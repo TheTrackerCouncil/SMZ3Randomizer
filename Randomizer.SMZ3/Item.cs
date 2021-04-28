@@ -841,7 +841,7 @@ namespace Randomizer.SMZ3 {
         }
 
         public static bool CanIbj(this Progression items) {
-            return items.Morph && items.Bombs;
+            return false;
         }
 
         public static bool CanFly(this Progression items) {

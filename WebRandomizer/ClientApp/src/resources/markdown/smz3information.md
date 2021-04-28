@@ -67,7 +67,8 @@ This option selects what kind of logic to use for item placement inside Super Me
 
     * Wall jumping (not including very precise ones)
     * Shinesparks in any direction (short charging for these is not expected)
-    * Infinite Bomb Jumps
+    * Infinite Bomb Jumps. Haha, just kidding; not in this version. Go play the 
+      [original randomizer](https://samus.link/) if that's your thing.
 
 * Hard - Hard logic is based upon the "no major glitches" ruleset and includes
   most tricks that are considered minor glitches, with some restrictions.
