@@ -14,6 +14,7 @@ process {
         $source = [IO.File]::OpenRead($Path)
         $source.CopyTo($gzip)
         $source.Close()
+        $gzip.Close()
 
         [IO.File]::WriteAllBytes($OutFile, $buffer.ToArray())
     }
