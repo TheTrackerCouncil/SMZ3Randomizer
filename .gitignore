@@ -344,3 +344,4 @@ healthchecksdb
 
 /Randomizer.CLI/Properties/launchSettings.json
 /WebRandomizer/randomizer.db
+/asar/
