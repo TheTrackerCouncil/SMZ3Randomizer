@@ -679,6 +679,10 @@
   ],
   "sm": [
     {
+      "title": "Captain Novolin",
+      "path": "sm/captain_novolin.1.sm.rdc.gz"
+    },
+    {
       "title": "Dark Samus",
       "path": "sm/dark_samus.2.sm.rdc.gz"
     },
