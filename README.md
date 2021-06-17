@@ -7,3 +7,7 @@ This is a fork of the Super Metroid &amp; A Link to the Past Crossover Item Rand
 Unlike the original, it does not expect you to do any Infinite Bomb Jumps (IBJ) as part of the normal item progression logic.
 
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
+
+## Credits
+- **Captain Novolin** replacement sprite for Super Metroid by PaddyCo
+- **Rash** replacement sprite for Super Metroid by Fragger

@@ -679,8 +679,12 @@
   ],
   "sm": [
     {
-      "title": "Captain Novolin",
+      "title": "Captain Novolin (by PaddyCo)",
       "path": "sm/captain_novolin.1.sm.rdc.gz"
+    },
+    {
+      "title": "Rash (by Fragger)",
+      "path": "sm/rash.1.sm.rdc.gz"
     },
     {
       "title": "Dark Samus",
