@@ -9,5 +9,6 @@ Unlike the original, it does not expect you to do any Infinite Bomb Jumps (IBJ) 
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
 ## Credits
-- **Captain Novolin** replacement sprite for Super Metroid by PaddyCo
-- **Rash** replacement sprite for Super Metroid by Fragger
+- **Captain Novolin** replacement sprite for _Super Metroid_ by PaddyCo
+- **Rash** replacement sprite for _Super Metroid_ by Fragger
+- **Captain Novolin** replacement sprite for _A Link to the Past_ by Fragger
