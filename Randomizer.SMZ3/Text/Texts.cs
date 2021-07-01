@@ -18,10 +18,10 @@ namespace Randomizer.SMZ3.Text {
 
         static Texts() {
             scripts = ParseYamlScripts("Text.Scripts.General.yaml") as YamlMapping;
-            blind = ParseTextScript("Text.Scripts.Blind.txt");
-            ganon = ParseTextScript("Text.Scripts.Ganon.txt");
+            blind = ParseTextScript("Text.Scripts.BlindExtra.txt");
+            ganon = ParseTextScript("Text.Scripts.GanonExtra.txt");
             tavernMan = ParseTextScript("Text.Scripts.TavernMan.txt");
-            triforceRoom = ParseTextScript("Text.Scripts.TriforceRoom.txt");
+            triforceRoom = ParseTextScript("Text.Scripts.TriforceRoomExtra.txt");
         }
 
         static YamlElement ParseYamlScripts(string resource) {
