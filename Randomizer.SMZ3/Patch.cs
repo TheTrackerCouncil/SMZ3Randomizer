@@ -96,8 +96,9 @@ namespace Randomizer.SMZ3 {
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
 
-            WritePreopenCurtains();
+            // WritePreopenCurtains();
             WriteQuickSwap();
+
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
