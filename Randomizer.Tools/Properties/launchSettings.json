@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Randomizer.Tools": {
+      "commandName": "Project",
+      "commandLineArgs": "format \"D:\\Desktop\\Ganon.txt\""
+    }
+  }
+}
