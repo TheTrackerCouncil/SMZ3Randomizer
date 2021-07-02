@@ -96,6 +96,9 @@ namespace Randomizer.SMZ3 {
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
 
+            // WritePreopenCurtains();
+            WriteQuickSwap();
+
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
@@ -704,7 +707,7 @@ namespace Randomizer.SMZ3 {
                     // Overwrite existing door
                     var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
                     patches.Add((Snes(0x8f0000 + door[6]), doorData));
-                    if((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C) || door[3] == KeycardEvents.LowerNorfairBoss || door[3] == KeycardEvents.MaridiaBoss || door[3] == KeycardEvents.WreckedShipBoss) {
+                    if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C) || door[3] == KeycardEvents.LowerNorfairBoss || door[3] == KeycardEvents.MaridiaBoss || door[3] == KeycardEvents.WreckedShipBoss) {
                         // Overwrite the extra parts of the Gadora with a PLM that just deletes itself
                         patches.Add((Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 }));
                     }
@@ -768,6 +771,16 @@ namespace Randomizer.SMZ3 {
                 var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(invincible))
             };
             patches.Add((Snes(0x30803E), new byte[] { (byte)value }));
+        }
+
+        void WritePreopenCurtains() { 
+            // #$00 = Off (default) - #$01 = On
+            patches.Add((Snes(0x308040), new byte[] { 0x01 }));
+        }
+
+        void WriteQuickSwap() {
+            // #$00 = Off (default) - #$01 = On
+            patches.Add((Snes(0x30804B), new byte[] { 0x01 }));
         }
 
         void WriteRngBlock() {
