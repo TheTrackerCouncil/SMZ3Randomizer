@@ -3,7 +3,7 @@
 namespace Randomizer.SMZ3 {
 
     [DefaultValue(Normal)]
-    enum GameMode {
+    public enum GameMode {
         [Description("Single player")]
         Normal,
         [Description("Multiworld")]
@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3 {
     }
 
     [DefaultValue(Normal)]
-    enum Z3Logic {
+    public enum Z3Logic {
         [Description("Normal")]
         Normal,
         [Description("No major glitches")]
@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3 {
     }
 
     [DefaultValue(Normal)]
-    enum SMLogic {
+    public enum SMLogic {
         [Description("Normal")]
         Normal,
         [Description("Hard")]
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3 {
     }
 
     [DefaultValue(Randomized)]
-    enum SwordLocation {
+    public enum SwordLocation {
         [Description("Randomized")]
         Randomized,
         [Description("Early")]
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3 {
     }
 
     [DefaultValue(Randomized)]
-    enum MorphLocation {
+    public enum MorphLocation {
         [Description("Randomized")]
         Randomized,
         [Description("Early")]
@@ -49,20 +49,20 @@ namespace Randomizer.SMZ3 {
     }
 
     [DefaultValue(DefeatBoth)]
-    enum Goal {
+    public enum Goal {
         [Description("Defeat Ganon and Mother Brain")]
         DefeatBoth,
     }
 
     [DefaultValue(None)]
-    enum KeyShuffle {
+    public enum KeyShuffle {
         [Description("None")]
         None,
         [Description("Keysanity")]
         Keysanity
     }
 
-    enum GanonInvincible {
+    public enum GanonInvincible {
         [Description("Never")]
         Never,
         [Description("Before Crystals")]
@@ -73,7 +73,7 @@ namespace Randomizer.SMZ3 {
         Always,
     }
 
-    class Config {
+    public class Config {
 
         public GameMode GameMode { get; set; } = GameMode.Normal;
         public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
