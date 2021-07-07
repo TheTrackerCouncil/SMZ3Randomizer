@@ -4,14 +4,17 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>chozo20.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="chozo20.ico" />
     <None Remove="zsm.ips" />
     <None Remove="zsm.ips.gz" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="chozo20.ico" />
     <EmbeddedResource Include="zsm.ips" />
   </ItemGroup>
 

@@ -39,7 +39,6 @@
       </Style>
 
       <local:EnumToBooleanConverter x:Key="EnumBoolConverter" />
-      
     </ResourceDictionary>
   </Application.Resources>
 </Application>
