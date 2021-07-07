@@ -21,11 +21,30 @@ namespace Randomizer.App
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly string _optionsPath;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            DataContext = new RandomizerOptions(this);
+
+            var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "SMZ3CasRandomizer");
+            Directory.CreateDirectory(basePath);
+            _optionsPath = Path.Combine(basePath, "options.json");
+
+            try
+            {
+                if (!File.Exists(_optionsPath))
+                    DataContext = new RandomizerOptions(this);
+
+                DataContext = RandomizerOptions.Load(_optionsPath)
+                    .WithOwner(this);
+            }
+            catch
+            {
+                DataContext = new RandomizerOptions(this);
+            }
         }
 
         protected RandomizerOptions Options => DataContext as RandomizerOptions;
@@ -95,5 +114,17 @@ namespace Randomizer.App
 
         private string Underline(string text, char line = '-') 
             => text + "\n" + new string(line, text.Length);
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                Options.Save(_optionsPath);
+            }
+            catch
+            {
+                // Oh well
+            }
+        }
     }
 }

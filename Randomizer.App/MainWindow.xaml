@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Randomizer.App" xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
     xmlns:smz3="clr-namespace:Randomizer.SMZ3;assembly=Randomizer.SMZ3" mc:Ignorable="d"
-    Title="SMZ3 Cas' Randomizer" Height="450" Width="600">
+    Closing="Window_Closing" Title="SMZ3 Cas' Randomizer" Height="450" Width="600">
   <Window.DataContext>
     <vm:RandomizerOptions></vm:RandomizerOptions>
   </Window.DataContext>
