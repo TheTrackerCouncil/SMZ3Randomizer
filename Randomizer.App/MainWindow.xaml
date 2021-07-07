@@ -32,12 +32,14 @@
             </Grid.ColumnDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0">A Link to the Past ROM:</Label>
-            <TextBox x:Name="Z3RomInput" Grid.Row="0" Grid.Column="1" Text="{Binding Z3RomPath}" />
+            <TextBox x:Name="Z3RomInput" Grid.Row="0" Grid.Column="1"
+                Text="{Binding Z3RomPath, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Row="0" Grid.Column="2" Command="{Binding BrowseRomCommand, Mode=OneWay}"
                 CommandParameter="{Binding ElementName=Z3RomInput}">Browse...</Button>
 
             <Label Grid.Row="1" Grid.Column="0">Super Metroid ROM:</Label>
-            <TextBox x:Name="SMRomInput" Grid.Row="1" Grid.Column="1" Text="{Binding SMRomPath}" />
+            <TextBox x:Name="SMRomInput" Grid.Row="1" Grid.Column="1"
+                Text="{Binding SMRomPath, UpdateSourceTrigger=PropertyChanged}" />
             <Button Grid.Row="1" Grid.Column="2" Command="{Binding BrowseRomCommand, Mode=OneWay}"
                 CommandParameter="{Binding ElementName=SMRomInput}">Browse...</Button>
           </Grid>

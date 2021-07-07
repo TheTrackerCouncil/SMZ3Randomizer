@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="zsm.ips" />
+    <None Remove="zsm.ips.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="zsm.ips" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
   </ItemGroup>
 
