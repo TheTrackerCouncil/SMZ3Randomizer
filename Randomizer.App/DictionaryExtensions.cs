@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,11 @@ namespace Randomizer.App
             {
                 dictionary[key]++;
             }
+        }
+
+        public static void Increment<TKey>(this ConcurrentDictionary<TKey, int> dictionary, TKey key)
+        {
+            dictionary.AddOrUpdate(key, 1, (_, current) => current + 1);
         }
     }
 }

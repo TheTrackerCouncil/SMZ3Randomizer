@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -198,34 +199,46 @@ namespace Randomizer.App
 
             const int numberOfSeeds = 10000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
-            var stats = new Dictionary<string, int>();
+            var stats = new ConcurrentDictionary<string, int>();
             var ct = progressDialog.CancellationToken;
+            var finished = false;
             var genTask = Task.Run(() =>
             {
-                for (var i = 0; i < numberOfSeeds && !ct.IsCancellationRequested; i++)
+                var i = 0;
+                Parallel.For(0, numberOfSeeds, (iteration, state) =>
                 {
                     ct.ThrowIfCancellationRequested();
                     var seed = randomizer.GenerateSeed(options, null, ct);
 
                     ct.ThrowIfCancellationRequested();
                     GatherStats(stats, seed);
-                    progressDialog.Report((i + 1) / (double)numberOfSeeds);
-                }
 
+                    var seedsGenerated = Interlocked.Increment(ref i);
+                    progressDialog.Report(seedsGenerated / (double)numberOfSeeds);
+                });
+
+                finished = true;
                 progressDialog.Dispatcher.Invoke(progressDialog.Close);
             }, ct);
 
-            progressDialog.ShowDialog();
+            progressDialog.StartTimer();
+            var result = progressDialog.ShowDialog();
             try
             {
                 genTask.GetAwaiter().GetResult();
             }
             catch (OperationCanceledException) { }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerExceptions.Any(x => !x.GetType().IsAssignableTo(typeof(OperationCanceledException))))
+                    throw;
+            }
 
-            ReportStats(stats, numberOfSeeds);
+            if (finished)
+                ReportStats(stats, numberOfSeeds);
         }
 
-        private void GatherStats(Dictionary<string, int> stats, ISeedData seed)
+        private void GatherStats(ConcurrentDictionary<string, int> stats, ISeedData seed)
         {
             var world = seed.Worlds.Single();
 
@@ -242,7 +255,7 @@ namespace Randomizer.App
                 stats.Increment("Scatfish is a scamfish");
         }
 
-        private void ReportStats(Dictionary<string, int> stats, int total)
+        private void ReportStats(IDictionary<string, int> stats, int total)
         {
             var message = new StringBuilder();
             message.AppendLine($"If you were to play {total} seeds:");

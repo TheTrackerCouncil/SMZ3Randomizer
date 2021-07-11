@@ -16,16 +16,20 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
       <RowDefinition Height="60" />
     </Grid.RowDefinitions>
 
     <TextBlock x:Name="MainInstructionText" Style="{StaticResource MainInstruction}" Margin="12"
         Grid.Row="0">Casualizing logic...</TextBlock>
-    <ProgressBar x:Name="MainProgressBar" Margin="12" VerticalAlignment="Center" Height="22"
-        Grid.Row="1" />
+    <TextBlock x:Name="TimeElapsedText" Margin="12,6" Grid.Row="2"></TextBlock>
+    <ProgressBar x:Name="MainProgressBar" Margin="12,0" VerticalAlignment="Center" Height="22"
+        Grid.Row="3" />
     <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
         Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
-        BorderThickness="0,1,0,0" Grid.Row="3">
+        BorderThickness="0,1,0,0" Grid.Row="5">
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch"
           Margin="6">
         <Button x:Name="CancelButton" IsCancel="True">Cancel</Button>

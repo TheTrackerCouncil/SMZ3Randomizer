@@ -21,11 +21,17 @@ namespace Randomizer.App
     /// </summary>
     public partial class ProgressDialog : Window, IProgress<double>
     {
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
+        private readonly DispatcherTimer _timer;
+        private DateTimeOffset? _shown;
 
         public ProgressDialog(Window owner, string title)
         {
             InitializeComponent();
+
+            _timer = new(DispatcherPriority.Render);
+            _timer.Tick += Timer_Tick;
+            _timer.Interval = TimeSpan.FromSeconds(1);
 
             Owner = owner;
             Title = owner.Title;
@@ -35,7 +41,20 @@ namespace Randomizer.App
             MainProgressBar.Maximum = 1d;
         }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            var elapsed = DateTimeOffset.Now - _shown;
+            TimeElapsedText.Text = $"{elapsed:m\\:ss}";
+        }
+
         public CancellationToken CancellationToken => _cancellationTokenSource.Token;
+
+        public void StartTimer()
+        {
+            _shown = DateTimeOffset.Now;
+            _timer.Start();
+            Timer_Tick(this, new EventArgs());
+        }
 
         public void Report(double value)
         {
