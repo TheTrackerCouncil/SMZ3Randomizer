@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 using Randomizer.App.ViewModels;
@@ -21,6 +23,8 @@ namespace Randomizer.App
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const bool SCAM = true;
+
         private readonly string _optionsPath;
 
         public MainWindow()
@@ -112,7 +116,7 @@ namespace Randomizer.App
             return log.ToString();
         }
 
-        private string Underline(string text, char line = '-') 
+        private string Underline(string text, char line = '-')
             => text + "\n" + new string(line, text.Length);
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -125,6 +129,138 @@ namespace Randomizer.App
             {
                 // Oh well
             }
+        }
+
+        private static bool IsScam(ItemType itemType)
+        {
+            return itemType switch
+            {
+                ItemType.ProgressiveTunic => false,
+                ItemType.ProgressiveShield => SCAM,
+                ItemType.ProgressiveSword => false,
+                ItemType.Bow => false,
+                ItemType.SilverArrows => false,
+                ItemType.BlueBoomerang => SCAM,
+                ItemType.RedBoomerang => SCAM,
+                ItemType.Hookshot => false,
+                ItemType.Mushroom => false,
+                ItemType.Powder => false,
+                ItemType.Firerod => false,
+                ItemType.Icerod => false,
+                ItemType.Bombos => false,
+                ItemType.Ether => false,
+                ItemType.Quake => false,
+                ItemType.Lamp => false,
+                ItemType.Hammer => false,
+                ItemType.Shovel => false,
+                ItemType.Flute => false,
+                ItemType.Bugnet => SCAM,
+                ItemType.Book => false,
+                ItemType.Bottle => SCAM,
+                ItemType.Somaria => false,
+                ItemType.Byrna => SCAM,
+                ItemType.Cape => false,
+                ItemType.Mirror => false,
+                ItemType.Boots => false,
+                ItemType.ProgressiveGlove => false,
+                ItemType.Flippers => false,
+                ItemType.MoonPearl => false,
+                ItemType.HalfMagic => false,
+                ItemType.Missile => false,
+                ItemType.Super => false,
+                ItemType.PowerBomb => false,
+                ItemType.Grapple => false,
+                ItemType.XRay => SCAM,
+                ItemType.Charge => false,
+                ItemType.Ice => false,
+                ItemType.Wave => false,
+                ItemType.Spazer => false,
+                ItemType.Plasma => false,
+                ItemType.Varia => false,
+                ItemType.Gravity => false,
+                ItemType.Morph => false,
+                ItemType.Bombs => false,
+                ItemType.SpringBall => false,
+                ItemType.ScrewAttack => false,
+                ItemType.HiJump => false,
+                ItemType.SpaceJump => false,
+                ItemType.SpeedBooster => false,
+                _ => SCAM
+            };
+        }
+
+        private void GenerateStatsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var options = Options.ToDictionary();
+            var randomizer = new SMZ3.Randomizer();
+            var items = randomizer.GetItems();
+            var locations = randomizer.GetLocations();
+
+            const int numberOfSeeds = 10000;
+            var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
+            var stats = new Dictionary<string, int>();
+            var ct = progressDialog.CancellationToken;
+            var genTask = Task.Run(() =>
+            {
+                for (var i = 0; i < numberOfSeeds && !ct.IsCancellationRequested; i++)
+                {
+                    ct.ThrowIfCancellationRequested();
+                    var seed = randomizer.GenerateSeed(options, null, ct);
+
+                    ct.ThrowIfCancellationRequested();
+                    GatherStats(stats, seed);
+                    progressDialog.Report((i + 1) / (double)numberOfSeeds);
+                }
+
+                progressDialog.Dispatcher.Invoke(progressDialog.Close);
+            }, ct);
+
+            progressDialog.ShowDialog();
+            try
+            {
+                genTask.GetAwaiter().GetResult();
+            }
+            catch (OperationCanceledException) { }
+
+            ReportStats(stats, numberOfSeeds);
+        }
+
+        private void GatherStats(Dictionary<string, int> stats, ISeedData seed)
+        {
+            var world = seed.Worlds.Single();
+
+            var shaktool = world.Locations.Single(x => x.LocationId == Locations.Shaktool);
+            if (IsScam((ItemType)shaktool.ItemId))
+                stats.Increment("Shaktool betrays you");
+
+            var zora = world.Locations.Single(x => x.LocationId == Locations.Zora);
+            if (IsScam((ItemType)zora.ItemId))
+                stats.Increment("Zora is a scam");
+
+            var scat = world.Locations.Single(x => x.LocationId == Locations.Scatfish);
+            if (IsScam((ItemType)scat.ItemId))
+                stats.Increment("Scatfish is a scamfish");
+        }
+
+        private void ReportStats(Dictionary<string, int> stats, int total)
+        {
+            var message = new StringBuilder();
+            message.AppendLine($"If you were to play {total} seeds:");
+            foreach (var key in stats.Keys)
+            {
+                var number = stats[key];
+                var percentage = number / (double)total;
+                message.AppendLine($"- {key} {number} time(s) ({percentage:P1})");
+            }
+
+            MessageBox.Show(this, message.ToString(), Title, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private static class Locations
+        {
+            public const int Shaktool = 150;
+            public const int Zora = 256 + 36;
+            public const int Scatfish = 256 + 78;
         }
     }
 }

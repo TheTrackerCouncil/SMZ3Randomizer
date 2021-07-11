@@ -9,14 +9,21 @@
   <Window.DataContext>
     <vm:RandomizerOptions></vm:RandomizerOptions>
   </Window.DataContext>
-
+  
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"
+    <Menu Grid.Row="0">
+      <MenuItem Header="_Tools">
+        <MenuItem Header="Generate _stats with current options..." x:Name="GenerateStatsMenuItem" Click="GenerateStatsMenuItem_Click" />
+      </MenuItem>
+    </Menu>
+
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
         HorizontalScrollBarVisibility="Disabled">
       <StackPanel>
         <Expander Header="Game options">
