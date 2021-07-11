@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -194,12 +196,11 @@ namespace Randomizer.App
         {
             var options = Options.ToDictionary();
             var randomizer = new SMZ3.Randomizer();
-            var items = randomizer.GetItems();
-            var locations = randomizer.GetLocations();
 
             const int numberOfSeeds = 10000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
             var stats = new ConcurrentDictionary<string, int>();
+            var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
             var ct = progressDialog.CancellationToken;
             var finished = false;
             var genTask = Task.Run(() =>
@@ -212,6 +213,7 @@ namespace Randomizer.App
 
                     ct.ThrowIfCancellationRequested();
                     GatherStats(stats, seed);
+                    AddToMegaSpoilerLog(itemCounts, seed);
 
                     var seedsGenerated = Interlocked.Increment(ref i);
                     progressDialog.Report(seedsGenerated / (double)numberOfSeeds);
@@ -235,7 +237,18 @@ namespace Randomizer.App
             }
 
             if (finished)
+            {
                 ReportStats(stats, numberOfSeeds);
+                WriteMegaSpoilerLog(itemCounts, randomizer);
+            }
+        }
+
+        private void AddToMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, ISeedData seed)
+        {
+            foreach (var item in seed.Worlds[0].Locations)
+            {
+                itemCounts.Increment((item.ItemId, item.LocationId));
+            }
         }
 
         private void GatherStats(ConcurrentDictionary<string, int> stats, ISeedData seed)
@@ -253,6 +266,61 @@ namespace Randomizer.App
             var scat = world.Locations.Single(x => x.LocationId == Locations.Scatfish);
             if (IsScam((ItemType)scat.ItemId))
                 stats.Increment("Scatfish is a scamfish");
+        }
+
+        private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, IRandomizer randomizer)
+        {
+            var items = randomizer.GetItems();
+            var locations = randomizer.GetLocations();
+
+            var itemLocations = items.Values
+                .Where(item => itemCounts.Keys.Any(x => x.itemId == item.Id))
+                .ToDictionary(
+                    keySelector: item => item.Name,
+                    elementSelector: item => itemCounts.Where(x => x.Key.itemId == item.Id)
+                        .OrderByDescending(x => x.Value)
+                        .ThenBy(x => locations[x.Key.locationId].Name)
+                        .ToDictionary(
+                            keySelector: x => locations[x.Key.locationId].Name,
+                            elementSelector: x => x.Value)
+            );
+
+            // Area > region > location
+            var locationItems = locations.Values.Select(location => new
+            {
+                Area = location.Area,
+                Name = location.Name,
+                Items = itemCounts.Where(x => x.Key.locationId == location.Id)
+                        .OrderByDescending(x => x.Value)
+                        .ThenBy(x => x.Key.itemId)
+                        .ToDictionary(
+                            keySelector: x => items[x.Key.itemId].Name,
+                            elementSelector: x => x.Value)
+            })
+                .GroupBy(x => x.Area, x => new { x.Name, x.Items })
+                .ToDictionary(x => x.Key, x => x.ToList());
+
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
+            var json = JsonSerializer.Serialize(new
+            {
+                ByItem = itemLocations,
+                ByLocation = locationItems
+            }, options);
+
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "SMZ3CasRandomizer", "item_generation_stats.json");
+            File.WriteAllText(path, json);
+
+            var startInfo = new ProcessStartInfo(path)
+            {
+                UseShellExecute = true
+            };
+            Process.Start(startInfo);
         }
 
         private void ReportStats(IDictionary<string, int> stats, int total)
