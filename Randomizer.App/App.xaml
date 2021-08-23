@@ -25,6 +25,12 @@
         <Setter Property="Height" Value="24" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
       </Style>
+      
+      <Style TargetType="ComboBox">
+        <Setter Property="Margin" Value="8" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
 
       <Style TargetType="RadioButton">
         <Setter Property="Margin" Value="0,4" />

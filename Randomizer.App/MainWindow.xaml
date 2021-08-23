@@ -5,11 +5,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Randomizer.App" xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
     xmlns:smz3="clr-namespace:Randomizer.SMZ3;assembly=Randomizer.SMZ3" mc:Ignorable="d"
-    Closing="Window_Closing" Title="SMZ3 Cas' Randomizer" Height="450" Width="600">
+    Closing="Window_Closing" Title="SMZ3 Cas' Randomizer" Height="505" Width="505">
   <Window.DataContext>
     <vm:RandomizerOptions></vm:RandomizerOptions>
   </Window.DataContext>
-  
+
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -19,7 +19,8 @@
 
     <Menu Grid.Row="0">
       <MenuItem Header="_Tools">
-        <MenuItem Header="Generate _stats with current options..." x:Name="GenerateStatsMenuItem" Click="GenerateStatsMenuItem_Click" />
+        <MenuItem Header="Generate _stats with current options..." x:Name="GenerateStatsMenuItem"
+            Click="GenerateStatsMenuItem_Click" />
       </MenuItem>
     </Menu>
 
@@ -59,6 +60,8 @@
               <RowDefinition Height="Auto" />
               <RowDefinition Height="Auto" />
               <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="150" />
@@ -85,13 +88,23 @@
                   IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MorphLocation.Original}}" />
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="2" Margin="8">
+            <Label Grid.Column="0" Grid.Row="2">Samus sprite:</Label>
+            <ComboBox x:Name="SamusSpriteDropdown" Grid.Column="1" Grid.Row="2"
+                ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+                DisplayMemberPath="DisplayName"></ComboBox>
+
+            <Label Grid.Column="0" Grid.Row="3">Link sprite:</Label>
+            <ComboBox x:Name="LinkSpriteDropdown" Grid.Column="1" Grid.Row="3"
+                ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+                DisplayMemberPath="DisplayName"></ComboBox>
+
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="4" Margin="8">
               <CheckBox>Keysanity</CheckBox>
               <CheckBox>Race</CheckBox>
             </StackPanel>
 
-            <Label Grid.Column="0" Grid.Row="3">Seed (optional):</Label>
-            <TextBox x:Name="SeedInput" Grid.Column="1" Grid.Row="3" Text="{Binding Seed}" />
+            <Label Grid.Column="0" Grid.Row="5">Seed (optional):</Label>
+            <TextBox x:Name="SeedInput" Grid.Column="1" Grid.Row="5" Text="{Binding Seed}" />
           </Grid>
         </Expander>
       </StackPanel>

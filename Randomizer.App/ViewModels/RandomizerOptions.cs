@@ -44,6 +44,10 @@ namespace Randomizer.App.ViewModels
 
         public string SMRomPath { get; set; }
 
+        public string LinkSpritePath { get; set; }
+
+        public string SamusSpritePath { get; set; }
+
         [JsonIgnore]
         public string Seed { get; set; }
 

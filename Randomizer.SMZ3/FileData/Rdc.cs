@@ -19,6 +19,12 @@ namespace Randomizer.SMZ3.FileData {
 
         public string Author { get; private set; }
 
+        /// <summary>
+        /// Reads an RDC-formatted file from the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream that contains an RDC-formatted file.</param>
+        /// <returns>A new <see cref="Rdc"/> for the specified stream.</returns>
+        /// <exception cref="InvalidDataException"><paramref name="stream"/> does not contain a valid RDC header or is of an unsupported version.</exception>
         public static Rdc Parse(Stream stream) {
             using var data = new BinaryReader(stream, Encoding.UTF8, true);
             if (!data.ReadChars(18).SequenceEqual(header))
@@ -57,7 +63,7 @@ namespace Randomizer.SMZ3.FileData {
             this.offsets = offsets.ToDictionary(x => x.type, x => x.offset);
         }
 
-        public bool TryParse<TBlock>(Stream stream, out BlockType block) where TBlock : BlockType, new() {
+        public bool TryParse<TBlock>(Stream stream, out TBlock block) where TBlock : BlockType, new() {
             block = default;
 
             var template = new TBlock();

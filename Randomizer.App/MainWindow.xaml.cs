@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -29,11 +30,14 @@ namespace Randomizer.App
         private const bool SCAM = true;
 
         private readonly string _optionsPath;
+        private readonly Task _loadSpritesTask;
 
         public MainWindow()
         {
             InitializeComponent();
 
+            _loadSpritesTask = Task.Run(() => LoadSprites())
+                .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
 
             var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "SMZ3CasRandomizer");
@@ -52,9 +56,41 @@ namespace Randomizer.App
             {
                 DataContext = new RandomizerOptions(this);
             }
+
+            SamusSprites.Add(Sprite.DefaultSamus);
+            SamusSpriteDropdown.SelectedIndex = 0;
+            LinkSprites.Add(Sprite.DefaultLink);
+            LinkSpriteDropdown.SelectedIndex = 0;
         }
 
+        public ObservableCollection<Sprite> SamusSprites { get; } = new();
+
+        public ObservableCollection<Sprite> LinkSprites { get; } = new();
+
         protected RandomizerOptions Options => DataContext as RandomizerOptions;
+
+        public void LoadSprites()
+        {
+            var spritesPath = Path.Combine(
+                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                "Sprites");
+            var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
+                .Select(x => Sprite.LoadSprite(x))
+                .OrderBy(x => x.Name);
+
+            foreach (var sprite in sprites)
+            {
+                switch (sprite.SpriteType)
+                {
+                    case SpriteType.Samus:
+                        SamusSprites.Add(sprite);
+                        break;
+                    case SpriteType.Link:
+                        LinkSprites.Add(sprite);
+                        break;
+                }
+            }
+        }
 
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
