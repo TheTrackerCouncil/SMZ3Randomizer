@@ -35,6 +35,8 @@ namespace Randomizer.App
         public MainWindow()
         {
             InitializeComponent();
+            SamusSprites.Add(Sprite.DefaultSamus);
+            LinkSprites.Add(Sprite.DefaultLink);
 
             _loadSpritesTask = Task.Run(() => LoadSprites())
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
@@ -56,11 +58,6 @@ namespace Randomizer.App
             {
                 DataContext = new RandomizerOptions(this);
             }
-
-            SamusSprites.Add(Sprite.DefaultSamus);
-            SamusSpriteDropdown.SelectedIndex = 0;
-            LinkSprites.Add(Sprite.DefaultLink);
-            LinkSpriteDropdown.SelectedIndex = 0;
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
@@ -105,7 +102,8 @@ namespace Randomizer.App
             using var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips");
             Rom.ApplyIps(rom, ips);
             Rom.ApplySeed(rom, seed.Worlds.First().Patches);
-            // Apply additional IPS or RDC patches here
+            Options.SamusSprite.ApplyTo(rom);
+            Options.LinkSprite.ApplyTo(rom);
 
             var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "SMZ3CasRandomizer", "Seeds");

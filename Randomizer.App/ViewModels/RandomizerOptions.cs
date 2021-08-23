@@ -17,7 +17,6 @@ namespace Randomizer.App.ViewModels
 
         private static readonly JsonSerializerOptions s_jsonOptions = new()
         {
-            IgnoreReadOnlyProperties = true,
             Converters =
             {
                 new JsonStringEnumConverter()
@@ -44,9 +43,9 @@ namespace Randomizer.App.ViewModels
 
         public string SMRomPath { get; set; }
 
-        public string LinkSpritePath { get; set; }
+        public Sprite LinkSprite { get; set; }
 
-        public string SamusSpritePath { get; set; }
+        public Sprite SamusSprite { get; set; }
 
         [JsonIgnore]
         public string Seed { get; set; }

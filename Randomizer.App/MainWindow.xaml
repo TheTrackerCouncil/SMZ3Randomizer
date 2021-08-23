@@ -91,12 +91,12 @@
             <Label Grid.Column="0" Grid.Row="2">Samus sprite:</Label>
             <ComboBox x:Name="SamusSpriteDropdown" Grid.Column="1" Grid.Row="2"
                 ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
-                DisplayMemberPath="DisplayName"></ComboBox>
+                DisplayMemberPath="DisplayName" SelectedItem="{Binding SamusSprite}"></ComboBox>
 
             <Label Grid.Column="0" Grid.Row="3">Link sprite:</Label>
             <ComboBox x:Name="LinkSpriteDropdown" Grid.Column="1" Grid.Row="3"
                 ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
-                DisplayMemberPath="DisplayName"></ComboBox>
+                DisplayMemberPath="DisplayName" SelectedItem="{Binding LinkSprite}"></ComboBox>
 
             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="4" Margin="8">
               <CheckBox>Keysanity</CheckBox>

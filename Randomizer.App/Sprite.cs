@@ -1,22 +1,24 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.App
 {
-    public class Sprite
+    public class Sprite : IEquatable<Sprite>
     {
         public static readonly Sprite DefaultSamus = new("Default", SpriteType.Samus);
         public static readonly Sprite DefaultLink = new("Default", SpriteType.Link);
 
         private readonly bool _isDefault = false;
 
-        protected Sprite(string name, string author, string filePath, SpriteType spriteType)
+        public Sprite(string name, string author, string filePath, SpriteType spriteType)
         {
             Name = name;
             Author = author;
@@ -72,5 +74,42 @@ namespace Randomizer.App
 
             return new Sprite(name, rdc.Author, path, spriteType);
         }
+
+        public void ApplyTo(byte[] rom)
+        {
+            if (_isDefault) return;
+
+            using var stream = File.OpenRead(FilePath);
+            var rdc = Rdc.Parse(stream);
+
+            if (rdc.TryParse<LinkSprite>(stream, out var linkSprite))
+                linkSprite.Apply(rom);
+
+            if (rdc.TryParse<SamusSprite>(stream, out var samusSprite))
+                samusSprite.Apply(rom);
+        }
+
+        public static bool operator ==(Sprite a, Sprite b) 
+            => (a is null && b is null) || a?.Equals(b) == true;
+
+        public static bool operator !=(Sprite a, Sprite b) 
+            => !(a == b);
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not Sprite other)
+                return false;
+
+            return Equals(other);
+        }
+
+        public bool Equals(Sprite other)
+        {
+            return FilePath == other.FilePath
+                && SpriteType == other.SpriteType;
+        }
+
+        public override int GetHashCode() 
+            => HashCode.Combine(FilePath, SpriteType);
     }
 }
