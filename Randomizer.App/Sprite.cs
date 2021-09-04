@@ -24,6 +24,8 @@ namespace Randomizer.App
             Author = author;
             FilePath = filePath;
             SpriteType = spriteType;
+            if (FilePath == null)
+                _isDefault = true;
         }
 
         private Sprite(string name, SpriteType spriteType)
