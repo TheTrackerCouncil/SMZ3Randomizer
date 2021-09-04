@@ -12,3 +12,5 @@ The original repository can be found at <https://github.com/tewtal/SMZ3Randomize
 - **Captain Novolin** replacement sprite for _Super Metroid_ by PaddyCo
 - **Rash** replacement sprite for _Super Metroid_ by Fragger
 - **Captain Novolin** replacement sprite for _A Link to the Past_ by Fragger
+- **Non-Binary** Samus sprite for _Super Metroid_ by Glove
+- **Trans** Samus sprite for _Super Metroid_ by TarThoron
