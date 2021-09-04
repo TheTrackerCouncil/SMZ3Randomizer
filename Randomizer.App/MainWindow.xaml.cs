@@ -13,6 +13,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Contracts;
@@ -75,18 +76,21 @@ namespace Randomizer.App
                 .Select(x => Sprite.LoadSprite(x))
                 .OrderBy(x => x.Name);
 
-            foreach (var sprite in sprites)
+            Dispatcher.Invoke(() =>
             {
-                switch (sprite.SpriteType)
+                foreach (var sprite in sprites)
                 {
-                    case SpriteType.Samus:
-                        SamusSprites.Add(sprite);
-                        break;
-                    case SpriteType.Link:
-                        LinkSprites.Add(sprite);
-                        break;
+                    switch (sprite.SpriteType)
+                    {
+                        case SpriteType.Samus:
+                            SamusSprites.Add(sprite);
+                            break;
+                        case SpriteType.Link:
+                            LinkSprites.Add(sprite);
+                            break;
+                    }
                 }
-            }
+            }, DispatcherPriority.Loaded);
         }
 
         public string SaveRomToFile()
