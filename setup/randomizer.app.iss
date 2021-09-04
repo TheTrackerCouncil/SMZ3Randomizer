@@ -54,6 +54,7 @@ end;
 function InitializeSetup: Boolean;
 begin
   Dependency_AddDotNet50Desktop;
+  Result := True;
 end;
 
 [Languages]
