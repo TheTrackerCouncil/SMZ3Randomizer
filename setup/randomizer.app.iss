@@ -28,7 +28,7 @@ PrivilegesRequiredOverridesAllowed=dialog
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-OutputBaseFilename=SMZ3CasRandomizerSetup     
+OutputBaseFilename=SMZ3CasRandomizerSetup_{#MyAppVersion}     
 
 [Code]
 procedure InitializeWizard;
