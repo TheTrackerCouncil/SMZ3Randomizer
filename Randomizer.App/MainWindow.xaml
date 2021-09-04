@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Randomizer.App" xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
     xmlns:smz3="clr-namespace:Randomizer.SMZ3;assembly=Randomizer.SMZ3" mc:Ignorable="d"
-    Closing="Window_Closing" Title="SMZ3 Cas' Randomizer" Height="505" Width="505">
+    Closing="Window_Closing" Title="SMZ3 Cas' Randomizer" Height="525" Width="450">
   <Window.DataContext>
     <vm:RandomizerOptions></vm:RandomizerOptions>
   </Window.DataContext>
@@ -111,7 +111,8 @@
     </ScrollViewer>
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3">
-      <Button x:Name="GenerateRomButton" Click="GenerateRomButton_Click">Generate ROM...</Button>
+      <Button x:Name="PlayButton" Click="PlayButton_Click">_Play</Button>
+      <Button x:Name="GenerateRomButton" Click="GenerateRomButton_Click">_Generate ROM...</Button>
     </StackPanel>
   </Grid>
 </Window>

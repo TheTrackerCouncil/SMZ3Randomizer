@@ -89,34 +89,62 @@ namespace Randomizer.App
             }
         }
 
-        private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
+        public string SaveRomToFile()
         {
             var randomizer = new SMZ3.Randomizer();
-            var options = Options.ToDictionary();
-            var seed = randomizer.GenerateSeed(options, Options.Seed, CancellationToken.None);
+            var rom = GenerateRom(randomizer, out var seed);
 
-            using var smRom = File.OpenRead(Options.SMRomPath);
-            using var z3Rom = File.OpenRead(Options.Z3RomPath);
-            var rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
-
-            using var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips");
-            Rom.ApplyIps(rom, ips);
-            Rom.ApplySeed(rom, seed.Worlds.First().Patches);
-            Options.SamusSprite.ApplyTo(rom);
-            Options.LinkSprite.ApplyTo(rom);
-
-            var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "SMZ3CasRandomizer", "Seeds");
-            Directory.CreateDirectory(basePath);
+            Directory.CreateDirectory(folderPath);
 
-            var fileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
-            var path = Path.Combine(basePath, fileName);
-            File.WriteAllBytes(path, rom);
+            var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
+            var romPath = Path.Combine(folderPath, romFileName);
+            File.WriteAllBytes(romPath, rom);
 
             var spoilerLog = GetSpoilerLog(seed, randomizer);
-            File.WriteAllText(Path.ChangeExtension(path, ".txt"), spoilerLog);
+            File.WriteAllText(Path.ChangeExtension(romPath, ".txt"), spoilerLog);
 
-            System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{path}\"");
+            return romPath;
+        }
+
+        private byte[] GenerateRom(SMZ3.Randomizer randomizer, out ISeedData seed)
+        {
+            var options = Options.ToDictionary();
+            seed = randomizer.GenerateSeed(options, Options.Seed, CancellationToken.None);
+
+            byte[] rom;
+            using (var smRom = File.OpenRead(Options.SMRomPath))
+            using (var z3Rom = File.OpenRead(Options.Z3RomPath))
+            {
+                rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
+            }
+
+            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips"))
+            {
+                Rom.ApplyIps(rom, ips);
+            }
+            Rom.ApplySeed(rom, seed.Worlds[0].Patches);
+
+            Options.SamusSprite.ApplyTo(rom);
+            Options.LinkSprite.ApplyTo(rom);
+            return rom;
+        }
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            var romPath = SaveRomToFile();
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = romPath,
+                UseShellExecute = true
+            });
+        }
+
+        private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
+        {
+            var path = SaveRomToFile();
+            Process.Start("explorer.exe", $"/select,\"{path}\"");
         }
 
         private string GetSpoilerLog(ISeedData seed, IRandomizer randomizer)
