@@ -73,7 +73,8 @@
           DisplayMemberPath="DisplayName" SelectedItem="{Binding LinkSprite}"></ComboBox>
 
       <Label Grid.Column="0" Grid.Row="4">Custom music pack:</Label>
-      <TextBox x:Name="Msu1Path" Grid.Row="4" Grid.Column="1" Text="{Binding Msu1Path}" />
+      <TextBox x:Name="Msu1Path" Grid.Row="4" Grid.Column="1"
+          Text="{Binding Msu1Path, UpdateSourceTrigger=PropertyChanged}" />
       <Button Grid.Row="4" Grid.Column="2" x:Name="BrowseMsu1PathButton"
           Click="BrowseMsu1PathButton_Click">Browse...</Button>
 
