@@ -31,6 +31,8 @@ namespace Randomizer.App.ViewModels
 
         public bool Race { get; set; }
 
+        public string Msu1Path { get; set; }
+
         public Dictionary<string, string> ToDictionary() => new()
         {
             ["gamemode"] = "normal", // Multiworld not supported in this fork

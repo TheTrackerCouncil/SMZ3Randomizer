@@ -34,10 +34,12 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="150" />
         <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
       </Grid.ColumnDefinitions>
 
       <Label Grid.Column="0" Grid.Row="0">Sword location:</Label>
@@ -70,13 +72,18 @@
           ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
           DisplayMemberPath="DisplayName" SelectedItem="{Binding LinkSprite}"></ComboBox>
 
-      <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="4" Margin="8">
+      <Label Grid.Column="0" Grid.Row="4">Custom music pack:</Label>
+      <TextBox x:Name="Msu1Path" Grid.Row="4" Grid.Column="1" Text="{Binding Msu1Path}" />
+      <Button Grid.Row="4" Grid.Column="2" x:Name="BrowseMsu1PathButton"
+          Click="BrowseMsu1PathButton_Click">Browse...</Button>
+
+      <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="5" Margin="8">
         <CheckBox>Keysanity</CheckBox>
         <CheckBox>Race</CheckBox>
       </StackPanel>
 
-      <Label Grid.Column="0" Grid.Row="5">Seed (optional):</Label>
-      <TextBox x:Name="SeedInput" Grid.Column="1" Grid.Row="5" Text="{Binding Seed}" />
+      <Label Grid.Column="0" Grid.Row="6">Seed (optional):</Label>
+      <TextBox x:Name="SeedInput" Grid.Column="1" Grid.Row="6" Text="{Binding Seed}" />
     </Grid>
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">

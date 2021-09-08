@@ -16,13 +16,19 @@
 
   <ItemGroup>
     <None Remove="chozo20.ico" />
+    <None Remove="msu1-v6.ips" />
     <None Remove="zsm.ips" />
     <None Remove="zsm.ips.gz" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="chozo20.ico" />
+    <EmbeddedResource Include="msu1-v6.ips" />
     <EmbeddedResource Include="zsm.ips" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
   </ItemGroup>
 
   <ItemGroup>

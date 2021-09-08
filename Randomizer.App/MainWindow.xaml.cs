@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
+using Microsoft.Win32;
+
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Contracts;
 using Randomizer.Shared.Models;
@@ -101,11 +103,12 @@ namespace Randomizer.App
             var rom = GenerateRom(randomizer, out var seed);
 
             var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "SMZ3CasRandomizer", "Seeds");
+                "SMZ3CasRandomizer", "Seeds", $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
             Directory.CreateDirectory(folderPath);
 
             var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);
+            EnableMsu1Support(rom, romPath);
             File.WriteAllBytes(romPath, rom);
 
             var spoilerLog = GetSpoilerLog(seed, randomizer);
@@ -135,6 +138,46 @@ namespace Randomizer.App
             Options.Seed.SamusSprite.ApplyTo(rom);
             Options.Seed.LinkSprite.ApplyTo(rom);
             return rom;
+        }
+
+        private bool EnableMsu1Support(byte[] rom, string romPath)
+        {
+            var msuPath = Options.Seed.Msu1Path;
+            if (!File.Exists(msuPath))
+                return false;
+
+            var romDrive = Path.GetPathRoot(romPath);
+            var msuDrive = Path.GetPathRoot(msuPath);
+            if (!romDrive.Equals(msuDrive, StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show(this, "Due to technical limitations, the MSU-1 " +
+                    "pack and the ROM need to be on the same drive. MSU-1 " +
+                    "support cannot be enabled. Yell at me on Discord if " +
+                    "this is imortant to you and you need this now.\nPlease" +
+                    "move or copy the MSU-1 files to somewhere on " + romDrive + ".", 
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.msu1-v6.ips"))
+            {
+                Rom.ApplyIps(rom, ips);
+            }
+
+            var romFolder = Path.GetDirectoryName(romPath);
+            var msuFolder = Path.GetDirectoryName(msuPath);
+            var romBaseName = Path.GetFileNameWithoutExtension(romPath);
+            var msuBaseName = Path.GetFileNameWithoutExtension(msuPath);
+            foreach (var msuFile in Directory.EnumerateFiles(msuFolder, $"{msuBaseName}*"))
+            {
+                var fileName = Path.GetFileName(msuFile);
+                var suffix = fileName.Replace(msuBaseName, "");
+
+                var link = Path.Combine(romFolder, romBaseName + suffix);
+                NativeMethods.CreateHardLink(link, msuFile, IntPtr.Zero);
+            }
+
+            return true;
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -181,6 +224,22 @@ namespace Randomizer.App
         {
             var optionsDialog = new OptionsWindow(Options.General);
             optionsDialog.ShowDialog();
+        }
+
+        private void BrowseMsu1PathButton_Click(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog()
+            {
+                CheckFileExists = true,
+                Filter = "MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*",
+                FileName = Options.Seed.Msu1Path,
+                Title = "Browse MSU-1 file - SMZ3 Cas’ Randomizer"
+            };
+
+            if (openFileDialog.ShowDialog(this) == true)
+            {
+                Msu1Path.Text = openFileDialog.FileName;
+            }
         }
 
         private string GetSpoilerLog(ISeedData seed, IRandomizer randomizer)
