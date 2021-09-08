@@ -5,9 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:Randomizer.App" xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
     xmlns:smz3="clr-namespace:Randomizer.SMZ3;assembly=Randomizer.SMZ3" mc:Ignorable="d"
-    Closing="Window_Closing" Title="SMZ3 Cas' Randomizer" Height="525" Width="525">
+    Loaded="Window_Loaded" Closing="Window_Closing" Title="SMZ3 Cas' Randomizer" Height="450"
+    Width="450">
   <Window.DataContext>
-    <vm:RandomizerOptions></vm:RandomizerOptions>
+    <vm:SeedOptions></vm:SeedOptions>
   </Window.DataContext>
 
   <Grid>
@@ -21,96 +22,64 @@
       <MenuItem Header="_Tools">
         <MenuItem Header="Generate _stats with current options..." x:Name="GenerateStatsMenuItem"
             Click="GenerateStatsMenuItem_Click" />
+        <MenuItem Header="_Options..." x:Name="OptionsMenuItem" Click="OptionsMenuItem_Click" />
       </MenuItem>
     </Menu>
 
-    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
-        HorizontalScrollBarVisibility="Disabled">
-      <StackPanel>
-        <Expander Header="Game options">
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="150" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+    <Grid Grid.Row="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0">A Link to the Past ROM:</Label>
-            <TextBox x:Name="Z3RomInput" Grid.Row="0" Grid.Column="1"
-                Text="{Binding Z3RomPath, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Grid.Row="0" Grid.Column="2" Command="{Binding BrowseRomCommand, Mode=OneWay}"
-                CommandParameter="{Binding ElementName=Z3RomInput}">Browse...</Button>
-
-            <Label Grid.Row="1" Grid.Column="0">Super Metroid ROM:</Label>
-            <TextBox x:Name="SMRomInput" Grid.Row="1" Grid.Column="1"
-                Text="{Binding SMRomPath, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Grid.Row="1" Grid.Column="2" Command="{Binding BrowseRomCommand, Mode=OneWay}"
-                CommandParameter="{Binding ElementName=SMRomInput}">Browse...</Button>
-          </Grid>
-        </Expander>
-
-        <Expander Header="Seed options" IsExpanded="True">
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="150" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Label Grid.Column="0" Grid.Row="0">Sword location:</Label>
-            <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Margin="8">
-              <RadioButton GroupName="SwordLocation" Content="Randomized"
-                  IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:SwordLocation.Randomized}}" />
-              <RadioButton GroupName="SwordLocation" Content="Early"
-                  IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:SwordLocation.Early}}" />
-              <RadioButton GroupName="SwordLocation" Content="Link's Uncle"
-                  IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:SwordLocation.Uncle}}" />
-            </StackPanel>
-
-            <Label Grid.Column="0" Grid.Row="1">Morph ball location:</Label>
-            <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="8">
-              <RadioButton GroupName="MorphLocation" Content="Randomized"
-                  IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MorphLocation.Randomized}}" />
-              <RadioButton GroupName="MorphLocation" Content="Early"
-                  IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MorphLocation.Early}}" />
-              <RadioButton GroupName="MorphLocation" Content="Original"
-                  IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MorphLocation.Original}}" />
-            </StackPanel>
-
-            <Label Grid.Column="0" Grid.Row="2">Samus sprite:</Label>
-            <ComboBox x:Name="SamusSpriteDropdown" Grid.Column="1" Grid.Row="2"
-                ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
-                DisplayMemberPath="DisplayName" SelectedItem="{Binding SamusSprite}"></ComboBox>
-
-            <Label Grid.Column="0" Grid.Row="3">Link sprite:</Label>
-            <ComboBox x:Name="LinkSpriteDropdown" Grid.Column="1" Grid.Row="3"
-                ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
-                DisplayMemberPath="DisplayName" SelectedItem="{Binding LinkSprite}"></ComboBox>
-
-            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="4" Margin="8">
-              <CheckBox>Keysanity</CheckBox>
-              <CheckBox>Race</CheckBox>
-            </StackPanel>
-
-            <Label Grid.Column="0" Grid.Row="5">Seed (optional):</Label>
-            <TextBox x:Name="SeedInput" Grid.Column="1" Grid.Row="5" Text="{Binding Seed}" />
-          </Grid>
-        </Expander>
+      <Label Grid.Column="0" Grid.Row="0">Sword location:</Label>
+      <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Margin="8">
+        <RadioButton GroupName="SwordLocation" Content="Randomized"
+            IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:SwordLocation.Randomized}}" />
+        <RadioButton GroupName="SwordLocation" Content="Early"
+            IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:SwordLocation.Early}}" />
+        <RadioButton GroupName="SwordLocation" Content="Link's Uncle"
+            IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:SwordLocation.Uncle}}" />
       </StackPanel>
-    </ScrollViewer>
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3">
+      <Label Grid.Column="0" Grid.Row="1">Morph ball location:</Label>
+      <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="8">
+        <RadioButton GroupName="MorphLocation" Content="Randomized"
+            IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MorphLocation.Randomized}}" />
+        <RadioButton GroupName="MorphLocation" Content="Early"
+            IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MorphLocation.Early}}" />
+        <RadioButton GroupName="MorphLocation" Content="Original"
+            IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MorphLocation.Original}}" />
+      </StackPanel>
+
+      <Label Grid.Column="0" Grid.Row="2">Samus sprite:</Label>
+      <ComboBox x:Name="SamusSpriteDropdown" Grid.Column="1" Grid.Row="2"
+          ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+          DisplayMemberPath="DisplayName" SelectedItem="{Binding SamusSprite}"></ComboBox>
+
+      <Label Grid.Column="0" Grid.Row="3">Link sprite:</Label>
+      <ComboBox x:Name="LinkSpriteDropdown" Grid.Column="1" Grid.Row="3"
+          ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+          DisplayMemberPath="DisplayName" SelectedItem="{Binding LinkSprite}"></ComboBox>
+
+      <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="4" Margin="8">
+        <CheckBox>Keysanity</CheckBox>
+        <CheckBox>Race</CheckBox>
+      </StackPanel>
+
+      <Label Grid.Column="0" Grid.Row="5">Seed (optional):</Label>
+      <TextBox x:Name="SeedInput" Grid.Column="1" Grid.Row="5" Text="{Binding Seed}" />
+    </Grid>
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
       <Button x:Name="PlayButton" Click="PlayButton_Click">_Play</Button>
       <Button x:Name="GenerateRomButton" Click="GenerateRomButton_Click">_Generate ROM</Button>
     </StackPanel>

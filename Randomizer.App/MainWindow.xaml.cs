@@ -50,22 +50,24 @@ namespace Randomizer.App
             try
             {
                 if (!File.Exists(_optionsPath))
-                    DataContext = new RandomizerOptions(this);
+                    Options = new RandomizerOptions(this);
 
-                DataContext = RandomizerOptions.Load(_optionsPath)
+                Options = RandomizerOptions.Load(_optionsPath)
                     .WithOwner(this);
             }
             catch
             {
-                DataContext = new RandomizerOptions(this);
+                Options = new RandomizerOptions(this);
             }
+
+            DataContext = Options.Seed;
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
         public ObservableCollection<Sprite> LinkSprites { get; } = new();
 
-        protected RandomizerOptions Options => DataContext as RandomizerOptions;
+        public RandomizerOptions Options { get; }
 
         public void LoadSprites()
         {
@@ -115,11 +117,11 @@ namespace Randomizer.App
         private byte[] GenerateRom(SMZ3.Randomizer randomizer, out ISeedData seed)
         {
             var options = Options.ToDictionary();
-            seed = randomizer.GenerateSeed(options, Options.Seed, CancellationToken.None);
+            seed = randomizer.GenerateSeed(options, Options.Seed.Seed, CancellationToken.None);
 
             byte[] rom;
-            using (var smRom = File.OpenRead(Options.SMRomPath))
-            using (var z3Rom = File.OpenRead(Options.Z3RomPath))
+            using (var smRom = File.OpenRead(Options.General.SMRomPath))
+            using (var z3Rom = File.OpenRead(Options.General.Z3RomPath))
             {
                 rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
             }
@@ -130,8 +132,8 @@ namespace Randomizer.App
             }
             Rom.ApplySeed(rom, seed.Worlds[0].Patches);
 
-            Options.SamusSprite.ApplyTo(rom);
-            Options.LinkSprite.ApplyTo(rom);
+            Options.Seed.SamusSprite.ApplyTo(rom);
+            Options.Seed.LinkSprite.ApplyTo(rom);
             return rom;
         }
 
@@ -149,6 +151,36 @@ namespace Randomizer.App
         {
             var path = SaveRomToFile();
             Process.Start("explorer.exe", $"/select,\"{path}\"");
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!Options.General.Validate())
+            {
+                MessageBox.Show(this, "If this is your first time using the randomizer," +
+                    " there are some required options you need to configure before you " +
+                    "can start playing randomized SMZ3 games. Please do so now.", 
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Information);
+                OptionsMenuItem_Click(this, new RoutedEventArgs());
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                Options.Save(_optionsPath);
+            }
+            catch
+            {
+                // Oh well
+            }
+        }
+
+        private void OptionsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var optionsDialog = new OptionsWindow(Options.General);
+            optionsDialog.ShowDialog();
         }
 
         private string GetSpoilerLog(ISeedData seed, IRandomizer randomizer)
@@ -187,18 +219,6 @@ namespace Randomizer.App
 
         private string Underline(string text, char line = '-')
             => text + "\n" + new string(line, text.Length);
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            try
-            {
-                Options.Save(_optionsPath);
-            }
-            catch
-            {
-                // Oh well
-            }
-        }
 
         private static bool IsScam(ItemType itemType)
         {
