@@ -1,0 +1,50 @@
+﻿<Window x:Class="Randomizer.App.OptionsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Randomizer.App.ViewModels" xmlns:local="clr-namespace:Randomizer.App"
+    ResizeMode="NoResize" mc:Ignorable="d" Title="Options - SMZ3 Cas' Randomizer" Height="250"
+    Width="500">
+  <Window.DataContext>
+    <vm:GeneralOptions></vm:GeneralOptions>
+  </Window.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="150" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+
+    <Label Grid.Row="0" Grid.Column="0">
+      <Label.Content>
+        <AccessText TextWrapping="WrapWithOverflow">A Link to the Past ROM (required):</AccessText>
+      </Label.Content>
+    </Label>
+    <TextBox x:Name="Z3RomInput" Grid.Row="0" Grid.Column="1"
+        Text="{Binding Z3RomPath, UpdateSourceTrigger=PropertyChanged}" />
+    <Button Grid.Row="0" Grid.Column="2" Command="{Binding BrowseRomCommand, Mode=OneWay}"
+        CommandParameter="{Binding ElementName=Z3RomInput}">Browse...</Button>
+
+    <Label Grid.Row="1" Grid.Column="0">
+      <Label.Content>
+        <AccessText TextWrapping="WrapWithOverflow">Super Metroid ROM (required):</AccessText>
+      </Label.Content>
+    </Label>
+    <TextBox x:Name="SMRomInput" Grid.Row="1" Grid.Column="1"
+        Text="{Binding SMRomPath, UpdateSourceTrigger=PropertyChanged}" />
+    <Button Grid.Row="1" Grid.Column="2" Command="{Binding BrowseRomCommand, Mode=OneWay}"
+        CommandParameter="{Binding ElementName=SMRomInput}">Browse...</Button>
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3"
+        Grid.ColumnSpan="3">
+      <Button IsDefault="True" x:Name="OkButton" Click="OkButton_Click">OK</Button>
+    </StackPanel>
+  </Grid>
+</Window>

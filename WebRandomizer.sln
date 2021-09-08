@@ -17,7 +17,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebGameService", "WebGameSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Shared", "Randomizer.Shared\Randomizer.Shared.csproj", "{3DA99948-6C0A-47E6-87AB-92672ED88C09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.Tools", "Randomizer.Tools\Randomizer.Tools.csproj", "{B594A95C-7B87-447A-8A80-EBF6991EB04C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Tools", "Randomizer.Tools\Randomizer.Tools.csproj", "{B594A95C-7B87-447A-8A80-EBF6991EB04C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.App", "Randomizer.App\Randomizer.App.csproj", "{CCEDE012-894B-48F6-811E-B2324E74C604}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F11C9119-7B5E-46E4-9A58-E157B80C7E9F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +64,10 @@ Global
 		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>chozo20.ico</ApplicationIcon>
+    <Version>0.2.0</Version>
+    <Title>SMZ3 Cas' Randomizer</Title>
+    <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
+    <Authors>Vivelin</Authors>
+    <Product>SMZ3 Cas' Randomizer</Product>
+    <PackageId>Randomizer.App</PackageId>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="chozo20.ico" />
+    <None Remove="msu1-v6.ips" />
+    <None Remove="zsm.ips" />
+    <None Remove="zsm.ips.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="chozo20.ico" />
+    <EmbeddedResource Include="msu1-v6.ips" />
+    <EmbeddedResource Include="zsm.ips" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
+  </ItemGroup>
+
+</Project>
