@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using static Randomizer.SMZ3.RewardType;
+using static Randomizer.SMZ3.Reward;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
 

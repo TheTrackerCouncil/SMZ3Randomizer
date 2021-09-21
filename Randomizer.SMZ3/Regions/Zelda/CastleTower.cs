@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class CastleTower : Z3Region, IReward {
+    class CastleTower : Z3Region, IHasReward {
 
         public override string Name => "Castle Tower";
 
-        public RewardType Reward { get; set; } = RewardType.Agahnim;
+        public Reward Reward { get; set; } = Reward.Agahnim;
 
         public CastleTower(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyCT };

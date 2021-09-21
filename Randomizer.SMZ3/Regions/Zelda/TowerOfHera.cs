@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class TowerOfHera : Z3Region, IReward {
+    class TowerOfHera : Z3Region, IHasReward {
 
         public override string Name => "Tower of Hera";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
 
         public TowerOfHera(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyTH, BigKeyTH, MapTH, CompassTH };

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using static Randomizer.SMZ3.ItemType;
-using static Randomizer.SMZ3.RewardType;
+using static Randomizer.SMZ3.Reward;
 
 namespace Randomizer.SMZ3.Regions.Zelda {
 

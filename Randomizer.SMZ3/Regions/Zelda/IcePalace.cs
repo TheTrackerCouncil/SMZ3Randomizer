@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class IcePalace : Z3Region, IReward {
+    class IcePalace : Z3Region, IHasReward {
 
         public override string Name => "Ice Palace";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
 
         public IcePalace(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyIP, BigKeyIP, MapIP, CompassIP };

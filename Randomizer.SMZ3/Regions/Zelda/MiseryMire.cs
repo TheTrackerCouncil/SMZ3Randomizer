@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class MiseryMire : Z3Region, IReward, IMedallionAccess {
+    class MiseryMire : Z3Region, IHasReward, INeedsMedallion {
 
         public override string Name => "Misery Mire";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
         public ItemType Medallion { get; set; }
 
         public MiseryMire(World world, Config config) : base(world, config) {

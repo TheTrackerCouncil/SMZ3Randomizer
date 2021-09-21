@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class ThievesTown : Z3Region, IReward {
+    class ThievesTown : Z3Region, IHasReward {
 
         public override string Name => "Thieves' Town";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
 
         public ThievesTown(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyTT, BigKeyTT, MapTT, CompassTT };

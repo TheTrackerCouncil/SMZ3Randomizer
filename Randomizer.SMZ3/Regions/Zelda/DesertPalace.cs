@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class DesertPalace : Z3Region, IReward {
+    class DesertPalace : Z3Region, IHasReward {
 
         public override string Name => "Desert Palace";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
 
         public DesertPalace(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyDP, BigKeyDP, MapDP, CompassDP };

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Randomizer.SMZ3 {
+using Randomizer.SMZ3.Regions;
+
+namespace Randomizer.SMZ3
+{
 
     class Playthrough {
 
@@ -73,13 +76,13 @@ namespace Randomizer.SMZ3 {
 
             /* Add Crystal/Pendant Prizes to playthrough */
             var rewardSphere = new Dictionary<string, string>();
-            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IReward>().Where(r => r.Reward != RewardType.GoldenFourBoss && r.Reward != RewardType.Agahnim))) {
+            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IHasReward>().Where(r => r.Reward != Reward.GoldenFourBoss && r.Reward != Reward.Agahnim))) {
                 var regionName = $"{((Region)region).Name}{(config.MultiWorld ? $" - {((Region)region).World.Player}" : "")}";
                 rewardSphere.Add($"Prize - {regionName}", region.Reward.GetDescription());
             }
 
             /* Add Medallion requirements to playthrough */
-            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IMedallionAccess>())) {
+            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<INeedsMedallion>())) {
                 var regionName = $"{((Region)region).Name}{(config.MultiWorld ? $" - {((Region)region).World.Player}" : "")}";
                 rewardSphere.Add($"Medallion Required - {regionName}", region.Medallion.GetDescription());
             }

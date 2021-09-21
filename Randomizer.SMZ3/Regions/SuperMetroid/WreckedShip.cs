@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid {
+namespace Randomizer.SMZ3.Regions.SuperMetroid
+{
 
-    class WreckedShip : SMRegion, IReward {
+    class WreckedShip : SMRegion, IHasReward {
 
         public override string Name => "Wrecked Ship";
         public override string Area => "Wrecked Ship";
 
-        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
+        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
         public WreckedShip(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

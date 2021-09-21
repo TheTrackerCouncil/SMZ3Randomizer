@@ -3,44 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Randomizer.SMZ3 {
-
-    class Filler {
-
-        List<World> Worlds { get; set; }
-        Config Config { get; set; }
-        Random Rnd { get; set; }
+namespace Randomizer.SMZ3
+{
+    public class Filler
+    {
+        public List<World> Worlds { get; set; }
+        public Config Config { get; set; }
+        public Random Rnd { get; set; }
 
         private CancellationToken CancellationToken { get; set; }
 
-        public Filler(List<World> worlds, Config config, Random rnd, CancellationToken cancellationToken) {
+        public Filler(List<World> worlds, Config config, Random rnd, CancellationToken cancellationToken)
+        {
             Worlds = worlds;
             Config = config;
             Rnd = rnd;
             CancellationToken = cancellationToken;
 
-            foreach (var world in worlds) {
+            foreach (var world in worlds)
+            {
                 world.Setup(Rnd);
             }
         }
 
-        public void Fill() {
+        public void Fill()
+        {
             var progressionItems = new List<Item>();
             var baseItems = new List<Item>();
 
-            foreach (var world in Worlds) {
+            foreach (var world in Worlds)
+            {
                 /* The dungeon pool order is significant, don't shuffle */
                 var dungeon = Item.CreateDungeonPool(world);
                 var progression = Item.CreateProgressionPool(world);
 
                 InitialFillInOwnWorld(dungeon, progression, world);
 
-                if (Config.Keysanity == false) {
+                if (Config.Keysanity == false)
+                {
                     var worldLocations = world.Locations.Empty().Shuffle(Rnd);
                     var keyCards = Item.CreateKeycards(world);
                     AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world });
                     baseItems = baseItems.Concat(keyCards).ToList();
-                } else {
+                }
+                else
+                {
                     progressionItems.AddRange(Item.CreateKeycards(world));
                 }
 
@@ -56,7 +63,8 @@ namespace Randomizer.SMZ3 {
             if (Config.SingleWorld)
                 locations = ApplyLocationWeighting(locations).ToList();
 
-            if (Config.MultiWorld) {
+            if (Config.MultiWorld)
+            {
                 /* Place moonpearls and morphs in last 40%/20% of the pool so that
                  * they will tend to place in earlier locations.
                  */
@@ -72,7 +80,8 @@ namespace Randomizer.SMZ3 {
             FastFill(junkItems, locations);
         }
 
-        void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder) {
+        private void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder)
+        {
             var n = itemPool.Count;
 
             /* Gather all items that are being biased */
@@ -82,33 +91,40 @@ namespace Randomizer.SMZ3 {
             /* Insert items from each biased type such that their lowest index 
              * is based on their weight on the original pool size
              */
-            foreach (var (type, weight) in reorder.OrderByDescending(x => x.weight)) {
+            foreach (var (type, weight) in reorder.OrderByDescending(x => x.weight))
+            {
                 var i = (int)(n * (1 - weight));
                 if (i >= itemPool.Count)
                     throw new InvalidOperationException($"Too many items are being biased which makes the tail portion for {type} too big");
-                foreach (var item in items[type]) {
+                foreach (var item in items[type])
+                {
                     var k = Rnd.Next(i, itemPool.Count);
                     itemPool.Insert(k, item);
                 }
             }
         }
 
-        IEnumerable<Location> ApplyLocationWeighting(IEnumerable<Location> locations) {
+        private IEnumerable<Location> ApplyLocationWeighting(IEnumerable<Location> locations)
+        {
             return from location in locations.Select((x, i) => (x, i: i - x.Weight))
-                   orderby location.i select location.x;
+                   orderby location.i
+                   select location.x;
         }
 
-        void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world) {
+        private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world)
+        {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.GetLocation("Skull Woods - Pinball Room"));
 
             /* Check Swords option and place as needed */
-            switch (Config.SwordLocation) {
+            switch (Config.SwordLocation)
+            {
                 case SwordLocation.Uncle: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.GetLocation("Link's Uncle")); break;
                 case SwordLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
             }
 
             /* Check Morph option and place as needed */
-            switch (Config.MorphLocation) {
+            switch (Config.MorphLocation)
+            {
                 case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.GetLocation("Morphing Ball")); break;
                 case MorphLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
             }
@@ -120,16 +136,19 @@ namespace Randomizer.SMZ3 {
             FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
         }
 
-        void AssumedFill(List<Item> itemPool, List<Item> baseItems, IEnumerable<Location> locations, IEnumerable<World> worlds) {
+        private void AssumedFill(List<Item> itemPool, List<Item> baseItems, IEnumerable<Location> locations, IEnumerable<World> worlds)
+        {
             var assumedItems = new List<Item>(itemPool);
-            while (assumedItems.Count > 0) {
+            while (assumedItems.Count > 0)
+            {
                 /* Try placing next item */
                 var item = assumedItems.First();
                 assumedItems.Remove(item);
 
                 var inventory = CollectItems(assumedItems.Concat(baseItems), worlds);
                 var location = locations.Empty().CanFillWithinWorld(item, inventory).FirstOrDefault();
-                if (location == null) {
+                if (location == null)
+                {
                     assumedItems.Add(item);
                     continue;
                 }
@@ -137,17 +156,20 @@ namespace Randomizer.SMZ3 {
                 location.Item = item;
                 itemPool.Remove(item);
 
-                if(CancellationToken.IsCancellationRequested) {
+                if (CancellationToken.IsCancellationRequested)
+                {
                     throw new OperationCanceledException("The operation has been cancelled.");
                 }
             }
         }
 
-        IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds) {
+        private IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds)
+        {
             var assumedItems = new List<Item>(items);
             var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
 
-            while (true) {
+            while (true)
+            {
                 var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems).ToList();
                 remainingLocations = remainingLocations.Except(availableLocations).ToList();
                 var foundItems = availableLocations.Select(x => x.Item).ToList();
@@ -160,18 +182,21 @@ namespace Randomizer.SMZ3 {
             return assumedItems;
         }
 
-        void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world) {
+        private void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world)
+        {
             var item = itemPool.Get(itemType);
             var location = world.Locations.Empty().Available(world.Items).Random(Rnd);
-            if (location == null) {
+            if (location == null)
+            {
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");
             }
-            
+
             location.Item = item;
             itemPool.Remove(item);
         }
 
-        void GanonTowerFill(List<Item> itemPool, double factor) {
+        private void GanonTowerFill(List<Item> itemPool, double factor)
+        {
             var locations = Worlds
                 .SelectMany(x => x.Locations)
                 .Where(x => x.Region is Regions.Zelda.GanonsTower)
@@ -179,14 +204,17 @@ namespace Randomizer.SMZ3 {
             FastFill(itemPool, locations.Take((int)(locations.Count / factor)));
         }
 
-        void FastFill(List<Item> itemPool, IEnumerable<Location> locations) {
-            foreach (var (location, item) in locations.Empty().Zip(itemPool, (l, i) => (l, i)).ToList()) {
+        private void FastFill(List<Item> itemPool, IEnumerable<Location> locations)
+        {
+            foreach (var (location, item) in locations.Empty().Zip(itemPool, (l, i) => (l, i)).ToList())
+            {
                 location.Item = item;
                 itemPool.Remove(item);
             }
         }
 
-        void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location) {
+        private void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location)
+        {
             var itemToPlace = itemPool.Get(itemType);
             location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);

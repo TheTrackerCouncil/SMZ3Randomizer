@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
+{
 
-    class Inner : SMRegion, IReward {
+    class Inner : SMRegion, IHasReward {
 
         public override string Name => "Maridia Inner";
         public override string Area => "Maridia";
 
-        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
+        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
         public Inner(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

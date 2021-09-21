@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class SkullWoods : Z3Region, IReward {
+    class SkullWoods : Z3Region, IHasReward {
 
         public override string Name => "Skull Woods";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
 
         public SkullWoods(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeySW, BigKeySW, MapSW, CompassSW };

@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
+{
 
-    class East : SMRegion, IReward {
+    class East : SMRegion, IHasReward {
 
         public override string Name => "Norfair Lower East";
         public override string Area => "Norfair Lower";
 
-        public RewardType Reward { get; set; } = RewardType.GoldenFourBoss;
+        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
         public East(World world, Config config) : base(world, config) {
             Locations = new List<Location> {

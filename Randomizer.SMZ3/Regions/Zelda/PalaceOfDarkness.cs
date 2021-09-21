@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class PalaceOfDarkness : Z3Region, IReward {
+    class PalaceOfDarkness : Z3Region, IHasReward {
 
         public override string Name => "Palace of Darkness";
         public override string Area => "Dark Palace";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
 
         public PalaceOfDarkness(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeyPD, BigKeyPD, MapPD, CompassPD };

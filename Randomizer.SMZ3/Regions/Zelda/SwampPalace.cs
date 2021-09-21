@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class SwampPalace : Z3Region, IReward {
+    class SwampPalace : Z3Region, IHasReward {
 
         public override string Name => "Swamp Palace";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
 
         public SwampPalace(World world, Config config) : base(world, config) {
             RegionItems = new[] { KeySP, BigKeySP, MapSP, CompassSP };

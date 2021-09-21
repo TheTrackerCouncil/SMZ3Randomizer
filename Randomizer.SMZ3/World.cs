@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Randomizer.SMZ3.RewardType;
 
-namespace Randomizer.SMZ3 {
+using Randomizer.SMZ3.Regions;
 
-    class World {
+using static Randomizer.SMZ3.Reward;
 
+namespace Randomizer.SMZ3
+{
+    public class World
+    {
         public List<Location> Locations { get; set; }
         public List<Region> Regions { get; set; }
         public Config Config { get; set; }
@@ -15,17 +17,17 @@ namespace Randomizer.SMZ3 {
         public string Guid { get; set; }
         public int Id { get; set; }
 
-        public IEnumerable<Item> Items {
-            get { return Locations.Select(l => l.Item).Where(i => i != null); }
-        }
+        public IEnumerable<Item> Items => Locations.Select(l => l.Item).Where(i => i != null);
 
         private Dictionary<string, Location> locationLookup { get; set; }
+
         private Dictionary<string, Region> regionLookup { get; set; }
 
         public Location GetLocation(string name) => locationLookup[name];
         public Region GetRegion(string name) => regionLookup[name];
 
-        public World(Config config, string player, int id, string guid) {
+        public World(Config config, string player, int id, string guid)
+        {
             Config = config;
             Player = player;
             Id = id;
@@ -78,35 +80,43 @@ namespace Randomizer.SMZ3 {
 
             regionLookup = Regions.ToDictionary(r => r.Name, r => r);
             locationLookup = Locations.ToDictionary(l => l.Name, l => l);
-            
-            foreach(var region in Regions) {
+
+            foreach (var region in Regions)
+            {
                 region.GenerateLocationLookup();
             }
         }
 
-        public bool CanEnter(string regionName, Progression items) {
+        public bool CanEnter(string regionName, Progression items)
+        {
             var region = regionLookup[regionName];
             if (region == null)
                 throw new ArgumentException($"World.CanEnter: Invalid region name {regionName}", nameof(regionName));
             return region.CanEnter(items);
         }
 
-        public bool CanAquire(Progression items, RewardType reward) {
-                return Regions.OfType<IReward>().First(x => reward == x.Reward).CanComplete(items);
+        public bool CanAquire(Progression items, Reward reward)
+        {
+            return Regions.OfType<IHasReward>().First(x => reward == x.Reward).CanComplete(items);
         }
 
-        public bool CanAquireAll(Progression items, params RewardType[] rewards) {
-            return Regions.OfType<IReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
+        public bool CanAquireAll(Progression items, params Reward[] rewards)
+        {
+            return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
         }
 
-        public void Setup(Random rnd) {
+        public void Setup(Random rnd)
+        {
             SetMedallions(rnd);
             SetRewards(rnd);
         }
 
-        private void SetMedallions(Random rnd) {
-            foreach (var region in Regions.OfType<IMedallionAccess>()) {
-                region.Medallion = rnd.Next(3) switch {
+        private void SetMedallions(Random rnd)
+        {
+            foreach (var region in Regions.OfType<INeedsMedallion>())
+            {
+                region.Medallion = rnd.Next(3) switch
+                {
                     0 => ItemType.Bombos,
                     1 => ItemType.Ether,
                     _ => ItemType.Quake,
@@ -114,16 +124,16 @@ namespace Randomizer.SMZ3 {
             }
         }
 
-        private void SetRewards(Random rnd) {
+        private void SetRewards(Random rnd)
+        {
             var rewards = new[] {
                 PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
                 CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue }.Shuffle(rnd);
-            foreach (var region in Regions.OfType<IReward>().Where(x => x.Reward == None)) {
+            foreach (var region in Regions.OfType<IHasReward>().Where(x => x.Reward == None))
+            {
                 region.Reward = rewards.First();
                 rewards.Remove(region.Reward);
             }
         }
-
     }
-
 }

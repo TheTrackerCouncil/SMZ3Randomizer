@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+
 using Randomizer.Shared.Contracts;
+
 using static Randomizer.Shared.Contracts.RandomizerOptionType;
 
-namespace Randomizer.SMZ3 {
-
-    static class RandomizerOptions {
-
+namespace Randomizer.SMZ3
+{
+    public static class RandomizerOptions
+    {
         public static List<IRandomizerOption> List { get; } = new List<IRandomizerOption> {
             CreateEnumOption<SMLogic>("Super Metroid Logic"),
             CreateEnumOption<Goal>("Goal"),
@@ -22,9 +24,11 @@ namespace Randomizer.SMZ3 {
             CreatePlayerOption(),
         };
 
-        static RandomizerOption CreateEnumOption<TEnum>(string description, string defaultOption = null) where TEnum : Enum {
+        private static RandomizerOption CreateEnumOption<TEnum>(string description, string defaultOption = null) where TEnum : Enum
+        {
             var enumType = typeof(TEnum);
-            return new RandomizerOption {
+            return new RandomizerOption
+            {
                 Key = enumType.Name.ToLower(),
                 Description = description,
                 Type = Dropdown,
@@ -33,14 +37,17 @@ namespace Randomizer.SMZ3 {
             };
         }
 
-        static TEnum GetDefaultValue<TEnum>() where TEnum : Enum {
+        private static TEnum GetDefaultValue<TEnum>() where TEnum : Enum
+        {
             var enumType = typeof(TEnum);
             var attrs = (DefaultValueAttribute[])enumType.GetCustomAttributes(typeof(DefaultValueAttribute), false);
             return (attrs?.Length ?? 0) > 0 ? (TEnum)attrs[0].Value : default;
         }
 
-        static RandomizerOption CreateBoolOption(string name, string description, bool defaultOption = false) {
-            return new RandomizerOption {
+        private static RandomizerOption CreateBoolOption(string name, string description, bool defaultOption = false)
+        {
+            return new RandomizerOption
+            {
                 Key = name.ToLower(),
                 Description = description,
                 Type = Checkbox,
@@ -49,14 +56,16 @@ namespace Randomizer.SMZ3 {
             };
         }
 
-        static RandomizerOption CreateSeedOption() =>
+        private static RandomizerOption CreateSeedOption() =>
             new RandomizerOption { Key = "seed", Description = "Seed", Type = Seed };
 
-        static RandomizerOption CreatePlayerOption() =>
+        private static RandomizerOption CreatePlayerOption() =>
             new RandomizerOption { Key = "players", Description = "Players", Type = Players, Default = "2" };
 
-        public static Config Parse(IDictionary<string, string> options) {
-            return new Config {
+        public static Config Parse(IDictionary<string, string> options)
+        {
+            return new Config
+            {
                 GameMode = ParseOption(options, GameMode.Normal),
                 Z3Logic = ParseOption(options, Z3Logic.Normal),
                 SMLogic = ParseOption(options, SMLogic.Normal),
@@ -69,24 +78,29 @@ namespace Randomizer.SMZ3 {
             };
         }
 
-        static TEnum ParseOption<TEnum>(IDictionary<string, string> options, TEnum defaultValue) where TEnum : Enum {
+        private static TEnum ParseOption<TEnum>(IDictionary<string, string> options, TEnum defaultValue) where TEnum : Enum
+        {
             var enumKey = typeof(TEnum).Name.ToLower();
-            if (options.ContainsKey(enumKey)) {
-                if (Enum.TryParse(typeof(TEnum), options[enumKey], true, out object enumValue)) {
+            if (options.ContainsKey(enumKey))
+            {
+                if (Enum.TryParse(typeof(TEnum), options[enumKey], true, out var enumValue))
+                {
                     return (TEnum)enumValue;
                 }
             }
             return defaultValue;
         }
 
-        static bool ParseOption(IDictionary<string, string> options, string option, bool defaultValue) {
-            if (options.ContainsKey(option.ToLower())) {
+        private static bool ParseOption(IDictionary<string, string> options, string option, bool defaultValue)
+        {
+            if (options.ContainsKey(option.ToLower()))
+            {
                 return bool.Parse(options[option.ToLower()]);
-            } else {
+            }
+            else
+            {
                 return defaultValue;
             }
         }
-
     }
-
 }

@@ -6,10 +6,12 @@ using static System.Linq.Enumerable;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
 using static Randomizer.SMZ3.ItemType;
-using static Randomizer.SMZ3.RewardType;
+using static Randomizer.SMZ3.Reward;
 using static Randomizer.SMZ3.DropPrize;
+using Randomizer.SMZ3.Regions;
 
-namespace Randomizer.SMZ3 {
+namespace Randomizer.SMZ3
+{
 
     static class KeycardPlaque {
         public const ushort Level1 = 0xe0;
@@ -154,7 +156,7 @@ namespace Randomizer.SMZ3 {
             var pendantsBlueRed = new[] { 2, 3 }.Shuffle(rnd);
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
-            var regions = myWorld.Regions.OfType<IReward>();
+            var regions = myWorld.Regions.OfType<IHasReward>();
             var crystalRegions = regions.Where(x => x.Reward == CrystalBlue).Concat(regions.Where(x => x.Reward == CrystalRed));
             var pendantRegions = regions.Where(x => x.Reward == PendantGreen).Concat(regions.Where(x => x.Reward == PendantNonGreen));
 
@@ -162,14 +164,14 @@ namespace Randomizer.SMZ3 {
             patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
         }
 
-        IEnumerable<(int, byte[])> RewardPatches(IEnumerable<IReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues) {
+        IEnumerable<(int, byte[])> RewardPatches(IEnumerable<IHasReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues) {
             var addresses = regions.Select(RewardAddresses);
             var values = rewards.Select(rewardValues);
             var associations = addresses.Zip(values, (a, v) => (a, v));
             return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (Snes(i), new byte[] { b })));
         }
 
-        int[] RewardAddresses(IReward region) {
+        int[] RewardAddresses(IHasReward region) {
             return region switch {
                 EasternPalace _ => new[] { 0x2A09D, 0xABEF8, 0xABEF9, 0x308052, 0x30807C, 0x1C6FE },
                 DesertPalace _ => new[] { 0x2A09E, 0xABF1C, 0xABF1D, 0x308053, 0x308078, 0x1C6FF },
@@ -317,7 +319,7 @@ namespace Randomizer.SMZ3 {
 
         void WriteDungeonMusic(bool keysanity) {
             if (!keysanity) {
-                var regions = myWorld.Regions.OfType<IReward>();
+                var regions = myWorld.Regions.OfType<IHasReward>();
                 IEnumerable<byte> music;
                 var pendantRegions = regions.Where(x => new[] { PendantGreen, PendantNonGreen }.Contains(x.Reward));
                 var crystalRegions = regions.Where(x => new[] { CrystalBlue, CrystalRed }.Contains(x.Reward));
@@ -334,13 +336,13 @@ namespace Randomizer.SMZ3 {
             while (true) yield return rnd.Next(2) == 0 ? (byte)0x11 : (byte)0x16;
         }
 
-        IEnumerable<(int, byte[])> MusicPatches(IEnumerable<IReward> regions, IEnumerable<byte> music) {
+        IEnumerable<(int, byte[])> MusicPatches(IEnumerable<IHasReward> regions, IEnumerable<byte> music) {
             var addresses = regions.Select(MusicAddresses);
             var associations = addresses.Zip(music, (a, b) => (a, b));
             return associations.SelectMany(x => x.a.Select(i => (Snes(i), new byte[] { x.b })));
         }
 
-        int[] MusicAddresses(IReward region) {
+        int[] MusicAddresses(IHasReward region) {
             return region switch {
                 EasternPalace _ => new[] { 0x2D59A },
                 DesertPalace _ => new[] { 0x2D59B, 0x2D59C, 0x2D59D, 0x2D59E },
@@ -514,7 +516,7 @@ namespace Randomizer.SMZ3 {
         }
 
         void WriteTexts(Config config) {
-            var regions = myWorld.Regions.OfType<IReward>();
+            var regions = myWorld.Regions.OfType<IHasReward>();
             var greenPendantDungeon = regions.Where(x => x.Reward == PendantGreen).Cast<Region>().First();
             var redCrystalDungeons = regions.Where(x => x.Reward == CrystalRed).Cast<Region>();
 

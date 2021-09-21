@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
 
-    class TurtleRock : Z3Region, IReward, IMedallionAccess {
+    class TurtleRock : Z3Region, IHasReward, INeedsMedallion {
 
         public override string Name => "Turtle Rock";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = Reward.None;
         public ItemType Medallion { get; set; }
 
         public TurtleRock(World world, Config config) : base(world, config) {
