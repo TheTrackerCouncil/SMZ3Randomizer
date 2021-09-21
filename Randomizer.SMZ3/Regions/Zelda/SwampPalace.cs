@@ -4,14 +4,15 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class SwampPalace : Z3Region, IHasReward {
+    public class SwampPalace : Z3Region, IHasReward
+    {
 
         public override string Name => "Swamp Palace";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public SwampPalace(World world, Config config) : base(world, config) {
+        public SwampPalace(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeySP, BigKeySP, MapSP, CompassSP };
 
             Locations = new List<Location> {
@@ -39,11 +40,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && items.Mirror && items.Flippers && World.CanEnter("Dark World South", items);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Swamp Palace - Arrghus").Available(items);
         }
 

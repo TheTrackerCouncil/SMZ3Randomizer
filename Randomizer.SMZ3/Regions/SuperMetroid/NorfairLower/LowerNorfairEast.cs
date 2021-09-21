@@ -4,15 +4,16 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
 {
-
-    class East : SMRegion, IHasReward {
+    public class LowerNorfairEast : SMRegion, IHasReward
+    {
 
         public override string Name => "Norfair Lower East";
         public override string Area => "Norfair Lower";
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
-        public East(World world, Config config) : base(world, config) {
+        public LowerNorfairEast(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 74, 0x8F8FCA, LocationType.Visible, "Missile (lower Norfair above fire flea room)", Logic switch {
                     _ => new Requirement(items => CanExit(items))
@@ -37,21 +38,25 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
             };
         }
 
-        bool CanExit(Progression items) {
-            return Logic switch {
+        private bool CanExit(Progression items)
+        {
+            return Logic switch
+            {
                 Normal => items.CardNorfairL2 /*Bubble Mountain*/ ||
                     items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump /*Spikey Acid Snakes and Croc Escape*/),
                 _ => /*Vanilla LN Escape*/
-                    (items.Morph && (items.CardNorfairL2 /*Bubble Mountain*/ || (items.Missile || items.Super || items.Wave /* Blue Gate */) && 
-                                     (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump && 
+                    (items.Morph && (items.CardNorfairL2 /*Bubble Mountain*/ || (items.Missile || items.Super || items.Wave /* Blue Gate */) &&
+                                     (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump &&
                                      (items.CanSpringBallJump() || items.Ice) /*Frog Speedway or Croc Escape*/)) ||
-                    /*Reverse Amphitheater*/
+                     /*Reverse Amphitheater*/
                      items.HasEnergyReserves(5)),
             };
         }
 
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal =>
                     items.Varia && items.CardLowerNorfairL1 && (
                         World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity ||
@@ -63,11 +68,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
                         items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster)
                     ) &&
                     (items.CanFly() || items.HiJump || items.CanSpringBallJump() || items.Ice && items.Charge) &&
-                    (items.CanPassBombPassages() || items.ScrewAttack && items.SpaceJump)                     
+                    (items.CanPassBombPassages() || items.ScrewAttack && items.SpaceJump)
             };
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Energy Tank, Ridley").Available(items);
         }
 

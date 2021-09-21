@@ -4,15 +4,16 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 {
-
-    class Inner : SMRegion, IHasReward {
+    public class MaridiaInner : SMRegion, IHasReward
+    {
 
         public override string Name => "Maridia Inner";
         public override string Area => "Maridia";
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
-        public Inner(World world, Config config) : base(world, config) {
+        public MaridiaInner(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 140, 0x8FC4AF, LocationType.Visible, "Super Missile (yellow Maridia)", Logic switch {
                     Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
@@ -88,17 +89,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             };
         }
 
-        bool CanReachAqueduct(Progression items) {
-            return Logic switch { 
-               Normal => items.CardMaridiaL1 && (items.CanFly() || items.SpeedBooster || items.Grapple) 
-                        || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World),
-               _ => items.CardMaridiaL1 && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple) 
-                        || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World)
+        private bool CanReachAqueduct(Progression items)
+        {
+            return Logic switch
+            {
+                Normal => items.CardMaridiaL1 && (items.CanFly() || items.SpeedBooster || items.Grapple)
+                         || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World),
+                _ => items.CardMaridiaL1 && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple)
+                         || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World)
             };
         }
 
-        bool CanDefeatDraygon(Progression items) {
-            return Logic switch {
+        private bool CanDefeatDraygon(Progression items)
+        {
+            return Logic switch
+            {
                 Normal => (
                     items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items) ||
                     items.CanAccessMaridiaPortal(World)
@@ -110,15 +115,19 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             };
         }
 
-        bool CanDefeatBotwoon(Progression items) {
-            return Logic switch {
+        private bool CanDefeatBotwoon(Progression items)
+        {
+            return Logic switch
+            {
                 Normal => items.SpeedBooster || items.CanAccessMaridiaPortal(World),
                 _ => items.Ice || items.SpeedBooster && items.Gravity || items.CanAccessMaridiaPortal(World)
             };
         }
 
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal => items.Gravity && (
                     World.CanEnter("Norfair Upper West", items) && items.Super && items.CanUsePowerBombs() &&
                         (items.CanFly() || items.SpeedBooster || items.Grapple) ||
@@ -131,7 +140,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             };
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Space Jump").Available(items);
         }
 

@@ -4,14 +4,15 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class ThievesTown : Z3Region, IHasReward {
+    public class ThievesTown : Z3Region, IHasReward
+    {
 
         public override string Name => "Thieves' Town";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public ThievesTown(World world, Config config) : base(world, config) {
+        public ThievesTown(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyTT, BigKeyTT, MapTT, CompassTT };
 
             Locations = new List<Location> {
@@ -32,16 +33,19 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        private bool CanBeatBoss(Progression items) {
+        private bool CanBeatBoss(Progression items)
+        {
             return items.Sword || items.Hammer ||
                 items.Somaria || items.Byrna;
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && World.CanEnter("Dark World North West", items);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Thieves' Town - Blind").Available(items);
         }
 

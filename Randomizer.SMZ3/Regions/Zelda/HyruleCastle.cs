@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
-
-    class HyruleCastle : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
+    public class HyruleCastle : Z3Region
+    {
 
         public override string Name => "Hyrule Castle";
 
-        public HyruleCastle(World world, Config config) : base(world, config) {
+        public HyruleCastle(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyHC, MapHC };
 
             var sphereOne = -10;

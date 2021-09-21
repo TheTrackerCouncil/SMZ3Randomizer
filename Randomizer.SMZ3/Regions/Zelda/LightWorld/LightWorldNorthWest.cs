@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.Reward;
 
-namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
-
-    class NorthWest : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
+{
+    public class LightWorldNorthWest : Z3Region
+    {
 
         public override string Name => "Light World North West";
         public override string Area => "Light World";
 
-        public NorthWest(World world, Config config) : base(world, config) {
+        public LightWorldNorthWest(World world, Config config) : base(world, config)
+        {
             var sphereOne = -14;
             Locations = new List<Location> {
                 new Location(this, 256+14, 0x589B0, LocationType.Pedestal, "Master Sword Pedestal",

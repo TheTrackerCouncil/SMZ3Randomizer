@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
-
-    class West : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
+{
+    public class LightWorldDeathMountainWest : Z3Region
+    {
 
         public override string Name => "Light World Death Mountain West";
         public override string Area => "Death Mountain";
 
-        public West(World world, Config config) : base(world, config) {
+        public LightWorldDeathMountainWest(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 256+0, 0x308016, LocationType.Ether, "Ether Tablet",
                     items => items.Book && items.MasterSword && (items.Mirror || items.Hammer && items.Hookshot)),
@@ -19,7 +21,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.Flute || items.CanLiftLight() && items.Lamp || items.CanAccessDeathMountainPortal();
         }
 

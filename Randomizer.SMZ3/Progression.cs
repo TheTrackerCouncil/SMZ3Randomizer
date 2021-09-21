@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 
 using static Randomizer.SMZ3.ItemType;
-using static Randomizer.SMZ3.Reward;
-using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3
 {
@@ -51,7 +45,7 @@ namespace Randomizer.SMZ3
         public bool CardWreckedShipBoss { get; private set; }
         public bool CardLowerNorfairL1 { get; private set; }
         public bool CardLowerNorfairBoss { get; private set; }
-        public bool CanBlockLasers { get { return shield >= 3; } }
+        public bool CanBlockLasers => shield >= 3;
         public bool Sword { get; private set; }
         public bool MasterSword { get; private set; }
         public bool Bow { get; private set; }
@@ -111,7 +105,7 @@ namespace Randomizer.SMZ3
         {
             foreach (var item in items)
             {
-                bool done = item.Type switch
+                var done = item.Type switch
                 {
                     ItemType.BigKeyEP => BigKeyEP = true,
                     ItemType.BigKeyDP => BigKeyDP = true,

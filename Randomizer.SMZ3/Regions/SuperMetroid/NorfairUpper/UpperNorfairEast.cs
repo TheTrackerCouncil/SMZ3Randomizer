@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
+{
 
-    class East : SMRegion {
+    public class UpperNorfairEast : SMRegion
+    {
 
         public override string Name => "Norfair Upper East";
         public override string Area => "Norfair Upper";
 
-        public East(World world, Config config) : base(world, config) {
+        public UpperNorfairEast(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 61, 0x8F8C3E, LocationType.Chozo, "Reserve Tank, Norfair", Logic switch {
                     Normal => items => items.CardNorfairL2 && items.Morph && (
@@ -79,8 +83,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
 
         // Todo: Super is not actually needed for Frog Speedway, but changing this will affect locations
         // Todo: Ice Beam -> Croc Speedway is not considered
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()

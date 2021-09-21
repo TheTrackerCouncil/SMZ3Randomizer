@@ -4,15 +4,16 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class PalaceOfDarkness : Z3Region, IHasReward {
+    public class PalaceOfDarkness : Z3Region, IHasReward
+    {
 
         public override string Name => "Palace of Darkness";
         public override string Area => "Dark Palace";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public PalaceOfDarkness(World world, Config config) : base(world, config) {
+        public PalaceOfDarkness(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyPD, BigKeyPD, MapPD, CompassPD };
 
             Locations = new List<Location> {
@@ -51,11 +52,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && World.CanEnter("Dark World North East", items);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Palace of Darkness - Helmasaur King").Available(items);
         }
 

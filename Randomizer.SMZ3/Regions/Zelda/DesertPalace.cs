@@ -4,14 +4,15 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class DesertPalace : Z3Region, IHasReward {
+    public class DesertPalace : Z3Region, IHasReward
+    {
 
         public override string Name => "Desert Palace";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public DesertPalace(World world, Config config) : base(world, config) {
+        public DesertPalace(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyDP, BigKeyDP, MapDP, CompassDP };
 
             Locations = new List<Location> {
@@ -32,19 +33,22 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        private bool CanBeatBoss(Progression items) {
+        private bool CanBeatBoss(Progression items)
+        {
             return items.Sword || items.Hammer || items.Bow ||
                 items.Firerod || items.Icerod ||
                 items.Byrna || items.Somaria;
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.Book ||
                 items.Mirror && items.CanLiftHeavy() && items.Flute ||
                 items.CanAccessMiseryMirePortal(Config) && items.Mirror;
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Desert Palace - Lanmolas").Available(items);
         }
 

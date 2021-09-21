@@ -4,14 +4,15 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class TowerOfHera : Z3Region, IHasReward {
+    public class TowerOfHera : Z3Region, IHasReward
+    {
 
         public override string Name => "Tower of Hera";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public TowerOfHera(World world, Config config) : base(world, config) {
+        public TowerOfHera(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyTH, BigKeyTH, MapTH, CompassTH };
 
             Locations = new List<Location> {
@@ -29,15 +30,18 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        private bool CanBeatBoss(Progression items) {
+        private bool CanBeatBoss(Progression items)
+        {
             return items.Sword || items.Hammer;
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return (items.Mirror || items.Hookshot && items.Hammer) && World.CanEnter("Light World Death Mountain West", items);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Tower of Hera - Moldorm").Available(items);
         }
 

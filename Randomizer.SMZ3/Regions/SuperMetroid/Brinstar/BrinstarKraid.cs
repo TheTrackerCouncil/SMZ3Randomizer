@@ -2,15 +2,16 @@
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {
-
-    class Kraid : SMRegion, IHasReward {
+    public class BrinstarKraid : SMRegion, IHasReward
+    {
 
         public override string Name => "Brinstar Kraid";
         public override string Area => "Brinstar";
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
-        public Kraid(World world, Config config) : base(world, config) {
+        public BrinstarKraid(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 43, 0x8F899C, LocationType.Hidden, "Energy Tank, Kraid",
                     items => items.CardBrinstarBoss),
@@ -22,12 +23,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return (items.CanDestroyBombWalls() || items.SpeedBooster || items.CanAccessNorfairUpperPortal()) &&
                 items.Super && items.CanPassBombPassages();
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Varia Suit").Available(items);
         }
 

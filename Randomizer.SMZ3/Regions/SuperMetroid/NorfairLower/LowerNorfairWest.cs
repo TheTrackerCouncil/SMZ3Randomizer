@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
-
-    class West : SMRegion {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
+{
+    public class LowerNorfairWest : SMRegion
+    {
 
         public override string Name => "Norfair Lower West";
         public override string Area => "Norfair Lower";
 
-        public West(World world, Config config) : base(world, config) {
+        public LowerNorfairWest(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 70, 0x8F8E6E, LocationType.Visible, "Missile (Gold Torizo)", Logic switch {
                     Normal => items => items.CanUsePowerBombs() && items.SpaceJump && items.Super,
@@ -32,7 +35,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
                         items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump) /*Spikey Acid Snakes and Croc Escape*/ ||
                         /*Exit via GT fight and Portal*/
                         (items.CanUsePowerBombs() && items.SpaceJump && (items.Super || items.Charge))),
-                    _ => new Requirement(items => 
+                    _ => new Requirement(items =>
                          items.Morph && items.Varia && items.Super && ((items.CanFly() || items.CanSpringBallJump() && items.CanPassBombPassages() ||
                                          (items.CardNorfairL2 && items.CanUsePowerBombs() && (items.HiJump || items.Gravity) || items.SpeedBooster)
                                            && (items.HiJump && items.CanUsePowerBombs() || items.Charge && items.Ice)) &&
@@ -46,8 +49,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower {
         }
 
         // Todo: account for Croc Speedway once Norfair Upper East also do so, otherwise it would be inconsistent to do so here
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal =>
                     items.Varia && (
                         World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity && (

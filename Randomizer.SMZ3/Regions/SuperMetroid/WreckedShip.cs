@@ -5,14 +5,16 @@ using static Randomizer.SMZ3.SMLogic;
 namespace Randomizer.SMZ3.Regions.SuperMetroid
 {
 
-    class WreckedShip : SMRegion, IHasReward {
+    public class WreckedShip : SMRegion, IHasReward
+    {
 
         public override string Name => "Wrecked Ship";
         public override string Area => "Wrecked Ship";
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
-        public WreckedShip(World world, Config config) : base(world, config) {
+        public WreckedShip(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 128, 0x8FC265, LocationType.Visible, "Missile (Wrecked Ship middle)", Logic switch {
                     _ => new Requirement(items => items.CanPassBombPassages())
@@ -48,12 +50,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
             };
         }
 
-        bool CanUnlockShip(Progression items) {
+        private bool CanUnlockShip(Progression items)
+        {
             return items.CardWreckedShipBoss && items.CanPassBombPassages();
         }
 
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal =>
                     items.Super && (
                         /* Over the Moat */
@@ -80,7 +85,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                             items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple && items.CardMaridiaL1
                         ) ||
                         /* From Maridia portal -> Forgotten Highway */
-                        items.CanAccessMaridiaPortal(World) && ( 
+                        items.CanAccessMaridiaPortal(World) && (
                             items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2 ||
                             items.Gravity && (
                                 items.CanDestroyBombWalls() && items.CardMaridiaL2 ||
@@ -91,7 +96,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
             };
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return CanEnter(items) && CanUnlockShip(items);
         }
 

@@ -99,7 +99,7 @@ namespace Randomizer.App
 
         public string SaveRomToFile()
         {
-            var randomizer = new SMZ3.Randomizer();
+            var randomizer = new SMZ3.Generation.Randomizer();
             var rom = GenerateRom(randomizer, out var seed);
 
             var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -340,7 +340,7 @@ namespace Randomizer.App
         private void GenerateStatsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var options = Options.ToDictionary();
-            var randomizer = new SMZ3.Randomizer();
+            var randomizer = new SMZ3.Generation.Randomizer();
 
             const int numberOfSeeds = 10000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");

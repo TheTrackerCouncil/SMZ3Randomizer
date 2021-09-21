@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
-
-    class East : SMRegion {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
+{
+    public class CrateriaEast : SMRegion
+    {
 
         public override string Name => "Crateria East";
         public override string Area => "Crateria";
 
-        public East(World world, Config config) : base(world, config) {
+        public CrateriaEast(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 1, 0x8F81E8, LocationType.Visible, "Missile (outside Wrecked Ship bottom)", Logic switch {
                     Normal => items => items.Morph && (
@@ -29,8 +32,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
             };
         }
 
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal =>
                     /* Ship -> Moat */
                     (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super ||
@@ -62,7 +67,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria {
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
                         items.Gravity && World.GetLocation("Space Jump").Available(items)) ||
                     /*Through Maridia from Pipe*/
-                    items.CanUsePowerBombs() && items.Super && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) 
+                    items.CanUsePowerBombs() && items.Super && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump())
                                                                 && items.Grapple && items.CardMaridiaL1)
             };
         }

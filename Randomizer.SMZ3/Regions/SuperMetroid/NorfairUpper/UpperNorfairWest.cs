@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
+{
 
-    class West : SMRegion {
+    public class UpperNorfairWest : SMRegion
+    {
 
         public override string Name => "Norfair Upper West";
         public override string Area => "Norfair Upper";
 
-        public West(World world, Config config) : base(world, config) {
+        public UpperNorfairWest(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 49, 0x8F8AE4, LocationType.Hidden, "Missile (lava room)", Logic switch {
                     Normal => items => items.Varia && (
@@ -47,7 +51,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                 items.CanAccessNorfairUpperPortal();
         }

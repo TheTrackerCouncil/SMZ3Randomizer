@@ -4,14 +4,15 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class SkullWoods : Z3Region, IHasReward {
+    public class SkullWoods : Z3Region, IHasReward
+    {
 
         public override string Name => "Skull Woods";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public SkullWoods(World world, Config config) : base(world, config) {
+        public SkullWoods(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeySW, BigKeySW, MapSW, CompassSW };
 
             Locations = new List<Location> {
@@ -31,11 +32,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && World.CanEnter("Dark World North West", items);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Skull Woods - Mothula").Available(items);
         }
 

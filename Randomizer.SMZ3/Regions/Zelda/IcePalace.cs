@@ -5,14 +5,15 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class IcePalace : Z3Region, IHasReward {
+    public class IcePalace : Z3Region, IHasReward
+    {
 
         public override string Name => "Ice Palace";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public IcePalace(World world, Config config) : base(world, config) {
+        public IcePalace(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyIP, BigKeyIP, MapIP, CompassIP };
 
             Locations = new List<Location> {
@@ -46,15 +47,18 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        bool CanNotWasteKeysBeforeAccessible(Progression items, IList<Location> locations) {
+        private bool CanNotWasteKeysBeforeAccessible(Progression items, IList<Location> locations)
+        {
             return !items.BigKeyIP || locations.Any(l => l.ItemIs(BigKeyIP, World));
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && items.Flippers && items.CanLiftHeavy() && items.CanMeltFreezors();
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Ice Palace - Kholdstare").Available(items);
         }
 

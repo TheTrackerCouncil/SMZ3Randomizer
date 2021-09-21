@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
-
-    class Green : SMRegion {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
+{
+    public class BrinstarGreen : SMRegion
+    {
 
         public override string Name => "Brinstar Green";
         public override string Area => "Brinstar";
 
-        public Green(World world, Config config) : base(world, config) {
+        public BrinstarGreen(World world, Config config) : base(world, config)
+        {
             Weight = -6;
 
             Locations = new List<Location> {
@@ -43,7 +46,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.CanDestroyBombWalls() || items.SpeedBooster;
         }
 

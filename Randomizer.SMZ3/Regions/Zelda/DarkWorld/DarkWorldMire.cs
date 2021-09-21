@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
-
-    class Mire : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
+{
+    public class DarkWorldMire : Z3Region
+    {
 
         public override string Name => "Dark World Mire";
         public override string Area => "Dark World";
 
-        public Mire(World world, Config config) : base(world, config) {
+        public DarkWorldMire(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 256+89, 0x1EA73, LocationType.Regular, "Mire Shed - Left",
                     items => items.MoonPearl),
@@ -16,7 +18,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.Flute && items.CanLiftHeavy() || items.CanAccessMiseryMirePortal(Config);
         }
 

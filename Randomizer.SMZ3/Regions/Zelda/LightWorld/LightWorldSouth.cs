@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
-
-    class South : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
+{
+    public class LightWorldSouth : Z3Region
+    {
 
         public override string Name => "Light World South";
         public override string Area => "Light World";
 
-        public South(World world, Config config) : base(world, config) {
+        public LightWorldSouth(World world, Config config) : base(world, config)
+        {
             var sphereOne = -10;
             Locations = new List<Location> {
                 new Location(this, 256+45, 0x308142, LocationType.Regular, "Maze Race").Weighted(sphereOne),

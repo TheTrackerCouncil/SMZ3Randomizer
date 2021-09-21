@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
-
-    class Outer : SMRegion {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
+{
+    public class MaridiaOuter : SMRegion
+    {
 
         public override string Name => "Maridia Outer";
         public override string Area => "Maridia";
 
-        public Outer(World world, Config config) : base(world, config) {
+        public MaridiaOuter(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 136, 0x8FC437, LocationType.Visible, "Missile (green Maridia shinespark)", Logic switch {
                     Normal => items => items.SpeedBooster,
@@ -28,8 +31,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia {
             };
         }
 
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal => items.Gravity && (
                         World.CanEnter("Norfair Upper West", items) && items.CanUsePowerBombs() ||
                         items.CanAccessMaridiaPortal(World) && items.CardMaridiaL1 && items.CardMaridiaL2 && (items.CanPassBombPassages() || items.ScrewAttack)

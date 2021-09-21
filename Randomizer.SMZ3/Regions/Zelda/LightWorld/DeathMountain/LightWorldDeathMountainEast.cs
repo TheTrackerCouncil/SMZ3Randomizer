@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
-
-    class East : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
+{
+    public class LightWorldDeathMountainEast : Z3Region
+    {
 
         public override string Name => "Light World Death Mountain East";
         public override string Area => "Death Mountain";
 
-        public East(World world, Config config) : base(world, config) {
+        public LightWorldDeathMountainEast(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 256+4, 0x308141, LocationType.Regular, "Floating Island",
                     items => items.Mirror && items.MoonPearl && items.CanLiftHeavy()),
@@ -24,7 +26,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain {
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return World.CanEnter("Light World Death Mountain West", items) && (
                 items.Hammer && items.Mirror ||
                 items.Hookshot

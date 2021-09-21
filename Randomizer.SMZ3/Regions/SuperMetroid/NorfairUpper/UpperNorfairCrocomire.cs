@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
-
-    class Crocomire : SMRegion {
+namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
+{
+    public class UpperNorfairCrocomire : SMRegion
+    {
 
         public override string Name => "Norfair Upper Crocomire";
         public override string Area => "Norfair Upper";
 
-        public Crocomire(World world, Config config) : base(world, config) {
+        public UpperNorfairCrocomire(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 52, 0x8F8BA4, LocationType.Visible, "Energy Tank, Crocomire", Logic switch {
                     Normal => items => CanAccessCrocomire(items) && (items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple),
@@ -38,12 +41,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
             };
         }
 
-        bool CanAccessCrocomire(Progression items) {
+        private bool CanAccessCrocomire(Progression items)
+        {
             return Config.Keysanity ? items.CardNorfairBoss : items.Super;
         }
 
-        public override bool CanEnter(Progression items) {
-            return Logic switch {
+        public override bool CanEnter(Progression items)
+        {
+            return Logic switch
+            {
                 Normal => (
                         (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
@@ -59,7 +65,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                             (items.CanPassBombPassages() || items.Gravity && items.Morph) && items.Wave
                         ||
                         /* Reverse Lava Dive */
-                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Super && 
+                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Super &&
                         items.Gravity && items.Wave && (items.CardNorfairL2 || items.Morph)
                       ),
                 _ => (
@@ -79,7 +85,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper {
                             (items.Missile || items.Super || items.Wave) /* Blue Gate */
                         ) ||
                         /* Reverse Lava Dive */
-                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Varia && items.Super && 
+                        items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Varia && items.Super &&
                         items.HasEnergyReserves(2) && (items.CardNorfairL2 || items.Morph)
             };
         }

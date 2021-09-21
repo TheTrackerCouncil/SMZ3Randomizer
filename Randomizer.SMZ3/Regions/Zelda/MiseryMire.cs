@@ -4,15 +4,16 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class MiseryMire : Z3Region, IHasReward, INeedsMedallion {
+    public class MiseryMire : Z3Region, IHasReward, INeedsMedallion
+    {
 
         public override string Name => "Misery Mire";
 
         public Reward Reward { get; set; } = Reward.None;
         public ItemType Medallion { get; set; }
 
-        public MiseryMire(World world, Config config) : base(world, config) {
+        public MiseryMire(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyMM, BigKeyMM, MapMM, CompassMM };
 
             Locations = new List<Location> {
@@ -36,17 +37,20 @@ namespace Randomizer.SMZ3.Regions.Zelda
         }
 
         // Need "CanKillManyEnemies" if implementing swordless
-        public override bool CanEnter(Progression items) {
-            return Medallion switch {
-                    Bombos => items.Bombos,
-                    Ether => items.Ether,
-                    _ => items.Quake
-                } && items.Sword &&
+        public override bool CanEnter(Progression items)
+        {
+            return Medallion switch
+            {
+                Bombos => items.Bombos,
+                Ether => items.Ether,
+                _ => items.Quake
+            } && items.Sword &&
                 items.MoonPearl && (items.Boots || items.Hookshot) &&
                 World.CanEnter("Dark World Mire", items);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Misery Mire - Vitreous").Available(items);
         }
 

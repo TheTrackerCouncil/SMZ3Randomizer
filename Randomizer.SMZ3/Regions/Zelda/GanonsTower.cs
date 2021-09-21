@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Reward;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
-
-    class GanonsTower : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
+    public class GanonsTower : Z3Region
+    {
 
         public override string Name => "Ganon's Tower";
 
-        public GanonsTower(World world, Config config) : base(world, config) {
+        public GanonsTower(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyGT, BigKeyGT, MapGT, CompassGT };
 
             Locations = new List<Location> {
@@ -113,45 +116,56 @@ namespace Randomizer.SMZ3.Regions.Zelda {
             };
         }
 
-        private bool LeftSide(Progression items, IList<Location> locations) {
+        private bool LeftSide(Progression items, IList<Location> locations)
+        {
             return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l.ItemIs(BigKeyGT, World)) ? 3 : 4);
         }
 
-        private bool RightSide(Progression items, IList<Location> locations) {
+        private bool RightSide(Progression items, IList<Location> locations)
+        {
             return items.Somaria && items.Firerod && items.KeyGT >= (locations.Any(l => l.ItemIs(BigKeyGT, World)) ? 3 : 4);
         }
 
-        private bool BigKeyRoom(Progression items) {
-            return items.KeyGT >= 3 && CanBeatArmos(items) 
+        private bool BigKeyRoom(Progression items)
+        {
+            return items.KeyGT >= 3 && CanBeatArmos(items)
                 && (items.Hammer && items.Hookshot || items.Firerod && items.Somaria);
         }
 
-        private bool TowerAscend(Progression items) {
+        private bool TowerAscend(Progression items)
+        {
             return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && items.CanLightTorches();
-        }   
-            
-        private bool CanBeatArmos(Progression items) {
+        }
+
+        private bool CanBeatArmos(Progression items)
+        {
             return items.Sword || items.Hammer || items.Bow ||
                 items.CanExtendMagic(2) && (items.Somaria || items.Byrna) ||
                 items.CanExtendMagic(4) && (items.Firerod || items.Icerod);
         }
 
-        private bool CanBeatMoldorm(Progression items) {
+        private bool CanBeatMoldorm(Progression items)
+        {
             return items.Sword || items.Hammer;
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && World.CanEnter("Dark World Death Mountain East", items) &&
                 World.CanAquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
         }
 
-        public override bool CanFill(Item item, Progression items) {
-            if (Config.MultiWorld) {
-                if (item.World != World || item.Progression) {
+        public override bool CanFill(Item item, Progression items)
+        {
+            if (Config.MultiWorld)
+            {
+                if (item.World != World || item.Progression)
+                {
                     return false;
                 }
 
-                if (Config.Keysanity && !((item.Type == BigKeyGT || item.Type == KeyGT) && item.World == World) && (item.IsKey || item.IsBigKey || item.IsKeycard)) {
+                if (Config.Keysanity && !((item.Type == BigKeyGT || item.Type == KeyGT) && item.World == World) && (item.IsKey || item.IsBigKey || item.IsKeycard))
+                {
                     return false;
                 }
             }

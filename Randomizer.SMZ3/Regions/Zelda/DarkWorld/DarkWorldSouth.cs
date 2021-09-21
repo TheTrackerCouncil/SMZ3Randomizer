@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.Reward;
 
-namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
-
-    class South : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
+{
+    public class DarkWorldSouth : Z3Region
+    {
 
         public override string Name => "Dark World South";
         public override string Area => "Dark World";
 
-        public South(World world, Config config) : base(world, config) {
+        public DarkWorldSouth(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 256+82, 0x308148, LocationType.Regular, "Digging Game"),
                 new Location(this, 256+83, 0x6B0C7, LocationType.Regular, "Stumpy"),
@@ -20,7 +23,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && ((
                     World.CanAquire(items, Agahnim) ||
                     items.CanAccessDarkWorldPortal(Config) && items.Flippers

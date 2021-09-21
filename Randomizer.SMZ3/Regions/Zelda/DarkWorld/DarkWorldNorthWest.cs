@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.Reward;
 
-namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
-
-    class NorthWest : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
+{
+    public class DarkWorldNorthWest : Z3Region
+    {
 
         public override string Name => "Dark World North West";
         public override string Area => "Dark World";
 
-        public NorthWest(World world, Config config) : base(world, config) {
+        public DarkWorldNorthWest(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 256+71, 0x308146, LocationType.Regular, "Bumper Cave",
                     items => items.CanLiftLight() && items.Cape),
@@ -24,7 +27,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld {
             };
         }
 
-        public override bool CanEnter(Progression items) {
+        public override bool CanEnter(Progression items)
+        {
             return items.MoonPearl && ((
                     World.CanAquire(items, Agahnim) ||
                     items.CanAccessDarkWorldPortal(Config) && items.Flippers

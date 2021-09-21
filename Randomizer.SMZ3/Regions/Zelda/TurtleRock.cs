@@ -4,15 +4,16 @@ using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-
-    class TurtleRock : Z3Region, IHasReward, INeedsMedallion {
+    public class TurtleRock : Z3Region, IHasReward, INeedsMedallion
+    {
 
         public override string Name => "Turtle Rock";
 
         public Reward Reward { get; set; } = Reward.None;
         public ItemType Medallion { get; set; }
 
-        public TurtleRock(World world, Config config) : base(world, config) {
+        public TurtleRock(World world, Config config) : base(world, config)
+        {
             RegionItems = new[] { KeyTR, BigKeyTR, MapTR, CompassTR };
 
             Locations = new List<Location> {
@@ -42,25 +43,30 @@ namespace Randomizer.SMZ3.Regions.Zelda
             };
         }
 
-        bool LaserBridge(Progression items) {
+        private bool LaserBridge(Progression items)
+        {
             return items.BigKeyTR && items.KeyTR >= 3 && items.Lamp && (items.Cape || items.Byrna || items.CanBlockLasers);
         }
 
-        bool CanBeatBoss(Progression items) {
+        private bool CanBeatBoss(Progression items)
+        {
             return items.Firerod && items.Icerod;
         }
 
-        public override bool CanEnter(Progression items) {
-            return Medallion switch {
-                    Bombos => items.Bombos,
-                    Ether => items.Ether,
-                    _ => items.Quake
-                } && items.Sword &&
+        public override bool CanEnter(Progression items)
+        {
+            return Medallion switch
+            {
+                Bombos => items.Bombos,
+                Ether => items.Ether,
+                _ => items.Quake
+            } && items.Sword &&
                 items.MoonPearl && items.CanLiftHeavy() && items.Hammer && items.Somaria &&
                 World.CanEnter("Light World Death Mountain East", items);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return GetLocation("Turtle Rock - Trinexx").Available(items);
         }
 

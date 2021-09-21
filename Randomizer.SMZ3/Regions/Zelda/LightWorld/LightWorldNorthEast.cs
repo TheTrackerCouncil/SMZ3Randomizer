@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.Reward;
 
-namespace Randomizer.SMZ3.Regions.Zelda.LightWorld {
-
-    class NorthEast : Z3Region {
+namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
+{
+    public class LightWorldNorthEast : Z3Region
+    {
 
         public override string Name => "Light World North East";
         public override string Area => "Light World";
 
-        public NorthEast(World world, Config config) : base(world, config) {
+        public LightWorldNorthEast(World world, Config config) : base(world, config)
+        {
             var sphereOne = -10;
             Locations = new List<Location> {
                 new Location(this, 256+36, 0x1DE1C3, LocationType.Regular, "King Zora",

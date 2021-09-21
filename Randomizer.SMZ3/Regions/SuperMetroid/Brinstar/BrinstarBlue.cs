@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar {
-
-    class Blue : SMRegion {
-
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
+{
+    public class BrinstarBlue : SMRegion
+    {
         public override string Name => "Brinstar Blue";
         public override string Area => "Brinstar";
 
-        public Blue(World world, Config config) : base(world, config) {
+        public BrinstarBlue(World world, Config config) : base(world, config)
+        {
             Locations = new List<Location> {
                 new Location(this, 26, 0x8F86EC, LocationType.Visible, "Morphing Ball"),
                 new Location(this, 27, 0x8F874C, LocationType.Visible, "Power Bomb (blue Brinstar)", Logic switch {

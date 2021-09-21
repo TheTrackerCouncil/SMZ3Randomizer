@@ -173,7 +173,7 @@ namespace Randomizer.CLI.Verbs {
             });
         }
 
-        public override IRandomizer NewRandomizer() => new SMZ3.Randomizer();
+        public override IRandomizer NewRandomizer() => new SMZ3.Generation.Randomizer();
         public override byte[] BaseRom() => (byte[]) smz3Rom.Value.Clone();
 
     }
