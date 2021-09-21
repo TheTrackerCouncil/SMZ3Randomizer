@@ -151,7 +151,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override bool CanEnter(Progression items)
         {
-            return items.MoonPearl && World.CanEnter("Dark World Death Mountain East", items) &&
+            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items) &&
                 World.CanAquireAll(items, new[] { CrystalBlue, CrystalRed, GoldenFourBoss });
         }
 

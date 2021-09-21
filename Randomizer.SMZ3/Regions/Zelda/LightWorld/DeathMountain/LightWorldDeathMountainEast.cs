@@ -22,13 +22,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
                 new Location(this, 256+11, 0x1EB30, LocationType.Regular, "Paradox Cave Lower - Right"),
                 new Location(this, 256+12, 0x1EB33, LocationType.Regular, "Paradox Cave Lower - Far Right"),
                 new Location(this, 256+13, 0x1E9C5, LocationType.Regular, "Mimic Cave",
-                    items => items.Mirror && items.KeyTR >= 2 && World.CanEnter("Turtle Rock", items)),
+                    items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items)),
             };
         }
 
         public override bool CanEnter(Progression items)
         {
-            return World.CanEnter("Light World Death Mountain West", items) && (
+            return World.LightWorldDeathMountainWest.CanEnter(items) && (
                 items.Hammer && items.Mirror ||
                 items.Hookshot
             );

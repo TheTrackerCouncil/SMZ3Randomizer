@@ -23,11 +23,11 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 new Location(this, 256+18, 0x1EB3F, LocationType.Regular, "Pegasus Rocks",
                     items => items.Boots),
                 new Location(this, 256+19, 0x308004, LocationType.Regular, "Graveyard Ledge",
-                    items => items.Mirror && items.MoonPearl && World.CanEnter("Dark World North West", items)),
+                    items => items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items)),
                 new Location(this, 256+20, 0x1E97A, LocationType.Regular, "King's Tomb",
                     items => items.Boots && (
                         items.CanLiftHeavy() ||
-                        items.Mirror && items.MoonPearl && World.CanEnter("Dark World North West", items))),
+                        items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items))),
                 new Location(this, 256+21, 0x1EA8E, LocationType.Regular, "Kakariko Well - Top").Weighted(sphereOne),
                 new Location(this, 256+22, 0x1EA91, LocationType.Regular, "Kakariko Well - Left").Weighted(sphereOne),
                 new Location(this, 256+23, 0x1EA94, LocationType.Regular, "Kakariko Well - Middle").Weighted(sphereOne),

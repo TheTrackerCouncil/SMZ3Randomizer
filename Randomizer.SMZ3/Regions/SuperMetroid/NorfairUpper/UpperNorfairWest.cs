@@ -17,14 +17,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 new Location(this, 49, 0x8F8AE4, LocationType.Hidden, "Missile (lava room)", Logic switch {
                     Normal => items => items.Varia && (
                             items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster) ||
-                            World.CanEnter("Norfair Upper East", items) && items.CardNorfairL2
+                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
                         ) && items.Morph,
                     _ => new Requirement(items => items.CanHellRun() && (
                             items.CanOpenRedDoors() && (
                                 items.CanFly() || items.HiJump || items.SpeedBooster ||
                                 items.CanSpringBallJump() || items.Varia && items.Ice
                             ) ||
-                            World.CanEnter("Norfair Upper East", items) && items.CardNorfairL2
+                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
                         ) && items.Morph),
                 }),
                 new Location(this, 50, 0x8F8B24, LocationType.Chozo, "Ice Beam", Logic switch {

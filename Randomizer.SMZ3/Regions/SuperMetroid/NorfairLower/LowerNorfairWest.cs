@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
             {
                 Normal =>
                     items.Varia && (
-                        World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity && (
+                        World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity && (
                             /* Trivial case, Bubble Mountain access */
                             items.CardNorfairL2 ||
                             /* Frog Speedway -> UN Farming Room gate */
@@ -64,7 +64,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
                         items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls()
                     ),
                 _ =>
-                    World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.Varia && (items.HiJump || items.Gravity) && (
+                    World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && items.Varia && (items.HiJump || items.Gravity) && (
                         /* Trivial case, Bubble Mountain access */
                         items.CardNorfairL2 ||
                         /* Frog Speedway -> UN Farming Room gate */

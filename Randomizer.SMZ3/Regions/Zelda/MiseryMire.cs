@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 _ => items.Quake
             } && items.Sword &&
                 items.MoonPearl && (items.Boots || items.Hookshot) &&
-                World.CanEnter("Dark World Mire", items);
+                World.DarkWorldMire.CanEnter(items);
         }
 
         public bool CanComplete(Progression items)

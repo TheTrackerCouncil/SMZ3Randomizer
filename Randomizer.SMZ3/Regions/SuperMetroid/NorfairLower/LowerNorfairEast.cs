@@ -59,12 +59,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
             {
                 Normal =>
                     items.Varia && items.CardLowerNorfairL1 && (
-                        World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity ||
+                        World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity ||
                         items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && items.CanUsePowerBombs() && items.CanFly()
                     ),
                 _ =>
                     items.Varia && items.CardLowerNorfairL1 && (
-                        World.CanEnter("Norfair Upper East", items) && items.CanUsePowerBombs() && (items.HiJump || items.Gravity) ||
+                        World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && (items.HiJump || items.Gravity) ||
                         items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster)
                     ) &&
                     (items.CanFly() || items.HiJump || items.CanSpringBallJump() || items.Ice && items.Charge) &&

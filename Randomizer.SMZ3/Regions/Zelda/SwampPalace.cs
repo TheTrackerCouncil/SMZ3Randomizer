@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override bool CanEnter(Progression items)
         {
-            return items.MoonPearl && items.Mirror && items.Flippers && World.CanEnter("Dark World South", items);
+            return items.MoonPearl && items.Mirror && items.Flippers && World.DarkWorldSouth.CanEnter(items);
         }
 
         public bool CanComplete(Progression items)

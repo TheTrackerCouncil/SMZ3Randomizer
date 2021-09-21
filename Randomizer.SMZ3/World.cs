@@ -35,6 +35,8 @@ namespace Randomizer.SMZ3
         private Dictionary<string, Region> regionLookup { get; set; }
 
         public Location GetLocation(string name) => locationLookup[name];
+
+        [Obsolete("Use the relevant property instead of accessing regions by name.")]
         public Region GetRegion(string name) => regionLookup[name];
 
         public CastleTower CastleTower { get; }
@@ -89,7 +91,7 @@ namespace Randomizer.SMZ3
             EasternPalace = new(this, Config);
             DesertPalace = new(this, Config);
             TowerOfHera = new(this, Config);
-            PalaceOfDarkness = new (this, Config);
+            PalaceOfDarkness = new(this, Config);
             SwampPalace = new(this, Config);
             SkullWoods = new(this, Config);
             ThievesTown = new(this, Config);
@@ -97,10 +99,10 @@ namespace Randomizer.SMZ3
             MiseryMire = new(this, Config);
             TurtleRock = new(this, Config);
             GanonsTower = new(this, Config);
-            LightWorldDeathMountainWest = new (this, Config);
-            LightWorldDeathMountainEast = new (this, Config);
-            LightWorldNorthWest = new (this, Config);
-            LightWorldNorthEast = new (this, Config);
+            LightWorldDeathMountainWest = new(this, Config);
+            LightWorldDeathMountainEast = new(this, Config);
+            LightWorldNorthWest = new(this, Config);
+            LightWorldNorthEast = new(this, Config);
             LightWorldSouth = new(this, Config);
             HyruleCastle = new(this, Config);
             DarkWorldDeathMountainWest = new(this, Config);
@@ -138,6 +140,7 @@ namespace Randomizer.SMZ3
             }
         }
 
+        [Obsolete("Use the relevant property instead of accessing regions by name.")]
         public bool CanEnter(string regionName, Progression items)
         {
             var region = regionLookup[regionName];

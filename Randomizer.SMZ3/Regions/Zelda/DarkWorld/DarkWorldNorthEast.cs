@@ -17,10 +17,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                     items => items.MoonPearl && items.CanLiftLight()),
                 new Location(this, 256+79, 0x308147, LocationType.Regular, "Pyramid"),
                 new Location(this, 256+80, 0x1E980, LocationType.Regular, "Pyramid Fairy - Left",
-                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
+                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
                         (items.Hammer || items.Mirror && World.CanAquire(items, Agahnim))),
                 new Location(this, 256+81, 0x1E983, LocationType.Regular, "Pyramid Fairy - Right",
-                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.CanEnter("Dark World South", items) &&
+                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
                         (items.Hammer || items.Mirror && World.CanAquire(items, Agahnim)))
             };
         }
