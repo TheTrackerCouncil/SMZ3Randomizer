@@ -9,7 +9,7 @@ using static Randomizer.Shared.Contracts.RandomizerOptionType;
 
 namespace Randomizer.SMZ3
 {
-    public static class RandomizerOptions
+    internal static class RandomizerOptions
     {
         public static List<IRandomizerOption> List { get; } = new List<IRandomizerOption> {
             CreateEnumOption<SMLogic>("Super Metroid Logic"),

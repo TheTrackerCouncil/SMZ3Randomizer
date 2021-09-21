@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3
             var worlds = new List<World>();
             if (config.SingleWorld)
             {
-                worlds.Add(new World(config, "Player", 0, new HexGuid()));
+                worlds.Add(new World(config, "Player", 0, Guid.NewGuid().ToString("N")));
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Randomizer.SMZ3
                     if (!legalCharacters.IsMatch(player))
                         throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
                     player = CleanPlayerName(player);
-                    worlds.Add(new World(config, player, p, new HexGuid()));
+                    worlds.Add(new World(config, player, p, Guid.NewGuid().ToString("N")));
                 }
             }
 
@@ -76,7 +76,7 @@ namespace Randomizer.SMZ3
 
             var seedData = new SeedData
             {
-                Guid = new HexGuid(),
+                Guid = Guid.NewGuid().ToString("N"),
                 Seed = seed,
                 Game = Name,
                 Mode = config.GameMode.ToLowerString(),
