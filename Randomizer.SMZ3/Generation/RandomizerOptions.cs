@@ -7,7 +7,7 @@ using Randomizer.Shared.Contracts;
 
 using static Randomizer.Shared.Contracts.RandomizerOptionType;
 
-namespace Randomizer.SMZ3
+namespace Randomizer.SMZ3.Generation
 {
     internal static class RandomizerOptions
     {
@@ -84,9 +84,7 @@ namespace Randomizer.SMZ3
             if (options.ContainsKey(enumKey))
             {
                 if (Enum.TryParse(typeof(TEnum), options[enumKey], true, out var enumValue))
-                {
                     return (TEnum)enumValue;
-                }
             }
             return defaultValue;
         }
@@ -94,9 +92,7 @@ namespace Randomizer.SMZ3
         private static bool ParseOption(IDictionary<string, string> options, string option, bool defaultValue)
         {
             if (options.ContainsKey(option.ToLower()))
-            {
                 return bool.Parse(options[option.ToLower()]);
-            }
             else
             {
                 return defaultValue;

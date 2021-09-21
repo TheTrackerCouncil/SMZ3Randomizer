@@ -5,8 +5,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 
 using Randomizer.Shared.Contracts;
+using Randomizer.SMZ3.FileData;
 
-namespace Randomizer.SMZ3
+namespace Randomizer.SMZ3.Generation
 {
     public class Randomizer : IRandomizer
     {
@@ -44,15 +45,11 @@ namespace Randomizer.SMZ3
 
             /* FIXME: Just here to semi-obfuscate race seeds until a better solution is in place */
             if (config.Race)
-            {
                 randoRnd = new Random(randoRnd.Next());
-            }
 
             var worlds = new List<World>();
             if (config.SingleWorld)
-            {
                 worlds.Add(new World(config, "Player", 0, Guid.NewGuid().ToString("N")));
-            }
             else
             {
                 var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
@@ -133,57 +130,6 @@ namespace Randomizer.SMZ3
             return name.Trim();
         }
 
-    }
-
-    public class RandomizerOption : IRandomizerOption
-    {
-        public string Key { get; set; }
-        public string Description { get; set; }
-        public RandomizerOptionType Type { get; set; }
-        public Dictionary<string, string> Values { get; set; }
-        public string Default { get; set; }
-    }
-
-    public class SeedData : ISeedData
-    {
-        public string Guid { get; set; }
-        public string Seed { get; set; }
-        public string Game { get; set; }
-        public string Logic { get; set; }
-        public string Mode { get; set; }
-        public List<IWorldData> Worlds { get; set; }
-        public List<Dictionary<string, string>> Playthrough { get; set; }
-    }
-
-    public class WorldData : IWorldData
-    {
-        public int Id { get; set; }
-        public string Guid { get; set; }
-        public string Player { get; set; }
-        public Dictionary<int, byte[]> Patches { get; set; }
-        public List<ILocationData> Locations { get; set; }
-    }
-
-    public class LocationData : ILocationData
-    {
-        public int LocationId { get; set; }
-        public int ItemId { get; set; }
-        public int ItemWorldId { get; set; }
-    }
-
-    public class ItemTypeData : IItemTypeData
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class LocationTypeData : ILocationTypeData
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string Region { get; set; }
-        public string Area { get; set; }
     }
 
 }

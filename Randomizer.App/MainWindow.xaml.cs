@@ -117,7 +117,7 @@ namespace Randomizer.App
             return romPath;
         }
 
-        private byte[] GenerateRom(SMZ3.Randomizer randomizer, out ISeedData seed)
+        private byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out ISeedData seed)
         {
             var options = Options.ToDictionary();
             seed = randomizer.GenerateSeed(options, Options.Seed.Seed, CancellationToken.None);
