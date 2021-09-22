@@ -6,8 +6,10 @@ namespace Randomizer.SMZ3
 {
     public abstract class Region
     {
-        public virtual string Name { get; }
+        public abstract string Name { get; }
         public virtual string Area => Name;
+
+        public virtual List<string> AlsoKnownAs { get; } = new();
 
         public List<Location> Locations { get; set; }
         public World World { get; set; }
@@ -45,7 +47,5 @@ namespace Randomizer.SMZ3
         {
             return true;
         }
-
     }
-
 }

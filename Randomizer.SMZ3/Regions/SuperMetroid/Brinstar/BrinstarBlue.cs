@@ -25,10 +25,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public Location MorphBall => new(this, 26, 0x8F86EC, LocationType.Visible,
             name: "Morphing Ball",
+            alsoKnownAs: "Morph Ball (Corridor No. 1)",
             vanillaItem: ItemType.Morph);
 
         public Location PowerBomb => new(this, 27, 0x8F874C, LocationType.Visible,
             name: "Power Bomb (blue Brinstar)",
+            alsoKnownAs: "Power Bomb wall (Corridor No. 1)",
             vanillaItem: ItemType.PowerBomb,
             access: Logic switch
             {
