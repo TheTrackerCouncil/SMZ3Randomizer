@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Varia Suit").Available(items);
+            return GetLocation("Varia Suit").IsAvailable(items);
         }
 
     }

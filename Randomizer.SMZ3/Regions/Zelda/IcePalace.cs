@@ -59,7 +59,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Ice Palace - Kholdstare").Available(items);
+            return GetLocation("Ice Palace - Kholdstare").IsAvailable(items);
         }
 
     }

@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Eastern Palace - Armos Knights").Available(items);
+            return GetLocation("Eastern Palace - Armos Knights").IsAvailable(items);
         }
 
     }

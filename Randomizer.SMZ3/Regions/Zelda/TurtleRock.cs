@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Turtle Rock - Trinexx").Available(items);
+            return GetLocation("Turtle Rock - Trinexx").IsAvailable(items);
         }
 
     }

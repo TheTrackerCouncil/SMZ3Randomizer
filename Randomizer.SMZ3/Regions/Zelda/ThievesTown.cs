@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Thieves' Town - Blind").Available(items);
+            return GetLocation("Thieves' Town - Blind").IsAvailable(items);
         }
 
     }

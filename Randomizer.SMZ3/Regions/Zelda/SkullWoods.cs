@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Skull Woods - Mothula").Available(items);
+            return GetLocation("Skull Woods - Mothula").IsAvailable(items);
         }
 
     }

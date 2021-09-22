@@ -59,7 +59,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Palace of Darkness - Helmasaur King").Available(items);
+            return GetLocation("Palace of Darkness - Helmasaur King").IsAvailable(items);
         }
 
     }

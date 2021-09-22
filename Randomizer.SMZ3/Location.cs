@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Randomizer.SMZ3
@@ -8,6 +9,9 @@ namespace Randomizer.SMZ3
 
     public delegate bool Verification(Item item, Progression items);
 
+    /// <summary>
+    /// Represents a location holding an item.
+    /// </summary>
     public class Location
     {
         /// <summary>
@@ -41,6 +45,17 @@ namespace Randomizer.SMZ3
         public Region Region { get; }
 
         /// <summary>
+        /// Gets any alternate names for the location.
+        /// </summary>
+        public IReadOnlyCollection<string> AlternateNames { get; }
+
+        /// <summary>
+        /// Gets the item that can be found in this location in the vanilla
+        /// game.
+        /// </summary>
+        public ItemType VanillaItem { get; }
+
+        /// <summary>
         /// Gets the relative weight of this location, where negative values
         /// indicate easier to reach locations.
         /// </summary>
@@ -64,7 +79,64 @@ namespace Randomizer.SMZ3
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         public Location(Region region, int id, int address, LocationType type, string name)
-            : this(region, id, address, type, name, _ => true)
+            : this(region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class that
+        /// is always considered accessible if the region can be entered.
+        /// </summary>
+        /// <param name="region">The region that contains this location.</param>
+        /// <param name="id">The internal ID of the location.</param>
+        /// <param name="address">The byte address of the location.</param>
+        /// <param name="type">The type of location.</param>
+        /// <param name="name">The name of the location.</param>
+        /// <param name="vanillaItem">
+        /// The item that can be found in this location in the regular game.
+        /// </param>
+        public Location(Region region, int id, int address, LocationType type, string name, ItemType vanillaItem)
+            : this(region, id, address, type, name, Array.Empty<string>(), vanillaItem, _ => true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class that
+        /// is always considered accessible if the region can be entered.
+        /// </summary>
+        /// <param name="region">The region that contains this location.</param>
+        /// <param name="id">The internal ID of the location.</param>
+        /// <param name="address">The byte address of the location.</param>
+        /// <param name="type">The type of location.</param>
+        /// <param name="name">The name of the location.</param>
+        /// <param name="alsoKnownAs">
+        /// An alternative name for the item or location.
+        /// </param>
+        /// <param name="vanillaItem">
+        /// The item that can be found in this location in the regular game.
+        /// </param>
+        public Location(Region region, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem)
+            : this(region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class that
+        /// is always considered accessible if the region can be entered.
+        /// </summary>
+        /// <param name="region">The region that contains this location.</param>
+        /// <param name="id">The internal ID of the location.</param>
+        /// <param name="address">The byte address of the location.</param>
+        /// <param name="type">The type of location.</param>
+        /// <param name="name">The name of the location.</param>
+        /// <param name="alsoKnownAs">
+        /// A collection of alternate names for the item or location.
+        /// </param>
+        /// <param name="vanillaItem">
+        /// The item that can be found in this location in the regular game.
+        /// </param>
+        public Location(Region region, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem)
+            : this(region, id, address, type, name, alsoKnownAs, vanillaItem, _ => true)
         {
         }
 
@@ -78,14 +150,87 @@ namespace Randomizer.SMZ3
         /// <param name="address">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
-        /// <param name="access">The requirement for being able to access the location.</param>
+        /// <param name="access">
+        /// The requirement for being able to access the location.
+        /// </param>
         public Location(Region region, int id, int address, LocationType type, string name, Requirement access)
+            : this(region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, access)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class with
+        /// a specific access requirement in addition the requirements for the
+        /// region itself.
+        /// </summary>
+        /// <param name="region">The region that contains this location.</param>
+        /// <param name="id">The internal ID of the location.</param>
+        /// <param name="address">The byte address of the location.</param>
+        /// <param name="type">The type of location.</param>
+        /// <param name="name">The name of the location.</param>
+        /// <param name="vanillaItem">
+        /// The item that can be found in this location in the regular game.
+        /// </param>
+        /// <param name="access">
+        /// The requirement for being able to access the location.
+        /// </param>
+        public Location(Region region, int id, int address, LocationType type, string name, ItemType vanillaItem, Requirement access)
+            : this(region, id, address, type, name, Array.Empty<string>(), vanillaItem, access)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class with
+        /// a specific access requirement in addition the requirements for the
+        /// region itself.
+        /// </summary>
+        /// <param name="region">The region that contains this location.</param>
+        /// <param name="id">The internal ID of the location.</param>
+        /// <param name="address">The byte address of the location.</param>
+        /// <param name="type">The type of location.</param>
+        /// <param name="name">The name of the location.</param>
+        /// <param name="alsoKnownAs">
+        /// An alternative name for the item or location.
+        /// </param>
+        /// <param name="vanillaItem">
+        /// The item that can be found in this location in the regular game.
+        /// </param>
+        /// <param name="access">
+        /// The requirement for being able to access the location.
+        /// </param>
+        public Location(Region region, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access)
+            : this(region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, access)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class with
+        /// a specific access requirement in addition the requirements for the
+        /// region itself.
+        /// </summary>
+        /// <param name="region">The region that contains this location.</param>
+        /// <param name="id">The internal ID of the location.</param>
+        /// <param name="address">The byte address of the location.</param>
+        /// <param name="type">The type of location.</param>
+        /// <param name="name">The name of the location.</param>
+        /// <param name="alsoKnownAs">
+        /// A collection of alternate names for the item or location.
+        /// </param>
+        /// <param name="vanillaItem">
+        /// The item that can be found in this location in the regular game.
+        /// </param>
+        /// <param name="access">
+        /// The requirement for being able to access the location.
+        /// </param>
+        public Location(Region region, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access)
         {
             Region = region;
             Id = id;
             Name = name;
             Type = type;
             Address = address;
+            AlternateNames = new ReadOnlyCollection<string>(alsoKnownAs);
+            VanillaItem = vanillaItem;
             _canAccess = access;
             _alwaysAllow = (_, _) => false;
             _allow = (_, _) => true;
@@ -140,7 +285,7 @@ namespace Randomizer.SMZ3
         /// <see langword="true"/> if the item is available with
         /// <paramref name="items"/>; otherwise, <see langword="false"/>.
         /// </returns>
-        public bool Available(Progression items)
+        public bool IsAvailable(Progression items)
         {
             return Region.CanEnter(items) && _canAccess(items);
         }
@@ -159,7 +304,7 @@ namespace Randomizer.SMZ3
         {
             var oldItem = Item;
             Item = item;
-            var fillable = _alwaysAllow(item, items) || (Region.CanFill(item, items) && _allow(item, items) && Available(items));
+            var fillable = _alwaysAllow(item, items) || (Region.CanFill(item, items) && _allow(item, items) && IsAvailable(items));
             Item = oldItem;
             return fillable;
         }
@@ -228,7 +373,7 @@ namespace Randomizer.SMZ3
         public static IEnumerable<Location> Available(this IEnumerable<Location> locations, IEnumerable<Item> items)
         {
             var progression = new Progression(items);
-            return locations.Where(l => l.Available(progression));
+            return locations.Where(l => l.IsAvailable(progression));
         }
 
         /// <summary>
@@ -251,7 +396,7 @@ namespace Randomizer.SMZ3
 
             return locations.Where(l =>
                 l.CanFill(item, worldProgression[l.Region.World.Id])
-                && item.World.Locations.Find(ll => ll.Id == l.Id).Available(itemWorldProgression));
+                && item.World.Locations.Find(ll => ll.Id == l.Id).IsAvailable(itemWorldProgression));
         }
 
     }
