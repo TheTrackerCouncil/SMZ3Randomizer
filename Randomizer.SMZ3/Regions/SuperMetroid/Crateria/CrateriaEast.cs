@@ -6,31 +6,57 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 {
     public class CrateriaEast : SMRegion
     {
+        public CrateriaEast(World world, Config config) : base(world, config)
+        {
+            Locations = new List<Location>
+            {
+                FloodedCavernUnderWater,
+                SkyMissile,
+                MorphBallMaze,
+                Moat
+            };
+        }
 
         public override string Name => "Crateria East";
         public override string Area => "Crateria";
 
-        public CrateriaEast(World world, Config config) : base(world, config)
-        {
-            Locations = new List<Location> {
-                new Location(this, 1, 0x8F81E8, LocationType.Visible, "Missile (outside Wrecked Ship bottom)", Logic switch {
-                    Normal => items => items.Morph && (
-                        items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                        items.Gravity && (items.CanIbj() || items.HiJump) ||
-                        World.WreckedShip.CanEnter(items)),
-                    _ => new Requirement(items => items.Morph)
-                }),
-                new Location(this, 2, 0x8F81EE, LocationType.Hidden, "Missile (outside Wrecked Ship top)", Logic switch {
-                    _ => new Requirement(items => World.WreckedShip.CanEnter(items) && (!Config.Keysanity || items.CardWreckedShipBoss) && items.CanPassBombPassages())
-                }),
-                new Location(this, 3, 0x8F81F4, LocationType.Visible, "Missile (outside Wrecked Ship middle)", Logic switch {
-                    _ => new Requirement(items => World.WreckedShip.CanEnter(items) && (!Config.Keysanity || items.CardWreckedShipBoss) && items.CanPassBombPassages())
-                }),
-                new Location(this, 4, 0x8F8248, LocationType.Visible, "Missile (Crateria moat)", Logic switch {
-                    _ => new Requirement(items => true)
-                }),
-            };
-        }
+        public Location FloodedCavernUnderWater => new(this, 1, 0x8F81E8, LocationType.Visible,
+            name: "Missile (outside Wrecked Ship bottom)",
+            alsoKnownAs: new[] { "Flooded Cavern - under water", "West Ocean - under water" },
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                Normal => items => items.Morph && (
+                    items.SpeedBooster || items.Grapple || items.SpaceJump ||
+                    (items.Gravity && (items.CanIbj() || items.HiJump)) ||
+                    World.WreckedShip.CanEnter(items)),
+                _ => new Requirement(items => items.Morph)
+            });
+
+        public Location SkyMissile => new(this, 2, 0x8F81EE, LocationType.Hidden,
+            name: "Missile (outside Wrecked Ship top)",
+            alsoKnownAs: "Sky Missile",
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                _ => new Requirement(items => World.WreckedShip.CanEnter(items)
+                                              && (!Config.Keysanity || items.CardWreckedShipBoss)
+                                              && items.CanPassBombPassages())
+            });
+
+        public Location MorphBallMaze => new(this, 3, 0x8F81F4, LocationType.Visible,
+            name: "Missile (outside Wrecked Ship middle)",
+            alsoKnownAs: "Morph Ball Maze",
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                _ => new Requirement(items => World.WreckedShip.CanEnter(items) && (!Config.Keysanity || items.CardWreckedShipBoss) && items.CanPassBombPassages())
+            });
+
+        public Location Moat => new(this, 4, 0x8F8248, LocationType.Visible,
+            name: "Missile (Crateria moat)",
+            alsoKnownAs: new[] { "The Moat", "Interior Lake" },
+            vanillaItem: ItemType.Missile); // Wiki says you need Gravity, Grapple or Shinespark, but SMZ3 says nothing? Huh?
 
         public override bool CanEnter(Progression items)
         {
@@ -38,40 +64,38 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
             {
                 Normal =>
                     /* Ship -> Moat */
-                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super) ||
                     /* UN Portal -> Red Tower -> Moat */
-                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
-                        (items.Ice || items.HiJump || items.SpaceJump) ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
+                        (items.Ice || items.HiJump || items.SpaceJump)) ||
                     /*Through Maridia From Portal*/
-                    items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super && (
+                    (items.CanAccessMaridiaPortal(World) && items.Gravity && items.Super && (
                         /* Oasis -> Forgotten Highway */
-                        items.CardMaridiaL2 && items.CanDestroyBombWalls() ||
+                        (items.CardMaridiaL2 && items.CanDestroyBombWalls()) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        World.GetLocation("Space Jump").IsAvailable(items)) ||
+                        World.GetLocation("Space Jump").IsAvailable(items))) ||
                     /*Through Maridia from Pipe*/
-                    items.CanUsePowerBombs() && items.Super && items.Gravity
+                    (items.CanUsePowerBombs() && items.Super && items.Gravity)
                     ,
                 _ =>
                     /* Ship -> Moat */
-                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.Super) ||
                     /* UN Portal -> Red Tower -> Moat */
-                    (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
-                        (items.Ice || items.HiJump || items.CanFly() || items.CanSpringBallJump()) ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && items.CanAccessNorfairUpperPortal() &&
+                        (items.Ice || items.HiJump || items.CanFly() || items.CanSpringBallJump())) ||
                     /*Through Maridia From Portal*/
-                    items.CanAccessMaridiaPortal(World) && (
+                    (items.CanAccessMaridiaPortal(World) && (
                         /* Oasis -> Forgotten Highway */
-                        items.CardMaridiaL2 && items.Super && (
-                            items.HiJump && items.CanPassBombPassages() ||
-                            items.Gravity && items.CanDestroyBombWalls()
-                        ) ||
+                        (items.CardMaridiaL2 && items.Super && (
+                            (items.HiJump && items.CanPassBombPassages()) ||
+                            (items.Gravity && items.CanDestroyBombWalls())
+                        )) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        items.Gravity && World.GetLocation("Space Jump").IsAvailable(items)) ||
+                        (items.Gravity && World.GetLocation("Space Jump").IsAvailable(items)))) ||
                     /*Through Maridia from Pipe*/
-                    items.CanUsePowerBombs() && items.Super && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump())
-                                                                && items.Grapple && items.CardMaridiaL1)
+                    (items.CanUsePowerBombs() && items.Super && (items.Gravity || (items.HiJump && (items.Ice || items.CanSpringBallJump())
+                                                                && items.Grapple && items.CardMaridiaL1)))
             };
         }
-
     }
-
 }

@@ -6,28 +6,53 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 {
     public class CrateriaWest : SMRegion
     {
+        public CrateriaWest(World world, Config config) : base(world, config)
+        {
+            Locations = new List<Location> {
+                Terminator,
+                Gauntlet,
+                GauntletRight,
+                GauntletLeft
+            };
+        }
 
         public override string Name => "Crateria West";
         public override string Area => "Crateria";
 
-        public CrateriaWest(World world, Config config) : base(world, config)
-        {
-            Locations = new List<Location> {
-                new Location(this, 8, 0x8F8432, LocationType.Visible, "Energy Tank, Terminator"),
-                new Location(this, 5, 0x8F8264, LocationType.Visible, "Energy Tank, Gauntlet", Logic switch {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
-                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
-                }),
-                new Location(this, 9, 0x8F8464, LocationType.Visible, "Missile (Crateria gauntlet right)", Logic switch {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
-                }),
-                new Location(this, 10, 0x8F846A, LocationType.Visible, "Missile (Crateria gauntlet left)", Logic switch {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
-                })
-            };
-        }
+        public Location Terminator => new(this, 8, 0x8F8432, LocationType.Visible,
+            name: "Energy Tank, Terminator",
+            alsoKnownAs: new[] { "Terminator Room", "Fungal Slope" },
+            vanillaItem: ItemType.ETank);
+
+        public Location Gauntlet => new(this, 5, 0x8F8264, LocationType.Visible,
+            name: "Energy Tank, Gauntlet",
+            alsoKnownAs: "Gauntlet (Chozo)",
+            vanillaItem: ItemType.ETank,
+            access: Logic switch
+            {
+                Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
+                _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
+            });
+
+        public Location GauntletRight => new(this, 9, 0x8F8464, LocationType.Visible,
+            name: "Missile (Crateria gauntlet right)",
+            alsoKnownAs: "Gauntlet shaft (right)",
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+            });
+
+        public Location GauntletLeft => new(this, 10, 0x8F846A, LocationType.Visible,
+            name: "Missile (Crateria gauntlet left)",
+            alsoKnownAs: "Gauntlet shaft (left)",
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+            });
 
         public override bool CanEnter(Progression items)
         {
