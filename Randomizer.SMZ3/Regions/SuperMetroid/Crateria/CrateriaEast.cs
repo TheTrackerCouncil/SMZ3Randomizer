@@ -50,7 +50,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
             vanillaItem: ItemType.Missile,
             access: Logic switch
             {
-                _ => new Requirement(items => World.WreckedShip.CanEnter(items) && (!Config.Keysanity || items.CardWreckedShipBoss) && items.CanPassBombPassages())
+                _ => new Requirement(items => World.WreckedShip.CanEnter(items)
+                                              && (!Config.Keysanity || items.CardWreckedShipBoss)
+                                              && items.CanPassBombPassages())
             });
 
         public Location Moat => new(this, 4, 0x8F8248, LocationType.Visible,
