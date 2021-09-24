@@ -7,53 +7,93 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
 
     public class UpperNorfairWest : SMRegion
     {
-
-        public override string Name => "Norfair Upper West";
-        public override string Area => "Norfair Upper";
-
         public UpperNorfairWest(World world, Config config) : base(world, config)
         {
             Locations = new List<Location> {
-                new Location(this, 49, 0x8F8AE4, LocationType.Hidden, "Missile (lava room)", Logic switch {
-                    Normal => items => items.Varia && (
-                            items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster) ||
-                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
-                        ) && items.Morph,
-                    _ => new Requirement(items => items.CanHellRun() && (
-                            items.CanOpenRedDoors() && (
-                                items.CanFly() || items.HiJump || items.SpeedBooster ||
-                                items.CanSpringBallJump() || items.Varia && items.Ice
-                            ) ||
-                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
-                        ) && items.Morph),
-                }),
-                new Location(this, 50, 0x8F8B24, LocationType.Chozo, "Ice Beam", Logic switch {
-                    Normal => items => (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanPassBombPassages() && items.Varia && items.SpeedBooster,
-                    _ => new Requirement(items => (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.Morph && (items.Varia || items.HasEnergyReserves(3)))
-                }),
-                new Location(this, 51, 0x8F8B46, LocationType.Hidden, "Missile (below Ice Beam)", Logic switch {
-                    Normal => items => (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && items.Varia && items.SpeedBooster,
-                    _ => new Requirement(items =>
-                        (config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3)) ||
-                        (items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
-                        /* Access to Croc's room to get spark */
-                        (config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1)
-                }),
-                new Location(this, 53, 0x8F8BAC, LocationType.Chozo, "Hi-Jump Boots", Logic switch {
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.CanPassBombPassages())
-                }),
-                new Location(this, 55, 0x8F8BE6, LocationType.Visible, "Missile (Hi-Jump Boots)", Logic switch {
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
-                }),
-                new Location(this, 56, 0x8F8BEC, LocationType.Visible, "Energy Tank (Hi-Jump Boots)", Logic switch {
-                    _ => new Requirement(items => items.CanOpenRedDoors())
-                }),
+                LavaRoom,
+                IceBeamRoom,
+                CrumbleShaft,
+                HiJumpBootsRoom,
+                HiJumpLobbyBack,
+                HiJumpLobbyEntrance,
             };
         }
+        public override string Name => "Norfair Upper West";
+        public override string Area => "Norfair Upper";
+
+        public Location LavaRoom => new(this, 49, 0x8F8AE4, LocationType.Hidden,
+            name: "Missile (lava room)",
+            alsoKnownAs: new[] { "Lava Room - Submerged in wall", "Cathedral" },
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                Normal => items => items.Varia && (
+                        (items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster)) ||
+                        (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
+                    ) && items.Morph,
+                _ => new Requirement(items => items.CanHellRun() && (
+                        (items.CanOpenRedDoors() && (
+                            items.CanFly() || items.HiJump || items.SpeedBooster ||
+                            items.CanSpringBallJump() || (items.Varia && items.Ice)
+                        )) ||
+                        (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
+                    ) && items.Morph),
+            });
+
+        public Location IceBeamRoom => new(this, 50, 0x8F8B24, LocationType.Chozo,
+            name: "Ice Beam",
+            alsoKnownAs: "Ice Beam Room",
+            vanillaItem: ItemType.Ice,
+            access: Logic switch
+            {
+                Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanPassBombPassages() && items.Varia && items.SpeedBooster,
+                _ => new Requirement(items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.Morph && (items.Varia || items.HasEnergyReserves(3)))
+            });
+
+        public Location CrumbleShaft => new(this, 51, 0x8F8B46, LocationType.Hidden,
+            name: "Missile (below Ice Beam)",
+            alsoKnownAs: "Crumble Shaft",
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && items.Varia && items.SpeedBooster,
+                _ => new Requirement(items =>
+                    ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3))) ||
+                    ((items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
+                    /* Access to Croc's room to get spark */
+                    (Config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1))
+            });
+
+        public Location HiJumpBootsRoom => new(this, 53, 0x8F8BAC, LocationType.Chozo,
+            name: "Hi-Jump Boots",
+            alsoKnownAs: "Hi-Jump Boots Room",
+            vanillaItem: ItemType.HiJump,
+            access: Logic switch
+            {
+                _ => new Requirement(items => items.CanOpenRedDoors() && items.CanPassBombPassages())
+            });
+
+        public Location HiJumpLobbyBack => new(this, 55, 0x8F8BE6, LocationType.Visible,
+            name: "Missile (Hi-Jump Boots)",
+            alsoKnownAs: "Hi-Jump Lobby - Back",
+            vanillaItem: ItemType.Missile,
+            access: Logic switch
+            {
+                _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
+            });
+
+        public Location HiJumpLobbyEntrance => new(this, 56, 0x8F8BEC, LocationType.Visible,
+            name: "Energy Tank (Hi-Jump Boots)",
+            alsoKnownAs: "Hi-Jump Lobby - Entrance",
+            vanillaItem: ItemType.ETank,
+            access: Logic switch
+            {
+                _ => new Requirement(items => items.CanOpenRedDoors())
+            });
 
         public override bool CanEnter(Progression items)
         {
-            return (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
+            return ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
                 items.CanAccessNorfairUpperPortal();
         }
 

@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 PinkShaftTop,
                 PinkShaftBottom,
                 PinkShaftChozo,
-                PowerBomb,
+                MissionImpossible,
                 GreenHillZone,
                 Waterway,
                 WaveBeamGlitchRoom
@@ -54,9 +54,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 _ => new Requirement(items => items.CanPassBombPassages())
             });
 
-        public Location PowerBomb => new(this, 24, 0x8F865C, LocationType.Visible,
+        public Location MissionImpossible => new(this, 24, 0x8F865C, LocationType.Visible,
             name: "Power Bomb (pink Brinstar)",
-            alsoKnownAs: "Pink Brinstar Power Bomb Room",
+            alsoKnownAs: new[] { "Mission: Impossible", "Pink Brinstar Power Bomb Room" },
             vanillaItem: ItemType.PowerBomb,
             access: Logic switch
             {
