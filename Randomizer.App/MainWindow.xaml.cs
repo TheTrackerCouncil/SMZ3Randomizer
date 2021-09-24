@@ -383,7 +383,7 @@ namespace Randomizer.App
 
             if (finished)
             {
-                ReportStats(stats, numberOfSeeds);
+                ReportStats(stats, itemCounts, numberOfSeeds);
                 WriteMegaSpoilerLog(itemCounts, randomizer);
             }
         }
@@ -468,7 +468,8 @@ namespace Randomizer.App
             Process.Start(startInfo);
         }
 
-        private void ReportStats(IDictionary<string, int> stats, int total)
+        private void ReportStats(IDictionary<string, int> stats,
+            ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, int total)
         {
             var message = new StringBuilder();
             message.AppendLine($"If you were to play {total} seeds:");
@@ -478,8 +479,18 @@ namespace Randomizer.App
                 var percentage = number / (double)total;
                 message.AppendLine($"- {key} {number} time(s) ({percentage:P1})");
             }
+            message.AppendLine();
+            message.AppendLine($"Morph ball is in {UniqueLocations(ItemType.Morph)} unique locations.");
 
             MessageBox.Show(this, message.ToString(), Title, MessageBoxButton.OK, MessageBoxImage.Information);
+
+            int UniqueLocations(ItemType item)
+            {
+                return itemCounts.Keys
+                    .Where(x => x.itemId == (int)item)
+                    .Select(x => x.locationId)
+                    .Count();
+            }
         }
 
         private static class Locations
