@@ -83,6 +83,11 @@ namespace Randomizer.SMZ3
         {
         }
 
+        public Location(Room room, int id, int address, LocationType type, string name)
+            : this(room.Region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Location"/> class that
         /// is always considered accessible if the region can be entered.
@@ -97,6 +102,11 @@ namespace Randomizer.SMZ3
         /// </param>
         public Location(Region region, int id, int address, LocationType type, string name, ItemType vanillaItem)
             : this(region, id, address, type, name, Array.Empty<string>(), vanillaItem, _ => true)
+        {
+        }
+
+        public Location(Room room, int id, int address, LocationType type, string name, ItemType vanillaItem)
+            : this(room.Region, id, address, type, name, Array.Empty<string>(), vanillaItem, _ => true)
         {
         }
 
@@ -120,6 +130,12 @@ namespace Randomizer.SMZ3
         {
         }
 
+        public Location(Room room, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem)
+            : this(room.Region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true)
+        {
+        }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Location"/> class that
         /// is always considered accessible if the region can be entered.
@@ -140,6 +156,11 @@ namespace Randomizer.SMZ3
         {
         }
 
+        public Location(Room room, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem)
+            : this(room.Region, id, address, type, name, alsoKnownAs, vanillaItem, _ => true)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Location"/> class with
         /// a specific access requirement in addition the requirements for the
@@ -155,6 +176,11 @@ namespace Randomizer.SMZ3
         /// </param>
         public Location(Region region, int id, int address, LocationType type, string name, Requirement access)
             : this(region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, access)
+        {
+        }
+
+        public Location(Room room, int id, int address, LocationType type, string name, Requirement access)
+            : this(room.Region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, access)
         {
         }
 
@@ -179,6 +205,11 @@ namespace Randomizer.SMZ3
         {
         }
 
+        public Location(Room room, int id, int address, LocationType type, string name, ItemType vanillaItem, Requirement access)
+            : this(room.Region, id, address, type, name, Array.Empty<string>(), vanillaItem, access)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Location"/> class with
         /// a specific access requirement in addition the requirements for the
@@ -200,6 +231,16 @@ namespace Randomizer.SMZ3
         /// </param>
         public Location(Region region, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access)
             : this(region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, access)
+        {
+        }
+
+        public Location(Room room, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access)
+            : this(room.Region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, access)
+        {
+        }
+
+        public Location(Room room, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access)
+            : this(room.Region, id, address, type, name, alsoKnownAs, vanillaItem, access)
         {
         }
 

@@ -58,7 +58,7 @@ namespace Randomizer.SMZ3
         /// <summary>
         /// Gets the randomizer configuration options.
         /// </summary>
-        protected Config Config { get; }
+        public Config Config { get; }
 
         /// <summary>
         /// Gets the list of region-specific items, e.g. keys, maps, compasses.

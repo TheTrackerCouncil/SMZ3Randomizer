@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 {
     public class DarkWorldNorthEast : Z3Region
     {
-
         public override string Name => "Dark World North East";
         public override string Area => "Dark World";
 
@@ -33,7 +32,5 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 items.CanAccessDarkWorldPortal(Config) && items.Flippers
             );
         }
-
     }
-
 }
