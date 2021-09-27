@@ -6,21 +6,27 @@ namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class CastleTower : Z3Region, IHasReward
     {
+        public CastleTower(World world, Config config)
+            : base(world, config)
+        {
+            RegionItems = new[] { KeyCT };
+
+            Foyer = new(this);
+            DarkMaze = new(this);
+
+            Locations = new List<Location> {
+                Foyer.Chest,
+                DarkMaze.Chest,
+            };
+        }
 
         public override string Name => "Castle Tower";
 
         public Reward Reward { get; set; } = Reward.Agahnim;
 
-        public CastleTower(World world, Config config) : base(world, config)
-        {
-            RegionItems = new[] { KeyCT };
+        public FoyerRoom Foyer { get; }
 
-            Locations = new List<Location> {
-                new Location(this, 256+101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer"),
-                new Location(this, 256+102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze",
-                    items => items.Lamp && items.KeyCT >= 1),
-            };
-        }
+        public DarkMazeRoom DarkMaze { get; }
 
         public override bool CanEnter(Progression items)
         {
@@ -32,6 +38,27 @@ namespace Randomizer.SMZ3.Regions.Zelda
             return CanEnter(items) && items.Lamp && items.KeyCT >= 2 && items.Sword;
         }
 
-    }
+        public class FoyerRoom : Room
+        {
+            public FoyerRoom(Region region)
+                : base(region, "Foyer")
+            {
+                Chest = new(region, 256 + 101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer");
+            }
 
+            public Location Chest { get; }
+        }
+
+        public class DarkMazeRoom : Room
+        {
+            public DarkMazeRoom(Region region)
+                : base(region, "Dark Maze")
+            {
+                Chest = new(region, 256 + 102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze",
+                    items => items.Lamp && items.KeyCT >= 1);
+            }
+
+            public Location Chest { get; }
+        }
+    }
 }
