@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace Randomizer.SMZ3
 {
@@ -39,9 +40,10 @@ namespace Randomizer.SMZ3
         public virtual List<string> AlsoKnownAs { get; } = new();
 
         /// <summary>
-        /// Gets or sets a collection of the locations in the region.
+        /// Gets or sets a collection of every location in the region.
         /// </summary>
-        public List<Location> Locations { get; set; }
+        public IEnumerable<Location> Locations => GetLocations()
+            .Concat(GetRooms().SelectMany(x => x.GetLocations()));
 
         /// <summary>
         /// Gets the world the region is located in.
@@ -51,7 +53,7 @@ namespace Randomizer.SMZ3
         /// <summary>
         /// Gets the relative weight used to bias the randomization process.
         /// </summary>
-        public int Weight { get; } = 0;
+        public int Weight { get; init; } = 0;
 
         /// <summary>
         /// Gets the randomizer configuration options.
@@ -125,5 +127,11 @@ namespace Randomizer.SMZ3
         {
             return true;
         }
+
+        protected IEnumerable<Location> GetLocations()
+            => GetType().GetPropertyValues<Location>(this);
+
+        protected IEnumerable<Room> GetRooms()
+            => GetType().GetPropertyValues<Room>(this);
     }
 }

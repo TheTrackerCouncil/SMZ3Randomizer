@@ -6,11 +6,23 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
     {
         public BrinstarKraid(World world, Config config) : base(world, config)
         {
-            Locations = new List<Location> {
-                ETank,
-                KraidsItem,
-                MissileBeforeKraid,
-            };
+            ETank = new(this, 43, 0x8F899C, LocationType.Hidden,
+                name: "Energy Tank, Kraid",
+                vanillaItem: ItemType.ETank,
+                access: items => items.CardBrinstarBoss);
+            KraidsItem = new(this, 48, 0x8F8ACA, LocationType.Chozo,
+                name: "Varia Suit",
+                alsoKnownAs: "Kraid's Item",
+                vanillaItem: ItemType.Varia,
+                access: items => items.CardBrinstarBoss);
+            MissileBeforeKraid = new(this, 44, 0x8F89EC, LocationType.Hidden,
+                name: "Missile (Kraid)",
+                alsoKnownAs: "Warehouse Kihunter Room",
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => items.CanUsePowerBombs())
+                });
         }
 
         public override string Name => "Brinstar Kraid";
@@ -22,25 +34,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
-        public Location ETank => new(this, 43, 0x8F899C, LocationType.Hidden,
-            name: "Energy Tank, Kraid",
-            vanillaItem: ItemType.ETank,
-            access: items => items.CardBrinstarBoss);
+        public Location ETank { get; }
 
-        public Location KraidsItem => new(this, 48, 0x8F8ACA, LocationType.Chozo,
-            name: "Varia Suit",
-            alsoKnownAs: "Kraid's Item",
-            vanillaItem: ItemType.Varia,
-            access: items => items.CardBrinstarBoss);
+        public Location KraidsItem { get; }
 
-        public Location MissileBeforeKraid => new(this, 44, 0x8F89EC, LocationType.Hidden,
-            name: "Missile (Kraid)",
-            alsoKnownAs: "Warehouse Kihunter Room",
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                _ => new Requirement(items => items.CanUsePowerBombs())
-            });
+        public Location MissileBeforeKraid { get; }
 
         public override bool CanEnter(Progression items)
         {

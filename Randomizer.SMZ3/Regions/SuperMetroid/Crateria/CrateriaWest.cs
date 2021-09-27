@@ -8,51 +8,50 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
     {
         public CrateriaWest(World world, Config config) : base(world, config)
         {
-            Locations = new List<Location> {
-                Terminator,
-                Gauntlet,
-                GauntletRight,
-                GauntletLeft
-            };
+            Terminator = new(this, 8, 0x8F8432, LocationType.Visible,
+                name: "Energy Tank, Terminator",
+                alsoKnownAs: new[] { "Terminator Room", "Fungal Slope" },
+                vanillaItem: ItemType.ETank);
+            Gauntlet = new(this, 5, 0x8F8264, LocationType.Visible,
+                name: "Energy Tank, Gauntlet",
+                alsoKnownAs: "Gauntlet (Chozo)",
+                vanillaItem: ItemType.ETank,
+                access: Logic switch
+                {
+                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
+                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
+                });
+            GauntletRight = new(this, 9, 0x8F8464, LocationType.Visible,
+                name: "Missile (Crateria gauntlet right)",
+                alsoKnownAs: "Gauntlet shaft (right)",
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                });
+            GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
+                name: "Missile (Crateria gauntlet left)",
+                alsoKnownAs: "Gauntlet shaft (left)",
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                });
         }
 
         public override string Name => "Crateria West";
+
         public override string Area => "Crateria";
 
-        public Location Terminator => new(this, 8, 0x8F8432, LocationType.Visible,
-            name: "Energy Tank, Terminator",
-            alsoKnownAs: new[] { "Terminator Room", "Fungal Slope" },
-            vanillaItem: ItemType.ETank);
+        public Location Terminator { get; }
 
-        public Location Gauntlet => new(this, 5, 0x8F8264, LocationType.Visible,
-            name: "Energy Tank, Gauntlet",
-            alsoKnownAs: "Gauntlet (Chozo)",
-            vanillaItem: ItemType.ETank,
-            access: Logic switch
-            {
-                Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
-                _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
-            });
+        public Location Gauntlet { get; }
 
-        public Location GauntletRight => new(this, 9, 0x8F8464, LocationType.Visible,
-            name: "Missile (Crateria gauntlet right)",
-            alsoKnownAs: "Gauntlet shaft (right)",
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
-            });
+        public Location GauntletRight { get; }
 
-        public Location GauntletLeft => new(this, 10, 0x8F846A, LocationType.Visible,
-            name: "Missile (Crateria gauntlet left)",
-            alsoKnownAs: "Gauntlet shaft (left)",
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
-            });
+        public Location GauntletLeft { get; }
 
         public override bool CanEnter(Progression items)
         {

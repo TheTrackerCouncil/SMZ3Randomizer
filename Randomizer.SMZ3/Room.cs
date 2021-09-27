@@ -23,5 +23,8 @@ namespace Randomizer.SMZ3
         public string Name { get; }
 
         public IReadOnlyCollection<string> AlsoKnownAs { get; }
+
+        public IEnumerable<Location> GetLocations()
+            => GetType().GetPropertyValues<Location>(this);
     }
 }

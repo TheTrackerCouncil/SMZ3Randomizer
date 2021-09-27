@@ -8,79 +8,77 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
     {
         public UpperNorfairCrocomire(World world, Config config) : base(world, config)
         {
-            Locations = new List<Location> {
-                Crocomire,
-                CrocomireEscape,
-                PostCrocPowerBombRoom,
-                CosineRoom,
-                IndianaJonesRoom,
-                GrappleBeamRoom,
-            };
+            Crocomire = new(this, 52, 0x8F8BA4, LocationType.Visible,
+                name: "Energy Tank, Crocomire",
+                alsoKnownAs: "Crocomire's Pit",
+                vanillaItem: ItemType.ETank,
+                access: Logic switch
+                {
+                    Normal => items => CanAccessCrocomire(items) && (items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple),
+                    _ => new Requirement(items => CanAccessCrocomire(items))
+                });
+            CrocomireEscape = new(this, 54, 0x8F8BC0, LocationType.Visible,
+                name: "Missile (above Crocomire)",
+                alsoKnownAs: "Crocomire Escape",
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    Normal => items => items.CanFly() || items.Grapple || (items.HiJump && items.SpeedBooster),
+                    _ => new Requirement(items => (items.CanFly() || items.Grapple || (items.HiJump &&
+                        (items.SpeedBooster || items.CanSpringBallJump() || (items.Varia && items.Ice)))) && items.CanHellRun())
+                });
+            PostCrocPowerBombRoom = new(this, 57, 0x8F8C04, LocationType.Visible,
+                name: "Power Bomb (Crocomire)",
+                alsoKnownAs: "Post Crocomire Power Bomb Room",
+                vanillaItem: ItemType.PowerBomb,
+                access: Logic switch
+                {
+                    Normal => items => CanAccessCrocomire(items) && (items.CanFly() || items.HiJump || items.Grapple),
+                    _ => new Requirement(items => CanAccessCrocomire(items))
+                });
+            CosineRoom = new(this, 58, 0x8F8C14, LocationType.Visible,
+                name: "Missile (below Crocomire)",
+                alsoKnownAs: new[] { "Cosine Room", "Post Crocomire Missile Room" },
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => CanAccessCrocomire(items) && items.Morph)
+                });
+            IndianaJonesRoom = new(this, 59, 0x8F8C2A, LocationType.Visible,
+                name: "Missile (Grappling Beam)",
+                alsoKnownAs: new[] { "Indiana Jones Room", "Pantry", "Post Crocomire Jump Room" },
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    Normal => items => CanAccessCrocomire(items) && items.Morph && (items.CanFly() || (items.SpeedBooster && items.CanUsePowerBombs())),
+                    _ => new Requirement(items => CanAccessCrocomire(items) && (items.SpeedBooster || (items.Morph && (items.CanFly() || items.Grapple))))
+                });
+            GrappleBeamRoom = new(this, 60, 0x8F8C36, LocationType.Chozo,
+                name: "Grappling Beam",
+                alsoKnownAs: "Grapple Beam Room",
+                vanillaItem: ItemType.Grapple,
+                access: Logic switch
+                {
+                    Normal => items => CanAccessCrocomire(items) && items.Morph && (items.CanFly() || (items.SpeedBooster && items.CanUsePowerBombs())),
+                    _ => new Requirement(items => CanAccessCrocomire(items) && (items.SpaceJump || items.Morph || items.Grapple ||
+                        (items.HiJump && items.SpeedBooster)))
+                });
         }
 
         public override string Name => "Norfair Upper Crocomire";
         public override string Area => "Norfair Upper";
 
-        public Location Crocomire => new(this, 52, 0x8F8BA4, LocationType.Visible,
-            name: "Energy Tank, Crocomire",
-            alsoKnownAs: "Crocomire's Pit",
-            vanillaItem: ItemType.ETank,
-            access: Logic switch
-            {
-                Normal => items => CanAccessCrocomire(items) && (items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple),
-                _ => new Requirement(items => CanAccessCrocomire(items))
-            });
+        public Location Crocomire { get; }
 
-        public Location CrocomireEscape => new(this, 54, 0x8F8BC0, LocationType.Visible,
-            name: "Missile (above Crocomire)",
-            alsoKnownAs: "Crocomire Escape",
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                Normal => items => items.CanFly() || items.Grapple || (items.HiJump && items.SpeedBooster),
-                _ => new Requirement(items => (items.CanFly() || items.Grapple || (items.HiJump &&
-                    (items.SpeedBooster || items.CanSpringBallJump() || (items.Varia && items.Ice)))) && items.CanHellRun())
-            });
+        public Location CrocomireEscape { get; }
 
-        public Location PostCrocPowerBombRoom => new(this, 57, 0x8F8C04, LocationType.Visible,
-            name: "Power Bomb (Crocomire)",
-            alsoKnownAs: "Post Crocomire Power Bomb Room",
-            vanillaItem: ItemType.PowerBomb,
-            access: Logic switch
-            {
-                Normal => items => CanAccessCrocomire(items) && (items.CanFly() || items.HiJump || items.Grapple),
-                _ => new Requirement(items => CanAccessCrocomire(items))
-            });
+        public Location PostCrocPowerBombRoom { get; }
 
-        public Location CosineRoom => new(this, 58, 0x8F8C14, LocationType.Visible,
-            name: "Missile (below Crocomire)",
-            alsoKnownAs: new[] { "Cosine Room", "Post Crocomire Missile Room" },
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                _ => new Requirement(items => CanAccessCrocomire(items) && items.Morph)
-            });
+        public Location CosineRoom { get; }
 
-        public Location IndianaJonesRoom => new(this, 59, 0x8F8C2A, LocationType.Visible,
-            name: "Missile (Grappling Beam)",
-            alsoKnownAs: new[] { "Indiana Jones Room", "Pantry", "Post Crocomire Jump Room" },
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                Normal => items => CanAccessCrocomire(items) && items.Morph && (items.CanFly() || (items.SpeedBooster && items.CanUsePowerBombs())),
-                _ => new Requirement(items => CanAccessCrocomire(items) && (items.SpeedBooster || (items.Morph && (items.CanFly() || items.Grapple))))
-            });
+        public Location IndianaJonesRoom { get; }
 
-        public Location GrappleBeamRoom => new(this, 60, 0x8F8C36, LocationType.Chozo,
-            name: "Grappling Beam",
-            alsoKnownAs: "Grapple Beam Room",
-            vanillaItem: ItemType.Grapple,
-            access: Logic switch
-            {
-                Normal => items => CanAccessCrocomire(items) && items.Morph && (items.CanFly() || (items.SpeedBooster && items.CanUsePowerBombs())),
-                _ => new Requirement(items => CanAccessCrocomire(items) && (items.SpaceJump || items.Morph || items.Grapple ||
-                    (items.HiJump && items.SpeedBooster)))
-            });
+        public Location GrappleBeamRoom { get; }
 
         public override bool CanEnter(Progression items)
         {

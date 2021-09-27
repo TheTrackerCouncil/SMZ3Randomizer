@@ -8,57 +8,55 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
     {
         public CrateriaEast(World world, Config config) : base(world, config)
         {
-            Locations = new List<Location>
-            {
-                FloodedCavernUnderWater,
-                SkyMissile,
-                MorphBallMaze,
-                Moat
-            };
+            FloodedCavernUnderWater = new(this, 1, 0x8F81E8, LocationType.Visible,
+                name: "Missile (outside Wrecked Ship bottom)",
+                alsoKnownAs: new[] { "Flooded Cavern - under water", "West Ocean - under water" },
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    Normal => items => items.Morph && (
+                        items.SpeedBooster || items.Grapple || items.SpaceJump ||
+                        (items.Gravity && (items.CanIbj() || items.HiJump)) ||
+                        World.WreckedShip.CanEnter(items)),
+                    _ => new Requirement(items => items.Morph)
+                });
+            SkyMissile = new(this, 2, 0x8F81EE, LocationType.Hidden,
+                name: "Missile (outside Wrecked Ship top)",
+                alsoKnownAs: "Sky Missile",
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => World.WreckedShip.CanEnter(items)
+                                                  && (!Config.Keysanity || items.CardWreckedShipBoss)
+                                                  && items.CanPassBombPassages())
+                });
+            MorphBallMaze = new(this, 3, 0x8F81F4, LocationType.Visible,
+                name: "Missile (outside Wrecked Ship middle)",
+                alsoKnownAs: "Morph Ball Maze",
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => World.WreckedShip.CanEnter(items)
+                                                  && (!Config.Keysanity || items.CardWreckedShipBoss)
+                                                  && items.CanPassBombPassages())
+                });
+            Moat = new(this, 4, 0x8F8248, LocationType.Visible,
+                name: "Missile (Crateria moat)",
+                alsoKnownAs: new[] { "The Moat", "Interior Lake" },
+                vanillaItem: ItemType.Missile);
         }
 
         public override string Name => "Crateria East";
+
         public override string Area => "Crateria";
 
-        public Location FloodedCavernUnderWater => new(this, 1, 0x8F81E8, LocationType.Visible,
-            name: "Missile (outside Wrecked Ship bottom)",
-            alsoKnownAs: new[] { "Flooded Cavern - under water", "West Ocean - under water" },
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                Normal => items => items.Morph && (
-                    items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                    (items.Gravity && (items.CanIbj() || items.HiJump)) ||
-                    World.WreckedShip.CanEnter(items)),
-                _ => new Requirement(items => items.Morph)
-            });
+        public Location FloodedCavernUnderWater { get; }
 
-        public Location SkyMissile => new(this, 2, 0x8F81EE, LocationType.Hidden,
-            name: "Missile (outside Wrecked Ship top)",
-            alsoKnownAs: "Sky Missile",
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                _ => new Requirement(items => World.WreckedShip.CanEnter(items)
-                                              && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                              && items.CanPassBombPassages())
-            });
+        public Location SkyMissile { get; }
 
-        public Location MorphBallMaze => new(this, 3, 0x8F81F4, LocationType.Visible,
-            name: "Missile (outside Wrecked Ship middle)",
-            alsoKnownAs: "Morph Ball Maze",
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                _ => new Requirement(items => World.WreckedShip.CanEnter(items)
-                                              && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                              && items.CanPassBombPassages())
-            });
+        public Location MorphBallMaze { get; }
 
-        public Location Moat => new(this, 4, 0x8F8248, LocationType.Visible,
-            name: "Missile (Crateria moat)",
-            alsoKnownAs: new[] { "The Moat", "Interior Lake" },
-            vanillaItem: ItemType.Missile); // Wiki says you need Gravity, Grapple or Shinespark, but SMZ3 says nothing? Huh?
+        public Location Moat { get; }
 
         public override bool CanEnter(Progression items)
         {

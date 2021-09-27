@@ -13,11 +13,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             Foyer = new(this);
             DarkMaze = new(this);
-
-            Locations = new List<Location> {
-                Foyer.Chest,
-                DarkMaze.Chest,
-            };
         }
 
         public override string Name => "Castle Tower";

@@ -8,14 +8,56 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
     {
         public LowerNorfairEast(World world, Config config) : base(world, config)
         {
-            Locations = new List<Location> {
-                SpringBallMaze,
-                EscapePowerBombRoom,
-                PowerBombOfShame,
-                ThreeMusketeersRoom,
-                RidleyTreasure,
-                FirefleaRoom
-            };
+            SpringBallMaze = new(this, 74, 0x8F8FCA, LocationType.Visible,
+                name: "Missile (lower Norfair above fire flea room)",
+                alsoKnownAs: "Spring Ball Maze Room",
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => CanExit(items))
+                });
+            EscapePowerBombRoom = new(this, 75, 0x8F8FD2, LocationType.Visible,
+                name: "Power Bomb (lower Norfair above fire flea room)",
+                alsoKnownAs: "Escape Power Bomb Room",
+                vanillaItem: ItemType.PowerBomb,
+                access: Logic switch
+                {
+                    Normal => new Requirement(items => CanExit(items)),
+                    _ => items => CanExit(items) && items.CanPassBombPassages()
+                });
+            PowerBombOfShame = new(this, 76, 0x8F90C0, LocationType.Visible,
+                name: "Power Bomb (Power Bombs of shame)",
+                alsoKnownAs: "Wasteland - Power Bomb of Shame",
+                vanillaItem: ItemType.PowerBomb,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => CanExit(items) && items.CanUsePowerBombs())
+                });
+            ThreeMusketeersRoom = new(this, 77, 0x8F9100, LocationType.Visible,
+                name: "Missile (lower Norfair near Wave Beam)",
+                alsoKnownAs: new[] { "Three Musketeer's Room", "FrankerZ Missiles" },
+                vanillaItem: ItemType.Missile,
+                access: Logic switch
+                {
+                    Normal => new Requirement(items => CanExit(items)),
+                    _ => items => CanExit(items) && items.Morph && items.CanDestroyBombWalls()
+                });
+            RidleyTreasure = new(this, 78, 0x8F9108, LocationType.Hidden,
+                name: "Energy Tank, Ridley",
+                alsoKnownAs: "Ridley's Reliquary",
+                vanillaItem: ItemType.ETank,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => CanExit(items) && items.CardLowerNorfairBoss && items.CanUsePowerBombs() && items.Super)
+                });
+            FirefleaRoom = new(this, 80, 0x8F9184, LocationType.Visible,
+                name: "Energy Tank, Firefleas",
+                alsoKnownAs: "Fireflea Room",
+                vanillaItem: ItemType.ETank,
+                access: Logic switch
+                {
+                    _ => new Requirement(items => CanExit(items))
+                });
         }
 
         public override string Name => "Norfair Lower East";
@@ -24,61 +66,17 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
-        public Location SpringBallMaze => new(this, 74, 0x8F8FCA, LocationType.Visible,
-            name: "Missile (lower Norfair above fire flea room)",
-            alsoKnownAs: "Spring Ball Maze Room",
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                _ => new Requirement(items => CanExit(items))
-            });
+        public Location SpringBallMaze { get; }
 
-        public Location EscapePowerBombRoom => new(this, 75, 0x8F8FD2, LocationType.Visible,
-            name: "Power Bomb (lower Norfair above fire flea room)",
-            alsoKnownAs: "Escape Power Bomb Room",
-            vanillaItem: ItemType.PowerBomb,
-            access: Logic switch
-            {
-                Normal => new Requirement(items => CanExit(items)),
-                _ => items => CanExit(items) && items.CanPassBombPassages()
-            });
+        public Location EscapePowerBombRoom { get; }
 
-        public Location PowerBombOfShame => new(this, 76, 0x8F90C0, LocationType.Visible,
-            name: "Power Bomb (Power Bombs of shame)",
-            alsoKnownAs: "Wasteland - Power Bomb of Shame",
-            vanillaItem: ItemType.PowerBomb,
-            access: Logic switch
-            {
-                _ => new Requirement(items => CanExit(items) && items.CanUsePowerBombs())
-            });
+        public Location PowerBombOfShame { get; }
 
-        public Location ThreeMusketeersRoom => new(this, 77, 0x8F9100, LocationType.Visible,
-            name: "Missile (lower Norfair near Wave Beam)",
-            alsoKnownAs: new[] { "Three Musketeer's Room", "FrankerZ Missiles" },
-            vanillaItem: ItemType.Missile,
-            access: Logic switch
-            {
-                Normal => new Requirement(items => CanExit(items)),
-                _ => items => CanExit(items) && items.Morph && items.CanDestroyBombWalls()
-            });
+        public Location ThreeMusketeersRoom { get; }
 
-        public Location RidleyTreasure => new(this, 78, 0x8F9108, LocationType.Hidden,
-            name: "Energy Tank, Ridley",
-            alsoKnownAs: "Ridley's Reliquary",
-            vanillaItem: ItemType.ETank,
-            access: Logic switch
-            {
-                _ => new Requirement(items => CanExit(items) && items.CardLowerNorfairBoss && items.CanUsePowerBombs() && items.Super)
-            });
+        public Location RidleyTreasure { get; }
 
-        public Location FirefleaRoom => new(this, 80, 0x8F9184, LocationType.Visible,
-            name: "Energy Tank, Firefleas",
-            alsoKnownAs: "Fireflea Room",
-            vanillaItem: ItemType.ETank,
-            access: Logic switch
-            {
-                _ => new Requirement(items => CanExit(items))
-            });
+        public Location FirefleaRoom { get; }
 
         public override bool CanEnter(Progression items) => Logic switch
         {
