@@ -75,6 +75,14 @@ namespace Randomizer.SMZ3.FileData
             return patches.ToDictionary(x => x.offset, x => x.bytes);
         }
 
+        protected void AddPatch(int[] addresses, byte[] values)
+        {
+            foreach (var address in addresses)
+            {
+                patches.Add((Snes(address), values));
+            }
+        }
+
         private static int Snes(int addr)
         {
             addr = addr switch
@@ -323,49 +331,24 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteDungeonMusic(bool keysanity)
         {
-            if (!keysanity)
+            SetSoundtrack(DungeonMusicAddresses.EasternPalace, ALttPSoundtrack.EasternPalace);
+            SetSoundtrack(DungeonMusicAddresses.DesertPalace, ALttPSoundtrack.DesertPalace);
+            // SetSoundtrack(DungeonMusicAddresses.CastleTower,
+            // ALttPSoundtrack.AgahnimsTower);
+            SetSoundtrack(DungeonMusicAddresses.SwampPalace, ALttPSoundtrack.SwampPalace);
+            SetSoundtrack(DungeonMusicAddresses.PalaceOfDarkness, ALttPSoundtrack.PalaceOfDarkness);
+            SetSoundtrack(DungeonMusicAddresses.MiseryMire, ALttPSoundtrack.MiseryMire);
+            SetSoundtrack(DungeonMusicAddresses.SkullWoods, ALttPSoundtrack.SkullWoods);
+            SetSoundtrack(DungeonMusicAddresses.IcePalace, ALttPSoundtrack.IcePalace);
+            SetSoundtrack(DungeonMusicAddresses.TowerOfHera, ALttPSoundtrack.TowerOfHera);
+            SetSoundtrack(DungeonMusicAddresses.ThievesTown, ALttPSoundtrack.ThievesTown);
+            SetSoundtrack(DungeonMusicAddresses.TurtleRock, ALttPSoundtrack.TurtleRock);
+            SetSoundtrack(DungeonMusicAddresses.GanonsTower, ALttPSoundtrack.GanonsTower);
+
+            void SetSoundtrack(int[] addresses, ALttPSoundtrack track)
             {
-                var regions = myWorld.Regions.OfType<IHasReward>();
-                IEnumerable<byte> music;
-                var pendantRegions = regions.Where(x => new[] { PendantGreen, PendantNonGreen }.Contains(x.Reward));
-                var crystalRegions = regions.Where(x => new[] { CrystalBlue, CrystalRed }.Contains(x.Reward));
-                regions = pendantRegions.Concat(crystalRegions);
-                music = new byte[] {
-                    0x11, 0x11, 0x11, 0x16, 0x16,
-                    0x16, 0x16, 0x16, 0x16, 0x16,
-                };
-                patches.AddRange(MusicPatches(regions, music));
+                AddPatch(addresses, new byte[] { (byte)track });
             }
-        }
-
-        private IEnumerable<byte> RandomDungeonMusic()
-        {
-            while (true) yield return rnd.Next(2) == 0 ? (byte)0x11 : (byte)0x16;
-        }
-
-        private IEnumerable<(int, byte[])> MusicPatches(IEnumerable<IHasReward> regions, IEnumerable<byte> music)
-        {
-            var addresses = regions.Select(MusicAddresses);
-            var associations = addresses.Zip(music, (a, b) => (a, b));
-            return associations.SelectMany(x => x.a.Select(i => (Snes(i), new byte[] { x.b })));
-        }
-
-        private int[] MusicAddresses(IHasReward region)
-        {
-            return region switch
-            {
-                EasternPalace _ => new[] { 0x2D59A },
-                DesertPalace _ => new[] { 0x2D59B, 0x2D59C, 0x2D59D, 0x2D59E },
-                TowerOfHera _ => new[] { 0x2D5C5, 0x2907A, 0x28B8C },
-                PalaceOfDarkness _ => new[] { 0x2D5B8 },
-                SwampPalace _ => new[] { 0x2D5B7 },
-                SkullWoods _ => new[] { 0x2D5BA, 0x2D5BB, 0x2D5BC, 0x2D5BD, 0x2D608, 0x2D609, 0x2D60A, 0x2D60B },
-                ThievesTown _ => new[] { 0x2D5C6 },
-                IcePalace _ => new[] { 0x2D5BF },
-                MiseryMire _ => new[] { 0x2D5B9 },
-                TurtleRock _ => new[] { 0x2D5C7, 0x2D5A7, 0x2D5AA, 0x2D5AB },
-                var x => throw new InvalidOperationException($"Region {x} should not be a dungeon music region"),
-            };
         }
 
         private void WritePrizeShuffle()
@@ -558,7 +541,7 @@ namespace Randomizer.SMZ3.FileData
             stringTable.SetGanonFirstPhaseText(ganon);
 
             // Todo: Verify these two are correct if ganon invincible patch is
-            //       ever added ganon_fall_in_alt in v30
+            // ever added ganon_fall_in_alt in v30
             var ganonFirstPhaseInvincible = "You think you\nare ready to\nface me?\n\nI will not die\n\nunless you\ncomplete your\ngoals. Dingus!";
             patches.Add((Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible)));
 
