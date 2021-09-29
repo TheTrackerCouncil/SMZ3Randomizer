@@ -1,36 +1,73 @@
 ﻿using System.Collections.Generic;
 
-using static Randomizer.SMZ3.ItemType;
-
 namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class SkullWoods : Z3Region, IHasReward
     {
+        public SkullWoods(World world, Config config) : base(world, config)
+        {
+            RegionItems = new[] { ItemType.KeySW, ItemType.BigKeySW, ItemType.MapSW, ItemType.CompassSW };
+
+            PotPrison = new Location(this, 256 + 145, 0x1E9A1, LocationType.Regular,
+                name: "Pot Prison",
+                vanillaItem: ItemType.KeySW);
+
+            CompassChest = new Location(this, 256 + 146, 0x1E992, LocationType.Regular,
+                name: "Compass Chest",
+                vanillaItem: ItemType.CompassSW);
+
+            BigChest = new Location(this, 256 + 147, 0x1E998, LocationType.Regular,
+                name: "Big Chest",
+                vanillaItem: ItemType.Firerod,
+                access: items => items.BigKeySW)
+                .AlwaysAllow((item, items) => item.Is(ItemType.BigKeySW, World));
+
+            MapChest = new Location(this, 256 + 148, 0x1E99B, LocationType.Regular,
+                name: "Map Chest",
+                vanillaItem: ItemType.MapSW);
+
+            PinballRoom = new Location(this, 256 + 149, 0x1E9C8, LocationType.Regular,
+                name: "Pinball Room",
+                vanillaItem: ItemType.KeySW)
+                .Allow((item, items) => item.Is(ItemType.KeySW, World));
+
+            BigKeyChest = new Location(this, 256 + 150, 0x1E99E, LocationType.Regular,
+                name: "Big Key Chest",
+                vanillaItem: ItemType.BigKeySW);
+
+            BridgeRoom = new Location(this, 256 + 151, 0x1E9FE, LocationType.Regular,
+                name: "Bridge Room",
+                vanillaItem: ItemType.KeySW,
+                access: items => items.Firerod);
+
+            MothulaReward = new Location(this, 256 + 152, 0x308155, LocationType.Regular,
+                name: "Mothula",
+                vanillaItem: ItemType.HeartContainer,
+                access: items => items.Firerod && items.Sword && items.KeySW >= 3);
+        }
 
         public override string Name => "Skull Woods";
 
+        public override List<string> AlsoKnownAs { get; }
+            = new() { "Skill Woods" };
+
         public Reward Reward { get; set; } = Reward.None;
 
-        public SkullWoods(World world, Config config) : base(world, config)
-        {
-            RegionItems = new[] { KeySW, BigKeySW, MapSW, CompassSW };
+        public Location PotPrison { get; }
 
-            Locations = new List<Location> {
-                new Location(this, 256+145, 0x1E9A1, LocationType.Regular, "Skull Woods - Pot Prison"),
-                new Location(this, 256+146, 0x1E992, LocationType.Regular, "Skull Woods - Compass Chest"),
-                new Location(this, 256+147, 0x1E998, LocationType.Regular, "Skull Woods - Big Chest",
-                    items => items.BigKeySW)
-                    .AlwaysAllow((item, items) => item.Is(BigKeySW, World)),
-                new Location(this, 256+148, 0x1E99B, LocationType.Regular, "Skull Woods - Map Chest"),
-                new Location(this, 256+149, 0x1E9C8, LocationType.Regular, "Skull Woods - Pinball Room")
-                    .Allow((item, items) => item.Is(KeySW, World)),
-                new Location(this, 256+150, 0x1E99E, LocationType.Regular, "Skull Woods - Big Key Chest"),
-                new Location(this, 256+151, 0x1E9FE, LocationType.Regular, "Skull Woods - Bridge Room",
-                    items => items.Firerod),
-                new Location(this, 256+152, 0x308155, LocationType.Regular, "Skull Woods - Mothula",
-                    items => items.Firerod && items.Sword && items.KeySW >= 3),
-            };
-        }
+        public Location CompassChest { get; }
+
+        public Location BigChest { get; }
+
+        public Location MapChest { get; }
+
+        public Location PinballRoom { get; }
+
+        public Location BigKeyChest { get; }
+
+        public Location BridgeRoom { get; }
+
+        public Location MothulaReward { get; }
 
         public override bool CanEnter(Progression items)
         {
@@ -39,9 +76,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Skull Woods - Mothula").IsAvailable(items);
+            return MothulaReward.IsAvailable(items);
         }
-
     }
-
 }

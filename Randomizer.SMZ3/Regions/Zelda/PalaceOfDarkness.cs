@@ -1,56 +1,98 @@
-﻿using System.Collections.Generic;
-
-using static Randomizer.SMZ3.ItemType;
-
-namespace Randomizer.SMZ3.Regions.Zelda
+﻿namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class PalaceOfDarkness : Z3Region, IHasReward
     {
+        public PalaceOfDarkness(World world, Config config) : base(world, config)
+        {
+            RegionItems = new[] { ItemType.KeyPD, ItemType.BigKeyPD, ItemType.MapPD, ItemType.CompassPD };
+
+            ShooterRoom = new Location(this, 256 + 121, 0x1EA5B, LocationType.Regular,
+                name: "Shooter Room",
+                vanillaItem: ItemType.KeyPD);
+
+            BigKeyChest = new Location(this, 256 + 122, 0x1EA37, LocationType.Regular,
+                name: "Big Key Chest",
+                vanillaItem: ItemType.BigKeyPD,
+                access: items => items.KeyPD >= (BigKeyChest.ItemIs(ItemType.KeyPD, World) ? 1 :
+                    (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 6 : 5))
+                .AlwaysAllow((item, items) => item.Is(ItemType.KeyPD, World) && items.KeyPD >= 5);
+
+            StalfosBasement = new Location(this, 256 + 123, 0x1EA49, LocationType.Regular,
+                name: "Stalfos Basement",
+                vanillaItem: ItemType.KeyPD,
+                access: items => items.KeyPD >= 1 || (items.Bow && items.Hammer));
+
+            ArenaBridge = new Location(this, 256 + 124, 0x1EA3D, LocationType.Regular,
+                name: "The Arena - Bridge",
+                vanillaItem: ItemType.KeyPD,
+                access: items => items.KeyPD >= 1 || (items.Bow && items.Hammer));
+
+            ArenaLedge = new Location(this, 256 + 125, 0x1EA3A, LocationType.Regular,
+                name: "The Arena - Ledge",
+                vanillaItem: ItemType.KeyPD,
+                access: items => items.Bow);
+
+            MapChest = new Location(this, 256 + 126, 0x1EA52, LocationType.Regular,
+                name: "Map Chest",
+                vanillaItem: ItemType.MapPD,
+                access: items => items.Bow);
+
+            CompassChest = new Location(this, 256 + 127, 0x1EA43, LocationType.Regular,
+                name: "Compass Chest",
+                vanillaItem: ItemType.CompassPD,
+                access: items => items.KeyPD >= ((items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 4 : 3));
+
+            HarmlessHellway = new Location(this, 256 + 128, 0x1EA46, LocationType.Regular,
+                name: "Harmless Hellway",
+                vanillaItem: ItemType.FiveRupees,
+                access: items => items.KeyPD >= (HarmlessHellway.ItemIs(ItemType.KeyPD, World) ?
+                    (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 4 : 3 :
+                    (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 6 : 5))
+                .AlwaysAllow((item, items) => item.Is(ItemType.KeyPD, World) && items.KeyPD >= 5);
+
+            BigChest = new Location(this, 256 + 133, 0x1EA40, LocationType.Regular,
+                name: "Big Chest",
+                vanillaItem: ItemType.Hammer,
+                access: items => items.BigKeyPD && items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 6 : 5));
+
+            HelmasaurKingReward = new Location(this, 256 + 134, 0x308153, LocationType.Regular,
+                name: "Helmasaur King",
+                vanillaItem: ItemType.HeartContainer,
+                access: items => items.Lamp && items.Hammer && items.Bow && items.BigKeyPD && items.KeyPD >= 6);
+
+            DarkMaze = new(this);
+            DarkBasement = new(this);
+        }
 
         public override string Name => "Palace of Darkness";
+
         public override string Area => "Dark Palace";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public PalaceOfDarkness(World world, Config config) : base(world, config)
-        {
-            RegionItems = new[] { KeyPD, BigKeyPD, MapPD, CompassPD };
+        public Location ShooterRoom { get; }
 
-            Locations = new List<Location> {
-                new Location(this, 256+121, 0x1EA5B, LocationType.Regular, "Palace of Darkness - Shooter Room"),
-                new Location(this, 256+122, 0x1EA37, LocationType.Regular, "Palace of Darkness - Big Key Chest",
-                    items => items.KeyPD >= (GetLocation("Palace of Darkness - Big Key Chest").ItemIs(KeyPD, World) ? 1 :
-                        (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 6 : 5))
-                    .AlwaysAllow((item, items) => item.Is(KeyPD, World) && items.KeyPD >= 5),
-                new Location(this, 256+123, 0x1EA49, LocationType.Regular, "Palace of Darkness - Stalfos Basement",
-                    items => items.KeyPD >= 1 || items.Bow && items.Hammer),
-                new Location(this, 256+124, 0x1EA3D, LocationType.Regular, "Palace of Darkness - The Arena - Bridge",
-                    items => items.KeyPD >= 1 || items.Bow && items.Hammer),
-                new Location(this, 256+125, 0x1EA3A, LocationType.Regular, "Palace of Darkness - The Arena - Ledge",
-                    items => items.Bow),
-                new Location(this, 256+126, 0x1EA52, LocationType.Regular, "Palace of Darkness - Map Chest",
-                    items => items.Bow),
-                new Location(this, 256+127, 0x1EA43, LocationType.Regular, "Palace of Darkness - Compass Chest",
-                    items => items.KeyPD >= ((items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 4 : 3)),
-                new Location(this, 256+128, 0x1EA46, LocationType.Regular, "Palace of Darkness - Harmless Hellway",
-                    items => items.KeyPD >= (GetLocation("Palace of Darkness - Harmless Hellway").ItemIs(KeyPD, World) ?
-                        (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 4 : 3 :
-                        (items.Hammer && items.Bow && items.Lamp) || config.Keysanity ? 6 : 5))
-                    .AlwaysAllow((item, items) => item.Is(KeyPD, World) && items.KeyPD >= 5),
-                new Location(this, 256+129, 0x1EA4C, LocationType.Regular, "Palace of Darkness - Dark Basement - Left",
-                    items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 4 : 3)),
-                new Location(this, 256+130, 0x1EA4F, LocationType.Regular, "Palace of Darkness - Dark Basement - Right",
-                    items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 4 : 3)),
-                new Location(this, 256+131, 0x1EA55, LocationType.Regular, "Palace of Darkness - Dark Maze - Top",
-                    items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 6 : 5)),
-                new Location(this, 256+132, 0x1EA58, LocationType.Regular, "Palace of Darkness - Dark Maze - Bottom",
-                    items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 6 : 5)),
-                new Location(this, 256+133, 0x1EA40, LocationType.Regular, "Palace of Darkness - Big Chest",
-                    items => items.BigKeyPD && items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 6 : 5)),
-                new Location(this, 256+134, 0x308153, LocationType.Regular, "Palace of Darkness - Helmasaur King",
-                    items => items.Lamp && items.Hammer && items.Bow && items.BigKeyPD && items.KeyPD >= 6),
-            };
-        }
+        public Location BigKeyChest { get; }
+
+        public Location StalfosBasement { get; }
+
+        public Location ArenaBridge { get; }
+
+        public Location ArenaLedge { get; }
+
+        public Location MapChest { get; }
+
+        public Location CompassChest { get; }
+
+        public Location HarmlessHellway { get; }
+
+        public Location BigChest { get; }
+
+        public Location HelmasaurKingReward { get; }
+
+        public DarkMazeRoom DarkMaze { get; }
+
+        public DarkBasementRoom DarkBasement { get; }
 
         public override bool CanEnter(Progression items)
         {
@@ -59,9 +101,49 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Palace of Darkness - Helmasaur King").IsAvailable(items);
+            return HelmasaurKingReward.IsAvailable(items);
         }
 
-    }
+        public class DarkMazeRoom : Room
+        {
+            public DarkMazeRoom(Region region)
+                : base(region, "Dark Maze")
+            {
+                Top = new Location(this, 256 + 131, 0x1EA55, LocationType.Regular,
+                    name: "Top",
+                    vanillaItem: ItemType.ThreeBombs,
+                    access: items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 6 : 5));
 
+                Bottom = new Location(this, 256 + 132, 0x1EA58, LocationType.Regular,
+                    name: "Bottom",
+                    vanillaItem: ItemType.KeyPD,
+                    access: items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 6 : 5));
+            }
+
+            public Location Top { get; }
+
+            public Location Bottom { get; }
+        }
+
+        public class DarkBasementRoom : Room
+        {
+            public DarkBasementRoom(Region region)
+                : base(region, "Dark Basement")
+            {
+                Left = new Location(this, 256 + 129, 0x1EA4C, LocationType.Regular,
+                    name: "Left",
+                    vanillaItem: ItemType.TenArrows,
+                    access: items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 4 : 3));
+
+                Right = new Location(this, 256 + 130, 0x1EA4F, LocationType.Regular,
+                    name: "Right",
+                    vanillaItem: ItemType.KeyPD,
+                    access: items => items.Lamp && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 4 : 3));
+            }
+
+            public Location Left { get; }
+
+            public Location Right { get; }
+        }
+    }
 }

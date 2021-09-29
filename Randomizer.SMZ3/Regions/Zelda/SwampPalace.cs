@@ -1,44 +1,76 @@
-﻿using System.Collections.Generic;
-
-using static Randomizer.SMZ3.ItemType;
-
-namespace Randomizer.SMZ3.Regions.Zelda
+﻿namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class SwampPalace : Z3Region, IHasReward
     {
+        public SwampPalace(World world, Config config) : base(world, config)
+        {
+            RegionItems = new[] { ItemType.KeySP, ItemType.BigKeySP, ItemType.MapSP, ItemType.CompassSP };
+
+            Entrance = new Location(this, 256 + 135, 0x1EA9D, LocationType.Regular,
+                name: "Entrance",
+                vanillaItem: ItemType.KeySP)
+                .Allow((item, items) => Config.Keysanity || item.Is(ItemType.KeySP, World));
+
+            MapChest = new Location(this, 256 + 136, 0x1E986, LocationType.Regular,
+                name: "Map Chest",
+                vanillaItem: ItemType.MapSP,
+                access: items => items.KeySP);
+
+            BigChest = new Location(this, 256 + 137, 0x1E989, LocationType.Regular,
+                name: "Big Chest",
+                vanillaItem: ItemType.Hookshot,
+                access: items => items.BigKeySP && items.KeySP && items.Hammer)
+                .AlwaysAllow((item, items) => item.Is(ItemType.BigKeySP, World));
+
+            CompassChest = new Location(this, 256 + 138, 0x1EAA0, LocationType.Regular,
+                name: "Compass Chest",
+                vanillaItem: ItemType.CompassSP,
+                access: items => items.KeySP && items.Hammer);
+
+            WestChest = new Location(this, 256 + 139, 0x1EAA3, LocationType.Regular,
+                name: "West Chest",
+                vanillaItem: ItemType.TwentyRupees,
+                access: items => items.KeySP && items.Hammer);
+
+            BigKeyChest = new Location(this, 256 + 140, 0x1EAA6, LocationType.Regular,
+                name: "Big Key Chest",
+                vanillaItem: ItemType.BigKeySP,
+                access: items => items.KeySP && items.Hammer);
+
+            WaterfallRoom = new Location(this, 256 + 143, 0x1EAAF, LocationType.Regular,
+                name: "Waterfall Room",
+                vanillaItem: ItemType.TwentyRupees,
+                access: items => items.KeySP && items.Hammer && items.Hookshot);
+
+            ArrghusReward = new Location(this, 256 + 144, 0x308154, LocationType.Regular,
+                name: "Arrghus",
+                vanillaItem: ItemType.HeartContainer,
+                access: items => items.KeySP && items.Hammer && items.Hookshot);
+
+            FloodedRoom = new(this);
+        }
 
         public override string Name => "Swamp Palace";
 
         public Reward Reward { get; set; } = Reward.None;
 
-        public SwampPalace(World world, Config config) : base(world, config)
-        {
-            RegionItems = new[] { KeySP, BigKeySP, MapSP, CompassSP };
+        public Location Entrance { get; }
 
-            Locations = new List<Location> {
-                new Location(this, 256+135, 0x1EA9D, LocationType.Regular, "Swamp Palace - Entrance")
-                    .Allow((item, items) => Config.Keysanity || item.Is(KeySP, World)),
-                new Location(this, 256+136, 0x1E986, LocationType.Regular, "Swamp Palace - Map Chest",
-                    items => items.KeySP),
-                new Location(this, 256+137, 0x1E989, LocationType.Regular, "Swamp Palace - Big Chest",
-                    items => items.BigKeySP && items.KeySP && items.Hammer)
-                    .AlwaysAllow((item, items) => item.Is(BigKeySP, World)),
-                new Location(this, 256+138, 0x1EAA0, LocationType.Regular, "Swamp Palace - Compass Chest",
-                    items => items.KeySP && items.Hammer),
-                new Location(this, 256+139, 0x1EAA3, LocationType.Regular, "Swamp Palace - West Chest",
-                    items => items.KeySP && items.Hammer),
-                new Location(this, 256+140, 0x1EAA6, LocationType.Regular, "Swamp Palace - Big Key Chest",
-                    items => items.KeySP && items.Hammer),
-                new Location(this, 256+141, 0x1EAA9, LocationType.Regular, "Swamp Palace - Flooded Room - Left",
-                    items => items.KeySP && items.Hammer && items.Hookshot),
-                new Location(this, 256+142, 0x1EAAC, LocationType.Regular, "Swamp Palace - Flooded Room - Right",
-                    items => items.KeySP && items.Hammer && items.Hookshot),
-                new Location(this, 256+143, 0x1EAAF, LocationType.Regular, "Swamp Palace - Waterfall Room",
-                    items => items.KeySP && items.Hammer && items.Hookshot),
-                new Location(this, 256+144, 0x308154, LocationType.Regular, "Swamp Palace - Arrghus",
-                    items => items.KeySP && items.Hammer && items.Hookshot),
-            };
-        }
+        public Location MapChest { get; }
+
+        public Location BigChest { get; }
+
+        public Location CompassChest { get; }
+
+        public Location WestChest { get; }
+
+        public Location BigKeyChest { get; }
+
+        public Location WaterfallRoom { get; }
+
+        public Location ArrghusReward { get; }
+
+        public FloodedRoomRoom FloodedRoom { get; }
 
         public override bool CanEnter(Progression items)
         {
@@ -47,9 +79,27 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Swamp Palace - Arrghus").IsAvailable(items);
+            return ArrghusReward.IsAvailable(items);
         }
 
-    }
+        public class FloodedRoomRoom : Room
+        {
+            public FloodedRoomRoom(Region region)
+                : base(region, "Flooded Room")
+            {
+                Left = new Location(this, 256 + 141, 0x1EAA9, LocationType.Regular,
+                    name: "Left",
+                    vanillaItem: ItemType.TwentyRupees,
+                    access: items => items.KeySP && items.Hammer && items.Hookshot);
+                Right = new Location(this, 256 + 142, 0x1EAAC, LocationType.Regular,
+                    name: "Right",
+                    vanillaItem: ItemType.TwentyRupees,
+                    access: items => items.KeySP && items.Hammer && items.Hookshot);
+            }
 
+            public Location Left { get; }
+
+            public Location Right { get; }
+        }
+    }
 }
