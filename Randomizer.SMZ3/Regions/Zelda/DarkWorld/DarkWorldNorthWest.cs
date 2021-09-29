@@ -32,11 +32,6 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.CanLiftHeavy() && items.Hammer);
 
-            Blacksmith = new Location(this, 256 + 76, 0x30802A, LocationType.Regular,
-                name: "Blacksmith", // ??? Shouldn't this be in the light world?
-                vanillaItem: ItemType.ProgressiveSword,
-                access: items => items.CanLiftHeavy());
-
             PurpleChestTurnin = new Location(this, 256 + 77, 0x6BD68, LocationType.Regular,
                 name: "Purple Chest",
                 alsoKnownAs: "Purple Chest turn-in",
@@ -56,8 +51,6 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         public Location Brewery { get; }
 
         public Location PegWorld { get; }
-
-        public Location Blacksmith { get; }
 
         public Location PurpleChestTurnin { get; }
 
