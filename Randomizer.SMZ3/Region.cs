@@ -21,7 +21,6 @@ namespace Randomizer.SMZ3
         {
             Config = config;
             World = world;
-            locationLookup = new Dictionary<string, Location>();
         }
 
         /// <summary>
@@ -64,26 +63,6 @@ namespace Randomizer.SMZ3
         /// Gets the list of region-specific items, e.g. keys, maps, compasses.
         /// </summary>
         protected IList<ItemType> RegionItems { get; set; } = new List<ItemType>();
-
-        private Dictionary<string, Location> locationLookup { get; set; }
-
-        /// <summary>
-        /// Returns the location with the specified name.
-        /// </summary>
-        /// <param name="name">
-        /// The name of the location in the region to return.
-        /// </param>
-        /// <returns>The location with the specified name.</returns>
-        /// <exception cref="ArgumentNullException" />
-        /// <exception cref="KeyNotFoundException" />
-        [Obsolete("Use the relevant property instead of accessing regions by name.")]
-        public Location GetLocation(string name) => locationLookup[name];
-
-        [Obsolete("This really shouldn't be necessary.")]
-        public void GenerateLocationLookup()
-        {
-            locationLookup = Locations.ToDictionary(l => l.Name, l => l);
-        }
 
         /// <summary>
         /// Determines whether the specified item is specific to this region.

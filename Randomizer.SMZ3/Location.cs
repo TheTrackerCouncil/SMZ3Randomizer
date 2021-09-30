@@ -437,7 +437,7 @@ namespace Randomizer.SMZ3
 
             return locations.Where(l =>
                 l.CanFill(item, worldProgression[l.Region.World.Id])
-                && item.World.Locations.Find(ll => ll.Id == l.Id).IsAvailable(itemWorldProgression));
+                && item.World.Locations.Single(ll => ll.Id == l.Id).IsAvailable(itemWorldProgression));
         }
 
     }

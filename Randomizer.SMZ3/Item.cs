@@ -28,8 +28,11 @@ namespace Randomizer.SMZ3
         public bool IsCompass => compass.IsMatch(Type.ToString());
         public bool IsKeycard => keycard.IsMatch(Type.ToString());
 
-        public bool Is(ItemType type, World world) => Type == type && World == world;
-        public bool IsNot(ItemType type, World world) => !Is(type, world);
+        public bool Is(ItemType type, World world)
+            => Type == type && World == world;
+
+        public bool IsNot(ItemType type, World world)
+            => !Is(type, world);
 
         public Item(ItemType itemType)
         {

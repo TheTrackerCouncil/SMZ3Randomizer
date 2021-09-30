@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 name: "Map Chest",
                 vanillaItem: ItemType.MapGT,
                 access: items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
-                    (new[] { ItemType.BigKeyGT, ItemType.KeyGT }.Any(type => GetLocation("Map Chest").ItemIs(type, World)) ? 3 : 4))
+                    (new[] { ItemType.BigKeyGT, ItemType.KeyGT }.Any(type => MapChest.ItemIs(type, World)) ? 3 : 4))
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyGT, World) && items.KeyGT >= 3);
 
             FiresnakeRoom = new Location(this, 256 + 195, 0x1EAD0, LocationType.Regular,

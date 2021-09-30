@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 access: Logic switch
                 {
                     Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
-                        (items.Grapple || items.SpaceJump || items.Varia && items.HasEnergyReserves(2) || items.HasEnergyReserves(3)),
+                        (items.Grapple || items.SpaceJump || (items.Varia && items.HasEnergyReserves(2)) || items.HasEnergyReserves(3)),
                     _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1)))
                 });
         }
@@ -113,7 +113,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                         /* From Maridia portal -> Forgotten Highway */
                         (items.CanAccessMaridiaPortal(World) && items.Gravity && (
                             (items.CanDestroyBombWalls() && items.CardMaridiaL2) ||
-                            World.GetLocation("Space Jump").IsAvailable(items)
+                            World.MaridiaInner.DraygonTreasure.IsAvailable(items)
                         ))
                     ),
                 _ =>
@@ -131,7 +131,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                             (items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2) ||
                             (items.Gravity && (
                                 (items.CanDestroyBombWalls() && items.CardMaridiaL2) ||
-                                World.GetLocation("Space Jump").IsAvailable(items)
+                                World.MaridiaInner.DraygonTreasure.IsAvailable(items)
                             ))
                         ))
                     ),

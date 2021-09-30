@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.FileData
 
             WritePrizeShuffle();
 
-            WriteRemoveEquipmentFromUncle(myWorld.GetLocation("Link's Uncle").Item);
+            WriteRemoveEquipmentFromUncle(myWorld.HyruleCastle.LinksUncle.Item);
 
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
@@ -75,15 +75,32 @@ namespace Randomizer.SMZ3.FileData
             return patches.ToDictionary(x => x.offset, x => x.bytes);
         }
 
+        private static int Snes(int addr)
+        {
+            addr = addr switch
+            {
+                /* Redirect hi bank $30 access into ExHiRom lo bank $40 */
+                _ when (addr & 0xFF8000) == 0x308000 => 0x400000 | (addr & 0x7FFF),
+                /* General case, add ExHi offset for banks < $80, and collapse mirroring */
+                _ => (addr < 0x800000 ? 0x400000 : 0) | (addr & 0x3FFFFF),
+            };
+            if (addr > 0x600000)
+                throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
+            return addr;
+        }
+
+        private static byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
+
+        private static byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
+
+        private static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
+
         private void WriteMedallions()
         {
-            var turtleRock = myWorld.Regions.OfType<TurtleRock>().First();
-            var miseryMire = myWorld.Regions.OfType<MiseryMire>().First();
-
             var turtleRockAddresses = new int[] { 0x308023, 0xD020, 0xD0FF, 0xD1DE };
             var miseryMireAddresses = new int[] { 0x308022, 0xCFF2, 0xD0D1, 0xD1B0 };
 
-            var turtleRockValues = turtleRock.Medallion switch
+            var turtleRockValues = myWorld.TurtleRock.Medallion switch
             {
                 Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
                 Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
@@ -91,7 +108,7 @@ namespace Randomizer.SMZ3.FileData
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Turtle Rock medallion")
             };
 
-            var miseryMireValues = miseryMire.Medallion switch
+            var miseryMireValues = myWorld.MiseryMire.Medallion switch
             {
                 Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
                 Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
@@ -301,7 +318,7 @@ namespace Randomizer.SMZ3.FileData
         {
             var type = location.Item.World == location.Region.World ? 0 : 1;
             var owner = location.Item.World.Id;
-            return (0x386000 + location.Id * 8, new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
+            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
         }
 
         private void WriteDungeonMusic(bool keysanity)
@@ -435,6 +452,7 @@ namespace Randomizer.SMZ3.FileData
          * within the list boundary. Otherwise use the "column" (modulo by m)
          * as the random element.
          */
+
         private IEnumerable<byte> PrizePackRandomization(int n, int s)
         {
             const int m = 7;
@@ -457,6 +475,7 @@ namespace Randomizer.SMZ3.FileData
         }
 
         /* Todo: Deadrock turns into $8F Blob when powdered, but those "onion blobs" always drop prize pack 1. */
+
         private (IList<(int offset, byte[] bytes)>, IList<(int src, int dest)>) EnemyPrizePacks()
         {
             const int offset = 0xDB632;
@@ -475,12 +494,10 @@ namespace Randomizer.SMZ3.FileData
                 (offset+0x18, new byte[] { 0x90, 0x90 }), // Mini Moldorm, Poe/Hyu
                 (offset+0x20, new byte[] { 0x00 }), // Sluggula
                 (offset+0x22, new byte[] { 0x80, 0x00, 0x00 }), // Ropa, Red Bari, Blue Bari
-                // Blue Soldier/Tarus, Green Soldier, Red Spear Soldier
-                // Blue Assault Soldier, Red Assault Spear Soldier/Tarus
-                // Blue Archer, Green Archer
-                // Red Javelin Soldier, Red Bush Javelin Soldier
-                // Red Bomb Soldiers, Green Soldier Recruits,
-                // Geldman, Toppo
+                // Blue Soldier/Tarus, Green Soldier, Red Spear Soldier Blue
+                // Assault Soldier, Red Assault Spear Soldier/Tarus Blue Archer,
+                // Green Archer Red Javelin Soldier, Red Bush Javelin Soldier
+                // Red Bomb Soldiers, Green Soldier Recruits, Geldman, Toppo
                 (offset+0x41, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x10, 0x90, 0x90, 0x80 }),
                 (offset+0x4F, new byte[] { 0x80 }), // Popo 2
                 (offset+0x51, new byte[] { 0x80 }), // Armos
@@ -492,16 +509,15 @@ namespace Randomizer.SMZ3.FileData
                 (offset+0x71, new byte[] { 0x80 }), // Leever
                 (offset+0x7C, new byte[] { 0x90 }), // Initially Floating Stal
                 (offset+0x81, new byte[] { 0xC0 }), // Hover
-                // Green Eyegore/Mimic, Red Eyegore/Mimic
-                // Detached Stalfos Body, Kodongo
+                // Green Eyegore/Mimic, Red Eyegore/Mimic Detached Stalfos Body,
+                // Kodongo
                 (offset+0x83, new byte[] { 0x10, 0x10, 0x10, 0x00 }),
                 (offset+0x8B, new byte[] { 0x10 }), // Gibdo
                 (offset+0x8E, new byte[] { 0x00, 0x00 }), // Terrorpin, Blob
                 (offset+0x91, new byte[] { 0x10 }), // Stalfos Knight
                 (offset+0x99, new byte[] { 0x10 }), // Pengator
                 (offset+0x9B, new byte[] { 0x10 }), // Wizzrobe
-                // Blue Zazak, Red Zazak, Stalfos
-                // Green Zirro, Blue Zirro, Pikit
+                // Blue Zazak, Red Zazak, Stalfos Green Zirro, Blue Zirro, Pikit
                 (offset+0xA5, new byte[] { 0x10, 0x10, 0x10, 0x80, 0x80, 0x80 }),
                 (offset+0xC7, new byte[] { 0x10 }), // Hokku-Bokku
                 (offset+0xC9, new byte[] { 0x10 }), // Tektite
@@ -541,8 +557,8 @@ namespace Randomizer.SMZ3.FileData
             patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
             stringTable.SetGanonFirstPhaseText(ganon);
 
-            // Todo: Verify these two are correct if ganon invincible patch is ever added
-            // ganon_fall_in_alt in v30
+            // Todo: Verify these two are correct if ganon invincible patch is
+            //       ever added ganon_fall_in_alt in v30
             var ganonFirstPhaseInvincible = "You think you\nare ready to\nface me?\n\nI will not die\n\nunless you\ncomplete your\ngoals. Dingus!";
             patches.Add((Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible)));
 
@@ -571,7 +587,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void WritePlayerNames()
         {
-            patches.AddRange(allWorlds.Select(world => (0x385000 + world.Id * 16, PlayerNameBytes(world.Player))));
+            patches.AddRange(allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
         }
 
         private byte[] PlayerNameBytes(string name)
@@ -589,13 +605,13 @@ namespace Randomizer.SMZ3.FileData
         private void WriteSeedData()
         {
             var configField =
-                (myWorld.Config.Race ? 1 : 0) << 15 |
-                (myWorld.Config.Keysanity ? 1 : 0) << 13 |
-                (myWorld.Config.MultiWorld ? 1 : 0) << 12 |
-                (int)myWorld.Config.Z3Logic << 10 |
-                (int)myWorld.Config.SMLogic << 8 |
-                Generation.Randomizer.version.Major << 4 |
-                Generation.Randomizer.version.Minor << 0;
+                ((myWorld.Config.Race ? 1 : 0) << 15) |
+                ((myWorld.Config.Keysanity ? 1 : 0) << 13) |
+                ((myWorld.Config.MultiWorld ? 1 : 0) << 12) |
+                ((int)myWorld.Config.Z3Logic << 10) |
+                ((int)myWorld.Config.SMLogic << 8) |
+                (Generation.Randomizer.version.Major << 4) |
+                (Generation.Randomizer.version.Minor << 0);
 
             patches.Add((Snes(0x80FF50), UshortBytes(myWorld.Id)));
             patches.Add((Snes(0x80FF52), UshortBytes(configField)));
@@ -652,19 +668,20 @@ namespace Randomizer.SMZ3.FileData
             ushort plaquePLm = 0xd410;
 
             var doorList = new List<ushort[]> {
-                            // RoomId  Door Facing                yyxx  Keycard Event Type                   Plaque type               yyxx, Address (if 0 a dynamic PLM is created)
-                // Crateria
+                            // RoomId Door Facing yyxx Keycard Event Type Plaque
+                            // type yyxx, Address (if 0 a dynamic PLM is
+                            // created) Crateria
                 new ushort[] { 0x91F8, KeycardDoors.Right,      0x2601, KeycardEvents.CrateriaLevel1,        KeycardPlaque.Level1,   0x2400, 0x0000 },  // Crateria - Landing Site - Door to gauntlet
                 new ushort[] { 0x91F8, KeycardDoors.Left,       0x168E, KeycardEvents.CrateriaLevel1,        KeycardPlaque.Level1,   0x148F, 0x801E },  // Crateria - Landing Site - Door to landing site PB
                 new ushort[] { 0x948C, KeycardDoors.Left,       0x062E, KeycardEvents.CrateriaLevel2,        KeycardPlaque.Level2,   0x042F, 0x8222 },  // Crateria - Before Moat - Door to moat (overwrite PB door)
                 new ushort[] { 0x99BD, KeycardDoors.Left,       0x660E, KeycardEvents.CrateriaBoss,          KeycardPlaque.Boss,     0x640F, 0x8470 },  // Crateria - Before G4 - Door to G4
                 new ushort[] { 0x9879, KeycardDoors.Left,       0x062E, KeycardEvents.CrateriaBoss,          KeycardPlaque.Boss,     0x042F, 0x8420 },  // Crateria - Before BT - Door to Bomb Torizo
-                
+
                 // Brinstar
                 new ushort[] { 0x9F11, KeycardDoors.Left,       0x060E, KeycardEvents.BrinstarLevel1,        KeycardPlaque.Level1,   0x040F, 0x8784 },  // Brinstar - Blue Brinstar - Door to ceiling e-tank room
 
-                new ushort[] { 0x9AD9, KeycardDoors.Right,      0xA601, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0xA400, 0x0000 },  // Brinstar - Green Brinstar - Door to etecoon area                
-                new ushort[] { 0x9D9C, KeycardDoors.Down,       0x0336, KeycardEvents.BrinstarBoss,          KeycardPlaque.Boss,     0x0234, 0x863A },  // Brinstar - Pink Brinstar - Door to spore spawn                
+                new ushort[] { 0x9AD9, KeycardDoors.Right,      0xA601, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0xA400, 0x0000 },  // Brinstar - Green Brinstar - Door to etecoon area
+                new ushort[] { 0x9D9C, KeycardDoors.Down,       0x0336, KeycardEvents.BrinstarBoss,          KeycardPlaque.Boss,     0x0234, 0x863A },  // Brinstar - Pink Brinstar - Door to spore spawn
                 new ushort[] { 0xA130, KeycardDoors.Left,       0x161E, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0x141F, 0x881C },  // Brinstar - Pink Brinstar - Door to wave gate e-tank
                 new ushort[] { 0xA0A4, KeycardDoors.Left,       0x062E, KeycardEvents.BrinstarLevel2,        KeycardPlaque.Level2,   0x042F, 0x0000 },  // Brinstar - Pink Brinstar - Door to spore spawn super
 
@@ -678,7 +695,7 @@ namespace Randomizer.SMZ3.FileData
                 new ushort[] { 0xAF72, KeycardDoors.Left,       0x061E, KeycardEvents.NorfairLevel2,         KeycardPlaque.Level2,   0x041F, 0x0000 },  // Norfair - After frog speedway - Door to Bubble Mountain
                 new ushort[] { 0xAEDF, KeycardDoors.Down,       0x0206, KeycardEvents.NorfairLevel2,         KeycardPlaque.Level2,   0x0204, 0x0000 },  // Norfair - Below bubble mountain - Door to Bubble Mountain
                 new ushort[] { 0xAD5E, KeycardDoors.Right,      0x0601, KeycardEvents.NorfairLevel2,         KeycardPlaque.Level2,   0x0400, 0x0000 },  // Norfair - LN Escape - Door to Bubble Mountain
-                
+
                 new ushort[] { 0xA923, KeycardDoors.Up,         0x2DC6, KeycardEvents.NorfairBoss,           KeycardPlaque.Boss,     0x2EC4, 0x8B96 },  // Norfair - Pre-Crocomire - Door to Crocomire
 
                 // Lower Norfair
@@ -703,7 +720,6 @@ namespace Randomizer.SMZ3.FileData
                 new ushort[] { 0xCE40, KeycardDoors.Left,       0x060E, KeycardEvents.WreckedShipLevel1,     KeycardPlaque.Level1,   0x040F, 0x0000 },  // Wrecked Ship - Gravity Suit - Door to Bowling Alley
 
                 new ushort[] { 0xCC6F, KeycardDoors.Left,       0x064E, KeycardEvents.WreckedShipBoss,       KeycardPlaque.Boss,     0x044F, 0xC29D },  // Wrecked Ship - Pre-Phantoon - Door to Phantoon
-                
             };
 
             ushort doorId = 0x0000;
@@ -723,8 +739,12 @@ namespace Randomizer.SMZ3.FileData
                     // Overwrite existing door
                     var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
                     patches.Add((Snes(0x8f0000 + door[6]), doorData));
-                    if (door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C || door[3] == KeycardEvents.LowerNorfairBoss || door[3] == KeycardEvents.MaridiaBoss || door[3] == KeycardEvents.WreckedShipBoss)
-                        // Overwrite the extra parts of the Gadora with a PLM that just deletes itself
+                    if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C)
+                        || door[3] == KeycardEvents.LowerNorfairBoss
+                        || door[3] == KeycardEvents.MaridiaBoss
+                        || door[3] == KeycardEvents.WreckedShipBoss)
+                        // Overwrite the extra parts of the Gadora with a PLM
+                        // that just deletes itself
                         patches.Add((Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 }));
                 }
 
@@ -748,8 +768,8 @@ namespace Randomizer.SMZ3.FileData
             patches.Add((Snes(0x1DFD95), new byte[] { digs }));
         }
 
-        // Removes Sword/Shield from Uncle by moving the tiles for
-        // sword/shield to his head and replaces them with his head.
+        // Removes Sword/Shield from Uncle by moving the tiles for sword/shield
+        // to his head and replaces them with his head.
         private void WriteRemoveEquipmentFromUncle(Item item)
         {
             if (item.Type != ProgressiveSword)
@@ -825,27 +845,5 @@ namespace Randomizer.SMZ3.FileData
             // Todo: Z3r major glitches disables this, reconsider extending or dropping with glitched logic later.
             //patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
         }
-
-        private int Snes(int addr)
-        {
-            addr = addr switch
-            {
-                /* Redirect hi bank $30 access into ExHiRom lo bank $40 */
-                _ when (addr & 0xFF8000) == 0x308000 => 0x400000 | addr & 0x7FFF,
-                /* General case, add ExHi offset for banks < $80, and collapse mirroring */
-                _ => (addr < 0x800000 ? 0x400000 : 0) | addr & 0x3FFFFF,
-            };
-            if (addr > 0x600000)
-                throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
-            return addr;
-        }
-
-        private byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
-
-        private byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
-
-        private byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
-
     }
-
 }

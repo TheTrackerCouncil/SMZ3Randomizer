@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using static Randomizer.SMZ3.SMLogic;
+﻿using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 {
@@ -145,6 +143,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     _ => new Requirement(items => CanDefeatDraygon(items))
                 });
         }
+
         public override string Name => "Maridia Inner";
 
         public override string Area => "Maridia";
@@ -184,30 +183,30 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             return Logic switch
             {
                 Normal => items.Gravity && (
-                    World.UpperNorfairWest.CanEnter(items) && items.Super && items.CanUsePowerBombs() &&
-                        (items.CanFly() || items.SpeedBooster || items.Grapple) ||
+                    (World.UpperNorfairWest.CanEnter(items) && items.Super && items.CanUsePowerBombs() &&
+                        (items.CanFly() || items.SpeedBooster || items.Grapple)) ||
                     items.CanAccessMaridiaPortal(World)
                 ),
                 _ =>
-                    items.Super && World.UpperNorfairWest.CanEnter(items) && items.CanUsePowerBombs() &&
-                        (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple) ||
+                    (items.Super && World.UpperNorfairWest.CanEnter(items) && items.CanUsePowerBombs() &&
+                        (items.Gravity || (items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple))) ||
                     items.CanAccessMaridiaPortal(World)
             };
         }
 
         public bool CanComplete(Progression items)
         {
-            return GetLocation("Space Jump").IsAvailable(items);
+            return DraygonTreasure.IsAvailable(items);
         }
 
         private bool CanReachAqueduct(Progression items)
         {
             return Logic switch
             {
-                Normal => items.CardMaridiaL1 && (items.CanFly() || items.SpeedBooster || items.Grapple)
-                         || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World),
-                _ => items.CardMaridiaL1 && (items.Gravity || items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple)
-                         || items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World)
+                Normal => (items.CardMaridiaL1 && (items.CanFly() || items.SpeedBooster || items.Grapple))
+                         || (items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World)),
+                _ => (items.CardMaridiaL1 && (items.Gravity || (items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple)))
+                         || (items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World))
             };
         }
 
@@ -216,11 +215,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             return Logic switch
             {
                 Normal => (
-                    items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items) ||
+                    (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) ||
                     items.CanAccessMaridiaPortal(World)
-                ) && items.CardMaridiaBoss && items.Gravity && (items.SpeedBooster && items.HiJump || items.CanFly()),
+                ) && items.CardMaridiaBoss && items.Gravity && ((items.SpeedBooster && items.HiJump) || items.CanFly()),
                 _ => (
-                    items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items) ||
+                    (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) ||
                     items.CanAccessMaridiaPortal(World)
                 ) && items.CardMaridiaBoss && items.Gravity
             };
@@ -231,7 +230,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             return Logic switch
             {
                 Normal => items.SpeedBooster || items.CanAccessMaridiaPortal(World),
-                _ => items.Ice || items.SpeedBooster && items.Gravity || items.CanAccessMaridiaPortal(World)
+                _ => items.Ice || (items.SpeedBooster && items.Gravity) || items.CanAccessMaridiaPortal(World)
             };
         }
     }

@@ -113,19 +113,19 @@ namespace Randomizer.SMZ3
 
         private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world)
         {
-            FillItemAtLocation(dungeonItems, ItemType.KeySW, world.GetLocation("Skull Woods - Pinball Room"));
+            FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
 
             /* Check Swords option and place as needed */
             switch (Config.SwordLocation)
             {
-                case SwordLocation.Uncle: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.GetLocation("Link's Uncle")); break;
+                case SwordLocation.Uncle: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.HyruleCastle.LinksUncle); break;
                 case SwordLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
             }
 
             /* Check Morph option and place as needed */
             switch (Config.MorphLocation)
             {
-                case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.GetLocation("Morphing Ball")); break;
+                case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.BrinstarBlue.MorphBall); break;
                 case MorphLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
             }
 

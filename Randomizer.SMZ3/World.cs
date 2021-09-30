@@ -21,65 +21,6 @@ namespace Randomizer.SMZ3
 {
     public class World
     {
-        public List<Location> Locations { get; set; }
-        public List<Region> Regions { get; set; }
-        public Config Config { get; set; }
-        public string Player { get; set; }
-        public string Guid { get; set; }
-        public int Id { get; set; }
-
-        public IEnumerable<Item> Items => Locations.Select(l => l.Item).Where(i => i != null);
-
-        private Dictionary<string, Location> locationLookup { get; set; }
-
-        private Dictionary<string, Region> regionLookup { get; set; }
-
-        public Location GetLocation(string name) => locationLookup[name];
-
-        [Obsolete("Use the relevant property instead of accessing regions by name.")]
-        public Region GetRegion(string name) => regionLookup[name];
-
-        public CastleTower CastleTower { get; }
-        public EasternPalace EasternPalace { get; }
-        public DesertPalace DesertPalace { get; }
-        public TowerOfHera TowerOfHera { get; }
-        public PalaceOfDarkness PalaceOfDarkness { get; }
-        public SwampPalace SwampPalace { get; }
-        public SkullWoods SkullWoods { get; }
-        public ThievesTown ThievesTown { get; }
-        public IcePalace IcePalace { get; }
-        public MiseryMire MiseryMire { get; }
-        public TurtleRock TurtleRock { get; }
-        public GanonsTower GanonsTower { get; }
-        public LightWorldDeathMountainWest LightWorldDeathMountainWest { get; }
-        public LightWorldDeathMountainEast LightWorldDeathMountainEast { get; }
-        public LightWorldNorthWest LightWorldNorthWest { get; }
-        public LightWorldNorthEast LightWorldNorthEast { get; }
-        public LightWorldSouth LightWorldSouth { get; }
-        public HyruleCastle HyruleCastle { get; }
-        public DarkWorldDeathMountainWest DarkWorldDeathMountainWest { get; }
-        public DarkWorldDeathMountainEast DarkWorldDeathMountainEast { get; }
-        public DarkWorldNorthWest DarkWorldNorthWest { get; }
-        public DarkWorldNorthEast DarkWorldNorthEast { get; }
-        public DarkWorldSouth DarkWorldSouth { get; }
-        public DarkWorldMire DarkWorldMire { get; }
-        public CrateriaCentral CrateriaCentral { get; }
-        public CrateriaWest CrateriaWest { get; }
-        public CrateriaEast CrateriaEast { get; }
-        public BrinstarBlue BrinstarBlue { get; }
-        public BrinstarGreen BrinstarGreen { get; }
-        public BrinstarKraid BrinstarKraid { get; }
-        public BrinstarPink BrinstarPink { get; }
-        public BrinstarRed BrinstarRed { get; }
-        public MaridiaOuter MaridiaOuter { get; }
-        public MaridiaInner MaridiaInner { get; }
-        public UpperNorfairWest UpperNorfairWest { get; }
-        public UpperNorfairEast UpperNorfairEast { get; }
-        public UpperNorfairCrocomire UpperNorfairCrocomire { get; }
-        public LowerNorfairWest LowerNorfairWest { get; }
-        public LowerNorfairEast LowerNorfairEast { get; }
-        public WreckedShip WreckedShip { get; }
-
         public World(Config config, string player, int id, string guid)
         {
             Config = config;
@@ -127,27 +68,72 @@ namespace Randomizer.SMZ3
             LowerNorfairWest = new(this, Config);
             LowerNorfairEast = new(this, Config);
             WreckedShip = new(this, Config);
-            Regions = new List<Region> { CastleTower, EasternPalace, DesertPalace, TowerOfHera, PalaceOfDarkness, SwampPalace, SkullWoods, ThievesTown, IcePalace, MiseryMire, TurtleRock, GanonsTower, LightWorldDeathMountainWest, LightWorldDeathMountainEast, LightWorldNorthWest, LightWorldNorthEast, LightWorldSouth, HyruleCastle, DarkWorldDeathMountainWest, DarkWorldDeathMountainEast, DarkWorldNorthWest, DarkWorldNorthEast, DarkWorldSouth, DarkWorldMire, CrateriaCentral, CrateriaWest, CrateriaEast, BrinstarBlue, BrinstarGreen, BrinstarKraid, BrinstarPink, BrinstarRed, MaridiaOuter, MaridiaInner, UpperNorfairWest, UpperNorfairEast, UpperNorfairCrocomire, LowerNorfairWest, LowerNorfairEast, WreckedShip };
-
+            Regions = new List<Region> {
+                CastleTower, EasternPalace, DesertPalace, TowerOfHera,
+                PalaceOfDarkness, SwampPalace, SkullWoods, ThievesTown,
+                IcePalace, MiseryMire, TurtleRock, GanonsTower,
+                LightWorldDeathMountainWest, LightWorldDeathMountainEast,
+                LightWorldNorthWest, LightWorldNorthEast, LightWorldSouth,
+                HyruleCastle, DarkWorldDeathMountainWest,
+                DarkWorldDeathMountainEast, DarkWorldNorthWest,
+                DarkWorldNorthEast, DarkWorldSouth, DarkWorldMire,
+                CrateriaCentral, CrateriaWest, CrateriaEast, BrinstarBlue,
+                BrinstarGreen, BrinstarKraid, BrinstarPink, BrinstarRed,
+                MaridiaOuter, MaridiaInner, UpperNorfairWest, UpperNorfairEast,
+                UpperNorfairCrocomire, LowerNorfairWest, LowerNorfairEast,
+                WreckedShip
+            };
             Locations = Regions.SelectMany(x => x.Locations).ToList();
-
-            regionLookup = Regions.ToDictionary(r => r.Name, r => r);
-            locationLookup = Locations.ToDictionary(l => l.Name, l => l);
-
-            foreach (var region in Regions)
-            {
-                region.GenerateLocationLookup();
-            }
         }
 
-        [Obsolete("Use the relevant property instead of accessing regions by name.")]
-        public bool CanEnter(string regionName, Progression items)
-        {
-            var region = regionLookup[regionName];
-            if (region == null)
-                throw new ArgumentException($"World.CanEnter: Invalid region name {regionName}", nameof(regionName));
-            return region.CanEnter(items);
-        }
+        public Config Config { get; }
+        public string Player { get; }
+        public string Guid { get; }
+        public int Id { get; }
+        public IEnumerable<Region> Regions { get; }
+        public IEnumerable<Location> Locations { get; }
+        public IEnumerable<Item> Items => Locations.Select(l => l.Item).Where(i => i != null);
+
+        public CastleTower CastleTower { get; }
+        public EasternPalace EasternPalace { get; }
+        public DesertPalace DesertPalace { get; }
+        public TowerOfHera TowerOfHera { get; }
+        public PalaceOfDarkness PalaceOfDarkness { get; }
+        public SwampPalace SwampPalace { get; }
+        public SkullWoods SkullWoods { get; }
+        public ThievesTown ThievesTown { get; }
+        public IcePalace IcePalace { get; }
+        public MiseryMire MiseryMire { get; }
+        public TurtleRock TurtleRock { get; }
+        public GanonsTower GanonsTower { get; }
+        public LightWorldDeathMountainWest LightWorldDeathMountainWest { get; }
+        public LightWorldDeathMountainEast LightWorldDeathMountainEast { get; }
+        public LightWorldNorthWest LightWorldNorthWest { get; }
+        public LightWorldNorthEast LightWorldNorthEast { get; }
+        public LightWorldSouth LightWorldSouth { get; }
+        public HyruleCastle HyruleCastle { get; }
+        public DarkWorldDeathMountainWest DarkWorldDeathMountainWest { get; }
+        public DarkWorldDeathMountainEast DarkWorldDeathMountainEast { get; }
+        public DarkWorldNorthWest DarkWorldNorthWest { get; }
+        public DarkWorldNorthEast DarkWorldNorthEast { get; }
+        public DarkWorldSouth DarkWorldSouth { get; }
+        public DarkWorldMire DarkWorldMire { get; }
+        public CrateriaCentral CrateriaCentral { get; }
+        public CrateriaWest CrateriaWest { get; }
+        public CrateriaEast CrateriaEast { get; }
+        public BrinstarBlue BrinstarBlue { get; }
+        public BrinstarGreen BrinstarGreen { get; }
+        public BrinstarKraid BrinstarKraid { get; }
+        public BrinstarPink BrinstarPink { get; }
+        public BrinstarRed BrinstarRed { get; }
+        public MaridiaOuter MaridiaOuter { get; }
+        public MaridiaInner MaridiaInner { get; }
+        public UpperNorfairWest UpperNorfairWest { get; }
+        public UpperNorfairEast UpperNorfairEast { get; }
+        public UpperNorfairCrocomire UpperNorfairCrocomire { get; }
+        public LowerNorfairWest LowerNorfairWest { get; }
+        public LowerNorfairEast LowerNorfairEast { get; }
+        public WreckedShip WreckedShip { get; }
 
         public bool CanAquire(Progression items, Reward reward)
         {

@@ -73,7 +73,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                         /* Oasis -> Forgotten Highway */
                         (items.CardMaridiaL2 && items.CanDestroyBombWalls()) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        World.GetLocation("Space Jump").IsAvailable(items))) ||
+                        World.MaridiaInner.DraygonTreasure.IsAvailable(items))) ||
                     /*Through Maridia from Pipe*/
                     (items.CanUsePowerBombs() && items.Super && items.Gravity)
                     ,
@@ -91,7 +91,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                             (items.Gravity && items.CanDestroyBombWalls())
                         )) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        (items.Gravity && World.GetLocation("Space Jump").IsAvailable(items)))) ||
+                        (items.Gravity && World.MaridiaInner.DraygonTreasure.IsAvailable(items)))) ||
                     /*Through Maridia from Pipe*/
                     (items.CanUsePowerBombs() && items.Super && (items.Gravity || (items.HiJump && (items.Ice || items.CanSpringBallJump())
                                                                 && items.Grapple && items.CardMaridiaL1)))
