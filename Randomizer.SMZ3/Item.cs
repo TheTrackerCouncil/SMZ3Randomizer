@@ -1,55 +1,97 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+
 using static Randomizer.SMZ3.ItemType;
-using System.Text.RegularExpressions;
-using System.ComponentModel;
 
 namespace Randomizer.SMZ3
 {
+    /// <summary>
+    /// Represents an item.
+    /// </summary>
     public class Item
     {
-        public string Name { get; set; }
-        public ItemType Type { get; set; }
-        public bool Progression { get; set; }
-        public World World { get; set; }
-
-        private static readonly Regex dungeon = new("^(BigKey|Key|Map|Compass)");
-        private static readonly Regex bigKey = new("^BigKey");
-        private static readonly Regex key = new("^Key");
-        private static readonly Regex map = new("^Map");
-        private static readonly Regex compass = new("^Compass");
-        private static readonly Regex keycard = new("^Card");
-
-        public bool IsDungeonItem => dungeon.IsMatch(Type.ToString());
-        public bool IsBigKey => bigKey.IsMatch(Type.ToString());
-        public bool IsKey => key.IsMatch(Type.ToString());
-        public bool IsMap => map.IsMatch(Type.ToString());
-        public bool IsCompass => compass.IsMatch(Type.ToString());
-        public bool IsKeycard => keycard.IsMatch(Type.ToString());
-
-        public bool Is(ItemType type, World world)
-            => Type == type && World == world;
-
-        public bool IsNot(ItemType type, World world)
-            => !Is(type, world);
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Item"/> class with the
+        /// specified item type.
+        /// </summary>
+        /// <param name="itemType">The type of item.</param>
         public Item(ItemType itemType)
         {
             Name = itemType.GetDescription();
             Type = itemType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Item"/> class with the
+        /// specified item type and world.
+        /// </summary>
+        /// <param name="itemType">The type of item.</param>
+        /// <param name="world">The world the item is in.</param>
         public Item(ItemType itemType, World world) : this(itemType)
         {
             World = world;
         }
 
-        public static Item Nothing(World world)
-        {
-            return new Item(ItemType.Nothing, world);
-        }
+        /// <summary>
+        /// Gets the name of the item.
+        /// </summary>
+        public string Name { get; }
 
+        /// <summary>
+        /// Gets the type of item.
+        /// </summary>
+        public ItemType Type { get; }
+
+        /// <summary>
+        /// Indicates whether the item is an item required to make progress.
+        /// </summary>
+        public bool Progression { get; protected set; }
+
+        /// <summary>
+        /// Gets the world the item is located in.
+        /// </summary>
+        public World World { get; protected set; }
+
+        /// <summary>
+        /// Indicates whether the item is a dungeon-specific item.
+        /// </summary>
+        public bool IsDungeonItem => Type.IsInAnyCategory(
+            ItemCategory.SmallKey,
+            ItemCategory.BigKey,
+            ItemCategory.Compass,
+            ItemCategory.Map);
+
+        /// <summary>
+        /// Indicates whether the item is a boss key.
+        /// </summary>
+        public bool IsBigKey => Type.IsInCategory(ItemCategory.BigKey);
+
+        /// <summary>
+        /// Indicates whether the item is a small key.
+        /// </summary>
+        public bool IsKey => Type.IsInCategory(ItemCategory.SmallKey);
+
+        /// <summary>
+        /// Indicates whether the item is a dungeon map.
+        /// </summary>
+        public bool IsMap => Type.IsInCategory(ItemCategory.Map);
+
+        /// <summary>
+        /// Indicates whether the item is a dungeon compass.
+        /// </summary>
+        public bool IsCompass => Type.IsInCategory(ItemCategory.Compass);
+
+        /// <summary>
+        /// Indicates whether the item is a keycard.
+        /// </summary>
+        public bool IsKeycard => Type.IsInCategory(ItemCategory.Keycard);
+
+        /// <summary>
+        /// Returns a list of the items required to progress through the game.
+        /// </summary>
+        /// <param name="world">The world to assign to the items.</param>
+        /// <returns>A new collection of items.</returns>
         public static List<Item> CreateProgressionPool(World world)
         {
             var itemPool = new List<Item> {
@@ -125,6 +167,12 @@ namespace Randomizer.SMZ3
             return itemPool;
         }
 
+        /// <summary>
+        /// Returns a list of items that are nice to have but are not required
+        /// to finish the game.
+        /// </summary>
+        /// <param name="world">The world to assign to the items.</param>
+        /// <returns>A new collection of items.</returns>
         public static List<Item> CreateNicePool(World world)
         {
             var itemPool = new List<Item> {
@@ -151,6 +199,11 @@ namespace Randomizer.SMZ3
             return itemPool;
         }
 
+        /// <summary>
+        /// Returns a list of items used to fill remaining locations.
+        /// </summary>
+        /// <param name="world">The world to assign to the items.</param>
+        /// <returns>A new collection of items.</returns>
         public static List<Item> CreateJunkPool(World world)
         {
             var itemPool = new List<Item> {
@@ -179,7 +232,12 @@ namespace Randomizer.SMZ3
             return itemPool;
         }
 
-        /* The order of the dungeon pool is significant */
+        /// <summary>
+        /// Returns a list of dungeon-specific items.
+        /// </summary>
+        /// <remarks>The order of the dungeon pool is significant.</remarks>
+        /// <param name="world">The world to assign to the items.</param>
+        /// <returns>A new collection of items.</returns>
         public static List<Item> CreateDungeonPool(World world)
         {
             var itemPool = new List<Item>();
@@ -247,6 +305,12 @@ namespace Randomizer.SMZ3
             return itemPool;
         }
 
+        /// <summary>
+        /// Returns a list of the items required to open doors in Metroid in a
+        /// keysanity seed.
+        /// </summary>
+        /// <param name="world">The world to assign to the items.</param>
+        /// <returns>A new collection of items.</returns>
         public static List<Item> CreateKeycards(World world)
         {
             return new List<Item> {
@@ -269,11 +333,37 @@ namespace Randomizer.SMZ3
             };
         }
 
-        static List<Item> Copies(int nr, Func<Item> template)
+        /// <summary>
+        /// Determines whether the item is of the specified type and belongs to
+        /// the specified world.
+        /// </summary>
+        /// <param name="type">The type of item to check.</param>
+        /// <param name="world">The world the item belongs to.</param>
+        /// <returns>
+        /// <see langword="true"/> if the item is of the specified <paramref
+        /// name="type"/> and <paramref name="world"/>; otherwise, <see
+        /// langword="false"/>.
+        /// </returns>
+        public bool Is(ItemType type, World world)
+            => Type == type && World == world;
+
+        /// <summary>
+        /// Determines whether the item is of a different type or belongs to a
+        /// different world.
+        /// </summary>
+        /// <param name="type">The type of item to check.</param>
+        /// <param name="world">The world the item belongs to.</param>
+        /// <returns>
+        /// <see langword="true"/> if the item is not of the specified <paramref
+        /// name="type"/> or <paramref name="world"/>; otherwise, <see
+        /// langword="false"/>.
+        /// </returns>
+        public bool IsNot(ItemType type, World world)
+            => !Is(type, world);
+
+        private static List<Item> Copies(int nr, Func<Item> template)
         {
             return Enumerable.Range(1, nr).Select(i => template()).ToList();
         }
-
     }
-
 }
