@@ -3,17 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28711.60
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRandomizer", "WebRandomizer\WebRandomizer.csproj", "{D9B11803-4841-4C84-BCE6-069D3DF579C9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SuperMetroid", "Randomizer.SuperMetroid\Randomizer.SuperMetroid.csproj", "{49C7747D-045A-4CC1-BEAA-526C53C89202}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.CLI", "Randomizer.CLI\Randomizer.CLI.csproj", "{E2F265D8-9953-4891-A27D-077F8509AFB1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3", "Randomizer.SMZ3\Randomizer.SMZ3.csproj", "{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Tests", "Randomizer.SMZ3.Tests\Randomizer.SMZ3.Tests.csproj", "{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebGameService", "WebGameService\WebGameService.csproj", "{A2316911-7424-4835-BD58-B630F4461060}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Shared", "Randomizer.Shared\Randomizer.Shared.csproj", "{3DA99948-6C0A-47E6-87AB-92672ED88C09}"
 EndProject
@@ -32,18 +26,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D9B11803-4841-4C84-BCE6-069D3DF579C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9B11803-4841-4C84-BCE6-069D3DF579C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9B11803-4841-4C84-BCE6-069D3DF579C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9B11803-4841-4C84-BCE6-069D3DF579C9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{49C7747D-045A-4CC1-BEAA-526C53C89202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{49C7747D-045A-4CC1-BEAA-526C53C89202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49C7747D-045A-4CC1-BEAA-526C53C89202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49C7747D-045A-4CC1-BEAA-526C53C89202}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2F265D8-9953-4891-A27D-077F8509AFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2F265D8-9953-4891-A27D-077F8509AFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2F265D8-9953-4891-A27D-077F8509AFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2F265D8-9953-4891-A27D-077F8509AFB1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,10 +38,6 @@ Global
 		{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2316911-7424-4835-BD58-B630F4461060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2316911-7424-4835-BD58-B630F4461060}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2316911-7424-4835-BD58-B630F4461060}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2316911-7424-4835-BD58-B630F4461060}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Release|Any CPU.ActiveCfg = Release|Any CPU

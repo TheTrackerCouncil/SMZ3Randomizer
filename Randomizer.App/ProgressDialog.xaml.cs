@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Shell;
 using System.Windows.Threading;
 
 namespace Randomizer.App
@@ -39,6 +40,11 @@ namespace Randomizer.App
             MainInstructionText.Text = title;
             MainProgressBar.Minimum = 0d;
             MainProgressBar.Maximum = 1d;
+
+            TaskbarItemInfo = new TaskbarItemInfo()
+            {
+                
+            };
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -63,11 +69,14 @@ namespace Randomizer.App
                 if (double.IsNaN(value))
                 {
                     MainProgressBar.IsIndeterminate = true;
+                    TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
                 }
                 else
                 {
                     MainProgressBar.IsIndeterminate = false;
+                    TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
                     MainProgressBar.Value = value;
+                    TaskbarItemInfo.ProgressValue = value;
                 }
             }, DispatcherPriority.Render, CancellationToken);
         }

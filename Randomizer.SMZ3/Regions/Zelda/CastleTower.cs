@@ -1,32 +1,62 @@
 ﻿using System.Collections.Generic;
+
 using static Randomizer.SMZ3.ItemType;
 
-namespace Randomizer.SMZ3.Regions.Zelda {
+namespace Randomizer.SMZ3.Regions.Zelda
+{
+    public class CastleTower : Z3Region, IHasReward
+    {
+        public CastleTower(World world, Config config)
+            : base(world, config)
+        {
+            RegionItems = new[] { KeyCT };
 
-    class CastleTower : Z3Region, IReward {
+            Foyer = new(this);
+            DarkMaze = new(this);
+        }
 
         public override string Name => "Castle Tower";
 
-        public RewardType Reward { get; set; } = RewardType.Agahnim;
+        public override List<string> AlsoKnownAs { get; }
+            = new() { "Agahnim's Tower", "Hyrule Castle Tower" };
 
-        public CastleTower(World world, Config config) : base(world, config) {
-            RegionItems = new[] { KeyCT };
+        public Reward Reward { get; set; } = Reward.Agahnim;
 
-            Locations = new List<Location> {
-                new Location(this, 256+101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer"),
-                new Location(this, 256+102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze",
-                    items => items.Lamp && items.KeyCT >= 1),
-            };
-        }
+        public FoyerRoom Foyer { get; }
 
-        public override bool CanEnter(Progression items) {
+        public DarkMazeRoom DarkMaze { get; }
+
+        public override bool CanEnter(Progression items)
+        {
             return items.CanKillManyEnemies() && (items.Cape || items.MasterSword);
         }
 
-        public bool CanComplete(Progression items) {
+        public bool CanComplete(Progression items)
+        {
             return CanEnter(items) && items.Lamp && items.KeyCT >= 2 && items.Sword;
         }
 
-    }
+        public class FoyerRoom : Room
+        {
+            public FoyerRoom(Region region)
+                : base(region, "Foyer")
+            {
+                Chest = new(region, 256 + 101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer");
+            }
 
+            public Location Chest { get; }
+        }
+
+        public class DarkMazeRoom : Room
+        {
+            public DarkMazeRoom(Region region)
+                : base(region, "Dark Maze")
+            {
+                Chest = new(region, 256 + 102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze",
+                    items => items.Lamp && items.KeyCT >= 1);
+            }
+
+            public Location Chest { get; }
+        }
+    }
 }
