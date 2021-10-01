@@ -400,6 +400,12 @@ namespace Randomizer.App
 
             if (IsScam(world.World.DarkWorldNorthEast.Catfish.Item.Type))
                 stats.Increment("Catfish is a scamfish");
+
+            if (world.World.BrinstarBlue.MorphBall.Item.Type == ItemType.Morph)
+                stats.Increment("The Morph Ball is in its original location");
+
+            if (world.World.GanonsTower.MoldormChest.Item.Type.IsInCategory(ItemCategory.Metroid))
+                stats.Increment("The GT Moldorm chest contains a Metroid item");
         }
 
         private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts)
@@ -480,13 +486,6 @@ namespace Randomizer.App
                     .Select(x => x.locationId)
                     .Count();
             }
-        }
-
-        private static class Locations
-        {
-            public const int Shaktool = 150;
-            public const int Zora = 256 + 36;
-            public const int Scatfish = 256 + 78;
         }
     }
 }
