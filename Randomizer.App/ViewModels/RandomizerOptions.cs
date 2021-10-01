@@ -7,6 +7,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
 
+using Randomizer.SMZ3;
+
 namespace Randomizer.App.ViewModels
 {
     public class RandomizerOptions : INotifyPropertyChanged
@@ -62,7 +64,16 @@ namespace Randomizer.App.ViewModels
             File.WriteAllText(path, json);
         }
 
-        public Dictionary<string, string> ToDictionary() => Seed.ToDictionary();
+        public Config ToConfig() => new()
+        {
+            GameMode = GameMode.Normal,
+            Z3Logic = Z3Logic.Normal,
+            SMLogic = SMLogic.Normal,
+            SwordLocation = Seed.SwordLocation,
+            MorphLocation = Seed.MorphLocation,
+            KeyShuffle = Seed.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
+            Race = Seed.Race
+        };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

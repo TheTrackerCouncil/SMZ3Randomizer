@@ -11,18 +11,17 @@ namespace Randomizer.SMZ3.Generation
 {
     public class Randomizer
     {
-        public static readonly Version version = new Version(11, 2);
+        public static readonly Version version = new Version(1, 0);
 
-        public string Id => "smz3";
-        public string Name => "Super Metroid & A Link to the Past Combo Randomizer";
+        public string Id => "smz3-cas";
+        public string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
         public string Version => version.ToString();
-        public List<IRandomizerOption> Options => RandomizerOptions.List;
 
         private static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex continousSpace = new Regex(@" +");
 
-        public SeedData GenerateSeed(IDictionary<string, string> options, string seed, CancellationToken cancellationToken)
+        public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken)
         {
             int randoSeed;
             if (string.IsNullOrEmpty(seed))
@@ -41,7 +40,6 @@ namespace Randomizer.SMZ3.Generation
             }
 
             var randoRnd = new Random(randoSeed);
-            var config = RandomizerOptions.Parse(options);
 
             /* FIXME: Just here to semi-obfuscate race seeds until a better solution is in place */
             if (config.Race)
@@ -52,17 +50,18 @@ namespace Randomizer.SMZ3.Generation
                 worlds.Add(new World(config, "Player", 0, Guid.NewGuid().ToString("N")));
             else
             {
-                var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
-                for (var p = 0; p < players; p++)
-                {
-                    var found = options.TryGetValue($"player-{p}", out var player);
-                    if (!found)
-                        throw new ArgumentException($"No name provided for player {p + 1}");
-                    if (!legalCharacters.IsMatch(player))
-                        throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
-                    player = CleanPlayerName(player);
-                    worlds.Add(new World(config, player, p, Guid.NewGuid().ToString("N")));
-                }
+                throw new NotSupportedException("Multiworld seeds are currently not supported.");
+                //var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
+                //for (var p = 0; p < players; p++)
+                //{
+                //    var found = options.TryGetValue($"player-{p}", out var player);
+                //    if (!found)
+                //        throw new ArgumentException($"No name provided for player {p + 1}");
+                //    if (!legalCharacters.IsMatch(player))
+                //        throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
+                //    player = CleanPlayerName(player);
+                //    worlds.Add(new World(config, player, p, Guid.NewGuid().ToString("N")));
+                //}
             }
 
             var filler = new Filler(worlds, config, randoRnd, cancellationToken);
@@ -93,24 +92,6 @@ namespace Randomizer.SMZ3.Generation
 
             return seedData;
         }
-
-        public Dictionary<int, ILocationTypeData> GetLocations() =>
-            new World(new Config(), "", 0, "")
-                .Locations.Select(location => new LocationTypeData
-                {
-                    Id = location.Id,
-                    Name = location.Name,
-                    Type = location.Type.ToString(),
-                    Region = location.Region.Name,
-                    Area = location.Region.Area
-                }).Cast<ILocationTypeData>().ToDictionary(locationData => locationData.Id);
-
-        public Dictionary<int, IItemTypeData> GetItems() =>
-            Enum.GetValues(typeof(ItemType)).Cast<ItemType>().Select(i => new ItemTypeData
-            {
-                Id = (int)i,
-                Name = i.GetDescription()
-            }).Cast<IItemTypeData>().ToDictionary(itemTypeData => itemTypeData.Id);
 
         private static string CleanPlayerName(string name)
         {

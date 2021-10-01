@@ -206,8 +206,8 @@ namespace Randomizer.App
 
         private byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out SeedData seed)
         {
-            var options = Options.ToDictionary();
-            seed = randomizer.GenerateSeed(options, Options.Seed.Seed, CancellationToken.None);
+            var config = Options.ToConfig();
+            seed = randomizer.GenerateSeed(config, Options.Seed.Seed, CancellationToken.None);
 
             byte[] rom;
             using (var smRom = File.OpenRead(Options.General.SMRomPath))
@@ -331,7 +331,7 @@ namespace Randomizer.App
 
         private void GenerateStatsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var options = Options.ToDictionary();
+            var config = Options.ToConfig();
             var randomizer = new SMZ3.Generation.Randomizer();
 
             const int numberOfSeeds = 10000;
@@ -346,7 +346,7 @@ namespace Randomizer.App
                 Parallel.For(0, numberOfSeeds, (iteration, state) =>
                 {
                     ct.ThrowIfCancellationRequested();
-                    var seed = randomizer.GenerateSeed(options, null, ct);
+                    var seed = randomizer.GenerateSeed(config, null, ct);
 
                     ct.ThrowIfCancellationRequested();
                     GatherStats(stats, seed);
