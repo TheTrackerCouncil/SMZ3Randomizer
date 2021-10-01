@@ -2,7 +2,7 @@
 
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 {
     public class UpperNorfairEast : SMRegion
     {
@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 {
                     Normal => items => items.CardNorfairL2 && items.Morph && (
                         items.CanFly() ||
-                        (items.Grapple && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                        items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
                     _ => new Requirement(items => items.CardNorfairL2 && items.Morph && items.Super)
@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 {
                     Normal => items => items.CardNorfairL2 && items.Morph && (
                         items.CanFly() ||
-                        (items.Grapple && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                        items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
                     _ => new Requirement(items => items.CardNorfairL2 && items.Morph && items.Super)
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 {
                     Normal => items => items.CardNorfairL2 && (
                         items.CanFly() ||
-                        (items.Grapple && items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                        items.Grapple && items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
                     _ => new Requirement(items => items.CardNorfairL2 && items.Super)
@@ -61,7 +61,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 {
                     Normal => items => items.CardNorfairL2 && (
                         items.CanFly() ||
-                        (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                        items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
                     _ => new Requirement(items => items.CardNorfairL2 && items.Super)
@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 {
                     Normal => items => items.CardNorfairL2 && (
                         items.CanFly() ||
-                        (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                        items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
                     ),
                     _ => new Requirement(items => items.CardNorfairL2 && items.Super)
@@ -85,12 +85,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    Normal => items => (items.CardNorfairL2 && (
+                    Normal => items => items.CardNorfairL2 && (
                         items.CanFly() ||
-                        (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                        items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                         items.HiJump || items.Ice
-                    )) ||
-                    (items.SpeedBooster && items.Wave && items.Morph && items.Super),
+                    ) ||
+                    items.SpeedBooster && items.Wave && items.Morph && items.Super,
                     _ => new Requirement(items => items.CardNorfairL2 || items.Varia)
                 });
             WaveBeamRoom = new(this, 68, 0x8F8CCA, LocationType.Chozo,
@@ -100,21 +100,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 access: Logic switch
                 {
                     Normal => items => items.Morph && (
-                        (items.CardNorfairL2 && (
+                        items.CardNorfairL2 && (
                             items.CanFly() ||
-                            (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                            items.Morph && (items.SpeedBooster || items.CanPassBombPassages()) ||
                             items.HiJump || items.Ice
-                        )) ||
-                        (items.SpeedBooster && items.Wave && items.Morph && items.Super)
+                        ) ||
+                        items.SpeedBooster && items.Wave && items.Morph && items.Super
                     ),
                     _ => new Requirement(items => items.CanOpenRedDoors() && (items.CardNorfairL2 || items.Varia) &&
-                        (items.Morph || items.Grapple || (items.HiJump && items.Varia) || items.SpaceJump))
+                        (items.Morph || items.Grapple || items.HiJump && items.Varia || items.SpaceJump))
                 });
         }
 
-        public override string Name => "Norfair Upper East";
+        public override string Name => "Upper Norfair, East";
 
-        public override string Area => "Norfair Upper";
+        public override string Area => "Upper Norfair";
 
         public Location ReserveTankRoom { get; }
 
@@ -139,27 +139,27 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
             return Logic switch
             {
                 Normal => (
-                        ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
+                        (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) && items.Varia && items.Super && (
                         /* Cathedral */
-                        (items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
-                            (items.CanFly() || items.HiJump || items.SpeedBooster)) ||
+                        items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
+                            (items.CanFly() || items.HiJump || items.SpeedBooster) ||
                         /* Frog Speedway */
-                        (items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && items.CanUsePowerBombs())
+                        items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && items.CanUsePowerBombs()
                     ),
                 _ => (
-                        ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
+                        (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                         items.CanAccessNorfairUpperPortal()
                     ) &&
                     items.CanHellRun() && (
                         /* Cathedral */
-                        (items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) && (
+                        items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) && (
                             items.CanFly() || items.HiJump || items.SpeedBooster ||
-                            items.CanSpringBallJump() || (items.Varia && items.Ice)
-                        )) ||
+                            items.CanSpringBallJump() || items.Varia && items.Ice
+                        ) ||
                         /* Frog Speedway */
-                        (items.SpeedBooster && (items.CardNorfairL2 || items.Missile || items.Super || items.Wave) && items.CanUsePowerBombs())
+                        items.SpeedBooster && (items.CardNorfairL2 || items.Missile || items.Super || items.Wave) && items.CanUsePowerBombs()
                     ),
             };
         }

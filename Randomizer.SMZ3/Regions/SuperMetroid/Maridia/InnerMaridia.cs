@@ -2,9 +2,9 @@
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 {
-    public class MaridiaInner : SMRegion, IHasReward
+    public class InnerMaridia : SMRegion, IHasReward
     {
-        public MaridiaInner(World world, Config config) : base(world, config)
+        public InnerMaridia(World world, Config config) : base(world, config)
         {
             WateringHoleLeft = new(this, 140, 0x8FC4AF, LocationType.Visible,
                 name: "Super Missile (yellow Maridia)",
@@ -144,7 +144,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 });
         }
 
-        public override string Name => "Maridia Inner";
+        public override string Name => "Inner Maridia";
 
         public override string Area => "Maridia";
 

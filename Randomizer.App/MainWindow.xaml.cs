@@ -392,7 +392,7 @@ namespace Randomizer.App
         {
             var world = seed.Worlds.Single();
 
-            if (IsScam(world.World.MaridiaInner.ShaktoolItem.Item.Type))
+            if (IsScam(world.World.InnerMaridia.ShaktoolItem.Item.Type))
                 stats.Increment("Shaktool betrays you");
 
             if (IsScam(world.World.LightWorldNorthEast.ZorasDomain.Zora.Item.Type))
@@ -401,7 +401,7 @@ namespace Randomizer.App
             if (IsScam(world.World.DarkWorldNorthEast.Catfish.Item.Type))
                 stats.Increment("Catfish is a scamfish");
 
-            if (world.World.BrinstarBlue.MorphBall.Item.Type == ItemType.Morph)
+            if (world.World.BlueBrinstar.MorphBall.Item.Type == ItemType.Morph)
                 stats.Increment("The Morph Ball is in its original location");
 
             if (world.World.GanonsTower.MoldormChest.Item.Type.IsInCategory(ItemCategory.Metroid))

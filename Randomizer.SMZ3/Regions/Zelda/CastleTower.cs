@@ -17,6 +17,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Castle Tower";
 
+        public override List<string> AlsoKnownAs { get; }
+            = new() { "Agahnim's Tower", "Hyrule Castle Tower" };
+
         public Reward Reward { get; set; } = Reward.Agahnim;
 
         public FoyerRoom Foyer { get; }

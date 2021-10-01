@@ -4,9 +4,9 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 {
-    public class CrateriaWest : SMRegion
+    public class WestCrateria : SMRegion
     {
-        public CrateriaWest(World world, Config config) : base(world, config)
+        public WestCrateria(World world, Config config) : base(world, config)
         {
             Terminator = new(this, 8, 0x8F8432, LocationType.Visible,
                 name: "Energy Tank, Terminator",
@@ -41,7 +41,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 });
         }
 
-        public override string Name => "Crateria West";
+        public override string Name => "West Crateria";
 
         public override string Area => "Crateria";
 

@@ -4,9 +4,9 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {
-    public class BrinstarBlue : SMRegion
+    public class BlueBrinstar : SMRegion
     {
-        public BrinstarBlue(World world, Config config) : base(world, config)
+        public BlueBrinstar(World world, Config config) : base(world, config)
         {
             MorphBall = new(this, 26, 0x8F86EC, LocationType.Visible,
                 name: "Morphing Ball",
@@ -66,7 +66,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 });
         }
 
-        public override string Name => "Brinstar Blue";
+        public override string Name => "Blue Brinstar";
 
         public override string Area => "Brinstar";
 

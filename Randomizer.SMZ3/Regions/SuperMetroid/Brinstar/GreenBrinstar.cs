@@ -2,9 +2,9 @@
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {
-    public class BrinstarGreen : SMRegion
+    public class GreenBrinstar : SMRegion
     {
-        public BrinstarGreen(World world, Config config) : base(world, config)
+        public GreenBrinstar(World world, Config config) : base(world, config)
         {
             Weight = -6;
 
@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 });
         }
 
-        public override string Name => "Brinstar Green";
+        public override string Name => "Green Brinstar";
 
         public override string Area => "Brinstar";
 

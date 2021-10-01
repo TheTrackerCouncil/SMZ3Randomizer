@@ -7,8 +7,7 @@ using Randomizer.SMZ3.Regions.SuperMetroid;
 using Randomizer.SMZ3.Regions.SuperMetroid.Brinstar;
 using Randomizer.SMZ3.Regions.SuperMetroid.Crateria;
 using Randomizer.SMZ3.Regions.SuperMetroid.Maridia;
-using Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower;
-using Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper;
+using Randomizer.SMZ3.Regions.SuperMetroid.Norfair;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Regions.Zelda.DarkWorld;
 using Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain;
@@ -52,16 +51,16 @@ namespace Randomizer.SMZ3
             DarkWorldNorthEast = new(this, Config);
             DarkWorldSouth = new(this, Config);
             DarkWorldMire = new(this, Config);
-            CrateriaCentral = new(this, Config);
-            CrateriaWest = new(this, Config);
-            CrateriaEast = new(this, Config);
-            BrinstarBlue = new(this, Config);
-            BrinstarGreen = new(this, Config);
-            BrinstarKraid = new(this, Config);
-            BrinstarPink = new(this, Config);
-            BrinstarRed = new(this, Config);
-            MaridiaOuter = new(this, Config);
-            MaridiaInner = new(this, Config);
+            CentralCrateria = new(this, Config);
+            WestCrateria = new(this, Config);
+            EastCrateria = new(this, Config);
+            BlueBrinstar = new(this, Config);
+            GreenBrinstar = new(this, Config);
+            KraidsLair = new(this, Config);
+            PinkBrinstar = new(this, Config);
+            RedBrinstar = new(this, Config);
+            OuterMaridia = new(this, Config);
+            InnerMaridia = new(this, Config);
             UpperNorfairWest = new(this, Config);
             UpperNorfairEast = new(this, Config);
             UpperNorfairCrocomire = new(this, Config);
@@ -77,9 +76,9 @@ namespace Randomizer.SMZ3
                 HyruleCastle, DarkWorldDeathMountainWest,
                 DarkWorldDeathMountainEast, DarkWorldNorthWest,
                 DarkWorldNorthEast, DarkWorldSouth, DarkWorldMire,
-                CrateriaCentral, CrateriaWest, CrateriaEast, BrinstarBlue,
-                BrinstarGreen, BrinstarKraid, BrinstarPink, BrinstarRed,
-                MaridiaOuter, MaridiaInner, UpperNorfairWest, UpperNorfairEast,
+                CentralCrateria, WestCrateria, EastCrateria, BlueBrinstar,
+                GreenBrinstar, KraidsLair, PinkBrinstar, RedBrinstar,
+                OuterMaridia, InnerMaridia, UpperNorfairWest, UpperNorfairEast,
                 UpperNorfairCrocomire, LowerNorfairWest, LowerNorfairEast,
                 WreckedShip
             };
@@ -118,16 +117,16 @@ namespace Randomizer.SMZ3
         public DarkWorldNorthEast DarkWorldNorthEast { get; }
         public DarkWorldSouth DarkWorldSouth { get; }
         public DarkWorldMire DarkWorldMire { get; }
-        public CrateriaCentral CrateriaCentral { get; }
-        public CrateriaWest CrateriaWest { get; }
-        public CrateriaEast CrateriaEast { get; }
-        public BrinstarBlue BrinstarBlue { get; }
-        public BrinstarGreen BrinstarGreen { get; }
-        public BrinstarKraid BrinstarKraid { get; }
-        public BrinstarPink BrinstarPink { get; }
-        public BrinstarRed BrinstarRed { get; }
-        public MaridiaOuter MaridiaOuter { get; }
-        public MaridiaInner MaridiaInner { get; }
+        public CentralCrateria CentralCrateria { get; }
+        public WestCrateria WestCrateria { get; }
+        public EastCrateria EastCrateria { get; }
+        public BlueBrinstar BlueBrinstar { get; }
+        public GreenBrinstar GreenBrinstar { get; }
+        public KraidsLair KraidsLair { get; }
+        public PinkBrinstar PinkBrinstar { get; }
+        public RedBrinstar RedBrinstar { get; }
+        public OuterMaridia OuterMaridia { get; }
+        public InnerMaridia InnerMaridia { get; }
         public UpperNorfairWest UpperNorfairWest { get; }
         public UpperNorfairEast UpperNorfairEast { get; }
         public UpperNorfairCrocomire UpperNorfairCrocomire { get; }

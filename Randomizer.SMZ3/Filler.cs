@@ -126,7 +126,7 @@ namespace Randomizer.SMZ3
             /* Check Morph option and place as needed */
             switch (Config.MorphLocation)
             {
-                case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.BrinstarBlue.MorphBall); break;
+                case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.BlueBrinstar.MorphBall); break;
                 case MorphLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
             }
 

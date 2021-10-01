@@ -2,9 +2,9 @@
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {
-    public class BrinstarPink : SMRegion
+    public class PinkBrinstar : SMRegion
     {
-        public BrinstarPink(World world, Config config) : base(world, config)
+        public PinkBrinstar(World world, Config config) : base(world, config)
         {
             Weight = -4;
             SporeSpawnReward = new(this, 14, 0x8F84E4, LocationType.Chozo,
@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 }); // Grapple or Walljump
         }
 
-        public override string Name => "Brinstar Pink";
+        public override string Name => "Pink Brinstar";
 
         public override string Area => "Brinstar";
 

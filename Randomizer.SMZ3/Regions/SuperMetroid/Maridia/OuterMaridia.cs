@@ -4,9 +4,9 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 {
-    public class MaridiaOuter : SMRegion
+    public class OuterMaridia : SMRegion
     {
-        public MaridiaOuter(World world, Config config) : base(world, config)
+        public OuterMaridia(World world, Config config) : base(world, config)
         {
             MainStreetCeiling = new(this, 136, 0x8FC437, LocationType.Visible,
                 name: "Missile (green Maridia shinespark)",
@@ -43,7 +43,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 });
         }
 
-        public override string Name => "Maridia Outer";
+        public override string Name => "Outer Maridia";
 
         public override string Area => "Maridia";
 

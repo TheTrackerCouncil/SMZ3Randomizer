@@ -4,11 +4,11 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 {
-    public class CrateriaCentral : SMRegion
+    public class CentralCrateria : SMRegion
     {
         // Considered part of West according to the speedrun wiki
 
-        public CrateriaCentral(World world, Config config)
+        public CentralCrateria(World world, Config config)
             : base(world, config)
         {
             PowerBombRoom = new(this, 0, 0x8F81CC, LocationType.Visible,
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 });
         }
 
-        public override string Name => "Crateria Central";
+        public override string Name => "Central Crateria";
 
         public override string Area => "Crateria";
 

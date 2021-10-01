@@ -2,7 +2,7 @@
 
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 {
 
     public class UpperNorfairWest : SMRegion
@@ -16,15 +16,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 access: Logic switch
                 {
                     Normal => items => items.Varia && (
-                            (items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster)) ||
-                            (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
+                            items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster) ||
+                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
                         ) && items.Morph,
                     _ => new Requirement(items => items.CanHellRun() && (
-                            (items.CanOpenRedDoors() && (
+                            items.CanOpenRedDoors() && (
                                 items.CanFly() || items.HiJump || items.SpeedBooster ||
-                                items.CanSpringBallJump() || (items.Varia && items.Ice)
-                            )) ||
-                            (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
+                                items.CanSpringBallJump() || items.Varia && items.Ice
+                            ) ||
+                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
                         ) && items.Morph),
                 });
             IceBeamRoom = new(this, 50, 0x8F8B24, LocationType.Chozo,
@@ -44,10 +44,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                 {
                     Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && items.Varia && items.SpeedBooster,
                     _ => new Requirement(items =>
-                        ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3))) ||
-                        ((items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
+                        (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3)) ||
+                        (items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
                         /* Access to Croc's room to get spark */
-                        (Config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1))
+                        (Config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1)
                 });
             HiJumpBootsRoom = new(this, 53, 0x8F8BAC, LocationType.Chozo,
                 name: "Hi-Jump Boots",
@@ -74,8 +74,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
                     _ => new Requirement(items => items.CanOpenRedDoors())
                 });
         }
-        public override string Name => "Norfair Upper West";
-        public override string Area => "Norfair Upper";
+        public override string Name => "Upper Norfair, West";
+        public override string Area => "Upper Norfair";
 
         public Location LavaRoom { get; }
 
@@ -91,7 +91,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairUpper
 
         public override bool CanEnter(Progression items)
         {
-            return ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
+            return (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
                 items.CanAccessNorfairUpperPortal();
         }
 

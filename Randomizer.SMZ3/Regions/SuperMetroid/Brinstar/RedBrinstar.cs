@@ -4,9 +4,9 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {
-    public class BrinstarRed : SMRegion
+    public class RedBrinstar : SMRegion
     {
-        public BrinstarRed(World world, Config config) : base(world, config)
+        public RedBrinstar(World world, Config config) : base(world, config)
         {
             XRayScopeRoom = new(this, 38, 0x8F8876, LocationType.Chozo,
                 name: "X-Ray Scope",
@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 });
         }
 
-        public override string Name => "Brinstar Red";
+        public override string Name => "Red Brinstar";
 
         public override string Area => "Brinstar";
 

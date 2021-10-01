@@ -2,9 +2,9 @@
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {
-    public class BrinstarKraid : SMRegion, IHasReward
+    public class KraidsLair : SMRegion, IHasReward
     {
-        public BrinstarKraid(World world, Config config) : base(world, config)
+        public KraidsLair(World world, Config config) : base(world, config)
         {
             ETank = new(this, 43, 0x8F899C, LocationType.Hidden,
                 name: "Energy Tank, Kraid",
@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: items => items.CardBrinstarBoss);
             KraidsItem = new(this, 48, 0x8F8ACA, LocationType.Chozo,
                 name: "Varia Suit",
-                alsoKnownAs: "Kraid's Item",
+                alsoKnownAs: "Kraid's Reliquary",
                 vanillaItem: ItemType.Varia,
                 access: items => items.CardBrinstarBoss);
             MissileBeforeKraid = new(this, 44, 0x8F89EC, LocationType.Hidden,
@@ -25,8 +25,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 });
         }
 
-        public override string Name => "Brinstar Kraid";
+        public override string Name => "Kraid's Lair";
+
         public override string Area => "Brinstar";
+
         public override List<string> AlsoKnownAs { get; } = new()
         {
             "Warehouse"

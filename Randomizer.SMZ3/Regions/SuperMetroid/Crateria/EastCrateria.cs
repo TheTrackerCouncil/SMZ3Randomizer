@@ -4,9 +4,9 @@ using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 {
-    public class CrateriaEast : SMRegion
+    public class EastCrateria : SMRegion
     {
-        public CrateriaEast(World world, Config config) : base(world, config)
+        public EastCrateria(World world, Config config) : base(world, config)
         {
             FloodedCavernUnderWater = new(this, 1, 0x8F81E8, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship bottom)",
@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile);
         }
 
-        public override string Name => "Crateria East";
+        public override string Name => "East Crateria";
 
         public override string Area => "Crateria";
 
@@ -73,7 +73,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                         /* Oasis -> Forgotten Highway */
                         (items.CardMaridiaL2 && items.CanDestroyBombWalls()) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        World.MaridiaInner.DraygonTreasure.IsAvailable(items))) ||
+                        World.InnerMaridia.DraygonTreasure.IsAvailable(items))) ||
                     /*Through Maridia from Pipe*/
                     (items.CanUsePowerBombs() && items.Super && items.Gravity)
                     ,
@@ -91,7 +91,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                             (items.Gravity && items.CanDestroyBombWalls())
                         )) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        (items.Gravity && World.MaridiaInner.DraygonTreasure.IsAvailable(items)))) ||
+                        (items.Gravity && World.InnerMaridia.DraygonTreasure.IsAvailable(items)))) ||
                     /*Through Maridia from Pipe*/
                     (items.CanUsePowerBombs() && items.Super && (items.Gravity || (items.HiJump && (items.Ice || items.CanSpringBallJump())
                                                                 && items.Grapple && items.CardMaridiaL1)))

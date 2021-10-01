@@ -2,7 +2,7 @@
 
 using static Randomizer.SMZ3.SMLogic;
 
-namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
+namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 {
     public class LowerNorfairEast : SMRegion, IHasReward
     {
@@ -60,9 +60,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
                 });
         }
 
-        public override string Name => "Norfair Lower East";
+        public override string Name => "Lower Norfair, East";
 
-        public override string Area => "Norfair Lower";
+        public override string Area => "Lower Norfair";
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
@@ -82,16 +82,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
         {
             Normal =>
                 items.Varia && items.CardLowerNorfairL1 && (
-                    (World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity) ||
-                    (items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && items.CanUsePowerBombs() && items.CanFly())
+                    World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity ||
+                    items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && items.CanUsePowerBombs() && items.CanFly()
                 ),
             _ =>
                 items.Varia && items.CardLowerNorfairL1 && (
-                    (World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && (items.HiJump || items.Gravity)) ||
-                    (items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster))
+                    World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && (items.HiJump || items.Gravity) ||
+                    items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster)
                 ) &&
-                (items.CanFly() || items.HiJump || items.CanSpringBallJump() || (items.Ice && items.Charge)) &&
-                (items.CanPassBombPassages() || (items.ScrewAttack && items.SpaceJump))
+                (items.CanFly() || items.HiJump || items.CanSpringBallJump() || items.Ice && items.Charge) &&
+                (items.CanPassBombPassages() || items.ScrewAttack && items.SpaceJump)
         };
 
         public bool CanComplete(Progression items)
@@ -104,13 +104,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.NorfairLower
             return Logic switch
             {
                 Normal => items.CardNorfairL2 /*Bubble Mountain*/ ||
-                    (items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump /*Spikey Acid Snakes and Croc Escape*/)),
+                    items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump /*Spikey Acid Snakes and Croc Escape*/),
                 _ => /*Vanilla LN Escape*/
-                    ((items.Morph && (items.CardNorfairL2 /*Bubble Mountain*/ || ((items.Missile || items.Super || items.Wave /* Blue Gate */) &&
-                                     (items.SpeedBooster || items.CanFly() || items.Grapple || (items.HiJump &&
-                                     (items.CanSpringBallJump() || items.Ice)) /*Frog Speedway or Croc Escape*/)))) ||
+                    items.Morph && (items.CardNorfairL2 /*Bubble Mountain*/ || (items.Missile || items.Super || items.Wave /* Blue Gate */) &&
+                                     (items.SpeedBooster || items.CanFly() || items.Grapple || items.HiJump &&
+                                     (items.CanSpringBallJump() || items.Ice) /*Frog Speedway or Croc Escape*/)) ||
                      /*Reverse Amphitheater*/
-                     items.HasEnergyReserves(5)),
+                     items.HasEnergyReserves(5),
             };
         }
     }
