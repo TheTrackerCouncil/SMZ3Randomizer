@@ -9,7 +9,7 @@ using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation
 {
-    public class Randomizer : IRandomizer
+    public class Randomizer
     {
         public static readonly Version version = new Version(11, 2);
 
@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Generation
         private static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex continousSpace = new Regex(@" +");
 
-        public ISeedData GenerateSeed(IDictionary<string, string> options, string seed, CancellationToken cancellationToken)
+        public SeedData GenerateSeed(IDictionary<string, string> options, string seed, CancellationToken cancellationToken)
         {
             int randoSeed;
             if (string.IsNullOrEmpty(seed))
@@ -79,7 +79,7 @@ namespace Randomizer.SMZ3.Generation
                 Mode = config.GameMode.ToLowerString(),
                 Logic = $"{config.SMLogic.ToLowerString()}+{config.Z3Logic.ToLowerString()}",
                 Playthrough = config.Race ? new List<Dictionary<string, string>>() : spheres,
-                Worlds = new List<IWorldData>(),
+                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
@@ -88,18 +88,7 @@ namespace Randomizer.SMZ3.Generation
             {
                 var patchRnd = new Random(patchSeed);
                 var patch = new Patch(world, worlds, seedData.Guid, config.Race ? 0 : randoSeed, patchRnd);
-                var worldData = new WorldData
-                {
-                    Id = world.Id,
-                    Guid = world.Guid,
-                    Player = world.Player,
-                    Patches = patch.Create(config),
-                    Locations = world.Locations
-                        .Select(l => new LocationData() { LocationId = l.Id, ItemId = (int)l.Item.Type, ItemWorldId = l.Item.World.Id })
-                        .ToList<ILocationData>(),
-                };
-
-                seedData.Worlds.Add(worldData);
+                seedData.Worlds.Add((world, patch.Create(config)));
             }
 
             return seedData;
