@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         public override bool CanEnter(Progression items)
         {
-            return items.CanDestroyBombWalls() || items.SpeedBooster;
+            return items.CanDestroyBombWalls() || (Logic == Hard && items.SpeedBooster);
         }
 
         private bool CanEnterAndLeaveGauntlet(Progression items)
