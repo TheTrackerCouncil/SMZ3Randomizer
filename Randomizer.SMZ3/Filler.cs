@@ -116,18 +116,22 @@ namespace Randomizer.SMZ3
         {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
 
-            /* Check Swords option and place as needed */
             switch (Config.SwordLocation)
             {
-                case SwordLocation.Uncle: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.HyruleCastle.LinksUncle); break;
-                case SwordLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
+                case ItemPlacement.Original: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.HyruleCastle.LinksUncle); break;
+                case ItemPlacement.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
             }
 
-            /* Check Morph option and place as needed */
             switch (Config.MorphLocation)
             {
-                case MorphLocation.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.BlueBrinstar.MorphBall); break;
-                case MorphLocation.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
+                case ItemPlacement.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.BlueBrinstar.MorphBall); break;
+                case ItemPlacement.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
+            }
+
+            switch (Config.MorphBombsLocation)
+            {
+                case ItemPlacement.Original: FillItemAtLocation(progressionItems, ItemType.Bombs, world.CentralCrateria.BombTorizo); break;
+                case ItemPlacement.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Bombs, world); break;
             }
 
             /* We place a PB and Super in Sphere 1 to make sure the filler

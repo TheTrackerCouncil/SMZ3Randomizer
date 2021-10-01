@@ -23,28 +23,16 @@ namespace Randomizer.App.ViewModels
         [JsonIgnore]
         public string Seed { get; set; }
 
-        public SwordLocation SwordLocation { get; set; }
+        public ItemPlacement SwordLocation { get; set; }
 
-        public MorphLocation MorphLocation { get; set; }
+        public ItemPlacement MorphLocation { get; set; }
+
+        public ItemPlacement MorphBombsLocation { get; set; }
 
         public bool Keysanity { get; set; }
 
         public bool Race { get; set; }
 
         public string Msu1Path { get; set; }
-
-        public Dictionary<string, string> ToDictionary() => new()
-        {
-            ["gamemode"] = "normal", // Multiworld not supported in this fork
-            ["players"] = "1",
-            ["z3logic"] = "normal", // Not used anywhere
-            ["smlogic"] = "normal", // Irrelevant if you're playing without IBJ, may support later?
-            ["swordlocation"] = SwordLocation.ToString().ToLowerInvariant(),
-            ["morphlocation"] = MorphLocation.ToString().ToLowerInvariant(),
-            ["goal"] = "defeatboth", // Only one value
-            ["keyshuffle"] = Keysanity ? "keysanity" : "none",
-            ["race"] = Race ? "true" : "false",
-            ["ganoninvincible"] = "beforecrystals", // Does anyone even change this?
-        };
     }
 }
