@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Randomizer.SMZ3
 {
@@ -85,8 +82,8 @@ namespace Randomizer.SMZ3
         /// <param name="items">The currently available items.</param>
         /// <returns>
         /// <see langword="true"/> if the <paramref name="item"/> can be
-        /// assigned to a location in this region; otherwise,
-        /// <see langword="false"/>.
+        /// assigned to a location in this region; otherwise, <see
+        /// langword="false"/>.
         /// </returns>
         public virtual bool CanFill(Item item, Progression items)
         {
@@ -94,13 +91,19 @@ namespace Randomizer.SMZ3
         }
 
         /// <summary>
+        /// Returns a string that represents the region.
+        /// </summary>
+        /// <returns>A new string that represents the region.</returns>
+        public override string ToString() => Name;
+
+        /// <summary>
         /// Determines whether the region can be entered with the specified
         /// items.
         /// </summary>
         /// <param name="items">The currently available items.</param>
         /// <returns>
-        /// <see langword="true"/> if the region is available with
-        /// <paramref name="items"/>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the region is available with <paramref
+        /// name="items"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public virtual bool CanEnter(Progression items)
         {

@@ -65,5 +65,11 @@ namespace Randomizer.SMZ3
         /// <returns>A collection of locations in the room.</returns>
         public IEnumerable<Location> GetLocations()
             => GetType().GetPropertyValues<Location>(this);
+
+        /// <summary>
+        /// Returns a string that represents the room.
+        /// </summary>
+        /// <returns>A new string that represents this room.</returns>
+        public override string ToString() => $"{Region} - {Name}";
     }
 }

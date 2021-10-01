@@ -23,7 +23,7 @@ namespace Randomizer.SMZ3
             BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance)
         {
             return type.GetProperties(bindingFlags)
-                .Where(x => x.PropertyType == typeof(TProperty))
+                .Where(x => x.PropertyType.IsAssignableTo(typeof(TProperty)))
                 .Select(x => (TProperty)x.GetValue(instance));
         }
     }

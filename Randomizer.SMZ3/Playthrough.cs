@@ -47,10 +47,10 @@ namespace Randomizer.SMZ3
                     var n = 0;
                     foreach (var location in inaccessibleLocations) {
                         if (config.MultiWorld) {
-                            sphere.Add($"Inaccessible Item #{n += 1}: {location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
+                            sphere.Add($"Inaccessible Item #{n += 1}: {location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
                         }
                         else {
-                            sphere.Add($"Inaccessible Item #{n += 1}: {location.Name}", $"{location.Item.Name}");
+                            sphere.Add($"Inaccessible Item #{n += 1}: {location}", $"{location.Item.Name}");
                         }
                     }
                     spheres.Add(sphere);
@@ -62,10 +62,10 @@ namespace Randomizer.SMZ3
                         continue;
 
                     if (config.MultiWorld) {
-                        sphere.Add($"{location.Name} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
+                        sphere.Add($"{location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
                     }
                     else {
-                        sphere.Add($"{location.Name}", $"{location.Item.Name}");
+                        sphere.Add($"{location}", $"{location.Item.Name}");
                     }
                 }
                 spheres.Add(sphere);

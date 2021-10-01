@@ -17,8 +17,7 @@ namespace Randomizer.SMZ3
         /// </returns>
         public static bool IsInCategory(this ItemType itemType, ItemCategory category)
         {
-            var attrib = itemType.GetType().GetCustomAttribute<ItemCategoryAttribute>(inherit: false);
-            return attrib.Categories.Any(x => x == category);
+            return GetCategories(itemType).Any(x => x == category);
         }
 
         /// <summary>
@@ -33,8 +32,25 @@ namespace Randomizer.SMZ3
         /// </returns>
         public static bool IsInAnyCategory(this ItemType itemType, params ItemCategory[] categories)
         {
-            var attrib = itemType.GetType().GetCustomAttribute<ItemCategoryAttribute>(inherit: false);
-            return attrib.Categories.Any(x => categories.Contains(x));
+            return GetCategories(itemType).Any(x => categories.Contains(x));
+        }
+
+        /// <summary>
+        /// Determines the categories for the specified item type.
+        /// </summary>
+        /// <param name="itemType">The type of item.</param>
+        /// <returns>
+        /// A collection of categories for <paramref name="itemType"/>, or an
+        /// empty array.
+        /// </returns>
+        public static ItemCategory[] GetCategories(this ItemType itemType)
+        {
+            var valueType = itemType.GetType().GetField(itemType.ToString());
+            var attrib = valueType.GetCustomAttribute<ItemCategoryAttribute>(inherit: false);
+            if (attrib == null)
+                return Array.Empty<ItemCategory>();
+
+            return attrib.Categories;
         }
     }
 }

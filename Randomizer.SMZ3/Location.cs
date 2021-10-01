@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Randomizer.SMZ3
 {
@@ -14,60 +13,13 @@ namespace Randomizer.SMZ3
     /// </summary>
     public class Location
     {
-        /// <summary>
-        /// Gets the internal identifier of the location.
-        /// </summary>
-        public int Id { get; }
-
-        /// <summary>
-        /// Gets the name of the location.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets the type of location.
-        /// </summary>
-        public LocationType Type { get; }
-
-        /// <summary>
-        /// Gets the byte address of the location.
-        /// </summary>
-        public int Address { get; }
-
-        /// <summary>
-        /// Gets or sets the item that can be found in this location.
-        /// </summary>
-        public Item Item { get; set; }
-
-        /// <summary>
-        /// Gets the region the location is in.
-        /// </summary>
-        public Region Region { get; }
-
-        /// <summary>
-        /// Gets any alternate names for the location.
-        /// </summary>
-        public IReadOnlyCollection<string> AlternateNames { get; }
-
-        /// <summary>
-        /// Gets the item that can be found in this location in the vanilla
-        /// game.
-        /// </summary>
-        public ItemType VanillaItem { get; }
-
-        /// <summary>
-        /// Gets the relative weight of this location, where negative values
-        /// indicate easier to reach locations.
-        /// </summary>
-        public int Weight => _weight ?? Region.Weight;
-
         private readonly Requirement _canAccess;
-        private Verification _alwaysAllow;
-        private Verification _allow;
-        private int? _weight;
 
-        public bool ItemIs(ItemType type, World world) => Item?.Is(type, world) ?? false;
-        public bool ItemIsNot(ItemType type, World world) => !ItemIs(type, world);
+        private Verification _alwaysAllow;
+
+        private Verification _allow;
+
+        private int? _weight;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Location"/> class that
@@ -84,7 +36,7 @@ namespace Randomizer.SMZ3
         }
 
         public Location(Room room, int id, int address, LocationType type, string name)
-            : this(room.Region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true)
+                    : this(room, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true)
         {
         }
 
@@ -106,7 +58,7 @@ namespace Randomizer.SMZ3
         }
 
         public Location(Room room, int id, int address, LocationType type, string name, ItemType vanillaItem)
-            : this(room.Region, id, address, type, name, Array.Empty<string>(), vanillaItem, _ => true)
+                    : this(room, id, address, type, name, Array.Empty<string>(), vanillaItem, _ => true)
         {
         }
 
@@ -131,10 +83,9 @@ namespace Randomizer.SMZ3
         }
 
         public Location(Room room, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem)
-            : this(room.Region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true)
+                    : this(room, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true)
         {
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Location"/> class that
@@ -157,7 +108,7 @@ namespace Randomizer.SMZ3
         }
 
         public Location(Room room, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem)
-            : this(room.Region, id, address, type, name, alsoKnownAs, vanillaItem, _ => true)
+                    : this(room, id, address, type, name, alsoKnownAs, vanillaItem, _ => true)
         {
         }
 
@@ -180,7 +131,7 @@ namespace Randomizer.SMZ3
         }
 
         public Location(Room room, int id, int address, LocationType type, string name, Requirement access)
-            : this(room.Region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, access)
+                    : this(room, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, access)
         {
         }
 
@@ -206,7 +157,7 @@ namespace Randomizer.SMZ3
         }
 
         public Location(Room room, int id, int address, LocationType type, string name, ItemType vanillaItem, Requirement access)
-            : this(room.Region, id, address, type, name, Array.Empty<string>(), vanillaItem, access)
+                    : this(room, id, address, type, name, Array.Empty<string>(), vanillaItem, access)
         {
         }
 
@@ -235,13 +186,14 @@ namespace Randomizer.SMZ3
         }
 
         public Location(Room room, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access)
-            : this(room.Region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, access)
+                    : this(room, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, access)
         {
         }
 
         public Location(Room room, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access)
-            : this(room.Region, id, address, type, name, alsoKnownAs, vanillaItem, access)
+                    : this(room.Region, id, address, type, name, alsoKnownAs, vanillaItem, access)
         {
+            Room = room;
         }
 
         /// <summary>
@@ -276,6 +228,62 @@ namespace Randomizer.SMZ3
             _alwaysAllow = (_, _) => false;
             _allow = (_, _) => true;
         }
+
+        /// <summary>
+        /// Gets the internal identifier of the location.
+        /// </summary>
+        public int Id { get; }
+
+        /// <summary>
+        /// Gets the name of the location.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets the type of location.
+        /// </summary>
+        public LocationType Type { get; }
+
+        /// <summary>
+        /// Gets the byte address of the location.
+        /// </summary>
+        public int Address { get; }
+
+        /// <summary>
+        /// Gets or sets the item that can be found in this location.
+        /// </summary>
+        public Item Item { get; set; }
+
+        /// <summary>
+        /// Gets the region the location is in.
+        /// </summary>
+        public Region Region { get; }
+
+        /// <summary>
+        /// Gets the room the location is in, if any.
+        /// </summary>
+        public Room Room { get; }
+
+        /// <summary>
+        /// Gets any alternate names for the location.
+        /// </summary>
+        public IReadOnlyCollection<string> AlternateNames { get; }
+
+        /// <summary>
+        /// Gets the item that can be found in this location in the vanilla
+        /// game.
+        /// </summary>
+        public ItemType VanillaItem { get; }
+
+        /// <summary>
+        /// Gets the relative weight of this location, where negative values
+        /// indicate easier to reach locations.
+        /// </summary>
+        public int Weight => _weight ?? Region.Weight;
+
+        public bool ItemIs(ItemType type, World world) => Item?.Is(type, world) ?? false;
+
+        public bool ItemIsNot(ItemType type, World world) => !ItemIs(type, world);
 
         /// <summary>
         /// Applies a weight to this location, indicating whether the location
@@ -323,8 +331,8 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="items">The available items.</param>
         /// <returns>
-        /// <see langword="true"/> if the item is available with
-        /// <paramref name="items"/>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the item is available with <paramref
+        /// name="items"/>; otherwise, <see langword="false"/>.
         /// </returns>
         public bool IsAvailable(Progression items)
         {
@@ -349,97 +357,16 @@ namespace Randomizer.SMZ3
             Item = oldItem;
             return fillable;
         }
+
+        /// <summary>
+        /// Returns a string that represents the location.
+        /// </summary>
+        /// <returns>A string that represents this location.</returns>
+        public override string ToString()
+        {
+            return Room != null
+                ? $"{Room} - {Name}"
+                : $"{Region} - {Name}";
+        }
     }
-
-    internal static class LocationsExtensions
-    {
-        public static Location Get(this IEnumerable<Location> locations, string name)
-        {
-            var location = locations.FirstOrDefault(l => l.Name == name);
-            if (location == null)
-                throw new ArgumentException($"Could not find location name {name}", nameof(name));
-            return location;
-        }
-
-        /// <summary>
-        /// Returns all locations that do not yet have items assigned to them.
-        /// </summary>
-        /// <param name="locations">The locations to filter.</param>
-        /// <returns>A collection of locations without items.</returns>
-        public static IEnumerable<Location> Empty(this IEnumerable<Location> locations)
-        {
-            return locations.Where(l => l.Item == null);
-        }
-
-        /// <summary>
-        /// Returns all locations that already have an item assigned to them.
-        /// </summary>
-        /// <param name="locations"></param>
-        /// <returns>A collection of locations with items.</returns>
-        public static IEnumerable<Location> Filled(this IEnumerable<Location> locations)
-        {
-            return locations.Where(l => l.Item != null);
-        }
-
-        /// <summary>
-        /// Returns all locations that can be accessed with the items from the
-        /// same world.
-        /// </summary>
-        /// <param name="locations">The locations to filter.</param>
-        /// <param name="items">The available items.</param>
-        /// <returns>
-        /// A collection of locations that can be accessed with
-        /// <paramref name="items"/> from the same world as the locations
-        /// themselves.
-        /// </returns>
-        public static IEnumerable<Location> AvailableWithinWorld(this IEnumerable<Location> locations, IEnumerable<Item> items)
-        {
-            return locations
-                .Select(x => x.Region.World)
-                .Distinct()
-                .SelectMany(world => locations
-                    .Where(l => l.Region.World == world)
-                    .Available(items.Where(i => i.World == world)));
-        }
-
-        /// <summary>
-        /// Returns all locations that can be accessed with the specified set
-        /// of items.
-        /// </summary>
-        /// <param name="locations">The locations to filter.</param>
-        /// <param name="items">The available items.</param>
-        /// <returns>
-        /// A collection of locations that can be accessed with <paramref name="items"/>.
-        /// </returns>
-        public static IEnumerable<Location> Available(this IEnumerable<Location> locations, IEnumerable<Item> items)
-        {
-            var progression = new Progression(items);
-            return locations.Where(l => l.IsAvailable(progression));
-        }
-
-        /// <summary>
-        /// Determines the locations the specified item can be assigned to.
-        /// </summary>
-        /// <param name="locations">The locations to assign the item to.</param>
-        /// <param name="item">The item to assign to a location.</param>
-        /// <param name="items">The available items.</param>
-        /// <returns>
-        /// A collection of locations that <paramref name="item"/> can be
-        /// assigned to based on the available items.
-        /// </returns>
-        public static IEnumerable<Location> CanFillWithinWorld(this IEnumerable<Location> locations, Item item, IEnumerable<Item> items)
-        {
-            var itemWorldProgression = new Progression(items.Where(i => i.World == item.World).Append(item));
-            var worldProgression = locations
-                .Select(x => x.Region.World)
-                .Distinct()
-                .ToDictionary(world => world.Id, world => new Progression(items.Where(i => i.World == world)));
-
-            return locations.Where(l =>
-                l.CanFill(item, worldProgression[l.Region.World.Id])
-                && item.World.Locations.Single(ll => ll.Id == l.Id).IsAvailable(itemWorldProgression));
-        }
-
-    }
-
 }

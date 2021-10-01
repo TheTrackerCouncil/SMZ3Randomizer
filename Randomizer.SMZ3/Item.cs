@@ -361,6 +361,12 @@ namespace Randomizer.SMZ3
         public bool IsNot(ItemType type, World world)
             => !Is(type, world);
 
+        /// <summary>
+        /// Returns a string that represents the item.
+        /// </summary>
+        /// <returns>A string representing this item.</returns>
+        public override string ToString() => $"{Name}";
+
         private static List<Item> Copies(int nr, Func<Item> template)
         {
             return Enumerable.Range(1, nr).Select(i => template()).ToList();
