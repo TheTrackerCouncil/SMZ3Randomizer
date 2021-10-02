@@ -6,6 +6,7 @@
              StartupUri="MainWindow.xaml">
   <Application.Resources>
     <ResourceDictionary>
+      <!-- Custom control templates -->
       <Style TargetType="controls:LabeledControl">
         <Setter Property="Template">
           <Setter.Value>
@@ -33,6 +34,7 @@
                 Value="0,0,0,11" />
       </Style>
 
+      <!-- General styles -->
       <Style TargetType="Menu">
         <Setter Property="Padding"
                 Value="3" />
@@ -94,6 +96,25 @@
                 Value="0" />
       </Style>
 
+      <Style TargetType="Expander">
+        <Setter Property="Margin"
+                Value="7" />
+      </Style>
+
+      <!-- Custom styles -->
+      <Style x:Key="BottomPanel"
+             TargetType="Border">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Setter Property="BorderThickness"
+                Value="0,1,0,0" />
+        <Setter Property="Background"
+                Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+        <Setter Property="Padding"
+                Value="11" />
+      </Style>
+
+      <!-- Misc. resources -->
       <local:EnumToBooleanConverter x:Key="EnumBoolConverter" />
     </ResourceDictionary>
   </Application.Resources>
