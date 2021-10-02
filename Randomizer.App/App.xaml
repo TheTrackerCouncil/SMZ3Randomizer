@@ -29,67 +29,69 @@
             </ControlTemplate>
           </Setter.Value>
         </Setter>
+        <Setter Property="Margin"
+                Value="0,0,0,11" />
       </Style>
 
       <Style TargetType="Menu">
         <Setter Property="Padding"
-                Value="4" />
+                Value="3" />
       </Style>
 
       <Style TargetType="Button">
         <Setter Property="Height"
-                Value="24" />
+                Value="23" />
         <Setter Property="MinWidth"
-                Value="80" />
+                Value="75" />
         <Setter Property="Margin"
-                Value="8" />
+                Value="7,0,0,0" />
         <Setter Property="Padding"
-                Value="6,0,6,0" />
+                Value="5,0,5,0" />
       </Style>
 
       <Style TargetType="Label">
+        <Setter Property="Padding"
+                Value="0" />
         <Setter Property="Margin"
-                Value="8" />
+                Value="0,3,5,0" />
         <Setter Property="VerticalAlignment"
                 Value="Top" />
       </Style>
 
       <Style TargetType="TextBox">
-        <Setter Property="Margin"
-                Value="8" />
         <Setter Property="Height"
-                Value="24" />
+                Value="23" />
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
       </Style>
 
       <Style TargetType="ComboBox">
-        <Setter Property="Margin"
-                Value="8" />
         <Setter Property="Height"
-                Value="24" />
+                Value="23" />
         <Setter Property="VerticalContentAlignment"
                 Value="Center" />
       </Style>
 
       <Style TargetType="RadioButton">
         <Setter Property="Margin"
-                Value="0,2" />
+                Value="0,0,11,7" />
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+      </Style>
+
+      <Style x:Key="RadioButtonGroup"
+             TargetType="StackPanel">
+        <Setter Property="Margin"
+                Value="0,5,0,0" />
       </Style>
 
       <Style TargetType="CheckBox">
         <Setter Property="Margin"
-                Value="4" />
-      </Style>
-
-      <Style TargetType="GroupBox">
-        <Setter Property="Margin"
-                Value="8" />
-      </Style>
-
-      <Style TargetType="Expander">
-        <Setter Property="Margin"
-                Value="8" />
+                Value="0,0,11,7" />
+        <Setter Property="Padding"
+                Value="0" />
       </Style>
 
       <local:EnumToBooleanConverter x:Key="EnumBoolConverter" />

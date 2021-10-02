@@ -12,7 +12,8 @@
         Closing="Window_Closing"
         Title="SMZ3 Cas' Randomizer"
         Height="550"
-        Width="500">
+        Width="500"
+        SnapsToDevicePixels="True">
   <Window.DataContext>
     <vm:SeedOptions></vm:SeedOptions>
   </Window.DataContext>
@@ -24,23 +25,27 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <Menu Grid.Row="0">
-      <MenuItem Header="_Tools">
-        <MenuItem Header="Generate _stats with current options..."
-                  x:Name="GenerateStatsMenuItem"
-                  Click="GenerateStatsMenuItem_Click" />
-        <MenuItem Header="_Options..."
-                  x:Name="OptionsMenuItem"
-                  Click="OptionsMenuItem_Click" />
-      </MenuItem>
-    </Menu>
+    <Border Grid.Row="0"
+            BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            BorderThickness="0,0,0,1">
+      <Menu>
+        <MenuItem Header="_Tools">
+          <MenuItem Header="Generate _stats with current options..."
+                    x:Name="GenerateStatsMenuItem"
+                    Click="GenerateStatsMenuItem_Click" />
+          <MenuItem Header="_Options..."
+                    x:Name="OptionsMenuItem"
+                    Click="OptionsMenuItem_Click" />
+        </MenuItem>
+      </Menu>
+    </Border>
 
     <Grid Grid.Row="1"
-          Grid.IsSharedSizeScope="True">
+          Grid.IsSharedSizeScope="True"
+          Margin="11">
       <StackPanel Orientation="Vertical">
         <controls:LabeledControl Text="Sword location:">
-          <StackPanel VerticalAlignment="Top"
-                      Margin="8">
+          <StackPanel Style="{StaticResource RadioButtonGroup}">
             <RadioButton GroupName="SwordLocation"
                          Content="Randomized"
                          IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
@@ -54,8 +59,7 @@
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Morph Ball location:">
-          <StackPanel VerticalAlignment="Top"
-                      Margin="8">
+          <StackPanel Style="{StaticResource RadioButtonGroup}">
             <RadioButton GroupName="MorphLocation"
                          Content="Randomized"
                          IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
@@ -69,8 +73,7 @@
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Metroid bombs:">
-          <StackPanel VerticalAlignment="Top"
-                      Margin="8">
+          <StackPanel Style="{StaticResource RadioButtonGroup}">
             <RadioButton GroupName="BombsLocation"
                          Content="Randomized"
                          IsChecked="{Binding MorphBombsLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
@@ -96,7 +99,7 @@
                     DisplayMemberPath="DisplayName"
                     SelectedItem="{Binding LinkSprite}" />
         </controls:LabeledControl>
-        
+
         <controls:LabeledControl Text="Custom music pack:">
           <Grid>
             <Grid.ColumnDefinitions>
@@ -114,7 +117,7 @@
         </controls:LabeledControl>
 
         <StackPanel Orientation="Horizontal"
-                    Margin="8">
+                    Margin="0,0,0,4">
           <CheckBox>Keysanity</CheckBox>
           <CheckBox>Race</CheckBox>
         </StackPanel>
@@ -126,13 +129,18 @@
       </StackPanel>
     </Grid>
 
-    <StackPanel Orientation="Horizontal"
-                HorizontalAlignment="Right"
-                Grid.Row="2">
-      <Button x:Name="PlayButton"
-              Click="PlayButton_Click">_Play</Button>
-      <Button x:Name="GenerateRomButton"
-              Click="GenerateRomButton_Click">_Generate ROM</Button>
-    </StackPanel>
+    <Border Grid.Row="2"
+            BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            BorderThickness="0,1,0,0"
+            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+            Padding="11">
+      <StackPanel Orientation="Horizontal"
+                  HorizontalAlignment="Right">
+        <Button x:Name="PlayButton"
+                Click="PlayButton_Click">_Play</Button>
+        <Button x:Name="GenerateRomButton"
+                Click="GenerateRomButton_Click">_Generate ROM</Button>
+      </StackPanel>
+    </Border>
   </Grid>
 </Window>
