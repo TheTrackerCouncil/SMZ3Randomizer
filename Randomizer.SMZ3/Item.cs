@@ -155,6 +155,9 @@ namespace Randomizer.SMZ3
                 new Item(ReserveTank),
                 new Item(ReserveTank),
                 new Item(ReserveTank),
+
+                new Item(ThreeHundredRupees),
+                new Item(ThreeHundredRupees),
             };
 
             foreach (var item in itemPool)
@@ -220,7 +223,7 @@ namespace Randomizer.SMZ3
             itemPool.AddRange(Copies(4, () => new Item(FiveRupees)));
             itemPool.AddRange(Copies(world.Config.Keysanity ? 25 : 28, () => new Item(TwentyRupees)));
             itemPool.AddRange(Copies(7, () => new Item(FiftyRupees)));
-            itemPool.AddRange(Copies(5, () => new Item(ThreeHundredRupees)));
+            itemPool.AddRange(Copies(3, () => new Item(ThreeHundredRupees)));
 
             itemPool.AddRange(Copies(9, () => new Item(ETank)));
             itemPool.AddRange(Copies(39, () => new Item(Missile)));

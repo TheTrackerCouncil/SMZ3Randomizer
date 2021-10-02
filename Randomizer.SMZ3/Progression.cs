@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-
-using static Randomizer.SMZ3.ItemType;
-
 namespace Randomizer.SMZ3
 {
     public class Progression
@@ -93,6 +90,7 @@ namespace Randomizer.SMZ3
         public bool TwoPowerBombs { get; private set; }
         public int ETank { get; private set; }
         public int ReserveTank { get; private set; }
+        public int Rupees { get; private set; }
 
         private int shield;
 
@@ -195,12 +193,12 @@ namespace Randomizer.SMZ3
                     case ItemType.KeyGT: KeyGT += 1; break;
                     case ItemType.ETank: ETank += 1; break;
                     case ItemType.ReserveTank: ReserveTank += 1; break;
-                    case ProgressiveShield: shield += 1; break;
-                    case ProgressiveSword:
+                    case ItemType.ProgressiveShield: shield += 1; break;
+                    case ItemType.ProgressiveSword:
                         MasterSword = Sword;
                         Sword = true;
                         break;
-                    case ProgressiveGlove:
+                    case ItemType.ProgressiveGlove:
                         Mitt = Glove;
                         Glove = true;
                         break;
@@ -208,6 +206,13 @@ namespace Randomizer.SMZ3
                         TwoPowerBombs = PowerBomb;
                         PowerBomb = true;
                         break;
+                    case ItemType.OneRupee: Rupees += 1; break;
+                    case ItemType.FiveRupees: Rupees += 5; break;
+                    case ItemType.TwentyRupees:
+                    case ItemType.TwentyRupees2: Rupees += 20; break;
+                    case ItemType.FiftyRupees: Rupees += 50; break;
+                    case ItemType.OneHundredRupees: Rupees += 100; break;
+                    case ItemType.ThreeHundredRupees: Rupees += 300; break;
                 }
             }
         }
