@@ -39,5 +39,13 @@ namespace Randomizer.SMZ3
 
         public static void Deconstruct<T>(this IEnumerable<T> source, out T first, out T second, out IEnumerable<T> rest)
             => (first, (second, rest)) = source;
+
+        public static T MoveToTop<T>(this List<T> source, Predicate<T> match)
+        {
+            var item = source.Find(match)
+                ?? throw new ArgumentException($"Could not find a matching item in the collection.", nameof(match));
+            source.Insert(0, item);
+            return item;
+        }
     }
 }

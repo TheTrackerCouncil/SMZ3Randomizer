@@ -29,6 +29,8 @@ namespace Randomizer.App.ViewModels
 
         public ItemPlacement MorphBombsLocation { get; set; }
 
+        public ItemPool ShaktoolItem { get; set; }
+
         public bool Keysanity { get; set; }
 
         public bool Race { get; set; }

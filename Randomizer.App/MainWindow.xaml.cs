@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
@@ -146,63 +147,7 @@ namespace Randomizer.App
         private static string Underline(string text, char line = '-')
             => text + "\n" + new string(line, text.Length);
 
-        private static bool IsScam(ItemType itemType)
-        {
-            return itemType switch
-            {
-                ItemType.ProgressiveTunic => false,
-                ItemType.ProgressiveShield => SCAM,
-                ItemType.ProgressiveSword => false,
-                ItemType.Bow => false,
-                ItemType.SilverArrows => false,
-                ItemType.BlueBoomerang => SCAM,
-                ItemType.RedBoomerang => SCAM,
-                ItemType.Hookshot => false,
-                ItemType.Mushroom => false,
-                ItemType.Powder => false,
-                ItemType.Firerod => false,
-                ItemType.Icerod => false,
-                ItemType.Bombos => false,
-                ItemType.Ether => false,
-                ItemType.Quake => false,
-                ItemType.Lamp => false,
-                ItemType.Hammer => false,
-                ItemType.Shovel => false,
-                ItemType.Flute => false,
-                ItemType.Bugnet => SCAM,
-                ItemType.Book => false,
-                ItemType.Bottle => SCAM,
-                ItemType.Somaria => false,
-                ItemType.Byrna => SCAM,
-                ItemType.Cape => false,
-                ItemType.Mirror => false,
-                ItemType.Boots => false,
-                ItemType.ProgressiveGlove => false,
-                ItemType.Flippers => false,
-                ItemType.MoonPearl => false,
-                ItemType.HalfMagic => false,
-                ItemType.Missile => false,
-                ItemType.Super => false,
-                ItemType.PowerBomb => false,
-                ItemType.Grapple => false,
-                ItemType.XRay => SCAM,
-                ItemType.Charge => false,
-                ItemType.Ice => false,
-                ItemType.Wave => false,
-                ItemType.Spazer => false,
-                ItemType.Plasma => false,
-                ItemType.Varia => false,
-                ItemType.Gravity => false,
-                ItemType.Morph => false,
-                ItemType.Bombs => false,
-                ItemType.SpringBall => false,
-                ItemType.ScrewAttack => false,
-                ItemType.HiJump => false,
-                ItemType.SpaceJump => false,
-                ItemType.SpeedBooster => false,
-                _ => SCAM
-            };
-        }
+        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
 
         private byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out SeedData seed)
         {
@@ -336,7 +281,7 @@ namespace Randomizer.App
 
             const int numberOfSeeds = 10000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
-            var stats = new ConcurrentDictionary<string, int>();
+            var stats = InitStats();
             var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
             var ct = progressDialog.CancellationToken;
             var finished = false;
@@ -386,6 +331,17 @@ namespace Randomizer.App
             {
                 itemCounts.Increment(((int)location.Item.Type, location.Id));
             }
+        }
+
+        private ConcurrentDictionary<string, int> InitStats()
+        {
+            var stats = new ConcurrentDictionary<string, int>();
+            stats.TryAdd("Shaktool betrays you", 0);
+            stats.TryAdd("Zora is a scam", 0);
+            stats.TryAdd("Catfish is a scamfish", 0);
+            stats.TryAdd("The Morph Ball is in its original location", 0);
+            stats.TryAdd("The GT Moldorm chest contains a Metroid item", 0);
+            return stats;
         }
 
         private void GatherStats(ConcurrentDictionary<string, int> stats, SeedData seed)

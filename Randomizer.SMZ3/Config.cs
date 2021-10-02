@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace Randomizer.SMZ3
 {
@@ -48,6 +49,21 @@ namespace Randomizer.SMZ3
         Original,
     }
 
+    [DefaultValue(Any)]
+    public enum ItemPool
+    {
+        Any = 0,
+
+        [Description("Progression items")]
+        Progression,
+
+        [Description("Non-junk items")]
+        NonJunk,
+
+        [Description("Junk items")]
+        Junk,
+    }
+
     [DefaultValue(DefeatBoth)]
     public enum Goal
     {
@@ -88,6 +104,7 @@ namespace Randomizer.SMZ3
         public ItemPlacement SwordLocation { get; set; } = ItemPlacement.Randomized;
         public ItemPlacement MorphLocation { get; set; } = ItemPlacement.Randomized;
         public ItemPlacement MorphBombsLocation { get; set; } = ItemPlacement.Randomized;
+        public ItemPool ShaktoolItemPool { get; set; } = ItemPool.Any;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
         public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Race { get; set; } = false;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -8,12 +7,6 @@ namespace Randomizer.SMZ3
 {
     public class Filler
     {
-        public List<World> Worlds { get; set; }
-        public Config Config { get; set; }
-        public Random Rnd { get; set; }
-
-        private CancellationToken CancellationToken { get; set; }
-
         public Filler(List<World> worlds, Config config, Random rnd, CancellationToken cancellationToken)
         {
             Worlds = worlds;
@@ -26,6 +19,12 @@ namespace Randomizer.SMZ3
                 world.Setup(Rnd);
             }
         }
+
+        public List<World> Worlds { get; set; }
+        public Config Config { get; set; }
+        public Random Rnd { get; set; }
+
+        private CancellationToken CancellationToken { get; set; }
 
         public void Fill()
         {
@@ -75,10 +74,32 @@ namespace Randomizer.SMZ3
                 });
             }
 
+            ShaktoolBias(junkItems, locations);
             GanonTowerFill(junkItems, 2);
             AssumedFill(progressionItems, baseItems, locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
+        }
+
+        private void ShaktoolBias(List<Item> junkItems, List<Location> locations)
+        {
+            switch (Config.ShaktoolItemPool)
+            {
+                case ItemPool.Progression:
+                    // If we always want Shaktool to have a progression item,
+                    // move it to the top of the list so it gets filled early
+                    // while we still have all progression items in the pool
+                    var shaktool = locations.MoveToTop(x => x.Id == Worlds[0].InnerMaridia.ShaktoolItem.Id);
+
+                    // Add a filter to prevent the "progression" junk from
+                    // filling it early.
+                    shaktool.Allow((item, items) => !item.Type.IsInCategory(ItemCategory.Scam));
+                    break;
+
+                case ItemPool.Junk:
+                    FastFill(junkItems, Worlds.Select(x => x.InnerMaridia.ShaktoolItem));
+                    break;
+            }
         }
 
         private void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder)
@@ -89,7 +110,7 @@ namespace Randomizer.SMZ3
             var items = reorder.ToDictionary(x => x.type, x => itemPool.FindAll(item => item.Type == x.type));
             itemPool.RemoveAll(item => reorder.Any(x => x.type == item.Type));
 
-            /* Insert items from each biased type such that their lowest index 
+            /* Insert items from each biased type such that their lowest index
              * is based on their weight on the original pool size
              */
             foreach (var (type, weight) in reorder.OrderByDescending(x => x.weight))
@@ -224,7 +245,5 @@ namespace Randomizer.SMZ3
             location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);
         }
-
     }
-
 }

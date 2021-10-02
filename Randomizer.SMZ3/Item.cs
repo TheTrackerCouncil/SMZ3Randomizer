@@ -113,7 +113,6 @@ namespace Randomizer.SMZ3
                 new Item(Hammer),
                 new Item(Shovel),
                 new Item(Flute),
-                new Item(Bugnet),
                 new Item(Book),
                 new Item(Bottle),
                 new Item(Somaria),
@@ -186,6 +185,7 @@ namespace Randomizer.SMZ3
                 new Item(Bottle),
                 new Item(Bottle),
                 new Item(Bottle),
+                new Item(Bugnet),
                 new Item(HeartContainerRefill),
 
                 new Item(Spazer),

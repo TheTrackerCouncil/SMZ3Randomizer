@@ -44,5 +44,15 @@
         /// The item is a keycard for a door in Super Metroid.
         /// </summary>
         Keycard,
+
+        /// <summary>
+        /// The item is not worth paying 500 rupees for, but not necessarily junk.
+        /// </summary>
+        Scam,
+
+        /// <summary>
+        /// The item is considered junk (e.g. arrows, rupees, capacity upgrades).
+        /// </summary>
+        Junk,
     }
 }

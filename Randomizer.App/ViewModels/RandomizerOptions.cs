@@ -72,6 +72,7 @@ namespace Randomizer.App.ViewModels
             SwordLocation = Seed.SwordLocation,
             MorphLocation = Seed.MorphLocation,
             MorphBombsLocation = Seed.MorphBombsLocation,
+            ShaktoolItemPool = Seed.ShaktoolItem,
             KeyShuffle = Seed.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
             Race = Seed.Race
         };

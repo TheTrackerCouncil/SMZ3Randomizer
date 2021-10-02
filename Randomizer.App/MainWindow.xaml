@@ -91,6 +91,20 @@
                 </StackPanel>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Shaktool item pool:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="ShaktoolItemPool"
+                               Content="Randomized"
+                               IsChecked="{Binding ShaktoolItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Any}}" />
+                  <RadioButton GroupName="ShaktoolItemPool"
+                               Content="Only progression items"
+                               IsChecked="{Binding ShaktoolItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Progression}}" />
+                  <RadioButton GroupName="ShaktoolItemPool"
+                               Content="I want Shaktool to betray me every time"
+                               IsChecked="{Binding ShaktoolItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Junk}}" />
+                </StackPanel>
+              </controls:LabeledControl>
+
               <StackPanel Orientation="Horizontal"
                           Margin="0,0,0,4">
                 <CheckBox>Keysanity</CheckBox>

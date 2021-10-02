@@ -213,7 +213,7 @@ namespace Randomizer.SMZ3
         ProgressiveTunic = 0x60,
 
         [Description("Progressive Shield")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         ProgressiveShield = 0x5F,
 
         [Description("Progressive Sword")]
@@ -229,11 +229,11 @@ namespace Randomizer.SMZ3
         SilverArrows = 0x58,
 
         [Description("Blue Boomerang")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         BlueBoomerang = 0x0C,
 
         [Description("Red Boomerang")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         RedBoomerang = 0x2A,
 
         [Description("Hookshot")]
@@ -241,11 +241,11 @@ namespace Randomizer.SMZ3
         Hookshot = 0x0A,
 
         [Description("Mushroom")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         Mushroom = 0x29,
 
         [Description("Magic Powder")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         Powder = 0x0D,
 
         [Description("Fire Rod")]
@@ -285,7 +285,7 @@ namespace Randomizer.SMZ3
         Flute = 0x14,
 
         [Description("Bug Catching Net")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         Bugnet = 0x21,
 
         [Description("Book of Mudora")]
@@ -293,7 +293,7 @@ namespace Randomizer.SMZ3
         Book = 0x1D,
 
         [Description("Bottle")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         Bottle = 0x16,
 
         [Description("Cane of Somaria")]
@@ -333,71 +333,71 @@ namespace Randomizer.SMZ3
         HalfMagic = 0x4E,
 
         [Description("Piece of Heart")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         HeartPiece = 0x17,
 
         [Description("Heart Container")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         HeartContainer = 0x3E,
 
         [Description("Sanctuary Heart Container")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
         HeartContainerRefill = 0x3F,
 
         [Description("Three Bombs")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         ThreeBombs = 0x28,
 
         [Description("Single Arrow")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         Arrow = 0x43,
 
         [Description("Ten Arrows")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         TenArrows = 0x44,
 
         [Description("One Rupee")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         OneRupee = 0x34,
 
         [Description("Five Rupees")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         FiveRupees = 0x35,
 
         [Description("Twenty Rupees")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         TwentyRupees = 0x36,
 
         [Description("Twenty Rupees")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         TwentyRupees2 = 0x47,
 
         [Description("Fifty Rupees")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         FiftyRupees = 0x41,
 
         [Description("One Hundred Rupees")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         OneHundredRupees = 0x40,
 
         [Description("Three Hundred Rupees")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         ThreeHundredRupees = 0x46,
 
         [Description("+5 Bomb Capacity")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         BombUpgrade5 = 0x51,
 
         [Description("+10 Bomb Capacity")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         BombUpgrade10 = 0x52,
 
         [Description("+5 Arrow Capacity")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         ArrowUpgrade5 = 0x53,
 
         [Description("+10 Arrow Capacity")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         ArrowUpgrade10 = 0x54,
 
         [Description("Crateria Level 1 Keycard")]
@@ -465,15 +465,15 @@ namespace Randomizer.SMZ3
         CardLowerNorfairBoss = 0xDF,
 
         [Description("Missile")]
-        [ItemCategory(ItemCategory.Metroid)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
         Missile = 0xC2,
 
         [Description("Super Missile")]
-        [ItemCategory(ItemCategory.Metroid)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
         Super = 0xC3,
 
         [Description("Power Bomb")]
-        [ItemCategory(ItemCategory.Metroid)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
         PowerBomb = 0xC4,
 
         [Description("Grappling Beam")]
@@ -481,15 +481,15 @@ namespace Randomizer.SMZ3
         Grapple = 0xB0,
 
         [Description("X-Ray Scope")]
-        [ItemCategory(ItemCategory.Metroid)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam)]
         XRay = 0xB1,
 
         [Description("Energy Tank")]
-        [ItemCategory(ItemCategory.Metroid)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
         ETank = 0xC0,
 
         [Description("Reserve Tank")]
-        [ItemCategory(ItemCategory.Metroid)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
         ReserveTank = 0xC1,
 
         [Description("Charge Beam")]
