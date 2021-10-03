@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
 
-using static System.Linq.Enumerable;
 using static Randomizer.SMZ3.FileData.DropPrize;
 using static Randomizer.SMZ3.ItemType;
 using static Randomizer.SMZ3.Reward;
@@ -16,21 +18,23 @@ namespace Randomizer.SMZ3.FileData
 {
     public class Patch
     {
-        private readonly List<World> allWorlds;
-        private readonly World myWorld;
-        private readonly string seedGuid;
-        private readonly int seed;
-        private readonly Random rnd;
+        private readonly List<World> _allWorlds;
+        private readonly World _myWorld;
+        private readonly string _seedGuid;
+        private readonly int _seed;
+        private readonly Random _rnd;
         private StringTable stringTable;
         private List<(int offset, byte[] bytes)> patches;
 
+        private Queue<byte> _shuffledSoundtrack;
+
         public Patch(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd)
         {
-            this.myWorld = myWorld;
-            this.allWorlds = allWorlds;
-            this.seedGuid = seedGuid;
-            this.seed = seed;
-            this.rnd = rnd;
+            _myWorld = myWorld;
+            _allWorlds = allWorlds;
+            _seedGuid = seedGuid;
+            _seed = seed;
+            _rnd = rnd;
         }
 
         public Dictionary<int, byte[]> Create(Config config)
@@ -40,13 +44,13 @@ namespace Randomizer.SMZ3.FileData
 
             WriteMedallions();
             WriteRewards();
-            WriteDungeonMusic(config.Keysanity);
+            WriteDungeonMusic(config);
 
             WriteDiggingGameRng();
 
             WritePrizeShuffle();
 
-            WriteRemoveEquipmentFromUncle(myWorld.HyruleCastle.LinksUncle.Item);
+            WriteRemoveEquipmentFromUncle(_myWorld.HyruleCastle.LinksUncle.Item);
 
             WriteGanonInvicible(config.GanonInvincible);
             WriteRngBlock();
@@ -59,8 +63,8 @@ namespace Randomizer.SMZ3.FileData
 
             WriteTexts(config);
 
-            WriteSMLocations(myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
-            WriteZ3Locations(myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
+            WriteSMLocations(_myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
+            WriteZ3Locations(_myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
 
             WriteStringTable();
 
@@ -108,7 +112,7 @@ namespace Randomizer.SMZ3.FileData
             var turtleRockAddresses = new int[] { 0x308023, 0xD020, 0xD0FF, 0xD1DE };
             var miseryMireAddresses = new int[] { 0x308022, 0xCFF2, 0xD0D1, 0xD1B0 };
 
-            var turtleRockValues = myWorld.TurtleRock.Medallion switch
+            var turtleRockValues = _myWorld.TurtleRock.Medallion switch
             {
                 Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
                 Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
@@ -116,7 +120,7 @@ namespace Randomizer.SMZ3.FileData
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Turtle Rock medallion")
             };
 
-            var miseryMireValues = myWorld.MiseryMire.Medallion switch
+            var miseryMireValues = _myWorld.MiseryMire.Medallion switch
             {
                 Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
                 Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
@@ -130,15 +134,15 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteRewards()
         {
-            var crystalsBlue = new[] { 1, 2, 3, 4, 7 }.Shuffle(rnd);
-            var crystalsRed = new[] { 5, 6 }.Shuffle(rnd);
+            var crystalsBlue = new[] { 1, 2, 3, 4, 7 }.Shuffle(_rnd);
+            var crystalsRed = new[] { 5, 6 }.Shuffle(_rnd);
             var crystalRewards = crystalsBlue.Concat(crystalsRed);
 
             var pendantsGreen = new[] { 1 };
-            var pendantsBlueRed = new[] { 2, 3 }.Shuffle(rnd);
+            var pendantsBlueRed = new[] { 2, 3 }.Shuffle(_rnd);
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
-            var regions = myWorld.Regions.OfType<IHasReward>();
+            var regions = _myWorld.Regions.OfType<IHasReward>();
             var crystalRegions = regions.Where(x => x.Reward == CrystalBlue).Concat(regions.Where(x => x.Reward == CrystalRed));
             var pendantRegions = regions.Where(x => x.Reward == PendantGreen).Concat(regions.Where(x => x.Reward == PendantNonGreen));
 
@@ -202,7 +206,7 @@ namespace Randomizer.SMZ3.FileData
         {
             foreach (var location in locations)
             {
-                if (myWorld.Config.MultiWorld)
+                if (_myWorld.Config.MultiWorld)
                 {
                     patches.Add((Snes(location.Address), UshortBytes(GetSMItemPLM(location))));
                     patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
@@ -219,7 +223,7 @@ namespace Randomizer.SMZ3.FileData
 
         private ushort GetSMItemPLM(Location location)
         {
-            var plmId = myWorld.Config.MultiWorld ?
+            var plmId = _myWorld.Config.MultiWorld ?
                 0xEFE0 :
                 location.Item.Type switch
                 {
@@ -295,7 +299,7 @@ namespace Randomizer.SMZ3.FileData
                     }
                 }
 
-                if (myWorld.Config.MultiWorld)
+                if (_myWorld.Config.MultiWorld)
                 {
                     patches.Add((Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
                     patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
@@ -311,7 +315,7 @@ namespace Randomizer.SMZ3.FileData
         {
             var item = location.Item;
             var value = location.Type == LocationType.NotInDungeon ||
-                !(item.IsDungeonItem && location.Region.IsRegionItem(item) && item.World == myWorld) ? item.Type : item switch
+                !(item.IsDungeonItem && location.Region.IsRegionItem(item) && item.World == _myWorld) ? item.Type : item switch
                 {
                     _ when item.IsKey => Key,
                     _ when item.IsBigKey => BigKey,
@@ -329,26 +333,125 @@ namespace Randomizer.SMZ3.FileData
             return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
         }
 
-        private void WriteDungeonMusic(bool keysanity)
+        private void WriteDungeonMusic(Config config)
         {
-            SetSoundtrack(DungeonMusicAddresses.EasternPalace, ALttPSoundtrack.EasternPalace);
-            SetSoundtrack(DungeonMusicAddresses.DesertPalace, ALttPSoundtrack.DesertPalace);
-            // SetSoundtrack(DungeonMusicAddresses.CastleTower,
-            // ALttPSoundtrack.AgahnimsTower);
-            SetSoundtrack(DungeonMusicAddresses.SwampPalace, ALttPSoundtrack.SwampPalace);
-            SetSoundtrack(DungeonMusicAddresses.PalaceOfDarkness, ALttPSoundtrack.PalaceOfDarkness);
-            SetSoundtrack(DungeonMusicAddresses.MiseryMire, ALttPSoundtrack.MiseryMire);
-            SetSoundtrack(DungeonMusicAddresses.SkullWoods, ALttPSoundtrack.SkullWoods);
-            SetSoundtrack(DungeonMusicAddresses.IcePalace, ALttPSoundtrack.IcePalace);
-            SetSoundtrack(DungeonMusicAddresses.TowerOfHera, ALttPSoundtrack.TowerOfHera);
-            SetSoundtrack(DungeonMusicAddresses.ThievesTown, ALttPSoundtrack.ThievesTown);
-            SetSoundtrack(DungeonMusicAddresses.TurtleRock, ALttPSoundtrack.TurtleRock);
-            SetSoundtrack(DungeonMusicAddresses.GanonsTower, ALttPSoundtrack.GanonsTower);
-
-            void SetSoundtrack(int[] addresses, ALttPSoundtrack track)
+            foreach (var region in _myWorld.Regions.OfType<Z3Region>())
             {
-                AddPatch(addresses, new byte[] { (byte)track });
+                var addresses = GetMusicAddresses(region.GetType());
+                if (addresses == null)
+                    continue;
+
+                var soundtrack = SelectSoundtrack(region, config.ExtendedMsuSupport, config.ShuffleDungeonMusic);
+                if (soundtrack == null)
+                    continue;
+
+                AddPatch(addresses, new byte[] { soundtrack.Value });
+                Debug.WriteLine($"Set {region.Name} dungeon music to {GetSoundtrackTitle(soundtrack.Value)}");
             }
+        }
+
+        private string GetSoundtrackTitle(byte soundtrackValue)
+        {
+            return Enum.GetName(typeof(ALttpExtendedSoundtrack), soundtrackValue)
+                ?? Enum.GetName(typeof(ALttPSoundtrack), soundtrackValue)
+                ?? $"Unknown soundtrack (0x{soundtrackValue:X2})";
+        }
+
+        private int[] GetMusicAddresses(Type regionType)
+        {
+            var musicAddresses = regionType.GetField("MusicAddresses",
+                BindingFlags.Public | BindingFlags.Static);
+
+            return musicAddresses != null
+                ? (int[])musicAddresses.GetValue(null)
+                : null;
+        }
+
+        private byte? SelectSoundtrack(Region region, bool extended, MusicShuffleMode shuffleMode) => shuffleMode switch
+        {
+            MusicShuffleMode.Default => GetDefaultSoundtrack(region, extended),
+            MusicShuffleMode.ShuffleDungeons => GetRandomSoundtrack(false, extended),
+            MusicShuffleMode.ShuffleAll => GetRandomSoundtrack(true, extended),
+            _ => throw new InvalidEnumArgumentException(nameof(shuffleMode), (int)shuffleMode, typeof(MusicShuffleMode))
+        };
+
+        private byte? GetDefaultSoundtrack(Region region, bool extended)
+        {
+            if (extended)
+            {
+                var soundtrack = region switch
+                {
+                    EasternPalace => ALttpExtendedSoundtrack.EasternPalace,
+                    DesertPalace => ALttpExtendedSoundtrack.DesertPalace,
+                    SwampPalace => ALttpExtendedSoundtrack.SwampPalace,
+                    PalaceOfDarkness => ALttpExtendedSoundtrack.PalaceOfDarkness,
+                    MiseryMire => ALttpExtendedSoundtrack.MiseryMire,
+                    SkullWoods => ALttpExtendedSoundtrack.SkullWoods,
+                    IcePalace => ALttpExtendedSoundtrack.IcePalace,
+                    TowerOfHera => ALttpExtendedSoundtrack.TowerOfHera,
+                    ThievesTown => ALttpExtendedSoundtrack.ThievesTown,
+                    TurtleRock => ALttpExtendedSoundtrack.TurtleRock,
+                    GanonsTower => ALttpExtendedSoundtrack.GanonsTower,
+                    _ => throw new ArgumentOutOfRangeException(nameof(region),
+                        "Region does not support extended soundtrack.")
+                };
+                return (byte)soundtrack;
+            }
+            else if (region is IHasReward dungeonRegion)
+            {
+                ALttPSoundtrack? soundtrack = dungeonRegion.Reward switch
+                {
+                    PendantGreen => ALttPSoundtrack.LightWorldDungeon,
+                    PendantNonGreen => ALttPSoundtrack.LightWorldDungeon,
+                    CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
+                    CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
+                    _ => null
+                };
+                return soundtrack != null
+                    ? (byte)soundtrack
+                    : null;
+            }
+
+            return null;
+        }
+
+        private byte GetRandomSoundtrack(bool includeNonDungeonMusic, bool extended)
+        {
+            if (_shuffledSoundtrack == null)
+            {
+                _shuffledSoundtrack = new Queue<byte>(includeNonDungeonMusic
+                    ? ShuffleSoundtrack(extended)
+                    : ShuffleDungeonSoundtracks(extended));
+            }
+
+            return _shuffledSoundtrack.Dequeue();
+        }
+
+        private IEnumerable<byte> ShuffleDungeonSoundtracks(bool extended)
+        {
+            var list = new List<byte>();
+            if (!extended)
+            {
+                list.AddRange(Enumerable.Repeat((byte)ALttPSoundtrack.LightWorldDungeon, 6));
+                list.AddRange(Enumerable.Repeat((byte)ALttPSoundtrack.DarkWorldDungeon, 6));
+            }
+            else
+            {
+                list.Add((byte)ALttPSoundtrack.LightWorldDungeon);
+                list.Add((byte)ALttPSoundtrack.DarkWorldDungeon);
+                list.AddRange(Enumerable.Range(35, 12).Select(x => (byte)x));
+            }
+            return list.Shuffle(_rnd);
+        }
+
+        private IEnumerable<byte> ShuffleSoundtrack(bool extended)
+        {
+            var list = new List<byte>();
+            list.AddRange(Enum.GetValues<ALttPSoundtrack>().Cast<byte>());
+            if (extended)
+                list.AddRange(Enum.GetValues<ALttpExtendedSoundtrack>().Cast<byte>());
+            list.Remove(0x00);
+            return list.Shuffle(_rnd);
         }
 
         private void WritePrizeShuffle()
@@ -373,7 +476,7 @@ namespace Randomizer.SMZ3.FileData
                 Red, // saved fish prize
             }.AsEnumerable();
 
-            var prizes = pool.Shuffle(rnd).Cast<byte>();
+            var prizes = pool.Shuffle(_rnd).Cast<byte>();
 
             /* prize pack drop order */
             (bytes, prizes) = prizes.SplitOff(prizePackItems);
@@ -402,7 +505,7 @@ namespace Randomizer.SMZ3.FileData
             /* Normal difficulty is 50%. 0 => 100%, 1 => 50%, 3 => 25% */
             const int nrPacks = 7;
             const byte probability = 1;
-            patches.Add((Snes(0x6FA62), Repeat(probability, nrPacks).ToArray()));
+            patches.Add((Snes(0x6FA62), Enumerable.Repeat(probability, nrPacks).ToArray()));
         }
 
         private IEnumerable<(int, byte[])> EnemyPrizePackDistribution()
@@ -439,14 +542,16 @@ namespace Randomizer.SMZ3.FileData
         private IEnumerable<byte> PrizePackRandomization(int n, int s)
         {
             const int m = 7;
-            var g = Repeat(Range(0, m), s).SelectMany(x => x).ToList();
+            var g = Enumerable.Repeat(Enumerable.Range(0, m), s)
+                .SelectMany(x => x)
+                .ToList();
 
             IEnumerable<int> randomization(int n)
             {
                 n = m * n;
                 while (n > 0)
                 {
-                    var r = rnd.Next(n);
+                    var r = _rnd.Next(n);
                     var k = r / m;
                     yield return k < g.Count ? g[k] : r % m;
                     if (k < g.Count) g.RemoveAt(k);
@@ -516,7 +621,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteTexts(Config config)
         {
-            var regions = myWorld.Regions.OfType<IHasReward>();
+            var regions = _myWorld.Regions.OfType<IHasReward>();
             var greenPendantDungeon = regions.Where(x => x.Reward == PendantGreen).Cast<Region>().First();
             var redCrystalDungeons = regions.Where(x => x.Reward == CrystalRed).Cast<Region>();
 
@@ -528,15 +633,15 @@ namespace Randomizer.SMZ3.FileData
             patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
             stringTable.SetBombShopRevealText(bombShop);
 
-            var blind = Texts.Blind(rnd);
+            var blind = Texts.Blind(_rnd);
             patches.Add((Snes(0x308800), Dialog.Simple(blind)));
             stringTable.SetBlindText(blind);
 
-            var tavernMan = Texts.TavernMan(rnd);
+            var tavernMan = Texts.TavernMan(_rnd);
             patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
             stringTable.SetTavernManText(tavernMan);
 
-            var ganon = Texts.GanonFirstPhase(rnd);
+            var ganon = Texts.GanonFirstPhase(_rnd);
             patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
             stringTable.SetGanonFirstPhaseText(ganon);
 
@@ -550,14 +655,14 @@ namespace Randomizer.SMZ3.FileData
             patches.Add((Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible)));
             // ---
 
-            var silversLocation = allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, myWorld)).First();
+            var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, _myWorld)).First();
             var silvers = config.MultiWorld ?
-                Texts.GanonThirdPhaseMulti(silversLocation.Region, myWorld) :
+                Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld) :
                 Texts.GanonThirdPhaseSingle(silversLocation.Region);
             patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
             stringTable.SetGanonThirdPhaseText(silvers);
 
-            var triforceRoom = Texts.TriforceRoom(rnd);
+            var triforceRoom = Texts.TriforceRoom(_rnd);
             patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             stringTable.SetTriforceRoomText(triforceRoom);
         }
@@ -570,7 +675,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void WritePlayerNames()
         {
-            patches.AddRange(allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
+            patches.AddRange(_allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
         }
 
         private byte[] PlayerNameBytes(string name)
@@ -588,54 +693,54 @@ namespace Randomizer.SMZ3.FileData
         private void WriteSeedData()
         {
             var configField =
-                ((myWorld.Config.Race ? 1 : 0) << 15) |
-                ((myWorld.Config.Keysanity ? 1 : 0) << 13) |
-                ((myWorld.Config.MultiWorld ? 1 : 0) << 12) |
-                ((int)myWorld.Config.Z3Logic << 10) |
-                ((int)myWorld.Config.SMLogic << 8) |
+                ((_myWorld.Config.Race ? 1 : 0) << 15) |
+                ((_myWorld.Config.Keysanity ? 1 : 0) << 13) |
+                ((_myWorld.Config.MultiWorld ? 1 : 0) << 12) |
+                ((int)_myWorld.Config.Z3Logic << 10) |
+                ((int)_myWorld.Config.SMLogic << 8) |
                 (Generation.Randomizer.version.Major << 4) |
                 (Generation.Randomizer.version.Minor << 0);
 
-            patches.Add((Snes(0x80FF50), UshortBytes(myWorld.Id)));
+            patches.Add((Snes(0x80FF50), UshortBytes(_myWorld.Id)));
             patches.Add((Snes(0x80FF52), UshortBytes(configField)));
-            patches.Add((Snes(0x80FF54), UintBytes(seed)));
+            patches.Add((Snes(0x80FF54), UintBytes(_seed)));
             /* Reserve the rest of the space for future use */
-            patches.Add((Snes(0x80FF58), Repeat<byte>(0x00, 8).ToArray()));
-            patches.Add((Snes(0x80FF60), AsAscii(seedGuid)));
-            patches.Add((Snes(0x80FF80), AsAscii(myWorld.Guid)));
+            patches.Add((Snes(0x80FF58), Enumerable.Repeat<byte>(0x00, 8).ToArray()));
+            patches.Add((Snes(0x80FF60), AsAscii(_seedGuid)));
+            patches.Add((Snes(0x80FF80), AsAscii(_myWorld.Guid)));
         }
 
         private void WriteCommonFlags()
         {
             /* Common Combo Configuration flags at [asm]/config.asm */
-            if (myWorld.Config.MultiWorld)
+            if (_myWorld.Config.MultiWorld)
                 patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
-            if (myWorld.Config.Keysanity)
+            if (_myWorld.Config.Keysanity)
                 patches.Add((Snes(0xF47006), UshortBytes(0x0001)));
         }
 
         private void WriteGameTitle()
         {
-            var z3Glitch = myWorld.Config.Z3Logic switch
+            var z3Glitch = _myWorld.Config.Z3Logic switch
             {
                 Z3Logic.Nmg => "N",
                 Z3Logic.Owg => "O",
                 _ => "C",
             };
-            var smGlitch = myWorld.Config.SMLogic switch
+            var smGlitch = _myWorld.Config.SMLogic switch
             {
                 SMLogic.Normal => "N",
                 SMLogic.Hard => "H",
                 _ => "X",
             };
-            var title = AsAscii($"ZSM{Generation.Randomizer.version}{z3Glitch}{smGlitch}{seed:X8}".PadRight(21)[..21]);
+            var title = AsAscii($"ZSM{Generation.Randomizer.version}{z3Glitch}{smGlitch}{_seed:X8}".PadRight(21)[..21]);
             patches.Add((Snes(0x00FFC0), title));
             patches.Add((Snes(0x80FFC0), title));
         }
 
         private void WriteZ3KeysanityFlags()
         {
-            if (myWorld.Config.Keysanity)
+            if (_myWorld.Config.Keysanity)
             {
                 patches.Add((Snes(0x40003B), new byte[] { 1 })); // MapMode #$00 = Always On (default) - #$01 = Require Map Item
                 patches.Add((Snes(0x400045), new byte[] { 0x0f })); // display ----dcba a: Small Keys, b: Big Key, c: Map, d: Compass
@@ -645,7 +750,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteSMKeyCardDoors()
         {
-            if (!myWorld.Config.Keysanity)
+            if (!_myWorld.Config.Keysanity)
                 return;
 
             ushort plaquePLm = 0xd410;
@@ -746,7 +851,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteDiggingGameRng()
         {
-            var digs = (byte)(rnd.Next(30) + 1);
+            var digs = (byte)(_rnd.Next(30) + 1);
             patches.Add((Snes(0x308020), new byte[] { digs }));
             patches.Add((Snes(0x1DFD95), new byte[] { digs }));
         }
@@ -813,7 +918,7 @@ namespace Randomizer.SMZ3.FileData
         private void WriteRngBlock()
         {
             /* Repoint RNG Block */
-            patches.Add((0x420000, Range(0, 1024).Select(x => (byte)rnd.Next(0x100)).ToArray()));
+            patches.Add((0x420000, Enumerable.Range(0, 1024).Select(x => (byte)_rnd.Next(0x100)).ToArray()));
         }
 
         private void WriteSaveAndQuitFromBossRoom()

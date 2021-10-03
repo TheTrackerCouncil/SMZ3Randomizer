@@ -2,6 +2,12 @@
 {
     public class TowerOfHera : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5C5,
+            0x02907A,
+            0x028B8C
+        };
+
         public TowerOfHera(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyTH, ItemType.BigKeyTH, ItemType.MapTH, ItemType.CompassTH };

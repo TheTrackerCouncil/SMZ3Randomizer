@@ -2,6 +2,10 @@
 {
     public class EasternPalace : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D59A
+        };
+
         public EasternPalace(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.BigKeyEP, ItemType.MapEP, ItemType.CompassEP };

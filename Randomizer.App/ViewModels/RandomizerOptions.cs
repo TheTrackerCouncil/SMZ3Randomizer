@@ -25,26 +25,35 @@ namespace Randomizer.App.ViewModels
 
         public RandomizerOptions()
         {
-            General = new GeneralOptions();
-            Seed = new SeedOptions();
+            GeneralOptions = new GeneralOptions();
+            SeedOptions = new SeedOptions();
+            PatchOptions = new PatchOptions();
         }
 
         [JsonConstructor]
-        public RandomizerOptions(GeneralOptions general, SeedOptions seed)
+        public RandomizerOptions(GeneralOptions generalOptions,
+            SeedOptions seedOptions,
+            PatchOptions patchOptions)
         {
-            General = general;
-            Seed = seed;
+            GeneralOptions = generalOptions;
+            SeedOptions = seedOptions;
+            PatchOptions = patchOptions;
         }
 
         public RandomizerOptions(Window owner)
             : this()
         {
-            General.SetOwner(owner);
+            GeneralOptions.SetOwner(owner);
         }
 
-        public GeneralOptions General { get; }
+        [JsonPropertyName("General")]
+        public GeneralOptions GeneralOptions { get; }
 
-        public SeedOptions Seed { get; }
+        [JsonPropertyName("Seed")]
+        public SeedOptions SeedOptions { get; }
+
+        [JsonPropertyName("Patch")]
+        public PatchOptions PatchOptions { get; }
 
         public static RandomizerOptions Load(string path)
         {
@@ -54,7 +63,7 @@ namespace Randomizer.App.ViewModels
 
         public RandomizerOptions WithOwner(Window owner)
         {
-            General.SetOwner(owner);
+            GeneralOptions.SetOwner(owner);
             return this;
         }
 
@@ -69,12 +78,14 @@ namespace Randomizer.App.ViewModels
             GameMode = GameMode.Normal,
             Z3Logic = Z3Logic.Normal,
             SMLogic = SMLogic.Normal,
-            SwordLocation = Seed.SwordLocation,
-            MorphLocation = Seed.MorphLocation,
-            MorphBombsLocation = Seed.MorphBombsLocation,
-            ShaktoolItemPool = Seed.ShaktoolItem,
-            KeyShuffle = Seed.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
-            Race = Seed.Race
+            SwordLocation = SeedOptions.SwordLocation,
+            MorphLocation = SeedOptions.MorphLocation,
+            MorphBombsLocation = SeedOptions.MorphBombsLocation,
+            ShaktoolItemPool = SeedOptions.ShaktoolItem,
+            KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
+            Race = SeedOptions.Race,
+            ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
+            ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

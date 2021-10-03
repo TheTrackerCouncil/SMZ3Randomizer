@@ -5,6 +5,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class GanonsTower : Z3Region
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5C9
+        };
+
         public GanonsTower(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyGT, ItemType.BigKeyGT, ItemType.MapGT, ItemType.CompassGT };

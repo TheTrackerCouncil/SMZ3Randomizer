@@ -28,8 +28,6 @@ namespace Randomizer.App
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const bool SCAM = true;
-
         private readonly string _optionsPath;
         private readonly Task _loadSpritesTask;
 
@@ -60,7 +58,7 @@ namespace Randomizer.App
                 Options = new RandomizerOptions(this);
             }
 
-            DataContext = Options.Seed;
+            DataContext = Options;
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
@@ -152,11 +150,11 @@ namespace Randomizer.App
         private byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out SeedData seed)
         {
             var config = Options.ToConfig();
-            seed = randomizer.GenerateSeed(config, Options.Seed.Seed, CancellationToken.None);
+            seed = randomizer.GenerateSeed(config, Options.SeedOptions.Seed, CancellationToken.None);
 
             byte[] rom;
-            using (var smRom = File.OpenRead(Options.General.SMRomPath))
-            using (var z3Rom = File.OpenRead(Options.General.Z3RomPath))
+            using (var smRom = File.OpenRead(Options.GeneralOptions.SMRomPath))
+            using (var z3Rom = File.OpenRead(Options.GeneralOptions.Z3RomPath))
             {
                 rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
             }
@@ -167,14 +165,14 @@ namespace Randomizer.App
             }
             Rom.ApplySeed(rom, seed.Worlds[0].Patches);
 
-            Options.Seed.SamusSprite.ApplyTo(rom);
-            Options.Seed.LinkSprite.ApplyTo(rom);
+            Options.PatchOptions.SamusSprite.ApplyTo(rom);
+            Options.PatchOptions.LinkSprite.ApplyTo(rom);
             return rom;
         }
 
         private bool EnableMsu1Support(byte[] rom, string romPath)
         {
-            var msuPath = Options.Seed.Msu1Path;
+            var msuPath = Options.PatchOptions.Msu1Path;
             if (!File.Exists(msuPath))
                 return false;
 
@@ -230,7 +228,7 @@ namespace Randomizer.App
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!Options.General.Validate())
+            if (!Options.GeneralOptions.Validate())
             {
                 MessageBox.Show(this, "If this is your first time using the randomizer," +
                     " there are some required options you need to configure before you " +
@@ -254,7 +252,7 @@ namespace Randomizer.App
 
         private void OptionsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var optionsDialog = new OptionsWindow(Options.General);
+            var optionsDialog = new OptionsWindow(Options.GeneralOptions);
             optionsDialog.ShowDialog();
         }
 
@@ -264,7 +262,7 @@ namespace Randomizer.App
             {
                 CheckFileExists = true,
                 Filter = "MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*",
-                FileName = Options.Seed.Msu1Path,
+                FileName = Options.PatchOptions.Msu1Path,
                 Title = "Browse MSU-1 file - SMZ3 Cas’ Randomizer"
             };
 

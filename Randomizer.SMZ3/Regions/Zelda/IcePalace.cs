@@ -4,6 +4,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class IcePalace : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5BF
+        };
         public IcePalace(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyIP, ItemType.BigKeyIP, ItemType.MapIP, ItemType.CompassIP };

@@ -2,6 +2,12 @@
 {
     public class TurtleRock : Z3Region, IHasReward, INeedsMedallion
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5C7,
+            0x02D5A7,
+            0x02D5AA,
+            0x02D5AB
+        };
         public TurtleRock(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyTR, ItemType.BigKeyTR, ItemType.MapTR, ItemType.CompassTR };

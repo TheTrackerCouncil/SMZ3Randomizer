@@ -4,6 +4,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class DesertPalace : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D59B,
+            0x02D59C,
+            0x02D59D,
+            0x02D59E
+        };
+
         public DesertPalace(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyDP, ItemType.BigKeyDP, ItemType.MapDP, ItemType.CompassDP };

@@ -16,10 +16,6 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class SeedOptions
     {
-        public Sprite LinkSprite { get; set; }
-
-        public Sprite SamusSprite { get; set; }
-
         [JsonIgnore]
         public string Seed { get; set; }
 
@@ -34,7 +30,5 @@ namespace Randomizer.App.ViewModels
         public bool Keysanity { get; set; }
 
         public bool Race { get; set; }
-
-        public string Msu1Path { get; set; }
     }
 }

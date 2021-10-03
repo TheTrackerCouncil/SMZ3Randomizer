@@ -1,5 +1,7 @@
-﻿namespace Randomizer.SMZ3.FileData {
-    public enum ALttPSoundtrack : byte {
+﻿namespace Randomizer.SMZ3.FileData
+{
+    public enum ALttPSoundtrack : byte
+    {
         None = 0,
         Title = 1,
         LightWorldOverworld = 2,
@@ -34,35 +36,5 @@
         TriforceRoom = 32,
         TriumphantReturn = 33,
         Credits = 34,
-        // Expanded soundtrack
-        DarkLostWoods = 15,
-        LightWorldOverworldPostPed = 60,
-        DarkWorldOverworldPostCrystals = 61,
-        EasternPalace = 35,
-        DesertPalace = 36,
-        AgahnimsTower = 37,
-        SwampPalace = 38,
-        PalaceOfDarkness = 39,
-        MiseryMire = 40,
-        SkullWoods = 41,
-        IcePalace = 42,
-        TowerOfHera = 43,
-        ThievesTown = 44,
-        TurtleRock = 45,
-        GanonsTower = 46,
-        GanonsTowerAscent = 59,
-        // Expanded soundtrack - boss fights
-        EasternPalaceBoss = 47,
-        DesertPalaceBoss = 48,
-        AgahnimsTowerBoss = 49,
-        SwampPalaceBoss = 50,
-        PalaceOfDarknessBoss = 51,
-        MiseryMireBoss = 52,
-        SkullWoodsBoss = 53,
-        IcePalaceBoss = 54,
-        TowerOfHeraBoss = 55,
-        ThievesTownBoss = 56,
-        TurtleRockBoss = 57,
-        GanonsTowerBoss = 58
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace Randomizer.SMZ3
 {
@@ -96,6 +95,42 @@ namespace Randomizer.SMZ3
         Always,
     }
 
+    /// <summary>
+    /// Specifies how dungeon music in A Link to the Past is selected.
+    /// </summary>
+    public enum MusicShuffleMode
+    {
+        /// <summary>
+        /// Specifies music should not be shuffled.
+        /// </summary>
+        /// <remarks>
+        /// Dungeons play the light/dark world dungeon theme depending on the
+        /// type of crystal. In extended mode, dungeons have their own theme.
+        /// </remarks>
+        [Description("Dungeons play the normal dungeon themes")]
+        Default,
+
+        /// <summary>
+        /// Specifies music should be shuffled between dungeons.
+        /// </summary>
+        /// <remarks>
+        /// Dungeons play the light/dark world theme randomly. In extended mode,
+        /// all dungeon themes are shuffled.
+        /// </remarks>
+        [Description("Dungeons can play any dungeon theme")]
+        ShuffleDungeons,
+
+        /// <summary>
+        /// Specifies dungeon music can be replaced by any track in the game.
+        /// </summary>
+        /// <remarks>
+        /// Dungeons can play any track from the game soundtrack. In extended
+        /// mode, all extended soundtracks are included.
+        /// </remarks>
+        [Description("Dungeons can play any track")]
+        ShuffleAll
+    }
+
     public class Config
     {
         public GameMode GameMode { get; set; } = GameMode.Normal;
@@ -109,6 +144,8 @@ namespace Randomizer.SMZ3
         public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Race { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
+        public bool ExtendedMsuSupport { get; set; } = false;
+        public MusicShuffleMode ShuffleDungeonMusic { get; set; } = MusicShuffleMode.Default;
 
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;

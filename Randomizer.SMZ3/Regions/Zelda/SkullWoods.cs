@@ -4,6 +4,17 @@ namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class SkullWoods : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5BA,
+            0x02D5BB,
+            0x02D5BC,
+            0x02D5BD,
+            0x02D608,
+            0x02D609,
+            0x02D60A,
+            0x02D60B
+        };
+
         public SkullWoods(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeySW, ItemType.BigKeySW, ItemType.MapSW, ItemType.CompassSW };

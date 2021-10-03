@@ -2,6 +2,9 @@
 {
     public class MiseryMire : Z3Region, IHasReward, INeedsMedallion
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5B9
+        };
         public MiseryMire(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyMM, ItemType.BigKeyMM, ItemType.MapMM, ItemType.CompassMM };

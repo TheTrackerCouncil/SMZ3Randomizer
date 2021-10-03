@@ -2,6 +2,10 @@
 {
     public class PalaceOfDarkness : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5B8
+        };
+
         public PalaceOfDarkness(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyPD, ItemType.BigKeyPD, ItemType.MapPD, ItemType.CompassPD };

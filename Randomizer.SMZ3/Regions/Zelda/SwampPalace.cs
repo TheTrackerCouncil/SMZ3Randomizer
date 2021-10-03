@@ -2,6 +2,10 @@
 {
     public class SwampPalace : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5B7
+        };
+
         public SwampPalace(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeySP, ItemType.BigKeySP, ItemType.MapSP, ItemType.CompassSP };

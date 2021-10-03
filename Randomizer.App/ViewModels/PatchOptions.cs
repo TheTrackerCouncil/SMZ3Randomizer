@@ -1,0 +1,48 @@
+﻿using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+
+using Randomizer.SMZ3;
+
+namespace Randomizer.App.ViewModels
+{
+    /// <summary>
+    /// Represents user-configurable options for patching and customizing the
+    /// randomized ROM.
+    /// </summary>
+    public class PatchOptions : INotifyPropertyChanged
+    {
+        private string _msu1Path;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Sprite LinkSprite { get; set; }
+
+        public Sprite SamusSprite { get; set; }
+
+        public string Msu1Path
+        {
+            get => _msu1Path;
+            set
+            {
+                if (value != _msu1Path)
+                {
+                    _msu1Path = value;
+                    OnPropertyChanged(nameof(Msu1Path));
+                    OnPropertyChanged(nameof(CanEnableExtendedSoundtrack));
+                }
+            }
+        }
+
+        public bool EnableExtendedSoundtrack { get; set; }
+
+        public MusicShuffleMode ShuffleDungeonMusic { get; set; }
+
+        public bool CanEnableExtendedSoundtrack => File.Exists(Msu1Path);
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}

@@ -2,6 +2,10 @@
 {
     public class ThievesTown : Z3Region, IHasReward
     {
+        public static readonly int[] MusicAddresses = new[] {
+            0x02D5C6
+        };
+
         public ThievesTown(World world, Config config) : base(world, config)
         {
             RegionItems = new[] { ItemType.KeyTT, ItemType.BigKeyTT, ItemType.MapTT, ItemType.CompassTT };
