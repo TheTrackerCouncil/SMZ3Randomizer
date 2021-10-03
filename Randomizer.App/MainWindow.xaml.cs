@@ -289,7 +289,7 @@ namespace Randomizer.App
                 Parallel.For(0, numberOfSeeds, (iteration, state) =>
                 {
                     ct.ThrowIfCancellationRequested();
-                    var seed = randomizer.GenerateSeed(config, null, ct);
+                    var seed = randomizer.GenerateSeed(config.SeedOnly(), null, ct);
 
                     ct.ThrowIfCancellationRequested();
                     GatherStats(stats, seed);
@@ -337,6 +337,7 @@ namespace Randomizer.App
             stats.TryAdd("Shaktool betrays you", 0);
             stats.TryAdd("Zora is a scam", 0);
             stats.TryAdd("Catfish is a scamfish", 0);
+            stats.TryAdd("\"I want to go on something more thrilling than Peg World.\"", 0);
             stats.TryAdd("The Morph Ball is in its original location", 0);
             stats.TryAdd("The GT Moldorm chest contains a Metroid item", 0);
             return stats;
@@ -354,6 +355,9 @@ namespace Randomizer.App
 
             if (IsScam(world.World.DarkWorldNorthEast.Catfish.Item.Type))
                 stats.Increment("Catfish is a scamfish");
+
+            if (IsScam(world.World.DarkWorldNorthWest.PegWorld.Item.Type))
+                stats.Increment("\"I want to go on something more thrilling than Peg World.\"");
 
             if (world.World.BlueBrinstar.MorphBall.Item.Type == ItemType.Morph)
                 stats.Increment("The Morph Ball is in its original location");

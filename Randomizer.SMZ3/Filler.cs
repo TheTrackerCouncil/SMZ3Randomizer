@@ -74,31 +74,38 @@ namespace Randomizer.SMZ3
                 });
             }
 
-            ShaktoolBias(junkItems, locations);
+            ApplyItemPoolPreferences(junkItems, locations);
             GanonTowerFill(junkItems, 2);
             AssumedFill(progressionItems, baseItems, locations, Worlds);
             FastFill(niceItems, locations);
             FastFill(junkItems, locations);
         }
 
-        private void ShaktoolBias(List<Item> junkItems, List<Location> locations)
+        private void ApplyItemPoolPreferences(List<Item> junkItems, List<Location> locations)
         {
-            switch (Config.ShaktoolItemPool)
+            ApplyPreference(Config.ShaktoolItemPool, world => world.InnerMaridia.ShaktoolItem);
+            ApplyPreference(Config.PegWorldItemPool, world => world.DarkWorldNorthWest.PegWorld);
+
+            void ApplyPreference(ItemPool setting, Func<World, Location> selectLocation)
             {
-                case ItemPool.Progression:
-                    // If we always want Shaktool to have a progression item,
-                    // move it to the top of the list so it gets filled early
-                    // while we still have all progression items in the pool
-                    var shaktool = locations.MoveToTop(x => x.Id == Worlds[0].InnerMaridia.ShaktoolItem.Id);
+                switch (setting)
+                {
+                    case ItemPool.Progression:
+                        // If we always want to have a progression item, move it
+                        // to the top of the list so it gets filled early while
+                        // we still have all progression items in the pool. We
+                        // also add a filter to prevent it from filling it with
+                        // the wrong items.
+                        var locationId = selectLocation(Worlds[0]).Id;
+                        var location = locations
+                            .MoveToTop(x => x.Id == locationId)
+                            .Allow((item, items) => !item.Type.IsInCategory(ItemCategory.Scam));
+                        break;
 
-                    // Add a filter to prevent the "progression" junk from
-                    // filling it early.
-                    shaktool.Allow((item, items) => !item.Type.IsInCategory(ItemCategory.Scam));
-                    break;
-
-                case ItemPool.Junk:
-                    FastFill(junkItems, Worlds.Select(x => x.InnerMaridia.ShaktoolItem));
-                    break;
+                    case ItemPool.Junk:
+                        FastFill(junkItems, Worlds.Select(selectLocation));
+                        break;
+                }
             }
         }
 

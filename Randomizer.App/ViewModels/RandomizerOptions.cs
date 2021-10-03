@@ -82,6 +82,7 @@ namespace Randomizer.App.ViewModels
             MorphLocation = SeedOptions.MorphLocation,
             MorphBombsLocation = SeedOptions.MorphBombsLocation,
             ShaktoolItemPool = SeedOptions.ShaktoolItem,
+            PegWorldItemPool = SeedOptions.PegWorldItem,
             KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
             Race = SeedOptions.Race,
             ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,

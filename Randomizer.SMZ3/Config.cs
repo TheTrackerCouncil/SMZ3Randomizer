@@ -140,6 +140,7 @@ namespace Randomizer.SMZ3
         public ItemPlacement MorphLocation { get; set; } = ItemPlacement.Randomized;
         public ItemPlacement MorphBombsLocation { get; set; } = ItemPlacement.Randomized;
         public ItemPool ShaktoolItemPool { get; set; } = ItemPool.Any;
+        public ItemPool PegWorldItemPool { get; set; } = ItemPool.Any;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
         public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Race { get; set; } = false;
@@ -147,8 +148,17 @@ namespace Randomizer.SMZ3
         public bool ExtendedMsuSupport { get; set; } = false;
         public MusicShuffleMode ShuffleDungeonMusic { get; set; } = MusicShuffleMode.Default;
 
+        public bool GenerateSeedOnly { get; private set; } = false;
+
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;
         public bool Keysanity => KeyShuffle != KeyShuffle.None;
+
+        public Config SeedOnly()
+        {
+            var clone = (Config)MemberwiseClone();
+            clone.GenerateSeedOnly = true;
+            return clone;
+        }
     }
 }

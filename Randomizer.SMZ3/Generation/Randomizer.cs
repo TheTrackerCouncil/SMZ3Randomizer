@@ -81,6 +81,12 @@ namespace Randomizer.SMZ3.Generation
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
 
+            if (config.GenerateSeedOnly)
+            {
+                seedData.Worlds = worlds.Select(x => (x, (Dictionary<int, byte[]>)null)).ToList();
+                return seedData;
+            }
+
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
             var patchSeed = randoRnd.Next();
             foreach (var world in worlds)

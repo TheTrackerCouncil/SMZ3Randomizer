@@ -106,6 +106,22 @@
                 </StackPanel>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Peg World item pool:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="PegWorldItemPool"
+                               Content="Randomized"
+                               IsChecked="{Binding PegWorldItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Any}}" />
+                  <RadioButton GroupName="PegWorldItemPool"
+                               Content="Only progression items"
+                               ToolTip="Mom, can we go to Peg World? It has all the best progression items!"
+                               IsChecked="{Binding PegWorldItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Progression}}" />
+                  <RadioButton GroupName="PegWorldItemPool"
+                               Content="Only junk items"
+                               ToolTip="Peg World is overrated anyway."
+                               IsChecked="{Binding PegWorldItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Junk}}" />
+                </StackPanel>
+              </controls:LabeledControl>
+
               <StackPanel Orientation="Horizontal"
                           Margin="0,0,0,4">
                 <CheckBox>Keysanity</CheckBox>

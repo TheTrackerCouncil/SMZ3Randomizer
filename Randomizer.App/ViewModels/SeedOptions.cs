@@ -27,6 +27,8 @@ namespace Randomizer.App.ViewModels
 
         public ItemPool ShaktoolItem { get; set; }
 
+        public ItemPool PegWorldItem { get; set; }
+
         public bool Keysanity { get; set; }
 
         public bool Race { get; set; }
