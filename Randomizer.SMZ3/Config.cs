@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+using Randomizer.Shared;
+
 namespace Randomizer.SMZ3
 {
     [DefaultValue(Normal)]
@@ -131,6 +133,23 @@ namespace Randomizer.SMZ3
         ShuffleAll
     }
 
+    public enum HeartColor
+    {
+        Red = 0,
+        Yellow,
+        Green,
+        Blue
+    }
+
+    public enum LowHealthBeepSpeed
+    {
+        Normal = 0,
+        Double,
+        Half,
+        Quarter,
+        Off,
+    }
+
     public class Config
     {
         public GameMode GameMode { get; set; } = GameMode.Normal;
@@ -147,6 +166,9 @@ namespace Randomizer.SMZ3
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
         public bool ExtendedMsuSupport { get; set; } = false;
         public MusicShuffleMode ShuffleDungeonMusic { get; set; } = MusicShuffleMode.Default;
+        public HeartColor HeartColor { get; set; } = HeartColor.Red;
+        public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; } = LowHealthBeepSpeed.Normal;
+        public bool DisableLowEnergyBeep { get; set; } = false;
 
         public bool GenerateSeedOnly { get; private set; } = false;
 

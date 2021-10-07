@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
@@ -23,9 +24,9 @@ namespace Randomizer.SMZ3.FileData
         private readonly string _seedGuid;
         private readonly int _seed;
         private readonly Random _rnd;
-        private StringTable stringTable;
-        private List<(int offset, byte[] bytes)> patches;
-
+        private readonly RomPatchFactory _romPatchFactory;
+        private StringTable _stringTable;
+        private List<(int offset, byte[] bytes)> _patches;
         private Queue<byte> _shuffledSoundtrack;
 
         public Patch(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd)
@@ -35,12 +36,64 @@ namespace Randomizer.SMZ3.FileData
             _seedGuid = seedGuid;
             _seed = seed;
             _rnd = rnd;
+            _romPatchFactory = new RomPatchFactory();
         }
+
+        /// <summary>
+        /// Returns the PC offset for the specified SNES address.
+        /// </summary>
+        /// <param name="addr">The SNES address to convert.</param>
+        /// <returns>
+        /// The PC offset equivalent to the SNES <paramref name="addr"/>.
+        /// </returns>
+        public static int Snes(int addr)
+        {
+            addr = addr switch
+            {
+                /* Redirect hi bank $30 access into ExHiRom lo bank $40 */
+                _ when (addr & 0xFF8000) == 0x308000 => 0x400000 | (addr & 0x7FFF),
+                /* General case, add ExHi offset for banks < $80, and collapse mirroring */
+                _ => (addr < 0x800000 ? 0x400000 : 0) | (addr & 0x3FFFFF),
+            };
+            if (addr > 0x600000)
+                throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
+            return addr;
+        }
+
+        /// <summary>
+        /// Returns a byte array representing the specified 32-bit unsigned
+        /// integer.
+        /// </summary>
+        /// <param name="value">The 32-bit unsigned integer.</param>
+        /// <returns>
+        /// A new byte array containing the 32-bit unsigned integer.
+        /// </returns>
+        public static byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
+
+        /// <summary>
+        /// Returns a byte array representing the specified 16-bit unsigned
+        /// integer.
+        /// </summary>
+        /// <param name="value">The 16-bit unsigned integer.</param>
+        /// <returns>
+        /// A new byte array containing the 16-bit unsigned integer.
+        /// </returns>
+        public static byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
+
+        /// <summary>
+        /// Returns a byte array representing the specified ASCII-encoded text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>
+        /// A new byte array containing the ASCII representation of the
+        /// <paramref name="text"/>.
+        /// </returns>
+        public static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
         public Dictionary<int, byte[]> Create(Config config)
         {
-            stringTable = new StringTable();
-            patches = new List<(int, byte[])>();
+            _stringTable = new StringTable();
+            _patches = new List<(int, byte[])>();
 
             WriteMedallions();
             WriteRewards();
@@ -76,36 +129,21 @@ namespace Randomizer.SMZ3.FileData
             WriteGameTitle();
             WriteCommonFlags();
 
-            return patches.ToDictionary(x => x.offset, x => x.bytes);
+            foreach (var patch in _romPatchFactory.GetPatches())
+            {
+                _patches.AddRange(patch.GetChanges(config));
+            }
+
+            return _patches.ToDictionary(x => x.offset, x => x.bytes);
         }
 
         protected void AddPatch(int[] addresses, byte[] values)
         {
             foreach (var address in addresses)
             {
-                patches.Add((Snes(address), values));
+                _patches.Add((Snes(address), values));
             }
         }
-
-        private static int Snes(int addr)
-        {
-            addr = addr switch
-            {
-                /* Redirect hi bank $30 access into ExHiRom lo bank $40 */
-                _ when (addr & 0xFF8000) == 0x308000 => 0x400000 | (addr & 0x7FFF),
-                /* General case, add ExHi offset for banks < $80, and collapse mirroring */
-                _ => (addr < 0x800000 ? 0x400000 : 0) | (addr & 0x3FFFFF),
-            };
-            if (addr > 0x600000)
-                throw new InvalidOperationException($"Unmapped pc address target ${addr:X}");
-            return addr;
-        }
-
-        private static byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
-
-        private static byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
-
-        private static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
         private void WriteMedallions()
         {
@@ -128,8 +166,8 @@ namespace Randomizer.SMZ3.FileData
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Misery Mire medallion")
             };
 
-            patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => (Snes(i), new byte[] { b })));
-            patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => (Snes(i), new byte[] { b })));
+            _patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => (Snes(i), new byte[] { b })));
+            _patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => (Snes(i), new byte[] { b })));
         }
 
         private void WriteRewards()
@@ -146,8 +184,8 @@ namespace Randomizer.SMZ3.FileData
             var crystalRegions = regions.Where(x => x.Reward == CrystalBlue).Concat(regions.Where(x => x.Reward == CrystalRed));
             var pendantRegions = regions.Where(x => x.Reward == PendantGreen).Concat(regions.Where(x => x.Reward == PendantNonGreen));
 
-            patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
-            patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
+            _patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
+            _patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
         }
 
         private IEnumerable<(int, byte[])> RewardPatches(IEnumerable<IHasReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues)
@@ -208,15 +246,15 @@ namespace Randomizer.SMZ3.FileData
             {
                 if (_myWorld.Config.MultiWorld)
                 {
-                    patches.Add((Snes(location.Address), UshortBytes(GetSMItemPLM(location))));
-                    patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
+                    _patches.Add((Snes(location.Address), UshortBytes(GetSMItemPLM(location))));
+                    _patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 }
                 else
                 {
                     var plmId = GetSMItemPLM(location);
-                    patches.Add((Snes(location.Address), UshortBytes(plmId)));
+                    _patches.Add((Snes(location.Address), UshortBytes(plmId)));
                     if (plmId >= 0xEFE0)
-                        patches.Add((Snes(location.Address + 5), new byte[] { GetZ3ItemId(location) }));
+                        _patches.Add((Snes(location.Address + 5), new byte[] { GetZ3ItemId(location) }));
                 }
             }
         }
@@ -276,7 +314,7 @@ namespace Randomizer.SMZ3.FileData
             {
                 if (location.Type == LocationType.HeraStandingKey)
                 {
-                    patches.Add((Snes(0x9E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
+                    _patches.Add((Snes(0x9E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
                 }
                 else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type))
                 {
@@ -284,29 +322,29 @@ namespace Randomizer.SMZ3.FileData
                     var dialog = Dialog.Simple(text);
                     if (location.Type == LocationType.Pedestal)
                     {
-                        patches.Add((Snes(0x308300), dialog));
-                        stringTable.SetPedestalText(text);
+                        _patches.Add((Snes(0x308300), dialog));
+                        _stringTable.SetPedestalText(text);
                     }
                     else if (location.Type == LocationType.Ether)
                     {
-                        patches.Add((Snes(0x308F00), dialog));
-                        stringTable.SetEtherText(text);
+                        _patches.Add((Snes(0x308F00), dialog));
+                        _stringTable.SetEtherText(text);
                     }
                     else if (location.Type == LocationType.Bombos)
                     {
-                        patches.Add((Snes(0x309000), dialog));
-                        stringTable.SetBombosText(text);
+                        _patches.Add((Snes(0x309000), dialog));
+                        _stringTable.SetBombosText(text);
                     }
                 }
 
                 if (_myWorld.Config.MultiWorld)
                 {
-                    patches.Add((Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
-                    patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
+                    _patches.Add((Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
+                    _patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 }
                 else
                 {
-                    patches.Add((Snes(location.Address), new byte[] { GetZ3ItemId(location) }));
+                    _patches.Add((Snes(location.Address), new byte[] { GetZ3ItemId(location) }));
                 }
             }
         }
@@ -480,32 +518,32 @@ namespace Randomizer.SMZ3.FileData
 
             /* prize pack drop order */
             (bytes, prizes) = prizes.SplitOff(prizePackItems);
-            patches.Add((Snes(0x6FA78), bytes.ToArray()));
+            _patches.Add((Snes(0x6FA78), bytes.ToArray()));
 
             /* tree pull prizes */
             (bytes, prizes) = prizes.SplitOff(treePullItems);
-            patches.Add((Snes(0x1DFBD4), bytes.ToArray()));
+            _patches.Add((Snes(0x1DFBD4), bytes.ToArray()));
 
             /* crab prizes */
             (drop, final, prizes) = prizes;
-            patches.Add((Snes(0x6A9C8), new[] { drop }));
-            patches.Add((Snes(0x6A9C4), new[] { final }));
+            _patches.Add((Snes(0x6A9C8), new[] { drop }));
+            _patches.Add((Snes(0x6A9C4), new[] { final }));
 
             /* stun prize */
             (drop, prizes) = prizes;
-            patches.Add((Snes(0x6F993), new[] { drop }));
+            _patches.Add((Snes(0x6F993), new[] { drop }));
 
             /* fish prize */
             (drop, _) = prizes;
-            patches.Add((Snes(0x1D82CC), new[] { drop }));
+            _patches.Add((Snes(0x1D82CC), new[] { drop }));
 
-            patches.AddRange(EnemyPrizePackDistribution());
+            _patches.AddRange(EnemyPrizePackDistribution());
 
             /* Pack drop chance */
             /* Normal difficulty is 50%. 0 => 100%, 1 => 50%, 3 => 25% */
             const int nrPacks = 7;
             const byte probability = 1;
-            patches.Add((Snes(0x6FA62), Enumerable.Repeat(probability, nrPacks).ToArray()));
+            _patches.Add((Snes(0x6FA62), Enumerable.Repeat(probability, nrPacks).ToArray()));
         }
 
         private IEnumerable<(int, byte[])> EnemyPrizePackDistribution()
@@ -626,56 +664,56 @@ namespace Randomizer.SMZ3.FileData
             var redCrystalDungeons = regions.Where(x => x.Reward == CrystalRed).Cast<Region>();
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
-            patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
-            stringTable.SetSahasrahlaRevealText(sahasrahla);
+            _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
+            _stringTable.SetSahasrahlaRevealText(sahasrahla);
 
             var bombShop = Texts.BombShopReveal(redCrystalDungeons);
-            patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
-            stringTable.SetBombShopRevealText(bombShop);
+            _patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
+            _stringTable.SetBombShopRevealText(bombShop);
 
             var blind = Texts.Blind(_rnd);
-            patches.Add((Snes(0x308800), Dialog.Simple(blind)));
-            stringTable.SetBlindText(blind);
+            _patches.Add((Snes(0x308800), Dialog.Simple(blind)));
+            _stringTable.SetBlindText(blind);
 
             var tavernMan = Texts.TavernMan(_rnd);
-            patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
-            stringTable.SetTavernManText(tavernMan);
+            _patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
+            _stringTable.SetTavernManText(tavernMan);
 
             var ganon = Texts.GanonFirstPhase(_rnd);
-            patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
-            stringTable.SetGanonFirstPhaseText(ganon);
+            _patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
+            _stringTable.SetGanonFirstPhaseText(ganon);
 
             // Todo: Verify these two are correct if ganon invincible patch is
             // ever added ganon_fall_in_alt in v30
             var ganonFirstPhaseInvincible = "You think you\nare ready to\nface me?\n\nI will not die\n\nunless you\ncomplete your\ngoals. Dingus!";
-            patches.Add((Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible)));
+            _patches.Add((Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible)));
 
             // ganon_phase_3_alt in v30
             var ganonThirdPhaseInvincible = "Got wax in\nyour ears?\nI cannot die!";
-            patches.Add((Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible)));
+            _patches.Add((Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible)));
             // ---
 
             var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, _myWorld)).First();
             var silvers = config.MultiWorld ?
                 Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld) :
                 Texts.GanonThirdPhaseSingle(silversLocation.Region);
-            patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
-            stringTable.SetGanonThirdPhaseText(silvers);
+            _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
+            _stringTable.SetGanonThirdPhaseText(silvers);
 
             var triforceRoom = Texts.TriforceRoom(_rnd);
-            patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
-            stringTable.SetTriforceRoomText(triforceRoom);
+            _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
+            _stringTable.SetTriforceRoomText(triforceRoom);
         }
 
         private void WriteStringTable()
         {
             // Todo: v12, base table in asm, use move instructions in seed patch
-            patches.Add((Snes(0x1C8000), stringTable.GetPaddedBytes()));
+            _patches.Add((Snes(0x1C8000), _stringTable.GetPaddedBytes()));
         }
 
         private void WritePlayerNames()
         {
-            patches.AddRange(_allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
+            _patches.AddRange(_allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
         }
 
         private byte[] PlayerNameBytes(string name)
@@ -701,22 +739,22 @@ namespace Randomizer.SMZ3.FileData
                 (Generation.Randomizer.version.Major << 4) |
                 (Generation.Randomizer.version.Minor << 0);
 
-            patches.Add((Snes(0x80FF50), UshortBytes(_myWorld.Id)));
-            patches.Add((Snes(0x80FF52), UshortBytes(configField)));
-            patches.Add((Snes(0x80FF54), UintBytes(_seed)));
+            _patches.Add((Snes(0x80FF50), UshortBytes(_myWorld.Id)));
+            _patches.Add((Snes(0x80FF52), UshortBytes(configField)));
+            _patches.Add((Snes(0x80FF54), UintBytes(_seed)));
             /* Reserve the rest of the space for future use */
-            patches.Add((Snes(0x80FF58), Enumerable.Repeat<byte>(0x00, 8).ToArray()));
-            patches.Add((Snes(0x80FF60), AsAscii(_seedGuid)));
-            patches.Add((Snes(0x80FF80), AsAscii(_myWorld.Guid)));
+            _patches.Add((Snes(0x80FF58), Enumerable.Repeat<byte>(0x00, 8).ToArray()));
+            _patches.Add((Snes(0x80FF60), AsAscii(_seedGuid)));
+            _patches.Add((Snes(0x80FF80), AsAscii(_myWorld.Guid)));
         }
 
         private void WriteCommonFlags()
         {
             /* Common Combo Configuration flags at [asm]/config.asm */
             if (_myWorld.Config.MultiWorld)
-                patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
+                _patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
             if (_myWorld.Config.Keysanity)
-                patches.Add((Snes(0xF47006), UshortBytes(0x0001)));
+                _patches.Add((Snes(0xF47006), UshortBytes(0x0001)));
         }
 
         private void WriteGameTitle()
@@ -734,17 +772,17 @@ namespace Randomizer.SMZ3.FileData
                 _ => "X",
             };
             var title = AsAscii($"ZSM{Generation.Randomizer.version}{z3Glitch}{smGlitch}{_seed:X8}".PadRight(21)[..21]);
-            patches.Add((Snes(0x00FFC0), title));
-            patches.Add((Snes(0x80FFC0), title));
+            _patches.Add((Snes(0x00FFC0), title));
+            _patches.Add((Snes(0x80FFC0), title));
         }
 
         private void WriteZ3KeysanityFlags()
         {
             if (_myWorld.Config.Keysanity)
             {
-                patches.Add((Snes(0x40003B), new byte[] { 1 })); // MapMode #$00 = Always On (default) - #$01 = Require Map Item
-                patches.Add((Snes(0x400045), new byte[] { 0x0f })); // display ----dcba a: Small Keys, b: Big Key, c: Map, d: Compass
-                patches.Add((Snes(0x40016A), new byte[] { 1 })); // FreeItemText: db #$01 ; #00 = Off (default) - #$01 = On
+                _patches.Add((Snes(0x40003B), new byte[] { 1 })); // MapMode #$00 = Always On (default) - #$01 = Require Map Item
+                _patches.Add((Snes(0x400045), new byte[] { 0x0f })); // display ----dcba a: Small Keys, b: Big Key, c: Map, d: Compass
+                _patches.Add((Snes(0x40016A), new byte[] { 1 })); // FreeItemText: db #$01 ; #00 = Off (default) - #$01 = On
             }
         }
 
@@ -819,41 +857,41 @@ namespace Randomizer.SMZ3.FileData
                 {
                     // Write dynamic door
                     var doorData = door[0..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                    patches.Add((Snes(0x8f0000 + plmTablePos), doorData));
+                    _patches.Add((Snes(0x8f0000 + plmTablePos), doorData));
                     plmTablePos += 0x08;
                 }
                 else
                 {
                     // Overwrite existing door
                     var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                    patches.Add((Snes(0x8f0000 + door[6]), doorData));
+                    _patches.Add((Snes(0x8f0000 + door[6]), doorData));
                     if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C)
                         || door[3] == KeycardEvents.LowerNorfairBoss
                         || door[3] == KeycardEvents.MaridiaBoss
                         || door[3] == KeycardEvents.WreckedShipBoss)
                         // Overwrite the extra parts of the Gadora with a PLM
                         // that just deletes itself
-                        patches.Add((Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 }));
+                        _patches.Add((Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 }));
                 }
 
                 // Plaque data
                 if (door[4] != KeycardPlaque.None)
                 {
                     var plaqueData = UshortBytes(door[0]).Concat(UshortBytes(plaquePLm)).Concat(UshortBytes(door[5])).Concat(UshortBytes(door[4])).ToArray();
-                    patches.Add((Snes(0x8f0000 + plmTablePos), plaqueData));
+                    _patches.Add((Snes(0x8f0000 + plmTablePos), plaqueData));
                     plmTablePos += 0x08;
                 }
                 doorId += 1;
             }
 
-            patches.Add((Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }));
+            _patches.Add((Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }));
         }
 
         private void WriteDiggingGameRng()
         {
             var digs = (byte)(_rnd.Next(30) + 1);
-            patches.Add((Snes(0x308020), new byte[] { digs }));
-            patches.Add((Snes(0x1DFD95), new byte[] { digs }));
+            _patches.Add((Snes(0x308020), new byte[] { digs }));
+            _patches.Add((Snes(0x1DFD95), new byte[] { digs }));
         }
 
         // Removes Sword/Shield from Uncle by moving the tiles for sword/shield
@@ -862,7 +900,7 @@ namespace Randomizer.SMZ3.FileData
         {
             if (item.Type != ProgressiveSword)
             {
-                patches.AddRange(new[] {
+                _patches.AddRange(new[] {
                     (Snes(0xDD263), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
                     (Snes(0xDD26B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
                     (Snes(0xDD293), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
@@ -877,7 +915,7 @@ namespace Randomizer.SMZ3.FileData
             }
             if (item.Type != ProgressiveShield)
             {
-                patches.AddRange(new[] {
+                _patches.AddRange(new[] {
                     (Snes(0xDD253), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
                     (Snes(0xDD25B), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
                     (Snes(0xDD283), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
@@ -900,31 +938,31 @@ namespace Randomizer.SMZ3.FileData
                 GanonInvincible.BeforeCrystals => 0x03,
                 var x => throw new ArgumentException($"Unknown Ganon invincible value {x}", nameof(invincible))
             };
-            patches.Add((Snes(0x30803E), new byte[] { (byte)value }));
+            _patches.Add((Snes(0x30803E), new byte[] { (byte)value }));
         }
 
         private void WritePreopenCurtains()
         {
             // #$00 = Off (default) - #$01 = On
-            patches.Add((Snes(0x308040), new byte[] { 0x01 }));
+            _patches.Add((Snes(0x308040), new byte[] { 0x01 }));
         }
 
         private void WriteQuickSwap()
         {
             // #$00 = Off (default) - #$01 = On
-            patches.Add((Snes(0x30804B), new byte[] { 0x01 }));
+            _patches.Add((Snes(0x30804B), new byte[] { 0x01 }));
         }
 
         private void WriteRngBlock()
         {
             /* Repoint RNG Block */
-            patches.Add((0x420000, Enumerable.Range(0, 1024).Select(x => (byte)_rnd.Next(0x100)).ToArray()));
+            _patches.Add((0x420000, Enumerable.Range(0, 1024).Select(x => (byte)_rnd.Next(0x100)).ToArray()));
         }
 
         private void WriteSaveAndQuitFromBossRoom()
         {
             /* Defaults to $00 at [asm]/z3/randomizer/tables.asm */
-            patches.Add((Snes(0x308042), new byte[] { 0x01 }));
+            _patches.Add((Snes(0x308042), new byte[] { 0x01 }));
         }
 
         private void WriteWorldOnAgahnimDeath()

@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-using Microsoft.Win32;
-
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
@@ -118,6 +116,29 @@ namespace Randomizer.App
             return romPath;
         }
 
+        protected byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out SeedData seed)
+        {
+            var config = Options.ToConfig();
+            seed = randomizer.GenerateSeed(config, Options.SeedOptions.Seed, CancellationToken.None);
+
+            byte[] rom;
+            using (var smRom = File.OpenRead(Options.GeneralOptions.SMRomPath))
+            using (var z3Rom = File.OpenRead(Options.GeneralOptions.Z3RomPath))
+            {
+                rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
+            }
+
+            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips"))
+            {
+                Rom.ApplyIps(rom, ips);
+            }
+            Rom.ApplySeed(rom, seed.Worlds[0].Patches);
+
+            Options.PatchOptions.SamusSprite.ApplyTo(rom);
+            Options.PatchOptions.LinkSprite.ApplyTo(rom);
+            return rom;
+        }
+
         private static string GetSpoilerLog(SeedData seed)
         {
             var log = new StringBuilder();
@@ -150,29 +171,6 @@ namespace Randomizer.App
             => text + "\n" + new string(line, text.Length);
 
         private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
-
-        private byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out SeedData seed)
-        {
-            var config = Options.ToConfig();
-            seed = randomizer.GenerateSeed(config, Options.SeedOptions.Seed, CancellationToken.None);
-
-            byte[] rom;
-            using (var smRom = File.OpenRead(Options.GeneralOptions.SMRomPath))
-            using (var z3Rom = File.OpenRead(Options.GeneralOptions.Z3RomPath))
-            {
-                rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
-            }
-
-            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips"))
-            {
-                Rom.ApplyIps(rom, ips);
-            }
-            Rom.ApplySeed(rom, seed.Worlds[0].Patches);
-
-            Options.PatchOptions.SamusSprite.ApplyTo(rom);
-            Options.PatchOptions.LinkSprite.ApplyTo(rom);
-            return rom;
-        }
 
         private bool EnableMsu1Support(byte[] rom, string romPath)
         {

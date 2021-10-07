@@ -74,7 +74,10 @@ namespace Randomizer.App.ViewModels
             KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
             Race = SeedOptions.Race,
             ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
-            ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic
+            ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
+            HeartColor = PatchOptions.HeartColor,
+            LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
+            DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

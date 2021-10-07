@@ -40,6 +40,14 @@ namespace Randomizer.App.ViewModels
 
         public bool CanEnableExtendedSoundtrack => File.Exists(Msu1Path);
 
+        public HeartColor HeartColor { get; set; }
+            = HeartColor.Red;
+
+        public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; }
+            = LowHealthBeepSpeed.Normal;
+
+        public bool DisableLowEnergyBeep { get; set; }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
