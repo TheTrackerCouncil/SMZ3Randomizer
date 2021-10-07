@@ -108,6 +108,7 @@ namespace Randomizer.App
             var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);
             EnableMsu1Support(rom, romPath);
+            Rom.UpdateChecksum(rom);
             File.WriteAllBytes(romPath, rom);
 
             var spoilerLog = GetSpoilerLog(seed);
