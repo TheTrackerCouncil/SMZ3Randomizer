@@ -10,26 +10,18 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class GeneralOptions
     {
-        private const string SnesRomFilter = "SNES ROMs (*.sfc, *.smc)|*.sfc;*.smc|All files (*.*)|*.*";
-
-        private Window _owner;
-
-        public void SetOwner(Window owner)
-        {
-            _owner = owner;
-        }
-
-        [JsonIgnore]
-        public BrowseFileCommand BrowseRomCommand => new BrowseFileCommand(_owner, SnesRomFilter);
-
         public string Z3RomPath { get; set; }
 
         public string SMRomPath { get; set; }
 
+        public string RomOutputPath { get; set; }
+            = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
+
         public bool Validate()
         {
             return File.Exists(Z3RomPath)
-                && File.Exists(SMRomPath);
+                && File.Exists(SMRomPath)
+                && (Directory.Exists(RomOutputPath) || RomOutputPath == null);
         }
     }
 }

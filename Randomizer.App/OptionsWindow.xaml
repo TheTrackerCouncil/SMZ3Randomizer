@@ -25,34 +25,19 @@
           Margin="11">
       <StackPanel Orientation="Vertical">
         <controls:LabeledControl Text="A Link to the Past ROM (required):">
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBox x:Name="Z3RomInput"
-                     Grid.Column="0"
-                     Text="{Binding Z3RomPath, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Grid.Column="1"
-                    Command="{Binding BrowseRomCommand, Mode=OneWay}"
-                    CommandParameter="{Binding ElementName=Z3RomInput}">Browse...</Button>
-          </Grid>
+          <controls:FileSystemInput Path="{Binding Z3RomPath, Mode=TwoWay}"
+                                    Filter="SNES ROMs (*.sfc, *.smc)|*.sfc;*.smc|All files (*.*)|*.*"
+                                    DialogTitle="Select 'A Link to the Past' ROM" />
         </controls:LabeledControl>
         <controls:LabeledControl Text="Super Metroid ROM (required):">
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBox x:Name="SMRomInput"
-                     Grid.Column="0"
-                     Text="{Binding SMRomPath, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Grid.Column="1"
-                    Command="{Binding BrowseRomCommand, Mode=OneWay}"
-                    CommandParameter="{Binding ElementName=SMRomInput}">Browse...</Button>
-          </Grid>
+          <controls:FileSystemInput Path="{Binding SMRomPath, Mode=TwoWay}"
+                                    Filter="SNES ROMs (*.sfc, *.smc)|*.sfc;*.smc|All files (*.*)|*.*"
+                                    DialogTitle="Select 'Super Metroid' ROM" />
+        </controls:LabeledControl>
+        <controls:LabeledControl Text="ROM output folder:">
+          <controls:FileSystemInput Path="{Binding RomOutputPath, Mode=TwoWay}"
+                                    IsFolderPicker="True"
+                                    DialogTitle="Select ROM output folder" />
         </controls:LabeledControl>
       </StackPanel>
     </Grid>

@@ -26,7 +26,6 @@ namespace Randomizer.App
             InitializeComponent();
 
             Options = options;
-            Options.SetOwner(this);
             DataContext = Options;
         }
 

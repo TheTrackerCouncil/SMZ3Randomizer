@@ -154,19 +154,9 @@
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Custom music pack:">
-                <Grid>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-
-                  <TextBox x:Name="Msu1Path"
-                           Grid.Column="0"
-                           Text="{Binding Msu1Path, UpdateSourceTrigger=PropertyChanged}" />
-                  <Button Grid.Column="1"
-                          x:Name="BrowseMsu1PathButton"
-                          Click="BrowseMsu1PathButton_Click">Browse...</Button>
-                </Grid>
+                <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
+                                          Filter="MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*"
+                                          DialogTitle="Select MSU-1 file"/>
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="">

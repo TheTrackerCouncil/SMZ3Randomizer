@@ -40,12 +40,6 @@ namespace Randomizer.App.ViewModels
             PatchOptions = patchOptions;
         }
 
-        public RandomizerOptions(Window owner)
-            : this()
-        {
-            GeneralOptions.SetOwner(owner);
-        }
-
         [JsonPropertyName("General")]
         public GeneralOptions GeneralOptions { get; }
 
@@ -59,12 +53,6 @@ namespace Randomizer.App.ViewModels
         {
             var json = File.ReadAllText(path);
             return JsonSerializer.Deserialize<RandomizerOptions>(json, s_jsonOptions);
-        }
-
-        public RandomizerOptions WithOwner(Window owner)
-        {
-            GeneralOptions.SetOwner(owner);
-            return this;
         }
 
         public void Save(string path)

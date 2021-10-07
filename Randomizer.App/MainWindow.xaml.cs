@@ -16,7 +16,6 @@ using System.Windows.Threading;
 using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
-using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
@@ -48,14 +47,13 @@ namespace Randomizer.App
             try
             {
                 if (!File.Exists(_optionsPath))
-                    Options = new RandomizerOptions(this);
+                    Options = new RandomizerOptions();
 
-                Options = RandomizerOptions.Load(_optionsPath)
-                    .WithOwner(this);
+                Options = RandomizerOptions.Load(_optionsPath);
             }
             catch
             {
-                Options = new RandomizerOptions(this);
+                Options = new RandomizerOptions();
             }
 
             DataContext = Options;
@@ -66,6 +64,13 @@ namespace Randomizer.App
         public ObservableCollection<Sprite> LinkSprites { get; } = new();
 
         public RandomizerOptions Options { get; }
+
+        public string RomOutputPath
+        {
+            get => Directory.Exists(Options.GeneralOptions.RomOutputPath)
+                    ? Options.GeneralOptions.RomOutputPath
+                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
+        }
 
         public void LoadSprites()
         {
@@ -99,8 +104,7 @@ namespace Randomizer.App
             var randomizer = new SMZ3.Generation.Randomizer();
             var rom = GenerateRom(randomizer, out var seed);
 
-            var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "SMZ3CasRandomizer", "Seeds", $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
+            var folderPath = Path.Combine(RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
             Directory.CreateDirectory(folderPath);
 
             var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
@@ -180,11 +184,11 @@ namespace Randomizer.App
             var msuDrive = Path.GetPathRoot(msuPath);
             if (!romDrive.Equals(msuDrive, StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show(this, "Due to technical limitations, the MSU-1 " +
-                    "pack and the ROM need to be on the same drive. MSU-1 " +
-                    "support cannot be enabled. Yell at me on Discord if " +
-                    "this is imortant to you and you need this now.\nPlease" +
-                    "move or copy the MSU-1 files to somewhere on " + romDrive + ".",
+                MessageBox.Show(this, $"Due to technical limitations, the MSU-1 " +
+                    $"pack and the ROM need to be on the same drive. MSU-1 " +
+                    $"support cannot be enabled.\n\nPlease move or copy the MSU-1 " +
+                    $"files to somewhere on {romDrive}, or change the ROM output " +
+                    $"folder setting to be on the {msuDrive} drive.",
                     "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
@@ -254,22 +258,6 @@ namespace Randomizer.App
         {
             var optionsDialog = new OptionsWindow(Options.GeneralOptions);
             optionsDialog.ShowDialog();
-        }
-
-        private void BrowseMsu1PathButton_Click(object sender, RoutedEventArgs e)
-        {
-            var openFileDialog = new OpenFileDialog()
-            {
-                CheckFileExists = true,
-                Filter = "MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*",
-                FileName = Options.PatchOptions.Msu1Path,
-                Title = "Browse MSU-1 file - SMZ3 Cas’ Randomizer"
-            };
-
-            if (openFileDialog.ShowDialog(this) == true)
-            {
-                Msu1Path.Text = openFileDialog.FileName;
-            }
         }
 
         private void GenerateStatsMenuItem_Click(object sender, RoutedEventArgs e)
