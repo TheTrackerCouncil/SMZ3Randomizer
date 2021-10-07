@@ -17,7 +17,7 @@ using static Randomizer.SMZ3.Reward;
 
 namespace Randomizer.SMZ3.FileData
 {
-    public class Patch
+    public class Patcher
     {
         private readonly List<World> _allWorlds;
         private readonly World _myWorld;
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.FileData
         private List<(int offset, byte[] bytes)> _patches;
         private Queue<byte> _shuffledSoundtrack;
 
-        public Patch(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd)
+        public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd)
         {
             _myWorld = myWorld;
             _allWorlds = allWorlds;
@@ -90,7 +90,7 @@ namespace Randomizer.SMZ3.FileData
         /// </returns>
         public static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
-        public Dictionary<int, byte[]> Create(Config config)
+        public Dictionary<int, byte[]> CreatePatch(Config config)
         {
             _stringTable = new StringTable();
             _patches = new List<(int, byte[])>();

@@ -92,8 +92,8 @@ namespace Randomizer.SMZ3.Generation
             foreach (var world in worlds)
             {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patch(world, worlds, seedData.Guid, config.Race ? 0 : randoSeed, patchRnd);
-                seedData.Worlds.Add((world, patch.Create(config)));
+                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : randoSeed, patchRnd);
+                seedData.Worlds.Add((world, patch.CreatePatch(config)));
             }
 
             return seedData;
