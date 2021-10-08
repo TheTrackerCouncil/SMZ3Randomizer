@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 
 namespace Randomizer.SMZ3.FileData
 {
@@ -78,11 +76,15 @@ namespace Randomizer.SMZ3.FileData
 
         public static void UpdateChecksum(byte[] rom)
         {
-            rom[0x7FDC] = 0xFF;
-            rom[0x7FDD] = 0xFF;
-            rom[0x7FDE] = 0x00;
-            rom[0x7FDF] = 0x00;
+            var romHeader = 0x40FFB0; // 0x7FB0 (base) + 0x8000 (hirom) + 0x400000 (extended)
+            var romHeaderComplement = romHeader + 0x2C;
+            var romHeaderChecksum = romHeader + 0x2E;
 
+            var origChecksum = BitConverter.ToUInt16(rom, romHeaderChecksum);
+            var origComplement = BitConverter.ToUInt16(rom, romHeaderComplement);
+            Debug.WriteLine($"Current checksum: {origChecksum:X4} (+ {origComplement:X4} = {origComplement + origChecksum:X4})");
+
+            // Algorithm from snes9x memmap.cpp
             var sum = 0;
             if ((rom.Length & 0x7FFF) != 0)
             {
@@ -94,13 +96,14 @@ namespace Randomizer.SMZ3.FileData
                 sum += MirrorSum(rom, ref length);
             }
 
+            // Invert the checksum bits so it cancel itself out when
+            // re-calculating
             var checksum = (ushort)(sum & 0xFFFF);
-            var complement = (ushort)(checksum ^ 0xFFFF); // Invert the checksum bits so it cancel itself out when re-calculating
-            Debug.WriteLine($"Checksum {checksum:X}");
-            rom[0x7FDC] = (byte)(complement & 0xFF);
-            rom[0x7FDD] = (byte)(complement << 8);
-            rom[0x7FDE] = (byte)(checksum & 0xFF);
-            rom[0x7FDF] = (byte)(checksum << 8);
+            var complement = (ushort)(checksum ^ 0xFFFF);
+            Debug.WriteLine($"Checksum {checksum:X4} (+ {complement:X4} = {checksum + complement:X4}");
+
+            BitConverter.GetBytes(complement).CopyTo(rom, romHeaderComplement);
+            BitConverter.GetBytes(checksum).CopyTo(rom, romHeaderChecksum);
 
             static ushort Sum(Span<byte> span, int length)
             {

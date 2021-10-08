@@ -772,7 +772,7 @@ namespace Randomizer.SMZ3.FileData
                 SMLogic.Hard => "H",
                 _ => "X",
             };
-            var title = AsAscii($"ZSM{Generation.Randomizer.version}{z3Glitch}{smGlitch}{_seed:X8}".PadRight(21)[..21]);
+            var title = AsAscii($"SMZ3 Cas' [{_seed:X8}]".PadRight(21)[..21]);
             _patches.Add((Snes(0x00FFC0), title));
             _patches.Add((Snes(0x80FFC0), title));
         }
