@@ -49,6 +49,16 @@ namespace Randomizer.App.ViewModels
         [JsonPropertyName("Patch")]
         public PatchOptions PatchOptions { get; }
 
+        public bool ItemLocationsExpanded { get; set; } = false;
+
+        public bool CustomizationExpanded { get; set; } = false;
+
+        public bool CommonExpanded { get; set; } = true;
+
+        public double WindowWidth { get; set; } = 500d;
+
+        public double WindowHeight { get; set; } = 600d;
+
         public static RandomizerOptions Load(string path)
         {
             var json = File.ReadAllText(path);

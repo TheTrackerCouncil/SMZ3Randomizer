@@ -12,8 +12,10 @@
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         Title="SMZ3 Cas' Randomizer"
-        Height="550"
-        Width="500"
+        Width="{Binding WindowWidth, Mode=TwoWay}"
+        Height="{Binding WindowHeight, Mode=TwoWay}"
+        MinWidth="320"
+        MinHeight="240"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">
   <Window.DataContext>
@@ -48,9 +50,11 @@
                     HorizontalScrollBarVisibility="Disabled">
         <StackPanel Orientation="Vertical">
           <Expander Header="Item locations"
-                    DataContext="{Binding SeedOptions}">
+                    x:Name="ItemLocationsExpander"
+                    IsExpanded="{Binding ItemLocationsExpanded}">
             <StackPanel Orientation="Vertical"
-                        Margin="24,11,11,11">
+                        Margin="24,11,11,11"
+                        DataContext="{Binding SeedOptions}">
               <controls:LabeledControl Text="Sword location:">
                 <StackPanel Style="{StaticResource RadioButtonGroup}">
                   <RadioButton GroupName="SwordLocation"
@@ -126,9 +130,11 @@
           </Expander>
 
           <Expander Header="Customization"
-                    DataContext="{Binding PatchOptions}">
+                    x:Name="CustomizationExpander"
+                    IsExpanded="{Binding CustomizationExpanded}">
             <StackPanel Orientation="Vertical"
-                        Margin="24,11,11,11">
+                        Margin="24,11,11,11"
+                        DataContext="{Binding PatchOptions}">
               <controls:LabeledControl Text="Samus sprite:">
                 <ComboBox x:Name="SamusSpriteDropdown"
                           ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
@@ -193,10 +199,11 @@
           </Expander>
 
           <Expander Header="Common"
-                    IsExpanded="True"
-                    DataContext="{Binding SeedOptions}">
+                    x:Name="CommonExpander"
+                    IsExpanded="{Binding CommonExpanded}">
             <StackPanel Orientation="Vertical"
-                        Margin="24,11,11,11">
+                        Margin="24,11,11,11"
+                        DataContext="{Binding SeedOptions}">
               <StackPanel Orientation="Horizontal"
                           Margin="0,0,0,4">
                 <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
