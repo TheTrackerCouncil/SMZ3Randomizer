@@ -140,9 +140,22 @@ namespace Randomizer.App
             return rom;
         }
 
-        private static string GetSpoilerLog(SeedData seed)
+        private string GetSpoilerLog(SeedData seed)
         {
             var log = new StringBuilder();
+            log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
+            log.AppendLine($"Generated on {DateTime.Now:F}");
+            log.AppendLine($"Seed: {Options.SeedOptions.Seed} (actual: {seed.Seed})");
+            log.AppendLine($"Sword: {Options.SeedOptions.SwordLocation}");
+            log.AppendLine($"Morph: {Options.SeedOptions.MorphLocation}");
+            log.AppendLine($"Bombs: {Options.SeedOptions.MorphBombsLocation}");
+            log.AppendLine($"Shaktool: {Options.SeedOptions.ShaktoolItem}");
+            log.AppendLine($"Peg World: {Options.SeedOptions.PegWorldItem}");
+            log.AppendLine((Options.SeedOptions.Keysanity ? "[Keysanity] " : "")
+                         + (Options.SeedOptions.Race ? "[Race] " : ""));
+            if (File.Exists(Options.PatchOptions.Msu1Path))
+                log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(Options.PatchOptions.Msu1Path)}");
+            log.AppendLine();
 
             for (var i = 0; i < seed.Playthrough.Count; i++)
             {

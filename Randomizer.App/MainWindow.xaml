@@ -47,7 +47,7 @@
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled">
         <StackPanel Orientation="Vertical">
-          <Expander Header="Randomization"
+          <Expander Header="Item locations"
                     DataContext="{Binding SeedOptions}">
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,11">
@@ -122,17 +122,6 @@
                                IsChecked="{Binding PegWorldItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Junk}}" />
                 </StackPanel>
               </controls:LabeledControl>
-
-              <StackPanel Orientation="Horizontal"
-                          Margin="0,0,0,4">
-                <CheckBox>Keysanity</CheckBox>
-                <CheckBox>Race</CheckBox>
-              </StackPanel>
-
-              <controls:LabeledControl Text="Seed (optional):">
-                <TextBox x:Name="SeedInput"
-                         Text="{Binding Seed}" />
-              </controls:LabeledControl>
             </StackPanel>
           </Expander>
 
@@ -199,6 +188,24 @@
                                ToolTip="Randomly plays any available music in dungeons."
                                IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MusicShuffleMode.ShuffleAll}}" />
                 </StackPanel>
+              </controls:LabeledControl>
+            </StackPanel>
+          </Expander>
+
+          <Expander Header="Common"
+                    IsExpanded="True"
+                    DataContext="{Binding SeedOptions}">
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,11">
+              <StackPanel Orientation="Horizontal"
+                          Margin="0,0,0,4">
+                <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
+                <CheckBox IsChecked="{Binding Race}">Race</CheckBox>
+              </StackPanel>
+
+              <controls:LabeledControl Text="Seed (optional):">
+                <TextBox x:Name="SeedInput"
+                         Text="{Binding Seed}" />
               </controls:LabeledControl>
             </StackPanel>
           </Expander>

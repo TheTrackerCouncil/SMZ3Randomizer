@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-using Randomizer.Shared.Contracts;
+using Randomizer.Shared;
 using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation
@@ -13,37 +15,41 @@ namespace Randomizer.SMZ3.Generation
     {
         public static readonly Version version = new Version(1, 0);
 
+        private static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
+        private static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
+        private static readonly Regex continousSpace = new Regex(@" +");
         public string Id => "smz3-cas";
         public string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
         public string Version => version.ToString();
 
-        private static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
-        private static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
-        private static readonly Regex continousSpace = new Regex(@" +");
-
-        public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken)
+        public static int ParseSeed(ref string input)
         {
-            int randoSeed;
-            if (string.IsNullOrEmpty(seed))
+            int seed;
+            if (string.IsNullOrEmpty(input))
             {
-                randoSeed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue);
-                seed = randoSeed.ToString();
+                seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue);
             }
             else
             {
-                randoSeed = int.Parse(seed);
-                /* The Random ctor takes the absolute value of a negative seed.
-                 * This is an non-obvious behavior so we treat a negative value
-                 * as out of range. */
-                if (randoSeed < 0)
-                    throw new ArgumentOutOfRangeException("Expected the seed option value to be an integer value in the range [0, 2147483647]");
+                input = input.Trim();
+                if (!Parse.AsInteger(input, out seed) // Accept plain ints as seeds (i.e. mostly original behavior)
+                    && !Parse.AsHex(input, out seed)) // Accept hex seeds (e.g. seed as stored in ROM info)
+                {
+                    // When all else fails, accept any other input by hashing it
+                    seed = NonCryptographicHash.Fnv1a(input);
+                }
             }
 
-            var randoRnd = new Random(randoSeed);
+            input = seed.ToString("D", CultureInfo.InvariantCulture);
+            return seed;
+        }
 
-            /* FIXME: Just here to semi-obfuscate race seeds until a better solution is in place */
+        public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken)
+        {
+            var seedNumber = ParseSeed(ref seed);
+            var rng = new Random(seedNumber);
             if (config.Race)
-                randoRnd = new Random(randoRnd.Next());
+                rng = new Random(rng.Next());
 
             var worlds = new List<World>();
             if (config.SingleWorld)
@@ -64,7 +70,7 @@ namespace Randomizer.SMZ3.Generation
                 //}
             }
 
-            var filler = new Filler(worlds, config, randoRnd, cancellationToken);
+            var filler = new Filler(worlds, config, rng, cancellationToken);
             filler.Fill();
 
             var playthrough = new Playthrough(worlds, config);
@@ -88,11 +94,11 @@ namespace Randomizer.SMZ3.Generation
             }
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
-            var patchSeed = randoRnd.Next();
+            var patchSeed = rng.Next();
             foreach (var world in worlds)
             {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : randoSeed, patchRnd);
+                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : seedNumber, patchRnd);
                 seedData.Worlds.Add((world, patch.CreatePatch(config)));
             }
 
@@ -105,7 +111,5 @@ namespace Randomizer.SMZ3.Generation
             name = continousSpace.Replace(name, " ");
             return name.Trim();
         }
-
     }
-
 }
