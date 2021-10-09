@@ -35,9 +35,9 @@ namespace Randomizer.App.ViewModels
             SeedOptions seedOptions,
             PatchOptions patchOptions)
         {
-            GeneralOptions = generalOptions;
-            SeedOptions = seedOptions;
-            PatchOptions = patchOptions;
+            GeneralOptions = generalOptions ?? new();
+            SeedOptions = seedOptions ?? new();
+            PatchOptions = patchOptions ?? new();
         }
 
         [JsonPropertyName("General")]

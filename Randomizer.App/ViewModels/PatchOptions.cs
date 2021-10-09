@@ -17,8 +17,10 @@ namespace Randomizer.App.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Sprite LinkSprite { get; set; }
+            = Sprite.DefaultLink;
 
         public Sprite SamusSprite { get; set; }
+            = Sprite.DefaultSamus;
 
         public string Msu1Path
         {
@@ -37,6 +39,7 @@ namespace Randomizer.App.ViewModels
         public bool EnableExtendedSoundtrack { get; set; }
 
         public MusicShuffleMode ShuffleDungeonMusic { get; set; }
+            = MusicShuffleMode.Default;
 
         public bool CanEnableExtendedSoundtrack => File.Exists(Msu1Path);
 
@@ -44,7 +47,7 @@ namespace Randomizer.App.ViewModels
             = HeartColor.Red;
 
         public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; }
-            = LowHealthBeepSpeed.Normal;
+            = LowHealthBeepSpeed.Half;
 
         public bool DisableLowEnergyBeep { get; set; }
 
