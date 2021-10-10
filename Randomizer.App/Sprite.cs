@@ -67,14 +67,19 @@ namespace Randomizer.App
                 spriteType = SpriteType.Samus;
 
             var name = Path.GetFileName(path);
+            var author = rdc.Author;
             if (rdc.TryParse<MetaDataBlock>(stream, out var block))
             {
                 var title = block.Content.Value<string>("title");
                 if (!string.IsNullOrEmpty(title))
                     name = title;
+
+                var author2 = block.Content.Value<string>("author");
+                if (string.IsNullOrEmpty(author) && !string.IsNullOrEmpty(author2))
+                    author = author2;
             }
 
-            return new Sprite(name, rdc.Author, path, spriteType);
+            return new Sprite(name, author, path, spriteType);
         }
 
         public void ApplyTo(byte[] rom)
