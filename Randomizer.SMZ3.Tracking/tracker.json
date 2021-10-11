@@ -1,0 +1,692 @@
+{
+  "Items": [
+    {
+      "Name": "Fire Rod",
+      "InternalItemType": 7,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ice Rod",
+      "InternalItemType": 8,
+      "OtherNames": [ "Nice Rod" ]
+    },
+    {
+      "Name": "Hammer",
+      "InternalItemType": 9,
+      "OtherNames": []
+    },
+    {
+      "Name": "Hookshot",
+      "InternalItemType": 10,
+      "OtherNames": []
+    },
+    {
+      "Name": "Bow",
+      "InternalItemType": 11,
+      "OtherNames": []
+    },
+    {
+      "Name": "Blue Boomerang",
+      "InternalItemType": 12,
+      "OtherNames": []
+    },
+    {
+      "Name": "Magic Powder",
+      "InternalItemType": 13,
+      "OtherNames": []
+    },
+    {
+      "Name": "Bombos",
+      "InternalItemType": 15,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ether",
+      "InternalItemType": 16,
+      "OtherNames": []
+    },
+    {
+      "Name": "Quake",
+      "InternalItemType": 17,
+      "OtherNames": []
+    },
+    {
+      "Name": "Lamp",
+      "InternalItemType": 18,
+      "OtherNames": []
+    },
+    {
+      "Name": "Shovel",
+      "InternalItemType": 19,
+      "OtherNames": []
+    },
+    {
+      "Name": "Flute",
+      "InternalItemType": 20,
+      "OtherNames": []
+    },
+    {
+      "Name": "Cane of Somaria",
+      "InternalItemType": 21,
+      "OtherNames": []
+    },
+    {
+      "Name": "Bottle",
+      "InternalItemType": 22,
+      "OtherNames": []
+    },
+    {
+      "Name": "Piece of Heart",
+      "InternalItemType": 23,
+      "OtherNames": []
+    },
+    {
+      "Name": "Cane of Byrna",
+      "InternalItemType": 24,
+      "OtherNames": []
+    },
+    {
+      "Name": "Magic Cape",
+      "InternalItemType": 25,
+      "OtherNames": []
+    },
+    {
+      "Name": "Magic Mirror",
+      "InternalItemType": 26,
+      "OtherNames": []
+    },
+    {
+      "Name": "Book of Mudora",
+      "InternalItemType": 29,
+      "OtherNames": []
+    },
+    {
+      "Name": "Zora's Flippers",
+      "InternalItemType": 30,
+      "OtherNames": []
+    },
+    {
+      "Name": "Moon Pearl",
+      "InternalItemType": 31,
+      "OtherNames": []
+    },
+    {
+      "Name": "Bug Catching Net",
+      "InternalItemType": 33,
+      "OtherNames": []
+    },
+    {
+      "Name": "Three Bombs",
+      "InternalItemType": 40,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Mushroom",
+      "InternalItemType": 41,
+      "OtherNames": []
+    },
+    {
+      "Name": "Red Boomerang",
+      "InternalItemType": 42,
+      "OtherNames": []
+    },
+    {
+      "Name": "One Rupee",
+      "InternalItemType": 52,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Five Rupees",
+      "InternalItemType": 53,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Twenty Rupees",
+      "InternalItemType": 54,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Heart Container",
+      "InternalItemType": 62,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "One Hundred Rupees",
+      "InternalItemType": 64,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Fifty Rupees",
+      "InternalItemType": 65,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Single Arrow",
+      "InternalItemType": 67,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ten Arrows",
+      "InternalItemType": 68,
+      "OtherNames": []
+    },
+    {
+      "Name": "Three Hundred Rupees",
+      "InternalItemType": 70,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Twenty Rupees",
+      "InternalItemType": 71,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Pegasus Boots",
+      "InternalItemType": 75,
+      "OtherNames": []
+    },
+    {
+      "Name": "Half Magic",
+      "InternalItemType": 78,
+      "OtherNames": []
+    },
+    {
+      "Name": "+5 Bomb Capacity",
+      "InternalItemType": 81,
+      "OtherNames": []
+    },
+    {
+      "Name": "+10 Bomb Capacity",
+      "InternalItemType": 82,
+      "OtherNames": []
+    },
+    {
+      "Name": "+5 Arrow Capacity",
+      "InternalItemType": 83,
+      "OtherNames": []
+    },
+    {
+      "Name": "+10 Arrow Capacity",
+      "InternalItemType": 84,
+      "OtherNames": []
+    },
+    {
+      "Name": "Silver Arrows",
+      "InternalItemType": 88,
+      "OtherNames": []
+    },
+    {
+      "Name": "Progressive Sword",
+      "InternalItemType": 94,
+      "Multiple": true,
+      "OtherNames": [ "Sword" ],
+      "Stages": {
+        "1": [ "Fighter's Sword" ],
+        "2": [ "Master Sword", "Blade of Evil's Bane", "Sword of Legend", "Sword that Seals the Darkness" ],
+        "3": [ "Tempered Sword", "Bacon" ],
+        "4": [ "Gold Sword", "Butter" ]
+      }
+    },
+    {
+      "Name": "Progressive Shield",
+      "InternalItemType": 95,
+      "Multiple": true,
+      "OtherNames": [ "Shield" ],
+      "Stages": {
+        "1": [ "Fighter's Shield" ],
+        "2": [ "Red Shield" ],
+        "3": [ "Mirror Shield" ]
+      }
+    },
+    {
+      "Name": "Progressive Mail",
+      "InternalItemType": 96,
+      "Multiple": true,
+      "OtherNames": [ "Mail" ],
+      "Stages": {
+        "0": [ "Green Mail" ],
+        "1": [ "Blue Mail" ],
+        "2": [ "Red Mail" ]
+      }
+    },
+    {
+      "Name": "Progressive Glove",
+      "InternalItemType": 97,
+      "Multiple": true,
+      "OtherNames": [ "Glove", "Gloves" ],
+      "Stages": {
+        "1": [ "Power Glove" ],
+        "2": [ "Titan's Mitt", "Tiddy Mitts" ]
+      }
+    },
+    {
+      "Name": "Ganons Tower Map",
+      "InternalItemType": 114,
+      "OtherNames": []
+    },
+    {
+      "Name": "Turtle Rock Map",
+      "InternalItemType": 115,
+      "OtherNames": []
+    },
+    {
+      "Name": "Thieves Town Map",
+      "InternalItemType": 116,
+      "OtherNames": []
+    },
+    {
+      "Name": "Tower of Hera Map",
+      "InternalItemType": 117,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ice Palace Map",
+      "InternalItemType": 118,
+      "OtherNames": []
+    },
+    {
+      "Name": "Skull Woods Map",
+      "InternalItemType": 119,
+      "OtherNames": []
+    },
+    {
+      "Name": "Misery Mire Map",
+      "InternalItemType": 120,
+      "OtherNames": []
+    },
+    {
+      "Name": "Palace of Darkness Map",
+      "InternalItemType": 121,
+      "OtherNames": []
+    },
+    {
+      "Name": "Swamp Palace Map",
+      "InternalItemType": 122,
+      "OtherNames": []
+    },
+    {
+      "Name": "Desert Palace Map",
+      "InternalItemType": 124,
+      "OtherNames": []
+    },
+    {
+      "Name": "Eastern Palace Map",
+      "InternalItemType": 125,
+      "OtherNames": []
+    },
+    {
+      "Name": "Hyrule Castle Map",
+      "InternalItemType": 127,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ganons Tower Compass",
+      "InternalItemType": 130,
+      "OtherNames": []
+    },
+    {
+      "Name": "Turtle Rock Compass",
+      "InternalItemType": 131,
+      "OtherNames": []
+    },
+    {
+      "Name": "Thieves Town Compass",
+      "InternalItemType": 132,
+      "OtherNames": []
+    },
+    {
+      "Name": "Tower of Hera Compass",
+      "InternalItemType": 133,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ice Palace Compass",
+      "InternalItemType": 134,
+      "OtherNames": []
+    },
+    {
+      "Name": "Skull Woods Compass",
+      "InternalItemType": 135,
+      "OtherNames": []
+    },
+    {
+      "Name": "Misery Mire Compass",
+      "InternalItemType": 136,
+      "OtherNames": []
+    },
+    {
+      "Name": "Palace of Darkness Compass",
+      "InternalItemType": 137,
+      "OtherNames": []
+    },
+    {
+      "Name": "Swamp Palace Compass",
+      "InternalItemType": 138,
+      "OtherNames": []
+    },
+    {
+      "Name": "Desert Palace Compass",
+      "InternalItemType": 140,
+      "OtherNames": []
+    },
+    {
+      "Name": "Eastern Palace Compass",
+      "InternalItemType": 141,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ganons Tower Big Key",
+      "InternalItemType": 146,
+      "OtherNames": []
+    },
+    {
+      "Name": "Turtle Rock Big Key",
+      "InternalItemType": 147,
+      "OtherNames": []
+    },
+    {
+      "Name": "Thieves Town Big Key",
+      "InternalItemType": 148,
+      "OtherNames": []
+    },
+    {
+      "Name": "Tower of Hera Big Key",
+      "InternalItemType": 149,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ice Palace Big Key",
+      "InternalItemType": 150,
+      "OtherNames": []
+    },
+    {
+      "Name": "Skull Woods Big Key",
+      "InternalItemType": 151,
+      "OtherNames": []
+    },
+    {
+      "Name": "Misery Mire Big Key",
+      "InternalItemType": 152,
+      "OtherNames": []
+    },
+    {
+      "Name": "Palace of Darkness Big Key",
+      "InternalItemType": 153,
+      "OtherNames": []
+    },
+    {
+      "Name": "Swamp Palace Big Key",
+      "InternalItemType": 154,
+      "OtherNames": []
+    },
+    {
+      "Name": "Desert Palace Big Key",
+      "InternalItemType": 156,
+      "OtherNames": []
+    },
+    {
+      "Name": "Eastern Palace Big Key",
+      "InternalItemType": 157,
+      "OtherNames": []
+    },
+    {
+      "Name": "Sewer Key",
+      "InternalItemType": 160,
+      "OtherNames": []
+    },
+    {
+      "Name": "Desert Palace Key",
+      "InternalItemType": 163,
+      "OtherNames": []
+    },
+    {
+      "Name": "Castle Tower Key",
+      "InternalItemType": 164,
+      "OtherNames": []
+    },
+    {
+      "Name": "Swamp Palace Key",
+      "InternalItemType": 165,
+      "OtherNames": []
+    },
+    {
+      "Name": "Palace of Darkness Key",
+      "InternalItemType": 166,
+      "OtherNames": []
+    },
+    {
+      "Name": "Misery Mire Key",
+      "InternalItemType": 167,
+      "OtherNames": []
+    },
+    {
+      "Name": "Skull Woods Key",
+      "InternalItemType": 168,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ice Palace Key",
+      "InternalItemType": 169,
+      "OtherNames": []
+    },
+    {
+      "Name": "Tower of Hera Key",
+      "InternalItemType": 170,
+      "OtherNames": []
+    },
+    {
+      "Name": "Thieves Town Key",
+      "InternalItemType": 171,
+      "OtherNames": []
+    },
+    {
+      "Name": "Turtle Rock Key",
+      "InternalItemType": 172,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ganons Tower Key",
+      "InternalItemType": 173,
+      "OtherNames": []
+    },
+    {
+      "Name": "Grappling Beam",
+      "InternalItemType": 176,
+      "OtherNames": []
+    },
+    {
+      "Name": "X-Ray Scope",
+      "InternalItemType": 177,
+      "OtherNames": []
+    },
+    {
+      "Name": "Varia Suit",
+      "InternalItemType": 178,
+      "OtherNames": []
+    },
+    {
+      "Name": "Spring Ball",
+      "InternalItemType": 179,
+      "OtherNames": []
+    },
+    {
+      "Name": "Morphing Ball",
+      "InternalItemType": 180,
+      "OtherNames": []
+    },
+    {
+      "Name": "Screw Attack",
+      "InternalItemType": 181,
+      "OtherNames": []
+    },
+    {
+      "Name": "Gravity Suit",
+      "InternalItemType": 182,
+      "OtherNames": []
+    },
+    {
+      "Name": "Hi-Jump Boots",
+      "InternalItemType": 183,
+      "OtherNames": []
+    },
+    {
+      "Name": "Space Jump",
+      "InternalItemType": 184,
+      "OtherNames": []
+    },
+    {
+      "Name": "Morph Bombs",
+      "InternalItemType": 185,
+      "OtherNames": []
+    },
+    {
+      "Name": "Speed Booster",
+      "InternalItemType": 186,
+      "OtherNames": []
+    },
+    {
+      "Name": "Charge Beam",
+      "InternalItemType": 187,
+      "OtherNames": []
+    },
+    {
+      "Name": "Ice Beam",
+      "InternalItemType": 188,
+      "OtherNames": [ "Nice Beam" ]
+    },
+    {
+      "Name": "Wave Beam",
+      "InternalItemType": 189,
+      "OtherNames": []
+    },
+    {
+      "Name": "Spazer",
+      "InternalItemType": 190,
+      "OtherNames": []
+    },
+    {
+      "Name": "Plasma Beam",
+      "InternalItemType": 191,
+      "OtherNames": []
+    },
+    {
+      "Name": "Energy Tank",
+      "InternalItemType": 192,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Reserve Tank",
+      "InternalItemType": 193,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Missile",
+      "InternalItemType": 194,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Super Missile",
+      "InternalItemType": 195,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Power Bomb",
+      "InternalItemType": 196,
+      "Multiple": true,
+      "OtherNames": []
+    },
+    {
+      "Name": "Crateria Level 1 Keycard",
+      "InternalItemType": 208,
+      "OtherNames": []
+    },
+    {
+      "Name": "Crateria Level 2 Keycard",
+      "InternalItemType": 209,
+      "OtherNames": []
+    },
+    {
+      "Name": "Crateria Boss Keycard",
+      "InternalItemType": 210,
+      "OtherNames": []
+    },
+    {
+      "Name": "Brinstar Level 1 Keycard",
+      "InternalItemType": 211,
+      "OtherNames": []
+    },
+    {
+      "Name": "Brinstar Level 2 Keycard",
+      "InternalItemType": 212,
+      "OtherNames": []
+    },
+    {
+      "Name": "Brinstar Boss Keycard",
+      "InternalItemType": 213,
+      "OtherNames": []
+    },
+    {
+      "Name": "Norfair Level 1 Keycard",
+      "InternalItemType": 214,
+      "OtherNames": []
+    },
+    {
+      "Name": "Norfair Level 2 Keycard",
+      "InternalItemType": 215,
+      "OtherNames": []
+    },
+    {
+      "Name": "Norfair Boss Keycard",
+      "InternalItemType": 216,
+      "OtherNames": []
+    },
+    {
+      "Name": "Maridia Level 1 Keycard",
+      "InternalItemType": 217,
+      "OtherNames": []
+    },
+    {
+      "Name": "Maridia Level 2 Keycard",
+      "InternalItemType": 218,
+      "OtherNames": []
+    },
+    {
+      "Name": "Maridia Boss Keycard",
+      "InternalItemType": 219,
+      "OtherNames": []
+    },
+    {
+      "Name": "Wrecked Ship Level 1 Keycard",
+      "InternalItemType": 220,
+      "OtherNames": []
+    },
+    {
+      "Name": "Wrecked Ship Boss Keycard",
+      "InternalItemType": 221,
+      "OtherNames": []
+    },
+    {
+      "Name": "Lower Norfair Level 1 Keycard",
+      "InternalItemType": 222,
+      "OtherNames": []
+    },
+    {
+      "Name": "Lower Norfair Boss Keycard",
+      "InternalItemType": 223,
+      "OtherNames": []
+    }
+  ]
+}

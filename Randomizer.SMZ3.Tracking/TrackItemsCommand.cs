@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -11,24 +8,40 @@ namespace Randomizer.SMZ3.Tracking
     {
         private const string ItemNameKey = "ItemName";
 
-        public event EventHandler<ItemTrackedEventArgs> ItemTracked;
+        public TrackItemsCommand(TrackerConfig trackerConfig)
+        {
+            TrackerConfig = trackerConfig;
+        }
+
+        public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
+
+        protected TrackerConfig TrackerConfig { get; }
 
         public Grammar BuildGrammar()
         {
-            var itemChoices = new Choices();
-            foreach (var itemType in Enum.GetValues<ItemType>())
+            var itemNames = new Choices();
+            foreach (var itemData in TrackerConfig.Items)
             {
-                var name = itemType.GetDescription();
-                itemChoices.Add(new SemanticResultValue(name, (int)itemType));
+                itemNames.Add(new SemanticResultValue(itemData.Name, itemData.Name));
+                foreach (var otherName in itemData.OtherNames)
+                    itemNames.Add(new SemanticResultValue(otherName, otherName));
+
+                if (itemData.Stages != null)
+                {
+                    foreach (var stageName in itemData.Stages.SelectMany(x => x.Value))
+                    {
+                        itemNames.Add(new SemanticResultValue(stageName, stageName));
+                    }
+                }
             }
 
             var trackItemPhrase = new GrammarBuilder()
                 .Append("Hey tracker, track")
-                .Append(ItemNameKey, itemChoices);
+                .Append(ItemNameKey, itemNames);
 
             var trackItemPleasePhrase = new GrammarBuilder()
                 .Append("Hey tracker, please track")
-                .Append(ItemNameKey, itemChoices);
+                .Append(ItemNameKey, itemNames);
 
             var trackItemCommands = GrammarBuilder.Combine(
                 trackItemPhrase,
@@ -39,16 +52,19 @@ namespace Randomizer.SMZ3.Tracking
             return grammar;
         }
 
-        private void Grammar_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
-        {
-            var value = (int)e.Result.Semantics[ItemNameKey].Value;
-            var itemType = (ItemType)value;
-            OnItemTracked(new ItemTrackedEventArgs(itemType, e.Result.Confidence));
-        }
-
         protected virtual void OnItemTracked(ItemTrackedEventArgs e)
         {
             ItemTracked?.Invoke(this, e);
+        }
+
+        private void Grammar_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
+        {
+            var itemName = (string)e.Result.Semantics[ItemNameKey].Value;
+            var itemData = TrackerConfig.FindItemByName(itemName);
+            if (itemData == null)
+                throw new Exception($"Could not find item '{itemName}' (\"{e.Result.Text}\")");
+
+            OnItemTracked(new ItemTrackedEventArgs(itemData, itemName, e.Result.Confidence));
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,6 +18,7 @@ using Randomizer.App.ViewModels;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App
 {

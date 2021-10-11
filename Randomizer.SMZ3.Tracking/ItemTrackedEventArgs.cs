@@ -8,13 +8,16 @@ namespace Randomizer.SMZ3.Tracking
 {
     public class ItemTrackedEventArgs : EventArgs
     {
-        public ItemTrackedEventArgs(ItemType itemType, float confidence)
+        public ItemTrackedEventArgs(ItemData itemData, string trackedAs, float confidence)
         {
-            ItemType = itemType;
+            ItemData = itemData;
+            TrackedAs = trackedAs;
             Confidence = confidence;
         }
 
-        public ItemType ItemType { get; }
+        public string TrackedAs { get; }
+
+        public ItemData ItemData { get; }
 
         public float Confidence { get; }
     }
