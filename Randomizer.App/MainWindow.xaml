@@ -222,13 +222,20 @@
 
     <Border Grid.Row="2"
             Style="{StaticResource BottomPanel}">
-      <StackPanel Orientation="Horizontal"
-                  HorizontalAlignment="Right">
-        <Button x:Name="PlayButton"
-                Click="PlayButton_Click">_Play</Button>
-        <Button x:Name="GenerateRomButton"
-                Click="GenerateRomButton_Click">_Generate ROM</Button>
-      </StackPanel>
+      <Grid>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left">
+          <Button x:Name="StartTracker"
+                  Click="StartTracker_Click">Start _tracker</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+          <Button x:Name="PlayButton"
+                  Click="PlayButton_Click">_Play</Button>
+          <Button x:Name="GenerateRomButton"
+                  Click="GenerateRomButton_Click">_Generate ROM</Button>
+        </StackPanel>
+      </Grid>
     </Border>
   </Grid>
 </Window>

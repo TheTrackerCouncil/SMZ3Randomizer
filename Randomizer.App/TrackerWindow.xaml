@@ -1,0 +1,33 @@
+﻿<Window x:Class="Randomizer.App.TrackerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Randomizer.App"
+        mc:Ignorable="d"
+        Title="Tracker — SMZ3 Cas' Randomizer"
+        Height="250"
+        Width="450"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        Closed="Window_Closed">
+  <Grid>
+    <RichTextBox x:Name="TrackerDebugOutput"
+                 BorderThickness="0"
+                 Background="#212121"
+                 Foreground="#DDDDDD"
+                 FontFamily="Consolas"
+                 FontSize="12px"
+                 Padding="7"
+                 VerticalScrollBarVisibility="Auto"
+                 IsReadOnly="True"
+                 IsReadOnlyCaretVisible="True">
+      <RichTextBox.Resources>
+        <Style TargetType="{x:Type Paragraph}">
+          <Setter Property="Margin"
+                  Value="0" />
+        </Style>
+      </RichTextBox.Resources>
+    </RichTextBox>
+  </Grid>
+</Window>

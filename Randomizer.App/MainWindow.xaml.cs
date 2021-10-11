@@ -445,5 +445,11 @@ namespace Randomizer.App
                     .Count();
             }
         }
+
+        private void StartTracker_Click(object sender, RoutedEventArgs e)
+        {
+            var trackerWindow = new TrackerWindow();
+            trackerWindow.Show();
+        }
     }
 }
