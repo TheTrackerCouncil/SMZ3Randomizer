@@ -17,13 +17,39 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
                 var text = reader.GetString();
                 return new Phrase(text!);
             }
+            else if (reader.TokenType == JsonTokenType.StartArray)
+            {
+                reader.Read();
+                var text = reader.GetString();
+                if (text == null)
+                    throw new JsonException("Expected a string at the start of the array.");
 
-            throw new JsonException();
+                reader.Read();
+                var weight = reader.GetDouble();
+
+                reader.Read();
+                if (reader.TokenType != JsonTokenType.EndArray)
+                    throw new JsonException("Expected end of array.");
+
+                return new Phrase(text, weight);
+            }
+
+            throw new JsonException($"Unexpected {reader.TokenType} at {reader.TokenStartIndex} when parsing phrase.");
         }
 
         public override void Write(Utf8JsonWriter writer, Phrase value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.Text);
+            if (value.Weight == Phrase.DefaultWeight)
+            {
+                writer.WriteStringValue(value.Text);
+            }
+            else
+            {
+                writer.WriteStartArray();
+                writer.WriteStringValue(value.Text);
+                writer.WriteNumberValue(value.Weight);
+                writer.WriteEndArray();
+            }
         }
     }
 }
