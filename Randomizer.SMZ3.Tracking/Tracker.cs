@@ -5,6 +5,7 @@ using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 
+using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -38,6 +39,7 @@ namespace Randomizer.SMZ3.Tracking
 
             var config = trackerConfigProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
+            Responses = config.Responses;
             World = world;
 
             var trackItemsCommand = new TrackItemsCommand(this);
@@ -52,6 +54,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets a collection of trackable items.
         /// </summary>
         public IReadOnlyCollection<ItemData> Items { get; }
+
+        /// <summary>
+        /// Gets the configured responses.
+        /// </summary>
+        public ResponseConfig Responses { get; }
 
         /// <summary>
         /// Gets the world for the currently tracked playthrough.
@@ -84,7 +91,7 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void StartTracking()
         {
             _recognizer.RecognizeAsync(RecognizeMode.Multiple);
-            Say("Is it weekend already?");
+            Say(Responses.StartedTracking);
         }
 
         /// <summary>
@@ -93,7 +100,42 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void StopTracking()
         {
             _recognizer.RecognizeAsyncStop();
-            Say("Leaving so soon?", wait: true);
+            Say(Responses.StoppedTracking, wait: true);
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="phrases">The phrases to pick from.</param>
+        /// <param name="args">
+        /// Optional object array used to format the randomly picked phrase
+        /// with.
+        /// </param>
+        public void Say(PhraseSet? phrases, params object?[] args)
+        {
+            Say(phrases, false, args);
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="phrases">The phrases to pick from.</param>
+        /// <param name="wait">
+        /// <c>true</c> to wait until the text has been spoken completely or
+        /// <c>false</c> to immediately return. The default is <c>false</c>.
+        /// </param>
+        /// <param name="args">
+        /// Optional object array used to format the randomly picked phrase
+        /// with.
+        /// </param>
+        public void Say(PhraseSet? phrases, bool wait, params object?[] args)
+        {
+            if (phrases == null || phrases.Count == 0)
+                return;
+
+            var phrase = phrases.Random(s_random);
+            var text = string.Format(phrase, args);
+            Say(text, wait);
         }
 
         /// <summary>
@@ -146,7 +188,7 @@ namespace Randomizer.SMZ3.Tracking
             _log($"Recognized item {e.Item.Name} as {e.TrackedAs} with {e.Confidence:P2} confidence.");
 
             var accessibleBefore = GetAccessibleLocations();
-            var randomName = e.Item.GetRandomName(s_random);
+            var itemName = e.Item.GetRandomName(s_random);
 
             if (e.Item.HasStages)
             {
@@ -156,8 +198,10 @@ namespace Randomizer.SMZ3.Tracking
                     // Tracked by specific stage name (e.g. Tempered Sword), set
                     // to that stage specifically
                     var stageName = e.Item.Stages[stage.Value].Random(s_random);
-                    e.Item.Track(stage.Value);
-                    Say($"Marked {randomName} as {stageName}");
+                    if (e.Item.Track(stage.Value))
+                        Say(Responses.TrackedItemByStage, itemName, stageName);
+                    else
+                        Say(Responses.TrackedOlderProgressiveItem, itemName, e.Item.Stages[e.Item.TrackingState].Random(s_random));
                 }
                 else
                 {
@@ -166,25 +210,25 @@ namespace Randomizer.SMZ3.Tracking
                     {
                         // Say($"Upgraded {randomName} by one step.");
                         var stageName = e.Item.Stages[e.Item.TrackingState].Random(s_random);
-                        Say($"Congratulations with your new {stageName}.");
+                        Say(Responses.TrackedProgressiveItem, itemName, stageName);
                     }
                     else
                     {
-                        Say("I doubt that.");
+                        Say(Responses.TrackedTooManyOfAnItem);
                     }
                 }
             }
             else if (e.Item.Multiple)
             {
                 e.Item.Track();
-                Say($"Added {randomName}.");
+                Say(Responses.TrackedItemMultiple, itemName);
             }
             else
             {
                 if (e.Item.Track())
-                    Say($"Toggled {e.Item.Name} on.");
+                    Say(Responses.TrackedItem, e.Item.Name);
                 else
-                    Say("You already have one. Go away.");
+                    Say(Responses.TrackedAlreadyTrackedItem);
             }
 
             GiveLocationHint(accessibleBefore);
@@ -206,10 +250,10 @@ namespace Randomizer.SMZ3.Tracking
                     _log($"{region.Count()} location(s) in {region.Key.Name}: {string.Join(", ", region.Select(x => x.Name))}");
 
                 if (newlyAccessible.Contains(World.InnerMaridia.ShaktoolItem))
-                    Say("Hey tracker, track Shaktool Go Mode.");
+                    Say(Responses.ShaktoolAvailable);
 
                 if (newlyAccessible.Contains(World.DarkWorldNorthWest.PegWorld))
-                    Say("Can we go to Peg World? Pretty please?");
+                    Say(Responses.PegWorldAvailable);
             }
             else
             {

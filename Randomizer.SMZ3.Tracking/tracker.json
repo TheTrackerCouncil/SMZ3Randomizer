@@ -688,5 +688,45 @@
       "InternalItemType": 223,
       "OtherNames": []
     }
-  ]
+  ],
+  "Responses": {
+    "StartedTracking": [
+      "Is it weekend already?",
+      "Hey you. You're finally awake. You were trying to cross the border right?"
+    ],
+    "StoppedTracking": [
+      "Leaving so soon?"
+    ],
+    "TrackedItem": [
+      "Toggled {0} on."
+    ],
+    "TrackedProgressiveItem": [
+      "Upgraded {0} by one step.",
+      "Congratulations with your new {1}."
+    ],
+    "TrackedItemByStage": [
+      "Marked {0} as {1}."
+    ],
+    "TrackedItemMultiple": [
+      "Added {0}."
+    ],
+    "TrackedAlreadyTrackedItem": [
+      "You already have one."
+    ],
+    "TrackedOlderProgressiveItem": [
+      "You already have a better {0}.",
+      "You already have the {1}."
+    ],
+    "TrackedTooManyOfAnItem": [
+      "I doubt that."
+    ],
+    "ShaktoolAvailable": [
+      "Hey tracker, track Shaktool Go Mode",
+      "I wonder how Shaktool is doing"
+    ],
+    "PegWorldAvailable": [
+      "Can we go to Peg World?",
+      "I hear Peg World is beautiful this time of year."
+    ]
+  }
 }
