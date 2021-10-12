@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App
@@ -22,10 +23,12 @@ namespace Randomizer.App
     public partial class TrackerWindow : Window
     {
         private Tracker _tracker;
+        private readonly World _world;
 
-        public TrackerWindow()
+        public TrackerWindow(World world)
         {
             InitializeComponent();
+            _world = world;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -33,7 +36,7 @@ namespace Randomizer.App
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "tracker.json");
             var provider = new TrackerConfigProvider(path);
 
-            _tracker = new Tracker(Log, provider);
+            _tracker = new Tracker(Log, provider, _world);
             _tracker.StartTracking();
         }
 

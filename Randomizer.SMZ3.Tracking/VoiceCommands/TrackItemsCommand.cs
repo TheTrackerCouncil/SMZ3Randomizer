@@ -8,19 +8,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         private const string ItemNameKey = "ItemName";
 
-        public TrackItemsCommand(TrackerConfig trackerConfig)
+        public TrackItemsCommand(Tracker tracker)
         {
-            TrackerConfig = trackerConfig;
+            Tracker = tracker;
         }
 
         public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
 
-        protected TrackerConfig TrackerConfig { get; }
+        public Tracker Tracker { get; }
 
         public Grammar BuildGrammar()
         {
             var itemNames = new Choices();
-            foreach (var itemData in TrackerConfig.Items)
+            foreach (var itemData in Tracker.Items)
             {
                 itemNames.Add(new SemanticResultValue(itemData.Name, itemData.Name));
                 foreach (var otherName in itemData.OtherNames)
@@ -60,7 +60,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private void Grammar_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
         {
             var itemName = (string)e.Result.Semantics[ItemNameKey].Value;
-            var itemData = TrackerConfig.FindItemByName(itemName);
+            var itemData = Tracker.FindItemByName(itemName);
             if (itemData == null)
                 throw new Exception($"Could not find item '{itemName}' (\"{e.Result.Text}\")");
 

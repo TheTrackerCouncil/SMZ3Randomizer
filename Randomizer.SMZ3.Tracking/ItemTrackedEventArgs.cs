@@ -10,14 +10,14 @@ namespace Randomizer.SMZ3.Tracking
     {
         public ItemTrackedEventArgs(ItemData itemData, string trackedAs, float confidence)
         {
-            ItemData = itemData;
+            Item = itemData;
             TrackedAs = trackedAs;
             Confidence = confidence;
         }
 
         public string TrackedAs { get; }
 
-        public ItemData ItemData { get; }
+        public ItemData Item { get; }
 
         public float Confidence { get; }
     }

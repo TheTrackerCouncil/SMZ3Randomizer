@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,7 +17,6 @@ using Randomizer.App.ViewModels;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App
 {
@@ -29,6 +27,7 @@ namespace Randomizer.App
     {
         private readonly string _optionsPath;
         private readonly Task _loadSpritesTask;
+        private World _lastWorld;
 
         public MainWindow()
         {
@@ -139,8 +138,14 @@ namespace Randomizer.App
 
             Options.PatchOptions.SamusSprite.ApplyTo(rom);
             Options.PatchOptions.LinkSprite.ApplyTo(rom);
+            _lastWorld = seed.Worlds[0].World;
             return rom;
         }
+
+        private static string Underline(string text, char line = '-')
+            => text + "\n" + new string(line, text.Length);
+
+        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
 
         private string GetSpoilerLog(SeedData seed)
         {
@@ -182,11 +187,6 @@ namespace Randomizer.App
 
             return log.ToString();
         }
-
-        private static string Underline(string text, char line = '-')
-            => text + "\n" + new string(line, text.Length);
-
-        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
 
         private bool EnableMsu1Support(byte[] rom, string romPath)
         {
@@ -450,7 +450,7 @@ namespace Randomizer.App
 
         private void StartTracker_Click(object sender, RoutedEventArgs e)
         {
-            var trackerWindow = new TrackerWindow();
+            var trackerWindow = new TrackerWindow(_lastWorld);
             trackerWindow.Show();
         }
     }
