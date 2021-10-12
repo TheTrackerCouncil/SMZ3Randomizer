@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Speech.Recognition;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class TrackItemsCommand : IVoiceCommand
     {

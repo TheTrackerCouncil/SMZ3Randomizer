@@ -2,6 +2,8 @@
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 
+using Randomizer.SMZ3.Tracking.VoiceCommands;
+
 namespace Randomizer.SMZ3.Tracking
 {
     public class Tracker : IDisposable
@@ -11,13 +13,11 @@ namespace Randomizer.SMZ3.Tracking
         private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
         private readonly Action<string> _log;
-        private readonly TrackerConfigProvider _trackerConfigProvider;
         private bool _disposed;
 
         public Tracker(Action<string> log, TrackerConfigProvider trackerConfigProvider)
         {
             _log = log;
-            _trackerConfigProvider = trackerConfigProvider;
             _tts = new SpeechSynthesizer();
             _tts.SelectVoiceByHints(VoiceGender.Female);
 
@@ -29,9 +29,6 @@ namespace Randomizer.SMZ3.Tracking
             _recognizer.LoadGrammar(trackItemsCommand.BuildGrammar());
             _recognizer.SetInputToDefaultAudioDevice();
         }
-
-        public Progression Progression { get; }
-            = new Progression();
 
         public virtual void StartTracking()
         {
@@ -85,27 +82,38 @@ namespace Randomizer.SMZ3.Tracking
                 var stage = e.ItemData.GetStage(e.TrackedAs);
                 if (stage != null)
                 {
-                    // Tracked by specific stage name (e.g. Tempered Sword), set to that stage specifically
+                    // Tracked by specific stage name (e.g. Tempered Sword), set
+                    // to that stage specifically
                     var stageName = e.ItemData.Stages[stage.Value].Random(s_random);
-                    Progression.TrackItem(e.ItemData.InternalItemType); // TODO: Set stage correctly
+                    e.ItemData.Track(stage.Value);
                     Say($"Marked {randomName} as {stageName}");
                 }
                 else
                 {
                     // Tracked by regular name, upgrade by one step
-                    Progression.TrackItem(e.ItemData.InternalItemType);
-                    Say($"Upgraded {randomName} by one step.");
+                    if (e.ItemData.Track())
+                    {
+                        // Say($"Upgraded {randomName} by one step.");
+                        var stageName = e.ItemData.Stages[e.ItemData.TrackingState].Random(s_random);
+                        Say($"Congratulations with your new {stageName}.");
+                    }
+                    else
+                    {
+                        Say("I doubt that.");
+                    }
                 }
             }
             else if (e.ItemData.Multiple)
             {
-                Progression.TrackItem(e.ItemData.InternalItemType);
+                e.ItemData.Track();
                 Say($"Added {randomName}.");
             }
             else
             {
-                Progression.TrackItem(e.ItemData.InternalItemType);
-                Say($"Toggled {e.ItemData.Name} on.");
+                if (e.ItemData.Track())
+                    Say($"Toggled {e.ItemData.Name} on.");
+                else
+                    Say("You already have one.");
             }
         }
     }
