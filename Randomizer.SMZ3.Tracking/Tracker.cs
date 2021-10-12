@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
-
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -32,9 +29,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="trackerConfigProvider">
         /// Used to provide the tracking configuration.
         /// </param>
-        /// <param name="world">
-        /// The generated world to track in.
-        /// </param>
+        /// <param name="world">The generated world to track in.</param>
         public Tracker(Action<string> log, TrackerConfigProvider trackerConfigProvider, World? world)
         {
             _log = log;
@@ -155,7 +150,6 @@ namespace Randomizer.SMZ3.Tracking
 
             if (e.Item.HasStages)
             {
-                // TODO: Get current stage
                 var stage = e.Item.GetStage(e.TrackedAs);
                 if (stage != null)
                 {
@@ -190,34 +184,38 @@ namespace Randomizer.SMZ3.Tracking
                 if (e.Item.Track())
                     Say($"Toggled {e.Item.Name} on.");
                 else
-                    Say("You already have one.");
+                    Say("You already have one. Go away.");
             }
 
-            if (World != null)
-            {
-                var accessibleAfter = GetAccessibleLocations();
-                var newlyAccessible = accessibleAfter.Except(accessibleBefore);
-                if (newlyAccessible.Any())
-                {
-                    if (newlyAccessible.Count() == 1)
-                        Say($"{newlyAccessible.Single().Name} is now open to you. Have fun.");
+            GiveLocationHint(accessibleBefore);
+        }
 
-                    var regions = newlyAccessible.GroupBy(x => x.Region).OrderByDescending(x => x.Count());
-                    if (regions.Count() == 1)
-                        Say($"Time to visit {regions.Single().Key.Name} maybe?");
-                    if (regions.Count() > 2)
-                    {
-                        Say($"You now have access to {regions.First().Key.Name} and {regions.Skip(1).First().Key.Name}.");
-                        if (regions.Count() == 2)
-                            Say("Isn't that exciting?");
-                        else
-                            Say("Others too but I have better things to do.");
-                    }
-                }
-                else
-                {
-                    Say("Doesn't get you anywhere, though.");
-                }
+        private void GiveLocationHint(IEnumerable<Location> accessibleBefore)
+        {
+            if (World == null)
+                return;
+
+            var accessibleAfter = GetAccessibleLocations();
+            var newlyAccessible = accessibleAfter.Except(accessibleBefore);
+            if (newlyAccessible.Any())
+            {
+                var regions = newlyAccessible.GroupBy(x => x.Region)
+                    .OrderByDescending(x => x.Count())
+                    .ThenBy(x => x.Key.Name);
+                foreach (var region in regions)
+                    _log($"{region.Count()} location(s) in {region.Key.Name}: {string.Join(", ", region.Select(x => x.Name))}");
+
+                if (newlyAccessible.Contains(World.InnerMaridia.ShaktoolItem))
+                    Say("Hey tracker, track Shaktool Go Mode.");
+
+                if (newlyAccessible.Contains(World.DarkWorldNorthWest.PegWorld))
+                    Say("Can we go to Peg World? Pretty please?");
+            }
+            else
+            {
+                var rnd = s_random.Next();
+                if (rnd % 20 == 0)
+                    Say("Doesn't get you anywhere though.");
             }
         }
 
