@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Tracking
 
             using var reader = new StreamReader(stream);
             var json = reader.ReadToEnd();
-            File.WriteAllText(_jsonPath, json); 
+            File.WriteAllText(_jsonPath, json);
             return JsonSerializer.Deserialize<TrackerConfig>(json, s_options)
                 ?? throw new InvalidOperationException("The embedded tracker configuration could not be loaded.");
         }

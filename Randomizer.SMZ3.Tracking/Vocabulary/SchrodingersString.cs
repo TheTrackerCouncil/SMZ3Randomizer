@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,6 +12,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
     /// Represents a string whose value is picked randomly from a collection of
     /// strings.
     /// </summary>
+    [JsonConverter(typeof(SchrodingersStringConverter))]
     public class SchrodingersString : Collection<SchrodingersString.Item>
     {
         private static readonly Random s_random = new();
@@ -21,6 +23,17 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </summary>
         public SchrodingersString()
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SchrodingersString"/>
+        /// class with the specified items.
+        /// </summary>
+        /// <param name="items">The items to add.</param>
+        public SchrodingersString(IEnumerable<Item> items)
+        {
+            foreach (var item in items)
+                Add(item);
         }
 
         /// <summary>
@@ -42,6 +55,23 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
             => value?.ToString();
 
         /// <summary>
+        /// Determines whether the specified text is among the possibilities for
+        /// this string.
+        /// </summary>
+        /// <param name="text">The string to test.</param>
+        /// <param name="stringComparison">
+        /// The type of comparison method to use.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="text"/> is among the
+        /// possibilities, otherwise, <see langword="false"/>.
+        /// </returns>
+        public bool Contains(string text, StringComparison stringComparison)
+        {
+            return Items.Any(x => x.Text.Equals(text, stringComparison));
+        }
+
+        /// <summary>
         /// Returns a random string from the possibilities.
         /// </summary>
         /// <returns>A random string from the possibilities.</returns>
@@ -50,8 +80,10 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// <summary>
         /// Replaces placeholders in the string with the specified values.
         /// </summary>
-        /// <param name="args">A collection of objects to format the string with.</param>
-        /// <returns>The formatted string, or <c>null</c> if </returns>
+        /// <param name="args">
+        /// A collection of objects to format the string with.
+        /// </param>
+        /// <returns>The formatted string, or <c>null</c> if</returns>
         public string? Format(params object[] args)
         {
             var value = ToString();

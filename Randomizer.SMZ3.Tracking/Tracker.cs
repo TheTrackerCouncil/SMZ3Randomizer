@@ -79,10 +79,8 @@ namespace Randomizer.SMZ3.Tracking
         /// </remarks>
         public ItemData? FindItemByName(string name)
         {
-            return Items.SingleOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                ?? Items.SingleOrDefault(x => x.OtherNames.Contains(name, StringComparer.OrdinalIgnoreCase))
-                ?? Items.Where(x => x.Stages != null)
-                        .SingleOrDefault(x => x.Stages!.SelectMany(stage => stage.Value).Any(x => x.Equals(name, StringComparison.OrdinalIgnoreCase)));
+            return Items.SingleOrDefault(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+                ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
         }
 
         /// <summary>
@@ -153,10 +151,10 @@ namespace Randomizer.SMZ3.Tracking
 
         private void ItemTracked(object? sender, ItemTrackedEventArgs e)
         {
-            _log($"Recognized item {e.Item.Name} as {e.TrackedAs} with {e.Confidence:P2} confidence.");
+            _log($"Recognized item {e.Item.Name[0]} as {e.TrackedAs} with {e.Confidence:P2} confidence.");
 
             var accessibleBefore = GetAccessibleLocations();
-            var itemName = e.Item.GetRandomName(s_random);
+            var itemName = e.Item.Name;
 
             if (e.Item.HasStages)
             {

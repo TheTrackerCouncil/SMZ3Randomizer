@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
 
+using Randomizer.SMZ3.Tracking.Vocabulary;
+
 namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>
@@ -15,31 +17,25 @@ namespace Randomizer.SMZ3.Tracking
         /// Initializes a new instance of the <see cref="ItemData"/> class with
         /// the specified item name and type.
         /// </summary>
-        /// <param name="name">The primary name of the item.</param>
+        /// <param name="name">The possible names of the item.</param>
         /// <param name="internalItemType">
         /// The internal <see cref="ItemType"/> of the item.
         /// </param>
-        public ItemData(string name, ItemType internalItemType)
+        public ItemData(SchrodingersString name, ItemType internalItemType)
         {
             Name = name;
             InternalItemType = internalItemType;
         }
 
         /// <summary>
-        /// Gets the default name for the item.
+        /// Gets the name for the item.
         /// </summary>
-        public string Name { get; init; }
+        public SchrodingersString Name { get; init; }
 
         /// <summary>
         /// Gets the internal <see cref="ItemType"/> of the item.
         /// </summary>
         public ItemType InternalItemType { get; init; }
-
-        /// <summary>
-        /// Gets a collection of additional names the item may be known as.
-        /// </summary>
-        public IReadOnlyCollection<string> OtherNames { get; init; }
-            = new List<string>();
 
         /// <summary>
         /// Indicates whether the item can be tracked more than once.
@@ -49,7 +45,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the stages and their names of a progressive item.
         /// </summary>
-        public IReadOnlyDictionary<int, IReadOnlyCollection<string>>? Stages { get; init; }
+        public IReadOnlyDictionary<int, SchrodingersString>? Stages { get; init; }
 
         /// <summary>
         /// Gets the highest stage the item supports, or 0 if the item does not
@@ -84,23 +80,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public int? GetStage(string name)
         {
-            if (Stages?.Any(x => x.Value.Contains(name, StringComparer.OrdinalIgnoreCase)) == true)
-                return Stages.Single(x => x.Value.Contains(name, StringComparer.OrdinalIgnoreCase)).Key;
+            if (Stages?.Any(x => x.Value.Contains(name, StringComparison.OrdinalIgnoreCase)) == true)
+                return Stages.Single(x => x.Value.Contains(name, StringComparison.OrdinalIgnoreCase)).Key;
 
             return null;
-        }
-
-        /// <summary>
-        /// Returns a name for the item, chosen at random.
-        /// </summary>
-        /// <param name="random">The random number generator to use.</param>
-        /// <returns>A name for the item.</returns>
-        public string GetRandomName(Random random)
-        {
-            if (OtherNames.Count == 0)
-                return Name;
-
-            return OtherNames.Concat(new[] { Name }).Random(random);
         }
 
         /// <summary>

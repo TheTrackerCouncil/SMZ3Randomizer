@@ -22,15 +22,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var itemNames = new Choices();
             foreach (var itemData in Tracker.Items)
             {
-                itemNames.Add(new SemanticResultValue(itemData.Name, itemData.Name));
-                foreach (var otherName in itemData.OtherNames)
-                    itemNames.Add(new SemanticResultValue(otherName, otherName));
+                foreach (var name in itemData.Name)
+                    itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));
 
                 if (itemData.Stages != null)
                 {
                     foreach (var stageName in itemData.Stages.SelectMany(x => x.Value))
                     {
-                        itemNames.Add(new SemanticResultValue(stageName, stageName));
+                        itemNames.Add(new SemanticResultValue(stageName.ToString(), stageName.ToString()));
                     }
                 }
             }
