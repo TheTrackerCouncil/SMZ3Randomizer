@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.Xml;
 
 using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -114,10 +116,22 @@ namespace Randomizer.SMZ3.Tracking
             if (text == null)
                 return;
 
+            var prompt = ParseText(text);
             if (wait)
-                _tts.Speak(text);
+                _tts.Speak(prompt);
             else
-                _tts.SpeakAsync(text);
+                _tts.SpeakAsync(prompt);
+
+            static Prompt ParseText(string text)
+            {
+                // If text does not contain any XML elements, just interpret it as text
+                if (!text.Contains("<") && !text.Contains("/>"))
+                    return new Prompt(text);
+
+                var prompt = new PromptBuilder();
+                prompt.AppendSsmlMarkup(text);
+                return new Prompt(prompt);
+            }
         }
 
         /// <summary>
@@ -191,9 +205,21 @@ namespace Randomizer.SMZ3.Tracking
             else
             {
                 if (e.Item.Track())
-                    Say(Responses.TrackedItem.Format(itemName));
+                {
+                    if (Responses.TrackedSpecificItem.TryGetValue(e.Item.Name[0], out var responses)
+                        && responses.Count > 0)
+                    {
+                        Say(responses);
+                    }
+                    else
+                    {
+                        Say(Responses.TrackedItem.Format(itemName));
+                    }
+                }
                 else
+                {
                     Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
+                }
             }
 
             GiveLocationHint(accessibleBefore);

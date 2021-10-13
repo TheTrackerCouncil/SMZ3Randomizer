@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Randomizer.SMZ3.Tracking.Vocabulary
 {
@@ -80,6 +81,11 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// <c>{0}</c> is a placeholder for the name of the item.
         /// </remarks>
         public SchrodingersString? TrackedAlreadyTrackedItem { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking a specific item.
+        /// </summary>
+        public Dictionary<string, SchrodingersString> TrackedSpecificItem { get; init; } = new();
 
         /// <summary>
         /// Gets the phrases to respond with when Shaktool becomes available.

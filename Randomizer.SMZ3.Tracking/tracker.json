@@ -644,6 +644,11 @@
     "PegWorldAvailable": [
       "Can we go to Peg World?",
       "I hear Peg World is beautiful this time of year."
-    ]
+    ],
+    "TrackedSpecificItem": {
+      "Shaktool Go Mode": [
+        "Toggled Shaktool Go Mode <break time='1s'/> on."
+      ]
+    }
   }
 }
