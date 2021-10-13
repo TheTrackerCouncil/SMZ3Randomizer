@@ -24,7 +24,8 @@ In addition to making IBJ completely optional, there is also:
 - **Rash** replacement sprite for _Super Metroid_ by Fragger
 - **Captain Novolin** replacement sprite for _A Link to the Past_ by Fragger
 - **Non-Binary** Samus sprite for _Super Metroid_ by Glove
-- **Trans** Samus sprite for _Super Metroid_ by TarThoron
-- **Shaktool** and **Shaktool Jr.** Samus sprites for _Super Metroid_ by Pneumatic
+- **Trans**, **Backwards**, **Upside down** and **180°** Samus sprites for _Super Metroid_ by TarThoron
+- **Shaktool** and **Shaktool Jr.** reolacement sprites for _Super Metroid_ by Pneumatic
+- **Diddy Kong** reolacement sprite for _Super Metroid_ by Di10
 
 [contribution]: https://github.com/tewtal/alttp_sm_combo_randomizer_rom/pull/55
