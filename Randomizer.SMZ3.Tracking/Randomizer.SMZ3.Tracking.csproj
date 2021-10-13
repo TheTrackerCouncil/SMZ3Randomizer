@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BunLabs.Common" Version="1.0.1" />
     <PackageReference Include="System.Speech" Version="5.0.0" />
   </ItemGroup>
 

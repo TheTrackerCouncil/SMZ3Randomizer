@@ -96,5 +96,12 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// Gets the phrases to respond with when Peg World becomes available.
         /// </summary>
         public SchrodingersString? PegWorldAvailable { get; init; }
+
+        /// <summary>
+        /// Gets a dictionary that contains the phrases to respond with when no
+        /// voice commands have been issued after a certain period of time, as
+        /// expressed in the dictionary keys.
+        /// </summary>
+        public Dictionary<string, SchrodingersString> Idle { get; init; } = new();
     }
 }

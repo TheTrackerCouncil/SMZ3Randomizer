@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
-using System.Xml;
+using System.Threading;
+
+using BunLabs;
 
 using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -23,6 +24,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
         private readonly Action<string> _log;
+        private Dictionary<string, Timer> _idleTimers;
         private bool _disposed;
 
         /// <summary>
@@ -47,7 +49,12 @@ namespace Randomizer.SMZ3.Tracking
             var trackItemsCommand = new TrackItemsCommand(this);
             trackItemsCommand.ItemTracked += ItemTracked;
 
+            _idleTimers = Responses.Idle.ToDictionary(
+                x => x.Key,
+                x => new Timer(IdleTimerElapsed, x.Key, Timeout.Infinite, Timeout.Infinite));
+
             _recognizer = new SpeechRecognitionEngine();
+            _recognizer.SpeechRecognized += SpeechRecognized;
             _recognizer.LoadGrammar(trackItemsCommand.BuildGrammar());
             _recognizer.SetInputToDefaultAudioDevice();
         }
@@ -92,6 +99,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             _recognizer.RecognizeAsync(RecognizeMode.Multiple);
             Say(Responses.StartedTracking);
+            RestartIdleTimers();
         }
 
         /// <summary>
@@ -101,6 +109,9 @@ namespace Randomizer.SMZ3.Tracking
         {
             _recognizer.RecognizeAsyncStop();
             Say(Responses.StoppedTracking, wait: true);
+
+            foreach (var timer in _idleTimers.Values)
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
         /// <summary>
@@ -124,7 +135,8 @@ namespace Randomizer.SMZ3.Tracking
 
             static Prompt ParseText(string text)
             {
-                // If text does not contain any XML elements, just interpret it as text
+                // If text does not contain any XML elements, just interpret it
+                // as text
                 if (!text.Contains("<") && !text.Contains("/>"))
                     return new Prompt(text);
 
@@ -157,10 +169,35 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     _recognizer.Dispose();
                     _tts.Dispose();
+
+                    foreach (var timer in _idleTimers.Values)
+                        timer.Dispose();
                 }
 
                 _disposed = true;
             }
+        }
+
+        private void RestartIdleTimers()
+        {
+            foreach (var item in _idleTimers)
+            {
+                var timeout = Parse.AsTimeSpan(item.Key, s_random) ?? Timeout.InfiniteTimeSpan;
+                var timer = item.Value;
+
+                timer.Change(timeout, Timeout.InfiniteTimeSpan);
+            }
+        }
+
+        private void IdleTimerElapsed(object? state)
+        {
+            var key = (string)state!;
+            Say(Responses.Idle[key]);
+        }
+
+        private void SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
+        {
+            RestartIdleTimers();
         }
 
         private void ItemTracked(object? sender, ItemTrackedEventArgs e)

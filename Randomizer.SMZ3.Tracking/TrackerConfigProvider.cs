@@ -25,6 +25,9 @@ namespace Randomizer.SMZ3.Tracking
 
         public virtual TrackerConfig GetTrackerConfig()
         {
+#if DEBUG
+            return GetBuiltInConfig();
+#endif
             if (!File.Exists(_jsonPath))
                 return GetBuiltInConfig();
 

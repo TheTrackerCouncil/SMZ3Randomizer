@@ -1,4 +1,4 @@
-{
+﻿{
   "Items": [
     {
       "Name": [ "Nothing", "Bullshit" ],
@@ -649,6 +649,9 @@
       "Shaktool Go Mode": [
         "Toggled Shaktool Go Mode <break time='1s'/> on."
       ]
+    },
+    "Idle": {
+      "10m±2m": [ "Decreased content by one step." ]
     }
   }
 }
