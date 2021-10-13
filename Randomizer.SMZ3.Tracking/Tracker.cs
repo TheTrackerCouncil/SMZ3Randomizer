@@ -106,48 +106,16 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Speak a sentence using text-to-speech.
         /// </summary>
-        /// <param name="phrases">The phrases to pick from.</param>
-        /// <param name="args">
-        /// Optional object array used to format the randomly picked phrase
-        /// with.
-        /// </param>
-        public void Say(PhraseSet? phrases, params object?[] args)
-        {
-            Say(phrases, false, args);
-        }
-
-        /// <summary>
-        /// Speak a sentence using text-to-speech.
-        /// </summary>
-        /// <param name="phrases">The phrases to pick from.</param>
-        /// <param name="wait">
-        /// <c>true</c> to wait until the text has been spoken completely or
-        /// <c>false</c> to immediately return. The default is <c>false</c>.
-        /// </param>
-        /// <param name="args">
-        /// Optional object array used to format the randomly picked phrase
-        /// with.
-        /// </param>
-        public void Say(PhraseSet? phrases, bool wait, params object?[] args)
-        {
-            if (phrases == null || phrases.Count == 0)
-                return;
-
-            var phrase = phrases.Random(s_random);
-            var text = string.Format(phrase, args);
-            Say(text, wait);
-        }
-
-        /// <summary>
-        /// Speak a sentence using text-to-speech.
-        /// </summary>
         /// <param name="text">The phrase to speak.</param>
         /// <param name="wait">
         /// <c>true</c> to wait until the text has been spoken completely or
         /// <c>false</c> to immediately return. The default is <c>false</c>.
         /// </param>
-        public virtual void Say(string text, bool wait = false)
+        public virtual void Say(string? text, bool wait = false)
         {
+            if (text == null)
+                return;
+
             if (wait)
                 _tts.Speak(text);
             else
@@ -199,18 +167,17 @@ namespace Randomizer.SMZ3.Tracking
                     // to that stage specifically
                     var stageName = e.Item.Stages[stage.Value].Random(s_random);
                     if (e.Item.Track(stage.Value))
-                        Say(Responses.TrackedItemByStage, itemName, stageName);
+                        Say(Responses.TrackedItemByStage.Format(itemName, stageName));
                     else
-                        Say(Responses.TrackedOlderProgressiveItem, itemName, e.Item.Stages[e.Item.TrackingState].Random(s_random));
+                        Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, e.Item.Stages[e.Item.TrackingState].Random(s_random)));
                 }
                 else
                 {
                     // Tracked by regular name, upgrade by one step
                     if (e.Item.Track())
                     {
-                        // Say($"Upgraded {randomName} by one step.");
                         var stageName = e.Item.Stages[e.Item.TrackingState].Random(s_random);
-                        Say(Responses.TrackedProgressiveItem, itemName, stageName);
+                        Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
                     }
                     else
                     {
@@ -221,14 +188,14 @@ namespace Randomizer.SMZ3.Tracking
             else if (e.Item.Multiple)
             {
                 e.Item.Track();
-                Say(Responses.TrackedItemMultiple, itemName);
+                Say(Responses.TrackedItemMultiple.Format(itemName));
             }
             else
             {
                 if (e.Item.Track())
-                    Say(Responses.TrackedItem, e.Item.Name);
+                    Say(Responses.TrackedItem.Format(itemName));
                 else
-                    Say(Responses.TrackedAlreadyTrackedItem);
+                    Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
             }
 
             GiveLocationHint(accessibleBefore);

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.Tracking.Vocabulary
 {
-    internal class PhraseConverter : JsonConverter<Phrase>
+    internal class SchrodingersStringItemConverter : JsonConverter<SchrodingersString.Item>
     {
-        public override Phrase? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override SchrodingersString.Item? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.String)
             {
                 var text = reader.GetString();
-                return new Phrase(text!);
+                return new SchrodingersString.Item(text!);
             }
             else if (reader.TokenType == JsonTokenType.StartArray)
             {
@@ -31,15 +31,15 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
                 if (reader.TokenType != JsonTokenType.EndArray)
                     throw new JsonException("Expected end of array.");
 
-                return new Phrase(text, weight);
+                return new SchrodingersString.Item(text, weight);
             }
 
             throw new JsonException($"Unexpected {reader.TokenType} at {reader.TokenStartIndex} when parsing phrase.");
         }
 
-        public override void Write(Utf8JsonWriter writer, Phrase value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, SchrodingersString.Item value, JsonSerializerOptions options)
         {
-            if (value.Weight == Phrase.DefaultWeight)
+            if (value.Weight == SchrodingersString.Item.DefaultWeight)
             {
                 writer.WriteStringValue(value.Text);
             }
