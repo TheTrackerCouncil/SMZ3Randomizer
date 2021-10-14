@@ -101,6 +101,20 @@
                 Value="7" />
       </Style>
 
+      <Style TargetType="StatusBar">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Setter Property="BorderThickness"
+                Value="0,0.5,0,0" />
+      </Style>
+      
+      <Style TargetType="StatusBarItem">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Setter Property="BorderThickness"
+                Value="0,0,0.5,0" />
+      </Style>
+
       <!-- Custom styles -->
       <Style x:Key="BottomPanel"
              TargetType="Border">

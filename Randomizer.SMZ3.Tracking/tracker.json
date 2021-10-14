@@ -16,62 +16,87 @@
     },
     {
       "Name": "Fire Rod",
-      "InternalItemType": 7
+      "InternalItemType": 7,
+      "Column": 0,
+      "Row": 1
     },
     {
       "Name": [ "Ice Rod", "Nice Rod" ],
-      "InternalItemType": 8
+      "InternalItemType": 8,
+      "Column": 1,
+      "Row": 1
     },
     {
       "Name": "Hammer",
-      "InternalItemType": 9
+      "InternalItemType": 9,
+      "Column": 1,
+      "Row": 2
     },
     {
       "Name": "Hookshot",
-      "InternalItemType": 10
+      "InternalItemType": 10,
+      "Column": 3,
+      "Row": 0
     },
     {
       "Name": "Bow",
       "InternalItemType": 11,
       "Column": 0,
-      "Row": 0,
-      "Image": "bow.png"
+      "Row": 0
     },
     {
       "Name": "Blue Boomerang",
-      "InternalItemType": 12
+      "InternalItemType": 12,
+      "Column": 1,
+      "Row": 0
     },
     {
       "Name": [ "Magic Powder", "Drugs" ],
-      "InternalItemType": 13
+      "InternalItemType": 13,
+      "Column": 4,
+      "Row": 0
     },
     {
       "Name": "Bombos",
-      "InternalItemType": 15
+      "InternalItemType": 15,
+      "Column": 2,
+      "Row": 1
     },
     {
       "Name": "Ether",
-      "InternalItemType": 16
+      "InternalItemType": 16,
+      "Column": 3,
+      "Row": 1
     },
     {
       "Name": "Quake",
+      "Column": 4,
+      "Row": 1,
       "InternalItemType": 17
     },
     {
       "Name": "Lamp",
-      "InternalItemType": 18
+      "InternalItemType": 18,
+      "Column": 0,
+      "Row": 2
     },
     {
       "Name": "Shovel",
-      "InternalItemType": 19
+      "InternalItemType": 19,
+      "Column": 5,
+      "Row": 1
     },
     {
       "Name": "Flute",
-      "InternalItemType": 20
+      "InternalItemType": 20,
+      "Column": 2,
+      "Row": 2
     },
     {
       "Name": "Cane of Somaria",
-      "InternalItemType": 21
+      "InternalItemType": 21,
+      "Column": 1,
+      "Row": 3
     },
     {
       "Name": "Bottle",
@@ -81,39 +106,57 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "Column": 0,
+      "Row": 3
     },
     {
-      "Name": [ "Piece of Heart", "Heart piece" ],
-      "InternalItemType": 23
+      "Name": [ "Heart piece", "Piece of Heart" ],
+      "InternalItemType": 23,
+      "Column": 4,
+      "Row": 4
     },
     {
       "Name": "Cane of Byrna",
-      "InternalItemType": 24
+      "InternalItemType": 24,
+      "Column": 2,
+      "Row": 3
     },
     {
       "Name": "Magic Cape",
-      "InternalItemType": 25
+      "InternalItemType": 25,
+      "Column": 3,
+      "Row": 3
     },
     {
       "Name": [ "Magic Mirror", "Mirror" ],
-      "InternalItemType": 26
+      "InternalItemType": 26,
+      "Column": 4,
+      "Row": 3
     },
     {
       "Name": "Book of Mudora",
-      "InternalItemType": 29
+      "InternalItemType": 29,
+      "Column": 4,
+      "Row": 2
     },
     {
       "Name": [ "Zora's Flippers", "Flippers" ],
-      "InternalItemType": 30
+      "InternalItemType": 30,
+      "Column": 2,
+      "Row": 4
     },
     {
       "Name": "Moon Pearl",
-      "InternalItemType": 31
+      "InternalItemType": 31,
+      "Column": 5,
+      "Row": 2
     },
     {
       "Name": [ "Bug Catching Net", "Bug net" ],
-      "InternalItemType": 33
+      "InternalItemType": 33,
+      "Column": 3,
+      "Row": 2
     },
     {
       "Name": [ "Three Bombs", "Bombs" ],
@@ -122,11 +165,15 @@
     },
     {
       "Name": "Mushroom",
-      "InternalItemType": 41
+      "InternalItemType": 41,
+      "Column": 5,
+      "Row": 0
     },
     {
       "Name": "Red Boomerang",
-      "InternalItemType": 42
+      "InternalItemType": 42,
+      "Column": 2,
+      "Row": 0
     },
     {
       "Name": "One Rupee",
@@ -146,7 +193,9 @@
     {
       "Name": "Heart Container",
       "InternalItemType": 62,
-      "Multiple": true
+      "Multiple": true,
+      "Column": 5,
+      "Row": 4
     },
     {
       "Name": "One Hundred Rupees",
@@ -180,11 +229,15 @@
     },
     {
       "Name": [ "Pegasus Boots", "Boots" ],
-      "InternalItemType": 75
+      "InternalItemType": 75,
+      "Column": 1,
+      "Row": 4
     },
     {
       "Name": "Half Magic",
-      "InternalItemType": 78
+      "InternalItemType": 78,
+      "Column": 3,
+      "Row": 4
     },
     {
       "Name": "+5 Bomb Capacity",
@@ -205,12 +258,13 @@
     {
       "Name": [ "Silver Arrows", "Silvers" ],
       "InternalItemType": 88,
-      "Image": "silver_arrows.png"
+      "Column": 0,
+      "Row": 0
     },
     {
       "Name": [
-        [ "Progressive Sword", 0 ],
-        "Sword"
+        "Sword",
+        [ "Progressive Sword", 0 ]
       ],
       "InternalItemType": 94,
       "Multiple": true,
@@ -219,12 +273,14 @@
         "2": [ "Master Sword", "Blade of Evil's Bane", "Sword of Legend", "Sword that Seals the Darkness" ],
         "3": [ "Tempered Sword", "Bacon" ],
         "4": [ "Gold Sword", "Butter" ]
-      }
+      },
+      "Column": 3,
+      "Row": 5
     },
     {
       "Name": [
-        [ "Progressive Shield", 0 ],
-        "Shield"
+        "Shield",
+        [ "Progressive Shield", 0 ]
       ],
       "InternalItemType": 95,
       "Multiple": true,
@@ -232,12 +288,14 @@
         "1": [ "Fighter's Shield" ],
         "2": [ "Red Shield" ],
         "3": [ "Mirror Shield" ]
-      }
+      },
+      "Column": 4,
+      "Row": 5
     },
     {
       "Name": [
-        [ "Progressive Mail", 0 ],
-        "Mail"
+        "Mail",
+        [ "Progressive Mail", 0 ]
       ],
       "InternalItemType": 96,
       "Multiple": true,
@@ -245,13 +303,15 @@
         "0": [ "Green Mail" ],
         "1": [ "Blue Mail" ],
         "2": [ "Red Mail" ]
-      }
+      },
+      "Column": 5,
+      "Row": 5
     },
     {
       "Name": [
-        [ "Progressive Glove", 0 ],
+        "Gloves",
         "Glove",
-        "Gloves"
+        [ "Progressive Glove", 0 ]
       ],
       "InternalItemType": 97,
       "Multiple": true,
@@ -458,95 +518,134 @@
     },
     {
       "Name": [ "Grappling Beam", "Grapple Beam", "Grapple" ],
-      "InternalItemType": 176
+      "InternalItemType": 176,
+      "Column": 8,
+      "Row": 3
     },
     {
       "Name": [ "X-Ray Scope", "X-Ray" ],
-      "InternalItemType": 177
+      "InternalItemType": 177,
+      "Column": 9,
+      "Row": 3
     },
     {
       "Name": "Varia Suit",
-      "InternalItemType": 178
+      "InternalItemType": 178,
+      "Column": 7,
+      "Row": 2
     },
     {
       "Name": "Spring Ball",
-      "InternalItemType": 179
+      "InternalItemType": 179,
+      "Column": 9,
+      "Row": 1
     },
     {
       "Name": [ "Morphing Ball", "Morph Ball", "Morph" ],
-      "InternalItemType": 180
+      "InternalItemType": 180,
+      "Column": 7,
+      "Row": 1
     },
     {
       "Name": "Screw Attack",
-      "InternalItemType": 181
+      "InternalItemType": 181,
+      "Column": 11,
+      "Row": 1
     },
     {
       "Name": "Gravity Suit",
-      "InternalItemType": 182
+      "InternalItemType": 182,
+      "Column": 8,
+      "Row": 2
     },
     {
       "Name": "Hi-Jump Boots",
-      "InternalItemType": 183
+      "InternalItemType": 183,
+      "Column": 9,
+      "Row": 2
     },
     {
       "Name": "Space Jump",
-      "InternalItemType": 184
+      "InternalItemType": 184,
+      "Column": 10,
+      "Row": 1
     },
     {
       "Name": "Morph Bombs",
-      "InternalItemType": 185
+      "InternalItemType": 185,
+      "Column": 8,
+      "Row": 1
     },
     {
       "Name": "Speed Booster",
-      "InternalItemType": 186
+      "InternalItemType": 186,
+      "Column": 10,
+      "Row": 2
     },
     {
       "Name": "Charge Beam",
-      "InternalItemType": 187
+      "InternalItemType": 187,
+      "Column": 7,
+      "Row": 0
     },
     {
       "Name": [ "Ice Beam", "Nice Beam" ],
-      "InternalItemType": 188
+      "InternalItemType": 188,
+      "Column": 8,
+      "Row": 0
     },
     {
       "Name": "Wave Beam",
-      "InternalItemType": 189
+      "InternalItemType": 189,
+      "Column": 9,
+      "Row": 0
     },
     {
       "Name": "Spazer",
-      "InternalItemType": 190
+      "InternalItemType": 190,
+      "Column": 10,
+      "Row": 0
     },
     {
       "Name": "Plasma Beam",
       "InternalItemType": 191,
       "Column": 11,
-      "Row": 0,
-      "Image": "plasma.png"
+      "Row": 0
     },
     {
       "Name": [ "Energy Tank", "E-Tank" ],
       "InternalItemType": 192,
-      "Multiple": true
+      "Multiple": true,
+      "Column": 10,
+      "Row": 3
     },
     {
       "Name": "Reserve Tank",
       "InternalItemType": 193,
-      "Multiple": true
+      "Multiple": true,
+      "Column": 11,
+      "Row": 3
     },
     {
       "Name": [ "Missile", "Missiles", "Missile pack" ],
       "InternalItemType": 194,
-      "Multiple": true
+      "Multiple": true,
+      "Column": 8,
+      "Row": 4
     },
     {
       "Name": [ "Super Missile", "Supers", "Superb Missiles", "Super Missile pack" ],
       "InternalItemType": 195,
-      "Multiple": true
+      "Multiple": true,
+      "Column": 9,
+      "Row": 4
     },
     {
       "Name": [ "Power Bomb", "Powerful Bombs" ],
       "InternalItemType": 196,
-      "Multiple": true
+      "Multiple": true,
+      "Column": 10,
+      "Row": 4
     },
     {
       "Name": "Crateria Level 1 Keycard",

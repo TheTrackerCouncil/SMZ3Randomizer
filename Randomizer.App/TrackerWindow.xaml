@@ -9,7 +9,9 @@
         Width="450"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        Closed="Window_Closed">
+        Closed="Window_Closed"
+        SizeToContent="WidthAndHeight"
+        Background="#212121">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
@@ -18,12 +20,16 @@
 
     <Grid x:Name="TrackerGrid"
           Grid.Row="0"
+          Margin="11"
           HorizontalAlignment="Left"
           VerticalAlignment="Top" />
 
-    <StatusBar Grid.Row="1">
-      <StatusBarItem x:Name="StatusBarDebugOutput"
-                     Content="" />
+    <StatusBar x:Name="TrackerStatusBar"
+               Grid.Row="1">
+      <StatusBarItem x:Name="StatusBarConfidence"
+                     Content="0.00%"
+                     ToolTip="Confidence of last recognized voice command"
+                     HorizontalAlignment="Left" />
     </StatusBar>
   </Grid>
 </Window>
