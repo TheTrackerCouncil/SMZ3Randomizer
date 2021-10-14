@@ -23,21 +23,18 @@ namespace Randomizer.SMZ3.Tracking
 
         private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
-        private readonly Action<string> _log;
         private Dictionary<string, Timer> _idleTimers;
         private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
-        /// <param name="log">Invoked for debug output.</param>
         /// <param name="trackerConfigProvider">
         /// Used to provide the tracking configuration.
         /// </param>
         /// <param name="world">The generated world to track in.</param>
-        public Tracker(Action<string> log, TrackerConfigProvider trackerConfigProvider, World? world)
+        public Tracker(TrackerConfigProvider trackerConfigProvider, World? world)
         {
-            _log = log;
             _tts = new SpeechSynthesizer();
             _tts.SelectVoiceByHints(VoiceGender.Female);
 
@@ -47,7 +44,7 @@ namespace Randomizer.SMZ3.Tracking
             World = world;
 
             var trackItemsCommand = new TrackItemsCommand(this);
-            trackItemsCommand.ItemTracked += ItemTracked;
+            trackItemsCommand.ItemTracked += TrackItemsCommand_ItemTracked;
 
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
@@ -58,6 +55,8 @@ namespace Randomizer.SMZ3.Tracking
             _recognizer.LoadGrammar(trackItemsCommand.BuildGrammar());
             _recognizer.SetInputToDefaultAudioDevice();
         }
+
+        public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
 
         /// <summary>
         /// Gets a collection of trackable items.
@@ -178,6 +177,9 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
+        protected virtual void OnItemTracked(ItemTrackedEventArgs e)
+            => ItemTracked?.Invoke(this, e);
+
         private void RestartIdleTimers()
         {
             foreach (var item in _idleTimers)
@@ -200,10 +202,8 @@ namespace Randomizer.SMZ3.Tracking
             RestartIdleTimers();
         }
 
-        private void ItemTracked(object? sender, ItemTrackedEventArgs e)
+        private void TrackItemsCommand_ItemTracked(object? sender, ItemTrackedEventArgs e)
         {
-            _log($"Recognized item {e.Item.Name[0]} as {e.TrackedAs} with {e.Confidence:P2} confidence.");
-
             var accessibleBefore = GetAccessibleLocations();
             var itemName = e.Item.Name;
 
@@ -259,6 +259,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            OnItemTracked(e);
             GiveLocationHint(accessibleBefore);
         }
 
@@ -274,8 +275,6 @@ namespace Randomizer.SMZ3.Tracking
                 var regions = newlyAccessible.GroupBy(x => x.Region)
                     .OrderByDescending(x => x.Count())
                     .ThenBy(x => x.Key.Name);
-                foreach (var region in regions)
-                    _log($"{region.Count()} location(s) in {region.Key.Name}: {string.Join(", ", region.Select(x => x.Name))}");
 
                 if (newlyAccessible.Contains(World.InnerMaridia.ShaktoolItem))
                     Say(Responses.ShaktoolAvailable);

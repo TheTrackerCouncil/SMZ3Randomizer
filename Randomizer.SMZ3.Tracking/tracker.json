@@ -32,7 +32,10 @@
     },
     {
       "Name": "Bow",
-      "InternalItemType": 11
+      "InternalItemType": 11,
+      "Column": 0,
+      "Row": 0,
+      "Image": "bow.png"
     },
     {
       "Name": "Blue Boomerang",
@@ -201,7 +204,8 @@
     },
     {
       "Name": [ "Silver Arrows", "Silvers" ],
-      "InternalItemType": 88
+      "InternalItemType": 88,
+      "Image": "silver_arrows.png"
     },
     {
       "Name": [
@@ -514,7 +518,10 @@
     },
     {
       "Name": "Plasma Beam",
-      "InternalItemType": 191
+      "InternalItemType": 191,
+      "Column": 11,
+      "Row": 0,
+      "Image": "plasma.png"
     },
     {
       "Name": [ "Energy Tank", "E-Tank" ],

@@ -48,6 +48,23 @@ namespace Randomizer.SMZ3.Tracking
         public IReadOnlyDictionary<int, SchrodingersString>? Stages { get; init; }
 
         /// <summary>
+        /// Gets or sets the zero-based index of the column in which the item
+        /// should be displayed on the tracker.
+        /// </summary>
+        public int? Column { get; set; }
+
+        /// <summary>
+        /// Gets or sets the zero-based index of the column in which the item
+        /// should be displayed on the tracker.
+        /// </summary>
+        public int? Row { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path to the image to be displayed on the tracker.
+        /// </summary>
+        public string? Image { get; set; }
+
+        /// <summary>
         /// Gets the highest stage the item supports, or 0 if the item does not
         /// have stages.
         /// </summary>

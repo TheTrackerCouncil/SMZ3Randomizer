@@ -37,4 +37,12 @@
     <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Sprites\Items\" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy $(ProjectDir)Sprites\ $(TargetDir)Sprites\ /D /S /I" />
+  </Target>
+
 </Project>

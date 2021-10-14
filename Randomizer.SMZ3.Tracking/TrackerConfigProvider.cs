@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Tracking
 #if DEBUG
             return GetBuiltInConfig();
 #endif
-            if (!File.Exists(_jsonPath))
+            if (string.IsNullOrEmpty(_jsonPath) || !File.Exists(_jsonPath))
                 return GetBuiltInConfig();
 
             var json = File.ReadAllBytes(_jsonPath);
@@ -45,7 +45,8 @@ namespace Randomizer.SMZ3.Tracking
 
             using var reader = new StreamReader(stream);
             var json = reader.ReadToEnd();
-            File.WriteAllText(_jsonPath, json);
+            if (!string.IsNullOrEmpty(_jsonPath))
+                File.WriteAllText(_jsonPath, json);
             return JsonSerializer.Deserialize<TrackerConfig>(json, s_options)
                 ?? throw new InvalidOperationException("The embedded tracker configuration could not be loaded.");
         }

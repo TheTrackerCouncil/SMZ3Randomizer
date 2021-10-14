@@ -116,6 +116,7 @@
 
       <!-- Misc. resources -->
       <local:EnumToBooleanConverter x:Key="EnumBoolConverter" />
+      <local:ItemSpriteImageSourceConverter x:Key="ItemSpriteConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>
