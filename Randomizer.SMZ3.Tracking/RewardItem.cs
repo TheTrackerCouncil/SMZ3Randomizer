@@ -18,11 +18,8 @@ namespace Randomizer.SMZ3.Tracking
         [Description("Blue pendant")]
         BluePendant,
 
-        [Description("Blue crystal")]
-        BlueCrystal,
-
-        [Description("Red crystal")]
-        RedCrystal
+        [Description("Crystal")]
+        Crystal,
     }
 
     public static class RewardItemExtensions
@@ -33,8 +30,7 @@ namespace Randomizer.SMZ3.Tracking
             RewardItem.GreenPendant => new SchrodingersString("Green pendant", "Pendant of Courage"),
             RewardItem.RedPendant => new SchrodingersString("Red pendant", "Pendant of Wisdom"),
             RewardItem.BluePendant => new SchrodingersString("Blue pendant", "Pendant of Courage"),
-            RewardItem.BlueCrystal => new SchrodingersString("Blue crystal"),
-            RewardItem.RedCrystal => new SchrodingersString("Red crystal"),
+            RewardItem.Crystal => new SchrodingersString("Crystal"),
             _ => throw new System.NotImplementedException(),
         };
     }
