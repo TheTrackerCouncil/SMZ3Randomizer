@@ -37,34 +37,25 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="world">The generated world to track in.</param>
         public Tracker(TrackerConfigProvider trackerConfigProvider, World? world)
         {
-            _tts = new SpeechSynthesizer();
-            _tts.SelectVoiceByHints(VoiceGender.Female);
-
             var config = trackerConfigProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
             Responses = config.Responses;
             World = world;
 
-            var trackItemsCommand = new TrackItemsCommand(this);
-            trackItemsCommand.ItemTracked += TrackItemsCommand_ItemTracked;
-
-            var pegWorldModeCommand = new EngagePegWorldCommand();
-            pegWorldModeCommand.PegWorldModeStarted += PegWorldModeCommand_PegWorldModeStarted;
-
-            var trackPegCommand = new TrackPegCommand();
-            trackPegCommand.PegPegged += TrackPegCommand_PegPegged;
-
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
                 x => new Timer(IdleTimerElapsed, x.Key, Timeout.Infinite, Timeout.Infinite));
 
+            _tts = new SpeechSynthesizer();
+            _tts.SelectVoiceByHints(VoiceGender.Female);
+
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += SpeechRecognized;
-            _recognizer.LoadGrammar(trackItemsCommand.BuildGrammar());
-            _recognizer.LoadGrammar(pegWorldModeCommand.BuildGrammar());
-            _recognizer.LoadGrammar(trackPegCommand.BuildGrammar());
             _recognizer.SetInputToDefaultAudioDevice();
+
+            var moduleFactory = new TrackerModuleFactory();
+            moduleFactory.LoadAll(this, _recognizer);
         }
 
         public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
@@ -244,6 +235,7 @@ namespace Randomizer.SMZ3.Tracking
 
             OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence));
             GiveLocationHint(accessibleBefore);
+            RestartIdleTimers();
         }
 
         /// <summary>
@@ -262,6 +254,14 @@ namespace Randomizer.SMZ3.Tracking
             else
                 Say(Responses.PegWorldModeDone);
             OnPegPegged(new TrackerEventArgs(confidence));
+
+            RestartIdleTimers();
+        }
+
+        public void StartPegWorldMode(float confidence = 1.0f)
+        {
+            Say(Responses.PegWorldModeOn, wait: true);
+            OnPegWorldModeToggled(new TrackerEventArgs(confidence));
         }
 
         /// <summary>
@@ -296,21 +296,6 @@ namespace Randomizer.SMZ3.Tracking
         protected virtual void OnPegPegged(TrackerEventArgs e)
             => PegPegged?.Invoke(this, e);
 
-        private void TrackPegCommand_PegPegged(object? sender, TrackerEventArgs e)
-        {
-            var peg = Pegs.FirstOrDefault(x => !x.Pegged);
-            if (peg != null)
-            {
-                Peg(peg, e.Confidence);
-            }
-        }
-
-        private void PegWorldModeCommand_PegWorldModeStarted(object? sender, TrackerEventArgs e)
-        {
-            Say(Responses.PegWorldModeOn, wait: true);
-            OnPegWorldModeToggled(e);
-        }
-
         private void RestartIdleTimers()
         {
             foreach (var item in _idleTimers)
@@ -331,11 +316,6 @@ namespace Randomizer.SMZ3.Tracking
         private void SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
         {
             RestartIdleTimers();
-        }
-
-        private void TrackItemsCommand_ItemTracked(object? sender, ItemTrackedEventArgs e)
-        {
-            TrackItem(e.Item, e.TrackedAs);
         }
 
         private void GiveLocationHint(IEnumerable<Location> accessibleBefore)

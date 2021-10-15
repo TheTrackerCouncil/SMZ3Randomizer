@@ -4,20 +4,25 @@ using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
-    public class TrackItemsCommand : IVoiceCommand
+    public class ItemTrackingModule : TrackerModule
     {
         private const string ItemNameKey = "ItemName";
 
-        public TrackItemsCommand(Tracker tracker)
+        public ItemTrackingModule(Tracker tracker)
+            : base(tracker)
         {
-            Tracker = tracker;
+            AddCommand("TrackItemRule", GetTrackItemRule(), (tracker, result) =>
+            {
+                var itemName = (string)result.Semantics[ItemNameKey].Value;
+                var itemData = Tracker.FindItemByName(itemName);
+                if (itemData == null)
+                    throw new Exception($"Could not find item '{itemName}' (\"{result.Text}\")");
+
+                tracker.TrackItem(itemData, itemName, result.Confidence);
+            });
         }
 
-        public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
-
-        public Tracker Tracker { get; }
-
-        public Grammar BuildGrammar()
+        private GrammarBuilder GetTrackItemRule()
         {
             var itemNames = new Choices();
             foreach (var itemData in Tracker.Items)
@@ -42,28 +47,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker, please track")
                 .Append(ItemNameKey, itemNames);
 
-            var trackItemCommands = GrammarBuilder.Combine(
+            return GrammarBuilder.Combine(
                 trackItemPhrase,
                 trackItemPleasePhrase);
-
-            var grammar = trackItemCommands.Build(nameof(TrackItemsCommand));
-            grammar.SpeechRecognized += Grammar_SpeechRecognized;
-            return grammar;
-        }
-
-        protected virtual void OnItemTracked(ItemTrackedEventArgs e)
-        {
-            ItemTracked?.Invoke(this, e);
-        }
-
-        private void Grammar_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
-        {
-            var itemName = (string)e.Result.Semantics[ItemNameKey].Value;
-            var itemData = Tracker.FindItemByName(itemName);
-            if (itemData == null)
-                throw new Exception($"Could not find item '{itemName}' (\"{e.Result.Text}\")");
-
-            OnItemTracked(new ItemTrackedEventArgs(itemData, itemName, e.Result.Confidence));
         }
     }
 }

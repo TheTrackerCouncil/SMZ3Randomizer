@@ -749,7 +749,7 @@
     ],
     "TrackedProgressiveItem": [
       "Upgraded {0} by one step.",
-      "Congratulations with your new {1}."
+      [ "Congratulations with your new {1}.", 0.5 ]
     ],
     "TrackedItemByStage": [
       "Marked {0} as {1}."

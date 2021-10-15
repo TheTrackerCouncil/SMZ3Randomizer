@@ -4,7 +4,7 @@ using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking
 {
-    internal class GrammarBuilder
+    public class GrammarBuilder
     {
         private System.Speech.Recognition.GrammarBuilder _builder;
 
