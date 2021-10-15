@@ -321,98 +321,6 @@
       }
     },
     {
-      "Name": "Ganons Tower Map",
-      "InternalItemType": 114
-    },
-    {
-      "Name": "Turtle Rock Map",
-      "InternalItemType": 115
-    },
-    {
-      "Name": "Thieves Town Map",
-      "InternalItemType": 116
-    },
-    {
-      "Name": "Tower of Hera Map",
-      "InternalItemType": 117
-    },
-    {
-      "Name": "Ice Palace Map",
-      "InternalItemType": 118
-    },
-    {
-      "Name": "Skull Woods Map",
-      "InternalItemType": 119
-    },
-    {
-      "Name": "Misery Mire Map",
-      "InternalItemType": 120
-    },
-    {
-      "Name": "Palace of Darkness Map",
-      "InternalItemType": 121
-    },
-    {
-      "Name": "Swamp Palace Map",
-      "InternalItemType": 122
-    },
-    {
-      "Name": "Desert Palace Map",
-      "InternalItemType": 124
-    },
-    {
-      "Name": "Eastern Palace Map",
-      "InternalItemType": 125
-    },
-    {
-      "Name": "Hyrule Castle Map",
-      "InternalItemType": 127
-    },
-    {
-      "Name": "Ganons Tower Compass",
-      "InternalItemType": 130
-    },
-    {
-      "Name": "Turtle Rock Compass",
-      "InternalItemType": 131
-    },
-    {
-      "Name": "Thieves Town Compass",
-      "InternalItemType": 132
-    },
-    {
-      "Name": "Tower of Hera Compass",
-      "InternalItemType": 133
-    },
-    {
-      "Name": "Ice Palace Compass",
-      "InternalItemType": 134
-    },
-    {
-      "Name": "Skull Woods Compass",
-      "InternalItemType": 135
-    },
-    {
-      "Name": "Misery Mire Compass",
-      "InternalItemType": 136
-    },
-    {
-      "Name": "Palace of Darkness Compass",
-      "InternalItemType": 137
-    },
-    {
-      "Name": "Swamp Palace Compass",
-      "InternalItemType": 138
-    },
-    {
-      "Name": "Desert Palace Compass",
-      "InternalItemType": 140
-    },
-    {
-      "Name": "Eastern Palace Compass",
-      "InternalItemType": 141
-    },
-    {
       "Name": "Ganons Tower Big Key",
       "InternalItemType": 146
     },
@@ -712,6 +620,78 @@
       "InternalItemType": 223
     }
   ],
+  "Dungeons": [
+    {
+      "Name": [ "Eastern Palace" ],
+      "Abbreviation": "EP",
+      "Boss": "Armos Knights",
+      "Column": 0,
+      "Row": 6
+    },
+    {
+      "Name": [ "Desert Palace", "Dessert Palace" ],
+      "Abbreviation": "DP",
+      "Boss": "Lanmolas",
+      "Column": 1,
+      "Row": 6
+    },
+    {
+      "Name": [ "Tower of Hera" ],
+      "Abbreviation": "TH",
+      "Boss": "Moldorm",
+      "Column": 2,
+      "Row": 6
+    },
+    {
+      "Name": [ "Thieves' Town" ],
+      "Abbreviation": "TT",
+      "Boss": "Blind",
+      "Column": 3,
+      "Row": 6
+    },
+    {
+      "Name": [ "Palace of Darkness", "Dark Palace" ],
+      "Abbreviation": "PD",
+      "Boss": "Helmasaur King",
+      "Column": 4,
+      "Row": 6
+    },
+    {
+      "Name": [ "Swamp Palace" ],
+      "Abbreviation": "SP",
+      "Boss": "Arrghus",
+      "Column": 0,
+      "Row": 7
+    },
+    {
+      "Name": [ "Skull Woods", "Skill Woods" ],
+      "Abbreviation": "SW",
+      "Boss": "Mothula",
+      "Column": 1,
+      "Row": 7
+    },
+    {
+      "Name": [ "Ice Palace" ],
+      "Abbreviation": "IP",
+      "Boss": "Kholdstare",
+      "Column": 2,
+      "Row": 7
+    },
+    {
+      "Name": [ "Misery Mire" ],
+      "Abbreviation": "MM",
+      "Boss": "Vitreous",
+      "Column": 3,
+      "Row": 7
+    },
+    {
+      "Name": [ "Turtle Rock" ],
+      "Abbreviation": "TR",
+      "Boss": "Trinexx",
+      "Column": 4,
+      "Row": 7
+    }
+  ],
   "Pegs": [
     [ 1, 0 ],
     [ 2, 0 ],
@@ -783,6 +763,14 @@
     ],
     "PegWorldModeDone": [
       "Let's visit Shaktool next."
+    ],
+    "DungeonRewardMarked": [
+      "Marked {0} as {1}."
+    ],
+    "DungeonCleared": [
+      "Cleared {0}.",
+      [ "Marked {1} as defeated.", 0.5 ],
+      [ "Congratulations on beating off {1}.", 0.5]
     ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [

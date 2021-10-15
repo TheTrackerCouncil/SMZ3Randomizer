@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 
 using Randomizer.SMZ3.Tracking.Vocabulary;
 
@@ -17,10 +15,17 @@ namespace Randomizer.SMZ3.Tracking
         /// with the specified item data.
         /// </summary>
         /// <param name="items">The item data to use.</param>
+        /// <param name="pegs">The peg data.</param>
+        /// <param name="dungeons">The dungeon data.</param>
         /// <param name="responses">The responses to use.</param>
-        public TrackerConfig(IReadOnlyCollection<ItemData> items, ResponseConfig responses)
+        public TrackerConfig(IReadOnlyCollection<ItemData> items,
+            IReadOnlyCollection<Peg> pegs,
+            IReadOnlyCollection<ZeldaDungeon> dungeons,
+            ResponseConfig responses)
         {
             Items = items;
+            Pegs = pegs;
+            Dungeons = dungeons;
             Responses = responses;
         }
 
@@ -33,6 +38,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the peg world peg configuration.
         /// </summary>
         public IReadOnlyCollection<Peg> Pegs { get; init; }
+
+        /// <summary>
+        /// Gets a collection of Zelda dungeons.
+        /// </summary>
+        public IReadOnlyCollection<ZeldaDungeon> Dungeons { get; init; }
 
         /// <summary>
         /// Gets a collection of configured responses.

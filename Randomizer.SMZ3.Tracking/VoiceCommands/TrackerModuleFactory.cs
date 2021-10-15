@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -7,15 +10,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         public void LoadAll(Tracker tracker, SpeechRecognitionEngine engine)
         {
-            var modules = new TrackerModule[] {
-                new ItemTrackingModule(tracker),
-                new PegWorldModeModule(tracker)
-            };
+            var modules = DiscoverModules(tracker);
 
             foreach (var module in modules)
             {
                 module.LoadInto(engine);
             }
+        }
+
+        protected IEnumerable<TrackerModule> DiscoverModules(Tracker tracker)
+        {
+            var assembly = typeof(TrackerModuleFactory).Assembly;
+            return DiscoverModules(tracker, assembly);
+        }
+
+        protected virtual IEnumerable<TrackerModule> DiscoverModules(Tracker tracker, Assembly assembly)
+        {
+            return assembly.GetTypes()
+                .Where(x => x.IsSubclassOf(typeof(TrackerModule)))
+                .Select(x => (TrackerModule)Activator.CreateInstance(x, tracker)!);
         }
     }
 }

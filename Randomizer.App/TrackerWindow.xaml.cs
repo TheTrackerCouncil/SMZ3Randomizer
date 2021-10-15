@@ -42,7 +42,6 @@ namespace Randomizer.App
 
                     var image = GetGridItemControl(fileName, peg.Column, peg.Row);
                     image.MouseLeftButtonUp += (sender, e) => _tracker.Peg(peg);
-                    image.Tag = peg;
                     TrackerGrid.Children.Add(image);
                 }
             }
@@ -57,8 +56,28 @@ namespace Randomizer.App
                     var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value);
                     image.MouseLeftButtonUp += (sender, e) => _tracker.TrackItem(item);
                     image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
-                    image.Tag = item;
                     TrackerGrid.Children.Add(image);
+                }
+
+                foreach (var dungeon in _tracker.Dungeons.Where(x => x.Column != null && x.Row != null))
+                {
+                    var overlayPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Dungeons", $"{dungeon.Name[0].Text.ToLowerInvariant()}.png");
+                    var overlayImage = GetGridItemControl(overlayPath, dungeon.Column.Value, dungeon.Row.Value);
+                    overlayImage.Stretch = Stretch.None;
+                    overlayImage.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
+                    overlayImage.MouseLeftButtonUp += (sender, e) => _tracker.ClearDungeon(dungeon);
+                    overlayImage.MouseRightButtonUp += (sender, e) => _tracker.SetDungeonReward(dungeon);
+
+                    var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
+                    var rewardImage = GetGridItemControl(rewardPath, dungeon.Column.Value, dungeon.Row.Value);
+                    rewardImage.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
+                    rewardImage.MouseLeftButtonUp += (sender, e) => _tracker.ClearDungeon(dungeon);
+                    rewardImage.MouseRightButtonUp += (sender, e) => _tracker.SetDungeonReward(dungeon);
+
+                    TrackerGrid.Children.Add(rewardImage);
+                    TrackerGrid.Children.Add(overlayImage);
                 }
             }
 
@@ -67,8 +86,8 @@ namespace Randomizer.App
                 var image = new Image
                 {
                     Source = new BitmapImage(new Uri(imageFileName)),
-                    Width = GridItemPx,
-                    Height = GridItemPx,
+                    MaxWidth = GridItemPx,
+                    MaxHeight = GridItemPx,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top
                 };
@@ -108,6 +127,14 @@ namespace Randomizer.App
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            InitializeTracker();
+            ResetGridSize();
+            RefreshGridItems();
+            _tracker.StartTracking();
+        }
+
+        private void InitializeTracker()
+        {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "tracker.json");
             var provider = new TrackerConfigProvider(path);
             _tracker = new Tracker(provider, _world);
@@ -129,19 +156,23 @@ namespace Randomizer.App
                 _pegWorldMode = _tracker.Pegs.Any(x => !x.Pegged);
                 RefreshGridItems();
             });
-
-            ResetGridSize();
-            RefreshGridItems();
-            _tracker.StartTracking();
+            _tracker.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarConfidence.Content = $"{e.Confidence:P2}";
+                _pegWorldMode = false;
+                RefreshGridItems();
+            });
         }
 
         private void ResetGridSize()
         {
-            var columns = _tracker.Items.Max(x => x.Column);
+            var columns = Math.Max(_tracker.Items.Max(x => x.Column) ?? 0,
+                _tracker.Dungeons.Max(x => x.Column) ?? 0);
             for (var i = 0; i <= columns; i++)
                 TrackerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(GridItemPx + GridItemMargin) });
 
-            var rows = _tracker.Items.Max(x => x.Row);
+            var rows = Math.Max(_tracker.Items.Max(x => x.Row) ?? 0,
+                _tracker.Dungeons.Max(x => x.Row) ?? 0);
             for (var i = 0; i <= rows; i++)
                 TrackerGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(GridItemPx + GridItemMargin) });
         }

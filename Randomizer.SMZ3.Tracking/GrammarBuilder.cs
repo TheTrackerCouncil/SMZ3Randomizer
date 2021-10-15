@@ -40,6 +40,12 @@ namespace Randomizer.SMZ3.Tracking
             return this;
         }
 
+        public GrammarBuilder OneOf(params string[] choices)
+        {
+            _builder.Append(new Choices(choices));
+            return this;
+        }
+
         public Grammar Build(string name)
         {
             return new Grammar(this)

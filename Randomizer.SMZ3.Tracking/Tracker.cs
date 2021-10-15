@@ -40,6 +40,7 @@ namespace Randomizer.SMZ3.Tracking
             var config = trackerConfigProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
+            Dungeons = config.Dungeons.ToImmutableList();
             Responses = config.Responses;
             World = world;
 
@@ -64,6 +65,8 @@ namespace Randomizer.SMZ3.Tracking
 
         public event EventHandler<TrackerEventArgs>? PegPegged;
 
+        public event EventHandler<TrackerEventArgs>? DungeonUpdated;
+
         /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
@@ -75,6 +78,11 @@ namespace Randomizer.SMZ3.Tracking
         public IReadOnlyCollection<Peg> Pegs { get; }
 
         /// <summary>
+        /// Gets a collection of Zelda dungeons.
+        /// </summary>
+        public IReadOnlyCollection<ZeldaDungeon> Dungeons { get; init; }
+
+        /// <summary>
         /// Gets the configured responses.
         /// </summary>
         public ResponseConfig Responses { get; }
@@ -83,6 +91,30 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the world for the currently tracked playthrough.
         /// </summary>
         public World? World { get; }
+
+        public void ClearDungeon(ZeldaDungeon dungeon, float confidence = 1.0f)
+        {
+            dungeon.Cleared = true;
+            Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
+            OnDungeonUpdated(new TrackerEventArgs(confidence));
+        }
+
+        public void SetDungeonReward(ZeldaDungeon dungeon, RewardItem? reward = null, float confidence = 1.0f)
+        {
+            if (reward == null)
+            {
+                dungeon.Reward = Enum.IsDefined(dungeon.Reward + 1) ? dungeon.Reward + 1 : RewardItem.Unknown;
+                // Cycling through rewards is done via UI, so speaking the
+                // reward out loud for multiple clicks is kind of annoying
+            }
+            else
+            {
+                dungeon.Reward = reward.Value;
+                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, dungeon.Reward.GetDescription()));
+            }
+
+            OnDungeonUpdated(new TrackerEventArgs(confidence));
+        }
 
         /// <summary>
         /// Returns the item that has the specified name.
@@ -295,6 +327,9 @@ namespace Randomizer.SMZ3.Tracking
 
         protected virtual void OnPegPegged(TrackerEventArgs e)
             => PegPegged?.Invoke(this, e);
+
+        protected virtual void OnDungeonUpdated(TrackerEventArgs e)
+            => DungeonUpdated?.Invoke(this, e);
 
         private void RestartIdleTimers()
         {

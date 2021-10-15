@@ -107,6 +107,27 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public SchrodingersString? PegWorldModeDone { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when marking the reward at a
+        /// dungeon.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is a placeholder for the name of the reward that was marked.
+        /// </remarks>
+        public SchrodingersString DungeonRewardMarked { get; init; }
+            = new SchrodingersString("Marked {0} as {1}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when clearing a dungeon.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon that was
+        /// cleared. <c>{1}</c> is a placeholder for the boss of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonCleared { get; init; }
+            = new SchrodingersString("Cleared {0}.", "Marked {1} as defeated.");
+
+        /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as
         /// expressed in the dictionary keys.
