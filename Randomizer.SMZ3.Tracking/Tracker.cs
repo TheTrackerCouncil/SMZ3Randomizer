@@ -175,6 +175,96 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Tracks the specifies item.
+        /// </summary>
+        /// <param name="item">The item data to track.</param>
+        /// <param name="trackedAs">
+        /// The text that was tracked, when triggered by voice command.
+        /// </param>
+        /// <param name="confidence">
+        /// The confidence when triggered by voice command.
+        /// </param>
+        public void TrackItem(ItemData item, string? trackedAs = null, float confidence = 1.0f)
+        {
+            var accessibleBefore = GetAccessibleLocations();
+            var itemName = item.Name;
+
+            if (item.HasStages)
+            {
+                if (trackedAs != null && item.GetStage(trackedAs) != null)
+                {
+                    var stage = item.GetStage(trackedAs)!;
+
+                    // Tracked by specific stage name (e.g. Tempered Sword), set
+                    // to that stage specifically
+                    var stageName = item.Stages[stage.Value].ToString();
+                    if (item.Track(stage.Value))
+                        Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                    else
+                        Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Stages[item.TrackingState].ToString()));
+                }
+                else
+                {
+                    // Tracked by regular name, upgrade by one step
+                    if (item.Track())
+                    {
+                        var stageName = item.Stages[item.TrackingState].ToString();
+                        Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                    }
+                    else
+                    {
+                        Say(Responses.TrackedTooManyOfAnItem);
+                    }
+                }
+            }
+            else if (item.Multiple)
+            {
+                item.Track();
+                Say(Responses.TrackedItemMultiple.Format(itemName));
+            }
+            else
+            {
+                if (item.Track())
+                {
+                    if (Responses.TrackedSpecificItem.TryGetValue(item.Name[0], out var responses)
+                        && responses.Count > 0)
+                    {
+                        Say(responses);
+                    }
+                    else
+                    {
+                        Say(Responses.TrackedItem.Format(itemName));
+                    }
+                }
+                else
+                {
+                    Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
+                }
+            }
+
+            OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence));
+            GiveLocationHint(accessibleBefore);
+        }
+
+        /// <summary>
+        /// Pegs a Peg World peg.
+        /// </summary>
+        /// <param name="peg">The peg to peg.</param>
+        /// <param name="confidence">
+        /// The confidence when triggered by voice command.
+        /// </param>
+        public void Peg(Peg peg, float confidence = 1.0f)
+        {
+            peg.Pegged = true;
+
+            if (Pegs.Any(x => !x.Pegged))
+                Say(Responses.PegWorldModePegged);
+            else
+                Say(Responses.PegWorldModeDone);
+            OnPegPegged(new TrackerEventArgs(confidence));
+        }
+
+        /// <summary>
         /// Cleans up resources used by this class.
         /// </summary>
         /// <param name="disposing">
@@ -211,13 +301,7 @@ namespace Randomizer.SMZ3.Tracking
             var peg = Pegs.FirstOrDefault(x => !x.Pegged);
             if (peg != null)
             {
-                peg.Pegged = true;
-
-                if (Pegs.Any(x => !x.Pegged))
-                    Say(Responses.PegWorldModePegged);
-                else
-                    Say(Responses.PegWorldModeDone);
-                OnPegPegged(e);
+                Peg(peg, e.Confidence);
             }
         }
 
@@ -251,63 +335,7 @@ namespace Randomizer.SMZ3.Tracking
 
         private void TrackItemsCommand_ItemTracked(object? sender, ItemTrackedEventArgs e)
         {
-            var accessibleBefore = GetAccessibleLocations();
-            var itemName = e.Item.Name;
-
-            if (e.Item.HasStages)
-            {
-                var stage = e.Item.GetStage(e.TrackedAs);
-                if (stage != null)
-                {
-                    // Tracked by specific stage name (e.g. Tempered Sword), set
-                    // to that stage specifically
-                    var stageName = e.Item.Stages[stage.Value].ToString();
-                    if (e.Item.Track(stage.Value))
-                        Say(Responses.TrackedItemByStage.Format(itemName, stageName));
-                    else
-                        Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, e.Item.Stages[e.Item.TrackingState].ToString()));
-                }
-                else
-                {
-                    // Tracked by regular name, upgrade by one step
-                    if (e.Item.Track())
-                    {
-                        var stageName = e.Item.Stages[e.Item.TrackingState].ToString();
-                        Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
-                    }
-                    else
-                    {
-                        Say(Responses.TrackedTooManyOfAnItem);
-                    }
-                }
-            }
-            else if (e.Item.Multiple)
-            {
-                e.Item.Track();
-                Say(Responses.TrackedItemMultiple.Format(itemName));
-            }
-            else
-            {
-                if (e.Item.Track())
-                {
-                    if (Responses.TrackedSpecificItem.TryGetValue(e.Item.Name[0], out var responses)
-                        && responses.Count > 0)
-                    {
-                        Say(responses);
-                    }
-                    else
-                    {
-                        Say(Responses.TrackedItem.Format(itemName));
-                    }
-                }
-                else
-                {
-                    Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
-                }
-            }
-
-            OnItemTracked(e);
-            GiveLocationHint(accessibleBefore);
+            TrackItem(e.Item, e.TrackedAs);
         }
 
         private void GiveLocationHint(IEnumerable<Location> accessibleBefore)

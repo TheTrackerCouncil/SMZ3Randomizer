@@ -102,10 +102,10 @@
       "Name": "Bottle",
       "InternalItemType": 22,
       "Stages": {
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": []
+        "1": [ "First bottle" ],
+        "2": [ "Second bottle" ],
+        "3": [ "Third bottle" ],
+        "4": [ "Fourth bottle" ]
       },
       "Column": 0,
       "Row": 3

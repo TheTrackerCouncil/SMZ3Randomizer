@@ -35,13 +35,14 @@ namespace Randomizer.App
 
             if (_pegWorldMode)
             {
-                foreach (var item in _tracker.Pegs)
+                foreach (var peg in _tracker.Pegs)
                 {
                     var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Items", item.Pegged ? "pegged.png" : "peg.png");
+                        "Sprites", "Items", peg.Pegged ? "pegged.png" : "peg.png");
 
-                    var image = GetGridItemControl(fileName, item.Column, item.Row);
-                    image.Tag = item;
+                    var image = GetGridItemControl(fileName, peg.Column, peg.Row);
+                    image.MouseLeftButtonUp += (sender, e) => _tracker.Peg(peg);
+                    image.Tag = peg;
                     TrackerGrid.Children.Add(image);
                 }
             }
@@ -54,6 +55,7 @@ namespace Randomizer.App
                         continue;
 
                     var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value);
+                    image.MouseLeftButtonUp += (sender, e) => _tracker.TrackItem(item);
                     image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
                     image.Tag = item;
                     TrackerGrid.Children.Add(image);
