@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shell;
 
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
@@ -22,6 +21,7 @@ namespace Randomizer.App
         private const int GridItemMargin = 3;
         private readonly World _world;
         private Tracker _tracker;
+        private bool _pegWorldMode;
 
         public TrackerWindow(World world)
         {
@@ -32,27 +32,49 @@ namespace Randomizer.App
         protected virtual void RefreshGridItems()
         {
             TrackerGrid.Children.Clear();
-            foreach (var item in _tracker.Items.Where(x => x.Column != null && x.Row != null))
-            {
-                var fileName = GetItemSpriteFileName(item);
-                if (fileName == null)
-                    continue;
 
+            if (_pegWorldMode)
+            {
+                foreach (var item in _tracker.Pegs)
+                {
+                    var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", item.Pegged ? "pegged.png" : "peg.png");
+
+                    var image = GetGridItemControl(fileName, item.Column, item.Row);
+                    image.Tag = item;
+                    TrackerGrid.Children.Add(image);
+                }
+            }
+            else
+            {
+                foreach (var item in _tracker.Items.Where(x => x.Column != null && x.Row != null))
+                {
+                    var fileName = GetItemSpriteFileName(item);
+                    if (fileName == null)
+                        continue;
+
+                    var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value);
+                    image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
+                    image.Tag = item;
+                    TrackerGrid.Children.Add(image);
+                }
+            }
+
+            static Image GetGridItemControl(string imageFileName, int column, int row)
+            {
                 var image = new Image
                 {
-                    Source = new BitmapImage(new Uri(fileName)),
-                    Opacity = item.TrackingState > 0 ? 1.0d : 0.2d,
+                    Source = new BitmapImage(new Uri(imageFileName)),
                     Width = GridItemPx,
                     Height = GridItemPx,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Tag = item
+                    VerticalAlignment = VerticalAlignment.Top
                 };
 
                 RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
-                Grid.SetColumn(image, item.Column.Value);
-                Grid.SetRow(image, item.Row.Value);
-                TrackerGrid.Children.Add(image);
+                Grid.SetColumn(image, column);
+                Grid.SetRow(image, row);
+                return image;
             }
         }
 
@@ -90,6 +112,19 @@ namespace Randomizer.App
             _tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
                 StatusBarConfidence.Content = $"{e.Confidence:P2}";
+                _pegWorldMode = false;
+                RefreshGridItems();
+            });
+            _tracker.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarConfidence.Content = $"{e.Confidence:P2}";
+                _pegWorldMode = true;
+                RefreshGridItems();
+            });
+            _tracker.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarConfidence.Content = $"{e.Confidence:P2}";
+                _pegWorldMode = _tracker.Pegs.Any(x => !x.Pegged);
                 RefreshGridItems();
             });
 
@@ -118,6 +153,5 @@ namespace Randomizer.App
         {
             _tracker?.Dispose();
         }
-
     }
 }

@@ -8,6 +8,8 @@ using System.Threading;
 
 using BunLabs;
 
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+
 using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -40,11 +42,18 @@ namespace Randomizer.SMZ3.Tracking
 
             var config = trackerConfigProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
+            Pegs = config.Pegs.ToImmutableList();
             Responses = config.Responses;
             World = world;
 
             var trackItemsCommand = new TrackItemsCommand(this);
             trackItemsCommand.ItemTracked += TrackItemsCommand_ItemTracked;
+
+            var pegWorldModeCommand = new EngagePegWorldCommand();
+            pegWorldModeCommand.PegWorldModeStarted += PegWorldModeCommand_PegWorldModeStarted;
+
+            var trackPegCommand = new TrackPegCommand();
+            trackPegCommand.PegPegged += TrackPegCommand_PegPegged;
 
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
@@ -53,15 +62,26 @@ namespace Randomizer.SMZ3.Tracking
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += SpeechRecognized;
             _recognizer.LoadGrammar(trackItemsCommand.BuildGrammar());
+            _recognizer.LoadGrammar(pegWorldModeCommand.BuildGrammar());
+            _recognizer.LoadGrammar(trackPegCommand.BuildGrammar());
             _recognizer.SetInputToDefaultAudioDevice();
         }
 
         public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
 
+        public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
+
+        public event EventHandler<TrackerEventArgs>? PegPegged;
+
         /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
         public IReadOnlyCollection<ItemData> Items { get; }
+
+        /// <summary>
+        /// Get a collection of pegs in Peg World mode.
+        /// </summary>
+        public IReadOnlyCollection<Peg> Pegs { get; }
 
         /// <summary>
         /// Gets the configured responses.
@@ -180,6 +200,33 @@ namespace Randomizer.SMZ3.Tracking
         protected virtual void OnItemTracked(ItemTrackedEventArgs e)
             => ItemTracked?.Invoke(this, e);
 
+        protected virtual void OnPegWorldModeToggled(TrackerEventArgs e)
+            => ToggledPegWorldModeOn?.Invoke(this, e);
+
+        protected virtual void OnPegPegged(TrackerEventArgs e)
+            => PegPegged?.Invoke(this, e);
+
+        private void TrackPegCommand_PegPegged(object? sender, TrackerEventArgs e)
+        {
+            var peg = Pegs.FirstOrDefault(x => !x.Pegged);
+            if (peg != null)
+            {
+                peg.Pegged = true;
+
+                if (Pegs.Any(x => !x.Pegged))
+                    Say(Responses.PegWorldModePegged);
+                else
+                    Say(Responses.PegWorldModeDone);
+                OnPegPegged(e);
+            }
+        }
+
+        private void PegWorldModeCommand_PegWorldModeStarted(object? sender, TrackerEventArgs e)
+        {
+            Say(Responses.PegWorldModeOn, wait: true);
+            OnPegWorldModeToggled(e);
+        }
+
         private void RestartIdleTimers()
         {
             foreach (var item in _idleTimers)
@@ -214,18 +261,18 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     // Tracked by specific stage name (e.g. Tempered Sword), set
                     // to that stage specifically
-                    var stageName = e.Item.Stages[stage.Value].Random(s_random);
+                    var stageName = e.Item.Stages[stage.Value].ToString();
                     if (e.Item.Track(stage.Value))
                         Say(Responses.TrackedItemByStage.Format(itemName, stageName));
                     else
-                        Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, e.Item.Stages[e.Item.TrackingState].Random(s_random)));
+                        Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, e.Item.Stages[e.Item.TrackingState].ToString()));
                 }
                 else
                 {
                     // Tracked by regular name, upgrade by one step
                     if (e.Item.Track())
                     {
-                        var stageName = e.Item.Stages[e.Item.TrackingState].Random(s_random);
+                        var stageName = e.Item.Stages[e.Item.TrackingState].ToString();
                         Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
                     }
                     else

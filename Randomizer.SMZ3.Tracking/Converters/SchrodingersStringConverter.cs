@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 using Randomizer.SMZ3.Tracking.Vocabulary;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Converters
 {
     internal class SchrodingersStringConverter : JsonConverter<SchrodingersString>
     {

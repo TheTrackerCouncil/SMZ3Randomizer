@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
 
+using Randomizer.SMZ3.Tracking.Converters;
+
 namespace Randomizer.SMZ3.Tracking.Vocabulary
 {
     /// <summary>
@@ -84,7 +86,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// A collection of objects to format the string with.
         /// </param>
         /// <returns>The formatted string, or <c>null</c> if</returns>
-        public string? Format(params object[] args)
+        public string? Format(params object?[] args)
         {
             var value = ToString();
             return value != null ? string.Format(value, args) : null;

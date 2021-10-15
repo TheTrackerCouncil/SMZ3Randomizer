@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace Randomizer.SMZ3.Tracking.Vocabulary
+using Randomizer.SMZ3.Tracking.Vocabulary;
+
+namespace Randomizer.SMZ3.Tracking.Converters
 {
     internal class SchrodingersStringItemConverter : JsonConverter<SchrodingersString.Item>
     {
@@ -40,9 +38,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public override void Write(Utf8JsonWriter writer, SchrodingersString.Item value, JsonSerializerOptions options)
         {
             if (value.Weight == SchrodingersString.Item.DefaultWeight)
-            {
                 writer.WriteStringValue(value.Text);
-            }
             else
             {
                 writer.WriteStartArray();

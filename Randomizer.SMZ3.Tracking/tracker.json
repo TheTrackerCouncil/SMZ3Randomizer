@@ -712,6 +712,30 @@
       "InternalItemType": 223
     }
   ],
+  "Pegs": [
+    [ 1, 0 ],
+    [ 2, 0 ],
+    [ 3, 0 ],
+    [ 4, 0 ],
+    [ 5, 0 ],
+    [ 1, 1 ],
+    [ 2, 1 ],
+    [ 3, 1 ],
+    [ 4, 1 ],
+    [ 5, 1 ],
+    [ 0, 2 ],
+    [ 1, 2 ],
+    [ 2, 2 ],
+    [ 3, 2 ],
+    [ 4, 2 ],
+    [ 5, 2 ],
+    [ 0, 3 ],
+    [ 1, 3 ],
+    [ 2, 3 ],
+    [ 0, 4 ],
+    [ 1, 4 ],
+    [ 2, 4 ]
+  ],
   "Responses": {
     "StartedTracking": [
       "Is it weekend already?",
@@ -750,6 +774,15 @@
     "PegWorldAvailable": [
       "Can we go to Peg World?",
       "I hear Peg World is beautiful this time of year."
+    ],
+    "PegWorldModeOn": [
+      "Toggled Peg World Go Mode <break time='1s'/> on."
+    ],
+    "PegWorldModePegged": [
+      "Pop."
+    ],
+    "PegWorldModeDone": [
+      "Let's visit Shaktool next."
     ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [

@@ -30,6 +30,11 @@ namespace Randomizer.SMZ3.Tracking
         public IReadOnlyCollection<ItemData> Items { get; init; }
 
         /// <summary>
+        /// Gets the peg world peg configuration.
+        /// </summary>
+        public IReadOnlyCollection<Peg> Pegs { get; init; }
+
+        /// <summary>
         /// Gets a collection of configured responses.
         /// </summary>
         public ResponseConfig Responses { get; init; }
