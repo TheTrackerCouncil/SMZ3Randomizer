@@ -110,7 +110,7 @@ namespace Randomizer.SMZ3.Tracking
             else
             {
                 dungeon.Reward = reward.Value;
-                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, dungeon.Reward.GetDescription()));
+                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, dungeon.Reward.GetName()));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
