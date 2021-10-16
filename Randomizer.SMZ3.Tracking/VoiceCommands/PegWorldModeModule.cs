@@ -15,17 +15,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, let's go to Peg World!"
             }, (tracker, result) =>
             {
+                tracker.StartPegWorldMode(result.Confidence);
+            });
+
+            AddCommand("TrackPegRule", new[] {
+                "Hey tracker, track Peg.",
+                "Hey tracker, peg."
+            }, (tracker, result) =>
+            {
                 var peg = tracker.Pegs.FirstOrDefault(x => !x.Pegged);
                 if (peg != null)
                 {
                     tracker.Peg(peg, result.Confidence);
                 }
             });
-
-            AddCommand("TrackPegRule", new[] {
-                "Hey tracker, track Peg.",
-                "Hey tracker, peg."
-            }, (tracker, result) => tracker.StartPegWorldMode(result.Confidence));
         }
     }
 }

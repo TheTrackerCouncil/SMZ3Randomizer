@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Speech.Recognition;
@@ -14,6 +15,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             foreach (var module in modules)
             {
+                foreach (var rule in module.Syntax)
+                    Debug.WriteLine($"{rule.Key}: {string.Join("\n    ", rule.Value)}");
                 module.LoadInto(engine);
             }
         }

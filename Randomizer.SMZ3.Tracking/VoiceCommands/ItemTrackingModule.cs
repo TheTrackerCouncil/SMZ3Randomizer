@@ -39,17 +39,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             }
 
-            var trackItemPhrase = new GrammarBuilder()
-                .Append("Hey tracker, track")
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("track", "please track")
                 .Append(ItemNameKey, itemNames);
-
-            var trackItemPleasePhrase = new GrammarBuilder()
-                .Append("Hey tracker, please track")
-                .Append(ItemNameKey, itemNames);
-
-            return GrammarBuilder.Combine(
-                trackItemPhrase,
-                trackItemPleasePhrase);
         }
     }
 }

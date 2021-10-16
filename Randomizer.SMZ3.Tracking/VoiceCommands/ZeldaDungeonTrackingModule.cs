@@ -52,7 +52,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             return new GrammarBuilder()
-                .Append("Hey tracker")
+                .Append("Hey tracker,")
                 .OneOf("mark", "set")
                 .Append(DungeonKey, dungeonNames)
                 .Append("as")
@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var dungeonNames = GetDungeonNames();
             return new GrammarBuilder()
-                .Append("Hey tracker")
+                .Append("Hey tracker,")
                 .OneOf("clear")
                 .Append(DungeonKey, dungeonNames);
         }
@@ -76,26 +76,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
 
             var dungeonFirst = new GrammarBuilder()
-                .Append("Hey tracker")
+                .Append("Hey tracker,")
                 .Append(DungeonKey, dungeonNames)
                 .OneOf("requires", "needs")
                 .Append(MedallionKey, medallions);
 
             var itemFirst = new GrammarBuilder()
-                .Append("Hey tracker")
+                .Append("Hey tracker,")
                 .Append(MedallionKey, medallions)
                 .OneOf("is required for", "is needed for")
                 .Append(DungeonKey, dungeonNames);
 
             var markDungeon = new GrammarBuilder()
-                .Append("Hey tracker")
+                .Append("Hey tracker,")
                 .Append("mark")
                 .Append(DungeonKey, dungeonNames)
                 .OneOf("as", "as requiring", "as needing")
                 .Append(MedallionKey, medallions);
 
             var markItem = new GrammarBuilder()
-                .Append("Hey tracker")
+                .Append("Hey tracker,")
                 .Append("mark")
                 .Append(MedallionKey, medallions)
                 .OneOf("as", "as required for", "as needed for")

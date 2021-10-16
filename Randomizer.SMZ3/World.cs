@@ -136,7 +136,10 @@ namespace Randomizer.SMZ3
 
         public bool CanAquire(Progression items, Reward reward)
         {
-            return Regions.OfType<IHasReward>().First(x => reward == x.Reward).CanComplete(items);
+            var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.Reward);
+            if (dungeonWithReward == null)
+                return false;
+            return dungeonWithReward.CanComplete(items);
         }
 
         public bool CanAquireAll(Progression items, params Reward[] rewards)

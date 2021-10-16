@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Tracking
         public GrammarBuilder OneOf(params string[] choices)
         {
             _grammar.Append(new Choices(choices));
-            _elements.Add($"[{string.Join(',', choices)}]");
+            _elements.Add($"[{string.Join('/', choices)}]");
             return this;
         }
 
