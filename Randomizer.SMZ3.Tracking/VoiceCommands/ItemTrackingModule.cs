@@ -1,48 +1,45 @@
 ﻿using System;
-using System.Linq;
-using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class ItemTrackingModule : TrackerModule
     {
-        private const string ItemNameKey = "ItemName";
-
         public ItemTrackingModule(Tracker tracker)
             : base(tracker)
         {
             AddCommand("TrackItemRule", GetTrackItemRule(), (tracker, result) =>
             {
-                var itemName = (string)result.Semantics[ItemNameKey].Value;
-                var itemData = Tracker.FindItemByName(itemName);
-                if (itemData == null)
-                    throw new Exception($"Could not find item '{itemName}' (\"{result.Text}\")");
+                var item = GetItemFromResult(tracker, result, out var itemName);
+                var dungeon = result.Semantics.ContainsKey(DungeonKey)
+                    ? GetDungeonFromResult(tracker, result)
+                    : null;
 
-                tracker.TrackItem(itemData, itemName, result.Confidence);
+                tracker.TrackItem(item,
+                    trackedAs: itemName,
+                    dungeon: dungeon,
+                    confidence: result.Confidence);
             });
         }
 
         private GrammarBuilder GetTrackItemRule()
         {
-            var itemNames = new Choices();
-            foreach (var itemData in Tracker.Items)
-            {
-                foreach (var name in itemData.Name)
-                    itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));
+            var dungeonNames = GetDungeonNames();
+            var itemNames = GetItemNames();
 
-                if (itemData.Stages != null)
-                {
-                    foreach (var stageName in itemData.Stages.SelectMany(x => x.Value))
-                    {
-                        itemNames.Add(new SemanticResultValue(stageName.ToString(), stageName.ToString()));
-                    }
-                }
-            }
-
-            return new GrammarBuilder()
+            var trackItemNormal = new GrammarBuilder()
                 .Append("Hey tracker,")
                 .OneOf("track", "please track")
                 .Append(ItemNameKey, itemNames);
+
+            var trackItemDungeon = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("track", "please track")
+                .Append(ItemNameKey, itemNames)
+                .OneOf("in", "from")
+                .Append(DungeonKey, dungeonNames);
+
+            return GrammarBuilder.Combine(
+                trackItemNormal, trackItemDungeon);
         }
     }
 }

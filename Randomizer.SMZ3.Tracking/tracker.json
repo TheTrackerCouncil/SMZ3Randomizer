@@ -59,20 +59,23 @@
     {
       "Name": "Bombos",
       "InternalItemType": 15,
+      "Article": "",
       "Column": 2,
       "Row": 1
     },
     {
       "Name": "Ether",
       "InternalItemType": 16,
+      "Article": "",
       "Column": 3,
       "Row": 1
     },
     {
       "Name": "Quake",
+      "InternalItemType": 17,
+      "Article": "",
       "Column": 4,
-      "Row": 1,
-      "InternalItemType": 17
+      "Row": 1
     },
     {
       "Name": "Lamp",
@@ -113,6 +116,7 @@
     {
       "Name": [ "Heart piece", "Piece of Heart" ],
       "InternalItemType": 23,
+      "Multiple": true,
       "Column": 4,
       "Row": 4
     },
@@ -141,7 +145,10 @@
       "Row": 2
     },
     {
-      "Name": [ "Zora's Flippers", "Flippers" ],
+      "Name": [
+        [ "Zora's Flippers", 0 ],
+        "Flippers"
+      ],
       "InternalItemType": 30,
       "Column": 2,
       "Row": 4
@@ -161,6 +168,7 @@
     {
       "Name": [ "Three Bombs", "Bombs" ],
       "InternalItemType": 40,
+      "Article": "",
       "Multiple": true
     },
     {
@@ -178,16 +186,19 @@
     {
       "Name": "One Rupee",
       "InternalItemType": 52,
+      "Artice": "",
       "Multiple": true
     },
     {
       "Name": "Five Rupees",
       "InternalItemType": 53,
+      "Artice": "",
       "Multiple": true
     },
     {
       "Name": "Twenty Rupees",
       "InternalItemType": 54,
+      "Artice": "",
       "Multiple": true
     },
     {
@@ -200,11 +211,13 @@
     {
       "Name": "One Hundred Rupees",
       "InternalItemType": 64,
+      "Artice": "",
       "Multiple": true
     },
     {
       "Name": "Fifty Rupees",
       "InternalItemType": 65,
+      "Artice": "",
       "Multiple": true
     },
     {
@@ -215,11 +228,13 @@
     {
       "Name": "Ten Arrows",
       "InternalItemType": 68,
+      "Artice": "",
       "Multiple": true
     },
     {
       "Name": "Three Hundred Rupees",
       "InternalItemType": 70,
+      "Artice": "",
       "Multiple": true
     },
     {
@@ -231,24 +246,29 @@
     {
       "Name": "Half Magic",
       "InternalItemType": 78,
+      "Artice": "",
       "Column": 3,
       "Row": 4
     },
     {
       "Name": "+5 Bomb Capacity",
-      "InternalItemType": 81
+      "InternalItemType": 81,
+      "Artice": ""
     },
     {
       "Name": "+10 Bomb Capacity",
-      "InternalItemType": 82
+      "InternalItemType": 82,
+      "Artice": ""
     },
     {
       "Name": "+5 Arrow Capacity",
-      "InternalItemType": 83
+      "InternalItemType": 83,
+      "Artice": ""
     },
     {
       "Name": "+10 Arrow Capacity",
-      "InternalItemType": 84
+      "InternalItemType": 84,
+      "Artice": ""
     },
     {
       "Name": [ "Silver Arrows", "Silvers" ],
@@ -397,6 +417,7 @@
     {
       "Name": "Ice Palace Key",
       "InternalItemType": 169,
+      "Artice": "an",
       "Multiple": true
     },
     {
@@ -518,6 +539,7 @@
     {
       "Name": [ "Energy Tank", "E-Tank" ],
       "InternalItemType": 192,
+      "Artice": "an",
       "Multiple": true,
       "Column": 10,
       "Row": 3
@@ -620,6 +642,7 @@
       "Name": [ "Eastern Palace" ],
       "Abbreviation": "EP",
       "Boss": "Armos Knights",
+      "TreasureRemaining": 3,
       "Column": 0,
       "Row": 6
     },
@@ -627,6 +650,7 @@
       "Name": [ "Desert Palace", "Dessert Palace" ],
       "Abbreviation": "DP",
       "Boss": "Lanmolas",
+      "TreasureRemaining": 2,
       "Column": 1,
       "Row": 6
     },
@@ -634,6 +658,7 @@
       "Name": [ "Tower of Hera" ],
       "Abbreviation": "TH",
       "Boss": "Moldorm",
+      "TreasureRemaining": 2,
       "Column": 2,
       "Row": 6
     },
@@ -641,6 +666,7 @@
       "Name": [ "Thieves' Town" ],
       "Abbreviation": "TT",
       "Boss": "Blind",
+      "TreasureRemaining": 4,
       "Column": 3,
       "Row": 6
     },
@@ -648,6 +674,7 @@
       "Name": [ "Palace of Darkness", "Dark Palace" ],
       "Abbreviation": "PD",
       "Boss": "Helmasaur King",
+      "TreasureRemaining": 5,
       "Column": 4,
       "Row": 6
     },
@@ -655,6 +682,7 @@
       "Name": [ "Swamp Palace" ],
       "Abbreviation": "SP",
       "Boss": "Arrghus",
+      "TreasureRemaining": 6,
       "Column": 0,
       "Row": 7
     },
@@ -662,6 +690,7 @@
       "Name": [ "Skull Woods", "Skill Woods" ],
       "Abbreviation": "SW",
       "Boss": "Mothula",
+      "TreasureRemaining": 2,
       "Column": 1,
       "Row": 7
     },
@@ -669,6 +698,7 @@
       "Name": [ "Ice Palace" ],
       "Abbreviation": "IP",
       "Boss": "Kholdstare",
+      "TreasureRemaining": 3,
       "Column": 2,
       "Row": 7
     },
@@ -676,6 +706,7 @@
       "Name": [ "Misery Mire" ],
       "Abbreviation": "MM",
       "Boss": "Vitreous",
+      "TreasureRemaining": 2,
       "Column": 3,
       "Row": 7
     },
@@ -683,8 +714,21 @@
       "Name": [ "Turtle Rock" ],
       "Abbreviation": "TR",
       "Boss": "Trinexx",
+      "TreasureRemaining": 5,
       "Column": 4,
       "Row": 7
+    },
+    {
+      "Name": [ "Ganon's Tower" ],
+      "Abbreviation": "GT",
+      "Boss": "Ganon",
+      "TreasureRemaining": 20
+    },
+    {
+      "Name": [ "Hyrule Castle" ],
+      "Abbreviation": "HC",
+      "Boss": "Nobody",
+      "TreasureRemaining": 6
     }
   ],
   "Pegs": [
@@ -714,10 +758,13 @@
   "Responses": {
     "StartedTracking": [
       "Is it weekend already?",
+      "Toggled Tracker on",
       [ "Hey you. You're finally awake. You were trying to cross the border right? Walked right into that Imperial ambush, same as us, and that thief over there. Damn you Stormcloaks.", 0.01 ]
     ],
     "StoppedTracking": [
-      "Leaving so soon?"
+      "Leaving so soon?",
+      "Toggled Tracker off.",
+      "Hey, you'll be missed, pal."
     ],
     "TrackedItem": [
       "Toggled {0} on."
@@ -733,7 +780,7 @@
       "Added {0}."
     ],
     "TrackedAlreadyTrackedItem": [
-      "You already have one."
+      "You already have that."
     ],
     "TrackedOlderProgressiveItem": [
       "You already have a better {0}.",
@@ -777,6 +824,16 @@
       "If you say so.",
       "Are you sure it shouldn't be {0}? Oh well, you do do.",
       "{1} requires {0}, not {2}, but whatever."
+    ],
+    "DungeonTreasureTracked": {
+      "2": [ "{1} items left in {0}.", "{1} treasures left." ],
+      "1": [ "One item left in {0}.", "One more to go in here.", "Just one more." ],
+      "0": [ "That's everything in {0}.", "That's the last of them." ],
+      "-1": [ "You already got everything in {0}." ]
+    },
+    "ItemTrackedInIncorrectDungeon": [
+      "Impressive. The seed didn't put {1} in {0}.",
+      "{1} shouldn't be in {0}."
     ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [

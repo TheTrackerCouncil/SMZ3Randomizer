@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class ZeldaDungeonTrackingModule : TrackerModule
     {
-        private const string DungeonKey = "DungeonName";
         private const string RewardKey = "RewardName";
         private const string MedallionKey = "MedallionName";
 
@@ -31,14 +30,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var medallion = (Medallion)result.Semantics[MedallionKey].Value;
                 tracker.SetDungeonRequirement(dungeon, medallion, result.Confidence);
             });
-        }
 
-        private static ZeldaDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
-        {
-            var dungeonName = (string)result.Semantics[DungeonKey].Value;
-            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase)
-                                                             || x.Abbreviation.Equals(dungeonName, StringComparison.OrdinalIgnoreCase));
-            return dungeon ?? throw new Exception($"Could not find recognized dungeon '{dungeonName}'.");
+            AddCommand("TreasureTrackingRule", GetTreasureTrackingRule(), (tracker, result) =>
+            {
+                var dungeon = GetDungeonFromResult(tracker, result);
+                tracker.TrackDungeonTreasure(dungeon, result.Confidence);
+            });
         }
 
         private GrammarBuilder GetMarkDungeonRewardRule()
@@ -104,6 +101,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(
                 dungeonFirst, itemFirst,
                 markDungeon, markItem);
+        }
+
+        private GrammarBuilder GetTreasureTrackingRule()
+        {
+            var dungeonNames = GetDungeonNames();
+            var medallions = new Choices();
+            foreach (var medallion in Enum.GetValues<Medallion>())
+                medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
+
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("clear", "mark")
+                .OneOf("item", "treasure", "chest", "treasure chest")
+                .Append("in")
+                .Append(DungeonKey, dungeonNames);
         }
 
         private Choices GetDungeonNames()

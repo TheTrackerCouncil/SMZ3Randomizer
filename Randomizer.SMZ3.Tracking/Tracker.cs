@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
@@ -44,6 +45,7 @@ namespace Randomizer.SMZ3.Tracking
             Dungeons = config.Dungeons.ToImmutableList();
             Responses = config.Responses;
             World = world ?? new World(new Config(), "Player", 0, "");
+            GetTreasureCounts(Dungeons, world);
 
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
@@ -93,6 +95,11 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public World World { get; }
 
+        /// <summary>
+        /// Marks a dungeon as cleared.
+        /// </summary>
+        /// <param name="dungeon">The dungeon that was cleared.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
         public void ClearDungeon(ZeldaDungeon dungeon, float confidence = 1.0f)
         {
             dungeon.Cleared = true;
@@ -100,6 +107,45 @@ namespace Randomizer.SMZ3.Tracking
             OnDungeonUpdated(new TrackerEventArgs(confidence));
         }
 
+        /// <summary>
+        /// Removes one item from the available treasure in the specified
+        /// dungeon.
+        /// </summary>
+        /// <param name="dungeon">The dungeon.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void TrackDungeonTreasure(ZeldaDungeon dungeon, float confidence = 1.0f)
+        {
+            if (dungeon.TreasureRemaining > 0)
+            {
+                dungeon.TreasureRemaining--;
+
+                // Try to get the response based on the amount of items left
+                if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
+                    Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                // If we don't have a response for the exact amount and we have
+                // multiple left, get the one for 2 (considered generic)
+                else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
+                    Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+
+                OnDungeonUpdated(new TrackerEventArgs(confidence));
+            }
+            else if (Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
+            {
+                // Attempted to track treasure when all treasure items were
+                // already cleared out
+                Say(response.Format(dungeon.Name));
+            }
+        }
+
+        /// <summary>
+        /// Sets the dungeon's reward to the specific pendant or crystal.
+        /// </summary>
+        /// <param name="dungeon">The dungeon to mark.</param>
+        /// <param name="reward">
+        /// The type of pendant or crystal, or <c>null</c> to cycle through the
+        /// possible rewards.
+        /// </param>
+        /// <param name="confidence">The speech recognition confidence.</param>
         public void SetDungeonReward(ZeldaDungeon dungeon, RewardItem? reward = null, float confidence = 1.0f)
         {
             if (reward == null)
@@ -117,6 +163,12 @@ namespace Randomizer.SMZ3.Tracking
             OnDungeonUpdated(new TrackerEventArgs(confidence));
         }
 
+        /// <summary>
+        /// Sets the dungeon's medallion requirement to the specified item.
+        /// </summary>
+        /// <param name="dungeon">The dungeon to mark.</param>
+        /// <param name="medallion">The medallion that is required.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
         public void SetDungeonRequirement(ZeldaDungeon dungeon, Medallion? medallion = null, float confidence = 1.0f)
         {
             var region = World?.Regions.SingleOrDefault(x => dungeon.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
@@ -241,10 +293,14 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="trackedAs">
         /// The text that was tracked, when triggered by voice command.
         /// </param>
+        /// <param name="dungeon">
+        /// The dungeon the item was tracked in, if mentioned in the voice
+        /// command.
+        /// </param>
         /// <param name="confidence">
         /// The confidence when triggered by voice command.
         /// </param>
-        public void TrackItem(ItemData item, string? trackedAs = null, float confidence = 1.0f)
+        public void TrackItem(ItemData item, string? trackedAs = null, ZeldaDungeon? dungeon = null, float confidence = 1.0f)
         {
             var accessibleBefore = GetAccessibleLocations();
             var itemName = item.Name;
@@ -300,6 +356,12 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
                 }
+            }
+
+            dungeon = GetDungeonFromItem(item, dungeon);
+            if (dungeon != null)
+            {
+                TrackDungeonTreasure(dungeon, confidence);
             }
 
             OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence));
@@ -367,6 +429,59 @@ namespace Randomizer.SMZ3.Tracking
 
         protected virtual void OnDungeonUpdated(TrackerEventArgs e)
             => DungeonUpdated?.Invoke(this, e);
+
+        private static void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World? world)
+        {
+            if (world == null)
+                return;
+
+            foreach (var dungeon in dungeons)
+            {
+                var region = world.Regions.SingleOrDefault(x => dungeon.Is(x));
+                if (region != null)
+                {
+                    dungeon.TreasureRemaining = region.Locations.Count(x => !x.Item.IsDungeonItem && x.Type != LocationType.NotInDungeon);
+                    Debug.WriteLine($"Found {dungeon.TreasureRemaining} item(s) in {dungeon.Name}");
+                }
+                else
+                {
+                    Debug.WriteLine($"Could not find region for dungeon {dungeon.Name}.");
+                }
+            }
+        }
+
+        private ZeldaDungeon? GetDungeonFromItem(ItemData item, ZeldaDungeon? dungeon = null)
+        {
+            var locations = World.Locations
+                .Where(x => x.ItemIs(item.InternalItemType, World))
+                .ToImmutableList();
+
+            if (locations.Count == 1 && dungeon == null)
+            {
+                // User didn't have a guess and there's only one location that
+                // has the tracker item
+                return Dungeons.SingleOrDefault(x => x.Is(locations[0].Region));
+            }
+
+            if (locations.Count > 0 && dungeon != null)
+            {
+                // Does the dungeon even have that item?
+                if (!locations.Any(x => dungeon.Is(x.Region)))
+                {
+                    // Be a smart-ass about it
+                    Say(Responses.ItemTrackedInIncorrectDungeon?.Format(dungeon.Name, item.NameWithArticle));
+                }
+            }
+
+            // - If tracker was started before generating a seed, we don't know
+            // better.
+            // - If we do know better, we should still go with the user's
+            // choice.
+            // - If there are multiple copies of the item, we don't know which
+            // was tracked. Either way, we have to assume `dungeon` is correct.
+            // If it's `null`, nobody knows.
+            return dungeon;
+        }
 
         private void RestartIdleTimers()
         {

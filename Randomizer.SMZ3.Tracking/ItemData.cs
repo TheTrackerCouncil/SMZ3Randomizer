@@ -33,6 +33,19 @@ namespace Randomizer.SMZ3.Tracking
         public SchrodingersString Name { get; init; }
 
         /// <summary>
+        /// Gets the grammatical article for the item (e.g. "a" or "the").
+        /// </summary>
+        public string Article { get; init; }
+
+        /// <summary>
+        /// Gets the name of the article, prefixed with "a", "the" or none,
+        /// depending on the item.
+        /// </summary>
+        public string NameWithArticle => string.Join(" ",
+            Article ?? (Multiple || HasStages ? "a" : "the"),
+            Name);
+
+        /// <summary>
         /// Gets the internal <see cref="ItemType"/> of the item.
         /// </summary>
         public ItemType InternalItemType { get; init; }

@@ -153,11 +153,40 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// requirement that doesn't match the seed logic.
         /// </summary>
         /// <remarks>
-        /// <c>{0}</c> is a placeholder for the name of the medallion in the seed.
-        /// <c>{1}</c> is a placeholder for the name of the dungeon.
-        /// <c>{2}</c> is a placeholder for the name of the medallion that was tracked.
+        /// <c>{0}</c> is a placeholder for the name of the medallion in the
+        /// seed. <c>{1}</c> is a placeholder for the name of the dungeon.
+        /// <c>{2}</c> is a placeholder for the name of the medallion that was
+        /// tracked.
         /// </remarks>
         public SchrodingersString? DungeonRequirementMismatch { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking treasure in a
+        /// dungeon. The dictionary key represents the amount of items left,
+        /// where 2 is 2 or more and -1 is when the dungeon is already empty.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is the amount of items left after tracking.
+        /// </remarks>
+        public Dictionary<int, SchrodingersString> DungeonTreasureTracked { get; init; } = new()
+        {
+            [2] = new SchrodingersString("{1} items left in {0}."),
+            [1] = new SchrodingersString("One item left in {0}."),
+            [0] = new SchrodingersString("Nothing left in {0}."),
+            [-1] = new SchrodingersString("You already got everything in {0}.")
+        };
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking an item in a specific
+        /// dungeon, but that dungeon does not have that item in the seed.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is a placeholder for the name of the item, including "a" or "the",
+        /// as appropriate.
+        /// </remarks>
+        public SchrodingersString? ItemTrackedInIncorrectDungeon { get; init; }
 
         /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
