@@ -128,6 +128,38 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
             = new SchrodingersString("Cleared {0}.", "Marked {1} as defeated.");
 
         /// <summary>
+        /// Gets the phrases to respond with when marking the medallion
+        /// requirement of a dungeon.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the medallion.
+        /// <c>{1}</c> is a placeholder for the name of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonRequirementMarked { get; init; }
+            = new SchrodingersString("Marked {0} as required for {1}");
+
+        /// <summary>
+        /// Gets the phrases to respond with when marking the wrong dungeon with
+        /// a required medallion.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonRequirementInvalid { get; init; }
+            = new SchrodingersString("{0} doesn't need medallions");
+
+        /// <summary>
+        /// Gets the phrases to respond with when marking a dungeon with a
+        /// requirement that doesn't match the seed logic.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the medallion in the seed.
+        /// <c>{1}</c> is a placeholder for the name of the dungeon.
+        /// <c>{2}</c> is a placeholder for the name of the medallion that was tracked.
+        /// </remarks>
+        public SchrodingersString? DungeonRequirementMismatch { get; init; }
+
+        /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as
         /// expressed in the dictionary keys.

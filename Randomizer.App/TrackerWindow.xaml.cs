@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -85,10 +86,11 @@ namespace Randomizer.App
                 foreach (var item in _tracker.Items.Where(x => x.Column != null && x.Row != null))
                 {
                     var fileName = GetItemSpriteFileName(item);
+                    var overlay = GetOverlayImageFileName(item, _tracker.Dungeons);
                     if (fileName == null)
                         continue;
 
-                    var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value);
+                    var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value, overlay);
                     image.MouseLeftButtonUp += (sender, e) => _tracker.TrackItem(item);
                     image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
                     TrackerGrid.Children.Add(image);
@@ -98,11 +100,6 @@ namespace Randomizer.App
                 {
                     var overlayPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{dungeon.Name[0].Text.ToLowerInvariant()}.png");
-                    //var overlayImage = GetGridItemControl(overlayPath, dungeon.Column.Value, dungeon.Row.Value);
-                    //overlayImage.Stretch = Stretch.None;
-                    //overlayImage.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
-                    //overlayImage.MouseLeftButtonUp += (sender, e) => _tracker.ClearDungeon(dungeon);
-                    //overlayImage.MouseRightButtonUp += (sender, e) => _tracker.SetDungeonReward(dungeon);
 
                     var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
@@ -112,8 +109,38 @@ namespace Randomizer.App
                     rewardImage.MouseRightButtonUp += (sender, e) => _tracker.SetDungeonReward(dungeon);
 
                     TrackerGrid.Children.Add(rewardImage);
-                    //TrackerGrid.Children.Add(overlayImage);
                 }
+            }
+        }
+
+        private static string GetOverlayImageFileName(ItemData item, IEnumerable<ZeldaDungeon> dungeons)
+        {
+            return item.InternalItemType switch
+            {
+                ItemType.Bombos => GetMatchingDungeonNameImages(Medallion.Bombos, dungeons),
+                ItemType.Ether => GetMatchingDungeonNameImages(Medallion.Ether, dungeons),
+                ItemType.Quake => GetMatchingDungeonNameImages(Medallion.Quake, dungeons),
+                _ => null
+            };
+
+            static string GetMatchingDungeonNameImages(Medallion requirement, IEnumerable<ZeldaDungeon> dungeons)
+            {
+                var names = dungeons.Where(x => x.Requirement == requirement)
+                    .Select(x => x.Name[0])
+                    .ToList();
+
+                if (names.Count == 1)
+                {
+                    return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Dungeons", $"{names[0]}.png");
+                }
+                else if (names.Count > 1)
+                {
+                    return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Dungeons", "both.png");
+                }
+
+                return null;
             }
         }
 

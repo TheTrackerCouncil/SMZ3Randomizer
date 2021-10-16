@@ -10,6 +10,7 @@ using BunLabs;
 
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
+using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -42,7 +43,7 @@ namespace Randomizer.SMZ3.Tracking
             Pegs = config.Pegs.ToImmutableList();
             Dungeons = config.Dungeons.ToImmutableList();
             Responses = config.Responses;
-            World = world;
+            World = world ?? new World(new Config(), "Player", 0, "");
 
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
@@ -90,7 +91,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the world for the currently tracked playthrough.
         /// </summary>
-        public World? World { get; }
+        public World World { get; }
 
         public void ClearDungeon(ZeldaDungeon dungeon, float confidence = 1.0f)
         {
@@ -114,6 +115,42 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
+        }
+
+        public void SetDungeonRequirement(ZeldaDungeon dungeon, Medallion? medallion = null, float confidence = 1.0f)
+        {
+            var region = World?.Regions.SingleOrDefault(x => dungeon.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
+            if (region == null)
+            {
+                Say("Strange, I can't find that dungeon in this seed.");
+            }
+            else if (region is not INeedsMedallion medallionRegion)
+            {
+                Say(Responses.DungeonRequirementInvalid.Format(dungeon.Name));
+                return;
+            }
+
+            if (medallion == null)
+            {
+                dungeon.Requirement = Enum.IsDefined(dungeon.Requirement + 1) ? dungeon.Requirement + 1 : Medallion.None;
+                OnDungeonUpdated(new TrackerEventArgs(confidence));
+            }
+            else
+            {
+                if (region is INeedsMedallion medallionRegion
+                    && medallionRegion.Medallion != ItemType.Nothing
+                    && medallionRegion.Medallion != medallion.Value.ToItemType())
+                {
+                    Say(Responses.DungeonRequirementMismatch?.Format(
+                        medallionRegion.Medallion.ToString(),
+                        dungeon.Name,
+                        medallion.Value.ToString()));
+                }
+
+                dungeon.Requirement = medallion.Value;
+                Say(Responses.DungeonRequirementMarked.Format(medallion.ToString(), dungeon.Name));
+                OnDungeonUpdated(new TrackerEventArgs(confidence));
+            }
         }
 
         /// <summary>

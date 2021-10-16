@@ -770,7 +770,17 @@
     "DungeonCleared": [
       "Cleared {0}.",
       [ "Marked {1} as defeated.", 0.5 ],
-      [ "Congratulations on beating off {1}.", 0.5]
+      [ "Congratulations on beating off {1}.", 0.5 ]
+    ],
+    "DungeonRequirementMarked": [
+      "Marked {0} as required for {1}"
+    ],
+    "DungeonRequirementInvalid": [
+      "{0} doesn't need medallions"
+    ],
+    "DungeonRequirementMismatch": [
+      "Are you sure it shouldn't be {0}? Oh well, if you say so.",
+      "{1} requires {0}, not {2}, but whatever."
     ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [

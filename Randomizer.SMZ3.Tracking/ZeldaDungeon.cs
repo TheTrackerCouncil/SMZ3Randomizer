@@ -1,5 +1,6 @@
 ﻿using System;
 
+using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Vocabulary;
 
 namespace Randomizer.SMZ3.Tracking
@@ -24,6 +25,9 @@ namespace Randomizer.SMZ3.Tracking
 
         public RewardItem Reward { get; set; }
             = RewardItem.Unknown;
+
+        public Medallion Requirement { get; set; }
+            = Medallion.None;
 
         public bool Cleared { get; set; }
     }

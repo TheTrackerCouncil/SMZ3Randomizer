@@ -8,6 +8,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         private const string DungeonKey = "DungeonName";
         private const string RewardKey = "RewardName";
+        private const string MedallionKey = "MedallionName";
 
         public ZeldaDungeonTrackingModule(Tracker tracker) : base(tracker)
         {
@@ -15,22 +16,28 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
                 var reward = (RewardItem)result.Semantics[RewardKey].Value;
-
                 tracker.SetDungeonReward(dungeon, reward, result.Confidence);
             });
 
             AddCommand("ClearDungeonRule", GetClearDungeonRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
-
                 tracker.ClearDungeon(dungeon, result.Confidence);
+            });
+
+            AddCommand("MarkDungeonRequirementRule", GetMarkDungeonRequirementRule(), (tracker, result) =>
+            {
+                var dungeon = GetDungeonFromResult(tracker, result);
+                var medallion = (Medallion)result.Semantics[MedallionKey].Value;
+                tracker.SetDungeonRequirement(dungeon, medallion, result.Confidence);
             });
         }
 
         private static ZeldaDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
             var dungeonName = (string)result.Semantics[DungeonKey].Value;
-            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase));
+            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase)
+                                                             || x.Abbreviation.Equals(dungeonName, StringComparison.OrdinalIgnoreCase));
             return dungeon ?? throw new Exception($"Could not find recognized dungeon '{dungeonName}'.");
         }
 
@@ -58,6 +65,44 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker")
                 .OneOf("clear")
                 .Append(DungeonKey, dungeonNames);
+        }
+
+        private GrammarBuilder GetMarkDungeonRequirementRule()
+        {
+            var dungeonNames = GetDungeonNames();
+            var medallions = new Choices();
+            foreach (var medallion in Enum.GetValues<Medallion>())
+                medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
+
+            var dungeonFirst = new GrammarBuilder()
+                .Append("Hey tracker")
+                .Append(DungeonKey, dungeonNames)
+                .OneOf("requires", "needs")
+                .Append(MedallionKey, medallions);
+
+            var itemFirst = new GrammarBuilder()
+                .Append("Hey tracker")
+                .Append(MedallionKey, medallions)
+                .OneOf("is required for", "is needed for")
+                .Append(DungeonKey, dungeonNames);
+
+            var markDungeon = new GrammarBuilder()
+                .Append("Hey tracker")
+                .Append("mark")
+                .Append(DungeonKey, dungeonNames)
+                .OneOf("as", "as requiring", "as needing")
+                .Append(MedallionKey, medallions);
+
+            var markItem = new GrammarBuilder()
+                .Append("Hey tracker")
+                .Append("mark")
+                .Append(MedallionKey, medallions)
+                .OneOf("as", "as required for", "as needed for")
+                .Append(DungeonKey, dungeonNames);
+
+            return GrammarBuilder.Combine(
+                dungeonFirst, itemFirst,
+                markDungeon, markItem);
         }
 
         private Choices GetDungeonNames()
