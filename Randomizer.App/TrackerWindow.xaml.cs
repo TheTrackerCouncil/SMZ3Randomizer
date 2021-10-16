@@ -29,6 +29,41 @@ namespace Randomizer.App
             _world = world;
         }
 
+        protected static Image GetGridItemControl(string imageFileName, int column, int row,
+            string overlayFileName = null, double overlayOffsetX = 0, double overlayOffsetY = 0)
+        {
+            var bitmapImage = new BitmapImage(new Uri(imageFileName));
+            if (overlayFileName == null)
+            {
+                return GetGridItemControl(bitmapImage, column, row);
+            }
+
+            var overlayImage = new BitmapImage(new Uri(overlayFileName));
+            var drawingGroup = new DrawingGroup();
+            drawingGroup.Children.Add(new ImageDrawing(bitmapImage,
+                new Rect(0, 0, bitmapImage.PixelWidth, bitmapImage.PixelHeight)));
+            drawingGroup.Children.Add(new ImageDrawing(overlayImage,
+                new Rect(overlayOffsetX, overlayOffsetY, overlayImage.PixelWidth, overlayImage.PixelHeight)));
+            return GetGridItemControl(new DrawingImage(drawingGroup), column, row);
+        }
+
+        protected static Image GetGridItemControl(ImageSource imageSource, int column, int row)
+        {
+            var image = new Image
+            {
+                Source = imageSource,
+                MaxWidth = GridItemPx,
+                MaxHeight = GridItemPx,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
+            };
+
+            RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+            Grid.SetColumn(image, column);
+            Grid.SetRow(image, row);
+            return image;
+        }
+
         protected virtual void RefreshGridItems()
         {
             TrackerGrid.Children.Clear();
@@ -63,39 +98,22 @@ namespace Randomizer.App
                 {
                     var overlayPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{dungeon.Name[0].Text.ToLowerInvariant()}.png");
-                    var overlayImage = GetGridItemControl(overlayPath, dungeon.Column.Value, dungeon.Row.Value);
-                    overlayImage.Stretch = Stretch.None;
-                    overlayImage.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
-                    overlayImage.MouseLeftButtonUp += (sender, e) => _tracker.ClearDungeon(dungeon);
-                    overlayImage.MouseRightButtonUp += (sender, e) => _tracker.SetDungeonReward(dungeon);
+                    //var overlayImage = GetGridItemControl(overlayPath, dungeon.Column.Value, dungeon.Row.Value);
+                    //overlayImage.Stretch = Stretch.None;
+                    //overlayImage.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
+                    //overlayImage.MouseLeftButtonUp += (sender, e) => _tracker.ClearDungeon(dungeon);
+                    //overlayImage.MouseRightButtonUp += (sender, e) => _tracker.SetDungeonReward(dungeon);
 
                     var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
-                    var rewardImage = GetGridItemControl(rewardPath, dungeon.Column.Value, dungeon.Row.Value);
+                    var rewardImage = GetGridItemControl(rewardPath, dungeon.Column.Value, dungeon.Row.Value, overlayPath);
                     rewardImage.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
                     rewardImage.MouseLeftButtonUp += (sender, e) => _tracker.ClearDungeon(dungeon);
                     rewardImage.MouseRightButtonUp += (sender, e) => _tracker.SetDungeonReward(dungeon);
 
                     TrackerGrid.Children.Add(rewardImage);
-                    TrackerGrid.Children.Add(overlayImage);
+                    //TrackerGrid.Children.Add(overlayImage);
                 }
-            }
-
-            static Image GetGridItemControl(string imageFileName, int column, int row)
-            {
-                var image = new Image
-                {
-                    Source = new BitmapImage(new Uri(imageFileName)),
-                    MaxWidth = GridItemPx,
-                    MaxHeight = GridItemPx,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
-                };
-
-                RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
-                Grid.SetColumn(image, column);
-                Grid.SetRow(image, row);
-                return image;
             }
         }
 
