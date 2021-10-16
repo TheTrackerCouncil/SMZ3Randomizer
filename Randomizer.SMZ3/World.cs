@@ -134,6 +134,12 @@ namespace Randomizer.SMZ3
         public LowerNorfairEast LowerNorfairEast { get; }
         public WreckedShip WreckedShip { get; }
 
+        public Location FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
+        {
+            return Locations.FirstOrDefault(x => x.Name.Equals(name, comparisonType))
+                ?? Locations.FirstOrDefault(x => x.AlternateNames.Contains(name, StringComparer.FromComparison(comparisonType)));
+        }
+
         public bool CanAquire(Progression items, Reward reward)
         {
             var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.Reward);

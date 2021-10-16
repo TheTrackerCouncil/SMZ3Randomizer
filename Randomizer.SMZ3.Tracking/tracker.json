@@ -832,7 +832,7 @@
       "-1": [ "You already got everything in {0}." ]
     },
     "ItemTrackedInIncorrectDungeon": [
-      "Impressive. The seed didn't put {1} in {0}.",
+      "Are you sure that's where you found it?",
       "{1} shouldn't be in {0}."
     ],
     "TrackedSpecificItem": {

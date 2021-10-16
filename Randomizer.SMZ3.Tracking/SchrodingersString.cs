@@ -80,6 +80,17 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public override string? ToString() => Random(s_random)?.Text;
 
         /// <summary>
+        /// Adds a new possibility to the string with the specified text and
+        /// weight.
+        /// </summary>
+        /// <param name="text">The possibility to add.</param>
+        /// <param name="weight">The weight of the possibility to add.</param>
+        public void Add(string text, double weight = 1.0d)
+        {
+            base.Add(new Item(text, weight));
+        }
+
+        /// <summary>
         /// Replaces placeholders in the string with the specified values.
         /// </summary>
         /// <param name="args">
