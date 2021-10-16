@@ -154,5 +154,7 @@ namespace Randomizer.SMZ3.Tracking
 
             return false;
         }
+
+        public override string ToString() => Name[0];
     }
 }

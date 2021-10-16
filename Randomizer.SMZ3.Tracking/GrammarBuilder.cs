@@ -1,48 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
+using System.Text;
 
 namespace Randomizer.SMZ3.Tracking
 {
     public class GrammarBuilder
     {
-        private System.Speech.Recognition.GrammarBuilder _builder;
+        private System.Speech.Recognition.GrammarBuilder _grammar;
+        private List<string> _elements;
 
         public GrammarBuilder()
         {
-            _builder = new();
+            _grammar = new();
+            _elements = new();
         }
 
-        public static implicit operator System.Speech.Recognition.GrammarBuilder(GrammarBuilder self) => self._builder;
+        public GrammarBuilder(IEnumerable<GrammarBuilder> choices)
+            : this()
+        {
+            _grammar.Append(new Choices(choices.Select(x => (System.Speech.Recognition.GrammarBuilder)x).ToArray()));
+            foreach (var choice in choices)
+                _elements.Add(choice.ToString() + "\n");
+        }
+
+        public static implicit operator System.Speech.Recognition.GrammarBuilder(GrammarBuilder self) => self._grammar;
 
         public static GrammarBuilder Combine(params GrammarBuilder[] choices)
         {
-            var builder = new GrammarBuilder();
-            builder.Append(new Choices(choices.Select(x => (System.Speech.Recognition.GrammarBuilder)x).ToArray()));
-            return builder;
+            return new GrammarBuilder(choices);
         }
 
         public GrammarBuilder Append(string phrase)
         {
-            _builder.Append(phrase);
+            _grammar.Append(phrase);
+            _elements.Add(phrase);
             return this;
         }
 
         public GrammarBuilder Append(string key, Choices choices)
         {
-            _builder.Append(new SemanticResultKey(key, choices));
-            return this;
-        }
-
-        public GrammarBuilder Append(Choices choices)
-        {
-            _builder.Append(choices);
+            _grammar.Append(new SemanticResultKey(key, choices));
+            _elements.Add($"<{key}>");
             return this;
         }
 
         public GrammarBuilder OneOf(params string[] choices)
         {
-            _builder.Append(new Choices(choices));
+            _grammar.Append(new Choices(choices));
+            _elements.Add($"[{string.Join(',', choices)}]");
             return this;
         }
 
@@ -53,5 +60,8 @@ namespace Randomizer.SMZ3.Tracking
                 Name = name
             };
         }
+
+        public override string ToString()
+            => string.Join(' ', _elements);
     }
 }

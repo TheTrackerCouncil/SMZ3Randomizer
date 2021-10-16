@@ -47,7 +47,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var rewardNames = new Choices();
             foreach (var reward in Enum.GetValues<RewardItem>())
             {
-                rewardNames.Add(new SemanticResultValue(reward.GetName(), (int)reward));
+                foreach (var name in reward.GetName())
+                    rewardNames.Add(new SemanticResultValue(name, (int)reward));
             }
 
             return new GrammarBuilder()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -35,7 +36,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Action<Tracker, RecognitionResult> executeCommand)
         {
             var builder = new GrammarBuilder()
-                .Append(new Choices(phrases));
+                .OneOf(phrases);
 
             AddCommand(ruleName, builder, executeCommand);
         }

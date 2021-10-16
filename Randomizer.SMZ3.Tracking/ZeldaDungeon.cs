@@ -29,6 +29,10 @@ namespace Randomizer.SMZ3.Tracking
         public Medallion Requirement { get; set; }
             = Medallion.None;
 
+        public int? TreasureRemaining { get; set; }
+
         public bool Cleared { get; set; }
+
+        public override string ToString() => Name[0];
     }
 }

@@ -223,11 +223,6 @@
       "Multiple": true
     },
     {
-      "Name": "Twenty Rupees",
-      "InternalItemType": 71,
-      "Multiple": true
-    },
-    {
       "Name": [ "Pegasus Boots", "Boots" ],
       "InternalItemType": 75,
       "Column": 1,
@@ -779,7 +774,8 @@
       "{0} doesn't need medallions"
     ],
     "DungeonRequirementMismatch": [
-      "Are you sure it shouldn't be {0}? Oh well, if you say so.",
+      "If you say so.",
+      "Are you sure it shouldn't be {0}? Oh well, you do do.",
       "{1} requires {0}, not {2}, but whatever."
     ],
     "TrackedSpecificItem": {
