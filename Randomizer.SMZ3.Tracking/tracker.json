@@ -120,9 +120,7 @@
     {
       "Name": [ "Heart piece", "Piece of Heart" ],
       "InternalItemType": 23,
-      "Multiple": true,
-      "Column": 4,
-      "Row": 4
+      "Multiple": true
     },
     {
       "Name": "Cane of Byrna",
@@ -210,7 +208,7 @@
       "InternalItemType": 62,
       "Multiple": true,
       "Column": 5,
-      "Row": 4
+      "Row": 3
     },
     {
       "Name": "One Hundred Rupees",
@@ -293,8 +291,8 @@
         "3": [ "Tempered Sword", "Bacon" ],
         "4": [ "Gold Sword", "Butter" ]
       },
-      "Column": 3,
-      "Row": 5
+      "Column": 4,
+      "Row": 4
     },
     {
       "Name": [
@@ -308,8 +306,8 @@
         "2": [ "Red Shield" ],
         "3": [ "Mirror Shield" ]
       },
-      "Column": 4,
-      "Row": 5
+      "Column": 5,
+      "Row": 4
     },
     {
       "Name": [
@@ -323,8 +321,8 @@
         "1": [ "Blue Mail" ],
         "2": [ "Red Mail" ]
       },
-      "Column": 5,
-      "Row": 5
+      "Column": 6,
+      "Row": 4
     },
     {
       "Name": [
@@ -449,97 +447,97 @@
     {
       "Name": [ "Grappling Beam", "Grapple Beam", "Grapple" ],
       "InternalItemType": 176,
-      "Column": 8,
+      "Column": 6,
       "Row": 3
     },
     {
       "Name": [ "X-Ray Scope", "X-Ray" ],
       "InternalItemType": 177,
-      "Column": 9,
+      "Column": 7,
       "Row": 3
     },
     {
       "Name": "Varia Suit",
       "InternalItemType": 178,
-      "Column": 7,
+      "Column": 6,
       "Row": 2
     },
     {
       "Name": "Spring Ball",
       "InternalItemType": 179,
-      "Column": 9,
+      "Column": 8,
       "Row": 1
     },
     {
       "Name": [ "Morphing Ball", "Morph Ball", "Morph" ],
       "InternalItemType": 180,
-      "Column": 7,
+      "Column": 6,
       "Row": 1
     },
     {
       "Name": "Screw Attack",
       "InternalItemType": 181,
-      "Column": 11,
+      "Column": 10,
       "Row": 1
     },
     {
       "Name": "Gravity Suit",
       "InternalItemType": 182,
-      "Column": 8,
+      "Column": 7,
       "Row": 2
     },
     {
       "Name": "Hi-Jump Boots",
       "InternalItemType": 183,
-      "Column": 9,
+      "Column": 8,
       "Row": 2
     },
     {
       "Name": "Space Jump",
       "InternalItemType": 184,
-      "Column": 10,
+      "Column": 9,
       "Row": 1
     },
     {
       "Name": "Morph Bombs",
       "InternalItemType": 185,
-      "Column": 8,
+      "Column": 7,
       "Row": 1
     },
     {
       "Name": "Speed Booster",
       "InternalItemType": 186,
-      "Column": 10,
+      "Column": 9,
       "Row": 2
     },
     {
       "Name": "Charge Beam",
       "InternalItemType": 187,
-      "Column": 7,
+      "Column": 6,
       "Row": 0
     },
     {
       "Name": [ "Ice Beam", "Nice Beam" ],
       "InternalItemType": 188,
-      "Column": 8,
+      "Column": 7,
       "Row": 0
     },
     {
       "Name": "Wave Beam",
       "InternalItemType": 189,
-      "Column": 9,
+      "Column": 8,
       "Row": 0
     },
     {
       "Name": "Spazer",
       "InternalItemType": 190,
-      "Column": 10,
+      "Column": 9,
       "Row": 0
     },
     {
       "Name": "Plasma Beam",
       "InternalItemType": 191,
-      "Column": 11,
+      "Column": 10,
       "Row": 0
     },
     {
@@ -547,35 +545,35 @@
       "InternalItemType": 192,
       "Artice": "an",
       "Multiple": true,
-      "Column": 10,
+      "Column": 8,
       "Row": 3
     },
     {
       "Name": "Reserve Tank",
       "InternalItemType": 193,
       "Multiple": true,
-      "Column": 11,
+      "Column": 9,
       "Row": 3
     },
     {
       "Name": [ "Missile", "Missiles", "Missile pack" ],
       "InternalItemType": 194,
       "Multiple": true,
-      "Column": 8,
+      "Column": 7,
       "Row": 4
     },
     {
       "Name": [ "Super Missile", "Supers", "Superb Missiles", "Super Missile pack" ],
       "InternalItemType": 195,
       "Multiple": true,
-      "Column": 9,
+      "Column": 8,
       "Row": 4
     },
     {
       "Name": [ "Power Bomb", "Powerful Bombs" ],
       "InternalItemType": 196,
       "Multiple": true,
-      "Column": 10,
+      "Column": 9,
       "Row": 4
     },
     {
@@ -650,7 +648,7 @@
       "Boss": "Armos Knights",
       "TreasureRemaining": 3,
       "Column": 0,
-      "Row": 6
+      "Row": 5
     },
     {
       "Name": [ "Desert Palace", "Dessert Palace" ],
@@ -658,7 +656,7 @@
       "Boss": "Lanmolas",
       "TreasureRemaining": 2,
       "Column": 1,
-      "Row": 6
+      "Row": 5
     },
     {
       "Name": [ "Tower of Hera" ],
@@ -666,7 +664,7 @@
       "Boss": "Moldorm",
       "TreasureRemaining": 2,
       "Column": 2,
-      "Row": 6
+      "Row": 5
     },
     {
       "Name": [ "Thieves' Town" ],
@@ -674,7 +672,7 @@
       "Boss": "Blind",
       "TreasureRemaining": 4,
       "Column": 3,
-      "Row": 6
+      "Row": 5
     },
     {
       "Name": [ "Palace of Darkness", "Dark Palace" ],
@@ -682,47 +680,47 @@
       "Boss": "Helmasaur King",
       "TreasureRemaining": 5,
       "Column": 4,
-      "Row": 6
+      "Row": 5
     },
     {
       "Name": [ "Swamp Palace" ],
       "Abbreviation": "SP",
       "Boss": "Arrghus",
       "TreasureRemaining": 6,
-      "Column": 0,
-      "Row": 7
+      "Column": 5,
+      "Row": 5
     },
     {
       "Name": [ "Skull Woods", "Skill Woods" ],
       "Abbreviation": "SW",
       "Boss": "Mothula",
       "TreasureRemaining": 2,
-      "Column": 1,
-      "Row": 7
+      "Column": 6,
+      "Row": 5
     },
     {
       "Name": [ "Ice Palace" ],
       "Abbreviation": "IP",
       "Boss": "Kholdstare",
       "TreasureRemaining": 3,
-      "Column": 2,
-      "Row": 7
+      "Column": 7,
+      "Row": 5
     },
     {
       "Name": [ "Misery Mire" ],
       "Abbreviation": "MM",
       "Boss": "Vitreous",
       "TreasureRemaining": 2,
-      "Column": 3,
-      "Row": 7
+      "Column": 8,
+      "Row": 5
     },
     {
       "Name": [ "Turtle Rock" ],
       "Abbreviation": "TR",
       "Boss": "Trinexx",
       "TreasureRemaining": 5,
-      "Column": 4,
-      "Row": 7
+      "Column": 9,
+      "Row": 5
     },
     {
       "Name": [ "Ganon's Tower" ],
