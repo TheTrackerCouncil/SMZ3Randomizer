@@ -168,6 +168,25 @@ namespace Randomizer.SMZ3.Tracking
             return false;
         }
 
+        /// <summary>
+        /// Determines whether the item is of the specified type.
+        /// </summary>
+        /// <param name="type">The type of item to check against.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="type"/> matches this item's type;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// If this item's type is Nothing, the item is considered the same if
+        /// it is a scam item.
+        /// </remarks>
+        public bool Is(ItemType type)
+        {
+            return InternalItemType == type
+                || (InternalItemType == ItemType.Nothing
+                    && type.IsInCategory(ItemCategory.Scam));
+        }
+
         public override string ToString() => Name[0];
     }
 }

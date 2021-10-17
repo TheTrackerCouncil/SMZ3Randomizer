@@ -404,10 +404,10 @@ namespace Randomizer.SMZ3.Tracking
 
         public void MarkLocation(Location location, ItemData item, float confidence = 1.0f)
         {
-            if (location.Item != null && location.Item.Type != item.InternalItemType)
+            if (location.Item != null && !item.Is(location.Item.Type))
             {
                 var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
-                    ?? location.Item.Name;
+                        ?? location.Item.Name;
                 Say(Responses.LocationMarkedWrong?.Format(item.Name, actualItemName));
             }
 
