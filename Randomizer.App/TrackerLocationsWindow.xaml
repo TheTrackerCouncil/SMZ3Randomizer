@@ -10,10 +10,28 @@
         Title="Tracker — Locations — SMZ3 Cas' Randomizer"
         Height="600"
         Width="450">
-  <StackPanel Margin="11">
+  <Window.Resources>
+    <CollectionViewSource x:Key="topLocations"
+                          Source="{Binding TopLocations}">
+      <CollectionViewSource.GroupDescriptions>
+        <PropertyGroupDescription PropertyName="Area" />
+      </CollectionViewSource.GroupDescriptions>
+    </CollectionViewSource>
+  </Window.Resources>
+
+  <Grid Margin="11">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
     <TextBlock Text="Marked locations"
+               Grid.Row="0"
                Style="{StaticResource Heading}" />
     <ListView ItemsSource="{Binding MarkedLocations}"
+              Grid.Row="1"
               BorderThickness="0"
               Margin="0,0,0,11">
       <ListView.ItemContainerStyle>
@@ -57,66 +75,50 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
+
     <TextBlock Text="Top locations"
+               Grid.Row="2"
                Style="{StaticResource Heading}" />
-    <Grid Grid.IsSharedSizeScope="True">
-      <ListView ItemsSource="{Binding TopLocations}"
-                BorderThickness="0"
-                Margin="0,0,0,11"
-                ScrollViewer.CanContentScroll="False"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-        <ListView.ItemContainerStyle>
-          <Style TargetType="ListViewItem">
-            <Setter Property="Focusable"
-                    Value="false" />
-          </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.ItemTemplate>
+    <ScrollViewer Grid.Row="3">
+      <ItemsControl ItemsSource="{Binding Source={StaticResource topLocations}}"
+                    BorderThickness="0"
+                    Margin="0,0,0,11">
+        <ItemsControl.GroupStyle>
+          <GroupStyle>
+            <GroupStyle.HeaderTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="{Binding Path=ItemCount}"
+                             FontWeight="Bold" />
+                  <Image Source="{Binding ChestSprite, RelativeSource={RelativeSource AncestorType={x:Type local:TrackerLocationsWindow}, Mode=FindAncestor}}"
+                         Width="16px"
+                         Height="16px"
+                         Margin="3,0,7,0" />
+                  <TextBlock Text="{Binding Path=Name}"
+                             FontWeight="Bold" />
+                </StackPanel>
+              </DataTemplate>
+            </GroupStyle.HeaderTemplate>
+          </GroupStyle>
+        </ItemsControl.GroupStyle>
+        <ItemsControl.ItemTemplate>
           <DataTemplate>
             <Grid>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-              </Grid.RowDefinitions>
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="32px" />
-                <ColumnDefinition Width="Auto"
-                                  SharedSizeGroup="treasureCount" />
-                <ColumnDefinition Width="7" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="3" />
+                <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
 
-              <Image Source="{Binding Sprite}"
-                     RenderOptions.BitmapScalingMode="NearestNeighbor"
-                     Grid.RowSpan="2"
-                     Grid.Column="0" />
-
-              <TextBlock Text="{Binding TreasureCount}"
-                         FontWeight="ExtraBlack"
-                         FontSize="20px"
-                         VerticalAlignment="Top"
-                         TextAlignment="Right"
-                         LineHeight="1"
-                         Grid.RowSpan="2"
-                         Grid.Column="1"
-                         Padding="0"
-                         Margin="3,0,3,0" />
-
-              <TextBlock Text="{Binding Region}"
-                         FontWeight="Bold"
-                         Grid.Row="0"
-                         Grid.Column="3"
-                         TextTrimming="CharacterEllipsis" />
-
-              <TextBlock Text="{Binding Locations}"
-                         Grid.Row="1"
-                         Grid.Column="3"
-                         TextTrimming="CharacterEllipsis"
-                         Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+              <TextBlock Text="{Binding Name}"
+                         Grid.Column="0" />
+              <Button Grid.Column="2"
+                      Style="{StaticResource InlineTextButton}"
+                      Command="{Binding Clear}">×</Button>
             </Grid>
           </DataTemplate>
-        </ListView.ItemTemplate>
-      </ListView>
-    </Grid>
-  </StackPanel>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </Grid>
 </Window>

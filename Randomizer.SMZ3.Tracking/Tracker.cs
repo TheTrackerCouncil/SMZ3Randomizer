@@ -380,11 +380,14 @@ namespace Randomizer.SMZ3.Tracking
 
             // Check if we can remove something from the marked location
             var location = World.Locations.TrySingle(x => x.ItemIs(item.InternalItemType, World));
-            if (location != null && MarkedLocations.ContainsKey(location)
-                && (dungeon == null || dungeon.Is(location.Region)))
+            if (location != null && (dungeon == null || dungeon.Is(location.Region)))
             {
-                MarkedLocations.Remove(location);
-                OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+                location.Cleared = true;
+                if (MarkedLocations.ContainsKey(location))
+                {
+                    MarkedLocations.Remove(location);
+                    OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+                }
             }
 
             // Check if we can remove something from the remaining treasures in a dungeon

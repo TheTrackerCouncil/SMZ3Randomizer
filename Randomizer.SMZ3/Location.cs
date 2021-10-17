@@ -265,6 +265,11 @@ namespace Randomizer.SMZ3
         public Room Room { get; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the item has been found.
+        /// </summary>
+        public bool Cleared { get; set; }
+
+        /// <summary>
         /// Gets any alternate names for the location.
         /// </summary>
         public IReadOnlyCollection<string> AlternateNames { get; }

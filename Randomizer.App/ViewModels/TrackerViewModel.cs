@@ -25,7 +25,11 @@ namespace Randomizer.App.ViewModels
         {
             _tracker = tracker;
             _tracker.MarkedLocationsUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
-            _tracker.ItemTracked += (_, _) => OnPropertyChanged(null);
+            _tracker.ItemTracked += (_, _) =>
+            {
+                OnPropertyChanged(nameof(TopLocations));
+                OnPropertyChanged(nameof(MarkedLocations));
+            };
 
             World = tracker.World;
         }
@@ -36,14 +40,16 @@ namespace Randomizer.App.ViewModels
                     => !_isDesign ? _tracker.MarkedLocations.Select(x => new MarkedLocationViewModel(x.Key, x.Value, Progression))
                           : GetDummyMarkedLocations();
 
-        public IEnumerable<TopLocationViewModel> TopLocations
+        public IEnumerable<LocationViewModel> TopLocations
         {
             get
             {
                 return World.Regions
-                    .OrderByDescending(x => x.Locations.Count(x => x.IsAvailable(Progression)))
-                    .Take(5)
-                    .Select(x => new TopLocationViewModel(x.Locations.Count(x => x.IsAvailable(Progression)), x, Progression));
+                    .OrderByDescending(x => x.Locations.Count(x => x.IsAvailable(Progression) && !x.Cleared))
+                    .Take(3)
+                    .SelectMany(x => x.Locations)
+                    .Where(x => x.IsAvailable(Progression) && !x.Cleared)
+                    .Select(x => new LocationViewModel(x, () => OnPropertyChanged(nameof(TopLocations))));
             }
         }
 
