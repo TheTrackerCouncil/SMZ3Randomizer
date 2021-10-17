@@ -26,6 +26,9 @@
 
     <StatusBar x:Name="TrackerStatusBar"
                Grid.Row="1">
+      <StatusBarItem x:Name="StatusBarTimer"
+                     Content="00:00"
+                     HorizontalAlignment="Left" />
       <StatusBarItem x:Name="StatusBarConfidence"
                      Content="0.00%"
                      ToolTip="Confidence of last recognized voice command"

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
@@ -22,12 +23,21 @@ namespace Randomizer.App
         private const int GridItemMargin = 3;
         private readonly World _world;
         private Tracker _tracker;
+        private DispatcherTimer _dispatcherTimer;
         private bool _pegWorldMode;
+        private DateTime _startTime;
 
         public TrackerWindow(World world)
         {
             InitializeComponent();
             _world = world;
+            _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Background, (sender, _) =>
+            {
+                var elapsed = DateTime.Now - _startTime;
+                StatusBarTimer.Content = elapsed.Hours > 0
+                    ? elapsed.ToString("h':'mm':'ss")
+                    : elapsed.ToString("mm':'ss");
+            }, Dispatcher);
         }
 
         protected static Image GetGridItemControl(string imageFileName, int column, int row,
@@ -176,6 +186,8 @@ namespace Randomizer.App
             ResetGridSize();
             RefreshGridItems();
             _tracker.StartTracking();
+            _startTime = DateTime.Now;
+            _dispatcherTimer.Start();
         }
 
         private void InitializeTracker()
@@ -225,6 +237,7 @@ namespace Randomizer.App
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _tracker.StopTracking();
+            _dispatcherTimer.Stop();
         }
 
         private void Window_Closed(object sender, EventArgs e)
