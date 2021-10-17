@@ -15,17 +15,20 @@ namespace Randomizer.App.ViewModels
     {
         private readonly Location _location;
         private readonly ItemData _itemData;
+        private readonly Progression _progression;
 
-        public MarkedLocationViewModel(Location location, ItemData itemData)
+        public MarkedLocationViewModel(Location location, ItemData itemData, Progression progression)
         {
             _location = location;
             _itemData = itemData;
-
+            _progression = progression;
             var fileName = TrackerWindow.GetItemSpriteFileName(itemData);
             ItemSprite = new BitmapImage(new Uri(fileName));
         }
 
         public ImageSource ItemSprite { get; }
+
+        public double Opacity => _location.IsAvailable(_progression) ? 1.0 : 0.33;
 
         public string Item => _itemData.Name;
 

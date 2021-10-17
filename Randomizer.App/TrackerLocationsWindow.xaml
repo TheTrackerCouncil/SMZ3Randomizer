@@ -37,18 +37,21 @@
 
             <Image Source="{Binding ItemSprite}"
                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   Opacity="{Binding Opacity}"
                    Grid.RowSpan="2"
                    Grid.Column="0" />
 
             <TextBlock Text="{Binding Location}"
                        Grid.Row="0"
                        Grid.Column="2"
+                       Opacity="{Binding Opacity}"
                        TextTrimming="CharacterEllipsis"
                        FontWeight="Bold" />
             <TextBlock Text="{Binding Area}"
                        Grid.Row="1"
                        Grid.Column="2"
                        TextTrimming="CharacterEllipsis"
+                       Opacity="{Binding Opacity}"
                        Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
           </Grid>
         </DataTemplate>

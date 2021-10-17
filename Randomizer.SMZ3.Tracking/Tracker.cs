@@ -232,6 +232,17 @@ namespace Randomizer.SMZ3.Tracking
                 ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
         }
 
+        public Progression GetProgression()
+        {
+            var progression = new Progression();
+            foreach (var item in Items)
+            {
+                if (item.TrackingState > 0)
+                    progression.Add(Enumerable.Repeat(new Item(item.InternalItemType), item.TrackingState));
+            }
+            return progression;
+        }
+
         /// <summary>
         /// Starts voice recognition.
         /// </summary>

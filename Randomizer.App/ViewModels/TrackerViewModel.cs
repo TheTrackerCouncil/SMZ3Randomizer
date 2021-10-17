@@ -25,7 +25,7 @@ namespace Randomizer.App.ViewModels
         {
             _tracker = tracker;
             _tracker.MarkedLocationsUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
-            _tracker.ItemTracked += (_, _) => OnPropertyChanged(nameof(TopLocations));
+            _tracker.ItemTracked += (_, _) => OnPropertyChanged(null);
 
             World = tracker.World;
         }
@@ -33,7 +33,7 @@ namespace Randomizer.App.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public IEnumerable<MarkedLocationViewModel> MarkedLocations
-                    => !_isDesign ? _tracker.MarkedLocations.Select(x => new MarkedLocationViewModel(x.Key, x.Value))
+                    => !_isDesign ? _tracker.MarkedLocations.Select(x => new MarkedLocationViewModel(x.Key, x.Value, Progression))
                           : GetDummyMarkedLocations();
 
         public IEnumerable<TopLocationViewModel> TopLocations
@@ -49,7 +49,7 @@ namespace Randomizer.App.ViewModels
 
         protected World World { get; }
 
-        protected Progression Progression => new Progression();
+        protected Progression Progression => _tracker?.GetProgression() ?? new();
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
             => PropertyChanged?.Invoke(this, new(propertyName));
@@ -58,11 +58,13 @@ namespace Randomizer.App.ViewModels
         {
             yield return new MarkedLocationViewModel(
                 World.LightWorldSouth.Library,
-                new ItemData(new("X-Ray Scope"), ItemType.XRay));
+                new ItemData(new("X-Ray Scope"), ItemType.XRay),
+                Progression);
 
             yield return new MarkedLocationViewModel(
                 World.LightWorldNorthEast.ZorasDomain.Zora,
-                new ItemData(new("Bullshit"), ItemType.Nothing));
+                new ItemData(new("Bullshit"), ItemType.Nothing),
+                Progression);
         }
     }
 }
