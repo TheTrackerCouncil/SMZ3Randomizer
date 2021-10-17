@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Speech.Recognition;
@@ -83,7 +84,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets a collection of Zelda dungeons.
         /// </summary>
-        public IReadOnlyCollection<ZeldaDungeon> Dungeons { get; init; }
+        public IReadOnlyCollection<ZeldaDungeon> Dungeons { get; }
+
+        /// <summary>
+        /// Gets a dictionary that contains the locations that are marked with
+        /// items.
+        /// </summary>
+        public Dictionary<Location, ItemData> MarkedLocations { get; } = new();
 
         /// <summary>
         /// Gets the configured responses.
@@ -367,6 +374,27 @@ namespace Randomizer.SMZ3.Tracking
             OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence));
             GiveLocationHint(accessibleBefore);
             RestartIdleTimers();
+        }
+
+        public void MarkLocation(Location location, ItemData item, float confidence = 1.0f)
+        {
+            if (location.Item != null && location.Item.Type != item.InternalItemType)
+            {
+                var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
+                    ?? location.Item.Name;
+                Say(Responses.LocationMarkedWrong?.Format(item.Name, actualItemName));
+            }
+
+            if (MarkedLocations.TryGetValue(location, out var oldItem))
+            {
+                MarkedLocations[location] = item;
+                Say(Responses.LocationMarkedAgain.Format(location.GetName(), item.Name, oldItem.Name));
+            }
+            else
+            {
+                MarkedLocations.Add(location, item);
+                Say(Responses.LocationMarked.Format(location.GetName(), item.Name));
+            }
         }
 
         /// <summary>

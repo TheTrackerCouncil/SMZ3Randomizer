@@ -764,7 +764,7 @@
     "StoppedTracking": [
       "Leaving so soon?",
       "Toggled Tracker off.",
-      "Hey, you'll be missed, pal."
+      "Hey you'll be missed pal."
     ],
     "TrackedItem": [
       "Toggled {0} on."
@@ -834,6 +834,17 @@
     "ItemTrackedInIncorrectDungeon": [
       "Are you sure that's where you found it?",
       "{1} shouldn't be in {0}."
+    ],
+    "LocationMarked": [
+      "Marked {1} at {0}."
+    ],
+    "LocationMarkedAgain": [
+      "Replaced {2} with {1} at {0}.",
+      "Changed your mind? Marked {1} at {0}."
+    ],
+    "LocationMarkedWrong": [
+      "That looks more like a {1} to me, but whatever.",
+      "Does that look like a {0} to you? Well if you say so."
     ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [

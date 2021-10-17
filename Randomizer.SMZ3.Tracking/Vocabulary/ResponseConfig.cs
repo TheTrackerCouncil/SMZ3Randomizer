@@ -188,6 +188,14 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </remarks>
         public SchrodingersString? ItemTrackedInIncorrectDungeon { get; init; }
 
+        public SchrodingersString LocationMarked { get; init; }
+            = new SchrodingersString("Marked {1} at {0}.");
+
+        public SchrodingersString LocationMarkedAgain { get; init; }
+            = new SchrodingersString("Replaced {2} with {1} at {0}.");
+
+        public SchrodingersString? LocationMarkedWrong { get; init; }
+
         /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as

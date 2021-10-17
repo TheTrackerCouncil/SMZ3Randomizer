@@ -14,8 +14,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 var location = GetLocationFromResult(tracker, result);
-
-                tracker.Say($"Marked {item.Name} at {location.GetName()}");
+                tracker.MarkLocation(location, item, result.Confidence);
             });
         }
 
@@ -31,9 +30,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var itemNames = GetItemNames();
             var locationNames = GetLocationNames();
 
-            var itemAtLocation = new GrammarBuilder()
+            var itemIsAtLocation = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("there is a", "a", "an", "the")
+                .OneOf("a", "an", "the")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("is at")
                 .Append(LocationKey, locationNames);
@@ -52,7 +51,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(LocationKey, locationNames);
 
             return GrammarBuilder.Combine(
-                itemAtLocation, locationHasItem, markAtLocation);
+                itemIsAtLocation, locationHasItem, markAtLocation);
         }
 
         private Choices GetLocationNames()
