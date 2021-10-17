@@ -18,11 +18,15 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <Grid x:Name="TrackerGrid"
-          Grid.Row="0"
-          Margin="11"
-          HorizontalAlignment="Left"
-          VerticalAlignment="Top" />
+    <Border x:Name="GoModeBorder"
+            Grid.Row="0"
+            Padding="7"
+            BorderThickness="4"
+            BorderBrush="Transparent">
+      <Grid x:Name="TrackerGrid"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top" />
+    </Border>
 
     <StatusBar x:Name="TrackerStatusBar"
                Grid.Row="1">

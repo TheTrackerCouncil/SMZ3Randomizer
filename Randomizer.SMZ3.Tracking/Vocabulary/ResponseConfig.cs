@@ -196,6 +196,9 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
 
         public SchrodingersString? LocationMarkedWrong { get; init; }
 
+        public SchrodingersString GoModeToggledOn { get; init; }
+            = new SchrodingersString("Toggled Go Mode <break time='1s'/> on.");
+
         /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as

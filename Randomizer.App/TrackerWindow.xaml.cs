@@ -222,6 +222,11 @@ namespace Randomizer.App
                 _pegWorldMode = false;
                 RefreshGridItems();
             });
+            _tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarConfidence.Content = $"{e.Confidence:P2}";
+                GoModeBorder.BorderBrush = new SolidColorBrush(Colors.Green);
+            });
         }
 
         private void ResetGridSize()

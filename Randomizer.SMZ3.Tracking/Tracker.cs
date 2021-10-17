@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Speech.Recognition;
@@ -30,6 +29,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly SpeechRecognitionEngine _recognizer;
         private Dictionary<string, Timer> _idleTimers;
         private bool _disposed;
+        private bool _goMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -73,6 +73,8 @@ namespace Randomizer.SMZ3.Tracking
 
         public event EventHandler<TrackerEventArgs>? MarkedLocationsUpdated;
 
+        public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
+
         /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
@@ -105,6 +107,11 @@ namespace Randomizer.SMZ3.Tracking
         public World World { get; }
 
         /// <summary>
+        /// Indicates whether Tracker is in Go Mode.
+        /// </summary>
+        public bool GoMode { get; private set; }
+
+        /// <summary>
         /// Marks a dungeon as cleared.
         /// </summary>
         /// <param name="dungeon">The dungeon that was cleared.</param>
@@ -114,6 +121,14 @@ namespace Randomizer.SMZ3.Tracking
             dungeon.Cleared = true;
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
             OnDungeonUpdated(new TrackerEventArgs(confidence));
+        }
+
+        public void ToggleGoMode(float confidence = 1.0f)
+        {
+            Say("Toggled Go Mode <break time='1s'/>", wait: true);
+            GoMode = true;
+            OnGoModeToggledOn(new TrackerEventArgs(confidence));
+            Say("on.");
         }
 
         /// <summary>
@@ -390,7 +405,8 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
-            // Check if we can remove something from the remaining treasures in a dungeon
+            // Check if we can remove something from the remaining treasures in
+            // a dungeon
             dungeon = GetDungeonFromItem(item, dungeon);
             if (dungeon != null)
             {
@@ -488,6 +504,9 @@ namespace Randomizer.SMZ3.Tracking
 
         protected virtual void OnMarkedLocationsUpdated(TrackerEventArgs e)
             => MarkedLocationsUpdated?.Invoke(this, e);
+
+        protected virtual void OnGoModeToggledOn(TrackerEventArgs e)
+            => GoModeToggledOn?.Invoke(this, e);
 
         private static void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World? world)
         {
