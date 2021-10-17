@@ -333,6 +333,8 @@
         [ "Progressive Glove", 0 ]
       ],
       "InternalItemType": 97,
+      "Column": 0,
+      "Row": 4,
       "Multiple": true,
       "Stages": {
         "1": [ "Power Glove" ],
