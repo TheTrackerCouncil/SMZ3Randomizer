@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 using Randomizer.SMZ3;
@@ -9,7 +10,7 @@ using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App.ViewModels
 {
-    public class TrackerViewModel
+    public class TrackerViewModel : INotifyPropertyChanged
     {
         private readonly Tracker _tracker;
         private bool _isDesign;
@@ -23,11 +24,16 @@ namespace Randomizer.App.ViewModels
         public TrackerViewModel(Tracker tracker)
         {
             _tracker = tracker;
+            _tracker.MarkedLocationsUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
+            _tracker.ItemTracked += (_, _) => OnPropertyChanged(nameof(TopLocations));
+
             World = tracker.World;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public IEnumerable<MarkedLocationViewModel> MarkedLocations
-            => !_isDesign ? _tracker.MarkedLocations.Select(x => new MarkedLocationViewModel(x.Key, x.Value))
+                    => !_isDesign ? _tracker.MarkedLocations.Select(x => new MarkedLocationViewModel(x.Key, x.Value))
                           : GetDummyMarkedLocations();
 
         public IEnumerable<TopLocationViewModel> TopLocations
@@ -44,6 +50,9 @@ namespace Randomizer.App.ViewModels
         protected World World { get; }
 
         protected Progression Progression => new Progression();
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            => PropertyChanged?.Invoke(this, new(propertyName));
 
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {

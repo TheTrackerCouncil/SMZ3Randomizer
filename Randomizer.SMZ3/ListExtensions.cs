@@ -47,5 +47,29 @@ namespace Randomizer.SMZ3
             source.Insert(0, item);
             return item;
         }
+
+        /// <summary>
+        /// Returns the only element in a sequence, or a default value if the
+        /// sequence does not have exactly one element.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of elements of <paramref name="source"/>.
+        /// </typeparam>
+        /// <param name="source">The sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each element for a condition.
+        /// </param>
+        /// <returns>
+        /// The only element in <paramref name="source"/> if it has exactly one
+        /// element; otherwise, the default value for <typeparamref name="T"/>.
+        /// </returns>
+        public static T TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+        {
+            if (source is null)
+                throw new ArgumentNullException(nameof(source));
+
+            var items = source.Where(predicate).Take(2).ToList();
+            return items.Count == 1 ? items[0] : default;
+        }
     }
 }

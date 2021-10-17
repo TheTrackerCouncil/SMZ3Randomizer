@@ -71,6 +71,8 @@ namespace Randomizer.SMZ3.Tracking
 
         public event EventHandler<TrackerEventArgs>? DungeonUpdated;
 
+        public event EventHandler<TrackerEventArgs>? MarkedLocationsUpdated;
+
         /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
@@ -365,6 +367,16 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            // Check if we can remove something from the marked location
+            var location = World.Locations.TrySingle(x => x.ItemIs(item.InternalItemType, World));
+            if (location != null && MarkedLocations.ContainsKey(location)
+                && (dungeon == null || dungeon.Is(location.Region)))
+            {
+                MarkedLocations.Remove(location);
+                OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+            }
+
+            // Check if we can remove something from the remaining treasures in a dungeon
             dungeon = GetDungeonFromItem(item, dungeon);
             if (dungeon != null)
             {
@@ -395,6 +407,8 @@ namespace Randomizer.SMZ3.Tracking
                 MarkedLocations.Add(location, item);
                 Say(Responses.LocationMarked.Format(location.GetName(), item.Name));
             }
+
+            OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
         }
 
         /// <summary>
@@ -457,6 +471,9 @@ namespace Randomizer.SMZ3.Tracking
 
         protected virtual void OnDungeonUpdated(TrackerEventArgs e)
             => DungeonUpdated?.Invoke(this, e);
+
+        protected virtual void OnMarkedLocationsUpdated(TrackerEventArgs e)
+            => MarkedLocationsUpdated?.Invoke(this, e);
 
         private static void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World? world)
         {
