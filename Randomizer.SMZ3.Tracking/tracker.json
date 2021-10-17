@@ -1,7 +1,11 @@
 ﻿{
   "Items": [
     {
-      "Name": [ "Nothing", "Bullshit" ],
+      "Name": [ "Nothing" ],
+      "InternalItemType": 0
+    },
+    {
+      "Name": [ "Bullshit" ],
       "InternalItemType": 0,
       "Multiple": true
     },

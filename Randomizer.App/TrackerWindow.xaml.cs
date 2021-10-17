@@ -40,8 +40,34 @@ namespace Randomizer.App
             }, Dispatcher);
         }
 
+        public static string GetItemSpriteFileName(ItemData item)
+        {
+            var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", "Items");
+            var fileName = (string)null;
+
+            if (item.Image != null)
+            {
+                fileName = Path.Combine(folder, item.Image);
+                if (File.Exists(fileName))
+                    return fileName;
+            }
+
+            if (item.HasStages)
+            {
+                fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()} ({item.TrackingState}).png");
+                if (File.Exists(fileName))
+                    return fileName;
+            }
+
+            fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()}.png");
+            if (File.Exists(fileName))
+                return fileName;
+
+            return null;
+        }
+
         protected static Image GetGridItemControl(string imageFileName, int column, int row,
-            string overlayFileName = null, double overlayOffsetX = 0, double overlayOffsetY = 0)
+                    string overlayFileName = null, double overlayOffsetX = 0, double overlayOffsetY = 0)
         {
             var bitmapImage = new BitmapImage(new Uri(imageFileName));
             if (overlayFileName == null)
@@ -154,32 +180,6 @@ namespace Randomizer.App
             }
         }
 
-        private static string GetItemSpriteFileName(ItemData item)
-        {
-            var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", "Items");
-            var fileName = (string)null;
-
-            if (item.Image != null)
-            {
-                fileName = Path.Combine(folder, item.Image);
-                if (File.Exists(fileName))
-                    return fileName;
-            }
-
-            if (item.HasStages)
-            {
-                fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()} ({item.TrackingState}).png");
-                if (File.Exists(fileName))
-                    return fileName;
-            }
-
-            fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()}.png");
-            if (File.Exists(fileName))
-                return fileName;
-
-            return null;
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeTracker();
@@ -188,6 +188,9 @@ namespace Randomizer.App
             _tracker.StartTracking();
             _startTime = DateTime.Now;
             _dispatcherTimer.Start();
+
+            var trackerLocations = new TrackerLocationsWindow(_tracker);
+            trackerLocations.Show();
         }
 
         private void InitializeTracker()
