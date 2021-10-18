@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Accessibility;
+
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
 
@@ -23,7 +25,7 @@ namespace Randomizer.App.ViewModels
             _itemData = itemData;
             _progression = progression;
             var fileName = TrackerWindow.GetItemSpriteFileName(itemData);
-            ItemSprite = new BitmapImage(new Uri(fileName));
+            ItemSprite = fileName != null ? new BitmapImage(new Uri(fileName)) : null;
         }
 
         public ImageSource ItemSprite { get; }
@@ -32,8 +34,8 @@ namespace Randomizer.App.ViewModels
 
         public string Item => _itemData.Name;
 
-        public string Location => _location.Name;
+        public string Location => _location.Room != null ? $"{_location.Room.Name} {_location.Name}" : _location.Name;
 
-        public string Area => _location.Room?.ToString() ?? _location.Region.ToString();
+        public string Area => _location.Region.ToString();
     }
 }

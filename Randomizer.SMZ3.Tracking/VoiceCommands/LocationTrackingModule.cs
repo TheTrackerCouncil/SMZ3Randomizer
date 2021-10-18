@@ -6,7 +6,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class LocationTrackingModule : TrackerModule
     {
-        private const string LocationKey = "LocationName";
 
         public LocationTrackingModule(Tracker tracker) : base(tracker)
         {
@@ -18,13 +17,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             });
         }
 
-        private static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
-        {
-            var id = (int)result.Semantics[LocationKey].Value;
-            var location = tracker.World.Locations.SingleOrDefault(x => x.Id == id);
-            return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
-        }
-
         private GrammarBuilder GetTrackItemAtLocationRule()
         {
             var itemNames = GetItemNames();
@@ -32,9 +24,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var itemIsAtLocation = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("a", "an", "the")
                 .Append(ItemNameKey, itemNames)
-                .OneOf("is at")
+                .OneOf("is at", "are at")
                 .Append(LocationKey, locationNames);
 
             var locationHasItem = new GrammarBuilder()
@@ -52,22 +43,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return GrammarBuilder.Combine(
                 itemIsAtLocation, locationHasItem, markAtLocation);
-        }
-
-        private Choices GetLocationNames()
-        {
-            var locationNames = new Choices();
-
-            // There's too many different locations and they don't all have
-            // unique names. Sort this mess out later for problematic locations.
-            foreach (var location in Tracker.World.Locations)
-            {
-                locationNames.Add(new SemanticResultValue(location.Name, location.Id));
-                foreach (var name in location.AlternateNames)
-                    locationNames.Add(new SemanticResultValue(name, location.Id));
-            }
-
-            return locationNames;
         }
     }
 }

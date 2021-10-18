@@ -35,6 +35,17 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public SchrodingersString(IEnumerable<Item> items)
         {
             foreach (var item in items)
+                base.Add(item);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SchrodingersString"/>
+        /// class with the specified items using default weights.
+        /// </summary>
+        /// <param name="items">The items to add.</param>
+        public SchrodingersString(IEnumerable<string> items)
+        {
+            foreach (var item in items)
                 Add(item);
         }
 
@@ -46,7 +57,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public SchrodingersString(params Item[] items)
         {
             foreach (var item in items)
-                Add(item);
+                base.Add(item);
         }
 
         /// <summary>

@@ -6,32 +6,67 @@ using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
+    /// <summary>
+    /// Provides Tracker with speech recognition commands.
+    /// </summary>
     public abstract class TrackerModule
     {
         protected const string DungeonKey = "DungeonName";
         protected const string ItemNameKey = "ItemName";
+        protected const string LocationKey = "LocationName";
 
-        private Dictionary<string, IEnumerable<string>> _syntax = new();
+        private readonly Dictionary<string, IEnumerable<string>> _syntax = new();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackerModule"/> class
+        /// with the specified tracker.
+        /// </summary>
+        /// <param name="tracker">The tracker instance to use.</param>
         protected TrackerModule(Tracker tracker)
         {
             Tracker = tracker;
         }
 
+        /// <summary>
+        /// Gets a dictionary that contains the rule names and their associated
+        /// speech recognition patterns.
+        /// </summary>
         public IReadOnlyDictionary<string, IEnumerable<string>> Syntax
             => _syntax.ToImmutableDictionary();
 
+        /// <summary>
+        /// Gets the Tracker instance.
+        /// </summary>
         protected Tracker Tracker { get; }
 
+        /// <summary>
+        /// Gets a list of speech recognition grammars provided by the module.
+        /// </summary>
         protected IList<Grammar> Grammars { get; }
             = new List<Grammar>();
 
+        /// <summary>
+        /// Loads the voice commands provided by the module into the specified
+        /// recognition engine.
+        /// </summary>
+        /// <param name="engine">
+        /// The speech recognition engine to initialize.
+        /// </param>
         public void LoadInto(SpeechRecognitionEngine engine)
         {
             foreach (var grammar in Grammars)
                 engine.LoadGrammar(grammar);
         }
 
+        /// <summary>
+        /// Returns the <see cref="ZeldaDungeon"/> that was detected in a voice
+        /// command using <see cref="DungeonKey"/>.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <returns>
+        /// A <see cref="ZeldaDungeon"/> from the recognition result.
+        /// </returns>
         protected static ZeldaDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
             var dungeonName = (string)result.Semantics[DungeonKey].Value;
@@ -40,6 +75,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return dungeon ?? throw new Exception($"Could not find recognized dungeon '{dungeonName}'.");
         }
 
+        /// <summary>
+        /// Returns the <see cref="ItemData"/> that was detected in a voice
+        /// command using <see cref="ItemNameKey"/>.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <param name="itemName">
+        /// The actual name of the item that was detected.
+        /// </param>
+        /// <returns>
+        /// An <see cref="ItemData"/> from the recognition result.
+        /// </returns>
         protected static ItemData GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
@@ -48,6 +95,30 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return itemData ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
         }
 
+        /// <summary>
+        /// Returns the <see cref="Location"/> that was detected in a voice
+        /// command using <see cref="LocationKey"/>.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <returns>
+        /// A <see cref="Location"/> from the recognition result.
+        /// </returns>
+        protected static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
+        {
+            var id = (int)result.Semantics[LocationKey].Value;
+            var location = tracker.World.Locations.SingleOrDefault(x => x.Id == id);
+            return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
+        }
+
+        /// <summary>
+        /// Adds a new voice command that matches the specified phrase.
+        /// </summary>
+        /// <param name="ruleName">The name of the command.</param>
+        /// <param name="phrase">The phrase to recognize.</param>
+        /// <param name="executeCommand">
+        /// The command to execute when the phrase is recognized.
+        /// </param>
         protected void AddCommand(string ruleName, string phrase,
             Action<Tracker, RecognitionResult> executeCommand)
         {
@@ -58,6 +129,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand(ruleName, builder, executeCommand);
         }
 
+        /// <summary>
+        /// Adds a new voice command that matches any of the specified phrases.
+        /// </summary>
+        /// <param name="ruleName">The name of the command.</param>
+        /// <param name="phrases">The phrases to recognize.</param>
+        /// <param name="executeCommand">
+        /// The command to execute when any of the phrases is recognized.
+        /// </param>
         protected void AddCommand(string ruleName, string[] phrases,
             Action<Tracker, RecognitionResult> executeCommand)
         {
@@ -68,6 +147,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand(ruleName, builder, executeCommand);
         }
 
+        /// <summary>
+        /// Adds a new voice command that matches the specified grammar.
+        /// </summary>
+        /// <param name="ruleName">The name of the command.</param>
+        /// <param name="grammarBuilder">The grammar to recognize.</param>
+        /// <param name="executeCommand">
+        /// The command to execute when speech matching the grammar is
+        /// recognized.
+        /// </param>
         protected void AddCommand(string ruleName, GrammarBuilder grammarBuilder,
             Action<Tracker, RecognitionResult> executeCommand)
         {
@@ -78,7 +166,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Grammars.Add(grammar);
         }
 
-        protected Choices GetItemNames()
+        /// <summary>
+        /// Gets the item names for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible item
+        /// names.
+        /// </returns>
+        protected virtual Choices GetItemNames()
         {
             var itemNames = new Choices();
             foreach (var itemData in Tracker.Items)
@@ -98,7 +193,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return itemNames;
         }
 
-        protected Choices GetDungeonNames()
+        /// <summary>
+        /// Gets the dungeon names for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible dungeon
+        /// names.
+        /// </returns>
+        protected virtual Choices GetDungeonNames()
         {
             var dungeonNames = new Choices();
             foreach (var dungeon in Tracker.Dungeons)
@@ -109,6 +211,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             return dungeonNames;
+        }
+
+        /// <summary>
+        /// Gets the location names for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible
+        /// location names.
+        /// </returns>
+        protected virtual Choices GetLocationNames()
+        {
+            var locationNames = new Choices();
+
+            foreach (var location in Tracker.World.Locations)
+            {
+                foreach (var name in Tracker.UniqueLocationNames[location])
+                    locationNames.Add(new SemanticResultValue(name, location.Id));
+            }
+
+            return locationNames;
         }
     }
 }

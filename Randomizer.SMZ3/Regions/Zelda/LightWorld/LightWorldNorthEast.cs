@@ -36,20 +36,20 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             private const int SphereOne = -10;
 
             public SahasrahlasHideoutRoom(Region region)
-                : base(region, "Sahasrahla's Hideout")
+                : base(region, "Sahasrahla's Hut")
             {
                 LeftChest = new Location(this, 256 + 41, 0x1EA82, LocationType.Regular,
-                    name: "Sahasrahla's Hut - Left",
+                    name: "Left",
                     vanillaItem: ItemType.FiftyRupees)
                     .Weighted(SphereOne);
 
                 MiddleChest = new Location(this, 256 + 42, 0x1EA85, LocationType.Regular,
-                    name: "Sahasrahla's Hut - Middle",
+                    name: "Middle",
                     vanillaItem: ItemType.ThreeBombs)
                     .Weighted(SphereOne);
 
                 RightChest = new Location(this, 256 + 43, 0x1EA88, LocationType.Regular,
-                    name: "Sahasrahla's Hut - Right",
+                    name: "Right",
                     vanillaItem: ItemType.FiftyRupees)
                     .Weighted(SphereOne);
 
@@ -74,10 +74,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 : base(region, "Waterfall Fairy")
             {
                 Left = new Location(this, 256 + 254, 0x1E9B0, LocationType.Regular,
-                    "Waterfall Fairy - Left",
+                    "Left",
                     items => items.Flippers);
                 Right = new Location(this, 256 + 39, 0x1E9D1, LocationType.Regular,
-                    "Waterfall Fairy - Right",
+                    "Right",
                     items => items.Flippers);
             }
 

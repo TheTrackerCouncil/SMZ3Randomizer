@@ -29,7 +29,6 @@ namespace Randomizer.SMZ3.Tracking
         private readonly SpeechRecognitionEngine _recognizer;
         private Dictionary<string, Timer> _idleTimers;
         private bool _disposed;
-        private bool _goMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -47,6 +46,9 @@ namespace Randomizer.SMZ3.Tracking
             Responses = config.Responses;
             World = world ?? new World(new Config(), "Player", 0, "");
             GetTreasureCounts(Dungeons, world);
+            UniqueLocationNames = World.Locations.ToDictionary(x => x, x => GetUniqueNames(x));
+            foreach (var name in UniqueLocationNames.Values.SelectMany(x => x))
+                Debug.WriteLine(name);
 
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
@@ -110,6 +112,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Indicates whether Tracker is in Go Mode.
         /// </summary>
         public bool GoMode { get; private set; }
+
+        /// <summary>
+        /// Gets a dictionary that contains unique location names for each
+        /// location.
+        /// </summary>
+        protected internal IReadOnlyDictionary<Location, IReadOnlyCollection<string>> UniqueLocationNames { get; }
 
         /// <summary>
         /// Marks a dungeon as cleared.
@@ -420,6 +428,7 @@ namespace Randomizer.SMZ3.Tracking
 
         public void MarkLocation(Location location, ItemData item, float confidence = 1.0f)
         {
+            var locationName = new SchrodingersString(UniqueLocationNames[location]);
             if (location.Item != null && !item.Is(location.Item.Type))
             {
                 var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
@@ -430,12 +439,12 @@ namespace Randomizer.SMZ3.Tracking
             if (MarkedLocations.TryGetValue(location, out var oldItem))
             {
                 MarkedLocations[location] = item;
-                Say(Responses.LocationMarkedAgain.Format(location.GetName(), item.Name, oldItem.Name));
+                Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldItem.Name));
             }
             else
             {
                 MarkedLocations.Add(location, item);
-                Say(Responses.LocationMarked.Format(location.GetName(), item.Name));
+                Say(Responses.LocationMarked.Format(locationName, item.Name));
             }
 
             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
@@ -624,6 +633,41 @@ namespace Randomizer.SMZ3.Tracking
 
             var progression = new Progression(items);
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
+        }
+
+        private IReadOnlyCollection<string> GetUniqueNames(Location location)
+        {
+            var allLocationNames = World.Locations.Select(x => x.Name)
+                .Concat(World.Locations.SelectMany(x => x.AlternateNames));
+
+            return location.AlternateNames.Concat(new[] { location.Name })
+                .SelectMany(x => MakeUnique(x, location))
+                .ToImmutableList();
+
+            IEnumerable<string> MakeUnique(string name, Location location)
+            {
+                // If the name is already unique, add it as-is (e.g. Library,
+                // Zora's Ledge)
+                if (Occurences(name) < 2)
+                {
+                    yield return name;
+                    yield break;
+                }
+
+                if (location.Room != null)
+                {
+                    foreach (var roomName in location.Room.AlsoKnownAs.Concat(new[] { location.Room.Name }))
+                        yield return $"{roomName} {name}";
+                }
+                else
+                {
+                    foreach (var regionName in location.Region.AlsoKnownAs.Concat(new[] { location.Region.Name }))
+                        yield return $"{regionName} {name}";
+                }
+            }
+
+            int Occurences(string name)
+                => allLocationNames!.Count(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -112,23 +112,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("clear", "mark")
+                .Append("clear one")
                 .OneOf("item", "treasure", "chest", "treasure chest")
                 .Append("in")
                 .Append(DungeonKey, dungeonNames);
-        }
-
-        private Choices GetDungeonNames()
-        {
-            var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.Dungeons)
-            {
-                foreach (var name in dungeon.Name)
-                    dungeonNames.Add(new SemanticResultValue(name.Text, name.Text));
-                dungeonNames.Add(new SemanticResultValue(dungeon.Abbreviation, dungeon.Abbreviation));
-            }
-
-            return dungeonNames;
         }
     }
 }
