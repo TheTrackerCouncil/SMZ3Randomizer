@@ -393,7 +393,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
-            OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence));
+            OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
 
             // Check if we can clear a location
             if (tryClear)
@@ -452,22 +452,22 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="trackedAs">
         /// The text that was tracked, when triggered by voice command.
         /// </param>
-        /// <param name="room">The room the item was found in.</param>
+        /// <param name="area">The area the item was found in.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackItem(ItemData item, Room room, string? trackedAs = null, float? confidence = null)
+        public void TrackItem(ItemData item, IHasLocations area, string? trackedAs = null, float? confidence = null)
         {
-            var locations = room.GetLocations()
+            var locations = area.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .ToImmutableList();
 
             if (locations.Count == 0)
             {
-                Say(Responses.AreaDoesNotHaveItem?.Format(item.Name, room.Name, item.NameWithArticle));
+                Say(Responses.AreaDoesNotHaveItem?.Format(item.Name, area.GetName(), item.NameWithArticle));
             }
             else if (locations.Count > 1)
             {
                 // Consider tracking/clearing everything?
-                Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, room.Name, item.NameWithArticle));
+                Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, area.GetName(), item.NameWithArticle));
             }
 
             TrackItem(item, trackedAs, confidence, tryClear: false);
@@ -489,6 +489,62 @@ namespace Randomizer.SMZ3.Tracking
             SassIfItemIsWrong(item, location);
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
+        }
+
+        /// <summary>
+        /// Tracks every item in the specified area.
+        /// </summary>
+        /// <param name="area">The area whose items to clear.</param>
+        /// <param name="includeUnavailable">
+        /// <c>true</c> to include every item in <paramref name="room"/>, even
+        /// those that are not in logic. <c>false</c> to only include chests
+        /// available with current items.
+        /// </param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void TrackItemsIn(IHasLocations area, bool includeUnavailable = false, float? confidence = null)
+        {
+            var locations = area.Locations.Where(x => !x.Cleared);
+            if (!includeUnavailable)
+                locations = locations.Where(x => x.IsAvailable(GetProgression()));
+
+            if (!locations.Any())
+            {
+                Say(Responses.TrackedNothing.Format(area.Name));
+                return;
+            }
+
+            // If there is only one (available) item here, just call the regular
+            // TrackItem instead
+            var onlyLocation = locations.TrySingle();
+            if (onlyLocation != null)
+            {
+                var item = Items.SingleOrDefault(x => x.InternalItemType == onlyLocation.Item.Type);
+                if (item == null)
+                    throw new Exception($"Missing trackable item data for {onlyLocation.Item.Type} (0x{(int)onlyLocation.Item.Type:X2})");
+
+                TrackItem(item, onlyLocation, confidence: confidence);
+                return;
+            }
+
+            // Otherwise, start counting
+            var itemsTracked = 0;
+            foreach (var location in locations)
+            {
+                var itemType = location.Item.Type;
+                var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
+                if (item != null && item.Track())
+                    itemsTracked++;
+                else
+                    Debug.WriteLine($"Failed to track {itemType} in {area.Name}."); // Probably the compass or something, who cares
+
+                location.Cleared = true;
+            }
+
+            // TODO: Include the most noteworthy item (by item value, once added
+            // to data), e.g. "Tracked 5 items in Mini Moldorm Cave, including
+            // the Morph Ball"
+            Say(Responses.TrackedMultipleItems.Format(itemsTracked, area.GetName()));
+            OnItemTracked(new ItemTrackedEventArgs(null, confidence));
         }
 
         /// <summary>

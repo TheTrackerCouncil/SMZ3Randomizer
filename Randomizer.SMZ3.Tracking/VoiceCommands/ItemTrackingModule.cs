@@ -1,9 +1,5 @@
 ﻿using System;
 
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-
-using Randomizer.Shared.Models;
-
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class ItemTrackingModule : TrackerModule
@@ -40,6 +36,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     tracker.TrackItem(item,
                         trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
+            });
+
+            AddCommand("TrackEverythingRule", GetTrackEverythingRule(), (tracker, result) =>
+            {
+                if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(tracker, result);
+                    tracker.TrackItemsIn(room,
+                        includeUnavailable: false,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RegionKey))
+                {
+                    var region = GetRegionFromResult(tracker, result);
+                    tracker.TrackItemsIn(region,
+                        includeUnavailable: false,
                         confidence: result.Confidence);
                 }
             });
@@ -80,6 +94,28 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return GrammarBuilder.Combine(
                 trackItemNormal, trackItemDungeon, trackItemLocation, trackItemRoom);
+        }
+
+        private GrammarBuilder GetTrackEverythingRule()
+        {
+            var roomNames = GetRoomNames();
+            var regionNames = GetRegionNames();
+
+            var trackAllInRoom = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("track", "please track", "clear")
+                .OneOf("everything", "all items", "available items")
+                .OneOf("in", "from", "in the", "from the")
+                .Append(RoomKey, roomNames);
+
+            var trackAllInRegion = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("track", "please track", "clear")
+                .OneOf("everything", "all items", "available items")
+                .OneOf("in", "from")
+                .Append(RegionKey, regionNames);
+
+            return GrammarBuilder.Combine(trackAllInRoom, trackAllInRegion);
         }
     }
 }

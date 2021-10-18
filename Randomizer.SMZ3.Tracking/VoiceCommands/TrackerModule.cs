@@ -15,6 +15,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected const string ItemNameKey = "ItemName";
         protected const string LocationKey = "LocationName";
         protected const string RoomKey = "RoomName";
+        protected const string RegionKey = "RegionName";
 
         private readonly Dictionary<string, IEnumerable<string>> _syntax = new();
 
@@ -127,6 +128,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var name = (string)result.Semantics[RoomKey].Value;
             var room = tracker.World.Rooms.SingleOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             return room ?? throw new Exception($"Could not find a room with name '{name}' ('{result.Text}').");
+        }
+
+        /// <summary>
+        /// Returns the <see cref="Region"/> that was detected in a voice
+        /// command using <see cref="RegionKey"/>.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <returns>
+        /// A <see cref="region"/> from the recognition result.
+        /// </returns>
+        protected static Region GetRegionFromResult(Tracker tracker, RecognitionResult result)
+        {
+            var name = (string)result.Semantics[RegionKey].Value;
+            var region = tracker.World.Regions.SingleOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return region ?? throw new Exception($"Could not find a region with name '{name}' ('{result.Text}').");
         }
 
         /// <summary>
@@ -270,6 +287,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             return roomNames;
+        }
+
+        /// <summary>
+        /// Gets the region names for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible
+        /// region names mapped to the primary region name.
+        /// </returns>
+        protected virtual Choices GetRegionNames()
+        {
+            var regionNames = new Choices();
+
+            foreach (var region in Tracker.World.Regions)
+            {
+                regionNames.Add(new SemanticResultValue(region.Name, region.Name));
+                foreach (var name in region.AlsoKnownAs)
+                    regionNames.Add(new SemanticResultValue(name, region.Name));
+            }
+
+            return regionNames;
         }
     }
 }

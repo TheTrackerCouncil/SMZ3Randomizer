@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3
     /// <summary>
     /// Represents a region in a game.
     /// </summary>
-    public abstract class Region
+    public abstract class Region : IHasLocations
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Region"/> class for the
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3
         /// <summary>
         /// Gets a collection of alternate names for the region.
         /// </summary>
-        public virtual List<string> AlsoKnownAs { get; } = new();
+        public virtual IReadOnlyCollection<string> AlsoKnownAs { get; } = new List<string>();
 
         /// <summary>
         /// Gets a collection of every location in the region.

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using Randomizer.SMZ3.Regions;
+
 namespace Randomizer.SMZ3
 {
     /// <summary>
     /// Represents a room or section in a region.
     /// </summary>
-    public abstract class Room
+    public abstract class Room : IHasLocations
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Room"/> class that has
@@ -58,6 +60,11 @@ namespace Randomizer.SMZ3
         /// Gets the randomizer configuration options.
         /// </summary>
         public Config Config => Region.Config;
+
+        /// <summary>
+        /// Gets all locations in the room.
+        /// </summary>
+        public IEnumerable<Location> Locations => GetLocations();
 
         /// <summary>
         /// Returns all locations in this room.

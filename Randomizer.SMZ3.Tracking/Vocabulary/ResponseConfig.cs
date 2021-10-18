@@ -82,6 +82,12 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </remarks>
         public SchrodingersString? TrackedAlreadyTrackedItem { get; init; }
 
+        public SchrodingersString TrackedMultipleItems { get; init; }
+            = new SchrodingersString("Tracked {0} items in {1}.");
+
+        public SchrodingersString TrackedNothing { get; init; }
+            = new SchrodingersString("There are no items left in {0}.");
+
         /// <summary>
         /// Gets the phrases to respond with when tracking a specific item.
         /// </summary>

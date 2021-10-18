@@ -215,6 +215,10 @@
       "Row": 3
     },
     {
+      "Name": "Heart Container Refill",
+      "InternalItemType": 63
+    },
+    {
       "Name": "One Hundred Rupees",
       "InternalItemType": 64,
       "Artice": "",
@@ -772,7 +776,7 @@
     "StoppedTracking": [
       "Leaving so soon?",
       "Toggled Tracker off.",
-      "Hey you'll be missed pal."
+      "Hey, you'll be missed pal."
     ],
     "TrackedItem": [
       "Toggled {0} on."
@@ -796,6 +800,13 @@
     ],
     "TrackedTooManyOfAnItem": [
       "I doubt that."
+    ],
+    "TrackedNothing": [
+      "There are no items left in {0}.",
+      "There's nothing left in {0}."
+    ],
+    "TrackedMultipleItems": [
+      "Tracked {0} items in {1}."
     ],
     "ShaktoolAvailable": [
       "Hey tracker, track Shaktool Go Mode",
