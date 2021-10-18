@@ -25,6 +25,16 @@ namespace Randomizer.App.ViewModels
         {
             _tracker = tracker;
             _tracker.MarkedLocationsUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
+            _tracker.LocationCleared += (_, _) =>
+            {
+                OnPropertyChanged(nameof(TopLocations));
+                OnPropertyChanged(nameof(MarkedLocations));
+            };
+            _tracker.DungeonUpdated += (_, _) =>
+            {
+                OnPropertyChanged(nameof(TopLocations));
+                OnPropertyChanged(nameof(MarkedLocations));
+            };
             _tracker.ItemTracked += (_, _) =>
             {
                 OnPropertyChanged(nameof(TopLocations));

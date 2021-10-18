@@ -8,11 +8,11 @@ namespace Randomizer.SMZ3.Tracking
 {
     public class TrackerEventArgs : EventArgs
     {
-        public TrackerEventArgs(float confidence)
+        public TrackerEventArgs(float? confidence)
         {
             Confidence = confidence;
         }
 
-        public float Confidence { get; }
+        public float? Confidence { get; }
     }
 }

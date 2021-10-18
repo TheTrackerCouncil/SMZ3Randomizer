@@ -15,6 +15,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var location = GetLocationFromResult(tracker, result);
                 tracker.MarkLocation(location, item, result.Confidence);
             });
+
+            AddCommand("ClearLocationRule", GetClearLocationRule(), (tracker, result) =>
+            {
+                var location = GetLocationFromResult(tracker, result);
+                tracker.Clear(location, result.Confidence);
+            });
         }
 
         private GrammarBuilder GetTrackItemAtLocationRule()
@@ -58,6 +64,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(
                 itemIsAtLocation, theItemIsAtLocation, thereIsItemAtLocation,
                 locationHasItem, markAtLocation);
+        }
+
+        private GrammarBuilder GetClearLocationRule()
+        {
+            var locationNames = GetLocationNames();
+
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("clear", "ignore")
+                .Append(LocationKey, locationNames);
         }
     }
 }

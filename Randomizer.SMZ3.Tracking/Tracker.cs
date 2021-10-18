@@ -67,6 +67,8 @@ namespace Randomizer.SMZ3.Tracking
 
         public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
 
+        public event EventHandler<TrackerEventArgs>? LocationCleared;
+
         public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
 
         public event EventHandler<TrackerEventArgs>? PegPegged;
@@ -120,18 +122,10 @@ namespace Randomizer.SMZ3.Tracking
         protected internal IReadOnlyDictionary<Location, IReadOnlyCollection<string>> UniqueLocationNames { get; }
 
         /// <summary>
-        /// Marks a dungeon as cleared.
+        /// Toggles Go Mode on.
         /// </summary>
-        /// <param name="dungeon">The dungeon that was cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void ClearDungeon(ZeldaDungeon dungeon, float confidence = 1.0f)
-        {
-            dungeon.Cleared = true;
-            Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
-            OnDungeonUpdated(new TrackerEventArgs(confidence));
-        }
-
-        public void ToggleGoMode(float confidence = 1.0f)
+        public void ToggleGoMode(float? confidence = null)
         {
             Say("Toggled Go Mode <break time='1s'/>", wait: true);
             GoMode = true;
@@ -145,7 +139,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackDungeonTreasure(ZeldaDungeon dungeon, float confidence = 1.0f)
+        public void TrackDungeonTreasure(ZeldaDungeon dungeon, float? confidence = null)
         {
             if (dungeon.TreasureRemaining > 0)
             {
@@ -178,7 +172,7 @@ namespace Randomizer.SMZ3.Tracking
         /// possible rewards.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonReward(ZeldaDungeon dungeon, RewardItem? reward = null, float confidence = 1.0f)
+        public void SetDungeonReward(ZeldaDungeon dungeon, RewardItem? reward = null, float? confidence = null)
         {
             if (reward == null)
             {
@@ -201,7 +195,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="dungeon">The dungeon to mark.</param>
         /// <param name="medallion">The medallion that is required.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonRequirement(ZeldaDungeon dungeon, Medallion? medallion = null, float confidence = 1.0f)
+        public void SetDungeonRequirement(ZeldaDungeon dungeon, Medallion? medallion = null, float? confidence = null)
         {
             var region = World?.Regions.SingleOrDefault(x => dungeon.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
             if (region == null)
@@ -336,13 +330,12 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="trackedAs">
         /// The text that was tracked, when triggered by voice command.
         /// </param>
-        /// <param name="confidence">
-        /// The confidence when triggered by voice command.
-        /// </param>
+        /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="tryClear">
-        /// <c>true</c> to attempt to clear a location for the tracked item; <c>false</c> if that is done by the caller.
+        /// <c>true</c> to attempt to clear a location for the tracked item;
+        /// <c>false</c> if that is done by the caller.
         /// </param>
-        public void TrackItem(ItemData item, string? trackedAs = null, float confidence = 1.0f, bool tryClear = true)
+        public void TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true)
         {
             var accessibleBefore = GetAccessibleLocations();
             var itemName = item.Name;
@@ -429,10 +422,8 @@ namespace Randomizer.SMZ3.Tracking
         /// The text that was tracked, when triggered by voice command.
         /// </param>
         /// <param name="dungeon">The dungeon the item was tracked in.</param>
-        /// <param name="confidence">
-        /// The confidence when triggered by voice command.
-        /// </param>
-        public void TrackItem(ItemData item, ZeldaDungeon dungeon, string? trackedAs = null, float confidence = 1.0f)
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void TrackItem(ItemData item, ZeldaDungeon dungeon, string? trackedAs = null, float? confidence = null)
         {
             TrackItem(item, trackedAs, confidence, tryClear: false);
 
@@ -462,15 +453,32 @@ namespace Randomizer.SMZ3.Tracking
         /// The text that was tracked, when triggered by voice command.
         /// </param>
         /// <param name="location">The location the item was found in.</param>
-        /// <param name="confidence">
-        /// The confidence when triggered by voice command.
-        /// </param>
-        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float confidence = 1.0f)
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null)
         {
             SassIfItemIsWrong(item, location);
             TrackItem(item, trackedAs, confidence, tryClear: false);
+            Clear(location);
+        }
 
+        /// <summary>
+        /// Clears an item from the specified location.
+        /// </summary>
+        /// <param name="location">The location to clear.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void Clear(Location location, float? confidence = null)
+        {
             location.Cleared = true;
+            OnLocationCleared(new TrackerEventArgs(confidence));
+
+            if (confidence != null)
+            {
+                // Only use TTS if called from a voice command
+                var itemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.Name ?? location.Item.Name;
+                var locationName = new SchrodingersString(UniqueLocationNames[location]);
+                Say(Responses.LocationCleared.Format(locationName, itemName));
+            }
+
             if (MarkedLocations.ContainsKey(location))
             {
                 MarkedLocations.Remove(location);
@@ -478,7 +486,19 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
-        public void MarkLocation(Location location, ItemData item, float confidence = 1.0f)
+        /// <summary>
+        /// Marks a dungeon as cleared.
+        /// </summary>
+        /// <param name="dungeon">The dungeon that was cleared.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void ClearDungeon(ZeldaDungeon dungeon, float? confidence = null)
+        {
+            dungeon.Cleared = true;
+            Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
+            OnDungeonUpdated(new TrackerEventArgs(confidence));
+        }
+
+        public void MarkLocation(Location location, ItemData item, float? confidence = null)
         {
             var locationName = new SchrodingersString(UniqueLocationNames[location]);
             SassIfItemIsWrong(item, location);
@@ -497,17 +517,6 @@ namespace Randomizer.SMZ3.Tracking
             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
         }
 
-        private void SassIfItemIsWrong(ItemData item, Location location)
-        {
-            // Give some sass if the user tracks or marks the wrong item at a location
-            if (location.Item != null && !item.Is(location.Item.Type))
-            {
-                var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
-                        ?? location.Item.Name;
-                Say(Responses.LocationHasDifferentItem?.Format(item.Name, actualItemName));
-            }
-        }
-
         /// <summary>
         /// Pegs a Peg World peg.
         /// </summary>
@@ -515,7 +524,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">
         /// The confidence when triggered by voice command.
         /// </param>
-        public void Peg(Peg peg, float confidence = 1.0f)
+        public void Peg(Peg peg, float? confidence = null)
         {
             peg.Pegged = true;
 
@@ -528,7 +537,7 @@ namespace Randomizer.SMZ3.Tracking
             RestartIdleTimers();
         }
 
-        public void StartPegWorldMode(float confidence = 1.0f)
+        public void StartPegWorldMode(float? confidence = null)
         {
             Say(Responses.PegWorldModeOn, wait: true);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
@@ -575,6 +584,9 @@ namespace Randomizer.SMZ3.Tracking
         protected virtual void OnGoModeToggledOn(TrackerEventArgs e)
             => GoModeToggledOn?.Invoke(this, e);
 
+        protected virtual void OnLocationCleared(TrackerEventArgs e)
+            => LocationCleared?.Invoke(this, e);
+
         private static void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World? world)
         {
             if (world == null)
@@ -592,6 +604,18 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     Debug.WriteLine($"Could not find region for dungeon {dungeon.Name}.");
                 }
+            }
+        }
+
+        private void SassIfItemIsWrong(ItemData item, Location location)
+        {
+            // Give some sass if the user tracks or marks the wrong item at a
+            // location
+            if (location.Item != null && !item.Is(location.Item.Type))
+            {
+                var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
+                        ?? location.Item.Name;
+                Say(Responses.LocationHasDifferentItem?.Format(item.Name, actualItemName));
             }
         }
 
@@ -710,7 +734,8 @@ namespace Randomizer.SMZ3.Tracking
                     yield return name;
                 }
 
-                // Always add the room/region name variants for consistent tracking
+                // Always add the room/region name variants for consistent
+                // tracking
                 if (location.Room != null)
                 {
                     foreach (var roomName in location.Room.AlsoKnownAs.Concat(new[] { location.Room.Name }))

@@ -200,33 +200,43 @@ namespace Randomizer.App
             _tracker = new Tracker(provider, _world);
             _tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
-                StatusBarConfidence.Content = $"{e.Confidence:P2}";
                 _pegWorldMode = false;
+                UpdateStats(e);
                 RefreshGridItems();
             });
             _tracker.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
             {
-                StatusBarConfidence.Content = $"{e.Confidence:P2}";
                 _pegWorldMode = true;
+                UpdateStats(e);
                 RefreshGridItems();
             });
             _tracker.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
             {
-                StatusBarConfidence.Content = $"{e.Confidence:P2}";
                 _pegWorldMode = _tracker.Pegs.Any(x => !x.Pegged);
+                UpdateStats(e);
                 RefreshGridItems();
             });
             _tracker.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
-                StatusBarConfidence.Content = $"{e.Confidence:P2}";
                 _pegWorldMode = false;
+                UpdateStats(e);
                 RefreshGridItems();
+            });
+            _tracker.MarkedLocationsUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                UpdateStats(e);
             });
             _tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
             {
-                StatusBarConfidence.Content = $"{e.Confidence:P2}";
                 GoModeBorder.BorderBrush = new SolidColorBrush(Colors.Green);
+                UpdateStats(e);
             });
+        }
+
+        private void UpdateStats(TrackerEventArgs e)
+        {
+            if (e.Confidence != null)
+                StatusBarConfidence.Content = $"{e.Confidence:P2}";
         }
 
         private void ResetGridSize()

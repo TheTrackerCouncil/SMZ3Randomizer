@@ -850,6 +850,10 @@
       "That looks more like a {1} to me, but whatever.",
       "Does that look like a {0} to you? Well if you say so."
     ],
+    "LocationCleared": [
+      "Cleared {0}.",
+      [ "Cleared {1} from {0}.", 0.1 ]
+    ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [
         "Toggled Shaktool Go Mode <break time='1s'/> on."

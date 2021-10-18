@@ -206,6 +206,16 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </remarks>
         public SchrodingersString? LocationHasDifferentItem { get; init; }
 
+        /// <summary>
+        /// Gets the phrases the respond with when clearing a location.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the item that was at the location.
+        /// </remarks>
+        public SchrodingersString LocationCleared { get; init; }
+            = new SchrodingersString("Cleared {0}.");
+
         public SchrodingersString GoModeToggledOn { get; init; }
             = new SchrodingersString("Toggled Go Mode <break time='1s'/> on.");
 

@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Tracking
 {
     public class ItemTrackedEventArgs : TrackerEventArgs
     {
-        public ItemTrackedEventArgs(ItemData itemData, string? trackedAs, float confidence)
+        public ItemTrackedEventArgs(ItemData itemData, string? trackedAs, float? confidence)
             : base(confidence)
         {
             Item = itemData;
