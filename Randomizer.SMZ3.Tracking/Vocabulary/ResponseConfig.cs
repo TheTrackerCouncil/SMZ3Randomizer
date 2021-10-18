@@ -194,7 +194,17 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public SchrodingersString LocationMarkedAgain { get; init; }
             = new SchrodingersString("Replaced {2} with {1} at {0}.");
 
-        public SchrodingersString? LocationMarkedWrong { get; init; }
+        /// <summary>
+        /// Gets the phrases to respond with when marking or tracking an item at
+        /// a location, when the seed contains a different item at the same
+        /// location.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the item that was tracked or marked.
+        /// <c>{1}</c> is a placeholder for the item that was in the same
+        /// location in the seed.
+        /// </remarks>
+        public SchrodingersString? LocationHasDifferentItem { get; init; }
 
         public SchrodingersString GoModeToggledOn { get; init; }
             = new SchrodingersString("Toggled Go Mode <break time='1s'/> on.");

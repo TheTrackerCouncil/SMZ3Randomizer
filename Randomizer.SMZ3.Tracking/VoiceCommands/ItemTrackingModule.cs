@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class ItemTrackingModule : TrackerModule
@@ -10,14 +12,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("TrackItemRule", GetTrackItemRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
-                var dungeon = result.Semantics.ContainsKey(DungeonKey)
-                    ? GetDungeonFromResult(tracker, result)
-                    : null;
 
-                tracker.TrackItem(item,
-                    trackedAs: itemName,
-                    dungeon: dungeon,
-                    confidence: result.Confidence);
+                if (result.Semantics.ContainsKey(DungeonKey))
+                {
+                    var dungeon = GetDungeonFromResult(tracker, result);
+                    tracker.TrackItem(item, dungeon,
+                        trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(LocationKey))
+                {
+                    var location = GetLocationFromResult(tracker, result);
+                    tracker.TrackItem(item, location,
+                        trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
+                else
+                {
+                    tracker.TrackItem(item,
+                        trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
             });
         }
 
@@ -25,6 +40,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var dungeonNames = GetDungeonNames();
             var itemNames = GetItemNames();
+            var locationNames = GetLocationNames();
 
             var trackItemNormal = new GrammarBuilder()
                 .Append("Hey tracker,")
@@ -38,8 +54,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("in", "from")
                 .Append(DungeonKey, dungeonNames);
 
+            var trackItemLocation = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("track", "please track")
+                .Append(ItemNameKey, itemNames)
+                .OneOf("in", "from", "in the", "from the")
+                .Append(LocationKey, locationNames);
+
             return GrammarBuilder.Combine(
-                trackItemNormal, trackItemDungeon);
+                trackItemNormal, trackItemDungeon, trackItemLocation);
         }
     }
 }

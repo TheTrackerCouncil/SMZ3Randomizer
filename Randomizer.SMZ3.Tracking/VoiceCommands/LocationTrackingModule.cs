@@ -28,6 +28,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("is at", "are at")
                 .Append(LocationKey, locationNames);
 
+            var theItemIsAtLocation = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("a", "an", "the")
+                .Append(ItemNameKey, itemNames)
+                .OneOf("is at", "are at")
+                .Append(LocationKey, locationNames);
+
+            var thereIsItemAtLocation = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("there are", "there is a", "there is an")
+                .Append(ItemNameKey, itemNames)
+                .Append("at")
+                .Append(LocationKey, locationNames);
+
             var locationHasItem = new GrammarBuilder()
                 .Append("Hey tracker,")
                 .Append(LocationKey, locationNames)
@@ -42,7 +56,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(LocationKey, locationNames);
 
             return GrammarBuilder.Combine(
-                itemIsAtLocation, locationHasItem, markAtLocation);
+                itemIsAtLocation, theItemIsAtLocation, thereIsItemAtLocation,
+                locationHasItem, markAtLocation);
         }
     }
 }
