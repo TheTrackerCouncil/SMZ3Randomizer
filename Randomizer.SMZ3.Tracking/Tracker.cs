@@ -10,7 +10,6 @@ using System.Threading;
 using BunLabs;
 
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Update;
 
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Vocabulary;
@@ -120,7 +119,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets a dictionary that contains unique location names for each
         /// location.
         /// </summary>
-        protected internal IReadOnlyDictionary<Location, IReadOnlyCollection<string>> UniqueLocationNames { get; }
+        protected internal IReadOnlyDictionary<Location, SchrodingersString> UniqueLocationNames { get; }
 
         /// <summary>
         /// Toggles Go Mode on.
@@ -506,7 +505,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 // Only use TTS if called from a voice command
                 var itemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.Name ?? location.Item.Name;
-                var locationName = new SchrodingersString(UniqueLocationNames[location]);
+                var locationName = UniqueLocationNames[location];
                 Say(Responses.LocationCleared.Format(locationName, itemName));
             }
 
@@ -531,7 +530,7 @@ namespace Randomizer.SMZ3.Tracking
 
         public void MarkLocation(Location location, ItemData item, float? confidence = null)
         {
-            var locationName = new SchrodingersString(UniqueLocationNames[location]);
+            var locationName = UniqueLocationNames[location];
             SassIfItemIsWrong(item, location);
 
             if (MarkedLocations.TryGetValue(location, out var oldItem))
@@ -646,7 +645,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
                         ?? location.Item.Name;
-                Say(Responses.LocationHasDifferentItem?.Format(item.Name, actualItemName));
+                Say(Responses.LocationHasDifferentItem?.Format(item.NameWithArticle, actualItemName));
             }
         }
 
@@ -748,34 +747,39 @@ namespace Randomizer.SMZ3.Tracking
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
         }
 
-        private IReadOnlyCollection<string> GetUniqueNames(Location location)
+        private SchrodingersString GetUniqueNames(Location location)
         {
             var allLocationNames = World.Locations.Select(x => x.Name)
                 .Concat(World.Locations.SelectMany(x => x.AlternateNames));
 
-            return location.AlternateNames.Concat(new[] { location.Name })
-                .SelectMany(x => MakeUnique(x, location))
-                .ToImmutableList();
+            return new SchrodingersString(location.AlternateNames.Concat(new[] { location.Name })
+                .SelectMany(x => MakeUnique(x, location)));
 
-            IEnumerable<string> MakeUnique(string name, Location location)
+            IEnumerable<SchrodingersString.Item> MakeUnique(string name, Location location)
             {
                 // Only at the location name if it is unique
-                if (Occurences(name) < 2)
+                var isUnique = Occurences(name) < 2;
+                if (isUnique)
                 {
-                    yield return name;
+                    yield return new(name);
                 }
 
-                // Always add the room/region name variants for consistent
-                // tracking
+                // Add the room/region name variants. If the name is unique, add
+                // them with a zero weight for consistent tracking, without
+                // having tracker say verbose names.
                 if (location.Room != null)
                 {
                     foreach (var roomName in location.Room.AlsoKnownAs.Concat(new[] { location.Room.Name }))
-                        yield return $"{roomName} {name}";
+                    {
+                        yield return new($"{roomName} {name}", isUnique ? 0 : 1);
+                    }
                 }
                 else
                 {
                     foreach (var regionName in location.Region.AlsoKnownAs.Concat(new[] { location.Region.Name }))
-                        yield return $"{regionName} {name}";
+                    {
+                        yield return new($"{regionName} {name}", isUnique ? 0 : 1);
+                    }
                 }
             }
 

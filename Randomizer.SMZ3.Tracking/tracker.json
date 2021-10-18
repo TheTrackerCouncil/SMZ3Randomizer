@@ -2,20 +2,24 @@
   "Items": [
     {
       "Name": [ "Nothing" ],
+      "Article": "",
       "InternalItemType": 0
     },
     {
       "Name": [ "Bullshit" ],
+      "Article": "",
       "InternalItemType": 0,
       "Multiple": true
     },
     {
       "Name": [ "Content" ],
+      "Article": "",
       "InternalItemType": 0,
       "Multiple": true
     },
     {
       "Name": [ "Shaktool Go Mode" ],
+      "Article": "",
       "InternalItemType": 0
     },
     {
@@ -847,8 +851,8 @@
       "Changed your mind? Marked {1} at {0}."
     ],
     "LocationHasDifferentItem": [
-      "That looks more like a {1} to me, but whatever.",
-      "Does that look like a {0} to you? Well if you say so."
+      "That looks more like {1} to me, but whatever.",
+      "Does that look like {0} to you? Well if you say so."
     ],
     "LocationCleared": [
       "Cleared {0}.",
