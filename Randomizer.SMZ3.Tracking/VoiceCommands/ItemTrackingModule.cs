@@ -2,6 +2,8 @@
 
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
+using Randomizer.Shared.Models;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class ItemTrackingModule : TrackerModule
@@ -17,6 +19,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     var dungeon = GetDungeonFromResult(tracker, result);
                     tracker.TrackItem(item, dungeon,
+                        trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(tracker, result);
+                    tracker.TrackItem(item, room,
                         trackedAs: itemName,
                         confidence: result.Confidence);
                 }
@@ -41,6 +50,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var dungeonNames = GetDungeonNames();
             var itemNames = GetItemNames();
             var locationNames = GetLocationNames();
+            var roomNames = GetRoomNames();
 
             var trackItemNormal = new GrammarBuilder()
                 .Append("Hey tracker,")
@@ -61,8 +71,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("in", "from", "in the", "from the")
                 .Append(LocationKey, locationNames);
 
+            var trackItemRoom = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("track", "please track")
+                .Append(ItemNameKey, itemNames)
+                .OneOf("in", "from", "in the", "from the")
+                .Append(RoomKey, roomNames);
+
             return GrammarBuilder.Combine(
-                trackItemNormal, trackItemDungeon, trackItemLocation);
+                trackItemNormal, trackItemDungeon, trackItemLocation, trackItemRoom);
         }
     }
 }

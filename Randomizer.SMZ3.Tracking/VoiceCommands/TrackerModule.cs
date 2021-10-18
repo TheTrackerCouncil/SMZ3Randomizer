@@ -14,6 +14,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected const string DungeonKey = "DungeonName";
         protected const string ItemNameKey = "ItemName";
         protected const string LocationKey = "LocationName";
+        protected const string RoomKey = "RoomName";
 
         private readonly Dictionary<string, IEnumerable<string>> _syntax = new();
 
@@ -109,6 +110,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var id = (int)result.Semantics[LocationKey].Value;
             var location = tracker.World.Locations.SingleOrDefault(x => x.Id == id);
             return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
+        }
+
+
+        /// <summary>
+        /// Returns the <see cref="Room"/> that was detected in a voice
+        /// command using <see cref="RoomKey"/>.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <returns>
+        /// A <see cref="Room"/> from the recognition result.
+        /// </returns>
+        protected static Room GetRoomFromResult(Tracker tracker, RecognitionResult result)
+        {
+            var name = (string)result.Semantics[RoomKey].Value;
+            var room = tracker.World.Rooms.SingleOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return room ?? throw new Exception($"Could not find a room with name '{name}' ('{result.Text}').");
         }
 
         /// <summary>
@@ -218,7 +236,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <returns>
         /// A new <see cref="Choices"/> object representing all possible
-        /// location names.
+        /// location names mapped to their IDs.
         /// </returns>
         protected virtual Choices GetLocationNames()
         {
@@ -231,6 +249,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             return locationNames;
+        }
+
+        /// <summary>
+        /// Gets the room names for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible
+        /// room names mapped to the primary room name.
+        /// </returns>
+        protected virtual Choices GetRoomNames()
+        {
+            var roomNames = new Choices();
+
+            foreach (var room in Tracker.World.Rooms)
+            {
+                roomNames.Add(new SemanticResultValue(room.Name, room.Name));
+                foreach (var name in room.AlsoKnownAs)
+                    roomNames.Add(new SemanticResultValue(name, room.Name));
+            }
+
+            return roomNames;
         }
     }
 }

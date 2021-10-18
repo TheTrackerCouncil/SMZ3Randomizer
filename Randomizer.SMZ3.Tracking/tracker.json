@@ -854,6 +854,12 @@
       "Cleared {0}.",
       [ "Cleared {1} from {0}.", 0.1 ]
     ],
+    "AreaDoesNotHaveItem": [
+      "I don't see {2} in {1}."
+    ],
+    "AreaHasMoreThanOneItem": [
+      "There's more than one {0} in {1}."
+    ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [
         "Toggled Shaktool Go Mode <break time='1s'/> on."

@@ -10,6 +10,7 @@ using System.Threading;
 using BunLabs;
 
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.EntityFrameworkCore.Update;
 
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Vocabulary;
@@ -446,7 +447,37 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Tracks the specifies item and clears the specified location.
+        /// Tracks the specified item and clears it from the specified room.
+        /// </summary>
+        /// <param name="item">The item data to track.</param>
+        /// <param name="trackedAs">
+        /// The text that was tracked, when triggered by voice command.
+        /// </param>
+        /// <param name="room">The room the item was found in.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void TrackItem(ItemData item, Room room, string? trackedAs = null, float? confidence = null)
+        {
+            var locations = room.GetLocations()
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .ToImmutableList();
+
+            if (locations.Count == 0)
+            {
+                Say(Responses.AreaDoesNotHaveItem?.Format(item.Name, room.Name, item.NameWithArticle));
+            }
+            else if (locations.Count > 1)
+            {
+                // Consider tracking/clearing everything?
+                Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, room.Name, item.NameWithArticle));
+            }
+
+            TrackItem(item, trackedAs, confidence, tryClear: false);
+            if (locations.Count == 1)
+                Clear(locations.Single());
+        }
+
+        /// <summary>
+        /// Tracks the specified item and clears the specified location.
         /// </summary>
         /// <param name="item">The item data to track.</param>
         /// <param name="trackedAs">

@@ -207,7 +207,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public SchrodingersString? LocationHasDifferentItem { get; init; }
 
         /// <summary>
-        /// Gets the phrases the respond with when clearing a location.
+        /// Gets the phrases to respond with when clearing a location.
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
@@ -218,6 +218,28 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
 
         public SchrodingersString GoModeToggledOn { get; init; }
             = new SchrodingersString("Toggled Go Mode <break time='1s'/> on.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when attempting to track or clear
+        /// an item in an area that does not have that item.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+        /// a placeholder for the name of the location. <c>{2}</c> is a
+        /// placeholder for the name of the item, including "a"/"the".
+        /// </remarks>
+        public SchrodingersString? AreaDoesNotHaveItem { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when attempting to track or clear
+        /// an item in an area that has multiple copies of that item.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+        /// a placeholder for the name of the location. <c>{2}</c> is a
+        /// placeholder for the name of the item, including "a"/"the".
+        /// </remarks>
+        public SchrodingersString? AreaHasMoreThanOneItem { get; init; }
 
         /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no

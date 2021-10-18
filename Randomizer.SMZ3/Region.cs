@@ -36,10 +36,15 @@ namespace Randomizer.SMZ3
         public virtual List<string> AlsoKnownAs { get; } = new();
 
         /// <summary>
-        /// Gets or sets a collection of every location in the region.
+        /// Gets a collection of every location in the region.
         /// </summary>
         public IEnumerable<Location> Locations => GetLocations()
             .Concat(GetRooms().SelectMany(x => x.GetLocations()));
+
+        /// <summary>
+        /// Gets a collection of every room in the region.
+        /// </summary>
+        public IEnumerable<Room> Rooms => GetRooms();
 
         /// <summary>
         /// Gets the world the region is located in.
