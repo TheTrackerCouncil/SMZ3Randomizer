@@ -875,6 +875,10 @@
     "AreaHasMoreThanOneItem": [
       "There's more than one {0} in {1}."
     ],
+    "Error": [
+      "Oops. Something went wrong.",
+      "Something went wrong. Time to ban Vihvelin."
+    ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [
         "Toggled Shaktool Go Mode <break time='1s'/> on."

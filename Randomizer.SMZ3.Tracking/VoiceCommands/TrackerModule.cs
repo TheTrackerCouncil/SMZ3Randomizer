@@ -4,6 +4,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Speech.Recognition;
 
+using Microsoft.Extensions.Logging;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -38,15 +40,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected const string RegionKey = "RegionName";
 
         private readonly Dictionary<string, IEnumerable<string>> _syntax = new();
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerModule"/> class
         /// with the specified tracker.
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
-        protected TrackerModule(Tracker tracker)
+        /// <param name="logger">Used to log information.</param>
+        protected TrackerModule(Tracker tracker, ILogger logger)
         {
             Tracker = tracker;
+            _logger = logger;
         }
 
         /// <summary>
@@ -213,9 +218,28 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             _syntax.TryAdd(ruleName, grammarBuilder.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
-            var grammar = grammarBuilder.Build(ruleName);
-            grammar.SpeechRecognized += (sender, e) => executeCommand(Tracker, e.Result);
-            Grammars.Add(grammar);
+            try
+            {
+                var grammar = grammarBuilder.Build(ruleName);
+                grammar.SpeechRecognized += (sender, e) =>
+                {
+                    try
+                    {
+                        executeCommand(Tracker, e.Result);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "An error occurred while executing recognized command '{command}': \"{text}\".", ruleName, e.Result.Text);
+                        Tracker.Error();
+                    }
+                };
+                Grammars.Add(grammar);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "An error occurred while constructing the speech recognition grammar for command '{command}'.", ruleName);
+                throw new GrammarException($"An error occurred while constructing the speech recognition grammar for command '{ruleName}'.", ex);
+            }
         }
 
         /// <summary>

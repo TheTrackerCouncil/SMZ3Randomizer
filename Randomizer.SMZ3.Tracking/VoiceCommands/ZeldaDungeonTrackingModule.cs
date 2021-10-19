@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Speech.Recognition;
 
+using Microsoft.Extensions.Logging;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -17,7 +19,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// cref="ZeldaDungeonTrackingModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
-        public ZeldaDungeonTrackingModule(Tracker tracker) : base(tracker)
+        /// <param name="logger">Used to log information.</param>
+        public ZeldaDungeonTrackingModule(Tracker tracker, ILogger<ZeldaDungeonTrackingModule> logger) : base(tracker, logger)
         {
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>
             {

@@ -82,6 +82,49 @@
             </summary>
             <returns>A string representing the grammar syntax.</returns>
         </member>
+        <member name="T:Randomizer.SMZ3.Tracking.GrammarException">
+            <summary>
+            Represents errors that occur when constructing a speech recognition
+            grammar.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.GrammarException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.GrammarException"/>
+            class.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.GrammarException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.GrammarException"/>
+            class with the specified message.
+            </summary>
+            <param name="message">The error message.</param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.GrammarException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.GrammarException"/>
+            class with the specified message and inner error.
+            </summary>
+            <param name="message">The error message.</param>
+            <param name="innerException">
+            The exception that is the cause of the current exception.
+            </param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.GrammarException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.GrammarException"/>
+            with serialized data.
+            </summary>
+            <param name="info">
+            The SerializationInfo that holds the serialized object data about
+            the exception being thrown.
+            </param>
+            <param name="context">
+            The StreamingContext that contains contextual information about the
+            source or destination.
+            </param>
+        </member>
         <member name="T:Randomizer.SMZ3.Tracking.ItemData">
             <summary>
             Represents a trackable item.
@@ -765,6 +808,11 @@
             placeholder for the name of the item, including "a"/"the".
             </remarks>
         </member>
+        <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.Error">
+            <summary>
+            Gets the phrases to respond with when an internal error occurs.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.Idle">
             <summary>
             Gets a dictionary that contains the phrases to respond with when no
@@ -967,6 +1015,11 @@
             <c>true</c> to wait until the text has been spoken completely or
             <c>false</c> to immediately return. The default is <c>false</c>.
             </param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.Error">
+            <summary>
+            Notifies the user an error occurred.
+            </summary>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.Dispose">
             <summary>
@@ -1199,11 +1252,12 @@
             Provides voice commands for turning on Go Mode.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.GoModeModule.#ctor(Randomizer.SMZ3.Tracking.Tracker)">
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.GoModeModule.#ctor(Randomizer.SMZ3.Tracking.Tracker,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.VoiceCommands.GoModeModule})">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.GoModeModule"/> class.
             </summary>
             <param name="tracker">The tracker instance.</param>
+            <param name="logger">Used to log information.</param>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.IOptionalModule">
             <summary>
@@ -1216,36 +1270,39 @@
             Provides voice commands for tracking items.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.ItemTrackingModule.#ctor(Randomizer.SMZ3.Tracking.Tracker)">
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.ItemTrackingModule.#ctor(Randomizer.SMZ3.Tracking.Tracker,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.VoiceCommands.ItemTrackingModule})">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.ItemTrackingModule"/>
             class.
             </summary>
             <param name="tracker">The tracker instance.</param>
+            <param name="logger">Used to log information.</param>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.LocationTrackingModule">
             <summary>
             Provides voice commands for marking and clearing locations.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.LocationTrackingModule.#ctor(Randomizer.SMZ3.Tracking.Tracker)">
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.LocationTrackingModule.#ctor(Randomizer.SMZ3.Tracking.Tracker,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.VoiceCommands.LocationTrackingModule})">
             <summary>
             Initializes a new instance of the <see
             cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.LocationTrackingModule"/> class.
             </summary>
             <param name="tracker">The tracker instance.</param>
+            <param name="logger">Used to log information.</param>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.PegWorldModeModule">
             <summary>
             Provides voice commands for Peg World mode.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.PegWorldModeModule.#ctor(Randomizer.SMZ3.Tracking.Tracker)">
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.PegWorldModeModule.#ctor(Randomizer.SMZ3.Tracking.Tracker,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.VoiceCommands.PegWorldModeModule})">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.PegWorldModeModule"/>
             class.
             </summary>
             <param name="tracker">The tracker instance.</param>
+            <param name="logger">Used to log information.</param>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModule">
             <summary>
@@ -1278,12 +1335,13 @@
             Gets the semantic result key used to identify the name of a region.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModule.#ctor(Randomizer.SMZ3.Tracking.Tracker)">
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModule.#ctor(Randomizer.SMZ3.Tracking.Tracker,Microsoft.Extensions.Logging.ILogger)">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModule"/> class
             with the specified tracker.
             </summary>
             <param name="tracker">The tracker instance to use.</param>
+            <param name="logger">Used to log information.</param>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModule.Syntax">
             <summary>
@@ -1475,12 +1533,13 @@
             progress.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.ZeldaDungeonTrackingModule.#ctor(Randomizer.SMZ3.Tracking.Tracker)">
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.ZeldaDungeonTrackingModule.#ctor(Randomizer.SMZ3.Tracking.Tracker,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.VoiceCommands.ZeldaDungeonTrackingModule})">
             <summary>
             Initializes a new instance of the <see
             cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.ZeldaDungeonTrackingModule"/> class.
             </summary>
             <param name="tracker">The tracker instance.</param>
+            <param name="logger">Used to log information.</param>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.ZeldaDungeon">
             <summary>

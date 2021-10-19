@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Microsoft.Extensions.Logging;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -11,7 +13,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Initializes a new instance of the <see cref="GoModeModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
-        public GoModeModule(Tracker tracker) : base(tracker)
+        /// <param name="logger">Used to log information.</param>
+        public GoModeModule(Tracker tracker, ILogger<GoModeModule> logger) : base(tracker, logger)
         {
             AddCommand("Toggle Go Mode", "Hey tracker, track Go Mode.", (tracker, result) =>
             {

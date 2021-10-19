@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Microsoft.Extensions.Logging;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -12,7 +14,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// cref="LocationTrackingModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
-        public LocationTrackingModule(Tracker tracker) : base(tracker)
+        /// <param name="logger">Used to log information.</param>
+        public LocationTrackingModule(Tracker tracker, ILogger<LocationTrackingModule> logger) : base(tracker, logger)
         {
             AddCommand("Track item at specific location", GetTrackItemAtLocationRule(), (tracker, result) =>
             {

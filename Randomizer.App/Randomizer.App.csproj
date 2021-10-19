@@ -34,6 +34,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="NReco.Logging.File" Version="1.1.2" />
     <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
   </ItemGroup>
 

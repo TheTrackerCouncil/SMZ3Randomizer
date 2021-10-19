@@ -367,6 +367,14 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Notifies the user an error occurred.
+        /// </summary>
+        public virtual void Error()
+        {
+            Say(Responses.Error);
+        }
+
+        /// <summary>
         /// Cleans up resources used by this class.
         /// </summary>
         public void Dispose()
@@ -591,7 +599,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (item != null && item.Track())
                     itemsTracked++;
                 else
-                    Debug.WriteLine($"Failed to track {itemType} in {area.Name}."); // Probably the compass or something, who cares
+                    _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
 
                 location.Cleared = true;
             }
@@ -767,7 +775,7 @@ namespace Randomizer.SMZ3.Tracking
         protected virtual void OnLocationCleared(TrackerEventArgs e)
             => LocationCleared?.Invoke(this, e);
 
-        private static void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
+        private void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
         {
             if (!world.Items.Any())
                 return;
@@ -778,11 +786,11 @@ namespace Randomizer.SMZ3.Tracking
                 if (region != null)
                 {
                     dungeon.TreasureRemaining = region.Locations.Count(x => !x.Item.IsDungeonItem && x.Type != LocationType.NotInDungeon);
-                    Debug.WriteLine($"Found {dungeon.TreasureRemaining} item(s) in {dungeon.Name}");
+                    _logger.LogDebug("Found {TreasureRemaining} item(s) in {dungeon}", dungeon.TreasureRemaining, dungeon.Name);
                 }
                 else
                 {
-                    Debug.WriteLine($"Could not find region for dungeon {dungeon.Name}.");
+                    _logger.LogWarning("Could not find region for dungeon {dungeon}.", dungeon.Name);
                 }
             }
         }
@@ -852,6 +860,9 @@ namespace Randomizer.SMZ3.Tracking
         private void SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
         {
             RestartIdleTimers();
+
+            _logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
+                e.Result.Text, e.Result.Confidence);
         }
 
         private void GiveLocationHint(IEnumerable<Location> accessibleBefore)

@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Microsoft.Extensions.Logging;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -12,8 +14,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
-        public ItemTrackingModule(Tracker tracker)
-            : base(tracker)
+        /// <param name="logger">Used to log information.</param>
+        public ItemTrackingModule(Tracker tracker, ILogger<ItemTrackingModule> logger) : base(tracker, logger)
         {
             AddCommand("Track item", GetTrackItemRule(), (tracker, result) =>
             {
