@@ -11,27 +11,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         public ZeldaDungeonTrackingModule(Tracker tracker) : base(tracker)
         {
-            AddCommand("MarkDungeonRewardRule", GetMarkDungeonRewardRule(), (tracker, result) =>
+            AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
                 var reward = (RewardItem)result.Semantics[RewardKey].Value;
                 tracker.SetDungeonReward(dungeon, reward, result.Confidence);
             });
 
-            AddCommand("ClearDungeonRule", GetClearDungeonRule(), (tracker, result) =>
+            AddCommand("Clear dungeon", GetClearDungeonRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
                 tracker.ClearDungeon(dungeon, result.Confidence);
             });
 
-            AddCommand("MarkDungeonRequirementRule", GetMarkDungeonRequirementRule(), (tracker, result) =>
+            AddCommand("Mark dungeon medallion", GetMarkDungeonRequirementRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
                 var medallion = (Medallion)result.Semantics[MedallionKey].Value;
                 tracker.SetDungeonRequirement(dungeon, medallion, result.Confidence);
             });
 
-            AddCommand("TreasureTrackingRule", GetTreasureTrackingRule(), (tracker, result) =>
+            AddCommand("Track dungeon treasure", GetTreasureTrackingRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
                 tracker.TrackDungeonTreasure(dungeon, result.Confidence);

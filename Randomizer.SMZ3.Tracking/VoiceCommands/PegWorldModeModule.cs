@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         public PegWorldModeModule(Tracker tracker) : base(tracker)
         {
-            AddCommand("StartPegWorldModeRule", new[] {
+            AddCommand("Toggle Peg World mode", new[] {
                 "Hey tracker, we're going to Peg World!",
                 "Hey tracker, let's go to Peg World!"
             }, (tracker, result) =>
@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 tracker.StartPegWorldMode(result.Confidence);
             });
 
-            AddCommand("TrackPegRule", new[] {
+            AddCommand("Track Peg World peg", new[] {
                 "Hey tracker, track Peg.",
                 "Hey tracker, peg."
             }, (tracker, result) =>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -9,16 +10,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     public class TrackerModuleFactory
     {
-        public void LoadAll(Tracker tracker, SpeechRecognitionEngine engine)
+        public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(Tracker tracker, SpeechRecognitionEngine engine)
         {
             var modules = DiscoverModules(tracker);
-
             foreach (var module in modules)
             {
-                foreach (var rule in module.Syntax)
-                    Debug.WriteLine($"{rule.Key}: {string.Join("\n    ", rule.Value)}");
                 module.LoadInto(engine);
             }
+
+            return modules.SelectMany(x => x.Syntax)
+                .ToImmutableSortedDictionary();
         }
 
         protected IEnumerable<TrackerModule> DiscoverModules(Tracker tracker)

@@ -27,6 +27,9 @@ namespace Randomizer.App
         private bool _pegWorldMode;
         private DateTime _startTime;
 
+        private TrackerLocationsWindow _locationsWindow;
+        private TrackerHelpWindow _trackerHelpWindow;
+
         public TrackerWindow(World world)
         {
             InitializeComponent();
@@ -189,8 +192,8 @@ namespace Randomizer.App
             _startTime = DateTime.Now;
             _dispatcherTimer.Start();
 
-            var trackerLocations = new TrackerLocationsWindow(_tracker);
-            trackerLocations.Show();
+            _locationsWindow = new TrackerLocationsWindow(_tracker);
+            _locationsWindow.Show();
         }
 
         private void InitializeTracker()
@@ -261,6 +264,32 @@ namespace Randomizer.App
         private void Window_Closed(object sender, EventArgs e)
         {
             _tracker?.Dispose();
+        }
+
+        private void LocationsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.OfType<TrackerLocationsWindow>().Any())
+            {
+                _locationsWindow.Activate();
+            }
+            else
+            {
+                _locationsWindow = new TrackerLocationsWindow(_tracker);
+                _locationsWindow.Show();
+            }
+        }
+
+        private void HelpMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.OfType<TrackerHelpWindow>().Any())
+            {
+                _trackerHelpWindow.Activate();
+            }
+            else
+            {
+                _trackerHelpWindow = new TrackerHelpWindow(_tracker);
+                _trackerHelpWindow.Show();
+            }
         }
     }
 }

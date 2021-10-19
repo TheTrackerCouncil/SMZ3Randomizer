@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public ItemTrackingModule(Tracker tracker)
             : base(tracker)
         {
-            AddCommand("TrackItemRule", GetTrackItemRule(), (tracker, result) =>
+            AddCommand("Track item", GetTrackItemRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
 
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             });
 
-            AddCommand("TrackEverythingRule", GetTrackEverythingRule(), (tracker, result) =>
+            AddCommand("Track multiple items", GetTrackEverythingRule(), (tracker, result) =>
             {
                 if (result.Semantics.ContainsKey(RoomKey))
                 {

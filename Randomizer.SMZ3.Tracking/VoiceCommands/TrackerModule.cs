@@ -194,7 +194,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected void AddCommand(string ruleName, GrammarBuilder grammarBuilder,
             Action<Tracker, RecognitionResult> executeCommand)
         {
-            _syntax.TryAdd(ruleName, grammarBuilder.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries));
+            _syntax.TryAdd(ruleName, grammarBuilder.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
             var grammar = grammarBuilder.Build(ruleName);
             grammar.SpeechRecognized += (sender, e) => executeCommand(Tracker, e.Result);

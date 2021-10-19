@@ -9,14 +9,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         public LocationTrackingModule(Tracker tracker) : base(tracker)
         {
-            AddCommand("TrackItemAtLocationRule", GetTrackItemAtLocationRule(), (tracker, result) =>
+            AddCommand("Track item at specific location", GetTrackItemAtLocationRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 var location = GetLocationFromResult(tracker, result);
                 tracker.MarkLocation(location, item, result.Confidence);
             });
 
-            AddCommand("ClearLocationRule", GetClearLocationRule(), (tracker, result) =>
+            AddCommand("Clear specific item location", GetClearLocationRule(), (tracker, result) =>
             {
                 var location = GetLocationFromResult(tracker, result);
                 tracker.Clear(location, result.Confidence);

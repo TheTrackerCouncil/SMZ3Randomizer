@@ -47,8 +47,6 @@ namespace Randomizer.SMZ3.Tracking
             World = world ?? new World(new Config(), "Player", 0, "");
             GetTreasureCounts(Dungeons, world);
             UniqueLocationNames = World.Locations.ToDictionary(x => x, x => GetUniqueNames(x));
-            foreach (var name in UniqueLocationNames.Values.SelectMany(x => x))
-                Debug.WriteLine(name);
 
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
@@ -62,7 +60,7 @@ namespace Randomizer.SMZ3.Tracking
             _recognizer.SetInputToDefaultAudioDevice();
 
             var moduleFactory = new TrackerModuleFactory();
-            moduleFactory.LoadAll(this, _recognizer);
+            Syntax = moduleFactory.LoadAll(this, _recognizer);
         }
 
         public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
@@ -114,6 +112,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Indicates whether Tracker is in Go Mode.
         /// </summary>
         public bool GoMode { get; private set; }
+
+        /// <summary>
+        /// Gets a dictionary containing the rules and the various speech
+        /// recognition syntaxes.
+        /// </summary>
+        public IReadOnlyDictionary<string, IEnumerable<string>> Syntax { get; }
 
         /// <summary>
         /// Gets a dictionary that contains unique location names for each
