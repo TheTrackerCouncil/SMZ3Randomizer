@@ -34,8 +34,10 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="trackerConfigProvider">
         /// Used to provide the tracking configuration.
         /// </param>
-        /// <param name="world">The generated world to track in.</param>
-        public Tracker(TrackerConfigProvider trackerConfigProvider, World? world)
+        /// <param name="worldAccessor">
+        /// Used to get the world to track in.
+        /// </param>
+        public Tracker(TrackerConfigProvider trackerConfigProvider, IWorldAccessor worldAccessor)
         {
             // Initialize the tracker state and configuration
             var config = trackerConfigProvider.GetTrackerConfig();
@@ -43,8 +45,8 @@ namespace Randomizer.SMZ3.Tracking
             Pegs = config.Pegs.ToImmutableList();
             Dungeons = config.Dungeons.ToImmutableList();
             Responses = config.Responses;
-            World = world ?? new World(new Config(), "Player", 0, "");
-            GetTreasureCounts(Dungeons, world);
+            World = worldAccessor.GetWorld();
+            GetTreasureCounts(Dungeons, World);
             UniqueLocationNames = World.Locations.ToDictionary(x => x, x => GetUniqueNames(x));
 
             // Initalize the timers used to trigger idle responses
@@ -750,9 +752,9 @@ namespace Randomizer.SMZ3.Tracking
         protected virtual void OnLocationCleared(TrackerEventArgs e)
             => LocationCleared?.Invoke(this, e);
 
-        private static void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World? world)
+        private static void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
         {
-            if (world == null)
+            if (!world.Items.Any())
                 return;
 
             foreach (var dungeon in dungeons)

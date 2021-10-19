@@ -793,14 +793,16 @@
             commands and responding with text-to-speech.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.World)">
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.IWorldAccessor)">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> class.
             </summary>
             <param name="trackerConfigProvider">
             Used to provide the tracking configuration.
             </param>
-            <param name="world">The generated world to track in.</param>
+            <param name="worldAccessor">
+            Used to get the world to track in.
+            </param>
         </member>
         <member name="E:Randomizer.SMZ3.Tracking.Tracker.ItemTracked">
             <summary>
@@ -1563,6 +1565,27 @@
             <c>true</c> if <paramref name="region"/> matches the dungeon;
             otherwise, <c>false</c>.
             </returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.TrackerServiceCollectionExtensions">
+            <summary>
+            Provides methods for adding tracking services to a service collection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.TrackerServiceCollectionExtensions.AddTracker``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+            <summary>
+            Adds the services required to start using Tracker.
+            </summary>
+            <typeparam name="TWorldAccessor">
+            A type implementing <see cref="T:Randomizer.SMZ3.IWorldAccessor"/>. The type should
+            already be registered as a singleton.
+            </typeparam>
+            <param name="services">
+            The service collection to add Tracker to.
+            </param>
+            <param name="trackerJsonPath">
+            The path to the JSON track configuration file.
+            </param>
+            <returns>A reference to <paramref name="services"/>.</returns>
         </member>
     </members>
 </doc>

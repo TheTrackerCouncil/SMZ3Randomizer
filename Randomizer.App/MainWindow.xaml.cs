@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
+using Accessibility;
+
+using Microsoft.Extensions.DependencyInjection;
+
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
@@ -27,9 +31,11 @@ namespace Randomizer.App
     {
         private readonly string _optionsPath;
         private readonly Task _loadSpritesTask;
-        private World _lastWorld;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly Smz3Randomizer _randomizer;
+        private TrackerWindow _trackerWindow;
 
-        public MainWindow()
+        public MainWindow(IServiceProvider serviceProvider, Smz3Randomizer randomizer)
         {
             InitializeComponent();
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -56,6 +62,8 @@ namespace Randomizer.App
             }
 
             DataContext = Options;
+            _serviceProvider = serviceProvider;
+            _randomizer = randomizer;
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
@@ -100,8 +108,7 @@ namespace Randomizer.App
 
         public string SaveRomToFile()
         {
-            var randomizer = new SMZ3.Generation.Randomizer();
-            var rom = GenerateRom(randomizer, out var seed);
+            var rom = GenerateRom(out var seed);
 
             var folderPath = Path.Combine(RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
             Directory.CreateDirectory(folderPath);
@@ -118,10 +125,10 @@ namespace Randomizer.App
             return romPath;
         }
 
-        protected byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out SeedData seed)
+        protected byte[] GenerateRom(out SeedData seed)
         {
             var config = Options.ToConfig();
-            seed = randomizer.GenerateSeed(config, Options.SeedOptions.Seed, CancellationToken.None);
+            seed = _randomizer.GenerateSeed(config, Options.SeedOptions.Seed, CancellationToken.None);
 
             byte[] rom;
             using (var smRom = File.OpenRead(Options.GeneralOptions.SMRomPath))
@@ -138,7 +145,6 @@ namespace Randomizer.App
 
             Options.PatchOptions.SamusSprite.ApplyTo(rom);
             Options.PatchOptions.LinkSprite.ApplyTo(rom);
-            _lastWorld = seed.Worlds[0].World;
             return rom;
         }
 
@@ -277,7 +283,7 @@ namespace Randomizer.App
         private void GenerateStatsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var config = Options.ToConfig();
-            var randomizer = new SMZ3.Generation.Randomizer();
+            var randomizer = new SMZ3.Generation.Smz3Randomizer();
 
             const int numberOfSeeds = 10000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
@@ -450,8 +456,10 @@ namespace Randomizer.App
 
         private void StartTracker_Click(object sender, RoutedEventArgs e)
         {
-            var trackerWindow = new TrackerWindow(_lastWorld);
-            trackerWindow.Show();
+            var scope = _serviceProvider.CreateScope();
+            _trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
+            _trackerWindow.Closed += (_, _) => scope.Dispose();
+            _trackerWindow.Show();
         }
     }
 }

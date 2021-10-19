@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Security.Authentication;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -11,16 +11,19 @@ using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation
 {
-    public class Randomizer
+    public class Smz3Randomizer : IWorldAccessor
     {
         public static readonly Version version = new Version(1, 0);
 
         private static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex continousSpace = new Regex(@" +");
-        public string Id => "smz3-cas";
-        public string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
-        public string Version => version.ToString();
+
+        public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
+
+        public World LastGeneratedWorld { get; private set; }
+
+        public SeedData LastGeneratedSeed { get; private set; }
 
         public static int ParseSeed(ref string input)
         {
@@ -102,7 +105,16 @@ namespace Randomizer.SMZ3.Generation
                 seedData.Worlds.Add((world, patch.CreatePatch(config)));
             }
 
+            Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
+            LastGeneratedWorld = worlds[0];
+            LastGeneratedSeed = seedData;
             return seedData;
+        }
+
+        public World GetWorld()
+        {
+            Debug.WriteLine("Retrieving world on randomizer instance " + GetHashCode());
+            return LastGeneratedWorld ?? new World(new Config(), "", 0, "");
         }
 
         private static string CleanPlayerName(string name)
