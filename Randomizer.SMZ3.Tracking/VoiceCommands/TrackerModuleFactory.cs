@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection;
 using System.Speech.Recognition;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -12,6 +13,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class TrackerModuleFactory
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackerModuleFactory"/>
+        /// class.
+        /// </summary>
+        /// <param name="serviceProvider">
+        /// Used to load available tracker modules.
+        /// </param>
+        public TrackerModuleFactory(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
         /// <summary>
         /// Loads all available tracker modules into the specified speech
         /// recognition engine.
@@ -25,7 +40,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </returns>
         public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(Tracker tracker, SpeechRecognitionEngine engine)
         {
-            var modules = DiscoverModules(tracker);
+            var modules = _serviceProvider.GetServices<TrackerModule>();
             foreach (var module in modules)
             {
                 module.LoadInto(engine);
@@ -33,37 +48,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return modules.SelectMany(x => x.Syntax)
                 .ToImmutableSortedDictionary();
-        }
-
-        /// <summary>
-        /// Returns all available tracker modules in the current assembly.
-        /// </summary>
-        /// <param name="tracker">The tracker instance to use.</param>
-        /// <returns>
-        /// A collection of initialized tracker modules in the current assembly.
-        /// </returns>
-        protected IEnumerable<TrackerModule> DiscoverModules(Tracker tracker)
-        {
-            var assembly = typeof(TrackerModuleFactory).Assembly;
-            return DiscoverModules(tracker, assembly);
-        }
-
-        /// <summary>
-        /// Returns all available tracker modules in the specified assembly.
-        /// </summary>
-        /// <param name="tracker">The tracker instance to use.</param>
-        /// <param name="assembly">
-        /// The assembly whose tracker modules to load.
-        /// </param>
-        /// <returns>
-        /// A collection of initialized tracker modules in the <paramref
-        /// name="assembly"/>.
-        /// </returns>
-        protected virtual IEnumerable<TrackerModule> DiscoverModules(Tracker tracker, Assembly assembly)
-        {
-            return assembly.GetTypes()
-                .Where(x => x.IsSubclassOf(typeof(TrackerModule)))
-                .Select(x => (TrackerModule)Activator.CreateInstance(x, tracker)!);
         }
     }
 }

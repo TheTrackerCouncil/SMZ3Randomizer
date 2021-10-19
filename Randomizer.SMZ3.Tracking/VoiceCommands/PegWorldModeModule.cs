@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// <summary>
     /// Provides voice commands for Peg World mode.
     /// </summary>
-    public class PegWorldModeModule : TrackerModule
+    public class PegWorldModeModule : TrackerModule, IOptionalModule
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PegWorldModeModule"/>

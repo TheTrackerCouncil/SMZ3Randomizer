@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.App
 {
@@ -21,13 +17,16 @@ namespace Randomizer.App
     {
         private IHost _host;
 
-        protected void ConfigureServices(IServiceCollection services)
+        protected static void ConfigureServices(IServiceCollection services)
         {
             var configFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer");
             var trackerConfigPath = Path.Combine(configFolder, "tracker.json");
 
             services.AddSingleton<Smz3Randomizer>();
-            services.AddTracker<Smz3Randomizer>(trackerConfigPath);
+
+            services.AddTracker<Smz3Randomizer>(trackerConfigPath)
+                .AddOptionalModule<PegWorldModeModule>();
+
             services.AddWindows<App>();
         }
 

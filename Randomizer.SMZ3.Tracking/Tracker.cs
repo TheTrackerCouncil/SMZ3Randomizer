@@ -9,6 +9,8 @@ using System.Threading;
 
 using BunLabs;
 
+using Microsoft.Extensions.Logging;
+
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -25,22 +27,34 @@ namespace Randomizer.SMZ3.Tracking
 
         private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
-        private Dictionary<string, Timer> _idleTimers;
+        private readonly TrackerModuleFactory _moduleFactory;
+        private readonly ILogger<Tracker> _logger;
+        private readonly Dictionary<string, Timer> _idleTimers;
         private bool _disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
-        /// <param name="trackerConfigProvider">
+        /// <param name="configProvider">
         /// Used to provide the tracking configuration.
+        /// </param>
+        /// <param name="moduleFactory">
+        /// Used to provide the tracking speech recognition syntax.
         /// </param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
-        public Tracker(TrackerConfigProvider trackerConfigProvider, IWorldAccessor worldAccessor)
+        /// <param name="logger">Used to write logging information.</param>
+        public Tracker(TrackerConfigProvider configProvider,
+            TrackerModuleFactory moduleFactory,
+            IWorldAccessor worldAccessor,
+            ILogger<Tracker> logger)
         {
+            _moduleFactory = moduleFactory;
+            _logger = logger;            
+
             // Initialize the tracker state and configuration
-            var config = trackerConfigProvider.GetTrackerConfig();
+            var config = configProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
             Dungeons = config.Dungeons.ToImmutableList();
@@ -62,9 +76,6 @@ namespace Randomizer.SMZ3.Tracking
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += SpeechRecognized;
             _recognizer.SetInputToDefaultAudioDevice();
-
-            var moduleFactory = new TrackerModuleFactory();
-            Syntax = moduleFactory.LoadAll(this, _recognizer);
         }
 
         /// <summary>
@@ -143,7 +154,8 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets a dictionary containing the rules and the various speech
         /// recognition syntaxes.
         /// </summary>
-        public IReadOnlyDictionary<string, IEnumerable<string>> Syntax { get; }
+        public IReadOnlyDictionary<string, IEnumerable<string>> Syntax { get; private set; }
+            = new Dictionary<string, IEnumerable<string>>();
 
         /// <summary>
         /// Gets a dictionary that contains unique location names for each
@@ -302,7 +314,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void StartTracking()
         {
+            // Load the modules and start speech recognition
+            Syntax = _moduleFactory.LoadAll(this, _recognizer);
             _recognizer.RecognizeAsync(RecognizeMode.Multiple);
+
             Say(Responses.StartedTracking);
             RestartIdleTimers();
         }

@@ -793,16 +793,20 @@
             commands and responding with text-to-speech.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.IWorldAccessor)">
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory,Randomizer.SMZ3.IWorldAccessor,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.Tracker})">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> class.
             </summary>
-            <param name="trackerConfigProvider">
+            <param name="configProvider">
             Used to provide the tracking configuration.
+            </param>
+            <param name="moduleFactory">
+            Used to provide the tracking speech recognition syntax.
             </param>
             <param name="worldAccessor">
             Used to get the world to track in.
             </param>
+            <param name="logger">Used to write logging information.</param>
         </member>
         <member name="E:Randomizer.SMZ3.Tracking.Tracker.ItemTracked">
             <summary>
@@ -1201,6 +1205,12 @@
             </summary>
             <param name="tracker">The tracker instance.</param>
         </member>
+        <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.IOptionalModule">
+            <summary>
+            Marks a tracker module as optional, i.e. not required for basic tracking
+            functionality.
+            </summary>
+        </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.ItemTrackingModule">
             <summary>
             Provides voice commands for tracking items.
@@ -1437,6 +1447,15 @@
             Loads and manages tracker modules.
             </summary>
         </member>
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory.#ctor(System.IServiceProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory"/>
+            class.
+            </summary>
+            <param name="serviceProvider">
+            Used to load available tracker modules.
+            </param>
+        </member>
         <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory.LoadAll(Randomizer.SMZ3.Tracking.Tracker,System.Speech.Recognition.SpeechRecognitionEngine)">
             <summary>
             Loads all available tracker modules into the specified speech
@@ -1448,28 +1467,6 @@
             </param>
             <returns>
             A dictionary that contains the loaded speech recognition syntax.
-            </returns>
-        </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory.DiscoverModules(Randomizer.SMZ3.Tracking.Tracker)">
-            <summary>
-            Returns all available tracker modules in the current assembly.
-            </summary>
-            <param name="tracker">The tracker instance to use.</param>
-            <returns>
-            A collection of initialized tracker modules in the current assembly.
-            </returns>
-        </member>
-        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory.DiscoverModules(Randomizer.SMZ3.Tracking.Tracker,System.Reflection.Assembly)">
-            <summary>
-            Returns all available tracker modules in the specified assembly.
-            </summary>
-            <param name="tracker">The tracker instance to use.</param>
-            <param name="assembly">
-            The assembly whose tracker modules to load.
-            </param>
-            <returns>
-            A collection of initialized tracker modules in the <paramref
-            name="assembly"/>.
             </returns>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.ZeldaDungeonTrackingModule">
@@ -1584,6 +1581,16 @@
             </param>
             <param name="trackerJsonPath">
             The path to the JSON track configuration file.
+            </param>
+            <returns>A reference to <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.TrackerServiceCollectionExtensions.AddOptionalModule``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Enables the specified tracker module.
+            </summary>
+            <typeparam name="TModule">The type of module to enable.</typeparam>
+            <param name="services">
+            The service collection to add the tracker module to.
             </param>
             <returns>A reference to <paramref name="services"/>.</returns>
         </member>
