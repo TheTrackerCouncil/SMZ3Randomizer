@@ -879,6 +879,19 @@
       "Oops. Something went wrong.",
       "Something went wrong. Time to ban Vihvelin."
     ],
+    "ActionUndone": [
+      "Was that not what you wanted?",
+      "Make up your mind.",
+      "Enunciate more clearly next time.",
+      "I'll pretend nothing happened."
+    ],
+    "NothingToUndo": [
+      "There's nothing to undo.",
+      "I haven't done anything."
+    ],
+    "GoModeToggledOff": [
+      "Toggled Go Mode off."
+    ],
     "TrackedSpecificItem": {
       "Shaktool Go Mode": [
         "Toggled Shaktool Go Mode <break time='1s'/> on."

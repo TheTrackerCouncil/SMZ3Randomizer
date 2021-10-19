@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// <c>{0}</c> is a placeholder for the name of the item.
         /// </remarks>
         public SchrodingersString TrackedItem { get; init; }
-            = new SchrodingersString("Toggled {0} on");
+            = new SchrodingersString("Toggled {0} on.");
 
         /// <summary>
         /// Gets the phrases to respond with when tracking a progressive item
@@ -258,10 +258,9 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
             = new SchrodingersString("Cleared {0}.");
 
         /// <summary>
-        /// Gets the phrases to respond with when toggling Go Mode on.
+        /// Gets the phrases to respond with when undoing Go Mode.
         /// </summary>
-        public SchrodingersString GoModeToggledOn { get; init; }
-            = new SchrodingersString("Toggled Go Mode <break time='1s'/> on.");
+        public SchrodingersString? GoModeToggledOff { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when attempting to track or clear
@@ -290,6 +289,17 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </summary>
         public SchrodingersString Error { get; init; }
              = new SchrodingersString("Oops. Something went wrong.");
+
+        /// <summary>
+        /// Gets the phrases to respond with before undoing the last action.
+        /// </summary>
+        public SchrodingersString? ActionUndone { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when there is nothing to undo.
+        /// </summary>
+        public SchrodingersString NothingToUndo { get; init; }
+            = new SchrodingersString("There's nothing to undo.");
 
         /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no

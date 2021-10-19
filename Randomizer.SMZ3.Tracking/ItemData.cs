@@ -90,7 +90,7 @@ namespace Randomizer.SMZ3.Tracking
         public bool HasStages => Stages != null && Stages.Count > 0;
 
         /// <summary>
-        /// Gets the tracking state of the item.
+        /// Gets or sets the tracking state of the item.
         /// </summary>
         /// <remarks>
         /// For example, 0 represents an untracked item, 1 represents an
@@ -98,7 +98,7 @@ namespace Randomizer.SMZ3.Tracking
         /// obtained more than once.
         /// </remarks>
         [JsonIgnore]
-        public int TrackingState { get; protected set; }
+        public int TrackingState { get; protected internal set; }
 
         /// <summary>
         /// Returns the stage of the item with the specifies name.

@@ -40,6 +40,11 @@ namespace Randomizer.App.ViewModels
                 OnPropertyChanged(nameof(TopLocations));
                 OnPropertyChanged(nameof(MarkedLocations));
             };
+            _tracker.ActionUndone += (_, _) =>
+            {
+                OnPropertyChanged(nameof(TopLocations));
+                OnPropertyChanged(nameof(MarkedLocations));
+            };
 
             World = tracker.World;
         }

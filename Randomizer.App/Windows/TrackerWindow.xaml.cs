@@ -232,6 +232,14 @@ namespace Randomizer.App
                 GoModeBorder.BorderBrush = new SolidColorBrush(Colors.Green);
                 UpdateStats(e);
             });
+            Tracker.ActionUndone += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                if (!Tracker.GoMode)
+                    GoModeBorder.BorderBrush = new SolidColorBrush(Colors.Transparent);
+
+                UpdateStats(e);
+                RefreshGridItems();
+            });
         }
 
         private void UpdateStats(TrackerEventArgs e)

@@ -201,7 +201,7 @@
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.ItemData.TrackingState">
             <summary>
-            Gets the tracking state of the item.
+            Gets or sets the tracking state of the item.
             </summary>
             <remarks>
             For example, 0 represents an untracked item, 1 represents an
@@ -781,9 +781,9 @@
             is a placeholder for the item that was at the location.
             </remarks>
         </member>
-        <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.GoModeToggledOn">
+        <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.GoModeToggledOff">
             <summary>
-            Gets the phrases to respond with when toggling Go Mode on.
+            Gets the phrases to respond with when undoing Go Mode.
             </summary>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.AreaDoesNotHaveItem">
@@ -811,6 +811,16 @@
         <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.Error">
             <summary>
             Gets the phrases to respond with when an internal error occurs.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.ActionUndone">
+            <summary>
+            Gets the phrases to respond with before undoing the last action.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.NothingToUndo">
+            <summary>
+            Gets the phrases to respond with when there is nothing to undo.
             </summary>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.Idle">
@@ -892,6 +902,11 @@
             Occurs when Go mode has been turned on.
             </summary>
         </member>
+        <member name="E:Randomizer.SMZ3.Tracking.Tracker.ActionUndone">
+            <summary>
+            Occurs when the last action was undone.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.Tracker.Items">
             <summary>
             Gets a collection of trackable items.
@@ -939,6 +954,12 @@
             Gets a dictionary that contains unique location names for each
             location.
             </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.Undo(System.Single)">
+            <summary>
+            Undoes the last operation.
+            </summary>
+            <param name="confidence">The speech recognition confidence.</param>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.ToggleGoMode(System.Nullable{System.Single})">
             <summary>
@@ -1122,6 +1143,14 @@
             </summary>
             <param name="confidence">The speech recognition confidence.</param>
         </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.AddUndo(System.Action)">
+            <summary>
+            Adds an action to be invoked to undo the last operation.
+            </summary>
+            <param name="undo">
+            The action to invoke to undo the last operation.
+            </param>
+        </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.Dispose(System.Boolean)">
             <summary>
             Cleans up resources used by this class.
@@ -1169,6 +1198,12 @@
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.OnLocationCleared(Randomizer.SMZ3.Tracking.TrackerEventArgs)">
             <summary>
             Raises the <see cref="E:Randomizer.SMZ3.Tracking.Tracker.LocationCleared"/> event.
+            </summary>
+            <param name="e">Event data.</param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.OnActionUndone(Randomizer.SMZ3.Tracking.TrackerEventArgs)">
+            <summary>
+            Raises the <see cref="E:Randomizer.SMZ3.Tracking.Tracker.ActionUndone"/> event.
             </summary>
             <param name="e">Event data.</param>
         </member>
@@ -1526,6 +1561,18 @@
             <returns>
             A dictionary that contains the loaded speech recognition syntax.
             </returns>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.UndoModule">
+            <summary>
+            Provides voice commands for undoing things.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.UndoModule.#ctor(Randomizer.SMZ3.Tracking.Tracker,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.VoiceCommands.UndoModule})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.VoiceCommands.UndoModule"/> class.
+            </summary>
+            <param name="tracker">The tracker instance.</param>
+            <param name="logger">Used to log information.</param>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.ZeldaDungeonTrackingModule">
             <summary>

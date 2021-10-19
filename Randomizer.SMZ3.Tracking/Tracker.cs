@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
@@ -30,6 +29,8 @@ namespace Randomizer.SMZ3.Tracking
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly ILogger<Tracker> _logger;
         private readonly Dictionary<string, Timer> _idleTimers;
+        private readonly Stack<Action> _undoHistory = new();
+
         private bool _disposed;
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace Randomizer.SMZ3.Tracking
             ILogger<Tracker> logger)
         {
             _moduleFactory = moduleFactory;
-            _logger = logger;            
+            _logger = logger;
 
             // Initialize the tracker state and configuration
             var config = configProvider.GetTrackerConfig();
@@ -115,6 +116,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
 
         /// <summary>
+        /// Occurs when the last action was undone.
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? ActionUndone;
+
+        /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
         public IReadOnlyCollection<ItemData> Items { get; }
@@ -164,6 +170,24 @@ namespace Randomizer.SMZ3.Tracking
         protected internal IReadOnlyDictionary<Location, SchrodingersString> UniqueLocationNames { get; }
 
         /// <summary>
+        /// Undoes the last operation.
+        /// </summary>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void Undo(float confidence)
+        {
+            if (_undoHistory.TryPop(out var undoLast))
+            {
+                Say(Responses.ActionUndone);
+                undoLast();
+                OnActionUndone(new TrackerEventArgs(confidence));
+            }
+            else
+            {
+                Say(Responses.NothingToUndo);
+            }
+        }
+
+        /// <summary>
         /// Toggles Go Mode on.
         /// </summary>
         /// <param name="confidence">The speech recognition confidence.</param>
@@ -173,6 +197,13 @@ namespace Randomizer.SMZ3.Tracking
             GoMode = true;
             OnGoModeToggledOn(new TrackerEventArgs(confidence));
             Say("on.");
+
+            AddUndo(() =>
+            {
+                GoMode = false;
+                if (Responses.GoModeToggledOff != null)
+                    Say(Responses.GoModeToggledOff);
+            });
         }
 
         /// <summary>
@@ -216,6 +247,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void SetDungeonReward(ZeldaDungeon dungeon, RewardItem? reward = null, float? confidence = null)
         {
+            var originalReward = dungeon.Reward;
             if (reward == null)
             {
                 dungeon.Reward = Enum.IsDefined(dungeon.Reward + 1) ? dungeon.Reward + 1 : RewardItem.Unknown;
@@ -229,6 +261,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
+            AddUndo(() => dungeon.Reward = originalReward);
         }
 
         /// <summary>
@@ -250,6 +283,7 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
+            var originalRequirement = dungeon.Requirement;
             if (medallion == null)
             {
                 dungeon.Requirement = Enum.IsDefined(dungeon.Requirement + 1) ? dungeon.Requirement + 1 : Medallion.None;
@@ -271,6 +305,8 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.DungeonRequirementMarked.Format(medallion.ToString(), dungeon.Name));
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
             }
+
+            AddUndo(() => dungeon.Requirement = originalRequirement);
         }
 
         /// <summary>
@@ -399,6 +435,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             var accessibleBefore = GetAccessibleLocations();
             var itemName = item.Name;
+            var originalTrackingState = item.TrackingState;
 
             if (item.HasStages)
             {
@@ -453,6 +490,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            AddUndo(() => item.TrackingState = originalTrackingState);
             OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
 
             // Check if we can clear a location
@@ -608,6 +646,16 @@ namespace Randomizer.SMZ3.Tracking
             // to data), e.g. "Tracked 5 items in Mini Moldorm Cave, including
             // the Morph Ball"
             Say(Responses.TrackedMultipleItems.Format(itemsTracked, area.GetName()));
+            AddUndo(() =>
+            {
+                foreach (var location in locations)
+                {
+                    var item = Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
+                    if (item != null && item.TrackingState > 0)
+                        item.TrackingState--;
+                    location.Cleared = false;
+                }
+            });
             OnItemTracked(new ItemTrackedEventArgs(null, confidence));
         }
 
@@ -619,6 +667,7 @@ namespace Randomizer.SMZ3.Tracking
         public void Clear(Location location, float? confidence = null)
         {
             location.Cleared = true;
+            AddUndo(() => location.Cleared = false);
             OnLocationCleared(new TrackerEventArgs(confidence));
 
             if (confidence != null)
@@ -646,6 +695,8 @@ namespace Randomizer.SMZ3.Tracking
             dungeon.Cleared = true;
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
             OnDungeonUpdated(new TrackerEventArgs(confidence));
+
+            AddUndo(() => dungeon.Cleared = false);
         }
 
         /// <summary>
@@ -665,14 +716,17 @@ namespace Randomizer.SMZ3.Tracking
             {
                 MarkedLocations[location] = item;
                 Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldItem.Name));
+                AddUndo(() => MarkedLocations[location] = oldItem);
             }
             else
             {
                 MarkedLocations.Add(location, item);
                 Say(Responses.LocationMarked.Format(locationName, item.Name));
+                AddUndo(() => MarkedLocations.Remove(location));
             }
 
             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+            
         }
 
         /// <summary>
@@ -689,6 +743,7 @@ namespace Randomizer.SMZ3.Tracking
             else
                 Say(Responses.PegWorldModeDone);
             OnPegPegged(new TrackerEventArgs(confidence));
+            AddUndo(() => peg.Pegged = false);
 
             RestartIdleTimers();
         }
@@ -702,6 +757,14 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.PegWorldModeOn, wait: true);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
         }
+
+        /// <summary>
+        /// Adds an action to be invoked to undo the last operation.
+        /// </summary>
+        /// <param name="undo">
+        /// The action to invoke to undo the last operation.
+        /// </param>
+        protected virtual void AddUndo(Action undo) => _undoHistory.Push(undo);
 
         /// <summary>
         /// Cleans up resources used by this class.
@@ -774,6 +837,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="e">Event data.</param>
         protected virtual void OnLocationCleared(TrackerEventArgs e)
             => LocationCleared?.Invoke(this, e);
+
+        /// <summary>
+        /// Raises the <see cref="ActionUndone"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        protected virtual void OnActionUndone(TrackerEventArgs e)
+            => ActionUndone?.Invoke(this, e);
 
         private void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
         {
