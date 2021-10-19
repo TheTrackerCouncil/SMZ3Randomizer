@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Randomizer.SMZ3.Tracking.Converters
 {
-    public class PegConverter : JsonConverter<Peg>
+    internal class PegConverter : JsonConverter<Peg>
     {
         public override Peg? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

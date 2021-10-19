@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Randomizer.SMZ3.Tracking.Vocabulary
 {
+    /// <summary>
+    /// Represents the various phrases that Tracker can respond with.
+    /// </summary>
     public class ResponseConfig
     {
         /// <summary>
@@ -82,9 +85,17 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </remarks>
         public SchrodingersString? TrackedAlreadyTrackedItem { get; init; }
 
+        /// <summary>
+        /// Gets the phrases to respond with when tracking multiple items in an
+        /// area at once.
+        /// </summary>
         public SchrodingersString TrackedMultipleItems { get; init; }
             = new SchrodingersString("Tracked {0} items in {1}.");
 
+        /// <summary>
+        /// Gets the phrases to respond with when tracking multiple items in an
+        /// area at once, but there no items available.
+        /// </summary>
         public SchrodingersString TrackedNothing { get; init; }
             = new SchrodingersString("There are no items left in {0}.");
 
@@ -108,8 +119,15 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </summary>
         public SchrodingersString? PegWorldModeOn { get; init; }
 
+        /// <summary>
+        /// Gets the phrases to respond with when pegging a Peg World peg.
+        /// </summary>
         public SchrodingersString? PegWorldModePegged { get; init; }
 
+        /// <summary>
+        /// Gets the phrases to respond with when all Peg World pegs have been
+        /// pegged.
+        /// </summary>
         public SchrodingersString? PegWorldModeDone { get; init; }
 
         /// <summary>
@@ -194,9 +212,26 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </remarks>
         public SchrodingersString? ItemTrackedInIncorrectDungeon { get; init; }
 
+        /// <summary>
+        /// Gets the phrases to respond with when marking an item at a location.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the name of the item.
+        /// </remarks>
         public SchrodingersString LocationMarked { get; init; }
             = new SchrodingersString("Marked {1} at {0}.");
 
+        /// <summary>
+        /// Gets the phrases to respond with when marking an item at a location
+        /// that has already been marked.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the name of the item. <c>{2}</c> is a
+        /// placeholder for the name of the item that was previously marked
+        /// here.
+        /// </remarks>
         public SchrodingersString LocationMarkedAgain { get; init; }
             = new SchrodingersString("Replaced {2} with {1} at {0}.");
 
@@ -222,6 +257,9 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         public SchrodingersString LocationCleared { get; init; }
             = new SchrodingersString("Cleared {0}.");
 
+        /// <summary>
+        /// Gets the phrases to respond with when toggling Go Mode on.
+        /// </summary>
         public SchrodingersString GoModeToggledOn { get; init; }
             = new SchrodingersString("Toggled Go Mode <break time='1s'/> on.");
 

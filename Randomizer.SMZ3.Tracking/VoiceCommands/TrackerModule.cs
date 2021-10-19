@@ -11,10 +11,30 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public abstract class TrackerModule
     {
+        /// <summary>
+        /// Gets the semantic result key used to identify the name of a dungeon.
+        /// </summary>
         protected const string DungeonKey = "DungeonName";
+
+        /// <summary>
+        /// Gets the semantic result key used to identify the name of an item.
+        /// </summary>
         protected const string ItemNameKey = "ItemName";
+
+        /// <summary>
+        /// Gets the semantic result key used to identify the name of a
+        /// location.
+        /// </summary>
         protected const string LocationKey = "LocationName";
+
+        /// <summary>
+        /// Gets the semantic result key used to identify the name of a room.
+        /// </summary>
         protected const string RoomKey = "RoomName";
+
+        /// <summary>
+        /// Gets the semantic result key used to identify the name of a region.
+        /// </summary>
         protected const string RegionKey = "RegionName";
 
         private readonly Dictionary<string, IEnumerable<string>> _syntax = new();
@@ -113,16 +133,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
         }
 
-
         /// <summary>
-        /// Returns the <see cref="Room"/> that was detected in a voice
-        /// command using <see cref="RoomKey"/>.
+        /// Returns the <see cref="Room"/> that was detected in a voice command
+        /// using <see cref="RoomKey"/>.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
-        /// <returns>
-        /// A <see cref="Room"/> from the recognition result.
-        /// </returns>
+        /// <returns>A <see cref="Room"/> from the recognition result.</returns>
         protected static Room GetRoomFromResult(Tracker tracker, RecognitionResult result)
         {
             var name = (string)result.Semantics[RoomKey].Value;
@@ -137,7 +154,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
         /// <returns>
-        /// A <see cref="region"/> from the recognition result.
+        /// A <see cref="Region"/> from the recognition result.
         /// </returns>
         protected static Region GetRegionFromResult(Tracker tracker, RecognitionResult result)
         {
@@ -272,8 +289,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Gets the room names for speech recognition.
         /// </summary>
         /// <returns>
-        /// A new <see cref="Choices"/> object representing all possible
-        /// room names mapped to the primary room name.
+        /// A new <see cref="Choices"/> object representing all possible room
+        /// names mapped to the primary room name.
         /// </returns>
         protected virtual Choices GetRoomNames()
         {
@@ -293,8 +310,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Gets the region names for speech recognition.
         /// </summary>
         /// <returns>
-        /// A new <see cref="Choices"/> object representing all possible
-        /// region names mapped to the primary region name.
+        /// A new <see cref="Choices"/> object representing all possible region
+        /// names mapped to the primary region name.
         /// </returns>
         protected virtual Choices GetRegionNames()
         {

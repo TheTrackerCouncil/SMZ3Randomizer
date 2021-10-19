@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").
         /// </summary>
-        public string Article { get; init; }
+        public string? Article { get; init; }
 
         /// <summary>
         /// Gets the name of the article, prefixed with "a", "the" or none,
@@ -187,6 +187,10 @@ namespace Randomizer.SMZ3.Tracking
                     && type.IsInCategory(ItemCategory.Scam));
         }
 
+        /// <summary>
+        /// Returns a string representing the item.
+        /// </summary>
+        /// <returns>A string representing the item.</returns>
         public override string ToString() => Name[0];
     }
 }

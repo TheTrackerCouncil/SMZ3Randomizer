@@ -2,21 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
-using System.Text;
 
 namespace Randomizer.SMZ3.Tracking
 {
+    /// <summary>
+    /// Constructs a speech recognition grammar.
+    /// </summary>
     public class GrammarBuilder
     {
-        private System.Speech.Recognition.GrammarBuilder _grammar;
-        private List<string> _elements;
+        private readonly System.Speech.Recognition.GrammarBuilder _grammar;
+        private readonly List<string> _elements;
 
+        /// <summary>
+        /// Initializes a new empty instance of the <see cref="GrammarBuilder"/>
+        /// class.
+        /// </summary>
         public GrammarBuilder()
         {
             _grammar = new();
             _elements = new();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrammarBuilder"/> class
+        /// that combines the specified grammars into a single choice.
+        /// </summary>
+        /// <param name="choices">The grammars to choose from.</param>
         public GrammarBuilder(IEnumerable<GrammarBuilder> choices)
             : this()
         {
@@ -25,20 +36,50 @@ namespace Randomizer.SMZ3.Tracking
                 _elements.Add(choice.ToString() + "\n");
         }
 
+        /// <summary>
+        /// Converts the grammar builder to the System.Speech grammar builder.
+        /// </summary>
+        /// <param name="self">The grammar builder to convert.</param>
         public static implicit operator System.Speech.Recognition.GrammarBuilder(GrammarBuilder self) => self._grammar;
 
+        /// <summary>
+        /// Combines the specified grammars into a single grammar.
+        /// </summary>
+        /// <param name="choices">
+        /// The possible grammars to choose from in the new grammar.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="GrammarBuilder"/> that represents a choice of one
+        /// of <paramref name="choices"/>.
+        /// </returns>
         public static GrammarBuilder Combine(params GrammarBuilder[] choices)
         {
             return new GrammarBuilder(choices);
         }
 
-        public GrammarBuilder Append(string phrase)
+        /// <summary>
+        /// Adds the specified text to the end of the grammar.
+        /// </summary>
+        /// <param name="text">The text to recognize.</param>
+        /// <returns>This instance.</returns>
+        public GrammarBuilder Append(string text)
         {
-            _grammar.Append(phrase);
-            _elements.Add(phrase);
+            _grammar.Append(text);
+            _elements.Add(text);
             return this;
         }
 
+        /// <summary>
+        /// Adds a choice that can be retrieved later using the specified
+        /// semantic result key.
+        /// </summary>
+        /// <param name="key">
+        /// The key used to retrieve the recognized choice.
+        /// </param>
+        /// <param name="choices">
+        /// The choices to represent in the grammar.
+        /// </param>
+        /// <returns>This instance.</returns>
         public GrammarBuilder Append(string key, Choices choices)
         {
             _grammar.Append(new SemanticResultKey(key, choices));
@@ -46,6 +87,13 @@ namespace Randomizer.SMZ3.Tracking
             return this;
         }
 
+        /// <summary>
+        /// Adds a choice.
+        /// </summary>
+        /// <param name="choices">
+        /// The choices to represent in the grammar.
+        /// </param>
+        /// <returns>This instance.</returns>
         public GrammarBuilder OneOf(params string[] choices)
         {
             _grammar.Append(new Choices(choices));
@@ -53,6 +101,11 @@ namespace Randomizer.SMZ3.Tracking
             return this;
         }
 
+        /// <summary>
+        /// Builds the grammar.
+        /// </summary>
+        /// <param name="name">The name of the grammar rule.</param>
+        /// <returns>A new <see cref="Grammar"/>.</returns>
         public Grammar Build(string name)
         {
             return new Grammar(this)
@@ -61,6 +114,10 @@ namespace Randomizer.SMZ3.Tracking
             };
         }
 
+        /// <summary>
+        /// Returns a string representing the grammar syntax.
+        /// </summary>
+        /// <returns>A string representing the grammar syntax.</returns>
         public override string ToString()
             => string.Join(' ', _elements);
     }

@@ -11,11 +11,10 @@ using Randomizer.SMZ3.Tracking.Converters;
 namespace Randomizer.SMZ3.Tracking.Vocabulary
 {
     /// <summary>
-    /// Represents a string whose value is picked randomly from a collection of
-    /// strings.
+    /// Represents multiple possibilities of a string.
     /// </summary>
     [JsonConverter(typeof(SchrodingersStringConverter))]
-    public class SchrodingersString : Collection<SchrodingersString.Item>
+    public class SchrodingersString : Collection<SchrodingersString.Possibility>
     {
         private static readonly Random s_random = new();
 
@@ -32,7 +31,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// class with the specified items.
         /// </summary>
         /// <param name="items">The items to add.</param>
-        public SchrodingersString(IEnumerable<Item> items)
+        public SchrodingersString(IEnumerable<Possibility> items)
         {
             foreach (var item in items)
                 base.Add(item);
@@ -54,7 +53,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// class with the specified items.
         /// </summary>
         /// <param name="items">The items to add.</param>
-        public SchrodingersString(params Item[] items)
+        public SchrodingersString(params Possibility[] items)
         {
             foreach (var item in items)
                 base.Add(item);
@@ -98,7 +97,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// <param name="weight">The weight of the possibility to add.</param>
         public void Add(string text, double weight = 1.0d)
         {
-            base.Add(new Item(text, weight));
+            base.Add(new Possibility(text, weight));
         }
 
         /// <summary>
@@ -123,7 +122,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// A random phrase from the phrase set, or <c>null</c> if the phrase
         /// set contains no items.
         /// </returns>
-        protected Item? Random(Random random)
+        protected Possibility? Random(Random random)
         {
             if (Items.Count == 0)
                 return null;
@@ -147,7 +146,7 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// </summary>
         [JsonConverter(typeof(SchrodingersStringItemConverter))]
         [DebuggerDisplay("{Text} Weight = {Weight}")]
-        public class Item
+        public class Possibility
         {
             /// <summary>
             /// The weight of items that do not have an explicit weight assigned
@@ -156,23 +155,23 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
             public const double DefaultWeight = 1.0d;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Item"/> class with
-            /// the specified text and the default weight of 1.
+            /// Initializes a new instance of the <see cref="Possibility"/>
+            /// class with the specified text and the default weight of 1.
             /// </summary>
             /// <param name="text">The text.</param>
-            public Item(string text) : this(text, DefaultWeight)
+            public Possibility(string text) : this(text, DefaultWeight)
             {
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Item"/> class with
-            /// the specified text and weight.
+            /// Initializes a new instance of the <see cref="Possibility"/>
+            /// class with the specified text and weight.
             /// </summary>
             /// <param name="text">The text.</param>
             /// <param name="weight">
             /// The weight for the item, based on a default of 1.
             /// </param>
-            public Item(string text, double weight)
+            public Possibility(string text, double weight)
             {
                 if (weight < 0)
                     throw new ArgumentOutOfRangeException(nameof(weight), weight, "Weight cannot be less than zero.");
@@ -192,12 +191,28 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
             [DefaultValue(DefaultWeight)]
             public double Weight { get; }
 
-            public static implicit operator string(Item phrase) => phrase.Text;
+            /// <summary>
+            /// Converts the possibility to a string.
+            /// </summary>
+            /// <param name="item">The item to convert.</param>
+            public static implicit operator string(Possibility item) => item.Text;
 
-            public static implicit operator Item(string text) => new(text);
+            /// <summary>
+            /// Converts the text to a new possibility.
+            /// </summary>
+            /// <param name="text">The text to use.</param>
+            public static implicit operator Possibility(string text) => new(text);
 
+            /// <summary>
+            /// Returns the hash code for this possibility.
+            /// </summary>
+            /// <returns>A 32-bit signed integer hash code.</returns>
             public override int GetHashCode() => Text.GetHashCode();
 
+            /// <summary>
+            /// Returns a string representation of the possibility.
+            /// </summary>
+            /// <returns>A string representation of the possibility.</returns>
             public override string ToString() => Text;
         }
     }

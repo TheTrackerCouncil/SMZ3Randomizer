@@ -1,13 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
+    /// <summary>
+    /// Provides voice commands for Peg World mode.
+    /// </summary>
     public class PegWorldModeModule : TrackerModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PegWorldModeModule"/>
+        /// class.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
         public PegWorldModeModule(Tracker tracker) : base(tracker)
         {
             AddCommand("Toggle Peg World mode", new[] {

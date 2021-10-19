@@ -6,14 +6,14 @@ using Randomizer.SMZ3.Tracking.Vocabulary;
 
 namespace Randomizer.SMZ3.Tracking.Converters
 {
-    internal class SchrodingersStringItemConverter : JsonConverter<SchrodingersString.Item>
+    internal class SchrodingersStringItemConverter : JsonConverter<SchrodingersString.Possibility>
     {
-        public override SchrodingersString.Item? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override SchrodingersString.Possibility? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.String)
             {
                 var text = reader.GetString();
-                return new SchrodingersString.Item(text!);
+                return new SchrodingersString.Possibility(text!);
             }
             else if (reader.TokenType == JsonTokenType.StartArray)
             {
@@ -29,15 +29,15 @@ namespace Randomizer.SMZ3.Tracking.Converters
                 if (reader.TokenType != JsonTokenType.EndArray)
                     throw new JsonException("Expected end of array.");
 
-                return new SchrodingersString.Item(text, weight);
+                return new SchrodingersString.Possibility(text, weight);
             }
 
             throw new JsonException($"Unexpected {reader.TokenType} at {reader.TokenStartIndex} when parsing phrase.");
         }
 
-        public override void Write(Utf8JsonWriter writer, SchrodingersString.Item value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, SchrodingersString.Possibility value, JsonSerializerOptions options)
         {
-            if (value.Weight == SchrodingersString.Item.DefaultWeight)
+            if (value.Weight == SchrodingersString.Possibility.DefaultWeight)
                 writer.WriteStringValue(value.Text);
             else
             {

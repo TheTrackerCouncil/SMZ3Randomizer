@@ -1,14 +1,22 @@
 ﻿using System;
-using System.Linq;
 using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
+    /// <summary>
+    /// Provides voice commands for marking dungeons and tracking dungeon
+    /// progress.
+    /// </summary>
     public class ZeldaDungeonTrackingModule : TrackerModule
     {
         private const string RewardKey = "RewardName";
         private const string MedallionKey = "MedallionName";
 
+        /// <summary>
+        /// Initializes a new instance of the <see
+        /// cref="ZeldaDungeonTrackingModule"/> class.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
         public ZeldaDungeonTrackingModule(Tracker tracker) : base(tracker)
         {
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>

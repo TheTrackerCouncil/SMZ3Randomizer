@@ -9,8 +9,6 @@ using System.Threading;
 
 using BunLabs;
 
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -39,6 +37,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="world">The generated world to track in.</param>
         public Tracker(TrackerConfigProvider trackerConfigProvider, World? world)
         {
+            // Initialize the tracker state and configuration
             var config = trackerConfigProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
@@ -48,13 +47,16 @@ namespace Randomizer.SMZ3.Tracking
             GetTreasureCounts(Dungeons, world);
             UniqueLocationNames = World.Locations.ToDictionary(x => x, x => GetUniqueNames(x));
 
+            // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
                 x => x.Key,
                 x => new Timer(IdleTimerElapsed, x.Key, Timeout.Infinite, Timeout.Infinite));
 
+            // Initialize the text-to-speech
             _tts = new SpeechSynthesizer();
             _tts.SelectVoiceByHints(VoiceGender.Female);
 
+            // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += SpeechRecognized;
             _recognizer.SetInputToDefaultAudioDevice();
@@ -63,18 +65,40 @@ namespace Randomizer.SMZ3.Tracking
             Syntax = moduleFactory.LoadAll(this, _recognizer);
         }
 
+        /// <summary>
+        /// Occurs when one more more items have been tracked.
+        /// </summary>
         public event EventHandler<ItemTrackedEventArgs>? ItemTracked;
 
+        /// <summary>
+        /// Occurs when a location has been cleared.
+        /// </summary>
         public event EventHandler<TrackerEventArgs>? LocationCleared;
 
+        /// <summary>
+        /// Occurs when Peg World mode has been toggled on.
+        /// </summary>
         public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
 
+        /// <summary>
+        /// Occurs when a Peg World peg has been pegged.
+        /// </summary>
         public event EventHandler<TrackerEventArgs>? PegPegged;
 
+        /// <summary>
+        /// Occurs when the properties of a dungeon have changed.
+        /// </summary>
         public event EventHandler<TrackerEventArgs>? DungeonUpdated;
 
+        /// <summary>
+        /// Occurs when the <see cref="MarkedLocations"/> collection has
+        /// changed.
+        /// </summary>
         public event EventHandler<TrackerEventArgs>? MarkedLocationsUpdated;
 
+        /// <summary>
+        /// Occurs when Go mode has been turned on.
+        /// </summary>
         public event EventHandler<TrackerEventArgs>? GoModeToggledOn;
 
         /// <summary>
@@ -253,6 +277,13 @@ namespace Randomizer.SMZ3.Tracking
                 ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
         }
 
+        /// <summary>
+        /// Gets the currently available items.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Progression"/> object representing the currently
+        /// available items.
+        /// </returns>
         public Progression GetProgression()
         {
             var progression = new Progression();
@@ -500,7 +531,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="area">The area whose items to clear.</param>
         /// <param name="includeUnavailable">
-        /// <c>true</c> to include every item in <paramref name="room"/>, even
+        /// <c>true</c> to include every item in <paramref name="area"/>, even
         /// those that are not in logic. <c>false</c> to only include chests
         /// available with current items.
         /// </param>
@@ -524,7 +555,11 @@ namespace Randomizer.SMZ3.Tracking
             {
                 var item = Items.SingleOrDefault(x => x.InternalItemType == onlyLocation.Item.Type);
                 if (item == null)
-                    throw new Exception($"Missing trackable item data for {onlyLocation.Item.Type} (0x{(int)onlyLocation.Item.Type:X2})");
+                {
+                    // Probably just the compass or something
+                    onlyLocation.Cleared = true;
+                    return;
+                }
 
                 TrackItem(item, onlyLocation, confidence: confidence);
                 return;
@@ -588,6 +623,14 @@ namespace Randomizer.SMZ3.Tracking
             OnDungeonUpdated(new TrackerEventArgs(confidence));
         }
 
+        /// <summary>
+        /// Marks an item at the specified location.
+        /// </summary>
+        /// <param name="location">The location to mark.</param>
+        /// <param name="item">
+        /// The item that is found at <paramref name="location"/>.
+        /// </param>
+        /// <param name="confidence">The speech recognition confidence.</param>
         public void MarkLocation(Location location, ItemData item, float? confidence = null)
         {
             var locationName = UniqueLocationNames[location];
@@ -611,9 +654,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Pegs a Peg World peg.
         /// </summary>
         /// <param name="peg">The peg to peg.</param>
-        /// <param name="confidence">
-        /// The confidence when triggered by voice command.
-        /// </param>
+        /// <param name="confidence">The speech recognition confidence.</param>
         public void Peg(Peg peg, float? confidence = null)
         {
             peg.Pegged = true;
@@ -627,6 +668,10 @@ namespace Randomizer.SMZ3.Tracking
             RestartIdleTimers();
         }
 
+        /// <summary>
+        /// Starts Peg World mode.
+        /// </summary>
+        /// <param name="confidence">The speech recognition confidence.</param>
         public void StartPegWorldMode(float? confidence = null)
         {
             Say(Responses.PegWorldModeOn, wait: true);
@@ -656,24 +701,52 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="ItemTracked"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected virtual void OnItemTracked(ItemTrackedEventArgs e)
             => ItemTracked?.Invoke(this, e);
 
+        /// <summary>
+        /// Raises the <see cref="ToggledPegWorldModeOn"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected virtual void OnPegWorldModeToggled(TrackerEventArgs e)
             => ToggledPegWorldModeOn?.Invoke(this, e);
 
+        /// <summary>
+        /// Raises the <see cref="PegPegged"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected virtual void OnPegPegged(TrackerEventArgs e)
             => PegPegged?.Invoke(this, e);
 
+        /// <summary>
+        /// Raises the <see cref="DungeonUpdated"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected virtual void OnDungeonUpdated(TrackerEventArgs e)
             => DungeonUpdated?.Invoke(this, e);
 
+        /// <summary>
+        /// Raises the <see cref="MarkedLocationsUpdated"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected virtual void OnMarkedLocationsUpdated(TrackerEventArgs e)
             => MarkedLocationsUpdated?.Invoke(this, e);
 
+        /// <summary>
+        /// Raises the <see cref="GoModeToggledOn"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected virtual void OnGoModeToggledOn(TrackerEventArgs e)
             => GoModeToggledOn?.Invoke(this, e);
 
+        /// <summary>
+        /// Raises the <see cref="LocationCleared"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected virtual void OnLocationCleared(TrackerEventArgs e)
             => LocationCleared?.Invoke(this, e);
 
@@ -815,7 +888,7 @@ namespace Randomizer.SMZ3.Tracking
             return new SchrodingersString(location.AlternateNames.Concat(new[] { location.Name })
                 .SelectMany(x => MakeUnique(x, location)));
 
-            IEnumerable<SchrodingersString.Item> MakeUnique(string name, Location location)
+            IEnumerable<SchrodingersString.Possibility> MakeUnique(string name, Location location)
             {
                 // Only at the location name if it is unique
                 var isUnique = Occurences(name) < 2;

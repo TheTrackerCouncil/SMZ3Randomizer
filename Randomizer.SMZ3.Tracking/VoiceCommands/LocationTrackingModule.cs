@@ -1,12 +1,17 @@
 ﻿using System;
-using System.Linq;
-using System.Speech.Recognition;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
+    /// <summary>
+    /// Provides voice commands for marking and clearing locations.
+    /// </summary>
     public class LocationTrackingModule : TrackerModule
     {
-
+        /// <summary>
+        /// Initializes a new instance of the <see
+        /// cref="LocationTrackingModule"/> class.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
         public LocationTrackingModule(Tracker tracker) : base(tracker)
         {
             AddCommand("Track item at specific location", GetTrackItemAtLocationRule(), (tracker, result) =>

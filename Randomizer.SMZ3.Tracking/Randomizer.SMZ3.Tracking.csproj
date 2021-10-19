@@ -5,6 +5,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>O:\Source\Vivelin\SMZ3Randomizer\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="tracker.json" />
   </ItemGroup>

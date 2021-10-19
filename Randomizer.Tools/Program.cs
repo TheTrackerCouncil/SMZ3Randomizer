@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
-using System.Text;
+using System.Linq;
+
 using NHyphenator;
 
 namespace Randomizer.Tools
@@ -17,9 +17,11 @@ namespace Randomizer.Tools
 
         static Program()
         {
-            s_hyphenator = new Hyphenator(HyphenatePatternsLanguage.EnglishUs, 
+#pragma warning disable CS0618 // Type or member is obsolete
+            s_hyphenator = new Hyphenator(HyphenatePatternsLanguage.EnglishUs,
                 hyphenateSymbol: SoftHyphens,
                 hyphenateLastWord: true);
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         public static void Main(string[] args)
@@ -89,17 +91,23 @@ namespace Randomizer.Tools
         }
 
         /// <summary>
-        /// Returns the index of the last character in the string at which text should be wrapped.
+        /// Returns the index of the last character in the string at which text
+        /// should be wrapped.
         /// </summary>
         /// <param name="span">The span to search through.</param>
         /// <param name="start">The index at which to begin searching.</param>
-        /// <param name="maxLength">The maximum number of characters to search through (excluding soft hyphens).</param>
-        /// <returns>The index of the last character near the wrapping point, or -1.</returns>
+        /// <param name="maxLength">
+        /// The maximum number of characters to search through (excluding soft
+        /// hyphens).
+        /// </param>
+        /// <returns>
+        /// The index of the last character near the wrapping point, or -1.
+        /// </returns>
         public static int LastIndexOfConvenientWrappingPoint(this ReadOnlySpan<char> span, int start, int maxLength)
         {
             var softHyphens = span.Slice(start, maxLength).ToArray().Count(x => x == SoftHyphen);
-            var slice = start + maxLength + softHyphens > span.Length 
-                ? span.Slice(start) 
+            var slice = start + maxLength + softHyphens > span.Length
+                ? span.Slice(start)
                 : span.Slice(start, maxLength + softHyphens);
             return start + slice.LastIndexOfAny(' ', SoftHyphen);
         }

@@ -2,8 +2,16 @@
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
+    /// <summary>
+    /// Provides voice commands for tracking items.
+    /// </summary>
     public class ItemTrackingModule : TrackerModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ItemTrackingModule"/>
+        /// class.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
         public ItemTrackingModule(Tracker tracker)
             : base(tracker)
         {
