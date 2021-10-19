@@ -142,12 +142,17 @@
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.ItemData.Name">
             <summary>
-            Gets the name for the item.
+            Gets the possible names for the item.
             </summary>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.ItemData.Article">
             <summary>
             Gets the grammatical article for the item (e.g. "a" or "the").
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ItemData.Plural">
+            <summary>
+            Gets the possible plural names for the item.
             </summary>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.ItemData.NameWithArticle">
@@ -586,6 +591,10 @@
             Gets the phrases to respond with when tracking an item that can be
             tracked multiple times.
             </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the plural item name. <c>{1}</c> is
+            a placeholder for the number of copies.
+            </remarks>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.Vocabulary.ResponseConfig.TrackedProgressiveItem">
             <summary>

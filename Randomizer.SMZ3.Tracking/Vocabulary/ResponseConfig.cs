@@ -44,8 +44,12 @@ namespace Randomizer.SMZ3.Tracking.Vocabulary
         /// Gets the phrases to respond with when tracking an item that can be
         /// tracked multiple times.
         /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the plural item name. <c>{1}</c> is
+        /// a placeholder for the number of copies.
+        /// </remarks>
         public SchrodingersString TrackedItemMultiple { get; init; }
-             = new SchrodingersString("Added {0}.");
+             = new SchrodingersString("Added {0}s.", "You now have {1} {0}s.");
 
         /// <summary>
         /// Gets the phrases to respond with when tracking a progressive item.

@@ -56,7 +56,7 @@ namespace Randomizer.App
                     return fileName;
             }
 
-            if (item.HasStages)
+            if (item.HasStages || item.Multiple)
             {
                 fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()} ({item.TrackingState}).png");
                 if (File.Exists(fileName))

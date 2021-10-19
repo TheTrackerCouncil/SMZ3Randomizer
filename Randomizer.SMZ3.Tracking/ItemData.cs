@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Gets the name for the item.
+        /// Gets the possible names for the item.
         /// </summary>
         public SchrodingersString Name { get; init; }
 
@@ -36,6 +36,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the grammatical article for the item (e.g. "a" or "the").
         /// </summary>
         public string? Article { get; init; }
+
+        /// <summary>
+        /// Gets the possible plural names for the item.
+        /// </summary>
+        public SchrodingersString? Plural { get; init; }
 
         /// <summary>
         /// Gets the name of the article, prefixed with "a", "the" or none,

@@ -7,12 +7,23 @@
     },
     {
       "Name": [ "Bullshit" ],
+      "Plural": [ "Bullshit" ],
       "Article": "",
       "InternalItemType": 0,
       "Multiple": true
     },
     {
       "Name": [ "Content" ],
+      "Plural": [ "Content" ],
+      "Article": "",
+      "InternalItemType": 0,
+      "Column": 10,
+      "Row": 5,
+      "Multiple": true
+    },
+    {
+      "Name": [ "Death" ],
+      "Plural": [ "Deaths" ],
       "Article": "",
       "InternalItemType": 0,
       "Multiple": true
@@ -123,6 +134,7 @@
     },
     {
       "Name": [ "Heart piece", "Piece of Heart" ],
+      "Plural": [ "Heart pieces", "Pieces of Heart" ],
       "InternalItemType": 23,
       "Multiple": true
     },
@@ -172,7 +184,8 @@
       "Row": 2
     },
     {
-      "Name": [ "Three Bombs", "Bombs" ],
+      "Name": [ "Bombs", "Zelda Bombs" ],
+      "Plural": [ "Bombs", "Zelda Bombs" ],
       "InternalItemType": 40,
       "Article": "",
       "Multiple": true
@@ -190,19 +203,19 @@
       "Row": 0
     },
     {
-      "Name": "One Rupee",
+      "Name": [ "One Rupee", "Green Rupee" ],
       "InternalItemType": 52,
       "Artice": "",
       "Multiple": true
     },
     {
-      "Name": "Five Rupees",
+      "Name": [ "Five Rupees", "Blue Rupee" ],
       "InternalItemType": 53,
       "Artice": "",
       "Multiple": true
     },
     {
-      "Name": "Twenty Rupees",
+      "Name": [ "Twenty Rupees", "Red Rupee" ],
       "InternalItemType": 54,
       "Artice": "",
       "Multiple": true
@@ -565,6 +578,7 @@
     },
     {
       "Name": [ "Missile", "Missiles", "Missile pack" ],
+      "Plural": [ "Missiles", "Missile packs" ],
       "InternalItemType": 194,
       "Multiple": true,
       "Column": 7,
@@ -572,6 +586,7 @@
     },
     {
       "Name": [ "Super Missile", "Supers", "Superb Missiles", "Super Missile pack" ],
+      "Plural": [ "Super Missiles", "Supers", "Superb Missiles", "Super Missile packs" ],
       "InternalItemType": 195,
       "Multiple": true,
       "Column": 8,
@@ -579,6 +594,7 @@
     },
     {
       "Name": [ "Power Bomb", "Powerful Bombs" ],
+      "Plural": [ "Power Bombs", "Powerful Bombs" ],
       "InternalItemType": 196,
       "Multiple": true,
       "Column": 9,
@@ -789,7 +805,8 @@
       "Marked {0} as {1}."
     ],
     "TrackedItemMultiple": [
-      "Added {0}."
+      "Added more {0}.",
+      "You now have {1} {0}."
     ],
     "TrackedAlreadyTrackedItem": [
       "You already have that."
