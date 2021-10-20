@@ -50,13 +50,16 @@
                Style="{StaticResource DarkStatusBar}"
                Grid.Row="2">
       <StatusBarItem x:Name="StatusBarTimer"
+                     Style="{StaticResource TimerStatusBarItem}"
                      Content="00:00" />
       <StatusBarItem x:Name="StatusBarGoMode"
+                     Style="{StaticResource GoModeStatusBarItem}"
                      Content="GO MODE"
                      Visibility="Collapsed" />
       <StatusBarItem x:Name="StatusBarConfidence"
+                     Style="{StaticResource ConfidenceStatusBarItem}"
                      Content="0.00%"
-                     ToolTip="Confidence of last recognized voice command"/>
+                     ToolTip="Confidence of last recognized voice command" />
     </StatusBar>
   </Grid>
 </Window>

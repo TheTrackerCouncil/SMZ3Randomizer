@@ -21,6 +21,9 @@
   <ItemGroup>
     <None Remove="chozo20.ico" />
     <None Remove="msu1-v6.ips" />
+    <None Remove="Resources\Font Awesome 5 Free-Regular-400.otf" />
+    <None Remove="Resources\Font Awesome 5 Free-Solid-900.otf" />
+    <None Remove="Resources\LICENSE.txt" />
     <None Remove="zsm.ips" />
     <None Remove="zsm.ips.gz" />
   </ItemGroup>
@@ -45,6 +48,11 @@
 
   <ItemGroup>
     <Folder Include="Sprites\Items\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Font Awesome 5 Free-Regular-400.otf" />
+    <Resource Include="Resources\Font Awesome 5 Free-Solid-900.otf" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
