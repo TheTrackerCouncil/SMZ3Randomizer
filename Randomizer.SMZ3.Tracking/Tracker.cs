@@ -144,7 +144,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the world for the currently tracked playthrough.
         /// </summary>
-        public World World { get; }
+        public World World { get; internal set; }
 
         /// <summary>
         /// Indicates whether Tracker is in Go Mode.

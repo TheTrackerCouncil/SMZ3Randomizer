@@ -161,7 +161,7 @@ namespace Randomizer.SMZ3.Tracking
 
             foreach (var locationState in LocationStates)
             {
-                var location = tracker.World.Locations.SingleOrDefault(x => x.Id == locationState.Id)
+                var location = world.Locations.SingleOrDefault(x => x.Id == locationState.Id)
                     ?? throw new ArgumentException($"Could not find location with ID {locationState.Id}.", nameof(tracker));
 
                 location.Item = locationState.Item != null ? new Item(locationState.Item.Value) : null;
@@ -170,7 +170,7 @@ namespace Randomizer.SMZ3.Tracking
 
             foreach (var regionState in RegionStates)
             {
-                var region = tracker.World.Regions.SingleOrDefault(x => x.GetType().Name == regionState.TypeName)
+                var region = world.Regions.SingleOrDefault(x => x.GetType().Name == regionState.TypeName)
                     ?? throw new ArgumentException($"Could not find region with type name '{regionState.TypeName}'.", nameof(tracker));
 
                 if (region is IHasReward rewardRegion && regionState.Reward != null)
@@ -198,6 +198,8 @@ namespace Randomizer.SMZ3.Tracking
 
                 tracker.MarkedLocations[markedLocation.LocationId] = item;
             }
+
+            tracker.World = world;
         }
 
         /// <summary>
