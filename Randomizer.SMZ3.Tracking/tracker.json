@@ -825,6 +825,9 @@
     "TrackedMultipleItems": [
       "Tracked {0} items in {1}."
     ],
+    "ClearedMultipleItems": [
+      "Cleared {0} items in {1}."
+    ],
     "ShaktoolAvailable": [
       "Hey tracker, track Shaktool Go Mode",
       "I wonder how Shaktool is doing"

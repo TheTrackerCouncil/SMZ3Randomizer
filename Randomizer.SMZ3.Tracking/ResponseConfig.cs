@@ -97,7 +97,14 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Tracked {0} items in {1}.");
 
         /// <summary>
-        /// Gets the phrases to respond with when tracking multiple items in an
+        /// Gets the phrases to respond with when clearing multiple items in an
+        /// area at once.
+        /// </summary>
+        public SchrodingersString ClearedMultipleItems { get; init; }
+            = new SchrodingersString("Cleared {0} items in {1}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking or clearing multiple items in an
         /// area at once, but there no items available.
         /// </summary>
         public SchrodingersString TrackedNothing { get; init; }

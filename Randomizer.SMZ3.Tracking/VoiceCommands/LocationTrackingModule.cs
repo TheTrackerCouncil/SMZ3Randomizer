@@ -29,6 +29,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var location = GetLocationFromResult(tracker, result);
                 tracker.Clear(location, result.Confidence);
             });
+
+            AddCommand("Clear available items in an area", GetClearAreaRule(), (tracker, result) =>
+            {
+                if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(tracker, result);
+                    tracker.ClearArea(room,
+                        trackItems: false,
+                        includeUnavailable: false,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RegionKey))
+                {
+                    var region = GetRegionFromResult(tracker, result);
+                    tracker.ClearArea(region,
+                        trackItems:false,
+                        includeUnavailable: false,
+                        confidence: result.Confidence);
+                }
+            });
         }
 
         private GrammarBuilder GetTrackItemAtLocationRule()
@@ -82,6 +102,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .OneOf("clear", "ignore")
                 .Append(LocationKey, locationNames);
+        }
+
+        private GrammarBuilder GetClearAreaRule()
+        {
+            var roomNames = GetRoomNames();
+            var regionNames = GetRegionNames();
+
+            var clearRoom = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("clear", "please clear")
+                .Append(RoomKey, roomNames);
+
+            var clearRegion = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("clear", "please clear")
+                .Append(RegionKey, regionNames);
+
+            return GrammarBuilder.Combine(clearRoom, clearRegion);
         }
     }
 }

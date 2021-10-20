@@ -50,19 +50,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             });
 
-            AddCommand("Track multiple items", GetTrackEverythingRule(), (tracker, result) =>
+            AddCommand("Track available items in an area", GetTrackEverythingRule(), (tracker, result) =>
             {
                 if (result.Semantics.ContainsKey(RoomKey))
                 {
                     var room = GetRoomFromResult(tracker, result);
-                    tracker.TrackItemsIn(room,
+                    tracker.ClearArea(room,
+                        trackItems: true,
                         includeUnavailable: false,
                         confidence: result.Confidence);
                 }
                 else if (result.Semantics.ContainsKey(RegionKey))
                 {
                     var region = GetRegionFromResult(tracker, result);
-                    tracker.TrackItemsIn(region,
+                    tracker.ClearArea(region,
+                        trackItems: true,
                         includeUnavailable: false,
                         confidence: result.Confidence);
                 }
@@ -113,14 +115,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var trackAllInRoom = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track", "clear")
+                .OneOf("track", "please track")
                 .OneOf("everything", "all items", "available items")
                 .OneOf("in", "from", "in the", "from the")
                 .Append(RoomKey, roomNames);
 
             var trackAllInRegion = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track", "clear")
+                .OneOf("track", "please track")
                 .OneOf("everything", "all items", "available items")
                 .OneOf("in", "from")
                 .Append(RegionKey, regionNames);

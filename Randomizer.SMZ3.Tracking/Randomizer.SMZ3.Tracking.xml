@@ -324,9 +324,15 @@
             area at once.
             </summary>
         </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.ClearedMultipleItems">
+            <summary>
+            Gets the phrases to respond with when clearing multiple items in an
+            area at once.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.TrackedNothing">
             <summary>
-            Gets the phrases to respond with when tracking multiple items in an
+            Gets the phrases to respond with when tracking or clearing multiple items in an
             area at once, but there no items available.
             </summary>
         </member>
@@ -1004,11 +1010,16 @@
             <param name="location">The location the item was found in.</param>
             <param name="confidence">The speech recognition confidence.</param>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.Tracker.TrackItemsIn(Randomizer.SMZ3.IHasLocations,System.Boolean,System.Nullable{System.Single})">
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.ClearArea(Randomizer.SMZ3.IHasLocations,System.Boolean,System.Boolean,System.Nullable{System.Single})">
             <summary>
-            Tracks every item in the specified area.
+            Clears every item in the specified area, optionally tracking the
+            cleared items.
             </summary>
             <param name="area">The area whose items to clear.</param>
+            <param name="trackItems">
+            <c>true</c> to track any items found; <c>false</c> to only clear the
+            affected locations.
+            </param>
             <param name="includeUnavailable">
             <c>true</c> to include every item in <paramref name="area"/>, even
             those that are not in logic. <c>false</c> to only include chests

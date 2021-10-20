@@ -625,16 +625,21 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Tracks every item in the specified area.
+        /// Clears every item in the specified area, optionally tracking the
+        /// cleared items.
         /// </summary>
         /// <param name="area">The area whose items to clear.</param>
+        /// <param name="trackItems">
+        /// <c>true</c> to track any items found; <c>false</c> to only clear the
+        /// affected locations.
+        /// </param>
         /// <param name="includeUnavailable">
         /// <c>true</c> to include every item in <paramref name="area"/>, even
         /// those that are not in logic. <c>false</c> to only include chests
         /// available with current items.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackItemsIn(IHasLocations area, bool includeUnavailable = false, float? confidence = null)
+        public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null)
         {
             var locations = area.Locations.Where(x => !x.Cleared);
             if (!includeUnavailable)
@@ -651,6 +656,12 @@ namespace Randomizer.SMZ3.Tracking
             var onlyLocation = locations.TrySingle();
             if (onlyLocation != null)
             {
+                if (!trackItems)
+                {
+                    onlyLocation.Cleared = true;
+                    return;
+                }
+
                 var item = Items.SingleOrDefault(x => x.InternalItemType == onlyLocation.Item.Type);
                 if (item == null)
                 {
@@ -667,6 +678,13 @@ namespace Randomizer.SMZ3.Tracking
             var itemsTracked = 0;
             foreach (var location in locations)
             {
+                if (!trackItems)
+                {
+                    itemsTracked++;
+                    location.Cleared = true;
+                    continue;
+                }
+
                 var itemType = location.Item.Type;
                 var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
                 if (item != null && item.Track())
@@ -680,14 +698,19 @@ namespace Randomizer.SMZ3.Tracking
             // TODO: Include the most noteworthy item (by item value, once added
             // to data), e.g. "Tracked 5 items in Mini Moldorm Cave, including
             // the Morph Ball"
-            Say(Responses.TrackedMultipleItems.Format(itemsTracked, area.GetName()));
+            var responses = trackItems ? Responses.TrackedMultipleItems : Responses.ClearedMultipleItems;
+            Say(responses.Format(itemsTracked, area.GetName()));
+
             AddUndo(() =>
             {
                 foreach (var location in locations)
                 {
-                    var item = Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
-                    if (item != null && item.TrackingState > 0)
-                        item.TrackingState--;
+                    if (trackItems)
+                    {
+                        var item = Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
+                        if (item != null && item.TrackingState > 0)
+                            item.TrackingState--;
+                    }
                     location.Cleared = false;
                 }
             });
