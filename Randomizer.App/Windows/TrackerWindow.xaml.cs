@@ -235,13 +235,17 @@ namespace Randomizer.App
             });
             Tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
             {
-                GoModeBorder.BorderBrush = new SolidColorBrush(Colors.Green);
+                TrackerStatusBar.Background = Brushes.Green;
+                StatusBarGoMode.Visibility = Visibility.Visible;
                 UpdateStats(e);
             });
             Tracker.ActionUndone += (sender, e) => Dispatcher.Invoke(() =>
             {
                 if (!Tracker.GoMode)
-                    GoModeBorder.BorderBrush = new SolidColorBrush(Colors.Transparent);
+                {
+                    TrackerStatusBar.Background = null;
+                    StatusBarGoMode.Visibility = Visibility.Collapsed;
+                }
 
                 UpdateStats(e);
                 RefreshGridItems();
@@ -250,7 +254,8 @@ namespace Randomizer.App
             {
                 RefreshGridItems();
                 ResetGridSize();
-                GoModeBorder.BorderBrush = new SolidColorBrush(Tracker.GoMode ? Colors.Green : Colors.Transparent);
+                TrackerStatusBar.Background = Tracker.GoMode ? Brushes.Green : null;
+                StatusBarGoMode.Visibility = Tracker.GoMode ? Visibility.Visible : Visibility.Collapsed;
             });
         }
 

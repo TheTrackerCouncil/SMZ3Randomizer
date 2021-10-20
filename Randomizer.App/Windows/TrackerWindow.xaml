@@ -19,10 +19,10 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <Menu Background="#212121"
-          Foreground="#DDDDDD"
+    <Menu Style="{StaticResource DarkMenu}"
           Grid.Row="0">
-      <MenuItem Header="_File">
+      <MenuItem Style="{StaticResource DarkMenuItem}"
+                Header="_File">
         <MenuItem Header="_Load saved state..."
                   x:Name="LoadSavedState"
                   Click="LoadSavedState_Click" />
@@ -40,25 +40,23 @@
       </MenuItem>
     </Menu>
 
-    <Border x:Name="GoModeBorder"
-            Grid.Row="1"
-            Padding="7"
-            BorderThickness="4"
-            BorderBrush="Transparent">
-      <Grid x:Name="TrackerGrid"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top" />
-    </Border>
+    <Grid x:Name="TrackerGrid"
+          HorizontalAlignment="Left"
+          Grid.Row="1"
+          Margin="11"
+          VerticalAlignment="Top" />
 
     <StatusBar x:Name="TrackerStatusBar"
+               Style="{StaticResource DarkStatusBar}"
                Grid.Row="2">
       <StatusBarItem x:Name="StatusBarTimer"
-                     Content="00:00"
-                     HorizontalAlignment="Left" />
+                     Content="00:00" />
+      <StatusBarItem x:Name="StatusBarGoMode"
+                     Content="GO MODE"
+                     Visibility="Collapsed" />
       <StatusBarItem x:Name="StatusBarConfidence"
                      Content="0.00%"
-                     ToolTip="Confidence of last recognized voice command"
-                     HorizontalAlignment="Left" />
+                     ToolTip="Confidence of last recognized voice command"/>
     </StatusBar>
   </Grid>
 </Window>
