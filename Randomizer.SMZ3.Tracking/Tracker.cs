@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Threading;
+using System.Threading.Tasks;
 
 using BunLabs;
 
@@ -39,22 +41,22 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="configProvider">
         /// Used to provide the tracking configuration.
         /// </param>
-        /// <param name="moduleFactory">
-        /// Used to provide the tracking speech recognition syntax.
-        /// </param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
+        /// <param name="moduleFactory">
+        /// Used to provide the tracking speech recognition syntax.
+        /// </param>
         /// <param name="logger">Used to write logging information.</param>
         public Tracker(TrackerConfigProvider configProvider,
-            TrackerModuleFactory moduleFactory,
             IWorldAccessor worldAccessor,
+            TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger)
         {
             _moduleFactory = moduleFactory;
             _logger = logger;
 
-            // Initialize the tracker state and configuration
+            // Initialize the tracker configuration
             var config = configProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
@@ -121,6 +123,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? ActionUndone;
 
         /// <summary>
+        /// Occurs when the tracker state has been loaded.
+        /// </summary>
+        public event EventHandler? StateLoaded;
+
+        /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
         public IReadOnlyCollection<ItemData> Items { get; }
@@ -136,17 +143,6 @@ namespace Randomizer.SMZ3.Tracking
         public IReadOnlyCollection<ZeldaDungeon> Dungeons { get; }
 
         /// <summary>
-        /// Gets a dictionary that contains the locations that are marked with
-        /// items.
-        /// </summary>
-        public Dictionary<Location, ItemData> MarkedLocations { get; } = new();
-
-        /// <summary>
-        /// Gets the configured responses.
-        /// </summary>
-        public ResponseConfig Responses { get; }
-
-        /// <summary>
         /// Gets the world for the currently tracked playthrough.
         /// </summary>
         public World World { get; }
@@ -155,6 +151,17 @@ namespace Randomizer.SMZ3.Tracking
         /// Indicates whether Tracker is in Go Mode.
         /// </summary>
         public bool GoMode { get; private set; }
+
+        /// <summary>
+        /// Gets a dictionary that contains the locations that are marked with
+        /// items.
+        /// </summary>
+        public Dictionary<int, ItemData> MarkedLocations { get; } = new();
+
+        /// <summary>
+        /// Gets the configured responses.
+        /// </summary>
+        public ResponseConfig Responses { get; }
 
         /// <summary>
         /// Gets a dictionary containing the rules and the various speech
@@ -168,6 +175,32 @@ namespace Randomizer.SMZ3.Tracking
         /// location.
         /// </summary>
         protected internal IReadOnlyDictionary<Location, SchrodingersString> UniqueLocationNames { get; }
+
+        /// <summary>
+        /// Loads the tracker state from the specified saved state.
+        /// </summary>
+        /// <param name="stream">A stream containing the saved state.</param>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="stream"/> is not a valid Tracker saved state.
+        /// </exception>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task LoadAsync(Stream stream)
+        {
+            var state = await TrackerState.LoadAsync(stream);
+            state.Apply(this);
+            OnStateLoaded();
+        }
+
+        /// <summary>
+        /// Saves the tracker state.
+        /// </summary>
+        /// <param name="destination">The stream to save the state to.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public Task SaveAsync(Stream destination)
+        {
+            var state = TrackerState.TakeSnapshot(this);
+            return state.SaveAsync(destination);
+        }
 
         /// <summary>
         /// Undoes the last operation.
@@ -503,9 +536,9 @@ namespace Randomizer.SMZ3.Tracking
                 if (location != null)
                 {
                     location.Cleared = true;
-                    if (MarkedLocations.ContainsKey(location))
+                    if (MarkedLocations.ContainsKey(location.Id))
                     {
-                        MarkedLocations.Remove(location);
+                        MarkedLocations.Remove(location.Id);
                         OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
                     }
                 }
@@ -538,9 +571,9 @@ namespace Randomizer.SMZ3.Tracking
             if (location != null && dungeon.Is(location.Region))
             {
                 location.Cleared = true;
-                if (MarkedLocations.ContainsKey(location))
+                if (MarkedLocations.ContainsKey(location.Id))
                 {
-                    MarkedLocations.Remove(location);
+                    MarkedLocations.Remove(location.Id);
                     OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
                 }
             }
@@ -681,9 +714,9 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.LocationCleared.Format(locationName, itemName));
             }
 
-            if (MarkedLocations.ContainsKey(location))
+            if (MarkedLocations.ContainsKey(location.Id))
             {
-                MarkedLocations.Remove(location);
+                MarkedLocations.Remove(location.Id);
                 OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
             }
         }
@@ -715,21 +748,20 @@ namespace Randomizer.SMZ3.Tracking
             var locationName = UniqueLocationNames[location];
             SassIfItemIsWrong(item, location);
 
-            if (MarkedLocations.TryGetValue(location, out var oldItem))
+            if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
             {
-                MarkedLocations[location] = item;
+                MarkedLocations[location.Id] = item;
                 Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldItem.Name));
-                AddUndo(() => MarkedLocations[location] = oldItem);
+                AddUndo(() => MarkedLocations[location.Id] = oldItem);
             }
             else
             {
-                MarkedLocations.Add(location, item);
+                MarkedLocations.Add(location.Id, item);
                 Say(Responses.LocationMarked.Format(locationName, item.Name));
-                AddUndo(() => MarkedLocations.Remove(location));
+                AddUndo(() => MarkedLocations.Remove(location.Id));
             }
 
             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
-            
         }
 
         /// <summary>
@@ -847,6 +879,12 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="e">Event data.</param>
         protected virtual void OnActionUndone(TrackerEventArgs e)
             => ActionUndone?.Invoke(this, e);
+
+        /// <summary>
+        /// Raises the <see cref="StateLoaded"/> event.
+        /// </summary>
+        protected virtual void OnStateLoaded()
+            => StateLoaded?.Invoke(this, EventArgs.Empty);
 
         private void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
         {

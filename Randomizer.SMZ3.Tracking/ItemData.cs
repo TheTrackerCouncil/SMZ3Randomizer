@@ -102,7 +102,6 @@ namespace Randomizer.SMZ3.Tracking
         /// obtained item and higher values indicate items that have been
         /// obtained more than once.
         /// </remarks>
-        [JsonIgnore]
         public int TrackingState { get; protected internal set; }
 
         /// <summary>

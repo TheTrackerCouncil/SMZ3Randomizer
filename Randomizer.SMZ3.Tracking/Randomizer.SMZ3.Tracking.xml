@@ -860,18 +860,18 @@
             commands and responding with text-to-speech.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory,Randomizer.SMZ3.IWorldAccessor,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.Tracker})">
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.IWorldAccessor,Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.Tracker})">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> class.
             </summary>
             <param name="configProvider">
             Used to provide the tracking configuration.
             </param>
-            <param name="moduleFactory">
-            Used to provide the tracking speech recognition syntax.
-            </param>
             <param name="worldAccessor">
             Used to get the world to track in.
+            </param>
+            <param name="moduleFactory">
+            Used to provide the tracking speech recognition syntax.
             </param>
             <param name="logger">Used to write logging information.</param>
         </member>
@@ -916,6 +916,11 @@
             Occurs when the last action was undone.
             </summary>
         </member>
+        <member name="E:Randomizer.SMZ3.Tracking.Tracker.StateLoaded">
+            <summary>
+            Occurs when the tracker state has been loaded.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.Tracker.Items">
             <summary>
             Gets a collection of trackable items.
@@ -931,6 +936,16 @@
             Gets a collection of Zelda dungeons.
             </summary>
         </member>
+        <member name="P:Randomizer.SMZ3.Tracking.Tracker.World">
+            <summary>
+            Gets the world for the currently tracked playthrough.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.Tracker.GoMode">
+            <summary>
+            Indicates whether Tracker is in Go Mode.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.Tracker.MarkedLocations">
             <summary>
             Gets a dictionary that contains the locations that are marked with
@@ -940,16 +955,6 @@
         <member name="P:Randomizer.SMZ3.Tracking.Tracker.Responses">
             <summary>
             Gets the configured responses.
-            </summary>
-        </member>
-        <member name="P:Randomizer.SMZ3.Tracking.Tracker.World">
-            <summary>
-            Gets the world for the currently tracked playthrough.
-            </summary>
-        </member>
-        <member name="P:Randomizer.SMZ3.Tracking.Tracker.GoMode">
-            <summary>
-            Indicates whether Tracker is in Go Mode.
             </summary>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.Tracker.Syntax">
@@ -963,6 +968,23 @@
             Gets a dictionary that contains unique location names for each
             location.
             </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.LoadAsync(System.IO.Stream)">
+            <summary>
+            Loads the tracker state from the specified saved state.
+            </summary>
+            <param name="stream">A stream containing the saved state.</param>
+            <exception cref="T:System.ArgumentException">
+            <paramref name="stream"/> is not a valid Tracker saved state.
+            </exception>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.SaveAsync(System.IO.Stream)">
+            <summary>
+            Saves the tracker state.
+            </summary>
+            <param name="destination">The stream to save the state to.</param>
+            <returns>A task representing the asynchronous operation.</returns>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.Undo(System.Single)">
             <summary>
@@ -1216,6 +1238,11 @@
             </summary>
             <param name="e">Event data.</param>
         </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.OnStateLoaded">
+            <summary>
+            Raises the <see cref="E:Randomizer.SMZ3.Tracking.Tracker.StateLoaded"/> event.
+            </summary>
+        </member>
         <member name="T:Randomizer.SMZ3.Tracking.TrackerConfig">
             <summary>
             Represents the currently active tracker configuration.
@@ -1290,6 +1317,201 @@
             1.0, or <c>null</c> if the event was not initiated by speech
             recognition.
             </summary>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerState">
+            <summary>
+            Represents the tracker state in a form that can be saved or restored.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.#ctor(System.Collections.Generic.IReadOnlyCollection{Randomizer.SMZ3.Tracking.TrackerState.ItemState},System.Collections.Generic.IReadOnlyCollection{Randomizer.SMZ3.Tracking.TrackerState.LocationState},System.Collections.Generic.IReadOnlyCollection{Randomizer.SMZ3.Tracking.TrackerState.RegionState},System.Collections.Generic.IReadOnlyCollection{Randomizer.SMZ3.Tracking.TrackerState.DungeonState},System.Collections.Generic.IReadOnlyCollection{Randomizer.SMZ3.Tracking.TrackerState.MarkedLocation},Randomizer.SMZ3.Config)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.TrackerState"/> class
+            with the specified state.
+            </summary>
+            <param name="itemStates">Item states.</param>
+            <param name="locationStates">Location states.</param>
+            <param name="regionStates">Region states.</param>
+            <param name="dungeonStates">Dungeon states.</param>
+            <param name="markedLocations">Marked locations.</param>
+            <param name="seedConfig">Seed config.</param>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerState.ItemStates">
+            <summary>
+            Gets a collection containing the tracking state of items.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerState.LocationStates">
+            <summary>
+            Gets a collection containing the tracking state of locations.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerState.RegionStates">
+            <summary>
+            Gets a collection containing the tracking state of regions.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerState.DungeonStates">
+            <summary>
+            Gets a collection containing the tracking state of dungeons.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerState.MarkedLocations">
+            <summary>
+            Gets a collection of marked locations.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerState.SeedConfig">
+            <summary>
+            Gets the <see cref="T:Randomizer.SMZ3.Config"/> used to generate the seed being
+            tracked.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.TakeSnapshot(Randomizer.SMZ3.Tracking.Tracker)">
+            <summary>
+            Takes a copy of the state from the specified tracker instance.
+            </summary>
+            <param name="tracker">
+            The tracker instance whose state to copy.
+            </param>
+            <returns>
+            A new <see cref="T:Randomizer.SMZ3.Tracking.TrackerState"/> object representing the state of
+            <paramref name="tracker"/>.
+            </returns>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.LoadAsync(System.IO.Stream)">
+            <summary>
+            Loads the tracker state from serialized data.
+            </summary>
+            <param name="stream">A stream containing the saved state.</param>
+            <returns>
+            A task returning a new <see cref="T:Randomizer.SMZ3.Tracking.TrackerState"/> from <paramref
+            name="stream"/>.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+            <paramref name="stream"/> does not contain a valid Tracker saved
+            state.
+            </exception>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.Apply(Randomizer.SMZ3.Tracking.Tracker)">
+            <summary>
+            Restores the saved state to the specified tracker instance.
+            </summary>
+            <param name="tracker">
+            The tracker instance to apply the state to.
+            </param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.SaveAsync(System.IO.Stream)">
+            <summary>
+            Saves the tracker state.
+            </summary>
+            <param name="destination">The stream to save the state to.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerState.ItemState">
+            <summary>
+            Represents the tracking state of an item.
+            </summary>
+            <param name="Name">The primary name of the item.</param>
+            <param name="TrackingState">The tracking state of the item.</param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.ItemState.#ctor(System.String,System.Int32)">
+            <summary>
+            Represents the tracking state of an item.
+            </summary>
+            <param name="Name">The primary name of the item.</param>
+            <param name="TrackingState">The tracking state of the item.</param>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerState.LocationState">
+            <summary>
+            Represents the tracking state of a location.
+            </summary>
+            <param name="Id">The ID of the location.</param>
+            <param name="Item">
+            The type of item at the location. May be <c>null</c> if Tracker was
+            started without a generated seed.
+            </param>
+            <param name="Cleared">
+            Indicates whether the location has been cleared or not.
+            </param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.LocationState.#ctor(System.Int32,System.Nullable{Randomizer.SMZ3.ItemType},System.Boolean)">
+            <summary>
+            Represents the tracking state of a location.
+            </summary>
+            <param name="Id">The ID of the location.</param>
+            <param name="Item">
+            The type of item at the location. May be <c>null</c> if Tracker was
+            started without a generated seed.
+            </param>
+            <param name="Cleared">
+            Indicates whether the location has been cleared or not.
+            </param>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerState.RegionState">
+            <summary>
+            Represents the tracking state of a region.
+            </summary>
+            <param name="TypeName">The class name of the region.</param>
+            <param name="Reward">The type of reward for the region.</param>
+            <param name="Medallion">
+            The type of medallion required for the region.
+            </param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.RegionState.#ctor(System.String,System.Nullable{Randomizer.SMZ3.Reward},System.Nullable{Randomizer.SMZ3.ItemType})">
+            <summary>
+            Represents the tracking state of a region.
+            </summary>
+            <param name="TypeName">The class name of the region.</param>
+            <param name="Reward">The type of reward for the region.</param>
+            <param name="Medallion">
+            The type of medallion required for the region.
+            </param>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerState.DungeonState">
+            <summary>
+            Represents the tracking state of a dungeon.
+            </summary>
+            <param name="Name">The name of the dungeon.</param>
+            <param name="Cleared">
+            Indicates whether the dungeon has been fully cleared.
+            </param>
+            <param name="RemainingTreasure">
+            The number of treasure chests remaining.
+            </param>
+            <param name="Reward">The type of pendant/crystal reward.</param>
+            <param name="Requirement">The type of medallion required.</param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.DungeonState.#ctor(System.String,System.Boolean,System.Int32,Randomizer.SMZ3.Tracking.RewardItem,Randomizer.SMZ3.Tracking.Medallion)">
+            <summary>
+            Represents the tracking state of a dungeon.
+            </summary>
+            <param name="Name">The name of the dungeon.</param>
+            <param name="Cleared">
+            Indicates whether the dungeon has been fully cleared.
+            </param>
+            <param name="RemainingTreasure">
+            The number of treasure chests remaining.
+            </param>
+            <param name="Reward">The type of pendant/crystal reward.</param>
+            <param name="Requirement">The type of medallion required.</param>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerState.MarkedLocation">
+            <summary>
+            Represents a marked location.
+            </summary>
+            <param name="LocationId">The ID of the location.</param>
+            <param name="ItemName">
+            The name of the item that was marked at the location.
+            </param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerState.MarkedLocation.#ctor(System.Int32,System.String)">
+            <summary>
+            Represents a marked location.
+            </summary>
+            <param name="LocationId">The ID of the location.</param>
+            <param name="ItemName">
+            The name of the item that was marked at the location.
+            </param>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.VoiceCommands.GoModeModule">
             <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -8,6 +9,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
+using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
@@ -22,17 +26,19 @@ namespace Randomizer.App
         private const int GridItemPx = 32;
         private const int GridItemMargin = 3;
         private readonly DispatcherTimer _dispatcherTimer;
+        private readonly ILogger<TrackerWindow> _logger;
         private bool _pegWorldMode;
         private DateTime _startTime;
 
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
 
-        public TrackerWindow(Tracker tracker)
+        public TrackerWindow(Tracker tracker, ILogger<TrackerWindow> logger)
         {
             InitializeComponent();
 
             Tracker = tracker;
+            _logger = logger;
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Background, (sender, _) =>
             {
                 var elapsed = DateTime.Now - _startTime;
@@ -240,6 +246,12 @@ namespace Randomizer.App
                 UpdateStats(e);
                 RefreshGridItems();
             });
+            Tracker.StateLoaded += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                RefreshGridItems();
+                ResetGridSize();
+                GoModeBorder.BorderBrush = new SolidColorBrush(Tracker.GoMode ? Colors.Green : Colors.Transparent);
+            });
         }
 
         private void UpdateStats(TrackerEventArgs e)
@@ -252,11 +264,15 @@ namespace Randomizer.App
         {
             var columns = Math.Max(Tracker.Items.Max(x => x.Column) ?? 0,
                 Tracker.Dungeons.Max(x => x.Column) ?? 0);
+
+            TrackerGrid.ColumnDefinitions.Clear();
             for (var i = 0; i <= columns; i++)
                 TrackerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(GridItemPx + GridItemMargin) });
 
             var rows = Math.Max(Tracker.Items.Max(x => x.Row) ?? 0,
                 Tracker.Dungeons.Max(x => x.Row) ?? 0);
+
+            TrackerGrid.RowDefinitions.Clear();
             for (var i = 0; i <= rows; i++)
                 TrackerGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(GridItemPx + GridItemMargin) });
         }
@@ -295,6 +311,66 @@ namespace Randomizer.App
             {
                 _trackerHelpWindow = new TrackerHelpWindow(Tracker);
                 _trackerHelpWindow.Show();
+            }
+        }
+
+        private async void LoadSavedState_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*"
+            };
+
+            while (dialog.ShowDialog(this) == true)
+            {
+                try
+                {
+                    using (var stream = new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
+                    {
+                        await Tracker.LoadAsync(gzip);
+                    }
+
+                    break;
+                }
+                catch (ArgumentException ex)
+                {
+                    _logger.LogError(ex, "Failed to load Tracker state from '{fileName}'.", dialog.FileName);
+
+                    var result = MessageBox.Show(this, "Could not load Tracker using the selected saved state file. Please check you selected the right file and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Cancel)
+                        break;
+                }
+            }
+        }
+
+        private async void SaveState_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*",
+                OverwritePrompt = true
+            };
+
+            while (dialog.ShowDialog(this) == true)
+            {
+                try
+                {
+                    using (var stream = new FileStream(dialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                    using (var gzip = new GZipStream(stream, CompressionLevel.Fastest))
+                    {
+                        await Tracker.SaveAsync(gzip);
+                    }
+
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to saved Tracker state to '{fileName}'.", dialog.FileName);
+                    var result = MessageBox.Show(this, "Could not save Tracker state to the selected file. Please check you have access and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Cancel)
+                        break;
+                }
             }
         }
     }

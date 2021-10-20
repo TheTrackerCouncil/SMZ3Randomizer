@@ -56,14 +56,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets or sets the type of pendant or crystal you are rewarded with
         /// when you beat the dungeon boss.
         /// </summary>
-        [JsonIgnore]
         public RewardItem Reward { get; set; }
             = RewardItem.Unknown;
 
         /// <summary>
         /// Gets or sets the medallion that is required to enter the dungeon.
         /// </summary>
-        [JsonIgnore]
         public Medallion Requirement { get; set; }
             = Medallion.None;
 

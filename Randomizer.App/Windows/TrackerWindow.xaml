@@ -19,21 +19,26 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <Border x:Name="MenuBorder"
-            Grid.Row="0"
-            BorderThickness="0,0,0,0.5"
-            BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
-      <Menu>
-        <MenuItem Header="_View">
-          <MenuItem Header="Locations"
-                    x:Name="LocationsMenuItem"
-                    Click="LocationsMenuItem_Click" />
-          <MenuItem Header="Help"
-                    x:Name="HelpMenuItem"
-                    Click="HelpMenuItem_Click" />
-        </MenuItem>
-      </Menu>
-    </Border>
+    <Menu Background="#212121"
+          Foreground="#DDDDDD"
+          Grid.Row="0">
+      <MenuItem Header="_File">
+        <MenuItem Header="_Load saved state..."
+                  x:Name="LoadSavedState"
+                  Click="LoadSavedState_Click" />
+        <MenuItem Header="_Save state..."
+                  x:Name="SaveState"
+                  Click="SaveState_Click" />
+      </MenuItem>
+      <MenuItem Header="_View">
+        <MenuItem Header="_Locations"
+                  x:Name="LocationsMenuItem"
+                  Click="LocationsMenuItem_Click" />
+        <MenuItem Header="_Help"
+                  x:Name="HelpMenuItem"
+                  Click="HelpMenuItem_Click" />
+      </MenuItem>
+    </Menu>
 
     <Border x:Name="GoModeBorder"
             Grid.Row="1"

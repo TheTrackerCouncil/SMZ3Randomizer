@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -26,6 +18,7 @@ namespace Randomizer.App
         public TrackerLocationsWindow(Tracker tracker)
         {
             Tracker = tracker;
+            Tracker.StateLoaded += Tracker_StateLoaded;
             DataContext = new TrackerViewModel(tracker);
 
             InitializeComponent();
@@ -38,5 +31,10 @@ namespace Randomizer.App
         public Tracker Tracker { get; }
 
         public ImageSource ChestSprite { get; }
+
+        private void Tracker_StateLoaded(object sender, EventArgs e)
+        {
+            DataContext = new TrackerViewModel(Tracker);
+        }
     }
 }

@@ -52,8 +52,19 @@ namespace Randomizer.App.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         public IEnumerable<MarkedLocationViewModel> MarkedLocations
-                    => !_isDesign ? _tracker.MarkedLocations.Select(x => new MarkedLocationViewModel(x.Key, x.Value, Progression))
-                          : GetDummyMarkedLocations();
+        {
+            get
+            {
+                if (_isDesign)
+                    return GetDummyMarkedLocations();
+
+                return _tracker.MarkedLocations.Select(x =>
+                {
+                    var location = World.Locations.Single(location => location.Id == x.Key);
+                    return new MarkedLocationViewModel(location, x.Value, Progression);
+                });
+            }
+        }
 
         public IEnumerable<LocationViewModel> TopLocations
         {
