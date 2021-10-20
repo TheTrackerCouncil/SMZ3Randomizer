@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
     /// Represents errors that occur when constructing a speech recognition

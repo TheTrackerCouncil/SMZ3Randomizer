@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 
-using Randomizer.SMZ3.Tracking.Vocabulary;
-
 namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Randomizer.SMZ3.Tracking.Vocabulary;
-
 namespace Randomizer.SMZ3.Tracking.Converters
 {
     internal class SchrodingersStringConverter : JsonConverter<SchrodingersString>

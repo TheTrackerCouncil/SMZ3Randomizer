@@ -13,7 +13,6 @@ using BunLabs;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Regions;
-using Randomizer.SMZ3.Tracking.Vocabulary;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking

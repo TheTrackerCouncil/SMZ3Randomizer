@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-using Randomizer.SMZ3.Tracking.Vocabulary;
-
 namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>

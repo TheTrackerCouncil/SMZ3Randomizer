@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Randomizer.SMZ3.Tracking.Vocabulary;
-
 namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Tracking.Vocabulary
+namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>
     /// Represents the various phrases that Tracker can respond with.

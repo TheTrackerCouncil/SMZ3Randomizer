@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
     /// Constructs a speech recognition grammar.
