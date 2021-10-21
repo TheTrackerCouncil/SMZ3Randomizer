@@ -33,13 +33,15 @@ namespace Randomizer.App
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
 
+        private TimeSpan _elapsedTime;
+
         public TrackerWindow(Tracker tracker, ILogger<TrackerWindow> logger)
         {
             InitializeComponent();
 
             Tracker = tracker;
             _logger = logger;
-            _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Background, (sender, _) =>
+            _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
             {
                 var elapsed = DateTime.Now - _startTime;
                 StatusBarTimer.Content = elapsed.Hours > 0
@@ -376,6 +378,27 @@ namespace Randomizer.App
                     if (result == MessageBoxResult.Cancel)
                         break;
                 }
+            }
+        }
+
+        private void StatusBarTimer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Reset timer on double click
+            _startTime = DateTime.Now;
+        }
+
+        private void StatusBarTimer_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Pause/resume timer on right click
+            if (_dispatcherTimer.IsEnabled)
+            {
+                _elapsedTime = DateTime.Now - _startTime;
+                _dispatcherTimer.Stop();
+            }
+            else
+            {
+                _startTime = DateTime.Now - _elapsedTime;
+                _dispatcherTimer.Start();
             }
         }
     }

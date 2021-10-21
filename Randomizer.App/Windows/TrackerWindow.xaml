@@ -51,7 +51,9 @@
                Grid.Row="2">
       <StatusBarItem x:Name="StatusBarTimer"
                      Style="{StaticResource TimerStatusBarItem}"
-                     Content="00:00" />
+                     Content="00:00"
+                     MouseRightButtonUp="StatusBarTimer_MouseRightButtonUp"
+                     MouseDoubleClick="StatusBarTimer_MouseDoubleClick"/>
       <StatusBarItem x:Name="StatusBarGoMode"
                      Style="{StaticResource GoModeStatusBarItem}"
                      Content="GO MODE"
