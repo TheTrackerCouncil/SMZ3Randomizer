@@ -794,6 +794,12 @@
       "Toggled Tracker off.",
       "Hey, you'll be missed pal."
     ],
+    "Misheard": [
+      "I didn't get that.",
+      "Could you repeat that?",
+      "What did you say?",
+      "Huh?"
+    ],
     "TrackedItem": [
       "Toggled {0} on."
     ],

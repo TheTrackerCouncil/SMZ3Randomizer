@@ -34,7 +34,7 @@
   <Geometry x:Key="UpArrow">M 0,4 L 3.5,0 L 7,4 Z</Geometry>
   <Geometry x:Key="RightArrow">M 0,0 L 4,3.5 L 0,7 Z</Geometry>
   <Geometry x:Key="Checkmark">F1 M 10.0,1.2 L 4.7,9.1 L 4.5,9.1 L 0,5.2 L 1.3,3.5 L 4.3,6.1L 8.3,0 L 10.0,1.2 Z</Geometry>
-  <Style x:Key="MenuScrollButton"
+  <Style x:Key="DarkMenuScrollButton"
          BasedOn="{x:Null}"
          TargetType="{x:Type RepeatButton}">
     <Setter Property="ClickMode"
@@ -55,7 +55,7 @@
       </Setter.Value>
     </Setter>
   </Style>
-  <Style x:Key="{ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}"
+  <Style x:Key="{ComponentResourceKey ResourceId=DarkMenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}"
          BasedOn="{x:Null}"
          TargetType="{x:Type ScrollViewer}">
     <Setter Property="HorizontalScrollBarVisibility"
@@ -84,7 +84,7 @@
                           Grid.Column="0"
                           Focusable="false"
                           Grid.Row="0"
-                          Style="{StaticResource MenuScrollButton}">
+                          Style="{StaticResource DarkMenuScrollButton}">
               <RepeatButton.Visibility>
                 <MultiBinding Converter="{StaticResource MenuScrollingVisibilityConverter}"
                               ConverterParameter="0"
@@ -107,7 +107,7 @@
                           Grid.Column="0"
                           Focusable="false"
                           Grid.Row="2"
-                          Style="{StaticResource MenuScrollButton}">
+                          Style="{StaticResource DarkMenuScrollButton}">
               <RepeatButton.Visibility>
                 <MultiBinding Converter="{StaticResource MenuScrollingVisibilityConverter}"
                               ConverterParameter="100"
@@ -130,7 +130,7 @@
       </Setter.Value>
     </Setter>
   </Style>
-  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=DarkMenuTopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
                    TargetType="{x:Type MenuItem}">
     <Border x:Name="templateRoot"
             Background="{TemplateBinding Background}"
@@ -214,7 +214,7 @@
       </MultiTrigger>
     </ControlTemplate.Triggers>
   </ControlTemplate>
-  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=DarkMenuTopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
                    TargetType="{x:Type MenuItem}">
     <Border x:Name="templateRoot"
             Background="{TemplateBinding Background}"
@@ -258,8 +258,8 @@
                   BorderThickness="1"
                   BorderBrush="{StaticResource Menu.Static.Border}"
                   Padding="2">
-            <ScrollViewer x:Name="SubMenuScrollViewer"
-                          Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+            <ScrollViewer x:Name="SubDarkMenuScrollViewer"
+                          Style="{DynamicResource {ComponentResourceKey ResourceId=DarkMenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
               <Grid RenderOptions.ClearTypeHint="Enabled">
                 <Canvas HorizontalAlignment="Left"
                         Height="0"
@@ -326,18 +326,18 @@
                 Value="{StaticResource Menu.Disabled.Foreground}" />
       </Trigger>
       <Trigger Property="ScrollViewer.CanContentScroll"
-               SourceName="SubMenuScrollViewer"
+               SourceName="SubDarkMenuScrollViewer"
                Value="false">
         <Setter Property="Canvas.Top"
                 TargetName="OpaqueRect"
-                Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
+                Value="{Binding VerticalOffset, ElementName=SubDarkMenuScrollViewer}" />
         <Setter Property="Canvas.Left"
                 TargetName="OpaqueRect"
-                Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
+                Value="{Binding HorizontalOffset, ElementName=SubDarkMenuScrollViewer}" />
       </Trigger>
     </ControlTemplate.Triggers>
   </ControlTemplate>
-  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=DarkMenuSubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
                    TargetType="{x:Type MenuItem}">
     <Border x:Name="templateRoot"
             Background="{TemplateBinding Background}"
@@ -449,7 +449,7 @@
       </MultiTrigger>
     </ControlTemplate.Triggers>
   </ControlTemplate>
-  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
+  <ControlTemplate x:Key="{ComponentResourceKey ResourceId=DarkMenuSubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}"
                    TargetType="{x:Type MenuItem}">
     <Border x:Name="templateRoot"
             Background="{TemplateBinding Background}"
@@ -525,8 +525,8 @@
                   BorderThickness="1"
                   BorderBrush="{StaticResource Menu.Static.Border}"
                   Padding="2">
-            <ScrollViewer x:Name="SubMenuScrollViewer"
-                          Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+            <ScrollViewer x:Name="SubDarkMenuScrollViewer"
+                          Style="{DynamicResource {ComponentResourceKey ResourceId=DarkMenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
               <Grid RenderOptions.ClearTypeHint="Enabled">
                 <Canvas HorizontalAlignment="Left"
                         Height="0"
@@ -596,14 +596,14 @@
                 Value="{StaticResource Menu.Disabled.Foreground}" />
       </Trigger>
       <Trigger Property="ScrollViewer.CanContentScroll"
-               SourceName="SubMenuScrollViewer"
+               SourceName="SubDarkMenuScrollViewer"
                Value="false">
         <Setter Property="Canvas.Top"
                 TargetName="OpaqueRect"
-                Value="{Binding VerticalOffset, ElementName=SubMenuScrollViewer}" />
+                Value="{Binding VerticalOffset, ElementName=SubDarkMenuScrollViewer}" />
         <Setter Property="Canvas.Left"
                 TargetName="OpaqueRect"
-                Value="{Binding HorizontalOffset, ElementName=SubMenuScrollViewer}" />
+                Value="{Binding HorizontalOffset, ElementName=SubDarkMenuScrollViewer}" />
       </Trigger>
     </ControlTemplate.Triggers>
   </ControlTemplate>
@@ -625,7 +625,7 @@
     <Setter Property="Stylus.IsFlicksEnabled"
             Value="False" />
     <Setter Property="Template"
-            Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
+            Value="{DynamicResource {ComponentResourceKey ResourceId=DarkMenuSubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
     <Style.Triggers>
       <Trigger Property="Role"
                Value="TopLevelHeader">
@@ -636,7 +636,7 @@
         <Setter Property="Foreground"
                 Value="{StaticResource Menu.Static.Foreground}" />
         <Setter Property="Template"
-                Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
+                Value="{DynamicResource {ComponentResourceKey ResourceId=DarkMenuTopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
         <Setter Property="Padding"
                 Value="6,0" />
       </Trigger>
@@ -649,14 +649,14 @@
         <Setter Property="Foreground"
                 Value="{StaticResource Menu.Static.Foreground}" />
         <Setter Property="Template"
-                Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
+                Value="{DynamicResource {ComponentResourceKey ResourceId=DarkMenuDarkMenuTopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
         <Setter Property="Padding"
                 Value="6,0" />
       </Trigger>
       <Trigger Property="Role"
                Value="SubmenuHeader">
         <Setter Property="Template"
-                Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
+                Value="{DynamicResource {ComponentResourceKey ResourceId=DarkMenuSubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
       </Trigger>
     </Style.Triggers>
   </Style>

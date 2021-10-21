@@ -26,6 +26,7 @@ namespace Randomizer.App
         private const int GridItemPx = 32;
         private const int GridItemMargin = 3;
         private readonly DispatcherTimer _dispatcherTimer;
+        private readonly TrackerFactory _trackerFactory;
         private readonly ILogger<TrackerWindow> _logger;
         private bool _pegWorldMode;
         private DateTime _startTime;
@@ -35,11 +36,11 @@ namespace Randomizer.App
 
         private TimeSpan _elapsedTime;
 
-        public TrackerWindow(Tracker tracker, ILogger<TrackerWindow> logger)
+        public TrackerWindow(TrackerFactory trackerFactory, ILogger<TrackerWindow> logger)
         {
             InitializeComponent();
 
-            Tracker = tracker;
+            _trackerFactory = trackerFactory;
             _logger = logger;
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
             {
@@ -50,7 +51,9 @@ namespace Randomizer.App
             }, Dispatcher);
         }
 
-        public Tracker Tracker { get; }
+        public TrackerOptions Options { get; set; }
+
+        public Tracker Tracker { get; private set; }
 
         public static string GetItemSpriteFileName(ItemData item)
         {
@@ -207,6 +210,10 @@ namespace Randomizer.App
 
         private void InitializeTracker()
         {
+            if (Options == null)
+                throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
+
+            Tracker = _trackerFactory.Create(Options);
             Tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
                 _pegWorldMode = false;

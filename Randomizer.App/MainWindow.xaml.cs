@@ -458,6 +458,7 @@ namespace Randomizer.App
         {
             var scope = _serviceProvider.CreateScope();
             _trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
+            _trackerWindow.Options = Options.GeneralOptions.GetTrackerOptions();
             _trackerWindow.Closed += (_, _) => scope.Dispose();
             _trackerWindow.Show();
         }

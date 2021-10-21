@@ -37,7 +37,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
             services.AddSingleton(new TrackerConfigProvider(trackerJsonPath));
-            services.AddScoped<Tracker>();
+            services.AddScoped<TrackerFactory>();
+            services.AddScoped<Tracker>(serviceProvider =>
+            {
+                var factory = serviceProvider.GetRequiredService<TrackerFactory>();
+                return factory.Instance ?? throw new InvalidOperationException("Cannot resolve Tracker instance before TrackerFactory.Create has been called.");
+            });
 
             return services;
         }

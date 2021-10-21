@@ -19,6 +19,13 @@ namespace Randomizer.SMZ3.Tracking
         public SchrodingersString? StoppedTracking { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when speech recognition confidence
+        /// does not meet the configured threshold for execution.
+        /// </summary>
+        public SchrodingersString Misheard { get; init; }
+            = new SchrodingersString("I didn't quite get that.");
+
+        /// <summary>
         /// Gets the phrases to respond with when tracking a simple single-stage
         /// item.
         /// </summary>
@@ -104,8 +111,8 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Cleared {0} items in {1}.");
 
         /// <summary>
-        /// Gets the phrases to respond with when tracking or clearing multiple items in an
-        /// area at once, but there no items available.
+        /// Gets the phrases to respond with when tracking or clearing multiple
+        /// items in an area at once, but there no items available.
         /// </summary>
         public SchrodingersString TrackedNothing { get; init; }
             = new SchrodingersString("There are no items left in {0}.");

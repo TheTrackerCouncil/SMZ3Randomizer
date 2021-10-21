@@ -251,6 +251,12 @@
             Gets the phrases to respond with when tracker stops.
             </summary>
         </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.Misheard">
+            <summary>
+            Gets the phrases to respond with when speech recognition confidence
+            does not meet the configured threshold for execution.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.TrackedItem">
             <summary>
             Gets the phrases to respond with when tracking a simple single-stage
@@ -332,8 +338,8 @@
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.TrackedNothing">
             <summary>
-            Gets the phrases to respond with when tracking or clearing multiple items in an
-            area at once, but there no items available.
+            Gets the phrases to respond with when tracking or clearing multiple
+            items in an area at once, but there no items available.
             </summary>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.TrackedSpecificItem">
@@ -745,7 +751,7 @@
             commands and responding with text-to-speech.
             </summary>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.IWorldAccessor,Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.Tracker})">
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.IWorldAccessor,Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.Tracker},Randomizer.SMZ3.Tracking.TrackerOptions)">
             <summary>
             Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> class.
             </summary>
@@ -759,6 +765,7 @@
             Used to provide the tracking speech recognition syntax.
             </param>
             <param name="logger">Used to write logging information.</param>
+            <param name="options">Provides Tracker preferences.</param>
         </member>
         <member name="E:Randomizer.SMZ3.Tracking.Tracker.ItemTracked">
             <summary>
@@ -846,6 +853,11 @@
             <summary>
             Gets a dictionary containing the rules and the various speech
             recognition syntaxes.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.Tracker.Options">
+            <summary>
+            Gets the tracking preferences.
             </summary>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.Tracker.UniqueLocationNames">
@@ -1206,6 +1218,60 @@
             Gets the speech recognition confidence as a value between 0.0 and
             1.0, or <c>null</c> if the event was not initiated by speech
             recognition.
+            </summary>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerFactory">
+            <summary>
+            Provides new <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> instances.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerFactory.#ctor(Randomizer.SMZ3.Tracking.TrackerConfigProvider,Randomizer.SMZ3.IWorldAccessor,Randomizer.SMZ3.Tracking.VoiceCommands.TrackerModuleFactory,Microsoft.Extensions.Logging.ILogger{Randomizer.SMZ3.Tracking.Tracker})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Randomizer.SMZ3.Tracking.TrackerFactory"/> class
+            with the specified dependencies.
+            </summary>
+            <param name="configProvider">
+            Used to provide the tracking configuration.
+            </param>
+            <param name="worldAccessor">
+            Used to get the world to track in.
+            </param>
+            <param name="moduleFactory">
+            Used to provide the tracking speech recognition syntax.
+            </param>
+            <param name="logger">Used to write logging information.</param>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerFactory.Instance">
+            <summary>
+            Gets a previously created <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> instance.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.TrackerFactory.Create(Randomizer.SMZ3.Tracking.TrackerOptions)">
+            <summary>
+            Returns a new <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> instance with the specified
+            options.
+            </summary>
+            <param name="options">Provides Tracker preferences.</param>
+            <returns>
+            A new <see cref="T:Randomizer.SMZ3.Tracking.Tracker"/> instance with the specified <paramref
+            name="options"/>.
+            </returns>
+        </member>
+        <member name="T:Randomizer.SMZ3.Tracking.TrackerOptions">
+            <summary>
+            Provides Tracker preferences.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerOptions.MinimumConfidence">
+            <summary>
+            Gets or sets the minimum confidence level for Tracker to react to
+            voice commands.
+            </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.TrackerOptions.MinimumSassConfidence">
+            <summary>
+            Gets or sets the minimum confidence level for Tracker to use sassy
+            responses or responses that could potentially give away information.
             </summary>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.TrackerState">

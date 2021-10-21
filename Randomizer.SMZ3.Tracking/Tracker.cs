@@ -47,13 +47,16 @@ namespace Randomizer.SMZ3.Tracking
         /// Used to provide the tracking speech recognition syntax.
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
+        /// <param name="options">Provides Tracker preferences.</param>
         public Tracker(TrackerConfigProvider configProvider,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
-            ILogger<Tracker> logger)
+            ILogger<Tracker> logger,
+            TrackerOptions options)
         {
             _moduleFactory = moduleFactory;
             _logger = logger;
+            Options = options;
 
             // Initialize the tracker configuration
             var config = configProvider.GetTrackerConfig();
@@ -168,6 +171,11 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public IReadOnlyDictionary<string, IEnumerable<string>> Syntax { get; private set; }
             = new Dictionary<string, IEnumerable<string>>();
+
+        /// <summary>
+        /// Gets the tracking preferences.
+        /// </summary>
+        public TrackerOptions Options { get; }
 
         /// <summary>
         /// Gets a dictionary that contains unique location names for each
@@ -619,7 +627,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null)
         {
-            SassIfItemIsWrong(item, location);
+            SassIfItemIsWrong(item, location, confidence);
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
         }
@@ -768,7 +776,7 @@ namespace Randomizer.SMZ3.Tracking
         public void MarkLocation(Location location, ItemData item, float? confidence = null)
         {
             var locationName = UniqueLocationNames[location];
-            SassIfItemIsWrong(item, location);
+            SassIfItemIsWrong(item, location, confidence);
 
             if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
             {
@@ -928,12 +936,15 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
-        private void SassIfItemIsWrong(ItemData item, Location location)
+        private void SassIfItemIsWrong(ItemData item, Location location, float? confidence)
         {
             // Give some sass if the user tracks or marks the wrong item at a
             // location
             if (location.Item != null && !item.Is(location.Item.Type))
             {
+                if (confidence == null || confidence < Options.MinimumSassConfidence)
+                    return;
+
                 var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
                         ?? location.Item.Name;
                 Say(Responses.LocationHasDifferentItem?.Format(item.NameWithArticle, actualItemName));

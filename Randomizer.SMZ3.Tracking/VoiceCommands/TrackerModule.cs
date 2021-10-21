@@ -225,6 +225,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     try
                     {
+                        if (e.Result.Confidence < Tracker.Options.MinimumConfidence)
+                        {
+                            _logger.LogWarning("Confidence level too low ({Confidence} < {Threshold}) in voice command: \"{Text}\".",
+                                e.Result.Confidence, Tracker.Options.MinimumConfidence, e.Result.Text);
+                            Tracker.Say(Tracker.Responses.Misheard);
+                            return;
+                        }
+
                         executeCommand(Tracker, e.Result);
                     }
                     catch (Exception ex)
