@@ -52,11 +52,13 @@
       <StatusBarItem x:Name="StatusBarTimer"
                      Style="{StaticResource TimerStatusBarItem}"
                      Content="00:00"
+                     ToolTip="Elapsed time. Right click to pause/resume. Double click to reset."
                      MouseRightButtonUp="StatusBarTimer_MouseRightButtonUp"
-                     MouseDoubleClick="StatusBarTimer_MouseDoubleClick"/>
+                     MouseDoubleClick="StatusBarTimer_MouseDoubleClick" />
       <StatusBarItem x:Name="StatusBarGoMode"
                      Style="{StaticResource GoModeStatusBarItem}"
                      Content="GO MODE"
+                     FontWeight="Bold"
                      Visibility="Collapsed" />
       <StatusBarItem x:Name="StatusBarConfidence"
                      Style="{StaticResource ConfidenceStatusBarItem}"
