@@ -541,6 +541,11 @@
             Specifies the reward is unknown.
             </summary>
         </member>
+        <member name="F:Randomizer.SMZ3.Tracking.RewardItem.Crystal">
+            <summary>
+            Specifies the reward is a blue or red crystal.
+            </summary>
+        </member>
         <member name="F:Randomizer.SMZ3.Tracking.RewardItem.GreenPendant">
             <summary>
             Specifies the reward is the green pendant.
@@ -554,11 +559,6 @@
         <member name="F:Randomizer.SMZ3.Tracking.RewardItem.BluePendant">
             <summary>
             Specifies the reward is the blue pendant.
-            </summary>
-        </member>
-        <member name="F:Randomizer.SMZ3.Tracking.RewardItem.Crystal">
-            <summary>
-            Specifies the reward is a blue or red crystal.
             </summary>
         </member>
         <member name="T:Randomizer.SMZ3.Tracking.RewardItemExtensions">

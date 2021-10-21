@@ -15,28 +15,28 @@ namespace Randomizer.SMZ3.Tracking
         Unknown = 0,
 
         /// <summary>
+        /// Specifies the reward is a blue or red crystal.
+        /// </summary>
+        [Description("Crystal")]
+        Crystal = 1,
+
+        /// <summary>
         /// Specifies the reward is the green pendant.
         /// </summary>
         [Description("Green pendant")]
-        GreenPendant,
+        GreenPendant = 2,
 
         /// <summary>
         /// Specifies the reward is the red pendant.
         /// </summary>
         [Description("Red pendant")]
-        RedPendant,
+        RedPendant = 3,
 
         /// <summary>
         /// Specifies the reward is the blue pendant.
         /// </summary>
         [Description("Blue pendant")]
-        BluePendant,
-
-        /// <summary>
-        /// Specifies the reward is a blue or red crystal.
-        /// </summary>
-        [Description("Crystal")]
-        Crystal,
+        BluePendant = 4,
     }
 
     /// <summary>
@@ -55,10 +55,10 @@ namespace Randomizer.SMZ3.Tracking
         public static SchrodingersString GetName(this RewardItem reward) => reward switch
         {
             RewardItem.Unknown => new SchrodingersString("Unknown"),
+            RewardItem.Crystal => new SchrodingersString("Crystal"),
             RewardItem.GreenPendant => new SchrodingersString("Green pendant", "Pendant of Courage"),
             RewardItem.RedPendant => new SchrodingersString("Red pendant", "Pendant of Wisdom"),
             RewardItem.BluePendant => new SchrodingersString("Blue pendant", "Pendant of Courage"),
-            RewardItem.Crystal => new SchrodingersString("Crystal"),
             _ => throw new System.NotImplementedException(),
         };
     }
