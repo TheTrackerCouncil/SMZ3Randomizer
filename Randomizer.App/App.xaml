@@ -216,6 +216,20 @@
                 Value="3" />
       </Style>
 
+      <Style x:Key="RadioToggleButtonGroup"
+             TargetType="StackPanel">
+        <Style.Resources>
+          <Style TargetType="RadioButton"
+                 BasedOn="{StaticResource {x:Type ToggleButton}}">
+            <Setter Property="Margin"
+                    Value="-1,0,0,0" />
+            <Setter Property="Padding"
+                    Value="3" />
+          </Style>
+        </Style.Resources>
+      </Style>
+
+
       <!-- Misc. resources -->
       <local:EnumToBooleanConverter x:Key="EnumBoolConverter" />
       <local:ItemSpriteImageSourceConverter x:Key="ItemSpriteConverter" />

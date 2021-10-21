@@ -76,9 +76,28 @@
       </ListView.ItemTemplate>
     </ListView>
 
-    <TextBlock Text="Top locations"
+    <TextBlock Text="All locations"
                Grid.Row="2"
                Style="{StaticResource Heading}" />
+    <StackPanel Orientation="Horizontal"
+                Style="{StaticResource RadioToggleButtonGroup}"
+                Grid.Row="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top">
+      <RadioButton GroupName="GameFilter"
+                   Content="Both"
+                   ToolTip="Show available locations from both games"
+                   IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.None}}" />
+      <RadioButton GroupName="GameFilter"
+                   Content="ALttP"
+                   ToolTip="Only show available locations in A Link to the Past"
+                   IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.ZeldaOnly}}" />
+      <RadioButton GroupName="GameFilter"
+                   Content="SM"
+                   ToolTip="Only show available locations in Super Metroid"
+                   IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.MetroidOnly}}" />
+    </StackPanel>
+
     <ScrollViewer Grid.Row="3">
       <ItemsControl ItemsSource="{Binding Source={StaticResource topLocations}}"
                     BorderThickness="0"

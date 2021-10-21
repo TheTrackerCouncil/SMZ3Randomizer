@@ -14,6 +14,7 @@ namespace Randomizer.App.ViewModels
     {
         private readonly Tracker _tracker;
         private bool _isDesign;
+        private LocationFilter _filter;
 
         public TrackerViewModel()
         {
@@ -51,6 +52,20 @@ namespace Randomizer.App.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public LocationFilter Filter
+        {
+            get => _filter;
+            set
+            {
+                if (value != _filter)
+                {
+                    _filter = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TopLocations));
+                }
+            }
+        }
+
         public IEnumerable<MarkedLocationViewModel> MarkedLocations
         {
             get
@@ -71,8 +86,8 @@ namespace Randomizer.App.ViewModels
             get
             {
                 return World.Regions
+                    .Where(RegionFilterCondition)
                     .OrderByDescending(x => x.Locations.Count(x => x.IsAvailable(Progression) && !x.Cleared))
-                    .Take(3)
                     .SelectMany(x => x.Locations)
                     .Where(x => x.IsAvailable(Progression) && !x.Cleared)
                     .Select(x => new LocationViewModel(x, () => OnPropertyChanged(nameof(TopLocations))));
@@ -83,8 +98,16 @@ namespace Randomizer.App.ViewModels
 
         protected Progression Progression => _tracker?.GetProgression() ?? new();
 
+        private Func<Region, bool> RegionFilterCondition => Filter switch
+        {
+            LocationFilter.None => _ => true,
+            LocationFilter.ZeldaOnly => x => x is Z3Region,
+            LocationFilter.MetroidOnly => x => x is SMRegion,
+            _ => throw new InvalidEnumArgumentException(nameof(Filter), (int)Filter, typeof(LocationFilter)),
+        };
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            => PropertyChanged?.Invoke(this, new(propertyName));
+                    => PropertyChanged?.Invoke(this, new(propertyName));
 
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {
