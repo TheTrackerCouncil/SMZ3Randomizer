@@ -97,8 +97,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static ZeldaDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
             var dungeonName = (string)result.Semantics[DungeonKey].Value;
-            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase)
-                                                             || x.Abbreviation.Equals(dungeonName, StringComparison.OrdinalIgnoreCase));
+            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase));
             return dungeon ?? throw new Exception($"Could not find recognized dungeon '{dungeonName}'.");
         }
 
@@ -291,7 +290,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 foreach (var name in dungeon.Name)
                     dungeonNames.Add(new SemanticResultValue(name.Text, name.Text));
-                dungeonNames.Add(new SemanticResultValue(dungeon.Abbreviation, dungeon.Abbreviation));
             }
 
             return dungeonNames;
