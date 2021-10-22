@@ -80,6 +80,7 @@ namespace Randomizer.SMZ3.Tracking
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += SpeechRecognized;
+            _recognizer.SpeechRecognitionRejected += _recognizer_SpeechRecognitionRejected;
             _recognizer.SetInputToDefaultAudioDevice();
         }
 
@@ -252,7 +253,8 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackDungeonTreasure(ZeldaDungeon dungeon, float? confidence = null)
+        /// <returns><c>true</c> if treasure was tracked; <c>false</c> if there is no treasure left to track.</returns>
+        public bool TrackDungeonTreasure(ZeldaDungeon dungeon, float? confidence = null)
         {
             if (dungeon.TreasureRemaining > 0)
             {
@@ -267,6 +269,8 @@ namespace Randomizer.SMZ3.Tracking
                     Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
 
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
+                AddUndo(() => dungeon.TreasureRemaining++);
+                return true;
             }
             else if (Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
             {
@@ -274,6 +278,8 @@ namespace Randomizer.SMZ3.Tracking
                 // already cleared out
                 Say(response.Format(dungeon.Name));
             }
+
+            return false;
         }
 
         /// <summary>
@@ -533,16 +539,18 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
-            AddUndo(() => item.TrackingState = originalTrackingState);
+            Action undoTrack = () => item.TrackingState = originalTrackingState;
             OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
 
             // Check if we can clear a location
+            Action? undoClear = null;
             if (tryClear)
             {
                 var location = World.Locations.TrySingle(x => x.ItemIs(item.InternalItemType, World));
                 if (location != null)
                 {
                     location.Cleared = true;
+                    undoClear = () => location.Cleared = false;
                     if (MarkedLocations.ContainsKey(location.Id))
                     {
                         MarkedLocations.Remove(location.Id);
@@ -551,6 +559,11 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            AddUndo(() =>
+            {
+                undoTrack();
+                undoClear?.Invoke();
+            });
             GiveLocationHint(accessibleBefore);
             RestartIdleTimers();
         }
@@ -567,11 +580,14 @@ namespace Randomizer.SMZ3.Tracking
         public void TrackItem(ItemData item, ZeldaDungeon dungeon, string? trackedAs = null, float? confidence = null)
         {
             TrackItem(item, trackedAs, confidence, tryClear: false);
+            var undoTrack = _undoHistory.Pop();
 
             // Check if we can remove something from the remaining treasures in
             // a dungeon
+            Action? undoTrackTreasure = null;
             dungeon = GetDungeonFromItem(item, dungeon)!;
-            TrackDungeonTreasure(dungeon, confidence);
+            if (TrackDungeonTreasure(dungeon, confidence))
+                undoTrackTreasure = _undoHistory.Pop();
 
             // Check if we can remove something from the marked location
             var location = World.Locations.TrySingle(x => x.ItemIs(item.InternalItemType, World));
@@ -583,6 +599,21 @@ namespace Randomizer.SMZ3.Tracking
                     MarkedLocations.Remove(location.Id);
                     OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
                 }
+
+                AddUndo(() =>
+                {
+                    undoTrack();
+                    undoTrackTreasure?.Invoke();
+                    location.Cleared = false;
+                });
+            }
+            else
+            {
+                AddUndo(() =>
+                {
+                    undoTrack();
+                    undoTrackTreasure?.Invoke();
+                });
             }
         }
 
@@ -613,7 +644,16 @@ namespace Randomizer.SMZ3.Tracking
 
             TrackItem(item, trackedAs, confidence, tryClear: false);
             if (locations.Count == 1)
+            {
                 Clear(locations.Single());
+                var undoClear = _undoHistory.Pop();
+                var undoTrack = _undoHistory.Pop();
+                AddUndo(() =>
+                {
+                    undoClear();
+                    undoTrack();
+                });
+            }
         }
 
         /// <summary>
@@ -630,6 +670,14 @@ namespace Randomizer.SMZ3.Tracking
             SassIfItemIsWrong(item, location, confidence);
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
+
+            var undoClear = _undoHistory.Pop();
+            var undoTrack = _undoHistory.Pop();
+            AddUndo(() =>
+            {
+                undoClear();
+                undoTrack();
+            });
         }
 
         /// <summary>
@@ -649,11 +697,12 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null)
         {
-            var locations = area.Locations.Where(x => !x.Cleared);
-            if (!includeUnavailable)
-                locations = locations.Where(x => x.IsAvailable(GetProgression()));
+            var locations = area.Locations
+                .Where(x => !x.Cleared)
+                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression()))
+                .ToImmutableList();
 
-            if (!locations.Any())
+            if (locations.Count == 0)
             {
                 Say(Responses.TrackedNothing.Format(area.Name));
                 return;
@@ -915,6 +964,11 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         protected virtual void OnStateLoaded()
             => StateLoaded?.Invoke(this, EventArgs.Empty);
+
+        private void _recognizer_SpeechRecognitionRejected(object? sender, SpeechRecognitionRejectedEventArgs e)
+        {
+            _logger.LogWarning("Speech recognition rejected: \"{Text}\" (Confidence: {Confidence:P2})", e.Result.Text, e.Result.Confidence);
+        }
 
         private void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
         {

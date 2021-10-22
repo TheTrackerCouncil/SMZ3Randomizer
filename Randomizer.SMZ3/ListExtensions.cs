@@ -91,5 +91,54 @@ namespace Randomizer.SMZ3
 
             return source.Where(predicate).TrySingle();
         }
+
+        /// <summary>
+        /// Filters a sequence based on a predicate if the specified condition
+        /// is <c>true</c>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of elements in <paramref name="source"/>.
+        /// </typeparam>
+        /// <param name="source">The sequence.</param>
+        /// <param name="condition">
+        /// The condition to test before applying the filter.
+        /// </param>
+        /// <param name="predicate">The filter to apply.</param>
+        /// <returns>
+        /// An <see cref="IEnumerable{T}"/> that contains elements from
+        /// <paramref name="source"/>. If <paramref name="condition"/> is
+        /// <c>true</c>, only elements matching <paramref name="predicate"/> are
+        /// returned. Otherwise, all elements are returned.
+        /// </returns>
+        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, bool condition, Func<T, bool> predicate)
+        {
+            if (source is null)
+                throw new ArgumentNullException(nameof(source));
+
+            return condition ? source.Where(predicate) : source;
+        }
+
+        /// <summary>
+        /// Filters a sequence based on a predicate if the specified condition
+        /// is <c>false</c>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of elements in <paramref name="source"/>.
+        /// </typeparam>
+        /// <param name="source">The sequence.</param>
+        /// <param name="condition">
+        /// The condition to test before applying the filter.
+        /// </param>
+        /// <param name="predicate">The filter to apply.</param>
+        /// <returns>
+        /// An <see cref="IEnumerable{T}"/> that contains elements from
+        /// <paramref name="source"/>. If <paramref name="condition"/> is
+        /// <c>false</c>, only elements matching <paramref name="predicate"/>
+        /// are returned. Otherwise, all elements are returned.
+        /// </returns>
+        public static IEnumerable<T> WhereUnless<T>(this IEnumerable<T> source, bool condition, Func<T, bool> predicate)
+        {
+            return source.WhereIf(!condition, predicate);
+        }
     }
 }

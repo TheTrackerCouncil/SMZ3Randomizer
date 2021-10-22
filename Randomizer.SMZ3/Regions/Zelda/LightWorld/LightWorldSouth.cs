@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             Aginah = new Location(this, 256 + 244, 0x1E9F2, LocationType.Regular,
                 name: "Aginah's Cave",
+                alsoKnownAs: "Uggy Nuh",
                 vanillaItem: ItemType.HeartPiece)
                 .Weighted(SphereOne);
 

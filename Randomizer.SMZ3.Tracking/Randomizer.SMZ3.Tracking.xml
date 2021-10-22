@@ -902,6 +902,7 @@
             </summary>
             <param name="dungeon">The dungeon.</param>
             <param name="confidence">The speech recognition confidence.</param>
+            <returns><c>true</c> if treasure was tracked; <c>false</c> if there is no treasure left to track.</returns>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.SetDungeonReward(Randomizer.SMZ3.Tracking.ZeldaDungeon,System.Nullable{Randomizer.SMZ3.Tracking.RewardItem},System.Nullable{System.Single})">
             <summary>
