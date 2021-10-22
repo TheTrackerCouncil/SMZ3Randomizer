@@ -44,6 +44,7 @@ namespace Randomizer.SMZ3
         {
             var item = source.Find(match)
                 ?? throw new ArgumentException($"Could not find a matching item in the collection.", nameof(match));
+            source.Remove(item);
             source.Insert(0, item);
             return item;
         }

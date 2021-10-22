@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Occurs when a location has been cleared.
         /// </summary>
-        public event EventHandler<TrackerEventArgs>? LocationCleared;
+        public event EventHandler<LocationClearedEventArgs>? LocationCleared;
 
         /// <summary>
         /// Occurs when Peg World mode has been toggled on.
@@ -550,6 +550,8 @@ namespace Randomizer.SMZ3.Tracking
                 if (location != null)
                 {
                     location.Cleared = true;
+                    OnLocationCleared(new(location, confidence));
+
                     undoClear = () => location.Cleared = false;
                     if (MarkedLocations.ContainsKey(location.Id))
                     {
@@ -594,6 +596,8 @@ namespace Randomizer.SMZ3.Tracking
             if (location != null && dungeon.Is(location.Region))
             {
                 location.Cleared = true;
+                OnLocationCleared(new(location, confidence));
+
                 if (MarkedLocations.ContainsKey(location.Id))
                 {
                     MarkedLocations.Remove(location.Id);
@@ -716,6 +720,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (!trackItems)
                 {
                     onlyLocation.Cleared = true;
+                    OnLocationCleared(new(onlyLocation, confidence));
                     return;
                 }
 
@@ -724,6 +729,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     // Probably just the compass or something
                     onlyLocation.Cleared = true;
+                    OnLocationCleared(new(onlyLocation, confidence));
                     return;
                 }
 
@@ -739,6 +745,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     itemsTracked++;
                     location.Cleared = true;
+                    OnLocationCleared(new(location, confidence));
                     continue;
                 }
 
@@ -783,7 +790,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             location.Cleared = true;
             AddUndo(() => location.Cleared = false);
-            OnLocationCleared(new TrackerEventArgs(confidence));
+            OnLocationCleared(new(location, confidence));
 
             if (confidence != null)
             {
@@ -949,7 +956,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Raises the <see cref="LocationCleared"/> event.
         /// </summary>
         /// <param name="e">Event data.</param>
-        protected virtual void OnLocationCleared(TrackerEventArgs e)
+        protected virtual void OnLocationCleared(LocationClearedEventArgs e)
             => LocationCleared?.Invoke(this, e);
 
         /// <summary>

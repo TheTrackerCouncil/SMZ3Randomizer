@@ -169,6 +169,24 @@
             Gets the name of the item as it was tracked.
             </summary>
         </member>
+        <member name="T:Randomizer.SMZ3.Tracking.LocationClearedEventArgs">
+            <summary>
+            Provides data for events that occur when clearing a location.
+            </summary>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.LocationClearedEventArgs.#ctor(Randomizer.SMZ3.Location,System.Nullable{System.Single})">
+            <summary>
+            Initializes a new instance of the <see
+            cref="T:Randomizer.SMZ3.Tracking.LocationClearedEventArgs"/> class.
+            </summary>
+            <param name="location">The location that was cleared.</param>
+            <param name="confidence">The speech recognition confidence.</param>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.LocationClearedEventArgs.Location">
+            <summary>
+            Gets the location that was cleared.
+            </summary>
+        </member>
         <member name="T:Randomizer.SMZ3.Tracking.Medallion">
             <summary>
             Specifies the types of medallions used to open dungeons.
@@ -1129,7 +1147,7 @@
             </summary>
             <param name="e">Event data.</param>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.Tracker.OnLocationCleared(Randomizer.SMZ3.Tracking.TrackerEventArgs)">
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.OnLocationCleared(Randomizer.SMZ3.Tracking.LocationClearedEventArgs)">
             <summary>
             Raises the <see cref="E:Randomizer.SMZ3.Tracking.Tracker.LocationCleared"/> event.
             </summary>

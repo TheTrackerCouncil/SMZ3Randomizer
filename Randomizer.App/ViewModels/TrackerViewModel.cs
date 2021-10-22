@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,6 +16,7 @@ namespace Randomizer.App.ViewModels
         private readonly Tracker _tracker;
         private bool _isDesign;
         private LocationFilter _filter;
+        private Region _stickyRegion = null;
 
         public TrackerViewModel()
         {
@@ -26,8 +28,9 @@ namespace Randomizer.App.ViewModels
         {
             _tracker = tracker;
             _tracker.MarkedLocationsUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
-            _tracker.LocationCleared += (_, _) =>
+            _tracker.LocationCleared += (_, e) =>
             {
+                _stickyRegion = e.Location.Region;
                 OnPropertyChanged(nameof(TopLocations));
                 OnPropertyChanged(nameof(MarkedLocations));
             };
@@ -85,12 +88,18 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                return World.Regions
+                var regions = World.Regions
                     .Where(RegionFilterCondition)
                     .OrderByDescending(x => x.Locations.Count(x => x.IsAvailable(Progression) && !x.Cleared))
-                    .SelectMany(x => x.Locations)
+                    .ToList();
+
+                if (_stickyRegion != null && regions.Contains(_stickyRegion))
+                    regions.MoveToTop(x => x == _stickyRegion);
+
+                return regions.SelectMany(x => x.Locations)
                     .Where(x => x.IsAvailable(Progression) && !x.Cleared)
-                    .Select(x => new LocationViewModel(x, () => OnPropertyChanged(nameof(TopLocations))));
+                    .Select(x => new LocationViewModel(x, () => OnPropertyChanged(nameof(TopLocations))))
+                    .ToImmutableList();
             }
         }
 
