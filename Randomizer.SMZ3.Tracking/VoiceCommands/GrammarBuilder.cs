@@ -102,6 +102,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
+        /// Adds the specified optional text to the end of the grammar.
+        /// </summary>
+        /// <param name="text">
+        /// The text that may or may not be recognized.
+        /// </param>
+        /// <returns>This instance.</returns>
+        public GrammarBuilder Optional(string text)
+        {
+            _grammar.Append(text, 0, 1);
+            _elements.Add($"({text})");
+            return this;
+        }
+
+        /// <summary>
         /// Builds the grammar.
         /// </summary>
         /// <param name="name">The name of the grammar rule.</param>

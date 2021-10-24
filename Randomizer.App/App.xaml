@@ -4,7 +4,8 @@
              xmlns:local="clr-namespace:Randomizer.App"
              xmlns:controls="clr-namespace:Randomizer.App.Controls"
              Startup="Application_Startup"
-             Exit="Application_Exit">
+             Exit="Application_Exit"
+             DispatcherUnhandledException="Application_DispatcherUnhandledException">
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>

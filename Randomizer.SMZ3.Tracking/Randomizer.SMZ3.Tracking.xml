@@ -1565,6 +1565,15 @@
             </param>
             <returns>This instance.</returns>
         </member>
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.GrammarBuilder.Optional(System.String)">
+            <summary>
+            Adds the specified optional text to the end of the grammar.
+            </summary>
+            <param name="text">
+            The text that may or may not be recognized.
+            </param>
+            <returns>This instance.</returns>
+        </member>
         <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.GrammarBuilder.Build(System.String)">
             <summary>
             Builds the grammar.

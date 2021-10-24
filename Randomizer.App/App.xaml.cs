@@ -19,6 +19,7 @@ namespace Randomizer.App
     public partial class App : Application
     {
         private IHost _host;
+        private ILogger<App> _logger;
 
         protected static void ConfigureServices(IServiceCollection services)
         {
@@ -46,8 +47,19 @@ namespace Randomizer.App
                 .ConfigureServices((context, services) => ConfigureServices(services))
                 .Start();
 
+            _logger = _host.Services.GetRequiredService<ILogger<App>>();
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             var mainWindow = _host.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception ex)
+                _logger?.LogCritical(ex, "[CRASH] Uncaught {exceptionType}", ex.GetType().Name);
+            else
+                _logger?.LogCritical("Unhandled exception in current domain but exception object is not an exception ({obj})", e.ExceptionObject);
         }
 
         private async void Application_Exit(object sender, ExitEventArgs e)
@@ -57,6 +69,11 @@ namespace Randomizer.App
                 await _host.StopAsync();
                 _host.Dispose();
             }
+        }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            _logger?.LogCritical(e.Exception, "[CRASH] Uncaught {exceptionType} in Dispatcher", e.Exception.GetType().Name);
         }
     }
 }
