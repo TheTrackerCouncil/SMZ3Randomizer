@@ -795,7 +795,9 @@ namespace Randomizer.SMZ3.Tracking
             if (confidence != null)
             {
                 // Only use TTS if called from a voice command
-                var itemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.Name ?? location.Item.Name;
+                var itemName = location.Item != null
+                    ? Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.Name ?? location.Item.Name
+                    : "something"; // TODO: Configure names for unknown items
                 var locationName = UniqueLocationNames[location];
                 Say(Responses.LocationCleared.Format(locationName, itemName));
             }
