@@ -17,6 +17,7 @@ namespace Randomizer.App.ViewModels
         private bool _isDesign;
         private LocationFilter _filter;
         private Region _stickyRegion = null;
+        private bool _showOutOfLogicLocations;
 
         public TrackerViewModel()
         {
@@ -69,6 +70,20 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public bool ShowOutOfLogicLocations
+        {
+            get => _showOutOfLogicLocations;
+            set
+            {
+                if (value != _showOutOfLogicLocations)
+                {
+                    _showOutOfLogicLocations = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TopLocations));
+                }
+            }
+        }
+
         public IEnumerable<MarkedLocationViewModel> MarkedLocations
         {
             get
@@ -90,16 +105,18 @@ namespace Randomizer.App.ViewModels
             {
                 var regions = World.Regions
                     .Where(RegionFilterCondition)
-                    .OrderByDescending(x => x.Locations.Count(x => x.IsAvailable(Progression) && !x.Cleared))
+                    .OrderByDescending(x => x.Locations.Count(x => !x.Cleared && x.IsAvailable(Progression)))
                     .ToList();
 
                 if (_stickyRegion != null && regions.Contains(_stickyRegion))
                     regions.MoveToTop(x => x == _stickyRegion);
 
                 return regions.SelectMany(x => x.Locations)
-                    .Where(x => x.IsAvailable(Progression) && !x.Cleared)
-                    .Select(x => new LocationViewModel(x, () => OnPropertyChanged(nameof(TopLocations))))
+                    .Where(ShouldShowLocation)
+                    .Select(x => new LocationViewModel(x, Progression, () => OnPropertyChanged(nameof(TopLocations))))
                     .ToImmutableList();
+
+                bool ShouldShowLocation(Location x) => !x.Cleared && (x.IsAvailable(Progression) || ShowOutOfLogicLocations);
             }
         }
 

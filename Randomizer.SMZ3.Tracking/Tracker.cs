@@ -833,7 +833,6 @@ namespace Randomizer.SMZ3.Tracking
         {
             dungeon.Cleared = true;
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
-            OnDungeonUpdated(new TrackerEventArgs(confidence));
 
             // Clear and track remaining treasure
             var clearedItems = 0;
@@ -859,6 +858,7 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.DungeonClearedTreasuresCleared.Format(clearedItems));
             }
 
+            OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
             {
                 dungeon.Cleared = false;

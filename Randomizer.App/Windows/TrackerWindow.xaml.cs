@@ -242,6 +242,10 @@ namespace Randomizer.App
             {
                 UpdateStats(e);
             });
+            Tracker.LocationCleared += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                UpdateStats(e);
+            });
             Tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TrackerStatusBar.Background = Brushes.Green;
