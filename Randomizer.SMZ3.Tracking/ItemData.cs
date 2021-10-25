@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -140,6 +139,22 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Untracks the item or decreases the item by one step.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if the item was removed; otherwise, <see
+        /// langword="false"/>.
+        /// </returns>
+        public bool Untrack()
+        {
+            if (TrackingState == 0)
+                return false;
+
+            TrackingState--;
+            return true;
         }
 
         /// <summary>

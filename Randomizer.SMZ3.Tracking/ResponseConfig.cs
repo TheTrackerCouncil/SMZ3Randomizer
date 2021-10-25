@@ -123,6 +123,60 @@ namespace Randomizer.SMZ3.Tracking
         public Dictionary<string, SchrodingersString> TrackedSpecificItem { get; init; } = new();
 
         /// <summary>
+        /// Gets the phrases to respond with when untracking an item.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+        /// a placeholder for the name of the item with "a"/"the".
+        /// </remarks>
+        public SchrodingersString UntrackedItem { get; init; }
+            = new SchrodingersString("Toggled {0} off.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when untracking an item that hasn't
+        /// been tracked yet.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+        /// a placeholder for the name of the item with "a"/"the".
+        /// </remarks>
+        public SchrodingersString UntrackedNothing { get; init; }
+            = new SchrodingersString("There's nothing to remove.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when untracking an item that has
+        /// multiple stages.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+        /// a placeholder for the name of the item with "a"/"the".
+        /// </remarks>
+        public SchrodingersString UntrackedProgressiveItem { get; init; }
+            = new SchrodingersString("Decreased {0} by one step.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when untracking an item that can be
+        /// tracked multiple times.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+        /// a placeholder for the name of the item with "a"/"the".
+        /// </remarks>
+        public SchrodingersString UntrackedItemMultiple { get; init; }
+            = new SchrodingersString("Removed {1}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when untracking the last copy of an
+        /// item that can be tracked multiple times.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+        /// a placeholder for the name of the item with "a"/"the".
+        /// </remarks>
+        public SchrodingersString UntrackedItemMultipleLast { get; init; }
+            = new SchrodingersString("Removed your last {0}.");
+
+        /// <summary>
         /// Gets the phrases to respond with when Shaktool becomes available.
         /// </summary>
         public SchrodingersString? ShaktoolAvailable { get; init; }

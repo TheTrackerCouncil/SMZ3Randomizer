@@ -69,6 +69,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         confidence: result.Confidence);
                 }
             });
+
+            AddCommand("Untrack an item", GetUntrackItemRule(), (tracker, result) =>
+            {
+                var item = GetItemFromResult(tracker, result, out _);
+                tracker.UntrackItem(item, result.Confidence);
+            });
         }
 
         private GrammarBuilder GetTrackItemRule()
@@ -134,6 +140,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(RegionKey, regionNames);
 
             return GrammarBuilder.Combine(trackAllInRoom, trackAllInRegion);
+        }
+
+        private GrammarBuilder GetUntrackItemRule()
+        {
+            var itemNames = GetItemNames();
+
+            var untrackItem = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Optional("please", "would you kindly")
+                .OneOf("untrack", "remove")
+                .Optional("a", "an", "the")
+                .Append(ItemNameKey, itemNames);
+
+            var toggleItemOff = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Optional("please", "would you kindly")
+                .Append("toggle")
+                .Append(ItemNameKey, itemNames)
+                .Append("off");
+
+            return GrammarBuilder.Combine(untrackItem, toggleItemOff);
         }
     }
 }

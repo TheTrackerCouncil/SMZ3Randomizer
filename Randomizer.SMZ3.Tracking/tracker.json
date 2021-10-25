@@ -58,7 +58,11 @@
       "Row": 0
     },
     {
-      "Name": "Bow",
+      "Name": [
+        [ "Bow", 0 ],
+        "Boh",
+        [ "Boh and Arrow", 0.2 ]
+      ],
       "InternalItemType": 11,
       "Column": 0,
       "Row": 0
@@ -833,6 +837,28 @@
     ],
     "ClearedMultipleItems": [
       "Cleared {0} items in {1}."
+    ],
+    "UntrackedNothing": [
+      "There's nothing to remove.",
+      "You don't have {1}.",
+      "What {0}?"
+    ],
+    "UntrackedProgressiveItem": [
+      "Decreased {0} by one step.",
+      "Removed {1}.",
+      [ "Not happy with your {0}?", 0.1 ]
+    ],
+    "UntrackedItem": [
+      "Toggled {0} off.",
+      "Removed {1}.",
+      [ "Threw {1} in the trash.", 0.1 ]
+    ],
+    "UntrackedItemMultiple": [
+      "Removed {1}.",
+      [ "Threw {1} in the trash.", 0.1 ]
+    ],
+    "UntrackedItemMultipleLast": [
+      "Removed your last {0}."
     ],
     "ShaktoolAvailable": [
       "Hey tracker, track Shaktool Go Mode",

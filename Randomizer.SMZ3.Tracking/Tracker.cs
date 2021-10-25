@@ -587,6 +587,41 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Removes an item from the tracker.
+        /// </summary>
+        /// <param name="item">The item to untrack.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void UntrackItem(ItemData item, float? confidence = null)
+        {
+            var originalTrackingState = item.TrackingState;
+
+            if (!item.Untrack())
+            {
+                Say(Responses.UntrackedNothing.Format(item.Name, item.NameWithArticle));
+                return;
+            }
+
+            if (item.HasStages)
+            {
+                Say(Responses.UntrackedProgressiveItem.Format(item.Name, item.NameWithArticle));
+            }
+            else if (item.Multiple)
+            {
+                if (item.TrackingState > 0)
+                    Say(Responses.UntrackedItemMultiple.Format(item.Name, item.NameWithArticle));
+                else
+                    Say(Responses.UntrackedItemMultipleLast.Format(item.Name, item.NameWithArticle));
+            }
+            else
+            {
+                Say(Responses.UntrackedItem.Format(item.Name, item.NameWithArticle));
+            }
+
+            OnItemTracked(new(null, confidence));
+            AddUndo(() => item.TrackingState = originalTrackingState);
+        }
+
+        /// <summary>
         /// Tracks the specifies item and clears it from the specified dungeon.
         /// </summary>
         /// <param name="item">The item data to track.</param>

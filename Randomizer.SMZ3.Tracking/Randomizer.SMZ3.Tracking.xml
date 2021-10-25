@@ -116,6 +116,15 @@
             already at the highest stage.
             </remarks>
         </member>
+        <member name="M:Randomizer.SMZ3.Tracking.ItemData.Untrack">
+            <summary>
+            Untracks the item or decreases the item by one step.
+            </summary>
+            <returns>
+            <see langword="true"/> if the item was removed; otherwise, <see
+            langword="false"/>.
+            </returns>
+        </member>
         <member name="M:Randomizer.SMZ3.Tracking.ItemData.Track(System.Int32)">
             <summary>
             Marks the item at the specified stage.
@@ -364,6 +373,55 @@
             <summary>
             Gets the phrases to respond with when tracking a specific item.
             </summary>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.UntrackedItem">
+            <summary>
+            Gets the phrases to respond with when untracking an item.
+            </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+            a placeholder for the name of the item with "a"/"the".
+            </remarks>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.UntrackedNothing">
+            <summary>
+            Gets the phrases to respond with when untracking an item that hasn't
+            been tracked yet.
+            </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+            a placeholder for the name of the item with "a"/"the".
+            </remarks>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.UntrackedProgressiveItem">
+            <summary>
+            Gets the phrases to respond with when untracking an item that has
+            multiple stages.
+            </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+            a placeholder for the name of the item with "a"/"the".
+            </remarks>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.UntrackedItemMultiple">
+            <summary>
+            Gets the phrases to respond with when untracking an item that can be
+            tracked multiple times.
+            </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+            a placeholder for the name of the item with "a"/"the".
+            </remarks>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.UntrackedItemMultipleLast">
+            <summary>
+            Gets the phrases to respond with when untracking the last copy of an
+            item that can be tracked multiple times.
+            </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the name of the item. <c>{1}</c> is
+            a placeholder for the name of the item with "a"/"the".
+            </remarks>
         </member>
         <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.ShaktoolAvailable">
             <summary>
@@ -1026,6 +1084,13 @@
             <c>true</c> to attempt to clear a location for the tracked item;
             <c>false</c> if that is done by the caller.
             </param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.UntrackItem(Randomizer.SMZ3.Tracking.ItemData,System.Nullable{System.Single})">
+            <summary>
+            Removes an item from the tracker.
+            </summary>
+            <param name="item">The item to untrack.</param>
+            <param name="confidence">The speech recognition confidence.</param>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.TrackItem(Randomizer.SMZ3.Tracking.ItemData,Randomizer.SMZ3.Tracking.ZeldaDungeon,System.String,System.Nullable{System.Single})">
             <summary>
