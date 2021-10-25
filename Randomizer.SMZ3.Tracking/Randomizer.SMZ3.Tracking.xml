@@ -920,7 +920,10 @@
             </summary>
             <param name="dungeon">The dungeon.</param>
             <param name="confidence">The speech recognition confidence.</param>
-            <returns><c>true</c> if treasure was tracked; <c>false</c> if there is no treasure left to track.</returns>
+            <returns>
+            <c>true</c> if treasure was tracked; <c>false</c> if there is no
+            treasure left to track.
+            </returns>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.SetDungeonReward(Randomizer.SMZ3.Tracking.ZeldaDungeon,System.Nullable{Randomizer.SMZ3.Tracking.RewardItem},System.Nullable{System.Single})">
             <summary>
@@ -1094,6 +1097,16 @@
             Starts Peg World mode.
             </summary>
             <param name="confidence">The speech recognition confidence.</param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.GetName(Randomizer.SMZ3.Location)">
+            <summary>
+            Returns the possible names of the specified location.
+            </summary>
+            <param name="location">The location whose names to get.</param>
+            <returns>
+            A new <see cref="T:Randomizer.SMZ3.Tracking.SchrodingersString"/> object representing the
+            possible names of <paramref name="location"/>.
+            </returns>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.AddUndo(System.Action)">
             <summary>

@@ -308,7 +308,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             foreach (var location in Tracker.World.Locations)
             {
-                foreach (var name in Tracker.UniqueLocationNames[location])
+                foreach (var name in Tracker.GetName(location))
                     locationNames.Add(new SemanticResultValue(name.Text, location.Id));
             }
 

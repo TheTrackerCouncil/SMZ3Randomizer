@@ -66,7 +66,7 @@ namespace Randomizer.SMZ3.Tracking
             Responses = config.Responses;
             World = worldAccessor.GetWorld();
             GetTreasureCounts(Dungeons, World);
-            UniqueLocationNames = World.Locations.ToDictionary(x => x, x => GetUniqueNames(x));
+            UniqueLocationNames = World.Locations.ToDictionary(x => x.Id, x => GetUniqueNames(x));
 
             // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
@@ -182,7 +182,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets a dictionary that contains unique location names for each
         /// location.
         /// </summary>
-        protected internal IReadOnlyDictionary<Location, SchrodingersString> UniqueLocationNames { get; }
+        protected internal IReadOnlyDictionary<int, SchrodingersString> UniqueLocationNames { get; }
 
         /// <summary>
         /// Loads the tracker state from the specified saved state.
@@ -253,7 +253,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        /// <returns><c>true</c> if treasure was tracked; <c>false</c> if there is no treasure left to track.</returns>
+        /// <returns>
+        /// <c>true</c> if treasure was tracked; <c>false</c> if there is no
+        /// treasure left to track.
+        /// </returns>
         public bool TrackDungeonTreasure(ZeldaDungeon dungeon, float? confidence = null)
         {
             if (dungeon.TreasureRemaining > 0)
@@ -798,7 +801,7 @@ namespace Randomizer.SMZ3.Tracking
                 var itemName = location.Item != null
                     ? Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.Name ?? location.Item.Name
                     : "something"; // TODO: Configure names for unknown items
-                var locationName = UniqueLocationNames[location];
+                var locationName = GetName(location);
                 Say(Responses.LocationCleared.Format(locationName, itemName));
             }
 
@@ -833,7 +836,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void MarkLocation(Location location, ItemData item, float? confidence = null)
         {
-            var locationName = UniqueLocationNames[location];
+            var locationName = GetName(location);
             SassIfItemIsWrong(item, location, confidence);
 
             if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
@@ -880,6 +883,17 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.PegWorldModeOn, wait: true);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
         }
+
+        /// <summary>
+        /// Returns the possible names of the specified location.
+        /// </summary>
+        /// <param name="location">The location whose names to get.</param>
+        /// <returns>
+        /// A new <see cref="SchrodingersString"/> object representing the
+        /// possible names of <paramref name="location"/>.
+        /// </returns>
+        protected internal virtual SchrodingersString GetName(Location location)
+            => UniqueLocationNames[location.Id];
 
         /// <summary>
         /// Adds an action to be invoked to undo the last operation.
