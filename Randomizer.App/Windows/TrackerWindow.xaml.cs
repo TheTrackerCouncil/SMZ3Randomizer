@@ -4,14 +4,18 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+
+using Npgsql.Replication.PgOutput.Messages;
 
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
@@ -128,7 +132,8 @@ namespace Randomizer.App
                         "Sprites", "Items", peg.Pegged ? "pegged.png" : "peg.png");
 
                     var image = GetGridItemControl(fileName, peg.Column, peg.Row);
-                    image.MouseLeftButtonUp += (sender, e) => Tracker.Peg(peg);
+                    image.Tag = peg;
+                    image.MouseLeftButtonUp += Image_LeftClick;
                     TrackerGrid.Children.Add(image);
                 }
             }
@@ -142,7 +147,9 @@ namespace Randomizer.App
                         continue;
 
                     var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value, overlay);
-                    image.MouseLeftButtonUp += (sender, e) => Tracker.TrackItem(item);
+                    image.Tag = item;
+                    image.ContextMenu = CreateContextMenu(item);
+                    image.MouseLeftButtonUp += Image_LeftClick;
                     image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
                     TrackerGrid.Children.Add(image);
                 }
@@ -154,12 +161,13 @@ namespace Randomizer.App
 
                     var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
-                    var rewardImage = GetGridItemControl(rewardPath, dungeon.Column.Value, dungeon.Row.Value, overlayPath);
-                    rewardImage.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
-                    rewardImage.MouseLeftButtonUp += (sender, e) => Tracker.ClearDungeon(dungeon);
-                    rewardImage.MouseRightButtonUp += (sender, e) => Tracker.SetDungeonReward(dungeon);
+                    var image = GetGridItemControl(rewardPath, dungeon.Column.Value, dungeon.Row.Value, overlayPath);
+                    image.Tag = dungeon;
+                    image.MouseLeftButtonUp += Image_LeftClick;
+                    image.ContextMenu = CreateContextMenu(dungeon);
+                    image.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
 
-                    TrackerGrid.Children.Add(rewardImage);
+                    TrackerGrid.Children.Add(image);
                 }
             }
         }
@@ -193,6 +201,86 @@ namespace Randomizer.App
 
                 return null;
             }
+        }
+
+        private void Image_LeftClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Image image)
+            {
+                if (image.Tag is ItemData item)
+                {
+                    Tracker.TrackItem(item);
+                }
+                else if (image.Tag is ZeldaDungeon dungeon)
+                {
+                    Tracker.ClearDungeon(dungeon);
+                }
+                else if (image.Tag is Peg peg)
+                {
+                    Tracker.Peg(peg);
+                }
+            };
+        }
+
+        private ContextMenu CreateContextMenu(ItemData item)
+        {
+            var menu = new ContextMenu();
+
+            if (item.TrackingState > 0)
+            {
+                var untrackItem = new MenuItem
+                {
+                    Header = "Remove"
+                };
+                untrackItem.Click += (sender, e) => Tracker.UntrackItem(item);
+                menu.Items.Add(untrackItem);
+            }
+
+            if (item.HasStages)
+            {
+                foreach ((var stage, var name) in item.Stages)
+                {
+                    var setStageItem = new MenuItem
+                    {
+                        Header = $"Set as {name[0]}",
+                        IsChecked = item.TrackingState == stage
+                    };
+
+                    setStageItem.Click += (sender, e) =>
+                    {
+                        item.TrackingState = stage;
+                        RefreshGridItems();
+                    };
+                    menu.Items.Add(setStageItem);
+                }
+            }
+
+            return menu.Items.Count > 0 ? menu : null;
+        }
+
+        private ContextMenu CreateContextMenu(ZeldaDungeon dungeon)
+        {
+            var menu = new ContextMenu();
+            foreach (var reward in Enum.GetValues<RewardItem>())
+            {
+                var item = new MenuItem
+                {
+                    Header = $"Mark as {reward.GetDescription()}",
+                    IsChecked = dungeon.Reward == reward,
+                    Icon = new Image
+                    {
+                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Dungeons", $"{reward.GetDescription().ToLowerInvariant()}.png")))
+                    }
+                };
+                item.Click += (sender, e) =>
+                {
+                    dungeon.Reward = reward;
+                    RefreshGridItems();
+                };
+                menu.Items.Add(item);
+            }
+            return menu;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

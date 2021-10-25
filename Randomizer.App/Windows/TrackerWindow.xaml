@@ -30,7 +30,8 @@
                   x:Name="SaveState"
                   Click="SaveState_Click" />
       </MenuItem>
-      <MenuItem Header="_View">
+      <MenuItem Style="{StaticResource DarkMenuItem}"
+                Header="_View">
         <MenuItem Header="_Locations"
                   x:Name="LocationsMenuItem"
                   Click="LocationsMenuItem_Click" />

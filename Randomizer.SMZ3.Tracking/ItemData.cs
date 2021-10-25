@@ -99,7 +99,7 @@ namespace Randomizer.SMZ3.Tracking
         /// obtained item and higher values indicate items that have been
         /// obtained more than once.
         /// </remarks>
-        public int TrackingState { get; protected internal set; }
+        public int TrackingState { get; set; }
 
         /// <summary>
         /// Returns the stage of the item with the specifies name.
