@@ -635,7 +635,12 @@
         </member>
         <member name="F:Randomizer.SMZ3.Tracking.RewardItem.Crystal">
             <summary>
-            Specifies the reward is a blue or red crystal.
+            Specifies the reward is a blue crystal.
+            </summary>
+        </member>
+        <member name="F:Randomizer.SMZ3.Tracking.RewardItem.RedCrystal">
+            <summary>
+            Specifies the reward is a red crystal, used to get the super bomb.
             </summary>
         </member>
         <member name="F:Randomizer.SMZ3.Tracking.RewardItem.GreenPendant">
