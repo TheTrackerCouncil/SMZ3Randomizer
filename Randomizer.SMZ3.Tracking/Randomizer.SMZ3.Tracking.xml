@@ -958,10 +958,16 @@
             default name, additional names, or stage names.
             </remarks>
         </member>
-        <member name="M:Randomizer.SMZ3.Tracking.Tracker.GetProgression">
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.GetProgression(System.Boolean)">
             <summary>
             Gets the currently available items.
             </summary>
+            <param name="assumeKeys">
+            Indicates whether to add small and big dungeon keys to the
+            progression pool. If keysanity is enabled for the current <see
+            cref="P:Randomizer.SMZ3.Tracking.Tracker.World"/>, this setting also adds keycards, which are otherwise
+            always added.
+            </param>
             <returns>
             A new <see cref="T:Randomizer.SMZ3.Progression"/> object representing the currently
             available items.

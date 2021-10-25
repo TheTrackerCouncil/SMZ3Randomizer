@@ -378,13 +378,27 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the currently available items.
         /// </summary>
+        /// <param name="assumeKeys">
+        /// Indicates whether to add small and big dungeon keys to the
+        /// progression pool. If keysanity is enabled for the current <see
+        /// cref="World"/>, this setting also adds keycards, which are otherwise
+        /// always added.
+        /// </param>
         /// <returns>
         /// A new <see cref="Progression"/> object representing the currently
         /// available items.
         /// </returns>
-        public Progression GetProgression()
+        public Progression GetProgression(bool assumeKeys = false)
         {
             var progression = new Progression();
+
+            if (!World.Config.Keysanity || assumeKeys)
+            {
+                progression.Add(Item.CreateKeycards(World));
+                if (assumeKeys)
+                    progression.Add(Item.CreateDungeonPool(World));
+            }
+
             foreach (var item in Items)
             {
                 if (item.TrackingState > 0)
