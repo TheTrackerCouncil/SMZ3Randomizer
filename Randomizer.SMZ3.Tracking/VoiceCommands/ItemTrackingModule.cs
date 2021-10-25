@@ -80,26 +80,30 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var trackItemNormal = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track")
+                .Optional("please", "would you kindly")
+                .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames);
 
             var trackItemDungeon = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track")
+                .Optional("please", "would you kindly")
+                .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from")
                 .Append(DungeonKey, dungeonNames);
 
             var trackItemLocation = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track")
+                .Optional("please", "would you kindly")
+                .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from", "in the", "from the")
                 .Append(LocationKey, locationNames);
 
             var trackItemRoom = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track")
+                .Optional("please", "would you kindly")
+                .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames)
                 .OneOf("in", "from", "in the", "from the")
                 .Append(RoomKey, roomNames);
@@ -115,14 +119,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var trackAllInRoom = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track")
+                .Optional("please", "would you kindly")
+                .OneOf("track", "add")
                 .OneOf("everything", "all items", "available items")
                 .OneOf("in", "from", "in the", "from the")
                 .Append(RoomKey, roomNames);
 
             var trackAllInRegion = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "please track")
+                .Optional("please", "would you kindly")
+                .OneOf("track", "add")
                 .OneOf("everything", "all items", "available items")
                 .OneOf("in", "from")
                 .Append(RegionKey, regionNames);

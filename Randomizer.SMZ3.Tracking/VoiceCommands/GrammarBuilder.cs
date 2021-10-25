@@ -116,6 +116,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
+        /// Adds an optional choice.
+        /// </summary>
+        /// <param name="choices">The choices to represent in the grammar.</param>
+        /// <returns>This instance.</returns>
+        public GrammarBuilder Optional(params string[] choices)
+        {
+            _grammar.Append(new Choices(choices), 0, 1);
+            _elements.Add($"({string.Join('/', choices)})");
+            return this;
+        }
+
+        /// <summary>
         /// Builds the grammar.
         /// </summary>
         /// <param name="name">The name of the grammar rule.</param>

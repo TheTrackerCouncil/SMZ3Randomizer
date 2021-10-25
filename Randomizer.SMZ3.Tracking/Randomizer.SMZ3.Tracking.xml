@@ -1603,6 +1603,13 @@
             </param>
             <returns>This instance.</returns>
         </member>
+        <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.GrammarBuilder.Optional(System.String[])">
+            <summary>
+            Adds an optional choice.
+            </summary>
+            <param name="choices">The choices to represent in the grammar.</param>
+            <returns>This instance.</returns>
+        </member>
         <member name="M:Randomizer.SMZ3.Tracking.VoiceCommands.GrammarBuilder.Build(System.String)">
             <summary>
             Builds the grammar.
