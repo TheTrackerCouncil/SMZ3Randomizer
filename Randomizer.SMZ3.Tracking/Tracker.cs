@@ -80,7 +80,6 @@ namespace Randomizer.SMZ3.Tracking
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += SpeechRecognized;
-            _recognizer.SpeechRecognitionRejected += _recognizer_SpeechRecognitionRejected;
             _recognizer.SetInputToDefaultAudioDevice();
         }
 
@@ -987,11 +986,6 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         protected virtual void OnStateLoaded()
             => StateLoaded?.Invoke(this, EventArgs.Empty);
-
-        private void _recognizer_SpeechRecognitionRejected(object? sender, SpeechRecognitionRejectedEventArgs e)
-        {
-            _logger.LogWarning("Speech recognition rejected: \"{Text}\" (Confidence: {Confidence:P2})", e.Result.Text, e.Result.Confidence);
-        }
 
         private void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
         {
