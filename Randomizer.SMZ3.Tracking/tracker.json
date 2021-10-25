@@ -859,6 +859,9 @@
       [ "Marked {1} as defeated.", 0.5 ],
       [ "Congratulations on beating off {1}.", 0.5 ]
     ],
+    "DungeonClearedTreasuresCleared": [
+      "Cleared {0} items"
+    ],
     "DungeonRequirementMarked": [
       "Marked {0} as required for {1}"
     ],

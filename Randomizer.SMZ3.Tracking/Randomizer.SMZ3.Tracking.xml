@@ -410,6 +410,16 @@
             cleared. <c>{1}</c> is a placeholder for the boss of the dungeon.
             </remarks>
         </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.DungeonClearedTreasuresCleared">
+            <summary>
+            Gets the phrases to respond with when clearing treasures after
+            clearing a dungeon.
+            </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the amount of items that were
+            tracked.
+            </remarks>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.DungeonRequirementMarked">
             <summary>
             Gets the phrases to respond with when marking the medallion
@@ -2022,6 +2032,17 @@
             <returns>
             <c>true</c> if <paramref name="region"/> matches the dungeon;
             otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.ZeldaDungeon.GetRegion(Randomizer.SMZ3.World)">
+            <summary>
+            Returns the region that represents this dungeon in the specified
+            <see cref="T:Randomizer.SMZ3.World"/>.
+            </summary>
+            <param name="world">The world those regions to find.</param>
+            <returns>
+            The <see cref="T:Randomizer.SMZ3.Region"/> in <paramref name="world"/> that matches
+            this dungeon.
             </returns>
         </member>
         <member name="T:Microsoft.Extensions.DependencyInjection.TrackerServiceCollectionExtensions">

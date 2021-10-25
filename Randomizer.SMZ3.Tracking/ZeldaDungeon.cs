@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json.Serialization;
+using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -91,5 +91,17 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public bool Is(Region region)
             => Name.Contains(region.Name, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Returns the region that represents this dungeon in the specified
+        /// <see cref="World"/>.
+        /// </summary>
+        /// <param name="world">The world those regions to find.</param>
+        /// <returns>
+        /// The <see cref="Region"/> in <paramref name="world"/> that matches
+        /// this dungeon.
+        /// </returns>
+        public Region GetRegion(World world)
+            => world.Regions.Single(Is);
     }
 }

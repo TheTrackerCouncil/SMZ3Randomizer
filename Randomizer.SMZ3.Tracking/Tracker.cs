@@ -767,10 +767,9 @@ namespace Randomizer.SMZ3.Tracking
 
                 var itemType = location.Item.Type;
                 var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
-                if (item != null && item.Track())
-                    itemsTracked++;
-                else
+                if (item == null || !item.Track())
                     _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
+                itemsTracked++;
 
                 location.Cleared = true;
             }
@@ -836,7 +835,44 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
             OnDungeonUpdated(new TrackerEventArgs(confidence));
 
-            AddUndo(() => dungeon.Cleared = false);
+            // Clear and track remaining treasure
+            var clearedItems = 0;
+            var remainingLocations = dungeon.GetRegion(World).Locations
+                .Where(x => !x.Cleared)
+                .ToImmutableList();
+            foreach (var location in remainingLocations)
+            {
+                location.Cleared = true;
+
+                if (location.Item != null)
+                {
+                    if (!location.Item.IsDungeonItem)
+                        clearedItems++;
+
+                    Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)
+                        ?.Track();
+                }
+            }
+
+            if (clearedItems > 0)
+            {
+                Say(Responses.DungeonClearedTreasuresCleared.Format(clearedItems));
+            }
+
+            AddUndo(() =>
+            {
+                dungeon.Cleared = false;
+                foreach (var location in remainingLocations)
+                {
+                    location.Cleared = false;
+                    if (location.Item != null)
+                    {
+                        var item = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
+                        if (item != null)
+                            item.TrackingState--;
+                    }
+                }
+            });
         }
 
         /// <summary>
