@@ -155,6 +155,11 @@ namespace Randomizer.SMZ3.Tracking
         public bool GoMode { get; private set; }
 
         /// <summary>
+        /// Indicates whether Tracker is in Peg World mode.
+        /// </summary>
+        public bool PegWorldMode { get; set; }
+
+        /// <summary>
         /// Gets a dictionary that contains the locations that are marked with
         /// items.
         /// </summary>
@@ -971,6 +976,9 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void Peg(Peg peg, float? confidence = null)
         {
+            if (!PegWorldMode)
+                return;
+
             peg.Pegged = true;
 
             if (Pegs.Any(x => !x.Pegged))
@@ -989,8 +997,10 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void StartPegWorldMode(float? confidence = null)
         {
+            PegWorldMode = true;
             Say(Responses.PegWorldModeOn, wait: true);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
+            AddUndo(() => PegWorldMode = false);
         }
 
         /// <summary>

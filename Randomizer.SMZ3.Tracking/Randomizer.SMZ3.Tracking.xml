@@ -942,6 +942,11 @@
             Indicates whether Tracker is in Go Mode.
             </summary>
         </member>
+        <member name="P:Randomizer.SMZ3.Tracking.Tracker.PegWorldMode">
+            <summary>
+            Indicates whether Tracker is in Peg World mode.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.Tracker.MarkedLocations">
             <summary>
             Gets a dictionary that contains the locations that are marked with
