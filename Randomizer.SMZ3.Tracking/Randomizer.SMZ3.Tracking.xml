@@ -459,6 +459,19 @@
             is a placeholder for the name of the reward that was marked.
             </remarks>
         </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.RemainingDungeonsMarked">
+            <summary>
+            Gets the phrases to respond with when marking the reward for all other unmarked dungeons.
+            </summary>
+            <remarks>
+            <c>{0}</c> is a placeholder for the name of the reward that was marked.
+            </remarks>
+        </member>
+        <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.NoRemainingDungeons">
+            <summary>
+            Gets the phrases to respond with when there are no unmarked dungeons.
+            </summary>
+        </member>
         <member name="P:Randomizer.SMZ3.Tracking.ResponseConfig.DungeonCleared">
             <summary>
             Gets the phrases to respond with when clearing a dungeon.
@@ -1007,6 +1020,13 @@
             The type of pendant or crystal, or <c>null</c> to cycle through the
             possible rewards.
             </param>
+            <param name="confidence">The speech recognition confidence.</param>
+        </member>
+        <member name="M:Randomizer.SMZ3.Tracking.Tracker.SetUnmarkedDungeonReward(Randomizer.SMZ3.Tracking.RewardItem,System.Nullable{System.Single})">
+            <summary>
+            Sets the reward of all unmarked dungeons.
+            </summary>
+            <param name="reward">The reward to set.</param>
             <param name="confidence">The speech recognition confidence.</param>
         </member>
         <member name="M:Randomizer.SMZ3.Tracking.Tracker.SetDungeonRequirement(Randomizer.SMZ3.Tracking.ZeldaDungeon,System.Nullable{Randomizer.SMZ3.Tracking.Medallion},System.Nullable{System.Single})">

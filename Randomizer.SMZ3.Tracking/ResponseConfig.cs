@@ -214,6 +214,21 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Marked {0} as {1}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when marking the reward for all other unmarked dungeons.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the reward that was marked.
+        /// </remarks>
+        public SchrodingersString RemainingDungeonsMarked { get; init; }
+            = new SchrodingersString("Marked remaining dungeons as {1}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when there are no unmarked dungeons.
+        /// </summary>
+        public SchrodingersString NoRemainingDungeons { get; init; }
+            = new SchrodingersString("You already marked every dungeon.");
+
+        /// <summary>
         /// Gets the phrases to respond with when clearing a dungeon.
         /// </summary>
         /// <remarks>

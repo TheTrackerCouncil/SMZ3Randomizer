@@ -880,6 +880,15 @@
     "DungeonRewardMarked": [
       "Marked {0} as {1}."
     ],
+    "RemainingDungeonsMarked": [
+      "Marked remaining dungeons as {0}.",
+      "Set all other dungeons to {0}.",
+      "Assigned {0} to unmarked dungeons."
+    ],
+    "NoRemainingDungeons": [
+      "You already marked every dungeon.",
+      "You did that already."
+    ],
     "DungeonCleared": [
       "Cleared {0}.",
       [ "Marked {1} as defeated.", 0.5 ],

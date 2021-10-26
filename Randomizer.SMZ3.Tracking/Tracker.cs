@@ -313,6 +313,31 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Sets the reward of all unmarked dungeons.
+        /// </summary>
+        /// <param name="reward">The reward to set.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void SetUnmarkedDungeonReward(RewardItem reward, float? confidence = null)
+        {
+            var unmarkedDungeons = Dungeons
+                .Where(x => x.Reward == RewardItem.Unknown)
+                .ToImmutableList();
+
+            if (unmarkedDungeons.Count > 0)
+            {
+                unmarkedDungeons.ForEach(dungeon => dungeon.Reward = reward);
+                Say(Responses.RemainingDungeonsMarked.Format(reward.GetName()));
+
+                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.Reward = RewardItem.Unknown));
+                OnDungeonUpdated(new(confidence));
+            }
+            else
+            {
+                Say(Responses.NoRemainingDungeons);
+            }
+        }
+
+        /// <summary>
         /// Sets the dungeon's medallion requirement to the specified item.
         /// </summary>
         /// <param name="dungeon">The dungeon to mark.</param>

@@ -29,6 +29,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 tracker.SetDungeonReward(dungeon, reward, result.Confidence);
             });
 
+            AddCommand("Mark remaining dungeons", GetMarkRemainingDungeonRewardsRule(), (tracker, result) =>
+            {
+                tracker.SetUnmarkedDungeonReward(RewardItem.Crystal, result.Confidence);
+            });
+
             AddCommand("Clear dungeon", GetClearDungeonRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
@@ -65,6 +70,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(DungeonKey, dungeonNames)
                 .Append("as")
                 .Append(RewardKey, rewardNames);
+        }
+
+        private GrammarBuilder GetMarkRemainingDungeonRewardsRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("mark", "set")
+                .OneOf("remaining dungeons", "other dungeons", "unmarked dungeons")
+                .Append("as")
+                .OneOf("crystal", "blue crystal");
         }
 
         private GrammarBuilder GetClearDungeonRule()
