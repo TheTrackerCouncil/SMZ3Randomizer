@@ -13,12 +13,14 @@ namespace Randomizer.App.ViewModels
     {
         private readonly Location _location;
         private readonly Progression _progression;
+        private readonly Progression _progressionWithKeys;
         private readonly Action _onClear;
 
-        public LocationViewModel(Location location, Progression progression, Action onClear)
+        public LocationViewModel(Location location, Progression progression, Progression progressionWithKeys, Action onClear)
         {
             _location = location;
             _progression = progression;
+            _progressionWithKeys = progressionWithKeys;
             _onClear = onClear;
         }
 
@@ -28,7 +30,9 @@ namespace Randomizer.App.ViewModels
 
         public bool InLogic => _location.IsAvailable(_progression);
 
-        public double Opacity => InLogic ? 1.0 : 0.33;
+        public bool InLogicWithKeys => !InLogic && _location.IsAvailable(_progressionWithKeys);
+
+        public double Opacity => (InLogic || InLogicWithKeys) ? 1.0 : 0.33;
 
         public ICommand Clear => new DelegateCommand(
             execute: () =>

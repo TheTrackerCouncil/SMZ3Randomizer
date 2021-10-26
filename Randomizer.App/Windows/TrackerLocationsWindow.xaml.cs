@@ -26,11 +26,17 @@ namespace Randomizer.App
             ChestSprite = new BitmapImage(new Uri(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "Sprites", "Items", "chest.png")));
+
+            KeySprite = new BitmapImage(new Uri(Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "Sprites", "Items", "key.png")));
         }
 
         public Tracker Tracker { get; }
 
         public ImageSource ChestSprite { get; }
+
+        public ImageSource KeySprite { get; }
 
         private void Tracker_StateLoaded(object sender, EventArgs e)
         {

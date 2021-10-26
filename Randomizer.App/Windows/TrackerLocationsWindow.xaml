@@ -11,6 +11,7 @@
         Height="600"
         Width="450">
   <Window.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <CollectionViewSource x:Key="topLocations"
                           Source="{Binding TopLocations}">
       <CollectionViewSource.GroupDescriptions>
@@ -137,9 +138,20 @@
                 <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
 
-              <TextBlock Text="{Binding Name}"
-                         Grid.Column="0"
-                         Opacity="{Binding Opacity}"/>
+              <StackPanel Orientation="Horizontal"
+                          Grid.Column="0">
+                <TextBlock Text="{Binding Name}"
+                           Opacity="{Binding Opacity}" />
+                <Image Source="{Binding KeySprite, RelativeSource={RelativeSource AncestorType={x:Type local:TrackerLocationsWindow}, Mode=FindAncestor}}"
+                       Visibility="{Binding InLogicWithKeys, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Width="8px"
+                       Height="16px"
+                       Margin="3,0,7,0"
+                       Stretch="Uniform"
+                       ToolTip="Requires one or more keys" />
+              </StackPanel>
+
               <Button Grid.Column="2"
                       Style="{StaticResource InlineTextButton}"
                       Command="{Binding Clear}">×</Button>

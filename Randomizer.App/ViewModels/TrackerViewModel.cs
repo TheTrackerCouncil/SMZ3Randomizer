@@ -113,16 +113,23 @@ namespace Randomizer.App.ViewModels
 
                 return regions.SelectMany(x => x.Locations)
                     .Where(ShouldShowLocation)
-                    .Select(x => new LocationViewModel(x, Progression, () => OnPropertyChanged(nameof(TopLocations))))
+                    .Select(x => new LocationViewModel(x,
+                        Progression,
+                        ProgressionWithKeys,
+                        onClear: () => OnPropertyChanged(nameof(TopLocations))))
                     .ToImmutableList();
 
-                bool ShouldShowLocation(Location x) => !x.Cleared && (x.IsAvailable(Progression) || ShowOutOfLogicLocations);
+                bool ShouldShowLocation(Location x) => !x.Cleared && (x.IsAvailable(Progression)
+                                                                      || x.IsAvailable(ProgressionWithKeys)
+                                                                      || ShowOutOfLogicLocations);
             }
         }
 
         protected World World { get; }
 
         protected Progression Progression => _tracker?.GetProgression() ?? new();
+
+        protected Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new();
 
         private Func<Region, bool> RegionFilterCondition => Filter switch
         {
