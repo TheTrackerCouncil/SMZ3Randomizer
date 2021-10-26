@@ -230,7 +230,7 @@ namespace Randomizer.App
             {
                 var untrackItem = new MenuItem
                 {
-                    Header = "Remove"
+                    Header = item.TrackingState > 1 ? "Remove one" : "Untrack"
                 };
                 untrackItem.Click += (sender, e) => Tracker.UntrackItem(item);
                 menu.Items.Add(untrackItem);
@@ -253,6 +253,76 @@ namespace Randomizer.App
                     };
                     menu.Items.Add(setStageItem);
                 }
+            }
+
+            var medallion = item.InternalItemType switch
+            {
+                ItemType.Bombos => Medallion.Bombos,
+                ItemType.Ether => Medallion.Ether,
+                ItemType.Quake => Medallion.Quake,
+                _ => Medallion.None
+            };
+            if (medallion != Medallion.None)
+            {
+                var turtleRock = Tracker.Dungeons.Single(x => x.Name.Contains("Turtle Rock", StringComparison.OrdinalIgnoreCase));
+                var miseryMire = Tracker.Dungeons.Single(x => x.Name.Contains("Misery Mire", StringComparison.OrdinalIgnoreCase));
+
+                var requiredByNone = new MenuItem
+                {
+                    Header = "Not required for any dungeon",
+                    IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement != medallion
+                };
+                requiredByNone.Click += (sender, e) =>
+                {
+                    if (turtleRock.Requirement == medallion)
+                        turtleRock.Requirement = Medallion.None;
+                    if (miseryMire.Requirement == medallion)
+                        miseryMire.Requirement = Medallion.None;
+                    RefreshGridItems();
+                };
+
+                var requiredByTR = new MenuItem
+                {
+                    Header = "Required for Turtle Rock",
+                    IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement != medallion
+                };
+                requiredByTR.Click += (sender, e) =>
+                {
+                    turtleRock.Requirement = medallion;
+                    if (miseryMire.Requirement == medallion)
+                        miseryMire.Requirement = Medallion.None;
+                    RefreshGridItems();
+                };
+
+                var requiredByMM = new MenuItem
+                {
+                    Header = "Required for Misery Mire",
+                    IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement == medallion
+                };
+                requiredByMM.Click += (sender, e) =>
+                {
+                    if (turtleRock.Requirement == medallion)
+                        turtleRock.Requirement = Medallion.None;
+                    miseryMire.Requirement = medallion;
+                    RefreshGridItems();
+                };
+
+                var requiredByBoth = new MenuItem
+                {
+                    Header = "Required by both",
+                    IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement == medallion
+                };
+                requiredByBoth.Click += (sender, e) =>
+                {
+                    turtleRock.Requirement = medallion;
+                    miseryMire.Requirement = medallion;
+                    RefreshGridItems();
+                };
+
+                menu.Items.Add(requiredByNone);
+                menu.Items.Add(requiredByTR);
+                menu.Items.Add(requiredByMM);
+                menu.Items.Add(requiredByBoth);
             }
 
             return menu.Items.Count > 0 ? menu : null;
