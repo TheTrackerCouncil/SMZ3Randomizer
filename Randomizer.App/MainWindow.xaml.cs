@@ -493,5 +493,12 @@ namespace Randomizer.App
                 _logger.LogCritical(ex, "An unhandled exception occurred when starting the tracker.");
             }
         }
+
+        private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = _serviceProvider.GetRequiredService<AboutWindow>();
+            aboutWindow.Owner = this;
+            aboutWindow.ShowDialog();
+        }
     }
 }

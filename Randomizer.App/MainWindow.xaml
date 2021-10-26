@@ -41,6 +41,11 @@
                     x:Name="OptionsMenuItem"
                     Click="OptionsMenuItem_Click" />
         </MenuItem>
+        <MenuItem Header="_Help">
+          <MenuItem Header="_About..."
+                    x:Name="AboutMenuItem"
+                    Click="AboutMenuItem_Click" />
+        </MenuItem>
       </Menu>
     </Border>
 

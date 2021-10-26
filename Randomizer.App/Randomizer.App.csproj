@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="chozo20.ico" />
+    <Resource Include="chozo20.ico" />
     <EmbeddedResource Include="msu1-v6.ips" />
     <EmbeddedResource Include="zsm.ips" />
   </ItemGroup>
