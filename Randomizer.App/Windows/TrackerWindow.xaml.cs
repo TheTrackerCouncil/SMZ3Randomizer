@@ -221,7 +221,10 @@ namespace Randomizer.App
 
         private ContextMenu CreateContextMenu(ItemData item)
         {
-            var menu = new ContextMenu();
+            var menu = new ContextMenu
+            {
+                Style = Application.Current.FindResource("DarkContextMenu") as Style
+            };
 
             if (item.TrackingState > 0 && item.InternalItemType != ItemType.Bow && item.InternalItemType != ItemType.SilverArrows)
             {
@@ -371,7 +374,11 @@ namespace Randomizer.App
 
         private ContextMenu CreateContextMenu(ZeldaDungeon dungeon)
         {
-            var menu = new ContextMenu();
+            var menu = new ContextMenu
+            {
+                Style = Application.Current.FindResource("DarkContextMenu") as Style
+            };
+
             foreach (var reward in Enum.GetValues<RewardItem>())
             {
                 var item = new MenuItem
