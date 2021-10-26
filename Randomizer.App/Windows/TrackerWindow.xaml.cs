@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,8 +13,6 @@ using System.Windows.Threading;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-
-using Npgsql.Replication.PgOutput.Messages;
 
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
@@ -226,7 +223,7 @@ namespace Randomizer.App
         {
             var menu = new ContextMenu();
 
-            if (item.TrackingState > 0)
+            if (item.TrackingState > 0 && item.InternalItemType != ItemType.Bow && item.InternalItemType != ItemType.SilverArrows)
             {
                 var untrackItem = new MenuItem
                 {
@@ -323,6 +320,50 @@ namespace Randomizer.App
                 menu.Items.Add(requiredByTR);
                 menu.Items.Add(requiredByMM);
                 menu.Items.Add(requiredByBoth);
+            }
+
+            if (item.InternalItemType is ItemType.Bow or ItemType.SilverArrows)
+            {
+                var bow = Tracker.Items.SingleOrDefault(x => x.InternalItemType == ItemType.Bow);
+                var toggleBow = new MenuItem
+                {
+                    Header = bow.TrackingState > 0 ? "Untrack Bow" : "Track Bow",
+                    Icon = new Image
+                    {
+                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", "bow.png")))
+                    }
+                };
+                toggleBow.Click += (sender, e) =>
+                {
+                    if (bow.TrackingState > 0)
+                        bow.Untrack();
+                    else
+                        bow.Track();
+                    RefreshGridItems();
+                };
+
+                var silverArrows = Tracker.Items.SingleOrDefault(x => x.InternalItemType == ItemType.SilverArrows);
+                var toggleSilverArrows = new MenuItem
+                {
+                    Header = silverArrows.TrackingState > 0 ? "Untrack Silver Arrows" : "Track Silver Arrows",
+                    Icon = new Image
+                    {
+                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", "silver arrows.png")))
+                    }
+                };
+                toggleSilverArrows.Click += (sender, e) =>
+                {
+                    if (silverArrows.TrackingState > 0)
+                        silverArrows.Untrack();
+                    else
+                        silverArrows.Track();
+                    RefreshGridItems();
+                };
+
+                menu.Items.Add(toggleBow);
+                menu.Items.Add(toggleSilverArrows);
             }
 
             return menu.Items.Count > 0 ? menu : null;
