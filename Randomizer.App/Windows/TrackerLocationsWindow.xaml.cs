@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
@@ -41,6 +42,14 @@ namespace Randomizer.App
         private void Tracker_StateLoaded(object sender, EventArgs e)
         {
             DataContext = new TrackerViewModel(Tracker);
+
+            // If we loaded a state, we need to resetup the map window to point to the latest tracker view model
+            if (Application.Current.Windows.OfType<TrackerMapWindow>().Any())
+            {
+                TrackerMapWindow trackerMapWindow = Application.Current.Windows.OfType<TrackerMapWindow>().First();
+                trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)DataContext);
+                trackerMapWindow.TrackerMapViewModel.OnPropertyChanged();
+            }
         }
     }
 }
