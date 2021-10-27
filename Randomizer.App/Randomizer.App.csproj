@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <Folder Include="Sprites\Items\" />
+    <Folder Include="Sprites\Maps\" />
   </ItemGroup>
 
   <ItemGroup>

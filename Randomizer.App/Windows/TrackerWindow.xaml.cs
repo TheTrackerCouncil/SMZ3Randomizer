@@ -11,8 +11,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+using Randomizer.App.ViewModels;
 
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
@@ -29,18 +31,21 @@ namespace Randomizer.App
         private readonly DispatcherTimer _dispatcherTimer;
         private readonly TrackerFactory _trackerFactory;
         private readonly ILogger<TrackerWindow> _logger;
+        private readonly IServiceProvider _serviceProvider;
         private bool _pegWorldMode;
         private DateTime _startTime;
 
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
+        private TrackerMapWindow _trackerMapWindow;
 
         private TimeSpan _elapsedTime;
 
-        public TrackerWindow(TrackerFactory trackerFactory, ILogger<TrackerWindow> logger)
+        public TrackerWindow(IServiceProvider serviceProvider, TrackerFactory trackerFactory, ILogger<TrackerWindow> logger)
         {
             InitializeComponent();
 
+            _serviceProvider = serviceProvider;
             _trackerFactory = trackerFactory;
             _logger = logger;
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
@@ -412,6 +417,11 @@ namespace Randomizer.App
 
             _locationsWindow = new TrackerLocationsWindow(Tracker);
             _locationsWindow.Show();
+
+            var scope = _serviceProvider.CreateScope();
+            _trackerMapWindow = scope.ServiceProvider.GetRequiredService<TrackerMapWindow>();
+            _trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)_locationsWindow.DataContext);
+            _trackerMapWindow.Show();
         }
 
         private void InitializeTracker()
@@ -509,6 +519,10 @@ namespace Randomizer.App
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            _locationsWindow.Close();
+            _locationsWindow = null;
+            _trackerMapWindow.Close();
+            _trackerMapWindow = null;
             Tracker?.Dispose();
         }
 
@@ -616,6 +630,27 @@ namespace Randomizer.App
             {
                 _startTime = DateTime.Now - _elapsedTime;
                 _dispatcherTimer.Start();
+            }
+        }
+
+        private void MapMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.OfType<TrackerMapWindow>().Any())
+            {
+                _trackerMapWindow.Activate();
+            }
+            else
+            {
+                // The tracker map is reliant on the tracker locations window, so pull it up in the background if it doesn't exist
+                if (!Application.Current.Windows.OfType<TrackerLocationsWindow>().Any())
+                {
+                    _locationsWindow = new TrackerLocationsWindow(Tracker);
+                }
+
+                var scope = _serviceProvider.CreateScope();
+                _trackerMapWindow = scope.ServiceProvider.GetRequiredService<TrackerMapWindow>();
+                _trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)_locationsWindow.DataContext);
+                _trackerMapWindow.Show();
             }
         }
     }
