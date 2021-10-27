@@ -35,6 +35,9 @@
         <MenuItem Header="_Locations"
                   x:Name="LocationsMenuItem"
                   Click="LocationsMenuItem_Click" />
+        <MenuItem Header="_Map"
+                  x:Name="MapMenuItem"
+                  Click="MapMenuItem_Click"/>
         <MenuItem Header="_Help"
                   x:Name="HelpMenuItem"
                   Click="HelpMenuItem_Click" />

@@ -125,11 +125,19 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public IEnumerable<Location> AllLocations
+        {
+            get
+            {
+                return World.Regions.SelectMany(x => x.Locations).ToImmutableList();
+            }
+        }
+
         protected World World { get; }
 
-        protected Progression Progression => _tracker?.GetProgression() ?? new();
+        public Progression Progression => _tracker?.GetProgression() ?? new();
 
-        protected Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new();
+        public Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new();
 
         private Func<Region, bool> RegionFilterCondition => Filter switch
         {

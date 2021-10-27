@@ -25,9 +25,10 @@ namespace Randomizer.App
         {
             var configFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer");
             var trackerConfigPath = Path.Combine(configFolder, "tracker.json");
+            var mapConfigPath = Path.Combine(configFolder, "map.json");
 
             services.AddSingleton<Smz3Randomizer>();
-            services.AddTracker<Smz3Randomizer>(trackerConfigPath)
+            services.AddTracker<Smz3Randomizer>(trackerConfigPath, mapConfigPath)
                 .AddOptionalModule<PegWorldModeModule>();
             services.AddWindows<App>();
         }
