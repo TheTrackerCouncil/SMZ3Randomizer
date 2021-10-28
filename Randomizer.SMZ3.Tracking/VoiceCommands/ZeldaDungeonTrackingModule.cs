@@ -34,10 +34,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 tracker.SetUnmarkedDungeonReward(RewardItem.Crystal, result.Confidence);
             });
 
-            AddCommand("Clear dungeon", GetClearDungeonRule(), (tracker, result) =>
+            AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (tracker, result) =>
             {
-                var dungeon = GetDungeonFromResult(tracker, result);
-                tracker.ClearDungeon(dungeon, result.Confidence);
+                ZeldaDungeon dungeon;
+                if (result.Semantics.ContainsKey(DungeonKey))
+                    dungeon = GetDungeonFromResult(tracker, result);
+                else if (result.Semantics.ContainsKey(BossKey))
+                    dungeon = GetBossDungeonFromResult(tracker, result);
+                else
+                    throw new Exception("Command did not contain any recognized boss or dungeon.");
+
+                tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
             });
 
             AddCommand("Mark dungeon medallion", GetMarkDungeonRequirementRule(), (tracker, result) =>
@@ -84,11 +91,29 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetClearDungeonRule()
         {
+            var bossNames = GetBossNames();
             var dungeonNames = GetDungeonNames();
-            return new GrammarBuilder()
+
+            var markDungeon = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("clear")
-                .Append(DungeonKey, dungeonNames);
+                .Append("mark")
+                .Append(DungeonKey, dungeonNames)
+                .Append("as")
+                .OneOf("cleared", "beaten");
+
+            var beatBoss = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("clear", "I beat", "I defeated", "beat off")
+                .Append(BossKey, bossNames);
+
+            var markBoss = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Append("mark")
+                .Append(BossKey, bossNames)
+                .Append("as")
+                .OneOf("cleared", "beaten", "beaten off");
+
+            return GrammarBuilder.Combine(markDungeon, beatBoss, markBoss);
         }
 
         private GrammarBuilder GetMarkDungeonRequirementRule()

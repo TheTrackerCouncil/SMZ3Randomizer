@@ -227,7 +227,7 @@ namespace Randomizer.App
                 }
                 else if (image.Tag is ZeldaDungeon dungeon)
                 {
-                    Tracker.ClearDungeon(dungeon);
+                    Tracker.MarkDungeonAsCleared(dungeon);
                 }
                 else if (image.Tag is Peg peg)
                 {

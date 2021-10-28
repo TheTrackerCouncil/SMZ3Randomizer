@@ -940,12 +940,12 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon that was cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void ClearDungeon(ZeldaDungeon dungeon, float? confidence = null)
+        public void MarkDungeonAsCleared(ZeldaDungeon dungeon, float? confidence = null)
         {
             dungeon.Cleared = true;
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
 
-            // Clear and track remaining treasure
+            // Clear remaining treasure
             var clearedItems = 0;
             var remainingLocations = dungeon.GetRegion(World).Locations
                 .Where(x => !x.Cleared)
@@ -953,14 +953,10 @@ namespace Randomizer.SMZ3.Tracking
             foreach (var location in remainingLocations)
             {
                 location.Cleared = true;
-
                 if (location.Item != null)
                 {
                     if (!location.Item.IsDungeonItem)
                         clearedItems++;
-
-                    Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)
-                        ?.Track();
                 }
             }
 
@@ -974,15 +970,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 dungeon.Cleared = false;
                 foreach (var location in remainingLocations)
-                {
                     location.Cleared = false;
-                    if (location.Item != null)
-                    {
-                        var item = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
-                        if (item != null)
-                            item.TrackingState--;
-                    }
-                }
             });
         }
 

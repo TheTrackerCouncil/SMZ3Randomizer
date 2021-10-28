@@ -737,7 +737,7 @@
     {
       "Name": [ "Misery Mire" ],
       "Abbreviation": "MM",
-      "Boss": "Vitreous",
+      "Boss": [ "Vitreous", "Psychedelic Eyeball" ],
       "TreasureRemaining": 2,
       "Column": 8,
       "Row": 5
@@ -890,12 +890,12 @@
       "You did that already."
     ],
     "DungeonCleared": [
-      "Cleared {0}.",
-      [ "Marked {1} as defeated.", 0.5 ],
-      [ "Congratulations on beating off {1}.", 0.5 ]
+      "Marked {0} as cleared.",
+      "Marked {1} as defeated.",
+      "Congratulations on beating off {1}."
     ],
     "DungeonClearedTreasuresCleared": [
-      "Cleared {0} items"
+      "Cleared {0} remaining treasure"
     ],
     "DungeonRequirementMarked": [
       "Marked {0} as required for {1}"

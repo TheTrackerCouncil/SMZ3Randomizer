@@ -19,6 +19,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected const string DungeonKey = "DungeonName";
 
         /// <summary>
+        /// Gets the semantic result key used to identify the name of a boss.
+        /// </summary>
+        protected const string BossKey = "BossName";
+
+        /// <summary>
         /// Gets the semantic result key used to identify the name of an item.
         /// </summary>
         protected const string ItemNameKey = "ItemName";
@@ -99,6 +104,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var dungeonName = (string)result.Semantics[DungeonKey].Value;
             var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase));
             return dungeon ?? throw new Exception($"Could not find recognized dungeon '{dungeonName}'.");
+        }
+
+        /// <summary>
+        /// Returns the <see cref="ZeldaDungeon"/> that was detected in a voice
+        /// command using <see cref="BossKey"/>.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <returns>
+        /// A <see cref="ZeldaDungeon"/> from the recognition result.
+        /// </returns>
+        protected static ZeldaDungeon GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        {
+            var bossName = (string)result.Semantics[BossKey].Value;
+            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Boss.Contains(bossName, StringComparison.OrdinalIgnoreCase));
+            return dungeon ?? throw new Exception($"Could not find dungeon with recognized boss name '{bossName}'.");
         }
 
         /// <summary>
@@ -289,6 +310,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             foreach (var dungeon in Tracker.Dungeons)
             {
                 foreach (var name in dungeon.Name)
+                    dungeonNames.Add(new SemanticResultValue(name.Text, name.Text));
+            }
+
+            return dungeonNames;
+        }
+
+        /// <summary>
+        /// Gets the names of dungeon bosses for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible boss
+        /// names.
+        /// </returns>
+        protected virtual Choices GetBossNames()
+        {
+            var dungeonNames = new Choices();
+            foreach (var dungeon in Tracker.Dungeons)
+            {
+                foreach (var name in dungeon.Boss)
                     dungeonNames.Add(new SemanticResultValue(name.Text, name.Text));
             }
 
