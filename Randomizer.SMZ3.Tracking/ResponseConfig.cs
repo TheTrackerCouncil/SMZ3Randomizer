@@ -246,7 +246,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <c>{0}</c> is a placeholder for the amount of items that were
         /// tracked.
         /// </remarks>
-        public SchrodingersString DungeonClearedTreasuresCleared { get; init; }
+        public SchrodingersString DungeonClearedTreasuresRemaining { get; init; }
             = new SchrodingersString("Cleared {0} items.");
 
         /// <summary>

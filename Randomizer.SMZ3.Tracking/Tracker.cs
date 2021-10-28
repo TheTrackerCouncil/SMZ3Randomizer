@@ -946,23 +946,20 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
 
             // Clear remaining treasure
-            var clearedItems = 0;
+            var remainingTreasure = 0;
             var remainingLocations = dungeon.GetRegion(World).Locations
                 .Where(x => !x.Cleared)
                 .ToImmutableList();
             foreach (var location in remainingLocations)
             {
-                location.Cleared = true;
-                if (location.Item != null)
-                {
-                    if (!location.Item.IsDungeonItem)
-                        clearedItems++;
-                }
+                //location.Cleared = true;
+                if (location.Item != null && !location.Item.IsDungeonItem)
+                    remainingTreasure++;
             }
 
-            if (clearedItems > 0)
+            if (remainingTreasure > 0)
             {
-                Say(Responses.DungeonClearedTreasuresCleared.Format(clearedItems));
+                Say(Responses.DungeonClearedTreasuresRemaining.Format(remainingTreasure));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
