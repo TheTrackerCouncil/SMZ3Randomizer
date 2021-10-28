@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+
 using Randomizer.App.ViewModels;
 
 using Randomizer.SMZ3;
@@ -32,14 +34,13 @@ namespace Randomizer.App
         private readonly TrackerFactory _trackerFactory;
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly List<object> _mouseDownSenders = new();
         private bool _pegWorldMode;
         private DateTime _startTime;
-
+        private TimeSpan _elapsedTime;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
-
-        private TimeSpan _elapsedTime;
 
         public TrackerWindow(IServiceProvider serviceProvider, TrackerFactory trackerFactory, ILogger<TrackerWindow> logger)
         {
@@ -135,6 +136,7 @@ namespace Randomizer.App
 
                     var image = GetGridItemControl(fileName, peg.Column, peg.Row);
                     image.Tag = peg;
+                    image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
                     TrackerGrid.Children.Add(image);
                 }
@@ -151,6 +153,7 @@ namespace Randomizer.App
                     var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value, overlay);
                     image.Tag = item;
                     image.ContextMenu = CreateContextMenu(item);
+                    image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
                     image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
                     TrackerGrid.Children.Add(image);
@@ -165,6 +168,7 @@ namespace Randomizer.App
                         "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
                     var image = GetGridItemControl(rewardPath, dungeon.Column.Value, dungeon.Row.Value, overlayPath);
                     image.Tag = dungeon;
+                    image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
                     image.ContextMenu = CreateContextMenu(dungeon);
                     image.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
@@ -205,8 +209,16 @@ namespace Randomizer.App
             }
         }
 
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _mouseDownSenders.Add(sender);
+        }
+
         private void Image_LeftClick(object sender, MouseButtonEventArgs e)
         {
+            if (!_mouseDownSenders.Remove(sender))
+                return;
+
             if (sender is Image image)
             {
                 if (image.Tag is ItemData item)
@@ -479,7 +491,7 @@ namespace Randomizer.App
                 UpdateStats(e);
                 RefreshGridItems();
             });
-            Tracker.StateLoaded += (sender, e) => Dispatcher.Invoke(() =>
+            Tracker.StateLoaded += (sender, e) => Dispatcher.Invoke(async () =>
             {
                 RefreshGridItems();
                 ResetGridSize();
@@ -641,7 +653,8 @@ namespace Randomizer.App
             }
             else
             {
-                // The tracker map is reliant on the tracker locations window, so pull it up in the background if it doesn't exist
+                // The tracker map is reliant on the tracker locations window,
+                // so pull it up in the background if it doesn't exist
                 if (!Application.Current.Windows.OfType<TrackerLocationsWindow>().Any())
                 {
                     _locationsWindow = new TrackerLocationsWindow(Tracker);
