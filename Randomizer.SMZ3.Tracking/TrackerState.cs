@@ -164,7 +164,7 @@ namespace Randomizer.SMZ3.Tracking
                 var location = world.Locations.SingleOrDefault(x => x.Id == locationState.Id)
                     ?? throw new ArgumentException($"Could not find location with ID {locationState.Id}.", nameof(tracker));
 
-                location.Item = locationState.Item != null ? new Item(locationState.Item.Value) : null;
+                location.Item = locationState.Item != null ? new Item(locationState.Item.Value, world) : null;
                 location.Cleared = locationState.Cleared;
             }
 

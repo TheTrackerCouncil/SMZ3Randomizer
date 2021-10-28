@@ -673,6 +673,7 @@ namespace Randomizer.SMZ3.Tracking
                 undoTrackTreasure = _undoHistory.Pop();
 
             // Check if we can remove something from the marked location
+            // TODO: include region/dungeon check before TrySingle
             var location = World.Locations.TrySingle(x => x.ItemIs(item.InternalItemType, World));
             if (location != null && dungeon.Is(location.Region))
             {
