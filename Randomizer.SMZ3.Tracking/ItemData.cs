@@ -58,6 +58,18 @@ namespace Randomizer.SMZ3.Tracking
         public bool Multiple { get; init; }
 
         /// <summary>
+        /// Gets the number the item counter should be multiplied with, in the
+        /// case of items that can be tracked more than once.
+        /// </summary>
+        public int? CounterMultiplier { get; init; }
+
+        /// <summary>
+        /// Gets the number of actual items as displayed or mentioned by
+        /// tracker, or <c>0</c> if the item does not have copies.
+        /// </summary>
+        public int Counter => Multiple && !HasStages ? TrackingState * (CounterMultiplier ?? 1) : 0;
+
+        /// <summary>
         /// Gets the stages and their names of a progressive item.
         /// </summary>
         public IReadOnlyDictionary<int, SchrodingersString>? Stages { get; init; }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -58,6 +58,14 @@ namespace Randomizer.App
             }, Dispatcher);
         }
 
+        protected enum Origin
+        {
+            TopLeft = 0,
+            TopRight = 1,
+            BottomLeft = 2,
+            BottomRight = 3
+        }
+
         public TrackerOptions Options { get; set; }
 
         public Tracker Tracker { get; private set; }
@@ -88,22 +96,83 @@ namespace Randomizer.App
             return null;
         }
 
+        protected static Image GetGridItemControl(string imageFileName, int column, int row, string overlayFileName)
+            => GetGridItemControl(imageFileName, column, row, new Overlay(overlayFileName, 0, 0));
+
+        protected static Image GetGridItemControl(string imageFileName, int column, int row, int counter, string overlayFileName)
+        {
+            var overlays = new List<Overlay>();
+            if (overlayFileName != null)
+                overlays.Add(new(overlayFileName, 0, 0));
+
+            if (counter > 9)
+            {
+                var tensDigit = counter / 10 % 10;
+                overlays.Add(new(GetDigitMarkFileName(tensDigit), 0, 0)
+                {
+                    OriginPoint = Origin.BottomLeft
+                });
+
+                // Digit images are 10px wide, but we overlap the 2 black pixels
+                // in the border
+                var digit = counter % 10;
+                overlays.Add(new(GetDigitMarkFileName(digit), 8, 0)
+                {
+                    OriginPoint = Origin.BottomLeft
+                });
+            }
+            else if (counter > 1)
+            {
+                var digit = counter % 10;
+                overlays.Add(new(GetDigitMarkFileName(digit), 0, 0)
+                {
+                    OriginPoint = Origin.BottomLeft
+                });
+            }
+
+            return GetGridItemControl(imageFileName, column, row, overlays.ToArray());
+
+            static string GetDigitMarkFileName(int digit) => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "Sprites", "Marks", $"{digit % 10}.png");
+        }
+
         protected static Image GetGridItemControl(string imageFileName, int column, int row,
-                    string overlayFileName = null, double overlayOffsetX = 0, double overlayOffsetY = 0)
+            params Overlay[] overlays)
         {
             var bitmapImage = new BitmapImage(new Uri(imageFileName));
-            if (overlayFileName == null)
+            if (overlays.Length == 0)
             {
                 return GetGridItemControl(bitmapImage, column, row);
             }
 
-            var overlayImage = new BitmapImage(new Uri(overlayFileName));
             var drawingGroup = new DrawingGroup();
             drawingGroup.Children.Add(new ImageDrawing(bitmapImage,
-                new Rect(0, 0, bitmapImage.PixelWidth, bitmapImage.PixelHeight)));
-            drawingGroup.Children.Add(new ImageDrawing(overlayImage,
-                new Rect(overlayOffsetX, overlayOffsetY, overlayImage.PixelWidth, overlayImage.PixelHeight)));
+                new Rect(0, 0, GridItemPx, GridItemPx)));
+
+            foreach (var overlay in overlays)
+            {
+                var overlayImage = new BitmapImage(new Uri(overlay.FileName));
+                var x = OffsetX(overlay.X, overlayImage.PixelWidth, overlay.OriginPoint);
+                var y = OffsetY(overlay.Y, overlayImage.PixelHeight, overlay.OriginPoint);
+                drawingGroup.Children.Add(new ImageDrawing(overlayImage,
+                    new Rect(x, y, overlayImage.PixelWidth, overlayImage.PixelHeight)));
+            }
+
             return GetGridItemControl(new DrawingImage(drawingGroup), column, row);
+
+            int OffsetX(int x, int width, Origin origin) => origin switch
+            {
+                Origin.TopLeft or Origin.BottomLeft => x,
+                Origin.TopRight or Origin.BottomRight => GridItemPx - width - x,
+                _ => throw new InvalidEnumArgumentException(nameof(origin), (int)origin, typeof(Origin))
+            };
+
+            int OffsetY(int y, int height, Origin origin) => origin switch
+            {
+                Origin.TopLeft or Origin.TopRight => y,
+                Origin.BottomLeft or Origin.BottomRight => GridItemPx - height - y,
+                _ => throw new InvalidEnumArgumentException(nameof(origin), (int)origin, typeof(Origin))
+            };
         }
 
         protected static Image GetGridItemControl(ImageSource imageSource, int column, int row)
@@ -146,11 +215,13 @@ namespace Randomizer.App
                 foreach (var item in Tracker.Items.Where(x => x.Column != null && x.Row != null))
                 {
                     var fileName = GetItemSpriteFileName(item);
-                    var overlay = GetOverlayImageFileName(item, Tracker.Dungeons);
+                    var overlay = GetOverlayImageFileName(item);
                     if (fileName == null)
                         continue;
 
-                    var image = GetGridItemControl(fileName, item.Column.Value, item.Row.Value, overlay);
+                    var image = GetGridItemControl(fileName,
+                        item.Column.Value, item.Row.Value,
+                        item.Counter, overlay);
                     image.Tag = item;
                     image.ContextMenu = CreateContextMenu(item);
                     image.MouseLeftButtonDown += Image_MouseDown;
@@ -166,7 +237,9 @@ namespace Randomizer.App
 
                     var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
-                    var image = GetGridItemControl(rewardPath, dungeon.Column.Value, dungeon.Row.Value, overlayPath);
+                    var image = GetGridItemControl(rewardPath,
+                        dungeon.Column.Value, dungeon.Row.Value,
+                        dungeon.TreasureRemaining, overlayPath);
                     image.Tag = dungeon;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
@@ -178,19 +251,19 @@ namespace Randomizer.App
             }
         }
 
-        private static string GetOverlayImageFileName(ItemData item, IEnumerable<ZeldaDungeon> dungeons)
+        private string GetOverlayImageFileName(ItemData item)
         {
-            return item.InternalItemType switch
+            return item switch
             {
-                ItemType.Bombos => GetMatchingDungeonNameImages(Medallion.Bombos, dungeons),
-                ItemType.Ether => GetMatchingDungeonNameImages(Medallion.Ether, dungeons),
-                ItemType.Quake => GetMatchingDungeonNameImages(Medallion.Quake, dungeons),
+                { InternalItemType: ItemType.Bombos } => GetMatchingDungeonNameImages(Medallion.Bombos),
+                { InternalItemType: ItemType.Ether } => GetMatchingDungeonNameImages(Medallion.Ether),
+                { InternalItemType: ItemType.Quake } => GetMatchingDungeonNameImages(Medallion.Quake),
                 _ => null
             };
 
-            static string GetMatchingDungeonNameImages(Medallion requirement, IEnumerable<ZeldaDungeon> dungeons)
+            string GetMatchingDungeonNameImages(Medallion requirement)
             {
-                var names = dungeons.Where(x => x.Requirement == requirement)
+                var names = Tracker.Dungeons.Where(x => x.Requirement == requirement)
                     .Select(x => x.Name[0])
                     .ToList();
 
@@ -665,6 +738,11 @@ namespace Randomizer.App
                 _trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)_locationsWindow.DataContext);
                 _trackerMapWindow.Show();
             }
+        }
+
+        protected record Overlay(string FileName, int X, int Y)
+        {
+            public Origin OriginPoint { get; init; }
         }
     }
 }

@@ -581,18 +581,37 @@
       "Row": 3
     },
     {
-      "Name": [ "Missile", "Missiles", "Missile pack" ],
-      "Plural": [ "Missiles", "Missile packs" ],
+      "Name": [
+        "Missile",
+        "Missiles",
+        [ "Missile pack", 0 ]
+      ],
+      "Plural": [
+        "Missiles",
+        [ "Missile packs", 0 ]
+      ],
       "InternalItemType": 194,
       "Multiple": true,
+      "CounterMultiplier": 5,
       "Column": 7,
       "Row": 4
     },
     {
-      "Name": [ "Super Missile", "Supers", "Superb Missiles", "Super Missile pack" ],
-      "Plural": [ "Super Missiles", "Supers", "Superb Missiles", "Super Missile packs" ],
+      "Name": [
+        "Super Missile",
+        "Supers",
+        "Superb Missiles",
+        [ "Super Missile pack", 0 ]
+      ],
+      "Plural": [
+        "Super Missiles",
+        "Supers",
+        "Superb Missiles",
+        [ "Super Missile packs", 0 ]
+      ],
       "InternalItemType": 195,
       "Multiple": true,
+      "CounterMultiplier": 5,
       "Column": 8,
       "Row": 4
     },
@@ -601,6 +620,7 @@
       "Plural": [ "Power Bombs", "Powerful Bombs" ],
       "InternalItemType": 196,
       "Multiple": true,
+      "CounterMultiplier": 5,
       "Column": 9,
       "Row": 4
     },
