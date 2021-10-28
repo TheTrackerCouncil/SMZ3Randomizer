@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             Name = name;
             Abbreviation = abbreviation;
-            Boss = boss;
+            Boss = boss ?? new();
         }
 
         /// <summary>
@@ -49,6 +49,13 @@ namespace Randomizer.SMZ3.Tracking
         /// display the dungeon.
         /// </summary>
         public int? Row { get; set; }
+
+        /// <summary>
+        /// Gets the ID of the location that represents the item rewarded by
+        /// defeating the boss, or <c>null</c> if the dungeon has item reward
+        /// for beating the boss.
+        /// </summary>
+        public int? LocationId { get; init; }
 
         /// <summary>
         /// Gets or sets the type of pendant or crystal you are rewarded with

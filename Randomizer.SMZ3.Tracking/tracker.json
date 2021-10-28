@@ -676,7 +676,8 @@
       "Boss": "Armos Knights",
       "TreasureRemaining": 3,
       "Column": 0,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 364
     },
     {
       "Name": [ "Desert Palace", "Dessert Palace" ],
@@ -684,7 +685,8 @@
       "Boss": "Lanmolas",
       "TreasureRemaining": 2,
       "Column": 1,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 370
     },
     {
       "Name": [ "Tower of Hera" ],
@@ -692,7 +694,8 @@
       "Boss": "Moldorm",
       "TreasureRemaining": 2,
       "Column": 2,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 376
     },
     {
       "Name": [ "Thieves' Town" ],
@@ -700,7 +703,8 @@
       "Boss": "Blind",
       "TreasureRemaining": 4,
       "Column": 3,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 416
     },
     {
       "Name": [ "Palace of Darkness", "Dark Palace" ],
@@ -708,7 +712,8 @@
       "Boss": "Helmasaur King",
       "TreasureRemaining": 5,
       "Column": 4,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 390
     },
     {
       "Name": [ "Swamp Palace" ],
@@ -716,7 +721,8 @@
       "Boss": "Arrghus",
       "TreasureRemaining": 6,
       "Column": 5,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 400
     },
     {
       "Name": [ "Skull Woods", "Skill Woods" ],
@@ -724,7 +730,8 @@
       "Boss": "Mothula",
       "TreasureRemaining": 2,
       "Column": 6,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 408
     },
     {
       "Name": [ "Ice Palace" ],
@@ -732,7 +739,8 @@
       "Boss": "Kholdstare",
       "TreasureRemaining": 3,
       "Column": 7,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 424
     },
     {
       "Name": [ "Misery Mire" ],
@@ -740,7 +748,8 @@
       "Boss": [ "Vitreous", "Psychedelic Eyeball" ],
       "TreasureRemaining": 2,
       "Column": 8,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 432
     },
     {
       "Name": [ "Turtle Rock" ],
@@ -748,18 +757,17 @@
       "Boss": "Trinexx",
       "TreasureRemaining": 5,
       "Column": 9,
-      "Row": 5
+      "Row": 5,
+      "LocationId": 444
     },
     {
       "Name": [ "Ganon's Tower" ],
       "Abbreviation": "GT",
-      "Boss": "Ganon",
       "TreasureRemaining": 20
     },
     {
       "Name": [ "Hyrule Castle" ],
       "Abbreviation": "HC",
-      "Boss": "Nobody",
       "TreasureRemaining": 6
     }
   ],
@@ -893,9 +901,6 @@
       "Marked {0} as cleared.",
       "Marked {1} as defeated.",
       "Congratulations on beating off {1}."
-    ],
-    "DungeonClearedTreasuresRemaining": [
-      "{0} treasure remaining"
     ],
     "DungeonRequirementMarked": [
       "Marked {0} as required for {1}"

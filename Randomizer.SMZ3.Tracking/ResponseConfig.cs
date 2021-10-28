@@ -239,17 +239,6 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Cleared {0}.", "Marked {1} as defeated.");
 
         /// <summary>
-        /// Gets the phrases to respond with when clearing treasures after
-        /// clearing a dungeon.
-        /// </summary>
-        /// <remarks>
-        /// <c>{0}</c> is a placeholder for the amount of items that were
-        /// tracked.
-        /// </remarks>
-        public SchrodingersString DungeonClearedTreasuresRemaining { get; init; }
-            = new SchrodingersString("Cleared {0} items.");
-
-        /// <summary>
         /// Gets the phrases to respond with when marking the medallion
         /// requirement of a dungeon.
         /// </summary>

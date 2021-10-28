@@ -921,7 +921,7 @@ namespace Randomizer.SMZ3.Tracking
 
             Action? undoTrackTreasure = null;
             var dungeon = Dungeons.SingleOrDefault(x => x.Is(location.Region));
-            if (dungeon != null)
+            if (dungeon != null && location.Item?.IsDungeonItem == false)
             {
                 TrackDungeonTreasure(dungeon);
                 undoTrackTreasure = _undoHistory.Pop();
@@ -945,29 +945,34 @@ namespace Randomizer.SMZ3.Tracking
             dungeon.Cleared = true;
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
 
-            // Clear remaining treasure
-            var remainingTreasure = 0;
-            var remainingLocations = dungeon.GetRegion(World).Locations
-                .Where(x => !x.Cleared)
-                .ToImmutableList();
-            foreach (var location in remainingLocations)
+            // Try to track the associated boss reward item
+            Action? undoTrack = null;
+            if (dungeon.LocationId != null)
             {
-                //location.Cleared = true;
-                if (location.Item != null && !location.Item.IsDungeonItem)
-                    remainingTreasure++;
-            }
+                var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
+                if (rewardLocation.Item != null)
+                {
+                    var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
+                    if (item != null)
+                    {
+                        TrackItem(item, rewardLocation);
+                        undoTrack = _undoHistory.Pop();
+                    }
+                }
 
-            if (remainingTreasure > 0)
-            {
-                Say(Responses.DungeonClearedTreasuresRemaining.Format(remainingTreasure));
+                if (undoTrack == null)
+                {
+                    // Couldn't track an item, so just clear the location
+                    Clear(rewardLocation);
+                    undoTrack = _undoHistory.Pop();
+                }
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
             {
                 dungeon.Cleared = false;
-                foreach (var location in remainingLocations)
-                    location.Cleared = false;
+                undoTrack?.Invoke();
             });
         }
 
@@ -1148,7 +1153,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var dungeon = GetDungeonFromItem(item);
-            if (dungeon != null)
+            if (dungeon != null && !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Map, ItemCategory.Compass))
             {
                 if (TrackDungeonTreasure(dungeon, confidence))
                     return _undoHistory.Pop();
