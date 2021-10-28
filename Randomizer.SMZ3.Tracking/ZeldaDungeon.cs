@@ -82,7 +82,7 @@ namespace Randomizer.SMZ3.Tracking
         public override string ToString() => Name[0];
 
         /// <summary>
-        /// Determines whether the specified region represents the dungeon.
+        /// Determines whether the specified region represents this dungeon.
         /// </summary>
         /// <param name="region">The region to check.</param>
         /// <returns>
@@ -91,6 +91,25 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public bool Is(Region region)
             => Name.Contains(region.Name, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Determines whether the specified area either represents this dungeon
+        /// or is located in this dungeon.
+        /// </summary>
+        /// <param name="area">The area to check.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="area"/> is or is contained in this
+        /// dungeon; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Is(IHasLocations area)
+        {
+            if (area is Region region)
+                return Is(region);
+            else if (area is Room room)
+                return Is(room.Region);
+            else
+                return false;
+        }
 
         /// <summary>
         /// Returns the region that represents this dungeon in the specified
