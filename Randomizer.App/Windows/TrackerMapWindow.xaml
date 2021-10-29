@@ -26,8 +26,8 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <Grid Width="{Binding Size}" Height="{Binding Size}" >
-              <Rectangle Fill="LightGreen" Width="{Binding Size}" Height="{Binding Size}" Stroke="Black" StrokeThickness="2" Visibility="{Binding RectangleVisibility}"/>
-              <Ellipse Fill="DarkOrange" Width="{Binding Size}" Height="{Binding Size}" Stroke="Black" StrokeThickness="2" Visibility="{Binding EllipseVisibility}"/>
+              <Rectangle Fill="{Binding Color}" Width="{Binding Size}" Height="{Binding Size}" Stroke="Black" StrokeThickness="2" Visibility="{Binding RectangleVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Locations}" ToolTip="{Binding Name}" />
+              <Ellipse Fill="{Binding Color}" Width="{Binding Size}" Height="{Binding Size}" Stroke="Black" StrokeThickness="2" Visibility="{Binding EllipseVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Locations}" ToolTip="{Binding Name}" />
             </Grid>
           </DataTemplate>
         </ItemsControl.ItemTemplate>

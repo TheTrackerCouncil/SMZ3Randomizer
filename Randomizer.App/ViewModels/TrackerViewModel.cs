@@ -13,45 +13,21 @@ namespace Randomizer.App.ViewModels
 {
     public class TrackerViewModel : INotifyPropertyChanged
     {
-        private readonly Tracker _tracker;
         private bool _isDesign;
         private LocationFilter _filter;
-        private Region _stickyRegion = null;
-        private bool _showOutOfLogicLocations;
+        private TrackerLocationSyncer _syncer;
 
         public TrackerViewModel()
         {
             _isDesign = DesignerProperties.GetIsInDesignMode(new DependencyObject());
-            World = new World(new Config(), "", 0, "");
+            _syncer = new TrackerLocationSyncer();
         }
 
-        public TrackerViewModel(Tracker tracker)
+        public TrackerViewModel(TrackerLocationSyncer syncer)
         {
-            _tracker = tracker;
-            _tracker.MarkedLocationsUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
-            _tracker.LocationCleared += (_, e) =>
-            {
-                _stickyRegion = e.Location.Region;
-                OnPropertyChanged(nameof(TopLocations));
-                OnPropertyChanged(nameof(MarkedLocations));
-            };
-            _tracker.DungeonUpdated += (_, _) =>
-            {
-                OnPropertyChanged(nameof(TopLocations));
-                OnPropertyChanged(nameof(MarkedLocations));
-            };
-            _tracker.ItemTracked += (_, _) =>
-            {
-                OnPropertyChanged(nameof(TopLocations));
-                OnPropertyChanged(nameof(MarkedLocations));
-            };
-            _tracker.ActionUndone += (_, _) =>
-            {
-                OnPropertyChanged(nameof(TopLocations));
-                OnPropertyChanged(nameof(MarkedLocations));
-            };
-
-            World = tracker.World;
+            _syncer = syncer;
+            _syncer.TrackedLocationUpdated += (_, _) => OnPropertyChanged(nameof(TopLocations));
+            _syncer.MarkedLocationUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -72,16 +48,8 @@ namespace Randomizer.App.ViewModels
 
         public bool ShowOutOfLogicLocations
         {
-            get => _showOutOfLogicLocations;
-            set
-            {
-                if (value != _showOutOfLogicLocations)
-                {
-                    _showOutOfLogicLocations = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(TopLocations));
-                }
-            }
+            get => _syncer.ShowOutOfLogicLocations;
+            set => _syncer.ShowOutOfLogicLocations = value;
         }
 
         public IEnumerable<MarkedLocationViewModel> MarkedLocations
@@ -91,10 +59,10 @@ namespace Randomizer.App.ViewModels
                 if (_isDesign)
                     return GetDummyMarkedLocations();
 
-                return _tracker.MarkedLocations.Select(x =>
+                return _syncer.MarkedLocations.Select(x =>
                 {
-                    var location = World.Locations.Single(location => location.Id == x.Key);
-                    return new MarkedLocationViewModel(location, x.Value, Progression);
+                    var location = _syncer.AllLocations.Single(location => location.Id == x.Key);
+                    return new MarkedLocationViewModel(location, x.Value, _syncer.Progression);
                 });
             }
         }
@@ -103,49 +71,12 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                var regions = World.Regions
-                    .Where(RegionFilterCondition)
-                    .OrderByDescending(x => x.Locations.Count(x => !x.Cleared && x.IsAvailable(Progression)))
-                    .ToList();
-
-                if (_stickyRegion != null && regions.Contains(_stickyRegion))
-                    regions.MoveToTop(x => x == _stickyRegion);
-
-                return regions.SelectMany(x => x.Locations)
-                    .Where(ShouldShowLocation)
-                    .Select(x => new LocationViewModel(x,
-                        Progression,
-                        ProgressionWithKeys,
-                        onClear: () => OnPropertyChanged(nameof(TopLocations))))
+                return _syncer.GetTopLocations(Filter)
+                    .Select(x => new LocationViewModel(x, _syncer))
                     .ToImmutableList();
-
-                bool ShouldShowLocation(Location x) => !x.Cleared && (x.IsAvailable(Progression)
-                                                                      || x.IsAvailable(ProgressionWithKeys)
-                                                                      || ShowOutOfLogicLocations);
             }
         }
 
-        public IEnumerable<Location> AllLocations
-        {
-            get
-            {
-                return World.Regions.SelectMany(x => x.Locations).ToImmutableList();
-            }
-        }
-
-        protected World World { get; }
-
-        public Progression Progression => _tracker?.GetProgression() ?? new();
-
-        public Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new();
-
-        private Func<Region, bool> RegionFilterCondition => Filter switch
-        {
-            LocationFilter.None => _ => true,
-            LocationFilter.ZeldaOnly => x => x is Z3Region,
-            LocationFilter.MetroidOnly => x => x is SMRegion,
-            _ => throw new InvalidEnumArgumentException(nameof(Filter), (int)Filter, typeof(LocationFilter)),
-        };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
                     => PropertyChanged?.Invoke(this, new(propertyName));
@@ -153,14 +84,14 @@ namespace Randomizer.App.ViewModels
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {
             yield return new MarkedLocationViewModel(
-                World.LightWorldSouth.Library,
+                _syncer.World.LightWorldSouth.Library,
                 new ItemData(new("X-Ray Scope"), ItemType.XRay),
-                Progression);
+                _syncer.Progression);
 
             yield return new MarkedLocationViewModel(
-                World.LightWorldNorthEast.ZorasDomain.Zora,
+                _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
                 new ItemData(new("Bullshit"), ItemType.Nothing),
-                Progression);
+                _syncer.Progression);
         }
     }
 }

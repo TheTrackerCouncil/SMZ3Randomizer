@@ -137,6 +137,11 @@ namespace Randomizer.App.ViewModels
         }
 
         /// <summary>
+        /// TrackerLocationSyncer used to keep items synced between both locations and map windows
+        /// </summary>
+        public TrackerLocationSyncer Syncer { get; set; }
+
+        /// <summary>
         /// A list of all tracker map location view models to display on the map
         /// </summary>
         public List<TrackerMapLocationViewModel> TrackerMapLocations
@@ -149,7 +154,7 @@ namespace Randomizer.App.ViewModels
                 if (Debugger.IsAttached)
                 {
                     var test = _currentMap.FullLocations
-                        .Where(mapLoc => TrackerViewModel.AllLocations.Where(loc => mapLoc.MatchesSMZ3Location(loc)).Count() == 0)
+                        .Where(mapLoc => Syncer.AllLocations.Where(loc => mapLoc.MatchesSMZ3Location(loc)).Count() == 0)
                         .Select(mapLoc => mapLoc.Name)
                         .ToList();
 
@@ -161,9 +166,7 @@ namespace Randomizer.App.ViewModels
 
                 return _currentMap.FullLocations
                     .Select(mapLoc => new TrackerMapLocationViewModel(mapLoc,
-                        TrackerViewModel.AllLocations.Where(loc => mapLoc.MatchesSMZ3Location(loc)).ToList(),
-                        TrackerViewModel.Progression,
-                        TrackerViewModel.ProgressionWithKeys,
+                        Syncer,
                         MapSize.Width / CurrentMap.Width))
                     .ToList();
             }
