@@ -34,6 +34,49 @@
       "InternalItemType": 0
     },
     {
+      "Name": [
+        "Kraid",
+        [ "Kraid's Awful Son's Father", 0.01 ]
+      ],
+      "InternalItemType": 0,
+      "Column": 5,
+      "Row": 5
+    },
+    {
+      "Name": [ "Crocomire" ],
+      "Image": "stoke.png",
+      "InternalItemType": 0,
+      "Column": 6,
+      "Row": 5
+    },
+    {
+      "Name": [
+        "Phantoon",
+        [ "Spooky Ghost", 0.25 ]
+      ],
+      "InternalItemType": 0,
+      "Column": 7,
+      "Row": 5
+    },
+    {
+      "Name": [ "Shaktool", "The Shaktool" ],
+      "InternalItemType": 0,
+      "Column": 5,
+      "Row": 6
+    },
+    {
+      "Name": [ "Draygon" ],
+      "InternalItemType": 0,
+      "Column": 6,
+      "Row": 6
+    },
+    {
+      "Name": [ "Ridley" ],
+      "InternalItemType": 0,
+      "Column": 7,
+      "Row": 6
+    },
+    {
       "Name": "Fire Rod",
       "InternalItemType": 7,
       "Column": 0,
@@ -718,20 +761,11 @@
       "LocationId": 376
     },
     {
-      "Name": [ "Thieves' Town" ],
-      "Abbreviation": "TT",
-      "Boss": "Blind",
-      "TreasureRemaining": 4,
-      "Column": 3,
-      "Row": 5,
-      "LocationId": 416
-    },
-    {
       "Name": [ "Palace of Darkness", "Dark Palace" ],
       "Abbreviation": "PD",
       "Boss": "Helmasaur King",
       "TreasureRemaining": 5,
-      "Column": 4,
+      "Column": 3,
       "Row": 5,
       "LocationId": 390
     },
@@ -740,7 +774,7 @@
       "Abbreviation": "SP",
       "Boss": "Arrghus",
       "TreasureRemaining": 6,
-      "Column": 5,
+      "Column": 4,
       "Row": 5,
       "LocationId": 400
     },
@@ -749,17 +783,26 @@
       "Abbreviation": "SW",
       "Boss": "Mothula",
       "TreasureRemaining": 2,
-      "Column": 6,
-      "Row": 5,
+      "Column": 0,
+      "Row": 6,
       "LocationId": 408
+    },
+    {
+      "Name": [ "Thieves' Town" ],
+      "Abbreviation": "TT",
+      "Boss": "Blind",
+      "TreasureRemaining": 4,
+      "Column": 1,
+      "Row": 6,
+      "LocationId": 416
     },
     {
       "Name": [ "Ice Palace" ],
       "Abbreviation": "IP",
       "Boss": "Kholdstare",
       "TreasureRemaining": 3,
-      "Column": 7,
-      "Row": 5,
+      "Column": 2,
+      "Row": 6,
       "LocationId": 424
     },
     {
@@ -767,8 +810,8 @@
       "Abbreviation": "MM",
       "Boss": [ "Vitreous", "Psychedelic Eyeball" ],
       "TreasureRemaining": 2,
-      "Column": 8,
-      "Row": 5,
+      "Column": 3,
+      "Row": 6,
       "LocationId": 432
     },
     {
@@ -776,8 +819,8 @@
       "Abbreviation": "TR",
       "Boss": "Trinexx",
       "TreasureRemaining": 5,
-      "Column": 9,
-      "Row": 5,
+      "Column": 4,
+      "Row": 6,
       "LocationId": 444
     },
     {
