@@ -9,7 +9,8 @@
         d:DataContext="{d:DesignInstance vm:TrackerViewModel, IsDesignTimeCreatable=True}"
         Title="Tracker — Locations — SMZ3 Cas' Randomizer"
         Height="600"
-        Width="450">
+        Width="450"
+        Closing="Window_Closing">
   <Window.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <CollectionViewSource x:Key="topLocations"

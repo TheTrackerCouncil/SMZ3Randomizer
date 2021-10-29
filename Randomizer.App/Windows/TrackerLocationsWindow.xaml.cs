@@ -31,6 +31,8 @@ namespace Randomizer.App
             KeySprite = new BitmapImage(new Uri(Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "Sprites", "Items", "key.png")));
+
+            App.RestoreWindowPositionAndSize(this);
         }
 
         public Tracker Tracker { get; }
@@ -50,6 +52,11 @@ namespace Randomizer.App
                 trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)DataContext);
                 trackerMapWindow.TrackerMapViewModel.OnPropertyChanged();
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            App.SaveWindowPositionAndSize(this);
         }
     }
 }

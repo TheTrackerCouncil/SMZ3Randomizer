@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:Randomizer.App"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TrackerMapViewModel, IsDesignTimeCreatable=True}"
-        Title="Tracker — Map — SMZ3 Cas' Randomizer" Height="450" Width="800" Background="#FF212121" Loaded="Window_Loaded">
+        Title="Tracker — Map — SMZ3 Cas' Randomizer" Height="450" Width="800" Background="#FF212121" Loaded="Window_Loaded"
+        Closing="Window_Closing">
     <DockPanel LastChildFill="True">
         <ComboBox x:Name="MapComboBox" DockPanel.Dock="Top" Margin="0,5,0,5" SelectionChanged="MapComboBox_SelectionChanged" ItemsSource="{Binding MapNames}" Width="200"/>
         <Grid DockPanel.Dock="Bottom" SizeChanged="Grid_SizeChanged" >

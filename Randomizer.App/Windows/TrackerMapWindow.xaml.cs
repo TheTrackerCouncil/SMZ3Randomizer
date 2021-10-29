@@ -58,6 +58,8 @@ namespace Randomizer.App
             TrackerMapViewModel = new TrackerMapViewModel();
             TrackerMapViewModel.MapNames = Maps.Select(x => x.Name).ToList();
             DataContext = TrackerMapViewModel;
+
+            App.RestoreWindowPositionAndSize(this);
         }
 
         /// <summary>
@@ -126,6 +128,11 @@ namespace Randomizer.App
         private void TrackerViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             TrackerMapViewModel.OnPropertyChanged();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            App.SaveWindowPositionAndSize(this);
         }
     }
 }

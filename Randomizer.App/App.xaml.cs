@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Forms.Design.Behavior;
 
 using BunLabs.IO;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -18,8 +20,51 @@ namespace Randomizer.App
     /// </summary>
     public partial class App : Application
     {
+        private const string BaseRegistryKey = "Software\\SMZ3 Cas Randomizer";
+        private const string WindowPositionKey = "Windows";
+
         private IHost _host;
         private ILogger<App> _logger;
+
+        public static void SaveWindowPositionAndSize<TWindow>(TWindow window)
+            where TWindow : Window
+        {
+            using var baseKey = Registry.CurrentUser.CreateSubKey(BaseRegistryKey);
+            using var windowKey = baseKey.CreateSubKey(WindowPositionKey);
+            using var key = windowKey.CreateSubKey(typeof(TWindow).Name);
+            key.SetValue("Width", window.Width, RegistryValueKind.DWord);
+            key.SetValue("Height", window.Height, RegistryValueKind.DWord);
+            key.SetValue("Left", window.Left, RegistryValueKind.DWord);
+            key.SetValue("Top", window.Top, RegistryValueKind.DWord);
+        }
+
+        public static void RestoreWindowPositionAndSize<TWindow>(TWindow window)
+            where TWindow : Window
+        {
+            try
+            {
+                using var baseKey = Registry.CurrentUser.OpenSubKey(BaseRegistryKey);
+                if (baseKey == null)
+                    return;
+
+                using var windowKey = baseKey.OpenSubKey(WindowPositionKey);
+                if (windowKey == null)
+                    return;
+
+                using var key = windowKey.OpenSubKey(typeof(TWindow).Name);
+                if (key == null)
+                    return;
+
+                window.Width = (int)key.GetValue("Width", window.Width);
+                window.Height = (int)key.GetValue("Height", window.Height);
+                window.Left = (int)key.GetValue("Left", window.Left);
+                window.Top = (int)key.GetValue("Top", window.Top);
+            }
+            catch (Exception ex)
+            {
+                // ¯\_(ツ)_/¯
+            }
+        }
 
         protected static void ConfigureServices(IServiceCollection services)
         {

@@ -56,6 +56,8 @@ namespace Randomizer.App
                     ? elapsed.ToString("h':'mm':'ss")
                     : elapsed.ToString("mm':'ss");
             }, Dispatcher);
+
+            App.RestoreWindowPositionAndSize(this);
         }
 
         protected enum Origin
@@ -600,6 +602,7 @@ namespace Randomizer.App
         {
             Tracker.StopTracking();
             _dispatcherTimer.Stop();
+            App.SaveWindowPositionAndSize(this);
         }
 
         private void Window_Closed(object sender, EventArgs e)
