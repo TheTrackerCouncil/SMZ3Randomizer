@@ -153,9 +153,8 @@ namespace Randomizer.App
         /// <param name="location">The SMZ3 location to update</param>
         public void ClearLocation(Location location)
         {
-            location.Cleared = true;
+            _tracker.Clear(location);
             _stickyRegion = location.Region;
-            OnLocationUpdated(location.Name);
         }
 
         /// <summary>
@@ -164,9 +163,8 @@ namespace Randomizer.App
         /// <param name="locations">A list of SMZ3 locations to update</param>
         public void ClearLocations(List<Location> locations)
         {
-            locations.ForEach(x => x.Cleared = true);
+            locations.ForEach(x => _tracker.Clear(x));
             if (locations.Select(x => x.Region).Count() == 1) _stickyRegion = locations.First().Region;
-            OnLocationUpdated();
         }
 
         public Dictionary<int, ItemData> MarkedLocations =>  _tracker?.MarkedLocations;
