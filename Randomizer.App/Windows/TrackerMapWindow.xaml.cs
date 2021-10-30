@@ -17,6 +17,7 @@ using Randomizer.SMZ3.Tracking;
 using System.IO;
 using Randomizer.App.ViewModels;
 using System.ComponentModel;
+using Randomizer.SMZ3;
 
 namespace Randomizer.App
 {
@@ -26,6 +27,7 @@ namespace Randomizer.App
     public partial class TrackerMapWindow : Window
     {
         private ILogger<TrackerMapWindow> _logger;
+        private TrackerLocationSyncer _syncer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerMapWindow"/> class to display the map of accessible
@@ -77,15 +79,18 @@ namespace Randomizer.App
         /// </summary>
         public TrackerMapViewModel TrackerMapViewModel { get; set; }
 
-        /// <summary>
-        /// Connects the regular tracker and map view models so that we can update when
-        /// it updates
-        /// </summary>
-        /// <param name="trackerViewModel">The regular tracker view model</param>
-        public void SetupTrackerViewModel (TrackerViewModel trackerViewModel)
+        public TrackerLocationSyncer Syncer
         {
-            TrackerMapViewModel.TrackerViewModel = trackerViewModel;
-            trackerViewModel.PropertyChanged += TrackerViewModel_PropertyChanged;
+            get
+            {
+                return _syncer;
+            }
+            set
+            {
+                TrackerMapViewModel.Syncer = value;
+                value.TrackedLocationUpdated += PropertyChanged;
+                _syncer = value;
+            }
         }
 
         /// <summary>
@@ -125,7 +130,7 @@ namespace Randomizer.App
             TrackerMapViewModel.CurrentMap = CurrentMap;
         }
 
-        private void TrackerViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             TrackerMapViewModel.OnPropertyChanged();
         }
@@ -133,6 +138,21 @@ namespace Randomizer.App
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             App.SaveWindowPositionAndSize(this);
+        }
+
+        /// <summary>
+        /// Called when a location is clicked on the map to clear out all affiliated SMZ3 locations
+        /// </summary>
+        /// <param name="sender">The rectangle/ellipse that was clicked</param>
+        /// <param name="e"></param>
+        private void Location_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Because we have to do this a gross way, let's at least be sure this is originating from the correct object with Location data
+            if (sender.GetType() != typeof(Rectangle) && sender.GetType() != typeof(Ellipse)) return;
+            Shape shape = (Shape)sender;
+            if (shape.Tag.GetType() != typeof(List<Location>)) return;
+            List<Location> locations = (List<Location>)((Shape)sender).Tag;
+            Syncer.ClearLocations(locations);
         }
     }
 }

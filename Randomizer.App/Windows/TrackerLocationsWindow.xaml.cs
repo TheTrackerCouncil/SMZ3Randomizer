@@ -16,11 +16,9 @@ namespace Randomizer.App
     /// </summary>
     public partial class TrackerLocationsWindow : Window
     {
-        public TrackerLocationsWindow(Tracker tracker)
+        public TrackerLocationsWindow(TrackerLocationSyncer syncer)
         {
-            Tracker = tracker;
-            Tracker.StateLoaded += Tracker_StateLoaded;
-            DataContext = new TrackerViewModel(tracker);
+            DataContext = new TrackerViewModel(syncer);
 
             InitializeComponent();
 
@@ -35,24 +33,9 @@ namespace Randomizer.App
             App.RestoreWindowPositionAndSize(this);
         }
 
-        public Tracker Tracker { get; }
-
         public ImageSource ChestSprite { get; }
 
         public ImageSource KeySprite { get; }
-
-        private void Tracker_StateLoaded(object sender, EventArgs e)
-        {
-            DataContext = new TrackerViewModel(Tracker);
-
-            // If we loaded a state, we need to resetup the map window to point to the latest tracker view model
-            if (Application.Current.Windows.OfType<TrackerMapWindow>().Any())
-            {
-                TrackerMapWindow trackerMapWindow = Application.Current.Windows.OfType<TrackerMapWindow>().First();
-                trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)DataContext);
-                trackerMapWindow.TrackerMapViewModel.OnPropertyChanged();
-            }
-        }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

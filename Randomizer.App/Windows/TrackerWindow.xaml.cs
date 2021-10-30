@@ -41,6 +41,7 @@ namespace Randomizer.App
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
+        private TrackerLocationSyncer _locationSyncer;
 
         public TrackerWindow(IServiceProvider serviceProvider, TrackerFactory trackerFactory, ILogger<TrackerWindow> logger)
         {
@@ -502,12 +503,14 @@ namespace Randomizer.App
             _startTime = DateTime.Now;
             _dispatcherTimer.Start();
 
-            _locationsWindow = new TrackerLocationsWindow(Tracker);
+            _locationSyncer = new TrackerLocationSyncer(Tracker);
+
+            _locationsWindow = new TrackerLocationsWindow(_locationSyncer);
             _locationsWindow.Show();
 
             var scope = _serviceProvider.CreateScope();
             _trackerMapWindow = scope.ServiceProvider.GetRequiredService<TrackerMapWindow>();
-            _trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)_locationsWindow.DataContext);
+            _trackerMapWindow.Syncer = _locationSyncer;
             _trackerMapWindow.Show();
         }
 
@@ -622,7 +625,7 @@ namespace Randomizer.App
             }
             else
             {
-                _locationsWindow = new TrackerLocationsWindow(Tracker);
+                _locationsWindow = new TrackerLocationsWindow(_locationSyncer);
                 _locationsWindow.Show();
             }
         }
@@ -729,16 +732,9 @@ namespace Randomizer.App
             }
             else
             {
-                // The tracker map is reliant on the tracker locations window,
-                // so pull it up in the background if it doesn't exist
-                if (!Application.Current.Windows.OfType<TrackerLocationsWindow>().Any())
-                {
-                    _locationsWindow = new TrackerLocationsWindow(Tracker);
-                }
-
                 var scope = _serviceProvider.CreateScope();
                 _trackerMapWindow = scope.ServiceProvider.GetRequiredService<TrackerMapWindow>();
-                _trackerMapWindow.SetupTrackerViewModel((TrackerViewModel)_locationsWindow.DataContext);
+                _trackerMapWindow.Syncer = _locationSyncer;
                 _trackerMapWindow.Show();
             }
         }
