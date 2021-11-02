@@ -26,8 +26,26 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <Grid Width="{Binding Size}" Height="{Binding Size}" >
-              <Rectangle Fill="{Binding Color}" Width="{Binding Size}" Height="{Binding Size}" Stroke="Black" StrokeThickness="2" Visibility="{Binding RectangleVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Locations}" ToolTip="{Binding Name}" />
-              <Ellipse Fill="{Binding Color}" Width="{Binding Size}" Height="{Binding Size}" Stroke="Black" StrokeThickness="2" Visibility="{Binding EllipseVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Locations}" ToolTip="{Binding Name}" />
+              <Rectangle Width="{Binding Size}" Height="{Binding Size}" Visibility="{Binding IconVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Locations}" ToolTip="{Binding Name}">
+                <Rectangle.Fill>
+                  <ImageBrush ImageSource="{Binding IconImage}" />
+                </Rectangle.Fill>
+                <Rectangle.ContextMenu>
+                  <ContextMenu ItemsSource="{Binding SubLocationModels}" Style="{Binding ContextMenuStyle}">
+                    <ContextMenu.ItemContainerStyle>
+                      <Style TargetType="MenuItem">
+                        <EventSetter Event="Click" Handler="LocationContextMenu_Click"></EventSetter>
+                        <Setter Property="Tag" Value="{Binding Locations[0]}"/>
+                      </Style>
+                    </ContextMenu.ItemContainerStyle>
+                    <ContextMenu.ItemTemplate>
+                      <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                      </DataTemplate>
+                    </ContextMenu.ItemTemplate>
+                  </ContextMenu>
+                </Rectangle.ContextMenu>
+              </Rectangle>
             </Grid>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
