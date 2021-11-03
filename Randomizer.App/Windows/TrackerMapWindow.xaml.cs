@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+
 using Microsoft.Extensions.Logging;
-using Randomizer.SMZ3.Tracking;
-using System.IO;
+
 using Randomizer.App.ViewModels;
-using System.ComponentModel;
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App
 {
@@ -26,14 +20,18 @@ namespace Randomizer.App
     /// </summary>
     public partial class TrackerMapWindow : Window
     {
-        private ILogger<TrackerMapWindow> _logger;
+        private readonly ILogger<TrackerMapWindow> _logger;
         private TrackerLocationSyncer _syncer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TrackerMapWindow"/> class to display the map of accessible
-        /// locations that the player can go to
+        /// Initializes a new instance of the <see cref="TrackerMapWindow"/>
+        /// class to display the map of accessible locations that the player can
+        /// go to
         /// </summary>
-        /// <param name="trackerMapConfigProvider">The config provider for the map json file with all the location details</param>
+        /// <param name="trackerMapConfigProvider">
+        /// The config provider for the map json file with all the location
+        /// details
+        /// </param>
         /// <param name="logger">Logger for logging</param>
         public TrackerMapWindow(TrackerMapConfigProvider trackerMapConfigProvider, ILogger<TrackerMapWindow> logger)
         {
@@ -44,15 +42,23 @@ namespace Randomizer.App
             Maps = trackerMapConfigProvider.GetTrackerMapConfig()?.Maps;
             var regions = trackerMapConfigProvider.GetTrackerMapConfig()?.Regions;
 
-            // To make querying easier for the viewmodel, compile a list of all locations on each map by combining all of their regions,
-            // making any location adjusments needed
-            foreach (TrackerMap map in Maps) {
+            // To make querying easier for the viewmodel, compile a list of all
+            // locations on each map by combining all of their regions, making
+            // any location adjusments needed
+            foreach (var map in Maps)
+            {
                 map.FullLocations = new List<TrackerMapLocation>();
                 if (map.Regions != null)
                 {
-                    foreach (TrackerMapLocation mapRegion in map.Regions)
+                    foreach (var mapRegion in map.Regions)
                     {
-                        map.FullLocations.AddRange(regions.Where(region => mapRegion.Name == region.Name).SelectMany(region => region.Rooms).Select(room => new TrackerMapLocation(mapRegion.Name, room.Name, (int)Math.Floor((double)room.X * mapRegion.Scale) + mapRegion.X, (int)Math.Floor((double)room.Y * mapRegion.Scale) + mapRegion.Y)).ToList());
+                        var mapLocations = regions.Where(region => mapRegion.Name == region.Name)
+                            .SelectMany(region => region.Rooms)
+                            .Select(room => new TrackerMapLocation(mapRegion.Name, room.Name,
+                                x: (int)Math.Floor(room.X * mapRegion.Scale) + mapRegion.X,
+                                y: (int)Math.Floor(room.Y * mapRegion.Scale) + mapRegion.Y))
+                            .ToList();
+                        map.FullLocations.AddRange(mapLocations);
                     }
                 }
             }
@@ -94,7 +100,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// When the canvas's parent grid size changes. Used for updating the canvas size to the correct proportions.
+        /// When the canvas's parent grid size changes. Used for updating the
+        /// canvas size to the correct proportions.
         /// </summary>
         /// <param name="sender">The original propagator of the change</param>
         /// <param name="e">The event with the resize information</param>
@@ -104,7 +111,7 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// When the window has fully loaded. 
+        /// When the window has fully loaded.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -120,7 +127,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Updates the current map to the option in the combo box when the combo box is updated
+        /// Updates the current map to the option in the combo box when the
+        /// combo box is updated
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -141,31 +149,40 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Called when a location is clicked on the map to clear out all affiliated SMZ3 locations
+        /// Called when a location is clicked on the map to clear out all
+        /// affiliated SMZ3 locations
         /// </summary>
         /// <param name="sender">The rectangle/ellipse that was clicked</param>
         /// <param name="e"></param>
         private void Location_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Because we have to do this a gross way, let's at least be sure this is originating from the correct object with Location data
-            if (sender.GetType() != typeof(Rectangle) && sender.GetType() != typeof(Ellipse)) return;
-            Shape shape = (Shape)sender;
-            if (shape.Tag.GetType() != typeof(List<Location>)) return;
-            List<Location> locations = (List<Location>)((Shape)sender).Tag;
+            // Because we have to do this a gross way, let's at least be sure
+            // this is originating from the correct object with Location data
+            if (sender is not Rectangle and not Ellipse)
+                return;
+
+            var shape = (Shape)sender;
+            if (shape.Tag is not List<Location> locations)
+                return;
+
             Syncer.ClearLocations(locations);
         }
 
         /// <summary>
-        /// Clicked on the right click menu for clearing an individual location inside of a room or region
+        /// Clicked on the right click menu for clearing an individual location
+        /// inside of a room or region
         /// </summary>
         /// <param name="sender">The menu item that was clicked</param>
         /// <param name="e"></param>
         private void LocationContextMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (sender.GetType() != typeof(MenuItem)) return;
-            MenuItem menuItem = (MenuItem)sender;
-            if (menuItem.Tag.GetType() != typeof(Location)) return;
-            Syncer.ClearLocation((Location)menuItem.Tag);
+            if (sender is not MenuItem menuItem)
+                return;
+
+            if (menuItem.Tag is not Location location)
+                return;
+
+            Syncer.ClearLocation(location);
         }
     }
 }
