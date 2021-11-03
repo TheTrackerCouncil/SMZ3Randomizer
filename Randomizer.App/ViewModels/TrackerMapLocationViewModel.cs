@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
 
@@ -15,6 +18,8 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class TrackerMapLocationViewModel
     {
+        private static readonly Style s_contextMenuStyle = Application.Current.FindResource("DarkContextMenu") as Style;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerMap"/> class
         /// with data to display a specific location on the map and its progress
@@ -24,7 +29,7 @@ namespace Randomizer.App.ViewModels
         /// <param name="scaledRatio">The ratio in which the canvas has been scaled to fit in the grid</param>
         public TrackerMapLocationViewModel(TrackerMapLocation mapLocation, TrackerLocationSyncer syncer, double scaledRatio)
         {
-            Size = 12;
+            Size = 16;
             X = mapLocation.X * scaledRatio - Size / 2;
             Y = mapLocation.Y * scaledRatio - Size / 2;
             Syncer = syncer;
@@ -52,9 +57,25 @@ namespace Randomizer.App.ViewModels
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TrackerMap"/> class
+        /// with data to display a specific map location in the sub menu
+        /// </summary>
+        /// <param name="location"></param>
+        public TrackerMapLocationViewModel(Location location)
+        {
+            Locations = new List<Location>() { location };
+            Name = "Clear " + (location.Room == null ? location.Name : location.Room.Name + " " + location.Name);
+        }
+
+        /// <summary>
         /// The list of SMZ3 randomizer locations to look at to determine progress
         /// </summary>
         public List<Location> Locations { get; set; }
+
+        /// <summary>
+        /// The list of locations underneath this one for the right click menu
+        /// </summary>
+        public List<TrackerMapLocationViewModel> SubLocationModels => Locations.Where(x => Syncer.IsLocationClearable(x)).Select(x => new TrackerMapLocationViewModel(x)).ToList();
 
         /// <summary>
         /// The X value of where to display this location on the map
@@ -91,39 +112,34 @@ namespace Randomizer.App.ViewModels
         public int ClearedLocationsCount { get; set; }
 
         /// <summary>
-        /// Display the green rectangle if there are available uncleared locations that match the number of total uncleared locations
+        /// Display the icon if there are available uncleared locations that match the number of total uncleared locations
         /// </summary>
-        public Visibility RectangleVisibility => (ClearableLocationsCount > 0 && ClearableLocationsCount == UnclearedLocationsCount) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IconVisibility => (ClearableLocationsCount > 0 || OutOfLogicLocationsCount > 0) ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
-        /// Display the orange circle if there are available uncleared locations, but it is less than the number of total uncleared locations
+        /// Get the icon to display for the location
         /// </summary>
-        public Visibility EllipseVisibility => (ClearableLocationsCount > 0 && ClearableLocationsCount < UnclearedLocationsCount) || (ClearableLocationsCount == 0 && OutOfLogicLocationsCount > 0) ? Visibility.Visible : Visibility.Collapsed;
-
-        /// <summary>
-        /// Set the color of the icon based on if it's fully or partially clearable
-        /// </summary>
-        public Brush Color {
+        public ImageSource IconImage
+        {
             get
             {
-                SolidColorBrush brush = new SolidColorBrush();
+                string image = "blank.png";
                 if (ClearableLocationsCount > 0 && ClearableLocationsCount == UnclearedLocationsCount)
                 {
-                    brush.Color = Colors.LightGreen;
+                    image = "accessible.png";
                 }
                 else if (ClearableLocationsCount > 0 && ClearableLocationsCount < UnclearedLocationsCount)
                 {
-                    brush.Color = Colors.DarkOrange;
+                    image = "partial.png";
                 }
                 else if (ClearableLocationsCount == 0 && OutOfLogicLocationsCount > 0)
                 {
-                    brush.Color = Colors.DarkSlateGray;
+                    image = "outoflogic.png";
                 }
-                else
-                {
-                    brush.Color = Colors.Magenta;
-                }
-                return brush;
+
+                return new BitmapImage(new Uri(System.IO.Path.Combine(
+                System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "Sprites", "Maps", image)));
             }
         }
 
@@ -132,5 +148,9 @@ namespace Randomizer.App.ViewModels
         /// </summary>
         protected TrackerLocationSyncer Syncer { get; }
 
+        /// <summary>
+        /// The visual style for the right click menu
+        /// </summary>
+        public Style ContextMenuStyle => s_contextMenuStyle;
     }
 }

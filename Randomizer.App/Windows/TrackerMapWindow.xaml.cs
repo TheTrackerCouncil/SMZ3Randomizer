@@ -154,5 +154,18 @@ namespace Randomizer.App
             List<Location> locations = (List<Location>)((Shape)sender).Tag;
             Syncer.ClearLocations(locations);
         }
+
+        /// <summary>
+        /// Clicked on the right click menu for clearing an individual location inside of a room or region
+        /// </summary>
+        /// <param name="sender">The menu item that was clicked</param>
+        /// <param name="e"></param>
+        private void LocationContextMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender.GetType() != typeof(MenuItem)) return;
+            MenuItem menuItem = (MenuItem)sender;
+            if (menuItem.Tag.GetType() != typeof(Location)) return;
+            Syncer.ClearLocation((Location)menuItem.Tag);
+        }
     }
 }
