@@ -220,7 +220,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <c>{0}</c> is a placeholder for the name of the reward that was marked.
         /// </remarks>
         public SchrodingersString RemainingDungeonsMarked { get; init; }
-            = new SchrodingersString("Marked remaining dungeons as {1}.");
+            = new SchrodingersString("Marked remaining dungeons as {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when there are no unmarked dungeons.
