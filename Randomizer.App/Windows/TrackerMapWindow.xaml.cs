@@ -28,19 +28,18 @@ namespace Randomizer.App
         /// class to display the map of accessible locations that the player can
         /// go to
         /// </summary>
-        /// <param name="trackerMapConfigProvider">
-        /// The config provider for the map json file with all the location
-        /// details
+        /// <param name="config">
+        /// The config for the map json file with all the location details
         /// </param>
         /// <param name="logger">Logger for logging</param>
-        public TrackerMapWindow(TrackerMapConfigProvider trackerMapConfigProvider, ILogger<TrackerMapWindow> logger)
+        public TrackerMapWindow(TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
         {
             InitializeComponent();
 
             _logger = logger;
 
-            Maps = trackerMapConfigProvider.GetTrackerMapConfig()?.Maps;
-            var regions = trackerMapConfigProvider.GetTrackerMapConfig()?.Regions;
+            Maps = config.Maps;
+            var regions = config.Regions;
 
             // To make querying easier for the viewmodel, compile a list of all
             // locations on each map by combining all of their regions, making
