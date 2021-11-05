@@ -27,7 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="trackerJsonPath">
         /// The path to the JSON track configuration file.
         /// </param>
-        /// /// <param name="trackerJsonPath">
+        /// /// <param name="trackerMapJsonPath">
         /// The path to the JSON tracker maps configuration file.
         /// </param>
         /// <returns>A reference to <paramref name="services"/>.</returns>

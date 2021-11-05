@@ -69,6 +69,8 @@ Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
 Source: "O:\Source\Vivelin\SMZ3Randomizer\Randomizer.App\bin\Release\net5.0-windows\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "O:\Source\Vivelin\SMZ3Randomizer\Randomizer.App\Sprites\*"; DestDir: "{app}\Sprites"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "O:\Source\Vivelin\SMZ3Randomizer\Randomizer.App\bin\Release\net5.0-windows\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "O:\Source\Vivelin\SMZ3Randomizer\Randomizer.SMZ3.Tracking\tracker.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
+Source: "O:\Source\Vivelin\SMZ3Randomizer\Randomizer.SMZ3.Tracking\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
