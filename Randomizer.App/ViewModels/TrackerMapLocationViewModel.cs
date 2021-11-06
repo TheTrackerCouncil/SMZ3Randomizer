@@ -40,6 +40,7 @@ namespace Randomizer.App.ViewModels
             Syncer = syncer;
             Locations = Syncer.AllLocations.Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
             Name = mapLocation.Name;
+            Region = Syncer.World.Regions.First(x => x.Name == mapLocation.Region);
 
             // To avoid multiple linq statements, let's loop through them all to
             // calculate the results
@@ -162,6 +163,17 @@ namespace Randomizer.App.ViewModels
         /// The visual style for the right click menu
         /// </summary>
         public Style ContextMenuStyle => s_contextMenuStyle;
+
+        /// <summary>
+        /// The region for this location on the map
+        /// </summary>
+        public Region Region { get; }
+
+        /// <summary>
+        /// Get the tag to use for the location. Use the region for dungeons
+        ///  and the list of locations for all other places
+        /// </summary>
+        public object Tag => Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x)).ToList();
 
         /// <summary>
         /// LocationSyncer to use for keeping locations in sync between the

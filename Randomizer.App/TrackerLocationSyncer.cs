@@ -163,8 +163,20 @@ namespace Randomizer.App
         /// <param name="locations">A list of SMZ3 locations to update</param>
         public void ClearLocations(List<Location> locations)
         {
-            locations.ForEach(x => _tracker.Clear(x));
+            locations.Where(x => !x.Cleared)
+                .ToList()
+                .ForEach(x => _tracker.Clear(x));
             if (locations.Select(x => x.Region).Count() == 1) _stickyRegion = locations.First().Region;
+        }
+
+        /// <summary>
+        /// Clears an entire region/area
+        /// </summary>
+        /// <param name="region">The region to clear</param>
+        /// <param name="trackItems">If items in the region should be tracked or not</param>
+        public void ClearRegion(Region region, bool trackItems = false)
+        {
+            _tracker.ClearArea(region, trackItems);
         }
 
         public Dictionary<int, ItemData> MarkedLocations =>  _tracker?.MarkedLocations;
