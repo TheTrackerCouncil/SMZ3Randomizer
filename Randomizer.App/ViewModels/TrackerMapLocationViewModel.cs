@@ -51,7 +51,7 @@ namespace Randomizer.App.ViewModels
 
             Locations.ForEach(x =>
             {
-                numClearable += Syncer.IsLocationClearable(x, false) ? 1 : 0;
+                numClearable += Syncer.IsLocationClearable(x, false, true) ? 1 : 0;
                 numOutOfLogic += Syncer.IsLocationClearable(x, true) && !Syncer.IsLocationClearable(x, false) ? 1 : 0;
                 numUncleared += !x.Cleared ? 1 : 0;
                 numCleared += x.Cleared ? 1 : 0;

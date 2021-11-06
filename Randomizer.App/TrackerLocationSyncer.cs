@@ -140,11 +140,12 @@ namespace Randomizer.App
         /// Returns if a SMZ3 location is currently accessible
         /// </summary>
         /// <param name="location">The location to check</param>
-        /// <param name="allowOutOfLogic">If out of logic checks shoudl be returned, assuming the option is enabled</param>
+        /// <param name="allowOutOfLogic">If out of logic checks should be returned, assuming the option is enabled</param>
+        /// <param name="requireKeys">If we should check for required keys for this location or not</param>
         /// <returns>True if a location is accessible given settings, false otherwise</returns>
-        public bool IsLocationClearable(Location location, bool allowOutOfLogic = true)
+        public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
-            return !location.Cleared && (location.IsAvailable(Progression) || location.IsAvailable(ProgressionWithKeys) || (allowOutOfLogic && ShowOutOfLogicLocations));
+            return !location.Cleared && (location.IsAvailable(Progression) || (!requireKeys && location.IsAvailable(ProgressionWithKeys)) || (allowOutOfLogic && ShowOutOfLogicLocations));
         }
 
         /// <summary>
