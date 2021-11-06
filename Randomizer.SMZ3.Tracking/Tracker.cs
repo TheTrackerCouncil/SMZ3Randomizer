@@ -37,9 +37,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
-        /// <param name="configProvider">
-        /// Used to provide the tracking configuration.
-        /// </param>
+        /// <param name="config">The tracking configuration.</param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
@@ -48,7 +46,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
-        public Tracker(TrackerConfigProvider configProvider,
+        public Tracker(TrackerConfig config,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger,
@@ -59,7 +57,6 @@ namespace Randomizer.SMZ3.Tracking
             Options = options;
 
             // Initialize the tracker configuration
-            var config = configProvider.GetTrackerConfig();
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
             Dungeons = config.Dungeons.ToImmutableList();

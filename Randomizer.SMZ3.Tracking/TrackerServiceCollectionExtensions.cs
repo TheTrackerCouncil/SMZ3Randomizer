@@ -24,23 +24,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">
         /// The service collection to add Tracker to.
         /// </param>
-        /// <param name="trackerJsonPath">
-        /// The path to the JSON track configuration file.
-        /// </param>
-        /// /// <param name="trackerJsonPath">
-        /// The path to the JSON tracker maps configuration file.
-        /// </param>
         /// <returns>A reference to <paramref name="services"/>.</returns>
-        public static IServiceCollection AddTracker<TWorldAccessor>(this IServiceCollection services,
-            string trackerJsonPath, string trackerMapJsonPath)
+        public static IServiceCollection AddTracker<TWorldAccessor>(this IServiceCollection services)
             where TWorldAccessor : class, IWorldAccessor
         {
             services.AddBasicTrackerModules<TrackerModuleFactory>();
             services.AddScoped<TrackerModuleFactory>();
 
             services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
-            services.AddSingleton(new TrackerConfigProvider(trackerJsonPath));
-            services.AddSingleton(new TrackerMapConfigProvider(trackerMapJsonPath));
+            services.AddSingleton<TrackerConfigProvider>();
             services.AddScoped<TrackerFactory>();
             services.AddScoped<Tracker>(serviceProvider =>
             {

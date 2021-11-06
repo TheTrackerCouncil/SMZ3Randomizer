@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows;
+
 using Randomizer.SMZ3.Tracking;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace Randomizer.App.ViewModels
 {
@@ -19,7 +17,18 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class TrackerMapViewModel : INotifyPropertyChanged
     {
-        private bool _isDesign;
+        private readonly bool _isDesign;
+
+        /// <summary>
+        /// The current map the user has selected
+        /// </summary>
+        private TrackerMap _currentMap;
+
+        /// <summary>
+        /// The size of the parent grid of the canvas to use for resizing the
+        /// canvas
+        /// </summary>
+        private Size _gridSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerMap"/> class
@@ -31,7 +40,8 @@ namespace Randomizer.App.ViewModels
         }
 
         /// <summary>
-        /// Event for when one of the values has been updated to notify the window to refresh
+        /// Event for when one of the values has been updated to notify the
+        /// window to refresh
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -41,19 +51,16 @@ namespace Randomizer.App.ViewModels
         public List<string> MapNames { get; set; }
 
         /// <summary>
-        /// A reference to the original <see cref="TrackerViewModel"/> object to keep synced up
+        /// A reference to the original <see cref="TrackerViewModel"/> object to
+        /// keep synced up
         /// </summary>
         public TrackerViewModel TrackerViewModel { get; set; }
 
         /// <summary>
         /// The current map the user has selected
         /// </summary>
-        private TrackerMap _currentMap;
-
-        /// <summary>
-        /// The current map the user has selected
-        /// </summary>
-        public TrackerMap CurrentMap {
+        public TrackerMap CurrentMap
+        {
             get => _currentMap;
             set
             {
@@ -63,12 +70,8 @@ namespace Randomizer.App.ViewModels
         }
 
         /// <summary>
-        /// The size of the parent grid of the canvas to use for resizing the canvas
-        /// </summary>
-        private Size _gridSize;
-
-        /// <summary>
-        /// The size of the parent grid of the canvas to use for resizing the canvas
+        /// The size of the parent grid of the canvas to use for resizing the
+        /// canvas
         /// </summary>
         public Size GridSize
         {
@@ -87,8 +90,11 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                if (_isDesign) return new Size(400, 400);
-                if (CurrentMap == null) return new Size(0, 0);
+                if (_isDesign)
+                    return new Size(400, 400);
+
+                if (CurrentMap == null)
+                    return new Size(0, 0);
 
                 double imageWidth = CurrentMap.Width;
                 double imageHeight = CurrentMap.Height;
@@ -129,15 +135,8 @@ namespace Randomizer.App.ViewModels
         }
 
         /// <summary>
-        /// Call to execute the PropertyChanged event to notify the window to refresh
-        /// </summary>
-        public void OnPropertyChanged()
-        {
-            PropertyChanged?.Invoke(this, new(""));
-        }
-
-        /// <summary>
-        /// TrackerLocationSyncer used to keep items synced between both locations and map windows
+        /// TrackerLocationSyncer used to keep items synced between both
+        /// locations and map windows
         /// </summary>
         public TrackerLocationSyncer Syncer { get; set; }
 
@@ -150,7 +149,8 @@ namespace Randomizer.App.ViewModels
             {
                 if (CurrentMap == null) return new List<TrackerMapLocationViewModel>();
 
-                // This is used to determine if there are invalid locations on the map
+                // This is used to determine if there are invalid locations on
+                // the map
                 if (Debugger.IsAttached)
                 {
                     var test = _currentMap.FullLocations
@@ -172,5 +172,13 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Call to execute the PropertyChanged event to notify the window to
+        /// refresh
+        /// </summary>
+        public void OnPropertyChanged()
+        {
+            PropertyChanged?.Invoke(this, new(""));
+        }
     }
 }

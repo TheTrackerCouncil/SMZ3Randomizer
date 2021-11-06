@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Tracking
     /// </summary>
     public class TrackerFactory
     {
-        private readonly TrackerConfigProvider _configProvider;
+        private readonly TrackerConfig _config;
         private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly ILogger<Tracker> _logger;
@@ -20,9 +20,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Initializes a new instance of the <see cref="TrackerFactory"/> class
         /// with the specified dependencies.
         /// </summary>
-        /// <param name="configProvider">
-        /// Used to provide the tracking configuration.
-        /// </param>
+        /// <param name="config">The tracking configuration.</param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
@@ -30,12 +28,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Used to provide the tracking speech recognition syntax.
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
-        public TrackerFactory(TrackerConfigProvider configProvider,
+        public TrackerFactory(TrackerConfig config,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger)
         {
-            _configProvider = configProvider;
+            _config = config;
             _worldAccessor = worldAccessor;
             _moduleFactory = moduleFactory;
             _logger = logger;
@@ -57,7 +55,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Tracker Create(TrackerOptions options)
         {
-            return Instance = new(_configProvider, _worldAccessor, _moduleFactory, _logger, options);
+            return Instance = new(_config, _worldAccessor, _moduleFactory, _logger, options);
         }
     }
 }
