@@ -1014,8 +1014,7 @@
       "Does that look like {0} to you? Well if you say so."
     ],
     "LocationCleared": [
-      "Cleared {0}.",
-      [ "Cleared {1} from {0}.", 0.1 ]
+      "Cleared {0}."
     ],
     "AreaDoesNotHaveItem": [
       "I don't see {2} in {1}."

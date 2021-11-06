@@ -338,8 +338,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the phrases to respond with when clearing a location.
         /// </summary>
         /// <remarks>
-        /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
-        /// is a placeholder for the item that was at the location.
+        /// <c>{0}</c> is a placeholder for the name of the location.
         /// </remarks>
         public SchrodingersString LocationCleared { get; init; }
             = new SchrodingersString("Cleared {0}.");
