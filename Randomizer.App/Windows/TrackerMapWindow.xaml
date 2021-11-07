@@ -26,7 +26,7 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <Grid Width="{Binding Size}" Height="{Binding Size}" >
-              <Rectangle Width="{Binding Size}" Height="{Binding Size}" Visibility="{Binding IconVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Locations}" ToolTip="{Binding Name}">
+              <Rectangle Width="{Binding Size}" Height="{Binding Size}" Visibility="{Binding IconVisibility}" MouseLeftButtonDown="Location_MouseLeftButtonDown" Tag="{Binding Tag}" ToolTip="{Binding Name}">
                 <Rectangle.Fill>
                   <ImageBrush ImageSource="{Binding IconImage}" />
                 </Rectangle.Fill>

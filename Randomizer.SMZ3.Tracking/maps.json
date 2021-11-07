@@ -876,6 +876,12 @@
           "X": 616,
           "Y": 1054,
           "Scale": 1
+        },
+        {
+          "Name": "King's Tomb",
+          "X": 1207,
+          "Y": 598,
+          "Scale": 1
         }
       ]
     },
@@ -993,6 +999,12 @@
           "Name": "Bombos Tablet",
           "X": 440,
           "Y": 1845,
+          "Scale": 1
+        },
+        {
+          "Name": "Lake Hylia Island",
+          "X": 1450,
+          "Y": 1666,
           "Scale": 1
         }
       ]

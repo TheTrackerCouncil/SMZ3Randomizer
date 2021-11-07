@@ -140,11 +140,12 @@ namespace Randomizer.App
         /// Returns if a SMZ3 location is currently accessible
         /// </summary>
         /// <param name="location">The location to check</param>
-        /// <param name="allowOutOfLogic">If out of logic checks shoudl be returned, assuming the option is enabled</param>
+        /// <param name="allowOutOfLogic">If out of logic checks should be returned, assuming the option is enabled</param>
+        /// <param name="requireKeys">If we should check for required keys for this location or not</param>
         /// <returns>True if a location is accessible given settings, false otherwise</returns>
-        public bool IsLocationClearable(Location location, bool allowOutOfLogic = true)
+        public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
-            return !location.Cleared && (location.IsAvailable(Progression) || location.IsAvailable(ProgressionWithKeys) || (allowOutOfLogic && ShowOutOfLogicLocations));
+            return !location.Cleared && (location.IsAvailable(Progression) || (!requireKeys && location.IsAvailable(ProgressionWithKeys)) || (allowOutOfLogic && ShowOutOfLogicLocations));
         }
 
         /// <summary>
@@ -163,8 +164,20 @@ namespace Randomizer.App
         /// <param name="locations">A list of SMZ3 locations to update</param>
         public void ClearLocations(List<Location> locations)
         {
-            locations.ForEach(x => _tracker.Clear(x));
+            locations.Where(x => !x.Cleared)
+                .ToList()
+                .ForEach(x => _tracker.Clear(x));
             if (locations.Select(x => x.Region).Count() == 1) _stickyRegion = locations.First().Region;
+        }
+
+        /// <summary>
+        /// Clears an entire region/area
+        /// </summary>
+        /// <param name="region">The region to clear</param>
+        /// <param name="trackItems">If items in the region should be tracked or not</param>
+        public void ClearRegion(Region region, bool trackItems = false)
+        {
+            _tracker.ClearArea(region, trackItems);
         }
 
         public Dictionary<int, ItemData> MarkedLocations =>  _tracker?.MarkedLocations;
