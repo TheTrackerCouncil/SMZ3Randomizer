@@ -161,10 +161,17 @@ namespace Randomizer.App
                 return;
 
             var shape = (Shape)sender;
-            if (shape.Tag is not List<Location> locations)
-                return;
 
-            Syncer.ClearLocations(locations);
+            // Determine what type of location this is
+            if (shape.Tag is List<Location> locations)
+            {
+                Syncer.ClearLocations(locations);
+            }
+            else if (shape.Tag is Region region)
+            {
+                Syncer.ClearRegion(region);
+            }
+            
         }
 
         /// <summary>
