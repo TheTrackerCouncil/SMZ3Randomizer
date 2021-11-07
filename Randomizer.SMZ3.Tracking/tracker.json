@@ -888,8 +888,7 @@
     "Misheard": [
       "I didn't get that.",
       "Could you repeat that?",
-      "What did you say?",
-      "Huh?"
+      "What did you say?"
     ],
     "TrackedItem": [
       "Toggled {0} on."
@@ -920,10 +919,12 @@
       "There's nothing left in {0}."
     ],
     "TrackedMultipleItems": [
-      "Tracked {0} items in {1}."
+      "Tracked {0} items in {1}.",
+      "Added {0} items from {1}."
     ],
     "ClearedMultipleItems": [
-      "Cleared {0} items in {1}."
+      "Cleared {0} items in {1}.",
+      "Ignored {0} items in {1}."
     ],
     "UntrackedNothing": [
       "There's nothing to remove.",
@@ -1014,7 +1015,9 @@
       "Does that look like {0} to you? Well if you say so."
     ],
     "LocationCleared": [
-      "Cleared {0}."
+      "Cleared {0}.",
+      "Ignored {0}.",
+      [ "I'll remove {0} from the list.", 0.1 ]
     ],
     "AreaDoesNotHaveItem": [
       "I don't see {2} in {1}."
@@ -1045,7 +1048,7 @@
       ]
     },
     "Idle": {
-      "10m±2m": [ "Decreased content by one step." ]
+      "10m±2m": [ "Decreased content by one step.", "What's wrong? Am I not good enough for you anymore?" ]
     }
   }
 }
