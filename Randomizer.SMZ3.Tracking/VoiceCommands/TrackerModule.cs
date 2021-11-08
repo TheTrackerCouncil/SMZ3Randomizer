@@ -245,15 +245,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     try
                     {
-                        if (e.Result.Confidence < Tracker.Options.MinimumConfidence)
+                        var minimumConfidence = Math.Max(Tracker.Options.MinimumRecognitionConfidence, Tracker.Options.MinimumExecutionConfidence);
+                        if (e.Result.Confidence >= minimumConfidence)
+                        {
+                            _logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
+                                e.Result.Text, e.Result.Confidence);
+                            executeCommand(Tracker, e.Result);
+                        }
+                        else
                         {
                             _logger.LogWarning("Confidence level too low ({Confidence} < {Threshold}) in voice command: \"{Text}\".",
-                                e.Result.Confidence, Tracker.Options.MinimumConfidence, e.Result.Text);
-                            Tracker.Say(Tracker.Responses.Misheard);
-                            return;
-                        }
+                                e.Result.Confidence, minimumConfidence, e.Result.Text);
 
-                        executeCommand(Tracker, e.Result);
+                            if (e.Result.Confidence >= Tracker.Options.MinimumRecognitionConfidence)
+                            {
+                                // If the confidence level is too low to be
+                                // executed, but high enough to be recognized,
+                                // let Tracker say something
+                                Tracker.Say(Tracker.Responses.Misheard);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {

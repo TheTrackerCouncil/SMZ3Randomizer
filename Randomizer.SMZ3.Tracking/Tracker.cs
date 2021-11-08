@@ -1244,9 +1244,6 @@ namespace Randomizer.SMZ3.Tracking
         private void SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
         {
             RestartIdleTimers();
-
-            _logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
-                e.Result.Text, e.Result.Confidence);
         }
 
         private void GiveLocationHint(IEnumerable<Location> accessibleBefore)
