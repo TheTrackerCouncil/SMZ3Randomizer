@@ -199,7 +199,7 @@ namespace Randomizer.SMZ3.Tracking
 
         /// <summary>
         /// Gets the phrases to respond with when all Peg World pegs have been
-        /// pegged.
+        /// pegged or Peg World mode is toggled off manually.
         /// </summary>
         public SchrodingersString? PegWorldModeDone { get; init; }
 

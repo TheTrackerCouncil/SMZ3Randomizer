@@ -930,10 +930,18 @@ namespace Randomizer.SMZ3.Tracking
                 undoTrackTreasure = _undoHistory.Pop();
             }
 
+            Action? undoStopPegWorldMode = null;
+            if (location == World.DarkWorldNorthWest.PegWorld)
+            {
+                StopPegWorldMode();
+                undoStopPegWorldMode = _undoHistory.Pop();
+            }
+
             AddUndo(() =>
             {
                 location.Cleared = false;
                 undoTrackTreasure?.Invoke();
+                undoStopPegWorldMode?.Invoke();
             });
             OnLocationCleared(new(location, confidence));
         }
@@ -1040,6 +1048,18 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.PegWorldModeOn, wait: true);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
             AddUndo(() => PegWorldMode = false);
+        }
+
+        /// <summary>
+        /// Turns Peg World mode off.
+        /// </summary>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void StopPegWorldMode(float? confidence = null)
+        {
+            PegWorldMode = false;
+            Say(Responses.PegWorldModeDone);
+            OnPegWorldModeToggled(new TrackerEventArgs(confidence));
+            AddUndo(() => PegWorldMode = true);
         }
 
         /// <summary>

@@ -528,7 +528,7 @@ namespace Randomizer.App
             });
             Tracker.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
             {
-                _pegWorldMode = true;
+                _pegWorldMode = Tracker.PegWorldMode;
                 UpdateStats(e);
                 RefreshGridItems();
             });

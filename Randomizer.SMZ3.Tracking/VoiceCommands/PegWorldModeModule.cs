@@ -18,12 +18,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="logger">Used to log information.</param>
         public PegWorldModeModule(Tracker tracker, ILogger<PegWorldModeModule> logger) : base(tracker, logger)
         {
-            AddCommand("Toggle Peg World mode", new[] {
+            AddCommand("Toggle Peg World mode on", new[] {
+                "Hey tracker, toggle Peg World Mode on",
                 "Hey tracker, we're going to Peg World!",
                 "Hey tracker, let's go to Peg World!"
             }, (tracker, result) =>
             {
                 tracker.StartPegWorldMode(result.Confidence);
+            });
+
+            AddCommand("Toggle Peg World mode off", new[] {
+                "Hey tracker, toggle Peg World Mode off",
+                "Hey tracker, I don't want to be at peg world anymore",
+                "Hey tracker, I want to go on something more thrilling than Peg World"
+            }, (tracker, result) =>
+            {
+                tracker.StopPegWorldMode(result.Confidence);
             });
 
             AddCommand("Track Peg World peg", new[] {
