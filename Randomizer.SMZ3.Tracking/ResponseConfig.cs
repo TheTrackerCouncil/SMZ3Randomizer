@@ -392,6 +392,16 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("There's nothing to undo.");
 
         /// <summary>
+        /// Gets the phrases to respond with when changing a Tracker setting.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the setting that was
+        /// changed. <c>{1}</c> is a placeholder for the new value.
+        /// </remarks>
+        public SchrodingersString TrackerSettingChanged { get; init; }
+            = new SchrodingersString("Changed {0} to {1}.");
+
+        /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as
         /// expressed in the dictionary keys.

@@ -1,0 +1,112 @@
+﻿using System;
+using System.Speech.Recognition;
+
+using Microsoft.Extensions.Logging;
+
+namespace Randomizer.SMZ3.Tracking.VoiceCommands
+{
+    /// <summary>
+    /// Provides voice commands for interacting with Tracker itself.
+    /// </summary>
+    public class MetaModule : TrackerModule
+    {
+        private const string ModifierKey = "Increase/Decrease";
+        private const string ThresholdSettingKey = "ThresholdSetting";
+        private const string ValueKey = "Value";
+        private const int ThresholdSetting_Recognition = 0;
+        private const int ThresholdSetting_Execution = 1;
+        private const int ThresholdSetting_Sass = 2;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MetaModule"/> class.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="logger">Used to write logging information.</param>
+        public MetaModule(Tracker tracker, ILogger<MetaModule> logger)
+            : base(tracker, logger)
+        {
+            AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (tracker, result) =>
+            {
+                var modifier = (int)result.Semantics[ModifierKey].Value;
+                var thresholdSetting = (int)result.Semantics[ThresholdSettingKey].Value;
+                var value = (float)(double)result.Semantics[ValueKey].Value;
+
+                var adjustment = modifier * value;
+                switch (thresholdSetting)
+                {
+                    case ThresholdSetting_Recognition:
+                        Tracker.Options.MinimumRecognitionConfidence += adjustment;
+                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
+                            "recognition threshold", $"{Tracker.Options.MinimumRecognitionConfidence:P0}"));
+                        logger.LogInformation("Temporarily changed recognition threshold to {newValue}", Tracker.Options.MinimumRecognitionConfidence);
+                        break;
+
+                    case ThresholdSetting_Execution:
+                        Tracker.Options.MinimumExecutionConfidence += adjustment;
+                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
+                            "execution threshold", $"{Tracker.Options.MinimumExecutionConfidence:P0}"));
+                        logger.LogInformation("Temporarily changed execution threshold to {newValue}", Tracker.Options.MinimumExecutionConfidence);
+                        break;
+
+                    case ThresholdSetting_Sass:
+                        Tracker.Options.MinimumSassConfidence += adjustment;
+                        Tracker.Say(Tracker.Responses.TrackerSettingChanged.Format(
+                            "sass threshold", $"{Tracker.Options.MinimumSassConfidence:P0}"));
+                        logger.LogInformation("Temporarily changed sass threshold to {newValue}", Tracker.Options.MinimumSassConfidence);
+                        break;
+
+                    default:
+                        throw new ArgumentException($"The threshold setting '{thresholdSetting}' was not recognized.");
+                }
+            });
+        }
+
+        private static Choices GetIncreaseDecrease()
+        {
+            var modifiers = new Choices();
+            modifiers.Add(new SemanticResultValue("increase", 1));
+            modifiers.Add(new SemanticResultValue("decrease", -1));
+            return modifiers;
+        }
+
+        private static Choices GetOneThroughTenPercent()
+        {
+            var values = new Choices();
+            values.Add(new SemanticResultValue("one percent", 0.01));
+            values.Add(new SemanticResultValue("two percent", 0.02));
+            values.Add(new SemanticResultValue("three percent", 0.03));
+            values.Add(new SemanticResultValue("four percent", 0.04));
+            values.Add(new SemanticResultValue("five percent", 0.05));
+            values.Add(new SemanticResultValue("six percent", 0.06));
+            values.Add(new SemanticResultValue("seven percent", 0.07));
+            values.Add(new SemanticResultValue("eight percent", 0.08));
+            values.Add(new SemanticResultValue("nine percent", 0.09));
+            values.Add(new SemanticResultValue("ten percent", 0.10));
+            return values;
+        }
+
+        private static Choices GetThresholdSettings()
+        {
+            var settings = new Choices();
+            settings.Add(new SemanticResultValue("recognition", ThresholdSetting_Recognition));
+            settings.Add(new SemanticResultValue("execution", ThresholdSetting_Execution));
+            settings.Add(new SemanticResultValue("sass", ThresholdSetting_Sass));
+            return settings;
+        }
+
+        private GrammarBuilder GetIncreaseThresholdGrammar()
+        {
+            var modifiers = GetIncreaseDecrease();
+            var settings = GetThresholdSettings();
+            var values = GetOneThroughTenPercent();
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Append(ModifierKey, modifiers)
+                .Optional("minimum")
+                .Append(ThresholdSettingKey, settings)
+                .OneOf("threshold", "confidence")
+                .Append("by")
+                .Append(ValueKey, values);
+        }
+    }
+}
