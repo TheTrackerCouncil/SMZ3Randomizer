@@ -799,6 +799,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null)
         {
+            var dungeon = Dungeons.SingleOrDefault(x => x.Is(area));
+            if (dungeon != null)
+            {
+                dungeon.Cleared = true;
+                OnDungeonUpdated(new(confidence));
+            }
+
             var locations = area.Locations
                 .Where(x => !x.Cleared)
                 .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression()))
@@ -867,7 +874,6 @@ namespace Randomizer.SMZ3.Tracking
             Say(responses.Format(itemsTracked, area.GetName()));
 
             Action? undoTrackDungeon = null;
-            var dungeon = Dungeons.SingleOrDefault(x => x.Is(area));
             if (dungeon != null && treasureTracked > 0)
             {
                 TrackDungeonTreasure(dungeon, amount: treasureTracked);
@@ -876,6 +882,9 @@ namespace Randomizer.SMZ3.Tracking
 
             AddUndo(() =>
             {
+                if (dungeon != null)
+                    dungeon.Cleared = false;
+
                 foreach (var location in locations)
                 {
                     if (trackItems)
