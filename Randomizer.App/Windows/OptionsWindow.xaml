@@ -43,7 +43,7 @@
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Tracker recognition threshold:"
-                                 ToolTip="Determines the minimum speech recognition confidence for Tracker to recognize commands. Anything below this threshold will be ignored completely.">
+                                 ToolTip="Determines the minimum speech recognition confidence for Tracker to recognize commands.&#x0a;Anything below this threshold will be ignored completely.&#x0a;&#x0a;Increase this if Tracker is incorrectly recognizing something as a voice command, for example when talking to other people.">
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
@@ -67,7 +67,7 @@
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Tracker execution threshold:"
-                                 ToolTip="Determines the minimum speech recognition confidence for Tracker to execute a voice command. Anything below this level will not be executed, but may result in Tracker asking you to repeat yourself.">
+                                 ToolTip="Determines the minimum speech recognition confidence for Tracker to execute a voice command.&#x0a;Anything below this level will not be executed, but may result in Tracker asking you to repeat yourself.&#x0a;&#x0a;Increase this to prevent Tracker from incorrectly recognizing a voice command, for example tracking the wrong item.">
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
