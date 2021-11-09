@@ -92,7 +92,7 @@ namespace Randomizer.App
             _host = Host.CreateDefaultBuilder(e.Args)
                 .ConfigureLogging(logging =>
                 {
-                    logging.AddFile($"smz3-cas-{DateTime.UtcNow:yyyyMMdd}.log", options =>
+                    logging.AddFile($"%LocalAppData%\\SMZ3CasRandomizer\\smz3-cas-{DateTime.UtcNow:yyyyMMdd}.log", options =>
                     {
                         options.Append = true;
                         options.FileSizeLimitBytes = FileSize.MB(20);
@@ -112,7 +112,7 @@ namespace Randomizer.App
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)
-                _logger?.LogCritical(ex, "[CRASH] Uncaught {exceptionType}", ex.GetType().Name);
+                _logger?.LogCritical(ex, "[CRASH] Uncaught {exceptionType}: ", ex.GetType().Name);
             else
                 _logger?.LogCritical("Unhandled exception in current domain but exception object is not an exception ({obj})", e.ExceptionObject);
         }
@@ -128,7 +128,15 @@ namespace Randomizer.App
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            _logger?.LogCritical(e.Exception, "[CRASH] Uncaught {exceptionType} in Dispatcher", e.Exception.GetType().Name);
+            _logger?.LogCritical(e.Exception, "[CRASH] Uncaught {exceptionType} in Dispatcher: ", e.Exception.GetType().Name);
+
+            var logFileLocation = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer");
+            MessageBox.Show("An unexpected problem occurred and the SMZ3 Cas’ Randomizer needs to shut down.\n\n" +
+                $"For technical details, please see the log files in '{logFileLocation}' and " +
+                "post them in Discord or on GitHub at https://github.com/Vivelin/SMZ3Randomizer/issues.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Stop);
+
+            e.Handled = true;
+            Environment.FailFast("Uncaught exception in Dispatcher", e.Exception);
         }
     }
 }

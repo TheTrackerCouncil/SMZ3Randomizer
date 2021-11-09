@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -187,6 +188,15 @@ namespace Randomizer.App
                 MaxHeight = GridItemPx,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
+            };
+
+            image.Effect = new DropShadowEffect
+            {
+                Color = Colors.Black,
+                Direction = 315,
+                BlurRadius = 5,
+                Opacity = 0.8,
+                ShadowDepth = 2
             };
 
             RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
@@ -769,7 +779,8 @@ namespace Randomizer.App
         /// </summary>
         private void ShowNoMicrophoneWarning()
         {
-            MessageBox.Show(this, "Error initializing your microphone. Check in your sound settings to ensure you have a microphone enabled. Voice recognition is currently disabled. You can attempt to re-enable it by double clicking on the Voice Disabled text.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(this, "There is a problem with your microphone. Please check your sound settings to ensure you have a microphone enabled.\n\n" +
+                "Voice recognition has been disabled. You can attempt to re-enable it by double clicking on the Voice Disabled text.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void MapMenuItem_Click(object sender, RoutedEventArgs e)
