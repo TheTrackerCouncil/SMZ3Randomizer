@@ -42,8 +42,32 @@
                                     DialogTitle="Select ROM output folder" />
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Tracker confidence threshold:"
-                                 ToolTip="Determines the minimum speech recognition confidence for Tracker to follow a command.">
+        <controls:LabeledControl Text="Tracker recognition threshold:"
+                                 ToolTip="Determines the minimum speech recognition confidence for Tracker to recognize commands.&#x0a;Anything below this threshold will be ignored completely.&#x0a;&#x0a;Increase this if Tracker is incorrectly recognizing something as a voice command, for example when talking to other people.">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="{Binding TrackerRecognitionThreshold, StringFormat=P1}"
+                       Margin="0,3,7,3" />
+            <Slider Grid.Column="1"
+                    Value="{Binding TrackerRecognitionThreshold}"
+                    Minimum="0.0"
+                    Maximum="1.0"
+                    SmallChange="0.05"
+                    LargeChange="0.2"
+                    TickFrequency="0.05"
+                    TickPlacement="BottomRight"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Stretch" />
+          </Grid>
+        </controls:LabeledControl>
+
+        <controls:LabeledControl Text="Tracker execution threshold:"
+                                 ToolTip="Determines the minimum speech recognition confidence for Tracker to execute a voice command.&#x0a;Anything below this level will not be executed, but may result in Tracker asking you to repeat yourself.&#x0a;&#x0a;Increase this to prevent Tracker from incorrectly recognizing a voice command, for example tracking the wrong item.">
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
@@ -66,7 +90,7 @@
           </Grid>
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Spoiler confidence threshold:"
+        <controls:LabeledControl Text="Tracker spoiler threshold:"
                                  ToolTip="Determines the minimum speech recognition confidence for Tracker to give potential spoilers in responses, e.g. when mis-tracking an item.">
           <Grid>
             <Grid.ColumnDefinitions>

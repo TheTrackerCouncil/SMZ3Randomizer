@@ -20,7 +20,8 @@ namespace Randomizer.SMZ3.Tracking
 
         /// <summary>
         /// Gets the phrases to respond with when speech recognition confidence
-        /// does not meet the configured threshold for execution.
+        /// does not meet the configured threshold for execution, but is high
+        /// enough to be recognized.
         /// </summary>
         public SchrodingersString Misheard { get; init; }
             = new SchrodingersString("I didn't quite get that.");
@@ -198,7 +199,7 @@ namespace Randomizer.SMZ3.Tracking
 
         /// <summary>
         /// Gets the phrases to respond with when all Peg World pegs have been
-        /// pegged.
+        /// pegged or Peg World mode is toggled off manually.
         /// </summary>
         public SchrodingersString? PegWorldModeDone { get; init; }
 
@@ -214,16 +215,19 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Marked {0} as {1}.");
 
         /// <summary>
-        /// Gets the phrases to respond with when marking the reward for all other unmarked dungeons.
+        /// Gets the phrases to respond with when marking the reward for all
+        /// other unmarked dungeons.
         /// </summary>
         /// <remarks>
-        /// <c>{0}</c> is a placeholder for the name of the reward that was marked.
+        /// <c>{0}</c> is a placeholder for the name of the reward that was
+        /// marked.
         /// </remarks>
         public SchrodingersString RemainingDungeonsMarked { get; init; }
             = new SchrodingersString("Marked remaining dungeons as {0}.");
 
         /// <summary>
-        /// Gets the phrases to respond with when there are no unmarked dungeons.
+        /// Gets the phrases to respond with when there are no unmarked
+        /// dungeons.
         /// </summary>
         public SchrodingersString NoRemainingDungeons { get; init; }
             = new SchrodingersString("You already marked every dungeon.");
@@ -386,6 +390,16 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public SchrodingersString NothingToUndo { get; init; }
             = new SchrodingersString("There's nothing to undo.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when changing a Tracker setting.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the setting that was
+        /// changed. <c>{1}</c> is a placeholder for the new value.
+        /// </remarks>
+        public SchrodingersString TrackerSettingChanged { get; init; }
+            = new SchrodingersString("Changed {0} to {1}.");
 
         /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
