@@ -503,6 +503,14 @@ namespace Randomizer.App
             _startTime = DateTime.Now;
             _dispatcherTimer.Start();
 
+            // Show proper voice status bar icon and warn the user if no mic is available
+            StatusBarConfidence.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarVoiceDisabled.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
+            if (!Tracker.MicrophoneInitialized)
+            {
+                ShowNoMicrophoneWarning();
+            }
+
             _locationSyncer = new TrackerLocationSyncer(Tracker);
 
             _locationsWindow = new TrackerLocationsWindow(_locationSyncer);
@@ -722,6 +730,46 @@ namespace Randomizer.App
                 _startTime = DateTime.Now - _elapsedTime;
                 _dispatcherTimer.Start();
             }
+        }
+
+        /// <summary>
+        /// Double clicking on the status bar icon to disable voice recognition
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StatusBarStatusBarConfidence_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Tracker.DisableVoiceRecognition();
+            StatusBarConfidence.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarVoiceDisabled.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Double clicking on the status bar icon to attempt to enable voice recognition
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StatusBarVoiceDisabled_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!Tracker.MicrophoneInitialized)
+            {
+                if (!Tracker.InitializeMicrophone())
+                {
+                    ShowNoMicrophoneWarning();
+                    return;
+                }
+            }
+            Tracker.EnableVoiceRecognition();
+            StatusBarConfidence.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarVoiceDisabled.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Displays a warning to the user that we could not detect a microphone
+        /// </summary>
+        private void ShowNoMicrophoneWarning()
+        {
+            MessageBox.Show(this, "Error initializing your microphone. Check in your sound settings to ensure you have a microphone enabled. Voice recognition is currently disabled. You can attempt to re-enable it by double clicking on the Voice Disabled text.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void MapMenuItem_Click(object sender, RoutedEventArgs e)

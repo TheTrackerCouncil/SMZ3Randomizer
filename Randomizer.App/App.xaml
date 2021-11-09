@@ -72,6 +72,27 @@
         </Setter>
       </Style>
 
+      <Style x:Key="VoiceDisabledStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Foreground" Value="IndianRed" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,11,5">
+                <TextBlock Text="&#xf131;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,5,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Solid"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
       <Style TargetType="controls:LabeledControl">
         <Setter Property="Template">
           <Setter.Value>

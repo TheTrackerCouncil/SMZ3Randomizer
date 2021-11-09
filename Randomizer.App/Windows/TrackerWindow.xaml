@@ -67,7 +67,14 @@
       <StatusBarItem x:Name="StatusBarConfidence"
                      Style="{StaticResource ConfidenceStatusBarItem}"
                      Content="0.00%"
-                     ToolTip="Confidence of last recognized voice command" />
+                     ToolTip="Confidence of last recognized voice command. Double click to disable voice recognition."
+                     MouseDoubleClick="StatusBarStatusBarConfidence_MouseDoubleClick" />
+      <StatusBarItem x:Name="StatusBarVoiceDisabled"
+                     Style="{StaticResource VoiceDisabledStatusBarItem}"
+                     Content="Voice Disabled"
+                     ToolTip="Voice recognition disabled. Double click to attempt to enable voice recognition."
+                     MouseDoubleClick="StatusBarVoiceDisabled_MouseDoubleClick"
+                     Visibility="Collapsed" />
     </StatusBar>
   </Grid>
 </Window>

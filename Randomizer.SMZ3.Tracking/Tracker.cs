@@ -77,7 +77,7 @@ namespace Randomizer.SMZ3.Tracking
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += SpeechRecognized;
-            _recognizer.SetInputToDefaultAudioDevice();
+            InitializeMicrophone();
         }
 
         /// <summary>
@@ -157,6 +157,16 @@ namespace Randomizer.SMZ3.Tracking
         public bool PegWorldMode { get; set; }
 
         /// <summary>
+        /// If the speech recognition engine was fully initialized
+        /// </summary>
+        public bool MicrophoneInitialized { get; private set; }
+
+        /// <summary>
+        /// If voice recognition has been enabled or not
+        /// </summary>
+        public bool VoiceRecognitionEnabled { get; private set; }
+
+        /// <summary>
         /// Gets a dictionary that contains the locations that are marked with
         /// items.
         /// </summary>
@@ -179,6 +189,26 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public TrackerOptions Options { get; }
 
+        /// <summary>
+        /// Initializes the microphone from the default audio device
+        /// </summary>
+        /// <returns>True if the microphone is initialized, false otherwise</returns>
+        public bool InitializeMicrophone()
+        {
+            if (MicrophoneInitialized) return true;
+
+            try
+            {
+                _recognizer.SetInputToDefaultAudioDevice();
+                MicrophoneInitialized = true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error initializing microphone");
+                return false;
+            }
+        }
         /// <summary>
         /// Gets a dictionary that contains unique location names for each
         /// location.
@@ -452,10 +482,9 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void StartTracking()
         {
-            // Load the modules and start speech recognition
+            // Load the modules for voice recognition
             Syntax = _moduleFactory.LoadAll(this, _recognizer);
-            _recognizer.RecognizeAsync(RecognizeMode.Multiple);
-
+            EnableVoiceRecognition();
             Say(Responses.StartedTracking);
             RestartIdleTimers();
         }
@@ -465,11 +494,35 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void StopTracking()
         {
-            _recognizer.RecognizeAsyncStop();
+            DisableVoiceRecognition();
             Say(Responses.StoppedTracking, wait: true);
 
             foreach (var timer in _idleTimers.Values)
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
+        /// <summary>
+        /// Enables the voice recognizer if the microphone is enabled
+        /// </summary>
+        public void EnableVoiceRecognition()
+        {
+            if (MicrophoneInitialized && !VoiceRecognitionEnabled)
+            {
+                _recognizer.RecognizeAsync(RecognizeMode.Multiple);
+                VoiceRecognitionEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Disables voice recognition if it was previously enabled
+        /// </summary>
+        public void DisableVoiceRecognition()
+        {
+            if (VoiceRecognitionEnabled)
+            {
+                VoiceRecognitionEnabled = false;
+                _recognizer.RecognizeAsyncStop();
+            }
         }
 
         /// <summary>
