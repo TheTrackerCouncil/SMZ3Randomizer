@@ -178,6 +178,11 @@ namespace Randomizer.App
         /// <param name="assumeKeys">Set to true if keys should be ignored in the logic for clearing locations</param>
         public void ClearRegion(Region region, bool trackItems = false, bool assumeKeys = false)
         {
+            if (region.Name == "Hyrule Castle")
+            {
+                assumeKeys = false;
+            }
+
             _tracker.ClearArea(region, trackItems, false, null, assumeKeys);
         }
 
