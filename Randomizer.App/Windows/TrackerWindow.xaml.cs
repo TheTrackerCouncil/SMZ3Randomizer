@@ -103,7 +103,7 @@ namespace Randomizer.App
         protected static Image GetGridItemControl(string imageFileName, int column, int row, string overlayFileName)
             => GetGridItemControl(imageFileName, column, row, new Overlay(overlayFileName, 0, 0));
 
-        protected static Image GetGridItemControl(string imageFileName, int column, int row, int counter, string overlayFileName)
+        protected static Image GetGridItemControl(string imageFileName, int column, int row, int counter, string overlayFileName, int minCounter = 2)
         {
             var overlays = new List<Overlay>();
             if (overlayFileName != null)
@@ -111,6 +111,10 @@ namespace Randomizer.App
 
             if (counter > 9)
             {
+                // Limit missiles to 99 for display purposes until I can be
+                // bothered to update the display code to not suck
+                counter = Math.Clamp(counter, 0, 99);
+
                 var tensDigit = counter / 10 % 10;
                 overlays.Add(new(GetDigitMarkFileName(tensDigit), 0, 0)
                 {
@@ -125,7 +129,7 @@ namespace Randomizer.App
                     OriginPoint = Origin.BottomLeft
                 });
             }
-            else if (counter > 1)
+            else if (counter >= minCounter)
             {
                 var digit = counter % 10;
                 overlays.Add(new(GetDigitMarkFileName(digit), 0, 0)
@@ -234,7 +238,7 @@ namespace Randomizer.App
 
                     var image = GetGridItemControl(fileName,
                         item.Column.Value, item.Row.Value,
-                        item.Counter, overlay);
+                        item.Counter, overlay, minCounter: 2);
                     image.Tag = item;
                     image.ContextMenu = CreateContextMenu(item);
                     image.MouseLeftButtonDown += Image_MouseDown;
@@ -252,7 +256,7 @@ namespace Randomizer.App
                         "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
                     var image = GetGridItemControl(rewardPath,
                         dungeon.Column.Value, dungeon.Row.Value,
-                        dungeon.TreasureRemaining, overlayPath);
+                        dungeon.TreasureRemaining, overlayPath, minCounter: 1);
                     image.Tag = dungeon;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
