@@ -482,6 +482,19 @@ namespace Randomizer.App
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
+            if (dungeon.Cleared)
+            {
+                var unclear = new MenuItem
+                {
+                    Header = "Reset cleared status",
+                };
+                unclear.Click += (sender, e) =>
+                {
+                    Tracker.MarkDungeonAsIncomplete(dungeon);
+                };
+                menu.Items.Add(unclear);
+            }
+
             foreach (var reward in Enum.GetValues<RewardItem>())
             {
                 var item = new MenuItem

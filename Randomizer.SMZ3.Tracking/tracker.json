@@ -986,6 +986,18 @@
       "Marked {1} as defeated.",
       "Congratulations on beating off {1}."
     ],
+    "DungeonAlreadyCleared": [
+      "But you already cleared {0}.",
+      "But you already defeated {1}."
+    ],
+    "DungeonUncleared": [
+      "Marked {0} as incomplete.",
+      "Marked {1} as still alive."
+    ],
+    "DungeonNotYetCleared": [
+      "But you haven't cleared {0} yet.",
+      "But you never defeated {1} in the first place."
+    ],
     "DungeonRequirementMarked": [
       "Marked {0} as required for {1}"
     ],

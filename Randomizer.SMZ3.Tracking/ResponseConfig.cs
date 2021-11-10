@@ -243,6 +243,39 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Cleared {0}.", "Marked {1} as defeated.");
 
         /// <summary>
+        /// Gets the phrases to respond with when clearing a dungeon that was
+        /// already cleared.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon that was
+        /// cleared. <c>{1}</c> is a placeholder for the boss of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonAlreadyCleared { get; init; }
+            = new SchrodingersString("You already cleared {0}.", "You already defeated {1}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when reverting the cleared status
+        /// of a dungeon.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is a placeholder for the boss of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonUncleared { get; init; }
+            = new SchrodingersString("Reset {0}.", "Marked {1} as still alive.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when reverting the cleared status
+        /// of a dungeon that wasn't cleared yet.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is a placeholder for the boss of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonNotYetCleared { get; init; }
+            = new SchrodingersString("You haven't cleared {0} yet.", "You never defeated {1} in the first place.");
+
+        /// <summary>
         /// Gets the phrases to respond with when marking the medallion
         /// requirement of a dungeon.
         /// </summary>

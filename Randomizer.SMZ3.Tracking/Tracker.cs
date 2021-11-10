@@ -1001,12 +1001,18 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Marks a dungeon as cleared.
+        /// Marks a dungeon as cleared and, if possible, tracks the boss reward.
         /// </summary>
         /// <param name="dungeon">The dungeon that was cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
         public void MarkDungeonAsCleared(ZeldaDungeon dungeon, float? confidence = null)
         {
+            if (dungeon.Cleared)
+            {
+                Say(Responses.DungeonAlreadyCleared.Format(dungeon.Name, dungeon.Boss));
+                return;
+            }
+
             dungeon.Cleared = true;
             Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
 
@@ -1038,6 +1044,63 @@ namespace Randomizer.SMZ3.Tracking
             {
                 dungeon.Cleared = false;
                 undoTrack?.Invoke();
+            });
+        }
+
+        /// <summary>
+        /// Un-marks a dungeon as cleared and, if possible, untracks the boss reward.
+        /// </summary>
+        /// <param name="dungeon">The dungeon that should be un-cleared.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void MarkDungeonAsIncomplete(ZeldaDungeon dungeon, float? confidence = null)
+        {
+            if (!dungeon.Cleared)
+            {
+                Say(Responses.DungeonNotYetCleared.Format(dungeon.Name, dungeon.Boss));
+                return;
+            }
+
+            dungeon.Cleared = false;
+            Say(Responses.DungeonUncleared.Format(dungeon.Name, dungeon.Boss));
+
+            // Try to untrack the associated boss reward item
+            Action? undoUnclear = null;
+            Action? undoUntrackTreasure = null;
+            Action? undoUntrack = null;
+            if (dungeon.LocationId != null)
+            {
+                var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
+                if (rewardLocation.Item != null)
+                {
+                    var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
+                    if (item != null && item.TrackingState > 0)
+                    {
+                        UntrackItem(item);
+                        undoUntrack = _undoHistory.Pop();
+                    }
+
+                    if (!rewardLocation.Item.IsDungeonItem)
+                    {
+                        dungeon.TreasureRemaining++;
+                        undoUntrackTreasure = () => dungeon.TreasureRemaining--;
+                    }    
+                }
+
+                if (rewardLocation.Cleared)
+                {
+                    rewardLocation.Cleared = false;
+                    OnLocationCleared(new(rewardLocation, null));
+                    undoUnclear = () => rewardLocation.Cleared = true;
+                }
+            }
+
+            OnDungeonUpdated(new TrackerEventArgs(confidence));
+            AddUndo(() =>
+            {
+                dungeon.Cleared = false;
+                undoUntrack?.Invoke();
+                undoUntrackTreasure?.Invoke();
+                undoUnclear?.Invoke();
             });
         }
 
