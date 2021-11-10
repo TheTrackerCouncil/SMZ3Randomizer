@@ -175,9 +175,15 @@ namespace Randomizer.App
         /// </summary>
         /// <param name="region">The region to clear</param>
         /// <param name="trackItems">If items in the region should be tracked or not</param>
-        public void ClearRegion(Region region, bool trackItems = false)
+        /// <param name="assumeKeys">Set to true if keys should be ignored in the logic for clearing locations</param>
+        public void ClearRegion(Region region, bool trackItems = false, bool assumeKeys = false)
         {
-            _tracker.ClearArea(region, trackItems);
+            if (region.Name == "Hyrule Castle")
+            {
+                assumeKeys = false;
+            }
+
+            _tracker.ClearArea(region, trackItems, false, null, assumeKeys);
         }
 
         public Dictionary<int, ItemData> MarkedLocations =>  _tracker?.MarkedLocations;

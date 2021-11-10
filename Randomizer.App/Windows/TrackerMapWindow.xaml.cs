@@ -169,7 +169,7 @@ namespace Randomizer.App
             }
             else if (shape.Tag is Region region)
             {
-                Syncer.ClearRegion(region);
+                Syncer.ClearRegion(region, false, true);
             }
             
         }

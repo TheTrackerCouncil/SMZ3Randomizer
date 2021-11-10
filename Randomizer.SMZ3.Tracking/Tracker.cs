@@ -850,7 +850,8 @@ namespace Randomizer.SMZ3.Tracking
         /// available with current items.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null)
+        /// <param name="assumeKeys">Set to true to ignore keys when clearing the location.</param>
+        public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
             var dungeon = Dungeons.SingleOrDefault(x => x.Is(area));
             if (dungeon != null)
@@ -861,7 +862,7 @@ namespace Randomizer.SMZ3.Tracking
 
             var locations = area.Locations
                 .Where(x => !x.Cleared)
-                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression()))
+                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression(assumeKeys)))
                 .ToImmutableList();
 
             if (locations.Count == 0)
