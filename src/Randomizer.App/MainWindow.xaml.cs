@@ -307,7 +307,7 @@ namespace Randomizer.App
         private void GenerateStatsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var config = Options.ToConfig();
-            var randomizer = new SMZ3.Generation.Smz3Randomizer();
+            var randomizer = _serviceProvider.GetRequiredService<Smz3Randomizer>();
 
             const int numberOfSeeds = 10000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");

@@ -19,11 +19,18 @@ namespace Randomizer.SMZ3.Generation
         private static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex continousSpace = new Regex(@" +");
 
+        public Smz3Randomizer(IFiller filler)
+        {
+            Filler = filler;
+        }
+
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
 
         public World LastGeneratedWorld { get; private set; }
 
         public SeedData LastGeneratedSeed { get; private set; }
+
+        protected IFiller Filler { get; }
 
         public static int ParseSeed(ref string input)
         {
@@ -73,8 +80,8 @@ namespace Randomizer.SMZ3.Generation
                 //}
             }
 
-            var filler = new Filler(worlds, config, rng, cancellationToken);
-            filler.Fill();
+            Filler.SetRandom(rng);
+            Filler.Fill(worlds, config, cancellationToken);
 
             var playthrough = new Playthrough(worlds, config);
             var spheres = playthrough.Generate();

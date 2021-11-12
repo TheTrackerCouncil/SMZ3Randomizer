@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
+using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -81,9 +82,13 @@ namespace Randomizer.App
                 return configProvider.GetTrackerConfig();
             });
 
+            services.AddSingleton<IFiller, StandardFiller>();
             services.AddSingleton<Smz3Randomizer>();
             services.AddTracker<Smz3Randomizer>()
                 .AddOptionalModule<PegWorldModeModule>();
+
+            services.AddScoped<TrackerLocationSyncer>();
+            services.AddSingleton<MainWindow>();
             services.AddWindows<App>();
         }
 

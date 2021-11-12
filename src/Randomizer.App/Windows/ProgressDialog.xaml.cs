@@ -20,6 +20,7 @@ namespace Randomizer.App
     /// <summary>
     /// Interaction logic for ProgressDialog.xaml
     /// </summary>
+    [NotAService]
     public partial class ProgressDialog : Window, IProgress<double>
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new();

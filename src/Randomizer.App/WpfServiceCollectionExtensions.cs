@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Randomizer.App
 {
@@ -21,7 +22,10 @@ namespace Randomizer.App
                 .Where(x => x.IsAssignableTo(typeof(Window)));
             foreach (var window in windows)
             {
-                services.AddScoped(window);
+                if (window.GetCustomAttribute<NotAServiceAttribute>() != null)
+                    continue;
+
+                services.TryAddScoped(window);
             }
 
             return services;

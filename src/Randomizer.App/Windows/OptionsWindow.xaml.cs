@@ -19,6 +19,7 @@ namespace Randomizer.App
     /// <summary>
     /// Interaction logic for OptionsWindow.xaml
     /// </summary>
+    [NotAService]
     public partial class OptionsWindow : Window
     {
         public OptionsWindow(GeneralOptions options)

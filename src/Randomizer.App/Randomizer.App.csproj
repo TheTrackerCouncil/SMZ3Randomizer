@@ -62,8 +62,16 @@
     <Resource Include="Resources\Font Awesome 5 Free-Solid-900.otf" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appSettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <Exec Command="xcopy $(ProjectDir)Sprites\ $(TargetDir)Sprites\ /S /I /Y" />
   </Target>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://json.schemastore.org/appsettings.json" /></VisualStudio></ProjectExtensions>
 
 </Project>

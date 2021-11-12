@@ -538,12 +538,10 @@ namespace Randomizer.App
                 ShowNoMicrophoneWarning();
             }
 
-            _locationSyncer = new TrackerLocationSyncer(Tracker);
-
-            _locationsWindow = new TrackerLocationsWindow(_locationSyncer);
-            _locationsWindow.Show();
-
             var scope = _serviceProvider.CreateScope();
+            _locationSyncer = scope.ServiceProvider.GetRequiredService<TrackerLocationSyncer>();
+            _locationsWindow = scope.ServiceProvider.GetRequiredService<TrackerLocationsWindow>();
+            _locationsWindow.Show();
             _trackerMapWindow = scope.ServiceProvider.GetRequiredService<TrackerMapWindow>();
             _trackerMapWindow.Syncer = _locationSyncer;
             _trackerMapWindow.Show();
