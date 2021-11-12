@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
@@ -27,8 +30,12 @@ namespace Randomizer.App
     {
         private readonly string _optionsPath;
         private readonly Task _loadSpritesTask;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly Smz3Randomizer _randomizer;
+        private readonly ILogger<MainWindow> _logger;
+        private TrackerWindow _trackerWindow;
 
-        public MainWindow()
+        public MainWindow(IServiceProvider serviceProvider, Smz3Randomizer randomizer, ILogger<MainWindow> logger)
         {
             InitializeComponent();
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -55,6 +62,11 @@ namespace Randomizer.App
             }
 
             DataContext = Options;
+            _serviceProvider = serviceProvider;
+            _randomizer = randomizer;
+            _logger = logger;
+
+            CheckSpeechRecognition();
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
@@ -99,8 +111,7 @@ namespace Randomizer.App
 
         public string SaveRomToFile()
         {
-            var randomizer = new SMZ3.Generation.Randomizer();
-            var rom = GenerateRom(randomizer, out var seed);
+            var rom = GenerateRom(out var seed);
 
             var folderPath = Path.Combine(RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
             Directory.CreateDirectory(folderPath);
@@ -117,10 +128,10 @@ namespace Randomizer.App
             return romPath;
         }
 
-        protected byte[] GenerateRom(SMZ3.Generation.Randomizer randomizer, out SeedData seed)
+        protected byte[] GenerateRom(out SeedData seed)
         {
             var config = Options.ToConfig();
-            seed = randomizer.GenerateSeed(config, Options.SeedOptions.Seed, CancellationToken.None);
+            seed = _randomizer.GenerateSeed(config, Options.SeedOptions.Seed, CancellationToken.None);
 
             byte[] rom;
             using (var smRom = File.OpenRead(Options.GeneralOptions.SMRomPath))
@@ -138,6 +149,32 @@ namespace Randomizer.App
             Options.PatchOptions.SamusSprite.ApplyTo(rom);
             Options.PatchOptions.LinkSprite.ApplyTo(rom);
             return rom;
+        }
+
+        private static string Underline(string text, char line = '-')
+            => text + "\n" + new string(line, text.Length);
+
+        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
+
+        private void CheckSpeechRecognition()
+        {
+            try
+            {
+                var installedRecognizers = System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers();
+                _logger.LogInformation("{count} installed recognizer(s): {recognizers}",
+                    installedRecognizers.Count, string.Join(", ", installedRecognizers.Select(x => x.Description)));
+                if (installedRecognizers.Count == 0)
+                {
+                    StartTracker.IsEnabled = false;
+                    StartTracker.ToolTip = "No speech recognition capabilities detected. Please check Windows settings under Time & Language > Speech.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while checking speech recognition capabilities.");
+                StartTracker.IsEnabled = false;
+                StartTracker.ToolTip = "An error occurred while checking speech recognition capabilities. Please check the randomizer log file and ensure the Windows settings under Time & Language > Speech are correct.";
+            }
         }
 
         private string GetSpoilerLog(SeedData seed)
@@ -180,11 +217,6 @@ namespace Randomizer.App
 
             return log.ToString();
         }
-
-        private static string Underline(string text, char line = '-')
-            => text + "\n" + new string(line, text.Length);
-
-        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
 
         private bool EnableMsu1Support(byte[] rom, string romPath)
         {
@@ -275,7 +307,7 @@ namespace Randomizer.App
         private void GenerateStatsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var config = Options.ToConfig();
-            var randomizer = new SMZ3.Generation.Randomizer();
+            var randomizer = new SMZ3.Generation.Smz3Randomizer();
 
             const int numberOfSeeds = 10000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
@@ -444,6 +476,29 @@ namespace Randomizer.App
                     .Select(x => x.locationId)
                     .Count();
             }
+        }
+
+        private void StartTracker_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var scope = _serviceProvider.CreateScope();
+                _trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
+                _trackerWindow.Options = Options.GeneralOptions.GetTrackerOptions();
+                _trackerWindow.Closed += (_, _) => scope.Dispose();
+                _trackerWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "An unhandled exception occurred when starting the tracker.");
+            }
+        }
+
+        private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var aboutWindow = _serviceProvider.GetRequiredService<AboutWindow>();
+            aboutWindow.Owner = this;
+            aboutWindow.ShowDialog();
         }
     }
 }

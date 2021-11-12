@@ -1,0 +1,165 @@
+﻿<Window x:Class="Randomizer.App.TrackerLocationsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
+        xmlns:local="clr-namespace:Randomizer.App"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:TrackerViewModel, IsDesignTimeCreatable=True}"
+        Title="Tracker — Locations — SMZ3 Cas' Randomizer"
+        Height="600"
+        Width="450"
+        Closing="Window_Closing">
+  <Window.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <CollectionViewSource x:Key="topLocations"
+                          Source="{Binding TopLocations}">
+      <CollectionViewSource.GroupDescriptions>
+        <PropertyGroupDescription PropertyName="Area" />
+      </CollectionViewSource.GroupDescriptions>
+    </CollectionViewSource>
+  </Window.Resources>
+
+  <Grid Margin="11">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <TextBlock Text="Marked locations"
+               Grid.Row="0"
+               Style="{StaticResource Heading}" />
+    <ListView ItemsSource="{Binding MarkedLocations}"
+              Grid.Row="1"
+              BorderThickness="0"
+              Margin="0,0,0,11">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+          <Setter Property="Focusable"
+                  Value="false" />
+        </Style>
+      </ListView.ItemContainerStyle>
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="32px" />
+              <ColumnDefinition Width="7" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Source="{Binding ItemSprite}"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   Opacity="{Binding Opacity}"
+                   Grid.RowSpan="2"
+                   Grid.Column="0" />
+
+            <TextBlock Text="{Binding Location}"
+                       Grid.Row="0"
+                       Grid.Column="2"
+                       Opacity="{Binding Opacity}"
+                       TextTrimming="CharacterEllipsis"
+                       FontWeight="Bold" />
+            <TextBlock Text="{Binding Area}"
+                       Grid.Row="1"
+                       Grid.Column="2"
+                       TextTrimming="CharacterEllipsis"
+                       Opacity="{Binding Opacity}"
+                       Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+          </Grid>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+
+    <TextBlock Text="All locations"
+               Grid.Row="2"
+               Style="{StaticResource Heading}" />
+    <StackPanel Orientation="Horizontal"
+                Grid.Row="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center">
+      <CheckBox Content="Show out-of-logic"
+                IsChecked="{Binding ShowOutOfLogicLocations}"
+                VerticalAlignment="Center"
+                Margin="7,0" />
+      <StackPanel Orientation="Horizontal"
+                  Style="{StaticResource RadioToggleButtonGroup}"
+                  VerticalAlignment="Top">
+        <RadioButton GroupName="GameFilter"
+                     Content="Both"
+                     ToolTip="Show available locations from both games"
+                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.None}}" />
+        <RadioButton GroupName="GameFilter"
+                     Content="ALttP"
+                     ToolTip="Only show available locations in A Link to the Past"
+                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.ZeldaOnly}}" />
+        <RadioButton GroupName="GameFilter"
+                     Content="SM"
+                     ToolTip="Only show available locations in Super Metroid"
+                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.MetroidOnly}}" />
+      </StackPanel>
+    </StackPanel>
+
+
+    <ScrollViewer Grid.Row="3">
+      <ItemsControl ItemsSource="{Binding Source={StaticResource topLocations}}"
+                    BorderThickness="0"
+                    Margin="0,0,0,11">
+        <ItemsControl.GroupStyle>
+          <GroupStyle>
+            <GroupStyle.HeaderTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="{Binding Path=ItemCount}"
+                             FontWeight="Bold" />
+                  <Image Source="{Binding ChestSprite, RelativeSource={RelativeSource AncestorType={x:Type local:TrackerLocationsWindow}, Mode=FindAncestor}}"
+                         Width="16px"
+                         Height="16px"
+                         Margin="3,0,7,0" />
+                  <TextBlock Text="{Binding Path=Name}"
+                             FontWeight="Bold" />
+                </StackPanel>
+              </DataTemplate>
+            </GroupStyle.HeaderTemplate>
+          </GroupStyle>
+        </ItemsControl.GroupStyle>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="3" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+
+              <StackPanel Orientation="Horizontal"
+                          Grid.Column="0">
+                <TextBlock Text="{Binding Name}"
+                           Opacity="{Binding Opacity}" />
+                <Image Source="{Binding KeySprite, RelativeSource={RelativeSource AncestorType={x:Type local:TrackerLocationsWindow}, Mode=FindAncestor}}"
+                       Visibility="{Binding InLogicWithKeys, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Width="8px"
+                       Height="16px"
+                       Margin="3,0,7,0"
+                       Stretch="Uniform"
+                       ToolTip="Requires one or more keys" />
+              </StackPanel>
+
+              <Button Grid.Column="2"
+                      Style="{StaticResource InlineTextButton}"
+                      Command="{Binding Clear}">×</Button>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </Grid>
+</Window>

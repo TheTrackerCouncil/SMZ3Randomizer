@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 using Randomizer.SMZ3.Regions;
@@ -82,7 +83,8 @@ namespace Randomizer.SMZ3
                 UpperNorfairCrocomire, LowerNorfairWest, LowerNorfairEast,
                 WreckedShip
             };
-            Locations = Regions.SelectMany(x => x.Locations).ToList();
+            Locations = Regions.SelectMany(x => x.Locations).ToImmutableList();
+            Rooms = Regions.SelectMany(x => x.Rooms).ToImmutableList();
         }
 
         public Config Config { get; }
@@ -90,6 +92,7 @@ namespace Randomizer.SMZ3
         public string Guid { get; }
         public int Id { get; }
         public IEnumerable<Region> Regions { get; }
+        public IEnumerable<Room> Rooms { get; }
         public IEnumerable<Location> Locations { get; }
         public IEnumerable<Item> Items => Locations.Select(l => l.Item).Where(i => i != null);
 
@@ -134,9 +137,18 @@ namespace Randomizer.SMZ3
         public LowerNorfairEast LowerNorfairEast { get; }
         public WreckedShip WreckedShip { get; }
 
+        public Location FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
+        {
+            return Locations.FirstOrDefault(x => x.Name.Equals(name, comparisonType))
+                ?? Locations.FirstOrDefault(x => x.AlternateNames.Contains(name, StringComparer.FromComparison(comparisonType)));
+        }
+
         public bool CanAquire(Progression items, Reward reward)
         {
-            return Regions.OfType<IHasReward>().First(x => reward == x.Reward).CanComplete(items);
+            var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.Reward);
+            if (dungeonWithReward == null)
+                return false;
+            return dungeonWithReward.CanComplete(items);
         }
 
         public bool CanAquireAll(Progression items, params Reward[] rewards)

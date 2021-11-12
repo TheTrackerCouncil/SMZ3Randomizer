@@ -1,0 +1,62 @@
+﻿<Window x:Class="Randomizer.App.TrackerHelpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Randomizer.App"
+        mc:Ignorable="d"
+        Title="Tracker — Help — SMZ3 Cas' Randomizer"
+        Height="500"
+        Width="450"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+  <Grid Margin="11">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.IsSharedSizeScope="True"
+          Grid.Row="0"
+          Margin="0,0,0,7">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled">
+        <ItemsControl ItemsSource="{Binding SpeechRecognitionSyntax, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TrackerHelpWindow}}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Grid Margin="0,0,0,11">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="125"
+                                    SharedSizeGroup="key" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding Key, StringFormat={}{0}\:}"
+                           Grid.Column="0"
+                           TextWrapping="Wrap"
+                           Margin="0,0,3,0"
+                           FontWeight="Bold" />
+                <ItemsControl ItemsSource="{Binding Value}"
+                              Grid.Column="1">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding}"
+                                 TextWrapping="Wrap"
+                                 Margin="0,0,3,7" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+
+    <Button x:Name="OkButton"
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            IsDefault="True"
+            Click="OkButton_Click">OK</Button>
+  </Grid>
+</Window>

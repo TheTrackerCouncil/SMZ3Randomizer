@@ -1,0 +1,1070 @@
+﻿{
+  "Items": [
+    {
+      "Name": [ "Nothing" ],
+      "Article": "",
+      "InternalItemType": 0
+    },
+    {
+      "Name": [ "Bullshit" ],
+      "Plural": [ "Bullshit" ],
+      "Article": "",
+      "InternalItemType": 0,
+      "Multiple": true
+    },
+    {
+      "Name": [ "Content" ],
+      "Plural": [ "Content" ],
+      "Article": "",
+      "InternalItemType": 0,
+      "Column": 10,
+      "Row": 5,
+      "Multiple": true
+    },
+    {
+      "Name": [ "Death" ],
+      "Plural": [ "Deaths" ],
+      "Article": "",
+      "InternalItemType": 0,
+      "Multiple": true
+    },
+    {
+      "Name": [ "Shaktool Go Mode" ],
+      "Article": "",
+      "InternalItemType": 0
+    },
+    {
+      "Name": [
+        "Kraid",
+        [ "Kraid's Awful Son's Father", 0.01 ]
+      ],
+      "InternalItemType": 0,
+      "Column": 5,
+      "Row": 5
+    },
+    {
+      "Name": [ "Crocomire" ],
+      "Image": "stoke.png",
+      "InternalItemType": 0,
+      "Column": 6,
+      "Row": 5
+    },
+    {
+      "Name": [
+        "Phantoon",
+        [ "Spooky Ghost", 0.25 ]
+      ],
+      "InternalItemType": 0,
+      "Column": 7,
+      "Row": 5
+    },
+    {
+      "Name": [ "Shaktool", "The Shaktool" ],
+      "InternalItemType": 0,
+      "Column": 5,
+      "Row": 6
+    },
+    {
+      "Name": [ "Draygon" ],
+      "InternalItemType": 0,
+      "Column": 6,
+      "Row": 6
+    },
+    {
+      "Name": [ "Ridley" ],
+      "InternalItemType": 0,
+      "Column": 7,
+      "Row": 6
+    },
+    {
+      "Name": "Fire Rod",
+      "InternalItemType": 7,
+      "Column": 0,
+      "Row": 1
+    },
+    {
+      "Name": [ "Ice Rod", "Nice Rod" ],
+      "InternalItemType": 8,
+      "Column": 1,
+      "Row": 1
+    },
+    {
+      "Name": "Hammer",
+      "InternalItemType": 9,
+      "Column": 1,
+      "Row": 2
+    },
+    {
+      "Name": "Hookshot",
+      "InternalItemType": 10,
+      "Column": 3,
+      "Row": 0
+    },
+    {
+      "Name": [
+        [ "Bow", 0 ],
+        "Boh",
+        [ "Boh and Arrow", 0.2 ]
+      ],
+      "InternalItemType": 11,
+      "Column": 0,
+      "Row": 0
+    },
+    {
+      "Name": "Blue Boomerang",
+      "InternalItemType": 12,
+      "Column": 1,
+      "Row": 0
+    },
+    {
+      "Name": [ "Magic Powder", "Drugs" ],
+      "InternalItemType": 13,
+      "Column": 4,
+      "Row": 0
+    },
+    {
+      "Name": "Bombos",
+      "InternalItemType": 15,
+      "Article": "",
+      "Column": 2,
+      "Row": 1
+    },
+    {
+      "Name": "Ether",
+      "InternalItemType": 16,
+      "Article": "",
+      "Column": 3,
+      "Row": 1
+    },
+    {
+      "Name": "Quake",
+      "InternalItemType": 17,
+      "Article": "",
+      "Column": 4,
+      "Row": 1
+    },
+    {
+      "Name": "Lamp",
+      "InternalItemType": 18,
+      "Column": 0,
+      "Row": 2
+    },
+    {
+      "Name": [
+        "Shovel",
+        "Digging Tool",
+        [ "Shaktool Junior", 0.01 ]
+      ],
+      "InternalItemType": 19,
+      "Column": 5,
+      "Row": 1
+    },
+    {
+      "Name": [ "Flute", "Ocarina" ],
+      "InternalItemType": 20,
+      "Column": 2,
+      "Row": 2
+    },
+    {
+      "Name": [
+        "Cane of Somaria",
+        "Cane of Technical Prowess",
+        "Tech Cane",
+        "The Tech",
+        [ "Red Cane", 0 ]
+      ],
+      "InternalItemType": 21,
+      "Column": 1,
+      "Row": 3
+    },
+    {
+      "Name": "Bottle",
+      "InternalItemType": 22,
+      "Stages": {
+        "1": [ "First bottle" ],
+        "2": [ "Second bottle" ],
+        "3": [ "Third bottle" ],
+        "4": [ "Fourth bottle" ]
+      },
+      "Column": 0,
+      "Row": 3
+    },
+    {
+      "Name": [ "Heart piece", "Piece of Heart" ],
+      "Plural": [ "Heart pieces", "Pieces of Heart" ],
+      "InternalItemType": 23,
+      "Multiple": true
+    },
+    {
+      "Name": [
+        "Cane of Byrna",
+        [ "Cane of Brian", 0.01 ]
+      ],
+      "InternalItemType": 24,
+      "Column": 2,
+      "Row": 3
+    },
+    {
+      "Name": "Magic Cape",
+      "InternalItemType": 25,
+      "Column": 3,
+      "Row": 3
+    },
+    {
+      "Name": [ "Magic Mirror", "Mirror" ],
+      "InternalItemType": 26,
+      "Column": 4,
+      "Row": 3
+    },
+    {
+      "Name": [ "Book of Mudora", "The Sacred Texts" ],
+      "InternalItemType": 29,
+      "Column": 4,
+      "Row": 2
+    },
+    {
+      "Name": [
+        [ "Zora's Flippers", 0 ],
+        "Flippers"
+      ],
+      "InternalItemType": 30,
+      "Column": 2,
+      "Row": 4
+    },
+    {
+      "Name": "Moon Pearl",
+      "InternalItemType": 31,
+      "Column": 5,
+      "Row": 2
+    },
+    {
+      "Name": [ "Bug Catching Net", "Bug net" ],
+      "InternalItemType": 33,
+      "Column": 3,
+      "Row": 2
+    },
+    {
+      "Name": [ "Bombs", "Zelda Bombs" ],
+      "Plural": [ "Bombs", "Zelda Bombs" ],
+      "InternalItemType": 40,
+      "Article": "",
+      "Multiple": true
+    },
+    {
+      "Name": "Mushroom",
+      "InternalItemType": 41,
+      "Column": 5,
+      "Row": 0
+    },
+    {
+      "Name": "Red Boomerang",
+      "InternalItemType": 42,
+      "Column": 2,
+      "Row": 0
+    },
+    {
+      "Name": [ "One Rupee", "Green Rupee" ],
+      "InternalItemType": 52,
+      "Artice": "",
+      "Multiple": true
+    },
+    {
+      "Name": [ "Five Rupees", "Blue Rupee" ],
+      "InternalItemType": 53,
+      "Artice": "",
+      "Multiple": true
+    },
+    {
+      "Name": [ "Twenty Rupees", "Red Rupee", "Big 20" ],
+      "InternalItemType": 54,
+      "Artice": "",
+      "Multiple": true
+    },
+    {
+      "Name": [ "Heart Container", "Love" ],
+      "InternalItemType": 62,
+      "Multiple": true,
+      "Column": 5,
+      "Row": 3
+    },
+    {
+      "Name": "Heart Container Refill",
+      "InternalItemType": 63
+    },
+    {
+      "Name": "One Hundred Rupees",
+      "InternalItemType": 64,
+      "Artice": "",
+      "Multiple": true
+    },
+    {
+      "Name": "Fifty Rupees",
+      "InternalItemType": 65,
+      "Artice": "",
+      "Multiple": true
+    },
+    {
+      "Name": "Single Arrow",
+      "InternalItemType": 67,
+      "Multiple": true
+    },
+    {
+      "Name": "Ten Arrows",
+      "InternalItemType": 68,
+      "Artice": "",
+      "Multiple": true
+    },
+    {
+      "Name": "Three Hundred Rupees",
+      "InternalItemType": 70,
+      "Artice": "",
+      "Multiple": true
+    },
+    {
+      "Name": [ "Pegasus Boots", "Boots" ],
+      "InternalItemType": 75,
+      "Column": 1,
+      "Row": 4
+    },
+    {
+      "Name": "Half Magic",
+      "InternalItemType": 78,
+      "Artice": "",
+      "Column": 3,
+      "Row": 4
+    },
+    {
+      "Name": "+5 Bomb Capacity",
+      "InternalItemType": 81,
+      "Artice": ""
+    },
+    {
+      "Name": "+10 Bomb Capacity",
+      "InternalItemType": 82,
+      "Artice": ""
+    },
+    {
+      "Name": "+5 Arrow Capacity",
+      "InternalItemType": 83,
+      "Artice": ""
+    },
+    {
+      "Name": "+10 Arrow Capacity",
+      "InternalItemType": 84,
+      "Artice": ""
+    },
+    {
+      "Name": [ "Silver Arrows", "Silvers" ],
+      "InternalItemType": 88,
+      "Column": 0,
+      "Row": 0
+    },
+    {
+      "Name": [
+        "Sword",
+        [ "Progressive Sword", 0 ]
+      ],
+      "InternalItemType": 94,
+      "Multiple": true,
+      "Stages": {
+        "1": [ "Fighter's Sword" ],
+        "2": [ "Master Sword", "Blade of Evil's Bane", "Sword of Legend", "Sword that Seals the Darkness" ],
+        "3": [ "Tempered Sword", "Bacon" ],
+        "4": [ "Gold Sword", "Butter" ]
+      },
+      "Column": 4,
+      "Row": 4
+    },
+    {
+      "Name": [
+        "Shield",
+        [ "Progressive Shield", 0 ]
+      ],
+      "InternalItemType": 95,
+      "Multiple": true,
+      "Stages": {
+        "1": [ "Fighter's Shield" ],
+        "2": [ "Red Shield" ],
+        "3": [ "Mirror Shield" ]
+      },
+      "Column": 5,
+      "Row": 4
+    },
+    {
+      "Name": [
+        "Mail",
+        [ "Progressive Mail", 0 ]
+      ],
+      "InternalItemType": 96,
+      "Multiple": true,
+      "Stages": {
+        "0": [ "Green Mail" ],
+        "1": [ "Blue Mail" ],
+        "2": [ "Red Mail" ]
+      },
+      "Column": 6,
+      "Row": 4
+    },
+    {
+      "Name": [
+        "Gloves",
+        "Glove",
+        [ "Progressive Glove", 0 ]
+      ],
+      "InternalItemType": 97,
+      "Column": 0,
+      "Row": 4,
+      "Multiple": true,
+      "Stages": {
+        "1": [ "Power Glove" ],
+        "2": [ "Titan's Mitt", "Tiddy Mitts" ]
+      }
+    },
+    {
+      "Name": "Ganons Tower Big Key",
+      "InternalItemType": 146
+    },
+    {
+      "Name": "Turtle Rock Big Key",
+      "InternalItemType": 147
+    },
+    {
+      "Name": "Thieves Town Big Key",
+      "InternalItemType": 148
+    },
+    {
+      "Name": "Tower of Hera Big Key",
+      "InternalItemType": 149
+    },
+    {
+      "Name": "Ice Palace Big Key",
+      "InternalItemType": 150
+    },
+    {
+      "Name": "Skull Woods Big Key",
+      "InternalItemType": 151
+    },
+    {
+      "Name": "Misery Mire Big Key",
+      "InternalItemType": 152
+    },
+    {
+      "Name": "Palace of Darkness Big Key",
+      "InternalItemType": 153
+    },
+    {
+      "Name": "Swamp Palace Big Key",
+      "InternalItemType": 154
+    },
+    {
+      "Name": "Desert Palace Big Key",
+      "InternalItemType": 156
+    },
+    {
+      "Name": "Eastern Palace Big Key",
+      "InternalItemType": 157
+    },
+    {
+      "Name": "Sewer Key",
+      "InternalItemType": 160,
+      "Multiple": true
+    },
+    {
+      "Name": "Desert Palace Key",
+      "InternalItemType": 163,
+      "Multiple": true
+    },
+    {
+      "Name": "Castle Tower Key",
+      "InternalItemType": 164,
+      "Multiple": true
+    },
+    {
+      "Name": "Swamp Palace Key",
+      "InternalItemType": 165,
+      "Multiple": true
+    },
+    {
+      "Name": "Palace of Darkness Key",
+      "InternalItemType": 166,
+      "Multiple": true
+    },
+    {
+      "Name": "Misery Mire Key",
+      "InternalItemType": 167,
+      "Multiple": true
+    },
+    {
+      "Name": "Skull Woods Key",
+      "InternalItemType": 168,
+      "Multiple": true
+    },
+    {
+      "Name": "Ice Palace Key",
+      "InternalItemType": 169,
+      "Artice": "an",
+      "Multiple": true
+    },
+    {
+      "Name": "Tower of Hera Key",
+      "InternalItemType": 170,
+      "Multiple": true
+    },
+    {
+      "Name": "Thieves Town Key",
+      "InternalItemType": 171,
+      "Multiple": true
+    },
+    {
+      "Name": "Turtle Rock Key",
+      "InternalItemType": 172,
+      "Multiple": true
+    },
+    {
+      "Name": "Ganons Tower Key",
+      "InternalItemType": 173,
+      "Multiple": true
+    },
+    {
+      "Name": [ "Grappling Beam", "Grapple Beam", "Grapple" ],
+      "InternalItemType": 176,
+      "Column": 6,
+      "Row": 3
+    },
+    {
+      "Name": [ "X-Ray Scope", "X-Ray" ],
+      "InternalItemType": 177,
+      "Column": 7,
+      "Row": 3
+    },
+    {
+      "Name": [ "Varia Suit", "Various Suits" ],
+      "InternalItemType": 178,
+      "Column": 6,
+      "Row": 2
+    },
+    {
+      "Name": "Spring Ball",
+      "InternalItemType": 179,
+      "Column": 8,
+      "Row": 1
+    },
+    {
+      "Name": [ "Morphing Ball", "Morph Ball", "Morph" ],
+      "InternalItemType": 180,
+      "Column": 6,
+      "Row": 1
+    },
+    {
+      "Name": [ "Screw Attack", "Screwing" ],
+      "InternalItemType": 181,
+      "Column": 10,
+      "Row": 1
+    },
+    {
+      "Name": "Gravity Suit",
+      "InternalItemType": 182,
+      "Column": 7,
+      "Row": 2
+    },
+    {
+      "Name": "Hi-Jump Boots",
+      "InternalItemType": 183,
+      "Column": 8,
+      "Row": 2
+    },
+    {
+      "Name": "Space Jump",
+      "InternalItemType": 184,
+      "Column": 9,
+      "Row": 1
+    },
+    {
+      "Name": "Morph Bombs",
+      "InternalItemType": 185,
+      "Column": 7,
+      "Row": 1
+    },
+    {
+      "Name": "Speed Booster",
+      "InternalItemType": 186,
+      "Column": 9,
+      "Row": 2
+    },
+    {
+      "Name": "Charge Beam",
+      "InternalItemType": 187,
+      "Column": 6,
+      "Row": 0
+    },
+    {
+      "Name": [ "Ice Beam", "Nice Beam" ],
+      "InternalItemType": 188,
+      "Column": 7,
+      "Row": 0
+    },
+    {
+      "Name": "Wave Beam",
+      "InternalItemType": 189,
+      "Column": 8,
+      "Row": 0
+    },
+    {
+      "Name": [
+        [ "Spazer", 0 ],
+        "Spayzer"
+      ],
+      "InternalItemType": 190,
+      "Column": 9,
+      "Row": 0
+    },
+    {
+      "Name": "Plasma Beam",
+      "InternalItemType": 191,
+      "Column": 10,
+      "Row": 0
+    },
+    {
+      "Name": [ "Energy Tank", "E-Tank" ],
+      "InternalItemType": 192,
+      "Artice": "an",
+      "Multiple": true,
+      "Column": 8,
+      "Row": 3
+    },
+    {
+      "Name": "Reserve Tank",
+      "InternalItemType": 193,
+      "Multiple": true,
+      "Column": 9,
+      "Row": 3
+    },
+    {
+      "Name": [
+        "Missile",
+        "Missiles",
+        [ "Missile pack", 0 ]
+      ],
+      "Plural": [
+        "Missiles",
+        [ "Missile packs", 0 ]
+      ],
+      "InternalItemType": 194,
+      "Multiple": true,
+      "CounterMultiplier": 5,
+      "Column": 7,
+      "Row": 4
+    },
+    {
+      "Name": [
+        "Super Missile",
+        "Supers",
+        "Superb Missiles",
+        [ "Super Missile pack", 0 ]
+      ],
+      "Plural": [
+        "Super Missiles",
+        "Supers",
+        "Superb Missiles",
+        [ "Super Missile packs", 0 ]
+      ],
+      "InternalItemType": 195,
+      "Multiple": true,
+      "CounterMultiplier": 5,
+      "Column": 8,
+      "Row": 4
+    },
+    {
+      "Name": [ "Power Bomb", "Powerful Bombs" ],
+      "Plural": [ "Power Bombs", "Powerful Bombs" ],
+      "InternalItemType": 196,
+      "Multiple": true,
+      "CounterMultiplier": 5,
+      "Column": 9,
+      "Row": 4
+    },
+    {
+      "Name": "Crateria Level 1 Keycard",
+      "InternalItemType": 208
+    },
+    {
+      "Name": "Crateria Level 2 Keycard",
+      "InternalItemType": 209
+    },
+    {
+      "Name": "Crateria Boss Keycard",
+      "InternalItemType": 210
+    },
+    {
+      "Name": "Brinstar Level 1 Keycard",
+      "InternalItemType": 211
+    },
+    {
+      "Name": "Brinstar Level 2 Keycard",
+      "InternalItemType": 212
+    },
+    {
+      "Name": "Brinstar Boss Keycard",
+      "InternalItemType": 213
+    },
+    {
+      "Name": "Norfair Level 1 Keycard",
+      "InternalItemType": 214
+    },
+    {
+      "Name": "Norfair Level 2 Keycard",
+      "InternalItemType": 215
+    },
+    {
+      "Name": "Norfair Boss Keycard",
+      "InternalItemType": 216
+    },
+    {
+      "Name": "Maridia Level 1 Keycard",
+      "InternalItemType": 217
+    },
+    {
+      "Name": "Maridia Level 2 Keycard",
+      "InternalItemType": 218
+    },
+    {
+      "Name": "Maridia Boss Keycard",
+      "InternalItemType": 219
+    },
+    {
+      "Name": "Wrecked Ship Level 1 Keycard",
+      "InternalItemType": 220
+    },
+    {
+      "Name": "Wrecked Ship Boss Keycard",
+      "InternalItemType": 221
+    },
+    {
+      "Name": "Lower Norfair Level 1 Keycard",
+      "InternalItemType": 222
+    },
+    {
+      "Name": "Lower Norfair Boss Keycard",
+      "InternalItemType": 223
+    }
+  ],
+  "Dungeons": [
+    {
+      "Name": [ "Eastern Palace" ],
+      "Abbreviation": "EP",
+      "Boss": "Armos Knights",
+      "TreasureRemaining": 3,
+      "Column": 0,
+      "Row": 5,
+      "LocationId": 364
+    },
+    {
+      "Name": [ "Desert Palace", "Dessert Palace" ],
+      "Abbreviation": "DP",
+      "Boss": "Lanmolas",
+      "TreasureRemaining": 2,
+      "Column": 1,
+      "Row": 5,
+      "LocationId": 370
+    },
+    {
+      "Name": [ "Tower of Hera" ],
+      "Abbreviation": "TH",
+      "Boss": "Moldorm",
+      "TreasureRemaining": 2,
+      "Column": 2,
+      "Row": 5,
+      "LocationId": 376
+    },
+    {
+      "Name": [ "Palace of Darkness", "Dark Palace" ],
+      "Abbreviation": "PD",
+      "Boss": "Helmasaur King",
+      "TreasureRemaining": 5,
+      "Column": 3,
+      "Row": 5,
+      "LocationId": 390
+    },
+    {
+      "Name": [ "Swamp Palace" ],
+      "Abbreviation": "SP",
+      "Boss": "Arrghus",
+      "TreasureRemaining": 6,
+      "Column": 4,
+      "Row": 5,
+      "LocationId": 400
+    },
+    {
+      "Name": [ "Skull Woods", "Skill Woods" ],
+      "Abbreviation": "SW",
+      "Boss": "Mothula",
+      "TreasureRemaining": 2,
+      "Column": 0,
+      "Row": 6,
+      "LocationId": 408
+    },
+    {
+      "Name": [ "Thieves' Town" ],
+      "Abbreviation": "TT",
+      "Boss": "Blind",
+      "TreasureRemaining": 4,
+      "Column": 1,
+      "Row": 6,
+      "LocationId": 416
+    },
+    {
+      "Name": [ "Ice Palace" ],
+      "Abbreviation": "IP",
+      "Boss": "Kholdstare",
+      "TreasureRemaining": 3,
+      "Column": 2,
+      "Row": 6,
+      "LocationId": 424
+    },
+    {
+      "Name": [ "Misery Mire" ],
+      "Abbreviation": "MM",
+      "Boss": [ "Vitreous", "Psychedelic Eyeball" ],
+      "TreasureRemaining": 2,
+      "Column": 3,
+      "Row": 6,
+      "LocationId": 432
+    },
+    {
+      "Name": [ "Turtle Rock" ],
+      "Abbreviation": "TR",
+      "Boss": "Trinexx",
+      "TreasureRemaining": 5,
+      "Column": 4,
+      "Row": 6,
+      "LocationId": 444
+    },
+    {
+      "Name": [ "Ganon's Tower" ],
+      "Abbreviation": "GT",
+      "TreasureRemaining": 20
+    },
+    {
+      "Name": [ "Hyrule Castle" ],
+      "Abbreviation": "HC",
+      "TreasureRemaining": 6
+    }
+  ],
+  "Pegs": [
+    [ 1, 0 ],
+    [ 2, 0 ],
+    [ 3, 0 ],
+    [ 4, 0 ],
+    [ 5, 0 ],
+    [ 1, 1 ],
+    [ 2, 1 ],
+    [ 3, 1 ],
+    [ 4, 1 ],
+    [ 5, 1 ],
+    [ 0, 2 ],
+    [ 1, 2 ],
+    [ 2, 2 ],
+    [ 3, 2 ],
+    [ 4, 2 ],
+    [ 5, 2 ],
+    [ 0, 3 ],
+    [ 1, 3 ],
+    [ 2, 3 ],
+    [ 0, 4 ],
+    [ 1, 4 ],
+    [ 2, 4 ]
+  ],
+  "Responses": {
+    "StartedTracking": [
+      "Is it weekend already?",
+      "Toggled Tracker on",
+      "Hey.",
+      [ "<voice gender='male'><prosody rate='slow'>Hey.</prosody></voice>", 0.05 ],
+      [ "Hey you. You're finally awake. You were trying to cross the border right? Walked right into that Imperial ambush, same as us, and that thief over there. Damn you Stormcloaks.", 0.01 ]
+    ],
+    "StoppedTracking": [
+      "Leaving so soon?",
+      "Toggled Tracker off.",
+      "Hey, you'll be missed pal."
+    ],
+    "Misheard": [
+      "I didn't get that.",
+      "Could you repeat that?",
+      "What did you say?",
+      "What was that?"
+    ],
+    "TrackedItem": [
+      "Toggled {0} on."
+    ],
+    "TrackedProgressiveItem": [
+      "Upgraded {0} by one step.",
+      [ "Congratulations with your new {1}.", 0.5 ]
+    ],
+    "TrackedItemByStage": [
+      "Marked {0} as {1}."
+    ],
+    "TrackedItemMultiple": [
+      "Added more {0}.",
+      "You now have {1} {0}."
+    ],
+    "TrackedAlreadyTrackedItem": [
+      "You already have that."
+    ],
+    "TrackedOlderProgressiveItem": [
+      "You already have a better {0}.",
+      "You already have the {1}."
+    ],
+    "TrackedTooManyOfAnItem": [
+      "I doubt that."
+    ],
+    "TrackedNothing": [
+      "There are no items left in {0}.",
+      "There's nothing left in {0}."
+    ],
+    "TrackedMultipleItems": [
+      "Tracked {0} items in {1}.",
+      "Added {0} items from {1}."
+    ],
+    "ClearedMultipleItems": [
+      "Cleared {0} items in {1}.",
+      "Ignored {0} items in {1}."
+    ],
+    "UntrackedNothing": [
+      "There's nothing to remove.",
+      "You don't have {1}.",
+      "What {0}?"
+    ],
+    "UntrackedProgressiveItem": [
+      "Decreased {0} by one step.",
+      "Removed {1}.",
+      [ "Not happy with your {0}?", 0.1 ]
+    ],
+    "UntrackedItem": [
+      "Toggled {0} off.",
+      "Removed {1}.",
+      [ "Threw {1} in the trash.", 0.1 ]
+    ],
+    "UntrackedItemMultiple": [
+      "Removed {1}.",
+      [ "Threw {1} in the trash.", 0.1 ]
+    ],
+    "UntrackedItemMultipleLast": [
+      "Removed your last {0}."
+    ],
+    "ShaktoolAvailable": [
+      "Hey tracker, track Shaktool Go Mode",
+      "I wonder how Shaktool is doing"
+    ],
+    "PegWorldAvailable": [
+      "Can we go to Peg World?",
+      "I hear Peg World is beautiful this time of year."
+    ],
+    "PegWorldModeOn": [
+      "Toggled Peg World Go Mode <break time='1s'/> on."
+    ],
+    "PegWorldModePegged": [
+      "Pop."
+    ],
+    "PegWorldModeDone": [
+      "Toggled Peg World Mode off.",
+      "Let's visit Shaktool next."
+    ],
+    "DungeonRewardMarked": [
+      "Marked {0} as {1}."
+    ],
+    "RemainingDungeonsMarked": [
+      "Marked remaining dungeons as {0}.",
+      "Set all other dungeons to {0}.",
+      "Assigned {0} to unmarked dungeons."
+    ],
+    "NoRemainingDungeons": [
+      "You already marked every dungeon.",
+      "You did that already."
+    ],
+    "DungeonCleared": [
+      "Marked {0} as cleared.",
+      "Marked {1} as defeated.",
+      "Congratulations on beating off {1}."
+    ],
+    "DungeonAlreadyCleared": [
+      "But you already cleared {0}.",
+      "But you already defeated {1}."
+    ],
+    "DungeonUncleared": [
+      "Marked {0} as incomplete.",
+      "Marked {1} as still alive."
+    ],
+    "DungeonNotYetCleared": [
+      "But you haven't cleared {0} yet.",
+      "But you never defeated {1} in the first place."
+    ],
+    "DungeonRequirementMarked": [
+      "Marked {0} as required for {1}"
+    ],
+    "DungeonRequirementInvalid": [
+      "{0} doesn't need medallions"
+    ],
+    "DungeonRequirementMismatch": [
+      "If you say so.",
+      "Are you sure it shouldn't be {0}? Oh well, you do do.",
+      "{1} requires {0}, not {2}, but whatever."
+    ],
+    "DungeonTreasureTracked": {
+      "2": [ "{1} items left in {0}.", "{1} treasures left." ],
+      "1": [ "One item left in {0}.", "One more to go in here.", "Just one more." ],
+      "0": [ "That's everything in {0}.", "That's the last of them." ],
+      "-1": [ "You already got everything in {0}." ]
+    },
+    "ItemTrackedInIncorrectDungeon": [
+      "Are you sure that's where you found it?",
+      "{1} shouldn't be in {0}."
+    ],
+    "LocationMarked": [
+      "Marked {1} at {0}."
+    ],
+    "LocationMarkedAgain": [
+      "Replaced {2} with {1} at {0}.",
+      "Changed your mind? Marked {1} at {0}."
+    ],
+    "LocationHasDifferentItem": [
+      "That looks more like {1} to me, but whatever.",
+      "Does that look like {0} to you? Well if you say so."
+    ],
+    "LocationCleared": [
+      "Cleared {0}.",
+      "Ignored {0}.",
+      [ "I'll remove {0} from the list.", 0.1 ]
+    ],
+    "AreaDoesNotHaveItem": [
+      "I don't see {2} in {1}."
+    ],
+    "AreaHasMoreThanOneItem": [
+      "There's more than one {0} in {1}."
+    ],
+    "Error": [
+      "Oops. Something went wrong.",
+      "Something went wrong. Time to ban Vihvelin."
+    ],
+    "ActionUndone": [
+      "Was that not what you wanted?",
+      "Make up your mind.",
+      "Enunciate more clearly next time.",
+      "I'll pretend nothing happened."
+    ],
+    "NothingToUndo": [
+      "There's nothing to undo.",
+      "I haven't done anything."
+    ],
+    "GoModeToggledOff": [
+      "Toggled Go Mode off."
+    ],
+    "TrackedSpecificItem": {
+      "Shaktool Go Mode": [
+        "Toggled Shaktool Go Mode <break time='1s'/> on."
+      ]
+    },
+    "Idle": {
+      "10m±2m": [ "Decreased content by one step.", "What's wrong? Am I not good enough for you anymore?" ]
+    }
+  }
+}

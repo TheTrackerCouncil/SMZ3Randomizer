@@ -5,7 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>2.1.2.2</Version>
+    <Version>2.9.9.22</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -14,26 +14,56 @@
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;0067</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Sprites\Items\**" />
+    <EmbeddedResource Remove="Sprites\Items\**" />
+    <None Remove="Sprites\Items\**" />
+    <Page Remove="Sprites\Items\**" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="chozo20.ico" />
     <None Remove="msu1-v6.ips" />
+    <None Remove="Resources\Font Awesome 5 Free-Regular-400.otf" />
+    <None Remove="Resources\Font Awesome 5 Free-Solid-900.otf" />
+    <None Remove="Resources\LICENSE.txt" />
     <None Remove="zsm.ips" />
     <None Remove="zsm.ips.gz" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="chozo20.ico" />
+    <Resource Include="chozo20.ico" />
     <EmbeddedResource Include="msu1-v6.ips" />
     <EmbeddedResource Include="zsm.ips" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="NReco.Logging.File" Version="1.1.2" />
     <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Sprites\Maps\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Font Awesome 5 Free-Regular-400.otf" />
+    <Resource Include="Resources\Font Awesome 5 Free-Solid-900.otf" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy $(ProjectDir)Sprites\ $(TargetDir)Sprites\ /S /I /Y" />
+  </Target>
 
 </Project>

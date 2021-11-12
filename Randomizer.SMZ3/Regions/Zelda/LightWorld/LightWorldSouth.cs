@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             Aginah = new Location(this, 256 + 244, 0x1E9F2, LocationType.Regular,
                 name: "Aginah's Cave",
+                alsoKnownAs: "Aggina's Cave",
                 vanillaItem: ItemType.HeartPiece)
                 .Weighted(SphereOne);
 
@@ -130,27 +131,27 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 : base(region, "Mini Moldorm Cave")
             {
                 FarLeftChest = new Location(this, 256 + 51, 0x1EB42, LocationType.Regular,
-                    name: "Mini Moldorm Cave - Far Left",
+                    name: "Far Left",
                     vanillaItem: ItemType.ThreeBombs)
                     .Weighted(SphereOne);
 
                 LeftChest = new Location(this, 256 + 52, 0x1EB45, LocationType.Regular,
-                    name: "Mini Moldorm Cave - Left",
+                    name: "Left",
                     vanillaItem: ItemType.TwentyRupees)
                     .Weighted(SphereOne);
 
                 Npc = new Location(this, 256 + 53, 0x308010, LocationType.Regular,
-                    name: "Mini Moldorm Cave - NPC",
+                    name: "NPC",
                     vanillaItem: ItemType.ThreeHundredRupees)
                     .Weighted(SphereOne);
 
                 RightChest = new Location(this, 256 + 54, 0x1EB48, LocationType.Regular,
-                    name: "Mini Moldorm Cave - Right",
+                    name: "Right",
                     vanillaItem: ItemType.TwentyRupees)
                     .Weighted(SphereOne);
 
                 FarRightChest = new Location(this, 256 + 251, 0x1EB4B, LocationType.Regular,
-                    name: "Mini Moldorm Cave - Far Right",
+                    name: "Far Right",
                     vanillaItem: ItemType.TenArrows)
                     .Weighted(SphereOne);
             }

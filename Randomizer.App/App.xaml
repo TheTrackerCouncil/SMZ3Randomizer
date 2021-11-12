@@ -3,10 +3,96 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Randomizer.App"
              xmlns:controls="clr-namespace:Randomizer.App.Controls"
-             StartupUri="MainWindow.xaml">
+             Startup="Application_Startup"
+             Exit="Application_Exit"
+             DispatcherUnhandledException="Application_DispatcherUnhandledException">
   <Application.Resources>
     <ResourceDictionary>
-      <!-- Custom control templates -->
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Resources/DarkMode.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <Style x:Key="ConfidenceStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,11,5">
+                <TextBlock Text="&#xf130;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,5,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Solid"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
+      <Style x:Key="TimerStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,7,5">
+                <TextBlock Text="&#xf017;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,5,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Regular"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
+      <Style x:Key="GoModeStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,11,5">
+                <TextBlock Text="&#xf144;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,5,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Solid"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
+      <Style x:Key="VoiceDisabledStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Foreground" Value="IndianRed" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,11,5">
+                <TextBlock Text="&#xf131;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,5,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Solid"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
       <Style TargetType="controls:LabeledControl">
         <Setter Property="Template">
           <Setter.Value>
@@ -101,6 +187,20 @@
                 Value="7" />
       </Style>
 
+      <Style TargetType="StatusBar">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Setter Property="BorderThickness"
+                Value="0,0.5,0,0" />
+      </Style>
+
+      <Style TargetType="StatusBarItem">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+        <Setter Property="BorderThickness"
+                Value="0,0,0.5,0" />
+      </Style>
+
       <!-- Custom styles -->
       <Style x:Key="BottomPanel"
              TargetType="Border">
@@ -114,8 +214,47 @@
                 Value="11" />
       </Style>
 
+      <Style x:Key="Heading"
+             TargetType="TextBlock">
+        <Setter Property="Foreground"
+                Value="#006699" />
+        <Setter Property="FontSize"
+                Value="12pt" />
+        <Setter Property="Margin"
+                Value="0,0,0,7" />
+      </Style>
+
+      <Style x:Key="InlineTextButton"
+             TargetType="Button">
+        <Setter Property="FontWeight"
+                Value="Bold" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Margin"
+                Value="0,-3,0,0" />
+        <Setter Property="Padding"
+                Value="3" />
+      </Style>
+
+      <Style x:Key="RadioToggleButtonGroup"
+             TargetType="StackPanel">
+        <Style.Resources>
+          <Style TargetType="RadioButton"
+                 BasedOn="{StaticResource {x:Type ToggleButton}}">
+            <Setter Property="Margin"
+                    Value="-1,0,0,0" />
+            <Setter Property="Padding"
+                    Value="3" />
+          </Style>
+        </Style.Resources>
+      </Style>
+
+
       <!-- Misc. resources -->
       <local:EnumToBooleanConverter x:Key="EnumBoolConverter" />
+      <local:ItemSpriteImageSourceConverter x:Key="ItemSpriteConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>
