@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28711.60
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3", "src\Randomizer.SMZ3\Randomizer.SMZ3.csproj", "{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Tests", "tests\Randomizer.SMZ3.Tests\Randomizer.SMZ3.Tests.csproj", "{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Shared", "src\Randomizer.Shared\Randomizer.Shared.csproj", "{3DA99948-6C0A-47E6-87AB-92672ED88C09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Tools", "src\Randomizer.Tools\Randomizer.Tools.csproj", "{B594A95C-7B87-447A-8A80-EBF6991EB04C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.App", "src\Randomizer.App\Randomizer.App.csproj", "{CCEDE012-894B-48F6-811E-B2324E74C604}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F11C9119-7B5E-46E4-9A58-E157B80C7E9F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Tracking", "src\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj", "{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1FFF084-0ADD-44B0-A5AE-E1B5F88749BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B594A95C-7B87-447A-8A80-EBF6991EB04C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCEDE012-894B-48F6-811E-B2324E74C604}.Release|Any CPU.Build.0 = Release|Any CPU
+		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2380A2BF-1821-4E24-BEC5-D4DA5ED15555}
+	EndGlobalSection
+EndGlobal

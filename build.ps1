@@ -46,8 +46,7 @@ process {
     Set-Location $PatchDir
     cmd.exe /c "build.bat"
 
-    Copy-Item -Path "$cd/$PatchDir/build/zsm.ips" -OutFile "$cd/Randomizer.App/zsm.ips"
-    Compress-Item -Path "$cd/$PatchDir/build/zsm.ips" -OutFile "$cd/WebRandomizer/ClientApp/src/resources/zsm.ips.gz"
+    Copy-Item -Path "$cd/$PatchDir/build/zsm.ips" -OutFile "$cd/src/Randomizer.App/zsm.ips"
 
     Set-Location $cd
 }
