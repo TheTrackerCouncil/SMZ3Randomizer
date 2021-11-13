@@ -275,7 +275,7 @@ namespace Randomizer.App
         {
             try
             {
-                Options.Save(_optionsPath);
+                Options.Save(OptionsFactory.GetFilePath());
             }
             catch
             {
@@ -469,7 +469,7 @@ namespace Randomizer.App
             {
                 var scope = _serviceProvider.CreateScope();
                 _trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
-                _trackerWindow.Options = Options.GeneralOptions.GetTrackerOptions();
+                _trackerWindow.Options = Options;
                 _trackerWindow.Closed += (_, _) => scope.Dispose();
                 _trackerWindow.Show();
             }

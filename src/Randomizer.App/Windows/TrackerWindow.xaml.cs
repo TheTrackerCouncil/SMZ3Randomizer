@@ -70,7 +70,7 @@ namespace Randomizer.App
             BottomRight = 3
         }
 
-        public TrackerOptions Options { get; set; }
+        public RandomizerOptions Options { get; set; }
 
         public Tracker Tracker { get; private set; }
 
@@ -100,10 +100,10 @@ namespace Randomizer.App
             return null;
         }
 
-        protected static Image GetGridItemControl(string imageFileName, int column, int row, string overlayFileName)
+        protected Image GetGridItemControl(string imageFileName, int column, int row, string overlayFileName)
             => GetGridItemControl(imageFileName, column, row, new Overlay(overlayFileName, 0, 0));
 
-        protected static Image GetGridItemControl(string imageFileName, int column, int row, int counter, string overlayFileName, int minCounter = 2)
+        protected Image GetGridItemControl(string imageFileName, int column, int row, int counter, string overlayFileName, int minCounter = 2)
         {
             var overlays = new List<Overlay>();
             if (overlayFileName != null)
@@ -144,7 +144,7 @@ namespace Randomizer.App
                 "Sprites", "Marks", $"{digit % 10}.png");
         }
 
-        protected static Image GetGridItemControl(string imageFileName, int column, int row,
+        protected Image GetGridItemControl(string imageFileName, int column, int row,
             params Overlay[] overlays)
         {
             var bitmapImage = new BitmapImage(new Uri(imageFileName));
@@ -183,7 +183,7 @@ namespace Randomizer.App
             };
         }
 
-        protected static Image GetGridItemControl(ImageSource imageSource, int column, int row)
+        protected Image GetGridItemControl(ImageSource imageSource, int column, int row)
         {
             var image = new Image
             {
@@ -194,14 +194,17 @@ namespace Randomizer.App
                 VerticalAlignment = VerticalAlignment.Top
             };
 
-            image.Effect = new DropShadowEffect
+            if (Options.GeneralOptions.TrackerShadows)
             {
-                Color = Colors.Black,
-                Direction = 315,
-                BlurRadius = 5,
-                Opacity = 0.8,
-                ShadowDepth = 2
-            };
+                image.Effect = new DropShadowEffect
+                {
+                    Color = Colors.Black,
+                    Direction = 315,
+                    BlurRadius = 5,
+                    Opacity = 0.8,
+                    ShadowDepth = 2
+                };
+            }
 
             RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
             Grid.SetColumn(image, column);
@@ -523,6 +526,8 @@ namespace Randomizer.App
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Background = new SolidColorBrush(Options.GeneralOptions.TrackerBackgroundColor);
+
             InitializeTracker();
             ResetGridSize();
             RefreshGridItems();
@@ -538,11 +543,10 @@ namespace Randomizer.App
                 ShowNoMicrophoneWarning();
             }
 
-            var scope = _serviceProvider.CreateScope();
-            _locationSyncer = scope.ServiceProvider.GetRequiredService<TrackerLocationSyncer>();
-            _locationsWindow = scope.ServiceProvider.GetRequiredService<TrackerLocationsWindow>();
+            _locationSyncer = _serviceProvider.GetRequiredService<TrackerLocationSyncer>();
+            _locationsWindow = _serviceProvider.GetRequiredService<TrackerLocationsWindow>();
             _locationsWindow.Show();
-            _trackerMapWindow = scope.ServiceProvider.GetRequiredService<TrackerMapWindow>();
+            _trackerMapWindow = _serviceProvider.GetRequiredService<TrackerMapWindow>();
             _trackerMapWindow.Syncer = _locationSyncer;
             _trackerMapWindow.Show();
         }
@@ -552,7 +556,7 @@ namespace Randomizer.App
             if (Options == null)
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
 
-            Tracker = _trackerFactory.Create(Options);
+            Tracker = _trackerFactory.Create(Options.GeneralOptions.GetTrackerOptions());
             Tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
                 _pegWorldMode = false;

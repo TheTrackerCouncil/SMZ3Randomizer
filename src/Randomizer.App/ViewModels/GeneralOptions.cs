@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Windows.Media;
 
 using Randomizer.SMZ3.Tracking;
 
@@ -27,6 +28,10 @@ namespace Randomizer.App.ViewModels
 
         [Range(0.0, 1.0)]
         public float TrackerConfidenceSassThreshold { get; set; } = 0.92f;
+
+        public Color TrackerBackgroundColor { get; set; } = Color.FromRgb(0x21, 0x21, 0x21);
+
+        public bool TrackerShadows { get; set; } = true;
 
         public bool Validate()
         {

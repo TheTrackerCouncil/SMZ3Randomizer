@@ -255,6 +255,8 @@
       <!-- Misc. resources -->
       <local:EnumToBooleanConverter x:Key="EnumBoolConverter" />
       <local:ItemSpriteImageSourceConverter x:Key="ItemSpriteConverter" />
+      <local:StringColorConverter x:Key="ColorConverter" />
+      <local:ColorBrushConverter x:Key="ColorBrushConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

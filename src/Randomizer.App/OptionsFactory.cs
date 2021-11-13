@@ -16,12 +16,17 @@ namespace Randomizer.App
             _logger = logger;
         }
 
-        public RandomizerOptions Create()
+        public static string GetFilePath()
         {
             var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "SMZ3CasRandomizer");
             Directory.CreateDirectory(basePath);
-            var optionsPath = Path.Combine(basePath, "options.json");
+            return Path.Combine(basePath, "options.json");
+        }
+
+        public RandomizerOptions Create()
+        {
+            var optionsPath = GetFilePath();
 
             try
             {

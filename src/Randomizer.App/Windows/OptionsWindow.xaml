@@ -8,7 +8,7 @@
         ResizeMode="NoResize"
         mc:Ignorable="d"
         Title="Options - SMZ3 Cas' Randomizer"
-        Height="300"
+        Height="350"
         Width="500">
   <Window.DataContext>
     <vm:GeneralOptions></vm:GeneralOptions>
@@ -40,6 +40,27 @@
           <controls:FileSystemInput Path="{Binding RomOutputPath, Mode=TwoWay}"
                                     IsFolderPicker="True"
                                     DialogTitle="Select ROM output folder" />
+        </controls:LabeledControl>
+
+        <controls:LabeledControl Text="Tracker background color:">
+          <StackPanel Orientation="Horizontal">
+            <Border x:Name="ColorPreview"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
+                    Height="23"
+                    Width="23"
+                    Margin="0,0,3,0">
+              <Rectangle Fill="{Binding TrackerBackgroundColor,
+                Converter={StaticResource ColorBrushConverter}}" />
+            </Border>
+            <TextBox Text="{Binding TrackerBackgroundColor,
+              Converter={StaticResource ColorConverter},
+              Mode=TwoWay}"
+                     MinWidth="80" />
+            <CheckBox IsChecked="{Binding TrackerShadows}"
+                      VerticalAlignment="Center"
+                      Margin="7,0">Render shadows</CheckBox>
+          </StackPanel>
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Tracker recognition threshold:"
