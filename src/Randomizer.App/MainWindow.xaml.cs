@@ -28,44 +28,29 @@ namespace Randomizer.App
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string _optionsPath;
         private readonly Task _loadSpritesTask;
         private readonly IServiceProvider _serviceProvider;
         private readonly Smz3Randomizer _randomizer;
         private readonly ILogger<MainWindow> _logger;
         private TrackerWindow _trackerWindow;
 
-        public MainWindow(IServiceProvider serviceProvider, Smz3Randomizer randomizer, ILogger<MainWindow> logger)
+        public MainWindow(IServiceProvider serviceProvider,
+            OptionsFactory optionsFactory,
+            Smz3Randomizer randomizer,
+            ILogger<MainWindow> logger)
         {
-            InitializeComponent();
-            SamusSprites.Add(Sprite.DefaultSamus);
-            LinkSprites.Add(Sprite.DefaultLink);
-
-            _loadSpritesTask = Task.Run(() => LoadSprites())
-                .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
-
-            var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "SMZ3CasRandomizer");
-            Directory.CreateDirectory(basePath);
-            _optionsPath = Path.Combine(basePath, "options.json");
-
-            try
-            {
-                if (!File.Exists(_optionsPath))
-                    Options = new RandomizerOptions();
-
-                Options = RandomizerOptions.Load(_optionsPath);
-            }
-            catch
-            {
-                Options = new RandomizerOptions();
-            }
-
-            DataContext = Options;
             _serviceProvider = serviceProvider;
             _randomizer = randomizer;
             _logger = logger;
+            InitializeComponent();
 
+            SamusSprites.Add(Sprite.DefaultSamus);
+            LinkSprites.Add(Sprite.DefaultLink);
+            _loadSpritesTask = Task.Run(() => LoadSprites())
+                .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
+
+            Options = optionsFactory.Create();
+            DataContext = Options;
             CheckSpeechRecognition();
         }
 

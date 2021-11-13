@@ -88,6 +88,7 @@ namespace Randomizer.App
                 .AddOptionalModule<PegWorldModeModule>();
 
             services.AddScoped<TrackerLocationSyncer>();
+            services.AddSingleton<OptionsFactory>();
             services.AddSingleton<MainWindow>();
             services.AddWindows<App>();
         }
