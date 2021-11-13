@@ -427,8 +427,8 @@ namespace Randomizer.SMZ3.Tests.Text
                 actual.Should().BeEquivalentTo(Bytes(
                     Byte(DialogStart), Byte(0x30),
                     Byte(StartSecondRow), Byte(0x31),
-                    Byte(StartThirdRow), Byte(0x32),
-                    Byte(ScrollRows), Byte(PauseForInput), Byte(0x33)
+                    Byte(StartThirdRow), Byte(0x32), Byte(PauseForInput),
+                    Byte(ScrollRows), Byte(0x33)
                 ));
             }
 
@@ -446,11 +446,11 @@ namespace Randomizer.SMZ3.Tests.Text
                 actual.Should().BeEquivalentTo(Bytes(
                     Byte(DialogStart), Byte(0x30),
                     Byte(StartSecondRow), Byte(0x31),
-                    Byte(StartThirdRow), Byte(0x32),
-                    Byte(ScrollRows), Byte(PauseForInput), Byte(0x33),
+                    Byte(StartThirdRow), Byte(0x32), Byte(PauseForInput),
+                    Byte(ScrollRows), Byte(0x33),
                     Byte(ScrollRows), Byte(0x34),
-                    Byte(ScrollRows), Byte(0x35),
-                    Byte(ScrollRows), Byte(PauseForInput), Byte(0x36),
+                    Byte(ScrollRows), Byte(0x35), Byte(PauseForInput),
+                    Byte(ScrollRows), Byte(0x36),
                     Byte(ScrollRows), Byte(0x37),
                     Byte(ScrollRows), Byte(0x38)
                 ));
