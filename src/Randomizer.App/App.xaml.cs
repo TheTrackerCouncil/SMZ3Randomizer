@@ -71,22 +71,13 @@ namespace Randomizer.App
 
         protected static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(serviceProvider =>
-            {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
-                return configProvider.GetMapConfig();
-            });
-            services.AddSingleton(serviceProvider =>
-            {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
-                return configProvider.GetTrackerConfig();
-            });
-
+            // Randomizer + Tracker
             services.AddSingleton<IFiller, StandardFiller>();
             services.AddSingleton<Smz3Randomizer>();
             services.AddTracker<Smz3Randomizer>()
                 .AddOptionalModule<PegWorldModeModule>();
 
+            // WPF
             services.AddScoped<TrackerLocationSyncer>();
             services.AddSingleton<OptionsFactory>();
             services.AddSingleton<MainWindow>();

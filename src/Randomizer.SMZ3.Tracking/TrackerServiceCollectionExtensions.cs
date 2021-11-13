@@ -33,6 +33,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
             services.AddSingleton<TrackerConfigProvider>();
+            services.AddSingleton(serviceProvider =>
+            {
+                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                return configProvider.GetMapConfig();
+            });
+            services.AddSingleton(serviceProvider =>
+            {
+                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                return configProvider.GetTrackerConfig();
+            });
+
             services.AddScoped<TrackerFactory>();
             services.AddScoped<Tracker>(serviceProvider =>
             {
