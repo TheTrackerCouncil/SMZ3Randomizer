@@ -6,18 +6,17 @@
 The **SMZ3 Cas’ Randomizer** is a fork of the original [Super Metroid & A 
 Link to the Past Crossover Randomizer](https://samus.link/). It’s aimed at making 
 it a more approachable and casual experience by removing some decidedly 
-_uncas’_ elements such as IBJ (Infinite Bomb Jump). 
-
-The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
+_uncas’_ elements such as IBJ (Infinite Bomb Jump).
 
 ## Features
 In addition to making IBJ completely optional, there is also:
 
+ - Integrated voice-enabled item & location tracker;
+ - Built-in MSU-1 support for custom music packs;
  - Item Quickswap in <cite>A Link to the Past</cite> based on a [contribution] 
    that never made it in;
- - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
  - More logic customization options;
- - Built-in MSU-1 support for custom music packs;
+ - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 
 ## Credits
 - **Captain Novolin** replacement sprite for _Super Metroid_ by PaddyCo
@@ -26,6 +25,8 @@ In addition to making IBJ completely optional, there is also:
 - **Non-Binary** Samus sprite for _Super Metroid_ by Glove
 - **Trans**, **Backwards**, **Upside down** and **180°** Samus sprites for _Super Metroid_ by TarThoron
 - **Shaktool** and **Shaktool Jr.** reolacement sprites for _Super Metroid_ by Pneumatic
-- **Diddy Kong** reolacement sprite for _Super Metroid_ by Di10
+- **Diddy Kong** reolacement sprite for _Super Metroid_ by Di10 
+
+The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
 [contribution]: https://github.com/tewtal/alttp_sm_combo_randomizer_rom/pull/55
