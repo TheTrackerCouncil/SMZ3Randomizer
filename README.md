@@ -8,6 +8,9 @@ Link to the Past Crossover Randomizer](https://samus.link/). It’s aimed at mak
 it a more approachable and casual experience by removing some decidedly 
 _uncas’_ elements such as IBJ (Infinite Bomb Jump).
 
+A Windows installer for latest version of the **SMZ3 Cas’ Randomizer** can be 
+found on the [GitHub releases] page.
+
 ## Features
 In addition to making IBJ completely optional, there is also:
 
@@ -30,3 +33,4 @@ In addition to making IBJ completely optional, there is also:
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
 [contribution]: https://github.com/tewtal/alttp_sm_combo_randomizer_rom/pull/55
+[GitHub releases]: https://github.com/Vivelin/SMZ3Randomizer/releases
