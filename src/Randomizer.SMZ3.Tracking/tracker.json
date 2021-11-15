@@ -1026,6 +1026,11 @@
       "Replaced {2} with {1} at {0}.",
       "Changed your mind? Marked {1} at {0}."
     ],
+    "LocationMarkedAsBullshit": [
+      "Marked {0} as bullshit",
+      [ "I hope you didn't waste time going to {0}.", 0.2 ],
+      [ "You're bullshit.", 0.01 ]
+    ],
     "LocationHasDifferentItem": [
       "That looks more like {1} to me, but whatever.",
       "Does that look like {0} to you? Well if you say so."

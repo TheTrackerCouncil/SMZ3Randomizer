@@ -360,6 +360,15 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Replaced {2} with {1} at {0}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when marking an item as nothing/bullshit.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location.
+        /// </remarks>
+        public SchrodingersString LocationMarkedAsBullshit { get; init; }
+            = new SchrodingersString("Marked {0} as bullshit.");
+
+        /// <summary>
         /// Gets the phrases to respond with when marking or tracking an item at
         /// a location, when the seed contains a different item at the same
         /// location.

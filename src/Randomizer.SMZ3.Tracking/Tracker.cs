@@ -1118,7 +1118,12 @@ namespace Randomizer.SMZ3.Tracking
             var locationName = GetName(location);
             SassIfItemIsWrong(item, location, confidence);
 
-            if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
+            if (item.InternalItemType == ItemType.Nothing)
+            {
+                Clear(location);
+                Say(Responses.LocationMarkedAsBullshit.Format(locationName));
+            }
+            else if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
             {
                 MarkedLocations[location.Id] = item;
                 Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldItem.Name));
