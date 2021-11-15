@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -109,39 +110,32 @@ namespace Randomizer.App
             if (overlayFileName != null)
                 overlays.Add(new(overlayFileName, 0, 0));
 
-            if (counter > 9)
+            if (counter >= minCounter)
             {
-                // Limit missiles to 99 for display purposes until I can be
-                // bothered to update the display code to not suck
-                counter = Math.Clamp(counter, 0, 99);
-
-                var tensDigit = counter / 10 % 10;
-                overlays.Add(new(GetDigitMarkFileName(tensDigit), 0, 0)
+                var offset = 0;
+                foreach (var digit in GetDigits(counter))
                 {
-                    OriginPoint = Origin.BottomLeft
-                });
-
-                // Digit images are 10px wide, but we overlap the 2 black pixels
-                // in the border
-                var digit = counter % 10;
-                overlays.Add(new(GetDigitMarkFileName(digit), 8, 0)
-                {
-                    OriginPoint = Origin.BottomLeft
-                });
-            }
-            else if (counter >= minCounter)
-            {
-                var digit = counter % 10;
-                overlays.Add(new(GetDigitMarkFileName(digit), 0, 0)
-                {
-                    OriginPoint = Origin.BottomLeft
-                });
+                    overlays.Add(new(GetDigitMarkFileName(digit), offset, 0)
+                    {
+                        OriginPoint = Origin.BottomLeft
+                    });
+                    offset += 8;
+                }
             }
 
             return GetGridItemControl(imageFileName, column, row, overlays.ToArray());
 
             static string GetDigitMarkFileName(int digit) => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 "Sprites", "Marks", $"{digit % 10}.png");
+        }
+
+        internal static IEnumerable<int> GetDigits(int value)
+        {
+            var numDigits = value.ToString("0", CultureInfo.InvariantCulture).Length;
+            for (var i = numDigits; i > 0; i--)
+            {
+                yield return value / (int)Math.Pow(10, i - 1) % 10;
+            }
         }
 
         protected Image GetGridItemControl(string imageFileName, int column, int row,
