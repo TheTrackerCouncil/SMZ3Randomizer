@@ -22,10 +22,12 @@
       "Multiple": true
     },
     {
-      "Name": [ "Death" ],
-      "Plural": [ "Deaths" ],
+      "Name": [ "Death", "Game Over" ],
+      "Plural": [ "Deaths", "Game Overs" ],
       "Article": "",
       "InternalItemType": 0,
+      "Column": 10,
+      "Row": 6,
       "Multiple": true
     },
     {
