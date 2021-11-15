@@ -712,7 +712,12 @@ namespace Randomizer.SMZ3.Tracking
             else if (item.Multiple)
             {
                 if (item.TrackingState > 0)
-                    Say(Responses.UntrackedItemMultiple.Format(item.Name, item.NameWithArticle));
+                {
+                    if (item.CounterMultiplier > 1)
+                        Say(Responses.UntrackedItemMultiple.Format($"{item.CounterMultiplier} {item.Plural}", $"{item.CounterMultiplier} {item.Plural}"));
+                    else
+                        Say(Responses.UntrackedItemMultiple.Format(item.Name, item.NameWithArticle));
+                }
                 else
                     Say(Responses.UntrackedItemMultipleLast.Format(item.Name, item.NameWithArticle));
             }
@@ -1089,7 +1094,7 @@ namespace Randomizer.SMZ3.Tracking
                     {
                         dungeon.TreasureRemaining++;
                         undoUntrackTreasure = () => dungeon.TreasureRemaining--;
-                    }    
+                    }
                 }
 
                 if (rewardLocation.Cleared)

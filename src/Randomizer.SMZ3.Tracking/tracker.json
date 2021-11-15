@@ -641,7 +641,7 @@
     {
       "Name": [
         "Missile",
-        "Missiles",
+        [ "Missiles", 0 ],
         [ "Missile pack", 0 ]
       ],
       "Plural": [
@@ -657,8 +657,8 @@
     {
       "Name": [
         "Super Missile",
-        "Supers",
-        "Superb Missiles",
+        [ "Supers", 0 ],
+        [ "Superb Missiles", 0 ],
         [ "Super Missile pack", 0 ]
       ],
       "Plural": [
