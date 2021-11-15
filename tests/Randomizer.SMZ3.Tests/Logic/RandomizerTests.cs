@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
-using Castle.Core.Logging;
 
 using FluentAssertions;
 
@@ -15,7 +11,6 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Generation;
 
 using Xunit;
-using Xunit.Sdk;
 
 namespace Randomizer.SMZ3.Tests.Logic
 {
@@ -37,6 +32,8 @@ namespace Randomizer.SMZ3.Tests.Logic
             worldHash.Should().Be(expectedHash);
         }
 
+        // Do not change the logic of this method. If you absolutely must, make
+        // sure to update the expected hash in tests that rely on it
         private static int GetHashForWorld(World world)
         {
             var stringBuilder = new StringBuilder();
