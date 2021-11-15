@@ -926,8 +926,7 @@
       "Added {0} items from {1}."
     ],
     "ClearedMultipleItems": [
-      "Cleared {0} items in {1}.",
-      "Ignored {0} items in {1}."
+      "Cleared {0} items in {1}."
     ],
     "UntrackedNothing": [
       "There's nothing to remove.",
@@ -1028,6 +1027,7 @@
     ],
     "LocationMarkedAsBullshit": [
       "Marked {0} as bullshit",
+      "Ignoring {0}",
       [ "I hope you didn't waste time going to {0}.", 0.2 ],
       [ "You're bullshit.", 0.01 ]
     ],
@@ -1037,7 +1037,6 @@
     ],
     "LocationCleared": [
       "Cleared {0}.",
-      "Ignored {0}.",
       [ "I'll remove {0} from the list.", 0.1 ]
     ],
     "AreaDoesNotHaveItem": [
@@ -1045,6 +1044,11 @@
     ],
     "AreaHasMoreThanOneItem": [
       "There's more than one {0} in {1}."
+    ],
+    "TrackedUselessItem": [
+      "",
+      [ "Doesn't get you anywhere though", 0.005 ],
+      [ "Can't find any useful items?", 0.005 ]
     ],
     "Error": [
       "Oops. Something went wrong.",

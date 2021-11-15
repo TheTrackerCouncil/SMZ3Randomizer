@@ -1422,11 +1422,9 @@ namespace Randomizer.SMZ3.Tracking
                 if (newlyAccessible.Contains(World.DarkWorldNorthWest.PegWorld))
                     Say(Responses.PegWorldAvailable);
             }
-            else
+            else if (Responses.TrackedUselessItem != null)
             {
-                var rnd = s_random.Next();
-                if (rnd % 20 == 0)
-                    Say("Doesn't get you anywhere though.");
+                Say(Responses.TrackedUselessItem);
             }
         }
 

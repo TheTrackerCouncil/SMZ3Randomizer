@@ -360,7 +360,8 @@ namespace Randomizer.SMZ3.Tracking
             = new SchrodingersString("Replaced {2} with {1} at {0}.");
 
         /// <summary>
-        /// Gets the phrases to respond with when marking an item as nothing/bullshit.
+        /// Gets the phrases to respond with when marking an item as
+        /// nothing/bullshit.
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location.
@@ -415,6 +416,12 @@ namespace Randomizer.SMZ3.Tracking
         /// placeholder for the name of the item, including "a"/"the".
         /// </remarks>
         public SchrodingersString? AreaHasMoreThanOneItem { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with after tracking an item that doesn't
+        /// open up new areas.
+        /// </summary>
+        public SchrodingersString? TrackedUselessItem { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when an internal error occurs.
