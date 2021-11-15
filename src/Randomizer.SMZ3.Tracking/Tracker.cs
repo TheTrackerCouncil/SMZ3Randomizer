@@ -624,10 +624,15 @@ namespace Randomizer.SMZ3.Tracking
             else if (item.Multiple)
             {
                 item.Track();
-                if (item.TrackingState == 1)
+                if (item.Counter == 1)
                     Say(Responses.TrackedItem.Format(itemName));
-                else if (item.TrackingState > 1)
-                    Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.TrackingState));
+                else if (item.Counter > 1)
+                    Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
+                else
+                {
+                    _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
+                    Say(Responses.TrackedItem.Format(itemName));
+                }
             }
             else
             {
