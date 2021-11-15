@@ -918,13 +918,7 @@
       "Name": "Light World South",
       "Rooms": [
         {
-          "Name": "Sunken Treasure",
-          "X": 930,
-          "Y": 1880,
-          "Scale": 1
-        },
-        {
-          "Name": "Floodgate Chest",
+          "Name": "Swamp Ruins",
           "X": 944,
           "Y": 1880,
           "Scale": 1
@@ -1026,8 +1020,8 @@
         },
         {
           "Name": "Spectacle Rock Cave",
-          "X": 900,
-          "Y": 260,
+          "X": 980,
+          "Y": 290,
           "Scale": 1
         },
         {
@@ -1174,8 +1168,8 @@
         },
         {
           "Name": "Purple Chest",
-          "X": 680,
-          "Y": 1805,
+          "X": 616,
+          "Y": 1054,
           "Scale": 1
         }
       ]
@@ -1364,7 +1358,7 @@
           "Scale": 1
         },
         {
-          "Name": "Missile (blue Brinstar top)",
+          "Name": "Blue Brinstar Top",
           "X": 872,
           "Y": 340,
           "Scale": 1
@@ -1393,13 +1387,7 @@
           "Scale": 1
         },
         {
-          "Name": "Missile (green Brinstar behind missile)",
-          "X": 392,
-          "Y": 212,
-          "Scale": 1
-        },
-        {
-          "Name": "Missile (green Brinstar behind reserve tank)",
+          "Name": "Mockball Hall Hidden Room",
           "X": 392,
           "Y": 212,
           "Scale": 1
@@ -1586,14 +1574,8 @@
           "Scale": 1
         },
         {
-          "Name": "Missile (Crateria gauntlet left)",
-          "X": 260,
-          "Y": 180,
-          "Scale": 1
-        },
-        {
-          "Name": "Missile (Crateria gauntlet right)",
-          "X": 268,
+          "Name": "Gauntlet Shaft",
+          "X": 264,
           "Y": 180,
           "Scale": 1
         }
@@ -1661,14 +1643,8 @@
       "Name": "Inner Maridia",
       "Rooms": [
         {
-          "Name": "Super Missile (yellow Maridia)",
-          "X": 292,
-          "Y": 276,
-          "Scale": 1
-        },
-        {
-          "Name": "Missile (yellow Maridia super missile)",
-          "X": 300,
+          "Name": "Watering Hole",
+          "X": 296,
           "Y": 276,
           "Scale": 1
         },
@@ -1679,14 +1655,8 @@
           "Scale": 1
         },
         {
-          "Name": "Missile (left Maridia sand pit room)",
-          "X": 548,
-          "Y": 532,
-          "Scale": 1
-        },
-        {
-          "Name": "Reserve Tank, Maridia",
-          "X": 556,
+          "Name": "Left Sand Pit",
+          "X": 552,
           "Y": 532,
           "Scale": 1
         },
@@ -1844,13 +1814,7 @@
       "Name": "Upper Norfair, East",
       "Rooms": [
         {
-          "Name": "Reserve Tank, Norfair",
-          "X": 632,
-          "Y": 148,
-          "Scale": 1
-        },
-        {
-          "Name": "Missile (Norfair Reserve Tank)",
+          "Name": "Bubble Mountain Hidden Hall",
           "X": 632,
           "Y": 148,
           "Scale": 1

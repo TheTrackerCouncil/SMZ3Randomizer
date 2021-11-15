@@ -6,26 +6,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
     {
         public InnerMaridia(World world, Config config) : base(world, config)
         {
-            WateringHoleLeft = new(this, 140, 0x8FC4AF, LocationType.Visible,
-                name: "Super Missile (yellow Maridia)",
-                alsoKnownAs: "Watering Hole - Left",
-                vanillaItem: ItemType.Super,
-                access: Logic switch
-                {
-                    Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                        (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump())))
-                });
-            WateringHoleRight = new(this, 141, 0x8FC4B5, LocationType.Visible,
-                name: "Missile (yellow Maridia super missile)",
-                alsoKnownAs: "Watering Hole - right",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                        (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump())))
-                });
             PseudoSparkRoom = new(this, 142, 0x8FC533, LocationType.Visible,
                 name: "Missile (yellow Maridia false wall)",
                 alsoKnownAs: "Pseudo Plasma Spark Room",
@@ -46,26 +26,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     _ => items => CanDefeatDraygon(items)
                                   && ((items.Charge && items.HasEnergyReserves(3)) || items.ScrewAttack || items.Plasma || items.SpeedBooster)
                                   && (items.HiJump || items.CanSpringBallJump() || items.CanFly() || items.SpeedBooster)
-                });
-            LeftSandPitLeft = new(this, 144, 0x8FC5DD, LocationType.Visible,
-                name: "Missile (left Maridia sand pit room)",
-                alsoKnownAs: "Left Sand Pit Room - Left item",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
-                    _ => items => CanReachAqueduct(items) && items.Super &&
-                        ((items.HiJump && (items.SpaceJump || items.CanSpringBallJump())) || items.Gravity)
-                });
-            LeftSandPitRight = new(this, 145, 0x8FC5E3, LocationType.Chozo,
-                name: "Reserve Tank, Maridia",
-                alsoKnownAs: "Left Sand Pit Room - Right item",
-                vanillaItem: ItemType.ReserveTank,
-                access: Logic switch
-                {
-                    Normal => items => CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
-                    _ => items => CanReachAqueduct(items) && items.Super &&
-                        ((items.HiJump && (items.SpaceJump || items.CanSpringBallJump())) || items.Gravity)
                 });
             RightSandPitLeft = new(this, 146, 0x8FC5EB, LocationType.Visible,
                 name: "Missile (right Maridia sand pit room)",
@@ -142,6 +102,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 {
                     _ => new Requirement(items => CanDefeatDraygon(items))
                 });
+
+            WateringHole = new(this);
+            LeftSandPit = new(this);
         }
 
         public override string Name => "Inner Maridia";
@@ -150,17 +113,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public Reward Reward { get; set; } = Reward.GoldenFourBoss;
 
-        public Location WateringHoleLeft { get; }
-
-        public Location WateringHoleRight { get; }
-
         public Location PseudoSparkRoom { get; }
 
         public Location PlasmaBeamRoom { get; }
-
-        public Location LeftSandPitLeft { get; }
-
-        public Location LeftSandPitRight { get; }
 
         public Location RightSandPitLeft { get; }
 
@@ -177,6 +132,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         public Location Botwoon { get; }
 
         public Location DraygonTreasure { get; }
+
+        public WateringHoleRoom WateringHole { get; }
+
+        public LeftSandPitRoom LeftSandPit { get; }
 
         public override bool CanEnter(Progression items)
         {
@@ -232,6 +191,72 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 Normal => items.SpeedBooster || items.CanAccessMaridiaPortal(World),
                 _ => items.Ice || (items.SpeedBooster && items.Gravity) || items.CanAccessMaridiaPortal(World)
             };
+        }
+
+        public class WateringHoleRoom : Room
+        {
+            public WateringHoleRoom(InnerMaridia region)
+                : base(region, "Watering Hole")
+            {
+                Left = new(this, 140, 0x8FC4AF, LocationType.Visible,
+                    name: "Left",
+                    alsoKnownAs: new[] { "Super Missile (yellow Maridia)", "Watering Hole - Left", },
+                    vanillaItem: ItemType.Super,
+                    access: region.Logic switch
+                    {
+                        Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
+                        _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
+                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump())))
+                    });
+
+                Right = new(this, 141, 0x8FC4B5, LocationType.Visible,
+                    name: "Right",
+                    alsoKnownAs: new[] { "Missile (yellow Maridia super missile)", "Watering Hole - right" },
+                    vanillaItem: ItemType.Missile,
+                    access: region.Logic switch
+                    {
+                        Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
+                        _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
+                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump())))
+                    });
+            }
+
+            public Location Left { get; }
+
+            public Location Right { get; }
+        }
+
+        public class LeftSandPitRoom : Room
+        {
+            public LeftSandPitRoom(InnerMaridia region)
+                : base(region, "Left Sand Pit")
+            {
+                Left = new(this, 144, 0x8FC5DD, LocationType.Visible,
+                    name: "Left",
+                    alsoKnownAs: new[] { "Missile (left Maridia sand pit room)" },
+                    vanillaItem: ItemType.Missile,
+                    access: region.Logic switch
+                    {
+                        Normal => items => region.CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
+                        _ => items => region.CanReachAqueduct(items) && items.Super &&
+                            ((items.HiJump && (items.SpaceJump || items.CanSpringBallJump())) || items.Gravity)
+                    });
+
+                Right = new(this, 145, 0x8FC5E3, LocationType.Chozo,
+                    name: "Right",
+                    alsoKnownAs: new[] { "Reserve Tank, Maridia" },
+                    vanillaItem: ItemType.ReserveTank,
+                    access: region.Logic switch
+                    {
+                        Normal => items => region.CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
+                        _ => items => region.CanReachAqueduct(items) && items.Super &&
+                            ((items.HiJump && (items.SpaceJump || items.CanSpringBallJump())) || items.Gravity)
+                    });
+            }
+
+            public Location Left { get; }
+
+            public Location Right { get; }
         }
     }
 }
