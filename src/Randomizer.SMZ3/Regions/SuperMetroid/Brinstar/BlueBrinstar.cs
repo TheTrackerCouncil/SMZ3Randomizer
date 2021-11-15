@@ -47,23 +47,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     _ => new Requirement(items => items.Morph)
                 });
 
-            TopMissile = new(this, 36, 0x8F8836, LocationType.Visible,
-                name: "Missile (blue Brinstar top)",
-                alsoKnownAs: "Billy Mays Room",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => new Requirement(items => items.CardBrinstarL1 && items.CanUsePowerBombs())
-                });
-
-            MissileBehindMissile = new(this, 37, 0x8F883C, LocationType.Hidden,
-                name: "Missile (blue Brinstar behind missile)",
-                alsoKnownAs: "Billy Mays Room - Hidden item",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => new Requirement(items => items.CardBrinstarL1 && items.CanUsePowerBombs())
-                });
+            BlueBrinstarTop = new(this);
         }
 
         public override string Name => "Blue Brinstar";
@@ -80,8 +64,36 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public Location BottomMissile { get; }
 
-        public Location TopMissile { get; }
+        public BlueBrinstarTopRoom BlueBrinstarTop { get; }
 
-        public Location MissileBehindMissile { get; }
+        public class BlueBrinstarTopRoom : Room
+        {
+            public BlueBrinstarTopRoom(BlueBrinstar region)
+                : base(region, "Blue Brinstar Top")
+            {
+                MainItem = new(this, 36, 0x8F8836, LocationType.Visible,
+                name: "Main Item",
+                alsoKnownAs: new[] { "Missile (blue Brinstar top)", "Billy Mays Room" },
+                vanillaItem: ItemType.Missile,
+                access: region.Logic switch
+                {
+                    _ => new Requirement(items => items.CardBrinstarL1 && items.CanUsePowerBombs())
+                });
+
+                HiddenItem = new(this, 37, 0x8F883C, LocationType.Hidden,
+                    name: "Hidden Item",
+                    alsoKnownAs: new[] { "Missile (blue Brinstar behind missile)", "Billy Mays Room - Hidden item" },
+                    vanillaItem: ItemType.Missile,
+                    access: region.Logic switch
+                    {
+                        _ => new Requirement(items => items.CardBrinstarL1 && items.CanUsePowerBombs())
+                    });
+            }
+
+            public Location MainItem { get; }
+
+            public Location HiddenItem { get; }
+
+        }
     }
 }

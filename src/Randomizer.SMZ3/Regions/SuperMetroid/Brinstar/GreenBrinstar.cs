@@ -40,24 +40,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     Normal => items => items.CanOpenRedDoors() && items.SpeedBooster,
                     _ => new Requirement(items => items.CanOpenRedDoors() && (items.Morph || items.SpeedBooster))
                 });
-            MissileBehindMissile = new(this, 18, 0x8F8532, LocationType.Hidden,
-                name: "Missile (green Brinstar behind missile)",
-                alsoKnownAs: new[] { "Mockball - Back room hidden item", "Ron Popeil missiles" },
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.SpeedBooster && items.CanPassBombPassages() && items.CanOpenRedDoors(),
-                    _ => new Requirement(items => (items.CanPassBombPassages() || (items.Morph && items.ScrewAttack)) && items.CanOpenRedDoors())
-                });
-            MissileBehindReserveTank = new(this, 19, 0x8F8538, LocationType.Visible,
-                name: "Missile (green Brinstar behind reserve tank)",
-                alsoKnownAs: "Mockball - Back room",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.SpeedBooster && items.CanOpenRedDoors() && items.Morph,
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
-                });
             ETank = new(this, 30, 0x8F87C2, LocationType.Visible,
                 name: "Energy Tank, Etecoons",
                 vanillaItem: ItemType.ETank,
@@ -72,6 +54,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 {
                     _ => new Requirement(items => items.CardBrinstarL2 && items.CanUsePowerBombs() && items.Super)
                 });
+            MockballHallHidden = new(this);
         }
 
         public override string Name => "Green Brinstar";
@@ -86,17 +69,46 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public Location ReserveTank { get; }
 
-        public Location MissileBehindMissile { get; }
-
-        public Location MissileBehindReserveTank { get; }
-
         public Location ETank { get; }
 
         public Location BottomSuperMissile { get; }
 
+        public MockballHallHiddenRoom MockballHallHidden { get; }
+
         public override bool CanEnter(Progression items)
         {
             return items.CanDestroyBombWalls() || items.SpeedBooster;
+        }
+
+        public class MockballHallHiddenRoom : Room
+        {
+            public MockballHallHiddenRoom(GreenBrinstar region)
+                : base(region, "Mockball Hall Hidden Room")
+            {
+                HiddenItem = new(this, 18, 0x8F8532, LocationType.Hidden,
+                    name: "Hidden Item",
+                    alsoKnownAs: new[] { "Missile (green Brinstar behind missile)", "Mockball - Back room hidden item", "Ron Popeil missiles" },
+                    vanillaItem: ItemType.Missile,
+                    access: region.Logic switch
+                    {
+                        Normal => items => items.SpeedBooster && items.CanPassBombPassages() && items.CanOpenRedDoors(),
+                        _ => new Requirement(items => (items.CanPassBombPassages() || (items.Morph && items.ScrewAttack)) && items.CanOpenRedDoors())
+                    });
+
+                MainItem = new(this, 19, 0x8F8538, LocationType.Visible,
+                    name: "Main Item",
+                    alsoKnownAs: new[] { "Missile (green Brinstar behind reserve tank)" , "Mockball - Back room" },
+                    vanillaItem: ItemType.Missile,
+                    access: region.Logic switch
+                    {
+                        Normal => items => items.SpeedBooster && items.CanOpenRedDoors() && items.Morph,
+                        _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
+                    });
+            }
+
+            public Location MainItem { get; }
+
+            public Location HiddenItem { get; }
         }
 
     }

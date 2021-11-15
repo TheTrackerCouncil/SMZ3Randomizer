@@ -8,30 +8,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
     {
         public UpperNorfairEast(World world, Config config) : base(world, config)
         {
-            ReserveTankRoom = new(this, 61, 0x8F8C3E, LocationType.Chozo,
-                name: "Reserve Tank, Norfair",
-                vanillaItem: ItemType.ReserveTank,
-                access: Logic switch
-                {
-                    Normal => items => items.CardNorfairL2 && items.Morph && (
-                        items.CanFly() ||
-                        items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
-                        items.HiJump || items.Ice
-                    ),
-                    _ => new Requirement(items => items.CardNorfairL2 && items.Morph && items.Super)
-                });
-            ReserveTankHiddenItem = new(this, 62, 0x8F8C44, LocationType.Hidden,
-                name: "Missile (Norfair Reserve Tank)",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.CardNorfairL2 && items.Morph && (
-                        items.CanFly() ||
-                        items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
-                        items.HiJump || items.Ice
-                    ),
-                    _ => new Requirement(items => items.CardNorfairL2 && items.Morph && items.Super)
-                });
+            
             BubbleMountainMissileRoom = new(this, 63, 0x8F8C52, LocationType.Visible,
                 name: "Missile (bubble Norfair green door)",
                 alsoKnownAs: "Bubble Mountain Missile Room",
@@ -110,15 +87,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     _ => new Requirement(items => items.CanOpenRedDoors() && (items.CardNorfairL2 || items.Varia) &&
                         (items.Morph || items.Grapple || items.HiJump && items.Varia || items.SpaceJump))
                 });
+            BubbleMountainHiddenHall = new(this);
         }
 
         public override string Name => "Upper Norfair, East";
 
         public override string Area => "Upper Norfair";
-
-        public Location ReserveTankRoom { get; }
-
-        public Location ReserveTankHiddenItem { get; }
 
         public Location BubbleMountainMissileRoom { get; }
 
@@ -131,6 +105,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         public Location DoubleChamber { get; }
 
         public Location WaveBeamRoom { get; }
+
+        public BubbleMountainHiddenHallRoom BubbleMountainHiddenHall { get; }
 
         // Todo: Super is not actually needed for Frog Speedway, but changing this will affect locations
         // Todo: Ice Beam -> Croc Speedway is not considered
@@ -164,6 +140,44 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
             };
         }
 
+        public class BubbleMountainHiddenHallRoom : Room
+        {
+            public BubbleMountainHiddenHallRoom(UpperNorfairEast region)
+                : base(region, "Bubble Mountain Hidden Hall")
+            {
+                MainItem = new(this, 61, 0x8F8C3E, LocationType.Chozo,
+                    name: "Main Item",
+                    alsoKnownAs: new[] { "Reserve Tank, Norfair" },
+                    vanillaItem: ItemType.ReserveTank,
+                    access: region.Logic switch
+                    {
+                        Normal => items => items.CardNorfairL2 && items.Morph && (
+                            items.CanFly() ||
+                            items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
+                            items.HiJump || items.Ice
+                        ),
+                        _ => new Requirement(items => items.CardNorfairL2 && items.Morph && items.Super)
+                    });
+
+                HiddenItem = new(this, 62, 0x8F8C44, LocationType.Hidden,
+                    name: "Hidden Item",
+                    alsoKnownAs: new[] { "Missile (Norfair Reserve Tank)" },
+                    vanillaItem: ItemType.Missile,
+                    access: region.Logic switch
+                    {
+                        Normal => items => items.CardNorfairL2 && items.Morph && (
+                            items.CanFly() ||
+                            items.Grapple && (items.SpeedBooster || items.CanPassBombPassages()) ||
+                            items.HiJump || items.Ice
+                        ),
+                        _ => new Requirement(items => items.CardNorfairL2 && items.Morph && items.Super)
+                    });
+            }
+
+            public Location MainItem { get; }
+
+            public Location HiddenItem { get; }
+        }
     }
 
 }

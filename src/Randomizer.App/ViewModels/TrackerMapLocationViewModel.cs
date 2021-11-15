@@ -34,7 +34,7 @@ namespace Randomizer.App.ViewModels
         /// </param>
         public TrackerMapLocationViewModel(TrackerMapLocation mapLocation, TrackerLocationSyncer syncer, double scaledRatio)
         {
-            Size = 16;
+            Size = 20;
             X = (mapLocation.X * scaledRatio) - (Size / 2);
             Y = (mapLocation.Y * scaledRatio) - (Size / 2);
             Syncer = syncer;
@@ -158,6 +158,31 @@ namespace Randomizer.App.ViewModels
                     "Sprites", "Maps", image)));
             }
         }
+
+
+        /// <summary>
+        /// Get the icon to display for the number of locations
+        /// </summary>
+        public ImageSource NumberImage
+        {
+            get
+            {
+                if (ClearableLocationsCount > 1)
+                {
+                    return new BitmapImage(new Uri(System.IO.Path.Combine(
+                        System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Marks", $"{Math.Min(9, ClearableLocationsCount)}.png")));
+
+                }
+                else 
+                {
+                    return new BitmapImage(new Uri(System.IO.Path.Combine(
+                        System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Maps", "blank.png")));
+                }
+            }
+        }
+        
 
         /// <summary>
         /// The visual style for the right click menu

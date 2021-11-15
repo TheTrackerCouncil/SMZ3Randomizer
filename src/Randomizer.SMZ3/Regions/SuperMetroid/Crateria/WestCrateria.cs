@@ -21,24 +21,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                     Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
                     _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
                 });
-            GauntletRight = new(this, 9, 0x8F8464, LocationType.Visible,
-                name: "Missile (Crateria gauntlet right)",
-                alsoKnownAs: "Gauntlet shaft (right)",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
-                });
-            GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
-                name: "Missile (Crateria gauntlet left)",
-                alsoKnownAs: "Gauntlet shaft (left)",
-                vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
-                });
+            GauntletShaft = new(this);
         }
 
         public override string Name => "West Crateria";
@@ -49,9 +32,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         public Location Gauntlet { get; }
 
-        public Location GauntletRight { get; }
-
-        public Location GauntletLeft { get; }
+        public GauntletShaftRoom GauntletShaft { get;  }
 
         public override bool CanEnter(Progression items)
         {
@@ -75,6 +56,37 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                         items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
                     )
             };
+        }
+
+        public class GauntletShaftRoom : Room
+        {
+            public GauntletShaftRoom(WestCrateria region)
+                : base(region, "Gauntlet Shaft")
+            {
+                GauntletRight = new(this, 9, 0x8F8464, LocationType.Visible,
+                name: "Right",
+                alsoKnownAs: "Missile (Crateria gauntlet right)",
+                vanillaItem: ItemType.Missile,
+                access: region.Logic switch
+                {
+                    Normal => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                    _ => new Requirement(items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                });
+
+                GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
+                    name: "Left",
+                    alsoKnownAs: "Missile (Crateria gauntlet left)",
+                    vanillaItem: ItemType.Missile,
+                    access: region.Logic switch
+                    {
+                        Normal => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
+                        _ => new Requirement(items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                    });
+            }
+
+            public Location GauntletRight { get; }
+
+            public Location GauntletLeft { get; }
         }
 
     }

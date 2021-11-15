@@ -59,17 +59,6 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 vanillaItem: ItemType.Bombos,
                 access: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items));
 
-            FloodgateChest = new Location(this, 256 + 59, 0x1E98C, LocationType.Regular,
-                name: "Floodgate Chest",
-                alsoKnownAs: "Swamp Ruins",
-                vanillaItem: ItemType.ThreeBombs)
-                .Weighted(SphereOne);
-
-            SunkedTreasure = new Location(this, 256 + 60, 0x308145, LocationType.Regular,
-                name: "Sunken Treasure",
-                vanillaItem: ItemType.HeartPiece)
-                .Weighted(SphereOne);
-
             LakeHyliaIsland = new Location(this, 256 + 61, 0x308144, LocationType.Regular,
                 name: "Lake Hylia Island",
                 vanillaItem: ItemType.HeartPiece,
@@ -90,6 +79,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 .Weighted(SphereOne);
 
             MiniMoldormCave = new(this);
+
+            SwampRuins = new(this);
         }
 
         public override string Name => "Light World South";
@@ -113,10 +104,6 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
         public Location BombosTablet { get; }
 
-        public Location FloodgateChest { get; }
-
-        public Location SunkedTreasure { get; }
-
         public Location LakeHyliaIsland { get; }
 
         public Location UnderTheBridge { get; }
@@ -124,6 +111,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
         public Location IceCave { get; }
 
         public MiniMoldormCaveRoom MiniMoldormCave { get; }
+
+        public SwampRuinsRoom SwampRuins { get; }
 
         public class MiniMoldormCaveRoom : Room
         {
@@ -165,6 +154,28 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             public Location FarRightChest { get; }
 
             public Location Npc { get; }
+        }
+
+        public class SwampRuinsRoom : Room
+        {
+            public SwampRuinsRoom(Region region)
+                : base(region, "Swamp Ruins")
+            {
+                FloodgateChest = new Location(this, 256 + 59, 0x1E98C, LocationType.Regular,
+                   name: "Floodgate Chest",
+                   vanillaItem: ItemType.ThreeBombs)
+                   .Weighted(SphereOne);
+
+                SunkedTreasure = new Location(this, 256 + 60, 0x308145, LocationType.Regular,
+                    name: "Sunken Treasure",
+                    vanillaItem: ItemType.HeartPiece)
+                    .Weighted(SphereOne);
+            }
+
+            public Location FloodgateChest { get; }
+
+            public Location SunkedTreasure { get; }
+
         }
     }
 

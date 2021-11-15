@@ -46,6 +46,11 @@
                   </ContextMenu>
                 </Rectangle.ContextMenu>
               </Rectangle>
+              <Rectangle Width="{Binding Size}" Height="{Binding Size}" Visibility="{Binding IconVisibility}" IsHitTestVisible="False" >
+                <Rectangle.Fill>
+                  <ImageBrush ImageSource="{Binding NumberImage}" TileMode="None" Stretch="None" AlignmentX="Center" AlignmentY="Center"/>
+                </Rectangle.Fill>
+              </Rectangle>
             </Grid>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
