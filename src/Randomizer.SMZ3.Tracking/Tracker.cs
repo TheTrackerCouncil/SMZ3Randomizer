@@ -190,6 +190,12 @@ namespace Randomizer.SMZ3.Tracking
         public TrackerOptions Options { get; }
 
         /// <summary>
+        /// Gets a dictionary that contains unique location names for each
+        /// location.
+        /// </summary>
+        protected internal IReadOnlyDictionary<int, SchrodingersString> UniqueLocationNames { get; }
+
+        /// <summary>
         /// Initializes the microphone from the default audio device
         /// </summary>
         /// <returns>True if the microphone is initialized, false otherwise</returns>
@@ -209,12 +215,6 @@ namespace Randomizer.SMZ3.Tracking
                 return false;
             }
         }
-        /// <summary>
-        /// Gets a dictionary that contains unique location names for each
-        /// location.
-        /// </summary>
-        protected internal IReadOnlyDictionary<int, SchrodingersString> UniqueLocationNames { get; }
-
         /// <summary>
         /// Loads the tracker state from the specified saved state.
         /// </summary>
@@ -307,19 +307,25 @@ namespace Randomizer.SMZ3.Tracking
             {
                 dungeon.TreasureRemaining -= amount;
 
-                // Try to get the response based on the amount of items left
-                if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
-                    Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
-                // If we don't have a response for the exact amount and we have
-                // multiple left, get the one for 2 (considered generic)
-                else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
-                    Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                // Always add a response if there's treasure left, even when
+                // clearing a dungeon (because that means it was out of logic
+                // and could be relevant)
+                if (confidence != null || dungeon.TreasureRemaining >= 1)
+                {
+                    // Try to get the response based on the amount of items left
+                    if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
+                        Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                    // If we don't have a response for the exact amount and we have
+                    // multiple left, get the one for 2 (considered generic)
+                    else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
+                        Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                }
 
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
                 AddUndo(() => dungeon.TreasureRemaining++);
                 return true;
             }
-            else if (Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
+            else if (confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
             {
                 // Attempted to track treasure when all treasure items were
                 // already cleared out
@@ -864,9 +870,10 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="assumeKeys">Set to true to ignore keys when clearing the location.</param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
-            var dungeon = Dungeons.SingleOrDefault(x => x.Is(area));
+            var dungeon = Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
             if (dungeon != null)
             {
+                assumeKeys = true; // Always assume keys when clearing the dungeon itself
                 dungeon.Cleared = true;
                 OnDungeonUpdated(new(confidence));
             }
@@ -991,7 +998,7 @@ namespace Randomizer.SMZ3.Tracking
             var dungeon = Dungeons.SingleOrDefault(x => x.Is(location.Region));
             if (dungeon != null && location.Item?.IsDungeonItem == false)
             {
-                TrackDungeonTreasure(dungeon);
+                TrackDungeonTreasure(dungeon, confidence);
                 undoTrackTreasure = _undoHistory.Pop();
             }
 
