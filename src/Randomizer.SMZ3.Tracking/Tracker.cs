@@ -853,6 +853,36 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Sets the item count for the specified item.
+        /// </summary>
+        /// <param name="item">The item to track.</param>
+        /// <param name="count">The amount of the item that is in the player's inventory now.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void SetItemCount(ItemData item, int count, float confidence)
+        {
+            var newItemCount = count;
+            if (item.CounterMultiplier > 1
+                && count % item.CounterMultiplier == 0)
+            {
+                newItemCount = count / item.CounterMultiplier.Value;
+            }
+
+            var oldItemCount = item.TrackingState;
+            item.TrackingState = newItemCount;
+            if (newItemCount > oldItemCount)
+            {
+                Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Counter));
+            }
+            else
+            {
+                Say(Responses.UntrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Plural ?? $"{item.Name}s"));
+            }
+
+            AddUndo(() => item.TrackingState = oldItemCount);
+            OnItemTracked(new(null, confidence));
+        }
+
+        /// <summary>
         /// Clears every item in the specified area, optionally tracking the
         /// cleared items.
         /// </summary>

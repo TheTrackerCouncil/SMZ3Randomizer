@@ -282,6 +282,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
+        /// Gets the pluralized item names for items that can be tracked more than once for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible item
+        /// names.
+        /// </returns>
+        protected virtual Choices GetPluralItemNames()
+        {
+            var itemNames = new Choices();
+            foreach (var itemData in Tracker.Items.Where(x => x.Multiple && !x.HasStages))
+            {
+                if (itemData.Plural == null)
+                {
+                    _logger.LogWarning("{item} is marked as Multiple but does not have plural names", itemData.Name[0]);
+                    continue;
+                }
+
+                foreach (var name in itemData.Plural)
+                    itemNames.Add(new SemanticResultValue(name.ToString(), itemData.Name[0].Text));
+            }
+
+            return itemNames;
+        }
+
+        /// <summary>
         /// Gets the item names for speech recognition.
         /// </summary>
         /// <returns>

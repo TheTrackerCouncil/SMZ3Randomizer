@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
 
@@ -9,6 +12,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class ItemTrackingModule : TrackerModule
     {
+        private const string ItemCountKey = "ItemCount";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ItemTrackingModule"/>
         /// class.
@@ -74,6 +79,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 tracker.UntrackItem(item, result.Confidence);
+            });
+
+            AddCommand("Set item count", GetSetItemCountRule(), (tracker, result) =>
+            {
+                var item = GetItemFromResult(tracker, result, out _);
+                var count = (int)result.Semantics[ItemCountKey].Value;
+                tracker.SetItemCount(item, count, result.Confidence);
             });
         }
 
@@ -161,6 +173,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("off");
 
             return GrammarBuilder.Combine(untrackItem, toggleItemOff);
+        }
+
+        private GrammarBuilder GetSetItemCountRule()
+        {
+            var itemNames = GetPluralItemNames();
+            var numbers = new Choices();
+            for (var i = 0; i <= 200; i++)
+                numbers.Add(new SemanticResultValue(i.ToString(), i));
+
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("I have", "I've got", "I possess", "I am in the possession of")
+                .Append(ItemCountKey, numbers)
+                .Append(ItemNameKey, itemNames);
         }
     }
 }

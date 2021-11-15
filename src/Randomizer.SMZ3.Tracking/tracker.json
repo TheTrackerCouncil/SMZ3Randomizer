@@ -281,7 +281,11 @@
       "Multiple": true
     },
     {
-      "Name": [ "Heart Container", "Love" ],
+      "Name": [
+        "Heart Container",
+        [ "Love", 0.2 ]
+      ],
+      "Plural": [ "Heart Containers" ],
       "InternalItemType": 62,
       "Multiple": true,
       "Column": 5,
@@ -625,6 +629,7 @@
     },
     {
       "Name": [ "Energy Tank", "E-Tank" ],
+      "Plural": [ "Energy Tanks", "E-Tanks" ],
       "InternalItemType": 192,
       "Artice": "an",
       "Multiple": true,
@@ -633,6 +638,7 @@
     },
     {
       "Name": "Reserve Tank",
+      "Plural": "Reserve Tanks",
       "InternalItemType": 193,
       "Multiple": true,
       "Column": 9,
