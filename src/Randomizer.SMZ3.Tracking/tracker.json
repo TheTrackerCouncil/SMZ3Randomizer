@@ -205,7 +205,7 @@
       "Row": 3
     },
     {
-      "Name": "Magic Cape",
+      "Name": [ "Magic Cape", "Cape" ],
       "InternalItemType": 25,
       "Column": 3,
       "Row": 3
@@ -408,7 +408,6 @@
     {
       "Name": [
         "Gloves",
-        "Glove",
         [ "Progressive Glove", 0 ]
       ],
       "InternalItemType": 97,
@@ -568,7 +567,7 @@
       "Row": 2
     },
     {
-      "Name": "Hi-Jump Boots",
+      "Name": [ "Hi-Jump Boots", "Hi-Jump" ],
       "InternalItemType": 183,
       "Column": 8,
       "Row": 2
