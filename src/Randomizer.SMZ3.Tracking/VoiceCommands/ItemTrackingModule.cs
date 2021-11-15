@@ -79,7 +79,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetTrackItemRule()
         {
-            var dungeonNames = GetDungeonNames();
+            var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
             var itemNames = GetItemNames();
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();

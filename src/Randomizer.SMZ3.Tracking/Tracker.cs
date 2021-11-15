@@ -365,7 +365,7 @@ namespace Randomizer.SMZ3.Tracking
         public void SetUnmarkedDungeonReward(RewardItem reward, float? confidence = null)
         {
             var unmarkedDungeons = Dungeons
-                .Where(x => x.Reward == RewardItem.Unknown)
+                .Where(x => x.HasReward && x.Reward == RewardItem.Unknown)
                 .ToImmutableList();
 
             if (unmarkedDungeons.Count > 0)

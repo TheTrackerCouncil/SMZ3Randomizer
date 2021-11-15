@@ -256,7 +256,7 @@ namespace Randomizer.App
                         "Sprites", "Dungeons", $"{dungeon.Name[0].Text.ToLowerInvariant()}.png");
 
                     var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", $"{dungeon.Reward.GetDescription().ToLowerInvariant()}.png");
+                        "Sprites", "Dungeons", $"{(dungeon.HasReward ? dungeon.Reward.GetDescription().ToLowerInvariant() : "blank")}.png");
                     var image = GetGridItemControl(rewardPath,
                         dungeon.Column.Value, dungeon.Row.Value,
                         dungeon.TreasureRemaining, overlayPath, minCounter: 1);
@@ -502,24 +502,27 @@ namespace Randomizer.App
                 menu.Items.Add(unclear);
             }
 
-            foreach (var reward in Enum.GetValues<RewardItem>())
+            if (dungeon.HasReward)
             {
-                var item = new MenuItem
+                foreach (var reward in Enum.GetValues<RewardItem>())
                 {
-                    Header = $"Mark as {reward.GetDescription()}",
-                    IsChecked = dungeon.Reward == reward,
-                    Icon = new Image
+                    var item = new MenuItem
                     {
-                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", $"{reward.GetDescription().ToLowerInvariant()}.png")))
-                    }
-                };
-                item.Click += (sender, e) =>
-                {
-                    dungeon.Reward = reward;
-                    RefreshGridItems();
-                };
-                menu.Items.Add(item);
+                        Header = $"Mark as {reward.GetDescription()}",
+                        IsChecked = dungeon.Reward == reward,
+                        Icon = new Image
+                        {
+                            Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                            "Sprites", "Dungeons", $"{reward.GetDescription().ToLowerInvariant()}.png")))
+                        }
+                    };
+                    item.Click += (sender, e) =>
+                    {
+                        dungeon.Reward = reward;
+                        RefreshGridItems();
+                    };
+                    menu.Items.Add(item);
+                }
             }
             return menu;
         }

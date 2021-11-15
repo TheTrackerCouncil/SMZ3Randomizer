@@ -65,6 +65,11 @@ namespace Randomizer.SMZ3.Tracking
             = RewardItem.Unknown;
 
         /// <summary>
+        /// Gets a value indicating whether the dungeon has a reward when the boss is defeated.
+        /// </summary>
+        public bool HasReward { get; init; } = true;
+
+        /// <summary>
         /// Gets or sets the medallion that is required to enter the dungeon.
         /// </summary>
         public Medallion Requirement { get; set; }

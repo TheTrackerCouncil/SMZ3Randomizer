@@ -19,13 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Sprites\Items\**" />
-    <EmbeddedResource Remove="Sprites\Items\**" />
-    <None Remove="Sprites\Items\**" />
-    <Page Remove="Sprites\Items\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="chozo20.ico" />
     <None Remove="msu1-v6.ips" />
     <None Remove="Resources\Font Awesome 5 Free-Regular-400.otf" />

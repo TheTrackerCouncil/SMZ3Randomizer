@@ -39,14 +39,14 @@
         [ "Kraid's Awful Son's Father", 0.01 ]
       ],
       "InternalItemType": 0,
-      "Column": 5,
+      "Column": 6,
       "Row": 5
     },
     {
       "Name": [ "Crocomire" ],
       "Image": "stoke.png",
       "InternalItemType": 0,
-      "Column": 6,
+      "Column": 7,
       "Row": 5
     },
     {
@@ -55,25 +55,25 @@
         [ "Spooky Ghost", 0.25 ]
       ],
       "InternalItemType": 0,
-      "Column": 7,
+      "Column": 8,
       "Row": 5
     },
     {
       "Name": [ "Shaktool", "The Shaktool" ],
       "InternalItemType": 0,
-      "Column": 5,
+      "Column": 6,
       "Row": 6
     },
     {
       "Name": [ "Draygon" ],
       "InternalItemType": 0,
-      "Column": 6,
+      "Column": 7,
       "Row": 6
     },
     {
       "Name": [ "Ridley" ],
       "InternalItemType": 0,
-      "Column": 7,
+      "Column": 8,
       "Row": 6
     },
     {
@@ -841,12 +841,20 @@
     {
       "Name": [ "Ganon's Tower" ],
       "Abbreviation": "GT",
-      "TreasureRemaining": 20
+      "Boss": "Ganon",
+      "Column": 5,
+      "Row": 6,
+      "TreasureRemaining": 20,
+      "HasReward": false
     },
     {
       "Name": [ "Hyrule Castle" ],
       "Abbreviation": "HC",
-      "TreasureRemaining": 6
+      "Boss": "Agahnim",
+      "Column": 5,
+      "Row": 5,
+      "TreasureRemaining": 6,
+      "HasReward": false
     }
   ],
   "Pegs": [
@@ -890,7 +898,8 @@
       "I didn't get that.",
       "Could you repeat that?",
       "What did you say?",
-      "What was that?"
+      "What was that?",
+      [ "English motherfucker, do you speak it?", 0.001 ]
     ],
     "TrackedItem": [
       "Toggled {0} on."
