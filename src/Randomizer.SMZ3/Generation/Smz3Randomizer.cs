@@ -13,11 +13,8 @@ namespace Randomizer.SMZ3.Generation
 {
     public class Smz3Randomizer : IWorldAccessor
     {
-        public static readonly Version version = new Version(1, 0);
-
-        private static readonly Regex legalCharacters = new Regex(@"[A-Z0-9]", RegexOptions.IgnoreCase);
-        private static readonly Regex illegalCharacters = new Regex(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
-        private static readonly Regex continousSpace = new Regex(@" +");
+        private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
+        private static readonly Regex s_continousSpace = new(@" +");
 
         public Smz3Randomizer(IFiller filler)
         {
@@ -25,6 +22,8 @@ namespace Randomizer.SMZ3.Generation
         }
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
+
+        public static Version Version => new(1, 0);
 
         public World LastGeneratedWorld { get; private set; }
 
@@ -126,8 +125,8 @@ namespace Randomizer.SMZ3.Generation
 
         private static string CleanPlayerName(string name)
         {
-            name = illegalCharacters.Replace(name, " ");
-            name = continousSpace.Replace(name, " ");
+            name = s_illegalCharacters.Replace(name, " ");
+            name = s_continousSpace.Replace(name, " ");
             return name.Trim();
         }
     }

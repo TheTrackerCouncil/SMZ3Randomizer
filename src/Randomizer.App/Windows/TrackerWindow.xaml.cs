@@ -606,7 +606,7 @@ namespace Randomizer.App
                 UpdateStats(e);
                 RefreshGridItems();
             });
-            Tracker.StateLoaded += (sender, e) => Dispatcher.Invoke(async () =>
+            Tracker.StateLoaded += (sender, e) => Dispatcher.Invoke(() =>
             {
                 RefreshGridItems();
                 ResetGridSize();

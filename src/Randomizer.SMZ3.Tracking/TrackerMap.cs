@@ -27,6 +27,7 @@ namespace Randomizer.SMZ3.Tracking
             Width = width;
             Height = height;
             Regions = regions;
+            FullLocations = new();
         }
 
         /// <summary>
@@ -59,6 +60,5 @@ namespace Randomizer.SMZ3.Tracking
         /// List of all actual locations that are underneath the region
         /// </summary>
         public List<TrackerMapLocation> FullLocations { get; set; }
-
     }
 }

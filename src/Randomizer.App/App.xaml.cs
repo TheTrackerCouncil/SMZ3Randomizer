@@ -63,7 +63,7 @@ namespace Randomizer.App
                 window.Left = (int)key.GetValue("Left", window.Left);
                 window.Top = (int)key.GetValue("Top", window.Top);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ¯\_(ツ)_/¯
             }

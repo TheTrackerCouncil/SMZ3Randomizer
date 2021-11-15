@@ -737,8 +737,8 @@ namespace Randomizer.SMZ3.FileData
                 ((_myWorld.Config.MultiWorld ? 1 : 0) << 12) |
                 ((int)_myWorld.Config.Z3Logic << 10) |
                 ((int)_myWorld.Config.SMLogic << 8) |
-                (Generation.Smz3Randomizer.version.Major << 4) |
-                (Generation.Smz3Randomizer.version.Minor << 0);
+                (Generation.Smz3Randomizer.Version.Major << 4) |
+                (Generation.Smz3Randomizer.Version.Minor << 0);
 
             _patches.Add((Snes(0x80FF50), UshortBytes(_myWorld.Id)));
             _patches.Add((Snes(0x80FF52), UshortBytes(configField)));
