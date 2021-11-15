@@ -1,30 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using NUnit.Framework;
+using Xunit;
 
 namespace Randomizer.SMZ3.Tests
 {
-    [TestFixture]
     public class ItemTypeTests
     {
-        [TestCase("Map", ItemCategory.Map)]
-        [TestCase("Compass", ItemCategory.Compass)]
-        [TestCase("BigKey", ItemCategory.BigKey)]
-        [TestCase("Key", ItemCategory.SmallKey)]
-        [TestCase("Card", ItemCategory.Keycard)]
+        [Theory]
+        [InlineData("Map", ItemCategory.Map)]
+        [InlineData("Compass", ItemCategory.Compass)]
+        [InlineData("BigKey", ItemCategory.BigKey)]
+        [InlineData("Key", ItemCategory.SmallKey)]
+        [InlineData("Card", ItemCategory.Keycard)]
         public void DungeonSpecificItemsHaveCorrectCategories(string prefix, ItemCategory expectedCategory)
         {
             foreach (var itemType in Enum.GetValues<ItemType>().Where(x => x.ToString().StartsWith(prefix)))
             {
-                Assert.IsTrue(itemType.IsInCategory(expectedCategory));
+                Assert.True(itemType.IsInCategory(expectedCategory));
             }
         }
 
-        [Test]
+        [Fact]
         public void DungeonSpecificItemsAreDungeonItems()
         {
             var itemTypes = Enum.GetValues<ItemType>()
@@ -36,16 +33,17 @@ namespace Randomizer.SMZ3.Tests
             {
                 var result = itemType.IsInAnyCategory(ItemCategory.BigKey,
                     ItemCategory.Compass, ItemCategory.SmallKey, ItemCategory.Map);
-                Assert.IsTrue(result, $"{itemType} should be considered a dungeon item");
+                Assert.True(result, $"{itemType} should be considered a dungeon item");
             }
         }
 
-        [TestCase(ItemType.SilverArrows)]
-        [TestCase(ItemType.ThreeBombs)]
+        [Theory]
+        [InlineData(ItemType.SilverArrows)]
+        [InlineData(ItemType.ThreeBombs)]
         public void ZeldaItemsAreNotMetroidItems(ItemType itemType)
         {
             var result = itemType.IsInCategory(ItemCategory.Metroid);
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
     }
 }

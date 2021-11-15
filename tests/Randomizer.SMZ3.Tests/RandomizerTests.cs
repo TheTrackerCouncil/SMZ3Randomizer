@@ -1,47 +1,51 @@
 ﻿using System;
 
-using NUnit.Framework;
+using FluentAssertions;
+
+using Xunit;
 
 namespace Randomizer.SMZ3.Tests
 {
-    [TestFixture]
     public class RandomizerTests
     {
-        [TestCase("0", 0)]
-        [TestCase("600233615", 600233615)]
-        [TestCase("69217125", 69217125)]
+        [Theory]
+        [InlineData("0", 0)]
+        [InlineData("600233615", 600233615)]
+        [InlineData("69217125", 69217125)]
         public void ParseSeedAcceptsRegularIntegers(string input, int expected)
         {
             var result = Generation.Smz3Randomizer.ParseSeed(ref input);
 
-            Assert.AreEqual(expected, result);
+            Assert.Equal(expected, result);
         }
 
-        [TestCase("23C6D68F", 600233615)]
-        [TestCase("0x69217125", 1763799333)]
+        [Theory]
+        [InlineData("23C6D68F", 600233615)]
+        [InlineData("0x69217125", 1763799333)]
         public void ParseSeedAcceptsHexadecimalSeeds(string input, int expected)
         {
             var result = Generation.Smz3Randomizer.ParseSeed(ref input);
 
-            Assert.AreEqual(expected, result);
+            Assert.Equal(expected, result);
         }
 
-        [TestCase("Cas'", 1498539627)]
+        [Theory]
+        [InlineData("Cas'", 1498539627)]
         public void ParseSeedAcceptsAnyString(string input, int expected)
         {
             var result = Generation.Smz3Randomizer.ParseSeed(ref input);
 
-            Assert.AreEqual(expected, result);
+            Assert.Equal(expected, result);
         }
 
-        [Test]
+        [Fact]
         public void ParseSeedReplacesEmptyInputWithRandomSeed()
         {
             var input = string.Empty;
             var result = Generation.Smz3Randomizer.ParseSeed(ref input);
 
-            Assert.IsTrue(int.TryParse(input, out var seed));
-            Assert.AreEqual(seed, result);
+            Assert.True(int.TryParse(input, out var seed));
+            Assert.Equal(seed, result);
         }
     }
 }

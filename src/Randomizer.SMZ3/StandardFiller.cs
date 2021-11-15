@@ -48,6 +48,7 @@ namespace Randomizer.SMZ3
 
                 if (config.Keysanity == false)
                 {
+                    _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
                     var keyCards = Item.CreateKeycards(world);
                     AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world }, cancellationToken);
@@ -82,9 +83,16 @@ namespace Randomizer.SMZ3
             }
 
             ApplyItemPoolPreferences(junkItems, locations, worlds, config);
+            _logger.LogDebug("Filling GT with junk");
             GanonTowerFill(worlds, junkItems, 2);
+
+            _logger.LogDebug("Distributing progression items according to logic");
             AssumedFill(progressionItems, baseItems, locations, worlds, cancellationToken);
+
+            _logger.LogDebug("Distributing nice-to-have items");
             FastFill(niceItems, locations);
+
+            _logger.LogDebug("Distributing junk items");
             FastFill(junkItems, locations);
         }
 
