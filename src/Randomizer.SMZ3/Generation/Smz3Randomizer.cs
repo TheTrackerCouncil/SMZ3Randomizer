@@ -53,7 +53,7 @@ namespace Randomizer.SMZ3.Generation
             return seed;
         }
 
-        public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken)
+        public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken = default)
         {
             var seedNumber = ParseSeed(ref seed);
             var rng = new Random(seedNumber);
