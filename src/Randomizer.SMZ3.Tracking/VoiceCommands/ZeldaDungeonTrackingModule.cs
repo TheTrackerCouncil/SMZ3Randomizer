@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetMarkDungeonRewardRule()
         {
-            var dungeonNames = GetDungeonNames();
+            var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
             var rewardNames = new Choices();
             foreach (var reward in Enum.GetValues<RewardItem>())
             {
@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetClearDungeonRule()
         {
             var bossNames = GetBossNames();
-            var dungeonNames = GetDungeonNames();
+            var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
 
             var markDungeon = new GrammarBuilder()
                 .Append("Hey tracker,")
@@ -118,7 +118,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetMarkDungeonRequirementRule()
         {
-            var dungeonNames = GetDungeonNames();
+            var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
             var medallions = new Choices();
             foreach (var medallion in Enum.GetValues<Medallion>())
                 medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
@@ -156,7 +156,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetTreasureTrackingRule()
         {
-            var dungeonNames = GetDungeonNames();
+            var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
             var medallions = new Choices();
             foreach (var medallion in Enum.GetValues<Medallion>())
                 medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));

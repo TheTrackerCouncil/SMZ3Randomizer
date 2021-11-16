@@ -190,6 +190,12 @@ namespace Randomizer.SMZ3.Tracking
         public TrackerOptions Options { get; }
 
         /// <summary>
+        /// Gets a dictionary that contains unique location names for each
+        /// location.
+        /// </summary>
+        protected internal IReadOnlyDictionary<int, SchrodingersString> UniqueLocationNames { get; }
+
+        /// <summary>
         /// Initializes the microphone from the default audio device
         /// </summary>
         /// <returns>True if the microphone is initialized, false otherwise</returns>
@@ -209,12 +215,6 @@ namespace Randomizer.SMZ3.Tracking
                 return false;
             }
         }
-        /// <summary>
-        /// Gets a dictionary that contains unique location names for each
-        /// location.
-        /// </summary>
-        protected internal IReadOnlyDictionary<int, SchrodingersString> UniqueLocationNames { get; }
-
         /// <summary>
         /// Loads the tracker state from the specified saved state.
         /// </summary>
@@ -307,19 +307,25 @@ namespace Randomizer.SMZ3.Tracking
             {
                 dungeon.TreasureRemaining -= amount;
 
-                // Try to get the response based on the amount of items left
-                if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
-                    Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
-                // If we don't have a response for the exact amount and we have
-                // multiple left, get the one for 2 (considered generic)
-                else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
-                    Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                // Always add a response if there's treasure left, even when
+                // clearing a dungeon (because that means it was out of logic
+                // and could be relevant)
+                if (confidence != null || dungeon.TreasureRemaining >= 1)
+                {
+                    // Try to get the response based on the amount of items left
+                    if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
+                        Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                    // If we don't have a response for the exact amount and we have
+                    // multiple left, get the one for 2 (considered generic)
+                    else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
+                        Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                }
 
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
                 AddUndo(() => dungeon.TreasureRemaining++);
                 return true;
             }
-            else if (Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
+            else if (confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
             {
                 // Attempted to track treasure when all treasure items were
                 // already cleared out
@@ -365,7 +371,7 @@ namespace Randomizer.SMZ3.Tracking
         public void SetUnmarkedDungeonReward(RewardItem reward, float? confidence = null)
         {
             var unmarkedDungeons = Dungeons
-                .Where(x => x.Reward == RewardItem.Unknown)
+                .Where(x => x.HasReward && x.Reward == RewardItem.Unknown)
                 .ToImmutableList();
 
             if (unmarkedDungeons.Count > 0)
@@ -624,10 +630,15 @@ namespace Randomizer.SMZ3.Tracking
             else if (item.Multiple)
             {
                 item.Track();
-                if (item.TrackingState == 1)
+                if (item.Counter == 1)
                     Say(Responses.TrackedItem.Format(itemName));
-                else if (item.TrackingState > 1)
-                    Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.TrackingState));
+                else if (item.Counter > 1)
+                    Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
+                else
+                {
+                    _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
+                    Say(Responses.TrackedItem.Format(itemName));
+                }
             }
             else
             {
@@ -707,7 +718,12 @@ namespace Randomizer.SMZ3.Tracking
             else if (item.Multiple)
             {
                 if (item.TrackingState > 0)
-                    Say(Responses.UntrackedItemMultiple.Format(item.Name, item.NameWithArticle));
+                {
+                    if (item.CounterMultiplier > 1)
+                        Say(Responses.UntrackedItemMultiple.Format($"{item.CounterMultiplier} {item.Plural}", $"{item.CounterMultiplier} {item.Plural}"));
+                    else
+                        Say(Responses.UntrackedItemMultiple.Format(item.Name, item.NameWithArticle));
+                }
                 else
                     Say(Responses.UntrackedItemMultipleLast.Format(item.Name, item.NameWithArticle));
             }
@@ -837,6 +853,36 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Sets the item count for the specified item.
+        /// </summary>
+        /// <param name="item">The item to track.</param>
+        /// <param name="count">The amount of the item that is in the player's inventory now.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void SetItemCount(ItemData item, int count, float confidence)
+        {
+            var newItemCount = count;
+            if (item.CounterMultiplier > 1
+                && count % item.CounterMultiplier == 0)
+            {
+                newItemCount = count / item.CounterMultiplier.Value;
+            }
+
+            var oldItemCount = item.TrackingState;
+            item.TrackingState = newItemCount;
+            if (newItemCount > oldItemCount)
+            {
+                Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Counter));
+            }
+            else
+            {
+                Say(Responses.UntrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Plural ?? $"{item.Name}s"));
+            }
+
+            AddUndo(() => item.TrackingState = oldItemCount);
+            OnItemTracked(new(null, confidence));
+        }
+
+        /// <summary>
         /// Clears every item in the specified area, optionally tracking the
         /// cleared items.
         /// </summary>
@@ -854,9 +900,10 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="assumeKeys">Set to true to ignore keys when clearing the location.</param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
-            var dungeon = Dungeons.SingleOrDefault(x => x.Is(area));
+            var dungeon = Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
             if (dungeon != null)
             {
+                assumeKeys = true; // Always assume keys when clearing the dungeon itself
                 dungeon.Cleared = true;
                 OnDungeonUpdated(new(confidence));
             }
@@ -981,7 +1028,7 @@ namespace Randomizer.SMZ3.Tracking
             var dungeon = Dungeons.SingleOrDefault(x => x.Is(location.Region));
             if (dungeon != null && location.Item?.IsDungeonItem == false)
             {
-                TrackDungeonTreasure(dungeon);
+                TrackDungeonTreasure(dungeon, confidence);
                 undoTrackTreasure = _undoHistory.Pop();
             }
 
@@ -1084,7 +1131,7 @@ namespace Randomizer.SMZ3.Tracking
                     {
                         dungeon.TreasureRemaining++;
                         undoUntrackTreasure = () => dungeon.TreasureRemaining--;
-                    }    
+                    }
                 }
 
                 if (rewardLocation.Cleared)
@@ -1118,7 +1165,12 @@ namespace Randomizer.SMZ3.Tracking
             var locationName = GetName(location);
             SassIfItemIsWrong(item, location, confidence);
 
-            if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
+            if (item.InternalItemType == ItemType.Nothing)
+            {
+                Clear(location);
+                Say(Responses.LocationMarkedAsBullshit.Format(locationName));
+            }
+            else if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
             {
                 MarkedLocations[location.Id] = item;
                 Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldItem.Name));
@@ -1412,11 +1464,9 @@ namespace Randomizer.SMZ3.Tracking
                 if (newlyAccessible.Contains(World.DarkWorldNorthWest.PegWorld))
                     Say(Responses.PegWorldAvailable);
             }
-            else
+            else if (Responses.TrackedUselessItem != null)
             {
-                var rnd = s_random.Next();
-                if (rnd % 20 == 0)
-                    Say("Doesn't get you anywhere though.");
+                Say(Responses.TrackedUselessItem);
             }
         }
 

@@ -22,10 +22,12 @@
       "Multiple": true
     },
     {
-      "Name": [ "Death" ],
-      "Plural": [ "Deaths" ],
+      "Name": [ "Death", "Game Over" ],
+      "Plural": [ "Deaths", "Game Overs" ],
       "Article": "",
       "InternalItemType": 0,
+      "Column": 10,
+      "Row": 6,
       "Multiple": true
     },
     {
@@ -39,14 +41,14 @@
         [ "Kraid's Awful Son's Father", 0.01 ]
       ],
       "InternalItemType": 0,
-      "Column": 5,
+      "Column": 6,
       "Row": 5
     },
     {
       "Name": [ "Crocomire" ],
       "Image": "stoke.png",
       "InternalItemType": 0,
-      "Column": 6,
+      "Column": 7,
       "Row": 5
     },
     {
@@ -55,25 +57,25 @@
         [ "Spooky Ghost", 0.25 ]
       ],
       "InternalItemType": 0,
-      "Column": 7,
+      "Column": 8,
       "Row": 5
     },
     {
       "Name": [ "Shaktool", "The Shaktool" ],
       "InternalItemType": 0,
-      "Column": 5,
+      "Column": 6,
       "Row": 6
     },
     {
       "Name": [ "Draygon" ],
       "InternalItemType": 0,
-      "Column": 6,
+      "Column": 7,
       "Row": 6
     },
     {
       "Name": [ "Ridley" ],
       "InternalItemType": 0,
-      "Column": 7,
+      "Column": 8,
       "Row": 6
     },
     {
@@ -205,7 +207,7 @@
       "Row": 3
     },
     {
-      "Name": "Magic Cape",
+      "Name": [ "Magic Cape", "Cape" ],
       "InternalItemType": 25,
       "Column": 3,
       "Row": 3
@@ -281,7 +283,11 @@
       "Multiple": true
     },
     {
-      "Name": [ "Heart Container", "Love" ],
+      "Name": [
+        "Heart Container",
+        [ "Love", 0.2 ]
+      ],
+      "Plural": [ "Heart Containers" ],
       "InternalItemType": 62,
       "Multiple": true,
       "Column": 5,
@@ -408,7 +414,6 @@
     {
       "Name": [
         "Gloves",
-        "Glove",
         [ "Progressive Glove", 0 ]
       ],
       "InternalItemType": 97,
@@ -568,7 +573,7 @@
       "Row": 2
     },
     {
-      "Name": "Hi-Jump Boots",
+      "Name": [ "Hi-Jump Boots", "Hi-Jump" ],
       "InternalItemType": 183,
       "Column": 8,
       "Row": 2
@@ -626,6 +631,7 @@
     },
     {
       "Name": [ "Energy Tank", "E-Tank" ],
+      "Plural": [ "Energy Tanks", "E-Tanks" ],
       "InternalItemType": 192,
       "Artice": "an",
       "Multiple": true,
@@ -634,6 +640,7 @@
     },
     {
       "Name": "Reserve Tank",
+      "Plural": "Reserve Tanks",
       "InternalItemType": 193,
       "Multiple": true,
       "Column": 9,
@@ -642,7 +649,7 @@
     {
       "Name": [
         "Missile",
-        "Missiles",
+        [ "Missiles", 0 ],
         [ "Missile pack", 0 ]
       ],
       "Plural": [
@@ -658,8 +665,8 @@
     {
       "Name": [
         "Super Missile",
-        "Supers",
-        "Superb Missiles",
+        [ "Supers", 0 ],
+        [ "Superb Missiles", 0 ],
         [ "Super Missile pack", 0 ]
       ],
       "Plural": [
@@ -842,12 +849,20 @@
     {
       "Name": [ "Ganon's Tower" ],
       "Abbreviation": "GT",
-      "TreasureRemaining": 20
+      "Boss": "Ganon",
+      "Column": 5,
+      "Row": 6,
+      "TreasureRemaining": 20,
+      "HasReward": false
     },
     {
       "Name": [ "Hyrule Castle" ],
       "Abbreviation": "HC",
-      "TreasureRemaining": 6
+      "Boss": "Agahnim",
+      "Column": 5,
+      "Row": 5,
+      "TreasureRemaining": 6,
+      "HasReward": false
     }
   ],
   "Pegs": [
@@ -891,7 +906,8 @@
       "I didn't get that.",
       "Could you repeat that?",
       "What did you say?",
-      "What was that?"
+      "What was that?",
+      [ "English motherfucker, do you speak it?", 0.001 ]
     ],
     "TrackedItem": [
       "Toggled {0} on."
@@ -926,8 +942,7 @@
       "Added {0} items from {1}."
     ],
     "ClearedMultipleItems": [
-      "Cleared {0} items in {1}.",
-      "Ignored {0} items in {1}."
+      "Cleared {0} items in {1}."
     ],
     "UntrackedNothing": [
       "There's nothing to remove.",
@@ -1026,13 +1041,18 @@
       "Replaced {2} with {1} at {0}.",
       "Changed your mind? Marked {1} at {0}."
     ],
+    "LocationMarkedAsBullshit": [
+      "Marked {0} as bullshit",
+      "Ignoring {0}",
+      [ "I hope you didn't waste time going to {0}.", 0.2 ],
+      [ "You're bullshit.", 0.01 ]
+    ],
     "LocationHasDifferentItem": [
       "That looks more like {1} to me, but whatever.",
       "Does that look like {0} to you? Well if you say so."
     ],
     "LocationCleared": [
       "Cleared {0}.",
-      "Ignored {0}.",
       [ "I'll remove {0} from the list.", 0.1 ]
     ],
     "AreaDoesNotHaveItem": [
@@ -1040,6 +1060,11 @@
     ],
     "AreaHasMoreThanOneItem": [
       "There's more than one {0} in {1}."
+    ],
+    "TrackedUselessItem": [
+      "",
+      [ "Doesn't get you anywhere though", 0.005 ],
+      [ "Can't find any useful items?", 0.005 ]
     ],
     "Error": [
       "Oops. Something went wrong.",
