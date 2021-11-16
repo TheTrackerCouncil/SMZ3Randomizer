@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
@@ -42,6 +44,22 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// displayed.
         /// </summary>
         public int? Y { get; init; }
+
+
+        /// <summary>
+        /// Returns the locations in the room.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world whose locations to return.
+        /// </param>
+        /// <returns>
+        /// A collection of locations in this room from the specified world.
+        /// </returns>
+        public IReadOnlyCollection<Location> GetLocations(World world)
+        {
+            var room = GetRoom(world);
+            return room.Locations.ToImmutableList();
+        }
 
         /// <summary>
         /// Returns the <see cref="Room"/> that matches the room info in the

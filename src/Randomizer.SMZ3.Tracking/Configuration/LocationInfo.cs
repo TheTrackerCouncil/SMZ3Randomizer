@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
@@ -61,6 +63,19 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         public Location GetLocation(World world)
             => world.Locations.Single(x => x.Id == Id);
+
+
+        /// <summary>
+        /// Returns the location associated with the point of interest.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world whose locations to return.
+        /// </param>
+        /// <returns>
+        /// A collection of locations containing this location.
+        /// </returns>
+        public IReadOnlyCollection<Location> GetLocations(World world)
+            => new ReadOnlyCollection<Location>(new[] { GetLocation(world) });
 
         /// <summary>
         /// Determines whether the point of interest is accessible with the

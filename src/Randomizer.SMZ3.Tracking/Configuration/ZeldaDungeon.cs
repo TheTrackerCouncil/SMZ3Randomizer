@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 using Randomizer.SMZ3.Tracking.Configuration;
@@ -18,11 +20,16 @@ namespace Randomizer.SMZ3.Tracking
         /// The abbreviation of the dungeon name.
         /// </param>
         /// <param name="boss">The name of the boss.</param>
-        public ZeldaDungeon(SchrodingersString name, string abbreviation, SchrodingersString boss)
+        /// <param name="regionTypeName">
+        /// The fully qualified type name of the region the dungeon is located
+        /// in.
+        /// </param>
+        public ZeldaDungeon(SchrodingersString name, string abbreviation, SchrodingersString boss, string regionTypeName)
         {
             Name = name;
             Abbreviation = abbreviation;
             Boss = boss ?? new();
+            RegionTypeName = regionTypeName;
         }
 
         /// <summary>
@@ -184,6 +191,21 @@ namespace Randomizer.SMZ3.Tracking
         public bool IsInRegion(Region region)
         {
             return region.GetType().FullName == RegionTypeName;
+        }
+
+        /// <summary>
+        /// Returns the locations associated with the dungeon.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world whose locations to return.
+        /// </param>
+        /// <returns>
+        /// A collection of locations in the dungeon from the specified world.
+        /// </returns>
+        public IReadOnlyCollection<Location> GetLocations(World world)
+        {
+            var region = GetRegion(world);
+            return region.Locations.ToImmutableList();
         }
     }
 }

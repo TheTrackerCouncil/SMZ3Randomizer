@@ -341,6 +341,24 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Returns info about locations associated with the specified point of
+        /// interest.
+        /// </summary>
+        /// <param name="poi">
+        /// The point of interest whose locations to get information about.
+        /// </param>
+        /// <returns>
+        /// A collection of <see cref="LocationInfo"/> associated with <paramref
+        /// name="poi"/>.
+        /// </returns>
+        public IReadOnlyCollection<LocationInfo> GetLocations(IPointOfInterest poi)
+        {
+            return poi.GetLocations(World)
+                .Select(x => Locations.Location(x))
+                .ToImmutableList();
+        }
+
+        /// <summary>
         /// Toggles Go Mode on.
         /// </summary>
         /// <param name="confidence">The speech recognition confidence.</param>

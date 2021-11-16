@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {
@@ -23,6 +24,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// displayed.
         /// </summary>
         int? Y { get; }
+
+        /// <summary>
+        /// Returns the locations associated with the point of interest.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world whose locations to return.
+        /// </param>
+        /// <returns>
+        /// A collection of locations from the specified world that are associated
+        /// with this point of interest.
+        /// </returns>
+        IReadOnlyCollection<Location> GetLocations(World world);
 
         /// <summary>
         /// Determines whether the point of interest is accessible with the
