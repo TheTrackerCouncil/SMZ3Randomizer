@@ -69,7 +69,7 @@ namespace Randomizer.Tools
 
                     return new LocationInfo(
                         id: l.Id,
-                        name: new SchrodingersString(new[] { l.ToString(), l.Name }.Concat(l.AlternateNames)))
+                        name: Tracker.GetUniqueNames(l, world))
                     {
                         X = mapLocation?.X,
                         Y = mapLocation?.Y,

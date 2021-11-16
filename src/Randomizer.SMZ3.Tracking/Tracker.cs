@@ -66,7 +66,7 @@ namespace Randomizer.SMZ3.Tracking
             Responses = config.Responses;
             World = worldAccessor.GetWorld();
             GetTreasureCounts(Dungeons, World);
-            UniqueLocationNames = World.Locations.ToDictionary(x => x.Id, x => GetUniqueNames(x));
+            UniqueLocationNames = World.Locations.ToDictionary(x => x.Id, x => GetUniqueNames(x, World));
             Locations = locationConfig;
 
             // Initalize the timers used to trigger idle responses
@@ -1504,10 +1504,10 @@ namespace Randomizer.SMZ3.Tracking
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
         }
 
-        private SchrodingersString GetUniqueNames(Location location)
+        public static SchrodingersString GetUniqueNames(Location location, World world)
         {
-            var allLocationNames = World.Locations.Select(x => x.Name)
-                .Concat(World.Locations.SelectMany(x => x.AlternateNames));
+            var allLocationNames = world.Locations.Select(x => x.Name)
+                .Concat(world.Locations.SelectMany(x => x.AlternateNames));
 
             return new SchrodingersString(location.AlternateNames.Concat(new[] { location.Name })
                 .SelectMany(x => MakeUnique(x, location)));
