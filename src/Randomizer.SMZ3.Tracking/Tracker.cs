@@ -204,6 +204,46 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         protected internal IReadOnlyDictionary<int, SchrodingersString> UniqueLocationNames { get; }
 
+        public static SchrodingersString GetUniqueNames(Location location, World world)
+        {
+            var allLocationNames = world.Locations.Select(x => x.Name)
+                .Concat(world.Locations.SelectMany(x => x.AlternateNames));
+
+            return new SchrodingersString(location.AlternateNames.Concat(new[] { location.Name })
+                .SelectMany(x => MakeUnique(x, location)));
+
+            IEnumerable<SchrodingersString.Possibility> MakeUnique(string name, Location location)
+            {
+                // Only at the location name if it is unique
+                var isUnique = Occurences(name) < 2;
+                if (isUnique)
+                {
+                    yield return new(name);
+                }
+
+                // Add the room/region name variants. If the name is unique, add
+                // them with a zero weight for consistent tracking, without
+                // having tracker say verbose names.
+                if (location.Room != null)
+                {
+                    foreach (var roomName in location.Room.AlsoKnownAs.Concat(new[] { location.Room.Name }))
+                    {
+                        yield return new($"{roomName} {name}", isUnique ? 0 : 1);
+                    }
+                }
+                else
+                {
+                    foreach (var regionName in location.Region.AlsoKnownAs.Concat(new[] { location.Region.Name }))
+                    {
+                        yield return new($"{regionName} {name}", isUnique ? 0 : 1);
+                    }
+                }
+            }
+
+            int Occurences(string name)
+                => allLocationNames!.Count(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
         /// <summary>
         /// Initializes the microphone from the default audio device
         /// </summary>
@@ -268,6 +308,35 @@ namespace Randomizer.SMZ3.Tracking
             else
             {
                 Say(Responses.NothingToUndo);
+            }
+        }
+
+        /// <summary>
+        /// Returns a collection of the points of interest in the specified
+        /// region.
+        /// </summary>
+        /// <param name="region">
+        /// The region whose points of interest to enumerate.
+        /// </param>
+        /// <returns>
+        /// A collection of the points of interest in <paramref name="region"/>.
+        /// </returns>
+        public IEnumerable<IPointOfInterest> EnumeratePointsOfInterest(Region region)
+        {
+            foreach (var room in region.Rooms)
+            {
+                yield return Locations.Room(room);
+            }
+
+            foreach (var location in region.GetStandaloneLocations())
+            {
+                yield return Locations.Location(location);
+            }
+
+            foreach (var dungeon in Dungeons)
+            {
+                if (dungeon.IsInRegion(region))
+                    yield return dungeon;
             }
         }
 
@@ -1502,46 +1571,6 @@ namespace Randomizer.SMZ3.Tracking
 
             var progression = new Progression(items);
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
-        }
-
-        public static SchrodingersString GetUniqueNames(Location location, World world)
-        {
-            var allLocationNames = world.Locations.Select(x => x.Name)
-                .Concat(world.Locations.SelectMany(x => x.AlternateNames));
-
-            return new SchrodingersString(location.AlternateNames.Concat(new[] { location.Name })
-                .SelectMany(x => MakeUnique(x, location)));
-
-            IEnumerable<SchrodingersString.Possibility> MakeUnique(string name, Location location)
-            {
-                // Only at the location name if it is unique
-                var isUnique = Occurences(name) < 2;
-                if (isUnique)
-                {
-                    yield return new(name);
-                }
-
-                // Add the room/region name variants. If the name is unique, add
-                // them with a zero weight for consistent tracking, without
-                // having tracker say verbose names.
-                if (location.Room != null)
-                {
-                    foreach (var roomName in location.Room.AlsoKnownAs.Concat(new[] { location.Room.Name }))
-                    {
-                        yield return new($"{roomName} {name}", isUnique ? 0 : 1);
-                    }
-                }
-                else
-                {
-                    foreach (var regionName in location.Region.AlsoKnownAs.Concat(new[] { location.Region.Name }))
-                    {
-                        yield return new($"{regionName} {name}", isUnique ? 0 : 1);
-                    }
-                }
-            }
-
-            int Occurences(string name)
-                => allLocationNames!.Count(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

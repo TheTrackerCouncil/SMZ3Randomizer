@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 
+using Randomizer.SMZ3.Tracking.Configuration;
+
 namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>
     /// Represents a dungeon in A Link to the Past.
     /// </summary>
-    public class ZeldaDungeon
+    public class ZeldaDungeon : IPointOfInterest
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ZeldaDungeon"/> class.
@@ -65,7 +67,8 @@ namespace Randomizer.SMZ3.Tracking
             = RewardItem.Unknown;
 
         /// <summary>
-        /// Gets a value indicating whether the dungeon has a reward when the boss is defeated.
+        /// Gets a value indicating whether the dungeon has a reward when the
+        /// boss is defeated.
         /// </summary>
         public bool HasReward { get; init; } = true;
 
@@ -86,6 +89,24 @@ namespace Randomizer.SMZ3.Tracking
         /// cleared.
         /// </summary>
         public bool Cleared { get; set; }
+
+        /// <summary>
+        /// Gets the x-coordinate of the dungeon on the map, if it should be
+        /// displayed.
+        /// </summary>
+        public int? X { get; init; }
+
+        /// <summary>
+        /// Gets the y-coordinate of the dungeon on the map, if it should be
+        /// displayed.
+        /// </summary>
+        public int? Y { get; init; }
+
+        /// <summary>
+        /// Gets the fully qualified name of the region that the dungeon is
+        /// located in.
+        /// </summary>
+        public string RegionTypeName { get; init; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.
@@ -134,5 +155,35 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Region GetRegion(World world)
             => world.Regions.Single(Is);
+
+        /// <summary>
+        /// Determines whether the dungeon is accessible with the specified set
+        /// of items.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world that contains the dungeon.
+        /// </param>
+        /// <param name="progression">The available items.</param>
+        /// <returns>
+        /// <c>true</c> if the dungeon is accessible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsAccessible(World world, Progression progression)
+        {
+            var region = GetRegion(world);
+            return region.CanEnter(progression);
+        }
+
+        /// <summary>
+        /// Determines whether the dungeon is located in the specified region.
+        /// </summary>
+        /// <param name="region">The region to check.</param>
+        /// <returns>
+        /// <c>true</c> if this dungeon is located in the specified region;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsInRegion(Region region)
+        {
+            return region.GetType().FullName == RegionTypeName;
+        }
     }
 }

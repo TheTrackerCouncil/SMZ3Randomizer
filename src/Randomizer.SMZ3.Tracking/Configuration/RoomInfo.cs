@@ -58,7 +58,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public Room GetRoom(World world)
             => world.Rooms.Single(x => x.GetType().FullName == TypeName);
 
-
         /// <summary>
         /// Determines whether the room is accessible with the
         /// specified set of items.
