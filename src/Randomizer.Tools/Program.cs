@@ -65,11 +65,11 @@ namespace Randomizer.Tools
                 {
                     var mapLocation = mapConfig.Regions
                         .SelectMany(x => x.Rooms)
-                        .SingleOrDefault(x => x.MatchesSMZ3Location(l));
+                        .SingleOrDefault(x => x.Name == l.Name);
 
                     return new LocationInfo(
                         id: l.Id,
-                        name: new SchrodingersString(new[] { l.Name }.Concat(l.AlternateNames)))
+                        name: new SchrodingersString(new[] { l.ToString(), l.Name }.Concat(l.AlternateNames)))
                     {
                         X = mapLocation?.X,
                         Y = mapLocation?.Y,
