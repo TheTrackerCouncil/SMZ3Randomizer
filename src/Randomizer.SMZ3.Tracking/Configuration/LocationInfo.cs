@@ -47,11 +47,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public int? Y { get; init; }
 
         /// <summary>
-        /// Gets the scale of the location, if it should be displayed on a map.
-        /// </summary>
-        public double? Scale { get; init; }
-
-        /// <summary>
         /// Returns the <see cref="Location"/> that matches the location info in
         /// the specified world.
         /// </summary>
@@ -66,5 +61,23 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         public Location GetLocation(World world)
             => world.Locations.Single(x => x.Id == Id);
+
+        /// <summary>
+        /// Determines whether the point of interest is accessible with the
+        /// specified set of items.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world that contains the point of interest.
+        /// </param>
+        /// <param name="progression">The available items.</param>
+        /// <returns>
+        /// <c>true</c> if the point of interest is accessible; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public bool IsAccessible(World world, Progression progression)
+        {
+            var location = GetLocation(world);
+            return location.IsAvailable(progression);
+        }
     }
 }

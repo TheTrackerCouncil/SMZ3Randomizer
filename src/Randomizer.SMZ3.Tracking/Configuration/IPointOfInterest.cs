@@ -8,20 +8,34 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     public interface IPointOfInterest
     {
         /// <summary>
+        /// Gets the possible names for the point of interest.
+        /// </summary>
+        SchrodingersString Name { get; }
+
+        /// <summary>
         /// Gets the x-coordinate of the POI on the map, if it should be
         /// displayed.
         /// </summary>
-        public int? X { get; }
+        int? X { get; }
 
         /// <summary>
         /// Gets the y-coordinate of the POI on the map, if it should be
         /// displayed.
         /// </summary>
-        public int? Y { get; }
+        int? Y { get; }
 
         /// <summary>
-        /// Gets the scale of the POI, if it should be displayed on a map.
+        /// Determines whether the point of interest is accessible with the
+        /// specified set of items.
         /// </summary>
-        public double? Scale { get; }
+        /// <param name="world">
+        /// The instance of the world that contains the point of interest.
+        /// </param>
+        /// <param name="progression">The available items.</param>
+        /// <returns>
+        /// <c>true</c> if the point of interest is accessible; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        bool IsAccessible(World world, Progression progression);
     }
 }

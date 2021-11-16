@@ -44,11 +44,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public int? Y { get; init; }
 
         /// <summary>
-        /// Gets the scale of the room, if it should be displayed on a map.
-        /// </summary>
-        public double? Scale { get; init; }
-
-        /// <summary>
         /// Returns the <see cref="Room"/> that matches the room info in the
         /// specified world.
         /// </summary>
@@ -60,7 +55,26 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// There is no matching room in <paramref name="world"/>. -or- There is
         /// more than one matching room in <paramref name="world"/>.
         /// </exception>
-        public Room GetRegion(World world)
+        public Room GetRoom(World world)
             => world.Rooms.Single(x => x.GetType().FullName == TypeName);
+
+
+        /// <summary>
+        /// Determines whether the room is accessible with the
+        /// specified set of items.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world that contains the room.
+        /// </param>
+        /// <param name="progression">The available items.</param>
+        /// <returns>
+        /// <c>true</c> if the room is accessible; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public bool IsAccessible(World world, Progression progression)
+        {
+            var room = GetRoom(world);
+            return room.Locations.Any(x => x.IsAvailable(progression));
+        }
     }
 }

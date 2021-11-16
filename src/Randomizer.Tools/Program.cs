@@ -72,8 +72,7 @@ namespace Randomizer.Tools
                         name: Tracker.GetUniqueNames(l, world))
                     {
                         X = mapLocation?.X,
-                        Y = mapLocation?.Y,
-                        Scale = mapLocation?.Scale
+                        Y = mapLocation?.Y
                     };
                 })
                 .ToImmutableList();
@@ -90,8 +89,7 @@ namespace Randomizer.Tools
                         name: new SchrodingersString(new[] { r.Name }.Concat(r.AlsoKnownAs)))
                     {
                         X = mapLocation?.X,
-                        Y = mapLocation?.Y,
-                        Scale = mapLocation?.Scale
+                        Y = mapLocation?.Y
                     };
                 })
                 .ToImmutableList();
