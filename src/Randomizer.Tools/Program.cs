@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using NHyphenator;
+
+using Randomizer.SMZ3;
+using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.Tools
 {
@@ -27,6 +36,7 @@ namespace Randomizer.Tools
         public static void Main(string[] args)
         {
             var rootCommand = new RootCommand("SMZ3 Randomizer command-line tools");
+
             var formatText = new Command("format", "Formats text entries for ALttP.")
             {
                 new Argument<FileInfo>("input",
@@ -35,7 +45,74 @@ namespace Randomizer.Tools
             };
             formatText.Handler = CommandHandler.Create<FileInfo>(FormatText);
             rootCommand.AddCommand(formatText);
+
+            var generateLocationConfig = new Command("generate-locations", "Generates locations.json");
+            generateLocationConfig.Handler = CommandHandler.Create(GenerateLocationConfig);
+            rootCommand.AddCommand(generateLocationConfig);
+
             rootCommand.Invoke(args);
+        }
+
+        public static void GenerateLocationConfig()
+        {
+            var configProvider = new TrackerConfigProvider(null);
+            var mapConfig = configProvider.GetMapConfig();
+            var world = new World(new Config(), "", 0, "");
+
+            var locations = world.Locations
+                .OrderBy(l => l.Id)
+                .Select(l =>
+                {
+                    var mapLocation = mapConfig.Regions
+                        .SelectMany(x => x.Rooms)
+                        .SingleOrDefault(x => x.MatchesSMZ3Location(l));
+
+                    return new LocationInfo(
+                        id: l.Id,
+                        name: new SchrodingersString(new[] { l.Name }.Concat(l.AlternateNames)))
+                    {
+                        X = mapLocation?.X,
+                        Y = mapLocation?.Y,
+                        Scale = mapLocation?.Scale
+                    };
+                })
+                .ToImmutableList();
+
+            var rooms = world.Rooms
+                .OrderBy(r => r.GetType().FullName)
+                .Select(r =>
+                {
+                    var mapLocation = mapConfig.Regions
+                        .SelectMany(x => x.Rooms)
+                        .SingleOrDefault(x => x.Name == r.Name);
+
+                    return new RoomInfo(typeName: r.GetType().FullName,
+                        name: new SchrodingersString(new[] { r.Name }.Concat(r.AlsoKnownAs)))
+                    {
+                        X = mapLocation?.X,
+                        Y = mapLocation?.Y,
+                        Scale = mapLocation?.Scale
+                    };
+                })
+                .ToImmutableList();
+
+            var regions = world.Regions
+                .OrderBy(r => r.GetType().FullName)
+                .Select(r =>
+                {
+                    return new RegionInfo(typeName: r.GetType().FullName,
+                        name: new SchrodingersString(new[] { r.Name }.Concat(r.AlsoKnownAs)));
+                })
+                .ToImmutableList();
+
+            var config = new LocationConfig(regions, rooms, locations);
+            var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            });
+            File.WriteAllText("locations.json", json, new UTF8Encoding(false));
         }
 
         public static void FormatText(FileInfo input)

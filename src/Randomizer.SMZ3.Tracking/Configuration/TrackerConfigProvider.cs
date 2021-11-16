@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.SMZ3.Tracking.Configuration;
+
 namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>
@@ -24,13 +26,13 @@ namespace Randomizer.SMZ3.Tracking
         };
 
         private readonly string _basePath;
-        private readonly ILogger<TrackerConfigProvider> _logger;
+        private readonly ILogger<TrackerConfigProvider>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see
         /// cref="TrackerConfigProvider"/> class.
         /// </summary>
-        public TrackerConfigProvider(ILogger<TrackerConfigProvider> logger)
+        public TrackerConfigProvider(ILogger<TrackerConfigProvider>? logger)
         {
             _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer"); ;
             _logger = logger;
@@ -42,6 +44,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns>A new <see cref="TrackerConfig"/> object.</returns>
         public virtual TrackerConfig GetTrackerConfig()
             => LoadConfig<TrackerConfig>("tracker.json");
+
+        /// <summary>
+        /// Loads the locations configuration.
+        /// </summary>
+        /// <returns>A new <see cref="LocationConfig"/> object.</returns>
+        public virtual LocationConfig GetLocationConfig()
+            => LoadConfig<LocationConfig>("locations.json");
 
         /// <summary>
         /// Loads the maps configuration.
@@ -68,7 +77,7 @@ namespace Randomizer.SMZ3.Tracking
             var jsonPath = Path.Combine(_basePath, fileName);
             if (!File.Exists(jsonPath))
             {
-                _logger.LogWarning("Could not find configuration file '{path}'. Falling back to embedded resource.", jsonPath);
+                _logger?.LogWarning("Could not find configuration file '{path}'. Falling back to embedded resource.", jsonPath);
                 return GetBuiltInConfig<T>(fileName);
             }
 

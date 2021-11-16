@@ -43,6 +43,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetTrackerConfig();
             });
+            services.AddSingleton(serviceProvider =>
+            {
+                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                return configProvider.GetLocationConfig();
+            });
 
             services.AddScoped<TrackerFactory>();
             services.AddScoped<Tracker>(serviceProvider =>

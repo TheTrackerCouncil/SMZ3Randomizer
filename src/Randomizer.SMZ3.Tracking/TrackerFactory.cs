@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -12,6 +13,7 @@ namespace Randomizer.SMZ3.Tracking
     public class TrackerFactory
     {
         private readonly TrackerConfig _config;
+        private readonly LocationConfig _locationConfig;
         private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly ILogger<Tracker> _logger;
@@ -21,6 +23,7 @@ namespace Randomizer.SMZ3.Tracking
         /// with the specified dependencies.
         /// </summary>
         /// <param name="config">The tracking configuration.</param>
+        /// <param name="locationConfig">The location configuration.</param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
@@ -29,11 +32,13 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
         public TrackerFactory(TrackerConfig config,
+            LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger)
         {
             _config = config;
+            _locationConfig = locationConfig;
             _worldAccessor = worldAccessor;
             _moduleFactory = moduleFactory;
             _logger = logger;
@@ -55,7 +60,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Tracker Create(TrackerOptions options)
         {
-            return Instance = new(_config, _worldAccessor, _moduleFactory, _logger, options);
+            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options);
         }
     }
 }

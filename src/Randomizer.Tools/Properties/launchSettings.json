@@ -2,7 +2,8 @@
   "profiles": {
     "Randomizer.Tools": {
       "commandName": "Project",
-      "commandLineArgs": "format \"D:\\Desktop\\Ganon.txt\""
+      "commandLineArgs": "generate-locations",
+      "workingDirectory": "C:\\Users\\laura\\Desktop"
     }
   }
 }

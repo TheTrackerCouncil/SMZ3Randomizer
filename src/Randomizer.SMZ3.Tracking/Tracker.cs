@@ -13,6 +13,7 @@ using BunLabs;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -38,6 +39,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
         /// <param name="config">The tracking configuration.</param>
+        /// <param name="locationConfig">The location configuration.</param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
@@ -47,6 +49,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
         public Tracker(TrackerConfig config,
+            LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger,
@@ -64,6 +67,7 @@ namespace Randomizer.SMZ3.Tracking
             World = worldAccessor.GetWorld();
             GetTreasureCounts(Dungeons, World);
             UniqueLocationNames = World.Locations.ToDictionary(x => x.Id, x => GetUniqueNames(x));
+            Locations = locationConfig;
 
             // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
@@ -125,6 +129,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Occurs when the tracker state has been loaded.
         /// </summary>
         public event EventHandler? StateLoaded;
+
+        /// <summary>
+        /// Gets extra information about locations.
+        /// </summary>
+        public LocationConfig Locations { get; }
 
         /// <summary>
         /// Gets a collection of trackable items.
@@ -198,7 +207,9 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Initializes the microphone from the default audio device
         /// </summary>
-        /// <returns>True if the microphone is initialized, false otherwise</returns>
+        /// <returns>
+        /// True if the microphone is initialized, false otherwise
+        /// </returns>
         public bool InitializeMicrophone()
         {
             if (MicrophoneInitialized) return true;
@@ -215,6 +226,7 @@ namespace Randomizer.SMZ3.Tracking
                 return false;
             }
         }
+
         /// <summary>
         /// Loads the tracker state from the specified saved state.
         /// </summary>
@@ -315,8 +327,9 @@ namespace Randomizer.SMZ3.Tracking
                     // Try to get the response based on the amount of items left
                     if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
                         Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
-                    // If we don't have a response for the exact amount and we have
-                    // multiple left, get the one for 2 (considered generic)
+                    // If we don't have a response for the exact amount and we
+                    // have multiple left, get the one for 2 (considered
+                    // generic)
                     else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
                         Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
                 }
@@ -856,7 +869,9 @@ namespace Randomizer.SMZ3.Tracking
         /// Sets the item count for the specified item.
         /// </summary>
         /// <param name="item">The item to track.</param>
-        /// <param name="count">The amount of the item that is in the player's inventory now.</param>
+        /// <param name="count">
+        /// The amount of the item that is in the player's inventory now.
+        /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
         public void SetItemCount(ItemData item, int count, float confidence)
         {
@@ -897,7 +912,9 @@ namespace Randomizer.SMZ3.Tracking
         /// available with current items.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        /// <param name="assumeKeys">Set to true to ignore keys when clearing the location.</param>
+        /// <param name="assumeKeys">
+        /// Set to true to ignore keys when clearing the location.
+        /// </param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
             var dungeon = Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
@@ -1096,7 +1113,8 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Un-marks a dungeon as cleared and, if possible, untracks the boss reward.
+        /// Un-marks a dungeon as cleared and, if possible, untracks the boss
+        /// reward.
         /// </summary>
         /// <param name="dungeon">The dungeon that should be un-cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
