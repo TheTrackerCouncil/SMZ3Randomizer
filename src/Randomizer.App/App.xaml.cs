@@ -15,6 +15,7 @@ using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.App
 {
@@ -71,6 +72,9 @@ namespace Randomizer.App
 
         protected static void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddSingleton<RandomizerContext>();
+
             // Randomizer + Tracker
             services.AddSingleton<IFiller, StandardFiller>();
             services.AddSingleton<Smz3Randomizer>();

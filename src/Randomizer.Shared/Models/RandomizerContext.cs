@@ -1,23 +1,43 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Shared.Models {
 
     public class RandomizerContext : DbContext {
 
-        public RandomizerContext(DbContextOptions<RandomizerContext> options)
-            : base(options) { }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<Client>().UseXminAsConcurrencyToken();
+        public RandomizerContext() : base()
+        {
+            Database.EnsureCreatedAsync();
         }
 
-        public DbSet<Session> Sessions { get; set; }
-        public DbSet<Client> Clients { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("FileName=sqlitedb", option =>
+            {
+                option.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+            });
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Seed>().ToTable("Seeds", "smz3cas");
+            modelBuilder.Entity<TrackerState>().ToTable("TrackerStates", "smz3cas");
+            modelBuilder.Entity<TrackerItemState>().ToTable("TrackerItemStates", "smz3cas");
+            modelBuilder.Entity<TrackerLocationState>().ToTable("TrackerLocationStates", "smz3cas");
+            modelBuilder.Entity<TrackerRegionState>().ToTable("TrackerRegionStates", "smz3cas");
+            modelBuilder.Entity<TrackerDungeonState>().ToTable("TrackerDungeonStates", "smz3cas");
+            modelBuilder.Entity<TrackerMarkedLocation>().ToTable("TrackerMarkedLocations", "smz3cas");
+        }
+
         public DbSet<Seed> Seeds { get; set; }
-        public DbSet<World> Worlds { get; set; }
-        public DbSet<Event> Events { get; set; }
-        public DbSet<Location> Locations { get; set; }
+        public DbSet<TrackerState> TrackerStates { get; set; }
+        public DbSet<TrackerItemState> TrackerItemStates { get; set; }
+        public DbSet<TrackerLocationState> TrackerLocationStates { get; set; }
+        public DbSet<TrackerRegionState> TrackerRegionState { get; set; }
+        public DbSet<TrackerDungeonState> TrackerDungeonStates { get; set; }
+        public DbSet<TrackerMarkedLocation> TrackerMarkedLocations { get; set; }
 
     }
 

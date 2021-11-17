@@ -1,19 +1,21 @@
 ﻿using System.Collections.Generic;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Randomizer.Shared.Models {
-
-    public class Seed {
+namespace Randomizer.Shared.Models
+{
+    public class Seed
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Guid { get; set; }
-        public string Mode { get; set; }
-        public string SeedNumber { get; set; }
-        public string Spoiler { get; set; }
-        public string GameName { get; set; }
-        public string GameVersion { get; set; }
-        public string GameId { get; set; }
-        public string Hash { get; set; }
-        public int Players { get; set; }
-        public List<World> Worlds { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Date { get; set; }
+        public string Label { get; set; }
+        public string Value { get; set; }
+        public string Settings { get; set; }
+        public int GeneratorVersion { get; set; }
+        public string RomPath { get; set; }
+        public string SpoilerPath { get; set; }
     }
 
 }

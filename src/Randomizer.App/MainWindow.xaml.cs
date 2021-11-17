@@ -12,11 +12,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
@@ -32,16 +33,19 @@ namespace Randomizer.App
         private readonly IServiceProvider _serviceProvider;
         private readonly Smz3Randomizer _randomizer;
         private readonly ILogger<MainWindow> _logger;
+        private readonly RandomizerContext _dbContext;
         private TrackerWindow _trackerWindow;
 
         public MainWindow(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             Smz3Randomizer randomizer,
-            ILogger<MainWindow> logger)
+            ILogger<MainWindow> logger,
+            RandomizerContext dbContext)
         {
             _serviceProvider = serviceProvider;
             _randomizer = randomizer;
             _logger = logger;
+            _dbContext = dbContext;
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -108,7 +112,10 @@ namespace Randomizer.App
             File.WriteAllBytes(romPath, rom);
 
             var spoilerLog = GetSpoilerLog(seed);
-            File.WriteAllText(Path.ChangeExtension(romPath, ".txt"), spoilerLog);
+            var spoilerPath = Path.ChangeExtension(romPath, ".txt");
+            File.WriteAllText(spoilerPath, spoilerLog);
+
+            SaveSeedToDatabase(seed, romPath, spoilerPath);
 
             return romPath;
         }
@@ -134,6 +141,19 @@ namespace Randomizer.App
             Options.PatchOptions.SamusSprite.ApplyTo(rom);
             Options.PatchOptions.LinkSprite.ApplyTo(rom);
             return rom;
+        }
+
+        protected void SaveSeedToDatabase(SeedData seed, String romPath, string spoilerPath)
+        {
+            _dbContext.Seeds.Add(new Seed()
+            {
+                Value = seed.Seed,
+                RomPath = romPath,
+                SpoilerPath = spoilerPath,
+                Settings = Options.GetConfigString(),
+                Date = DateTime.UtcNow
+            });
+            _dbContext.SaveChanges();
         }
 
         private static string Underline(string text, char line = '-')
