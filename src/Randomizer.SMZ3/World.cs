@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.SuperMetroid;
 using Randomizer.SMZ3.Regions.SuperMetroid.Brinstar;
@@ -14,8 +14,6 @@ using Randomizer.SMZ3.Regions.Zelda.DarkWorld;
 using Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain;
 using Randomizer.SMZ3.Regions.Zelda.LightWorld;
 using Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain;
-
-using static Randomizer.SMZ3.Reward;
 
 namespace Randomizer.SMZ3
 {
@@ -178,9 +176,9 @@ namespace Randomizer.SMZ3
         private void SetRewards(Random rnd)
         {
             var rewards = new[] {
-                PendantGreen, PendantNonGreen, PendantNonGreen, CrystalRed, CrystalRed,
-                CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue, CrystalBlue }.Shuffle(rnd);
-            foreach (var region in Regions.OfType<IHasReward>().Where(x => x.Reward == None))
+                Reward.PendantGreen, Reward.PendantNonGreen, Reward.PendantNonGreen, Reward.CrystalRed, Reward.CrystalRed,
+                Reward.CrystalBlue, Reward.CrystalBlue, Reward.CrystalBlue, Reward.CrystalBlue, Reward.CrystalBlue }.Shuffle(rnd);
+            foreach (var region in Regions.OfType<IHasReward>().Where(x => x.Reward == Reward.None))
             {
                 region.Reward = rewards.First();
                 rewards.Remove(region.Reward);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Randomizer.SMZ3
+namespace Randomizer.Shared
 {
     /// <summary>
     /// Specifies the item categories for an item type.

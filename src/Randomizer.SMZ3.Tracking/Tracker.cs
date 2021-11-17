@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using BunLabs;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -470,15 +470,15 @@ namespace Randomizer.SMZ3.Tracking
 
             if (!World.Config.Keysanity || assumeKeys)
             {
-                progression.Add(Item.CreateKeycards(World));
+                progression.Add(SMZ3.Item.CreateKeycards(World));
                 if (assumeKeys)
-                    progression.Add(Item.CreateDungeonPool(World));
+                    progression.Add(SMZ3.Item.CreateDungeonPool(World));
             }
 
             foreach (var item in Items)
             {
                 if (item.TrackingState > 0)
-                    progression.Add(Enumerable.Repeat(new Item(item.InternalItemType), item.TrackingState));
+                    progression.Add(Enumerable.Repeat(new SMZ3.Item(item.InternalItemType), item.TrackingState));
             }
             return progression;
         }
@@ -1475,11 +1475,11 @@ namespace Randomizer.SMZ3.Tracking
             if (World == null)
                 return Enumerable.Empty<Location>();
 
-            var items = new List<Item>();
+            var items = new List<SMZ3.Item>();
             foreach (var item in Items)
             {
                 for (var i = 0; i < item.TrackingState; i++)
-                    items.Add(new Item(item.InternalItemType));
+                    items.Add(new SMZ3.Item(item.InternalItemType));
             }
 
             var progression = new Progression(items);

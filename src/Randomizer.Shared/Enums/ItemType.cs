@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Randomizer.SMZ3
+namespace Randomizer.Shared
 {
     public enum ItemType : byte
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Randomizer.SMZ3
+namespace Randomizer.Shared
 {
     /// <summary>
     /// Specifies the reward for completing a dungeon or boss.
