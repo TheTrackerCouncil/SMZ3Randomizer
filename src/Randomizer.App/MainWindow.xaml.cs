@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
@@ -145,12 +146,12 @@ namespace Randomizer.App
 
         protected void SaveSeedToDatabase(SeedData seed, String romPath, string spoilerPath)
         {
-            _dbContext.Seeds.Add(new Seed()
+            _dbContext.Seeds.Add(new GeneratedRom()
             {
                 Value = seed.Seed,
                 RomPath = romPath,
                 SpoilerPath = spoilerPath,
-                Date = DateTime.UtcNow
+                Date = DateTimeOffset.Now
             });
             _dbContext.SaveChanges();
         }

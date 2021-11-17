@@ -22,7 +22,7 @@ namespace Randomizer.Shared.Models {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Seed>().ToTable("Seeds", "smz3cas");
+            modelBuilder.Entity<GeneratedRom>().ToTable("GeneratedRom", "smz3cas");
             modelBuilder.Entity<TrackerState>().ToTable("TrackerStates", "smz3cas");
             modelBuilder.Entity<TrackerItemState>().ToTable("TrackerItemStates", "smz3cas");
             modelBuilder.Entity<TrackerLocationState>().ToTable("TrackerLocationStates", "smz3cas");
@@ -31,7 +31,7 @@ namespace Randomizer.Shared.Models {
             modelBuilder.Entity<TrackerMarkedLocation>().ToTable("TrackerMarkedLocations", "smz3cas");
         }
 
-        public DbSet<Seed> Seeds { get; set; }
+        public DbSet<GeneratedRom> Seeds { get; set; }
         public DbSet<TrackerState> TrackerStates { get; set; }
         public DbSet<TrackerItemState> TrackerItemStates { get; set; }
         public DbSet<TrackerLocationState> TrackerLocationStates { get; set; }

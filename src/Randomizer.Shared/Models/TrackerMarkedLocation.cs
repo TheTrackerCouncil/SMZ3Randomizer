@@ -7,7 +7,7 @@ namespace Randomizer.Shared.Models {
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int TrackerStateId { get; set; }
+        public TrackerState TrackerState { get; set; }
         public int LocationId { get; set; }
         public string ItemName { get; set; }
     }

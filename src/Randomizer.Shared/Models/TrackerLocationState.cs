@@ -8,8 +8,8 @@ namespace Randomizer.Shared.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int TrackerStateId { get; set; }
-        public byte Item { get; set; }
+        public TrackerState TrackerState { get; set; }
+        public ItemType Item { get; set; }
         public bool Cleared { get; set; }
     }
 
