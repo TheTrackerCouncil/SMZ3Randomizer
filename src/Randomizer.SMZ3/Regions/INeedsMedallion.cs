@@ -1,4 +1,6 @@
-﻿namespace Randomizer.SMZ3.Regions
+﻿using Randomizer.Shared;
+
+namespace Randomizer.SMZ3.Regions
 {
     /// <summary>
     /// Defines a region that requires a medallion (Bombos, Ether, Quake) to be

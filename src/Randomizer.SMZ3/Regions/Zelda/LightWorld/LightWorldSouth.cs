@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 {

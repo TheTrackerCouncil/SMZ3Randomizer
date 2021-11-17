@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-using static Randomizer.SMZ3.Reward;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 {
@@ -56,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 Sahasrahla = new Location(this, 256 + 44, 0x5F1FC, LocationType.Regular,
                     name: "Sahasrahla",
                     vanillaItem: ItemType.Boots,
-                    access: items => World.CanAquire(items, PendantGreen));
+                    access: items => World.CanAquire(items, Reward.PendantGreen));
             }
 
             public Location LeftChest { get; }

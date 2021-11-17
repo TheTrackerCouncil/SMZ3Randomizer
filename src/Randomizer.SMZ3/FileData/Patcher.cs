@@ -6,15 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
 
 using static Randomizer.SMZ3.FileData.DropPrize;
-using static Randomizer.SMZ3.ItemType;
-using static Randomizer.SMZ3.Reward;
 
 namespace Randomizer.SMZ3.FileData
 {
@@ -153,17 +151,17 @@ namespace Randomizer.SMZ3.FileData
 
             var turtleRockValues = _myWorld.TurtleRock.Medallion switch
             {
-                Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
-                Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
-                Quake => new byte[] { 0x02, 0x14, 0xEF, 0xC4 },
+                ItemType.Bombos => new byte[] { 0x00, 0x51, 0x10, 0x00 },
+                ItemType.Ether => new byte[] { 0x01, 0x51, 0x18, 0x00 },
+                ItemType.Quake => new byte[] { 0x02, 0x14, 0xEF, 0xC4 },
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Turtle Rock medallion")
             };
 
             var miseryMireValues = _myWorld.MiseryMire.Medallion switch
             {
-                Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
-                Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
-                Quake => new byte[] { 0x02, 0x51, 0x08, 0x00 },
+                ItemType.Bombos => new byte[] { 0x00, 0x51, 0x00, 0x00 },
+                ItemType.Ether => new byte[] { 0x01, 0x13, 0x9F, 0xF1 },
+                ItemType.Quake => new byte[] { 0x02, 0x51, 0x08, 0x00 },
                 var x => throw new InvalidOperationException($"Tried using {x} in place of Misery Mire medallion")
             };
 
@@ -182,8 +180,8 @@ namespace Randomizer.SMZ3.FileData
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var crystalRegions = regions.Where(x => x.Reward == CrystalBlue).Concat(regions.Where(x => x.Reward == CrystalRed));
-            var pendantRegions = regions.Where(x => x.Reward == PendantGreen).Concat(regions.Where(x => x.Reward == PendantNonGreen));
+            var crystalRegions = regions.Where(x => x.Reward == Reward.CrystalBlue).Concat(regions.Where(x => x.Reward == Reward.CrystalRed));
+            var pendantRegions = regions.Where(x => x.Reward == Reward.PendantGreen).Concat(regions.Where(x => x.Reward == Reward.PendantNonGreen));
 
             _patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
             _patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
@@ -266,27 +264,27 @@ namespace Randomizer.SMZ3.FileData
                 0xEFE0 :
                 location.Item.Type switch
                 {
-                    ETank => 0xEED7,
-                    Missile => 0xEEDB,
-                    Super => 0xEEDF,
-                    PowerBomb => 0xEEE3,
-                    Bombs => 0xEEE7,
-                    Charge => 0xEEEB,
-                    Ice => 0xEEEF,
-                    HiJump => 0xEEF3,
-                    SpeedBooster => 0xEEF7,
-                    Wave => 0xEEFB,
-                    Spazer => 0xEEFF,
-                    SpringBall => 0xEF03,
-                    Varia => 0xEF07,
-                    Plasma => 0xEF13,
-                    Grapple => 0xEF17,
-                    Morph => 0xEF23,
-                    ReserveTank => 0xEF27,
-                    Gravity => 0xEF0B,
-                    XRay => 0xEF0F,
-                    SpaceJump => 0xEF1B,
-                    ScrewAttack => 0xEF1F,
+                    ItemType.ETank => 0xEED7,
+                    ItemType.Missile => 0xEEDB,
+                    ItemType.Super => 0xEEDF,
+                    ItemType.PowerBomb => 0xEEE3,
+                    ItemType.Bombs => 0xEEE7,
+                    ItemType.Charge => 0xEEEB,
+                    ItemType.Ice => 0xEEEF,
+                    ItemType.HiJump => 0xEEF3,
+                    ItemType.SpeedBooster => 0xEEF7,
+                    ItemType.Wave => 0xEEFB,
+                    ItemType.Spazer => 0xEEFF,
+                    ItemType.SpringBall => 0xEF03,
+                    ItemType.Varia => 0xEF07,
+                    ItemType.Plasma => 0xEF13,
+                    ItemType.Grapple => 0xEF17,
+                    ItemType.Morph => 0xEF23,
+                    ItemType.ReserveTank => 0xEF27,
+                    ItemType.Gravity => 0xEF0B,
+                    ItemType.XRay => 0xEF0F,
+                    ItemType.SpaceJump => 0xEF1B,
+                    ItemType.ScrewAttack => 0xEF1F,
                     _ => 0xEFE0,
                 };
 
@@ -315,7 +313,7 @@ namespace Randomizer.SMZ3.FileData
             {
                 if (location.Type == LocationType.HeraStandingKey)
                 {
-                    _patches.Add((Snes(0x9E3BB), location.Item.Type == KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
+                    _patches.Add((Snes(0x9E3BB), location.Item.Type == ItemType.KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB }));
                 }
                 else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type))
                 {
@@ -356,10 +354,10 @@ namespace Randomizer.SMZ3.FileData
             var value = location.Type == LocationType.NotInDungeon ||
                 !(item.IsDungeonItem && location.Region.IsRegionItem(item) && item.World == _myWorld) ? item.Type : item switch
                 {
-                    _ when item.IsKey => Key,
-                    _ when item.IsBigKey => BigKey,
-                    _ when item.IsMap => Map,
-                    _ when item.IsCompass => Compass,
+                    _ when item.IsKey => ItemType.Key,
+                    _ when item.IsBigKey => ItemType.BigKey,
+                    _ when item.IsMap => ItemType.Map,
+                    _ when item.IsCompass => ItemType.Compass,
                     _ => throw new InvalidOperationException($"Tried replacing {item} with a dungeon region item"),
                 };
             return (byte)value;
@@ -440,10 +438,10 @@ namespace Randomizer.SMZ3.FileData
             {
                 ALttPSoundtrack? soundtrack = dungeonRegion.Reward switch
                 {
-                    PendantGreen => ALttPSoundtrack.LightWorldDungeon,
-                    PendantNonGreen => ALttPSoundtrack.LightWorldDungeon,
-                    CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
-                    CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
+                    Reward.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
+                    Reward.PendantNonGreen => ALttPSoundtrack.LightWorldDungeon,
+                    Reward.CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
+                    Reward.CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
                     _ => null
                 };
                 return soundtrack != null
@@ -661,8 +659,8 @@ namespace Randomizer.SMZ3.FileData
         private void WriteTexts(Config config)
         {
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var greenPendantDungeon = regions.Where(x => x.Reward == PendantGreen).Cast<Region>().First();
-            var redCrystalDungeons = regions.Where(x => x.Reward == CrystalRed).Cast<Region>();
+            var greenPendantDungeon = regions.Where(x => x.Reward == Reward.PendantGreen).Cast<Region>().First();
+            var redCrystalDungeons = regions.Where(x => x.Reward == Reward.CrystalRed).Cast<Region>();
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
@@ -694,7 +692,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible)));
             // ---
 
-            var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(SilverArrows, _myWorld)).First();
+            var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(ItemType.SilverArrows, _myWorld)).First();
             var silvers = config.MultiWorld ?
                 Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld) :
                 Texts.GanonThirdPhaseSingle(silversLocation.Region);
@@ -899,7 +897,7 @@ namespace Randomizer.SMZ3.FileData
         // to his head and replaces them with his head.
         private void WriteRemoveEquipmentFromUncle(Item item)
         {
-            if (item.Type != ProgressiveSword)
+            if (item.Type != ItemType.ProgressiveSword)
             {
                 _patches.AddRange(new[] {
                     (Snes(0xDD263), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),
@@ -914,7 +912,7 @@ namespace Randomizer.SMZ3.FileData
                     (Snes(0xDD323), new byte[] { 0x00, 0x00, 0xE4, 0xFF, 0x08, 0x0E }),
                 });
             }
-            if (item.Type != ProgressiveShield)
+            if (item.Type != ItemType.ProgressiveShield)
             {
                 _patches.AddRange(new[] {
                     (Snes(0xDD253), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E }),

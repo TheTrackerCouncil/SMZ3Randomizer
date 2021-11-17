@@ -5,8 +5,6 @@ using System.Linq;
 using static System.Linq.Enumerable;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
-using static Randomizer.SMZ3.ItemType;
-using static Randomizer.SMZ3.Reward;
 using static Randomizer.SMZ3.FileData.DropPrize;
 using Randomizer.SMZ3.Regions;
 

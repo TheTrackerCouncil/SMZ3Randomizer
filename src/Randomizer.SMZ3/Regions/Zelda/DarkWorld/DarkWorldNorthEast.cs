@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-using static Randomizer.SMZ3.Reward;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 {
@@ -34,7 +33,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
         public override bool CanEnter(Progression items)
         {
-            return World.CanAquire(items, Agahnim) || (items.MoonPearl && (
+            return World.CanAquire(items, Reward.Agahnim) || (items.MoonPearl && (
                 (items.Hammer && items.CanLiftLight()) ||
                 (items.CanLiftHeavy() && items.Flippers) ||
                 (items.CanAccessDarkWorldPortal(Config) && items.Flippers)
@@ -51,14 +50,14 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 Left = new Location(this, 256 + 80, 0x1E980, LocationType.Regular,
                     "Left",
                     ItemType.ProgressiveSword, 
-                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && World.CanAquire(items, Agahnim))));
+                    items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
+                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))));
 
                 Right = new Location(this, 256 + 81, 0x1E983, LocationType.Regular,
                     "Right",
                     ItemType.SilverArrows, 
-                    items => World.CanAquireAll(items, CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && World.CanAquire(items, Agahnim))));
+                    items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
+                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))));
             }
 
             public Location Left { get; }

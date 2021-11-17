@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3
 {
