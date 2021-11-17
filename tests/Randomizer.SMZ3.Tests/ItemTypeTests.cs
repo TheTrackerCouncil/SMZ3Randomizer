@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using Randomizer.Shared;
 using Xunit;
 
 namespace Randomizer.SMZ3.Tests

@@ -1,4 +1,4 @@
-﻿using static Randomizer.SMZ3.Reward;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 {
@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Master Sword Pedestal",
                 alsoKnownAs: "Ped",
                 vanillaItem: ItemType.ProgressiveSword,
-                access: items => World.CanAquireAll(items, PendantGreen, PendantNonGreen));
+                access: items => World.CanAquireAll(items, Reward.PendantGreen, Reward.PendantNonGreen));
 
             Mushroom = new Location(this, 256 + 15, 0x308013, LocationType.Regular,
                 name: "Mushroom",
@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             LumberjackTree = new Location(this, 256 + 17, 0x308001, LocationType.Regular,
                 name: "Lumberjack Tree",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => World.CanAquire(items, Agahnim) && items.Boots);
+                access: items => World.CanAquire(items, Reward.Agahnim) && items.Boots);
 
             PegasusRocks = new Location(this, 256 + 18, 0x1EB3F, LocationType.Regular,
                 name: "Pegasus Rocks",

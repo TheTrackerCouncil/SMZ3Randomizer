@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-
-using static Randomizer.SMZ3.ItemType;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3
 {
@@ -96,69 +95,69 @@ namespace Randomizer.SMZ3
         public static List<Item> CreateProgressionPool(World world)
         {
             var itemPool = new List<Item> {
-                new Item(ProgressiveShield),
-                new Item(ProgressiveShield),
-                new Item(ProgressiveShield),
-                new Item(ProgressiveSword),
-                new Item(ProgressiveSword),
-                new Item(Bow),
-                new Item(Hookshot),
-                new Item(Mushroom),
-                new Item(Powder),
-                new Item(Firerod),
-                new Item(Icerod),
-                new Item(Bombos),
-                new Item(Ether),
-                new Item(Quake),
-                new Item(Lamp),
-                new Item(Hammer),
-                new Item(Shovel),
-                new Item(Flute),
-                new Item(Book),
-                new Item(Bottle),
-                new Item(Somaria),
-                new Item(Byrna),
-                new Item(Cape),
-                new Item(Mirror),
-                new Item(Boots),
-                new Item(ProgressiveGlove),
-                new Item(ProgressiveGlove),
-                new Item(Flippers),
-                new Item(MoonPearl),
-                new Item(HalfMagic),
+                new Item(ItemType.ProgressiveShield),
+                new Item(ItemType.ProgressiveShield),
+                new Item(ItemType.ProgressiveShield),
+                new Item(ItemType.ProgressiveSword),
+                new Item(ItemType.ProgressiveSword),
+                new Item(ItemType.Bow),
+                new Item(ItemType.Hookshot),
+                new Item(ItemType.Mushroom),
+                new Item(ItemType.Powder),
+                new Item(ItemType.Firerod),
+                new Item(ItemType.Icerod),
+                new Item(ItemType.Bombos),
+                new Item(ItemType.Ether),
+                new Item(ItemType.Quake),
+                new Item(ItemType.Lamp),
+                new Item(ItemType.Hammer),
+                new Item(ItemType.Shovel),
+                new Item(ItemType.Flute),
+                new Item(ItemType.Book),
+                new Item(ItemType.Bottle),
+                new Item(ItemType.Somaria),
+                new Item(ItemType.Byrna),
+                new Item(ItemType.Cape),
+                new Item(ItemType.Mirror),
+                new Item(ItemType.Boots),
+                new Item(ItemType.ProgressiveGlove),
+                new Item(ItemType.ProgressiveGlove),
+                new Item(ItemType.Flippers),
+                new Item(ItemType.MoonPearl),
+                new Item(ItemType.HalfMagic),
 
-                new Item(Grapple),
-                new Item(Charge),
-                new Item(Ice),
-                new Item(Wave),
-                new Item(Plasma),
-                new Item(Varia),
-                new Item(Gravity),
-                new Item(Morph),
-                new Item(Bombs),
-                new Item(SpringBall),
-                new Item(ScrewAttack),
-                new Item(HiJump),
-                new Item(SpaceJump),
-                new Item(SpeedBooster),
+                new Item(ItemType.Grapple),
+                new Item(ItemType.Charge),
+                new Item(ItemType.Ice),
+                new Item(ItemType.Wave),
+                new Item(ItemType.Plasma),
+                new Item(ItemType.Varia),
+                new Item(ItemType.Gravity),
+                new Item(ItemType.Morph),
+                new Item(ItemType.Bombs),
+                new Item(ItemType.SpringBall),
+                new Item(ItemType.ScrewAttack),
+                new Item(ItemType.HiJump),
+                new Item(ItemType.SpaceJump),
+                new Item(ItemType.SpeedBooster),
 
-                new Item(Missile),
-                new Item(Super),
-                new Item(PowerBomb),
-                new Item(PowerBomb),
-                new Item(ETank),
-                new Item(ETank),
-                new Item(ETank),
-                new Item(ETank),
-                new Item(ETank),
+                new Item(ItemType.Missile),
+                new Item(ItemType.Super),
+                new Item(ItemType.PowerBomb),
+                new Item(ItemType.PowerBomb),
+                new Item(ItemType.ETank),
+                new Item(ItemType.ETank),
+                new Item(ItemType.ETank),
+                new Item(ItemType.ETank),
+                new Item(ItemType.ETank),
 
-                new Item(ReserveTank),
-                new Item(ReserveTank),
-                new Item(ReserveTank),
-                new Item(ReserveTank),
+                new Item(ItemType.ReserveTank),
+                new Item(ItemType.ReserveTank),
+                new Item(ItemType.ReserveTank),
+                new Item(ItemType.ReserveTank),
 
-                new Item(ThreeHundredRupees),
-                new Item(ThreeHundredRupees),
+                new Item(ItemType.ThreeHundredRupees),
+                new Item(ItemType.ThreeHundredRupees),
             };
 
             foreach (var item in itemPool)
@@ -179,24 +178,24 @@ namespace Randomizer.SMZ3
         public static List<Item> CreateNicePool(World world)
         {
             var itemPool = new List<Item> {
-                new Item(ProgressiveTunic),
-                new Item(ProgressiveTunic),
-                new Item(ProgressiveSword),
-                new Item(ProgressiveSword),
-                new Item(SilverArrows),
-                new Item(BlueBoomerang),
-                new Item(RedBoomerang),
-                new Item(Bottle),
-                new Item(Bottle),
-                new Item(Bottle),
-                new Item(Bugnet),
-                new Item(HeartContainerRefill),
+                new Item(ItemType.ProgressiveTunic),
+                new Item(ItemType.ProgressiveTunic),
+                new Item(ItemType.ProgressiveSword),
+                new Item(ItemType.ProgressiveSword),
+                new Item(ItemType.SilverArrows),
+                new Item(ItemType.BlueBoomerang),
+                new Item(ItemType.RedBoomerang),
+                new Item(ItemType.Bottle),
+                new Item(ItemType.Bottle),
+                new Item(ItemType.Bottle),
+                new Item(ItemType.Bugnet),
+                new Item(ItemType.HeartContainerRefill),
 
-                new Item(Spazer),
-                new Item(XRay),
+                new Item(ItemType.Spazer),
+                new Item(ItemType.XRay),
             };
 
-            itemPool.AddRange(Copies(10, () => new Item(HeartContainer, world)));
+            itemPool.AddRange(Copies(10, () => new Item(ItemType.HeartContainer, world)));
 
             foreach (var item in itemPool) item.World = world;
 
@@ -211,25 +210,25 @@ namespace Randomizer.SMZ3
         public static List<Item> CreateJunkPool(World world)
         {
             var itemPool = new List<Item> {
-                new Item(Arrow),
-                new Item(OneHundredRupees)
+                new Item(ItemType.Arrow),
+                new Item(ItemType.OneHundredRupees)
             };
 
-            itemPool.AddRange(Copies(24, () => new Item(HeartPiece)));
-            itemPool.AddRange(Copies(8, () => new Item(TenArrows)));
-            itemPool.AddRange(Copies(13, () => new Item(ThreeBombs)));
-            itemPool.AddRange(Copies(4, () => new Item(ArrowUpgrade5)));
-            itemPool.AddRange(Copies(4, () => new Item(BombUpgrade5)));
-            itemPool.AddRange(Copies(2, () => new Item(OneRupee)));
-            itemPool.AddRange(Copies(4, () => new Item(FiveRupees)));
-            itemPool.AddRange(Copies(world.Config.Keysanity ? 25 : 28, () => new Item(TwentyRupees)));
-            itemPool.AddRange(Copies(7, () => new Item(FiftyRupees)));
-            itemPool.AddRange(Copies(3, () => new Item(ThreeHundredRupees)));
+            itemPool.AddRange(Copies(24, () => new Item(ItemType.HeartPiece)));
+            itemPool.AddRange(Copies(8, () => new Item(ItemType.TenArrows)));
+            itemPool.AddRange(Copies(13, () => new Item(ItemType.ThreeBombs)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.ArrowUpgrade5)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.BombUpgrade5)));
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.OneRupee)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.FiveRupees)));
+            itemPool.AddRange(Copies(world.Config.Keysanity ? 25 : 28, () => new Item(ItemType.TwentyRupees)));
+            itemPool.AddRange(Copies(7, () => new Item(ItemType.FiftyRupees)));
+            itemPool.AddRange(Copies(3, () => new Item(ItemType.ThreeHundredRupees)));
 
-            itemPool.AddRange(Copies(9, () => new Item(ETank)));
-            itemPool.AddRange(Copies(39, () => new Item(Missile)));
-            itemPool.AddRange(Copies(15, () => new Item(Super)));
-            itemPool.AddRange(Copies(8, () => new Item(PowerBomb)));
+            itemPool.AddRange(Copies(9, () => new Item(ItemType.ETank)));
+            itemPool.AddRange(Copies(39, () => new Item(ItemType.Missile)));
+            itemPool.AddRange(Copies(15, () => new Item(ItemType.Super)));
+            itemPool.AddRange(Copies(8, () => new Item(ItemType.PowerBomb)));
 
             foreach (var item in itemPool) item.World = world;
 
@@ -247,60 +246,60 @@ namespace Randomizer.SMZ3
             var itemPool = new List<Item>();
 
             itemPool.AddRange(new[] {
-                new Item(BigKeyEP),
-                new Item(BigKeyDP),
-                new Item(BigKeyTH),
-                new Item(BigKeyPD),
-                new Item(BigKeySP),
-                new Item(BigKeySW),
-                new Item(BigKeyTT),
-                new Item(BigKeyIP),
-                new Item(BigKeyMM),
-                new Item(BigKeyTR),
-                new Item(BigKeyGT),
+                new Item(ItemType.BigKeyEP),
+                new Item(ItemType.BigKeyDP),
+                new Item(ItemType.BigKeyTH),
+                new Item(ItemType.BigKeyPD),
+                new Item(ItemType.BigKeySP),
+                new Item(ItemType.BigKeySW),
+                new Item(ItemType.BigKeyTT),
+                new Item(ItemType.BigKeyIP),
+                new Item(ItemType.BigKeyMM),
+                new Item(ItemType.BigKeyTR),
+                new Item(ItemType.BigKeyGT),
             });
 
-            itemPool.AddRange(Copies(1, () => new Item(KeyHC)));
-            itemPool.AddRange(Copies(2, () => new Item(KeyCT)));
-            itemPool.AddRange(Copies(1, () => new Item(KeyDP)));
-            itemPool.AddRange(Copies(1, () => new Item(KeyTH)));
-            itemPool.AddRange(Copies(6, () => new Item(KeyPD)));
-            itemPool.AddRange(Copies(1, () => new Item(KeySP)));
-            itemPool.AddRange(Copies(3, () => new Item(KeySW)));
-            itemPool.AddRange(Copies(1, () => new Item(KeyTT)));
-            itemPool.AddRange(Copies(2, () => new Item(KeyIP)));
-            itemPool.AddRange(Copies(3, () => new Item(KeyMM)));
-            itemPool.AddRange(Copies(4, () => new Item(KeyTR)));
-            itemPool.AddRange(Copies(4, () => new Item(KeyGT)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyHC)));
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.KeyCT)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyDP)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyTH)));
+            itemPool.AddRange(Copies(6, () => new Item(ItemType.KeyPD)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeySP)));
+            itemPool.AddRange(Copies(3, () => new Item(ItemType.KeySW)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyTT)));
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.KeyIP)));
+            itemPool.AddRange(Copies(3, () => new Item(ItemType.KeyMM)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.KeyTR)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.KeyGT)));
 
             itemPool.AddRange(new[] {
-                new Item(MapEP),
-                new Item(MapDP),
-                new Item(MapTH),
-                new Item(MapPD),
-                new Item(MapSP),
-                new Item(MapSW),
-                new Item(MapTT),
-                new Item(MapIP),
-                new Item(MapMM),
-                new Item(MapTR),
+                new Item(ItemType.MapEP),
+                new Item(ItemType.MapDP),
+                new Item(ItemType.MapTH),
+                new Item(ItemType.MapPD),
+                new Item(ItemType.MapSP),
+                new Item(ItemType.MapSW),
+                new Item(ItemType.MapTT),
+                new Item(ItemType.MapIP),
+                new Item(ItemType.MapMM),
+                new Item(ItemType.MapTR),
             });
             if (!world.Config.Keysanity)
             {
                 itemPool.AddRange(new[] {
-                    new Item(MapHC),
-                    new Item(MapGT),
-                    new Item(CompassEP),
-                    new Item(CompassDP),
-                    new Item(CompassTH),
-                    new Item(CompassPD),
-                    new Item(CompassSP),
-                    new Item(CompassSW),
-                    new Item(CompassTT),
-                    new Item(CompassIP),
-                    new Item(CompassMM),
-                    new Item(CompassTR),
-                    new Item(CompassGT),
+                    new Item(ItemType.MapHC),
+                    new Item(ItemType.MapGT),
+                    new Item(ItemType.CompassEP),
+                    new Item(ItemType.CompassDP),
+                    new Item(ItemType.CompassTH),
+                    new Item(ItemType.CompassPD),
+                    new Item(ItemType.CompassSP),
+                    new Item(ItemType.CompassSW),
+                    new Item(ItemType.CompassTT),
+                    new Item(ItemType.CompassIP),
+                    new Item(ItemType.CompassMM),
+                    new Item(ItemType.CompassTR),
+                    new Item(ItemType.CompassGT),
                 });
             }
 
@@ -318,22 +317,22 @@ namespace Randomizer.SMZ3
         public static List<Item> CreateKeycards(World world)
         {
             return new List<Item> {
-                new Item(CardCrateriaL1, world),
-                new Item(CardCrateriaL2, world),
-                new Item(CardCrateriaBoss, world),
-                new Item(CardBrinstarL1, world),
-                new Item(CardBrinstarL2, world),
-                new Item(CardBrinstarBoss, world),
-                new Item(CardNorfairL1, world),
-                new Item(CardNorfairL2, world),
-                new Item(CardNorfairBoss, world),
-                new Item(CardMaridiaL1, world),
-                new Item(CardMaridiaL2, world),
-                new Item(CardMaridiaBoss, world),
-                new Item(CardWreckedShipL1, world),
-                new Item(CardWreckedShipBoss, world),
-                new Item(CardLowerNorfairL1, world),
-                new Item(CardLowerNorfairBoss, world),
+                new Item(ItemType.CardCrateriaL1, world),
+                new Item(ItemType.CardCrateriaL2, world),
+                new Item(ItemType.CardCrateriaBoss, world),
+                new Item(ItemType.CardBrinstarL1, world),
+                new Item(ItemType.CardBrinstarL2, world),
+                new Item(ItemType.CardBrinstarBoss, world),
+                new Item(ItemType.CardNorfairL1, world),
+                new Item(ItemType.CardNorfairL2, world),
+                new Item(ItemType.CardNorfairBoss, world),
+                new Item(ItemType.CardMaridiaL1, world),
+                new Item(ItemType.CardMaridiaL2, world),
+                new Item(ItemType.CardMaridiaBoss, world),
+                new Item(ItemType.CardWreckedShipL1, world),
+                new Item(ItemType.CardWreckedShipBoss, world),
+                new Item(ItemType.CardLowerNorfairL1, world),
+                new Item(ItemType.CardLowerNorfairBoss, world),
             };
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Randomizer.SMZ3
+﻿namespace Randomizer.Shared
 {
     /// <summary>
     /// Specifies the categories of an item.

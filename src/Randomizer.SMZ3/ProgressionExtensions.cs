@@ -1,5 +1,5 @@
-﻿using static Randomizer.SMZ3.SMLogic;
-using static Randomizer.SMZ3.Reward;
+﻿using Randomizer.Shared;
+using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3
 {
@@ -101,11 +101,11 @@ namespace Randomizer.SMZ3
                 Normal =>
                     items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
-                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
+                    (world.CanAquire(items, Reward.Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy()),
                 _ =>
                     items.MoonPearl && items.Flippers &&
                     (items.CanSpringBallJump() || items.HiJump || items.Gravity) && items.Morph &&
-                    (world.CanAquire(items, Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
+                    (world.CanAquire(items, Reward.Agahnim) || items.Hammer && items.CanLiftLight() || items.CanLiftHeavy())
             };
         }
 

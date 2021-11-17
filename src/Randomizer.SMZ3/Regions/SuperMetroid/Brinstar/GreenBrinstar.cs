@@ -1,4 +1,5 @@
-﻿using static Randomizer.SMZ3.SMLogic;
+﻿using Randomizer.Shared;
+using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {

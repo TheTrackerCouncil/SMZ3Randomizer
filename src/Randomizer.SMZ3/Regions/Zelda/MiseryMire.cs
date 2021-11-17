@@ -1,4 +1,6 @@
-﻿namespace Randomizer.SMZ3.Regions.Zelda
+﻿using Randomizer.Shared;
+
+namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class MiseryMire : Z3Region, IHasReward, INeedsMedallion
     {

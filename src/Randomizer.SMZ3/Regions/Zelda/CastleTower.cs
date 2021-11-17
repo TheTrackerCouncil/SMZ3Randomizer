@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-using static Randomizer.SMZ3.ItemType;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
@@ -9,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public CastleTower(World world, Config config)
             : base(world, config)
         {
-            RegionItems = new[] { KeyCT };
+            RegionItems = new[] { ItemType.KeyCT };
 
             Foyer = new(this);
             DarkMaze = new(this);
