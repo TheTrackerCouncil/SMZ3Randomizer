@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-using Randomizer.SMZ3.Tracking.Converters;
+using Randomizer.SMZ3.Tracking.Configuration.Converters;
 
 namespace Randomizer.SMZ3.Tracking
 {

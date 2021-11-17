@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Represents a trackable item.
@@ -143,8 +143,8 @@ namespace Randomizer.SMZ3.Tracking
         public bool Track()
         {
             if (TrackingState == 0 // Item hasn't been tracked yet (any case)
-                || (!HasStages && Multiple) // Multiple items always track
-                || (HasStages && TrackingState < MaxStage)) // Hasn't reached max. stage yet
+                || !HasStages && Multiple // Multiple items always track
+                || HasStages && TrackingState < MaxStage) // Hasn't reached max. stage yet
             {
                 TrackingState++;
                 return true;
@@ -212,8 +212,8 @@ namespace Randomizer.SMZ3.Tracking
         public bool Is(ItemType type)
         {
             return InternalItemType == type
-                || (InternalItemType == ItemType.Nothing
-                    && type.IsInCategory(ItemCategory.Scam));
+                || InternalItemType == ItemType.Nothing
+                    && type.IsInCategory(ItemCategory.Scam);
         }
 
         /// <summary>

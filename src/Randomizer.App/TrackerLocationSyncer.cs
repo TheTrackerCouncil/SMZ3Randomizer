@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App
 {

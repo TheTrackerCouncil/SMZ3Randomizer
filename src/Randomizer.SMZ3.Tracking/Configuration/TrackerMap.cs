@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// A representation of a map that a user can select with multiple regions on it.
@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="width">The width of the map image in pixels</param>
         /// <param name="height">The height of the map image in pixels</param>
         /// <param name="regions">A list of all regions that are a part of this map</param>
-        public TrackerMap (string name, string image, int width, int height, IReadOnlyCollection<TrackerMapLocation> regions)
+        public TrackerMap(string name, string image, int width, int height, IReadOnlyCollection<TrackerMapLocation> regions)
         {
             Name = name;
             Image = image;
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Tracking
         /// A list of all of the regions that are a part of this map and where they
         /// should be placed on the map
         /// </summary>
-        public IReadOnlyCollection<TrackerMapLocation> Regions { get;  }
+        public IReadOnlyCollection<TrackerMapLocation> Regions { get; }
 
         /// <summary>
         /// List of all actual locations that are underneath the region

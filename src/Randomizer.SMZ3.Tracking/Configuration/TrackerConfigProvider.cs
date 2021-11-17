@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
-using Randomizer.SMZ3.Tracking.Configuration;
-
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Provides tracker configuration data.

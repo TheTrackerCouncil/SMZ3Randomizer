@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// This class represents a config for displaying a map of the tracker state
