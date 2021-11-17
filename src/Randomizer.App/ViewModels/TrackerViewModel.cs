@@ -8,6 +8,7 @@ using System.Windows;
 
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App.ViewModels
 {
