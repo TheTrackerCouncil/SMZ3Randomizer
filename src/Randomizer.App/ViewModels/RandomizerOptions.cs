@@ -71,17 +71,6 @@ namespace Randomizer.App.ViewModels
             File.WriteAllText(path, json);
         }
 
-        public string GetConfigString()
-        {
-            return $"{(int)GameMode.Normal}{(int)Z3Logic.Normal}{(int)SMLogic.Normal}{(int)SeedOptions.SwordLocation}{(int)SeedOptions.MorphLocation}{(int)SeedOptions.MorphBombsLocation}{(int)SeedOptions.ShaktoolItem}{(int)SeedOptions.PegWorldItem}{(SeedOptions.Keysanity ? 1 : 0)}{(SeedOptions.Race ? 1 : 0)}";
-        }
-
-        public static RandomizerOptions FromConfigString(string configString)
-        {
-            char[] values = configString.ToCharArray();
-            return null;
-        }
-
         public Config ToConfig() => new()
         {
             GameMode = GameMode.Normal,

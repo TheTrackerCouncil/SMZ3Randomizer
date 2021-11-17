@@ -150,7 +150,6 @@ namespace Randomizer.App
                 Value = seed.Seed,
                 RomPath = romPath,
                 SpoilerPath = spoilerPath,
-                Settings = Options.GetConfigString(),
                 Date = DateTime.UtcNow
             });
             _dbContext.SaveChanges();
