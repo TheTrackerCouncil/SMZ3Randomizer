@@ -2,6 +2,7 @@
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {

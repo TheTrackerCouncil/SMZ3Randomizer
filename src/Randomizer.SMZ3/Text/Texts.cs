@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3.Regions.Zelda;
 
 using SharpYaml.Model;
-
-using static Randomizer.SMZ3.ItemType;
 
 namespace Randomizer.SMZ3.Text
 {
@@ -83,17 +81,17 @@ namespace Randomizer.SMZ3.Text
                 _ when item.IsMap => "Map",
                 _ when item.IsCompass => "Compass",
                 _ when item.IsKeycard => "Keycard",
-                BottleWithGoldBee => BottleWithBee.ToString(),
-                HeartContainerRefill => HeartContainer.ToString(),
-                OneRupee => "PocketRupees",
-                FiveRupees => "PocketRupees",
-                TwentyRupees => "CouchRupees",
-                TwentyRupees2 => "CouchRupees",
-                FiftyRupees => "CouchRupees",
-                BombUpgrade5 => "BombUpgrade",
-                BombUpgrade10 => "BombUpgrade",
-                ArrowUpgrade5 => "ArrowUpgrade",
-                ArrowUpgrade10 => "ArrowUpgrade",
+                ItemType.BottleWithGoldBee => ItemType.BottleWithBee.ToString(),
+                ItemType.HeartContainerRefill => ItemType.HeartContainer.ToString(),
+                ItemType.OneRupee => "PocketRupees",
+                ItemType.FiveRupees => "PocketRupees",
+                ItemType.TwentyRupees => "CouchRupees",
+                ItemType.TwentyRupees2 => "CouchRupees",
+                ItemType.FiftyRupees => "CouchRupees",
+                ItemType.BombUpgrade5 => "BombUpgrade",
+                ItemType.BombUpgrade10 => "BombUpgrade",
+                ItemType.ArrowUpgrade5 => "ArrowUpgrade",
+                ItemType.ArrowUpgrade10 => "ArrowUpgrade",
                 var type => type.ToString(),
             };
 

@@ -1,4 +1,6 @@
-﻿namespace Randomizer.SMZ3.Regions.Zelda
+﻿using Randomizer.Shared;
+
+namespace Randomizer.SMZ3.Regions.Zelda
 {
     public class TowerOfHera : Z3Region, IHasReward
     {
