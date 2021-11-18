@@ -8,25 +8,30 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     /// <summary>
     /// Represents a dungeon in A Link to the Past.
     /// </summary>
-    public class ZeldaDungeon : IPointOfInterest
+    public class DungeonInfo : IPointOfInterest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ZeldaDungeon"/> class.
+        /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
         /// </summary>
         /// <param name="name">The name of the dungeon.</param>
         /// <param name="abbreviation">
         /// The abbreviation of the dungeon name.
         /// </param>
         /// <param name="boss">The name of the boss.</param>
+        /// <param name="typeName">
+        /// The fully qualified type name of the region that represents the
+        /// dungeon.
+        /// </param>
         /// <param name="regionTypeName">
         /// The fully qualified type name of the region the dungeon is located
         /// in.
         /// </param>
-        public ZeldaDungeon(SchrodingersString name, string abbreviation, SchrodingersString boss, string regionTypeName)
+        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss, string typeName, string regionTypeName)
         {
             Name = name;
             Abbreviation = abbreviation;
             Boss = boss ?? new();
+            TypeName = typeName;
             RegionTypeName = regionTypeName;
         }
 
@@ -44,6 +49,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the possible names of the dungeon boss.
         /// </summary>
         public SchrodingersString Boss { get; init; }
+
+        /// <summary>
+        /// Gets the fully qualified name of the type of region that represents
+        /// this dungeon.
+        /// </summary>
+        public string TypeName { get; }
 
         /// <summary>
         /// Gets or sets the zero-based of the column in which the tracker
@@ -128,7 +139,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// otherwise, <c>false</c>.
         /// </returns>
         public bool Is(Region region)
-            => Name.Contains(region.Name, StringComparison.OrdinalIgnoreCase);
+            => TypeName == region.GetType().FullName;
 
         /// <summary>
         /// Determines whether the specified area either represents this dungeon

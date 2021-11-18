@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <param name="responses">The responses to use.</param>
         public TrackerConfig(IReadOnlyCollection<ItemData> items,
             IReadOnlyCollection<Peg> pegs,
-            IReadOnlyCollection<ZeldaDungeon> dungeons,
+            IReadOnlyCollection<DungeonInfo> dungeons,
             ResponseConfig responses)
         {
             Items = items;
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets a collection of Zelda dungeons.
         /// </summary>
-        public IReadOnlyCollection<ZeldaDungeon> Dungeons { get; init; }
+        public IReadOnlyCollection<DungeonInfo> Dungeons { get; init; }
 
         /// <summary>
         /// Gets a collection of configured responses.

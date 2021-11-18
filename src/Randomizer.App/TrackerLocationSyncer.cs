@@ -147,7 +147,10 @@ namespace Randomizer.App
         /// <returns>True if a location is accessible given settings, false otherwise</returns>
         public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
-            return !location.Cleared && (location.IsAvailable(Progression) || (!requireKeys && location.IsAvailable(ProgressionWithKeys)) || (allowOutOfLogic && ShowOutOfLogicLocations));
+            return !location.Cleared
+                && (location.IsAvailable(Progression)
+                || (!requireKeys && location.IsAvailable(ProgressionWithKeys))
+                || (allowOutOfLogic && ShowOutOfLogicLocations));
         }
 
         /// <summary>

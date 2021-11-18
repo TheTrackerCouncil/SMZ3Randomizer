@@ -93,34 +93,34 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
-        /// Returns the <see cref="ZeldaDungeon"/> that was detected in a voice
+        /// Returns the <see cref="DungeonInfo"/> that was detected in a voice
         /// command using <see cref="DungeonKey"/>.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
         /// <returns>
-        /// A <see cref="ZeldaDungeon"/> from the recognition result.
+        /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static ZeldaDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static DungeonInfo GetDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
             var dungeonName = (string)result.Semantics[DungeonKey].Value;
-            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase));
+            var dungeon = tracker.Locations.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase));
             return dungeon ?? throw new Exception($"Could not find recognized dungeon '{dungeonName}'.");
         }
 
         /// <summary>
-        /// Returns the <see cref="ZeldaDungeon"/> that was detected in a voice
+        /// Returns the <see cref="DungeonInfo"/> that was detected in a voice
         /// command using <see cref="BossKey"/>.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
         /// <returns>
-        /// A <see cref="ZeldaDungeon"/> from the recognition result.
+        /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static ZeldaDungeon GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static DungeonInfo GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
             var bossName = (string)result.Semantics[BossKey].Value;
-            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Boss.Contains(bossName, StringComparison.OrdinalIgnoreCase));
+            var dungeon = tracker.Locations.Dungeons.SingleOrDefault(x => x.Boss.Contains(bossName, StringComparison.OrdinalIgnoreCase));
             return dungeon ?? throw new Exception($"Could not find dungeon with recognized boss name '{bossName}'.");
         }
 
@@ -345,7 +345,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetDungeonNames(bool includeDungeonsWithoutReward = false)
         {
             var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.Dungeons)
+            foreach (var dungeon in Tracker.Locations.Dungeons)
             {
                 if (dungeon.HasReward || includeDungeonsWithoutReward)
                 {
@@ -367,7 +367,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetBossNames()
         {
             var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.Dungeons)
+            foreach (var dungeon in Tracker.Locations.Dungeons)
             {
                 foreach (var name in dungeon.Boss)
                     dungeonNames.Add(new SemanticResultValue(name.Text, name.Text));
