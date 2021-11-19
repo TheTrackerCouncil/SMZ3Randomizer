@@ -8,7 +8,7 @@
         ResizeMode="NoResize"
         mc:Ignorable="d"
         Title="Options - SMZ3 Cas' Randomizer"
-        Height="350"
+        Height="380"
         Width="500">
   <Window.DataContext>
     <vm:GeneralOptions></vm:GeneralOptions>
@@ -132,6 +132,20 @@
                     TickPlacement="BottomRight"
                     Orientation="Horizontal"
                     HorizontalAlignment="Stretch" />
+          </Grid>
+        </controls:LabeledControl>
+
+        <controls:LabeledControl Text="Launch button behavior:"
+                                 ToolTip="Determines default behavior when clicking on the Launch button for a generated rom.">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox
+              ItemsSource="{Binding QuickLaunchOptions}"
+              SelectedIndex="{Binding LaunchButton}" Height="23" VerticalAlignment="Top">
+            </ComboBox>
           </Grid>
         </controls:LabeledControl>
       </StackPanel>

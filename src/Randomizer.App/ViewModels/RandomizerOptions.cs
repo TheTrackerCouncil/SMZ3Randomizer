@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Windows;
 
 using Randomizer.SMZ3;
 
@@ -58,6 +56,13 @@ namespace Randomizer.App.ViewModels
         public double WindowWidth { get; set; } = 500d;
 
         public double WindowHeight { get; set; } = 600d;
+
+        public string RomOutputPath
+        {
+            get => Directory.Exists(GeneralOptions.RomOutputPath)
+                    ? GeneralOptions.RomOutputPath
+                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
+        }
 
         public static RandomizerOptions Load(string path)
         {

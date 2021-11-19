@@ -1,21 +1,14 @@
 ﻿using System;
-using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms.Design.Behavior;
-
 using BunLabs.IO;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
-using Randomizer.Shared.Models;
 
 namespace Randomizer.App
 {
@@ -83,8 +76,10 @@ namespace Randomizer.App
 
             // WPF
             services.AddScoped<TrackerLocationSyncer>();
+            services.AddSingleton<RomGenerator>();
             services.AddSingleton<OptionsFactory>();
-            services.AddSingleton<MainWindow>();
+            services.AddSingleton<RomListWindow>();
+            services.AddSingleton<GenerateRomWindow>();
             services.AddWindows<App>();
         }
 
@@ -106,7 +101,7 @@ namespace Randomizer.App
             _logger = _host.Services.GetRequiredService<ILogger<App>>();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+            var mainWindow = _host.Services.GetRequiredService<RomListWindow>();
             mainWindow.Show();
         }
 

@@ -11,8 +11,8 @@ namespace Randomizer.Shared.Models {
         public string Name { get; set; }
         public bool Cleared { get; set; }
         public int RemainingTreasure { get; set; }
-        public int Reward { get; set; }
-        public int RequiredMedallion { get; set; }
+        public RewardItem Reward { get; set; }
+        public Medallion RequiredMedallion { get; set; }
     }
 
 }

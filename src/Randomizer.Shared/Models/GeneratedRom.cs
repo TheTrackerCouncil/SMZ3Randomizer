@@ -15,6 +15,12 @@ namespace Randomizer.Shared.Models
         public int GeneratorVersion { get; set; }
         public string RomPath { get; set; }
         public string SpoilerPath { get; set; }
+        public TrackerState TrackerState { get; set; }
+
+        public static bool IsValid(GeneratedRom rom)
+        {
+            return rom != null && rom.Id > 0;
+        }
     }
 
 }

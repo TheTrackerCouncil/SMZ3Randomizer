@@ -22,20 +22,22 @@ namespace Randomizer.Shared.Models {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GeneratedRom>().ToTable("GeneratedRom", "smz3cas");
-            modelBuilder.Entity<TrackerState>().ToTable("TrackerStates", "smz3cas");
-            modelBuilder.Entity<TrackerItemState>().ToTable("TrackerItemStates", "smz3cas");
-            modelBuilder.Entity<TrackerLocationState>().ToTable("TrackerLocationStates", "smz3cas");
-            modelBuilder.Entity<TrackerRegionState>().ToTable("TrackerRegionStates", "smz3cas");
-            modelBuilder.Entity<TrackerDungeonState>().ToTable("TrackerDungeonStates", "smz3cas");
-            modelBuilder.Entity<TrackerMarkedLocation>().ToTable("TrackerMarkedLocations", "smz3cas");
+            modelBuilder.Entity<GeneratedRom>().HasOne(x => x.TrackerState);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.ItemStates);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.LocationStates);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.RegionStates);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.DungeonStates);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.MarkedLocations);
+
+            base.OnModelCreating(modelBuilder);
+
         }
 
-        public DbSet<GeneratedRom> Seeds { get; set; }
+        public DbSet<GeneratedRom> GeneratedRoms { get; set; }
         public DbSet<TrackerState> TrackerStates { get; set; }
         public DbSet<TrackerItemState> TrackerItemStates { get; set; }
         public DbSet<TrackerLocationState> TrackerLocationStates { get; set; }
-        public DbSet<TrackerRegionState> TrackerRegionState { get; set; }
+        public DbSet<TrackerRegionState> TrackerRegionStates { get; set; }
         public DbSet<TrackerDungeonState> TrackerDungeonStates { get; set; }
         public DbSet<TrackerMarkedLocation> TrackerMarkedLocations { get; set; }
 
