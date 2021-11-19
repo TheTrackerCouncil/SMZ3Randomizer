@@ -210,12 +210,12 @@
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Left">
           <Button x:Name="GenerateStatsButton"
-                  Click="GenerateStatsButton_Click">Generate Stats</Button>
+                  Click="GenerateStatsButton_Click">Generate _Stats</Button>
         </StackPanel>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
           <Button x:Name="CancelButton"
-                  Click="CancelButton_Click">Cancel</Button>
+                  Click="CancelButton_Click">_Cancel</Button>
           
           <Button x:Name="GenerateRomButton"
                   Click="GenerateRomButton_Click">_Generate</Button>

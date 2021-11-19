@@ -113,9 +113,9 @@
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
           <Button x:Name="QuickGenerate"
-                  Click="QuickGenerate_Click">Quick Generate</Button>
+                  Click="QuickGenerate_Click">_Quick generate</Button>
           <Button x:Name="GenerateRomButton"
-                  Click="GenerateRomButton_Click">_Generate ROM</Button>
+                  Click="GenerateRomButton_Click">_Custom generate</Button>
         </StackPanel>
       </Grid>
     </Border>

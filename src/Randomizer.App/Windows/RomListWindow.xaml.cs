@@ -15,13 +15,11 @@ using Randomizer.SMZ3.Generation;
 namespace Randomizer.App
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for RomListWindow.xaml
     /// </summary>
     public partial class RomListWindow : Window
     {
-        private readonly Task _loadSpritesTask;
         private readonly IServiceProvider _serviceProvider;
-        private readonly Smz3Randomizer _randomizer;
         private readonly ILogger<RomListWindow> _logger;
         private readonly RandomizerContext _dbContext;
         private readonly RomGenerator _romGenerator;
@@ -29,13 +27,11 @@ namespace Randomizer.App
 
         public RomListWindow(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
-            Smz3Randomizer randomizer,
             ILogger<RomListWindow> logger,
             RandomizerContext dbContext,
             RomGenerator romGenerator)
         {
             _serviceProvider = serviceProvider;
-            _randomizer = randomizer;
             _logger = logger;
             _dbContext = dbContext;
             _romGenerator = romGenerator;
@@ -43,18 +39,17 @@ namespace Randomizer.App
             CheckSpeechRecognition();
             Options = optionsFactory.Create();
 
-            var models = dbContext.GeneratedRoms
-                .Include(x => x.TrackerState)
-                .OrderByDescending(x => x.Id)
-                .ToList();
-
-            Model = new GeneratedRomsViewModel(models);
+            Model = new GeneratedRomsViewModel();
             DataContext = Model;
+            UpdateRomList();
         }
 
         public GeneratedRomsViewModel Model { get; }
         public RandomizerOptions Options { get; }
 
+        /// <summary>
+        /// Verifies that speech recognition is working
+        /// </summary>
         private void CheckSpeechRecognition()
         {
             try
@@ -76,23 +71,28 @@ namespace Randomizer.App
             }
         }
 
+        /// <summary>
+        /// Generates a rom based on te previous settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void QuickGenerate_Click(object sender, RoutedEventArgs e)
         {
             var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error);
 
             if (successful)
             {
-                var models = _dbContext.GeneratedRoms
-                    .Include(x => x.TrackerState)
-                    .OrderByDescending(x => x.Id)
-                    .ToList();
-                Model.UpdateList(models);
+                UpdateRomList();
             }
         }
 
+        /// <summary>
+        /// Opens the page to generate a custom rom with new settings
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            //_romGenerator.GenerateRom(Options, out var romPath, out var error);
             var generateWindow = new GenerateRomWindow(_serviceProvider);
             generateWindow.Owner = this;
             generateWindow.Options = Options;
@@ -100,11 +100,7 @@ namespace Randomizer.App
 
             if (successful.HasValue && successful.Value)
             {
-                var models = _dbContext.GeneratedRoms
-                    .Include(x => x.TrackerState)
-                    .OrderByDescending(x => x.Id)
-                    .ToList();
-                Model.UpdateList(models);
+                UpdateRomList();
             }
 
             RomsList.SelectedIndex = 0;
@@ -122,9 +118,25 @@ namespace Randomizer.App
             }
         }
 
+        private void UpdateRomList()
+        {
+            var models = _dbContext.GeneratedRoms
+                    .Include(x => x.TrackerState)
+                    .OrderByDescending(x => x.Id)
+                    .ToList();
+            Model.UpdateList(models);
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            try
+            {
+                Options.Save(OptionsFactory.GetFilePath());
+            }
+            catch
+            {
+                // Oh well
+            }
         }
 
         private void OptionsMenuItem_Click(object sender, RoutedEventArgs e)
@@ -143,11 +155,21 @@ namespace Randomizer.App
 
         }
 
+        /// <summary>
+        /// Launches the tracker window with no rom selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartTracker_Click(object sender, RoutedEventArgs e)
         {
             LaunchTracker(null);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var aboutWindow = _serviceProvider.GetRequiredService<AboutWindow>();
@@ -155,6 +177,11 @@ namespace Randomizer.App
             aboutWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// The user has clicked on a quick launch button for a rom
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is not Button launchButton)
@@ -182,6 +209,10 @@ namespace Randomizer.App
 
         }
 
+        /// <summary>
+        /// Launches the tracker window for the given rom
+        /// </summary>
+        /// <param name="rom">The rom to open tracker for</param>
         private void LaunchTracker(GeneratedRom rom)
         {
             try
@@ -196,6 +227,8 @@ namespace Randomizer.App
                     _trackerWindow.Rom = rom;
                 }
 
+                _trackerWindow.SavedState += _trackerWindow_SavedState;
+
                 _trackerWindow.Show();
             }
             catch (Exception ex)
@@ -204,6 +237,20 @@ namespace Randomizer.App
             }
         }
 
+        /// <summary>
+        /// Updates the rom list upon tracker's state being saved
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _trackerWindow_SavedState(object sender, EventArgs e)
+        {
+            UpdateRomList();
+        }
+
+        /// <summary>
+        /// Launches the current rom in the default program
+        /// </summary>
+        /// <param name="rom">The rom to execute</param>
         private void LaunchRom(GeneratedRom rom)
         {
             Process.Start(new ProcessStartInfo
@@ -213,6 +260,10 @@ namespace Randomizer.App
             });
         }
 
+        /// <summary>
+        /// Opens the folder containing the rom
+        /// </summary>
+        /// <param name="rom">The rom to open the folder for</param>
         private void OpenFolder(GeneratedRom rom)
         {
             Process.Start("explorer.exe", $"/select,\"{rom.RomPath}\"");

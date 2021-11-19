@@ -781,6 +781,8 @@ namespace Randomizer.App
                     }
                 }
             }
+
+            SavedState.Invoke(this, null);
         }
 
         private void StatusBarTimer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -867,5 +869,10 @@ namespace Randomizer.App
         {
             public Origin OriginPoint { get; init; }
         }
+
+        /// <summary>
+        /// Occurs when the the tracker's state has been saved
+        /// </summary>
+        public event EventHandler SavedState;
     }
 }
