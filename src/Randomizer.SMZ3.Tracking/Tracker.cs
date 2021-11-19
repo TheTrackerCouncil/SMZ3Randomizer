@@ -9,11 +9,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using BunLabs;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Parse = BunLabs.Parse;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -31,6 +33,8 @@ namespace Randomizer.SMZ3.Tracking
         private readonly ILogger<Tracker> _logger;
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
+        private readonly RandomizerContext _dbContext;
+        private DateTime _startTime = DateTime.MinValue;
 
         private bool _disposed;
 
@@ -50,11 +54,13 @@ namespace Randomizer.SMZ3.Tracking
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger,
-            TrackerOptions options)
+            TrackerOptions options,
+            RandomizerContext dbContext)
         {
             _moduleFactory = moduleFactory;
             _logger = logger;
             Options = options;
+            _dbContext = dbContext;
 
             // Initialize the tracker configuration
             Items = config.Items.ToImmutableList();
@@ -231,6 +237,23 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Loads the state from the database for a given rom
+        /// </summary>
+        /// <param name="rom">The rom to load</param>
+        /// <returns>True or false if the load was successful</returns>
+        public bool Load(GeneratedRom rom)
+        {
+            var state = TrackerState.Load(_dbContext, rom);
+            if (state != null)
+            {
+                state.Apply(this);
+                OnStateLoaded();
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Saves the tracker state.
         /// </summary>
         /// <param name="destination">The stream to save the state to.</param>
@@ -239,6 +262,17 @@ namespace Randomizer.SMZ3.Tracking
         {
             var state = TrackerState.TakeSnapshot(this);
             return state.SaveAsync(destination);
+        }
+
+        /// <summary>
+        /// Saves the state of the tracker to the database
+        /// </summary>
+        /// <param name="rom">The rom to save</param>
+        /// <returns></returns>
+        public Task SaveAsync(GeneratedRom rom)
+        {
+            var state = TrackerState.TakeSnapshot(this);
+            return state.SaveAsync(_dbContext, rom);
         }
 
         /// <summary>
@@ -489,11 +523,48 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void StartTracking()
         {
             // Load the modules for voice recognition
+            StartTimer();
             Syntax = _moduleFactory.LoadAll(this, _recognizer);
             EnableVoiceRecognition();
             Say(Responses.StartedTracking);
             RestartIdleTimers();
         }
+
+        /// <summary>
+        /// Sets the start time of the timer
+        /// </summary>
+        public virtual void StartTimer()
+        {
+            _startTime = DateTime.Now;
+        }
+
+        /// <summary>
+        /// Resets the timer to 0
+        /// </summary>
+        public virtual void ResetTimer()
+        {
+            SavedElapsedTime = TimeSpan.Zero;
+            StartTimer();
+        }
+
+        /// <summary>
+        /// Pauses the timer, saving the elapsed time
+        /// </summary>
+        public virtual void PauseTimer()
+        {
+            SavedElapsedTime = TotalElapsedTime;
+            _startTime = DateTime.MinValue;
+        }
+
+        /// <summary>
+        /// The previous saved elapsed time
+        /// </summary>
+        public TimeSpan SavedElapsedTime { get; set; }
+
+        /// <summary>
+        /// The total elapsed time including the previously saved time
+        /// </summary>
+        public TimeSpan TotalElapsedTime => SavedElapsedTime + (DateTime.Now - (_startTime == DateTime.MinValue ? DateTime.Now : _startTime));
 
         /// <summary>
         /// Stops voice recognition.

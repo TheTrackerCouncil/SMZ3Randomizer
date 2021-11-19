@@ -10,12 +10,11 @@ namespace Randomizer.Shared.Models {
         public int Id { get; set; }
         public DateTimeOffset Date { get; set; }
         public double SecondsElapsed { get; set; }
-        public GeneratedRom GeneratedRom { get; set; }
-        public List<TrackerItemState> ItemStates { get; set; }
-        public List<TrackerLocationState> LocationStates { get; set; }
-        public List<TrackerRegionState> RegionStates { get; set; }
-        public List<TrackerDungeonState> DungeonStates { get; set; }
-        public List<TrackerMarkedLocation> MarkedLocations { get; set; }
+        public ICollection<TrackerItemState> ItemStates { get; set; }
+        public ICollection<TrackerLocationState> LocationStates { get; set; }
+        public ICollection<TrackerRegionState> RegionStates { get; set; }
+        public ICollection<TrackerDungeonState> DungeonStates { get; set; }
+        public ICollection<TrackerMarkedLocation> MarkedLocations { get; set; }
     }
 
 }

@@ -1,0 +1,123 @@
+﻿<Window x:Class="Randomizer.App.RomListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
+        xmlns:local="clr-namespace:Randomizer.App"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:GeneratedRomsViewModel, IsDesignTimeCreatable=True}"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        Title="SMZ3 Cas' Randomizer"
+        Width="{Binding WindowWidth, Mode=TwoWay}"
+        Height="{Binding WindowHeight, Mode=TwoWay}"
+        MinWidth="400"
+        MaxWidth="400"
+        MinHeight="240"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0"
+            BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            BorderThickness="0,0,0,1">
+      <Menu>
+        <MenuItem Header="_Tools">
+          <MenuItem Header="_Options..."
+                    x:Name="OptionsMenuItem"
+                    Click="OptionsMenuItem_Click" />
+        </MenuItem>
+        <MenuItem Header="_Help">
+          <MenuItem Header="_About..."
+                    x:Name="AboutMenuItem"
+                    Click="AboutMenuItem_Click" />
+        </MenuItem>
+      </Menu>
+    </Border>
+
+    <Grid Grid.Row="1"
+          Grid.IsSharedSizeScope="True">
+      <!--
+      <ScrollViewer>
+        <ItemsControl ItemsSource="{Binding RomsList}"
+                    BorderThickness="0"
+                    Margin="2,0,0,11">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Grid Margin="0,10">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition/>
+                  <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding NameLabel}" Grid.Row="0" />
+                <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"/>
+                <TextBlock Text="{Binding NameLabel}" Grid.Row="1" Grid.Column="0" />
+                <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+      -->
+
+      <ListView Name="RomsList" ItemsSource="{Binding RomsList}" SelectionMode="Single">
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <Grid Margin="0,2">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="75" />
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+              </Grid.RowDefinitions>
+              <TextBlock Text="{Binding NameLabel}" Grid.Row="0" />
+              <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,8,0"/>
+              <TextBlock Text="{Binding SeedLabel}" Grid.Row="1" Grid.Column="0" />
+              <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,8,0" />
+              <DockPanel Grid.Column="2" Grid.RowSpan="2">
+                <Button Margin="0,0,0,0" Click="LaunchButton_Click" Tag="{Binding Rom}">Launch</Button>
+              </DockPanel>
+            </Grid>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+        <ListView.ItemContainerStyle>
+          <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          </Style>
+        </ListView.ItemContainerStyle>
+      </ListView>
+
+    </Grid>
+
+    <Border Grid.Row="2"
+            Style="{StaticResource BottomPanel}">
+      <Grid>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left">
+          <Button x:Name="StartTracker"
+                  Click="StartTracker_Click">Start _tracker</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+          <Button x:Name="QuickGenerate"
+                  Click="QuickGenerate_Click">Quick Generate</Button>
+          <Button x:Name="GenerateRomButton"
+                  Click="GenerateRomButton_Click">_Generate ROM</Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Windows.Media;
 
 using Randomizer.SMZ3.Tracking;
@@ -13,6 +16,17 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class GeneralOptions
     {
+        public static IEnumerable<string> QuickLaunchOptions
+        {
+            get
+            {
+                var attributes = typeof(LaunchButtonOptions).GetMembers()
+                    .SelectMany(member => member.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
+                    .ToList();
+                return attributes.Select(x => x.Description);
+            }
+        }
+
         public string Z3RomPath { get; set; }
 
         public string SMRomPath { get; set; }
@@ -33,6 +47,8 @@ namespace Randomizer.App.ViewModels
 
         public bool TrackerShadows { get; set; } = true;
 
+        public int LaunchButton { get; set; } = (int)LaunchButtonOptions.PlayAndTrack;
+
         public bool Validate()
         {
             return File.Exists(Z3RomPath)
@@ -46,5 +62,19 @@ namespace Randomizer.App.ViewModels
             MinimumExecutionConfidence = TrackerConfidenceThreshold,
             MinimumSassConfidence = TrackerConfidenceSassThreshold
         };
+    }
+
+    public enum LaunchButtonOptions
+    {
+        [Description("Play Rom and Open Tracker")]
+        PlayAndTrack,
+        [Description("Open Folder and Tracker")]
+        OpenFolderAndTrack,
+        [Description("Open Tracker")]
+        TrackOnly,
+        [Description("Play Rom")]
+        PlayOnly,
+        [Description("Open Folder")]
+        OpenFolderOnly
     }
 }
