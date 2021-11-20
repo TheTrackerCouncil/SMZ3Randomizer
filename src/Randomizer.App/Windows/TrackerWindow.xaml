@@ -24,11 +24,11 @@
       <MenuItem Style="{StaticResource DarkMenuItem}"
                 Header="_File">
         <MenuItem Header="_Load saved state..."
-                  x:Name="LoadSavedState"
-                  Click="LoadSavedState_Click" />
+                  x:Name="LoadSavedStateMenuItem"
+                  Click="LoadSavedStateMenuItem_Click" />
         <MenuItem Header="_Save state..."
-                  x:Name="SaveState"
-                  Click="SaveState_Click" />
+                  x:Name="SaveStateMenuItem"
+                  Click="SaveStateMenuItem_Click" />
       </MenuItem>
       <MenuItem Style="{StaticResource DarkMenuItem}"
                 Header="_View">

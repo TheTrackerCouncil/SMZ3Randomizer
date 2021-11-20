@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -658,8 +659,16 @@ namespace Randomizer.App
                 TrackerGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(GridItemPx + GridItemMargin) });
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if(Tracker.IsDirty)
+            {
+                if(MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) ==  MessageBoxResult.Yes)
+                {
+                    await SaveState();
+                }
+            }
             Tracker.StopTracking();
             _dispatcherTimer.Stop();
             App.SaveWindowPositionAndSize(this);
@@ -700,7 +709,7 @@ namespace Randomizer.App
             }
         }
 
-        private async void LoadSavedState_Click(object sender, RoutedEventArgs e)
+        private async void LoadSavedStateMenuItem_Click(object sender, RoutedEventArgs e)
         {
             // If there is a valid rom, then load the state from the db
             if (GeneratedRom.IsValid(Rom))
@@ -744,7 +753,7 @@ namespace Randomizer.App
             }
         }
 
-        private async void SaveState_Click(object sender, RoutedEventArgs e)
+        private async Task SaveState()
         {
             // If there is a rom, save it to the database
             if (GeneratedRom.IsValid(Rom))
@@ -783,6 +792,11 @@ namespace Randomizer.App
             }
 
             SavedState.Invoke(this, null);
+        }
+
+        private async void SaveStateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveState();
         }
 
         private void StatusBarTimer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

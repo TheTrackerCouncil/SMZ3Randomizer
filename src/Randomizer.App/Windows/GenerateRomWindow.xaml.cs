@@ -31,7 +31,6 @@ namespace Randomizer.App
         private readonly Smz3Randomizer _randomizer;
         private readonly RomGenerator _romGenerator;
         private RandomizerOptions _options;
-        private TrackerWindow _trackerWindow;
 
         public GenerateRomWindow(IServiceProvider serviceProvider)
         {
@@ -122,18 +121,6 @@ namespace Randomizer.App
             Close();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!Options.GeneralOptions.Validate())
-            {
-                MessageBox.Show(this, "If this is your first time using the randomizer," +
-                    " there are some required options you need to configure before you " +
-                    "can start playing randomized SMZ3 games. Please do so now.",
-                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Information);
-                OptionsMenuItem_Click(this, new RoutedEventArgs());
-            }
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             try
@@ -144,12 +131,6 @@ namespace Randomizer.App
             {
                 // Oh well
             }
-        }
-
-        private void OptionsMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var optionsDialog = new OptionsWindow(Options.GeneralOptions);
-            optionsDialog.ShowDialog();
         }
 
         private void GenerateStatsButton_Click(object sender, RoutedEventArgs e)

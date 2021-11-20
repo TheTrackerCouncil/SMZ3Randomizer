@@ -231,6 +231,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task LoadAsync(Stream stream)
         {
+            IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
             state.Apply(this);
             OnStateLoaded();
@@ -243,6 +244,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns>True or false if the load was successful</returns>
         public bool Load(GeneratedRom rom)
         {
+            IsDirty = false;
             var state = TrackerState.Load(_dbContext, rom);
             if (state != null)
             {
@@ -260,6 +262,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns>A task representing the asynchronous operation.</returns>
         public Task SaveAsync(Stream destination)
         {
+            IsDirty = false;
             var state = TrackerState.TakeSnapshot(this);
             return state.SaveAsync(destination);
         }
@@ -271,6 +274,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns></returns>
         public Task SaveAsync(GeneratedRom rom)
         {
+            IsDirty = false;
             var state = TrackerState.TakeSnapshot(this);
             return state.SaveAsync(_dbContext, rom);
         }
@@ -757,6 +761,8 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            IsDirty = true;
+
             AddUndo(() =>
             {
                 undoTrack();
@@ -803,6 +809,8 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.UntrackedItem.Format(item.Name, item.NameWithArticle));
             }
 
+
+            IsDirty = true;
             OnItemTracked(new(null, confidence));
             AddUndo(() => item.TrackingState = originalTrackingState);
         }
@@ -827,6 +835,8 @@ namespace Randomizer.SMZ3.Tracking
             dungeon = GetDungeonFromItem(item, dungeon)!;
             if (TrackDungeonTreasure(dungeon, confidence))
                 undoTrackTreasure = _undoHistory.Pop();
+
+            IsDirty = true;
 
             // Check if we can remove something from the marked location
             var location = World.Locations
@@ -885,6 +895,8 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, area.GetName(), item.NameWithArticle));
             }
 
+            IsDirty = true;
+
             TrackItem(item, trackedAs, confidence, tryClear: false);
             if (locations.Count == 1)
             {
@@ -913,6 +925,8 @@ namespace Randomizer.SMZ3.Tracking
             SassIfItemIsWrong(item, location, confidence);
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
+
+            IsDirty = true;
 
             var undoClear = _undoHistory.Pop();
             var undoTrack = _undoHistory.Pop();
@@ -948,6 +962,8 @@ namespace Randomizer.SMZ3.Tracking
             {
                 Say(Responses.UntrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Plural ?? $"{item.Name}s"));
             }
+
+            IsDirty = true;
 
             AddUndo(() => item.TrackingState = oldItemCount);
             OnItemTracked(new(null, confidence));
@@ -1053,6 +1069,8 @@ namespace Randomizer.SMZ3.Tracking
                 undoTrackDungeon = _undoHistory.Pop();
             }
 
+            IsDirty = true;
+
             AddUndo(() =>
             {
                 if (dungeon != null)
@@ -1110,6 +1128,8 @@ namespace Randomizer.SMZ3.Tracking
                 undoStopPegWorldMode = _undoHistory.Pop();
             }
 
+            IsDirty = true;
+
             AddUndo(() =>
             {
                 location.Cleared = false;
@@ -1157,6 +1177,8 @@ namespace Randomizer.SMZ3.Tracking
                     undoTrack = _undoHistory.Pop();
                 }
             }
+
+            IsDirty = true;
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
@@ -1213,6 +1235,8 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            IsDirty = true;
+
             OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
             {
@@ -1253,6 +1277,8 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.LocationMarked.Format(locationName, item.Name));
                 AddUndo(() => MarkedLocations.Remove(location.Id));
             }
+
+            IsDirty = true;
 
             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
         }
@@ -1422,6 +1448,8 @@ namespace Randomizer.SMZ3.Tracking
                 if (TrackDungeonTreasure(dungeon, confidence))
                     return _undoHistory.Pop();
             }
+
+            IsDirty = true;
 
             return null;
         }
@@ -1596,5 +1624,9 @@ namespace Randomizer.SMZ3.Tracking
             int Occurences(string name)
                 => allLocationNames!.Count(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
+
+        public bool IsDirty { get; set; }
     }
+
+
 }

@@ -9,7 +9,6 @@
         xmlns:smz3="clr-namespace:Randomizer.SMZ3;assembly=Randomizer.SMZ3"
         d:DataContext="{d:DesignInstance vm:RandomizerOptions, IsDesignTimeCreatable=True}"
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
         Closing="Window_Closing"
         Title="SMZ3 Cas' Randomizer"
         Width="{Binding WindowWidth, Mode=TwoWay}"
