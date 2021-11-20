@@ -41,39 +41,22 @@
       </Menu>
     </Border>
 
-    <Grid Grid.Row="1"
-          Grid.IsSharedSizeScope="True">
-      <!--
-      <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding RomsList}"
-                    BorderThickness="0"
-                    Margin="2,0,0,11">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <Grid Margin="0,10">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                  <RowDefinition/>
-                  <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="{Binding NameLabel}" Grid.Row="0" />
-                <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"/>
-                <TextBlock Text="{Binding NameLabel}" Grid.Row="1" Grid.Column="0" />
-                <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" />
-              </Grid>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-      -->
-
+    <Grid Grid.Row="1" Grid.IsSharedSizeScope="True">
       <ListView Name="RomsList" ItemsSource="{Binding RomsList}" SelectionMode="Single">
         <ListView.ItemTemplate>
           <DataTemplate>
             <Grid Margin="0,2">
+              <Grid.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="Play" Tag="{Binding Rom}" Click="PlayMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Open Folder" Tag="{Binding Rom}" Click="OpenFolderMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Open Tracker" Tag="{Binding Rom}" Click="OpenTrackerMenuItem_Click"></MenuItem>
+                  <MenuItem Header="View Spoiler Log" Tag="{Binding Rom}" Click="ViewSpoilerMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Edit Label" Tag="{Binding Rom}" Click="EditLabelMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Copy Seed" Tag="{Binding Rom}" Click="CopySeedMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Delete Rom" Tag="{Binding Rom}" Click="DeleteRomMenuItem_Click"></MenuItem>
+                </ContextMenu>
+              </Grid.ContextMenu>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />

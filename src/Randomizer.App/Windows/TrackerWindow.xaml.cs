@@ -661,9 +661,9 @@ namespace Randomizer.App
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(Tracker.IsDirty)
+            if (Tracker.IsDirty)
             {
-                if(MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
+                if (MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) ==  MessageBoxResult.Yes)
                 {
                     await SaveState();
