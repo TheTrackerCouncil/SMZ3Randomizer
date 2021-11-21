@@ -36,5 +36,10 @@ namespace Randomizer.SMZ3.Tracking
         /// Indicates whether the peg has been pegged.
         /// </summary>
         public bool Pegged { get; set; }
+
+        public Peg Clone()
+        {
+            return (Peg)MemberwiseClone();
+        }
     }
 }

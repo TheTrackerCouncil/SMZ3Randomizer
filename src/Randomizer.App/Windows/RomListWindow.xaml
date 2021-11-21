@@ -66,10 +66,34 @@
                 <RowDefinition/>
                 <RowDefinition/>
               </Grid.RowDefinitions>
-              <TextBlock Text="{Binding NameLabel}" Grid.Row="0" />
-              <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,8,0"/>
-              <TextBlock Text="{Binding SeedLabel}" Grid.Row="1" Grid.Column="0" />
-              <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,8,0" />
+              <TextBox Text="{Binding Name, Mode=OneWay}" Name="EditLabelTextBox" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Top" Visibility="Collapsed" LostFocus="EditLabelTextBox_LostFocus" KeyDown="EditLabelTextBox_KeyDown" Tag="{Binding Rom}">
+                <TextBox.Style>
+                  <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                    <Style.Resources>
+                      <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                        <VisualBrush.Visual>
+                          <Label Content="Label" Foreground="LightGray" VerticalAlignment="Center" />
+                        </VisualBrush.Visual>
+                      </VisualBrush>
+                    </Style.Resources>
+                    <Style.Triggers>
+                      <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                      </Trigger>
+                      <Trigger Property="Text" Value="{x:Null}">
+                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                      </Trigger>
+                      <Trigger Property="IsKeyboardFocused" Value="True">
+                        <Setter Property="Background" Value="White" />
+                      </Trigger>
+                    </Style.Triggers>
+                  </Style>
+                </TextBox.Style>
+              </TextBox>
+              <TextBlock Text="{Binding NameLabel}" Name="LabelTextBlock" Grid.Row="0" />
+              <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" TextAlignment="Right" Margin="0,0,8,0"/>
+              <TextBlock Text="{Binding LocationsLabel}" Grid.Row="1" Grid.Column="0" />
+              <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" Margin="0,0,8,0" TextAlignment="Right" />
               <DockPanel Grid.Column="2" Grid.RowSpan="2">
                 <Button Margin="0,0,0,0" Click="LaunchButton_Click" Tag="{Binding Rom}">Launch</Button>
               </DockPanel>
@@ -88,11 +112,6 @@
     <Border Grid.Row="2"
             Style="{StaticResource BottomPanel}">
       <Grid>
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Left">
-          <Button x:Name="StartTracker"
-                  Click="StartTracker_Click">Start _tracker</Button>
-        </StackPanel>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
           <Button x:Name="QuickGenerate"

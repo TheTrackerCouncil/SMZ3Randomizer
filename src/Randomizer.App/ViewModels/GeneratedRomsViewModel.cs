@@ -16,11 +16,11 @@ namespace Randomizer.App.ViewModels
             {
                 RomsList = new()
                 {
-                    new(new GeneratedRom() { Label = "Test1", Date = DateTimeOffset.Now, Value = "12345", TrackerState = new TrackerState() { SecondsElapsed = 342.54 } }),
-                    new(new GeneratedRom() { Date = DateTimeOffset.UtcNow, Value = "45623" }),
-                    new(new GeneratedRom() { Label = "Test2", Date = DateTimeOffset.UtcNow, Value = "5634" }),
-                    new(new GeneratedRom() { Date = DateTimeOffset.UtcNow, TrackerState = new TrackerState() { SecondsElapsed = 4245.64 } }),
-                    new(new GeneratedRom() { Label = "Test3", Date = DateTimeOffset.UtcNow, Value = "4564656423" })
+                    new(new GeneratedRom() { Label = "Test1", Date = DateTimeOffset.Now, Seed = "12345", TrackerState = new TrackerState() { SecondsElapsed = 342.54 , PercentageCleared = 54 } }),
+                    new(new GeneratedRom() { Date = DateTimeOffset.UtcNow, Seed = "45623" }),
+                    new(new GeneratedRom() { Label = "Test2", Date = DateTimeOffset.UtcNow, Seed = "5634" }),
+                    new(new GeneratedRom() { Date = DateTimeOffset.UtcNow, Seed = "234" , TrackerState = new TrackerState() { SecondsElapsed = 4245.64 , PercentageCleared = 20 } }),
+                    new(new GeneratedRom() { Label = "Test3", Date = DateTimeOffset.UtcNow, Seed = "4564656423" })
                 };
             }
         }
@@ -55,9 +55,19 @@ namespace Randomizer.App.ViewModels
 
         public GeneratedRom Rom { get; }
 
-        public string NameLabel => string.IsNullOrEmpty(Rom.Label) ? $"Seed: {Rom.Value}" : Rom.Label;
+        public string TextBoxName => $"EditLabelTextBox{Rom.Id}";
+        public string Name => Rom.Label;
 
-        public string SeedLabel => string.IsNullOrEmpty(Rom.Label) ? "" : $"Seed: {Rom.Value}";
+        public string NameLabel => string.IsNullOrEmpty(Rom.Label) ? $"Seed: {Rom.Seed}" : Rom.Label;
+
+        public string LocationsLabel
+        {
+            get
+            {
+                if (Rom.TrackerState == null) return "";
+                return $"Cleared: {Rom.TrackerState.PercentageCleared}%";
+            }
+        }
 
         public string TimeLabel
         {
@@ -76,7 +86,7 @@ namespace Randomizer.App.ViewModels
                 var duration = timeSpan.Hours > 0
                     ? timeSpan.ToString("h':'mm':'ss")
                     : timeSpan.ToString("mm':'ss");
-                return $"Tracked Duration: {duration}";
+                return $"Duration: {duration}";
             }
         }
     }

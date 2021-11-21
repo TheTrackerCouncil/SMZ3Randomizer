@@ -63,9 +63,9 @@ namespace Randomizer.SMZ3.Tracking
             _dbContext = dbContext;
 
             // Initialize the tracker configuration
-            Items = config.Items.ToImmutableList();
-            Pegs = config.Pegs.ToImmutableList();
-            Dungeons = config.Dungeons.ToImmutableList();
+            Items = config.Items.Select(x => x.Clone()).ToImmutableList();
+            Pegs = config.Pegs.Select(x => x.Clone()).ToImmutableList();
+            Dungeons = config.Dungeons.Select(x => x.Clone()).ToImmutableList();
             Responses = config.Responses;
             World = worldAccessor.GetWorld();
             GetTreasureCounts(Dungeons, World);
@@ -1626,6 +1626,7 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         public bool IsDirty { get; set; }
+
     }
 
 

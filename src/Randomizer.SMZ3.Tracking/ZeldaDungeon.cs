@@ -135,5 +135,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Region GetRegion(World world)
             => world.Regions.Single(Is);
+
+        public ZeldaDungeon Clone()
+        {
+            return (ZeldaDungeon)MemberwiseClone();
+        }
     }
 }

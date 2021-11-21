@@ -65,18 +65,16 @@ namespace Randomizer.App
 
         protected static void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddSingleton<RandomizerContext>();
-
             // Randomizer + Tracker
+            services.AddSingleton<RandomizerContext>();
             services.AddSingleton<IFiller, StandardFiller>();
             services.AddSingleton<Smz3Randomizer>();
             services.AddTracker<Smz3Randomizer>()
                 .AddOptionalModule<PegWorldModeModule>();
+            services.AddSingleton<RomGenerator>();
+            services.AddScoped<TrackerLocationSyncer>();
 
             // WPF
-            services.AddScoped<TrackerLocationSyncer>();
-            services.AddSingleton<RomGenerator>();
             services.AddSingleton<OptionsFactory>();
             services.AddSingleton<RomListWindow>();
             services.AddSingleton<GenerateRomWindow>();

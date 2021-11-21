@@ -539,7 +539,7 @@ namespace Randomizer.App
             // If a rom was passed in, generate its seed to populate all locations and items
             if (GeneratedRom.IsValid(Rom))
             {
-                _romGenerator.GenerateSeed(Options, Rom.Value);
+                _romGenerator.GenerateSeed(Options, Rom.Seed);
             }
 
             InitializeTracker();
@@ -547,7 +547,7 @@ namespace Randomizer.App
             RefreshGridItems();
 
             // If a rom was passed in with a valid tracker state, reload the state from the database
-            if (GeneratedRom.IsValid(Rom) && Rom.TrackerState != null)
+            if (GeneratedRom.IsValid(Rom))
             {
                 Tracker.Load(Rom);
             }

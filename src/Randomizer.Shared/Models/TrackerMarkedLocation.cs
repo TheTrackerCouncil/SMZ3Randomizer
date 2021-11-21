@@ -6,7 +6,7 @@ namespace Randomizer.Shared.Models {
     public class TrackerMarkedLocation
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public long Id { get; set; }
         public TrackerState TrackerState { get; set; }
         public int LocationId { get; set; }
         public string ItemName { get; set; }

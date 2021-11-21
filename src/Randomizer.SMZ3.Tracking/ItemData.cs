@@ -222,5 +222,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <returns>A string representing the item.</returns>
         public override string ToString() => Name[0];
+
+        public ItemData Clone()
+        {
+            return (ItemData)MemberwiseClone();
+        }
     }
 }

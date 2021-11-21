@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -167,15 +168,14 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// 
+        /// Launches the about menu
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var aboutWindow = _serviceProvider.GetRequiredService<AboutWindow>();
-            aboutWindow.Owner = this;
-            aboutWindow.ShowDialog();
+            var optionsDialog = new AboutWindow();
+            optionsDialog.ShowDialog();
         }
 
         /// <summary>
@@ -372,7 +372,61 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void EditLabelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (sender is not MenuItem menuItem)
+                return;
+
+            if (menuItem.Parent is not ContextMenu contextMenu)
+                return;
+
+            if (contextMenu.PlacementTarget is not Grid grid)
+                return;
+
+            ShowEditTextBox(grid);
+        }
+
+        /// <summary>
+        /// Toggles the edit textbox and hides the textblock for a rom for editing the label
+        /// </summary>
+        /// <param name="grid">The grid that houses both the textbox and textblock for the rom</param>
+        private void ShowEditTextBox(Grid grid)
+        {
+            if (grid.FindName("EditLabelTextBox") is not TextBox editLabelTextBox)
+                return;
+
+            if (grid.FindName("LabelTextBlock") is not TextBlock labelTextBlock)
+                return;
+
+            labelTextBlock.Visibility = Visibility.Collapsed;
+            editLabelTextBox.Visibility = Visibility.Visible;
+            editLabelTextBox.Focus();
+        }
+
+        /// <summary>
+        /// Updates the name for a rom and toggles the visibility for the textbox and textblock
+        /// </summary>
+        /// <param name="grid">The grid that houses both the textbox and textblock for the rom</param>
+        private void UpdateName(Grid grid)
+        {
+            if (grid.FindName("EditLabelTextBox") is not TextBox editLabelTextBox)
+                return;
+
+            if (grid.FindName("LabelTextBlock") is not TextBlock labelTextBlock)
+                return;
+
+            if (editLabelTextBox.Tag is not GeneratedRom rom)
+                return;
+
+            labelTextBlock.Visibility = Visibility.Visible;
+            editLabelTextBox.Visibility = Visibility.Collapsed;
+
+            var newName = editLabelTextBox.Text;
+            if (rom.Label != newName)
+            {
+                rom.Label = newName;
+                _dbContext.SaveChanges();
+                UpdateRomList();
+            }
+
         }
 
         /// <summary>
@@ -388,7 +442,7 @@ namespace Randomizer.App
             if (menuItem.Tag is not GeneratedRom rom)
                 return;
 
-            Clipboard.SetText(rom.Value);
+            Clipboard.SetText(rom.Seed);
         }
 
         /// <summary>
@@ -444,6 +498,41 @@ namespace Randomizer.App
             }
 
             UpdateRomList();
+        }
+
+        /// <summary>
+        /// Updates the label for a rom when clicking away from the text box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EditLabelTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is not TextBox textBox)
+                return;
+
+            if (textBox.Parent is not Grid grid)
+                return;
+
+            UpdateName(grid);
+        }
+
+        /// <summary>
+        /// Updates the label for a rom when pressing enter/return
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EditLabelTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Return)
+                return;
+
+            if (sender is not TextBox textBox)
+                return;
+
+            if (textBox.Parent is not Grid grid)
+                return;
+
+            UpdateName(grid);
         }
     }
 }

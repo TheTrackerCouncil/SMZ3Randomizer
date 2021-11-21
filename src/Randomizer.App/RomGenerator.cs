@@ -182,7 +182,7 @@ namespace Randomizer.App
 
             _dbContext.GeneratedRoms.Add(new GeneratedRom()
             {
-                Value = seed.Seed,
+                Seed = seed.Seed,
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,

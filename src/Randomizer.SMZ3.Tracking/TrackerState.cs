@@ -195,7 +195,7 @@ namespace Randomizer.SMZ3.Tracking
 
             var secondsElapsed = trackerState.SecondsElapsed;
 
-            var config = generatedRom == null ? new Config() : JsonSerializer.Deserialize<Config>(generatedRom.Settings, s_options);
+            var config = GeneratedRom.IsValid(generatedRom) ? JsonSerializer.Deserialize<Config>(generatedRom.Settings, s_options) : new Config();
 
             return new TrackerState(
                 itemStates,
@@ -287,12 +287,21 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns></returns>
         public Task SaveAsync(RandomizerContext dbContext, GeneratedRom rom)
         {
+            var totalLocations = LocationStates.Count;
+            var clearedLocations = LocationStates
+                .Where(x => x.Cleared)
+                .Count();
+            var percCleared = (int)Math.Floor((double)clearedLocations / totalLocations * 100);
+
             if (rom.TrackerState == null)
             {
-                var trackerState = new Randomizer.Shared.Models.TrackerState()
+                
+                var trackerState = new Shared.Models.TrackerState()
                 {
-                    Date = DateTimeOffset.Now,
-                    SecondsElapsed = SecondsElapsed
+                    StartDateTime = DateTimeOffset.Now,
+                    UpdatedDateTime = DateTimeOffset.Now,
+                    SecondsElapsed = SecondsElapsed,
+                    PercentageCleared = percCleared
                 };
 
                 trackerState.ItemStates = ItemStates
@@ -365,8 +374,9 @@ namespace Randomizer.SMZ3.Tracking
                     })
                     .ToList();
 
-                trackerState.Date = DateTimeOffset.Now;
+                trackerState.UpdatedDateTime = DateTimeOffset.Now;
                 trackerState.SecondsElapsed = SecondsElapsed;
+                trackerState.PercentageCleared = percCleared;
             }
 
             return dbContext.SaveChangesAsync();

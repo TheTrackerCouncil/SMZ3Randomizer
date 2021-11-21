@@ -7,9 +7,11 @@ namespace Randomizer.Shared.Models {
     public class TrackerState
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public DateTimeOffset Date { get; set; }
+        public long Id { get; set; }
+        public DateTimeOffset StartDateTime { get; set; }
+        public DateTimeOffset UpdatedDateTime { get; set; }
         public double SecondsElapsed { get; set; }
+        public int PercentageCleared { get; set; }
         public ICollection<TrackerItemState> ItemStates { get; set; }
         public ICollection<TrackerLocationState> LocationStates { get; set; }
         public ICollection<TrackerRegionState> RegionStates { get; set; }
