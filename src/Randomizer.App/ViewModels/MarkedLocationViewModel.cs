@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using Accessibility;
 
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App.ViewModels
 {
@@ -17,25 +17,25 @@ namespace Randomizer.App.ViewModels
     {
         private readonly Location _location;
         private readonly ItemData _itemData;
-        private readonly Progression _progression;
+        private readonly TrackerLocationSyncer _syncer;
 
-        public MarkedLocationViewModel(Location location, ItemData itemData, Progression progression)
+        public MarkedLocationViewModel(Location location, ItemData itemData, TrackerLocationSyncer syncer)
         {
             _location = location;
             _itemData = itemData;
-            _progression = progression;
+            _syncer = syncer;
             var fileName = TrackerWindow.GetItemSpriteFileName(itemData);
             ItemSprite = fileName != null ? new BitmapImage(new Uri(fileName)) : null;
         }
 
         public ImageSource ItemSprite { get; }
 
-        public double Opacity => _location.IsAvailable(_progression) ? 1.0 : 0.33;
+        public double Opacity => _syncer.IsLocationClearable(_location) ? 1.0 : 0.33;
 
         public string Item => _itemData.Name;
 
-        public string Location => _location.Room != null ? $"{_location.Room.Name} {_location.Name}" : _location.Name;
+        public string Location => _syncer.GetName(_location);
 
-        public string Area => _location.Region.ToString();
+        public string Area => _syncer.GetName(_location.Region);
     }
 }

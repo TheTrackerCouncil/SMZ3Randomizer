@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-using Randomizer.SMZ3.Tracking.Converters;
+using Randomizer.SMZ3.Tracking.Configuration.Converters;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Represents a peg in Peg World mode.

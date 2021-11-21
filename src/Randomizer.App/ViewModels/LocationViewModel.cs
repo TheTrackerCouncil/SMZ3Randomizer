@@ -20,9 +20,9 @@ namespace Randomizer.App.ViewModels
             _syncer = syncer;
         }
 
-        public string Name => _location.Room != null ? $"{_location.Room.Name} - {_location.Name}" : _location.Name;
+        public string Name => _syncer.GetName(_location);
 
-        public string Area => _location.Region.ToString();
+        public string Area => _syncer.GetName(_location.Region);
 
         public bool InLogic => _location.IsAvailable(_syncer.Progression);
 

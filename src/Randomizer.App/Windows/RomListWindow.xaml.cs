@@ -65,6 +65,10 @@ namespace Randomizer.App
                 {
                     CanStartTracker = false;
                 }
+                else
+                {
+                    CanStartTracker = true;
+                }
             }
             catch (Exception ex)
             {

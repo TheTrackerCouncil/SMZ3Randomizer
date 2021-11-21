@@ -4,6 +4,8 @@ using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 
+using Randomizer.SMZ3.Tracking.Configuration;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -37,7 +39,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (tracker, result) =>
             {
-                ZeldaDungeon dungeon;
+                DungeonInfo dungeon;
                 if (result.Semantics.ContainsKey(DungeonKey))
                     dungeon = GetDungeonFromResult(tracker, result);
                 else if (result.Semantics.ContainsKey(BossKey))

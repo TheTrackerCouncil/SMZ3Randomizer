@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3
         /// <summary>
         /// Gets a collection of every location in the region.
         /// </summary>
-        public IEnumerable<Location> Locations => GetLocations()
+        public IEnumerable<Location> Locations => GetStandaloneLocations()
             .Concat(GetRooms().SelectMany(x => x.GetLocations()));
 
         /// <summary>
@@ -116,7 +116,15 @@ namespace Randomizer.SMZ3
             return true;
         }
 
-        protected IEnumerable<Location> GetLocations()
+        /// <summary>
+        /// Returns a collection of all locations in this region that are not
+        /// part of a room.
+        /// </summary>
+        /// <returns>
+        /// A collection of <see cref="Location"/> that do not exist in <see
+        /// cref="Rooms"/>.
+        /// </returns>
+        public IEnumerable<Location> GetStandaloneLocations()
             => GetType().GetPropertyValues<Location>(this);
 
         protected IEnumerable<Room> GetRooms()

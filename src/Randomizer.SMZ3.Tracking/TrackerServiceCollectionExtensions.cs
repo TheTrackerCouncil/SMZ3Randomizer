@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>
     /// Provides methods for adding tracking services to a service collection.
@@ -43,9 +44,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetTrackerConfig();
             });
+            services.AddSingleton(serviceProvider =>
+            {
+                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                return configProvider.GetLocationConfig();
+            });
 
             services.AddScoped<TrackerFactory>();
-            services.AddScoped<Tracker>(serviceProvider =>
+            services.AddScoped(serviceProvider =>
             {
                 var factory = serviceProvider.GetRequiredService<TrackerFactory>();
                 return factory.Instance ?? throw new InvalidOperationException("Cannot resolve Tracker instance before TrackerFactory.Create has been called.");

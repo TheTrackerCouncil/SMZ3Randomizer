@@ -70,6 +70,7 @@ Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\{#MyAppExeName
 Source: "..\src\Randomizer.App\Sprites\*"; DestDir: "{app}\Sprites"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\src\Randomizer.SMZ3.Tracking\tracker.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
+Source: "..\src\Randomizer.SMZ3.Tracking\locations.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

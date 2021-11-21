@@ -23,7 +23,9 @@ using Randomizer.App.ViewModels;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App
 {
@@ -323,7 +325,7 @@ namespace Randomizer.App
                 {
                     Tracker.TrackItem(item);
                 }
-                else if (image.Tag is ZeldaDungeon dungeon)
+                else if (image.Tag is DungeonInfo dungeon)
                 {
                     Tracker.MarkDungeonAsCleared(dungeon);
                 }
@@ -379,8 +381,8 @@ namespace Randomizer.App
             };
             if (medallion != Medallion.None)
             {
-                var turtleRock = Tracker.Dungeons.Single(x => x.Name.Contains("Turtle Rock", StringComparison.OrdinalIgnoreCase));
-                var miseryMire = Tracker.Dungeons.Single(x => x.Name.Contains("Misery Mire", StringComparison.OrdinalIgnoreCase));
+                var turtleRock = Tracker.WorldInfo.Dungeon<TurtleRock>();
+                var miseryMire = Tracker.WorldInfo.Dungeon<MiseryMire>();
 
                 var requiredByNone = new MenuItem
                 {
@@ -487,7 +489,7 @@ namespace Randomizer.App
             return menu.Items.Count > 0 ? menu : null;
         }
 
-        private ContextMenu CreateContextMenu(ZeldaDungeon dungeon)
+        private ContextMenu CreateContextMenu(DungeonInfo dungeon)
         {
             var menu = new ContextMenu
             {

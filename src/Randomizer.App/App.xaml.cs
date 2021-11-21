@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.App
