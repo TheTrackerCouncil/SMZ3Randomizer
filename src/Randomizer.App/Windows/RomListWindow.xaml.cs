@@ -49,6 +49,8 @@ namespace Randomizer.App
         public GeneratedRomsViewModel Model { get; }
         public RandomizerOptions Options { get; }
 
+        protected bool CanStartTracker { get; set; }
+
         /// <summary>
         /// Verifies that speech recognition is working
         /// </summary>
@@ -61,15 +63,13 @@ namespace Randomizer.App
                     installedRecognizers.Count, string.Join(", ", installedRecognizers.Select(x => x.Description)));
                 if (installedRecognizers.Count == 0)
                 {
-                    StartTracker.IsEnabled = false;
-                    StartTracker.ToolTip = "No speech recognition capabilities detected. Please check Windows settings under Time & Language > Speech.";
+                    CanStartTracker = false;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error occurred while checking speech recognition capabilities.");
-                StartTracker.IsEnabled = false;
-                StartTracker.ToolTip = "An error occurred while checking speech recognition capabilities. Please check the randomizer log file and ensure the Windows settings under Time & Language > Speech are correct.";
+                CanStartTracker = false;
             }
         }
 
@@ -216,6 +216,11 @@ namespace Randomizer.App
         /// <param name="rom">The rom to open tracker for</param>
         private void LaunchTracker(GeneratedRom rom)
         {
+            if (!CanStartTracker)
+            {
+                MessageBox.Show(this, $"No speech recognition capabilities detected. Please check Windows settings under Time & Language > Speech.",
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
             try
             {
                 var scope = _serviceProvider.CreateScope();
