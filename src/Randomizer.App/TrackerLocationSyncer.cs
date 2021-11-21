@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 using Randomizer.SMZ3;
@@ -14,8 +12,9 @@ using Randomizer.SMZ3.Tracking.Configuration;
 namespace Randomizer.App
 {
     /// <summary>
-    /// This is a shared class that is meant to act as an intermediary between the tracker and the location/map windows
-    /// to keep everything in sync as well as clean up some of the logic in view models
+    /// This is a shared class that is meant to act as an intermediary between
+    /// the tracker and the location/map windows to keep everything in sync as
+    /// well as clean up some of the logic in view models
     /// </summary>
     public class TrackerLocationSyncer
     {
@@ -30,7 +29,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Creates a new instance of the TrackerLocationSyncer that will be synced with a given tracker
+        /// Creates a new instance of the TrackerLocationSyncer that will be
+        /// synced with a given tracker
         /// </summary>
         /// <param name="tracker">The tracker to keep things in sync with</param>
         public TrackerLocationSyncer(Tracker tracker)
@@ -72,18 +72,6 @@ namespace Randomizer.App
         public event PropertyChangedEventHandler MarkedLocationUpdated;
 
         /// <summary>
-        /// Calls the event handlers when a location has been updated somehow
-        /// </summary>
-        /// <param name="location">The name of the location that was updated</param>
-        /// <param name="updateToTrackedLocation">Whether a tracked location has been potentially updated</param>
-        /// <param name="updateToMarkedLocation">Whether a marked location has been potentially updated</param>
-        public void OnLocationUpdated(string location = null , bool updateToTrackedLocation = true, bool updateToMarkedLocation = true)
-        {
-            if (updateToTrackedLocation) TrackedLocationUpdated.Invoke(this, new(location));
-            if (updateToMarkedLocation) MarkedLocationUpdated.Invoke(this, new(location));
-        }
-
-        /// <summary>
         /// If out of logic locations should be displayed on the tracker
         /// </summary>
         public bool ShowOutOfLogicLocations
@@ -106,12 +94,37 @@ namespace Randomizer.App
 
         public IEnumerable<Location> AllClearableLocations => World.Locations.Where(x => IsLocationClearable(x)).ToImmutableList();
 
+        public Dictionary<int, ItemData> MarkedLocations => _tracker?.MarkedLocations;
+
         /// <summary>
-        /// Returns the regions sorted by the ones with highest number of accessible items, stickying the one that the user recently
+        /// Calls the event handlers when a location has been updated somehow
+        /// </summary>
+        /// <param name="location">
+        /// The name of the location that was updated
+        /// </param>
+        /// <param name="updateToTrackedLocation">
+        /// Whether a tracked location has been potentially updated
+        /// </param>
+        /// <param name="updateToMarkedLocation">
+        /// Whether a marked location has been potentially updated
+        /// </param>
+        public void OnLocationUpdated(string location = null, bool updateToTrackedLocation = true, bool updateToMarkedLocation = true)
+        {
+            if (updateToTrackedLocation) TrackedLocationUpdated.Invoke(this, new(location));
+            if (updateToMarkedLocation) MarkedLocationUpdated.Invoke(this, new(location));
+        }
+
+        /// <summary>
+        /// Returns the regions sorted by the ones with highest number of
+        /// accessible items, stickying the one that the user recently
         /// </summary>
         /// <param name="filter">LocationFilter for SM or Z3</param>
-        /// <param name="applyStickyRegion">If the region the player updated last should be stickied at the top</param>
-        /// <returns>A list of all regions sorted by the regions with the most items</returns>
+        /// <param name="applyStickyRegion">
+        /// If the region the player updated last should be stickied at the top
+        /// </param>
+        /// <returns>
+        /// A list of all regions sorted by the regions with the most items
+        /// </returns>
         public IEnumerable<Region> GetTopRegions(LocationFilter filter = LocationFilter.None, bool applyStickyRegion = true)
         {
             var regions = World.Regions
@@ -126,11 +139,16 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Returns the locations sorted by regions with the highest number of accessible items
+        /// Returns the locations sorted by regions with the highest number of
+        /// accessible items
         /// </summary>
         /// <param name="filter">LocationFilter for SM or Z3</param>
-        /// <param name="applyStickyRegion">If the region the player updated last should be sticked at the top</param>
-        /// <returns>A list of all locations sorted by the regions with the most items</returns>
+        /// <param name="applyStickyRegion">
+        /// If the region the player updated last should be sticked at the top
+        /// </param>
+        /// <returns>
+        /// A list of all locations sorted by the regions with the most items
+        /// </returns>
         public IEnumerable<Location> GetTopLocations(LocationFilter filter = LocationFilter.None, bool applyStickyRegion = true)
         {
             return GetTopRegions(filter, applyStickyRegion).SelectMany(x => x.Locations)
@@ -142,9 +160,16 @@ namespace Randomizer.App
         /// Returns if a SMZ3 location is currently accessible
         /// </summary>
         /// <param name="location">The location to check</param>
-        /// <param name="allowOutOfLogic">If out of logic checks should be returned, assuming the option is enabled</param>
-        /// <param name="requireKeys">If we should check for required keys for this location or not</param>
-        /// <returns>True if a location is accessible given settings, false otherwise</returns>
+        /// <param name="allowOutOfLogic">
+        /// If out of logic checks should be returned, assuming the option is
+        /// enabled
+        /// </param>
+        /// <param name="requireKeys">
+        /// If we should check for required keys for this location or not
+        /// </param>
+        /// <returns>
+        /// True if a location is accessible given settings, false otherwise
+        /// </returns>
         public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
             return !location.Cleared
@@ -179,8 +204,13 @@ namespace Randomizer.App
         /// Clears an entire region/area
         /// </summary>
         /// <param name="region">The region to clear</param>
-        /// <param name="trackItems">If items in the region should be tracked or not</param>
-        /// <param name="assumeKeys">Set to true if keys should be ignored in the logic for clearing locations</param>
+        /// <param name="trackItems">
+        /// If items in the region should be tracked or not
+        /// </param>
+        /// <param name="assumeKeys">
+        /// Set to true if keys should be ignored in the logic for clearing
+        /// locations
+        /// </param>
         public void ClearRegion(Region region, bool trackItems = false, bool assumeKeys = false)
         {
             if (region.Name == "Hyrule Castle")
@@ -191,7 +221,36 @@ namespace Randomizer.App
             _tracker.ClearArea(region, trackItems, false, null, assumeKeys);
         }
 
-        public Dictionary<int, ItemData> MarkedLocations =>  _tracker?.MarkedLocations;
+        /// <summary>
+        /// Gets the primary name for the specified location.
+        /// </summary>
+        /// <param name="location">
+        /// The location whose configured name to find.
+        /// </param>
+        /// <returns>
+        /// The first name configured for <paramref name="location"/>.
+        /// </returns>
+        public string GetName(Location location) => _tracker.WorldInfo.Location(location).Name[0];
+
+        /// <summary>
+        /// Gets the primary name for the specified room.
+        /// </summary>
+        /// <param name="room">The room whose configured name to find.</param>
+        /// <returns>
+        /// The first name configured for <paramref name="room"/>.
+        /// </returns>
+        public string GetName(Room room) => _tracker.WorldInfo.Room(room).Name[0];
+
+        /// <summary>
+        /// Gets the primary name for the specified region.
+        /// </summary>
+        /// <param name="region">
+        /// The region whose configured name to find.
+        /// </param>
+        /// <returns>
+        /// The first name configured for <paramref name="region"/>.
+        /// </returns>
+        public string GetName(Region region) => _tracker.WorldInfo.Region(region).Name[0];
 
         /// <summary>
         /// Returns if a given region matches the LocationFilter
