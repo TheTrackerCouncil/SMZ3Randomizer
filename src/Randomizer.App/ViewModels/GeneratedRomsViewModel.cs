@@ -8,20 +8,23 @@ using Randomizer.Shared.Models;
 
 namespace Randomizer.App.ViewModels
 {
+    /// <summary>
+    /// Class for the generated roms list window
+    /// </summary>
     public class GeneratedRomsViewModel : INotifyPropertyChanged
     {
         public GeneratedRomsViewModel()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
-                RomsList = new();
-                /*{
-                    new(new GeneratedRom() { Label = "Test1", Date = DateTimeOffset.Now, Seed = "12345", TrackerState = new TrackerState() { SecondsElapsed = 342.54 , PercentageCleared = 54 } }),
+                RomsList = new()
+                {
+                    new(new GeneratedRom() { Label = "Test1", Date = DateTimeOffset.Now, Seed = "12345", TrackerState = new TrackerState() { SecondsElapsed = 342.54, PercentageCleared = 54 } }),
                     new(new GeneratedRom() { Date = DateTimeOffset.UtcNow, Seed = "45623" }),
                     new(new GeneratedRom() { Label = "Test2", Date = DateTimeOffset.UtcNow, Seed = "5634" }),
-                    new(new GeneratedRom() { Date = DateTimeOffset.UtcNow, Seed = "234" , TrackerState = new TrackerState() { SecondsElapsed = 4245.64 , PercentageCleared = 20 } }),
+                    new(new GeneratedRom() { Date = DateTimeOffset.UtcNow, Seed = "234", TrackerState = new TrackerState() { SecondsElapsed = 4245.64, PercentageCleared = 20 } }),
                     new(new GeneratedRom() { Label = "Test3", Date = DateTimeOffset.UtcNow, Seed = "4564656423" })
-                };*/
+                };
             }
         }
 
@@ -50,6 +53,9 @@ namespace Randomizer.App.ViewModels
         }
     }
 
+    /// <summary>
+    /// Class for an individual entry for a generated rom
+    /// </summary>
     public class GeneratedRomViewModel
     {
         public GeneratedRomViewModel(GeneratedRom rom)

@@ -16,6 +16,9 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class GeneralOptions
     {
+        /// <summary>
+        /// Converts the enum descriptions into a string array for displaying in a dropdown
+        /// </summary>
         public static IEnumerable<string> QuickLaunchOptions
         {
             get
@@ -64,6 +67,9 @@ namespace Randomizer.App.ViewModels
         };
     }
 
+    /// <summary>
+    /// Enum for the launch button options
+    /// </summary>
     public enum LaunchButtonOptions
     {
         [Description("Play Rom and Open Tracker")]

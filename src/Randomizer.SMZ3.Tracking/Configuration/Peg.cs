@@ -37,6 +37,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         public bool Pegged { get; set; }
 
+        /// <summary>
+        /// Creates a copy of the Peg data
+        /// </summary>
+        /// <returns>The copied Peg data</returns>
         public Peg Clone()
         {
             return (Peg)MemberwiseClone();

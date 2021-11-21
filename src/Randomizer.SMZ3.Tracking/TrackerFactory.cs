@@ -1,9 +1,7 @@
-﻿using System;
-
+﻿
 using Microsoft.Extensions.Logging;
-
-using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -33,6 +31,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Used to provide the tracking speech recognition syntax.
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
+        /// <param name="dbContext">The database context object</param>
         public TrackerFactory(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,

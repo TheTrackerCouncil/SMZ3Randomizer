@@ -218,6 +218,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             return region.Locations.ToImmutableList();
         }
 
+        /// <summary>
+        /// Creates a copy of the DungeonInfo
+        /// </summary>
+        /// <returns>The copied DungeonInfo</returns>
         public DungeonInfo Clone()
         {
             return (DungeonInfo)MemberwiseClone();

@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
-using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.FileData;
@@ -13,24 +12,29 @@ using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.App
 {
+    /// <summary>
+    /// Class to handle generating roms 
+    /// </summary>
     public class RomGenerator
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly RandomizerContext _dbContext;
         private readonly Smz3Randomizer _randomizer;
-        private readonly ILogger<GenerateRomWindow> _logger;
 
-        public RomGenerator(IServiceProvider serviceProvider,
-            Smz3Randomizer randomizer,
-            ILogger<GenerateRomWindow> logger,
+        public RomGenerator(Smz3Randomizer randomizer,
             RandomizerContext dbContext)
         {
-            _serviceProvider = serviceProvider;
             _randomizer = randomizer;
-            _logger = logger;
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Generates a rom and returns details about the rom
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="path">The path to the rom</param>
+        /// <param name="error">Any error message from generating the rom</param>
+        /// <param name="rom">The db entry for the rom</param>
+        /// <returns>True if the rom was generated successfully, false otherwise</returns>
         public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
         {
             var bytes = GenerateRomBytes(options, out var seed);
@@ -57,6 +61,12 @@ namespace Randomizer.App
 
         }
 
+        /// <summary>
+        /// Uses the options to generate the rom
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="seed">The generated seed data</param>
+        /// <returns>The bytes of the rom file</returns>
         protected byte[] GenerateRomBytes(RandomizerOptions options, out SeedData seed)
         {
             seed = GenerateSeed(options);
@@ -79,12 +89,24 @@ namespace Randomizer.App
             return rom;
         }
 
+        /// <summary>
+        /// Generates a seed for a rom based on the given randomizer options
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="seed">The string seed to use for generating the rom</param>
+        /// <returns>The seed data</returns>
         public SeedData GenerateSeed(RandomizerOptions options, string seed = null)
         {
             var config = options.ToConfig();
             return _randomizer.GenerateSeed(config, seed ?? options.SeedOptions.Seed, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Gets the spoiler log of a given seed 
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="seed">The previously generated seed data</param>
+        /// <returns>The string output of the spoiler log file</returns>
         private string GetSpoilerLog(RandomizerOptions options, SeedData seed)
         {
             var log = new StringBuilder();
@@ -126,9 +148,23 @@ namespace Randomizer.App
             return log.ToString();
         }
 
+        /// <summary>
+        /// Underlines text in the spoiler log
+        /// </summary>
+        /// <param name="text">The text to be underlined</param>
+        /// <param name="line">The character to use for underlining</param>
+        /// <returns>The text to be underlined followed by the underlining text</returns>
         private static string Underline(string text, char line = '-')
             => text + "\n" + new string(line, text.Length);
 
+        /// <summary>
+        /// Enabled MSU support for a rom
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="rom">The bytes of the previously generated rom</param>
+        /// <param name="romPath">The path to the rom file</param>
+        /// <param name="error">Any error that was ran into when updating the rom</param>
+        /// <returns>True if successful, false otherwise</returns>
         private bool EnableMsu1Support(RandomizerOptions options, byte[] rom, string romPath, out string error)
         {
             var msuPath = options.PatchOptions.Msu1Path;
@@ -172,7 +208,15 @@ namespace Randomizer.App
             return true;
         }
 
-        protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, String romPath, string spoilerPath)
+        /// <summary>
+        /// Takes the given seed information and saves it to the database
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="seed">The generated seed data</param>
+        /// <param name="romPath">The path to the rom file</param>
+        /// <param name="spoilerPath">The path to the spoiler file</param>
+        /// <returns>The db entry for the generated rom</returns>
+        protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
             var jsonOptions = new JsonSerializerOptions
             {

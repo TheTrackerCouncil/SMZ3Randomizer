@@ -666,7 +666,7 @@ namespace Randomizer.App
             if (Tracker.IsDirty)
             {
                 if (MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
-                    MessageBoxButton.YesNo, MessageBoxImage.Warning) ==  MessageBoxResult.Yes)
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     await SaveState();
                 }

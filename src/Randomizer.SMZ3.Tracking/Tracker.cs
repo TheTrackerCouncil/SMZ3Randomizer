@@ -7,8 +7,6 @@ using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Threading;
 using System.Threading.Tasks;
-
-using BunLabs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
@@ -52,6 +50,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
+        /// <param name="dbContext">The database context</param>
         public Tracker(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
@@ -150,6 +149,9 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public IReadOnlyCollection<Peg> Pegs { get; }
 
+        /// <summary>
+        /// Get a collections of the dungeons for the world
+        /// </summary>
         public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
 
         /// <summary>
@@ -1649,9 +1651,12 @@ namespace Randomizer.SMZ3.Tracking
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
         }
 
+        /// <summary>
+        /// Get if the Tracker has been updated since it was last saved
+        /// </summary>
         public bool IsDirty { get; set; }
     }
 
-    
+
 
 }

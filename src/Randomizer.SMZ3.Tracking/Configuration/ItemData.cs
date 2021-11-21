@@ -223,6 +223,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <returns>A string representing the item.</returns>
         public override string ToString() => Name[0];
 
+        /// <summary>
+        /// Creates a copy of the ItemData
+        /// </summary>
+        /// <returns>The copied ItemData</returns>
         public ItemData Clone()
         {
             return (ItemData)MemberwiseClone();

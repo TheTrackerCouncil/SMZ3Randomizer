@@ -295,7 +295,7 @@ namespace Randomizer.SMZ3.Tracking
 
             if (rom.TrackerState == null)
             {
-                
+
                 var trackerState = new Shared.Models.TrackerState()
                 {
                     StartDateTime = DateTimeOffset.Now,
@@ -354,7 +354,10 @@ namespace Randomizer.SMZ3.Tracking
                     rom.Settings = JsonSerializer.Serialize(SeedConfig, s_options);
                 }
 
-                rom.TrackerState = trackerState;
+                if (rom != null)
+                {
+                    rom.TrackerState = trackerState;
+                }
                 dbContext.TrackerStates.Add(trackerState);
             }
             else
