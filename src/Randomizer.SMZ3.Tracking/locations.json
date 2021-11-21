@@ -211,7 +211,8 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
       "Name": [
-        "Palace of Darkness"
+        "Palace of Darkness",
+        "Palace of Dorkness"
       ]
     },
     {
@@ -287,7 +288,7 @@
       "LocationId": 376
     },
     {
-      "Name": [ "Palace of Darkness", "Dark Palace" ],
+      "Name": [ "Palace of Darkness", "Dark Palace", "Palace of Dorkness", "Dork Palace" ],
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
       "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
       "X": 1924,
@@ -456,13 +457,13 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower+DarkMazeRoom",
       "Name": [
-        "Dark Maze"
+        "Castle Tower Dark Maze"
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower+FoyerRoom",
       "Name": [
-        "Foyer"
+        "Castle Tower Foyer"
       ]
     },
     {
@@ -517,13 +518,13 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+BigKeyRoomRoom",
       "Name": [
-        "Big Key Room"
+        "Ganon's Tower Big Key Room"
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+CompassRoomRoom",
       "Name": [
-        "Compass Room"
+        "Ganon's Tower Compass Room"
       ]
     },
     {
@@ -535,20 +536,20 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+HopeRoomRoom",
       "Name": [
-        "Hope Room",
-        "Right Side First Room"
+        "Ganon's Tower Hope Room",
+        "Ganon's Tower Right Side First Room"
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+MiniHelmasaurRoomRoom",
       "Name": [
-        "Mini Helmasaur Room"
+        "Ganon's Tower Mini Helmasaur Room"
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+RandomizerRoomRoom",
       "Name": [
-        "Randomizer Room"
+        "Ganon's Tower Randomizer Room"
       ]
     },
     {
@@ -625,19 +626,19 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness+DarkBasementRoom",
       "Name": [
-        "Dark Basement"
+        "Palace of Darkness Dark Basement"
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness+DarkMazeRoom",
       "Name": [
-        "Dark Maze"
+        "Palace of Darkness Dark Maze"
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace+FloodedRoomRoom",
       "Name": [
-        "Flooded Room"
+        "Swamp Palace Flooded Room"
       ]
     },
     {
@@ -650,7 +651,7 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock+RollerRoomRoom",
       "Name": [
-        "Roller Room"
+        "Turtle Rock Roller Room"
       ]
     }
   ],
@@ -658,9 +659,7 @@
     {
       "Name": [
         "Chozo Ruins entrance",
-        [ "Central Crateria Chozo Ruins entrance", 0 ],
-        "Power Bomb (Crateria surface)",
-        [ "Central Crateria Power Bomb (Crateria surface)", 0 ]
+        [ "Power Bomb (Crateria surface)", 0 ]
       ],
       "X": 968,
       "Y": 116
@@ -669,11 +668,8 @@
       "Id": 1,
       "Name": [
         "Flooded Cavern - under water",
-        [ "East Crateria Flooded Cavern - under water", 0 ],
         "West Ocean - under water",
-        [ "East Crateria West Ocean - under water", 0 ],
-        "Missile (outside Wrecked Ship bottom)",
-        [ "East Crateria Missile (outside Wrecked Ship bottom)", 0 ]
+        [ "Missile (outside Wrecked Ship bottom)", 0 ]
       ],
       "X": 1128,
       "Y": 244
@@ -682,9 +678,7 @@
       "Id": 2,
       "Name": [
         "Sky Missile",
-        [ "East Crateria Sky Missile", 0 ],
-        "Missile (outside Wrecked Ship top)",
-        [ "East Crateria Missile (outside Wrecked Ship top)", 0 ]
+        [ "Missile (outside Wrecked Ship top)", 0 ]
       ],
       "X": 1160,
       "Y": 84
@@ -693,9 +687,7 @@
       "Id": 3,
       "Name": [
         "Morph Ball Maze",
-        [ "East Crateria Morph Ball Maze", 0 ],
-        "Missile (outside Wrecked Ship middle)",
-        [ "East Crateria Missile (outside Wrecked Ship middle)", 0 ]
+        [ "Missile (outside Wrecked Ship middle)", 0 ]
       ],
       "X": 1128,
       "Y": 148
@@ -704,11 +696,8 @@
       "Id": 4,
       "Name": [
         "The Moat",
-        [ "East Crateria The Moat", 0 ],
         "Interior Lake",
-        [ "East Crateria Interior Lake", 0 ],
-        "Missile (Crateria moat)",
-        [ "East Crateria Missile (Crateria moat)", 0 ]
+        [ "Missile (Crateria moat)", 0 ]
       ],
       "X": 1064,
       "Y": 212
@@ -717,9 +706,7 @@
       "Id": 5,
       "Name": [
         "Gauntlet (Chozo)",
-        [ "West Crateria Gauntlet (Chozo)", 0 ],
-        "Energy Tank, Gauntlet",
-        [ "West Crateria Energy Tank, Gauntlet", 0 ]
+        [ "Energy Tank, Gauntlet", 0 ]
       ],
       "X": 456,
       "Y": 148
@@ -728,11 +715,8 @@
       "Id": 6,
       "Name": [
         "Mother Brain's reliquary",
-        [ "Central Crateria Mother Brain's reliquary", 0 ],
         "Pit Room",
-        [ "Central Crateria Pit Room", 0 ],
-        "Missile (Crateria bottom)",
-        [ "Central Crateria Missile (Crateria bottom)", 0 ]
+        [ "Missile (Crateria bottom)", 0 ]
       ],
       "X": 552,
       "Y": 660
@@ -740,10 +724,9 @@
     {
       "Id": 7,
       "Name": [
+        "Bozo",
         "Bomb Torizo room",
-        [ "Central Crateria Bomb Torizo room", 0 ],
-        "Bombs",
-        [ "Central Crateria Bombs", 0 ]
+        [ "Bombs", 0 ]
       ],
       "X": 712,
       "Y": 276
@@ -752,11 +735,8 @@
       "Id": 8,
       "Name": [
         "Terminator Room",
-        [ "West Crateria Terminator Room", 0 ],
         "Fungal Slope",
-        [ "West Crateria Fungal Slope", 0 ],
-        "Energy Tank, Terminator",
-        [ "West Crateria Energy Tank, Terminator", 0 ]
+        [ "Energy Tank, Terminator", 0 ]
       ],
       "X": 296,
       "Y": 276
@@ -764,26 +744,22 @@
     {
       "Id": 9,
       "Name": [
-        "Missile (Crateria gauntlet right)",
-        [ "Gauntlet Shaft Missile (Crateria gauntlet right)", 0 ],
-        "Gauntlet Shaft Right"
+        "Gauntlet Shaft Right",
+        [ "Missile (Crateria gauntlet right)", 0 ]
       ]
     },
     {
       "Id": 10,
       "Name": [
-        "Missile (Crateria gauntlet left)",
-        [ "Gauntlet Shaft Missile (Crateria gauntlet left)", 0 ],
-        "Gauntlet Shaft Left"
+        "Gauntlet Shaft Left",
+        [ "Missile (Crateria gauntlet left)", 0 ]
       ]
     },
     {
       "Id": 11,
       "Name": [
         "Old Tourian launchpad",
-        [ "Central Crateria Old Tourian launchpad", 0 ],
-        "Super Missile (Crateria)",
-        [ "Central Crateria Super Missile (Crateria)", 0 ]
+        [ "Super Missile (Crateria)", 0 ]
       ],
       "X": 680,
       "Y": 372
@@ -792,13 +768,9 @@
       "Id": 12,
       "Name": [
         "Final Missile Bombway",
-        [ "Central Crateria Final Missile Bombway", 0 ],
         "The Final Missile",
-        [ "Central Crateria The Final Missile", 0 ],
         "Dental Plan Missiles",
-        [ "Central Crateria Dental Plan Missiles", 0 ],
-        "Missile (Crateria middle)",
-        [ "Central Crateria Missile (Crateria middle)", 0 ]
+        [ "Missile (Crateria middle)", 0 ]
       ],
       "X": 424,
       "Y": 308
@@ -806,8 +778,7 @@
     {
       "Id": 13,
       "Name": [
-        "Power Bomb (green Brinstar bottom)",
-        [ "Green Brinstar Power Bomb (green Brinstar bottom)", 0 ]
+        "Power Bomb (green Brinstar bottom)"
       ],
       "X": 328,
       "Y": 308
@@ -816,9 +787,7 @@
       "Id": 14,
       "Name": [
         "Spore Spawn's item",
-        [ "Pink Brinstar Spore Spawn's item", 0 ],
-        "Super Missile (pink Brinstar)",
-        [ "Pink Brinstar Super Missile (pink Brinstar)", 0 ]
+        [ "Super Missile (pink Brinstar)", 0 ]
       ],
       "X": 712,
       "Y": 372
@@ -827,9 +796,7 @@
       "Id": 15,
       "Name": [
         "Mockball Room - Fail item",
-        [ "Green Brinstar Mockball Room - Fail item", 0 ],
-        "Missile (green Brinstar below super missile)",
-        [ "Green Brinstar Missile (green Brinstar below super missile)", 0 ]
+        [ "Missile (green Brinstar below super missile)", 0 ]
       ],
       "X": 296,
       "Y": 212
@@ -838,9 +805,7 @@
       "Id": 16,
       "Name": [
         "Mockball Room Attic",
-        [ "Green Brinstar Mockball Room Attic", 0 ],
-        "Super Missile (green Brinstar top)",
-        [ "Green Brinstar Super Missile (green Brinstar top)", 0 ]
+        [ "Super Missile (green Brinstar top)", 0 ]
       ],
       "X": 264,
       "Y": 180
@@ -849,9 +814,7 @@
       "Id": 17,
       "Name": [
         "Mockball Chozo",
-        [ "Green Brinstar Mockball Chozo", 0 ],
-        "Reserve Tank, Brinstar",
-        [ "Green Brinstar Reserve Tank, Brinstar", 0 ]
+        [ "Reserve Tank, Brinstar", 0 ]
       ],
       "X": 360,
       "Y": 212
@@ -859,22 +822,17 @@
     {
       "Id": 18,
       "Name": [
-        "Missile (green Brinstar behind missile)",
-        [ "Mockball Hall Hidden Room Missile (green Brinstar behind missile)", 0 ],
-        "Mockball - Back room hidden item",
-        [ "Mockball Hall Hidden Room Mockball - Back room hidden item", 0 ],
+        "Mockball Back room hidden item",
+        [ "Missile (green Brinstar behind missile)", 0 ],
         "Ron Popeil missiles",
-        [ "Mockball Hall Hidden Room Ron Popeil missiles", 0 ],
         "Mockball Hall Hidden Room Hidden Item"
       ]
     },
     {
       "Id": 19,
       "Name": [
-        "Missile (green Brinstar behind reserve tank)",
-        [ "Mockball Hall Hidden Room Missile (green Brinstar behind reserve tank)", 0 ],
-        "Mockball - Back room",
-        [ "Mockball Hall Hidden Room Mockball - Back room", 0 ],
+        "Mockball Back room",
+        [ "Missile (green Brinstar behind reserve tank)", 0 ],
         "Mockball Hall Hidden Room Main Item"
       ]
     },
@@ -882,11 +840,8 @@
       "Id": 21,
       "Name": [
         "Pink Shaft (top)",
-        [ "Pink Brinstar Pink Shaft (top)", 0 ],
         "Big Pink (top)",
-        [ "Pink Brinstar Big Pink (top)", 0 ],
-        "Missile (pink Brinstar top)",
-        [ "Pink Brinstar Missile (pink Brinstar top)", 0 ]
+        [ "Missile (pink Brinstar top)", 0 ]
       ],
       "X": 488,
       "Y": 308
@@ -895,11 +850,8 @@
       "Id": 22,
       "Name": [
         "Pink Shaft (bottom)",
-        [ "Pink Brinstar Pink Shaft (bottom)", 0 ],
         "Big Pink (bottom)",
-        [ "Pink Brinstar Big Pink (bottom)", 0 ],
-        "Missile (pink Brinstar bottom)",
-        [ "Pink Brinstar Missile (pink Brinstar bottom)", 0 ]
+        [ "Missile (pink Brinstar bottom)", 0 ]
       ],
       "X": 488,
       "Y": 404
@@ -908,9 +860,7 @@
       "Id": 23,
       "Name": [
         "Pink Shaft - Chozo",
-        [ "Pink Brinstar Pink Shaft - Chozo", 0 ],
-        "Charge Beam",
-        [ "Pink Brinstar Charge Beam", 0 ]
+        [ "Charge Beam", 0 ]
       ],
       "X": 488,
       "Y": 436
@@ -919,11 +869,8 @@
       "Id": 24,
       "Name": [
         "Mission: Impossible",
-        [ "Pink Brinstar Mission: Impossible", 0 ],
         "Pink Brinstar Power Bomb Room",
-        [ "Pink Brinstar Pink Brinstar Power Bomb Room", 0 ],
-        "Power Bomb (pink Brinstar)",
-        [ "Pink Brinstar Power Bomb (pink Brinstar)", 0 ]
+        [ "Power Bomb (pink Brinstar)", 0 ]
       ],
       "X": 424,
       "Y": 340
@@ -932,11 +879,8 @@
       "Id": 25,
       "Name": [
         "Green Hill Zone",
-        [ "Pink Brinstar Green Hill Zone", 0 ],
         "Jungle slope",
-        [ "Pink Brinstar Jungle slope", 0 ],
-        "Missile (green Brinstar pipe)",
-        [ "Pink Brinstar Missile (green Brinstar pipe)", 0 ]
+        [ "Missile (green Brinstar pipe)", 0 ]
       ],
       "X": 648,
       "Y": 436
@@ -945,9 +889,7 @@
       "Id": 26,
       "Name": [
         "Morph Ball (Corridor No. 1)",
-        [ "Blue Brinstar Morph Ball (Corridor No. 1)", 0 ],
-        "Morphing Ball",
-        [ "Blue Brinstar Morphing Ball", 0 ]
+        "Morphing Ball"
       ],
       "X": 744,
       "Y": 404
@@ -956,9 +898,7 @@
       "Id": 27,
       "Name": [
         "Power Bomb wall (Corridor No. 1)",
-        [ "Blue Brinstar Power Bomb wall (Corridor No. 1)", 0 ],
-        "Power Bomb (blue Brinstar)",
-        [ "Blue Brinstar Power Bomb (blue Brinstar)", 0 ]
+        [ "Power Bomb (blue Brinstar)", 0 ]
       ],
       "X": 680,
       "Y": 404
@@ -966,8 +906,7 @@
     {
       "Id": 28,
       "Name": [
-        "Missile (blue Brinstar middle)",
-        [ "Blue Brinstar Missile (blue Brinstar middle)", 0 ]
+        "Missile (blue Brinstar middle)"
       ],
       "X": 968,
       "Y": 404
@@ -975,8 +914,8 @@
     {
       "Id": 29,
       "Name": [
-        "Energy Tank, Brinstar Ceiling",
-        [ "Blue Brinstar Energy Tank, Brinstar Ceiling", 0 ]
+        "Blue Brinstar Ceiling",
+        [ "Energy Tank, Brinstar Ceiling", 0 ]
       ],
       "X": 936,
       "Y": 404
@@ -984,8 +923,9 @@
     {
       "Id": 30,
       "Name": [
-        "Energy Tank, Etecoons",
-        [ "Green Brinstar Energy Tank, Etecoons", 0 ]
+        "Hell",
+        "Etecoon shaft",
+        [ "Energy Tank, Etecoons", 0 ]
       ],
       "X": 136,
       "Y": 404
@@ -993,8 +933,7 @@
     {
       "Id": 31,
       "Name": [
-        "Super Missile (green Brinstar bottom)",
-        [ "Green Brinstar Super Missile (green Brinstar bottom)", 0 ]
+        "Super Missile (green Brinstar bottom)"
       ],
       "X": 104,
       "Y": 404
@@ -1003,9 +942,7 @@
       "Id": 33,
       "Name": [
         "Waterway",
-        [ "Pink Brinstar Waterway", 0 ],
-        "Energy Tank, Waterway",
-        [ "Pink Brinstar Energy Tank, Waterway", 0 ]
+        [ "Energy Tank, Waterway", 0 ]
       ],
       "X": 200,
       "Y": 500
@@ -1013,8 +950,7 @@
     {
       "Id": 34,
       "Name": [
-        "Missile (blue Brinstar bottom)",
-        [ "Blue Brinstar Missile (blue Brinstar bottom)", 0 ]
+        "Missile (blue Brinstar bottom)"
       ],
       "X": 840,
       "Y": 436
@@ -1023,11 +959,8 @@
       "Id": 35,
       "Name": [
         "Hoptank Room",
-        [ "Pink Brinstar Hoptank Room", 0 ],
         "Wave Beam Glitch room",
-        [ "Pink Brinstar Wave Beam Glitch room", 0 ],
-        "Energy Tank, Brinstar Gate",
-        [ "Pink Brinstar Energy Tank, Brinstar Gate", 0 ]
+        [ "Energy Tank, Brinstar Gate", 0 ]
       ],
       "X": 616,
       "Y": 340
@@ -1035,20 +968,17 @@
     {
       "Id": 36,
       "Name": [
-        "Missile (blue Brinstar top)",
-        [ "Blue Brinstar Top Missile (blue Brinstar top)", 0 ],
         "Billy Mays Room",
-        [ "Blue Brinstar Top Billy Mays Room", 0 ],
+        [ "Missile (blue Brinstar top)", 0 ],
         "Blue Brinstar Top Main Item"
       ]
     },
     {
       "Id": 37,
       "Name": [
-        "Missile (blue Brinstar behind missile)",
-        [ "Blue Brinstar Top Missile (blue Brinstar behind missile)", 0 ],
         "Billy Mays Room - Hidden item",
-        [ "Blue Brinstar Top Billy Mays Room - Hidden item", 0 ],
+        "But wait, there's more!",
+        [ "Missile (blue Brinstar behind missile)", 0 ],
         "Blue Brinstar Top Hidden Item"
       ]
     },
@@ -1056,9 +986,7 @@
       "Id": 38,
       "Name": [
         "The Chozo room after the dark room with all the spikes",
-        [ "Red Brinstar The Chozo room after the dark room with all the spikes", 0 ],
-        "X-Ray Scope",
-        [ "Red Brinstar X-Ray Scope", 0 ]
+        "X-Ray Scope"
       ],
       "X": 680,
       "Y": 564
@@ -1067,9 +995,7 @@
       "Id": 39,
       "Name": [
         "Beta Power Bomb Room",
-        [ "Red Brinstar Beta Power Bomb Room", 0 ],
-        "Power Bomb (red Brinstar sidehopper room)",
-        [ "Red Brinstar Power Bomb (red Brinstar sidehopper room)", 0 ]
+        "Power Bomb (red Brinstar sidehopper room)"
       ],
       "X": 1064,
       "Y": 340
@@ -1078,9 +1004,7 @@
       "Id": 40,
       "Name": [
         "Alpha Power Bomb Room",
-        [ "Red Brinstar Alpha Power Bomb Room", 0 ],
-        "Power Bomb (red Brinstar spike room)",
-        [ "Red Brinstar Power Bomb (red Brinstar spike room)", 0 ]
+        "Power Bomb (red Brinstar spike room)"
       ],
       "X": 1064,
       "Y": 436
@@ -1089,9 +1013,7 @@
       "Id": 41,
       "Name": [
         "Alpha Power Bomb Room - Behind the wall",
-        [ "Red Brinstar Alpha Power Bomb Room - Behind the wall", 0 ],
-        "Missile (red Brinstar spike room)",
-        [ "Red Brinstar Missile (red Brinstar spike room)", 0 ]
+        "Missile (red Brinstar spike room)"
       ],
       "X": 1032,
       "Y": 436
@@ -1100,9 +1022,7 @@
       "Id": 42,
       "Name": [
         "~ S p A z E r ~",
-        [ "Red Brinstar ~ S p A z E r ~", 0 ],
-        "Spazer",
-        [ "Red Brinstar Spazer", 0 ]
+        "Spazer"
       ],
       "X": 1160,
       "Y": 628
@@ -1110,9 +1030,7 @@
     {
       "Id": 43,
       "Name": [
-        "Energy Tank, Kraid",
-        [ "Warehouse Energy Tank, Kraid", 0 ],
-        [ "Kraid's Lair Energy Tank, Kraid", 0 ]
+        "Energy Tank, Kraid"
       ],
       "X": 1320,
       "Y": 692
@@ -1121,11 +1039,7 @@
       "Id": 44,
       "Name": [
         "Warehouse Kihunter Room",
-        [ "Warehouse Warehouse Kihunter Room", 0 ],
-        [ "Kraid's Lair Warehouse Kihunter Room", 0 ],
-        "Missile (Kraid)",
-        [ "Warehouse Missile (Kraid)", 0 ],
-        [ "Kraid's Lair Missile (Kraid)", 0 ]
+        "Missile (Kraid)"
       ],
       "X": 1448,
       "Y": 660
@@ -1134,11 +1048,7 @@
       "Id": 48,
       "Name": [
         "Kraid's Reliquary",
-        [ "Warehouse Kraid's Reliquary", 0 ],
-        [ "Kraid's Lair Kraid's Reliquary", 0 ],
-        "Varia Suit",
-        [ "Warehouse Varia Suit", 0 ],
-        [ "Kraid's Lair Varia Suit", 0 ]
+        [ "Varia Suit", 0 ]
       ],
       "X": 1768,
       "Y": 692
@@ -1147,11 +1057,8 @@
       "Id": 49,
       "Name": [
         "Lava Room - Submerged in wall",
-        [ "Upper Norfair, West Lava Room - Submerged in wall", 0 ],
         "Cathedral",
-        [ "Upper Norfair, West Cathedral", 0 ],
-        "Missile (lava room)",
-        [ "Upper Norfair, West Missile (lava room)", 0 ]
+        [ "Missile (lava room)", 0 ]
       ],
       "X": 568,
       "Y": 212
@@ -1160,9 +1067,7 @@
       "Id": 50,
       "Name": [
         "Ice Beam Room",
-        [ "Upper Norfair, West Ice Beam Room", 0 ],
-        "Ice Beam",
-        [ "Upper Norfair, West Ice Beam", 0 ]
+        "Ice Beam"
       ],
       "X": 216,
       "Y": 148
@@ -1171,9 +1076,7 @@
       "Id": 51,
       "Name": [
         "Crumble Shaft",
-        [ "Upper Norfair, West Crumble Shaft", 0 ],
-        "Missile (below Ice Beam)",
-        [ "Upper Norfair, West Missile (below Ice Beam)", 0 ]
+        [ "Missile (below Ice Beam)", 0 ]
       ],
       "X": 120,
       "Y": 212
@@ -1182,9 +1085,7 @@
       "Id": 52,
       "Name": [
         "Crocomire's Pit",
-        [ "Upper Norfair, Crocomire Crocomire's Pit", 0 ],
-        "Energy Tank, Crocomire",
-        [ "Upper Norfair, Crocomire Energy Tank, Crocomire", 0 ]
+        [ "Energy Tank, Crocomire", 0 ]
       ],
       "X": 664,
       "Y": 404
@@ -1193,9 +1094,7 @@
       "Id": 53,
       "Name": [
         "Hi-Jump Boots Room",
-        [ "Upper Norfair, West Hi-Jump Boots Room", 0 ],
-        "Hi-Jump Boots",
-        [ "Upper Norfair, West Hi-Jump Boots", 0 ]
+        "Hi-Jump Boots"
       ],
       "X": 280,
       "Y": 276
@@ -1204,9 +1103,7 @@
       "Id": 54,
       "Name": [
         "Crocomire Escape",
-        [ "Upper Norfair, Crocomire Crocomire Escape", 0 ],
-        "Missile (above Crocomire)",
-        [ "Upper Norfair, Crocomire Missile (above Crocomire)", 0 ]
+        [ "Missile (above Crocomire)", 0 ]
       ],
       "X": 408,
       "Y": 276
@@ -1215,9 +1112,7 @@
       "Id": 55,
       "Name": [
         "Hi-Jump Lobby - Back",
-        [ "Upper Norfair, West Hi-Jump Lobby - Back", 0 ],
-        "Missile (Hi-Jump Boots)",
-        [ "Upper Norfair, West Missile (Hi-Jump Boots)", 0 ]
+        [ "Missile (Hi-Jump Boots)", 0 ]
       ],
       "X": 312,
       "Y": 244
@@ -1226,9 +1121,7 @@
       "Id": 56,
       "Name": [
         "Hi-Jump Lobby - Entrance",
-        [ "Upper Norfair, West Hi-Jump Lobby - Entrance", 0 ],
-        "Energy Tank (Hi-Jump Boots)",
-        [ "Upper Norfair, West Energy Tank (Hi-Jump Boots)", 0 ]
+        [ "Energy Tank (Hi-Jump Boots)", 0 ]
       ],
       "X": 344,
       "Y": 244
@@ -1237,9 +1130,7 @@
       "Id": 57,
       "Name": [
         "Post Crocomire Power Bomb Room",
-        [ "Upper Norfair, Crocomire Post Crocomire Power Bomb Room", 0 ],
-        "Power Bomb (Crocomire)",
-        [ "Upper Norfair, Crocomire Power Bomb (Crocomire)", 0 ]
+        [ "Power Bomb (Crocomire)", 0 ]
       ],
       "X": 344,
       "Y": 404
@@ -1248,11 +1139,8 @@
       "Id": 58,
       "Name": [
         "Cosine Room",
-        [ "Upper Norfair, Crocomire Cosine Room", 0 ],
         "Post Crocomire Missile Room",
-        [ "Upper Norfair, Crocomire Post Crocomire Missile Room", 0 ],
-        "Missile (below Crocomire)",
-        [ "Upper Norfair, Crocomire Missile (below Crocomire)", 0 ]
+        [ "Missile (below Crocomire)", 0 ]
       ],
       "X": 504,
       "Y": 564
@@ -1261,13 +1149,9 @@
       "Id": 59,
       "Name": [
         "Indiana Jones Room",
-        [ "Upper Norfair, Crocomire Indiana Jones Room", 0 ],
         "Pantry",
-        [ "Upper Norfair, Crocomire Pantry", 0 ],
         "Post Crocomire Jump Room",
-        [ "Upper Norfair, Crocomire Post Crocomire Jump Room", 0 ],
-        "Missile (Grappling Beam)",
-        [ "Upper Norfair, Crocomire Missile (Grappling Beam)", 0 ]
+        [ "Missile (Grappling Beam)", 0 ]
       ],
       "X": 312,
       "Y": 564
@@ -1276,9 +1160,7 @@
       "Id": 60,
       "Name": [
         "Grapple Beam Room",
-        [ "Upper Norfair, Crocomire Grapple Beam Room", 0 ],
-        "Grappling Beam",
-        [ "Upper Norfair, Crocomire Grappling Beam", 0 ]
+        "Grappling Beam"
       ],
       "X": 152,
       "Y": 596
@@ -1287,7 +1169,6 @@
       "Id": 61,
       "Name": [
         "Reserve Tank, Norfair",
-        [ "Bubble Mountain Hidden Hall Reserve Tank, Norfair", 0 ],
         "Bubble Mountain Hidden Hall Main Item"
       ]
     },
@@ -1295,7 +1176,6 @@
       "Id": 62,
       "Name": [
         "Missile (Norfair Reserve Tank)",
-        [ "Bubble Mountain Hidden Hall Missile (Norfair Reserve Tank)", 0 ],
         "Bubble Mountain Hidden Hall Hidden Item"
       ]
     },
@@ -1303,9 +1183,7 @@
       "Id": 63,
       "Name": [
         "Bubble Mountain Missile Room",
-        [ "Upper Norfair, East Bubble Mountain Missile Room", 0 ],
-        "Missile (bubble Norfair green door)",
-        [ "Upper Norfair, East Missile (bubble Norfair green door)", 0 ]
+        [ "Missile (bubble Norfair green door)", 0 ]
       ],
       "X": 728,
       "Y": 148
@@ -1314,9 +1192,7 @@
       "Id": 64,
       "Name": [
         "Bubble Mountain",
-        [ "Upper Norfair, East Bubble Mountain", 0 ],
-        "Missile (bubble Norfair)",
-        [ "Upper Norfair, East Missile (bubble Norfair)", 0 ]
+        [ "Missile (bubble Norfair)", 0 ]
       ],
       "X": 792,
       "Y": 244
@@ -1325,9 +1201,7 @@
       "Id": 65,
       "Name": [
         "Speed Booster Hall - Ceiling",
-        [ "Upper Norfair, East Speed Booster Hall - Ceiling", 0 ],
-        "Missile (Speed Booster)",
-        [ "Upper Norfair, East Missile (Speed Booster)", 0 ]
+        [ "Missile (Speed Booster)", 0 ]
       ],
       "X": 1208,
       "Y": 148
@@ -1336,9 +1210,7 @@
       "Id": 66,
       "Name": [
         "Speed Booster Room",
-        [ "Upper Norfair, East Speed Booster Room", 0 ],
-        "Speed Booster",
-        [ "Upper Norfair, East Speed Booster", 0 ]
+        "Speed Booster"
       ],
       "X": 1240,
       "Y": 148
@@ -1347,11 +1219,8 @@
       "Id": 67,
       "Name": [
         "Double Chamber",
-        [ "Upper Norfair, East Double Chamber", 0 ],
         "Grapple Crossing",
-        [ "Upper Norfair, East Grapple Crossing", 0 ],
-        "Missile (Wave Beam)",
-        [ "Upper Norfair, East Missile (Wave Beam)", 0 ]
+        [ "Missile (Wave Beam)", 0 ]
       ],
       "X": 888,
       "Y": 212
@@ -1360,9 +1229,7 @@
       "Id": 68,
       "Name": [
         "Wave Beam Room",
-        [ "Upper Norfair, East Wave Beam Room", 0 ],
-        "Wave Beam",
-        [ "Upper Norfair, East Wave Beam", 0 ]
+        "Wave Beam"
       ],
       "X": 984,
       "Y": 212
@@ -1371,9 +1238,7 @@
       "Id": 70,
       "Name": [
         "Gold Torizo - Drop down",
-        [ "Lower Norfair, West Gold Torizo - Drop down", 0 ],
-        "Missile (Gold Torizo)",
-        [ "Lower Norfair, West Missile (Gold Torizo)", 0 ]
+        [ "Missile (Gold Torizo)", 0 ]
       ],
       "X": 632,
       "Y": 564
@@ -1382,9 +1247,7 @@
       "Id": 71,
       "Name": [
         "Golden Torizo - Ceiling",
-        [ "Lower Norfair, West Golden Torizo - Ceiling", 0 ],
-        "Super Missile (Gold Torizo)",
-        [ "Lower Norfair, West Super Missile (Gold Torizo)", 0 ]
+        [ "Super Missile (Gold Torizo)", 0 ]
       ],
       "X": 664,
       "Y": 564
@@ -1393,9 +1256,7 @@
       "Id": 73,
       "Name": [
         "Mickey Mouse Clubhouse",
-        [ "Lower Norfair, West Mickey Mouse Clubhouse", 0 ],
-        "Missile (Mickey Mouse room)",
-        [ "Lower Norfair, West Missile (Mickey Mouse room)", 0 ]
+        [ "Missile (Mickey Mouse room)", 0 ]
       ],
       "X": 952,
       "Y": 404
@@ -1404,9 +1265,7 @@
       "Id": 74,
       "Name": [
         "Spring Ball Maze Room",
-        [ "Lower Norfair, East Spring Ball Maze Room", 0 ],
-        "Missile (lower Norfair above fire flea room)",
-        [ "Lower Norfair, East Missile (lower Norfair above fire flea room)", 0 ]
+        [ "Missile (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1176,
       "Y": 244
@@ -1415,9 +1274,7 @@
       "Id": 75,
       "Name": [
         "Escape Power Bomb Room",
-        [ "Lower Norfair, East Escape Power Bomb Room", 0 ],
-        "Power Bomb (lower Norfair above fire flea room)",
-        [ "Lower Norfair, East Power Bomb (lower Norfair above fire flea room)", 0 ]
+        [ "Power Bomb (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1240,
       "Y": 276
@@ -1426,9 +1283,7 @@
       "Id": 76,
       "Name": [
         "Wasteland - Power Bomb of Shame",
-        [ "Lower Norfair, East Wasteland - Power Bomb of Shame", 0 ],
-        "Power Bomb (Power Bombs of shame)",
-        [ "Lower Norfair, East Power Bomb (Power Bombs of shame)", 0 ]
+        [ "Power Bomb (Power Bombs of shame)", 0 ]
       ],
       "X": 1080,
       "Y": 532
@@ -1437,11 +1292,8 @@
       "Id": 77,
       "Name": [
         "Three Musketeer's Room",
-        [ "Lower Norfair, East Three Musketeer's Room", 0 ],
         "FrankerZ Missiles",
-        [ "Lower Norfair, East FrankerZ Missiles", 0 ],
-        "Missile (lower Norfair near Wave Beam)",
-        [ "Lower Norfair, East Missile (lower Norfair near Wave Beam)", 0 ]
+        [ "Missile (lower Norfair near Wave Beam)", 0 ]
       ],
       "X": 984,
       "Y": 244
@@ -1450,9 +1302,7 @@
       "Id": 78,
       "Name": [
         "Ridley's Reliquary",
-        [ "Lower Norfair, East Ridley's Reliquary", 0 ],
-        "Energy Tank, Ridley",
-        [ "Lower Norfair, East Energy Tank, Ridley", 0 ]
+        [ "Energy Tank, Ridley", 0 ]
       ],
       "X": 760,
       "Y": 628
@@ -1460,8 +1310,7 @@
     {
       "Id": 79,
       "Name": [
-        "Screw Attack",
-        [ "Lower Norfair, West Screw Attack", 0 ]
+        "Screw Attack"
       ],
       "X": 696,
       "Y": 596
@@ -1470,9 +1319,7 @@
       "Id": 80,
       "Name": [
         "Fireflea Room",
-        [ "Lower Norfair, East Fireflea Room", 0 ],
-        "Energy Tank, Firefleas",
-        [ "Lower Norfair, East Energy Tank, Firefleas", 0 ]
+        [ "Energy Tank, Firefleas" , 0 ]
       ],
       "X": 1240,
       "Y": 436
@@ -1481,9 +1328,7 @@
       "Id": 128,
       "Name": [
         "Main Shaft - Side room",
-        [ "Wrecked Ship Main Shaft - Side room", 0 ],
-        "Missile (Wrecked Ship middle)",
-        [ "Wrecked Ship Missile (Wrecked Ship middle)", 0 ]
+        [ "Missile (Wrecked Ship middle)", 0 ]
       ],
       "X": 408,
       "Y": 340
@@ -1492,11 +1337,8 @@
       "Id": 129,
       "Name": [
         "Post Chozo Concert - Speed Booster Item",
-        [ "Wrecked Ship Post Chozo Concert - Speed Booster Item", 0 ],
         "Bowling Alley - Speed Booster Item",
-        [ "Wrecked Ship Bowling Alley - Speed Booster Item", 0 ],
-        "Reserve Tank, Wrecked Ship",
-        [ "Wrecked Ship Reserve Tank, Wrecked Ship", 0 ]
+        [ "Reserve Tank, Wrecked Ship", 0 ]
       ],
       "X": 504,
       "Y": 180
@@ -1505,9 +1347,7 @@
       "Id": 130,
       "Name": [
         "Post Chozo Concert - Breakable Chozo",
-        [ "Wrecked Ship Post Chozo Concert - Breakable Chozo", 0 ],
-        "Missile (Gravity Suit)",
-        [ "Wrecked Ship Missile (Gravity Suit)", 0 ]
+        [ "Missile (Gravity Suit)", 0 ]
       ],
       "X": 440,
       "Y": 244
@@ -1516,9 +1356,7 @@
       "Id": 131,
       "Name": [
         "Attic - Assembly Line",
-        [ "Wrecked Ship Attic - Assembly Line", 0 ],
-        "Missile (Wrecked Ship top)",
-        [ "Wrecked Ship Missile (Wrecked Ship top)", 0 ]
+        [ "Missile (Wrecked Ship top)", 0 ]
       ],
       "X": 696,
       "Y": 148
@@ -1527,9 +1365,7 @@
       "Id": 132,
       "Name": [
         "Wrecked Pool",
-        [ "Wrecked Ship Wrecked Pool", 0 ],
-        "Energy Tank, Wrecked Ship",
-        [ "Wrecked Ship Energy Tank, Wrecked Ship", 0 ]
+        [ "Energy Tank, Wrecked Ship", 0 ]
       ],
       "X": 600,
       "Y": 244
@@ -1538,9 +1374,7 @@
       "Id": 133,
       "Name": [
         "Left Super Missile Chamber",
-        [ "Wrecked Ship Left Super Missile Chamber", 0 ],
-        "Super Missile (Wrecked Ship left)",
-        [ "Wrecked Ship Super Missile (Wrecked Ship left)", 0 ]
+        ["Super Missile (Wrecked Ship left)", 0 ]
       ],
       "X": 504,
       "Y": 372
@@ -1549,9 +1383,7 @@
       "Id": 134,
       "Name": [
         "Right Super Missile Chamber",
-        [ "Wrecked Ship Right Super Missile Chamber", 0 ],
-        "Right Super, Wrecked Ship",
-        [ "Wrecked Ship Right Super, Wrecked Ship", 0 ]
+        [ "Right Super, Wrecked Ship", 0 ]
       ],
       "X": 696,
       "Y": 372
@@ -1560,9 +1392,7 @@
       "Id": 135,
       "Name": [
         "Post Chozo Concert - Gravity Suit Chamber",
-        [ "Wrecked Ship Post Chozo Concert - Gravity Suit Chamber", 0 ],
-        "Gravity Suit",
-        [ "Wrecked Ship Gravity Suit", 0 ]
+        [ "Gravity Suit", 0 ]
       ],
       "X": 344,
       "Y": 244
@@ -1571,11 +1401,8 @@
       "Id": 136,
       "Name": [
         "Main Street - Ceiling (Shinespark)",
-        [ "Outer Maridia Main Street - Ceiling (Shinespark)", 0 ],
         "Main Street Missiles",
-        [ "Outer Maridia Main Street Missiles", 0 ],
-        "Missile (green Maridia shinespark)",
-        [ "Outer Maridia Missile (green Maridia shinespark)", 0 ]
+        [ "Missile (green Maridia shinespark)", 0 ]
       ],
       "X": 232,
       "Y": 468
@@ -1584,9 +1411,7 @@
       "Id": 137,
       "Name": [
         "Main Street - Crab Supers",
-        [ "Outer Maridia Main Street - Crab Supers", 0 ],
-        "Super Missile (green Maridia)",
-        [ "Outer Maridia Super Missile (green Maridia)", 0 ]
+        [ "Super Missile (green Maridia)", 0 ]
       ],
       "X": 264,
       "Y": 436
@@ -1595,9 +1420,7 @@
       "Id": 138,
       "Name": [
         "Mama Turtle Room",
-        [ "Outer Maridia Mama Turtle Room", 0 ],
-        "Energy Tank, Mama turtle",
-        [ "Outer Maridia Energy Tank, Mama turtle", 0 ]
+        [ "Energy Tank, Mama turtle", 0 ]
       ],
       "X": 488,
       "Y": 468
@@ -1606,9 +1429,7 @@
       "Id": 139,
       "Name": [
         "Mama Turtle Room - Wall item",
-        [ "Outer Maridia Mama Turtle Room - Wall item", 0 ],
-        "Missile (green Maridia tatori)",
-        [ "Outer Maridia Missile (green Maridia tatori)", 0 ]
+        [ "Missile (green Maridia tatori)", 0 ]
       ],
       "X": 520,
       "Y": 500
@@ -1616,30 +1437,22 @@
     {
       "Id": 140,
       "Name": [
-        "Super Missile (yellow Maridia)",
-        [ "Watering Hole Super Missile (yellow Maridia)", 0 ],
-        "Watering Hole - Left",
-        [ "Watering Hole Watering Hole - Left", 0 ],
-        "Watering Hole Left"
+        "Watering Hole Left",
+        [ "Super Missile (yellow Maridia)", 0 ]
       ]
     },
     {
       "Id": 141,
       "Name": [
-        "Missile (yellow Maridia super missile)",
-        [ "Watering Hole Missile (yellow Maridia super missile)", 0 ],
-        "Watering Hole - right",
-        [ "Watering Hole Watering Hole - right", 0 ],
-        "Watering Hole Right"
+        "Watering Hole Right",
+        [ "Missile (yellow Maridia super missile)", 0 ]
       ]
     },
     {
       "Id": 142,
       "Name": [
         "Pseudo Plasma Spark Room",
-        [ "Inner Maridia Pseudo Plasma Spark Room", 0 ],
-        "Missile (yellow Maridia false wall)",
-        [ "Inner Maridia Missile (yellow Maridia false wall)", 0 ]
+        [ "Missile (yellow Maridia false wall)", 0 ]
       ],
       "X": 552,
       "Y": 276
@@ -1647,8 +1460,7 @@
     {
       "Id": 143,
       "Name": [
-        "Plasma Beam",
-        [ "Inner Maridia Plasma Beam", 0 ]
+        "Plasma Beam"
       ],
       "X": 808,
       "Y": 148
@@ -1656,26 +1468,22 @@
     {
       "Id": 144,
       "Name": [
-        "Missile (left Maridia sand pit room)",
-        [ "Left Sand Pit Missile (left Maridia sand pit room)", 0 ],
-        "Left Sand Pit Left"
+        "Left Sand Pit Left",
+        [ "Missile (left Maridia sand pit room)", 0 ]
       ]
     },
     {
       "Id": 145,
       "Name": [
-        "Reserve Tank, Maridia",
-        [ "Left Sand Pit Reserve Tank, Maridia", 0 ],
-        "Left Sand Pit Right"
+        "Left Sand Pit Right",
+        [ "Reserve Tank, Maridia", 0 ]
       ]
     },
     {
       "Id": 146,
       "Name": [
         "Right Sand Pit - Left item",
-        [ "Inner Maridia Right Sand Pit - Left item", 0 ],
-        "Missile (right Maridia sand pit room)",
-        [ "Inner Maridia Missile (right Maridia sand pit room)", 0 ]
+        [ "Missile (right Maridia sand pit room)", 0 ]
       ],
       "X": 648,
       "Y": 532
@@ -1684,9 +1492,7 @@
       "Id": 147,
       "Name": [
         "Right Sand Pit - Right item",
-        [ "Inner Maridia Right Sand Pit - Right item", 0 ],
-        "Power Bomb (right Maridia sand pit room)",
-        [ "Inner Maridia Power Bomb (right Maridia sand pit room)", 0 ]
+        [ "Power Bomb (right Maridia sand pit room)", 0 ]
       ],
       "X": 680,
       "Y": 564
@@ -1695,9 +1501,7 @@
       "Id": 148,
       "Name": [
         "Aqueduct - Left item",
-        [ "Inner Maridia Aqueduct - Left item", 0 ],
-        "Missile (pink Maridia)",
-        [ "Inner Maridia Missile (pink Maridia)", 0 ]
+        [ "Missile (pink Maridia)", 0 ]
       ],
       "X": 680,
       "Y": 372
@@ -1706,9 +1510,7 @@
       "Id": 149,
       "Name": [
         "Aqueduct - Right item",
-        [ "Inner Maridia Aqueduct - Right item", 0 ],
-        "Super Missile (pink Maridia)",
-        [ "Inner Maridia Super Missile (pink Maridia)", 0 ]
+        [ "Super Missile (pink Maridia)", 0 ]
       ],
       "X": 712,
       "Y": 372
@@ -1716,10 +1518,9 @@
     {
       "Id": 150,
       "Name": [
+        "Shak's Stash",
         "Shaktool's item",
-        [ "Inner Maridia Shaktool's item", 0 ],
-        "Spring Ball",
-        [ "Inner Maridia Spring Ball", 0 ]
+        [ "Spring Ball", 0 ]
       ],
       "X": 968,
       "Y": 596
@@ -1727,12 +1528,9 @@
     {
       "Id": 151,
       "Name": [
-        "Pre-Draygon Room",
-        [ "Inner Maridia Pre-Draygon Room", 0 ],
         "The Precious Room",
-        [ "Inner Maridia The Precious Room", 0 ],
-        "Missile (Draygon)",
-        [ "Inner Maridia Missile (Draygon)", 0 ]
+        "Pre-Draygon Room",
+        [ "Missile (Draygon)", 0 ]
       ],
       "X": 1256,
       "Y": 308
@@ -1741,9 +1539,7 @@
       "Id": 152,
       "Name": [
         "Sandy Path",
-        [ "Inner Maridia Sandy Path", 0 ],
-        "Energy Tank, Botwoon",
-        [ "Inner Maridia Energy Tank, Botwoon", 0 ]
+        [ "Energy Tank, Botwoon", 0 ]
       ],
       "X": 840,
       "Y": 340
@@ -1752,9 +1548,7 @@
       "Id": 154,
       "Name": [
         "Draygon's Reliquary",
-        [ "Inner Maridia Draygon's Reliquary", 0 ],
-        "Space Jump",
-        [ "Inner Maridia Space Jump", 0 ]
+        [ "Space Jump", 0 ]
       ],
       "X": 1128,
       "Y": 404
@@ -1762,8 +1556,7 @@
     {
       "Id": 256,
       "Name": [
-        "Ether Tablet",
-        [ "Light World Death Mountain West Ether Tablet", 0 ]
+        "Ether Tablet"
       ],
       "X": 844,
       "Y": 38
@@ -1771,8 +1564,7 @@
     {
       "Id": 257,
       "Name": [
-        "Spectacle Rock",
-        [ "Light World Death Mountain West Spectacle Rock", 0 ]
+        "Spectacle Rock"
       ],
       "X": 980,
       "Y": 178
@@ -1780,8 +1572,7 @@
     {
       "Id": 258,
       "Name": [
-        "Spectacle Rock Cave",
-        [ "Light World Death Mountain West Spectacle Rock Cave", 0 ]
+        "Spectacle Rock Cave"
       ],
       "X": 980,
       "Y": 290
@@ -1789,8 +1580,7 @@
     {
       "Id": 259,
       "Name": [
-        "Old Man",
-        [ "Light World Death Mountain West Old Man", 0 ]
+        "Old Man"
       ],
       "X": 816,
       "Y": 378
@@ -1798,8 +1588,7 @@
     {
       "Id": 260,
       "Name": [
-        "Floating Island",
-        [ "Light World Death Mountain East Floating Island", 0 ]
+        "Floating Island"
       ],
       "X": 1627,
       "Y": 40
@@ -1807,8 +1596,7 @@
     {
       "Id": 261,
       "Name": [
-        "Spiral Cave",
-        [ "Light World Death Mountain East Spiral Cave", 0 ]
+        "Spiral Cave"
       ],
       "X": 1598,
       "Y": 180
@@ -1816,66 +1604,56 @@
     {
       "Id": 262,
       "Name": [
-        "Paradox Cave Upper - Left",
-        [ "Paradox Cave Paradox Cave Upper - Left", 0 ]
+        "Paradox Cave Upper - Left"
       ]
     },
     {
       "Id": 263,
       "Name": [
-        "Paradox Cave Upper - Right",
-        [ "Paradox Cave Paradox Cave Upper - Right", 0 ]
+        "Paradox Cave Upper - Right"
       ]
     },
     {
       "Id": 264,
       "Name": [
-        "Paradox Cave Lower - Far Left",
-        [ "Paradox Cave Paradox Cave Lower - Far Left", 0 ]
+        "Paradox Cave Lower - Far Left"
       ]
     },
     {
       "Id": 265,
       "Name": [
-        "Paradox Cave Lower - Left",
-        [ "Paradox Cave Paradox Cave Lower - Left", 0 ]
+        "Paradox Cave Lower - Left"
       ]
     },
     {
       "Id": 266,
       "Name": [
-        "Paradox Cave Lower - Middle",
-        [ "Paradox Cave Paradox Cave Lower - Middle", 0 ]
+        "Paradox Cave Lower - Middle"
       ]
     },
     {
       "Id": 267,
       "Name": [
-        "Paradox Cave Lower - Right",
-        [ "Paradox Cave Paradox Cave Lower - Right", 0 ]
+        "Paradox Cave Lower - Right"
       ]
     },
     {
       "Id": 268,
       "Name": [
-        "Paradox Cave Lower - Far Right",
-        [ "Paradox Cave Paradox Cave Lower - Far Right", 0 ]
+        "Paradox Cave Lower - Far Right"
       ]
     },
     {
       "Id": 269,
       "Name": [
-        "Mimic Cave",
-        [ "Light World Death Mountain East Mimic Cave", 0 ]
+        "Mimic Cave"
       ]
     },
     {
       "Id": 270,
       "Name": [
-        "Ped",
-        [ "Light World North West Ped", 0 ],
         "Master Sword Pedestal",
-        [ "Light World North West Master Sword Pedestal", 0 ]
+        "Ped"
       ],
       "X": 83,
       "Y": 101
@@ -1883,8 +1661,7 @@
     {
       "Id": 271,
       "Name": [
-        "Mushroom",
-        [ "Light World North West Mushroom", 0 ]
+        "Mushroom"
       ],
       "X": 240,
       "Y": 180
@@ -1892,8 +1669,7 @@
     {
       "Id": 272,
       "Name": [
-        "Lost Woods Hideout",
-        [ "Light World North West Lost Woods Hideout", 0 ]
+        "Lost Woods Hideout"
       ],
       "X": 320,
       "Y": 260
@@ -1901,8 +1677,7 @@
     {
       "Id": 273,
       "Name": [
-        "Lumberjack Tree",
-        [ "Light World North West Lumberjack Tree", 0 ]
+        "Lumberjack Tree"
       ],
       "X": 633,
       "Y": 117
@@ -1911,9 +1686,7 @@
       "Id": 274,
       "Name": [
         "Bonk Rocks",
-        [ "Light World North West Bonk Rocks", 0 ],
-        "Pegasus Rocks",
-        [ "Light World North West Pegasus Rocks", 0 ]
+        "Pegasus Rocks"
       ],
       "X": 777,
       "Y": 590
@@ -1921,8 +1694,7 @@
     {
       "Id": 275,
       "Name": [
-        "Graveyard Ledge",
-        [ "Light World North West Graveyard Ledge", 0 ]
+        "Graveyard Ledge"
       ],
       "X": 1132,
       "Y": 549
@@ -1930,8 +1702,7 @@
     {
       "Id": 276,
       "Name": [
-        "King's Tomb",
-        [ "Light World North West King's Tomb", 0 ]
+        "King's Tomb"
       ],
       "X": 1207,
       "Y": 598
@@ -1939,8 +1710,7 @@
     {
       "Id": 277,
       "Name": [
-        "Back cave",
-        [ "Kakariko Well Back cave", 0 ],
+        "Kakariko Well Back cave",
         "Kakariko Well Top"
       ]
     },
@@ -1971,6 +1741,7 @@
     {
       "Id": 282,
       "Name": [
+        "Blind's Hideout Back Room",
         "Blind's Hideout Top"
       ]
     },
@@ -2001,8 +1772,7 @@
     {
       "Id": 287,
       "Name": [
-        "Bottle Merchant",
-        [ "Light World North West Bottle Merchant", 0 ]
+        "Bottle Merchant"
       ],
       "X": 190,
       "Y": 933
@@ -2010,10 +1780,8 @@
     {
       "Id": 289,
       "Name": [
-        "Bug Catching Kid's House",
-        [ "Light World North West Bug Catching Kid's House", 0 ],
         "Sick Kid",
-        [ "Light World North West Sick Kid", 0 ]
+        "Bug Catching Kid's House"
       ],
       "X": 314,
       "Y": 1060
@@ -2021,10 +1789,8 @@
     {
       "Id": 290,
       "Name": [
-        "Inn back room",
-        [ "Light World North West Inn back room", 0 ],
         "Kakariko Tavern",
-        [ "Light World North West Kakariko Tavern", 0 ]
+        "Inn back room"
       ],
       "X": 320,
       "Y": 1145
@@ -2032,8 +1798,7 @@
     {
       "Id": 291,
       "Name": [
-        "Magic Bat",
-        [ "Light World North West Magic Bat", 0 ]
+        "Magic Bat"
       ],
       "X": 650,
       "Y": 1127
@@ -2042,16 +1807,13 @@
       "Id": 292,
       "Name": [
         "Zora",
-        [ "Zora's Domain Zora", 0 ],
-        "King Zora",
-        [ "Zora's Domain King Zora", 0 ]
+        "King Zora"
       ]
     },
     {
       "Id": 293,
       "Name": [
-        "Zora's Ledge",
-        [ "Zora's Domain Zora's Ledge", 0 ]
+        "Zora's Ledge"
       ]
     },
     {
@@ -2063,10 +1825,8 @@
     {
       "Id": 296,
       "Name": [
-        "Mushroom Item",
-        [ "Light World North East Mushroom Item", 0 ],
         "Potion Shop",
-        [ "Light World North East Potion Shop", 0 ]
+        "Mushroom Item"
       ],
       "X": 1607,
       "Y": 670
@@ -2092,15 +1852,14 @@
     {
       "Id": 300,
       "Name": [
-        "Sahasrahla",
-        [ "Sahasrahla's Hut Sahasrahla", 0 ]
+        "Sahasrahla"
       ]
     },
     {
       "Id": 301,
       "Name": [
         "Maze Race",
-        [ "Light World South Maze Race", 0 ]
+        "Racing Game"
       ],
       "X": 111,
       "Y": 1354
@@ -2132,8 +1891,7 @@
     {
       "Id": 314,
       "Name": [
-        "Bombos Tablet",
-        [ "Light World South Bombos Tablet", 0 ]
+        "Bombos Tablet"
       ],
       "X": 440,
       "Y": 1845
@@ -2141,22 +1899,19 @@
     {
       "Id": 315,
       "Name": [
-        "Floodgate Chest",
-        [ "Swamp Ruins Floodgate Chest", 0 ]
+        "Floodgate Chest"
       ]
     },
     {
       "Id": 316,
       "Name": [
-        "Sunken Treasure",
-        [ "Swamp Ruins Sunken Treasure", 0 ]
+        "Sunken Treasure"
       ]
     },
     {
       "Id": 317,
       "Name": [
-        "Lake Hylia Island",
-        [ "Light World South Lake Hylia Island", 0 ]
+        "Lake Hylia Island"
       ],
       "X": 1450,
       "Y": 1666
@@ -2165,9 +1920,7 @@
       "Id": 318,
       "Name": [
         "Under the bridge",
-        [ "Light World South Under the bridge", 0 ],
-        "Hobo",
-        [ "Light World South Hobo", 0 ]
+        "Hobo"
       ],
       "X": 1390,
       "Y": 1390
@@ -2176,9 +1929,7 @@
       "Id": 319,
       "Name": [
         "Ice Cave",
-        [ "Light World South Ice Cave", 0 ],
-        "Ice Rod Cave",
-        [ "Light World South Ice Rod Cave", 0 ]
+        "Ice Rod Cave"
       ],
       "X": 1795,
       "Y": 1547
@@ -2186,8 +1937,7 @@
     {
       "Id": 320,
       "Name": [
-        "Spike Cave",
-        [ "Spike Cave Spike Cave", 0 ]
+        "Spike Cave"
       ],
       "X": 1151,
       "Y": 294
@@ -2195,52 +1945,44 @@
     {
       "Id": 321,
       "Name": [
-        "Hookshot Cave - Top Right",
-        [ "Hookshot Cave Hookshot Cave - Top Right", 0 ]
+        "Hookshot Cave - Top Right"
       ]
     },
     {
       "Id": 322,
       "Name": [
-        "Hookshot Cave - Top Left",
-        [ "Hookshot Cave Hookshot Cave - Top Left", 0 ]
+        "Hookshot Cave - Top Left"
       ]
     },
     {
       "Id": 323,
       "Name": [
-        "Hookshot Cave - Bottom Left",
-        [ "Hookshot Cave Hookshot Cave - Bottom Left", 0 ]
+        "Hookshot Cave - Bottom Left"
       ]
     },
     {
       "Id": 324,
       "Name": [
-        "Hookshot Cave - Bottom Right",
-        [ "Hookshot Cave Hookshot Cave - Bottom Right", 0 ]
+        "Hookshot Cave - Bottom Right"
       ]
     },
     {
       "Id": 325,
       "Name": [
-        "Superbunny Cave - Top",
-        [ "Superbunny Cave Superbunny Cave - Top", 0 ]
+        "Superbunny Cave - Top"
       ]
     },
     {
       "Id": 326,
       "Name": [
-        "Superbunny Cave - Bottom",
-        [ "Superbunny Cave Superbunny Cave - Bottom", 0 ]
+        "Superbunny Cave - Bottom"
       ]
     },
     {
       "Id": 327,
       "Name": [
         "Bumper Cave Ledge",
-        [ "Dark World North West Bumper Cave Ledge", 0 ],
         "Bumper Cave",
-        [ "Dark World North West Bumper Cave", 0 ]
       ],
       "X": 687,
       "Y": 340
@@ -2248,8 +1990,7 @@
     {
       "Id": 328,
       "Name": [
-        "Chest Game",
-        [ "Dark World North West Chest Game", 0 ]
+        "Chest Game"
       ],
       "X": 100,
       "Y": 936
@@ -2257,8 +1998,7 @@
     {
       "Id": 329,
       "Name": [
-        "C-Shaped House",
-        [ "Dark World North West C-Shaped House", 0 ]
+        "C-Shaped House"
       ],
       "X": 414,
       "Y": 969
@@ -2266,8 +2006,7 @@
     {
       "Id": 330,
       "Name": [
-        "Brewery",
-        [ "Dark World North West Brewery", 0 ]
+        "Brewery"
       ],
       "X": 219,
       "Y": 1171
@@ -2276,9 +2015,7 @@
       "Id": 331,
       "Name": [
         "Peg World",
-        [ "Dark World North West Peg World", 0 ],
-        "Hammer Pegs",
-        [ "Dark World North West Hammer Pegs", 0 ]
+        "Hammer Pegs"
       ],
       "X": 636,
       "Y": 1214
@@ -2286,8 +2023,7 @@
     {
       "Id": 332,
       "Name": [
-        "Blacksmith",
-        [ "Light World North West Blacksmith", 0 ]
+        "Blacksmith"
       ],
       "X": 616,
       "Y": 1054
@@ -2296,9 +2032,7 @@
       "Id": 333,
       "Name": [
         "Purple Chest turn-in",
-        [ "Dark World North West Purple Chest turn-in", 0 ],
-        "Purple Chest",
-        [ "Dark World North West Purple Chest", 0 ]
+        "Purple Chest"
       ],
       "X": 616,
       "Y": 1054
@@ -2306,10 +2040,9 @@
     {
       "Id": 334,
       "Name": [
-        "Lake of Ill Omen",
-        [ "Dark World North East Lake of Ill Omen", 0 ],
         "Catfish",
-        [ "Dark World North East Catfish", 0 ]
+        "Scatfish",
+        "Lake of Ill Omen"
       ],
       "X": 1813,
       "Y": 347
@@ -2318,9 +2051,7 @@
       "Id": 335,
       "Name": [
         "Pyramid of Power",
-        [ "Dark World North East Pyramid of Power", 0 ],
-        "Pyramid",
-        [ "Dark World North East Pyramid", 0 ]
+        "Pyramid"
       ],
       "X": 1164,
       "Y": 922
@@ -2342,8 +2073,7 @@
     {
       "Id": 338,
       "Name": [
-        "Digging Game",
-        [ "Dark World South Digging Game", 0 ]
+        "Digging Game"
       ],
       "X": 100,
       "Y": 1385
@@ -2352,9 +2082,7 @@
       "Id": 339,
       "Name": [
         "Haunted Grove",
-        [ "Dark World South Haunted Grove", 0 ],
-        "Stumpy",
-        [ "Dark World South Stumpy", 0 ]
+        "Stumpy"
       ],
       "X": 620,
       "Y": 1371
@@ -2368,15 +2096,13 @@
     {
       "Id": 341,
       "Name": [
-        "Middle Right",
-        [ "Hype Cave Middle Right", 0 ]
+        "Hype Cave Middle Right"
       ]
     },
     {
       "Id": 342,
       "Name": [
-        "Middle Left",
-        [ "Hype Cave Middle Left", 0 ]
+        "Hype Cave Middle Left"
       ]
     },
     {
@@ -2394,29 +2120,26 @@
     {
       "Id": 345,
       "Name": [
-        "Mire Shed - Left",
-        [ "Mire Shed Mire Shed - Left", 0 ]
+        "Mire Shed - Left"
       ]
     },
     {
       "Id": 346,
       "Name": [
-        "Mire Shed - Right",
-        [ "Mire Shed Mire Shed - Right", 0 ]
+        "Mire Shed - Right"
       ]
     },
     {
       "Id": 347,
       "Name": [
-        "Sanctuary",
-        [ "Hyrule Castle Sanctuary", 0 ]
+        "Sanctuary"
       ]
     },
     {
       "Id": 348,
       "Name": [
         "Secret Room - Left",
-        [ "Back of Escape Secret Room - Left", 0 ],
+        "Back of Escape - Left",
         [ "Sewers Secret Room - Left", 0 ]
       ]
     },
@@ -2424,7 +2147,7 @@
       "Id": 349,
       "Name": [
         "Secret Room - Middle",
-        [ "Back of Escape Secret Room - Middle", 0 ],
+        "Back of Escape - Middle",
         [ "Sewers Secret Room - Middle", 0 ]
       ]
     },
@@ -2432,16 +2155,14 @@
       "Id": 350,
       "Name": [
         "Secret Room - Right",
-        [ "Back of Escape Secret Room - Right", 0 ],
+        "Back of Escape - Right",
         [ "Sewers Secret Room - Right", 0 ]
       ]
     },
     {
       "Id": 351,
       "Name": [
-        "Dark Cross",
-        [ "Back of Escape Dark Cross", 0 ],
-        [ "Sewers Dark Cross", 0 ]
+        "Dark Cross"
       ]
     },
     {
@@ -2467,8 +2188,7 @@
     {
       "Id": 355,
       "Name": [
-        "Link's Uncle",
-        [ "Hyrule Castle Link's Uncle", 0 ]
+        "Link's Uncle"
       ]
     },
     {
@@ -2481,19 +2201,13 @@
     {
       "Id": 357,
       "Name": [
-        "Castle Tower - Foyer",
-        [ "Agahnim's Tower Castle Tower - Foyer", 0 ],
-        [ "Hyrule Castle Tower Castle Tower - Foyer", 0 ],
-        [ "Castle Tower Castle Tower - Foyer", 0 ]
+        "Castle Tower Foyer"
       ]
     },
     {
       "Id": 358,
       "Name": [
-        "Castle Tower - Dark Maze",
-        [ "Agahnim's Tower Castle Tower - Dark Maze", 0 ],
-        [ "Hyrule Castle Tower Castle Tower - Dark Maze", 0 ],
-        [ "Castle Tower Castle Tower - Dark Maze", 0 ]
+        "Castle Tower - Dark Maze"
       ]
     },
     {
@@ -2530,52 +2244,49 @@
     {
       "Id": 364,
       "Name": [
-        "Armos Knights",
-        [ "Eastern Palace Armos Knights", 0 ]
+        "Armos Knights"
       ]
     },
     {
       "Id": 365,
       "Name": [
-        "Dessert Palace Big Chest",
-        "Desert Palace Big Chest"
+        "Desert Palace Big Chest",
+        "Dessert Palace Big Chest"
       ]
     },
     {
       "Id": 366,
       "Name": [
         "Torch",
-        [ "Dessert Palace Torch", 0 ],
-        [ "Desert Palace Torch", 0 ]
+        [ "Desert Palace Torch", 0 ],
+        [ "Dessert Palace Torch", 0 ]
       ]
     },
     {
       "Id": 367,
       "Name": [
-        "Dessert Palace Map Chest",
-        "Desert Palace Map Chest"
+        "Desert Palace Map Chest",
+        "Dessert Palace Map Chest"
       ]
     },
     {
       "Id": 368,
       "Name": [
-        "Dessert Palace Big Key Chest",
-        "Desert Palace Big Key Chest"
+        "Desert Palace Big Key Chest",
+        "Dessert Palace Big Key Chest"
       ]
     },
     {
       "Id": 369,
       "Name": [
-        "Dessert Palace Compass Chest",
-        "Desert Palace Compass Chest"
+        "Desert Palace Compass Chest",
+        "Dessert Palace Compass Chest"
       ]
     },
     {
       "Id": 370,
       "Name": [
-        "Lanmolas",
-        [ "Dessert Palace Lanmolas", 0 ],
-        [ "Desert Palace Lanmolas", 0 ]
+        "Lanmolas"
       ]
     },
     {
@@ -2612,8 +2323,7 @@
     {
       "Id": 376,
       "Name": [
-        "Moldorm",
-        [ "Tower of Hera Moldorm", 0 ]
+        "Moldorm"
       ]
     },
     {
@@ -2702,15 +2412,13 @@
     {
       "Id": 390,
       "Name": [
-        "Helmasaur King",
-        [ "Palace of Darkness Helmasaur King", 0 ]
+        "Helmasaur King"
       ]
     },
     {
       "Id": 391,
       "Name": [
-        "Entrance",
-        [ "Swamp Palace Entrance", 0 ]
+        "Swamp Palace Entrance"
       ]
     },
     {
@@ -2734,8 +2442,7 @@
     {
       "Id": 395,
       "Name": [
-        "West Chest",
-        [ "Swamp Palace West Chest", 0 ]
+        "Swamp Palace West Chest"
       ]
     },
     {
@@ -2766,68 +2473,65 @@
     {
       "Id": 400,
       "Name": [
-        "Arrghus",
-        [ "Swamp Palace Arrghus", 0 ]
+        "Arrghus"
       ]
     },
     {
       "Id": 401,
       "Name": [
         "Pot Prison",
-        [ "Skill Woods Pot Prison", 0 ],
-        [ "Skull Woods Pot Prison", 0 ]
+        [ "Skull Woods Pot Prison", 0 ],
+        [ "Skill Woods Pot Prison", 0 ]
       ]
     },
     {
       "Id": 402,
       "Name": [
-        "Skill Woods Compass Chest",
-        "Skull Woods Compass Chest"
+        "Skull Woods Compass Chest",
+        "Skill Woods Compass Chest"
       ]
     },
     {
       "Id": 403,
       "Name": [
-        "Skill Woods Big Chest",
-        "Skull Woods Big Chest"
+        "Skull Woods Big Chest",
+        "Skill Woods Big Chest"
       ]
     },
     {
       "Id": 404,
       "Name": [
-        "Skill Woods Map Chest",
-        "Skull Woods Map Chest"
+        "Skull Woods Map Chest",
+        "Skill Woods Map Chest"
       ]
     },
     {
       "Id": 405,
       "Name": [
         "Pinball Room",
-        [ "Skill Woods Pinball Room", 0 ],
-        [ "Skull Woods Pinball Room", 0 ]
+        [ "Skull Woods Pinball Room", 0 ],
+        [ "Skill Woods Pinball Room", 0 ]
       ]
     },
     {
       "Id": 406,
       "Name": [
-        "Skill Woods Big Key Chest",
-        "Skull Woods Big Key Chest"
+        "Skull Woods Big Key Chest",
+        "Skill Woods Big Key Chest"
       ]
     },
     {
       "Id": 407,
       "Name": [
         "Bridge Room",
-        [ "Skill Woods Bridge Room", 0 ],
-        [ "Skull Woods Bridge Room", 0 ]
+        [ "Skull Woods Bridge Room", 0 ],
+        [ "Skill Woods Bridge Room", 0 ]
       ]
     },
     {
       "Id": 408,
       "Name": [
-        "Mothula",
-        [ "Skill Woods Mothula", 0 ],
-        [ "Skull Woods Mothula", 0 ]
+        "Mothula"
       ]
     },
     {
@@ -2878,8 +2582,7 @@
     {
       "Id": 416,
       "Name": [
-        "Blind",
-        [ "Thieves' Town Blind", 0 ]
+        "Blind"
       ]
     },
     {
@@ -2930,15 +2633,13 @@
     {
       "Id": 424,
       "Name": [
-        "Kholdstare",
-        [ "Ice Palace Kholdstare", 0 ]
+        "Kholdstare"
       ]
     },
     {
       "Id": 425,
       "Name": [
-        "Main Lobby",
-        [ "Misery Mire Main Lobby", 0 ]
+        "Misery Mire Main Lobby"
       ]
     },
     {
@@ -2982,8 +2683,7 @@
     {
       "Id": 432,
       "Name": [
-        "Vitreous",
-        [ "Misery Mire Vitreous", 0 ]
+        "Vitreous"
       ]
     },
     {
@@ -3239,8 +2939,7 @@
     {
       "Id": 496,
       "Name": [
-        "Library",
-        [ "Light World South Library", 0 ]
+        "Library"
       ],
       "X": 313,
       "Y": 1310
@@ -3249,9 +2948,7 @@
       "Id": 497,
       "Name": [
         "Forest Clearing - Digging Spot",
-        [ "Light World South Forest Clearing - Digging Spot", 0 ],
-        "Flute Spot",
-        [ "Light World South Flute Spot", 0 ]
+        "Flute Spot"
       ],
       "X": 600,
       "Y": 1350
@@ -3260,9 +2957,7 @@
       "Id": 498,
       "Name": [
         "Cave #45",
-        [ "Light World South Cave #45", 0 ],
-        "South of Grove",
-        [ "Light World South South of Grove", 0 ]
+        "South of Grove"
       ],
       "X": 552,
       "Y": 1693
@@ -3270,8 +2965,7 @@
     {
       "Id": 499,
       "Name": [
-        "Link's House",
-        [ "Light World South Link's House", 0 ]
+        "Link's House"
       ],
       "X": 1097,
       "Y": 1366
@@ -3279,10 +2973,8 @@
     {
       "Id": 500,
       "Name": [
-        "Aggina's Cave",
-        [ "Light World South Aggina's Cave", 0 ],
-        "Aginah's Cave",
-        [ "Light World South Aginah's Cave", 0 ]
+        [ "Aginah's Cave", 0 ],
+        "Aggina's Cave"
       ],
       "X": 400,
       "Y": 1655
@@ -3290,10 +2982,8 @@
     {
       "Id": 506,
       "Name": [
-        "Chicken Lady's House",
-        [ "Light World North West Chicken Lady's House", 0 ],
         "Chicken House",
-        [ "Light World North West Chicken House", 0 ]
+        "Chicken Lady's House"
       ],
       "X": 197,
       "Y": 1066
@@ -3307,8 +2997,7 @@
     {
       "Id": 508,
       "Name": [
-        "Desert Ledge",
-        [ "Light World South Desert Ledge", 0 ]
+        "Desert Ledge"
       ],
       "X": 40,
       "Y": 1835
@@ -3316,8 +3005,7 @@
     {
       "Id": 509,
       "Name": [
-        "Checkerboard Cave",
-        [ "Light World South Checkerboard Cave", 0 ]
+        "Checkerboard Cave"
       ],
       "X": 354,
       "Y": 1560
