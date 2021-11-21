@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Randomizer.Shared;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Represents a trackable item.

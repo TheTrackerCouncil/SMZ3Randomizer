@@ -1,27 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Randomizer.Shared;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Represents a dungeon in A Link to the Past.
     /// </summary>
-    public class ZeldaDungeon
+    public class DungeonInfo : IPointOfInterest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ZeldaDungeon"/> class.
+        /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
         /// </summary>
         /// <param name="name">The name of the dungeon.</param>
         /// <param name="abbreviation">
         /// The abbreviation of the dungeon name.
         /// </param>
         /// <param name="boss">The name of the boss.</param>
-        public ZeldaDungeon(SchrodingersString name, string abbreviation, SchrodingersString boss)
+        /// <param name="typeName">
+        /// The fully qualified type name of the region that represents the
+        /// dungeon.
+        /// </param>
+        /// <param name="regionTypeName">
+        /// The fully qualified type name of the region the dungeon is located
+        /// in.
+        /// </param>
+        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss, string typeName, string regionTypeName)
         {
             Name = name;
             Abbreviation = abbreviation;
             Boss = boss ?? new();
+            TypeName = typeName;
+            RegionTypeName = regionTypeName;
         }
 
         /// <summary>
@@ -38,6 +50,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the possible names of the dungeon boss.
         /// </summary>
         public SchrodingersString Boss { get; init; }
+
+        /// <summary>
+        /// Gets the fully qualified name of the type of region that represents
+        /// this dungeon.
+        /// </summary>
+        public string TypeName { get; }
 
         /// <summary>
         /// Gets or sets the zero-based of the column in which the tracker
@@ -66,7 +84,8 @@ namespace Randomizer.SMZ3.Tracking
             = RewardItem.Unknown;
 
         /// <summary>
-        /// Gets a value indicating whether the dungeon has a reward when the boss is defeated.
+        /// Gets a value indicating whether the dungeon has a reward when the
+        /// boss is defeated.
         /// </summary>
         public bool HasReward { get; init; } = true;
 
@@ -89,6 +108,24 @@ namespace Randomizer.SMZ3.Tracking
         public bool Cleared { get; set; }
 
         /// <summary>
+        /// Gets the x-coordinate of the dungeon on the map, if it should be
+        /// displayed.
+        /// </summary>
+        public int? X { get; init; }
+
+        /// <summary>
+        /// Gets the y-coordinate of the dungeon on the map, if it should be
+        /// displayed.
+        /// </summary>
+        public int? Y { get; init; }
+
+        /// <summary>
+        /// Gets the fully qualified name of the region that the dungeon is
+        /// located in.
+        /// </summary>
+        public string RegionTypeName { get; init; }
+
+        /// <summary>
         /// Returns a string representation of the dungeon.
         /// </summary>
         /// <returns>A string representing the dungeon.</returns>
@@ -103,7 +140,7 @@ namespace Randomizer.SMZ3.Tracking
         /// otherwise, <c>false</c>.
         /// </returns>
         public bool Is(Region region)
-            => Name.Contains(region.Name, StringComparison.OrdinalIgnoreCase);
+            => TypeName == region.GetType().FullName;
 
         /// <summary>
         /// Determines whether the specified area either represents this dungeon
@@ -135,5 +172,50 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Region GetRegion(World world)
             => world.Regions.Single(Is);
+
+        /// <summary>
+        /// Determines whether the dungeon is accessible with the specified set
+        /// of items.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world that contains the dungeon.
+        /// </param>
+        /// <param name="progression">The available items.</param>
+        /// <returns>
+        /// <c>true</c> if the dungeon is accessible; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsAccessible(World world, Progression progression)
+        {
+            var region = GetRegion(world);
+            return region.CanEnter(progression);
+        }
+
+        /// <summary>
+        /// Determines whether the dungeon is located in the specified region.
+        /// </summary>
+        /// <param name="region">The region to check.</param>
+        /// <returns>
+        /// <c>true</c> if this dungeon is located in the specified region;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsInRegion(Region region)
+        {
+            return region.GetType().FullName == RegionTypeName;
+        }
+
+        /// <summary>
+        /// Returns the locations associated with the dungeon.
+        /// </summary>
+        /// <param name="world">
+        /// The instance of the world whose locations to return.
+        /// </param>
+        /// <returns>
+        /// A collection of locations in the dungeon from the specified world.
+        /// </returns>
+        public IReadOnlyCollection<Location> GetLocations(World world)
+        {
+            var region = GetRegion(world);
+            return region.Locations.ToImmutableList();
+        }
     }
 }

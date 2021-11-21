@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Randomizer.SMZ3.Tracking.Converters
+namespace Randomizer.SMZ3.Tracking.Configuration.Converters
 {
     internal class PegConverter : JsonConverter<Peg>
     {

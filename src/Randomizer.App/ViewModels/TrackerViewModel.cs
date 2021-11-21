@@ -8,6 +8,7 @@ using System.Windows;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App.ViewModels
 {
@@ -62,7 +63,7 @@ namespace Randomizer.App.ViewModels
                 return _syncer.MarkedLocations.Select(x =>
                 {
                     var location = _syncer.AllLocations.Single(location => location.Id == x.Key);
-                    return new MarkedLocationViewModel(location, x.Value, _syncer.Progression);
+                    return new MarkedLocationViewModel(location, x.Value, _syncer);
                 });
             }
         }
@@ -86,12 +87,12 @@ namespace Randomizer.App.ViewModels
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldSouth.Library,
                 new ItemData(new("X-Ray Scope"), ItemType.XRay),
-                _syncer.Progression);
+                _syncer);
 
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
                 new ItemData(new("Bullshit"), ItemType.Nothing),
-                _syncer.Progression);
+                _syncer);
         }
     }
 }

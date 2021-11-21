@@ -13,6 +13,7 @@ using BunLabs;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -38,6 +39,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
         /// <param name="config">The tracking configuration.</param>
+        /// <param name="locationConfig">The location configuration.</param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
@@ -47,6 +49,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
         public Tracker(TrackerConfig config,
+            LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger,
@@ -59,11 +62,10 @@ namespace Randomizer.SMZ3.Tracking
             // Initialize the tracker configuration
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
-            Dungeons = config.Dungeons.ToImmutableList();
             Responses = config.Responses;
             World = worldAccessor.GetWorld();
-            GetTreasureCounts(Dungeons, World);
-            UniqueLocationNames = World.Locations.ToDictionary(x => x.Id, x => GetUniqueNames(x));
+            WorldInfo = locationConfig;
+            GetTreasureCounts(WorldInfo.Dungeons, World);
 
             // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
@@ -127,6 +129,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler? StateLoaded;
 
         /// <summary>
+        /// Gets extra information about locations.
+        /// </summary>
+        public LocationConfig WorldInfo { get; }
+
+        /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
         public IReadOnlyCollection<ItemData> Items { get; }
@@ -135,11 +142,6 @@ namespace Randomizer.SMZ3.Tracking
         /// Get a collection of pegs in Peg World mode.
         /// </summary>
         public IReadOnlyCollection<Peg> Pegs { get; }
-
-        /// <summary>
-        /// Gets a collection of Zelda dungeons.
-        /// </summary>
-        public IReadOnlyCollection<ZeldaDungeon> Dungeons { get; }
 
         /// <summary>
         /// Gets the world for the currently tracked playthrough.
@@ -190,15 +192,11 @@ namespace Randomizer.SMZ3.Tracking
         public TrackerOptions Options { get; }
 
         /// <summary>
-        /// Gets a dictionary that contains unique location names for each
-        /// location.
-        /// </summary>
-        protected internal IReadOnlyDictionary<int, SchrodingersString> UniqueLocationNames { get; }
-
-        /// <summary>
         /// Initializes the microphone from the default audio device
         /// </summary>
-        /// <returns>True if the microphone is initialized, false otherwise</returns>
+        /// <returns>
+        /// True if the microphone is initialized, false otherwise
+        /// </returns>
         public bool InitializeMicrophone()
         {
             if (MicrophoneInitialized) return true;
@@ -215,6 +213,7 @@ namespace Randomizer.SMZ3.Tracking
                 return false;
             }
         }
+
         /// <summary>
         /// Loads the tracker state from the specified saved state.
         /// </summary>
@@ -260,6 +259,53 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Returns a collection of the points of interest in the specified
+        /// region.
+        /// </summary>
+        /// <param name="region">
+        /// The region whose points of interest to enumerate.
+        /// </param>
+        /// <returns>
+        /// A collection of the points of interest in <paramref name="region"/>.
+        /// </returns>
+        public IEnumerable<IPointOfInterest> EnumeratePointsOfInterest(Region region)
+        {
+            foreach (var room in region.Rooms)
+            {
+                yield return WorldInfo.Room(room);
+            }
+
+            foreach (var location in region.GetStandaloneLocations())
+            {
+                yield return WorldInfo.Location(location);
+            }
+
+            foreach (var dungeon in WorldInfo.Dungeons)
+            {
+                if (dungeon.IsInRegion(region))
+                    yield return dungeon;
+            }
+        }
+
+        /// <summary>
+        /// Returns info about locations associated with the specified point of
+        /// interest.
+        /// </summary>
+        /// <param name="poi">
+        /// The point of interest whose locations to get information about.
+        /// </param>
+        /// <returns>
+        /// A collection of <see cref="LocationInfo"/> associated with <paramref
+        /// name="poi"/>.
+        /// </returns>
+        public IReadOnlyCollection<LocationInfo> GetLocations(IPointOfInterest poi)
+        {
+            return poi.GetLocations(World)
+                .Select(x => WorldInfo.Location(x))
+                .ToImmutableList();
+        }
+
+        /// <summary>
         /// Toggles Go Mode on.
         /// </summary>
         /// <param name="confidence">The speech recognition confidence.</param>
@@ -296,7 +342,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <exception cref=" ArgumentOutOfRangeException">
         /// <paramref name="amount"/> is less than 1.
         /// </exception>
-        public bool TrackDungeonTreasure(ZeldaDungeon dungeon, float? confidence = null, int amount = 1)
+        public bool TrackDungeonTreasure(DungeonInfo dungeon, float? confidence = null, int amount = 1)
         {
             if (amount < 1)
                 throw new ArgumentOutOfRangeException(nameof(amount), "The amount of items must be greater than zero.");
@@ -315,8 +361,9 @@ namespace Randomizer.SMZ3.Tracking
                     // Try to get the response based on the amount of items left
                     if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
                         Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
-                    // If we don't have a response for the exact amount and we have
-                    // multiple left, get the one for 2 (considered generic)
+                    // If we don't have a response for the exact amount and we
+                    // have multiple left, get the one for 2 (considered
+                    // generic)
                     else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
                         Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
                 }
@@ -344,7 +391,7 @@ namespace Randomizer.SMZ3.Tracking
         /// possible rewards.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonReward(ZeldaDungeon dungeon, RewardItem? reward = null, float? confidence = null)
+        public void SetDungeonReward(DungeonInfo dungeon, RewardItem? reward = null, float? confidence = null)
         {
             var originalReward = dungeon.Reward;
             if (reward == null)
@@ -370,7 +417,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void SetUnmarkedDungeonReward(RewardItem reward, float? confidence = null)
         {
-            var unmarkedDungeons = Dungeons
+            var unmarkedDungeons = WorldInfo.Dungeons
                 .Where(x => x.HasReward && x.Reward == RewardItem.Unknown)
                 .ToImmutableList();
 
@@ -394,7 +441,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="dungeon">The dungeon to mark.</param>
         /// <param name="medallion">The medallion that is required.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonRequirement(ZeldaDungeon dungeon, Medallion? medallion = null, float? confidence = null)
+        public void SetDungeonRequirement(DungeonInfo dungeon, Medallion? medallion = null, float? confidence = null)
         {
             var region = World?.Regions.SingleOrDefault(x => dungeon.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
             if (region == null)
@@ -745,7 +792,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="dungeon">The dungeon the item was tracked in.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackItem(ItemData item, ZeldaDungeon dungeon, string? trackedAs = null, float? confidence = null)
+        public void TrackItem(ItemData item, DungeonInfo dungeon, string? trackedAs = null, float? confidence = null)
         {
             TrackItem(item, trackedAs, confidence, tryClear: false);
             var undoTrack = _undoHistory.Pop();
@@ -856,7 +903,9 @@ namespace Randomizer.SMZ3.Tracking
         /// Sets the item count for the specified item.
         /// </summary>
         /// <param name="item">The item to track.</param>
-        /// <param name="count">The amount of the item that is in the player's inventory now.</param>
+        /// <param name="count">
+        /// The amount of the item that is in the player's inventory now.
+        /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
         public void SetItemCount(ItemData item, int count, float confidence)
         {
@@ -897,10 +946,12 @@ namespace Randomizer.SMZ3.Tracking
         /// available with current items.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        /// <param name="assumeKeys">Set to true to ignore keys when clearing the location.</param>
+        /// <param name="assumeKeys">
+        /// Set to true to ignore keys when clearing the location.
+        /// </param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
-            var dungeon = Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
+            var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
             if (dungeon != null)
             {
                 assumeKeys = true; // Always assume keys when clearing the dungeon itself
@@ -1025,7 +1076,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             Action? undoTrackTreasure = null;
-            var dungeon = Dungeons.SingleOrDefault(x => x.Is(location.Region));
+            var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => x.Is(location.Region));
             if (dungeon != null && location.Item?.IsDungeonItem == false)
             {
                 TrackDungeonTreasure(dungeon, confidence);
@@ -1053,7 +1104,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon that was cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkDungeonAsCleared(ZeldaDungeon dungeon, float? confidence = null)
+        public void MarkDungeonAsCleared(DungeonInfo dungeon, float? confidence = null)
         {
             if (dungeon.Cleared)
             {
@@ -1096,11 +1147,12 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Un-marks a dungeon as cleared and, if possible, untracks the boss reward.
+        /// Un-marks a dungeon as cleared and, if possible, untracks the boss
+        /// reward.
         /// </summary>
         /// <param name="dungeon">The dungeon that should be un-cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkDungeonAsIncomplete(ZeldaDungeon dungeon, float? confidence = null)
+        public void MarkDungeonAsIncomplete(DungeonInfo dungeon, float? confidence = null)
         {
             if (!dungeon.Cleared)
             {
@@ -1241,7 +1293,7 @@ namespace Randomizer.SMZ3.Tracking
         /// possible names of <paramref name="location"/>.
         /// </returns>
         protected internal virtual SchrodingersString GetName(Location location)
-            => UniqueLocationNames[location.Id];
+            => WorldInfo.Location(location).Name;
 
         /// <summary>
         /// Adds an action to be invoked to undo the last operation.
@@ -1355,7 +1407,7 @@ namespace Randomizer.SMZ3.Tracking
             return null;
         }
 
-        private void GetTreasureCounts(IReadOnlyCollection<ZeldaDungeon> dungeons, World world)
+        private void GetTreasureCounts(IReadOnlyCollection<DungeonInfo> dungeons, World world)
         {
             if (!world.Items.Any())
                 return;
@@ -1390,7 +1442,7 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
-        private ZeldaDungeon? GetDungeonFromItem(ItemData item, ZeldaDungeon? dungeon = null)
+        private DungeonInfo? GetDungeonFromItem(ItemData item, DungeonInfo? dungeon = null)
         {
             var locations = World.Locations
                 .Where(x => !x.Cleared && x.ItemIs(item.InternalItemType, World))
@@ -1400,7 +1452,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 // User didn't have a guess and there's only one location that
                 // has the tracker item
-                return Dungeons.SingleOrDefault(x => x.Is(locations[0].Region));
+                return WorldInfo.Dungeons.SingleOrDefault(x => x.Is(locations[0].Region));
             }
 
             if (locations.Count > 0 && dungeon != null)
@@ -1484,46 +1536,6 @@ namespace Randomizer.SMZ3.Tracking
 
             var progression = new Progression(items);
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
-        }
-
-        private SchrodingersString GetUniqueNames(Location location)
-        {
-            var allLocationNames = World.Locations.Select(x => x.Name)
-                .Concat(World.Locations.SelectMany(x => x.AlternateNames));
-
-            return new SchrodingersString(location.AlternateNames.Concat(new[] { location.Name })
-                .SelectMany(x => MakeUnique(x, location)));
-
-            IEnumerable<SchrodingersString.Possibility> MakeUnique(string name, Location location)
-            {
-                // Only at the location name if it is unique
-                var isUnique = Occurences(name) < 2;
-                if (isUnique)
-                {
-                    yield return new(name);
-                }
-
-                // Add the room/region name variants. If the name is unique, add
-                // them with a zero weight for consistent tracking, without
-                // having tracker say verbose names.
-                if (location.Room != null)
-                {
-                    foreach (var roomName in location.Room.AlsoKnownAs.Concat(new[] { location.Room.Name }))
-                    {
-                        yield return new($"{roomName} {name}", isUnique ? 0 : 1);
-                    }
-                }
-                else
-                {
-                    foreach (var regionName in location.Region.AlsoKnownAs.Concat(new[] { location.Region.Name }))
-                    {
-                        yield return new($"{regionName} {name}", isUnique ? 0 : 1);
-                    }
-                }
-            }
-
-            int Occurences(string name)
-                => allLocationNames!.Count(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

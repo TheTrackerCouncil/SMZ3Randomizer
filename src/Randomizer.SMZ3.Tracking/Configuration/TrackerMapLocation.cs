@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Representation of a location to be displayed on the map at a certain position
@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="x">The x location to place this location on the map</param>
         /// <param name="y">The y location to place this location on the map</param>
         /// <param name="scale">The ratio at which this location has been scaled down (for combined maps)</param>
-        public TrackerMapLocation (string region, string name, int x, int y, double scale = 1)
+        public TrackerMapLocation(string region, string name, int x, int y, double scale = 1)
         {
             Region = region;
             Name = name;
@@ -60,9 +60,11 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="loc">The randomizer location to compare to</param>
         /// <returns>True if the location matches the randomizer location, false otherwise</returns>
-        public bool MatchesSMZ3Location (Location loc)
+        public bool MatchesSMZ3Location(Location loc)
         {
-            return (Region == loc.Region.Name && Name == loc.Name) || (Region == loc.Region.Name && Name == loc.Room?.Name) || (Region == Name && Name == loc.Region.Name);
+            return (Region == loc.Region.Name && Name == loc.Name)
+                || (Region == loc.Region.Name && Name == loc.Room?.Name)
+                || (Region == Name && Name == loc.Region.Name);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Represents a region on the map

@@ -1,0 +1,3020 @@
+{
+  "Regions": [
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar",
+      "Name": [
+        "Blue Brinstar"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.GreenBrinstar",
+      "Name": [
+        "Green Brinstar"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.KraidsLair",
+      "Name": [
+        "Kraid's Lair",
+        "Warehouse"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.PinkBrinstar",
+      "Name": [
+        "Pink Brinstar"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.RedBrinstar",
+      "Name": [
+        "Red Brinstar"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.CentralCrateria",
+      "Name": [
+        "Central Crateria"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.EastCrateria",
+      "Name": [
+        "East Crateria"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.WestCrateria",
+      "Name": [
+        "West Crateria"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.InnerMaridia",
+      "Name": [
+        "Inner Maridia"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.OuterMaridia",
+      "Name": [
+        "Outer Maridia"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.LowerNorfairEast",
+      "Name": [
+        "Lower Norfair, East"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.LowerNorfairWest",
+      "Name": [
+        "Lower Norfair, West"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairCrocomire",
+      "Name": [
+        "Upper Norfair, Crocomire"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairEast",
+      "Name": [
+        "Upper Norfair, East"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairWest",
+      "Name": [
+        "Upper Norfair, West"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.WreckedShip",
+      "Name": [
+        "Wrecked Ship"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower",
+      "Name": [
+        "Castle Tower",
+        "Agahnim's Tower",
+        "Hyrule Castle Tower"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
+      "Name": [
+        "Dark World Mire"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
+      "Name": [
+        "Dark World North East"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
+      "Name": [
+        "Dark World North West"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth",
+      "Name": [
+        "Dark World South"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast",
+      "Name": [
+        "Dark World Death Mountain East"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
+      "Name": [
+        "Dark World Death Mountain West"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DesertPalace",
+      "Name": [
+        "Desert Palace",
+        "Dessert Palace"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.EasternPalace",
+      "Name": [
+        "Eastern Palace"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
+      "Name": [
+        "Ganon's Tower"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.HyruleCastle",
+      "Name": [
+        "Hyrule Castle"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.IcePalace",
+      "Name": [
+        "Ice Palace"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast",
+      "Name": [
+        "Light World Death Mountain East"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest",
+      "Name": [
+        "Light World Death Mountain West"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
+      "Name": [
+        "Light World North East"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest",
+      "Name": [
+        "Light World North West"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth",
+      "Name": [
+        "Light World South"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
+      "Name": [
+        "Misery Mire"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
+      "Name": [
+        "Palace of Darkness",
+        "Palace of Dorkness"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.SkullWoods",
+      "Name": [
+        "Skull Woods",
+        "Skill Woods"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace",
+      "Name": [
+        "Swamp Palace"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.ThievesTown",
+      "Name": [
+        "Thieves' Town"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TowerOfHera",
+      "Name": [
+        "Tower of Hera"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
+      "Name": [
+        "Turtle Rock"
+      ]
+    }
+  ],
+  "Dungeons": [
+    {
+      "Name": [ "Eastern Palace" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.EasternPalace",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
+      "X": 1925,
+      "Y": 791,
+      "Abbreviation": "EP",
+      "Boss": "Armos Knights",
+      "TreasureRemaining": 3,
+      "Column": 0,
+      "Row": 5,
+      "LocationId": 364
+    },
+    {
+      "Name": [ "Desert Palace", "Dessert Palace" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DesertPalace",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth",
+      "X": 146,
+      "Y": 1584,
+      "Abbreviation": "DP",
+      "Boss": "Lanmolas",
+      "TreasureRemaining": 2,
+      "Column": 1,
+      "Row": 5,
+      "LocationId": 370
+    },
+    {
+      "Name": [ "Tower of Hera" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TowerOfHera",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest",
+      "X": 1126,
+      "Y": 68,
+      "Abbreviation": "TH",
+      "Boss": "Moldorm",
+      "TreasureRemaining": 2,
+      "Column": 2,
+      "Row": 5,
+      "LocationId": 376
+    },
+    {
+      "Name": [ "Palace of Darkness", "Dark Palace", "Palace of Dorkness", "Dork Palace" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
+      "X": 1924,
+      "Y": 800,
+      "Abbreviation": "PD",
+      "Boss": "Helmasaur King",
+      "TreasureRemaining": 5,
+      "Column": 3,
+      "Row": 5,
+      "LocationId": 390
+    },
+    {
+      "Name": [ "Swamp Palace" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth",
+      "X": 940,
+      "Y": 1880,
+      "Abbreviation": "SP",
+      "Boss": "Arrghus",
+      "TreasureRemaining": 6,
+      "Column": 4,
+      "Row": 5,
+      "LocationId": 400
+    },
+    {
+      "Name": [ "Skull Woods", "Skill Woods" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.SkullWoods",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
+      "X": 79,
+      "Y": 121,
+      "Abbreviation": "SW",
+      "Boss": "Mothula",
+      "TreasureRemaining": 2,
+      "Column": 0,
+      "Row": 6,
+      "LocationId": 408
+    },
+    {
+      "Name": [ "Thieves' Town" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.ThievesTown",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
+      "X": 251,
+      "Y": 971,
+      "Abbreviation": "TT",
+      "Boss": "Blind",
+      "TreasureRemaining": 4,
+      "Column": 1,
+      "Row": 6,
+      "LocationId": 416
+    },
+    {
+      "Name": [ "Ice Palace" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.IcePalace",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth",
+      "X": 1600,
+      "Y": 1735,
+      "Abbreviation": "IP",
+      "Boss": "Kholdstare",
+      "TreasureRemaining": 3,
+      "Column": 2,
+      "Row": 6,
+      "LocationId": 424
+    },
+    {
+      "Name": [ "Misery Mire" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
+      "X": 150,
+      "Y": 1670,
+      "Abbreviation": "MM",
+      "Boss": [ "Vitreous", "Psychedelic Eyeball" ],
+      "TreasureRemaining": 2,
+      "Column": 3,
+      "Row": 6,
+      "LocationId": 432
+    },
+    {
+      "Name": [ "Turtle Rock" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast",
+      "X": 1890,
+      "Y": 144,
+      "Abbreviation": "TR",
+      "Boss": "Trinexx",
+      "TreasureRemaining": 5,
+      "Column": 4,
+      "Row": 6,
+      "LocationId": 444
+    },
+    {
+      "Name": [ "Ganon's Tower" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
+      "X": 1126,
+      "Y": 68,
+      "Abbreviation": "GT",
+      "Boss": "Ganon",
+      "Column": 5,
+      "Row": 6,
+      "TreasureRemaining": 20,
+      "HasReward": false
+    },
+    {
+      "Name": [ "Hyrule Castle" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.HyruleCastle",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
+      "X": 1003,
+      "Y": 906,
+      "Abbreviation": "HC",
+      "Boss": "Agahnim",
+      "Column": 5,
+      "Row": 5,
+      "TreasureRemaining": 6,
+      "HasReward": false
+    }
+  ],
+  "Rooms": [
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar+BlueBrinstarTopRoom",
+      "Name": [
+        "Blue Brinstar Top"
+      ],
+      "X": 872,
+      "Y": 340
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.GreenBrinstar+MockballHallHiddenRoom",
+      "Name": [
+        "Mockball Hall Hidden Room"
+      ],
+      "X": 392,
+      "Y": 212
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.WestCrateria+GauntletShaftRoom",
+      "Name": [
+        "Gauntlet Shaft"
+      ],
+      "X": 264,
+      "Y": 180
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.InnerMaridia+LeftSandPitRoom",
+      "Name": [
+        "Left Sand Pit"
+      ],
+      "X": 552,
+      "Y": 532
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.InnerMaridia+WateringHoleRoom",
+      "Name": [
+        "Watering Hole"
+      ],
+      "X": 296,
+      "Y": 276
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairEast+BubbleMountainHiddenHallRoom",
+      "Name": [
+        "Bubble Mountain Hidden Hall"
+      ],
+      "X": 632,
+      "Y": 148
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower+DarkMazeRoom",
+      "Name": [
+        "Castle Tower Dark Maze"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower+FoyerRoom",
+      "Name": [
+        "Castle Tower Foyer"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire+MireShedRoom",
+      "Name": [
+        "Mire Shed"
+      ],
+      "X": 77,
+      "Y": 1600
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast+PyramidFairyChamber",
+      "Name": [
+        "Pyramid Fairy",
+        "Cursed Fairy"
+      ],
+      "X": 940,
+      "Y": 976
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth+HypeCaveRoom",
+      "Name": [
+        "Hype Cave"
+      ],
+      "X": 1200,
+      "Y": 1560
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast+HookshotCaveRoom",
+      "Name": [
+        "Hookshot Cave"
+      ],
+      "X": 1670,
+      "Y": 126
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast+SuperbunnyCaveRoom",
+      "Name": [
+        "Superbunny Cave"
+      ],
+      "X": 1695,
+      "Y": 290
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest+SpikeCaveRoom",
+      "Name": [
+        "Spike Cave"
+      ],
+      "X": 1151,
+      "Y": 294
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+BigKeyRoomRoom",
+      "Name": [
+        "Ganon's Tower Big Key Room"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+CompassRoomRoom",
+      "Name": [
+        "Ganon's Tower Compass Room"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+DMsRoomRoom",
+      "Name": [
+        "DMs Room"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+HopeRoomRoom",
+      "Name": [
+        "Ganon's Tower Hope Room",
+        "Ganon's Tower Right Side First Room"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+MiniHelmasaurRoomRoom",
+      "Name": [
+        "Ganon's Tower Mini Helmasaur Room"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+RandomizerRoomRoom",
+      "Name": [
+        "Ganon's Tower Randomizer Room"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.HyruleCastle+Sewers",
+      "Name": [
+        "Back of Escape",
+        "Sewers"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast+ParadoxCaveRoom",
+      "Name": [
+        "Paradox Cave"
+      ],
+      "X": 1731,
+      "Y": 434
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast+SahasrahlasHideoutRoom",
+      "Name": [
+        "Sahasrahla's Hut"
+      ],
+      "X": 1630,
+      "Y": 900
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast+WaterfallFairyChamber",
+      "Name": [
+        "Waterfall Fairy"
+      ],
+      "X": 1806,
+      "Y": 286
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast+ZorasDomainArea",
+      "Name": [
+        "Zora's Domain"
+      ],
+      "X": 1920,
+      "Y": 273
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest+BlindsHideoutRoom",
+      "Name": [
+        "Blind's Hideout"
+      ],
+      "X": 307,
+      "Y": 840
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest+KakarikoWellArea",
+      "Name": [
+        "Kakariko Well"
+      ],
+      "X": 47,
+      "Y": 833
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth+MiniMoldormCaveRoom",
+      "Name": [
+        "Mini Moldorm Cave"
+      ],
+      "X": 1309,
+      "Y": 1887
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth+SwampRuinsRoom",
+      "Name": [
+        "Swamp Ruins"
+      ],
+      "X": 944,
+      "Y": 1880
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness+DarkBasementRoom",
+      "Name": [
+        "Palace of Darkness Dark Basement"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness+DarkMazeRoom",
+      "Name": [
+        "Palace of Darkness Dark Maze"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace+FloodedRoomRoom",
+      "Name": [
+        "Swamp Palace Flooded Room"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock+LaserBridgeRoom",
+      "Name": [
+        "Eye Bridge",
+        "Laser Bridge"
+      ]
+    },
+    {
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock+RollerRoomRoom",
+      "Name": [
+        "Turtle Rock Roller Room"
+      ]
+    }
+  ],
+  "Locations": [
+    {
+      "Name": [
+        "Chozo Ruins entrance",
+        [ "Power Bomb (Crateria surface)", 0 ]
+      ],
+      "X": 968,
+      "Y": 116
+    },
+    {
+      "Id": 1,
+      "Name": [
+        "Flooded Cavern - under water",
+        "West Ocean - under water",
+        [ "Missile (outside Wrecked Ship bottom)", 0 ]
+      ],
+      "X": 1128,
+      "Y": 244
+    },
+    {
+      "Id": 2,
+      "Name": [
+        "Sky Missile",
+        [ "Missile (outside Wrecked Ship top)", 0 ]
+      ],
+      "X": 1160,
+      "Y": 84
+    },
+    {
+      "Id": 3,
+      "Name": [
+        "Morph Ball Maze",
+        [ "Missile (outside Wrecked Ship middle)", 0 ]
+      ],
+      "X": 1128,
+      "Y": 148
+    },
+    {
+      "Id": 4,
+      "Name": [
+        "The Moat",
+        "Interior Lake",
+        [ "Missile (Crateria moat)", 0 ]
+      ],
+      "X": 1064,
+      "Y": 212
+    },
+    {
+      "Id": 5,
+      "Name": [
+        "Gauntlet (Chozo)",
+        [ "Energy Tank, Gauntlet", 0 ]
+      ],
+      "X": 456,
+      "Y": 148
+    },
+    {
+      "Id": 6,
+      "Name": [
+        "Mother Brain's reliquary",
+        "Pit Room",
+        [ "Missile (Crateria bottom)", 0 ]
+      ],
+      "X": 552,
+      "Y": 660
+    },
+    {
+      "Id": 7,
+      "Name": [
+        "Bozo",
+        "Bomb Torizo room",
+        [ "Bombs", 0 ]
+      ],
+      "X": 712,
+      "Y": 276
+    },
+    {
+      "Id": 8,
+      "Name": [
+        "Terminator Room",
+        "Fungal Slope",
+        [ "Energy Tank, Terminator", 0 ]
+      ],
+      "X": 296,
+      "Y": 276
+    },
+    {
+      "Id": 9,
+      "Name": [
+        "Gauntlet Shaft Right",
+        [ "Missile (Crateria gauntlet right)", 0 ]
+      ]
+    },
+    {
+      "Id": 10,
+      "Name": [
+        "Gauntlet Shaft Left",
+        [ "Missile (Crateria gauntlet left)", 0 ]
+      ]
+    },
+    {
+      "Id": 11,
+      "Name": [
+        "Old Tourian launchpad",
+        [ "Super Missile (Crateria)", 0 ]
+      ],
+      "X": 680,
+      "Y": 372
+    },
+    {
+      "Id": 12,
+      "Name": [
+        "Final Missile Bombway",
+        "The Final Missile",
+        "Dental Plan Missiles",
+        [ "Missile (Crateria middle)", 0 ]
+      ],
+      "X": 424,
+      "Y": 308
+    },
+    {
+      "Id": 13,
+      "Name": [
+        "Power Bomb (green Brinstar bottom)"
+      ],
+      "X": 328,
+      "Y": 308
+    },
+    {
+      "Id": 14,
+      "Name": [
+        "Spore Spawn's item",
+        [ "Super Missile (pink Brinstar)", 0 ]
+      ],
+      "X": 712,
+      "Y": 372
+    },
+    {
+      "Id": 15,
+      "Name": [
+        "Mockball Room - Fail item",
+        [ "Missile (green Brinstar below super missile)", 0 ]
+      ],
+      "X": 296,
+      "Y": 212
+    },
+    {
+      "Id": 16,
+      "Name": [
+        "Mockball Room Attic",
+        [ "Super Missile (green Brinstar top)", 0 ]
+      ],
+      "X": 264,
+      "Y": 180
+    },
+    {
+      "Id": 17,
+      "Name": [
+        "Mockball Chozo",
+        [ "Reserve Tank, Brinstar", 0 ]
+      ],
+      "X": 360,
+      "Y": 212
+    },
+    {
+      "Id": 18,
+      "Name": [
+        "Mockball Back room hidden item",
+        [ "Missile (green Brinstar behind missile)", 0 ],
+        "Ron Popeil missiles",
+        "Mockball Hall Hidden Room Hidden Item"
+      ]
+    },
+    {
+      "Id": 19,
+      "Name": [
+        "Mockball Back room",
+        [ "Missile (green Brinstar behind reserve tank)", 0 ],
+        "Mockball Hall Hidden Room Main Item"
+      ]
+    },
+    {
+      "Id": 21,
+      "Name": [
+        "Pink Shaft (top)",
+        "Big Pink (top)",
+        [ "Missile (pink Brinstar top)", 0 ]
+      ],
+      "X": 488,
+      "Y": 308
+    },
+    {
+      "Id": 22,
+      "Name": [
+        "Pink Shaft (bottom)",
+        "Big Pink (bottom)",
+        [ "Missile (pink Brinstar bottom)", 0 ]
+      ],
+      "X": 488,
+      "Y": 404
+    },
+    {
+      "Id": 23,
+      "Name": [
+        "Pink Shaft - Chozo",
+        [ "Charge Beam", 0 ]
+      ],
+      "X": 488,
+      "Y": 436
+    },
+    {
+      "Id": 24,
+      "Name": [
+        "Mission: Impossible",
+        "Pink Brinstar Power Bomb Room",
+        [ "Power Bomb (pink Brinstar)", 0 ]
+      ],
+      "X": 424,
+      "Y": 340
+    },
+    {
+      "Id": 25,
+      "Name": [
+        "Green Hill Zone",
+        "Jungle slope",
+        [ "Missile (green Brinstar pipe)", 0 ]
+      ],
+      "X": 648,
+      "Y": 436
+    },
+    {
+      "Id": 26,
+      "Name": [
+        "Morph Ball (Corridor No. 1)",
+        "Morphing Ball"
+      ],
+      "X": 744,
+      "Y": 404
+    },
+    {
+      "Id": 27,
+      "Name": [
+        "Power Bomb wall (Corridor No. 1)",
+        [ "Power Bomb (blue Brinstar)", 0 ]
+      ],
+      "X": 680,
+      "Y": 404
+    },
+    {
+      "Id": 28,
+      "Name": [
+        "Missile (blue Brinstar middle)"
+      ],
+      "X": 968,
+      "Y": 404
+    },
+    {
+      "Id": 29,
+      "Name": [
+        "Blue Brinstar Ceiling",
+        [ "Energy Tank, Brinstar Ceiling", 0 ]
+      ],
+      "X": 936,
+      "Y": 404
+    },
+    {
+      "Id": 30,
+      "Name": [
+        "Hell",
+        "Etecoon shaft",
+        [ "Energy Tank, Etecoons", 0 ]
+      ],
+      "X": 136,
+      "Y": 404
+    },
+    {
+      "Id": 31,
+      "Name": [
+        "Super Missile (green Brinstar bottom)"
+      ],
+      "X": 104,
+      "Y": 404
+    },
+    {
+      "Id": 33,
+      "Name": [
+        "Waterway",
+        [ "Energy Tank, Waterway", 0 ]
+      ],
+      "X": 200,
+      "Y": 500
+    },
+    {
+      "Id": 34,
+      "Name": [
+        "Missile (blue Brinstar bottom)"
+      ],
+      "X": 840,
+      "Y": 436
+    },
+    {
+      "Id": 35,
+      "Name": [
+        "Hoptank Room",
+        "Wave Beam Glitch room",
+        [ "Energy Tank, Brinstar Gate", 0 ]
+      ],
+      "X": 616,
+      "Y": 340
+    },
+    {
+      "Id": 36,
+      "Name": [
+        "Billy Mays Room",
+        [ "Missile (blue Brinstar top)", 0 ],
+        "Blue Brinstar Top Main Item"
+      ]
+    },
+    {
+      "Id": 37,
+      "Name": [
+        "Billy Mays Room - Hidden item",
+        "But wait, there's more!",
+        [ "Missile (blue Brinstar behind missile)", 0 ],
+        "Blue Brinstar Top Hidden Item"
+      ]
+    },
+    {
+      "Id": 38,
+      "Name": [
+        "The Chozo room after the dark room with all the spikes",
+        "X-Ray Scope"
+      ],
+      "X": 680,
+      "Y": 564
+    },
+    {
+      "Id": 39,
+      "Name": [
+        "Beta Power Bomb Room",
+        "Power Bomb (red Brinstar sidehopper room)"
+      ],
+      "X": 1064,
+      "Y": 340
+    },
+    {
+      "Id": 40,
+      "Name": [
+        "Alpha Power Bomb Room",
+        "Power Bomb (red Brinstar spike room)"
+      ],
+      "X": 1064,
+      "Y": 436
+    },
+    {
+      "Id": 41,
+      "Name": [
+        "Alpha Power Bomb Room - Behind the wall",
+        "Missile (red Brinstar spike room)"
+      ],
+      "X": 1032,
+      "Y": 436
+    },
+    {
+      "Id": 42,
+      "Name": [
+        "~ S p A z E r ~",
+        "Spazer"
+      ],
+      "X": 1160,
+      "Y": 628
+    },
+    {
+      "Id": 43,
+      "Name": [
+        "Energy Tank, Kraid"
+      ],
+      "X": 1320,
+      "Y": 692
+    },
+    {
+      "Id": 44,
+      "Name": [
+        "Warehouse Kihunter Room",
+        "Missile (Kraid)"
+      ],
+      "X": 1448,
+      "Y": 660
+    },
+    {
+      "Id": 48,
+      "Name": [
+        "Kraid's Reliquary",
+        [ "Varia Suit", 0 ]
+      ],
+      "X": 1768,
+      "Y": 692
+    },
+    {
+      "Id": 49,
+      "Name": [
+        "Lava Room - Submerged in wall",
+        "Cathedral",
+        [ "Missile (lava room)", 0 ]
+      ],
+      "X": 568,
+      "Y": 212
+    },
+    {
+      "Id": 50,
+      "Name": [
+        "Ice Beam Room",
+        "Ice Beam"
+      ],
+      "X": 216,
+      "Y": 148
+    },
+    {
+      "Id": 51,
+      "Name": [
+        "Crumble Shaft",
+        [ "Missile (below Ice Beam)", 0 ]
+      ],
+      "X": 120,
+      "Y": 212
+    },
+    {
+      "Id": 52,
+      "Name": [
+        "Crocomire's Pit",
+        [ "Energy Tank, Crocomire", 0 ]
+      ],
+      "X": 664,
+      "Y": 404
+    },
+    {
+      "Id": 53,
+      "Name": [
+        "Hi-Jump Boots Room",
+        "Hi-Jump Boots"
+      ],
+      "X": 280,
+      "Y": 276
+    },
+    {
+      "Id": 54,
+      "Name": [
+        "Crocomire Escape",
+        [ "Missile (above Crocomire)", 0 ]
+      ],
+      "X": 408,
+      "Y": 276
+    },
+    {
+      "Id": 55,
+      "Name": [
+        "Hi-Jump Lobby - Back",
+        [ "Missile (Hi-Jump Boots)", 0 ]
+      ],
+      "X": 312,
+      "Y": 244
+    },
+    {
+      "Id": 56,
+      "Name": [
+        "Hi-Jump Lobby - Entrance",
+        [ "Energy Tank (Hi-Jump Boots)", 0 ]
+      ],
+      "X": 344,
+      "Y": 244
+    },
+    {
+      "Id": 57,
+      "Name": [
+        "Post Crocomire Power Bomb Room",
+        [ "Power Bomb (Crocomire)", 0 ]
+      ],
+      "X": 344,
+      "Y": 404
+    },
+    {
+      "Id": 58,
+      "Name": [
+        "Cosine Room",
+        "Post Crocomire Missile Room",
+        [ "Missile (below Crocomire)", 0 ]
+      ],
+      "X": 504,
+      "Y": 564
+    },
+    {
+      "Id": 59,
+      "Name": [
+        "Indiana Jones Room",
+        "Pantry",
+        "Post Crocomire Jump Room",
+        [ "Missile (Grappling Beam)", 0 ]
+      ],
+      "X": 312,
+      "Y": 564
+    },
+    {
+      "Id": 60,
+      "Name": [
+        "Grapple Beam Room",
+        "Grappling Beam"
+      ],
+      "X": 152,
+      "Y": 596
+    },
+    {
+      "Id": 61,
+      "Name": [
+        "Reserve Tank, Norfair",
+        "Bubble Mountain Hidden Hall Main Item"
+      ]
+    },
+    {
+      "Id": 62,
+      "Name": [
+        "Missile (Norfair Reserve Tank)",
+        "Bubble Mountain Hidden Hall Hidden Item"
+      ]
+    },
+    {
+      "Id": 63,
+      "Name": [
+        "Bubble Mountain Missile Room",
+        [ "Missile (bubble Norfair green door)", 0 ]
+      ],
+      "X": 728,
+      "Y": 148
+    },
+    {
+      "Id": 64,
+      "Name": [
+        "Bubble Mountain",
+        [ "Missile (bubble Norfair)", 0 ]
+      ],
+      "X": 792,
+      "Y": 244
+    },
+    {
+      "Id": 65,
+      "Name": [
+        "Speed Booster Hall - Ceiling",
+        [ "Missile (Speed Booster)", 0 ]
+      ],
+      "X": 1208,
+      "Y": 148
+    },
+    {
+      "Id": 66,
+      "Name": [
+        "Speed Booster Room",
+        "Speed Booster"
+      ],
+      "X": 1240,
+      "Y": 148
+    },
+    {
+      "Id": 67,
+      "Name": [
+        "Double Chamber",
+        "Grapple Crossing",
+        [ "Missile (Wave Beam)", 0 ]
+      ],
+      "X": 888,
+      "Y": 212
+    },
+    {
+      "Id": 68,
+      "Name": [
+        "Wave Beam Room",
+        "Wave Beam"
+      ],
+      "X": 984,
+      "Y": 212
+    },
+    {
+      "Id": 70,
+      "Name": [
+        "Gold Torizo - Drop down",
+        [ "Missile (Gold Torizo)", 0 ]
+      ],
+      "X": 632,
+      "Y": 564
+    },
+    {
+      "Id": 71,
+      "Name": [
+        "Golden Torizo - Ceiling",
+        [ "Super Missile (Gold Torizo)", 0 ]
+      ],
+      "X": 664,
+      "Y": 564
+    },
+    {
+      "Id": 73,
+      "Name": [
+        "Mickey Mouse Clubhouse",
+        [ "Missile (Mickey Mouse room)", 0 ]
+      ],
+      "X": 952,
+      "Y": 404
+    },
+    {
+      "Id": 74,
+      "Name": [
+        "Spring Ball Maze Room",
+        [ "Missile (lower Norfair above fire flea room)", 0 ]
+      ],
+      "X": 1176,
+      "Y": 244
+    },
+    {
+      "Id": 75,
+      "Name": [
+        "Escape Power Bomb Room",
+        [ "Power Bomb (lower Norfair above fire flea room)", 0 ]
+      ],
+      "X": 1240,
+      "Y": 276
+    },
+    {
+      "Id": 76,
+      "Name": [
+        "Wasteland - Power Bomb of Shame",
+        [ "Power Bomb (Power Bombs of shame)", 0 ]
+      ],
+      "X": 1080,
+      "Y": 532
+    },
+    {
+      "Id": 77,
+      "Name": [
+        "Three Musketeer's Room",
+        "FrankerZ Missiles",
+        [ "Missile (lower Norfair near Wave Beam)", 0 ]
+      ],
+      "X": 984,
+      "Y": 244
+    },
+    {
+      "Id": 78,
+      "Name": [
+        "Ridley's Reliquary",
+        [ "Energy Tank, Ridley", 0 ]
+      ],
+      "X": 760,
+      "Y": 628
+    },
+    {
+      "Id": 79,
+      "Name": [
+        "Screw Attack"
+      ],
+      "X": 696,
+      "Y": 596
+    },
+    {
+      "Id": 80,
+      "Name": [
+        "Fireflea Room",
+        [ "Energy Tank, Firefleas" , 0 ]
+      ],
+      "X": 1240,
+      "Y": 436
+    },
+    {
+      "Id": 128,
+      "Name": [
+        "Main Shaft - Side room",
+        [ "Missile (Wrecked Ship middle)", 0 ]
+      ],
+      "X": 408,
+      "Y": 340
+    },
+    {
+      "Id": 129,
+      "Name": [
+        "Post Chozo Concert - Speed Booster Item",
+        "Bowling Alley - Speed Booster Item",
+        [ "Reserve Tank, Wrecked Ship", 0 ]
+      ],
+      "X": 504,
+      "Y": 180
+    },
+    {
+      "Id": 130,
+      "Name": [
+        "Post Chozo Concert - Breakable Chozo",
+        [ "Missile (Gravity Suit)", 0 ]
+      ],
+      "X": 440,
+      "Y": 244
+    },
+    {
+      "Id": 131,
+      "Name": [
+        "Attic - Assembly Line",
+        [ "Missile (Wrecked Ship top)", 0 ]
+      ],
+      "X": 696,
+      "Y": 148
+    },
+    {
+      "Id": 132,
+      "Name": [
+        "Wrecked Pool",
+        [ "Energy Tank, Wrecked Ship", 0 ]
+      ],
+      "X": 600,
+      "Y": 244
+    },
+    {
+      "Id": 133,
+      "Name": [
+        "Left Super Missile Chamber",
+        ["Super Missile (Wrecked Ship left)", 0 ]
+      ],
+      "X": 504,
+      "Y": 372
+    },
+    {
+      "Id": 134,
+      "Name": [
+        "Right Super Missile Chamber",
+        [ "Right Super, Wrecked Ship", 0 ]
+      ],
+      "X": 696,
+      "Y": 372
+    },
+    {
+      "Id": 135,
+      "Name": [
+        "Post Chozo Concert - Gravity Suit Chamber",
+        [ "Gravity Suit", 0 ]
+      ],
+      "X": 344,
+      "Y": 244
+    },
+    {
+      "Id": 136,
+      "Name": [
+        "Main Street - Ceiling (Shinespark)",
+        "Main Street Missiles",
+        [ "Missile (green Maridia shinespark)", 0 ]
+      ],
+      "X": 232,
+      "Y": 468
+    },
+    {
+      "Id": 137,
+      "Name": [
+        "Main Street - Crab Supers",
+        [ "Super Missile (green Maridia)", 0 ]
+      ],
+      "X": 264,
+      "Y": 436
+    },
+    {
+      "Id": 138,
+      "Name": [
+        "Mama Turtle Room",
+        [ "Energy Tank, Mama turtle", 0 ]
+      ],
+      "X": 488,
+      "Y": 468
+    },
+    {
+      "Id": 139,
+      "Name": [
+        "Mama Turtle Room - Wall item",
+        [ "Missile (green Maridia tatori)", 0 ]
+      ],
+      "X": 520,
+      "Y": 500
+    },
+    {
+      "Id": 140,
+      "Name": [
+        "Watering Hole Left",
+        [ "Super Missile (yellow Maridia)", 0 ]
+      ]
+    },
+    {
+      "Id": 141,
+      "Name": [
+        "Watering Hole Right",
+        [ "Missile (yellow Maridia super missile)", 0 ]
+      ]
+    },
+    {
+      "Id": 142,
+      "Name": [
+        "Pseudo Plasma Spark Room",
+        [ "Missile (yellow Maridia false wall)", 0 ]
+      ],
+      "X": 552,
+      "Y": 276
+    },
+    {
+      "Id": 143,
+      "Name": [
+        "Plasma Beam"
+      ],
+      "X": 808,
+      "Y": 148
+    },
+    {
+      "Id": 144,
+      "Name": [
+        "Left Sand Pit Left",
+        [ "Missile (left Maridia sand pit room)", 0 ]
+      ]
+    },
+    {
+      "Id": 145,
+      "Name": [
+        "Left Sand Pit Right",
+        [ "Reserve Tank, Maridia", 0 ]
+      ]
+    },
+    {
+      "Id": 146,
+      "Name": [
+        "Right Sand Pit - Left item",
+        [ "Missile (right Maridia sand pit room)", 0 ]
+      ],
+      "X": 648,
+      "Y": 532
+    },
+    {
+      "Id": 147,
+      "Name": [
+        "Right Sand Pit - Right item",
+        [ "Power Bomb (right Maridia sand pit room)", 0 ]
+      ],
+      "X": 680,
+      "Y": 564
+    },
+    {
+      "Id": 148,
+      "Name": [
+        "Aqueduct - Left item",
+        [ "Missile (pink Maridia)", 0 ]
+      ],
+      "X": 680,
+      "Y": 372
+    },
+    {
+      "Id": 149,
+      "Name": [
+        "Aqueduct - Right item",
+        [ "Super Missile (pink Maridia)", 0 ]
+      ],
+      "X": 712,
+      "Y": 372
+    },
+    {
+      "Id": 150,
+      "Name": [
+        "Shak's Stash",
+        "Shaktool's item",
+        [ "Spring Ball", 0 ]
+      ],
+      "X": 968,
+      "Y": 596
+    },
+    {
+      "Id": 151,
+      "Name": [
+        "The Precious Room",
+        "Pre-Draygon Room",
+        [ "Missile (Draygon)", 0 ]
+      ],
+      "X": 1256,
+      "Y": 308
+    },
+    {
+      "Id": 152,
+      "Name": [
+        "Sandy Path",
+        [ "Energy Tank, Botwoon", 0 ]
+      ],
+      "X": 840,
+      "Y": 340
+    },
+    {
+      "Id": 154,
+      "Name": [
+        "Draygon's Reliquary",
+        [ "Space Jump", 0 ]
+      ],
+      "X": 1128,
+      "Y": 404
+    },
+    {
+      "Id": 256,
+      "Name": [
+        "Ether Tablet"
+      ],
+      "X": 844,
+      "Y": 38
+    },
+    {
+      "Id": 257,
+      "Name": [
+        "Spectacle Rock"
+      ],
+      "X": 980,
+      "Y": 178
+    },
+    {
+      "Id": 258,
+      "Name": [
+        "Spectacle Rock Cave"
+      ],
+      "X": 980,
+      "Y": 290
+    },
+    {
+      "Id": 259,
+      "Name": [
+        "Old Man"
+      ],
+      "X": 816,
+      "Y": 378
+    },
+    {
+      "Id": 260,
+      "Name": [
+        "Floating Island"
+      ],
+      "X": 1627,
+      "Y": 40
+    },
+    {
+      "Id": 261,
+      "Name": [
+        "Spiral Cave"
+      ],
+      "X": 1598,
+      "Y": 180
+    },
+    {
+      "Id": 262,
+      "Name": [
+        "Paradox Cave Upper - Left"
+      ]
+    },
+    {
+      "Id": 263,
+      "Name": [
+        "Paradox Cave Upper - Right"
+      ]
+    },
+    {
+      "Id": 264,
+      "Name": [
+        "Paradox Cave Lower - Far Left"
+      ]
+    },
+    {
+      "Id": 265,
+      "Name": [
+        "Paradox Cave Lower - Left"
+      ]
+    },
+    {
+      "Id": 266,
+      "Name": [
+        "Paradox Cave Lower - Middle"
+      ]
+    },
+    {
+      "Id": 267,
+      "Name": [
+        "Paradox Cave Lower - Right"
+      ]
+    },
+    {
+      "Id": 268,
+      "Name": [
+        "Paradox Cave Lower - Far Right"
+      ]
+    },
+    {
+      "Id": 269,
+      "Name": [
+        "Mimic Cave"
+      ]
+    },
+    {
+      "Id": 270,
+      "Name": [
+        "Master Sword Pedestal",
+        "Ped"
+      ],
+      "X": 83,
+      "Y": 101
+    },
+    {
+      "Id": 271,
+      "Name": [
+        "Mushroom"
+      ],
+      "X": 240,
+      "Y": 180
+    },
+    {
+      "Id": 272,
+      "Name": [
+        "Lost Woods Hideout"
+      ],
+      "X": 320,
+      "Y": 260
+    },
+    {
+      "Id": 273,
+      "Name": [
+        "Lumberjack Tree"
+      ],
+      "X": 633,
+      "Y": 117
+    },
+    {
+      "Id": 274,
+      "Name": [
+        "Bonk Rocks",
+        "Pegasus Rocks"
+      ],
+      "X": 777,
+      "Y": 590
+    },
+    {
+      "Id": 275,
+      "Name": [
+        "Graveyard Ledge"
+      ],
+      "X": 1132,
+      "Y": 549
+    },
+    {
+      "Id": 276,
+      "Name": [
+        "King's Tomb"
+      ],
+      "X": 1207,
+      "Y": 598
+    },
+    {
+      "Id": 277,
+      "Name": [
+        "Kakariko Well Back cave",
+        "Kakariko Well Top"
+      ]
+    },
+    {
+      "Id": 278,
+      "Name": [
+        "Kakariko Well Left"
+      ]
+    },
+    {
+      "Id": 279,
+      "Name": [
+        "Kakariko Well Middle"
+      ]
+    },
+    {
+      "Id": 280,
+      "Name": [
+        "Kakariko Well Right"
+      ]
+    },
+    {
+      "Id": 281,
+      "Name": [
+        "Kakariko Well Bottom"
+      ]
+    },
+    {
+      "Id": 282,
+      "Name": [
+        "Blind's Hideout Back Room",
+        "Blind's Hideout Top"
+      ]
+    },
+    {
+      "Id": 283,
+      "Name": [
+        "Blind's Hideout Far Left"
+      ]
+    },
+    {
+      "Id": 284,
+      "Name": [
+        "Blind's Hideout Left"
+      ]
+    },
+    {
+      "Id": 285,
+      "Name": [
+        "Blind's Hideout Right"
+      ]
+    },
+    {
+      "Id": 286,
+      "Name": [
+        "Blind's Hideout Far Right"
+      ]
+    },
+    {
+      "Id": 287,
+      "Name": [
+        "Bottle Merchant"
+      ],
+      "X": 190,
+      "Y": 933
+    },
+    {
+      "Id": 289,
+      "Name": [
+        "Sick Kid",
+        "Bug Catching Kid's House"
+      ],
+      "X": 314,
+      "Y": 1060
+    },
+    {
+      "Id": 290,
+      "Name": [
+        "Kakariko Tavern",
+        "Inn back room"
+      ],
+      "X": 320,
+      "Y": 1145
+    },
+    {
+      "Id": 291,
+      "Name": [
+        "Magic Bat"
+      ],
+      "X": 650,
+      "Y": 1127
+    },
+    {
+      "Id": 292,
+      "Name": [
+        "Zora",
+        "King Zora"
+      ]
+    },
+    {
+      "Id": 293,
+      "Name": [
+        "Zora's Ledge"
+      ]
+    },
+    {
+      "Id": 295,
+      "Name": [
+        "Waterfall Fairy Right"
+      ]
+    },
+    {
+      "Id": 296,
+      "Name": [
+        "Potion Shop",
+        "Mushroom Item"
+      ],
+      "X": 1607,
+      "Y": 670
+    },
+    {
+      "Id": 297,
+      "Name": [
+        "Sahasrahla's Hut Left"
+      ]
+    },
+    {
+      "Id": 298,
+      "Name": [
+        "Sahasrahla's Hut Middle"
+      ]
+    },
+    {
+      "Id": 299,
+      "Name": [
+        "Sahasrahla's Hut Right"
+      ]
+    },
+    {
+      "Id": 300,
+      "Name": [
+        "Sahasrahla"
+      ]
+    },
+    {
+      "Id": 301,
+      "Name": [
+        "Maze Race",
+        "Racing Game"
+      ],
+      "X": 111,
+      "Y": 1354
+    },
+    {
+      "Id": 307,
+      "Name": [
+        "Mini Moldorm Cave Far Left"
+      ]
+    },
+    {
+      "Id": 308,
+      "Name": [
+        "Mini Moldorm Cave Left"
+      ]
+    },
+    {
+      "Id": 309,
+      "Name": [
+        "Mini Moldorm Cave NPC"
+      ]
+    },
+    {
+      "Id": 310,
+      "Name": [
+        "Mini Moldorm Cave Right"
+      ]
+    },
+    {
+      "Id": 314,
+      "Name": [
+        "Bombos Tablet"
+      ],
+      "X": 440,
+      "Y": 1845
+    },
+    {
+      "Id": 315,
+      "Name": [
+        "Floodgate Chest"
+      ]
+    },
+    {
+      "Id": 316,
+      "Name": [
+        "Sunken Treasure"
+      ]
+    },
+    {
+      "Id": 317,
+      "Name": [
+        "Lake Hylia Island"
+      ],
+      "X": 1450,
+      "Y": 1666
+    },
+    {
+      "Id": 318,
+      "Name": [
+        "Under the bridge",
+        "Hobo"
+      ],
+      "X": 1390,
+      "Y": 1390
+    },
+    {
+      "Id": 319,
+      "Name": [
+        "Ice Cave",
+        "Ice Rod Cave"
+      ],
+      "X": 1795,
+      "Y": 1547
+    },
+    {
+      "Id": 320,
+      "Name": [
+        "Spike Cave"
+      ],
+      "X": 1151,
+      "Y": 294
+    },
+    {
+      "Id": 321,
+      "Name": [
+        "Hookshot Cave - Top Right"
+      ]
+    },
+    {
+      "Id": 322,
+      "Name": [
+        "Hookshot Cave - Top Left"
+      ]
+    },
+    {
+      "Id": 323,
+      "Name": [
+        "Hookshot Cave - Bottom Left"
+      ]
+    },
+    {
+      "Id": 324,
+      "Name": [
+        "Hookshot Cave - Bottom Right"
+      ]
+    },
+    {
+      "Id": 325,
+      "Name": [
+        "Superbunny Cave - Top"
+      ]
+    },
+    {
+      "Id": 326,
+      "Name": [
+        "Superbunny Cave - Bottom"
+      ]
+    },
+    {
+      "Id": 327,
+      "Name": [
+        "Bumper Cave Ledge",
+        "Bumper Cave"
+      ],
+      "X": 687,
+      "Y": 340
+    },
+    {
+      "Id": 328,
+      "Name": [
+        "Chest Game"
+      ],
+      "X": 100,
+      "Y": 936
+    },
+    {
+      "Id": 329,
+      "Name": [
+        "C-Shaped House"
+      ],
+      "X": 414,
+      "Y": 969
+    },
+    {
+      "Id": 330,
+      "Name": [
+        "Brewery"
+      ],
+      "X": 219,
+      "Y": 1171
+    },
+    {
+      "Id": 331,
+      "Name": [
+        "Peg World",
+        "Hammer Pegs"
+      ],
+      "X": 636,
+      "Y": 1214
+    },
+    {
+      "Id": 332,
+      "Name": [
+        "Blacksmith"
+      ],
+      "X": 616,
+      "Y": 1054
+    },
+    {
+      "Id": 333,
+      "Name": [
+        "Purple Chest turn-in",
+        "Purple Chest"
+      ],
+      "X": 616,
+      "Y": 1054
+    },
+    {
+      "Id": 334,
+      "Name": [
+        "Catfish",
+        "Scatfish",
+        "Lake of Ill Omen"
+      ],
+      "X": 1813,
+      "Y": 347
+    },
+    {
+      "Id": 335,
+      "Name": [
+        "Pyramid of Power",
+        "Pyramid"
+      ],
+      "X": 1164,
+      "Y": 922
+    },
+    {
+      "Id": 336,
+      "Name": [
+        "Cursed Fairy Left",
+        "Pyramid Fairy Left"
+      ]
+    },
+    {
+      "Id": 337,
+      "Name": [
+        "Cursed Fairy Right",
+        "Pyramid Fairy Right"
+      ]
+    },
+    {
+      "Id": 338,
+      "Name": [
+        "Digging Game"
+      ],
+      "X": 100,
+      "Y": 1385
+    },
+    {
+      "Id": 339,
+      "Name": [
+        "Haunted Grove",
+        "Stumpy"
+      ],
+      "X": 620,
+      "Y": 1371
+    },
+    {
+      "Id": 340,
+      "Name": [
+        "Hype Cave Top"
+      ]
+    },
+    {
+      "Id": 341,
+      "Name": [
+        "Hype Cave Middle Right"
+      ]
+    },
+    {
+      "Id": 342,
+      "Name": [
+        "Hype Cave Middle Left"
+      ]
+    },
+    {
+      "Id": 343,
+      "Name": [
+        "Hype Cave Bottom"
+      ]
+    },
+    {
+      "Id": 344,
+      "Name": [
+        "Hype Cave NPC"
+      ]
+    },
+    {
+      "Id": 345,
+      "Name": [
+        "Mire Shed - Left"
+      ]
+    },
+    {
+      "Id": 346,
+      "Name": [
+        "Mire Shed - Right"
+      ]
+    },
+    {
+      "Id": 347,
+      "Name": [
+        "Sanctuary"
+      ]
+    },
+    {
+      "Id": 348,
+      "Name": [
+        "Secret Room - Left",
+        "Back of Escape - Left",
+        [ "Sewers Secret Room - Left", 0 ]
+      ]
+    },
+    {
+      "Id": 349,
+      "Name": [
+        "Secret Room - Middle",
+        "Back of Escape - Middle",
+        [ "Sewers Secret Room - Middle", 0 ]
+      ]
+    },
+    {
+      "Id": 350,
+      "Name": [
+        "Secret Room - Right",
+        "Back of Escape - Right",
+        [ "Sewers Secret Room - Right", 0 ]
+      ]
+    },
+    {
+      "Id": 351,
+      "Name": [
+        "Dark Cross"
+      ]
+    },
+    {
+      "Id": 352,
+      "Name": [
+        "Hyrule Castle Map Chest"
+      ]
+    },
+    {
+      "Id": 353,
+      "Name": [
+        "Boomerang Chest",
+        [ "Hyrule Castle Boomerang Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 354,
+      "Name": [
+        "Zelda's Cell",
+        [ "Hyrule Castle Zelda's Cell", 0 ]
+      ]
+    },
+    {
+      "Id": 355,
+      "Name": [
+        "Link's Uncle"
+      ]
+    },
+    {
+      "Id": 356,
+      "Name": [
+        "Secret Passage",
+        [ "Hyrule Castle Secret Passage", 0 ]
+      ]
+    },
+    {
+      "Id": 357,
+      "Name": [
+        "Castle Tower Foyer"
+      ]
+    },
+    {
+      "Id": 358,
+      "Name": [
+        "Castle Tower - Dark Maze"
+      ]
+    },
+    {
+      "Id": 359,
+      "Name": [
+        "Cannonball Chest",
+        [ "Eastern Palace Cannonball Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 360,
+      "Name": [
+        "Eastern Palace Map Chest"
+      ]
+    },
+    {
+      "Id": 361,
+      "Name": [
+        "Eastern Palace Compass Chest"
+      ]
+    },
+    {
+      "Id": 362,
+      "Name": [
+        "Eastern Palace Big Chest"
+      ]
+    },
+    {
+      "Id": 363,
+      "Name": [
+        "Eastern Palace Big Key Chest"
+      ]
+    },
+    {
+      "Id": 364,
+      "Name": [
+        "Armos Knights"
+      ]
+    },
+    {
+      "Id": 365,
+      "Name": [
+        "Desert Palace Big Chest",
+        "Dessert Palace Big Chest"
+      ]
+    },
+    {
+      "Id": 366,
+      "Name": [
+        "Torch",
+        [ "Desert Palace Torch", 0 ],
+        [ "Dessert Palace Torch", 0 ]
+      ]
+    },
+    {
+      "Id": 367,
+      "Name": [
+        "Desert Palace Map Chest",
+        "Dessert Palace Map Chest"
+      ]
+    },
+    {
+      "Id": 368,
+      "Name": [
+        "Desert Palace Big Key Chest",
+        "Dessert Palace Big Key Chest"
+      ]
+    },
+    {
+      "Id": 369,
+      "Name": [
+        "Desert Palace Compass Chest",
+        "Dessert Palace Compass Chest"
+      ]
+    },
+    {
+      "Id": 370,
+      "Name": [
+        "Lanmolas"
+      ]
+    },
+    {
+      "Id": 371,
+      "Name": [
+        "Basement Cage",
+        [ "Tower of Hera Basement Cage", 0 ]
+      ]
+    },
+    {
+      "Id": 372,
+      "Name": [
+        "Tower of Hera Map Chest"
+      ]
+    },
+    {
+      "Id": 373,
+      "Name": [
+        "Tower of Hera Big Key Chest"
+      ]
+    },
+    {
+      "Id": 374,
+      "Name": [
+        "Tower of Hera Compass Chest"
+      ]
+    },
+    {
+      "Id": 375,
+      "Name": [
+        "Tower of Hera Big Chest"
+      ]
+    },
+    {
+      "Id": 376,
+      "Name": [
+        "Moldorm"
+      ]
+    },
+    {
+      "Id": 377,
+      "Name": [
+        "Shooter Room",
+        [ "Palace of Darkness Shooter Room", 0 ]
+      ]
+    },
+    {
+      "Id": 378,
+      "Name": [
+        "Palace of Darkness Big Key Chest"
+      ]
+    },
+    {
+      "Id": 379,
+      "Name": [
+        "Stalfos Basement",
+        [ "Palace of Darkness Stalfos Basement", 0 ]
+      ]
+    },
+    {
+      "Id": 380,
+      "Name": [
+        "The Arena - Bridge",
+        [ "Palace of Darkness The Arena - Bridge", 0 ]
+      ]
+    },
+    {
+      "Id": 381,
+      "Name": [
+        "The Arena - Ledge",
+        [ "Palace of Darkness The Arena - Ledge", 0 ]
+      ]
+    },
+    {
+      "Id": 382,
+      "Name": [
+        "Palace of Darkness Map Chest"
+      ]
+    },
+    {
+      "Id": 383,
+      "Name": [
+        "Palace of Darkness Compass Chest"
+      ]
+    },
+    {
+      "Id": 384,
+      "Name": [
+        "Harmless Hellway",
+        [ "Palace of Darkness Harmless Hellway", 0 ]
+      ]
+    },
+    {
+      "Id": 385,
+      "Name": [
+        "Dark Basement Left"
+      ]
+    },
+    {
+      "Id": 386,
+      "Name": [
+        "Dark Basement Right"
+      ]
+    },
+    {
+      "Id": 387,
+      "Name": [
+        "Dark Maze Top"
+      ]
+    },
+    {
+      "Id": 388,
+      "Name": [
+        "Dark Maze Bottom"
+      ]
+    },
+    {
+      "Id": 389,
+      "Name": [
+        "Palace of Darkness Big Chest"
+      ]
+    },
+    {
+      "Id": 390,
+      "Name": [
+        "Helmasaur King"
+      ]
+    },
+    {
+      "Id": 391,
+      "Name": [
+        "Swamp Palace Entrance"
+      ]
+    },
+    {
+      "Id": 392,
+      "Name": [
+        "Swamp Palace Map Chest"
+      ]
+    },
+    {
+      "Id": 393,
+      "Name": [
+        "Swamp Palace Big Chest"
+      ]
+    },
+    {
+      "Id": 394,
+      "Name": [
+        "Swamp Palace Compass Chest"
+      ]
+    },
+    {
+      "Id": 395,
+      "Name": [
+        "Swamp Palace West Chest"
+      ]
+    },
+    {
+      "Id": 396,
+      "Name": [
+        "Swamp Palace Big Key Chest"
+      ]
+    },
+    {
+      "Id": 397,
+      "Name": [
+        "Flooded Room Left"
+      ]
+    },
+    {
+      "Id": 398,
+      "Name": [
+        "Flooded Room Right"
+      ]
+    },
+    {
+      "Id": 399,
+      "Name": [
+        "Waterfall Room",
+        [ "Swamp Palace Waterfall Room", 0 ]
+      ]
+    },
+    {
+      "Id": 400,
+      "Name": [
+        "Arrghus"
+      ]
+    },
+    {
+      "Id": 401,
+      "Name": [
+        "Pot Prison",
+        [ "Skull Woods Pot Prison", 0 ],
+        [ "Skill Woods Pot Prison", 0 ]
+      ]
+    },
+    {
+      "Id": 402,
+      "Name": [
+        "Skull Woods Compass Chest",
+        "Skill Woods Compass Chest"
+      ]
+    },
+    {
+      "Id": 403,
+      "Name": [
+        "Skull Woods Big Chest",
+        "Skill Woods Big Chest"
+      ]
+    },
+    {
+      "Id": 404,
+      "Name": [
+        "Skull Woods Map Chest",
+        "Skill Woods Map Chest"
+      ]
+    },
+    {
+      "Id": 405,
+      "Name": [
+        "Pinball Room",
+        [ "Skull Woods Pinball Room", 0 ],
+        [ "Skill Woods Pinball Room", 0 ]
+      ]
+    },
+    {
+      "Id": 406,
+      "Name": [
+        "Skull Woods Big Key Chest",
+        "Skill Woods Big Key Chest"
+      ]
+    },
+    {
+      "Id": 407,
+      "Name": [
+        "Bridge Room",
+        [ "Skull Woods Bridge Room", 0 ],
+        [ "Skill Woods Bridge Room", 0 ]
+      ]
+    },
+    {
+      "Id": 408,
+      "Name": [
+        "Mothula"
+      ]
+    },
+    {
+      "Id": 409,
+      "Name": [
+        "Thieves' Town Map Chest"
+      ]
+    },
+    {
+      "Id": 410,
+      "Name": [
+        "Ambush Chest",
+        [ "Thieves' Town Ambush Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 411,
+      "Name": [
+        "Thieves' Town Compass Chest"
+      ]
+    },
+    {
+      "Id": 412,
+      "Name": [
+        "Thieves' Town Big Key Chest"
+      ]
+    },
+    {
+      "Id": 413,
+      "Name": [
+        "Attic",
+        [ "Thieves' Town Attic", 0 ]
+      ]
+    },
+    {
+      "Id": 414,
+      "Name": [
+        "Blind's Cell",
+        [ "Thieves' Town Blind's Cell", 0 ]
+      ]
+    },
+    {
+      "Id": 415,
+      "Name": [
+        "Thieves' Town Big Chest"
+      ]
+    },
+    {
+      "Id": 416,
+      "Name": [
+        "Blind"
+      ]
+    },
+    {
+      "Id": 417,
+      "Name": [
+        "Ice Palace Compass Chest"
+      ]
+    },
+    {
+      "Id": 418,
+      "Name": [
+        "Spike Room",
+        [ "Ice Palace Spike Room", 0 ]
+      ]
+    },
+    {
+      "Id": 419,
+      "Name": [
+        "Ice Palace Map Chest"
+      ]
+    },
+    {
+      "Id": 420,
+      "Name": [
+        "Ice Palace Big Key Chest"
+      ]
+    },
+    {
+      "Id": 421,
+      "Name": [
+        "Iced T Room",
+        [ "Ice Palace Iced T Room", 0 ]
+      ]
+    },
+    {
+      "Id": 422,
+      "Name": [
+        "Freezor Chest",
+        [ "Ice Palace Freezor Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 423,
+      "Name": [
+        "Ice Palace Big Chest"
+      ]
+    },
+    {
+      "Id": 424,
+      "Name": [
+        "Kholdstare"
+      ]
+    },
+    {
+      "Id": 425,
+      "Name": [
+        "Misery Mire Main Lobby"
+      ]
+    },
+    {
+      "Id": 426,
+      "Name": [
+        "Misery Mire Map Chest"
+      ]
+    },
+    {
+      "Id": 427,
+      "Name": [
+        "Bridge Chest",
+        [ "Misery Mire Bridge Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 428,
+      "Name": [
+        "Spike Chest",
+        [ "Misery Mire Spike Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 429,
+      "Name": [
+        "Misery Mire Compass Chest"
+      ]
+    },
+    {
+      "Id": 430,
+      "Name": [
+        "Misery Mire Big Key Chest"
+      ]
+    },
+    {
+      "Id": 431,
+      "Name": [
+        "Misery Mire Big Chest"
+      ]
+    },
+    {
+      "Id": 432,
+      "Name": [
+        "Vitreous"
+      ]
+    },
+    {
+      "Id": 433,
+      "Name": [
+        "Turtle Rock Compass Chest"
+      ]
+    },
+    {
+      "Id": 434,
+      "Name": [
+        "Roller Room Left"
+      ]
+    },
+    {
+      "Id": 435,
+      "Name": [
+        "Roller Room Right"
+      ]
+    },
+    {
+      "Id": 436,
+      "Name": [
+        "Chain Chomps",
+        [ "Turtle Rock Chain Chomps", 0 ]
+      ]
+    },
+    {
+      "Id": 437,
+      "Name": [
+        "Turtle Rock Big Key Chest"
+      ]
+    },
+    {
+      "Id": 438,
+      "Name": [
+        "Turtle Rock Big Chest"
+      ]
+    },
+    {
+      "Id": 439,
+      "Name": [
+        "Crystaroller Room",
+        [ "Turtle Rock Crystaroller Room", 0 ]
+      ]
+    },
+    {
+      "Id": 440,
+      "Name": [
+        "Laser Bridge Top Right",
+        "Eye Bridge Top Right"
+      ]
+    },
+    {
+      "Id": 441,
+      "Name": [
+        "Laser Bridge Top Left",
+        "Eye Bridge Top Left"
+      ]
+    },
+    {
+      "Id": 442,
+      "Name": [
+        "Laser Bridge Bottom Right",
+        "Eye Bridge Bottom Right"
+      ]
+    },
+    {
+      "Id": 443,
+      "Name": [
+        "Laser Bridge Bottom Left",
+        "Eye Bridge Bottom Left"
+      ]
+    },
+    {
+      "Id": 444,
+      "Name": [
+        "Trinexx",
+        [ "Turtle Rock Trinexx", 0 ]
+      ]
+    },
+    {
+      "Id": 445,
+      "Name": [
+        "Bob's Torch",
+        [ "Ganon's Tower Bob's Torch", 0 ]
+      ]
+    },
+    {
+      "Id": 446,
+      "Name": [
+        "DMs Room Top Left"
+      ]
+    },
+    {
+      "Id": 447,
+      "Name": [
+        "DMs Room Top Right"
+      ]
+    },
+    {
+      "Id": 448,
+      "Name": [
+        "DMs Room Bottom Left"
+      ]
+    },
+    {
+      "Id": 449,
+      "Name": [
+        "DMs Room Bottom Right"
+      ]
+    },
+    {
+      "Id": 450,
+      "Name": [
+        "Ganon's Tower Map Chest"
+      ]
+    },
+    {
+      "Id": 451,
+      "Name": [
+        "Firesnake Room",
+        [ "Ganon's Tower Firesnake Room", 0 ]
+      ]
+    },
+    {
+      "Id": 452,
+      "Name": [
+        "Randomizer Room Top Left"
+      ]
+    },
+    {
+      "Id": 453,
+      "Name": [
+        "Randomizer Room Top Right"
+      ]
+    },
+    {
+      "Id": 454,
+      "Name": [
+        "Randomizer Room Bottom Left"
+      ]
+    },
+    {
+      "Id": 455,
+      "Name": [
+        "Randomizer Room Bottom Right"
+      ]
+    },
+    {
+      "Id": 456,
+      "Name": [
+        "Right Side First Room Left",
+        "Hope Room Left"
+      ]
+    },
+    {
+      "Id": 457,
+      "Name": [
+        "Right Side First Room Right",
+        "Hope Room Right"
+      ]
+    },
+    {
+      "Id": 458,
+      "Name": [
+        "Tile Room",
+        [ "Ganon's Tower Tile Room", 0 ]
+      ]
+    },
+    {
+      "Id": 459,
+      "Name": [
+        "Compass Room Top Left"
+      ]
+    },
+    {
+      "Id": 460,
+      "Name": [
+        "Compass Room Top Right"
+      ]
+    },
+    {
+      "Id": 461,
+      "Name": [
+        "Compass Room Bottom Left"
+      ]
+    },
+    {
+      "Id": 462,
+      "Name": [
+        "Compass Room Bottom Right"
+      ]
+    },
+    {
+      "Id": 463,
+      "Name": [
+        "Bob's Chest",
+        [ "Ganon's Tower Bob's Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 464,
+      "Name": [
+        "Ganon's Tower Big Chest"
+      ]
+    },
+    {
+      "Id": 465,
+      "Name": [
+        "Bottom Big Key Chest",
+        [ "Big Key Room Bottom Big Key Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 466,
+      "Name": [
+        "Big Key Room Left"
+      ]
+    },
+    {
+      "Id": 467,
+      "Name": [
+        "Big Key Room Right"
+      ]
+    },
+    {
+      "Id": 468,
+      "Name": [
+        "Mini Helmasaur Room Left"
+      ]
+    },
+    {
+      "Id": 469,
+      "Name": [
+        "Mini Helmasaur Room Right"
+      ]
+    },
+    {
+      "Id": 470,
+      "Name": [
+        "Pre-Moldorm Chest",
+        [ "Ganon's Tower Pre-Moldorm Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 471,
+      "Name": [
+        "Moldorm Chest",
+        [ "Ganon's Tower Moldorm Chest", 0 ]
+      ]
+    },
+    {
+      "Id": 496,
+      "Name": [
+        "Library"
+      ],
+      "X": 313,
+      "Y": 1310
+    },
+    {
+      "Id": 497,
+      "Name": [
+        "Forest Clearing - Digging Spot",
+        "Flute Spot"
+      ],
+      "X": 600,
+      "Y": 1350
+    },
+    {
+      "Id": 498,
+      "Name": [
+        "Cave #45",
+        "South of Grove"
+      ],
+      "X": 552,
+      "Y": 1693
+    },
+    {
+      "Id": 499,
+      "Name": [
+        "Link's House"
+      ],
+      "X": 1097,
+      "Y": 1366
+    },
+    {
+      "Id": 500,
+      "Name": [
+        [ "Aginah's Cave", 0 ],
+        "Aggina's Cave"
+      ],
+      "X": 400,
+      "Y": 1655
+    },
+    {
+      "Id": 506,
+      "Name": [
+        "Chicken House",
+        "Chicken Lady's House"
+      ],
+      "X": 197,
+      "Y": 1066
+    },
+    {
+      "Id": 507,
+      "Name": [
+        "Mini Moldorm Cave Far Right"
+      ]
+    },
+    {
+      "Id": 508,
+      "Name": [
+        "Desert Ledge"
+      ],
+      "X": 40,
+      "Y": 1835
+    },
+    {
+      "Id": 509,
+      "Name": [
+        "Checkerboard Cave"
+      ],
+      "X": 354,
+      "Y": 1560
+    },
+    {
+      "Id": 510,
+      "Name": [
+        "Waterfall Fairy Left"
+      ]
+    }
+  ]
+}

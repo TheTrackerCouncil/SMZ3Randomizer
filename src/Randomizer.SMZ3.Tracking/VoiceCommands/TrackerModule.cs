@@ -6,6 +6,8 @@ using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.SMZ3.Tracking.Configuration;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -91,35 +93,35 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
-        /// Returns the <see cref="ZeldaDungeon"/> that was detected in a voice
+        /// Returns the <see cref="DungeonInfo"/> that was detected in a voice
         /// command using <see cref="DungeonKey"/>.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
         /// <returns>
-        /// A <see cref="ZeldaDungeon"/> from the recognition result.
+        /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static ZeldaDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static DungeonInfo GetDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
-            var dungeonName = (string)result.Semantics[DungeonKey].Value;
-            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonName, StringComparison.OrdinalIgnoreCase));
-            return dungeon ?? throw new Exception($"Could not find recognized dungeon '{dungeonName}'.");
+            var dungeonTypeName = (string)result.Semantics[DungeonKey].Value;
+            var dungeon = tracker.WorldInfo.Dungeon(dungeonTypeName);
+            return dungeon ?? throw new Exception($"Could not find dungeon {dungeonTypeName} (\"{result.Text}\").");
         }
 
         /// <summary>
-        /// Returns the <see cref="ZeldaDungeon"/> that was detected in a voice
+        /// Returns the <see cref="DungeonInfo"/> that was detected in a voice
         /// command using <see cref="BossKey"/>.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="result">The speech recognition result.</param>
         /// <returns>
-        /// A <see cref="ZeldaDungeon"/> from the recognition result.
+        /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static ZeldaDungeon GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static DungeonInfo GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
-            var bossName = (string)result.Semantics[BossKey].Value;
-            var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Boss.Contains(bossName, StringComparison.OrdinalIgnoreCase));
-            return dungeon ?? throw new Exception($"Could not find dungeon with recognized boss name '{bossName}'.");
+            var dungeonTypeName = (string)result.Semantics[BossKey].Value;
+            var dungeon = tracker.WorldInfo.Dungeon(dungeonTypeName);
+            return dungeon ?? throw new Exception($"Could not find dungeon {dungeonTypeName} (\"{result.Text}\").");
         }
 
         /// <summary>
@@ -154,7 +156,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
         {
             var id = (int)result.Semantics[LocationKey].Value;
-            var location = tracker.World.Locations.SingleOrDefault(x => x.Id == id);
+            var location = tracker.WorldInfo.Location(id).GetLocation(tracker.World);
             return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
         }
 
@@ -167,9 +169,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>A <see cref="Room"/> from the recognition result.</returns>
         protected static Room GetRoomFromResult(Tracker tracker, RecognitionResult result)
         {
-            var name = (string)result.Semantics[RoomKey].Value;
-            var room = tracker.World.Rooms.SingleOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            return room ?? throw new Exception($"Could not find a room with name '{name}' ('{result.Text}').");
+            var roomTypeName = (string)result.Semantics[RoomKey].Value;
+            var room = tracker.WorldInfo.Room(roomTypeName).GetRoom(tracker.World);
+            return room ?? throw new Exception($"Could not find room {roomTypeName} (\"{result.Text}\").");
         }
 
         /// <summary>
@@ -183,9 +185,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </returns>
         protected static Region GetRegionFromResult(Tracker tracker, RecognitionResult result)
         {
-            var name = (string)result.Semantics[RegionKey].Value;
-            var region = tracker.World.Regions.SingleOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            return region ?? throw new Exception($"Could not find a region with name '{name}' ('{result.Text}').");
+            var regionTypeName = (string)result.Semantics[RegionKey].Value;
+            var region = tracker.WorldInfo.Region(regionTypeName).GetRegion(tracker.World);
+            return region ?? throw new Exception($"Could not find region {regionTypeName} (\"{result.Text}\").");
         }
 
         /// <summary>
@@ -343,12 +345,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetDungeonNames(bool includeDungeonsWithoutReward = false)
         {
             var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.Dungeons)
+            foreach (var dungeon in Tracker.WorldInfo.Dungeons)
             {
                 if (dungeon.HasReward || includeDungeonsWithoutReward)
                 {
                     foreach (var name in dungeon.Name)
-                        dungeonNames.Add(new SemanticResultValue(name.Text, name.Text));
+                        dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.TypeName));
                 }
             }
 
@@ -365,10 +367,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetBossNames()
         {
             var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.Dungeons)
+            foreach (var dungeon in Tracker.WorldInfo.Dungeons)
             {
                 foreach (var name in dungeon.Boss)
-                    dungeonNames.Add(new SemanticResultValue(name.Text, name.Text));
+                    dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.TypeName));
             }
 
             return dungeonNames;
@@ -385,9 +387,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var locationNames = new Choices();
 
-            foreach (var location in Tracker.World.Locations)
+            foreach (var location in Tracker.WorldInfo.Locations)
             {
-                foreach (var name in Tracker.GetName(location))
+                foreach (var name in location.Name)
                     locationNames.Add(new SemanticResultValue(name.Text, location.Id));
             }
 
@@ -405,11 +407,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var roomNames = new Choices();
 
-            foreach (var room in Tracker.World.Rooms)
+            foreach (var room in Tracker.WorldInfo.Rooms)
             {
-                roomNames.Add(new SemanticResultValue(room.Name, room.Name));
-                foreach (var name in room.AlsoKnownAs)
-                    roomNames.Add(new SemanticResultValue(name, room.Name));
+                foreach (var name in room.Name)
+                    roomNames.Add(new SemanticResultValue(name.Text, room.TypeName));
             }
 
             return roomNames;
@@ -426,11 +427,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var regionNames = new Choices();
 
-            foreach (var region in Tracker.World.Regions)
+            foreach (var region in Tracker.WorldInfo.Regions)
             {
-                regionNames.Add(new SemanticResultValue(region.Name, region.Name));
-                foreach (var name in region.AlsoKnownAs)
-                    regionNames.Add(new SemanticResultValue(name, region.Name));
+                foreach (var name in region.Name)
+                    regionNames.Add(new SemanticResultValue(name.Text, region.TypeName));
             }
 
             return regionNames;

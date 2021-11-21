@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="locations.json" />
     <None Remove="maps.json" />
     <None Remove="tracker.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="locations.json" />
     <EmbeddedResource Include="maps.json" />
     <EmbeddedResource Include="tracker.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
