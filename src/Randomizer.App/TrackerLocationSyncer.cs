@@ -272,6 +272,10 @@ namespace Randomizer.App
             if (location != null)
                 return GetName(location);
 
+            var dungeon = _tracker.WorldInfo.Dungeons.SingleOrDefault(x => x.Name.Contains(mapLocation.Name, StringComparison.OrdinalIgnoreCase));
+            if (dungeon != null)
+                return dungeon.Name[0];
+
             _logger?.LogWarning("Could not find matching room or location for map location {MapLocation} in {Region}", mapLocation.Name, mapLocation.Region);
             return mapLocation.Name;
         }
