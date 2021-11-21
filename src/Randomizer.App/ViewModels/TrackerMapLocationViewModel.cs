@@ -37,9 +37,9 @@ namespace Randomizer.App.ViewModels
             Size = 20;
             X = (mapLocation.X * scaledRatio) - (Size / 2);
             Y = (mapLocation.Y * scaledRatio) - (Size / 2);
-            Syncer = syncer;
+            Syncer = syncer ?? throw new ArgumentNullException(nameof(syncer));
             Locations = Syncer.AllLocations.Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
-            Name = mapLocation.Name;
+            Name = Syncer.GetName(mapLocation);
             Region = Syncer.World.Regions.First(x => x.Name == mapLocation.Region);
 
             // To avoid multiple linq statements, let's loop through them all to
@@ -51,8 +51,8 @@ namespace Randomizer.App.ViewModels
 
             Locations.ForEach(x =>
             {
-                numClearable += Syncer.IsLocationClearable(x, false, Region.Name == "Hyrule Castle" ? true : false) ? 1 : 0;
-                numOutOfLogic += Syncer.IsLocationClearable(x, true) && !Syncer.IsLocationClearable(x, false) ? 1 : 0;
+                numClearable += Syncer.IsLocationClearable(x, allowOutOfLogic: false, requireKeys: Region.Name == "Hyrule Castle") ? 1 : 0;
+                numOutOfLogic += Syncer.IsLocationClearable(x, allowOutOfLogic: true) && !Syncer.IsLocationClearable(x, allowOutOfLogic: false) ? 1 : 0;
                 numUncleared += !x.Cleared ? 1 : 0;
                 numCleared += x.Cleared ? 1 : 0;
             });
@@ -68,10 +68,11 @@ namespace Randomizer.App.ViewModels
         /// with data to display a specific map location in the sub menu
         /// </summary>
         /// <param name="location"></param>
-        public TrackerMapLocationViewModel(Location location)
+        public TrackerMapLocationViewModel(Location location, TrackerLocationSyncer syncer)
         {
             Locations = new List<Location>() { location };
-            Name = "Clear " + (location.Room == null ? location.Name : location.Room.Name + " " + location.Name);
+            Syncer = syncer;
+            Name = $"Clear {Syncer.GetName(location)}";
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace Randomizer.App.ViewModels
         /// </summary>
         public List<TrackerMapLocationViewModel> SubLocationModels
             => Locations.Where(x => Syncer.IsLocationClearable(x))
-                        .Select(x => new TrackerMapLocationViewModel(x))
+                        .Select(x => new TrackerMapLocationViewModel(x, Syncer))
                         .ToList();
 
         /// <summary>

@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
+using Microsoft.Extensions.Logging;
+
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
@@ -21,6 +23,7 @@ namespace Randomizer.App
         private bool _isDesign;
         private Region _stickyRegion = null;
         private Tracker _tracker = null;
+        private readonly ILogger<TrackerLocationSyncer> _logger;
         private bool _showOutOfLogicLocations;
 
         public TrackerLocationSyncer()
@@ -33,9 +36,10 @@ namespace Randomizer.App
         /// synced with a given tracker
         /// </summary>
         /// <param name="tracker">The tracker to keep things in sync with</param>
-        public TrackerLocationSyncer(Tracker tracker)
+        public TrackerLocationSyncer(Tracker tracker, ILogger<TrackerLocationSyncer> logger)
         {
             _tracker = tracker;
+            _logger = logger;
 
             // Set all events from the tracker to point to the two in this class
             _tracker.MarkedLocationsUpdated += (_, _) => MarkedLocationUpdated.Invoke(this, new(""));
@@ -253,20 +257,37 @@ namespace Randomizer.App
         public string GetName(Region region) => _tracker.WorldInfo.Region(region).Name[0];
 
         /// <summary>
+        /// Gets the primary name for the specified map location.
+        /// </summary>
+        /// <param name="mapLocation">The map location whose configured name to find.</param>
+        /// <returns>The first name configured for <paramref name="mapLocation"/>.</returns>
+        public string GetName(TrackerMapLocation mapLocation)
+        {
+            // TODO: Make this method unnecessary (e.g. instead of map locations, use the locations.json stuff I guess)
+            var room = World.Rooms.SingleOrDefault(x => x.Name.Equals(mapLocation.Name, StringComparison.OrdinalIgnoreCase));
+            if (room != null)
+                return GetName(room);
+
+            var location = World.Locations.SingleOrDefault(x => x.Name.Equals(mapLocation.Name, StringComparison.OrdinalIgnoreCase));
+            if (location != null)
+                return GetName(location);
+
+            _logger?.LogWarning("Could not find matching room or location for map location {MapLocation} in {Region}", mapLocation.Name, mapLocation.Region);
+            return mapLocation.Name;
+        }
+
+        /// <summary>
         /// Returns if a given region matches the LocationFilter
         /// </summary>
         /// <param name="filter">The filter to apply</param>
         /// <param name="region">The SMZ3 region to check</param>
         /// <returns>True if the region matches, false otherwise</returns>
-        private bool RegionMatchesFilter(LocationFilter filter, Region region)
+        private static bool RegionMatchesFilter(LocationFilter filter, Region region) => filter switch
         {
-            switch (filter)
-            {
-                case LocationFilter.None: return true;
-                case LocationFilter.ZeldaOnly: return region is Z3Region;
-                case LocationFilter.MetroidOnly: return region is SMRegion;
-                default: throw new InvalidEnumArgumentException(nameof(filter), (int)filter, typeof(LocationFilter));
-            }
-        }
+            LocationFilter.None => true,
+            LocationFilter.ZeldaOnly => region is Z3Region,
+            LocationFilter.MetroidOnly => region is SMRegion,
+            _ => throw new InvalidEnumArgumentException(nameof(filter), (int)filter, typeof(LocationFilter)),
+        };
     }
 }

@@ -62,7 +62,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <returns>True if the location matches the randomizer location, false otherwise</returns>
         public bool MatchesSMZ3Location(Location loc)
         {
-            return Region == loc.Region.Name && Name == loc.Name || Region == loc.Region.Name && Name == loc.Room?.Name || Region == Name && Name == loc.Region.Name;
+            return (Region == loc.Region.Name && Name == loc.Name)
+                || (Region == loc.Region.Name && Name == loc.Room?.Name)
+                || (Region == Name && Name == loc.Region.Name);
         }
     }
 }
