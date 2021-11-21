@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Randomizer.Shared.Models;
 
@@ -13,7 +15,13 @@ namespace Randomizer.Shared.Models {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("FileName=sqlitedb", option =>
+            var dbPath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\smz3.db");
+            if (Debugger.IsAttached)
+            {
+                dbPath = "smz3.db";
+            }
+
+            optionsBuilder.UseSqlite($"FileName={dbPath}", option =>
             {
                 option.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });
