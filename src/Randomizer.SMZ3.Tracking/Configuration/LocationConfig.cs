@@ -51,6 +51,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Returns extra information for the specified region.
         /// </summary>
+        /// <param name="typeName">
+        /// The fully qualified type name of the region.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="RegionInfo"/> for the specified region.
+        /// </returns>
+        public RegionInfo Region(string typeName)
+            => Regions.Single(x => x.TypeName == typeName);
+
+        /// <summary>
+        /// Returns extra information for the specified region.
+        /// </summary>
         /// <param name="region">The region to get extra information for.</param>
         /// <returns>
         /// A new <see cref="RegionInfo"/> for the specified region.
@@ -69,6 +81,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </returns>
         public RegionInfo Region<TRegion>() where TRegion : Region
             => Regions.Single(x => x.TypeName == typeof(TRegion).FullName);
+
+        /// <summary>
+        /// Returns extra information for the specified dungeon.
+        /// </summary>
+        /// <param name="typeName">
+        /// The fully qualified type name of the dungeon region.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
+        /// </returns>
+        public DungeonInfo Dungeon(string typeName)
+            => Dungeons.Single(x => x.TypeName == typeName);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -98,6 +122,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Returns extra information for the specified room.
         /// </summary>
+        /// <param name="typeName">
+        /// The fully qualified type name of the room.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="RoomInfo"/> for the specified room.
+        /// </returns>
+        public RoomInfo Room(string typeName)
+            => Rooms.Single(x => x.TypeName == typeName);
+
+        /// <summary>
+        /// Returns extra information for the specified room.
+        /// </summary>
         /// <param name="room">The room to get extra information for.</param>
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
@@ -116,6 +152,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </returns>
         public RoomInfo Room<TRoom>() where TRoom : Room
             => Rooms.Single(x => x.TypeName == typeof(TRoom).FullName);
+
+        /// <summary>
+        /// Returns extra information for the specified location.
+        /// </summary>
+        /// <param name="id">The numeric ID of the location.</param>
+        /// <returns>
+        /// A new <see cref="LocationInfo"/> for the specified room.
+        /// </returns>
+        public LocationInfo Location(int id)
+            => Locations.Single(x => x.Id == id);
 
         /// <summary>
         /// Returns extra information for the specified location.

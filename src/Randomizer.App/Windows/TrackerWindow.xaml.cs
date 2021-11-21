@@ -246,7 +246,7 @@ namespace Randomizer.App
                     TrackerGrid.Children.Add(image);
                 }
 
-                foreach (var dungeon in Tracker.Locations.Dungeons.Where(x => x.Column != null && x.Row != null))
+                foreach (var dungeon in Tracker.WorldInfo.Dungeons.Where(x => x.Column != null && x.Row != null))
                 {
                     var overlayPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{dungeon.Name[0].Text.ToLowerInvariant()}.png");
@@ -279,7 +279,7 @@ namespace Randomizer.App
 
             string GetMatchingDungeonNameImages(Medallion requirement)
             {
-                var names = Tracker.Locations.Dungeons.Where(x => x.Requirement == requirement)
+                var names = Tracker.WorldInfo.Dungeons.Where(x => x.Requirement == requirement)
                     .Select(x => x.Name[0])
                     .ToList();
 
@@ -370,8 +370,8 @@ namespace Randomizer.App
             };
             if (medallion != Medallion.None)
             {
-                var turtleRock = Tracker.Locations.Dungeon<TurtleRock>();
-                var miseryMire = Tracker.Locations.Dungeon<MiseryMire>();
+                var turtleRock = Tracker.WorldInfo.Dungeon<TurtleRock>();
+                var miseryMire = Tracker.WorldInfo.Dungeon<MiseryMire>();
 
                 var requiredByNone = new MenuItem
                 {
@@ -623,14 +623,14 @@ namespace Randomizer.App
         private void ResetGridSize()
         {
             var columns = Math.Max(Tracker.Items.Max(x => x.Column) ?? 0,
-                Tracker.Locations.Dungeons.Max(x => x.Column) ?? 0);
+                Tracker.WorldInfo.Dungeons.Max(x => x.Column) ?? 0);
 
             TrackerGrid.ColumnDefinitions.Clear();
             for (var i = 0; i <= columns; i++)
                 TrackerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(GridItemPx + GridItemMargin) });
 
             var rows = Math.Max(Tracker.Items.Max(x => x.Row) ?? 0,
-                Tracker.Locations.Dungeons.Max(x => x.Row) ?? 0);
+                Tracker.WorldInfo.Dungeons.Max(x => x.Row) ?? 0);
 
             TrackerGrid.RowDefinitions.Clear();
             for (var i = 0; i <= rows; i++)

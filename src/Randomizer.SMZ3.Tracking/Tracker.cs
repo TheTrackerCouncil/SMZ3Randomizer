@@ -64,8 +64,8 @@ namespace Randomizer.SMZ3.Tracking
             Pegs = config.Pegs.ToImmutableList();
             Responses = config.Responses;
             World = worldAccessor.GetWorld();
-            Locations = locationConfig;
-            GetTreasureCounts(Locations.Dungeons, World);
+            WorldInfo = locationConfig;
+            GetTreasureCounts(WorldInfo.Dungeons, World);
 
             // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
@@ -131,7 +131,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets extra information about locations.
         /// </summary>
-        public LocationConfig Locations { get; }
+        public LocationConfig WorldInfo { get; }
 
         /// <summary>
         /// Gets a collection of trackable items.
@@ -272,15 +272,15 @@ namespace Randomizer.SMZ3.Tracking
         {
             foreach (var room in region.Rooms)
             {
-                yield return Locations.Room(room);
+                yield return WorldInfo.Room(room);
             }
 
             foreach (var location in region.GetStandaloneLocations())
             {
-                yield return Locations.Location(location);
+                yield return WorldInfo.Location(location);
             }
 
-            foreach (var dungeon in Locations.Dungeons)
+            foreach (var dungeon in WorldInfo.Dungeons)
             {
                 if (dungeon.IsInRegion(region))
                     yield return dungeon;
@@ -301,7 +301,7 @@ namespace Randomizer.SMZ3.Tracking
         public IReadOnlyCollection<LocationInfo> GetLocations(IPointOfInterest poi)
         {
             return poi.GetLocations(World)
-                .Select(x => Locations.Location(x))
+                .Select(x => WorldInfo.Location(x))
                 .ToImmutableList();
         }
 
@@ -417,7 +417,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void SetUnmarkedDungeonReward(RewardItem reward, float? confidence = null)
         {
-            var unmarkedDungeons = Locations.Dungeons
+            var unmarkedDungeons = WorldInfo.Dungeons
                 .Where(x => x.HasReward && x.Reward == RewardItem.Unknown)
                 .ToImmutableList();
 
@@ -951,7 +951,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
-            var dungeon = Locations.Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
+            var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
             if (dungeon != null)
             {
                 assumeKeys = true; // Always assume keys when clearing the dungeon itself
@@ -1076,7 +1076,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             Action? undoTrackTreasure = null;
-            var dungeon = Locations.Dungeons.SingleOrDefault(x => x.Is(location.Region));
+            var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => x.Is(location.Region));
             if (dungeon != null && location.Item?.IsDungeonItem == false)
             {
                 TrackDungeonTreasure(dungeon, confidence);
@@ -1293,7 +1293,7 @@ namespace Randomizer.SMZ3.Tracking
         /// possible names of <paramref name="location"/>.
         /// </returns>
         protected internal virtual SchrodingersString GetName(Location location)
-            => Locations.Location(location).Name;
+            => WorldInfo.Location(location).Name;
 
         /// <summary>
         /// Adds an action to be invoked to undo the last operation.
@@ -1452,7 +1452,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 // User didn't have a guess and there's only one location that
                 // has the tracker item
-                return Locations.Dungeons.SingleOrDefault(x => x.Is(locations[0].Region));
+                return WorldInfo.Dungeons.SingleOrDefault(x => x.Is(locations[0].Region));
             }
 
             if (locations.Count > 0 && dungeon != null)
