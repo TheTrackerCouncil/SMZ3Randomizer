@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {

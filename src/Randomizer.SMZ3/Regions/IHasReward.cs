@@ -1,4 +1,6 @@
-﻿namespace Randomizer.SMZ3.Regions
+﻿using Randomizer.Shared;
+
+namespace Randomizer.SMZ3.Regions
 {
     /// <summary>
     /// Defines a region that offers a reward for completing it, e.g. a Zelda

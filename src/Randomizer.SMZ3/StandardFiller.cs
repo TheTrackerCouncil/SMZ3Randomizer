@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3
 {
