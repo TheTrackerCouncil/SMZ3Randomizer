@@ -87,31 +87,15 @@ namespace Randomizer.App
         }
 
         private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            bool successful = _romGenerator.GenerateRom(Options, out var romPath, out var error);
-            if (!successful && !String.IsNullOrEmpty(error))
-            {
-                MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = romPath,
-                UseShellExecute = true
-            });
-        }
 
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            bool successful = _romGenerator.GenerateRom(Options, out var romPath, out var error);
+            bool successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
             if (!successful && !string.IsNullOrEmpty(error))
             {
                 MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            //Process.Start("explorer.exe", $"/select,\"{romPath}\"");
             DialogResult = true;
             Close();
         }

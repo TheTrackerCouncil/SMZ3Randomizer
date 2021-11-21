@@ -42,19 +42,19 @@
     </Border>
 
     <Grid Grid.Row="1" Grid.IsSharedSizeScope="True">
-      <ListView Name="RomsList" ItemsSource="{Binding RomsList}" SelectionMode="Single">
+      <ListView Name="RomsList" ItemsSource="{Binding RomsList}" SelectionMode="Single" Visibility="{Binding RomsListVisibility}">
         <ListView.ItemTemplate>
           <DataTemplate>
             <Grid Margin="0,2">
               <Grid.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="Play" Tag="{Binding Rom}" Click="PlayMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Open Folder" Tag="{Binding Rom}" Click="OpenFolderMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Open Tracker" Tag="{Binding Rom}" Click="OpenTrackerMenuItem_Click"></MenuItem>
-                  <MenuItem Header="View Spoiler Log" Tag="{Binding Rom}" Click="ViewSpoilerMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Edit Label" Tag="{Binding Rom}" Click="EditLabelMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Copy Seed" Tag="{Binding Rom}" Click="CopySeedMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Delete Rom" Tag="{Binding Rom}" Click="DeleteRomMenuItem_Click"></MenuItem>
+                  <MenuItem Header="_Play" Tag="{Binding Rom}" Click="PlayMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Open _Folder" Tag="{Binding Rom}" Click="OpenFolderMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Open _Tracker" Tag="{Binding Rom}" Click="OpenTrackerMenuItem_Click"></MenuItem>
+                  <MenuItem Header="View _Spoiler Log" Tag="{Binding Rom}" Click="ViewSpoilerMenuItem_Click"></MenuItem>
+                  <MenuItem Header="_Edit Label" Tag="{Binding Rom}" Click="EditLabelMenuItem_Click"></MenuItem>
+                  <MenuItem Header="_Copy Seed" Tag="{Binding Rom}" Click="CopySeedMenuItem_Click"></MenuItem>
+                  <MenuItem Header="_Delete Rom" Tag="{Binding Rom}" Click="DeleteRomMenuItem_Click"></MenuItem>
                 </ContextMenu>
               </Grid.ContextMenu>
               <Grid.ColumnDefinitions>
@@ -107,6 +107,14 @@
         </ListView.ItemContainerStyle>
       </ListView>
 
+      <StackPanel Visibility="{Binding IntroVisibility}" Margin="5 2">
+        <TextBlock TextWrapping="Wrap">It looks like you don't have any generated roms yet! Press quick play below to generate and launch a rom with the either the default or last used settings, or click generate custom game to change settings before playing.</TextBlock>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+          <Button Grid.Column="0" HorizontalAlignment="Right" Click="QuickPlayButton_Click">_Quick play</Button>
+          <Button Grid.Column="1" HorizontalAlignment="Left" Click="GenerateRomButton_Click">Generate custom game...</Button>
+        </StackPanel>
+      </StackPanel>
+
     </Grid>
 
     <Border Grid.Row="2"
@@ -114,10 +122,10 @@
       <Grid>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right">
-          <Button x:Name="QuickGenerate"
-                  Click="QuickGenerate_Click">_Quick generate</Button>
+          <Button x:Name="QuickPlayButton"
+                  Click="QuickPlayButton_Click">_Quick play</Button>
           <Button x:Name="GenerateRomButton"
-                  Click="GenerateRomButton_Click">_Custom generate</Button>
+                  Click="GenerateRomButton_Click">Generate custom game...</Button>
         </StackPanel>
       </Grid>
     </Border>

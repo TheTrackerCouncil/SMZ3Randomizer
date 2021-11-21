@@ -31,7 +31,7 @@ namespace Randomizer.App
             _dbContext = dbContext;
         }
 
-        public bool GenerateRom(RandomizerOptions options, out string path, out string error)
+        public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
         {
             var bytes = GenerateRomBytes(options, out var seed);
 
@@ -48,10 +48,11 @@ namespace Randomizer.App
             var spoilerPath = Path.ChangeExtension(romPath, ".txt");
             File.WriteAllText(spoilerPath, spoilerLog);
 
-            SaveSeedToDatabase(options, seed, romPath, spoilerPath);
+            rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
 
             error = msuError;
             path = romPath;
+
             return true;
 
         }
@@ -171,7 +172,7 @@ namespace Randomizer.App
             return true;
         }
 
-        protected void SaveSeedToDatabase(RandomizerOptions options, SeedData seed, String romPath, string spoilerPath)
+        protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, String romPath, string spoilerPath)
         {
             var jsonOptions = new JsonSerializerOptions
             {
@@ -180,15 +181,17 @@ namespace Randomizer.App
 
             string settings = JsonSerializer.Serialize(options.ToConfig(), jsonOptions);
 
-            _dbContext.GeneratedRoms.Add(new GeneratedRom()
+            GeneratedRom rom = new GeneratedRom()
             {
                 Seed = seed.Seed,
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
                 Settings = settings
-            });
+            };
+            _dbContext.GeneratedRoms.Add(rom);
             _dbContext.SaveChanges();
+            return rom;
         }
     }
 }

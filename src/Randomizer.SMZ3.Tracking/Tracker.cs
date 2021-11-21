@@ -1554,7 +1554,7 @@ namespace Randomizer.SMZ3.Tracking
 
         private DungeonInfo? GetDungeonFromItem(ItemData item, DungeonInfo? dungeon = null)
         {
-            dungeon = Dungeons.First(x => x.Name == dungeon?.Name);
+            dungeon = Dungeons.FirstOrDefault(x => x.Name == dungeon?.Name);
             var locations = World.Locations
                 .Where(x => !x.Cleared && x.ItemIs(item.InternalItemType, World))
                 .ToImmutableList();

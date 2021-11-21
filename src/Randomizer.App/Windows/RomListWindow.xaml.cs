@@ -82,13 +82,14 @@ namespace Randomizer.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void QuickGenerate_Click(object sender, RoutedEventArgs e)
+        private void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error);
+            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
 
             if (successful)
             {
                 UpdateRomList();
+                QuickLaunchRom(rom);
             }
         }
 
@@ -195,6 +196,15 @@ namespace Randomizer.App
             if (launchButton.Tag is not GeneratedRom rom)
                 return;
 
+            QuickLaunchRom(rom);
+        }
+
+        /// <summary>
+        /// Launches a rom with the set quick launch options
+        /// </summary>
+        /// <param name="rom">The rom to launch</param>
+        private void QuickLaunchRom(GeneratedRom rom)
+        {
             var launchButtonOptions = (LaunchButtonOptions)Options.GeneralOptions.LaunchButton;
 
             if (launchButtonOptions is LaunchButtonOptions.PlayAndTrack or LaunchButtonOptions.OpenFolderAndTrack or LaunchButtonOptions.TrackOnly)
@@ -211,7 +221,6 @@ namespace Randomizer.App
             {
                 LaunchRom(rom);
             }
-
         }
 
         /// <summary>
