@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Shared;
 
 namespace Randomizer.Shared
 {
