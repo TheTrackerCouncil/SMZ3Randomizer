@@ -928,7 +928,7 @@ namespace Randomizer.SMZ3.Tracking
         /// The amount of the item that is in the player's inventory now.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetItemCount(ItemData item, int count, float confidence)
+        public void TrackItemAmount(ItemData item, int count, float confidence)
         {
             var newItemCount = count;
             if (item.CounterMultiplier > 1
@@ -938,6 +938,12 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var oldItemCount = item.TrackingState;
+            if (newItemCount == oldItemCount)
+            {
+                Say(Responses.TrackedExactAmountDuplicate.Format(item.Plural, count));
+                return;
+            }
+
             item.TrackingState = newItemCount;
             if (newItemCount > oldItemCount)
             {

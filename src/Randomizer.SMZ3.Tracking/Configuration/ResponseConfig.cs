@@ -98,6 +98,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? TrackedAlreadyTrackedItem { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when setting the exact amount of an
+        /// item, but that exact amount is already tracked.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is the plural name of the item. <c>{1}</c> is the number of items.
+        /// </remarks>
+        public SchrodingersString TrackedExactAmountDuplicate { get; init; }
+            = new("You already have {1} {0}.");
+
+        /// <summary>
         /// Gets the phrases to respond with when tracking multiple items in an
         /// area at once.
         /// </summary>

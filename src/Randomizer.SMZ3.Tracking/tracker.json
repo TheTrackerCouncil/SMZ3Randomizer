@@ -836,6 +836,11 @@
     "TrackedAlreadyTrackedItem": [
       "You already have that."
     ],
+    "TrackedExactAmountDuplicate": [
+      "I know.",
+      "That is correct.",
+      "You already have {1} {0}."
+    ],
     "TrackedOlderProgressiveItem": [
       "You already have a better {0}.",
       "You already have the {1}."
