@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using BunLabs;
 
 using Microsoft.Extensions.Logging;
+
 using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Configuration;
@@ -961,6 +962,7 @@ namespace Randomizer.SMZ3.Tracking
 
             var locations = area.Locations
                 .Where(x => !x.Cleared)
+                .WhereIf(dungeon != null, x => x.Type != LocationType.NotInDungeon)
                 .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression(assumeKeys)))
                 .ToImmutableList();
 
@@ -1002,7 +1004,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (!trackItems)
                 {
                     itemsTracked++;
-                    if (location.Item != null && !location.Item.IsDungeonItem)
+                    if (IsTreasure(location.Item))
                         treasureTracked++;
                     location.Cleared = true;
                     OnLocationCleared(new(location, confidence));
@@ -1014,7 +1016,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (item == null || !item.Track())
                     _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
                 itemsTracked++;
-                if (location.Item != null && !location.Item.IsDungeonItem)
+                if (IsTreasure(location.Item))
                     treasureTracked++;
 
                 location.Cleared = true;
@@ -1076,8 +1078,8 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             Action? undoTrackTreasure = null;
-            var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => x.Is(location.Region));
-            if (dungeon != null && location.Item?.IsDungeonItem == false)
+            var dungeon = GetDungeonFromLocation(location);
+            if (dungeon != null && IsTreasure(location.Item))
             {
                 TrackDungeonTreasure(dungeon, confidence);
                 undoTrackTreasure = _undoHistory.Pop();
@@ -1388,6 +1390,20 @@ namespace Randomizer.SMZ3.Tracking
         protected virtual void OnStateLoaded()
             => StateLoaded?.Invoke(this, EventArgs.Empty);
 
+        private static bool IsTreasure(ItemData item)
+            => !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Map, ItemCategory.Compass);
+
+        private static bool IsTreasure(Item? item)
+            => item != null && !item.IsDungeonItem;
+
+        private DungeonInfo? GetDungeonFromLocation(Location location)
+        {
+            if (location.Type == LocationType.NotInDungeon)
+                return null;
+
+            return WorldInfo.Dungeons.SingleOrDefault(x => x.Is(location.Region));
+        }
+
         private Action? TryTrackDungeonTreasure(ItemData item, float? confidence)
         {
             if (confidence < Options.MinimumSassConfidence)
@@ -1398,7 +1414,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var dungeon = GetDungeonFromItem(item);
-            if (dungeon != null && !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Map, ItemCategory.Compass))
+            if (dungeon != null && IsTreasure(item))
             {
                 if (TrackDungeonTreasure(dungeon, confidence))
                     return _undoHistory.Pop();
@@ -1445,14 +1461,14 @@ namespace Randomizer.SMZ3.Tracking
         private DungeonInfo? GetDungeonFromItem(ItemData item, DungeonInfo? dungeon = null)
         {
             var locations = World.Locations
-                .Where(x => !x.Cleared && x.ItemIs(item.InternalItemType, World))
+                .Where(x => !x.Cleared && x.Type != LocationType.NotInDungeon && x.ItemIs(item.InternalItemType, World))
                 .ToImmutableList();
 
             if (locations.Count == 1 && dungeon == null)
             {
                 // User didn't have a guess and there's only one location that
                 // has the tracker item
-                return WorldInfo.Dungeons.SingleOrDefault(x => x.Is(locations[0].Region));
+                return GetDungeonFromLocation(locations[0]);
             }
 
             if (locations.Count > 0 && dungeon != null)
