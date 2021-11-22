@@ -109,7 +109,7 @@ namespace Randomizer.SMZ3.Tracking
                     x is IHasReward rewardRegion ? rewardRegion.Reward : null,
                     x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null))
                 .ToImmutableList();
-            var dungeonStates = tracker.Dungeons
+            var dungeonStates = tracker.WorldInfo.Dungeons
                 .Select(x => new DungeonState(x.Name[0], x.Cleared, x.TreasureRemaining, x.Reward, x.Requirement))
                 .ToImmutableList();
             var markedLocations = tracker.MarkedLocations
@@ -247,7 +247,7 @@ namespace Randomizer.SMZ3.Tracking
 
             foreach (var dungeonState in DungeonStates)
             {
-                var dungeon = tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonState.Name, StringComparison.OrdinalIgnoreCase))
+                var dungeon = tracker.WorldInfo.Dungeons.SingleOrDefault(x => x.Name.Contains(dungeonState.Name, StringComparison.OrdinalIgnoreCase))
                     ?? throw new ArgumentException($"Could not find dungeon with name '{dungeonState.Name}'.", nameof(tracker));
 
                 dungeon.Cleared = dungeonState.Cleared;

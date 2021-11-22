@@ -272,7 +272,7 @@ namespace Randomizer.App
             if (location != null)
                 return GetName(location);
 
-            var dungeon = _tracker.Dungeons.SingleOrDefault(x => x.Name.Contains(mapLocation.Name, StringComparison.OrdinalIgnoreCase));
+            var dungeon = _tracker.WorldInfo.Dungeons.SingleOrDefault(x => x.Name.Contains(mapLocation.Name, StringComparison.OrdinalIgnoreCase));
             if (dungeon != null)
                 return dungeon.Name[0];
 
