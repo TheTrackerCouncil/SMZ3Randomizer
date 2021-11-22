@@ -113,7 +113,11 @@
       "Row": 0
     },
     {
-      "Name": "Blue Boomerang",
+      "Name": [
+        "Blue Boomerang",
+        [ "Blue Shit", 0.01 ],
+        [ "That Blue Shit", 0.01 ]
+      ],
       "InternalItemType": 12,
       "Column": 1,
       "Row": 0
@@ -259,7 +263,11 @@
       "Row": 0
     },
     {
-      "Name": "Red Boomerang",
+      "Name": [
+        "Red Boomerang",
+        [ "Red Shit", 0.01 ],
+        [ "That Red Shit", 0.01 ]
+      ],
       "InternalItemType": 42,
       "Column": 2,
       "Row": 0
@@ -422,7 +430,11 @@
       "Multiple": true,
       "Stages": {
         "1": [ "Power Glove" ],
-        "2": [ "Titan's Mitt", "Tiddy Mitts" ]
+        "2": [
+          "Titan's Mitt",
+          "Tiddy Mitts",
+          [ "Itty Bitty Titty Mitty", 0.01 ]
+        ]
       }
     },
     {
@@ -567,7 +579,10 @@
       "Row": 1
     },
     {
-      "Name": "Gravity Suit",
+      "Name": [
+        "Gravity Suit",
+        [ "Pancakes", 0.05 ]
+      ],
       "InternalItemType": 182,
       "Column": 7,
       "Row": 2
@@ -666,6 +681,7 @@
       "Name": [
         "Super Missile",
         [ "Supers", 0 ],
+        [ "Soups", 0 ],
         [ "Superb Missiles", 0 ],
         [ "Super Missile pack", 0 ]
       ],
@@ -682,7 +698,11 @@
       "Row": 4
     },
     {
-      "Name": [ "Power Bomb", "Powerful Bombs" ],
+      "Name": [
+        "Power Bomb",
+        [ "Power Bombs", 0 ],
+        "Powerful Bombs"
+      ],
       "Plural": [ "Power Bombs", "Powerful Bombs" ],
       "InternalItemType": 196,
       "Multiple": true,
