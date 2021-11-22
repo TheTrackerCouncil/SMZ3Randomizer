@@ -348,7 +348,11 @@ namespace Randomizer.SMZ3.Tracking
             if (amount < 1)
                 throw new ArgumentOutOfRangeException(nameof(amount), "The amount of items must be greater than zero.");
             if (amount > dungeon.TreasureRemaining)
+            {
                 _logger.LogWarning("Trying to track {amount} treasures in a dungeon with only {left} treasures left.", amount, dungeon.TreasureRemaining);
+                Say(Responses.DungeonTooManyTreasuresTracked?.Format(dungeon.Name, dungeon.TreasureRemaining, amount));
+                return false;
+            }
 
             if (dungeon.TreasureRemaining > 0)
             {

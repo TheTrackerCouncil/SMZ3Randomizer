@@ -326,6 +326,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         };
 
         /// <summary>
+        /// Gets the phrases to respond with when clearing more treasure chests
+        /// in a dungeon than there are left.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is the actual amount of items left. <c>{2}</c> is the amount of
+        /// items requested to clear.
+        /// </remarks>
+        public SchrodingersString? DungeonTooManyTreasuresTracked { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when tracking an item in a specific
         /// dungeon, but that dungeon does not have that item in the seed.
         /// </summary>

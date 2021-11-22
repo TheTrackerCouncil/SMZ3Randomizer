@@ -940,6 +940,10 @@
       "0": [ "That's everything in {0}.", "That's the last of them." ],
       "-1": [ "You already got everything in {0}." ]
     },
+    "DungeonTooManyTreasuresTracked": [
+      "But there's only {1} left.",
+      "But there's only {1} left in {0}."
+    ],
     "ItemTrackedInIncorrectDungeon": [
       "Are you sure that's where you found it?",
       "{1} shouldn't be in {0}."
