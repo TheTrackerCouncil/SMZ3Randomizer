@@ -641,8 +641,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <c>true</c> to attempt to clear a location for the tracked item;
         /// <c>false</c> if that is done by the caller.
         /// </param>
-        public void TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true)
+        /// <returns>
+        /// <c>true</c> if the item was actually tracked; <c>false</c> if the
+        /// item could not be tracked, e.g. when tracking Bow twice.
+        /// </returns>
+        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true)
         {
+            var didTrack = false;
             var accessibleBefore = GetAccessibleLocations();
             var itemName = item.Name;
             var originalTrackingState = item.TrackingState;
@@ -656,7 +661,8 @@ namespace Randomizer.SMZ3.Tracking
                     // Tracked by specific stage name (e.g. Tempered Sword), set
                     // to that stage specifically
                     var stageName = item.Stages[stage.Value].ToString();
-                    if (item.Track(stage.Value))
+                    didTrack = item.Track(stage.Value);
+                    if (didTrack)
                         Say(Responses.TrackedItemByStage.Format(itemName, stageName));
                     else
                         Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Stages[item.TrackingState].ToString()));
@@ -664,7 +670,8 @@ namespace Randomizer.SMZ3.Tracking
                 else
                 {
                     // Tracked by regular name, upgrade by one step
-                    if (item.Track())
+                    didTrack = item.Track();
+                    if (didTrack)
                     {
                         var stageName = item.Stages[item.TrackingState].ToString();
                         Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
@@ -677,7 +684,7 @@ namespace Randomizer.SMZ3.Tracking
             }
             else if (item.Multiple)
             {
-                item.Track();
+                didTrack = item.Track();
                 if (item.Counter == 1)
                     Say(Responses.TrackedItem.Format(itemName));
                 else if (item.Counter > 1)
@@ -690,7 +697,8 @@ namespace Randomizer.SMZ3.Tracking
             }
             else
             {
-                if (item.Track())
+                didTrack = item.Track();
+                if (didTrack)
                 {
                     if (Responses.TrackedSpecificItem.TryGetValue(item.Name[0], out var responses)
                         && responses.Count > 0)
@@ -719,6 +727,12 @@ namespace Randomizer.SMZ3.Tracking
                 var location = World.Locations.TrySingle(x => x.Cleared == false && x.ItemIs(item.InternalItemType, World));
                 if (location != null)
                 {
+                    // If this item was in a dungeon, track treasure count
+                    undoTrackDungeonTreasure = TryTrackDungeonTreasure(item, confidence);
+
+                    // Important: clear only after tracking dungeon treasure, as
+                    //            the "guess dungeon from location" algorithm
+                    //            excludes cleared items
                     location.Cleared = true;
                     OnLocationCleared(new(location, confidence));
 
@@ -728,9 +742,6 @@ namespace Randomizer.SMZ3.Tracking
                         MarkedLocations.Remove(location.Id);
                         OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
                     }
-
-                    // If this item was in a dungeon, also track treasure count
-                    undoTrackDungeonTreasure = TryTrackDungeonTreasure(item, confidence);
                 }
             }
 
@@ -742,6 +753,8 @@ namespace Randomizer.SMZ3.Tracking
             });
             GiveLocationHint(accessibleBefore);
             RestartIdleTimers();
+
+            return didTrack;
         }
 
         /// <summary>
@@ -795,15 +808,18 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void TrackItem(ItemData item, DungeonInfo dungeon, string? trackedAs = null, float? confidence = null)
         {
-            TrackItem(item, trackedAs, confidence, tryClear: false);
+            var tracked = TrackItem(item, trackedAs, confidence, tryClear: false);
             var undoTrack = _undoHistory.Pop();
 
             // Check if we can remove something from the remaining treasures in
             // a dungeon
             Action? undoTrackTreasure = null;
-            dungeon = GetDungeonFromItem(item, dungeon)!;
-            if (TrackDungeonTreasure(dungeon, confidence))
-                undoTrackTreasure = _undoHistory.Pop();
+            if (tracked) // Only track treasure if we actually tracked anything
+            {
+                dungeon = GetDungeonFromItem(item, dungeon)!;
+                if (TrackDungeonTreasure(dungeon, confidence))
+                    undoTrackTreasure = _undoHistory.Pop();
+            }
 
             // Check if we can remove something from the marked location
             var location = World.Locations
