@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Tracking
             services.AddScoped<TrackerModuleFactory>();
 
             services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
-            services.AddScoped<TrackerConfigProvider>();
+            services.AddSingleton<TrackerConfigProvider>();
             services.AddScoped(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
