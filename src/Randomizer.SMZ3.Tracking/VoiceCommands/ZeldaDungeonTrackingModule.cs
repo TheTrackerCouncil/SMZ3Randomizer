@@ -110,7 +110,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var beatBoss = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("clear", "I beat", "I defeated", "beat off")
+                .OneOf("clear", "I beat", "I defeated", "I beat off")
                 .Append(BossKey, bossNames);
 
             var markBoss = new GrammarBuilder()
@@ -118,9 +118,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("mark")
                 .Append(BossKey, bossNames)
                 .Append("as")
-                .OneOf("cleared", "beaten", "beaten off");
+                .OneOf("cleared", "beaten", "beaten off", "dead", "fucking dead");
 
-            return GrammarBuilder.Combine(markDungeon, beatBoss, markBoss);
+            var bossIsDead = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Append(BossKey, bossNames)
+                .OneOf("is dead", "is fucking dead");
+
+            return GrammarBuilder.Combine(markDungeon, beatBoss, markBoss, bossIsDead);
         }
 
         private GrammarBuilder GetMarkDungeonRequirementRule()

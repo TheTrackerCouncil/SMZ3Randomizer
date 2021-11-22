@@ -17,7 +17,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="logger">Used to log information.</param>
         public LocationTrackingModule(Tracker tracker, ILogger<LocationTrackingModule> logger) : base(tracker, logger)
         {
-            AddCommand("Track item at specific location", GetTrackItemAtLocationRule(), (tracker, result) =>
+            AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 var location = GetLocationFromResult(tracker, result);
@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             });
         }
 
-        private GrammarBuilder GetTrackItemAtLocationRule()
+        private GrammarBuilder GetMarkItemAtLocationRule()
         {
             var itemNames = GetItemNames();
             var locationNames = GetLocationNames();

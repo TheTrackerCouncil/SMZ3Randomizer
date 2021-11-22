@@ -907,9 +907,10 @@
       "You did that already."
     ],
     "DungeonCleared": [
-      "Marked {0} as cleared.",
       "Marked {1} as defeated.",
-      "Congratulations on beating off {1}."
+      "Congratulations on beating off {1}.",
+      "RIP {1}",
+      [ "f", 0.05 ]
     ],
     "DungeonAlreadyCleared": [
       "But you already cleared {0}.",
