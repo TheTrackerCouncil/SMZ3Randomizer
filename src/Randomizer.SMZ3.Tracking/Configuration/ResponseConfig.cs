@@ -477,5 +477,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// expressed in the dictionary keys.
         /// </summary>
         public Dictionary<string, SchrodingersString> Idle { get; init; } = new();
+
+        /// <summary>
+        /// Get the phrases to respond with when asking tracker about her mood.
+        /// </summary>
+        public Dictionary<string, SchrodingersString> Moods { get; init; } = new()
+        {
+            ["non-committal"] = new("Can it wait for a bit? I'm in the middle of some calibrations.")
+        };
     }
 }

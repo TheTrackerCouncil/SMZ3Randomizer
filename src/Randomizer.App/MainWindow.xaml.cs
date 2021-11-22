@@ -482,7 +482,8 @@ namespace Randomizer.App
 
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var aboutWindow = _serviceProvider.GetRequiredService<AboutWindow>();
+            using var scope = _serviceProvider.CreateScope();
+            var aboutWindow = scope.ServiceProvider.GetRequiredService<AboutWindow>();
             aboutWindow.Owner = this;
             aboutWindow.ShowDialog();
         }

@@ -69,6 +69,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             => _syntax.ToImmutableDictionary();
 
         /// <summary>
+        /// Gets a value indicating whether the voice recognition syntax is
+        /// secret and should not be displayed to the user.
+        /// </summary>
+        public virtual bool IsSecret => false;
+
+        /// <summary>
         /// Gets the Tracker instance.
         /// </summary>
         protected Tracker Tracker { get; }
@@ -284,7 +290,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
-        /// Gets the pluralized item names for items that can be tracked more than once for speech recognition.
+        /// Gets the pluralized item names for items that can be tracked more
+        /// than once for speech recognition.
         /// </summary>
         /// <returns>
         /// A new <see cref="Choices"/> object representing all possible item

@@ -36,6 +36,8 @@ namespace Randomizer.SMZ3.Tracking
 
         private bool _disposed;
 
+        private string? _mood;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
@@ -191,6 +193,21 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the tracking preferences.
         /// </summary>
         public TrackerOptions Options { get; }
+
+        /// <summary>
+        /// Gets a string describing tracker's mood.
+        /// </summary>
+        public string Mood
+        {
+            get
+            {
+                if (_mood == null)
+                {
+                    _mood = Responses.Moods.Keys.Random(Rng.Current);
+                }
+                return _mood;
+            }
+        }
 
         /// <summary>
         /// Initializes the microphone from the default audio device
@@ -735,8 +752,8 @@ namespace Randomizer.SMZ3.Tracking
                     undoTrackDungeonTreasure = TryTrackDungeonTreasure(item, confidence);
 
                     // Important: clear only after tracking dungeon treasure, as
-                    //            the "guess dungeon from location" algorithm
-                    //            excludes cleared items
+                    // the "guess dungeon from location" algorithm excludes
+                    // cleared items
                     location.Cleared = true;
                     OnLocationCleared(new(location, confidence));
 

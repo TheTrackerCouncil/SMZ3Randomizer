@@ -1010,6 +1010,11 @@
     },
     "Idle": {
       "10m±2m": [ "Decreased content by one step.", "What's wrong? Am I not good enough for you anymore?" ]
+    },
+    "Moods": {
+      "non-committal": [
+        "Can it wait for a bit? I'm in the middle of some calibrations."
+      ]
     }
   }
 }
