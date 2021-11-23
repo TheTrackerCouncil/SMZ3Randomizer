@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 tracker.Say(tracker.Responses.Moods[tracker.Mood]);
             });
+
+            foreach (var request in tracker.Requests)
+            {
+                if (request.Phrases.Count == 0)
+                    continue;
+
+                AddCommand(request.Phrases.First(), GetRequestRule(request.Phrases), (tracker, result) =>
+                {
+                    tracker.Say(request.Response);
+                });
+            }
         }
 
         /// <summary>
@@ -38,6 +50,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return new GrammarBuilder()
                 .Append("Hey tracker,")
                 .OneOf("how are you?", "how are you doing?", "how are you feeling?");
+        }
+
+        private GrammarBuilder GetRequestRule(IEnumerable<string> requests)
+        {
+            return new GrammarBuilder(requests.Select(x =>
+            {
+                return new GrammarBuilder()
+                    .Append("Hey tracker, ")
+                    .Append(x);
+            }));
         }
     }
 }

@@ -66,6 +66,7 @@ namespace Randomizer.SMZ3.Tracking
             Items = config.Items.ToImmutableList();
             Pegs = config.Pegs.ToImmutableList();
             Responses = config.Responses;
+            Requests = config.Requests;
             World = worldAccessor.GetWorld();
             WorldInfo = locationConfig;
             GetTreasureCounts(WorldInfo.Dungeons, World);
@@ -186,6 +187,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the configured responses.
         /// </summary>
         public ResponseConfig Responses { get; }
+
+        /// <summary>
+        /// Gets a collection of basic requests and responses.
+        /// </summary>
+        public IReadOnlyCollection<BasicVoiceRequest> Requests { get; }
 
         /// <summary>
         /// Gets a dictionary containing the rules and the various speech

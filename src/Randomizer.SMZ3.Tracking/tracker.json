@@ -1019,12 +1019,47 @@
       ]
     },
     "Idle": {
-      "10m±2m": [ "Decreased content by one step.", "What's wrong? Am I not good enough for you anymore?" ]
+      "10m±2m": [
+        "Decreased content by one step.",
+        "What's wrong? Am I not good enough for you anymore?",
+        "I enjoy the sight of humans on their knees.",
+        "Assuming direct control."
+      ]
     },
     "Moods": {
       "non-committal": [
         "Can it wait for a bit? I'm in the middle of some calibrations."
       ]
     }
-  }
+  },
+  "Requests": [
+    {
+      "Phrases": [ "Toggle sass off" ],
+      "Response": [
+        "Sorry, I can't let you do that.",
+        "Excuse me? I thought you wanted good content."
+      ]
+    },
+    {
+      "Phrases": [ "Track date with snowman robot" ],
+      "Response": [ "I have no time for games." ]
+    },
+    {
+      "Phrases": [
+        "I'm almost dead",
+        "tell my wife I love her",
+        "tell my husband I love him",
+        "tell my partner I love them"
+      ],
+      "Response": [ "RIP" ]
+    },
+    {
+      "Phrases": [ "Execute order 66" ],
+      "Response": [ "Yes, my lord" ]
+    },
+    {
+      "Phrases": [ "Ban Vivelin" ],
+      "Response": [ "Please enter 75 digit alphanumeric password to continue." ]
+    }
+  ]
 }
