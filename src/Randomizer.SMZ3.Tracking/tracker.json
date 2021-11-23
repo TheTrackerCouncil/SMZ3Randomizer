@@ -1074,7 +1074,7 @@
     },
     {
       "Phrases": [ "Ban Vivelin", "Ban Fragger" ],
-      "Response": [ "Please enter 75 digit alphanumeric password to continue." ]
+      "Response": [ "Please enter 75 digit alphanumeric password to continue.", "Access denied." ]
     }
   ]
 }
