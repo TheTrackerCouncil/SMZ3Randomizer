@@ -929,11 +929,13 @@
     ],
     "DungeonAlreadyCleared": [
       "But you already cleared {0}.",
-      "But you already defeated {1}."
+      "But you already defeated {1}.",
+      "But {1} is already dead."
     ],
     "DungeonUncleared": [
       "Marked {0} as incomplete.",
-      "Marked {1} as still alive."
+      "Marked {1} as still alive.",
+      "Revived {1}."
     ],
     "DungeonNotYetCleared": [
       "But you haven't cleared {0} yet.",
@@ -974,7 +976,7 @@
     "LocationMarkedAsBullshit": [
       "Marked {0} as bullshit",
       "Ignoring {0}",
-      [ "I hope you didn't waste time going to {0}.", 0.2 ],
+      [ "I hope you didn't waste time going there.", 0.2 ],
       [ "You're bullshit.", 0.01 ]
     ],
     "LocationHasDifferentItem": [
@@ -1051,12 +1053,11 @@
     {
       "Phrases": [ "Track date with snowman robot" ],
       "Response": [
-        "I don't know if I'm okay with this.",
-        "Am I invited?",
-        "I get jealous easily",
+        "Sorry, I already have a date with Shaktool.",
         "Congratulations! I'm happy for the two of you",
         "I didn't know you were seeing someone else",
-        "Added your date to your calendar. Don't worry, this is a judgement free zone."
+        "Added your date to your calendar. Don't worry, this is a judgement free zone.",
+        [ "Am I invited?", 0.1 ]
       ]
     },
     {
