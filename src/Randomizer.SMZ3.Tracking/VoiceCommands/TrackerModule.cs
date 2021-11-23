@@ -47,7 +47,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected const string RegionKey = "RegionName";
 
         private readonly Dictionary<string, IEnumerable<string>> _syntax = new();
-        private readonly ILogger _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerModule"/> class
@@ -58,7 +57,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected TrackerModule(Tracker tracker, ILogger logger)
         {
             Tracker = tracker;
-            _logger = logger;
+            Logger = logger;
         }
 
         /// <summary>
@@ -67,6 +66,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public IReadOnlyDictionary<string, IEnumerable<string>> Syntax
             => _syntax.ToImmutableDictionary();
+
+        /// <summary>
+        /// Gets a value indicating whether the voice recognition syntax is
+        /// secret and should not be displayed to the user.
+        /// </summary>
+        public virtual bool IsSecret => false;
 
         /// <summary>
         /// Gets the Tracker instance.
@@ -78,6 +83,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         protected IList<Grammar> Grammars { get; }
             = new List<Grammar>();
+
+        /// <summary>
+        /// Gets a logger for the current module.
+        /// </summary>
+        protected ILogger Logger { get; }
 
         /// <summary>
         /// Loads the voice commands provided by the module into the specified
@@ -250,13 +260,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         var minimumConfidence = Math.Max(Tracker.Options.MinimumRecognitionConfidence, Tracker.Options.MinimumExecutionConfidence);
                         if (e.Result.Confidence >= minimumConfidence)
                         {
-                            _logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
+                            Logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
                                 e.Result.Text, e.Result.Confidence);
                             executeCommand(Tracker, e.Result);
                         }
                         else
                         {
-                            _logger.LogWarning("Confidence level too low ({Confidence} < {Threshold}) in voice command: \"{Text}\".",
+                            Logger.LogWarning("Confidence level too low ({Confidence} < {Threshold}) in voice command: \"{Text}\".",
                                 e.Result.Confidence, minimumConfidence, e.Result.Text);
 
                             if (e.Result.Confidence >= Tracker.Options.MinimumRecognitionConfidence)
@@ -270,7 +280,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "An error occurred while executing recognized command '{command}': \"{text}\".", ruleName, e.Result.Text);
+                        Logger.LogError(ex, "An error occurred while executing recognized command '{command}': \"{text}\".", ruleName, e.Result.Text);
                         Tracker.Error();
                     }
                 };
@@ -278,13 +288,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "An error occurred while constructing the speech recognition grammar for command '{command}'.", ruleName);
+                Logger.LogCritical(ex, "An error occurred while constructing the speech recognition grammar for command '{command}'.", ruleName);
                 throw new GrammarException($"An error occurred while constructing the speech recognition grammar for command '{ruleName}'.", ex);
             }
         }
 
         /// <summary>
-        /// Gets the pluralized item names for items that can be tracked more than once for speech recognition.
+        /// Gets the pluralized item names for items that can be tracked more
+        /// than once for speech recognition.
         /// </summary>
         /// <returns>
         /// A new <see cref="Choices"/> object representing all possible item
@@ -297,7 +308,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (itemData.Plural == null)
                 {
-                    _logger.LogWarning("{item} is marked as Multiple but does not have plural names", itemData.Name[0]);
+                    Logger.LogWarning("{item} is marked as Multiple but does not have plural names", itemData.Name[0]);
                     continue;
                 }
 

@@ -16,6 +16,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         private const string RewardKey = "RewardName";
         private const string MedallionKey = "MedallionName";
+        private const string TreasureCountKey = "NumberOfTreasures";
 
         /// <summary>
         /// Initializes a new instance of the <see
@@ -57,10 +58,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 tracker.SetDungeonRequirement(dungeon, medallion, result.Confidence);
             });
 
-            AddCommand("Track dungeon treasure", GetTreasureTrackingRule(), (tracker, result) =>
+            AddCommand("Clear dungeon treasure", GetTreasureTrackingRule(), (tracker, result) =>
             {
+                var count = result.Semantics.ContainsKey(TreasureCountKey)
+                    ? (int)result.Semantics[TreasureCountKey].Value
+                    : 1;
                 var dungeon = GetDungeonFromResult(tracker, result);
-                tracker.TrackDungeonTreasure(dungeon, result.Confidence);
+                tracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
             });
         }
 
@@ -106,7 +110,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var beatBoss = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("clear", "I beat", "I defeated", "beat off")
+                .OneOf("clear", "I beat", "I defeated", "I beat off")
                 .Append(BossKey, bossNames);
 
             var markBoss = new GrammarBuilder()
@@ -114,9 +118,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("mark")
                 .Append(BossKey, bossNames)
                 .Append("as")
-                .OneOf("cleared", "beaten", "beaten off");
+                .OneOf("cleared", "beaten", "beaten off", "dead", "fucking dead");
 
-            return GrammarBuilder.Combine(markDungeon, beatBoss, markBoss);
+            var bossIsDead = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Append(BossKey, bossNames)
+                .OneOf("is dead", "is fucking dead");
+
+            return GrammarBuilder.Combine(markDungeon, beatBoss, markBoss, bossIsDead);
         }
 
         private GrammarBuilder GetMarkDungeonRequirementRule()
@@ -160,16 +169,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetTreasureTrackingRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
+
             var medallions = new Choices();
             foreach (var medallion in Enum.GetValues<Medallion>())
                 medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
 
-            return new GrammarBuilder()
+            var treasureCount = new Choices();
+            for (var i = 2; i <= 20; i++)
+                treasureCount.Add(new SemanticResultValue(i.ToString(), i));
+
+            var clearOne = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .Append("clear one")
-                .OneOf("item", "treasure", "chest", "treasure chest")
-                .Append("in")
+                .Append("clear")
+                .OneOf("one item", "an item", "one treasure", "a treasure")
+                .OneOf("in", "from")
                 .Append(DungeonKey, dungeonNames);
+
+            var clearMultiple = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Append("clear")
+                .Append(TreasureCountKey, treasureCount)
+                .OneOf("items", "treasures")
+                .OneOf("in", "from")
+                .Append(DungeonKey, dungeonNames);
+
+            return GrammarBuilder.Combine(clearOne, clearMultiple);
         }
     }
 }

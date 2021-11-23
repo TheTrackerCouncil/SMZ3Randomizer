@@ -98,6 +98,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? TrackedAlreadyTrackedItem { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when setting the exact amount of an
+        /// item, but that exact amount is already tracked.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is the plural name of the item. <c>{1}</c> is the number
+        /// of items.
+        /// </remarks>
+        public SchrodingersString TrackedExactAmountDuplicate { get; init; }
+            = new("You already have {1} {0}.");
+
+        /// <summary>
         /// Gets the phrases to respond with when tracking multiple items in an
         /// area at once.
         /// </summary>
@@ -113,10 +124,28 @@ namespace Randomizer.SMZ3.Tracking.Configuration
 
         /// <summary>
         /// Gets the phrases to respond with when tracking or clearing multiple
-        /// items in an area at once, but there no items available.
+        /// items in an area at once, but there no items left.
         /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area.
+        /// </remarks>
         public SchrodingersString TrackedNothing { get; init; }
             = new SchrodingersString("There are no items left in {0}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking or clearing multiple
+        /// items in an area at once, but the only items left are out of logic.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area. <c>{1}</c> is
+        /// a placeholder for the number of items that are left but
+        /// inaccessible.
+        /// </remarks>
+        public Dictionary<int, SchrodingersString> TrackedNothingOutOfLogic { get; init; } = new Dictionary<int, SchrodingersString>
+        {
+            [1] = new SchrodingersString("The only item left in {0} is out of logic."),
+            [2] = new SchrodingersString("The only items left in {0} are out of logic.")
+        };
 
         /// <summary>
         /// Gets the phrases to respond with when untracking an item.
@@ -321,6 +350,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         };
 
         /// <summary>
+        /// Gets the phrases to respond with when clearing more treasure chests
+        /// in a dungeon than there are left.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is the actual amount of items left. <c>{2}</c> is the amount of
+        /// items requested to clear.
+        /// </remarks>
+        public SchrodingersString? DungeonTooManyTreasuresTracked { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when tracking an item in a specific
         /// dungeon, but that dungeon does not have that item in the seed.
         /// </summary>
@@ -451,5 +491,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// expressed in the dictionary keys.
         /// </summary>
         public Dictionary<string, SchrodingersString> Idle { get; init; } = new();
+
+        /// <summary>
+        /// Get the phrases to respond with when asking tracker about her mood.
+        /// </summary>
+        public Dictionary<string, SchrodingersString> Moods { get; init; } = new()
+        {
+            ["non-committal"] = new("Can it wait for a bit? I'm in the middle of some calibrations.")
+        };
     }
 }

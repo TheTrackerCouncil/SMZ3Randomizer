@@ -16,15 +16,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <param name="pegs">The peg data.</param>
         /// <param name="dungeons">The dungeon data.</param>
         /// <param name="responses">The responses to use.</param>
+        /// <param name="requests">The basic requests and responses.</param>
         public TrackerConfig(IReadOnlyCollection<ItemData> items,
             IReadOnlyCollection<Peg> pegs,
             IReadOnlyCollection<DungeonInfo> dungeons,
-            ResponseConfig responses)
+            ResponseConfig responses,
+            IReadOnlyCollection<BasicVoiceRequest> requests)
         {
             Items = items;
             Pegs = pegs;
             Dungeons = dungeons;
             Responses = responses;
+            Requests = requests;
         }
 
         /// <summary>
@@ -46,5 +49,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets a collection of configured responses.
         /// </summary>
         public ResponseConfig Responses { get; init; }
+
+        /// <summary>
+        /// Gets a collection of basic requests and responses.
+        /// </summary>
+        public IReadOnlyCollection<BasicVoiceRequest> Requests { get; init; }
     }
 }

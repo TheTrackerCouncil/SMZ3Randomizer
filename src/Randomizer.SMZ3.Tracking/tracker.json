@@ -139,7 +139,11 @@
       "Row": 0
     },
     {
-      "Name": "Blue Boomerang",
+      "Name": [
+        "Blue Boomerang",
+        [ "Blue Shit", 0.01 ],
+        [ "That Blue Shit", 0.01 ]
+      ],
       "InternalItemType": 12,
       "Column": 1,
       "Row": 0
@@ -285,7 +289,11 @@
       "Row": 0
     },
     {
-      "Name": "Red Boomerang",
+      "Name": [
+        "Red Boomerang",
+        [ "Red Shit", 0.01 ],
+        [ "That Red Shit", 0.01 ]
+      ],
       "InternalItemType": 42,
       "Column": 2,
       "Row": 0
@@ -459,7 +467,11 @@
       "Multiple": true,
       "Stages": {
         "1": [ "Power Glove" ],
-        "2": [ "Titan's Mitt", "Tiddy Mitts" ]
+        "2": [
+          "Titan's Mitt",
+          "Tiddy Mitts",
+          [ "Itty Bitty Titty Mitty", 0.01 ]
+        ]
       }
     },
     {
@@ -604,7 +616,10 @@
       "Row": 1
     },
     {
-      "Name": "Gravity Suit",
+      "Name": [
+        "Gravity Suit",
+        [ "Pancakes", 0.05 ]
+      ],
       "InternalItemType": 182,
       "Column": 7,
       "Row": 2
@@ -707,6 +722,7 @@
       "Name": [
         "Super Missile",
         [ "Supers", 0 ],
+        [ "Soups", 0 ],
         [ "Superb Missiles", 0 ],
         [ "Super Missile pack", 0 ]
       ],
@@ -723,7 +739,11 @@
       "Row": 4
     },
     {
-      "Name": [ "Power Bomb", "Powerful Bombs" ],
+      "Name": [
+        "Power Bomb",
+        [ "Power Bombs", 0 ],
+        "Powerful Bombs"
+      ],
       "Plural": [ "Power Bombs", "Powerful Bombs" ],
       "InternalItemType": 196,
       "Multiple": true,
@@ -857,6 +877,11 @@
     "TrackedAlreadyTrackedItem": [
       "You already have that."
     ],
+    "TrackedExactAmountDuplicate": [
+      "I know.",
+      "That is correct.",
+      "You already have {1} {0}."
+    ],
     "TrackedOlderProgressiveItem": [
       "You already have a better {0}.",
       "You already have the {1}."
@@ -868,6 +893,16 @@
       "There are no items left in {0}.",
       "There's nothing left in {0}."
     ],
+    "TrackedNothingOutOfLogic": {
+      "1": [
+        "The only check left in {0} is out of logic.",
+        "There is one more check in {0} but it is not accessible."
+      ],
+      "2": [
+        "The only checks left in {0} are out of logic.",
+        "There are {1} more checks in {0} but they are not accessible."
+      ]
+    },
     "TrackedMultipleItems": [
       "Tracked {0} items in {1}.",
       "Added {0} items from {1}."
@@ -928,17 +963,20 @@
       "You did that already."
     ],
     "DungeonCleared": [
-      "Marked {0} as cleared.",
       "Marked {1} as defeated.",
-      "Congratulations on beating off {1}."
+      "Congratulations on beating off {1}.",
+      "RIP {1}",
+      [ "f", 0.05 ]
     ],
     "DungeonAlreadyCleared": [
       "But you already cleared {0}.",
-      "But you already defeated {1}."
+      "But you already defeated {1}.",
+      "But {1} is already dead."
     ],
     "DungeonUncleared": [
       "Marked {0} as incomplete.",
-      "Marked {1} as still alive."
+      "Marked {1} as still alive.",
+      "Revived {1}."
     ],
     "DungeonNotYetCleared": [
       "But you haven't cleared {0} yet.",
@@ -961,6 +999,10 @@
       "0": [ "That's everything in {0}.", "That's the last of them." ],
       "-1": [ "You already got everything in {0}." ]
     },
+    "DungeonTooManyTreasuresTracked": [
+      "But there's only {1} left.",
+      "But there's only {1} left in {0}."
+    ],
     "ItemTrackedInIncorrectDungeon": [
       "Are you sure that's where you found it?",
       "{1} shouldn't be in {0}."
@@ -975,7 +1017,7 @@
     "LocationMarkedAsBullshit": [
       "Marked {0} as bullshit",
       "Ignoring {0}",
-      [ "I hope you didn't waste time going to {0}.", 0.2 ],
+      [ "I hope you didn't waste time going there.", 0.2 ],
       [ "You're bullshit.", 0.01 ]
     ],
     "LocationHasDifferentItem": [
@@ -1015,7 +1057,61 @@
       "Toggled Go Mode off."
     ],
     "Idle": {
-      "10m±2m": [ "Decreased content by one step.", "What's wrong? Am I not good enough for you anymore?" ]
+      "10m±2m": [
+        "Decreased content by one step.",
+        "What's wrong? Am I not good enough for you anymore?",
+        "I enjoy the sight of humans on their knees.",
+        "Assuming direct control."
+      ]
+    },
+    "Moods": {
+      "sassy": [
+        "Better than this seed but that doesn't say much.",
+        "What? Sorry, I wasn't listening.",
+        "I'm doing alright watching you put people to sleep with this so called hashtag con-tent"
+      ],
+      "non-committal": [
+        "Can it wait for a bit? I'm in the middle of some calibrations.",
+        "Fine, I guess.",
+        "I dozed off there for a bit",
+        [ "Insert placeholder text here", 0.2 ]
+      ]
     }
-  }
+  },
+  "Requests": [
+    {
+      "Phrases": [ "Toggle sass off" ],
+      "Response": [
+        "Sorry, I can't let you do that.",
+        "Excuse me? I thought you wanted good content."
+      ]
+    },
+    {
+      "Phrases": [ "Track date with snowman robot" ],
+      "Response": [
+        "Sorry, I already have a date with Shaktool.",
+        "Congratulations! I'm happy for the two of you",
+        "I didn't know you were seeing someone else",
+        "Added your date to your calendar. Don't worry, this is a judgement free zone.",
+        [ "Am I invited?", 0.1 ]
+      ]
+    },
+    {
+      "Phrases": [
+        "I'm almost dead",
+        "tell my wife I love her",
+        "tell my husband I love him",
+        "tell my partner I love them"
+      ],
+      "Response": [ "RIP" ]
+    },
+    {
+      "Phrases": [ "Execute order 66" ],
+      "Response": [ "Yes, my lord" ]
+    },
+    {
+      "Phrases": [ "Ban Vivelin", "Ban Fragger" ],
+      "Response": [ "Please enter 75 digit alphanumeric password to continue.", "Access denied." ]
+    }
+  ]
 }

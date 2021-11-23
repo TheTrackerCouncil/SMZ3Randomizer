@@ -29,8 +29,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Toggle Peg World mode off", new[] {
                 "Hey tracker, toggle Peg World Mode off",
-                "Hey tracker, I don't want to be at peg world anymore",
-                "Hey tracker, I want to go on something more thrilling than Peg World"
+                "Hey tracker, I don't want to be at Peg World anymore",
+                "Hey tracker, I want to go on something more thrilling than Peg World",
+                "Hey tracker, please release me from Peg World",
+                "Hey tracker, release me from Peg World"
             }, (tracker, result) =>
             {
                 tracker.StopPegWorldMode(result.Confidence);
