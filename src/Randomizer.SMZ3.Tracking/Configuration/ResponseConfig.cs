@@ -119,11 +119,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new SchrodingersString("There are no items left in {0}.");
 
         /// <summary>
-        /// Gets the phrases to respond with when tracking a specific item.
-        /// </summary>
-        public Dictionary<string, SchrodingersString> TrackedSpecificItem { get; init; } = new();
-
-        /// <summary>
         /// Gets the phrases to respond with when untracking an item.
         /// </summary>
         /// <remarks>

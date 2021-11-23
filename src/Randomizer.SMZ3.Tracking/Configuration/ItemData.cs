@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+
 using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
@@ -74,6 +75,20 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the stages and their names of a progressive item.
         /// </summary>
         public IReadOnlyDictionary<int, SchrodingersString>? Stages { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking this item, or
+        /// <c>null</c> to use the generic item responses. The dictionary key
+        /// represents the current <see cref="TrackingState"/>.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the item counter.
+        /// <para>
+        /// If the key is missing, it will fall back to the closest smaller key.
+        /// Use <c>null</c> to reset to the default item responses.
+        /// </para>
+        /// </remarks>
+        public IReadOnlyDictionary<int, SchrodingersString>? WhenTracked { get; init; }
 
         /// <summary>
         /// Gets or sets the zero-based index of the column in which the item
@@ -222,5 +237,47 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <returns>A string representing the item.</returns>
         public override string ToString() => Name[0];
+
+        /// <summary>
+        /// Retrieves the item-specific phrases to respond with when tracking
+        /// the item.
+        /// </summary>
+        /// <param name="response">
+        /// When this method returns <c>true</c>, contains the possible phrases
+        /// to respond with when tracking the item.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if a response was configured for the item at the current
+        /// tracking state; otherwise, <c>false</c>.
+        /// </returns>
+        public bool TryGetTrackingResponse([NotNullWhen(true)] out SchrodingersString? response)
+        {
+            if (WhenTracked == null)
+            {
+                response = null;
+                return false;
+            }
+
+            if (WhenTracked.TryGetValue(TrackingState, out response))
+            {
+                return response != null;
+            }
+
+            var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < TrackingState);
+            if (!smallerKeys.Any())
+            {
+                response = null;
+                return false;
+            }
+
+            var closestSmallerKey = smallerKeys.Last();
+            if (WhenTracked.TryGetValue(closestSmallerKey, out response))
+            {
+                return response != null;
+            }
+
+            response = null;
+            return false;
+        }
     }
 }

@@ -656,17 +656,35 @@ namespace Randomizer.SMZ3.Tracking
                     // to that stage specifically
                     var stageName = item.Stages[stage.Value].ToString();
                     if (item.Track(stage.Value))
-                        Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                    {
+                        if (item.TryGetTrackingResponse(out var response))
+                        {
+                            Say(response.Format(item.Counter));
+                        }
+                        else
+                        {
+                            Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                        }
+                    }
                     else
+                    {
                         Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Stages[item.TrackingState].ToString()));
+                    }
                 }
                 else
                 {
                     // Tracked by regular name, upgrade by one step
                     if (item.Track())
                     {
-                        var stageName = item.Stages[item.TrackingState].ToString();
-                        Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                        if (item.TryGetTrackingResponse(out var response))
+                        {
+                            Say(response.Format(item.Counter));
+                        }
+                        else
+                        {
+                            var stageName = item.Stages[item.TrackingState].ToString();
+                            Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                        }
                     }
                     else
                     {
@@ -677,7 +695,9 @@ namespace Randomizer.SMZ3.Tracking
             else if (item.Multiple)
             {
                 item.Track();
-                if (item.Counter == 1)
+                if (item.TryGetTrackingResponse(out var response))
+                    Say(response.Format(item.Counter));
+                else if (item.Counter == 1)
                     Say(Responses.TrackedItem.Format(itemName));
                 else if (item.Counter > 1)
                     Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
@@ -691,10 +711,9 @@ namespace Randomizer.SMZ3.Tracking
             {
                 if (item.Track())
                 {
-                    if (Responses.TrackedSpecificItem.TryGetValue(item.Name[0], out var responses)
-                        && responses.Count > 0)
+                    if (item.TryGetTrackingResponse(out var response))
                     {
-                        Say(responses);
+                        Say(response.Format(item.Counter));
                     }
                     else
                     {
@@ -918,7 +937,11 @@ namespace Randomizer.SMZ3.Tracking
 
             var oldItemCount = item.TrackingState;
             item.TrackingState = newItemCount;
-            if (newItemCount > oldItemCount)
+            if (item.TryGetTrackingResponse(out var response))
+            {
+                Say(response.Format(item.Counter));
+            }
+            else if (newItemCount > oldItemCount)
             {
                 Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Counter));
             }
