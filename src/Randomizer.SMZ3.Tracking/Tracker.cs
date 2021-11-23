@@ -995,12 +995,12 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
+            Action? undoTrackDungeon = null;
+
             var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
             if (dungeon != null)
             {
                 assumeKeys = true; // Always assume keys when clearing the dungeon itself
-                dungeon.Cleared = true;
-                OnDungeonUpdated(new(confidence));
             }
 
             var locations = area.Locations
@@ -1011,71 +1011,91 @@ namespace Randomizer.SMZ3.Tracking
 
             if (locations.Count == 0)
             {
-                Say(Responses.TrackedNothing.Format(area.Name));
-                return;
-            }
+                var outOfLogicLocations = area.Locations
+                    .Where(x => !x.Cleared)
+                    .WhereIf(dungeon != null, x => x.Type != LocationType.NotInDungeon)
+                    .Count();
 
-            // If there is only one (available) item here, just call the regular
-            // TrackItem instead
-            var onlyLocation = locations.TrySingle();
-            if (onlyLocation != null)
+                if (outOfLogicLocations > 1)
+                    Say(Responses.TrackedNothingOutOfLogic[2].Format(area.Name, outOfLogicLocations));
+                else if (outOfLogicLocations > 0)
+                    Say(Responses.TrackedNothingOutOfLogic[1].Format(area.Name, outOfLogicLocations));
+                else
+                    Say(Responses.TrackedNothing.Format(area.Name));
+            }
+            else
             {
-                if (!trackItems)
+                if (dungeon != null)
                 {
-                    Clear(onlyLocation, confidence);
-                    return;
+                    dungeon.Cleared = true;
+                    OnDungeonUpdated(new(confidence));
                 }
 
-                var item = Items.SingleOrDefault(x => x.InternalItemType == onlyLocation.Item.Type);
-                if (item == null)
+                // If there is only one (available) item here, just call the regular
+                // TrackItem instead
+                var onlyLocation = locations.TrySingle();
+                if (onlyLocation != null)
                 {
-                    // Probably just the compass or something. Clear the
-                    // location still, even if we can't track the item.
-                    Clear(onlyLocation, confidence);
-                    return;
+                    if (!trackItems)
+                    {
+                        Clear(onlyLocation, confidence);
+                    }
+                    else
+                    {
+                        var item = Items.SingleOrDefault(x => x.InternalItemType == onlyLocation.Item.Type);
+                        if (item == null)
+                        {
+                            // Probably just the compass or something. Clear the
+                            // location still, even if we can't track the item.
+                            Clear(onlyLocation, confidence);
+                        }
+                        else
+                        {
+                            TrackItem(item, onlyLocation, confidence: confidence);
+                        }
+                    }
                 }
-
-                TrackItem(item, onlyLocation, confidence: confidence);
-                return;
-            }
-
-            // Otherwise, start counting
-            var itemsTracked = 0;
-            var treasureTracked = 0;
-            foreach (var location in locations)
-            {
-                if (!trackItems)
+                else
                 {
-                    itemsTracked++;
-                    if (IsTreasure(location.Item))
-                        treasureTracked++;
-                    location.Cleared = true;
-                    OnLocationCleared(new(location, confidence));
-                    continue;
+                    // Otherwise, start counting
+                    var itemsTracked = 0;
+                    var treasureTracked = 0;
+                    foreach (var location in locations)
+                    {
+                        if (!trackItems)
+                        {
+                            itemsTracked++;
+                            if (IsTreasure(location.Item))
+                                treasureTracked++;
+                            location.Cleared = true;
+                            OnLocationCleared(new(location, confidence));
+                            continue;
+                        }
+
+                        var itemType = location.Item?.Type;
+                        var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
+                        if (item == null || !item.Track())
+                            _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
+                        itemsTracked++;
+                        if (IsTreasure(location.Item))
+                            treasureTracked++;
+
+                        location.Cleared = true;
+                    }
+
+                    // TODO: Include the most noteworthy item (by item value, once added
+                    // to data), e.g. "Tracked 5 items in Mini Moldorm Cave, including
+                    // the Morph Ball"
+                    var responses = trackItems ? Responses.TrackedMultipleItems : Responses.ClearedMultipleItems;
+                    Say(responses.Format(itemsTracked, area.GetName()));
+
+                    if (dungeon != null && treasureTracked > 0)
+                    {
+                        TrackDungeonTreasure(dungeon, amount: treasureTracked);
+                        undoTrackDungeon = _undoHistory.Pop();
+                    }
                 }
-
-                var itemType = location.Item?.Type;
-                var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
-                if (item == null || !item.Track())
-                    _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
-                itemsTracked++;
-                if (IsTreasure(location.Item))
-                    treasureTracked++;
-
-                location.Cleared = true;
-            }
-
-            // TODO: Include the most noteworthy item (by item value, once added
-            // to data), e.g. "Tracked 5 items in Mini Moldorm Cave, including
-            // the Morph Ball"
-            var responses = trackItems ? Responses.TrackedMultipleItems : Responses.ClearedMultipleItems;
-            Say(responses.Format(itemsTracked, area.GetName()));
-
-            Action? undoTrackDungeon = null;
-            if (dungeon != null && treasureTracked > 0)
-            {
-                TrackDungeonTreasure(dungeon, amount: treasureTracked);
-                undoTrackDungeon = _undoHistory.Pop();
+                OnItemTracked(new ItemTrackedEventArgs(null, confidence));
             }
 
             AddUndo(() =>
@@ -1095,7 +1115,6 @@ namespace Randomizer.SMZ3.Tracking
                 }
                 undoTrackDungeon?.Invoke();
             });
-            OnItemTracked(new ItemTrackedEventArgs(null, confidence));
         }
 
         /// <summary>

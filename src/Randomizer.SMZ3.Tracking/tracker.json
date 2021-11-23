@@ -852,6 +852,16 @@
       "There are no items left in {0}.",
       "There's nothing left in {0}."
     ],
+    "TrackedNothingOutOfLogic": {
+      "1": [
+        "The only check left in {0} is out of logic.",
+        "There is one more check in {0} but it is not accessible."
+      ],
+      "2": [
+        "The only checks left in {0} are out of logic.",
+        "There are {1} more checks in {0} but they are not accessible."
+      ]
+    },
     "TrackedMultipleItems": [
       "Tracked {0} items in {1}.",
       "Added {0} items from {1}."
