@@ -927,7 +927,7 @@
             Get a collection of pegs in Peg World mode.
             </summary>
         </member>
-        <member name="P:Randomizer.SMZ3.Tracking.Tracker.Dungeons">
+        <member name="P:Randomizer.SMZ3.Tracking.Tracker.WorldInfo.Dungeons">
             <summary>
             Gets a collection of Zelda dungeons.
             </summary>

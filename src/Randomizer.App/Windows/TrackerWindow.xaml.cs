@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
@@ -46,17 +48,24 @@ namespace Randomizer.App
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
         private TrackerLocationSyncer _locationSyncer;
+        private RomGenerator _romGenerator;
 
-        public TrackerWindow(IServiceProvider serviceProvider, TrackerFactory trackerFactory, ILogger<TrackerWindow> logger)
+        public TrackerWindow(IServiceProvider serviceProvider,
+            TrackerFactory trackerFactory,
+            ILogger<TrackerWindow> logger,
+            RomGenerator romGenerator
+        )
         {
             InitializeComponent();
 
             _serviceProvider = serviceProvider;
             _trackerFactory = trackerFactory;
             _logger = logger;
+            _romGenerator = romGenerator;
+
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
             {
-                var elapsed = DateTime.Now - _startTime;
+                var elapsed = Tracker.TotalElapsedTime;
                 StatusBarTimer.Content = elapsed.Hours > 0
                     ? elapsed.ToString("h':'mm':'ss")
                     : elapsed.ToString("mm':'ss");
@@ -76,6 +85,8 @@ namespace Randomizer.App
         public RandomizerOptions Options { get; set; }
 
         public Tracker Tracker { get; private set; }
+
+        public GeneratedRom Rom { get; set; }
 
         public static string GetItemSpriteFileName(ItemData item)
         {
@@ -527,9 +538,22 @@ namespace Randomizer.App
         {
             Background = new SolidColorBrush(Options.GeneralOptions.TrackerBackgroundColor);
 
+            // If a rom was passed in, generate its seed to populate all locations and items
+            if (GeneratedRom.IsValid(Rom))
+            {
+                _romGenerator.GenerateSeed(Options, Rom.Seed);
+            }
+
             InitializeTracker();
             ResetGridSize();
             RefreshGridItems();
+
+            // If a rom was passed in with a valid tracker state, reload the state from the database
+            if (GeneratedRom.IsValid(Rom))
+            {
+                Tracker.Load(Rom);
+            }
+
             Tracker.StartTracking();
             _startTime = DateTime.Now;
             _dispatcherTimer.Start();
@@ -627,8 +651,16 @@ namespace Randomizer.App
                 TrackerGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(GridItemPx + GridItemMargin) });
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (Tracker.IsDirty)
+            {
+                if (MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    await SaveState();
+                }
+            }
             Tracker.StopTracking();
             _dispatcherTimer.Stop();
             App.SaveWindowPositionAndSize(this);
@@ -669,70 +701,101 @@ namespace Randomizer.App
             }
         }
 
-        private async void LoadSavedState_Click(object sender, RoutedEventArgs e)
+        private async void LoadSavedStateMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog
+            // If there is a valid rom, then load the state from the db
+            if (GeneratedRom.IsValid(Rom))
             {
-                Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*"
-            };
-
-            while (dialog.ShowDialog(this) == true)
-            {
-                try
+                Tracker.Load(Rom);
+                Tracker.StartTimer();
+                if (_dispatcherTimer.IsEnabled)
                 {
-                    using (var stream = new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
-                    {
-                        await Tracker.LoadAsync(gzip);
-                    }
-
-                    break;
+                    _dispatcherTimer.Start();
                 }
-                catch (ArgumentException ex)
+            }
+            // Otherwise save it to a file
+            else
+            {
+                var dialog = new OpenFileDialog
                 {
-                    _logger.LogError(ex, "Failed to load Tracker state from '{fileName}'.", dialog.FileName);
+                    Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*"
+                };
 
-                    var result = MessageBox.Show(this, "Could not load Tracker using the selected saved state file. Please check you selected the right file and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                    if (result == MessageBoxResult.Cancel)
+                while (dialog.ShowDialog(this) == true)
+                {
+                    try
+                    {
+                        using (var stream = new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
+                        {
+                            await Tracker.LoadAsync(gzip);
+                        }
+
                         break;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        _logger.LogError(ex, "Failed to load Tracker state from '{fileName}'.", dialog.FileName);
+
+                        var result = MessageBox.Show(this, "Could not load Tracker using the selected saved state file. Please check you selected the right file and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                        if (result == MessageBoxResult.Cancel)
+                            break;
+                    }
                 }
             }
         }
 
-        private async void SaveState_Click(object sender, RoutedEventArgs e)
+        private async Task SaveState()
         {
-            var dialog = new SaveFileDialog
+            // If there is a rom, save it to the database
+            if (GeneratedRom.IsValid(Rom))
             {
-                Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*",
-                OverwritePrompt = true
-            };
-
-            while (dialog.ShowDialog(this) == true)
+                await Tracker.SaveAsync(Rom);
+            }
+            // Otherwise open the save file dialog
+            else
             {
-                try
+                var dialog = new SaveFileDialog
                 {
-                    using (var stream = new FileStream(dialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
-                    using (var gzip = new GZipStream(stream, CompressionLevel.Fastest))
+                    Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*",
+                    OverwritePrompt = true
+                };
+
+                while (dialog.ShowDialog(this) == true)
+                {
+                    try
                     {
-                        await Tracker.SaveAsync(gzip);
-                    }
+                        using (var stream = new FileStream(dialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                        using (var gzip = new GZipStream(stream, CompressionLevel.Fastest))
+                        {
+                            await Tracker.SaveAsync(gzip);
+                        }
 
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to saved Tracker state to '{fileName}'.", dialog.FileName);
-                    var result = MessageBox.Show(this, "Could not save Tracker state to the selected file. Please check you have access and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                    if (result == MessageBoxResult.Cancel)
                         break;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to saved Tracker state to '{fileName}'.", dialog.FileName);
+                        var result = MessageBox.Show(this, "Could not save Tracker state to the selected file. Please check you have access and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                        if (result == MessageBoxResult.Cancel)
+                            break;
+                    }
                 }
             }
+
+            SavedState.Invoke(this, null);
+        }
+
+        private async void SaveStateMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveState();
         }
 
         private void StatusBarTimer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             // Reset timer on double click
             _startTime = DateTime.Now;
+            Tracker.ResetTimer();
         }
 
         private void StatusBarTimer_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -742,11 +805,13 @@ namespace Randomizer.App
             {
                 _elapsedTime = DateTime.Now - _startTime;
                 _dispatcherTimer.Stop();
+                Tracker.PauseTimer();
             }
             else
             {
                 _startTime = DateTime.Now - _elapsedTime;
                 _dispatcherTimer.Start();
+                Tracker.StartTimer();
             }
         }
 
@@ -810,5 +875,10 @@ namespace Randomizer.App
         {
             public Origin OriginPoint { get; init; }
         }
+
+        /// <summary>
+        /// Occurs when the the tracker's state has been saved
+        /// </summary>
+        public event EventHandler SavedState;
     }
 }

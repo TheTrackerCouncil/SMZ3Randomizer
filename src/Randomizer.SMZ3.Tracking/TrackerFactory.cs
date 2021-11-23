@@ -1,7 +1,6 @@
-﻿using System;
-
+﻿
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -17,6 +16,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly ILogger<Tracker> _logger;
+        private readonly RandomizerContext _dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerFactory"/> class
@@ -31,17 +31,20 @@ namespace Randomizer.SMZ3.Tracking
         /// Used to provide the tracking speech recognition syntax.
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
+        /// <param name="dbContext">The database context object</param>
         public TrackerFactory(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
-            ILogger<Tracker> logger)
+            ILogger<Tracker> logger,
+            RandomizerContext dbContext)
         {
             _config = config;
             _locationConfig = locationConfig;
             _worldAccessor = worldAccessor;
             _moduleFactory = moduleFactory;
             _logger = logger;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Tracker Create(TrackerOptions options)
         {
-            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options);
+            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options, _dbContext);
         }
     }
 }

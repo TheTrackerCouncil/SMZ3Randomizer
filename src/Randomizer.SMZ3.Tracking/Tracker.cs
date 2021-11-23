@@ -7,15 +7,14 @@ using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Threading;
 using System.Threading.Tasks;
-
-using BunLabs;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using Randomizer.Shared;
+using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using BunLabs;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -33,6 +32,8 @@ namespace Randomizer.SMZ3.Tracking
         private readonly ILogger<Tracker> _logger;
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
+        private readonly RandomizerContext _dbContext;
+        private DateTime _startTime = DateTime.MinValue;
 
         private bool _disposed;
 
@@ -51,20 +52,23 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
+        /// <param name="dbContext">The database context</param>
         public Tracker(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger,
-            TrackerOptions options)
+            TrackerOptions options,
+            RandomizerContext dbContext)
         {
             _moduleFactory = moduleFactory;
             _logger = logger;
             Options = options;
+            _dbContext = dbContext;
 
             // Initialize the tracker configuration
-            Items = config.Items.ToImmutableList();
-            Pegs = config.Pegs.ToImmutableList();
+            Items = config.Items;
+            Pegs = config.Pegs;
             Responses = config.Responses;
             Requests = config.Requests;
             World = worldAccessor.GetWorld();
@@ -253,9 +257,28 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task LoadAsync(Stream stream)
         {
+            IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
             state.Apply(this);
             OnStateLoaded();
+        }
+
+        /// <summary>
+        /// Loads the state from the database for a given rom
+        /// </summary>
+        /// <param name="rom">The rom to load</param>
+        /// <returns>True or false if the load was successful</returns>
+        public bool Load(GeneratedRom rom)
+        {
+            IsDirty = false;
+            var state = TrackerState.Load(_dbContext, rom);
+            if (state != null)
+            {
+                state.Apply(this);
+                OnStateLoaded();
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -265,8 +288,21 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns>A task representing the asynchronous operation.</returns>
         public Task SaveAsync(Stream destination)
         {
+            IsDirty = false;
             var state = TrackerState.TakeSnapshot(this);
             return state.SaveAsync(destination);
+        }
+
+        /// <summary>
+        /// Saves the state of the tracker to the database
+        /// </summary>
+        /// <param name="rom">The rom to save</param>
+        /// <returns></returns>
+        public Task SaveAsync(GeneratedRom rom)
+        {
+            IsDirty = false;
+            var state = TrackerState.TakeSnapshot(this);
+            return state.SaveAsync(_dbContext, rom);
         }
 
         /// <summary>
@@ -569,11 +605,48 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void StartTracking()
         {
             // Load the modules for voice recognition
+            StartTimer();
             Syntax = _moduleFactory.LoadAll(this, _recognizer);
             EnableVoiceRecognition();
             Say(Responses.StartedTracking);
             RestartIdleTimers();
         }
+
+        /// <summary>
+        /// Sets the start time of the timer
+        /// </summary>
+        public virtual void StartTimer()
+        {
+            _startTime = DateTime.Now;
+        }
+
+        /// <summary>
+        /// Resets the timer to 0
+        /// </summary>
+        public virtual void ResetTimer()
+        {
+            SavedElapsedTime = TimeSpan.Zero;
+            StartTimer();
+        }
+
+        /// <summary>
+        /// Pauses the timer, saving the elapsed time
+        /// </summary>
+        public virtual void PauseTimer()
+        {
+            SavedElapsedTime = TotalElapsedTime;
+            _startTime = DateTime.MinValue;
+        }
+
+        /// <summary>
+        /// The previous saved elapsed time
+        /// </summary>
+        public TimeSpan SavedElapsedTime { get; set; }
+
+        /// <summary>
+        /// The total elapsed time including the previously saved time
+        /// </summary>
+        public TimeSpan TotalElapsedTime => SavedElapsedTime + (DateTime.Now - (_startTime == DateTime.MinValue ? DateTime.Now : _startTime));
 
         /// <summary>
         /// Stops voice recognition.
@@ -797,6 +870,8 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            IsDirty = true;
+
             AddUndo(() =>
             {
                 undoTrack();
@@ -845,6 +920,8 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.UntrackedItem.Format(item.Name, item.NameWithArticle));
             }
 
+
+            IsDirty = true;
             OnItemTracked(new(null, confidence));
             AddUndo(() => item.TrackingState = originalTrackingState);
         }
@@ -872,6 +949,8 @@ namespace Randomizer.SMZ3.Tracking
                 if (TrackDungeonTreasure(dungeon, confidence))
                     undoTrackTreasure = _undoHistory.Pop();
             }
+
+            IsDirty = true;
 
             // Check if we can remove something from the marked location
             var location = World.Locations
@@ -930,6 +1009,8 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, area.GetName(), item.NameWithArticle));
             }
 
+            IsDirty = true;
+
             TrackItem(item, trackedAs, confidence, tryClear: false);
             if (locations.Count == 1)
             {
@@ -958,6 +1039,8 @@ namespace Randomizer.SMZ3.Tracking
             SassIfItemIsWrong(item, location, confidence);
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
+
+            IsDirty = true;
 
             var undoClear = _undoHistory.Pop();
             var undoTrack = _undoHistory.Pop();
@@ -1005,6 +1088,8 @@ namespace Randomizer.SMZ3.Tracking
             {
                 Say(Responses.UntrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Plural ?? $"{item.Name}s"));
             }
+
+            IsDirty = true;
 
             AddUndo(() => item.TrackingState = oldItemCount);
             OnItemTracked(new(null, confidence));
@@ -1133,6 +1218,8 @@ namespace Randomizer.SMZ3.Tracking
                 OnItemTracked(new ItemTrackedEventArgs(null, confidence));
             }
 
+            IsDirty = true;
+
             AddUndo(() =>
             {
                 if (dungeon != null)
@@ -1189,6 +1276,8 @@ namespace Randomizer.SMZ3.Tracking
                 undoStopPegWorldMode = _undoHistory.Pop();
             }
 
+            IsDirty = true;
+
             AddUndo(() =>
             {
                 location.Cleared = false;
@@ -1236,6 +1325,8 @@ namespace Randomizer.SMZ3.Tracking
                     undoTrack = _undoHistory.Pop();
                 }
             }
+
+            IsDirty = true;
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
@@ -1293,6 +1384,8 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            IsDirty = true;
+
             OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
             {
@@ -1333,6 +1426,8 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.LocationMarked.Format(locationName, item.Name));
                 AddUndo(() => MarkedLocations.Remove(location.Id));
             }
+
+            IsDirty = true;
 
             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
         }
@@ -1524,6 +1619,8 @@ namespace Randomizer.SMZ3.Tracking
                     return _undoHistory.Pop();
             }
 
+            IsDirty = true;
+
             return null;
         }
 
@@ -1658,5 +1755,13 @@ namespace Randomizer.SMZ3.Tracking
             var progression = new Progression(items);
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
         }
+
+        /// <summary>
+        /// Get if the Tracker has been updated since it was last saved
+        /// </summary>
+        public bool IsDirty { get; set; }
     }
+
+
+
 }

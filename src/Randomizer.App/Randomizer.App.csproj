@@ -61,6 +61,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="Windows\RomListWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <Exec Command="xcopy $(ProjectDir)Sprites\ $(TargetDir)Sprites\ /S /I /Y" />
   </Target>

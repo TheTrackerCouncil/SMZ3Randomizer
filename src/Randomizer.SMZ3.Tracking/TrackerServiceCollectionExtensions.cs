@@ -34,17 +34,17 @@ namespace Randomizer.SMZ3.Tracking
 
             services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
             services.AddSingleton<TrackerConfigProvider>();
-            services.AddSingleton(serviceProvider =>
+            services.AddScoped(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetMapConfig();
             });
-            services.AddSingleton(serviceProvider =>
+            services.AddScoped(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetTrackerConfig();
             });
-            services.AddSingleton(serviceProvider =>
+            services.AddScoped(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetLocationConfig();
