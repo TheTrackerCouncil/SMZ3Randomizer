@@ -81,9 +81,14 @@ namespace Randomizer.SMZ3.Tracking
 
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
-            _recognizer.SpeechRecognized += SpeechRecognized;
+            _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
             InitializeMicrophone();
         }
+
+        /// <summary>
+        /// Occurs when any speech was recognized, regardless of configured thresholds.
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? SpeechRecognized;
 
         /// <summary>
         /// Occurs when one more more items have been tracked.
@@ -1452,6 +1457,13 @@ namespace Randomizer.SMZ3.Tracking
         protected virtual void OnStateLoaded()
             => StateLoaded?.Invoke(this, EventArgs.Empty);
 
+        /// <summary>
+        /// Raises the <see cref="SpeechRecognized"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        protected virtual void OnSpeechRecognized(TrackerEventArgs e)
+            => SpeechRecognized?.Invoke(this, e);
+
         private static bool IsTreasure(ItemData item)
             => !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Map, ItemCategory.Compass);
 
@@ -1570,9 +1582,10 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.Idle[key]);
         }
 
-        private void SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
+        private void Recognizer_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
         {
             RestartIdleTimers();
+            OnSpeechRecognized(new(e.Result.Confidence));
         }
 
         private void GiveLocationHint(IEnumerable<Location> accessibleBefore)
