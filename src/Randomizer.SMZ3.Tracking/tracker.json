@@ -13,8 +13,14 @@
       "Multiple": true
     },
     {
-      "Name": [ "Content" ],
-      "Plural": [ "Content" ],
+      "Name": [
+        [ "Content", 0 ],
+        "Con-tent"
+      ],
+      "Plural": [
+        [ "Content", 0 ],
+        "Con-tent"
+      ],
       "Article": "",
       "InternalItemType": 0,
       "Column": 10,
@@ -28,12 +34,23 @@
       "InternalItemType": 0,
       "Column": 10,
       "Row": 6,
-      "Multiple": true
+      "Multiple": true,
+      "WhenTracked": {
+        "1": [ "lawl, you died" ],
+        "2": [ "You've died {0} times." ],
+        "5": [
+          "You've died {0} times now.",
+          [ "Maybe I should take over", 0.1 ]
+        ]
+      }
     },
     {
       "Name": [ "Shaktool Go Mode" ],
       "Article": "",
-      "InternalItemType": 0
+      "InternalItemType": 0,
+      "WhenTracked": {
+        "1": [ "Toggled Shaktool Go Mode <break time='1s'/> on." ]
+      }
     },
     {
       "Name": [
@@ -42,7 +59,10 @@
       ],
       "InternalItemType": 0,
       "Column": 6,
-      "Row": 5
+      "Row": 5,
+      "WhenTracked": {
+        "1": [ "Toggled Kraid on. Watch out for his awful son on the way out." ]
+      }
     },
     {
       "Name": [ "Crocomire" ],
@@ -64,7 +84,13 @@
       "Name": [ "Shaktool", "The Shaktool" ],
       "InternalItemType": 0,
       "Column": 6,
-      "Row": 6
+      "Row": 6,
+      "WhenTracked": {
+        "1": [
+          "Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.",
+          "Toggled Shaktool on. Did you get something nice?"
+        ]
+      }
     },
     {
       "Name": [ "Draygon" ],
@@ -276,7 +302,10 @@
       "Name": [ "One Rupee", "Green Rupee" ],
       "InternalItemType": 52,
       "Artice": "",
-      "Multiple": true
+      "Multiple": true,
+      "WhenTracked": {
+        "1": "Really?"
+      }
     },
     {
       "Name": [ "Five Rupees", "Blue Rupee" ],
@@ -288,7 +317,11 @@
       "Name": [ "Twenty Rupees", "Red Rupee", "Big 20" ],
       "InternalItemType": 54,
       "Artice": "",
-      "Multiple": true
+      "Multiple": true,
+      "WhenTracked": {
+        "1": [ "Seriously?", "This is not the con-tent you are looking for." ],
+        "2": null
+      }
     },
     {
       "Name": [
@@ -318,12 +351,12 @@
       "Multiple": true
     },
     {
-      "Name": "Single Arrow",
+      "Name": [ "Single Arrow", "Single Stick" ],
       "InternalItemType": 67,
       "Multiple": true
     },
     {
-      "Name": "Ten Arrows",
+      "Name": [ "Ten Arrows", "Ten Sticks", "Sticks" ],
       "InternalItemType": 68,
       "Artice": "",
       "Multiple": true
@@ -387,7 +420,11 @@
         "4": [ "Gold Sword", "Butter" ]
       },
       "Column": 4,
-      "Row": 4
+      "Row": 4,
+      "WhenTracked": {
+        "3": [ "Toggled Bacon on", "Hmm... Bacon" ],
+        "4": null
+      }
     },
     {
       "Name": [
@@ -675,7 +712,11 @@
       "Multiple": true,
       "CounterMultiplier": 5,
       "Column": 7,
-      "Row": 4
+      "Row": 4,
+      "WhenTracked": {
+        "69": "Nice",
+        "70": null
+      }
     },
     {
       "Name": [
@@ -1015,11 +1056,6 @@
     "GoModeToggledOff": [
       "Toggled Go Mode off."
     ],
-    "TrackedSpecificItem": {
-      "Shaktool Go Mode": [
-        "Toggled Shaktool Go Mode <break time='1s'/> on."
-      ]
-    },
     "Idle": {
       "10m±2m": [
         "Decreased content by one step.",
