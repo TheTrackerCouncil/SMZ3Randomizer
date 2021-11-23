@@ -1027,8 +1027,16 @@
       ]
     },
     "Moods": {
+      "sassy": [
+        "Better than this seed but that doesn't say much.",
+        "What? Sorry, I wasn't listening.",
+        "I'm doing alright watching you put people to sleep with this so called hashtag con-tent"
+      ],
       "non-committal": [
-        "Can it wait for a bit? I'm in the middle of some calibrations."
+        "Can it wait for a bit? I'm in the middle of some calibrations.",
+        "Fine, I guess.",
+        "I dozed off there for a bit",
+        [ "Insert placeholder text here", 0.2 ]
       ]
     }
   },
@@ -1042,7 +1050,14 @@
     },
     {
       "Phrases": [ "Track date with snowman robot" ],
-      "Response": [ "I have no time for games." ]
+      "Response": [
+        "I don't know if I'm okay with this.",
+        "Am I invited?",
+        "I get jealous easily",
+        "Congratulations! I'm happy for the two of you",
+        "I didn't know you were seeing someone else",
+        "Added your date to your calendar. Don't worry, this is a judgement free zone."
+      ]
     },
     {
       "Phrases": [
@@ -1058,7 +1073,7 @@
       "Response": [ "Yes, my lord" ]
     },
     {
-      "Phrases": [ "Ban Vivelin" ],
+      "Phrases": [ "Ban Vivelin", "Ban Fragger" ],
       "Response": [ "Please enter 75 digit alphanumeric password to continue." ]
     }
   ]
