@@ -179,8 +179,10 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var optionsDialog = new AboutWindow();
-            optionsDialog.ShowDialog();
+            using var scope = _serviceProvider.CreateScope();
+            var aboutWindow = scope.ServiceProvider.GetRequiredService<AboutWindow>();
+            aboutWindow.Owner = this;
+            aboutWindow.ShowDialog();
         }
 
         /// <summary>

@@ -580,43 +580,34 @@ namespace Randomizer.App
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
 
             Tracker = _trackerFactory.Create(Options.GeneralOptions.GetTrackerOptions());
+            Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                UpdateStats(e);
+            });
             Tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
                 _pegWorldMode = false;
-                UpdateStats(e);
                 RefreshGridItems();
             });
             Tracker.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
             {
                 _pegWorldMode = Tracker.PegWorldMode;
-                UpdateStats(e);
                 RefreshGridItems();
             });
             Tracker.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
             {
                 _pegWorldMode = Tracker.Pegs.Any(x => !x.Pegged);
-                UpdateStats(e);
                 RefreshGridItems();
             });
             Tracker.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
                 _pegWorldMode = false;
-                UpdateStats(e);
                 RefreshGridItems();
-            });
-            Tracker.MarkedLocationsUpdated += (sender, e) => Dispatcher.Invoke(() =>
-            {
-                UpdateStats(e);
-            });
-            Tracker.LocationCleared += (sender, e) => Dispatcher.Invoke(() =>
-            {
-                UpdateStats(e);
             });
             Tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TrackerStatusBar.Background = Brushes.Green;
                 StatusBarGoMode.Visibility = Visibility.Visible;
-                UpdateStats(e);
             });
             Tracker.ActionUndone += (sender, e) => Dispatcher.Invoke(() =>
             {
@@ -626,7 +617,6 @@ namespace Randomizer.App
                     StatusBarGoMode.Visibility = Visibility.Collapsed;
                 }
 
-                UpdateStats(e);
                 RefreshGridItems();
             });
             Tracker.StateLoaded += (sender, e) => Dispatcher.Invoke(() =>

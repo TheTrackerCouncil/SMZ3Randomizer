@@ -85,7 +85,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 var count = (int)result.Semantics[ItemCountKey].Value;
-                tracker.SetItemCount(item, count, result.Confidence);
+                tracker.TrackItemAmount(item, count, result.Confidence);
             });
         }
 

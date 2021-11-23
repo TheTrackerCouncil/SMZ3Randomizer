@@ -320,7 +320,10 @@
       "X": 79,
       "Y": 121,
       "Abbreviation": "SW",
-      "Boss": "Mothula",
+      "Boss": [
+        [ "Mothula", 0 ],
+        "MOTHyula"
+      ],
       "TreasureRemaining": 2,
       "Column": 0,
       "Row": 6,
@@ -379,13 +382,20 @@
       "LocationId": 444
     },
     {
-      "Name": [ "Ganon's Tower" ],
+      "Name": [
+        [ "Ganon's Tower", 0 ],
+        "Gannon's Tower"
+      ],
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
       "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
       "X": 1126,
       "Y": 68,
       "Abbreviation": "GT",
-      "Boss": "Ganon",
+      "Boss": [
+        "Ganon",
+        "Gannon",
+        [ "Gaynon", 0 ]
+      ],
       "Column": 5,
       "Row": 6,
       "TreasureRemaining": 20,
@@ -398,7 +408,10 @@
       "X": 1003,
       "Y": 906,
       "Abbreviation": "HC",
-      "Boss": "Agahnim",
+      "Boss": [
+        [ "Agahnim", 0 ],
+        "Aganihm"
+      ],
       "Column": 5,
       "Row": 5,
       "TreasureRemaining": 6,
@@ -1319,7 +1332,7 @@
       "Id": 80,
       "Name": [
         "Fireflea Room",
-        [ "Energy Tank, Firefleas" , 0 ]
+        [ "Energy Tank, Firefleas", 0 ]
       ],
       "X": 1240,
       "Y": 436
@@ -1374,7 +1387,7 @@
       "Id": 133,
       "Name": [
         "Left Super Missile Chamber",
-        ["Super Missile (Wrecked Ship left)", 0 ]
+        [ "Super Missile (Wrecked Ship left)", 0 ]
       ],
       "X": 504,
       "Y": 372
