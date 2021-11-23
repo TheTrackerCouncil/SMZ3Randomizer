@@ -46,7 +46,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 module.LoadInto(engine);
             }
 
-            return modules.SelectMany(x => x.Syntax)
+            return modules.Where(x => !x.IsSecret)
+                .SelectMany(x => x.Syntax)
                 .ToImmutableSortedDictionary();
         }
     }
