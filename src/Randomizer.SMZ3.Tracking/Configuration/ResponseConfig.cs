@@ -148,11 +148,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         };
 
         /// <summary>
-        /// Gets the phrases to respond with when tracking a specific item.
-        /// </summary>
-        public Dictionary<string, SchrodingersString> TrackedSpecificItem { get; init; } = new();
-
-        /// <summary>
         /// Gets the phrases to respond with when untracking an item.
         /// </summary>
         /// <remarks>
