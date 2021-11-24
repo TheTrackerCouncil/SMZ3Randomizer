@@ -25,6 +25,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public MetaModule(Tracker tracker, ILogger<MetaModule> logger)
             : base(tracker, logger)
         {
+            AddCommand("Repeat that", GetRepeatThatRule(), (tracker, result) =>
+            {
+                tracker.Repeat();
+            });
+
             AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (tracker, result) =>
             {
                 var modifier = (int)result.Semantics[ModifierKey].Value;
@@ -92,6 +97,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             settings.Add(new SemanticResultValue("execution", ThresholdSetting_Execution));
             settings.Add(new SemanticResultValue("sass", ThresholdSetting_Sass));
             return settings;
+        }
+
+        private GrammarBuilder GetRepeatThatRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("can you repeat that?",
+                    "can you please repeat that?",
+                    "what was that?",
+                    "repeat that",
+                    "please repeat that");
         }
 
         private GrammarBuilder GetIncreaseThresholdGrammar()
