@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Speech.Synthesis;
 
 using Microsoft.Extensions.Logging;
 
@@ -26,6 +25,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 SpoilersEnabled = true;
                 tracker.Say("Toggled spoilers on.");
+            });
+            AddCommand("Disable spoilers", GetDisableSpoilersRule(), (tracker, result) =>
+            {
+                SpoilersEnabled = false;
+                tracker.Say("Toggled spoilers off.");
             });
 
             AddCommand("Reveal item location", GetItemSpoilerRule(), (tracker, result) =>
@@ -132,7 +136,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
-                .OneOf("toggle", "enable", "turn on")
+                .OneOf("enable", "turn on")
+                .Append("spoilers");
+        }
+
+        private GrammarBuilder GetDisableSpoilersRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("disable", "turn off")
                 .Append("spoilers");
         }
     }
