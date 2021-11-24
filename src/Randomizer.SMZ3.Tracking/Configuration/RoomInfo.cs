@@ -45,6 +45,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         public int? Y { get; init; }
 
+        /// <summary>
+        /// Gets the possible hints for the room, if any are defined.
+        /// </summary>
+        public SchrodingersString? Hints { get; init; }
 
         /// <summary>
         /// Returns the locations in the room.

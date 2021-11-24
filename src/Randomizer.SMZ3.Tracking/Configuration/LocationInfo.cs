@@ -49,6 +49,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public int? Y { get; init; }
 
         /// <summary>
+        /// Gets the possible hints for the location, if any are defined.
+        /// </summary>
+        public SchrodingersString? Hints { get; init; }
+
+        /// <summary>
         /// Returns the <see cref="Location"/> that matches the location info in
         /// the specified world.
         /// </summary>
@@ -63,7 +68,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         public Location GetLocation(World world)
             => world.Locations.Single(x => x.Id == Id);
-
 
         /// <summary>
         /// Returns the location associated with the point of interest.

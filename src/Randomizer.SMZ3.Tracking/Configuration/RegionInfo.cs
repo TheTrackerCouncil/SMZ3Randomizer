@@ -34,6 +34,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString Name { get; }
 
         /// <summary>
+        /// Gets the possible hints for the region, if any are defined.
+        /// </summary>
+        public SchrodingersString? Hints { get; init; }
+
+        /// <summary>
         /// Returns the <see cref="Region"/> that matches the region info in the
         /// specified world.
         /// </summary>

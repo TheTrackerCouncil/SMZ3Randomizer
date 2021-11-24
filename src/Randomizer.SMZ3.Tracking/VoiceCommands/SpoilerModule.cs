@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 using Microsoft.Extensions.Logging;
@@ -13,6 +15,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class SpoilerModule : TrackerModule, IOptionalModule
     {
+        private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
         /// </summary>
@@ -100,45 +104,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
+            if (HintsEnabled && GiveItemLocationHint(item))
+                return;
+
+            if (SpoilersEnabled && GiveItemLocationSpoiler(item))
+                return;
+
+            if (!HintsEnabled)
+            {
+                Tracker.Say("If you want me to give a hint, say 'Hey tracker, enable hints'.");
+                return;
+            }
+
             if (!SpoilersEnabled)
             {
                 Tracker.Say("If you want me to spoil it, say 'Hey tracker, enable spoilers'.");
                 return;
             }
-
-            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
-            var reachableLocation = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared)
-                .Where(x => x.IsAvailable(progression))
-                .Random();
-            if (reachableLocation != null)
-            {
-                var locationName = Tracker.WorldInfo.Location(reachableLocation).Name;
-                var regionName = Tracker.WorldInfo.Region(reachableLocation.Region).Name;
-                if (item.Multiple || item.HasStages)
-                    Tracker.Say(string.Format("There is {0} at {1} <break strength='weak'/> in {2}", item.NameWithArticle, locationName, regionName));
-                else
-                    Tracker.Say(string.Format("{0} is at {1} <break strength='weak'/> in {2}.", item.NameWithArticle, locationName, regionName));
-                return;
-            }
-
-            var worldLocation = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared)
-                .Random();
-            if (worldLocation != null)
-            {
-                var locationName = Tracker.WorldInfo.Location(worldLocation).Name;
-                var regionName = Tracker.WorldInfo.Region(worldLocation.Region).Name;
-                if (item.Multiple || item.HasStages)
-                    Tracker.Say(string.Format("There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.", item.NameWithArticle, locationName, regionName));
-                else
-                    Tracker.Say(string.Format("{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.", item.NameWithArticle, locationName, regionName));
-                return;
-            }
-
-            // RIP
 
             if (item.Multiple || item.HasStages)
                 Tracker.Say(string.Format("I cannot find any more {0}.", item.Plural));
@@ -182,6 +164,198 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Tracker.Say(string.Format("{0} has {1}, but I don't recognize that item.", locationName, location.Item));
                 return;
             }
+        }
+
+        internal bool GiveItemLocationSpoiler(ItemData item)
+        {
+            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            var reachableLocation = Tracker.World.Locations
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => !x.Cleared)
+                .Where(x => x.IsAvailable(progression))
+                .Random();
+            if (reachableLocation != null)
+            {
+                var locationName = Tracker.WorldInfo.Location(reachableLocation).Name;
+                var regionName = Tracker.WorldInfo.Region(reachableLocation.Region).Name;
+                if (item.Multiple || item.HasStages)
+                    Tracker.Say(string.Format("There is {0} at {1} <break strength='weak'/> in {2}", item.NameWithArticle, locationName, regionName));
+                else
+                    Tracker.Say(string.Format("{0} is at {1} <break strength='weak'/> in {2}.", item.NameWithArticle, locationName, regionName));
+                return true;
+            }
+
+            var worldLocation = Tracker.World.Locations
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => !x.Cleared)
+                .Random();
+            if (worldLocation != null)
+            {
+                var locationName = Tracker.WorldInfo.Location(worldLocation).Name;
+                var regionName = Tracker.WorldInfo.Region(worldLocation.Region).Name;
+                if (item.Multiple || item.HasStages)
+                    Tracker.Say(string.Format("There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.", item.NameWithArticle, locationName, regionName));
+                else
+                    Tracker.Say(string.Format("{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.", item.NameWithArticle, locationName, regionName));
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool GiveItemLocationHint(ItemData item)
+        {
+            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            switch (HintsGiven(item))
+            {
+                // If unobtainable, give hint about that. Otherwise, give hint
+                // about where the item is NOT
+                case 0:
+                    {
+                        var itemLocations = Tracker.World.Locations
+                            .Where(x => x.Item.Type == item.InternalItemType)
+                            .Where(x => !x.Cleared);
+
+                        if (!itemLocations.Any(x => x.IsAvailable(progression)))
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: not available with current items", item);
+                            Tracker.Say(string.Format("You need something else before you can find {0}.", item.NameWithArticle));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
+                        var regionWithoutItem = Tracker.World.Locations
+                            .Except(itemLocations)
+                            .Select(x => x.Region)
+                            .Random();
+
+                        if (regionWithoutItem != null)
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: not in {Region}", item, regionWithoutItem);
+                            var regionName = Tracker.WorldInfo.Region(regionWithoutItem).Name;
+                            Tracker.Say(string.Format("You won't find {0} in {1}.", item.NameWithArticle, regionName));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
+                        // No vague hints possible for this item. Increase the
+                        // counter and let the player try again for a more
+                        // specific hint.
+                        Logger.LogInformation("No level 0 spoilers for {Item}", item);
+                        Tracker.Say("Concentrate and ask again.");
+                        RememberHintGiven(item);
+                        return true;
+                    }
+
+                // Give a vague hint about the region, or tell the player if
+                // it's in an optional dungeon
+                case 1:
+                    {
+                        var randomLocation = GetRandomItemLocationWithFilter(item,
+                            l => Tracker.WorldInfo.Region(l.Region).Hints?.Count > 0);
+
+                        if (randomLocation != null)
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: in {Region}", item, randomLocation.Region);
+                            var regionHint = Tracker.WorldInfo.Region(randomLocation.Region).Hints;
+                            if (regionHint != null && regionHint.Count > 0)
+                            {
+                                Tracker.Say(regionHint);
+                                RememberHintGiven(item);
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            // No locations that have a region hint available.
+                            // Increase hints to prevent getting stuck on hints.
+                            Logger.LogInformation("No level 1 spoilers for {Item}", item);
+                            Tracker.Say("Reply hazy, try again.");
+                            RememberHintGiven(item);
+                            return true;
+                        }
+                        break;
+                    }
+
+                // Give a more precise hint on subsequent attemps
+                case 2:
+                    {
+                        var randomLocation = GetRandomItemLocationWithFilter(item,
+                            location =>
+                            {
+                                if (location.Room != null && Tracker.WorldInfo.Room(location.Room).Hints?.Count > 0)
+                                    return true;
+                                return Tracker.WorldInfo.Location(location).Hints?.Count > 0;
+                            });
+
+                        if (randomLocation != null)
+                        {
+                            if (randomLocation.Room != null)
+                            {
+                                Logger.LogInformation("Giving spoiler for {Item}: in room {Room}", item, randomLocation.Room);
+                                var roomHint = Tracker.WorldInfo.Room(randomLocation.Room).Hints;
+                                if (roomHint != null && roomHint.Count > 0)
+                                {
+                                    Tracker.Say(roomHint);
+                                    RememberHintGiven(item);
+                                    return true;
+                                }
+                            }
+
+                            var locationHint = Tracker.WorldInfo.Location(randomLocation).Hints;
+                            if (locationHint != null && locationHint.Count > 0)
+                            {
+                                Logger.LogInformation("Giving spoiler for {Item}: at location {Location}", item, randomLocation);
+                                Tracker.Say(locationHint);
+                                RememberHintGiven(item);
+                                return true;
+                            } 
+                        }
+                        else
+                        {
+                            // If there isn't any location with this item that
+                            // has a hint, let it fall through so tracker can
+                            // tell the player to enable spoilers
+                            Logger.LogInformation("No level 2 spoilers for {Item}", item);
+                        }
+                        break;
+                    }
+            }
+
+            return false;
+
+            int HintsGiven(ItemData item) => _itemHintsGiven.GetValueOrDefault(item.InternalItemType, 0);
+            void RememberHintGiven(ItemData item)
+            {
+                if (_itemHintsGiven.ContainsKey(item.InternalItemType))
+                    _itemHintsGiven[item.InternalItemType]++;
+                else
+                    _itemHintsGiven[item.InternalItemType] = 1;
+            }
+        }
+
+        private Location? GetRandomItemLocationWithFilter(ItemData item, Func<Location, bool> predicate)
+        {
+            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            var randomLocation = Tracker.World.Locations
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => !x.Cleared)
+                .Where(x => x.IsAvailable(progression))
+                .Where(predicate)
+                .Random();
+
+            if (randomLocation == null)
+            {
+                // If the item is not at any accessible location, try to look in
+                // out-of-logic places, too.
+                randomLocation = Tracker.World.Locations
+                    .Where(x => x.Item.Type == item.InternalItemType)
+                    .Where(x => !x.Cleared)
+                    .Where(predicate)
+                    .Random();
+            }
+
+            return randomLocation;
         }
 
         private GrammarBuilder GetItemSpoilerRule()
