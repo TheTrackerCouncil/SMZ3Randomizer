@@ -28,6 +28,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         public void RevealItemLocation(ItemData item)
         {
+            if (!item.Multiple && !item.HasStages && item.TrackingState > 0)
+            {
+                Tracker.Say("You already have that.");
+                return;
+            }
+
             var markedLocation = Tracker.MarkedLocations
                 .Where(x => x.Value.InternalItemType == item.InternalItemType)
                 .Select(x => Tracker.World.Locations.Single(y => y.Id == x.Key))
@@ -42,6 +48,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             // ENTER SPOILER TERRITORY
+
             var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
             var reachableLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
@@ -73,6 +80,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     Tracker.Say(string.Format("{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.", item.NameWithArticle, locationName, regionName));
                 return;
             }
+
+            // RIP
+
+            if (item.Multiple || item.HasStages)
+                Tracker.Say(string.Format("I cannot find any more {0}.", item.Plural));
+            else
+                Tracker.Say(string.Format("I cannot find {0}.", item.NameWithArticle));
         }
 
         private GrammarBuilder GetItemSpoilerRule()
@@ -81,7 +95,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
-                .OneOf("where is", "where's")
+                .OneOf("where is", "where's", "where are")
                 .Optional("the", "a", "an")
                 .Append(ItemNameKey, items);
         }
