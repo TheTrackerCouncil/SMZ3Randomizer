@@ -3,13 +3,13 @@ using System.Linq;
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
-    /// Provides voice commands that give hints or spoilers about items and
-    /// locations.
+    /// Provides voice commands that reveal about items and locations.
     /// </summary>
     public class SpoilerModule : TrackerModule, IOptionalModule
     {
@@ -36,6 +36,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
                 RevealItemLocation(item);
+            });
+
+            AddCommand("Reveal location item", GetLocationSpoilerRule(), (tracker, result) =>
+            {
+                var location = GetLocationFromResult(tracker, result);
+                RevealLocationItem(location);
             });
         }
 
@@ -121,6 +127,44 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Tracker.Say(string.Format("I cannot find {0}.", item.NameWithArticle));
         }
 
+        /// <summary>
+        /// Gives a hint or spoiler about the given location.
+        /// </summary>
+        /// <param name="location">The location to ask about.</param>
+        public void RevealLocationItem(Location location)
+        {
+            var locationName = Tracker.WorldInfo.Location(location).Name;
+            if (Tracker.MarkedLocations.TryGetValue(location.Id, out var markedItem))
+            {
+                Tracker.Say(string.Format("You've marked {1} at {0}.", locationName, markedItem.NameWithArticle));
+                return;
+            }
+
+            if (!SpoilersEnabled)
+            {
+                Tracker.Say("Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you.");
+                return;
+            }
+
+            if (location.Item == null || location.Item.Type == ItemType.Nothing)
+            {
+                Tracker.Say(string.Format("{0} does not have an item. Did you forget to generate a seed first?", locationName));
+                return;
+            }
+
+            var item = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
+            if (item != null)
+            {
+                Tracker.Say(string.Format("{0} has {1}", locationName, item.NameWithArticle));
+                return;
+            }
+            else
+            {
+                Tracker.Say(string.Format("{0} has {1}, but I don't recognize that item.", locationName, location.Item));
+                return;
+            }
+        }
+
         private GrammarBuilder GetItemSpoilerRule()
         {
             var items = GetItemNames();
@@ -130,6 +174,28 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("where is", "where's", "where are")
                 .Optional("the", "a", "an")
                 .Append(ItemNameKey, items);
+        }
+
+        private GrammarBuilder GetLocationSpoilerRule()
+        {
+            var locations = GetLocationNames();
+
+            var whatsAtRule = new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("what's", "what is")
+                .OneOf("at", "in")
+                .Optional("the")
+                .Append(LocationKey, locations);
+
+            var whatDoesLocationHaveRule = new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Append("what does")
+                .Optional("the")
+                .Append(LocationKey, locations)
+                .Append("have")
+                .Optional("for me");
+
+            return GrammarBuilder.Combine(whatsAtRule, whatDoesLocationHaveRule);
         }
 
         private GrammarBuilder GetEnableSpoilersRule()
