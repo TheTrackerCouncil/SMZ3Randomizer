@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Speech.Synthesis;
-using System.Text;
-using System.Threading.Tasks;
-
-using BunLabs;
 
 using Microsoft.Extensions.Logging;
 
@@ -14,8 +7,17 @@ using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
+    /// <summary>
+    /// Provides voice commands that give hints or spoilers about items and
+    /// locations.
+    /// </summary>
     public class SpoilerModule : TrackerModule, IOptionalModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="logger">Used to write logging information.</param>
         public SpoilerModule(Tracker tracker, ILogger<SpoilerModule> logger)
             : base(tracker, logger)
         {
@@ -26,11 +28,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             });
         }
 
+        /// <summary>
+        /// Gives a hint or spoiler about the location of an item.
+        /// </summary>
+        /// <param name="item">The item to find.</param>
         public void RevealItemLocation(ItemData item)
         {
-            if (!item.Multiple && !item.HasStages && item.TrackingState > 0)
+            if (item.HasStages && item.TrackingState >= item.MaxStage)
             {
-                Tracker.Say("You already have that.");
+                Tracker.Say(string.Format("You already have every {0}.", item.Name));
+                return;
+            }
+            else if (!item.Multiple && item.TrackingState > 0)
+            {
+                Tracker.Say(string.Format("You already have {0}.", item.NameWithArticle));
                 return;
             }
 

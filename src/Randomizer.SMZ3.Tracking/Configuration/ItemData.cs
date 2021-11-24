@@ -108,10 +108,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public string? Image { get; set; }
 
         /// <summary>
-        /// Gets the highest stage the item supports, or 0 if the item does not
-        /// have stages.
+        /// Gets the highest stage the item supports, or 1 if the item does not
+        /// have stages, or 0 if the item has no limit.
         /// </summary>
-        public int MaxStage => HasStages ? Stages.Max(x => x.Key) : default;
+        public int MaxStage => HasStages ? Stages.Max(x => x.Key) : (Multiple ? 0 : 1);
 
         /// <summary>
         /// Indicates whether the item has stages.
