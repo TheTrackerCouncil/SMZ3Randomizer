@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Speech.Synthesis;
 
 using Microsoft.Extensions.Logging;
 
@@ -21,12 +22,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public SpoilerModule(Tracker tracker, ILogger<SpoilerModule> logger)
             : base(tracker, logger)
         {
+            AddCommand("Enable spoilers", GetEnableSpoilersRule(), (tracker, result) =>
+            {
+                SpoilersEnabled = true;
+                tracker.Say("Toggled spoilers on.");
+            });
+
             AddCommand("Reveal item location", GetItemSpoilerRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
                 RevealItemLocation(item);
             });
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Tracker may give spoilers
+        /// when asked about items or locations.
+        /// </summary>
+        public bool SpoilersEnabled { get; set; }
 
         /// <summary>
         /// Gives a hint or spoiler about the location of an item.
@@ -58,7 +71,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
-            // ENTER SPOILER TERRITORY
+            if (!SpoilersEnabled)
+            {
+                Tracker.Say("If you want me to spoil it, say 'Hey tracker, enable spoilers'.");
+                return;
+            }
 
             var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
             var reachableLocation = Tracker.World.Locations
@@ -109,6 +126,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("where is", "where's", "where are")
                 .Optional("the", "a", "an")
                 .Append(ItemNameKey, items);
+        }
+
+        private GrammarBuilder GetEnableSpoilersRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("toggle", "enable", "turn on")
+                .Append("spoilers");
         }
     }
 }
