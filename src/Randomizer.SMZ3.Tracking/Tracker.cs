@@ -747,6 +747,14 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Makes Tracker stop talking.
+        /// </summary>
+        public virtual void ShutUp()
+        {
+            _tts.SpeakAsyncCancelAll();
+        }
+
+        /// <summary>
         /// Notifies the user an error occurred.
         /// </summary>
         public virtual void Error()

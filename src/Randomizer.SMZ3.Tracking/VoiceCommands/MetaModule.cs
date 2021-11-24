@@ -30,6 +30,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 tracker.Repeat();
             });
 
+            AddCommand("Shut up", GetShutUpRule(), (tracker, result) =>
+            {
+                tracker.ShutUp();
+            });
+
             AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (tracker, result) =>
             {
                 var modifier = (int)result.Semantics[ModifierKey].Value;
@@ -108,6 +113,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     "what was that?",
                     "repeat that",
                     "please repeat that");
+        }
+
+        private GrammarBuilder GetShutUpRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Optional("please")
+                .OneOf("shut up", "be quiet", "stop talking");
         }
 
         private GrammarBuilder GetIncreaseThresholdGrammar()
