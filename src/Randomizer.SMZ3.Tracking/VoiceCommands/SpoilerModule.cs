@@ -21,6 +21,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public SpoilerModule(Tracker tracker, ILogger<SpoilerModule> logger)
             : base(tracker, logger)
         {
+            HintsEnabled = tracker.Options.HintsEnabled;
+            SpoilersEnabled = tracker.Options.SpoilersEnabled;
+
+            AddCommand("Enable hints", GetEnableHintsRule(), (tracker, result) =>
+            {
+                HintsEnabled = true;
+                tracker.Say("Toggled hints on.");
+            });
+            AddCommand("Disable hints", GetDisableHintsRule(), (tracker, result) =>
+            {
+                HintsEnabled = false;
+                tracker.Say("Toggled hints off.");
+            });
             AddCommand("Enable spoilers", GetEnableSpoilersRule(), (tracker, result) =>
             {
                 SpoilersEnabled = true;
@@ -44,6 +57,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 RevealLocationItem(location);
             });
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Tracker may give hints when
+        /// asked about items or locations.
+        /// </summary>
+        public bool HintsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Tracker may give spoilers
@@ -212,6 +231,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker, ")
                 .OneOf("disable", "turn off")
                 .Append("spoilers");
+        }
+
+        private GrammarBuilder GetEnableHintsRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("enable", "turn on")
+                .Append("hints");
+        }
+
+        private GrammarBuilder GetDisableHintsRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("disable", "turn off")
+                .Append("hints");
         }
     }
 }

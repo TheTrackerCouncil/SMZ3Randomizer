@@ -52,6 +52,11 @@ namespace Randomizer.App.ViewModels
 
         public int LaunchButton { get; set; } = (int)LaunchButtonOptions.PlayAndTrack;
 
+        public bool TrackerHintsEnabled { get; set; }
+
+        public bool TrackerSpoilersEnabled { get; set; }
+
+
         public bool Validate()
         {
             return File.Exists(Z3RomPath)
@@ -63,7 +68,9 @@ namespace Randomizer.App.ViewModels
         {
             MinimumRecognitionConfidence = TrackerRecognitionThreshold,
             MinimumExecutionConfidence = TrackerConfidenceThreshold,
-            MinimumSassConfidence = TrackerConfidenceSassThreshold
+            MinimumSassConfidence = TrackerConfidenceSassThreshold,
+            HintsEnabled = TrackerHintsEnabled,
+            SpoilersEnabled = TrackerSpoilersEnabled
         };
     }
 

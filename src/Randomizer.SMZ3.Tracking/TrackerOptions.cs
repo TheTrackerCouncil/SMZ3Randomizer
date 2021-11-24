@@ -31,5 +31,17 @@ namespace Randomizer.SMZ3.Tracking
         /// responses or responses that could potentially give away information.
         /// </summary>
         public float MinimumSassConfidence { get; set; } = 0.92f;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Tracker can give hints when
+        /// asked about an item or location.
+        /// </summary>
+        public bool HintsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Tracker can give spoilers
+        /// when asked about an item or location.
+        /// </summary>
+        public bool SpoilersEnabled { get; set; }
     }
 }
