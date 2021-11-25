@@ -206,16 +206,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private bool GiveItemLocationHint(ItemData item)
         {
             var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            var itemLocations = Tracker.World.Locations
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => !x.Cleared);
+
             switch (HintsGiven(item))
             {
                 // If unobtainable, give hint about that. Otherwise, give hint
                 // about where the item is NOT
                 case 0:
                     {
-                        var itemLocations = Tracker.World.Locations
-                            .Where(x => x.Item.Type == item.InternalItemType)
-                            .Where(x => !x.Cleared);
-
                         if (!itemLocations.Any(x => x.IsAvailable(progression)))
                         {
                             Logger.LogInformation("Giving spoiler for {Item}: not available with current items", item);
@@ -224,16 +224,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             return true;
                         }
 
-                        var regionWithoutItem = Tracker.World.Locations
-                            .Except(itemLocations)
-                            .Select(x => x.Region)
-                            .Random();
-
-                        if (regionWithoutItem != null)
+                        if (itemLocations.Select(x => x.Region).All(x => x is SMRegion))
                         {
-                            Logger.LogInformation("Giving spoiler for {Item}: not in {Region}", item, regionWithoutItem);
-                            var regionName = Tracker.WorldInfo.Region(regionWithoutItem).Name;
-                            Tracker.Say(string.Format("You won't find {0} in {1}.", item.NameWithArticle, regionName));
+                            Logger.LogInformation("Giving spoiler for {Item}: only in SM", item);
+                            Tracker.Say(string.Format("You might find {0} on a strange planet.", item.NameWithArticle));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
+                        if (itemLocations.Select(x => x.Region).All(x => x is Z3Region))
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: only in ALttP", item);
+                            Tracker.Say(string.Format("You might find {0} in a world of light and dark.", item.NameWithArticle));
                             RememberHintGiven(item);
                             return true;
                         }
@@ -247,9 +249,40 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         return true;
                     }
 
+                case 1:
+                    {
+                        if (!itemLocations.Any(x => x.IsAvailable(progression)))
+                        {
+                            // TODO: Determine what item(s) are missing from
+                            // logic, then give a hint about an item that has
+                            // hints
+                        }
+
+                        var regionWithoutItem = Tracker.World.Locations
+                            .Except(itemLocations)
+                            .Select(x => x.Region)
+                            .Random();
+
+                        if (regionWithoutItem != null)
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: not in {Area}", item, regionWithoutItem.Area);
+                            Tracker.Say(string.Format("You won't find {0} in {1}.", item.NameWithArticle, regionWithoutItem.Area));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
+                        // Unlikely but possible: the item can be found in every
+                        // region.
+                        Logger.LogInformation("No level 1 spoilers for {Item}", item);
+                        Tracker.Say("Concentrate and ask again.");
+                        RememberHintGiven(item);
+                        return true;
+                    }
+                    break;
+
                 // Give a vague hint about the region, or tell the player if
                 // it's in an optional dungeon
-                case 1:
+                case 2:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item,
                             l => Tracker.WorldInfo.Region(l.Region).Hints?.Count > 0);
@@ -269,16 +302,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         {
                             // No locations that have a region hint available.
                             // Increase hints to prevent getting stuck on hints.
-                            Logger.LogInformation("No level 1 spoilers for {Item}", item);
+                            Logger.LogInformation("No level 2 spoilers for {Item}", item);
                             Tracker.Say("Reply hazy, try again.");
                             RememberHintGiven(item);
                             return true;
                         }
-                        break;
                     }
+                    break;
 
                 // Give a more precise hint on subsequent attemps
-                case 2:
+                case 3:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item,
                             location =>
@@ -309,17 +342,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 Tracker.Say(locationHint);
                                 RememberHintGiven(item);
                                 return true;
-                            } 
+                            }
                         }
                         else
                         {
                             // If there isn't any location with this item that
                             // has a hint, let it fall through so tracker can
                             // tell the player to enable spoilers
-                            Logger.LogInformation("No level 2 spoilers for {Item}", item);
+                            Logger.LogInformation("No level 3 spoilers for {Item}", item);
                         }
-                        break;
                     }
+                    break;
             }
 
             return false;

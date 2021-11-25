@@ -1669,7 +1669,8 @@
         "Ped"
       ],
       "X": 83,
-      "Y": 101
+      "Y": 101,
+      "Hints": [ "I hope you don't need it." ]
     },
     {
       "Id": 271,
