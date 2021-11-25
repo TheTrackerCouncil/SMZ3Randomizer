@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Generation
         public string Mode { get; set; }
         public List<(World World, Dictionary<int, byte[]> Patches)> Worlds { get; set; }
 
-        public List<Dictionary<string, string>> Playthrough { get; set; }
+        public Playthrough Playthrough { get; set; }
     }
 
 }

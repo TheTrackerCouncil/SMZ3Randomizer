@@ -5,10 +5,13 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
+
 using Randomizer.App.ViewModels;
+using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.App
 {
@@ -124,17 +127,36 @@ namespace Randomizer.App
                 log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.Msu1Path)}");
             log.AppendLine();
 
-            for (var i = 0; i < seed.Playthrough.Count; i++)
+            var spheres = seed.Playthrough.GetPlaythroughText();
+            for (var i = 0; i < spheres.Count; i++)
             {
-                if (seed.Playthrough[i].Count == 0)
+                if (spheres[i].Count == 0)
                     continue;
 
                 log.AppendLine(Underline($"Sphere {i + 1}"));
                 log.AppendLine();
-                foreach (var (location, item) in seed.Playthrough[i])
+                foreach (var (location, item) in spheres[i])
                     log.AppendLine($"{location}: {item}");
                 log.AppendLine();
             }
+
+            log.AppendLine(Underline("Rewards"));
+            log.AppendLine();
+            foreach (var region in seed.Worlds[0].World.Regions)
+            {
+                if (region is IHasReward rewardRegion && rewardRegion.Reward != Reward.Agahnim && rewardRegion.Reward != Reward.GoldenFourBoss)
+                    log.AppendLine($"{region.Name}: {rewardRegion.Reward}");
+            }
+            log.AppendLine();
+
+            log.AppendLine(Underline("Medallions"));
+            log.AppendLine();
+            foreach (var region in seed.Worlds[0].World.Regions)
+            {
+                if (region is INeedsMedallion medallionReegion)
+                    log.AppendLine($"{region.Name}: {medallionReegion.Medallion}");
+            }
+            log.AppendLine();
 
             log.AppendLine(Underline("All items"));
             log.AppendLine();

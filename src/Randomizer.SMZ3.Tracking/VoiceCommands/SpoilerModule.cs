@@ -16,6 +16,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     public class SpoilerModule : TrackerModule, IOptionalModule
     {
         private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
+        private readonly Playthrough _playthrough;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
@@ -27,6 +28,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             HintsEnabled = tracker.Options.HintsEnabled;
             SpoilersEnabled = tracker.Options.SpoilersEnabled;
+            _playthrough = Playthrough.Generate(new[] { tracker.World }, tracker.World.Config);
 
             AddCommand("Enable hints", GetEnableHintsRule(), (tracker, result) =>
             {
@@ -240,8 +242,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             return true;
                         }
 
-                        // No vague hints possible for this item. Increase the
-                        // counter and let the player try again for a more
+                        var regionWithoutItem = Tracker.World.Locations
+                            .Except(itemLocations)
+                            .Select(x => x.Region)
+                            .Random();
+
+                        if (regionWithoutItem != null)
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: not in {Area}", item, regionWithoutItem.Area);
+                            Tracker.Say(string.Format("You won't find {0} in {1}.", item.NameWithArticle, regionWithoutItem.Area));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
+                        // In the unlikely event it's in every region: Increase
+                        // the counter and let the player try again for a more
                         // specific hint.
                         Logger.LogInformation("No level 0 spoilers for {Item}", item);
                         Tracker.Say("Concentrate and ask again.");
@@ -258,27 +273,39 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             // hints
                         }
 
-                        var regionWithoutItem = Tracker.World.Locations
-                            .Except(itemLocations)
-                            .Select(x => x.Region)
-                            .Random();
-
-                        if (regionWithoutItem != null)
+                        var sphere = _playthrough.Spheres.IndexOf(x => x.Items.Any(i => i.Type == item.InternalItemType));
+                        var earlyThreshold = Math.Floor(_playthrough.Spheres.Count * 0.25);
+                        var lateThreshold = Math.Ceiling(_playthrough.Spheres.Count * 0.75);
+                        Logger.LogDebug("Giving spoiler for {Item}: sphere {Sphere}, early: {Early}, late: {Late}", item, sphere, earlyThreshold, lateThreshold);
+                        if (sphere == 0)
                         {
-                            Logger.LogInformation("Giving spoiler for {Item}: not in {Area}", item, regionWithoutItem.Area);
-                            Tracker.Say(string.Format("You won't find {0} in {1}.", item.NameWithArticle, regionWithoutItem.Area));
+                            Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
+                            Tracker.Say(string.Format("How have you not found {0} yet?", item.NameWithArticle));
                             RememberHintGiven(item);
                             return true;
                         }
 
-                        // Unlikely but possible: the item can be found in every
-                        // region.
+                        if (sphere <= earlyThreshold)
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
+                            Tracker.Say(string.Format("{0} can be found pretty early on.", item.NameWithArticle));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
+                        if (sphere >= lateThreshold)
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
+                            Tracker.Say(string.Format("Don't count on getting {0} any time soon.", item.NameWithArticle));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
                         Logger.LogInformation("No level 1 spoilers for {Item}", item);
-                        Tracker.Say("Concentrate and ask again.");
+                        Tracker.Say("Ask again later.");
                         RememberHintGiven(item);
                         return true;
                     }
-                    break;
 
                 // Give a vague hint about the region, or tell the player if
                 // it's in an optional dungeon
