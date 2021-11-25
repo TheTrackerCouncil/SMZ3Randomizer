@@ -1074,7 +1074,12 @@
         "Can it wait for a bit? I'm in the middle of some calibrations.",
         "Fine, I guess.",
         "I dozed off there for a bit",
-        [ "Insert placeholder text here", 0.2 ]
+        [ "Reply hazy, try again.", 0.2 ],
+        [ "Ask again later.", 0.2 ],
+        [ "Better not tell you now.", 0.2 ],
+        [ "Cannot predict now.", 0.2 ],
+        [ "Concentrate and ask again.", 0.2 ],
+        [ "Insert placeholder text here", 0.1 ]
       ]
     }
   },

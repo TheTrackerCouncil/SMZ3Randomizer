@@ -34,22 +34,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Enable hints", GetEnableHintsRule(), (tracker, result) =>
             {
                 HintsEnabled = true;
-                tracker.Say("Toggled hints on.");
+                tracker.Say(x => x.Hints.EnabledHints);
             });
             AddCommand("Disable hints", GetDisableHintsRule(), (tracker, result) =>
             {
                 HintsEnabled = false;
-                tracker.Say("Toggled hints off.");
+                tracker.Say(x => x.Hints.DisabledHints);
             });
             AddCommand("Enable spoilers", GetEnableSpoilersRule(), (tracker, result) =>
             {
                 SpoilersEnabled = true;
-                tracker.Say("Toggled spoilers on.");
+                tracker.Say(x => x.Spoilers.EnabledSpoilers);
             });
             AddCommand("Disable spoilers", GetDisableSpoilersRule(), (tracker, result) =>
             {
                 SpoilersEnabled = false;
-                tracker.Say("Toggled spoilers off.");
+                tracker.Say(x => x.Spoilers.DisabledSpoilers);
             });
 
             AddCommand("Reveal item location", GetItemSpoilerRule(), (tracker, result) =>
@@ -85,12 +85,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (item.HasStages && item.TrackingState >= item.MaxStage)
             {
-                Tracker.Say(string.Format("You already have every {0}.", item.Name));
+                Tracker.Say(x => x.Spoilers.TrackedAllItemsAlready, item.Name);
                 return;
             }
             else if (!item.Multiple && item.TrackingState > 0)
             {
-                Tracker.Say(string.Format("You already have {0}.", item.NameWithArticle));
+                Tracker.Say(x => x.Spoilers.TrackedItemAlready, item.NameWithArticle);
                 return;
             }
 
@@ -103,7 +103,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var locationName = Tracker.GetName(markedLocation);
                 var regionName = Tracker.WorldInfo.Region(markedLocation.Region).Name;
-                Tracker.Say(string.Format("You've marked {0} at {1} <break strength='weak'/> in {2}", item.NameWithArticle, locationName, regionName));
+                Tracker.Say(x => x.Spoilers.MarkedItem, item.NameWithArticle, locationName, regionName);
                 return;
             }
 
@@ -115,20 +115,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (!HintsEnabled)
             {
-                Tracker.Say("If you want me to give a hint, say 'Hey tracker, enable hints'.");
+                Tracker.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
             if (!SpoilersEnabled)
             {
-                Tracker.Say("If you want me to spoil it, say 'Hey tracker, enable spoilers'.");
+                Tracker.Say(x => x.Spoilers.PromptEnableItemSpoilers);
                 return;
             }
 
             if (item.Multiple || item.HasStages)
-                Tracker.Say(string.Format("I cannot find any more {0}.", item.Plural));
+                Tracker.Say(x => x.Spoilers.ItemsNotFound, item.Plural);
             else
-                Tracker.Say(string.Format("I cannot find {0}.", item.NameWithArticle));
+                Tracker.Say(x => x.Spoilers.ItemNotFound, item.NameWithArticle);
         }
 
         /// <summary>
@@ -140,31 +140,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationName = Tracker.WorldInfo.Location(location).Name;
             if (Tracker.MarkedLocations.TryGetValue(location.Id, out var markedItem))
             {
-                Tracker.Say(string.Format("You've marked {1} at {0}.", locationName, markedItem.NameWithArticle));
+                Tracker.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.NameWithArticle);
                 return;
             }
 
             if (!SpoilersEnabled)
             {
-                Tracker.Say("Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you.");
+                Tracker.Say(x => x.Spoilers.PromptEnableLocationSpoilers);
                 return;
             }
 
             if (location.Item == null || location.Item.Type == ItemType.Nothing)
             {
-                Tracker.Say(string.Format("{0} does not have an item. Did you forget to generate a seed first?", locationName));
+                Tracker.Say(x => x.Spoilers.EmptyLocation, locationName);
                 return;
             }
 
             var item = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
             if (item != null)
             {
-                Tracker.Say(string.Format("{0} has {1}", locationName, item.NameWithArticle));
+                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.NameWithArticle);
                 return;
             }
             else
             {
-                Tracker.Say(string.Format("{0} has {1}, but I don't recognize that item.", locationName, location.Item));
+                Tracker.Say(x => x.Spoilers.LocationHasUnknownItem, locationName, location.Item);
                 return;
             }
         }
@@ -182,9 +182,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var locationName = Tracker.WorldInfo.Location(reachableLocation).Name;
                 var regionName = Tracker.WorldInfo.Region(reachableLocation.Region).Name;
                 if (item.Multiple || item.HasStages)
-                    Tracker.Say(string.Format("There is {0} at {1} <break strength='weak'/> in {2}", item.NameWithArticle, locationName, regionName));
+                    Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.NameWithArticle, locationName, regionName);
                 else
-                    Tracker.Say(string.Format("{0} is at {1} <break strength='weak'/> in {2}.", item.NameWithArticle, locationName, regionName));
+                    Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.NameWithArticle, locationName, regionName);
                 return true;
             }
 
@@ -197,13 +197,65 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var locationName = Tracker.WorldInfo.Location(worldLocation).Name;
                 var regionName = Tracker.WorldInfo.Region(worldLocation.Region).Name;
                 if (item.Multiple || item.HasStages)
-                    Tracker.Say(string.Format("There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.", item.NameWithArticle, locationName, regionName));
+                    Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
                 else
-                    Tracker.Say(string.Format("{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.", item.NameWithArticle, locationName, regionName));
+                    Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
                 return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Gives the specified item hint for the specified item.
+        /// </summary>
+        /// <param name="selectHint">Selects the hint to give.</param>
+        /// <param name="item">The item that was asked about.</param>
+        /// <param name="additionalArgs">
+        /// ADditional arguments used to format the hint text.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if a hint was given. <c>false</c> if the selected hint
+        /// was null, empty or returned a <c>null</c> hint.
+        /// </returns>
+        protected virtual bool GiveItemHint(Func<HintsConfig, SchrodingersString?> selectHint,
+            ItemData item, params object?[] additionalArgs)
+        {
+            var args = Args.Combine(item.NameWithArticle, additionalArgs);
+            if (!Tracker.Say(responses => selectHint(responses.Hints), args))
+                return false;
+
+            if (_itemHintsGiven.ContainsKey(item.InternalItemType))
+                _itemHintsGiven[item.InternalItemType]++;
+            else
+                _itemHintsGiven[item.InternalItemType] = 1;
+            return true;
+        }
+
+        /// <summary>
+        /// Gives the specified item hint for the specified item.
+        /// </summary>
+        /// <param name="hint">The hint to give.</param>
+        /// <param name="item">The item that was asked about.</param>
+        /// <param name="additionalArgs">
+        /// Additional arguments used to format the hint text.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if a hint was given. <c>false</c> if <paramref
+        /// name="hint"/> was null, empty or returned a <c>null</c> hint.
+        /// </returns>
+        protected virtual bool GiveItemHint(SchrodingersString? hint,
+            ItemData item, params object?[] additionalArgs)
+        {
+            var args = Args.Combine(item.NameWithArticle, additionalArgs);
+            if (!Tracker.Say(hint, args))
+                return false;
+
+            if (_itemHintsGiven.ContainsKey(item.InternalItemType))
+                _itemHintsGiven[item.InternalItemType]++;
+            else
+                _itemHintsGiven[item.InternalItemType] = 1;
+            return true;
         }
 
         private bool GiveItemLocationHint(ItemData item)
@@ -221,48 +273,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     {
                         var isInLogic = itemLocations.Any(x => x.IsAvailable(progression));
                         if (!isInLogic)
-                        {
-                            Tracker.Say(string.Format("You need something else before you can find {0}.", item.NameWithArticle));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemNotInLogic, item);
 
                         var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
                         if (isOnlyInSuperMetroid)
-                        {
-                            Tracker.Say(string.Format("You might find {0} on a strange planet.", item.NameWithArticle));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemInSuperMetroid, item);
 
                         var isOnlyInALinkToThePast = itemLocations.Select(x => x.Region).All(x => x is Z3Region);
                         if (isOnlyInALinkToThePast)
-                        {
-                            Tracker.Say(string.Format("You might find {0} in a world of light and dark.", item.NameWithArticle));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemInALttP, item);
 
                         var regionWithoutItem = Tracker.World.Locations
                             .Except(itemLocations)
                             .Select(x => x.Region)
                             .Random();
-
                         if (regionWithoutItem != null)
-                        {
-                            Logger.LogInformation("Giving spoiler for {Item}: not in {Area}", item, regionWithoutItem.Area);
-                            Tracker.Say(string.Format("You won't find {0} in {1}.", item.NameWithArticle, regionWithoutItem.Area));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemNotInArea, item, regionWithoutItem.Area);
 
                         // In the unlikely event it's in every region: Increase
                         // the counter and let the player try again for a more
                         // specific hint.
-                        Logger.LogInformation("No level 0 spoilers for {Item}", item);
-                        Tracker.Say("Concentrate and ask again.");
-                        RememberHintGiven(item);
-                        return true;
+                        return GiveItemHint(x => x.NoApplicableHints, item);
                     }
 
                 case 1:
@@ -279,31 +310,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         var lateThreshold = Math.Ceiling(_playthrough.Spheres.Count * 0.75);
                         Logger.LogDebug("Giving spoiler for {Item}: sphere {Sphere}, early: {Early}, late: {Late}", item, sphere, earlyThreshold, lateThreshold);
                         if (sphere == 0)
-                        {
-                            Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
-                            Tracker.Say(string.Format("How have you not found {0} yet?", item.NameWithArticle));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemInSphereZero, item);
                         if (sphere <= earlyThreshold)
-                        {
-                            Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
-                            Tracker.Say(string.Format("{0} can be found pretty early on.", item.NameWithArticle));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemInEarlySphere, item);
                         if (sphere >= lateThreshold)
-                        {
-                            Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
-                            Tracker.Say(string.Format("Don't count on getting {0} any time soon.", item.NameWithArticle));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemInLateSphere, item);
 
-                        Logger.LogInformation("No level 1 spoilers for {Item}", item);
-                        Tracker.Say("Ask again later.");
-                        RememberHintGiven(item);
-                        return true;
+                        return GiveItemHint(x => x.NoApplicableHints, item);
                     }
 
                 case 2:
@@ -312,54 +325,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.Reward != Reward.Agahnim)
                         {
                             if (randomLocation.Region.Locations.Any(x => x.Cleared))
-                            {
-                                Logger.LogInformation("Giving spoiler for {Item}: in dungeon with cleared items", item);
-                                Tracker.Say(string.Format("How do you feel about double dipping?", item.NameWithArticle));
-                                RememberHintGiven(item);
-                                return true;
-                            }
+                                return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);
                             else
-                            {
-                                Logger.LogInformation("Giving spoiler for {Item}: in dungeon without cleared items", item);
-                                Tracker.Say(string.Format("It's in a dungeon you haven't visited yet.", item.NameWithArticle));
-                                RememberHintGiven(item);
-                                return true;
-                            }
+                                return GiveItemHint(x => x.ItemInUnvisitedDungeon, item);
                         }
 
                         if (randomLocation?.Region.Locations.Any(x => x.Cleared) == true)
-                        {
-                            Logger.LogInformation("Giving spoiler for {Item}: in region with cleared items", item);
-                            Tracker.Say(string.Format("Deja voo, I've just been to this place before", item.NameWithArticle));
-                            RememberHintGiven(item);
-                            return true;
-                        }
+                            return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);
 
                         var randomLocationWithHint = GetRandomItemLocationWithFilter(item,
                             l => Tracker.WorldInfo.Region(l.Region).Hints?.Count > 0);
 
                         if (randomLocationWithHint != null)
                         {
-                            Logger.LogInformation("Giving spoiler for {Item}: in {Region}", item, randomLocationWithHint.Region);
                             var regionHint = Tracker.WorldInfo.Region(randomLocationWithHint.Region).Hints;
                             if (regionHint != null && regionHint.Count > 0)
-                            {
-                                Tracker.Say(regionHint);
-                                RememberHintGiven(item);
-                                return true;
-                            }
+                                return GiveItemHint(regionHint, item);
                         }
-                        else
-                        {
-                            // No locations that have a region hint available.
-                            // Increase hints to prevent getting stuck on hints.
-                            Logger.LogInformation("No level 2 spoilers for {Item}", item);
-                            Tracker.Say("Reply hazy, try again.");
-                            RememberHintGiven(item);
-                            return true;
-                        }
+
+                        return GiveItemHint(x => x.NoApplicableHints, item);
                     }
-                    break;
 
                 case 3:
                     {
@@ -375,23 +360,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         {
                             if (randomLocation.Room != null)
                             {
-                                Logger.LogInformation("Giving spoiler for {Item}: in room {Room}", item, randomLocation.Room);
                                 var roomHint = Tracker.WorldInfo.Room(randomLocation.Room).Hints;
                                 if (roomHint != null && roomHint.Count > 0)
                                 {
-                                    Tracker.Say(roomHint);
-                                    RememberHintGiven(item);
-                                    return true;
+                                    return GiveItemHint(roomHint, item);
                                 }
                             }
 
                             var locationHint = Tracker.WorldInfo.Location(randomLocation).Hints;
                             if (locationHint != null && locationHint.Count > 0)
                             {
-                                Logger.LogInformation("Giving spoiler for {Item}: at location {Location}", item, randomLocation);
-                                Tracker.Say(locationHint);
-                                RememberHintGiven(item);
-                                return true;
+                                return GiveItemHint(locationHint, item);
                             }
                         }
                         else
@@ -399,7 +378,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             // If there isn't any location with this item that
                             // has a hint, let it fall through so tracker can
                             // tell the player to enable spoilers
-                            Logger.LogInformation("No level 3 spoilers for {Item}", item);
+                            Logger.LogInformation("No level 3 hints for {Item}", item);
                         }
                     }
                     break;
@@ -408,13 +387,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return false;
 
             int HintsGiven(ItemData item) => _itemHintsGiven.GetValueOrDefault(item.InternalItemType, 0);
-            void RememberHintGiven(ItemData item)
-            {
-                if (_itemHintsGiven.ContainsKey(item.InternalItemType))
-                    _itemHintsGiven[item.InternalItemType]++;
-                else
-                    _itemHintsGiven[item.InternalItemType] = 1;
-            }
         }
 
         private Location? GetRandomItemLocationWithFilter(ItemData item, Func<Location, bool> predicate)

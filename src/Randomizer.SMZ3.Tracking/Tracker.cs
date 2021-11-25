@@ -698,15 +698,79 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Speak a sentence using text-to-speech.
         /// </summary>
+        /// <param name="text">The possible sentences to speak.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+        /// name="text"/> was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(SchrodingersString? text)
+        {
+            if (text == null)
+                return false;
+
+            return Say(text.ToString());
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="selectResponse">Selects the response to use.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse)
+        {
+            return Say(selectResponse(Responses));
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="text">The possible sentences to speak.</param>
+        /// <param name="args">The arguments used to format the text.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+        /// name="text"/> was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(SchrodingersString? text, params object?[] args)
+        {
+            if (text == null)
+                return false;
+
+            return Say(text.Format(args), wait: false);
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="selectResponse">Selects the response to use.</param>
+        /// <param name="args">The arguments used to format the text.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
+        {
+            return Say(selectResponse(Responses), args);
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
         /// <param name="text">The phrase to speak.</param>
         /// <param name="wait">
         /// <c>true</c> to wait until the text has been spoken completely or
         /// <c>false</c> to immediately return. The default is <c>false</c>.
         /// </param>
-        public virtual void Say(string? text, bool wait = false)
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(string? text, bool wait = false)
         {
             if (text == null)
-                return;
+                return false;
 
             var prompt = ParseText(text);
             if (wait)
@@ -714,6 +778,7 @@ namespace Randomizer.SMZ3.Tracking
             else
                 _tts.SpeakAsync(prompt);
             _lastSpokenText = text;
+            return true;
 
             static Prompt ParseText(string text)
             {

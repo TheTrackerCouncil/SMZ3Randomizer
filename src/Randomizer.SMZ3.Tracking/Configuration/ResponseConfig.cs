@@ -499,5 +499,15 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         {
             ["non-committal"] = new("Can it wait for a bit? I'm in the middle of some calibrations.")
         };
+
+        /// <summary>
+        /// Gets the configured phrases for hints.
+        /// </summary>
+        public HintsConfig Hints { get; init; } = new();
+
+        /// <summary>
+        /// Gets the configured phrases for spoilers.
+        /// </summary>
+        public SpoilerConfig Spoilers { get; init; } = new();
     }
 }
