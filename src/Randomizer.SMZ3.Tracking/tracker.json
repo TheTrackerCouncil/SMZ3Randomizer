@@ -1056,6 +1056,131 @@
     "GoModeToggledOff": [
       "Toggled Go Mode off."
     ],
+    "Hints": {
+      "EnabledHints": [
+        "Toggled hints on.",
+        "I'll give you hints when asked."
+      ],
+      "DisabledHints": [
+        "Toggled hints off.",
+        "I'll stop giving you hints."
+      ],
+      "PromptEnableItemHints": [
+        "If you want me to give a hint, say 'Hey tracker, enable hints'."
+      ],
+      "NoApplicableHints": [
+        "Reply hazy, try again.",
+        "Ask again later.",
+        "Better not tell you now.",
+        "Cannot predict now.",
+        "Concentrate and ask again."
+      ],
+      "ItemNotInLogic": [
+        "You need something else before you can find {0}."
+      ],
+      "ItemInSuperMetroid": [
+        "You might find {0} on a strange planet.",
+        "It's in a place that rhymes with 'Thebes'.",
+        "It's in a place that rhymes with 'The Bees'.",
+        "It's on a planet with a name whose pronunciation nobody can agree on."
+      ],
+      "ItemInALttP": [
+        "You might find {0} in a world of light and dark."
+      ],
+      "ItemNotInArea": [
+        "Don't bother going to {1}.",
+        "You won't find {0} in {1}."
+      ],
+      "ItemInSphereZero": [
+        "How have you not found {0} yet?"
+      ],
+      "ItemInEarlySphere": [
+        "{0} can be found pretty early on.",
+        "It shouldn't take you too long to find {0}."
+      ],
+      "ItemInLateSphere": [
+        "Don't count on getting {0} any time soon.",
+        "{0} won't appear until later in the seed."
+      ],
+      "ItemInPreviouslyVisitedDungeon": [
+        "How do you feel about double dipping?"
+      ],
+      "ItemInUnvisitedDungeon": [
+        "It's in a dungeon you haven't visited yet."
+      ],
+      "ItemInPreviouslyVisitedRegion": [
+        "It's in a place you've been before.",
+        "Deja voo, I've just been in this place before"
+      ]
+    },
+    "Spoilers": {
+      "EnabledSpoilers": [
+        "Toggled spoilers on.",
+        "I'll tell you what you want to know when you ask for spoilers."
+      ],
+      "DisabledSpoilers": [
+        "Toggled spoilers off.",
+        "I'll stop giving you spoilers when asked for."
+      ],
+      "PromptEnableItemSpoilers": [
+        "If you want me to spoil it, say 'Hey tracker, enable spoilers'."
+      ],
+      "PromptEnableLocationSpoilers": [
+        "Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you."
+      ],
+      "TrackedAllItemsAlready": [
+        "You already have every {0}.",
+        "You've already found every {0}.",
+        "You've already tracked every {0}."
+      ],
+      "TrackedItemAlready": [
+        "You already have {0}.",
+        "You've already found {0}.",
+        "You've already tracked {0}."
+      ],
+      "MarkedItem": [
+        "You've marked {0} at {1} <break strength='weak'/> in {2}"
+      ],
+      "MarkedLocation": [
+        "You've marked {1} at {0}."
+      ],
+      "EmptyLocation": [
+        "{0} does not have an item. Did you forget to generate a seed first?",
+        "{0} is empty. Are you sure you started with a seed?"
+      ],
+      "ItemNotFound": [
+        "I cannot find {0}.",
+        "I don't know where {0} is."
+      ],
+      "ItemsNotFound": [
+        "I cannot find any more {0}.",
+        "I don't know where any other {0} are."
+      ],
+      "LocationHasItem": [
+        "{0} has {1}.",
+        "{1} is there."
+      ],
+      "LocationHasUnknownItem": [
+        "{0} has {1}, but you can't track it.",
+        "{1} is there, but you can't track it."
+      ],
+      "ItemIsAtLocation": [
+        "{0} is at {1} <break strength='weak'/> in {2}.",
+        "{0} can be found at {1} <break strength='weak'/> in {2}."
+      ],
+      "ItemsAreAtLocation": [
+        "There is {0} at {1} <break strength='weak'/> in {2}",
+        "{0} can be found at {1} <break strength='weak'/> in {2}"
+      ],
+      "ItemIsAtOutOfLogicLocation": [
+        "{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.",
+        "{0} is out of logic but can be found at {1} <break strength='weak'/> in {2}"
+      ],
+      "ItemsAreAtOutOfLogicLocation": [
+        "There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.",
+        "{0} is at {1} <break strength='weak'/> in {2}, but it's out of logic."
+      ]
+    },
     "Idle": {
       "10m±2m": [
         "Decreased content by one step.",

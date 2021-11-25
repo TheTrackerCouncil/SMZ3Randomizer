@@ -331,7 +331,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         }
 
                         if (randomLocation?.Region.Locations.Any(x => x.Cleared) == true)
-                            return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);
+                            return GiveItemHint(x => x.ItemInPreviouslyVisitedRegion, item);
 
                         var randomLocationWithHint = GetRandomItemLocationWithFilter(item,
                             l => Tracker.WorldInfo.Region(l.Region).Hints?.Count > 0);
