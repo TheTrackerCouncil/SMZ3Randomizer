@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -218,25 +219,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // about where the item is NOT
                 case 0:
                     {
-                        if (!itemLocations.Any(x => x.IsAvailable(progression)))
+                        var isInLogic = itemLocations.Any(x => x.IsAvailable(progression));
+                        if (!isInLogic)
                         {
-                            Logger.LogInformation("Giving spoiler for {Item}: not available with current items", item);
                             Tracker.Say(string.Format("You need something else before you can find {0}.", item.NameWithArticle));
                             RememberHintGiven(item);
                             return true;
                         }
 
-                        if (itemLocations.Select(x => x.Region).All(x => x is SMRegion))
+                        var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
+                        if (isOnlyInSuperMetroid)
                         {
-                            Logger.LogInformation("Giving spoiler for {Item}: only in SM", item);
                             Tracker.Say(string.Format("You might find {0} on a strange planet.", item.NameWithArticle));
                             RememberHintGiven(item);
                             return true;
                         }
 
-                        if (itemLocations.Select(x => x.Region).All(x => x is Z3Region))
+                        var isOnlyInALinkToThePast = itemLocations.Select(x => x.Region).All(x => x is Z3Region);
+                        if (isOnlyInALinkToThePast)
                         {
-                            Logger.LogInformation("Giving spoiler for {Item}: only in ALttP", item);
                             Tracker.Say(string.Format("You might find {0} in a world of light and dark.", item.NameWithArticle));
                             RememberHintGiven(item);
                             return true;
@@ -284,7 +285,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             RememberHintGiven(item);
                             return true;
                         }
-
                         if (sphere <= earlyThreshold)
                         {
                             Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
@@ -292,7 +292,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             RememberHintGiven(item);
                             return true;
                         }
-
                         if (sphere >= lateThreshold)
                         {
                             Logger.LogInformation("Giving spoiler for {Item}: in sphere {Sphere}", item, sphere);
@@ -307,17 +306,42 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         return true;
                     }
 
-                // Give a vague hint about the region, or tell the player if
-                // it's in an optional dungeon
                 case 2:
                     {
-                        var randomLocation = GetRandomItemLocationWithFilter(item,
+                        var randomLocation = GetRandomItemLocationWithFilter(item, x => true);
+                        if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.Reward != Reward.Agahnim)
+                        {
+                            if (randomLocation.Region.Locations.Any(x => x.Cleared))
+                            {
+                                Logger.LogInformation("Giving spoiler for {Item}: in dungeon with cleared items", item);
+                                Tracker.Say(string.Format("How do you feel about double dipping?", item.NameWithArticle));
+                                RememberHintGiven(item);
+                                return true;
+                            }
+                            else
+                            {
+                                Logger.LogInformation("Giving spoiler for {Item}: in dungeon without cleared items", item);
+                                Tracker.Say(string.Format("It's in a dungeon you haven't visited yet.", item.NameWithArticle));
+                                RememberHintGiven(item);
+                                return true;
+                            }
+                        }
+
+                        if (randomLocation?.Region.Locations.Any(x => x.Cleared) == true)
+                        {
+                            Logger.LogInformation("Giving spoiler for {Item}: in region with cleared items", item);
+                            Tracker.Say(string.Format("Deja voo, I've just been to this place before", item.NameWithArticle));
+                            RememberHintGiven(item);
+                            return true;
+                        }
+
+                        var randomLocationWithHint = GetRandomItemLocationWithFilter(item,
                             l => Tracker.WorldInfo.Region(l.Region).Hints?.Count > 0);
 
-                        if (randomLocation != null)
+                        if (randomLocationWithHint != null)
                         {
-                            Logger.LogInformation("Giving spoiler for {Item}: in {Region}", item, randomLocation.Region);
-                            var regionHint = Tracker.WorldInfo.Region(randomLocation.Region).Hints;
+                            Logger.LogInformation("Giving spoiler for {Item}: in {Region}", item, randomLocationWithHint.Region);
+                            var regionHint = Tracker.WorldInfo.Region(randomLocationWithHint.Region).Hints;
                             if (regionHint != null && regionHint.Count > 0)
                             {
                                 Tracker.Say(regionHint);
@@ -337,7 +361,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                     break;
 
-                // Give a more precise hint on subsequent attemps
                 case 3:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item,
