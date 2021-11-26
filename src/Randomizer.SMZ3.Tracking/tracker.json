@@ -1131,6 +1131,12 @@
       ],
       "ItemInUnvisitedRegion": [
         "It's in an area you haven't been to yet."
+      ],
+      "ItemHasBadVanillaLocationName": [
+        "It's in {1}. Good luck figuring out what that means."
+      ],
+      "ItemIsInVanillaJunkLocation": [
+        "In the regular game, you can find {1} there. <break strength='weak'/> You're welcome."
       ]
     },
     "Spoilers": {

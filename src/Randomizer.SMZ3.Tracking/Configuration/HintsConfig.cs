@@ -139,8 +139,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Deja voo, I've just been in this place before");
 
         /// <summary>
-        /// Gets the hints for items that are in a region that has not been visited
-        /// yet.
+        /// Gets the hints for items that are in a region that has not been
+        /// visited yet.
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
@@ -148,5 +148,29 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString ItemInUnvisitedRegion { get; init; }
             = new("It's in a place you haven't been yet.");
+
+        /// <summary>
+        /// Gets the hints for items that are in locations that have a bad name
+        /// in the original randomizer.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location
+        /// in the original randomizer code.
+        /// </remarks>
+        public SchrodingersString ItemHasBadVanillaLocationName { get; init; }
+            = new("It's in {1}. Good luck figuring out what that means.");
+
+        /// <summary>
+        /// Gets the hints for items that are in locations which have junk items
+        /// in the vanilla game.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the vanilla
+        /// item in the same location.
+        /// </remarks>
+        public SchrodingersString ItemIsInVanillaJunkLocation { get; init; }
+            = new("In the regular game, you can find {1} there.");
     }
 }

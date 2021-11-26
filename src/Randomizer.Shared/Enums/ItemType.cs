@@ -333,7 +333,7 @@ namespace Randomizer.Shared
         HalfMagic = 0x4E,
 
         [Description("Piece of Heart")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
         HeartPiece = 0x17,
 
         [Description("Heart Container")]
@@ -345,7 +345,7 @@ namespace Randomizer.Shared
         HeartContainerRefill = 0x3F,
 
         [Description("Three Bombs")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
         ThreeBombs = 0x28,
 
         [Description("Single Arrow")]
@@ -365,7 +365,7 @@ namespace Randomizer.Shared
         FiveRupees = 0x35,
 
         [Description("Twenty Rupees")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
         TwentyRupees = 0x36,
 
         [Description("Twenty Rupees")]
@@ -465,11 +465,11 @@ namespace Randomizer.Shared
         CardLowerNorfairBoss = 0xDF,
 
         [Description("Missile")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
         Missile = 0xC2,
 
         [Description("Super Missile")]
-        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Scam, ItemCategory.Junk, ItemCategory.Plentiful)]
         Super = 0xC3,
 
         [Description("Power Bomb")]

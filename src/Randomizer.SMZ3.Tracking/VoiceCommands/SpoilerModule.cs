@@ -16,6 +16,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class SpoilerModule : TrackerModule, IOptionalModule
     {
+        /// <summary>
+        /// Specifies the substrings that indicate a Super Metroid location name
+        /// is a pretty worthless descriptor.
+        /// </summary>
+        private static readonly string[] s_worthlessLocationNameIndicators = new[] {
+            "behind", "top", "bottom", "middle"
+        };
+
         private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
         private readonly Playthrough _playthrough;
 
@@ -269,7 +277,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 // Lv0 hints are the vaguest:
                 // - Is it out of logic?
-                // - Is it only in one game (mostly useful for progression items)
+                // - Is it only in one game (mostly useful for progression
+                //   items)
                 case 0:
                     {
                         var isInLogic = itemLocations.Any(x => x.IsAvailable(progression));
@@ -386,13 +395,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 return GiveItemHint(locationHint, item);
                             }
                         }
-                        else
+
+
+                        randomLocation = GetRandomItemLocationWithFilter(item, x => x.VanillaItem.IsInCategory(ItemCategory.Plentiful));
+                        if (randomLocation != null && randomLocation.VanillaItem.IsInCategory(ItemCategory.Plentiful))
                         {
-                            // If there isn't any location with this item that
-                            // has a hint, let it fall through so tracker can
-                            // tell the player to enable spoilers
-                            Logger.LogInformation("No level 3 hints for {Item}", item);
+                            if (randomLocation.Region is SMRegion
+                                && randomLocation.Name.ContainsAny(StringComparison.OrdinalIgnoreCase, s_worthlessLocationNameIndicators))
+                            {
+                                // Just give the name of the location from the original SMZ3 randomizer code, it's vague enough
+                                return GiveItemHint(x => x.ItemHasBadVanillaLocationName, item, randomLocation.Name);
+                            }
+
+                            var vanillaItem = Tracker.Items.FirstOrDefault(x => x.InternalItemType == randomLocation.VanillaItem);
+                            return GiveItemHint(x => x.ItemIsInVanillaJunkLocation, item, vanillaItem?.Name ?? randomLocation.VanillaItem.GetDescription());
                         }
+
+                        // If there isn't any location with this item that has a
+                        // hint, let it fall through so tracker can tell the
+                        // player to enable spoilers
+                        Logger.LogInformation("No more hints for {Item}", item);
                     }
                     break;
             }
