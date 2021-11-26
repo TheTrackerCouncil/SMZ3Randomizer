@@ -25,6 +25,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         };
 
         private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
+        private readonly Dictionary<int, int> _locationHintsGiven = new();
         private readonly Playthrough _playthrough;
 
         /// <summary>
@@ -152,66 +153,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
+            if (HintsEnabled && GiveLocationHints(location))
+                return;
+
+            if (SpoilersEnabled && GiveLocationSpoiler(location))
+                return;
+
+            if (!HintsEnabled)
+            {
+                Tracker.Say(x => x.Hints.PromptEnableLocationHints);
+                return;
+            }
+
             if (!SpoilersEnabled)
             {
                 Tracker.Say(x => x.Spoilers.PromptEnableLocationSpoilers);
                 return;
             }
-
-            if (location.Item == null || location.Item.Type == ItemType.Nothing)
-            {
-                Tracker.Say(x => x.Spoilers.EmptyLocation, locationName);
-                return;
-            }
-
-            var item = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
-            if (item != null)
-            {
-                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.NameWithArticle);
-                return;
-            }
-            else
-            {
-                Tracker.Say(x => x.Spoilers.LocationHasUnknownItem, locationName, location.Item);
-                return;
-            }
-        }
-
-        internal bool GiveItemLocationSpoiler(ItemData item)
-        {
-            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
-            var reachableLocation = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared)
-                .Where(x => x.IsAvailable(progression))
-                .Random();
-            if (reachableLocation != null)
-            {
-                var locationName = Tracker.WorldInfo.Location(reachableLocation).Name;
-                var regionName = Tracker.WorldInfo.Region(reachableLocation.Region).Name;
-                if (item.Multiple || item.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.NameWithArticle, locationName, regionName);
-                else
-                    Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.NameWithArticle, locationName, regionName);
-                return true;
-            }
-
-            var worldLocation = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared)
-                .Random();
-            if (worldLocation != null)
-            {
-                var locationName = Tracker.WorldInfo.Location(worldLocation).Name;
-                var regionName = Tracker.WorldInfo.Region(worldLocation.Region).Name;
-                if (item.Multiple || item.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
-                else
-                    Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -266,6 +224,172 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return true;
         }
 
+        /// <summary>
+        /// Gives the specified location hint for the specified item.
+        /// </summary>
+        /// <param name="selectHint">Selects the hint to give.</param>
+        /// <param name="location">The lcoation that was asked about.</param>
+        /// <param name="additionalArgs">
+        /// ADditional arguments used to format the hint text.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if a hint was given. <c>false</c> if the selected hint
+        /// was null, empty or returned a <c>null</c> hint.
+        /// </returns>
+        protected virtual bool GiveLocationHint(Func<HintsConfig, SchrodingersString?> selectHint,
+            Location location, params object?[] additionalArgs)
+        {
+            var name = Tracker.WorldInfo.Location(location).Name;
+            var args = Args.Combine(name, additionalArgs);
+            if (!Tracker.Say(responses => selectHint(responses.Hints), args))
+                return false;
+
+            if (_locationHintsGiven.ContainsKey(location.Id))
+                _locationHintsGiven[location.Id]++;
+            else
+                _locationHintsGiven[location.Id] = 1;
+            return true;
+        }
+
+        /// <summary>
+        /// Gives the specified location hint for the specified item.
+        /// </summary>
+        /// <param name="hint">The hint to give.</param>
+        /// <param name="location">The lcoation that was asked about.</param>
+        /// <param name="additionalArgs">
+        /// ADditional arguments used to format the hint text.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if a hint was given. <c>false</c> if the selected hint
+        /// was null, empty or returned a <c>null</c> hint.
+        /// </returns>
+        protected virtual bool GiveLocationHint(SchrodingersString? hint,
+            Location location, params object?[] additionalArgs)
+        {
+            var name = Tracker.WorldInfo.Location(location).Name;
+            var args = Args.Combine(name, additionalArgs);
+            if (!Tracker.Say(hint, args))
+                return false;
+
+            if (_locationHintsGiven.ContainsKey(location.Id))
+                _locationHintsGiven[location.Id]++;
+            else
+                _locationHintsGiven[location.Id] = 1;
+            return true;
+        }
+
+        private bool GiveLocationHints(Location location)
+        {
+            switch (HintsGiven(location))
+            {
+                // Give a vague hint at first: is the item there even from the right game?
+                case 0:
+                    {
+                        if ((location.Region is SMRegion && location.Item.Type.IsInCategory(ItemCategory.Zelda))
+                            || (location.Region is Z3Region && location.Item.Type.IsInCategory(ItemCategory.Metroid)))
+                        {
+                            return GiveLocationHint(x => x.LocationHasItemFromOtherGame, location);
+                        }
+                        else
+                        {
+                            return GiveLocationHint(x => x.LocationHasItemFromCorrectGame, location);
+                        }
+                    }
+
+                // Give a more useful hint: is it useful or not?
+                case 1:
+                    {
+                        if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam)
+                            || (location.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard)
+                                && !Tracker.World.Config.Keysanity))
+                        {
+                            return GiveLocationHint(x => x.LocationHasJunkItem, location);
+                        }
+
+                        var junkCategories = new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass };
+                        if (!Tracker.World.Config.Keysanity)
+                            junkCategories = junkCategories.Concat(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard }).ToArray();
+
+                        if (!location.Item.Type.IsInAnyCategory(junkCategories))
+                        {
+                            return GiveLocationHint(x => x.LocationHasUsefulItem, location);
+                        }
+
+                        return GiveLocationHint(x => x.NoApplicableHints, location);
+                    }
+
+                // Try to give a specific hint
+                case 2:
+                    {
+                        var hint = Tracker.WorldInfo.Location(location).Hints;
+                        if (hint != null && hint.Count > 0)
+                            return GiveLocationHint(hint, location);
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
+        private bool GiveLocationSpoiler(Location location)
+        {
+            var locationName = Tracker.WorldInfo.Location(location).Name;
+            if (location.Item == null || location.Item.Type == ItemType.Nothing)
+            {
+                Tracker.Say(x => x.Spoilers.EmptyLocation, locationName);
+                return true;
+            }
+
+            var item = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
+            if (item != null)
+            {
+                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.NameWithArticle);
+                return true;
+            }
+            else
+            {
+                Tracker.Say(x => x.Spoilers.LocationHasUnknownItem, locationName, location.Item);
+                return true;
+            }
+        }
+
+        private bool GiveItemLocationSpoiler(ItemData item)
+        {
+            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            var reachableLocation = Tracker.World.Locations
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => !x.Cleared)
+                .Where(x => x.IsAvailable(progression))
+                .Random();
+            if (reachableLocation != null)
+            {
+                var locationName = Tracker.WorldInfo.Location(reachableLocation).Name;
+                var regionName = Tracker.WorldInfo.Region(reachableLocation.Region).Name;
+                if (item.Multiple || item.HasStages)
+                    Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.NameWithArticle, locationName, regionName);
+                else
+                    Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.NameWithArticle, locationName, regionName);
+                return true;
+            }
+
+            var worldLocation = Tracker.World.Locations
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => !x.Cleared)
+                .Random();
+            if (worldLocation != null)
+            {
+                var locationName = Tracker.WorldInfo.Location(worldLocation).Name;
+                var regionName = Tracker.WorldInfo.Region(worldLocation.Region).Name;
+                if (item.Multiple || item.HasStages)
+                    Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
+                else
+                    Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
+                return true;
+            }
+
+            return false;
+        }
+
         private bool GiveItemLocationHint(ItemData item)
         {
             var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
@@ -278,7 +402,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Lv0 hints are the vaguest:
                 // - Is it out of logic?
                 // - Is it only in one game (mostly useful for progression
-                //   items)
+                // items)
                 case 0:
                     {
                         var isInLogic = itemLocations.Any(x => x.IsAvailable(progression));
@@ -396,14 +520,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             }
                         }
 
-
                         randomLocation = GetRandomItemLocationWithFilter(item, x => x.VanillaItem.IsInCategory(ItemCategory.Plentiful));
                         if (randomLocation != null && randomLocation.VanillaItem.IsInCategory(ItemCategory.Plentiful))
                         {
                             if (randomLocation.Region is SMRegion
                                 && randomLocation.Name.ContainsAny(StringComparison.OrdinalIgnoreCase, s_worthlessLocationNameIndicators))
                             {
-                                // Just give the name of the location from the original SMZ3 randomizer code, it's vague enough
+                                // Just give the name of the location from the
+                                // original SMZ3 randomizer code, it's vague
+                                // enough
                                 return GiveItemHint(x => x.ItemHasBadVanillaLocationName, item, randomLocation.Name);
                             }
 
@@ -420,9 +545,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             return false;
-
-            int HintsGiven(ItemData item) => _itemHintsGiven.GetValueOrDefault(item.InternalItemType, 0);
         }
+
+        private int HintsGiven(ItemData item) => _itemHintsGiven.GetValueOrDefault(item.InternalItemType, 0);
+
+        private int HintsGiven(Location location) => _locationHintsGiven.GetValueOrDefault(location.Id, 0);
 
         private Location? GetRandomItemLocationWithFilter(ItemData item, Func<Location, bool> predicate)
         {

@@ -117,7 +117,10 @@
       "Name": "Fire Rod",
       "InternalItemType": 7,
       "Column": 0,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "You could use it to set things on fire."
+      ]
     },
     {
       "Name": [ "Ice Rod", "Nice Rod" ],
@@ -188,7 +191,10 @@
       "Name": "Lamp",
       "InternalItemType": 18,
       "Column": 0,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You could use it to set things on fire."
+      ]
     },
     {
       "Name": [
@@ -1091,6 +1097,9 @@
       "PromptEnableItemHints": [
         "If you want me to give a hint, say 'Hey tracker, enable hints'."
       ],
+      "PromptEnableLocationHints": [
+        "If you want me to give a hint, say 'Hey tracker, enable hints'."
+      ],
       "NoApplicableHints": [
         "Reply hazy, try again.",
         "Ask again later.",
@@ -1145,6 +1154,22 @@
       ],
       "ItemIsInVanillaJunkLocation": [
         "In the regular game, you can find {1} there. <break strength='weak'/> You're welcome."
+      ],
+      "LocationHasJunkItem": [
+        "There's nothing important there.",
+        "I wouldn't bother going there.",
+        "I wouldn't bother."
+      ],
+      "LocationHasUsefulItem": [
+        "It might be worth checking out.",
+        "Could have something good."
+      ],
+      "LocationHasItemFromOtherGame": [
+        "It's got something from a different universe.",
+        "The item there doesn't belong in that game."
+      ],
+      "LocationHasItemFromCorrectGame": [
+        "The item there is in the correct game, at least."
       ]
     },
     "Spoilers": {

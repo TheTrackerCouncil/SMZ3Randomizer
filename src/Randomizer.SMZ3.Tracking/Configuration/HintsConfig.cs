@@ -27,6 +27,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("If you want me to give a hint, say 'Hey tracker, enable hints'.");
 
         /// <summary>
+        /// Gets the phrases to respond with when asked about a location and
+        /// hints are turned off.
+        /// </summary>
+        public SchrodingersString PromptEnableLocationHints { get; init; }
+            = new("If you want me to give a hint, say 'Hey tracker, enable hints'.");
+
+        /// <summary>
         /// Gets the phrases to respond with when there are no applicable hints
         /// for the item or location that was asked about.
         /// </summary>
@@ -172,5 +179,41 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString ItemIsInVanillaJunkLocation { get; init; }
             = new("In the regular game, you can find {1} there.");
+
+        /// <summary>
+        /// Gets the hints for locations that don't have anything useful.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is placeholder for the name of the location.
+        /// </remarks>
+        public SchrodingersString LocationHasJunkItem { get; init; }
+            = new("There's nothing important there.");
+
+        /// <summary>
+        /// Gets the hints for locations that might have something useful.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is placeholder for the name of the location.
+        /// </remarks>
+        public SchrodingersString LocationHasUsefulItem { get; init; }
+            = new("It might be worth checking out.");
+
+        /// <summary>
+        /// Gets the hints for locations that have an item from the other game.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is placeholder for the name of the location.
+        /// </remarks>
+        public SchrodingersString LocationHasItemFromOtherGame { get; init; }
+            = new("It's got something from a different universe.");
+
+        /// <summary>
+        /// Gets the hints for locations that have an item from the correct game.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is placeholder for the name of the location.
+        /// </remarks>
+        public SchrodingersString LocationHasItemFromCorrectGame { get; init; }
+            = new("The item there is in the correct game, at least.");
     }
 }
