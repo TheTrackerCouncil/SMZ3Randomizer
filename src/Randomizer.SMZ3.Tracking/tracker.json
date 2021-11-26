@@ -482,7 +482,15 @@
         "2": [
           "Titan's Mitt",
           "Tiddy Mitts",
-          [ "Itty Bitty Titty Mitty", 0.01 ]
+          [ "Itty Bitty Titty Mitty", 0.1 ]
+        ]
+      },
+      "WhenTracked": {
+        "2": [
+          "Toggled Tiddy Mitts on,",
+          "Congratulations with your new Tiddy Mitts.",
+          [ "Toggled Itty Bitty Titty Mitty on", 0.2 ],
+          [ "Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.", 0.05 ]
         ]
       }
     },
