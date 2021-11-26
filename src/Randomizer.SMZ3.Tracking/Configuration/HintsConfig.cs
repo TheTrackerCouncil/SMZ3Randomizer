@@ -137,5 +137,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString ItemInPreviouslyVisitedRegion { get; init; }
             = new("Deja voo, I've just been in this place before");
+
+        /// <summary>
+        /// Gets the hints for items that are in a region that has not been visited
+        /// yet.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the".
+        /// </remarks>
+        public SchrodingersString ItemInUnvisitedRegion { get; init; }
+            = new("It's in a place you haven't been yet.");
     }
 }

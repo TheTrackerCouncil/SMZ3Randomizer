@@ -1126,8 +1126,11 @@
         "It's in a dungeon you haven't visited yet."
       ],
       "ItemInPreviouslyVisitedRegion": [
-        "It's in a place you've been before.",
+        "It's in an area you've been before.",
         "Deja voo, I've just been in this place before"
+      ],
+      "ItemInUnvisitedRegion": [
+        "It's in an area you haven't been to yet."
       ]
     },
     "Spoilers": {

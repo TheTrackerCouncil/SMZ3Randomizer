@@ -267,8 +267,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             switch (HintsGiven(item))
             {
-                // If unobtainable, give hint about that. Otherwise, give hint
-                // about where the item is NOT
+                // Lv0 hints are the vaguest:
+                // - Is it out of logic?
+                // - Is it only in one game (mostly useful for progression items)
                 case 0:
                     {
                         var isInLogic = itemLocations.Any(x => x.IsAvailable(progression));
@@ -286,6 +287,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }
 
+                // Lv1 hints are still pretty vague:
+                // - Is it early or late?
+                // - Where will you NOT find it?
                 case 1:
                     {
                         if (!itemLocations.Any(x => x.IsAvailable(progression)))
@@ -319,6 +323,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }
 
+                // Lv2 hints are less vague still: have you there or not?
+                // - Is it in a dungeon? Have you been there before or not?
+                // - Is it in an area you've been before?
                 case 2:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item, x => true);
@@ -332,8 +339,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                         if (randomLocation?.Region.Locations.Any(x => x.Cleared) == true)
                             return GiveItemHint(x => x.ItemInPreviouslyVisitedRegion, item);
+                        else
+                            return GiveItemHint(x => x.ItemInUnvisitedRegion, item);
+                    }
 
-                        // Get a hint for the region
+                // Lv3 hints give a clue about the actual region it is in.
+                case 3:
+                    {
                         var randomLocationWithHint = GetRandomItemLocationWithFilter(item,
                             l => Tracker.WorldInfo.Region(l.Region).Hints?.Count > 0);
                         if (randomLocationWithHint != null)
@@ -346,7 +358,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }
 
-                case 3:
+                // Lv4 hints give a clue about the room or location itself
+                case 4:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item,
                             location =>

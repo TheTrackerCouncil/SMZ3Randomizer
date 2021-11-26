@@ -4,6 +4,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar",
       "Name": [
         "Blue Brinstar"
+      ],
+      "Hints": [
+        "Samus might have been there before."
       ]
     },
     {
@@ -119,6 +122,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
       "Name": [
         "Dark World Mire"
+      ],
+      "Hints": [
+        "It's in a wet place."
       ]
     },
     {
