@@ -108,7 +108,10 @@
       "Name": [ "Mother Brain" ],
       "InternalItemType": 0,
       "Column": 9,
-      "Row": 6
+      "Row": 6,
+      "WhenTracked": {
+        "1": [ "GG", "Is it finally over? Can I go home now?" ]
+      }
     },
     {
       "Name": "Fire Rod",
@@ -859,6 +862,9 @@
     ],
     "StoppedTracking": [
       "Leaving so soon?",
+      "Toggled Tracker off."
+    ],
+    "StoppedTrackingPostGoMode": [
       "Toggled Tracker off.",
       "Hey, you'll be missed pal."
     ],

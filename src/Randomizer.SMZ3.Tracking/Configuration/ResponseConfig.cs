@@ -19,6 +19,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? StoppedTracking { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when tracker stops after go mode
+        /// has been turned on.
+        /// </summary>
+        public SchrodingersString? StoppedTrackingPostGoMode { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when speech recognition confidence
         /// does not meet the configured threshold for execution, but is high
         /// enough to be recognized.

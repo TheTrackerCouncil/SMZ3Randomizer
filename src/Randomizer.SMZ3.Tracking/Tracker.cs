@@ -665,7 +665,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             DisableVoiceRecognition();
             _tts.SpeakAsyncCancelAll();
-            Say(Responses.StoppedTracking, wait: true);
+            Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
             foreach (var timer in _idleTimers.Values)
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
