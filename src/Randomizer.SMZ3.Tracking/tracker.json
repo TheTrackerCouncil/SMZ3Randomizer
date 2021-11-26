@@ -1091,7 +1091,9 @@
         "Concentrate and ask again."
       ],
       "ItemNotInLogic": [
-        "You need something else before you can find {0}."
+        "You need something else before you can find {0}.",
+        "{0} is out of logic right now.",
+        "{0} is not yet available to you."
       ],
       "ItemInSuperMetroid": [
         "You might find {0} on a strange planet.",
@@ -1103,8 +1105,8 @@
         "You might find {0} in a world of light and dark."
       ],
       "ItemNotInArea": [
-        "Don't bother going to {1}.",
-        "You won't find {0} in {1}."
+        "You won't find {0} in {1}.",
+        "You won't have to search {1} for {0}, at least."
       ],
       "ItemInSphereZero": [
         "How have you not found {0} yet?"

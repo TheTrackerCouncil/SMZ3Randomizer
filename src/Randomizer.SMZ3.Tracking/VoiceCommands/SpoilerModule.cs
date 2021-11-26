@@ -283,16 +283,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         if (isOnlyInALinkToThePast)
                             return GiveItemHint(x => x.ItemInALttP, item);
 
-                        var regionWithoutItem = Tracker.World.Locations
-                            .Except(itemLocations)
-                            .Select(x => x.Region)
-                            .Random();
-                        if (regionWithoutItem != null)
-                            return GiveItemHint(x => x.ItemNotInArea, item, regionWithoutItem.Area);
-
-                        // In the unlikely event it's in every region: Increase
-                        // the counter and let the player try again for a more
-                        // specific hint.
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }
 
@@ -308,13 +298,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         var sphere = _playthrough.Spheres.IndexOf(x => x.Items.Any(i => i.Type == item.InternalItemType));
                         var earlyThreshold = Math.Floor(_playthrough.Spheres.Count * 0.25);
                         var lateThreshold = Math.Ceiling(_playthrough.Spheres.Count * 0.75);
-                        Logger.LogDebug("Giving spoiler for {Item}: sphere {Sphere}, early: {Early}, late: {Late}", item, sphere, earlyThreshold, lateThreshold);
+                        Logger.LogDebug("{Item} spoiler: sphere {Sphere}, early: {Early}, late: {Late}", item, sphere, earlyThreshold, lateThreshold);
                         if (sphere == 0)
                             return GiveItemHint(x => x.ItemInSphereZero, item);
                         if (sphere <= earlyThreshold)
                             return GiveItemHint(x => x.ItemInEarlySphere, item);
                         if (sphere >= lateThreshold)
                             return GiveItemHint(x => x.ItemInLateSphere, item);
+
+                        var areaWithoutItem = Tracker.World.Regions
+                            .GroupBy(x => x.Area)
+                            .Where(x => !x.SelectMany(x => x.Locations)
+                                          .Where(x => !x.Cleared)
+                                          .Any(l => l.Item.Type == item.InternalItemType))
+                            .Select(x => x.Key)
+                            .Random();
+                        if (areaWithoutItem != null)
+                            return GiveItemHint(x => x.ItemNotInArea, item, areaWithoutItem);
 
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }
@@ -333,9 +333,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         if (randomLocation?.Region.Locations.Any(x => x.Cleared) == true)
                             return GiveItemHint(x => x.ItemInPreviouslyVisitedRegion, item);
 
+                        // Get a hint for the region
                         var randomLocationWithHint = GetRandomItemLocationWithFilter(item,
                             l => Tracker.WorldInfo.Region(l.Region).Hints?.Count > 0);
-
                         if (randomLocationWithHint != null)
                         {
                             var regionHint = Tracker.WorldInfo.Region(randomLocationWithHint.Region).Hints;
