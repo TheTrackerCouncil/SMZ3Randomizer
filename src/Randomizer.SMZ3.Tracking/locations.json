@@ -446,13 +446,27 @@
       "Y": 906,
       "Abbreviation": "HC",
       "Boss": [
-        [ "Agahnim", 0 ],
-        "Aganihm"
+        "Ball and Chain Soldier"
       ],
       "Column": 5,
       "Row": 5,
       "TreasureRemaining": 6,
       "HasReward": false
+    },
+    {
+      "Name": [ "Agahnim's Tower", "Castle Tower" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
+      "Abbreviation": "AT",
+      "Boss": [
+        [ "Agahnim", 0 ],
+        "Aganihm"
+      ],
+      "Column": 6,
+      "Row": 5,
+      "TreasureRemaining": 0,
+      "HasReward": true,
+      "Reward": 6
     }
   ],
   "Rooms": [

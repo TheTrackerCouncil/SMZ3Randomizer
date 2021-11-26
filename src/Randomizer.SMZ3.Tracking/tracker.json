@@ -58,7 +58,7 @@
         [ "Kraid's Awful Son's Father", 0.01 ]
       ],
       "InternalItemType": 0,
-      "Column": 6,
+      "Column": 7,
       "Row": 5,
       "WhenTracked": {
         "1": [ "Toggled Kraid on. Watch out for his awful son on the way out." ]
@@ -68,7 +68,7 @@
       "Name": [ "Crocomire" ],
       "Image": "stoke.png",
       "InternalItemType": 0,
-      "Column": 7,
+      "Column": 8,
       "Row": 5
     },
     {
@@ -77,7 +77,7 @@
         [ "Spooky Ghost", 0.25 ]
       ],
       "InternalItemType": 0,
-      "Column": 8,
+      "Column": 9,
       "Row": 5
     },
     {
@@ -102,6 +102,12 @@
       "Name": [ "Ridley" ],
       "InternalItemType": 0,
       "Column": 8,
+      "Row": 6
+    },
+    {
+      "Name": [ "Mother Brain" ],
+      "InternalItemType": 0,
+      "Column": 9,
       "Row": 6
     },
     {
@@ -454,7 +460,10 @@
         "2": [ "Red Mail" ]
       },
       "Column": 6,
-      "Row": 4
+      "Row": 4,
+      "WhenTracked": {
+        "1": [ "You've got mail!" ]
+      }
     },
     {
       "Name": [

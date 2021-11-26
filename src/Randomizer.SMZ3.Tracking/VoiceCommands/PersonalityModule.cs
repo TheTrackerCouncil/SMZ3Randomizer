@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Speech.Synthesis;
 using System.Text;
@@ -27,6 +28,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 tracker.Say(tracker.Responses.Moods[tracker.Mood]);
             });
 
+            AddCommand("Hey, ya missed pal", GetYaMissedRule(), (tracker, result) =>
+            {
+                tracker.Say("Here Mike. This will explain everything.", wait: true);
+                OpenInBrowser(new Uri("https://www.youtube.com/watch?v=5P6UirFDdxM"));
+            });
+
             foreach (var request in tracker.Requests)
             {
                 if (request.Phrases.Count == 0)
@@ -52,6 +59,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("how are you?", "how are you doing?", "how are you feeling?");
         }
 
+        private GrammarBuilder GetYaMissedRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Append("what do you know about")
+                .OneOf("your missing steak knives?", "my shoes getting bloody?");
+        }
+
         private GrammarBuilder GetRequestRule(IEnumerable<string> requests)
         {
             return new GrammarBuilder(requests.Select(x =>
@@ -60,6 +75,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     .Append("Hey tracker, ")
                     .Append(x);
             }));
+        }
+
+        private static void OpenInBrowser(Uri address)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = address.ToString(),
+                UseShellExecute= true
+            };
+            Process.Start(startInfo);
         }
     }
 }

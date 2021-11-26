@@ -42,7 +42,13 @@ namespace Randomizer.Shared
         /// Specifies the reward is the blue pendant.
         /// </summary>
         [Description("Blue pendant")]
-        BluePendant = 5
+        BluePendant = 5,
+
+        /// <summary>
+        /// Specifies the "reward" is Agahnim.
+        /// </summary>
+        [Description("Agahnim")]
+        Agahnim = 6,
     }
 
 }
