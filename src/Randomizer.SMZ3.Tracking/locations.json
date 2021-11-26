@@ -4,6 +4,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar",
       "Name": [
         "Blue Brinstar"
+      ],
+      "Hints": [
+        "Samus might have been there before."
       ]
     },
     {
@@ -53,18 +56,28 @@
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.InnerMaridia",
       "Name": [
         "Inner Maridia"
+      ],
+      "Hints": [
+        "You should go see Shaktool when you're in the area.",
+        "It's in a wet place."
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.OuterMaridia",
       "Name": [
         "Outer Maridia"
+      ],
+      "Hints": [
+        "It's in a wet place."
       ]
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.LowerNorfairEast",
       "Name": [
         "Lower Norfair, East"
+      ],
+      "Hints": [
+        "I heard Ridley hangs out around there."
       ]
     },
     {
@@ -109,6 +122,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
       "Name": [
         "Dark World Mire"
+      ],
+      "Hints": [
+        "It's in a wet place."
       ]
     },
     {
@@ -121,6 +137,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
       "Name": [
         "Dark World North West"
+      ],
+      "Hints": [
+        "Check around the villages."
       ]
     },
     {
@@ -146,6 +165,9 @@
       "Name": [
         "Desert Palace",
         "Dessert Palace"
+      ],
+      "Hints": [ 
+        "I don't like sand. It's coarse, rough and irritating, and it gets everywhere."
       ]
     },
     {
@@ -158,6 +180,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
       "Name": [
         "Ganon's Tower"
+      ],
+      "Hints": [
+        "I hope you don't need it."
       ]
     },
     {
@@ -170,6 +195,10 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.IcePalace",
       "Name": [
         "Ice Palace"
+      ],
+      "Hints": [ 
+        "Are you going to break the ice?", 
+        "You're not sending ME to cooler!"
       ]
     },
     {
@@ -194,6 +223,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest",
       "Name": [
         "Light World North West"
+      ],
+      "Hints": [
+        "Check around the villages."
       ]
     },
     {
@@ -206,6 +238,11 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
       "Name": [
         "Misery Mire"
+      ],
+      "Hints": [
+        "It's pretty miserable.",
+        "It's in a wet place.",
+        "You need a medallion to get in there."
       ]
     },
     {
@@ -226,6 +263,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace",
       "Name": [
         "Swamp Palace"
+      ],
+      "Hints": [
+        "It's in a wet place."
       ]
     },
     {
@@ -244,6 +284,9 @@
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
       "Name": [
         "Turtle Rock"
+      ],
+      "Hints": [
+        "You need a medallion to get in there."
       ]
     }
   ],
@@ -409,13 +452,27 @@
       "Y": 906,
       "Abbreviation": "HC",
       "Boss": [
-        [ "Agahnim", 0 ],
-        "Aganihm"
+        "Ball and Chain Soldier"
       ],
       "Column": 5,
       "Row": 5,
       "TreasureRemaining": 6,
       "HasReward": false
+    },
+    {
+      "Name": [ "Agahnim's Tower", "Castle Tower" ],
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower",
+      "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
+      "Abbreviation": "AT",
+      "Boss": [
+        [ "Agahnim", 0 ],
+        "Aganihm"
+      ],
+      "Column": 6,
+      "Row": 5,
+      "TreasureRemaining": 0,
+      "HasReward": true,
+      "Reward": 6
     }
   ],
   "Rooms": [
@@ -543,7 +600,7 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower+DMsRoomRoom",
       "Name": [
-        "DMs Room"
+        "DM's Room"
       ]
     },
     {
@@ -1318,7 +1375,8 @@
         [ "Energy Tank, Ridley", 0 ]
       ],
       "X": 760,
-      "Y": 628
+      "Y": 628,
+      "Hints": [ "I hear Ridley is about to open one of Kraid's Christmas presents again." ]
     },
     {
       "Id": 79,
@@ -1669,7 +1727,8 @@
         "Ped"
       ],
       "X": 83,
-      "Y": 101
+      "Y": 101,
+      "Hints": [ "I hope you don't need it." ]
     },
     {
       "Id": 271,
@@ -1788,7 +1847,10 @@
         "Bottle Merchant"
       ],
       "X": 190,
-      "Y": 933
+      "Y": 933,
+      "Hints": [
+        "You know it's a scam, right?"
+      ]
     },
     {
       "Id": 289,
@@ -1821,6 +1883,9 @@
       "Name": [
         "Zora",
         "King Zora"
+      ],
+      "Hints": [
+        "You know it's a scam, right?"
       ]
     },
     {
@@ -2058,7 +2123,10 @@
         "Lake of Ill Omen"
       ],
       "X": 1813,
-      "Y": 347
+      "Y": 347,
+      "Hints": [
+        "You know it's a scam, right?"
+      ]
     },
     {
       "Id": 335,
@@ -2258,6 +2326,9 @@
       "Id": 364,
       "Name": [
         "Armos Knights"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2300,6 +2371,9 @@
       "Id": 370,
       "Name": [
         "Lanmolas"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2337,6 +2411,9 @@
       "Id": 376,
       "Name": [
         "Moldorm"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2426,6 +2503,9 @@
       "Id": 390,
       "Name": [
         "Helmasaur King"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2487,6 +2567,9 @@
       "Id": 400,
       "Name": [
         "Arrghus"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2545,6 +2628,9 @@
       "Id": 408,
       "Name": [
         "Mothula"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2596,6 +2682,10 @@
       "Id": 416,
       "Name": [
         "Blind"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it.",
+        "It will explain everything."
       ]
     },
     {
@@ -2647,6 +2737,9 @@
       "Id": 424,
       "Name": [
         "Kholdstare"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2697,6 +2790,9 @@
       "Id": 432,
       "Name": [
         "Vitreous"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
@@ -2774,15 +2870,16 @@
     {
       "Id": 444,
       "Name": [
-        "Trinexx",
-        [ "Turtle Rock Trinexx", 0 ]
+        "Trinexx"
+      ],
+      "Hints": [
+        "One of the dungeon bosses has it."
       ]
     },
     {
       "Id": 445,
       "Name": [
-        "Bob's Torch",
-        [ "Ganon's Tower Bob's Torch", 0 ]
+        "Bob's Torch"
       ]
     },
     {
@@ -2818,8 +2915,7 @@
     {
       "Id": 451,
       "Name": [
-        "Firesnake Room",
-        [ "Ganon's Tower Firesnake Room", 0 ]
+        "Firesnake Room"
       ]
     },
     {

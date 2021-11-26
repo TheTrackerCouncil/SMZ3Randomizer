@@ -46,13 +46,21 @@
         Keycard,
 
         /// <summary>
-        /// The item is not worth paying 500 rupees for, but not necessarily junk.
+        /// The item is not worth paying 500 rupees for, but not necessarily
+        /// junk.
         /// </summary>
         Scam,
 
         /// <summary>
-        /// The item is considered junk (e.g. arrows, rupees, capacity upgrades).
+        /// The item is considered junk (e.g. arrows, rupees, capacity
+        /// upgrades).
         /// </summary>
         Junk,
+
+        /// <summary>
+        /// The item is especially numerious and can be found in a large number
+        /// of locations.
+        /// </summary>
+        Plentiful
     }
 }

@@ -82,9 +82,7 @@ namespace Randomizer.SMZ3.Generation
             Filler.SetRandom(rng);
             Filler.Fill(worlds, config, cancellationToken);
 
-            var playthrough = new Playthrough(worlds, config);
-            var spheres = playthrough.Generate();
-
+            var playthrough = Playthrough.Generate(worlds, config);
             var seedData = new SeedData
             {
                 Guid = Guid.NewGuid().ToString("N"),
@@ -92,7 +90,7 @@ namespace Randomizer.SMZ3.Generation
                 Game = Name,
                 Mode = config.GameMode.ToLowerString(),
                 Logic = $"{config.SMLogic.ToLowerString()}+{config.Z3Logic.ToLowerString()}",
-                Playthrough = config.Race ? new List<Dictionary<string, string>>() : spheres,
+                Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
 

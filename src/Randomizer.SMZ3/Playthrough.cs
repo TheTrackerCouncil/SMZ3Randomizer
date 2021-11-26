@@ -1,25 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
-using Randomizer.Shared;
-using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3
 {
-    internal class Playthrough
+    public class Playthrough
     {
-        private readonly List<World> worlds;
-        private readonly Config config;
-
-        public Playthrough(List<World> worlds, Config config)
+        public Playthrough(Config config, IEnumerable<Sphere> spheres)
         {
-            this.worlds = worlds;
-            this.config = config;
+            Config = config;
+            Spheres = spheres.ToImmutableList();
         }
 
-        public List<Dictionary<string, string>> Generate()
+        public Config Config { get; }
+
+        public IReadOnlyList<Sphere> Spheres { get; }
+
+        public static bool IsImportant(Location location, bool keysanity)
+            => (keysanity && (location.Item.Progression || location.Item.IsDungeonItem || location.Item.IsKeycard))
+            || (!keysanity && location.Item.Progression);
+
+        public static Playthrough Generate(IReadOnlyCollection<World> worlds, Config config)
         {
-            var spheres = new List<Dictionary<string, string>>();
+            var spheres = new List<Sphere>();
             var locations = new List<Location>();
             var items = new List<Item>();
 
@@ -34,7 +38,7 @@ namespace Randomizer.SMZ3
             var totalItemCount = worlds.SelectMany(w => w.Items).Count();
             while (items.Count < totalItemCount)
             {
-                var sphere = new Dictionary<string, string>();
+                var sphere = new Sphere();
 
                 var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w)));
                 var newLocations = allLocations.Except(locations).ToList();
@@ -49,62 +53,58 @@ namespace Randomizer.SMZ3
                     if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count))
                         throw new Exception("Too many inaccessible items, seed likely impossible.");
 
-                    var n = 0;
-                    foreach (var location in inaccessibleLocations)
-                    {
-                        if (config.MultiWorld)
-                        {
-                            sphere.Add($"Inaccessible Item #{n += 1}: {location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
-                        }
-                        else
-                        {
-                            sphere.Add($"Inaccessible Item #{n += 1}: {location}", $"{location.Item.Name}");
-                        }
-                    }
-                    spheres.Add(sphere);
+                    sphere.InaccessibleLocations.AddRange(inaccessibleLocations);
                     break;
                 }
 
-                foreach (var location in newLocations)
-                {
-                    if ((config.Keysanity && !location.Item.Progression && !location.Item.IsDungeonItem && !location.Item.IsKeycard)
-                        || (!config.Keysanity && !location.Item.Progression))
-                    {
-                        continue;
-                    }
-
-                    if (config.MultiWorld)
-                    {
-                        sphere.Add($"{location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
-                    }
-                    else
-                    {
-                        sphere.Add($"{location}", $"{location.Item.Name}");
-                    }
-                }
+                sphere.Locations.AddRange(newLocations);
+                sphere.Items.AddRange(newItems);
                 spheres.Add(sphere);
 
                 if (spheres.Count > 100)
                     throw new Exception("Too many spheres, seed likely impossible.");
             }
 
-            /* Add Crystal/Pendant Prizes to playthrough */
-            var rewardSphere = new Dictionary<string, string>();
-            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<IHasReward>().Where(r => r.Reward != Reward.GoldenFourBoss && r.Reward != Reward.Agahnim)))
+            return new Playthrough(config, spheres);
+        }
+
+        public List<Dictionary<string, string>> GetPlaythroughText()
+        {
+            return Spheres.Select(x =>
             {
-                var regionName = $"{((Region)region).Name}{(config.MultiWorld ? $" - {((Region)region).World.Player}" : "")}";
-                rewardSphere.Add($"Prize - {regionName}", region.Reward.GetDescription());
+                var text = new Dictionary<string, string>();
+
+                foreach (var location in x.InaccessibleLocations)
+                {
+                    if (Config.MultiWorld)
+                        text.Add($"Inaccessible Item: {location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
+                    else
+                        text.Add($"Inaccessible Item: {location}", $"{location.Item.Name}");
+                }
+
+                foreach (var location in x.Locations.Where(x => IsImportant(x, Config.Keysanity)))
+                {
+                    if (Config.MultiWorld)
+                        text.Add($"{location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
+                    else
+                        text.Add($"{location}", $"{location.Item.Name}");
+                }
+
+                return text;
+            }).ToList();
+        }
+
+        public class Sphere
+        {
+            public Sphere()
+            {
             }
 
-            /* Add Medallion requirements to playthrough */
-            foreach (var region in worlds.SelectMany(w => w.Regions.OfType<INeedsMedallion>()))
-            {
-                var regionName = $"{((Region)region).Name}{(config.MultiWorld ? $" - {((Region)region).World.Player}" : "")}";
-                rewardSphere.Add($"Medallion Required - {regionName}", region.Medallion.GetDescription());
-            }
+            public List<Location> Locations { get; } = new();
 
-            spheres.Add(rewardSphere);
-            return spheres;
+            public List<Item> Items { get; } = new();
+
+            public List<Location> InaccessibleLocations { get; } = new();
         }
     }
 }

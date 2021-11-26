@@ -7,14 +7,17 @@ using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Threading;
 using System.Threading.Tasks;
+
+using BunLabs;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
-using BunLabs;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -24,6 +27,7 @@ namespace Randomizer.SMZ3.Tracking
     /// </summary>
     public class Tracker : IDisposable
     {
+        private const int RepeatRateModifier = 2;
         private static readonly Random s_random = new();
 
         private readonly SpeechSynthesizer _tts;
@@ -33,11 +37,11 @@ namespace Randomizer.SMZ3.Tracking
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
         private readonly RandomizerContext _dbContext;
+
         private DateTime _startTime = DateTime.MinValue;
-
         private bool _disposed;
-
         private string? _mood;
+        private string? _lastSpokenText;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -91,7 +95,8 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Occurs when any speech was recognized, regardless of configured thresholds.
+        /// Occurs when any speech was recognized, regardless of configured
+        /// thresholds.
         /// </summary>
         public event EventHandler<TrackerEventArgs>? SpeechRecognized;
 
@@ -223,6 +228,21 @@ namespace Randomizer.SMZ3.Tracking
                 return _mood;
             }
         }
+
+        /// <summary>
+        /// The previous saved elapsed time
+        /// </summary>
+        public TimeSpan SavedElapsedTime { get; set; }
+
+        /// <summary>
+        /// The total elapsed time including the previously saved time
+        /// </summary>
+        public TimeSpan TotalElapsedTime => SavedElapsedTime + (DateTime.Now - (_startTime == DateTime.MinValue ? DateTime.Now : _startTime));
+
+        /// <summary>
+        /// Get if the Tracker has been updated since it was last saved
+        /// </summary>
+        public bool IsDirty { get; set; }
 
         /// <summary>
         /// Initializes the microphone from the default audio device
@@ -639,23 +659,13 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// The previous saved elapsed time
-        /// </summary>
-        public TimeSpan SavedElapsedTime { get; set; }
-
-        /// <summary>
-        /// The total elapsed time including the previously saved time
-        /// </summary>
-        public TimeSpan TotalElapsedTime => SavedElapsedTime + (DateTime.Now - (_startTime == DateTime.MinValue ? DateTime.Now : _startTime));
-
-        /// <summary>
         /// Stops voice recognition.
         /// </summary>
         public virtual void StopTracking()
         {
             DisableVoiceRecognition();
             _tts.SpeakAsyncCancelAll();
-            Say(Responses.StoppedTracking, wait: true);
+            Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
             foreach (var timer in _idleTimers.Values)
                 timer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -688,21 +698,87 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Speak a sentence using text-to-speech.
         /// </summary>
+        /// <param name="text">The possible sentences to speak.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+        /// name="text"/> was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(SchrodingersString? text)
+        {
+            if (text == null)
+                return false;
+
+            return Say(text.ToString());
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="selectResponse">Selects the response to use.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse)
+        {
+            return Say(selectResponse(Responses));
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="text">The possible sentences to speak.</param>
+        /// <param name="args">The arguments used to format the text.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+        /// name="text"/> was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(SchrodingersString? text, params object?[] args)
+        {
+            if (text == null)
+                return false;
+
+            return Say(text.Format(args), wait: false);
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
+        /// <param name="selectResponse">Selects the response to use.</param>
+        /// <param name="args">The arguments used to format the text.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
+        {
+            return Say(selectResponse(Responses), args);
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech.
+        /// </summary>
         /// <param name="text">The phrase to speak.</param>
         /// <param name="wait">
         /// <c>true</c> to wait until the text has been spoken completely or
         /// <c>false</c> to immediately return. The default is <c>false</c>.
         /// </param>
-        public virtual void Say(string? text, bool wait = false)
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool Say(string? text, bool wait = false)
         {
             if (text == null)
-                return;
+                return false;
 
             var prompt = ParseText(text);
             if (wait)
                 _tts.Speak(prompt);
             else
                 _tts.SpeakAsync(prompt);
+            _lastSpokenText = text;
+            return true;
 
             static Prompt ParseText(string text)
             {
@@ -715,6 +791,32 @@ namespace Randomizer.SMZ3.Tracking
                 prompt.AppendSsmlMarkup(text);
                 return new Prompt(prompt);
             }
+        }
+
+        /// <summary>
+        /// Repeats the most recently spoken sentence using text-to-speech at a
+        /// slower rate.
+        /// </summary>
+        public virtual void Repeat()
+        {
+            if (_lastSpokenText == null)
+            {
+                Say("I haven't said anything yet.");
+                return;
+            }
+
+            _tts.Speak("I said");
+            _tts.Rate -= RepeatRateModifier;
+            Say(_lastSpokenText, wait: true);
+            _tts.Rate += RepeatRateModifier;
+        }
+
+        /// <summary>
+        /// Makes Tracker stop talking.
+        /// </summary>
+        public virtual void ShutUp()
+        {
+            _tts.SpeakAsyncCancelAll();
         }
 
         /// <summary>
@@ -919,7 +1021,6 @@ namespace Randomizer.SMZ3.Tracking
             {
                 Say(Responses.UntrackedItem.Format(item.Name, item.NameWithArticle));
             }
-
 
             IsDirty = true;
             OnItemTracked(new(null, confidence));
@@ -1151,8 +1252,8 @@ namespace Randomizer.SMZ3.Tracking
                     OnDungeonUpdated(new(confidence));
                 }
 
-                // If there is only one (available) item here, just call the regular
-                // TrackItem instead
+                // If there is only one (available) item here, just call the
+                // regular TrackItem instead
                 var onlyLocation = locations.TrySingle();
                 if (onlyLocation != null)
                 {
@@ -1204,8 +1305,8 @@ namespace Randomizer.SMZ3.Tracking
                     }
 
                     // TODO: Include the most noteworthy item (by item value, once added
-                    // to data), e.g. "Tracked 5 items in Mini Moldorm Cave, including
-                    // the Morph Ball"
+                    // to data), e.g. "Tracked 5 items in Mini Moldorm Cave,
+                    // including the Morph Ball"
                     var responses = trackItems ? Responses.TrackedMultipleItems : Responses.ClearedMultipleItems;
                     Say(responses.Format(itemsTracked, area.GetName()));
 
@@ -1755,13 +1856,5 @@ namespace Randomizer.SMZ3.Tracking
             var progression = new Progression(items);
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
         }
-
-        /// <summary>
-        /// Get if the Tracker has been updated since it was last saved
-        /// </summary>
-        public bool IsDirty { get; set; }
     }
-
-
-
 }

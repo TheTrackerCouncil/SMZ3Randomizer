@@ -58,7 +58,7 @@
         [ "Kraid's Awful Son's Father", 0.01 ]
       ],
       "InternalItemType": 0,
-      "Column": 6,
+      "Column": 7,
       "Row": 5,
       "WhenTracked": {
         "1": [ "Toggled Kraid on. Watch out for his awful son on the way out." ]
@@ -68,7 +68,7 @@
       "Name": [ "Crocomire" ],
       "Image": "stoke.png",
       "InternalItemType": 0,
-      "Column": 7,
+      "Column": 8,
       "Row": 5
     },
     {
@@ -77,7 +77,7 @@
         [ "Spooky Ghost", 0.25 ]
       ],
       "InternalItemType": 0,
-      "Column": 8,
+      "Column": 9,
       "Row": 5
     },
     {
@@ -105,10 +105,22 @@
       "Row": 6
     },
     {
+      "Name": [ "Mother Brain" ],
+      "InternalItemType": 0,
+      "Column": 9,
+      "Row": 6,
+      "WhenTracked": {
+        "1": [ "GG", "Is it finally over? Can I go home now?" ]
+      }
+    },
+    {
       "Name": "Fire Rod",
       "InternalItemType": 7,
       "Column": 0,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "You could use it to set things on fire."
+      ]
     },
     {
       "Name": [ "Ice Rod", "Nice Rod" ],
@@ -179,7 +191,10 @@
       "Name": "Lamp",
       "InternalItemType": 18,
       "Column": 0,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You could use it to set things on fire."
+      ]
     },
     {
       "Name": [
@@ -454,7 +469,10 @@
         "2": [ "Red Mail" ]
       },
       "Column": 6,
-      "Row": 4
+      "Row": 4,
+      "WhenTracked": {
+        "1": [ "You've got mail!" ]
+      }
     },
     {
       "Name": [
@@ -470,7 +488,15 @@
         "2": [
           "Titan's Mitt",
           "Tiddy Mitts",
-          [ "Itty Bitty Titty Mitty", 0.01 ]
+          [ "Itty Bitty Titty Mitty", 0.1 ]
+        ]
+      },
+      "WhenTracked": {
+        "2": [
+          "Toggled Tiddy Mitts on,",
+          "Congratulations with your new Tiddy Mitts.",
+          [ "Toggled Itty Bitty Titty Mitty on", 0.2 ],
+          [ "Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.", 0.05 ]
         ]
       }
     },
@@ -850,6 +876,9 @@
     ],
     "StoppedTracking": [
       "Leaving so soon?",
+      "Toggled Tracker off."
+    ],
+    "StoppedTrackingPostGoMode": [
       "Toggled Tracker off.",
       "Hey, you'll be missed pal."
     ],
@@ -1056,6 +1085,161 @@
     "GoModeToggledOff": [
       "Toggled Go Mode off."
     ],
+    "Hints": {
+      "EnabledHints": [
+        "Toggled hints on.",
+        "I'll give you hints when asked."
+      ],
+      "DisabledHints": [
+        "Toggled hints off.",
+        "I'll stop giving you hints."
+      ],
+      "PromptEnableItemHints": [
+        "If you want me to give a hint, say 'Hey tracker, enable hints'."
+      ],
+      "PromptEnableLocationHints": [
+        "If you want me to give a hint, say 'Hey tracker, enable hints'."
+      ],
+      "NoApplicableHints": [
+        "Reply hazy, try again.",
+        "Ask again later.",
+        "Better not tell you now.",
+        "Cannot predict now.",
+        "Concentrate and ask again."
+      ],
+      "ItemNotInLogic": [
+        "You need something else before you can find {0}.",
+        "{0} is out of logic right now.",
+        "{0} is not yet available to you."
+      ],
+      "ItemInSuperMetroid": [
+        "You might find {0} on a strange planet.",
+        "It's in a place that rhymes with 'Thebes'.",
+        "It's in a place that rhymes with 'The Bees'.",
+        "It's on a planet with a name whose pronunciation nobody can agree on."
+      ],
+      "ItemInALttP": [
+        "You might find {0} in a world of light and dark."
+      ],
+      "ItemNotInArea": [
+        "You won't find {0} in {1}.",
+        "You won't have to search {1} for {0}, at least."
+      ],
+      "ItemInSphereZero": [
+        "How have you not found {0} yet?"
+      ],
+      "ItemInEarlySphere": [
+        "{0} can be found pretty early on.",
+        "It shouldn't take you too long to find {0}."
+      ],
+      "ItemInLateSphere": [
+        "Don't count on getting {0} any time soon.",
+        "{0} won't appear until later in the seed."
+      ],
+      "ItemInPreviouslyVisitedDungeon": [
+        "How do you feel about double dipping?"
+      ],
+      "ItemInUnvisitedDungeon": [
+        "It's in a dungeon you haven't visited yet."
+      ],
+      "ItemInPreviouslyVisitedRegion": [
+        "It's in an area you've been before.",
+        "Deja voo, I've just been in this place before"
+      ],
+      "ItemInUnvisitedRegion": [
+        "It's in an area you haven't been to yet."
+      ],
+      "ItemHasBadVanillaLocationName": [
+        "It's in {1}. Good luck figuring out what that means."
+      ],
+      "ItemIsInVanillaJunkLocation": [
+        "In the regular game, you can find {1} there. <break strength='weak'/> You're welcome."
+      ],
+      "LocationHasJunkItem": [
+        "There's nothing important there.",
+        "I wouldn't bother going there.",
+        "I wouldn't bother."
+      ],
+      "LocationHasUsefulItem": [
+        "It might be worth checking out.",
+        "Could have something good."
+      ],
+      "LocationHasItemFromOtherGame": [
+        "It's got something from a different universe.",
+        "The item there doesn't belong in that game."
+      ],
+      "LocationHasItemFromCorrectGame": [
+        "The item there is in the correct game, at least."
+      ]
+    },
+    "Spoilers": {
+      "EnabledSpoilers": [
+        "Toggled spoilers on.",
+        "I'll tell you what you want to know when you ask for spoilers."
+      ],
+      "DisabledSpoilers": [
+        "Toggled spoilers off.",
+        "I'll stop giving you spoilers when asked for."
+      ],
+      "PromptEnableItemSpoilers": [
+        "If you want me to spoil it, say 'Hey tracker, enable spoilers'."
+      ],
+      "PromptEnableLocationSpoilers": [
+        "Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you."
+      ],
+      "TrackedAllItemsAlready": [
+        "You already have every {0}.",
+        "You've already found every {0}.",
+        "You've already tracked every {0}."
+      ],
+      "TrackedItemAlready": [
+        "You already have {0}.",
+        "You've already found {0}.",
+        "You've already tracked {0}."
+      ],
+      "MarkedItem": [
+        "You've marked {0} at {1} <break strength='weak'/> in {2}"
+      ],
+      "MarkedLocation": [
+        "You've marked {1} at {0}."
+      ],
+      "EmptyLocation": [
+        "{0} does not have an item. Did you forget to generate a seed first?",
+        "{0} is empty. Are you sure you started with a seed?"
+      ],
+      "ItemNotFound": [
+        "I cannot find {0}.",
+        "I don't know where {0} is."
+      ],
+      "ItemsNotFound": [
+        "I cannot find any more {0}.",
+        "I don't know where any other {0} are."
+      ],
+      "LocationHasItem": [
+        "{0} has {1}.",
+        "{1} is there."
+      ],
+      "LocationHasUnknownItem": [
+        "{0} has {1}, but you can't track it.",
+        "{1} is there, but you can't track it."
+      ],
+      "ItemIsAtLocation": [
+        "{0} is at {1} <break strength='weak'/> in {2}.",
+        "{0} can be found at {1} <break strength='weak'/> in {2}."
+      ],
+      "ItemsAreAtLocation": [
+        "There is {0} at {1} <break strength='weak'/> in {2}",
+        "{0} can be found at {1} <break strength='weak'/> in {2}"
+      ],
+      "ItemIsAtOutOfLogicLocation": [
+        "{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.",
+        "{0} is out of logic but can be found at {1} <break strength='weak'/> in {2}"
+      ],
+      "ItemsAreAtOutOfLogicLocation": [
+        "There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.",
+        "{0} is at {1} <break strength='weak'/> in {2}, but it's out of logic."
+      ]
+    },
     "Idle": {
       "10m±2m": [
         "Decreased content by one step.",
@@ -1074,7 +1258,12 @@
         "Can it wait for a bit? I'm in the middle of some calibrations.",
         "Fine, I guess.",
         "I dozed off there for a bit",
-        [ "Insert placeholder text here", 0.2 ]
+        [ "Reply hazy, try again.", 0.2 ],
+        [ "Ask again later.", 0.2 ],
+        [ "Better not tell you now.", 0.2 ],
+        [ "Cannot predict now.", 0.2 ],
+        [ "Concentrate and ask again.", 0.2 ],
+        [ "Insert placeholder text here", 0.1 ]
       ]
     }
   },

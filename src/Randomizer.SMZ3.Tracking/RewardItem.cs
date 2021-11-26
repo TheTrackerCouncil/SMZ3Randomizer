@@ -24,6 +24,7 @@ namespace Randomizer.SMZ3.Tracking
             RewardItem.GreenPendant => new SchrodingersString("Green pendant", "Pendant of Courage"),
             RewardItem.RedPendant => new SchrodingersString("Red pendant", "Pendant of Wisdom"),
             RewardItem.BluePendant => new SchrodingersString("Blue pendant", "Pendant of Courage"),
+            RewardItem.Agahnim => new SchrodingersString("Agahnim"),
             _ => throw new System.NotImplementedException(),
         };
     }

@@ -71,7 +71,8 @@ namespace Randomizer.App
             services.AddSingleton<IFiller, StandardFiller>();
             services.AddSingleton<Smz3Randomizer>();
             services.AddTracker<Smz3Randomizer>()
-                .AddOptionalModule<PegWorldModeModule>();
+                .AddOptionalModule<PegWorldModeModule>()
+                .AddOptionalModule<SpoilerModule>();
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
 

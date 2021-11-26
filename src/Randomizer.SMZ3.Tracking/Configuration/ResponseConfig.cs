@@ -19,6 +19,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? StoppedTracking { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when tracker stops after go mode
+        /// has been turned on.
+        /// </summary>
+        public SchrodingersString? StoppedTrackingPostGoMode { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when speech recognition confidence
         /// does not meet the configured threshold for execution, but is high
         /// enough to be recognized.
@@ -499,5 +505,15 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         {
             ["non-committal"] = new("Can it wait for a bit? I'm in the middle of some calibrations.")
         };
+
+        /// <summary>
+        /// Gets the configured phrases for hints.
+        /// </summary>
+        public HintsConfig Hints { get; init; } = new();
+
+        /// <summary>
+        /// Gets the configured phrases for spoilers.
+        /// </summary>
+        public SpoilerConfig Spoilers { get; init; } = new();
     }
 }
