@@ -355,7 +355,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private bool GiveItemLocationSpoiler(ItemData item)
         {
-            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            var progression = Tracker.GetProgression();
             var reachableLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .Where(x => !x.Cleared)
@@ -392,7 +392,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private bool GiveItemLocationHint(ItemData item)
         {
-            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            var progression = Tracker.GetProgression();
             var itemLocations = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .Where(x => !x.Cleared);
@@ -553,7 +553,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private Location? GetRandomItemLocationWithFilter(ItemData item, Func<Location, bool> predicate)
         {
-            var progression = Tracker.GetProgression(assumeKeys: Tracker.World.Config.Keysanity);
+            var progression = Tracker.GetProgression();
             var randomLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .Where(x => !x.Cleared)

@@ -90,7 +90,7 @@ namespace Randomizer.App
 
         public World World => _tracker?.World ?? new World(new Config(), "", 0, "");
 
-        public Progression Progression => _tracker?.GetProgression() ?? new();
+        public Progression Progression => _tracker?.GetProgression(false) ?? new();
 
         public Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new();
 
