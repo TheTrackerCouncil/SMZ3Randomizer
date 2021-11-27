@@ -590,6 +590,21 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the currently available items.
         /// </summary>
+        /// <returns>
+        /// A new <see cref="Progression"/> object representing the currently
+        /// available items.
+        /// </returns>
+        /// <remarks>
+        /// Keycards and dungeon items such as keys are assumed to be owned,
+        /// unless playing on a keysanity world, in which case keys and keycards
+        /// must be tracked manually.
+        /// </remarks>
+        public Progression GetProgression()
+            => GetProgression(assumeKeys: !World.Config.Keysanity);
+
+        /// <summary>
+        /// Gets the currently available items.
+        /// </summary>
         /// <param name="assumeKeys">
         /// Indicates whether to add small and big dungeon keys to the
         /// progression pool. If keysanity is enabled for the current <see
@@ -600,7 +615,7 @@ namespace Randomizer.SMZ3.Tracking
         /// A new <see cref="Progression"/> object representing the currently
         /// available items.
         /// </returns>
-        public Progression GetProgression(bool assumeKeys = false)
+        public Progression GetProgression(bool assumeKeys)
         {
             var progression = new Progression();
 
