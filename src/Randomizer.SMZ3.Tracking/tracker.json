@@ -1164,6 +1164,10 @@
       "ItemIsInVanillaJunkLocation": [
         "In the regular game, you can find {1} there. <break strength='weak'/> You're welcome."
       ],
+      "LocationAlreadyCleared": [
+        "Haven't you been there already?",
+        "I thought you've already cleared {0}."
+      ],
       "LocationHasJunkItem": [
         "There's nothing important there.",
         "I wouldn't bother going there.",
