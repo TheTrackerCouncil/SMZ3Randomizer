@@ -1452,6 +1452,28 @@ namespace Randomizer.SMZ3.Tracking
             });
         }
 
+
+        /// <summary>
+        /// Marks a boss as defeated.
+        /// </summary>
+        /// <param name="boss">The boss that was defeated.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void MarkBossAsDefeated(BossInfo boss, float? confidence = null)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        /// Un-marks a boss as defeated.
+        /// </summary>
+        /// <param name="boss">The boss that should be 'revived'.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void MarkBossAsNotDefeated(BossInfo boss, float? confidence = null)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Un-marks a dungeon as cleared and, if possible, untracks the boss
         /// reward.

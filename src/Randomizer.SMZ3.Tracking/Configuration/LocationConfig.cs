@@ -15,15 +15,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <param name="regions">The region information.</param>
         /// <param name="dungeons">The dungeon information.</param>
+        /// <param name="bosses">The boss information.</param>
         /// <param name="rooms">The room information.</param>
         /// <param name="locations">The location information.</param>
         public LocationConfig(IReadOnlyCollection<RegionInfo> regions,
             IReadOnlyCollection<DungeonInfo> dungeons,
+            IReadOnlyCollection<BossInfo> bosses,
             IReadOnlyCollection<RoomInfo> rooms,
             IReadOnlyCollection<LocationInfo> locations)
         {
             Regions = regions;
             Dungeons = dungeons;
+            Bosses = bosses;
             Rooms = rooms;
             Locations = locations;
         }
@@ -37,6 +40,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets a collection of extra information about dungeons.
         /// </summary>
         public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
+
+        /// <summary>
+        /// Gets a collection of bosses.
+        /// </summary>
+        public IReadOnlyCollection<BossInfo> Bosses { get; init; }
 
         /// <summary>
         /// Gets a collection of extra information about rooms.
