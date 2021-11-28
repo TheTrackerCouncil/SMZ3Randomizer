@@ -53,6 +53,14 @@
       }
     },
     {
+      "Name": [ "Spore Spawn" ],
+      "Article": "",
+      "InternalItemType": 0,
+      "WhenTracked": {
+        "1": [ "You must be real desperate. Very well, toggled Spore Spawn on." ]
+      }
+    },
+    {
       "Name": [
         "Kraid",
         [ "Kraid's Awful Son's Father", 0.01 ]
@@ -61,7 +69,10 @@
       "Column": 7,
       "Row": 5,
       "WhenTracked": {
-        "1": [ "Toggled Kraid on. Watch out for his awful son on the way out." ]
+        "1": [
+          "Toggled Kraid on. Watch out for his awful son on the way out.",
+          "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face."
+        ]
       }
     },
     {
@@ -319,7 +330,7 @@
       "Artice": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": "Really?"
+        "1": [ "Really?", "I don't get paid enough for this.", "Do you think I've got nothing better to do?" ]
       }
     },
     {
@@ -339,10 +350,7 @@
       }
     },
     {
-      "Name": [
-        "Heart Container",
-        [ "Love", 0.2 ]
-      ],
+      "Name": [ "Heart Container" ],
       "Plural": [ "Heart Containers" ],
       "InternalItemType": 62,
       "Multiple": true,
@@ -366,7 +374,7 @@
       "Multiple": true
     },
     {
-      "Name": [ "Single Arrow", "Single Stick" ],
+      "Name": [ "Single Arrow", "Single Stick", "One Stick" ],
       "InternalItemType": 67,
       "Multiple": true
     },
@@ -471,7 +479,8 @@
       "Column": 6,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "You've got mail!" ]
+        "1": [ "You've got mail!" ],
+        "2": null
       }
     },
     {
@@ -1188,20 +1197,24 @@
         "Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you."
       ],
       "TrackedAllItemsAlready": [
+        "Every {0} is already in your inventory.",
         "You already have every {0}.",
         "You've already found every {0}.",
         "You've already tracked every {0}."
       ],
       "TrackedItemAlready": [
+        "{0} is in your inventory.",
         "You already have {0}.",
         "You've already found {0}.",
         "You've already tracked {0}."
       ],
       "MarkedItem": [
-        "You've marked {0} at {1} <break strength='weak'/> in {2}"
+        "You've marked {0} at {1} <break strength='weak'/> in {2}",
+        "{0} is at {1}. At least that's what you told me earlier."
       ],
       "MarkedLocation": [
-        "You've marked {1} at {0}."
+        "You've marked {1} at {0}.",
+        "{0} has {1}. Or so you told me."
       ],
       "EmptyLocation": [
         "{0} does not have an item. Did you forget to generate a seed first?",
