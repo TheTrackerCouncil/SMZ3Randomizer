@@ -65,6 +65,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     : 1;
                 var dungeon = GetDungeonFromResult(tracker, result);
                 tracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
+                dungeon.HasManuallyClearedTreasure = true;
             });
         }
 
