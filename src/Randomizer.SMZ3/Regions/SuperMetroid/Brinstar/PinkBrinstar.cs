@@ -14,8 +14,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Super,
                 access: Logic switch
                 {
-                    Normal => new Requirement(items => items.CardBrinstarBoss && items.CanPassBombPassages() && items.Super),
-                    _ => new Requirement(items => (items.CardBrinstarBoss || items.CardBrinstarL2) && items.CanPassBombPassages() && items.Super)
+                    Normal => items => items.CardBrinstarBoss && items.CanPassBombPassages() && items.Super,
+                    _ => items => (items.CardBrinstarBoss || items.CardBrinstarL2) && items.CanPassBombPassages() && items.Super
                 });
             PinkShaftTop = new(this, 21, 0x8F8608, LocationType.Visible,
                 name: "Missile (pink Brinstar top)",
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Charge,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanPassBombPassages())
+                    _ => items => items.CanPassBombPassages()
                 });
             MissionImpossible = new(this, 24, 0x8F865C, LocationType.Visible,
                 name: "Power Bomb (pink Brinstar)",
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: Logic switch
                 {
                     Normal => items => items.CanUsePowerBombs() && items.Super && items.HasEnergyReserves(1),
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Super)
+                    _ => items => items.CanUsePowerBombs() && items.Super
                 });
             GreenHillZone = new(this, 25, 0x8F8676, LocationType.Visible,
                 name: "Missile (green Brinstar pipe)",
@@ -48,8 +48,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.Morph &&
-                        (items.PowerBomb || items.Super || items.CanAccessNorfairUpperPortal()))
+                    _ => items => items.Morph &&
+                        (items.PowerBomb || items.Super || items.CanAccessNorfairUpperPortal())
                 });
             Waterway = new(this, 33, 0x8F87FA, LocationType.Visible,
                 name: "Energy Tank, Waterway",
@@ -57,8 +57,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && items.SpeedBooster &&
-                        (items.HasEnergyReserves(1) || items.Gravity))
+                    _ => items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && items.SpeedBooster &&
+                        (items.HasEnergyReserves(1) || items.Gravity)
                 });
             WaveBeamGlitchRoom = new(this, 35, 0x8F8824, LocationType.Visible,
                 name: "Energy Tank, Brinstar Gate",
@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: Logic switch
                 {
                     Normal => items => items.CardBrinstarL2 && items.CanUsePowerBombs() && items.Wave && items.HasEnergyReserves(1),
-                    _ => new Requirement(items => items.CardBrinstarL2 && items.CanUsePowerBombs() && (items.Wave || items.Super))
+                    _ => items => items.CardBrinstarL2 && items.CanUsePowerBombs() && (items.Wave || items.Super)
                 }); // Grapple or Walljump
         }
 

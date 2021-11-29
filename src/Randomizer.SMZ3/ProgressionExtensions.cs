@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3
 
         public static bool CanKillManyEnemies(this Progression items) {
             return items.Sword || items.Hammer || items.Bow || items.Firerod ||
-                items.Somaria || items.Byrna && items.CanExtendMagic();
+                items.Somaria || (items.Byrna && items.CanExtendMagic());
         }
 
         public static bool CanAccessDeathMountainPortal(this Progression items) {
@@ -35,16 +35,16 @@ namespace Randomizer.SMZ3
                     items.CardMaridiaL1 && items.CardMaridiaL2 && items.CanUsePowerBombs() && items.Super && items.Gravity && items.SpeedBooster,
                 _ =>
                     items.CardMaridiaL1 && items.CardMaridiaL2 && items.CanUsePowerBombs() && items.Super &&
-                    (items.Charge || items.Super && items.Missile) &&
-                    (items.Gravity || items.HiJump && items.Ice && items.Grapple) &&
-                    (items.Ice || items.Gravity && items.SpeedBooster)
+                    (items.Charge || (items.Super && items.Missile)) &&
+                    (items.Gravity || (items.HiJump && items.Ice && items.Grapple)) &&
+                    (items.Ice || (items.Gravity && items.SpeedBooster))
             };
         }
 
         public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
             return config.SMLogic switch {
                 Normal =>
-                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
+                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && items.Gravity && items.SpaceJump && items.CanUsePowerBombs(),
                 _ =>
                     (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
                         items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Ice

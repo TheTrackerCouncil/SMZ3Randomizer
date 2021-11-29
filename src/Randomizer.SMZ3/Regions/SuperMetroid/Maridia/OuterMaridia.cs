@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: Logic switch
                 {
                     Normal => items => items.SpeedBooster,
-                    _ => new Requirement(items => items.Gravity && items.SpeedBooster)
+                    _ => items => items.Gravity && items.SpeedBooster
                 });
             MainStreetCrabSupers = new(this, 137, 0x8FC43D, LocationType.Visible,
                 name: "Super Missile (green Maridia)",
@@ -28,10 +28,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: Logic switch
                 {
                     Normal => items => items.CanOpenRedDoors() && (items.CanFly() || items.SpeedBooster || items.Grapple),
-                    _ => new Requirement(items => items.CanOpenRedDoors() && (
+                    _ => items => items.CanOpenRedDoors() && (
                         items.CanFly() || items.SpeedBooster || items.Grapple ||
                         (items.CanSpringBallJump() && (items.Gravity || items.HiJump))
-                    ))
+                    )
                 });
             MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
                 name: "Missile (green Maridia tatori)",
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanOpenRedDoors())
+                    _ => items => items.CanOpenRedDoors()
                 });
         }
 

@@ -15,10 +15,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: Logic switch
                 {
                     Normal => items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && (items.Grapple || items.SpaceJump),
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && (
+                    _ => items => items.CanUsePowerBombs() && items.CanOpenRedDoors() && (
                         items.Grapple || items.SpaceJump ||
                         ((items.CanIbj() || (items.HiJump && items.SpeedBooster) || items.CanSpringBallJump()) &&
-                            ((items.Varia && items.HasEnergyReserves(3)) || items.HasEnergyReserves(5)))))
+                            ((items.Varia && items.HasEnergyReserves(3)) || items.HasEnergyReserves(5))))
                 });
             BetaPowerBombRoom = new(this, 39, 0x8F88CA, LocationType.Visible,
                 name: "Power Bomb (red Brinstar sidehopper room)",
@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Super)
+                    _ => items => items.CanUsePowerBombs() && items.Super
                 });
             AlphaPowerBombRoom = new(this, 40, 0x8F890E, LocationType.Chozo,
                 name: "Power Bomb (red Brinstar spike room)",
@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: Logic switch
                 {
                     Normal => items => (items.CanUsePowerBombs() || items.Ice) && items.Super,
-                    _ => new Requirement(items => items.Super)
+                    _ => items => items.Super
                 });
             AlphaPowerBombRoomWall = new(this, 41, 0x8F8914, LocationType.Visible,
                 name: "Missile (red Brinstar spike room)",
@@ -43,7 +43,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.Super)
+                    _ => items => items.CanUsePowerBombs() && items.Super
                 });
             SpazerRoom = new(this, 42, 0x8F896E, LocationType.Chozo,
                 name: "Spazer",
@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Spazer,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanPassBombPassages() && items.Super)
+                    _ => items => items.CanPassBombPassages() && items.Super
                 });
         }
 
@@ -74,11 +74,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             return Logic switch
             {
                 Normal =>
-                    (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                    items.CanAccessNorfairUpperPortal() && (items.Ice || items.HiJump || items.SpaceJump),
+                    ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
+                    (items.CanAccessNorfairUpperPortal() && (items.Ice || items.HiJump || items.SpaceJump)),
                 _ =>
-                    (items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph ||
-                    items.CanAccessNorfairUpperPortal() && (items.Ice || items.CanSpringBallJump() || items.HiJump || items.CanFly())
+                    ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
+                    (items.CanAccessNorfairUpperPortal() && (items.Ice || items.CanSpringBallJump() || items.HiJump || items.CanFly()))
             };
         }
 

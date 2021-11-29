@@ -14,8 +14,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: Logic switch
                 {
                     Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                    _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                        (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump())))
+                    _ => items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
+                        (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump()))
                 });
             PlasmaBeamRoom = new(this, 143, 0x8FC559, LocationType.Chozo,
                 name: "Plasma Beam",
@@ -53,7 +53,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: Logic switch
                 {
                     Normal => items => CanReachAqueduct(items) && items.SpeedBooster,
-                    _ => new Requirement(items => CanReachAqueduct(items) && items.Gravity)
+                    _ => items => CanReachAqueduct(items) && items.Gravity
                 });
             AqueductRight = new(this, 149, 0x8FC609, LocationType.Visible,
                 name: "Super Missile (pink Maridia)",
@@ -62,7 +62,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: Logic switch
                 {
                     Normal => items => CanReachAqueduct(items) && items.SpeedBooster,
-                    _ => new Requirement(items => CanReachAqueduct(items) && items.Gravity)
+                    _ => items => CanReachAqueduct(items) && items.Gravity
                 });
             ShaktoolItem = new(this, 150, 0x8FC6E5, LocationType.Chozo,
                 name: "Spring Ball",
@@ -101,7 +101,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.SpaceJump,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => CanDefeatDraygon(items))
+                    _ => items => CanDefeatDraygon(items)
                 });
 
             WateringHole = new(this);
@@ -206,8 +206,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     access: region.Logic switch
                     {
                         Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                        _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump())))
+                        _ => items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
+                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump()))
                     });
 
                 Right = new(this, 141, 0x8FC4B5, LocationType.Visible,
@@ -217,8 +217,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     access: region.Logic switch
                     {
                         Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                        _ => new Requirement(items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump())))
+                        _ => items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
+                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump()))
                     });
             }
 

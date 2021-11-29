@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanUsePowerBombs())
+                    _ => items => items.CanUsePowerBombs()
                 });
 
             MiddleMissile = new(this, 28, 0x8F8798, LocationType.Visible,
@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CardBrinstarL1 && items.Morph)
+                    _ => items => items.CardBrinstarL1 && items.Morph
                 });
 
             Ceiling = new(this, 29, 0x8F879E, LocationType.Hidden,
@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: Logic switch
                 {
                     Normal => items => items.CardBrinstarL1 && (items.CanFly() || items.HiJump || items.SpeedBooster || items.Ice),
-                    _ => new Requirement(items => items.CardBrinstarL1)
+                    _ => items => items.CardBrinstarL1
                 });
 
             BottomMissile = new(this, 34, 0x8F8802, LocationType.Chozo,
@@ -44,7 +44,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.Morph)
+                    _ => items => items.Morph
                 });
 
             BlueBrinstarTop = new(this);
@@ -77,7 +77,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: region.Logic switch
                 {
-                    _ => new Requirement(items => items.CardBrinstarL1 && items.CanUsePowerBombs())
+                    _ => items => items.CardBrinstarL1 && items.CanUsePowerBombs()
                 });
 
                 HiddenItem = new(this, 37, 0x8F883C, LocationType.Hidden,
@@ -86,7 +86,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        _ => new Requirement(items => items.CardBrinstarL1 && items.CanUsePowerBombs())
+                        _ => items => items.CardBrinstarL1 && items.CanUsePowerBombs()
                     });
             }
 

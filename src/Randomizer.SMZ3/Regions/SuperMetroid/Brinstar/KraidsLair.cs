@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanUsePowerBombs())
+                    _ => items => items.CanUsePowerBombs()
                 });
         }
 

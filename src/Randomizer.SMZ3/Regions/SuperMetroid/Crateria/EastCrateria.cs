@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                         items.SpeedBooster || items.Grapple || items.SpaceJump ||
                         (items.Gravity && (items.CanIbj() || items.HiJump)) ||
                         World.WreckedShip.CanEnter(items)),
-                    _ => new Requirement(items => items.Morph)
+                    _ => items => items.Morph
                 });
             SkyMissile = new(this, 2, 0x8F81EE, LocationType.Hidden,
                 name: "Missile (outside Wrecked Ship top)",
@@ -26,9 +26,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => World.WreckedShip.CanEnter(items)
+                    _ => items => World.WreckedShip.CanEnter(items)
                                                   && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                                  && items.CanPassBombPassages())
+                                                  && items.CanPassBombPassages()
                 });
             MorphBallMaze = new(this, 3, 0x8F81F4, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship middle)",
@@ -36,9 +36,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => World.WreckedShip.CanEnter(items)
+                    _ => items => World.WreckedShip.CanEnter(items)
                                                   && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                                  && items.CanPassBombPassages())
+                                                  && items.CanPassBombPassages()
                 });
             Moat = new(this, 4, 0x8F8248, LocationType.Visible,
                 name: "Missile (Crateria moat)",

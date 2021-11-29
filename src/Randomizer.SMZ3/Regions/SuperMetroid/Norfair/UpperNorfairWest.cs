@@ -16,16 +16,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => items.Varia && (
-                            items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster) ||
-                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
+                            (items.CanOpenRedDoors() && (items.CanFly() || items.HiJump || items.SpeedBooster)) ||
+                            (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
                         ) && items.Morph,
-                    _ => new Requirement(items => items.CanHellRun() && (
+                    _ => items => items.CanHellRun() && (
                             items.CanOpenRedDoors() && (
                                 items.CanFly() || items.HiJump || items.SpeedBooster ||
-                                items.CanSpringBallJump() || items.Varia && items.Ice
+                                items.CanSpringBallJump() || (items.Varia && items.Ice)
                             ) ||
-                            World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2
-                        ) && items.Morph),
+                            (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
+                        ) && items.Morph,
                 });
             IceBeamRoom = new(this, 50, 0x8F8B24, LocationType.Chozo,
                 name: "Ice Beam",
@@ -34,7 +34,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanPassBombPassages() && items.Varia && items.SpeedBooster,
-                    _ => new Requirement(items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.Morph && (items.Varia || items.HasEnergyReserves(3)))
+                    _ => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.Morph && (items.Varia || items.HasEnergyReserves(3))
                 });
             CrumbleShaft = new(this, 51, 0x8F8B46, LocationType.Hidden,
                 name: "Missile (below Ice Beam)",
@@ -43,9 +43,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && items.Varia && items.SpeedBooster,
-                    _ => new Requirement(items =>
-                        (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3)) ||
-                        (items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
+                    _ => items =>
+                        ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && (items.Varia || items.HasEnergyReserves(3))) ||
+                        ((items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
                         /* Access to Croc's room to get spark */
                         (Config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1)
                 });
@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.HiJump,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.CanPassBombPassages())
+                    _ => items => items.CanOpenRedDoors() && items.CanPassBombPassages()
                 });
             HiJumpLobbyBack = new(this, 55, 0x8F8BE6, LocationType.Visible,
                 name: "Missile (Hi-Jump Boots)",
@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanOpenRedDoors() && items.Morph)
+                    _ => items => items.CanOpenRedDoors() && items.Morph
                 });
             HiJumpLobbyEntrance = new(this, 56, 0x8F8BEC, LocationType.Visible,
                 name: "Energy Tank (Hi-Jump Boots)",
@@ -71,7 +71,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanOpenRedDoors())
+                    _ => items => items.CanOpenRedDoors()
                 });
         }
         public override string Name => "Upper Norfair, West";
