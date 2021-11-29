@@ -164,6 +164,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new SchrodingersString("Toggled {0} off.");
 
         /// <summary>
+        /// Gets the phrases to respond with after tracking an item that is not
+        /// in logic.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item was tracked.
+        /// <c>{1}</c> is a placeholder for the name of the location that
+        /// contains the item that is out of logic.
+        /// </remarks>
+        public SchrodingersString? TrackedOutOfLogicItem { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when untracking an item that hasn't
         /// been tracked yet.
         /// </summary>

@@ -1085,6 +1085,11 @@
     "GoModeToggledOff": [
       "Toggled Go Mode off."
     ],
+    "TrackedOutOfLogicItem": [
+      "The racing council will hear about this!",
+      "Nice {0} you got there. How did you get to {1}?",
+      "By the way, nice tech."
+    ],
     "Hints": {
       "EnabledHints": [
         "Toggled hints on.",

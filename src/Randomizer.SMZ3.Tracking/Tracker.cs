@@ -964,10 +964,11 @@ namespace Randomizer.SMZ3.Tracking
             // Check if we can clear a location
             Action? undoClear = null;
             Action? undoTrackDungeonTreasure = null;
-            if (tryClear)
+
+            var location = World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
+            if (location != null)
             {
-                var location = World.Locations.TrySingle(x => x.Cleared == false && x.ItemIs(item.InternalItemType, World));
-                if (location != null)
+                if (tryClear)
                 {
                     // If this item was in a dungeon, track treasure count
                     undoTrackDungeonTreasure = TryTrackDungeonTreasure(item, confidence);
@@ -984,6 +985,12 @@ namespace Randomizer.SMZ3.Tracking
                         MarkedLocations.Remove(location.Id);
                         OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
                     }
+                }
+
+                if (!location.IsAvailable(GetProgression()) && confidence >= Options.MinimumSassConfidence)
+                {
+                    var locationInfo = WorldInfo.Location(location);
+                    Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name);
                 }
             }
 
