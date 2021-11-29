@@ -98,5 +98,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             var location = GetLocation(world);
             return location.IsAvailable(progression);
         }
+
+        /// <summary>
+        /// Returns a string representation of the location.
+        /// </summary>
+        /// <returns>A string representation of this location.</returns>
+        public override string? ToString() => Name[0];
     }
 }

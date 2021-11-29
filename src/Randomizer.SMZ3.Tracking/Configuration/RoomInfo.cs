@@ -81,21 +81,26 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             => world.Rooms.Single(x => x.GetType().FullName == TypeName);
 
         /// <summary>
-        /// Determines whether the room is accessible with the
-        /// specified set of items.
+        /// Determines whether the room is accessible with the specified set of
+        /// items.
         /// </summary>
         /// <param name="world">
         /// The instance of the world that contains the room.
         /// </param>
         /// <param name="progression">The available items.</param>
         /// <returns>
-        /// <c>true</c> if the room is accessible; otherwise,
-        /// <c>false</c>.
+        /// <c>true</c> if the room is accessible; otherwise, <c>false</c>.
         /// </returns>
         public bool IsAccessible(World world, Progression progression)
         {
             var room = GetRoom(world);
             return room.Locations.Any(x => x.IsAvailable(progression));
         }
+
+        /// <summary>
+        /// Returns a string representation of the room.
+        /// </summary>
+        /// <returns>A string representation of this room.</returns>
+        public override string? ToString() => Name[0];
     }
 }

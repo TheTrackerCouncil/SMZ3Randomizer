@@ -126,6 +126,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? DungeonUpdated;
 
         /// <summary>
+        /// Occurs when the properties of a boss have changed.
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? BossUpdated;
+
+        /// <summary>
         /// Occurs when the <see cref="MarkedLocations"/> collection has
         /// changed.
         /// </summary>
@@ -431,7 +436,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (amount < 1)
                 throw new ArgumentOutOfRangeException(nameof(amount), "The amount of items must be greater than zero.");
-            if (amount > dungeon.TreasureRemaining)
+            if (amount > dungeon.TreasureRemaining && !dungeon.HasManuallyClearedTreasure)
             {
                 _logger.LogWarning("Trying to track {amount} treasures in a dungeon with only {left} treasures left.", amount, dungeon.TreasureRemaining);
                 Say(Responses.DungeonTooManyTreasuresTracked?.Format(dungeon.Name, dungeon.TreasureRemaining, amount));
@@ -1453,6 +1458,46 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Marks a boss as defeated.
+        /// </summary>
+        /// <param name="boss">The boss that was defeated.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void MarkBossAsDefeated(BossInfo boss, float? confidence = null)
+        {
+            if (boss.Defeated)
+            {
+                Say(x => x.BossAlreadyDefeated, boss.Name);
+                return;
+            }
+
+            boss.Defeated = true;
+            Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+
+            OnBossUpdated(new(confidence));
+            AddUndo(() => boss.Defeated = false);
+        }
+
+        /// <summary>
+        /// Un-marks a boss as defeated.
+        /// </summary>
+        /// <param name="boss">The boss that should be 'revived'.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void MarkBossAsNotDefeated(BossInfo boss, float? confidence = null)
+        {
+            if (!boss.Defeated)
+            {
+                Say(x => x.BossNotYetDefeated, boss.Name);
+                return;
+            }
+
+            boss.Defeated = false;
+            Say(Responses.BossUndefeated, boss.Name);
+
+            OnBossUpdated(new(confidence));
+            AddUndo(() => boss.Defeated = true);
+        }
+
+        /// <summary>
         /// Un-marks a dungeon as cleared and, if possible, untracks the boss
         /// reward.
         /// </summary>
@@ -1663,6 +1708,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="e">Event data.</param>
         protected virtual void OnDungeonUpdated(TrackerEventArgs e)
             => DungeonUpdated?.Invoke(this, e);
+
+        /// <summary>
+        /// Raises the <see cref="BossUpdated"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        protected virtual void OnBossUpdated(TrackerEventArgs e)
+            => BossUpdated?.Invoke(this, e);
 
         /// <summary>
         /// Raises the <see cref="MarkedLocationsUpdated"/> event.

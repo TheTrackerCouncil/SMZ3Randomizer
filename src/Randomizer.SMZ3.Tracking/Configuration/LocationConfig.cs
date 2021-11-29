@@ -15,15 +15,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <param name="regions">The region information.</param>
         /// <param name="dungeons">The dungeon information.</param>
+        /// <param name="bosses">The boss information.</param>
         /// <param name="rooms">The room information.</param>
         /// <param name="locations">The location information.</param>
         public LocationConfig(IReadOnlyCollection<RegionInfo> regions,
             IReadOnlyCollection<DungeonInfo> dungeons,
+            IReadOnlyCollection<BossInfo> bosses,
             IReadOnlyCollection<RoomInfo> rooms,
             IReadOnlyCollection<LocationInfo> locations)
         {
             Regions = regions;
             Dungeons = dungeons;
+            Bosses = bosses;
             Rooms = rooms;
             Locations = locations;
         }
@@ -37,6 +40,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets a collection of extra information about dungeons.
         /// </summary>
         public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
+
+        /// <summary>
+        /// Gets a collection of bosses.
+        /// </summary>
+        public IReadOnlyCollection<BossInfo> Bosses { get; init; }
 
         /// <summary>
         /// Gets a collection of extra information about rooms.
@@ -89,10 +97,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The fully qualified type name of the dungeon region.
         /// </param>
         /// <returns>
-        /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
+        /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
+        /// <c>null</c> if <paramref name="typeName"/> is not a valid dungeon.
         /// </returns>
-        public DungeonInfo Dungeon(string typeName)
-            => Dungeons.Single(x => x.TypeName == typeName);
+        public DungeonInfo? Dungeon(string typeName)
+            => Dungeons.SingleOrDefault(x => x.TypeName == typeName);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.

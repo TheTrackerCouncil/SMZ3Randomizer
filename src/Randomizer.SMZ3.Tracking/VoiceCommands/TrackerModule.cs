@@ -127,11 +127,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static DungeonInfo GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static DungeonInfo? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
             var dungeonTypeName = (string)result.Semantics[BossKey].Value;
-            var dungeon = tracker.WorldInfo.Dungeon(dungeonTypeName);
-            return dungeon ?? throw new Exception($"Could not find dungeon {dungeonTypeName} (\"{result.Text}\").");
+            return tracker.WorldInfo.Dungeon(dungeonTypeName);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="BossInfo"/> that was detected in a voice
+        /// command using <see cref="BossKey"/>.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <returns>
+        /// A <see cref="BossInfo"/> from the recognition result.
+        /// </returns>
+        protected static BossInfo? GetBossFromResult(Tracker tracker, RecognitionResult result)
+        {
+            var bossName = (string)result.Semantics[BossKey].Value;
+            return tracker.WorldInfo.Bosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -369,7 +383,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
-        /// Gets the names of dungeon bosses for speech recognition.
+        /// Gets the names of bosses for speech recognition.
         /// </summary>
         /// <returns>
         /// A new <see cref="Choices"/> object representing all possible boss
@@ -377,14 +391,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </returns>
         protected virtual Choices GetBossNames()
         {
-            var dungeonNames = new Choices();
+            var bossNames = new Choices();
             foreach (var dungeon in Tracker.WorldInfo.Dungeons)
             {
                 foreach (var name in dungeon.Boss)
-                    dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.TypeName));
+                    bossNames.Add(new SemanticResultValue(name.Text, dungeon.TypeName));
             }
-
-            return dungeonNames;
+            foreach (var boss in Tracker.WorldInfo.Bosses)
+            {
+                foreach (var name in boss.Name)
+                    bossNames.Add(new SemanticResultValue(name.Text, name.Text));
+            }
+            return bossNames;
         }
 
         /// <summary>

@@ -166,7 +166,7 @@
         "Desert Palace",
         "Dessert Palace"
       ],
-      "Hints": [ 
+      "Hints": [
         "I don't like sand. It's coarse, rough and irritating, and it gets everywhere."
       ]
     },
@@ -196,8 +196,8 @@
       "Name": [
         "Ice Palace"
       ],
-      "Hints": [ 
-        "Are you going to break the ice?", 
+      "Hints": [
+        "Are you going to break the ice?",
         "You're not sending ME to cooler!"
       ]
     },
@@ -473,6 +473,63 @@
       "TreasureRemaining": 0,
       "HasReward": true,
       "Reward": 6
+    }
+  ],
+  "Bosses": [
+    {
+      "Name": [ "Spore Spawn" ],
+      "WhenDefeated": [ "You must be real desperate. Very well, toggled Spore Spawn on." ]
+    },
+    {
+      "Name": [
+        "Kraid",
+        [ "Kraid's Awful Son's Father", 0.01 ]
+      ],
+      "Column": 7,
+      "Row": 5,
+      "WhenDefeated": [
+        "Toggled Kraid on. Watch out for his awful son on the way out.",
+        "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face."
+      ]
+    },
+    {
+      "Name": [ "Crocomire" ],
+      "Image": "stoke.png",
+      "Column": 8,
+      "Row": 5
+    },
+    {
+      "Name": [
+        "Phantoon",
+        [ "Spooky Ghost", 0.25 ]
+      ],
+      "Column": 9,
+      "Row": 5
+    },
+    {
+      "Name": [ "Shaktool", "The Shaktool" ],
+      "Column": 6,
+      "Row": 6,
+      "WhenDefeated": [
+        "Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.",
+        "Toggled Shaktool on. Did you get something nice?"
+      ]
+    },
+    {
+      "Name": [ "Draygon" ],
+      "Column": 7,
+      "Row": 6
+    },
+    {
+      "Name": [ "Ridley" ],
+      "Column": 8,
+      "Row": 6
+    },
+    {
+      "Name": [ "Mother Brain" ],
+      "Column": 9,
+      "Row": 6,
+      "WhenDefeated": [ "GG", "Is it finally over? Can I go home now?" ]
     }
   ],
   "Rooms": [

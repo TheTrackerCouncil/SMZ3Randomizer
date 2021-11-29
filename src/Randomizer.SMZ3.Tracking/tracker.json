@@ -53,67 +53,6 @@
       }
     },
     {
-      "Name": [
-        "Kraid",
-        [ "Kraid's Awful Son's Father", 0.01 ]
-      ],
-      "InternalItemType": 0,
-      "Column": 7,
-      "Row": 5,
-      "WhenTracked": {
-        "1": [ "Toggled Kraid on. Watch out for his awful son on the way out." ]
-      }
-    },
-    {
-      "Name": [ "Crocomire" ],
-      "Image": "stoke.png",
-      "InternalItemType": 0,
-      "Column": 8,
-      "Row": 5
-    },
-    {
-      "Name": [
-        "Phantoon",
-        [ "Spooky Ghost", 0.25 ]
-      ],
-      "InternalItemType": 0,
-      "Column": 9,
-      "Row": 5
-    },
-    {
-      "Name": [ "Shaktool", "The Shaktool" ],
-      "InternalItemType": 0,
-      "Column": 6,
-      "Row": 6,
-      "WhenTracked": {
-        "1": [
-          "Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.",
-          "Toggled Shaktool on. Did you get something nice?"
-        ]
-      }
-    },
-    {
-      "Name": [ "Draygon" ],
-      "InternalItemType": 0,
-      "Column": 7,
-      "Row": 6
-    },
-    {
-      "Name": [ "Ridley" ],
-      "InternalItemType": 0,
-      "Column": 8,
-      "Row": 6
-    },
-    {
-      "Name": [ "Mother Brain" ],
-      "InternalItemType": 0,
-      "Column": 9,
-      "Row": 6,
-      "WhenTracked": {
-        "1": [ "GG", "Is it finally over? Can I go home now?" ]
-      }
-    },
-    {
       "Name": "Fire Rod",
       "InternalItemType": 7,
       "Column": 0,
@@ -319,7 +258,7 @@
       "Artice": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": "Really?"
+        "1": [ "Really?", "I don't get paid enough for this.", "Do you think I've got nothing better to do?" ]
       }
     },
     {
@@ -339,10 +278,7 @@
       }
     },
     {
-      "Name": [
-        "Heart Container",
-        [ "Love", 0.2 ]
-      ],
+      "Name": [ "Heart Container" ],
       "Plural": [ "Heart Containers" ],
       "InternalItemType": 62,
       "Multiple": true,
@@ -366,7 +302,7 @@
       "Multiple": true
     },
     {
-      "Name": [ "Single Arrow", "Single Stick" ],
+      "Name": [ "Single Arrow", "Single Stick", "One Stick" ],
       "InternalItemType": 67,
       "Multiple": true
     },
@@ -471,7 +407,8 @@
       "Column": 6,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "You've got mail!" ]
+        "1": [ "You've got mail!" ],
+        "2": null
       }
     },
     {
@@ -1085,6 +1022,23 @@
     "GoModeToggledOff": [
       "Toggled Go Mode off."
     ],
+    "BossDefeated": [
+      "Marked {0} as defeated.",
+      "Congratulations on beating off {0}.",
+      "RIP {0}",
+      [ "f", 0.1 ]
+    ],
+    "BossAlreadyDefeated": [
+      "But you already defeated {0}.",
+      "But {0} is already dead."
+    ],
+    "BossUndefeated": [
+      "Marked {0} as still alive.",
+      "Revived {0}."
+    ],
+    "BossNotYetDefeated": [
+      "But you never defeated {0} in the first place."
+    ],
     "Hints": {
       "EnabledHints": [
         "Toggled hints on.",
@@ -1155,6 +1109,10 @@
       "ItemIsInVanillaJunkLocation": [
         "In the regular game, you can find {1} there. <break strength='weak'/> You're welcome."
       ],
+      "LocationAlreadyCleared": [
+        "Haven't you been there already?",
+        "I thought you've already cleared {0}."
+      ],
       "LocationHasJunkItem": [
         "There's nothing important there.",
         "I wouldn't bother going there.",
@@ -1188,20 +1146,24 @@
         "Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you."
       ],
       "TrackedAllItemsAlready": [
+        "Every {0} is already in your inventory.",
         "You already have every {0}.",
         "You've already found every {0}.",
         "You've already tracked every {0}."
       ],
       "TrackedItemAlready": [
+        "{0} is in your inventory.",
         "You already have {0}.",
         "You've already found {0}.",
         "You've already tracked {0}."
       ],
       "MarkedItem": [
-        "You've marked {0} at {1} <break strength='weak'/> in {2}"
+        "You've marked {0} at {1} <break strength='weak'/> in {2}",
+        "{0} is at {1}. At least that's what you told me earlier."
       ],
       "MarkedLocation": [
-        "You've marked {1} at {0}."
+        "You've marked {1} at {0}.",
+        "{0} has {1}. Or so you told me."
       ],
       "EmptyLocation": [
         "{0} does not have an item. Did you forget to generate a seed first?",

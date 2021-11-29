@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.Extensions.Logging;
 
@@ -147,6 +148,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public void RevealLocationItem(Location location)
         {
             var locationName = Tracker.WorldInfo.Location(location).Name;
+            if (location.Cleared)
+            {
+                Tracker.Say(x => x.Hints.LocationAlreadyCleared, locationName);
+                return;
+            }
+
             if (Tracker.MarkedLocations.TryGetValue(location.Id, out var markedItem))
             {
                 Tracker.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.NameWithArticle);
