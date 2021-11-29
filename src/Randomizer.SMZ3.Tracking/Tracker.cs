@@ -126,6 +126,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? DungeonUpdated;
 
         /// <summary>
+        /// Occurs when the properties of a boss have changed.
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? BossUpdated;
+
+        /// <summary>
         /// Occurs when the <see cref="MarkedLocations"/> collection has
         /// changed.
         /// </summary>
@@ -1452,7 +1457,6 @@ namespace Randomizer.SMZ3.Tracking
             });
         }
 
-
         /// <summary>
         /// Marks a boss as defeated.
         /// </summary>
@@ -1460,9 +1464,18 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void MarkBossAsDefeated(BossInfo boss, float? confidence = null)
         {
-            throw new NotImplementedException();
-        }
+            if (boss.Defeated)
+            {
+                Say(x => x.BossAlreadyDefeated, boss.Name);
+                return;
+            }
 
+            boss.Defeated = true;
+            Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+
+            OnBossUpdated(new(confidence));
+            AddUndo(() => boss.Defeated = false);
+        }
 
         /// <summary>
         /// Un-marks a boss as defeated.
@@ -1471,7 +1484,17 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void MarkBossAsNotDefeated(BossInfo boss, float? confidence = null)
         {
-            throw new NotImplementedException();
+            if (!boss.Defeated)
+            {
+                Say(x => x.BossNotYetDefeated, boss.Name);
+                return;
+            }
+
+            boss.Defeated = false;
+            Say(Responses.BossUndefeated, boss.Name);
+
+            OnBossUpdated(new(confidence));
+            AddUndo(() => boss.Defeated = true);
         }
 
         /// <summary>
@@ -1685,6 +1708,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="e">Event data.</param>
         protected virtual void OnDungeonUpdated(TrackerEventArgs e)
             => DungeonUpdated?.Invoke(this, e);
+
+        /// <summary>
+        /// Raises the <see cref="BossUpdated"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        protected virtual void OnBossUpdated(TrackerEventArgs e)
+            => BossUpdated?.Invoke(this, e);
 
         /// <summary>
         /// Raises the <see cref="MarkedLocationsUpdated"/> event.

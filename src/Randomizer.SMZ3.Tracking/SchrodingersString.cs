@@ -14,6 +14,7 @@ namespace Randomizer.SMZ3.Tracking
     /// Represents multiple possibilities of a string.
     /// </summary>
     [JsonConverter(typeof(SchrodingersStringConverter))]
+    [DebuggerDisplay("[{GetDebuggerDisplay()}]")]
     public class SchrodingersString : Collection<SchrodingersString.Possibility>
     {
         private static readonly Random s_random = new();
@@ -140,6 +141,8 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         private double GetTotalWeight() => Items.Sum(x => x.Weight);
+
+        private string GetDebuggerDisplay() => string.Join(", ", this.Select(x => x.ToString()));
 
         /// <summary>
         /// Represents one possibility of a <see cref="SchrodingersString"/>.

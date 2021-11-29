@@ -492,6 +492,44 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new SchrodingersString("Changed {0} to {1}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when marking a boss as defeated.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the boss.
+        /// </remarks>
+        public SchrodingersString? BossDefeated { get; init; }
+            = new SchrodingersString("Congratulations on defeating {0}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when marking a boss as defeated who
+        /// was already marked.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the boss.
+        /// </remarks>
+        public SchrodingersString? BossAlreadyDefeated { get; init; }
+            = new SchrodingersString("But you already marked {0} as defeated.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when un-marking a boss as defeated.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the boss.
+        /// </remarks>
+        public SchrodingersString? BossUndefeated { get; init; }
+            = new SchrodingersString("Marking {0} as alive.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when un-marking a boss as defeated
+        /// who hasn't been defeated yet.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the boss.
+        /// </remarks>
+        public SchrodingersString? BossNotYetDefeated { get; init; }
+            = new SchrodingersString("But you haven't defeated {0} yet.");
+
+        /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as
         /// expressed in the dictionary keys.

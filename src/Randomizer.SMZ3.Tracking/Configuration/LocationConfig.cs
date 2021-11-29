@@ -97,10 +97,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The fully qualified type name of the dungeon region.
         /// </param>
         /// <returns>
-        /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
+        /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
+        /// <c>null</c> if <paramref name="typeName"/> is not a valid dungeon.
         /// </returns>
-        public DungeonInfo Dungeon(string typeName)
-            => Dungeons.Single(x => x.TypeName == typeName);
+        public DungeonInfo? Dungeon(string typeName)
+            => Dungeons.SingleOrDefault(x => x.TypeName == typeName);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.

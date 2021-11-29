@@ -1022,6 +1022,23 @@
     "GoModeToggledOff": [
       "Toggled Go Mode off."
     ],
+    "BossDefeated": [
+      "Marked {0} as defeated.",
+      "Congratulations on beating off {0}.",
+      "RIP {0}",
+      [ "f", 0.1 ]
+    ],
+    "BossAlreadyDefeated": [
+      "But you already defeated {0}.",
+      "But {0} is already dead."
+    ],
+    "BossUndefeated": [
+      "Marked {0} as still alive.",
+      "Revived {0}."
+    ],
+    "BossNotYetDefeated": [
+      "But you never defeated {0} in the first place."
+    ],
     "Hints": {
       "EnabledHints": [
         "Toggled hints on.",

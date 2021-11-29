@@ -478,7 +478,7 @@
   "Bosses": [
     {
       "Name": [ "Spore Spawn" ],
-      "WhenTracked": [ "You must be real desperate. Very well, toggled Spore Spawn on." ]
+      "WhenDefeated": [ "You must be real desperate. Very well, toggled Spore Spawn on." ]
     },
     {
       "Name": [
@@ -487,7 +487,7 @@
       ],
       "Column": 7,
       "Row": 5,
-      "WhenTracked": [
+      "WhenDefeated": [
         "Toggled Kraid on. Watch out for his awful son on the way out.",
         "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face."
       ]
@@ -510,7 +510,7 @@
       "Name": [ "Shaktool", "The Shaktool" ],
       "Column": 6,
       "Row": 6,
-      "WhenTracked": [
+      "WhenDefeated": [
         "Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.",
         "Toggled Shaktool on. Did you get something nice?"
       ]
@@ -529,7 +529,7 @@
       "Name": [ "Mother Brain" ],
       "Column": 9,
       "Row": 6,
-      "WhenTracked": [ "GG", "Is it finally over? Can I go home now?" ]
+      "WhenDefeated": [ "GG", "Is it finally over? Can I go home now?" ]
     }
   ],
   "Rooms": [

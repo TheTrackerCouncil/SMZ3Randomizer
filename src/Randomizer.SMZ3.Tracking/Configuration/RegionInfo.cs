@@ -52,5 +52,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         public Region GetRegion(World world)
             => world.Regions.Single(x => x.GetType().FullName == TypeName);
+
+        /// <summary>
+        /// Returns a string representation of the region.
+        /// </summary>
+        /// <returns>A string representation of this region.</returns>
+        public override string? ToString() => Name[0];
     }
 }

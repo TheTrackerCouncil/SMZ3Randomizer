@@ -679,6 +679,11 @@ namespace Randomizer.App
                 _pegWorldMode = false;
                 RefreshGridItems();
             });
+            Tracker.BossUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                _pegWorldMode = false;
+                RefreshGridItems();
+            });
             Tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TrackerStatusBar.Background = Brushes.Green;
