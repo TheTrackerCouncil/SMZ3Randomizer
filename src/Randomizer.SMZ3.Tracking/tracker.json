@@ -119,26 +119,38 @@
       "Column": 0,
       "Row": 1,
       "Hints": [
-        "You could use it to set things on fire."
+        "You could use it to set things on fire.",
+        "You can hurt people with it.",
+        "It's something magical."
       ]
     },
     {
       "Name": [ "Ice Rod", "Nice Rod" ],
       "InternalItemType": 8,
       "Column": 1,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "You can hurt people with it.",
+        "It's something magical."
+      ]
     },
     {
       "Name": "Hammer",
       "InternalItemType": 9,
       "Column": 1,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": "Hookshot",
       "InternalItemType": 10,
       "Column": 3,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": [
@@ -148,7 +160,10 @@
       ],
       "InternalItemType": 11,
       "Column": 0,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [
@@ -158,34 +173,49 @@
       ],
       "InternalItemType": 12,
       "Column": 1,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [ "Magic Powder", "Drugs" ],
       "InternalItemType": 13,
       "Column": 4,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": "Bombos",
       "InternalItemType": 15,
       "Article": "",
       "Column": 2,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": "Ether",
       "InternalItemType": 16,
       "Article": "",
       "Column": 3,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": "Quake",
       "InternalItemType": 17,
       "Article": "",
       "Column": 4,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": "Lamp",
@@ -204,13 +234,19 @@
       ],
       "InternalItemType": 19,
       "Column": 5,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "You could find it in real life."
+      ]
     },
     {
       "Name": [ "Flute", "Ocarina" ],
       "InternalItemType": 20,
       "Column": 2,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": [
@@ -222,7 +258,10 @@
       ],
       "InternalItemType": 21,
       "Column": 1,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": "Bottle",
@@ -234,13 +273,20 @@
         "4": [ "Fourth bottle" ]
       },
       "Column": 0,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "You could find it in real life."
+      ]
     },
     {
       "Name": [ "Heart piece", "Piece of Heart" ],
       "Plural": [ "Heart pieces", "Pieces of Heart" ],
       "InternalItemType": 23,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "You probably already have a lot of it.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": [
@@ -249,19 +295,28 @@
       ],
       "InternalItemType": 24,
       "Column": 2,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": [ "Magic Cape", "Cape" ],
       "InternalItemType": 25,
       "Column": 3,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": [ "Magic Mirror", "Mirror" ],
       "InternalItemType": 26,
       "Column": 4,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": [ "Book of Mudora", "The Sacred Texts" ],
@@ -276,13 +331,19 @@
       ],
       "InternalItemType": 30,
       "Column": 2,
-      "Row": 4
+      "Row": 4,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": "Moon Pearl",
       "InternalItemType": 31,
       "Column": 5,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "It's round."
+      ]
     },
     {
       "Name": [ "Bug Catching Net", "Bug net" ],
@@ -295,7 +356,11 @@
       "Plural": [ "Bombs", "Zelda Bombs" ],
       "InternalItemType": 40,
       "Article": "",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "You probably already have a lot of it.",
+        "It's round."
+      ]
     },
     {
       "Name": "Mushroom",
@@ -311,7 +376,10 @@
       ],
       "InternalItemType": 42,
       "Column": 2,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [ "One Rupee", "Green Rupee" ],
@@ -320,13 +388,21 @@
       "Multiple": true,
       "WhenTracked": {
         "1": "Really?"
-      }
+      },
+      "Hints": [
+        "It's just money.",
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": [ "Five Rupees", "Blue Rupee" ],
       "InternalItemType": 53,
       "Artice": "",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It's just money.",
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": [ "Twenty Rupees", "Red Rupee", "Big 20" ],
@@ -336,7 +412,11 @@
       "WhenTracked": {
         "1": [ "Seriously?", "This is not the con-tent you are looking for." ],
         "2": null
-      }
+      },
+      "Hints": [
+        "It's just money.",
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": [
@@ -347,46 +427,74 @@
       "InternalItemType": 62,
       "Multiple": true,
       "Column": 5,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "You probably already have a lot of it.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": "Heart Container Refill",
-      "InternalItemType": 63
+      "InternalItemType": 63,
+      "Hints": [
+        "It improves your survivability."
+      ]
     },
     {
       "Name": "One Hundred Rupees",
       "InternalItemType": 64,
       "Artice": "",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It's just money.",
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": "Fifty Rupees",
       "InternalItemType": 65,
       "Artice": "",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It's just money.",
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": [ "Single Arrow", "Single Stick" ],
       "InternalItemType": 67,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "You could find it in real life."
+      ]
     },
     {
       "Name": [ "Ten Arrows", "Ten Sticks", "Sticks" ],
       "InternalItemType": 68,
       "Artice": "",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "You could find it in real life."
+      ]
     },
     {
       "Name": "Three Hundred Rupees",
       "InternalItemType": 70,
       "Artice": "",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It's just money.",
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": [ "Pegasus Boots", "Boots" ],
       "InternalItemType": 75,
       "Column": 1,
-      "Row": 4
+      "Row": 4,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": "Half Magic",
@@ -439,7 +547,10 @@
       "WhenTracked": {
         "3": [ "Toggled Bacon on", "Hmm... Bacon" ],
         "4": null
-      }
+      },
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [
@@ -454,7 +565,10 @@
         "3": [ "Mirror Shield" ]
       },
       "Column": 5,
-      "Row": 4
+      "Row": 4,
+      "Hints": [
+        "It improves your survivability."
+      ]
     },
     {
       "Name": [
@@ -472,7 +586,10 @@
       "Row": 4,
       "WhenTracked": {
         "1": [ "You've got mail!" ]
-      }
+      },
+      "Hints": [
+        "It improves your survivability."
+      ]
     },
     {
       "Name": [
@@ -609,7 +726,10 @@
       "Name": [ "Grappling Beam", "Grapple Beam", "Grapple" ],
       "InternalItemType": 176,
       "Column": 6,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": [ "X-Ray Scope", "X-Ray" ],
@@ -627,19 +747,28 @@
       "Name": "Spring Ball",
       "InternalItemType": 179,
       "Column": 8,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": [ "Morphing Ball", "Morph Ball", "Morph" ],
       "InternalItemType": 180,
       "Column": 6,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "It's round."
+      ]
     },
     {
       "Name": [ "Screw Attack", "Screwing" ],
       "InternalItemType": 181,
       "Column": 10,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [
@@ -654,13 +783,19 @@
       "Name": [ "Hi-Jump Boots", "Hi-Jump" ],
       "InternalItemType": 183,
       "Column": 8,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": "Space Jump",
       "InternalItemType": 184,
       "Column": 9,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": "Morph Bombs",
@@ -672,25 +807,37 @@
       "Name": "Speed Booster",
       "InternalItemType": 186,
       "Column": 9,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You could use it to get around."
+      ]
     },
     {
       "Name": "Charge Beam",
       "InternalItemType": 187,
       "Column": 6,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [ "Ice Beam", "Nice Beam" ],
       "InternalItemType": 188,
       "Column": 7,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": "Wave Beam",
       "InternalItemType": 189,
       "Column": 8,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [
@@ -699,13 +846,19 @@
       ],
       "InternalItemType": 190,
       "Column": 9,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": "Plasma Beam",
       "InternalItemType": 191,
       "Column": 10,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [ "Energy Tank", "E-Tank" ],
@@ -714,7 +867,11 @@
       "Artice": "an",
       "Multiple": true,
       "Column": 8,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "You probably already have a lot of it.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": "Reserve Tank",
@@ -722,7 +879,11 @@
       "InternalItemType": 193,
       "Multiple": true,
       "Column": 9,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "You probably already have a lot of it.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": [
@@ -742,7 +903,10 @@
       "WhenTracked": {
         "69": "Nice",
         "70": null
-      }
+      },
+      "Hints": [
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": [
@@ -762,7 +926,10 @@
       "Multiple": true,
       "CounterMultiplier": 5,
       "Column": 8,
-      "Row": 4
+      "Row": 4,
+      "Hints": [
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": [
@@ -775,7 +942,10 @@
       "Multiple": true,
       "CounterMultiplier": 5,
       "Column": 9,
-      "Row": 4
+      "Row": 4,
+      "Hints": [
+        "You probably already have a lot of it."
+      ]
     },
     {
       "Name": "Crateria Level 1 Keycard",
@@ -1129,6 +1299,14 @@
       ],
       "ItemInALttP": [
         "You might find {0} in a world of light and dark."
+      ],
+      "ItemRequiresOtherItem": [
+        "You need {1} before you can find {0}.",
+        "{0} is out of logic. Finding {1} might help."
+      ],
+      "ItemRequiresManyOtherItems": [
+        "You need a lot of other items before you can find {0}.",
+        "{0} is out of logic and you need more items than I care to mention."
       ],
       "ItemNotInArea": [
         "You won't find {0} in {1}.",

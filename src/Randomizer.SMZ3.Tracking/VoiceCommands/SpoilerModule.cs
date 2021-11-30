@@ -427,9 +427,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     {
                         if (!itemLocations.Any(x => x.IsAvailable(progression)))
                         {
-                            // TODO: Determine what item(s) are missing from
-                            // logic, then give a hint about an item that has
-                            // hints
+                            var randomLocation = itemLocations.Where(x => !x.IsAvailable(progression)).Random();
+                            var missingItemSets = Logic.GetMissingRequiredItems(randomLocation, progression);
+                            if (!missingItemSets.Any())
+                            {
+                                return GiveItemHint(x => x.ItemRequiresManyOtherItems, item);
+                            }
+                            else
+                            {
+                                var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression)
+                                    .SelectMany(x => x)
+                                    .Select(x => Tracker.Items.FirstOrDefault(item => item.InternalItemType == x))
+                                    .Random();
+                                if (randomMissingItem != null)
+                                    return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.NameWithArticle);
+                            }
                         }
 
                         var sphere = _playthrough.Spheres.IndexOf(x => x.Items.Any(i => i.Type == item.InternalItemType));
