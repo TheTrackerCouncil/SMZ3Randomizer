@@ -14,30 +14,43 @@ namespace Randomizer.SMZ3
         {
             if (location.IsAvailable(items))
             {
-                yield break;
+                return Enumerable.Empty<ItemType[]>();
             }
-            else
+
+            // Build an item pool of all missing progression items
+            var combinations = new List<ItemType[]>();
+            var itemPool = Item.CreateProgressionPool(null).Select(x => x.Type).ToList();
+            foreach (var ownedItem in items)
+                itemPool.Remove(ownedItem);
+
+            // Try all items by themselves
+            foreach (var missingItem in itemPool)
             {
-                // 1. Create item pools
-                var itemPool = Item.CreateProgressionPool(null).Select(x => x.Type).ToList();
+                var progression = items.Clone();
+                progression.Add(missingItem);
 
-                // 2. Subtract items in Progression from item pools
-                foreach (var ownedItem in items)
-                    itemPool.Remove(ownedItem);
+                if (location.IsAvailable(progression))
+                    combinations.Add(new[] { missingItem });
+            }
 
-                // 3. For every item in the progression item pool:
-                foreach (var missingItem in itemPool)
+            // Remove all successfull combinations from the pool to prevent redundant combinations
+            foreach (var combination in combinations.SelectMany(x => x))
+                itemPool.Remove(combination);
+
+            // Try all combinations of two
+            foreach (var missingItem in itemPool)
+            {
+                foreach (var missingItem2 in itemPool)
                 {
-                    //    1. Add the items to the progression check
                     var progression = items.Clone();
                     progression.Add(missingItem);
-                    //    2. If this makes the location accessible, yield return that item
+                    progression.Add(missingItem2);
                     if (location.IsAvailable(progression))
-                        yield return new[] { missingItem };
+                        combinations.Add(new[] { missingItem, missingItem2 });
                 }
-
-                // 4. Repeat the above, but for every combination of two items in the pool
             }
+
+            return combinations;
         }
     }
 }

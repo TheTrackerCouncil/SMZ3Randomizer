@@ -55,5 +55,13 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Boots });
         }
+
+        [Fact]
+        public void LocationWithSimpleLogicReturnsBothMissingItems()
+        {
+            var emptyProgression = new Progression(Item.CreateKeycards(null));
+            var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.ETank, emptyProgression);
+            missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.PowerBomb });
+        }
     }
 }
