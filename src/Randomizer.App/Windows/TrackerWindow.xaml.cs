@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Speech.Synthesis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,8 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+
+using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
@@ -108,6 +111,25 @@ namespace Randomizer.App
             }
 
             fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()}.png");
+            if (File.Exists(fileName))
+                return fileName;
+
+            return null;
+        }
+
+        public static string GetItemSpriteFileName(BossInfo boss)
+        {
+            var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", "Items");
+            var fileName = (string)null;
+
+            if (boss.Image != null)
+            {
+                fileName = Path.Combine(folder, boss.Image);
+                if (File.Exists(fileName))
+                    return fileName;
+            }
+
+            fileName = Path.Combine(folder, $"{boss.Name[0].Text.ToLowerInvariant()}.png");
             if (File.Exists(fileName))
                 return fileName;
 
@@ -275,7 +297,29 @@ namespace Randomizer.App
 
                     TrackerGrid.Children.Add(image);
                 }
+
+                foreach (var boss in Tracker.WorldInfo.Bosses.Where(x => x.Column != null && x.Row != null))
+                {
+                    var fileName = GetItemSpriteFileName(boss);
+                    var overlay = GetOverlayImageFileName(boss);
+                    if (fileName == null)
+                        continue;
+
+                    var image = GetGridItemControl(fileName,
+                        boss.Column.Value, boss.Row.Value);
+                    image.Tag = boss;
+                    image.ContextMenu = CreateContextMenu(boss);
+                    image.MouseLeftButtonDown += Image_MouseDown;
+                    image.MouseLeftButtonUp += Image_LeftClick;
+                    image.Opacity = boss.Defeated ? 1.0d : 0.2d;
+                    TrackerGrid.Children.Add(image);
+                }
             }
+        }
+
+        private string GetOverlayImageFileName(BossInfo boss)
+        {
+            return null;
         }
 
         private string GetOverlayImageFileName(ItemData item)
@@ -332,6 +376,14 @@ namespace Randomizer.App
                 else if (image.Tag is Peg peg)
                 {
                     Tracker.Peg(peg);
+                }
+                else if (image.Tag is BossInfo boss)
+                {
+                    Tracker.MarkBossAsDefeated(boss);
+                }
+                else
+                {
+                    _logger.LogError("Unrecognized image tag type {TagType}", image.Tag.GetType());
                 }
             };
         }
@@ -489,6 +541,29 @@ namespace Randomizer.App
             return menu.Items.Count > 0 ? menu : null;
         }
 
+        private ContextMenu CreateContextMenu(BossInfo boss)
+        {
+            var menu = new ContextMenu
+            {
+                Style = Application.Current.FindResource("DarkContextMenu") as Style
+            };
+
+            if (boss.Defeated)
+            {
+                var unclear = new MenuItem
+                {
+                    Header = $"Revive {boss.Name[0]}",
+                };
+                unclear.Click += (sender, e) =>
+                {
+                    Tracker.MarkBossAsNotDefeated(boss);
+                };
+                menu.Items.Add(unclear);
+            }
+
+            return menu;
+        }
+
         private ContextMenu CreateContextMenu(DungeonInfo dungeon)
         {
             var menu = new ContextMenu
@@ -600,6 +675,11 @@ namespace Randomizer.App
                 RefreshGridItems();
             });
             Tracker.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                _pegWorldMode = false;
+                RefreshGridItems();
+            });
+            Tracker.BossUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
                 _pegWorldMode = false;
                 RefreshGridItems();

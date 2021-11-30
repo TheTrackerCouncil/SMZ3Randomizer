@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+
 using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
@@ -124,6 +125,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// located in.
         /// </summary>
         public string RegionTypeName { get; init; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user manually decreased
+        /// the treasure count in this dungeon before.
+        /// </summary>
+        public bool HasManuallyClearedTreasure { get; set; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.

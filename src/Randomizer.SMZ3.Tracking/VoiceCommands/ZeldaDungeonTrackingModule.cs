@@ -40,14 +40,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (tracker, result) =>
             {
-                DungeonInfo dungeon;
-                if (result.Semantics.ContainsKey(DungeonKey))
-                    dungeon = GetDungeonFromResult(tracker, result);
-                else if (result.Semantics.ContainsKey(BossKey))
-                    dungeon = GetBossDungeonFromResult(tracker, result);
-                else
-                    throw new Exception("Command did not contain any recognized boss or dungeon.");
-
+                var dungeon = GetDungeonFromResult(tracker, result);
                 tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
             });
 
@@ -65,6 +58,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     : 1;
                 var dungeon = GetDungeonFromResult(tracker, result);
                 tracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
+                dungeon.HasManuallyClearedTreasure = true;
             });
         }
 
@@ -98,7 +92,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetClearDungeonRule()
         {
-            var bossNames = GetBossNames();
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
 
             var markDungeon = new GrammarBuilder()
@@ -108,24 +101,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("as")
                 .OneOf("cleared", "beaten");
 
-            var beatBoss = new GrammarBuilder()
-                .Append("Hey tracker,")
-                .OneOf("clear", "I beat", "I defeated", "I beat off")
-                .Append(BossKey, bossNames);
-
-            var markBoss = new GrammarBuilder()
-                .Append("Hey tracker,")
-                .Append("mark")
-                .Append(BossKey, bossNames)
-                .Append("as")
-                .OneOf("cleared", "beaten", "beaten off", "dead", "fucking dead");
-
-            var bossIsDead = new GrammarBuilder()
-                .Append("Hey tracker,")
-                .Append(BossKey, bossNames)
-                .OneOf("is dead", "is fucking dead");
-
-            return GrammarBuilder.Combine(markDungeon, beatBoss, markBoss, bossIsDead);
+            return GrammarBuilder.Combine(markDungeon);
         }
 
         private GrammarBuilder GetMarkDungeonRequirementRule()

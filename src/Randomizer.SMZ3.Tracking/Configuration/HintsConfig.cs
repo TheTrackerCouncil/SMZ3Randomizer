@@ -203,6 +203,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("In the regular game, you can find {1} there.");
 
         /// <summary>
+        /// Gets the hints for locations that have been cleared already.
+        /// </summary>
+        public SchrodingersString LocationAlreadyCleared { get; init; }
+            = new("Haven't you been there already?");
+
+        /// <summary>
         /// Gets the hints for locations that don't have anything useful.
         /// </summary>
         /// <remarks>
