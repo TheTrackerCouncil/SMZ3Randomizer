@@ -993,9 +993,16 @@ namespace Randomizer.SMZ3.Tracking
                     var locationInfo = WorldInfo.Location(location);
                     var missingItems = Logic.GetMissingRequiredItems(location, items)
                         .OrderBy(x => x.Length)
-                        .First();
-                    var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
-                    Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                        .FirstOrDefault();
+                    if (missingItems == null)
+                    {
+                        Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                    }
+                    else
+                    {
+                        var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                        Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                    }
                 }
             }
 

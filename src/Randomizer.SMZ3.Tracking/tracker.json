@@ -1090,6 +1090,10 @@
       "How did you get to {1} without {2}?",
       "By the way, nice tech."
     ],
+    "TrackedOutOfLogicItemTooManyMissing": [
+      "The racing council will hear about this!",
+      "How did you get to {1} with so many missing items?"
+    ],
     "Hints": {
       "EnabledHints": [
         "Toggled hints on.",
