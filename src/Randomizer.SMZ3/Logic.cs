@@ -39,7 +39,6 @@ namespace Randomizer.SMZ3
 
             // Try all combinations of two
             foreach (var missingItem in itemPool)
-            {
                 foreach (var missingItem2 in itemPool)
                 {
                     var progression = items.Clone();
@@ -48,7 +47,23 @@ namespace Randomizer.SMZ3
                     if (location.IsAvailable(progression))
                         combinations.Add(new[] { missingItem, missingItem2 });
                 }
-            }
+
+            // Once again, remove successfull combinations
+            foreach (var combination in combinations.SelectMany(x => x))
+                itemPool.Remove(combination);
+
+            // Try all combinations of three
+            foreach (var missingItem in itemPool)
+                foreach (var missingItem2 in itemPool)
+                    foreach (var missingItem3 in itemPool)
+                    {
+                        var progression = items.Clone();
+                        progression.Add(missingItem);
+                        progression.Add(missingItem2);
+                        progression.Add(missingItem3);
+                        if (location.IsAvailable(progression))
+                            combinations.Add(new[] { missingItem, missingItem2, missingItem3 });
+                    }
 
             return combinations;
         }
