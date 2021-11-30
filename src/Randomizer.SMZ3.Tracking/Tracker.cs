@@ -621,15 +621,15 @@ namespace Randomizer.SMZ3.Tracking
 
             if (!World.Config.Keysanity || assumeKeys)
             {
-                progression.Add(SMZ3.Item.CreateKeycards(World));
+                progression.AddRange(Item.CreateKeycards(World));
                 if (assumeKeys)
-                    progression.Add(SMZ3.Item.CreateDungeonPool(World));
+                    progression.AddRange(Item.CreateDungeonPool(World));
             }
 
             foreach (var item in Items)
             {
                 if (item.TrackingState > 0)
-                    progression.Add(Enumerable.Repeat(new SMZ3.Item(item.InternalItemType), item.TrackingState));
+                    progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
             }
             return progression;
         }
@@ -987,10 +987,15 @@ namespace Randomizer.SMZ3.Tracking
                     }
                 }
 
-                if (!location.IsAvailable(GetProgression()) && confidence >= Options.MinimumSassConfidence)
+                var items = GetProgression();
+                if (!location.IsAvailable(items) && confidence >= Options.MinimumSassConfidence)
                 {
                     var locationInfo = WorldInfo.Location(location);
-                    Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name);
+                    var missingItems = Logic.GetMissingRequiredItems(location, items)
+                        .OrderBy(x => x.Length)
+                        .First();
+                    var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                    Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
                 }
             }
 
@@ -1611,6 +1616,16 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         protected internal virtual SchrodingersString GetName(Location location)
             => WorldInfo.Location(location).Name;
+
+        /// <summary>
+        /// Returns a name for the specified item.
+        /// </summary>
+        /// <param name="item">The type of item whose name to get.</param>
+        /// <returns>
+        /// One of the possible names for the <paramref name="item"/>.
+        /// </returns>
+        protected internal virtual string GetName(ItemType item)
+            => Items.SingleOrDefault(x => x.InternalItemType == item)?.NameWithArticle.ToString() ?? item.GetDescription();
 
         /// <summary>
         /// Adds an action to be invoked to undo the last operation.

@@ -1087,7 +1087,7 @@
     ],
     "TrackedOutOfLogicItem": [
       "The racing council will hear about this!",
-      "Nice {0} you got there. How did you get to {1}?",
+      "How did you get to {1} without {2}?",
       "By the way, nice tech."
     ],
     "Hints": {
@@ -1306,6 +1306,10 @@
     {
       "Phrases": [ "Ban Vivelin", "Ban Fragger" ],
       "Response": [ "Please enter 75 digit alphanumeric password to continue.", "Access denied." ]
+    },
+    {
+      "Phrases": [ "Sing me a song" ],
+      "Response": [ "High, on high I stand,\nGazing down to see,\nThe endless garden,\nAwaiting me.\n\nRed bloometh the rose of conviction,\nAnd red bloometh the rose of hate,\nYes red bloometh the rose of contest,\nFirmly bound to its fate.\n\nAnd the war, it wageth on,\nThe storm, it rageth on,\nThe bold ever fight on,\nTheir lives echoed in song.\n\nFall, like snow they fall,\nPetals plucked and strewn,\nYet from their seeds grow,\nThis war anew.\n\nBlood trickling down from my fullers,\nAnd blood trickling down from mine hands,\nYes, blood trickling down to Hydaelyn,\nUntil I alone stand.\n\nThe war, still wageth on,\nThe storm, still rageth on,\nThe bold blindly march on,\nTheir lives, lost in a song." ]
     }
   ]
 }
