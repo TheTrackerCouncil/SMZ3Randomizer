@@ -31,6 +31,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="regionStates">Region states.</param>
         /// <param name="dungeonStates">Dungeon states.</param>
         /// <param name="markedLocations">Marked locations.</param>
+        /// <param name="bossStates">Boss states.</param>
         /// <param name="secondsElapsed">Seconds elapsed.</param>
         /// <param name="seedConfig">Seed config.</param>
         public TrackerState(IReadOnlyCollection<ItemState> itemStates,
@@ -38,6 +39,7 @@ namespace Randomizer.SMZ3.Tracking
             IReadOnlyCollection<RegionState> regionStates,
             IReadOnlyCollection<DungeonState> dungeonStates,
             IReadOnlyCollection<MarkedLocation> markedLocations,
+            IReadOnlyCollection<BossState> bossStates,
             double secondsElapsed,
             Config seedConfig)
         {
@@ -46,6 +48,7 @@ namespace Randomizer.SMZ3.Tracking
             RegionStates = regionStates;
             DungeonStates = dungeonStates;
             MarkedLocations = markedLocations;
+            BossStates = bossStates;
             SecondsElapsed = secondsElapsed;
             SeedConfig = seedConfig;
         }
@@ -74,6 +77,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets a collection of marked locations.
         /// </summary>
         public IReadOnlyCollection<MarkedLocation> MarkedLocations { get; }
+
+        /// <summary>
+        /// Gets a collection of marked locations.
+        /// </summary>
+        public IReadOnlyCollection<BossState> BossStates { get; }
 
         /// <summary>
         /// Gets the <see cref="Config"/> used to generate the seed being
@@ -115,6 +123,9 @@ namespace Randomizer.SMZ3.Tracking
             var markedLocations = tracker.MarkedLocations
                 .Select(x => new MarkedLocation(x.Key, x.Value.Name[0]))
                 .ToImmutableList();
+            var bossStates = tracker.WorldInfo.Bosses
+                .Select(x => new BossState(x.Name[0], x.Defeated))
+                .ToImmutableList();
             var seedConfig = tracker.World.Config;
             var secondsElapsed = tracker.TotalElapsedTime.TotalSeconds;
             return new TrackerState(
@@ -123,6 +134,7 @@ namespace Randomizer.SMZ3.Tracking
                 regionStates,
                 dungeonStates,
                 markedLocations,
+                bossStates,
                 secondsElapsed,
                 seedConfig);
         }
@@ -172,6 +184,7 @@ namespace Randomizer.SMZ3.Tracking
             dbContext.Entry(trackerState).Collection(x => x.RegionStates).Load();
             dbContext.Entry(trackerState).Collection(x => x.DungeonStates).Load();
             dbContext.Entry(trackerState).Collection(x => x.MarkedLocations).Load();
+            dbContext.Entry(trackerState).Collection(x => x.BossStates).Load();
 
             var itemStates = trackerState.ItemStates
                 .Select(x => new ItemState(x.ItemName, x.TrackingState))
@@ -193,6 +206,10 @@ namespace Randomizer.SMZ3.Tracking
                 .Select(x => new MarkedLocation(x.LocationId, x.ItemName))
                 .ToImmutableList();
 
+            var bossStates = trackerState.BossStates
+                .Select(x => new BossState(x.BossName, x.Defeated))
+                .ToImmutableList();
+
             var secondsElapsed = trackerState.SecondsElapsed;
 
             var config = GeneratedRom.IsValid(generatedRom) ? JsonSerializer.Deserialize<Config>(generatedRom.Settings, s_options) : new Config();
@@ -203,6 +220,7 @@ namespace Randomizer.SMZ3.Tracking
                 regionStates,
                 dungeonStates,
                 markedLocations,
+                bossStates,
                 secondsElapsed,
                 config ?? new Config());
         }
@@ -263,6 +281,14 @@ namespace Randomizer.SMZ3.Tracking
                     ?? throw new ArgumentException($"Could not find loaded item data for '{markedLocation.ItemName}'.", nameof(tracker));
 
                 tracker.MarkedLocations[markedLocation.LocationId] = item;
+            }
+
+            foreach (var bossState in BossStates)
+            {
+                var boss = tracker.WorldInfo.Bosses.SingleOrDefault(x => x.Name[0] == bossState.Name)
+                    ?? throw new ArgumentException($"Could not find boss with name '{bossState.Name}.", nameof(tracker));
+
+                boss.Defeated = bossState.Defeated;
             }
 
             tracker.World = world;
@@ -349,6 +375,14 @@ namespace Randomizer.SMZ3.Tracking
                     })
                     .ToList();
 
+                trackerState.BossStates = BossStates
+                    .Select(x => new TrackerBossState()
+                    {
+                        BossName = x.Name,
+                        Defeated = x.Defeated
+                    })
+                    .ToList();
+
                 if (rom != null)
                 {
                     rom.Settings = JsonSerializer.Serialize(SeedConfig, s_options);
@@ -368,6 +402,7 @@ namespace Randomizer.SMZ3.Tracking
                 trackerState.LocationStates.ToList().ForEach(x => CopyLocationState(x, LocationStates.First(y => y.Id == x.LocationId)));
                 trackerState.RegionStates.ToList().ForEach(x => CopyRegionState(x, RegionStates.First(y => y.TypeName == x.TypeName)));
                 trackerState.DungeonStates.ToList().ForEach(x => CopyDungeonState(x, DungeonStates.First(y => y.Name == x.Name)));
+                trackerState.BossStates.ToList().ForEach(x => CopyBossState(x, BossStates.First(y => y.Name == x.BossName)));
 
                 trackerState.MarkedLocations = MarkedLocations
                     .Select(x => new TrackerMarkedLocation()
@@ -485,5 +520,27 @@ namespace Randomizer.SMZ3.Tracking
         /// The name of the item that was marked at the location.
         /// </param>
         public record MarkedLocation(int LocationId, string ItemName);
+
+        /// <summary>
+        /// Represents the tracking state of a boss
+        /// </summary>
+        /// <param name="Name">
+        /// The name of the boss
+        /// </param>
+        /// <param name="Defeated">
+        /// Indicates whether the boss has been defeated or not.
+        /// </param>
+        public record BossState(string Name, bool Defeated);
+
+        /// <summary>
+        /// Copies the boss state values to the db boss state
+        /// </summary>
+        /// <param name="trackerbossState">The db boss state</param>
+        /// <param name="bossState">The tracker boss state</param>
+        private static void CopyBossState(TrackerBossState trackerbossState, BossState bossState)
+        {
+            trackerbossState.BossName = bossState.Name;
+            trackerbossState.Defeated = bossState.Defeated;
+        }
     }
 }

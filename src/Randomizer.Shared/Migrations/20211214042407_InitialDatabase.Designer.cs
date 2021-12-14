@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Shared.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    partial class RandomizerContextModelSnapshot : ModelSnapshot
+    [Migration("20211214042407_InitialDatabase")]
+    partial class InitialDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,28 +53,6 @@ namespace Randomizer.Shared.Migrations
                     b.HasIndex("TrackerStateId");
 
                     b.ToTable("GeneratedRoms");
-                });
-
-            modelBuilder.Entity("Randomizer.Shared.Models.TrackerBossState", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("BossName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Defeated")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("TrackerStateId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TrackerStateId");
-
-                    b.ToTable("TrackerBossStates");
                 });
 
             modelBuilder.Entity("Randomizer.Shared.Models.TrackerDungeonState", b =>
@@ -232,16 +212,6 @@ namespace Randomizer.Shared.Migrations
                     b.Navigation("TrackerState");
                 });
 
-            modelBuilder.Entity("Randomizer.Shared.Models.TrackerBossState", b =>
-                {
-                    b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
-                        .WithMany("BossStates")
-                        .HasForeignKey("TrackerStateId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("TrackerState");
-                });
-
             modelBuilder.Entity("Randomizer.Shared.Models.TrackerDungeonState", b =>
                 {
                     b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
@@ -294,8 +264,6 @@ namespace Randomizer.Shared.Migrations
 
             modelBuilder.Entity("Randomizer.Shared.Models.TrackerState", b =>
                 {
-                    b.Navigation("BossStates");
-
                     b.Navigation("DungeonStates");
 
                     b.Navigation("ItemStates");

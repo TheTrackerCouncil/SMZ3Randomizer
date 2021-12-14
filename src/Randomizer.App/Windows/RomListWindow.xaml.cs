@@ -495,7 +495,8 @@ namespace Randomizer.App
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.RegionStates).Load();
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.DungeonStates).Load();
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.MarkedLocations).Load();
-                    
+                _dbContext.Entry(rom.TrackerState).Collection(x => x.BossStates).Load();
+
                 _dbContext.TrackerStates.Remove(rom.TrackerState);
             }
 
