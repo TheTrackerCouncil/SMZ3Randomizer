@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: Logic switch
                 {
                     _ => new Requirement(items => items.Morph &&
-                        (items.PowerBomb || items.Super || items.CanAccessNorfairUpperPortal()))
+                        (items.TwoPowerBombs || items.CanPerformTrick(TrickType.SinglePowerBombForMorphBombs) || items.Super || items.CanAccessNorfairUpperPortal()))
                 });
             Waterway = new(this, 33, 0x8F87FA, LocationType.Visible,
                 name: "Energy Tank, Waterway",

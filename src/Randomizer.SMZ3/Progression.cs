@@ -105,6 +105,8 @@ namespace Randomizer.SMZ3
         public int ReserveTank { get; private set; }
         public int Rupees { get; private set; }
 
+        public List<TrickType> EnabledTricks { get; set; } = new () { TrickType.SinglePowerBombForMorphBombs };
+
         public void Add(IEnumerable<Item> items)
         {
             foreach (var item in items)

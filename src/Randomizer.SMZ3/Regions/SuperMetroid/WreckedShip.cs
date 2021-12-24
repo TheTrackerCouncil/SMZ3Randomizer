@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 {
                     Normal => items => CanUnlockShip(items) &&
                         (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
-                    _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
+                    _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.TwoPowerBombs || items.CanPerformTrick(TrickType.SinglePowerBombForMorphBombs) || items.CanSpringBallJump() ||
                         items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity))
                 });
             LeftSuperMissileChamber = new(this, 133, 0x8FC357, LocationType.Visible,
