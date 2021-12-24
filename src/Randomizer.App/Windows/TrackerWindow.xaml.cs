@@ -512,6 +512,7 @@ namespace Randomizer.App
                         bow.Untrack();
                     else
                         bow.Track();
+                    Tracker.UpdateTrackerProgression = true;
                     RefreshGridItems();
                 };
 
@@ -531,6 +532,7 @@ namespace Randomizer.App
                         silverArrows.Untrack();
                     else
                         silverArrows.Track();
+                    Tracker.UpdateTrackerProgression = true;
                     RefreshGridItems();
                 };
 
