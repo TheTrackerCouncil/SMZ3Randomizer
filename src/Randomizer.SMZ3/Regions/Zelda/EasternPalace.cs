@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             ArmosKnightsRewards = new Location(this, 256 + 108, 0x308150, LocationType.Regular,
                 name: "Armos Knights",
                 vanillaItem: ItemType.HeartContainer,
-                access: items => items.BigKeyEP && items.Bow && (items.Lamp || items.FireRod));
+                access: items => items.BigKeyEP && items.Bow && items.CanLightTorches());
         }
 
         public override string Name => "Eastern Palace";

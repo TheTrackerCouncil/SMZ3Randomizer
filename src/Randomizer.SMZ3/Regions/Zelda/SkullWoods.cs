@@ -50,12 +50,12 @@ namespace Randomizer.SMZ3.Regions.Zelda
             BridgeRoom = new Location(this, 256 + 151, 0x1E9FE, LocationType.Regular,
                 name: "Bridge Room",
                 vanillaItem: ItemType.KeySW,
-                access: items => items.Firerod);
+                access: items => items.FireRod);
 
             MothulaReward = new Location(this, 256 + 152, 0x308155, LocationType.Regular,
                 name: "Mothula",
                 vanillaItem: ItemType.HeartContainer,
-                access: items => items.Firerod && items.Sword && items.KeySW >= 3);
+                access: items => items.FireRod && items.Sword && items.KeySW >= 3);
         }
 
         public override string Name => "Skull Woods";

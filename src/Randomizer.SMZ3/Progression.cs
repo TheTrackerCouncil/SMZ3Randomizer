@@ -62,8 +62,8 @@ namespace Randomizer.SMZ3
         public bool Hookshot { get; private set; }
         public bool Mushroom { get; private set; }
         public bool Powder { get; private set; }
-        public bool Firerod { get; private set; }
-        public bool Icerod { get; private set; }
+        public bool FireRod { get; private set; }
+        public bool IceRod { get; private set; }
         public bool Bombos { get; private set; }
         public bool Ether { get; private set; }
         public bool Quake { get; private set; }
@@ -200,8 +200,8 @@ namespace Randomizer.SMZ3
                 ItemType.Hookshot => Hookshot = true,
                 ItemType.Mushroom => Mushroom = true,
                 ItemType.Powder => Powder = true,
-                ItemType.Firerod => Firerod = true,
-                ItemType.Icerod => Icerod = true,
+                ItemType.Firerod => FireRod = true,
+                ItemType.Icerod => IceRod = true,
                 ItemType.Bombos => Bombos = true,
                 ItemType.Ether => Ether = true,
                 ItemType.Quake => Quake = true,

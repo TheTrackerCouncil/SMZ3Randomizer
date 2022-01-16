@@ -47,14 +47,14 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 vanillaItem: ItemType.TenArrows,
                 access: items => items.KeyGT >= 3 && (
                     (items.Hammer && items.Hookshot) ||
-                    (items.Somaria && items.Firerod)));
+                    (items.Somaria && items.FireRod)));
 
             BigChest = new Location(this, 256 + 208, 0x1EAD6, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveTunic,
                 access: items => items.BigKeyGT && items.KeyGT >= 3 && (
                     (items.Hammer && items.Hookshot) ||
-                    (items.Somaria && items.Firerod)))
+                    (items.Somaria && items.FireRod)))
                 .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
             PreMoldormChest = new Location(this, 256 + 214, 0x1EB03, LocationType.Regular,
@@ -260,7 +260,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             private bool RightSide(Progression items, IList<Location> locations)
             {
-                return items.Somaria && items.Firerod && items.KeyGT >= (locations.Any(l => l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
+                return items.Somaria && items.FireRod && items.KeyGT >= (locations.Any(l => l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
             }
         }
 
@@ -294,14 +294,14 @@ namespace Randomizer.SMZ3.Regions.Zelda
             private bool BigKeyRoom(Progression items)
             {
                 return items.KeyGT >= 3 && CanBeatArmos(items)
-                    && ((items.Hammer && items.Hookshot) || (items.Firerod && items.Somaria));
+                    && ((items.Hammer && items.Hookshot) || (items.FireRod && items.Somaria));
             }
 
             private bool CanBeatArmos(Progression items)
             {
                 return items.Sword || items.Hammer || items.Bow ||
                     (items.CanExtendMagic(2) && (items.Somaria || items.Byrna)) ||
-                    (items.CanExtendMagic(4) && (items.Firerod || items.Icerod));
+                    (items.CanExtendMagic(4) && (items.FireRod || items.IceRod));
             }
         }
 
