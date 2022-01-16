@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         private bool CanBeatBoss(Progression items)
         {
-            return items.Firerod && items.Icerod;
+            return items.FireRod && items.IceRod;
         }
 
         public class RollerRoomRoom : Room
@@ -103,11 +103,11 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 Left = new Location(this, 256 + 178, 0x1EA1C, LocationType.Regular,
                     "Left",
                     ItemType.MapTR,
-                    items => items.Firerod);
+                    items => items.FireRod);
                 Right = new Location(this, 256 + 179, 0x1EA1F, LocationType.Regular,
                     "Right",
                     ItemType.KeyTR,
-                    items => items.Firerod);
+                    items => items.FireRod);
             }
 
             public Location Left { get; }

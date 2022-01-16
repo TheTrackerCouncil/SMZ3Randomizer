@@ -83,7 +83,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
         private bool CanBeatBoss(Progression items)
         {
             return items.Sword || items.Hammer || items.Bow ||
-                items.Firerod || items.Icerod ||
+                items.FireRod || items.IceRod ||
                 items.Byrna || items.Somaria;
         }
     }
