@@ -73,8 +73,8 @@ namespace Randomizer.SMZ3
         public bool Hookshot => Contains(ItemType.Hookshot);
         public bool Mushroom => Contains(ItemType.Mushroom);
         public bool Powder => Contains(ItemType.Powder);
-        public bool Firerod => Contains(ItemType.Firerod);
-        public bool Icerod => Contains(ItemType.Icerod);
+        public bool FireRod => Contains(ItemType.Firerod);
+        public bool IceRod => Contains(ItemType.Icerod);
         public bool Bombos => Contains(ItemType.Bombos);
         public bool Ether => Contains(ItemType.Ether);
         public bool Quake => Contains(ItemType.Quake);
