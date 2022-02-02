@@ -5,7 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>3.1.1</Version>
+    <Version>3.2.0</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="NReco.Logging.File" Version="1.1.2" />

@@ -9,11 +9,11 @@ namespace Randomizer.SMZ3
         public static bool CanLiftHeavy(this Progression items) => items.Mitt;
 
         public static bool CanLightTorches(this Progression items) {
-            return items.Firerod || items.Lamp;
+            return items.FireRod || items.Lamp;
         }
 
         public static bool CanMeltFreezors(this Progression items) {
-            return items.Firerod || items.Bombos && items.Sword;
+            return items.FireRod || (items.Bombos && items.Sword);
         }
 
         public static bool CanExtendMagic(this Progression items, int bars = 2) {
@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3
         }
 
         public static bool CanKillManyEnemies(this Progression items) {
-            return items.Sword || items.Hammer || items.Bow || items.Firerod ||
+            return items.Sword || items.Hammer || items.Bow || items.FireRod ||
                 items.Somaria || (items.Byrna && items.CanExtendMagic());
         }
 
@@ -44,7 +44,7 @@ namespace Randomizer.SMZ3
         public static bool CanAccessMiseryMirePortal(this Progression items, Config config) {
             return config.SMLogic switch {
                 Normal =>
-                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && items.Gravity && items.SpaceJump && items.CanUsePowerBombs(),
+                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && (items.Gravity && items.SpaceJump) && items.CanUsePowerBombs(),
                 _ =>
                     (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
                         items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || items.Ice
