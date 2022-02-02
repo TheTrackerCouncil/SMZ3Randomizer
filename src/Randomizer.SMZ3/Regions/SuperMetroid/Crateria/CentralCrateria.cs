@@ -17,7 +17,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => (Config.Keysanity ? items.CardCrateriaL1 : items.CanUsePowerBombs()) && (items.SpeedBooster || items.CanFly()))
+                    _ => items => (Config.Keysanity ? items.CardCrateriaL1 : items.CanUsePowerBombs()) && (items.SpeedBooster || items.CanFly())
                 });
             FinalMissileBombWay = new(this, 12, 0x8F8486, LocationType.Visible,
                 name: "Missile (Crateria middle)",
@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanPassBombPassages())
+                    _ => items => items.CanPassBombPassages()
                 });
             MotherBrainTreasure = new(this, 6, 0x8F83EE, LocationType.Visible,
                 name: "Missile (Crateria bottom)",
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanDestroyBombWalls())
+                    _ => items => items.CanDestroyBombWalls()
                 });
             SuperMissile = new(this, 11, 0x8F8478, LocationType.Visible,
                 name: "Super Missile (Crateria)",
@@ -41,7 +41,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Super,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanUsePowerBombs() && items.HasEnergyReserves(2) && items.SpeedBooster)
+                    _ => items => items.CanUsePowerBombs() && items.HasEnergyReserves(2) && items.SpeedBooster
                 });
             BombTorizo = new(this, 7, 0x8F8404, LocationType.Chozo,
                 name: "Bombs",
@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 access: Logic switch
                 {
                     Normal => items => (Config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.CanPassBombPassages(),
-                    _ => new Requirement(items => (Config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.Morph)
+                    _ => items => (Config.Keysanity ? items.CardCrateriaBoss : items.CanOpenRedDoors()) && items.Morph
                 });
         }
 

@@ -14,7 +14,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => new Requirement(items => items.CanPassBombPassages())
+                    _ => items => items.CanPassBombPassages()
                 });
             PostChozoConcertSpeedBoosterItem = new(this, 129, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
                 name: "Reserve Tank, Wrecked Ship",
@@ -24,8 +24,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 {
                     Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.SpeedBooster && items.CanUsePowerBombs() &&
                         (items.Grapple || items.SpaceJump || (items.Varia && items.HasEnergyReserves(2)) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.CanUsePowerBombs() && items.SpeedBooster &&
-                        (items.Varia || items.HasEnergyReserves(2)))
+                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.CanUsePowerBombs() && items.SpeedBooster &&
+                        (items.Varia || items.HasEnergyReserves(2))
                 });
             PostChozoConcertBreakableChozo = new(this, 130, 0x8FC2EF, LocationType.Visible,
                 name: "Missile (Gravity Suit)",
@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 {
                     Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
                         (items.Grapple || items.SpaceJump || (items.Varia && items.HasEnergyReserves(2)) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1)))
+                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1))
                 });
             AtticAssemblyLine = new(this, 131, 0x8FC319, LocationType.Visible,
                 name: "Missile (Wrecked Ship top)",
@@ -50,8 +50,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 {
                     Normal => items => CanUnlockShip(items) &&
                         (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
-                    _ => new Requirement(items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
-                        items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity))
+                    _ => items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
+                        items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity)
                 });
             LeftSuperMissileChamber = new(this, 133, 0x8FC357, LocationType.Visible,
                 name: "Super Missile (Wrecked Ship left)",
@@ -71,7 +71,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 {
                     Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
                         (items.Grapple || items.SpaceJump || (items.Varia && items.HasEnergyReserves(2)) || items.HasEnergyReserves(3)),
-                    _ => new Requirement(items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1)))
+                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1))
                 });
         }
 

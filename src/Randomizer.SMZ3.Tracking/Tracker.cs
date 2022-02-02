@@ -626,15 +626,15 @@ namespace Randomizer.SMZ3.Tracking
 
             if (!World.Config.Keysanity || assumeKeys)
             {
-                progression.Add(SMZ3.Item.CreateKeycards(World));
+                progression.AddRange(Item.CreateKeycards(World));
                 if (assumeKeys)
-                    progression.Add(SMZ3.Item.CreateDungeonPool(World));
+                    progression.AddRange(Item.CreateDungeonPool(World));
             }
 
             foreach (var item in Items)
             {
                 if (item.TrackingState > 0)
-                    progression.Add(Enumerable.Repeat(new SMZ3.Item(item.InternalItemType), item.TrackingState));
+                    progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
             }
             return progression;
         }
@@ -969,10 +969,11 @@ namespace Randomizer.SMZ3.Tracking
             // Check if we can clear a location
             Action? undoClear = null;
             Action? undoTrackDungeonTreasure = null;
-            if (tryClear)
+
+            var location = World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
+            if (location != null)
             {
-                var location = World.Locations.TrySingle(x => x.Cleared == false && x.ItemIs(item.InternalItemType, World));
-                if (location != null)
+                if (tryClear)
                 {
                     // If this item was in a dungeon, track treasure count
                     undoTrackDungeonTreasure = TryTrackDungeonTreasure(item, confidence);
@@ -988,6 +989,24 @@ namespace Randomizer.SMZ3.Tracking
                     {
                         MarkedLocations.Remove(location.Id);
                         OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+                    }
+                }
+
+                var items = GetProgression();
+                if (!location.IsAvailable(items) && confidence >= Options.MinimumSassConfidence)
+                {
+                    var locationInfo = WorldInfo.Location(location);
+                    var missingItems = Logic.GetMissingRequiredItems(location, items)
+                        .OrderBy(x => x.Length)
+                        .FirstOrDefault();
+                    if (missingItems == null)
+                    {
+                        Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                    }
+                    else
+                    {
+                        var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                        Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
                     }
                 }
             }
@@ -1649,6 +1668,16 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         protected internal virtual SchrodingersString GetName(Location location)
             => WorldInfo.Location(location).Name;
+
+        /// <summary>
+        /// Returns a name for the specified item.
+        /// </summary>
+        /// <param name="item">The type of item whose name to get.</param>
+        /// <returns>
+        /// One of the possible names for the <paramref name="item"/>.
+        /// </returns>
+        protected internal virtual string GetName(ItemType item)
+            => Items.SingleOrDefault(x => x.InternalItemType == item)?.NameWithArticle.ToString() ?? item.GetDescription();
 
         /// <summary>
         /// Adds an action to be invoked to undo the last operation.

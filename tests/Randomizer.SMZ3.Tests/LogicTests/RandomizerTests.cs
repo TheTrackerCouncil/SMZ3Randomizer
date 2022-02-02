@@ -12,7 +12,7 @@ using Randomizer.SMZ3.Generation;
 
 using Xunit;
 
-namespace Randomizer.SMZ3.Tests.Logic
+namespace Randomizer.SMZ3.Tests.LogicTests
 {
     public class RandomizerTests
     {

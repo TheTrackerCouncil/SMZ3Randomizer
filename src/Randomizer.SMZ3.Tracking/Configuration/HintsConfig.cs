@@ -71,6 +71,28 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("You might find {0} in a world of light and dark.");
 
         /// <summary>
+        /// Gets the hints for items that are not in logic and mention one or
+        /// more missing items.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name(s) of the missing
+        /// item(s).
+        /// </remarks>
+        public SchrodingersString ItemRequiresOtherItem { get; init; }
+            = new("You need {1} before you can find {0}.");
+
+        /// <summary>
+        /// Gets the hints for items that are not in logic and require too many items to mention.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the".
+        /// </remarks>
+        public SchrodingersString ItemRequiresManyOtherItems { get; init; }
+            = new("You need a lot of other items before you can find {0}.");
+
+        /// <summary>
         /// Gets the hints for items that are not found in the specified region
         /// or area.
         /// </summary>
@@ -214,7 +236,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("It's got something from a different universe.");
 
         /// <summary>
-        /// Gets the hints for locations that have an item from the correct game.
+        /// Gets the hints for locations that have an item from the correct
+        /// game.
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is placeholder for the name of the location.

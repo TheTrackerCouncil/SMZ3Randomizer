@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 access: Logic switch
                 {
                     Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
-                    _ => new Requirement(items => CanEnterAndLeaveGauntlet(items))
+                    _ => items => CanEnterAndLeaveGauntlet(items)
                 });
             GauntletShaft = new(this);
         }
@@ -46,14 +46,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 Normal =>
                     items.CardCrateriaL1 && items.Morph && (items.CanFly() || items.SpeedBooster) && (
                         items.CanIbj() ||
-                        items.CanUsePowerBombs() && items.TwoPowerBombs ||
+                        (items.CanUsePowerBombs() && items.TwoPowerBombs) ||
                         items.ScrewAttack
                     ),
                 _ =>
                     items.CardCrateriaL1 && (
-                        items.Morph && (items.Bombs || items.TwoPowerBombs) ||
+                        (items.Morph && (items.Bombs || items.TwoPowerBombs)) ||
                         items.ScrewAttack ||
-                        items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2)
+                        (items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2))
                     )
             };
         }
@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 access: region.Logic switch
                 {
                     Normal => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                    _ => new Requirement(items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                    _ => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages()
                 });
 
                 GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
@@ -80,7 +80,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                     access: region.Logic switch
                     {
                         Normal => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                        _ => new Requirement(items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages())
+                        _ => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages()
                     });
             }
 
