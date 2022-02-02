@@ -42,6 +42,12 @@ namespace Randomizer.SMZ3.Tracking
         private bool _disposed;
         private string? _mood;
         private string? _lastSpokenText;
+        private Dictionary<string, Progression> _progression = new();
+
+        /// <summary>
+        /// Set when the progression needs to be updated for the current tracker instance
+        /// </summary>
+        public bool UpdateTrackerProgression { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -78,6 +84,7 @@ namespace Randomizer.SMZ3.Tracking
             World = worldAccessor.GetWorld();
             WorldInfo = locationConfig;
             GetTreasureCounts(WorldInfo.Dungeons, World);
+            UpdateTrackerProgression = true;
 
             // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
@@ -622,6 +629,19 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Progression GetProgression(bool assumeKeys)
         {
+            if (UpdateTrackerProgression)
+            {
+                _progression.Clear();
+                UpdateTrackerProgression = false;
+            }
+
+            var mapKey = $"{assumeKeys}{!World.Config.Keysanity}";
+
+            if (_progression.ContainsKey(mapKey))
+            {
+                return _progression[mapKey];
+            }
+
             var progression = new Progression();
 
             if (!World.Config.Keysanity || assumeKeys)
@@ -636,6 +656,8 @@ namespace Randomizer.SMZ3.Tracking
                 if (item.TrackingState > 0)
                     progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
             }
+
+            _progression[mapKey] = progression;
             return progression;
         }
 
@@ -878,6 +900,7 @@ namespace Randomizer.SMZ3.Tracking
             var accessibleBefore = GetAccessibleLocations();
             var itemName = item.Name;
             var originalTrackingState = item.TrackingState;
+            UpdateTrackerProgression = true;
 
             if (item.HasStages)
             {
@@ -963,7 +986,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
-            Action undoTrack = () => item.TrackingState = originalTrackingState;
+            Action undoTrack = () => { item.TrackingState = originalTrackingState; UpdateTrackerProgression = true; };
             OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
 
             // Check if we can clear a location
@@ -1018,6 +1041,7 @@ namespace Randomizer.SMZ3.Tracking
                 undoTrack();
                 undoClear?.Invoke();
                 undoTrackDungeonTreasure?.Invoke();
+                UpdateTrackerProgression = true;
             });
             GiveLocationHint(accessibleBefore);
             RestartIdleTimers();
@@ -1033,6 +1057,7 @@ namespace Randomizer.SMZ3.Tracking
         public void UntrackItem(ItemData item, float? confidence = null)
         {
             var originalTrackingState = item.TrackingState;
+            UpdateTrackerProgression = true;
 
             if (!item.Untrack())
             {
@@ -1063,7 +1088,7 @@ namespace Randomizer.SMZ3.Tracking
 
             IsDirty = true;
             OnItemTracked(new(null, confidence));
-            AddUndo(() => item.TrackingState = originalTrackingState);
+            AddUndo(() => { item.TrackingState = originalTrackingState; UpdateTrackerProgression = true; });
         }
 
         /// <summary>
@@ -1079,6 +1104,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             var tracked = TrackItem(item, trackedAs, confidence, tryClear: false);
             var undoTrack = _undoHistory.Pop();
+            UpdateTrackerProgression = true;
 
             // Check if we can remove something from the remaining treasures in
             // a dungeon
@@ -1112,6 +1138,7 @@ namespace Randomizer.SMZ3.Tracking
                     undoTrack();
                     undoTrackTreasure?.Invoke();
                     location.Cleared = false;
+                    UpdateTrackerProgression = true;
                 });
             }
             else
@@ -1120,6 +1147,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     undoTrack();
                     undoTrackTreasure?.Invoke();
+                    UpdateTrackerProgression = true;
                 });
             }
         }
@@ -1138,6 +1166,7 @@ namespace Randomizer.SMZ3.Tracking
             var locations = area.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .ToImmutableList();
+            UpdateTrackerProgression = true;
 
             if (locations.Count == 0)
             {
@@ -1161,6 +1190,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     undoClear();
                     undoTrack();
+                    UpdateTrackerProgression = true;
                 });
             }
         }
@@ -1180,6 +1210,7 @@ namespace Randomizer.SMZ3.Tracking
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
 
+            UpdateTrackerProgression = true;
             IsDirty = true;
 
             var undoClear = _undoHistory.Pop();
@@ -1188,6 +1219,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 undoClear();
                 undoTrack();
+                UpdateTrackerProgression = true;
             });
         }
 
@@ -1201,6 +1233,8 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void TrackItemAmount(ItemData item, int count, float confidence)
         {
+            UpdateTrackerProgression = true;
+
             var newItemCount = count;
             if (item.CounterMultiplier > 1
                 && count % item.CounterMultiplier == 0)
@@ -1231,7 +1265,7 @@ namespace Randomizer.SMZ3.Tracking
 
             IsDirty = true;
 
-            AddUndo(() => item.TrackingState = oldItemCount);
+            AddUndo(() => { item.TrackingState = oldItemCount; UpdateTrackerProgression = true; });
             OnItemTracked(new(null, confidence));
         }
 
@@ -1256,7 +1290,7 @@ namespace Randomizer.SMZ3.Tracking
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
             Action? undoTrackDungeon = null;
-
+            
             var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
             if (dungeon != null)
             {
@@ -1268,6 +1302,8 @@ namespace Randomizer.SMZ3.Tracking
                 .WhereIf(dungeon != null, x => x.Type != LocationType.NotInDungeon)
                 .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression(assumeKeys)))
                 .ToImmutableList();
+
+            UpdateTrackerProgression = true;
 
             if (locations.Count == 0)
             {
@@ -1376,6 +1412,7 @@ namespace Randomizer.SMZ3.Tracking
                     location.Cleared = false;
                 }
                 undoTrackDungeon?.Invoke();
+                UpdateTrackerProgression = true;
             });
         }
 
@@ -1386,6 +1423,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void Clear(Location location, float? confidence = null)
         {
+            UpdateTrackerProgression = true;
             location.Cleared = true;
 
             if (confidence != null)
@@ -1423,6 +1461,7 @@ namespace Randomizer.SMZ3.Tracking
                 location.Cleared = false;
                 undoTrackTreasure?.Invoke();
                 undoStopPegWorldMode?.Invoke();
+                UpdateTrackerProgression = true;
             });
             OnLocationCleared(new(location, confidence));
         }
@@ -1434,6 +1473,8 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void MarkDungeonAsCleared(DungeonInfo dungeon, float? confidence = null)
         {
+            UpdateTrackerProgression = true;
+
             if (dungeon.Cleared)
             {
                 Say(Responses.DungeonAlreadyCleared.Format(dungeon.Name, dungeon.Boss));
@@ -1471,6 +1512,7 @@ namespace Randomizer.SMZ3.Tracking
             OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
             {
+                UpdateTrackerProgression = true;
                 dungeon.Cleared = false;
                 undoTrack?.Invoke();
             });
@@ -1530,6 +1572,7 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
+            UpdateTrackerProgression = true;
             dungeon.Cleared = false;
             Say(Responses.DungeonUncleared.Format(dungeon.Name, dungeon.Boss));
 
@@ -1573,6 +1616,7 @@ namespace Randomizer.SMZ3.Tracking
                 undoUntrack?.Invoke();
                 undoUntrackTreasure?.Invoke();
                 undoUnclear?.Invoke();
+                UpdateTrackerProgression = true;
             });
         }
 
