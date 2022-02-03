@@ -478,7 +478,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
 
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
-                AddUndo(() => dungeon.TreasureRemaining++);
+                AddUndo(() => dungeon.TreasureRemaining += amount);
                 return true;
             }
             else if (confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
