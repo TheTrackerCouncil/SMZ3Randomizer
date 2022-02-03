@@ -1499,21 +1499,24 @@ namespace Randomizer.SMZ3.Tracking
             if (dungeon.LocationId != null)
             {
                 var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
-                if (rewardLocation.Item != null)
+                if (!rewardLocation.Cleared)
                 {
-                    var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
-                    if (item != null)
+                    if (rewardLocation.Item != null)
                     {
-                        TrackItem(item, rewardLocation);
+                        var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
+                        if (item != null)
+                        {
+                            TrackItem(item, rewardLocation);
+                            undoTrack = _undoHistory.Pop();
+                        }
+                    }
+
+                    if (undoTrack == null)
+                    {
+                        // Couldn't track an item, so just clear the location
+                        Clear(rewardLocation);
                         undoTrack = _undoHistory.Pop();
                     }
-                }
-
-                if (undoTrack == null)
-                {
-                    // Couldn't track an item, so just clear the location
-                    Clear(rewardLocation);
-                    undoTrack = _undoHistory.Pop();
                 }
             }
 
