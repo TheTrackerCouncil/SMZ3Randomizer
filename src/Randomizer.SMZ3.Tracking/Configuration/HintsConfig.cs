@@ -83,7 +83,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("You need {1} before you can find {0}.");
 
         /// <summary>
-        /// Gets the hints for items that are not in logic and require too many items to mention.
+        /// Gets the hints for items that are not in logic and require too many
+        /// items to mention.
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
@@ -205,8 +206,21 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets the hints for locations that have been cleared already.
         /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is placeholder for the name of the location.
+        /// </remarks>
         public SchrodingersString LocationAlreadyCleared { get; init; }
             = new("Haven't you been there already?");
+
+        /// <summary>
+        /// Gets the hints for locations that have been cleared already.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the name of the item at the location.
+        /// </remarks>
+        public SchrodingersString LocationAlreadyClearedSpoiler { get; init; }
+            = new("Haven't you been there already? It was {1}.");
 
         /// <summary>
         /// Gets the hints for locations that don't have anything useful.
