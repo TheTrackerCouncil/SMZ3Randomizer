@@ -600,7 +600,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
-                .OneOf("where is", "where's", "where are")
+                .OneOf("where is", "where's", "where are", "where can I find")
                 .Optional("the", "a", "an")
                 .Append(ItemNameKey, items);
         }
