@@ -98,6 +98,14 @@ namespace Randomizer.SMZ3.Tracking
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
+            _recognizer.AudioSignalProblemOccurred += (sender, e) =>
+            {
+                _logger.LogDebug("Audio signal problem occurred in speech recognizer: {0}", e.AudioSignalProblem);
+            };
+            _recognizer.AudioStateChanged += (sender, e) =>
+            {
+                _logger.LogTrace("{0}", e.AudioState);
+            };
             InitializeMicrophone();
         }
 
@@ -720,6 +728,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (MicrophoneInitialized && !VoiceRecognitionEnabled)
             {
+                _logger.LogInformation("Starting speech recognition");
                 _recognizer.RecognizeAsync(RecognizeMode.Multiple);
                 VoiceRecognitionEnabled = true;
             }
@@ -734,6 +743,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 VoiceRecognitionEnabled = false;
                 _recognizer.RecognizeAsyncStop();
+                _logger.LogInformation("Stopped speech recognition");
             }
         }
 
@@ -1953,7 +1963,7 @@ namespace Randomizer.SMZ3.Tracking
         private void Recognizer_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
         {
             RestartIdleTimers();
-            OnSpeechRecognized(new(e.Result.Confidence));
+            OnSpeechRecognized(new(e.Result.Confidence, e.Result.Text));
         }
 
         private void GiveLocationHint(IEnumerable<Location> accessibleBefore)
