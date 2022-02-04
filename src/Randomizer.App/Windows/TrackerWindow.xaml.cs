@@ -714,6 +714,7 @@ namespace Randomizer.App
         {
             if (e.Confidence != null)
                 StatusBarConfidence.Content = $"{e.Confidence:P2}";
+            StatusBarRecognizedPhrase.Content = $"“{e.Phrase}”";
         }
 
         private void ResetGridSize()

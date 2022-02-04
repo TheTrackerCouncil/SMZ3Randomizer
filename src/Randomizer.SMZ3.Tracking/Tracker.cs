@@ -98,6 +98,14 @@ namespace Randomizer.SMZ3.Tracking
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
+            _recognizer.AudioSignalProblemOccurred += (sender, e) =>
+            {
+                _logger.LogDebug("Audio signal problem occurred in speech recognizer: {0}", e.AudioSignalProblem);
+            };
+            _recognizer.AudioStateChanged += (sender, e) =>
+            {
+                _logger.LogTrace("{0}", e.AudioState);
+            };
             InitializeMicrophone();
         }
 
@@ -470,7 +478,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
 
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
-                AddUndo(() => dungeon.TreasureRemaining++);
+                AddUndo(() => dungeon.TreasureRemaining += amount);
                 return true;
             }
             else if (confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
@@ -720,6 +728,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (MicrophoneInitialized && !VoiceRecognitionEnabled)
             {
+                _logger.LogInformation("Starting speech recognition");
                 _recognizer.RecognizeAsync(RecognizeMode.Multiple);
                 VoiceRecognitionEnabled = true;
             }
@@ -734,6 +743,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 VoiceRecognitionEnabled = false;
                 _recognizer.RecognizeAsyncStop();
+                _logger.LogInformation("Stopped speech recognition");
             }
         }
 
@@ -1489,21 +1499,24 @@ namespace Randomizer.SMZ3.Tracking
             if (dungeon.LocationId != null)
             {
                 var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
-                if (rewardLocation.Item != null)
+                if (!rewardLocation.Cleared)
                 {
-                    var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
-                    if (item != null)
+                    if (rewardLocation.Item != null)
                     {
-                        TrackItem(item, rewardLocation);
+                        var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
+                        if (item != null)
+                        {
+                            TrackItem(item, rewardLocation);
+                            undoTrack = _undoHistory.Pop();
+                        }
+                    }
+
+                    if (undoTrack == null)
+                    {
+                        // Couldn't track an item, so just clear the location
+                        Clear(rewardLocation);
                         undoTrack = _undoHistory.Pop();
                     }
-                }
-
-                if (undoTrack == null)
-                {
-                    // Couldn't track an item, so just clear the location
-                    Clear(rewardLocation);
-                    undoTrack = _undoHistory.Pop();
                 }
             }
 
@@ -1953,7 +1966,7 @@ namespace Randomizer.SMZ3.Tracking
         private void Recognizer_SpeechRecognized(object? sender, SpeechRecognizedEventArgs e)
         {
             RestartIdleTimers();
-            OnSpeechRecognized(new(e.Result.Confidence));
+            OnSpeechRecognized(new(e.Result.Confidence, e.Result.Text));
         }
 
         private void GiveLocationHint(IEnumerable<Location> accessibleBefore)

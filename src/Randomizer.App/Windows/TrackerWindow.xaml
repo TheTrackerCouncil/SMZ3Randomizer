@@ -75,6 +75,9 @@
                      ToolTip="Voice recognition disabled. Double click to attempt to enable voice recognition."
                      MouseDoubleClick="StatusBarVoiceDisabled_MouseDoubleClick"
                      Visibility="Collapsed" />
+      <StatusBarItem x:Name="StatusBarRecognizedPhrase"
+                     Content=""
+                     ToolTip="The most recently recognized phrase." />
     </StatusBar>
   </Grid>
 </Window>

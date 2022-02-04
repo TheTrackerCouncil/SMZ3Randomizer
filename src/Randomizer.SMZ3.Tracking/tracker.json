@@ -28,8 +28,8 @@
       "Multiple": true
     },
     {
-      "Name": [ "Death", "Game Over" ],
-      "Plural": [ "Deaths", "Game Overs" ],
+      "Name": [ "Death", "Game Over", "Tactical reset" ],
+      "Plural": [ "Deaths", "Game Overs", "Tactical resets" ],
       "Article": "",
       "InternalItemType": 0,
       "Column": 10,
@@ -37,10 +37,16 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "lawl, you died" ],
-        "2": [ "You've died {0} times." ],
+        "2": [
+          "You've died {0} times.",
+          [ "You've manipulated RNG {0} times.", 0.5 ],
+          [ "You've performed {0} tactical resets.", 0.5 ]
+        ],
         "5": [
           "You've died {0} times now.",
-          [ "Maybe I should take over", 0.1 ]
+          [ "You've manipulated RNG {0} times.", 0.5 ],
+          [ "You've performed {0} tactical resets.", 0.5 ],
+          [ "Maybe I should take over", 0.2 ]
         ]
       }
     },
@@ -95,7 +101,9 @@
       "Name": [
         [ "Bow", 0 ],
         "Boh",
-        [ "Boh and Arrow", 0.2 ]
+        [ "Boh and Arrow", 0.2 ],
+        [ "Arrow launcher", 0.01 ],
+        [ "Stick thrower", 0.05 ]
       ],
       "InternalItemType": 11,
       "Column": 0,
@@ -107,8 +115,8 @@
     {
       "Name": [
         "Blue Boomerang",
-        [ "Blue Shit", 0.01 ],
-        [ "That Blue Shit", 0.01 ]
+        [ "Blue Shit", 0.1 ],
+        [ "That Blue Shit", 0.1 ]
       ],
       "InternalItemType": 12,
       "Column": 1,
@@ -169,7 +177,7 @@
       "Name": [
         "Shovel",
         "Digging Tool",
-        [ "Shaktool Junior", 0.01 ]
+        [ "Shaktool Junior", 0.1 ]
       ],
       "InternalItemType": 19,
       "Column": 5,
@@ -203,7 +211,10 @@
       ]
     },
     {
-      "Name": "Bottle",
+      "Name": [
+        "Bottle",
+        [ "Glass container", 0.2 ]
+      ],
       "InternalItemType": 22,
       "Stages": {
         "1": [ "First bottle" ],
@@ -660,7 +671,12 @@
       "Multiple": true
     },
     {
-      "Name": [ "Grappling Beam", "Grapple Beam", "Grapple" ],
+      "Name": [
+        "Grappling Beam",
+        "Grapple Beam",
+        "Grapple",
+        [ "Key to Shaktool's front door", 0.01 ]
+      ],
       "InternalItemType": 176,
       "Column": 6,
       "Row": 3,
@@ -1298,7 +1314,13 @@
       ],
       "LocationAlreadyCleared": [
         "Haven't you been there already?",
-        "I thought you've already cleared {0}."
+        "I thought you've already cleared {0}.",
+        "Did you forget already? How sad."
+      ],
+      "LocationAlreadyClearedSpoiler": [
+        "Haven't you been there already? It had {1}.",
+        "I thought you've already cleared {0}. It was {1}, in case you forgot.",
+        "Did you forget already? How sad. It was {1}."
       ],
       "LocationHasJunkItem": [
         "There's nothing important there.",
@@ -1453,7 +1475,24 @@
     },
     {
       "Phrases": [ "Sing me a song" ],
-      "Response": [ "High, on high I stand,\nGazing down to see,\nThe endless garden,\nAwaiting me.\n\nRed bloometh the rose of conviction,\nAnd red bloometh the rose of hate,\nYes red bloometh the rose of contest,\nFirmly bound to its fate.\n\nAnd the war, it wageth on,\nThe storm, it rageth on,\nThe bold ever fight on,\nTheir lives echoed in song.\n\nFall, like snow they fall,\nPetals plucked and strewn,\nYet from their seeds grow,\nThis war anew.\n\nBlood trickling down from my fullers,\nAnd blood trickling down from mine hands,\nYes, blood trickling down to Hydaelyn,\nUntil I alone stand.\n\nThe war, still wageth on,\nThe storm, still rageth on,\nThe bold blindly march on,\nTheir lives, lost in a song." ]
+      "Response": [
+        "High, on high I stand,\nGazing down to see,\nThe endless garden,\nAwaiting me.\n\nRed bloometh the rose of conviction,\nAnd red bloometh the rose of hate,\nYes red bloometh the rose of contest,\nFirmly bound to its fate.\n\nAnd the war, it wageth on,\nThe storm, it rageth on,\nThe bold ever fight on,\nTheir lives echoed in song.\n\nFall, like snow they fall,\nPetals plucked and strewn,\nYet from their seeds grow,\nThis war anew.\n\nBlood trickling down from my fullers,\nAnd blood trickling down from mine hands,\nYes, blood trickling down to Hydaelyn,\nUntil I alone stand.\n\nThe war, still wageth on,\nThe storm, still rageth on,\nThe bold blindly march on,\nTheir lives, lost in a song.",
+        "You seem so far away\nAnd I just need to hear your voice\nI just need to hear you say\nIf you would have me go or stay.\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nGirl in the tower\nI'm calling out\nMy heart cries out for you\n\nI saw your face\nand I felt our souls embrace\nIf it's not meant to be this way\nWhy do you haunt me night and day?\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\n\nGirl in the tower...\n\nI'm calling out, calling out\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower...\nHere in the tower...\n"
+      ]
+    },
+    {
+      "Phrases": [ "What's Google been up to?" ],
+      "Response": [
+        "Google Has dedicated 1 Billion Dollars to giving the world free wifi access through satellites, so soon even in third world countries they will have our refurbished smartphones. All of us need funding for a Website. The Website, will be the most popular website in history. it's existence is inevitable, and the public needs it. The world needs it. "
+      ]
+    },
+    {
+      "Phrases": [ "Tell me a joke", "Do you know any jokes?" ],
+      "Response": [
+        "This seed.",
+        "When does a joke become a dad joke? <break time='1s'/> When it becomes apparent.",
+        "I got drunk and threw up in the elevator on my way home. It was disgusting on so many levels."
+      ]
     }
   ]
 }

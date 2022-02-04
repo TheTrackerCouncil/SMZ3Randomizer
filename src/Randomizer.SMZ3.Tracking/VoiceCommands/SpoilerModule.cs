@@ -150,8 +150,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationName = Tracker.WorldInfo.Location(location).Name;
             if (location.Cleared)
             {
-                Tracker.Say(x => x.Hints.LocationAlreadyCleared, locationName);
-                return;
+                if (HintsEnabled || SpoilersEnabled)
+                {
+                    var itemName = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
+                        ?? location.Item?.Name
+                        ?? "an unknown item";
+                    Tracker.Say(x => x.Hints.LocationAlreadyClearedSpoiler, locationName, itemName);
+                    return;
+                }
+                else
+                {
+                    Tracker.Say(x => x.Hints.LocationAlreadyCleared, locationName);
+                    return;
+                }
             }
 
             if (Tracker.MarkedLocations.TryGetValue(location.Id, out var markedItem))
@@ -600,7 +611,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
-                .OneOf("where is", "where's", "where are")
+                .OneOf("where is", "where's", "where are", "where can I find")
                 .Optional("the", "a", "an")
                 .Append(ItemNameKey, items);
         }
