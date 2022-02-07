@@ -17,214 +17,218 @@
         MinHeight="240"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">
-    <Window.DataContext>
-        <vm:RandomizerOptions></vm:RandomizerOptions>
-    </Window.DataContext>
+  <Window.DataContext>
+    <vm:RandomizerOptions></vm:RandomizerOptions>
+  </Window.DataContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"
+    <Grid Grid.Row="0"
           Grid.IsSharedSizeScope="True">
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled">
-                <StackPanel Orientation="Vertical">
-                    <Expander Header="Item locations"
+        <StackPanel Orientation="Vertical">
+          <Expander Header="Item locations"
                     x:Name="ItemLocationsExpander"
                     IsExpanded="{Binding ItemLocationsExpanded}">
-                        <StackPanel Orientation="Vertical"
+            <StackPanel Orientation="Vertical"
                         Margin="24,11,11,11"
                         DataContext="{Binding SeedOptions}">
-                            <controls:LabeledControl Text="Sword location:">
-                                <StackPanel Style="{StaticResource RadioButtonGroup}">
-                                    <RadioButton GroupName="SwordLocation"
+              <controls:LabeledControl Text="Sword location:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="SwordLocation"
                                Content="Randomized"
                                IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
-                                    <RadioButton GroupName="SwordLocation"
+                  <RadioButton GroupName="SwordLocation"
                                Content="Early"
                                IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Early}}" />
-                                    <RadioButton GroupName="SwordLocation"
+                  <RadioButton GroupName="SwordLocation"
                                Content="Original location (Link's Uncle)"
                                IsChecked="{Binding SwordLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Original}}" />
-                                </StackPanel>
-                            </controls:LabeledControl>
+                </StackPanel>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Morph Ball location:">
-                                <StackPanel Style="{StaticResource RadioButtonGroup}">
-                                    <RadioButton GroupName="MorphLocation"
+              <controls:LabeledControl Text="Morph Ball location:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="MorphLocation"
                                Content="Randomized"
                                IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
-                                    <RadioButton GroupName="MorphLocation"
+                  <RadioButton GroupName="MorphLocation"
                                Content="Early"
                                IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Early}}" />
-                                    <RadioButton GroupName="MorphLocation"
+                  <RadioButton GroupName="MorphLocation"
                                Content="Original location (Blue Brinstar)"
                                IsChecked="{Binding MorphLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Original}}" />
-                                </StackPanel>
-                            </controls:LabeledControl>
+                </StackPanel>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Metroid bombs:">
-                                <StackPanel Style="{StaticResource RadioButtonGroup}">
-                                    <RadioButton GroupName="BombsLocation"
+              <controls:LabeledControl Text="Metroid bombs:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="BombsLocation"
                                Content="Randomized"
                                IsChecked="{Binding MorphBombsLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
-                                    <RadioButton GroupName="BombsLocation"
+                  <RadioButton GroupName="BombsLocation"
                                Content="Early"
                                IsChecked="{Binding MorphBombsLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Early}}" />
-                                    <RadioButton GroupName="BombsLocation"
+                  <RadioButton GroupName="BombsLocation"
                                Content="Original location (Torizo)"
                                IsChecked="{Binding MorphBombsLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Original}}" />
-                                </StackPanel>
-                            </controls:LabeledControl>
+                </StackPanel>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Shaktool item pool:">
-                                <StackPanel Style="{StaticResource RadioButtonGroup}">
-                                    <RadioButton GroupName="ShaktoolItemPool"
+              <controls:LabeledControl Text="Shaktool item pool:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="ShaktoolItemPool"
                                Content="Randomized"
                                IsChecked="{Binding ShaktoolItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Any}}" />
-                                    <RadioButton GroupName="ShaktoolItemPool"
+                  <RadioButton GroupName="ShaktoolItemPool"
                                Content="Only progression items"
                                IsChecked="{Binding ShaktoolItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Progression}}" />
-                                    <RadioButton GroupName="ShaktoolItemPool"
+                  <RadioButton GroupName="ShaktoolItemPool"
                                Content="I want Shaktool to betray me every time"
                                IsChecked="{Binding ShaktoolItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Junk}}" />
-                                </StackPanel>
-                            </controls:LabeledControl>
+                </StackPanel>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Peg World item pool:">
-                                <StackPanel Style="{StaticResource RadioButtonGroup}">
-                                    <RadioButton GroupName="PegWorldItemPool"
+              <controls:LabeledControl Text="Peg World item pool:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="PegWorldItemPool"
                                Content="Randomized"
                                IsChecked="{Binding PegWorldItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Any}}" />
-                                    <RadioButton GroupName="PegWorldItemPool"
+                  <RadioButton GroupName="PegWorldItemPool"
                                Content="Only progression items"
                                ToolTip="Mom, can we go to Peg World? It has all the best progression items!"
                                IsChecked="{Binding PegWorldItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Progression}}" />
-                                    <RadioButton GroupName="PegWorldItemPool"
+                  <RadioButton GroupName="PegWorldItemPool"
                                Content="Only junk items"
                                ToolTip="Peg World is overrated anyway."
                                IsChecked="{Binding PegWorldItem, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPool.Junk}}" />
-                                </StackPanel>
-                            </controls:LabeledControl>
-                        </StackPanel>
-                    </Expander>
+                </StackPanel>
+              </controls:LabeledControl>
+            </StackPanel>
+          </Expander>
 
-                    <Expander Header="Customization"
+          <Expander Header="Customization"
                     x:Name="CustomizationExpander"
                     IsExpanded="{Binding CustomizationExpanded}">
-                        <StackPanel Orientation="Vertical"
+            <StackPanel Orientation="Vertical"
                         Margin="24,11,11,11"
                         DataContext="{Binding PatchOptions}">
-                            <controls:LabeledControl Text="Samus sprite:">
-                                <ComboBox x:Name="SamusSpriteDropdown"
+              <controls:LabeledControl Text="Samus sprite:">
+                <ComboBox x:Name="SamusSpriteDropdown"
                           ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GenerateRomWindow}}}"
                           DisplayMemberPath="DisplayName"
                           SelectedItem="{Binding SamusSprite}" />
-                            </controls:LabeledControl>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Link sprite:">
-                                <ComboBox x:Name="LinkSpriteDropdown"
+              <controls:LabeledControl Text="Link sprite:">
+                <ComboBox x:Name="LinkSpriteDropdown"
                           ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GenerateRomWindow}}}"
                           DisplayMemberPath="DisplayName"
                           SelectedItem="{Binding LinkSprite}" />
-                            </controls:LabeledControl>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Heart color:">
-                                <ComboBox SelectedItem="{Binding HeartColor}"
+              <controls:LabeledControl Text="Heart color:">
+                <ComboBox SelectedItem="{Binding HeartColor}"
                           ItemsSource="{Binding Source={local:EnumBindingSource {x:Type smz3:HeartColor}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
-                            </controls:LabeledControl>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Low health beep speed:">
-                                <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
+              <controls:LabeledControl Text="Low health beep speed:">
+                <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
                           ItemsSource="{Binding Source={local:EnumBindingSource {x:Type smz3:LowHealthBeepSpeed}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
-                            </controls:LabeledControl>
+              </controls:LabeledControl>
 
-                            <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
+              <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
                         Content="Disable low energy beep in Super Metroid" />
 
-                            <controls:LabeledControl Text="Custom music pack:">
-                                <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
+              <CheckBox IsChecked="{Binding CasualSuperMetroidPatches}"
+                        Content="Super Cas'troid"
+                        ToolTip="Enables the following patches:\n• Infinite Space Jump: space jump is easier to use"/>
+
+              <controls:LabeledControl Text="Custom music pack:">
+                <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
                                           Filter="MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*"
                                           DialogTitle="Select MSU-1 file" />
-                            </controls:LabeledControl>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="">
-                                <CheckBox IsChecked="{Binding EnableExtendedSoundtrack}"
+              <controls:LabeledControl Text="">
+                <CheckBox IsChecked="{Binding EnableExtendedSoundtrack}"
                           IsEnabled="{Binding CanEnableExtendedSoundtrack}"
                           Content="Enable extended soundtrack"
                           ToolTip="Enables support for the extended MSU-1 soundtrack. Only available if a custom music pack is selected." />
-                            </controls:LabeledControl>
+              </controls:LabeledControl>
 
-                            <controls:LabeledControl Text="Dungeon music:">
-                                <StackPanel Style="{StaticResource RadioButtonGroup}">
-                                    <RadioButton GroupName="ShuffleMusic"
+              <controls:LabeledControl Text="Dungeon music:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="ShuffleMusic"
                                Content="Default"
                                ToolTip="Plays the light or dark world dungeon theme depending on whether the dungeon has a pendant or crystal. With the extended soundtrack, each dungeon plays its own theme."
                                IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MusicShuffleMode.Default}}" />
-                                    <RadioButton GroupName="ShuffleMusic"
+                  <RadioButton GroupName="ShuffleMusic"
                                Content="Shuffle dungeon themes"
                                ToolTip="Randomly plays either the light or dark world dungeon theme. With the extended soundtrack, each dungeon plays a random dungeon theme."
                                IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MusicShuffleMode.ShuffleDungeons}}" />
-                                    <RadioButton GroupName="ShuffleMusic"
+                  <RadioButton GroupName="ShuffleMusic"
                                Content="Shuffle all music"
                                ToolTip="Randomly plays any available music in dungeons."
                                IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MusicShuffleMode.ShuffleAll}}" />
-                                </StackPanel>
-                            </controls:LabeledControl>
-                        </StackPanel>
-                    </Expander>
+                </StackPanel>
+              </controls:LabeledControl>
+            </StackPanel>
+          </Expander>
 
-                    <Expander Header="Common"
+          <Expander Header="Common"
                     x:Name="CommonExpander"
                     IsExpanded="{Binding CommonExpanded}">
-                        <StackPanel Orientation="Vertical"
+            <StackPanel Orientation="Vertical"
                         Margin="24,11,11,11"
                         DataContext="{Binding SeedOptions}">
-                            <StackPanel Orientation="Horizontal"
+              <StackPanel Orientation="Horizontal"
                           Margin="0,0,0,4">
-                                <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
-                                <CheckBox IsChecked="{Binding Race}">Race</CheckBox>
-                            </StackPanel>
+                <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
+                <CheckBox IsChecked="{Binding Race}">Race</CheckBox>
+              </StackPanel>
 
-                            <controls:LabeledControl Text="Seed (optional):">
-                                <TextBox x:Name="SeedInput"
+              <controls:LabeledControl Text="Seed (optional):">
+                <TextBox x:Name="SeedInput"
                          Text="{Binding Seed}" />
-                            </controls:LabeledControl>
-                        </StackPanel>
-                    </Expander>
-                </StackPanel>
-            </ScrollViewer>
-        </Grid>
+              </controls:LabeledControl>
+            </StackPanel>
+          </Expander>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
 
-        <Border Grid.Row="1"
+    <Border Grid.Row="1"
             Style="{StaticResource BottomPanel}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="265*"/>
-                    <ColumnDefinition Width="213*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal"
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="265*"/>
+          <ColumnDefinition Width="213*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Left">
-                    <Button x:Name="GenerateStatsButton"
+          <Button x:Name="GenerateStatsButton"
                   Click="GenerateStatsButton_Click">Generate _Stats</Button>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal"
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Left" Grid.Column="1" Margin="49,0,0,0">
 
-                    <Button x:Name="GenerateRomButton"
+          <Button x:Name="GenerateRomButton"
                   Click="GenerateRomButton_Click" Margin="0">_Generate</Button>
 
-                    <Button x:Name="CancelButton"
+          <Button x:Name="CancelButton"
                           Click="CancelButton_Click">_Cancel</Button>
         </StackPanel>
-            </Grid>
-        </Border>
-    </Grid>
+      </Grid>
+    </Border>
+  </Grid>
 </Window>

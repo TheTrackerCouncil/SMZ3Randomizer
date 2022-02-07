@@ -169,6 +169,7 @@ namespace Randomizer.SMZ3
         public HeartColor HeartColor { get; set; } = HeartColor.Red;
         public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; } = LowHealthBeepSpeed.Normal;
         public bool DisableLowEnergyBeep { get; set; } = false;
+        public bool CasualSMPatches { get; set; } = false;
 
         public bool GenerateSeedOnly { get; private set; } = false;
 

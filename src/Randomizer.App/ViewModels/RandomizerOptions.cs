@@ -19,8 +19,6 @@ namespace Randomizer.App.ViewModels
             }
         };
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public RandomizerOptions()
         {
             GeneralOptions = new GeneralOptions();
@@ -37,6 +35,8 @@ namespace Randomizer.App.ViewModels
             SeedOptions = seedOptions ?? new();
             PatchOptions = patchOptions ?? new();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         [JsonPropertyName("General")]
         public GeneralOptions GeneralOptions { get; }
@@ -92,7 +92,8 @@ namespace Randomizer.App.ViewModels
             ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
             HeartColor = PatchOptions.HeartColor,
             LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
-            DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep
+            DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
+            CasualSMPatches = PatchOptions.CasualSuperMetroidPatches
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

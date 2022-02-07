@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using Randomizer.SMZ3;
 
@@ -50,6 +51,8 @@ namespace Randomizer.App.ViewModels
             = LowHealthBeepSpeed.Half;
 
         public bool DisableLowEnergyBeep { get; set; }
+
+        public bool CasualSuperMetroidPatches { get; set; }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
