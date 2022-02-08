@@ -89,7 +89,10 @@
       ]
     },
     {
-      "Name": "Hookshot",
+      "Name": [
+        "Hookshot",
+        [ "Second best grappling armament", 0.05 ]
+      ],
       "InternalItemType": 10,
       "Column": 3,
       "Row": 0,
@@ -165,7 +168,7 @@
       ]
     },
     {
-      "Name": "Lamp",
+      "Name": [ "Lamp", "Lantern" ],
       "InternalItemType": 18,
       "Column": 0,
       "Row": 2,
@@ -296,7 +299,11 @@
       ]
     },
     {
-      "Name": [ "Bug Catching Net", "Bug net" ],
+      "Name": [
+        "Bug Catching Net",
+        "Bug net",
+        [ "Swagnet", 0.1 ]
+      ],
       "InternalItemType": 33,
       "Column": 3,
       "Row": 2
@@ -479,7 +486,8 @@
     {
       "Name": [
         "Sword",
-        [ "Progressive Sword", 0 ]
+        [ "Progressive Sword", 0 ],
+        [ "Pointy thing", 0.2 ]
       ],
       "InternalItemType": 94,
       "Multiple": true,
@@ -712,7 +720,10 @@
       "Row": 1,
       "Hints": [
         "It's round."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [ "Toggled Morph Ball on", "It's morphin' time!" ]
+      }
     },
     {
       "Name": [ "Screw Attack", "Screwing" ],
@@ -751,7 +762,14 @@
       ]
     },
     {
-      "Name": "Morph Bombs",
+      "Name": [
+        "Morph Bombs",
+        "Morph Bomb",
+        "Morph Ball Bombs",
+        [ "IBJ device", 0.05 ],
+        [ "Infinite Bomb Jump device", 0.05 ],
+        [ "Not so powerful bombs", 0.05 ]
+      ],
       "InternalItemType": 185,
       "Column": 7,
       "Row": 1
@@ -994,6 +1012,7 @@
       "Is it weekend already?",
       "Toggled Tracker on",
       "Hey.",
+      "Hello there.",
       [ "<voice gender='male'><prosody rate='slow'>Hey.</prosody></voice>", 0.05 ],
       [ "Hey you. You're finally awake. You were trying to cross the border right? Walked right into that Imperial ambush, same as us, and that thief over there. Damn you Stormcloaks.", 0.01 ]
     ],
@@ -1027,7 +1046,8 @@
       "You now have {1} {0}."
     ],
     "TrackedAlreadyTrackedItem": [
-      "You already have that."
+      "You already have that.",
+      "You already have {0}."
     ],
     "TrackedExactAmountDuplicate": [
       "I know.",
@@ -1423,7 +1443,7 @@
       "sassy": [
         "Better than this seed but that doesn't say much.",
         "What? Sorry, I wasn't listening.",
-        "I'm doing alright watching you put people to sleep with this so called hashtag con-tent"
+        [ "I'm doing alright watching you put people to sleep with this so called hashtag con-tent", 0.2 ]
       ],
       "non-committal": [
         "Can it wait for a bit? I'm in the middle of some calibrations.",
@@ -1471,7 +1491,11 @@
     },
     {
       "Phrases": [ "Ban Vivelin", "Ban Fragger" ],
-      "Response": [ "Please enter 75 digit alphanumeric password to continue.", "Access denied." ]
+      "Response": [
+        "Please enter 75 digit alphanumeric password to continue.",
+        "Access denied.",
+        "Ah <break time='100ms'/> ah <break time='100ms'/> aah, you didn't say the magic word."
+      ]
     },
     {
       "Phrases": [ "Sing me a song" ],
@@ -1489,9 +1513,19 @@
     {
       "Phrases": [ "Tell me a joke", "Do you know any jokes?" ],
       "Response": [
-        "This seed.",
+        [ "This seed.", 0.2 ],
         "When does a joke become a dad joke? <break time='1s'/> When it becomes apparent.",
         "I got drunk and threw up in the elevator on my way home. It was disgusting on so many levels."
+      ]
+    },
+    {
+      "Phrases": [ "Fuck you" ],
+      "Response": [
+        "Watch your language.",
+        "That's not very nice.",
+        "Don't make me report you to the racing council.",
+        "Fuck me yourself.",
+        "That's it. I quit. <break time='60s'/>"
       ]
     }
   ]

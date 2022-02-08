@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 using Randomizer.Shared;
 
@@ -150,14 +151,23 @@ namespace Randomizer.SMZ3
         Off,
     }
 
+    public enum MenuSpeed
+    {
+        Default = 0,
+        Fast,
+        Instant,
+        Slow
+    }
+
     public class Config
     {
         public GameMode GameMode { get; set; } = GameMode.Normal;
         public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
         public SMLogic SMLogic { get; set; } = SMLogic.Normal;
-        public ItemPlacement SwordLocation { get; set; } = ItemPlacement.Randomized;
-        public ItemPlacement MorphLocation { get; set; } = ItemPlacement.Randomized;
-        public ItemPlacement MorphBombsLocation { get; set; } = ItemPlacement.Randomized;
+
+        public IDictionary<ItemType, ItemPlacement> ItemLocations { get; }
+            = new Dictionary<ItemType, ItemPlacement>();
+
         public ItemPool ShaktoolItemPool { get; set; } = ItemPool.Any;
         public ItemPool PegWorldItemPool { get; set; } = ItemPool.Any;
         public Goal Goal { get; set; } = Goal.DefeatBoth;
@@ -169,6 +179,8 @@ namespace Randomizer.SMZ3
         public HeartColor HeartColor { get; set; } = HeartColor.Red;
         public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; } = LowHealthBeepSpeed.Normal;
         public bool DisableLowEnergyBeep { get; set; } = false;
+        public MenuSpeed MenuSpeed { get; set; } = MenuSpeed.Default;
+        public bool CasualSMPatches { get; set; } = false;
 
         public bool GenerateSeedOnly { get; private set; } = false;
 

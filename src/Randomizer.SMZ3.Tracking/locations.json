@@ -489,7 +489,8 @@
       "Row": 5,
       "WhenDefeated": [
         "Toggled Kraid on. Watch out for his awful son on the way out.",
-        "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face."
+        "Toggled Kraid on. Did you get the quick kill?",
+        [ "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face.", 0.1 ]
       ]
     },
     {

@@ -37,7 +37,7 @@
                   Click="LocationsMenuItem_Click" />
         <MenuItem Header="_Map"
                   x:Name="MapMenuItem"
-                  Click="MapMenuItem_Click"/>
+                  Click="MapMenuItem_Click" />
         <MenuItem Header="_Help"
                   x:Name="HelpMenuItem"
                   Click="HelpMenuItem_Click" />
@@ -75,9 +75,13 @@
                      ToolTip="Voice recognition disabled. Double click to attempt to enable voice recognition."
                      MouseDoubleClick="StatusBarVoiceDisabled_MouseDoubleClick"
                      Visibility="Collapsed" />
-      <StatusBarItem x:Name="StatusBarRecognizedPhrase"
-                     Content=""
-                     ToolTip="The most recently recognized phrase." />
+      <StatusBarItem x:Name="StatusBarRecognizedPhrase">
+        <StatusBarItem.Content>
+          <TextBlock x:Name="RecognizedPhraseText"
+                     MaxWidth="250"
+                     TextTrimming="WordEllipsis" />
+        </StatusBarItem.Content>
+      </StatusBarItem>
     </StatusBar>
   </Grid>
 </Window>
