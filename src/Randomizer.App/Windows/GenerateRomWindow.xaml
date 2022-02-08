@@ -150,8 +150,15 @@
                         Content="Disable low energy beep in Super Metroid" />
 
               <CheckBox IsChecked="{Binding CasualSuperMetroidPatches}"
-                        Content="Super Cas'troid"
-                        ToolTip="Enables the following patches:\n• Infinite Space Jump: space jump is easier to use"/>
+                        Content="Super Cas'troid">
+                <CheckBox.ToolTip>
+                  <TextBlock>
+                    Enables the following patches:
+                    <LineBreak/>
+                    • Infinite Space Jump: space jump is easier to use
+                  </TextBlock>
+                </CheckBox.ToolTip>
+              </CheckBox>
 
               <controls:LabeledControl Text="Custom music pack:">
                 <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"

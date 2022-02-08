@@ -299,7 +299,11 @@
       ]
     },
     {
-      "Name": [ "Bug Catching Net", "Bug net" ],
+      "Name": [
+        "Bug Catching Net",
+        "Bug net",
+        [ "Swagnet", 0.1 ]
+      ],
       "InternalItemType": 33,
       "Column": 3,
       "Row": 2
@@ -482,7 +486,8 @@
     {
       "Name": [
         "Sword",
-        [ "Progressive Sword", 0 ]
+        [ "Progressive Sword", 0 ],
+        [ "Pointy thing", 0.2 ]
       ],
       "InternalItemType": 94,
       "Multiple": true,
@@ -715,7 +720,10 @@
       "Row": 1,
       "Hints": [
         "It's round."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [ "Toggled Morph Ball on", "It's morphin' time!" ]
+      }
     },
     {
       "Name": [ "Screw Attack", "Screwing" ],
