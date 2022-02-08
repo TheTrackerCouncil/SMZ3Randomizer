@@ -50,6 +50,9 @@ namespace Randomizer.App.ViewModels
         public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; }
             = LowHealthBeepSpeed.Half;
 
+        public MenuSpeed MenuSpeed { get; set; }
+            = MenuSpeed.Default;
+
         public bool DisableLowEnergyBeep { get; set; }
 
         public bool CasualSuperMetroidPatches { get; set; }

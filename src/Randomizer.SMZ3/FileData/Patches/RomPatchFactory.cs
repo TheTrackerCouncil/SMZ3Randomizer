@@ -14,6 +14,7 @@ namespace Randomizer.SMZ3.FileData.Patches
             yield return new HeartColorPatch();
             yield return new LowHealthPatch();
             yield return new CasualSMPatch();
+            yield return new MenuSpeedPatch();
         }
     }
 }

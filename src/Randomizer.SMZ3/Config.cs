@@ -150,6 +150,14 @@ namespace Randomizer.SMZ3
         Off,
     }
 
+    public enum MenuSpeed
+    {
+        Default = 0,
+        Fast,
+        Instant,
+        Slow
+    }
+
     public class Config
     {
         public GameMode GameMode { get; set; } = GameMode.Normal;
@@ -169,6 +177,7 @@ namespace Randomizer.SMZ3
         public HeartColor HeartColor { get; set; } = HeartColor.Red;
         public LowHealthBeepSpeed LowHealthBeepSpeed { get; set; } = LowHealthBeepSpeed.Normal;
         public bool DisableLowEnergyBeep { get; set; } = false;
+        public MenuSpeed MenuSpeed { get; set; } = MenuSpeed.Default;
         public bool CasualSMPatches { get; set; } = false;
 
         public bool GenerateSeedOnly { get; private set; } = false;

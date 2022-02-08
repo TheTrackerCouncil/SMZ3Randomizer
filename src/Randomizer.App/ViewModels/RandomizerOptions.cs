@@ -93,7 +93,8 @@ namespace Randomizer.App.ViewModels
             HeartColor = PatchOptions.HeartColor,
             LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
             DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
-            CasualSMPatches = PatchOptions.CasualSuperMetroidPatches
+            CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
+            MenuSpeed = PatchOptions.MenuSpeed
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

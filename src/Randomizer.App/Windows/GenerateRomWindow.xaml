@@ -138,6 +138,13 @@
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
+              
+              <controls:LabeledControl Text="ALttP Menu speed:">
+                <ComboBox SelectedItem="{Binding MenuSpeed}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type smz3:MenuSpeed}}}"
+                          HorizontalAlignment="Left"
+                          MinWidth="75" />
+              </controls:LabeledControl>
 
               <controls:LabeledControl Text="Low health beep speed:">
                 <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
