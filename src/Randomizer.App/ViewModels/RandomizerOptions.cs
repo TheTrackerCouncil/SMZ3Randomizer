@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Randomizer.Shared;
 using Randomizer.SMZ3;
 
 namespace Randomizer.App.ViewModels
@@ -81,9 +82,14 @@ namespace Randomizer.App.ViewModels
             GameMode = GameMode.Normal,
             Z3Logic = Z3Logic.Normal,
             SMLogic = SMLogic.Normal,
-            SwordLocation = SeedOptions.SwordLocation,
-            MorphLocation = SeedOptions.MorphLocation,
-            MorphBombsLocation = SeedOptions.MorphBombsLocation,
+            ItemLocations =
+            {
+                [ItemType.ProgressiveSword] = SeedOptions.SwordLocation,
+                [ItemType.Morph] = SeedOptions.MorphLocation,
+                [ItemType.Bombs] = SeedOptions.MorphBombsLocation,
+                [ItemType.Boots] = SeedOptions.PegasusBootsLocation,
+                [ItemType.SpaceJump] = SeedOptions.SpaceJumpLocation,
+            },
             ShaktoolItemPool = SeedOptions.ShaktoolItem,
             PegWorldItemPool = SeedOptions.PegWorldItem,
             KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,

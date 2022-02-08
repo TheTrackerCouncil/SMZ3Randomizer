@@ -80,6 +80,34 @@
                 </StackPanel>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Pegasus Boots:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="PegasusBootsLocation"
+                               Content="Randomized"
+                               IsChecked="{Binding PegasusBootsLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
+                  <RadioButton GroupName="PegasusBootsLocation"
+                               Content="Early"
+                               IsChecked="{Binding PegasusBootsLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Early}}" />
+                  <RadioButton GroupName="PegasusBootsLocation"
+                               Content="Original location (Sahasrahla)"
+                               IsChecked="{Binding PegasusBootsLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Original}}" />
+                </StackPanel>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Space Jump:">
+                <StackPanel Style="{StaticResource RadioButtonGroup}">
+                  <RadioButton GroupName="SpaceJumpLocation"
+                               Content="Randomized"
+                               IsChecked="{Binding SpaceJumpLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Randomized}}" />
+                  <RadioButton GroupName="SpaceJumpLocation"
+                               Content="Early"
+                               IsChecked="{Binding SpaceJumpLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Early}}" />
+                  <RadioButton GroupName="SpaceJumpLocation"
+                               Content="Original location (Draygon)"
+                               IsChecked="{Binding SpaceJumpLocation, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:ItemPlacement.Original}}" />
+                </StackPanel>
+              </controls:LabeledControl>
+
               <controls:LabeledControl Text="Shaktool item pool:">
                 <StackPanel Style="{StaticResource RadioButtonGroup}">
                   <RadioButton GroupName="ShaktoolItemPool"

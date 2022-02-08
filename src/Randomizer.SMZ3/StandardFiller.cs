@@ -156,26 +156,38 @@ namespace Randomizer.SMZ3
                    select location.x;
         }
 
+        private static Location GetVanillaLocation(ItemType itemType, World world)
+        {
+            return itemType switch
+            {
+                ItemType.ProgressiveSword => world.HyruleCastle.LinksUncle,
+                _ => world.Locations.TrySingle(x => x.VanillaItem == itemType),
+            };
+        }
+
         private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world, Config config)
         {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
 
-            switch (config.SwordLocation)
+            foreach (var (itemType, itemPlacement) in config.ItemLocations)
             {
-                case ItemPlacement.Original: FillItemAtLocation(progressionItems, ItemType.ProgressiveSword, world.HyruleCastle.LinksUncle); break;
-                case ItemPlacement.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.ProgressiveSword, world); break;
-            }
+                switch (itemPlacement)
+                {
+                    case ItemPlacement.Original:
+                        var vanilla = GetVanillaLocation(itemType, world);
+                        if (vanilla == null)
+                        {
+                            _logger.LogError("Unable to determine vanilla location for {item}", itemType);
+                            continue;
+                        }
+                        
+                        FillItemAtLocation(progressionItems, itemType, vanilla);
+                        break;
 
-            switch (config.MorphLocation)
-            {
-                case ItemPlacement.Original: FillItemAtLocation(progressionItems, ItemType.Morph, world.BlueBrinstar.MorphBall); break;
-                case ItemPlacement.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Morph, world); break;
-            }
-
-            switch (config.MorphBombsLocation)
-            {
-                case ItemPlacement.Original: FillItemAtLocation(progressionItems, ItemType.Bombs, world.CentralCrateria.BombTorizo); break;
-                case ItemPlacement.Early: FrontFillItemInOwnWorld(progressionItems, ItemType.Bombs, world); break;
+                    case ItemPlacement.Early:
+                        FrontFillItemInOwnWorld(progressionItems, itemType, world);
+                        break;
+                }
             }
 
             /* We place a PB and Super in Sphere 1 to make sure the filler

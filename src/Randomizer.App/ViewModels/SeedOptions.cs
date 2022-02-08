@@ -25,6 +25,10 @@ namespace Randomizer.App.ViewModels
 
         public ItemPlacement MorphBombsLocation { get; set; }
 
+        public ItemPlacement PegasusBootsLocation { get; set; }
+
+        public ItemPlacement SpaceJumpLocation { get; set; }
+
         public ItemPool ShaktoolItem { get; set; }
 
         public ItemPool PegWorldItem { get; set; }
