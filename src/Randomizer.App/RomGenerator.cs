@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -74,12 +75,21 @@ namespace Randomizer.App
         {
             seed = GenerateSeed(options);
 
+            List<Stream> smIpsFiles = new();
+
+            if (options.PatchOptions.CasualSuperMetroidPatches)
+            {
+                smIpsFiles.Add(GetType().Assembly.GetManifestResourceStream("Randomizer.App.spinjumprestart.ips"));
+            }
+
             byte[] rom;
             using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
             using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
             {
-                rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
+                rom = Rom.CombineSMZ3Rom(smRom, z3Rom, smIpsFiles);
             }
+
+            smIpsFiles.ForEach(x => x.Close());
 
             using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips"))
             {

@@ -24,6 +24,7 @@
     <None Remove="Resources\Font Awesome 5 Free-Regular-400.otf" />
     <None Remove="Resources\Font Awesome 5 Free-Solid-900.otf" />
     <None Remove="Resources\LICENSE.txt" />
+    <None Remove="spinjumprestart.ips" />
     <None Remove="zsm.ips" />
     <None Remove="zsm.ips.gz" />
   </ItemGroup>
@@ -31,6 +32,7 @@
   <ItemGroup>
     <Resource Include="chozo20.ico" />
     <EmbeddedResource Include="msu1-v6.ips" />
+    <EmbeddedResource Include="spinjumprestart.ips" />
     <EmbeddedResource Include="zsm.ips" />
   </ItemGroup>
 
