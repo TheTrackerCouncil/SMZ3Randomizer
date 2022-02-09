@@ -98,14 +98,6 @@ namespace Randomizer.SMZ3.Tracking
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
-            _recognizer.AudioSignalProblemOccurred += (sender, e) =>
-            {
-                _logger.LogDebug("Audio signal problem occurred in speech recognizer: {0}", e.AudioSignalProblem);
-            };
-            _recognizer.AudioStateChanged += (sender, e) =>
-            {
-                _logger.LogTrace("{0}", e.AudioState);
-            };
             InitializeMicrophone();
         }
 
