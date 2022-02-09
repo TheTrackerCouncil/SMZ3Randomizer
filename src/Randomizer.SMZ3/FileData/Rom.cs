@@ -7,8 +7,24 @@ namespace Randomizer.SMZ3.FileData
 {
     public static class Rom
     {
-        public static byte[] CombineSMZ3Rom(Stream smRom, Stream z3Rom)
+        public static byte[] CombineSMZ3Rom(Stream smRom, Stream z3Rom, IReadOnlyCollection<Stream> smIpsStreams)
         {
+            // Apply any ips files to SM if they are provided
+            if (smIpsStreams?.Count > 0)
+            {
+                byte[] smBytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    smRom.CopyTo(memoryStream);
+                    smBytes = memoryStream.ToArray();
+                }
+
+                foreach (var patch in smIpsStreams)
+                    ApplyIps(smBytes, patch);
+
+                smRom = new MemoryStream(smBytes);
+            }
+
             int pos;
             var combined = new byte[0x600000];
 
