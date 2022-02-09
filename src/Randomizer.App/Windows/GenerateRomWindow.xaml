@@ -190,7 +190,8 @@
                   <TextBlock>
                     Enables the following patches:
                     <LineBreak/>
-                    • Infinite Space Jump: space jump is easier to use
+                    • Infinite Space Jump: space jump is easier to use <LineBreak />
+                    • Respin: space jump can be restarted in mid-air
                   </TextBlock>
                 </CheckBox.ToolTip>
               </CheckBox>
