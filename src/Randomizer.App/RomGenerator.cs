@@ -66,6 +66,18 @@ namespace Randomizer.App
         }
 
         /// <summary>
+        /// Generates a seed for a rom based on the given randomizer options
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="seed">The string seed to use for generating the rom</param>
+        /// <returns>The seed data</returns>
+        public SeedData GenerateSeed(RandomizerOptions options, string seed = null)
+        {
+            var config = options.ToConfig();
+            return _randomizer.GenerateSeed(config, seed ?? options.SeedOptions.Seed, CancellationToken.None);
+        }
+
+        /// <summary>
         /// Uses the options to generate the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
@@ -75,21 +87,25 @@ namespace Randomizer.App
         {
             seed = GenerateSeed(options);
 
-            List<Stream> smIpsFiles = new();
-
+            var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)
             {
                 smIpsFiles.Add(GetType().Assembly.GetManifestResourceStream("Randomizer.App.spinjumprestart.ips"));
             }
 
             byte[] rom;
-            using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
-            using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
+            try
             {
-                rom = Rom.CombineSMZ3Rom(smRom, z3Rom, smIpsFiles);
+                using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
+                using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
+                {
+                    rom = Rom.CombineSMZ3Rom(smRom, z3Rom, smIpsFiles);
+                }
             }
-
-            smIpsFiles.ForEach(x => x.Close());
+            finally
+            {
+                smIpsFiles.ForEach(x => x.Close());
+            }
 
             using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips"))
             {
@@ -101,18 +117,44 @@ namespace Randomizer.App
             options.PatchOptions.LinkSprite.ApplyTo(rom);
             return rom;
         }
-
         /// <summary>
-        /// Generates a seed for a rom based on the given randomizer options
+        /// Takes the given seed information and saves it to the database
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
-        /// <param name="seed">The string seed to use for generating the rom</param>
-        /// <returns>The seed data</returns>
-        public SeedData GenerateSeed(RandomizerOptions options, string seed = null)
+        /// <param name="seed">The generated seed data</param>
+        /// <param name="romPath">The path to the rom file</param>
+        /// <param name="spoilerPath">The path to the spoiler file</param>
+        /// <returns>The db entry for the generated rom</returns>
+        protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
-            var config = options.ToConfig();
-            return _randomizer.GenerateSeed(config, seed ?? options.SeedOptions.Seed, CancellationToken.None);
+            var jsonOptions = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
+            string settings = JsonSerializer.Serialize(options.ToConfig(), jsonOptions);
+
+            GeneratedRom rom = new GeneratedRom()
+            {
+                Seed = seed.Seed,
+                RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
+                SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
+                Date = DateTimeOffset.Now,
+                Settings = settings
+            };
+            _dbContext.GeneratedRoms.Add(rom);
+            _dbContext.SaveChanges();
+            return rom;
         }
+
+        /// <summary>
+        /// Underlines text in the spoiler log
+        /// </summary>
+        /// <param name="text">The text to be underlined</param>
+        /// <param name="line">The character to use for underlining</param>
+        /// <returns>The text to be underlined followed by the underlining text</returns>
+        private static string Underline(string text, char line = '-')
+            => text + "\n" + new string(line, text.Length);
 
         /// <summary>
         /// Gets the spoiler log of a given seed 
@@ -179,16 +221,6 @@ namespace Randomizer.App
 
             return log.ToString();
         }
-
-        /// <summary>
-        /// Underlines text in the spoiler log
-        /// </summary>
-        /// <param name="text">The text to be underlined</param>
-        /// <param name="line">The character to use for underlining</param>
-        /// <returns>The text to be underlined followed by the underlining text</returns>
-        private static string Underline(string text, char line = '-')
-            => text + "\n" + new string(line, text.Length);
-
         /// <summary>
         /// Enabled MSU support for a rom
         /// </summary>
@@ -238,36 +270,6 @@ namespace Randomizer.App
 
             error = "";
             return true;
-        }
-
-        /// <summary>
-        /// Takes the given seed information and saves it to the database
-        /// </summary>
-        /// <param name="options">The randomizer generation options</param>
-        /// <param name="seed">The generated seed data</param>
-        /// <param name="romPath">The path to the rom file</param>
-        /// <param name="spoilerPath">The path to the spoiler file</param>
-        /// <returns>The db entry for the generated rom</returns>
-        protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
-        {
-            var jsonOptions = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            };
-
-            string settings = JsonSerializer.Serialize(options.ToConfig(), jsonOptions);
-
-            GeneratedRom rom = new GeneratedRom()
-            {
-                Seed = seed.Seed,
-                RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
-                SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
-                Date = DateTimeOffset.Now,
-                Settings = settings
-            };
-            _dbContext.GeneratedRoms.Add(rom);
-            _dbContext.SaveChanges();
-            return rom;
         }
     }
 }
