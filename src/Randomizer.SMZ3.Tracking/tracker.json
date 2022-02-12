@@ -36,7 +36,10 @@
       "Row": 6,
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "lawl, you died" ],
+        "1": [
+          "lawl, you died",
+          "I'm interested in this"
+        ],
         "2": [
           "You've died {0} times.",
           [ "You've manipulated RNG {0} times.", 0.5 ],
@@ -1501,7 +1504,8 @@
       "Phrases": [ "Sing me a song" ],
       "Response": [
         "High, on high I stand,\nGazing down to see,\nThe endless garden,\nAwaiting me.\n\nRed bloometh the rose of conviction,\nAnd red bloometh the rose of hate,\nYes red bloometh the rose of contest,\nFirmly bound to its fate.\n\nAnd the war, it wageth on,\nThe storm, it rageth on,\nThe bold ever fight on,\nTheir lives echoed in song.\n\nFall, like snow they fall,\nPetals plucked and strewn,\nYet from their seeds grow,\nThis war anew.\n\nBlood trickling down from my fullers,\nAnd blood trickling down from mine hands,\nYes, blood trickling down to Hydaelyn,\nUntil I alone stand.\n\nThe war, still wageth on,\nThe storm, still rageth on,\nThe bold blindly march on,\nTheir lives, lost in a song.",
-        "You seem so far away\nAnd I just need to hear your voice\nI just need to hear you say\nIf you would have me go or stay.\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nGirl in the tower\nI'm calling out\nMy heart cries out for you\n\nI saw your face\nand I felt our souls embrace\nIf it's not meant to be this way\nWhy do you haunt me night and day?\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\n\nGirl in the tower...\n\nI'm calling out, calling out\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower...\nHere in the tower...\n"
+        "You seem so far away\nAnd I just need to hear your voice\nI just need to hear you say\nIf you would have me go or stay.\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nGirl in the tower\nI'm calling out\nMy heart cries out for you\n\nI saw your face\nand I felt our souls embrace\nIf it's not meant to be this way\nWhy do you haunt me night and day?\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\n\nGirl in the tower...\n\nI'm calling out, calling out\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower...\nHere in the tower...\n",
+        "In this world (His world!)\nWhere life is strong\nIn this world (His world!)\nLife's an open book\nIn this world (His world!)\nWhere compromise does not exist\nIn his world of worlds, every step meets the rest!\nIn this world (His world!)\nWhere one is all\nIn this world (His world!)\nNever fear the fall\nIn this world (His world!)\nWhere compromise does not exist"
       ]
     },
     {
