@@ -317,7 +317,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Give a more useful hint: is it useful or not?
                 case 1:
                     {
-                        if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam)
+                        if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass)
                             || (location.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard)
                                 && !Tracker.World.Config.Keysanity))
                         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -234,7 +235,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         {
             return InternalItemType == type
                 || (InternalItemType == ItemType.Nothing
-                    && type.IsInCategory(ItemCategory.Scam));
+                    && type.IsInCategory(ItemCategory.Scam))
+                || (InternalItemType == ItemType.HeartContainer
+                    && type == ItemType.HeartContainerRefill)
+                || (InternalItemType == ItemType.HeartContainerRefill
+                    && type == ItemType.HeartContainer);
         }
 
         /// <summary>
