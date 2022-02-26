@@ -949,7 +949,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        Say(Responses.TrackedTooManyOfAnItem);
+                        Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
                     }
                 }
             }

@@ -45,11 +45,18 @@
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ]
         ],
-        "5": [
+        "4": [
           "You've died {0} times now.",
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ],
-          [ "Maybe I should take over", 0.2 ]
+          [ "Maybe I should take over", 0.5 ]
+        ],
+        "8": [
+          "You've died {0} times now.",
+          [ "You've manipulated RNG {0} times.", 0.5 ],
+          [ "You've performed {0} tactical resets.", 0.5 ],
+          [ "Maybe I should take over", 0.5 ],
+          [ "Such devastation... This was not my intention!", 0.5 ]
         ]
       }
     },
@@ -762,9 +769,9 @@
         "Morph Bombs",
         "Morph Bomb",
         "Morph Ball Bombs",
-        [ "IBJ device", 0.1 ],
-        [ "Infinite Bomb Jump device", 0.1 ],
-        [ "Not so powerful bombs", 0.2 ]
+        "Not so powerful bombs",
+        [ "IBJ device", 0.5 ],
+        [ "Infinite Bomb Jump device", 0.5 ]
       ],
       "InternalItemType": 185,
       "Column": 7,
@@ -1028,7 +1035,8 @@
       [ "English motherfucker, do you speak it?", 0.002 ]
     ],
     "TrackedItem": [
-      "Toggled {0} on."
+      "Toggled {0} on.",
+      "Tracking {0}."
     ],
     "TrackedProgressiveItem": [
       "Upgraded {0} by one step.",
@@ -1039,7 +1047,8 @@
     ],
     "TrackedItemMultiple": [
       "Added more {0}.",
-      "You now have {1} {0}."
+      "You now have {1} {0}.",
+      "Another one."
     ],
     "TrackedAlreadyTrackedItem": [
       "You already have that.",
@@ -1055,7 +1064,8 @@
       "You already have the {1}."
     ],
     "TrackedTooManyOfAnItem": [
-      "I doubt that."
+      "I doubt that.",
+      "You already have every {0}."
     ],
     "TrackedNothing": [
       "There are no items left in {0}.",
@@ -1158,7 +1168,7 @@
     ],
     "DungeonRequirementMismatch": [
       "If you say so.",
-      "Are you sure it shouldn't be {0}? Oh well, you do do.",
+      "Are you sure it shouldn't be {0}? Oh well, you do you.",
       "{1} requires {0}, not {2}, but whatever."
     ],
     "DungeonTreasureTracked": {
