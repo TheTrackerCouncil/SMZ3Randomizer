@@ -45,11 +45,18 @@
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ]
         ],
-        "5": [
+        "4": [
           "You've died {0} times now.",
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ],
-          [ "Maybe I should take over", 0.2 ]
+          [ "Maybe I should take over", 0.5 ]
+        ],
+        "8": [
+          "You've died {0} times now.",
+          [ "You've manipulated RNG {0} times.", 0.5 ],
+          [ "You've performed {0} tactical resets.", 0.5 ],
+          [ "Maybe I should take over", 0.5 ],
+          [ "Such devastation... This was not my intention!", 0.5 ]
         ]
       }
     },
@@ -107,7 +114,7 @@
       "Name": [
         [ "Bow", 0 ],
         "Boh",
-        [ "Boh and Arrow", 0.2 ],
+        "Boh and Arrow",
         [ "Arrow launcher", 0.01 ],
         [ "Stick thrower", 0.05 ]
       ],
@@ -121,8 +128,8 @@
     {
       "Name": [
         "Blue Boomerang",
-        [ "Blue Shit", 0.1 ],
-        [ "That Blue Shit", 0.1 ]
+        [ "Blue Shit", 0.2 ],
+        [ "That Blue Shit", 0.2 ]
       ],
       "InternalItemType": 12,
       "Column": 1,
@@ -323,7 +330,10 @@
       ]
     },
     {
-      "Name": "Mushroom",
+      "Name": [
+        "Mushroom",
+        [ "Shrooms", 0.2 ]
+      ],
       "InternalItemType": 41,
       "Column": 5,
       "Row": 0
@@ -391,7 +401,7 @@
       ]
     },
     {
-      "Name": "Heart Container Refill",
+      "Name": [ "Heart Container Refill", "Sanctuary Heart Container" ],
       "InternalItemType": 63,
       "Hints": [
         "It improves your survivability."
@@ -461,23 +471,13 @@
       "Row": 4
     },
     {
-      "Name": "+5 Bomb Capacity",
+      "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
       "InternalItemType": 81,
       "Artice": ""
     },
     {
-      "Name": "+10 Bomb Capacity",
-      "InternalItemType": 82,
-      "Artice": ""
-    },
-    {
-      "Name": "+5 Arrow Capacity",
+      "Name": [ "+5 Arrow Capacity", "+5 Stick Capacity", "Arrow Capacity", "Stick Capacity", "Arrow Carrying Knowledge", "Stick Carrying Knowledge" ],
       "InternalItemType": 83,
-      "Artice": ""
-    },
-    {
-      "Name": "+10 Arrow Capacity",
-      "InternalItemType": 84,
       "Artice": ""
     },
     {
@@ -519,7 +519,7 @@
       "Multiple": true,
       "Stages": {
         "1": [ "Fighter's Shield" ],
-        "2": [ "Red Shield" ],
+        "2": [ "Red Shield", "Fire Shield" ],
         "3": [ "Mirror Shield" ]
       },
       "Column": 5,
@@ -564,7 +564,7 @@
         "2": [
           "Titan's Mitt",
           "Tiddy Mitts",
-          [ "Itty Bitty Titty Mitty", 0.1 ]
+          [ "Itty Bitty Titty Mitty", 0.2 ]
         ]
       },
       "WhenTracked": {
@@ -686,7 +686,7 @@
         "Grappling Beam",
         "Grapple Beam",
         "Grapple",
-        [ "Key to Shaktool's front door", 0.01 ]
+        [ "Key to Shaktool's front door", 0.1 ]
       ],
       "InternalItemType": 176,
       "Column": 6,
@@ -769,9 +769,9 @@
         "Morph Bombs",
         "Morph Bomb",
         "Morph Ball Bombs",
-        [ "IBJ device", 0.05 ],
-        [ "Infinite Bomb Jump device", 0.05 ],
-        [ "Not so powerful bombs", 0.05 ]
+        "Not so powerful bombs",
+        [ "IBJ device", 0.5 ],
+        [ "Infinite Bomb Jump device", 0.5 ]
       ],
       "InternalItemType": 185,
       "Column": 7,
@@ -1032,10 +1032,11 @@
       "Could you repeat that?",
       "What did you say?",
       "What was that?",
-      [ "English motherfucker, do you speak it?", 0.001 ]
+      [ "English motherfucker, do you speak it?", 0.002 ]
     ],
     "TrackedItem": [
-      "Toggled {0} on."
+      "Toggled {0} on.",
+      "Tracking {0}."
     ],
     "TrackedProgressiveItem": [
       "Upgraded {0} by one step.",
@@ -1046,7 +1047,8 @@
     ],
     "TrackedItemMultiple": [
       "Added more {0}.",
-      "You now have {1} {0}."
+      "You now have {1} {0}.",
+      "Another one."
     ],
     "TrackedAlreadyTrackedItem": [
       "You already have that.",
@@ -1062,7 +1064,8 @@
       "You already have the {1}."
     ],
     "TrackedTooManyOfAnItem": [
-      "I doubt that."
+      "I doubt that.",
+      "You already have every {0}."
     ],
     "TrackedNothing": [
       "There are no items left in {0}.",
@@ -1165,7 +1168,7 @@
     ],
     "DungeonRequirementMismatch": [
       "If you say so.",
-      "Are you sure it shouldn't be {0}? Oh well, you do do.",
+      "Are you sure it shouldn't be {0}? Oh well, you do you.",
       "{1} requires {0}, not {2}, but whatever."
     ],
     "DungeonTreasureTracked": {
@@ -1463,14 +1466,14 @@
   },
   "Requests": [
     {
-      "Phrases": [ "Toggle sass off" ],
+      "Phrases": [ "toggle sass off" ],
       "Response": [
         "Sorry, I can't let you do that.",
         "Excuse me? I thought you wanted good content."
       ]
     },
     {
-      "Phrases": [ "Track date with snowman robot" ],
+      "Phrases": [ "track date with snowman robot" ],
       "Response": [
         "Sorry, I already have a date with Shaktool.",
         "Congratulations! I'm happy for the two of you",
@@ -1489,11 +1492,11 @@
       "Response": [ "RIP" ]
     },
     {
-      "Phrases": [ "Execute order 66" ],
+      "Phrases": [ "execute order 66" ],
       "Response": [ "Yes, my lord" ]
     },
     {
-      "Phrases": [ "Ban Vivelin", "Ban Fragger" ],
+      "Phrases": [ "ban Vivelin", "ban Fragger" ],
       "Response": [
         "Please enter 75 digit alphanumeric password to continue.",
         "Access denied.",
@@ -1501,7 +1504,7 @@
       ]
     },
     {
-      "Phrases": [ "Sing me a song" ],
+      "Phrases": [ "sing me a song" ],
       "Response": [
         "High, on high I stand,\nGazing down to see,\nThe endless garden,\nAwaiting me.\n\nRed bloometh the rose of conviction,\nAnd red bloometh the rose of hate,\nYes red bloometh the rose of contest,\nFirmly bound to its fate.\n\nAnd the war, it wageth on,\nThe storm, it rageth on,\nThe bold ever fight on,\nTheir lives echoed in song.\n\nFall, like snow they fall,\nPetals plucked and strewn,\nYet from their seeds grow,\nThis war anew.\n\nBlood trickling down from my fullers,\nAnd blood trickling down from mine hands,\nYes, blood trickling down to Hydaelyn,\nUntil I alone stand.\n\nThe war, still wageth on,\nThe storm, still rageth on,\nThe bold blindly march on,\nTheir lives, lost in a song.",
         "You seem so far away\nAnd I just need to hear your voice\nI just need to hear you say\nIf you would have me go or stay.\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nGirl in the tower\nI'm calling out\nMy heart cries out for you\n\nI saw your face\nand I felt our souls embrace\nIf it's not meant to be this way\nWhy do you haunt me night and day?\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\n\nGirl in the tower...\n\nI'm calling out, calling out\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower...\nHere in the tower...\n",
@@ -1509,13 +1512,13 @@
       ]
     },
     {
-      "Phrases": [ "What's Google been up to?" ],
+      "Phrases": [ "what's Google been up to?" ],
       "Response": [
         "Google Has dedicated 1 Billion Dollars to giving the world free wifi access through satellites, so soon even in third world countries they will have our refurbished smartphones. All of us need funding for a Website. The Website, will be the most popular website in history. it's existence is inevitable, and the public needs it. The world needs it. "
       ]
     },
     {
-      "Phrases": [ "Tell me a joke", "Do you know any jokes?" ],
+      "Phrases": [ "tell me a joke", "do you know any jokes?" ],
       "Response": [
         [ "This seed.", 0.2 ],
         "When does a joke become a dad joke? <break time='1s'/> When it becomes apparent.",
@@ -1523,13 +1526,35 @@
       ]
     },
     {
-      "Phrases": [ "Fuck you" ],
+      "Phrases": [ "fuck you" ],
       "Response": [
         "Watch your language.",
         "That's not very nice.",
         "Don't make me report you to the racing council.",
         "Fuck me yourself.",
         "That's it. I quit. <break time='60s'/>"
+      ]
+    },
+    {
+      "Phrases": [ "I like you" ],
+      "Response": [
+        "Thanks",
+        "Are you sure about that?"
+      ]
+    },
+    {
+      "Phrases": [ "I love you" ],
+      "Response": [
+        [ "Hey, thanks. Thank you. That's awesome, fucking awesome. I mean, that's cool, you can say that.", 0.2 ],
+        "No.",
+        [ "No homo, right?", 0.2 ]
+      ]
+    },
+    {
+      "Phrases": [ "thank you" ],
+      "Response": [
+        "You're welcome",
+        "You're welcome, I think"
       ]
     }
   ]

@@ -54,6 +54,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? Hints { get; init; }
 
         /// <summary>
+        /// Gets the phrases to reply with when tracking a junk item at this location.
+        /// </summary>
+        public IReadOnlyCollection<SchrodingersString>? WhenTrackingJunk { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to reply with when tracking a progression item at this location.
+        /// </summary>
+        public IReadOnlyCollection<SchrodingersString>? WhenTrackingProgression { get; init; }
+
+        /// <summary>
         /// Returns the <see cref="Location"/> that matches the location info in
         /// the specified world.
         /// </summary>

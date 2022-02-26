@@ -29,11 +29,12 @@ In addition to making IBJ completely optional, there is also:
 - **Trans**, **Backwards**, **Upside down** and **180°** Samus sprites for _Super Metroid_ by TarThoron
 - **Shaktool** and **Shaktool Jr.** replacement sprites for _Super Metroid_ by Pneumatic
 - **Diddy Kong** replacement sprite for _Super Metroid_ by Di10 
-- **Crewmate** replacement sprite for _Super Metroid_ by _aitchFactor, and _A Link to the Past_ by Fish_waffle64
+- **Crewmate** replacement sprite for _Super Metroid_ by \_aitchFactor, and _A Link to the Past_ by Fish_waffle64
 - **Goose** replacement sprite for _A Link to the Past_ by Jam
 - **Inkling Girl** replacement sprite for _Super Metroid by ouily644
 - **Metroid** replacement sprite for _Super Metroid by Fingersmcgee
 - **Sprite** replacement sprite for _Super Metroid_ by TarThoron
+- **Chair** replacement sprite for _Super Metroid_ by \_aitchFactor
 
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
