@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -288,6 +287,24 @@ namespace Randomizer.SMZ3.Tracking.Configuration
 
             response = null;
             return false;
+        }
+
+        /// <summary>
+        /// Determines whether the item is junk given the specified
+        /// configuration.
+        /// </summary>
+        /// <param name="config">The randomizer configuration.</param>
+        /// <returns>
+        /// <c>true</c> if the item is considered junk; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsJunk(Config config)
+        {
+            var junkCategories = config.Keysanity
+                ? new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass }
+                : new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
+                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard };
+
+            return InternalItemType.IsInAnyCategory(junkCategories);
         }
     }
 }

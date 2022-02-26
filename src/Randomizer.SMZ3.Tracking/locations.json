@@ -1649,12 +1649,24 @@
     {
       "Id": 150,
       "Name": [
+        "Shaktool",
         "Shak's Stash",
         "Shaktool's item",
         [ "Spring Ball", 0 ]
       ],
       "X": 968,
-      "Y": 596
+      "Y": 596,
+      "WhenTrackingJunk": [
+        "I'm sorry.",
+        "Shaktool hasn't been himself lately.",
+        "Don't be so hard on Shaktool. He's had a rough time lately."
+      ],
+      "WhenTrackingProgression": [
+        "I told you about Shaktool",
+        "I always had faith",
+        "I knew Shaktool wouldn't let you down.",
+        "Never doubt the Shak."
+      ]
     },
     {
       "Id": 151,
@@ -1788,7 +1800,9 @@
       ],
       "X": 83,
       "Y": 101,
-      "Hints": [ "I hope you don't need it." ]
+      "Hints": [ "I hope you don't need it." ],
+      "WhenTrackingJunk": [ "I bet that's a relief." ],
+      "WhenTrackingProgression": [ "I'm so sorry." ]
     },
     {
       "Id": 271,
@@ -2157,7 +2171,9 @@
         "Hammer Pegs"
       ],
       "X": 636,
-      "Y": 1214
+      "Y": 1214,
+      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." ],
+      "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ]
     },
     {
       "Id": 332,

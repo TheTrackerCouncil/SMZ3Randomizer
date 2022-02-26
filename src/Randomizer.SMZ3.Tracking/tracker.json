@@ -519,7 +519,7 @@
       "Multiple": true,
       "Stages": {
         "1": [ "Fighter's Shield" ],
-        "2": [ "Red Shield" ],
+        "2": [ "Red Shield", "Fire Shield" ],
         "3": [ "Mirror Shield" ]
       },
       "Column": 5,
