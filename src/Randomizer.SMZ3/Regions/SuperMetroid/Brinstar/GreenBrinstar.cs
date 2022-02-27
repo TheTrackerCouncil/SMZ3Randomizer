@@ -78,7 +78,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public override bool CanEnter(Progression items)
         {
-            return items.CanDestroyBombWalls() || items.SpeedBooster;
+            return items.CanDestroyBombWalls() || (Logic == SMLogic.Hard && items.SpeedBooster);
         }
 
         public class MockballHallHiddenRoom : Room
