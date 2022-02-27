@@ -184,6 +184,10 @@ namespace Randomizer.SMZ3
 
         public bool GenerateSeedOnly { get; private set; } = false;
 
+        public string LinkName { get; set; } = "Link";
+
+        public string SamusName { get; set; } = "Samus";
+
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;
         public bool Keysanity => KeyShuffle != KeyShuffle.None;

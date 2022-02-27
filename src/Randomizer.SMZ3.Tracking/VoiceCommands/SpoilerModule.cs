@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.Extensions.Logging;
 
@@ -296,53 +295,52 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return true;
         }
 
+        private static string CorrectPronunciation(string name)
+            => name.Replace("Samus", "Sammus");
+
         private bool GiveLocationHints(Location location)
         {
             switch (HintsGiven(location))
             {
-                // Give a vague hint at first: is the item there even from the right game?
+                // Give a vague hint at first: is the item there even from the
+                // right game?
                 case 0:
+                    if (location.Item.Type.IsInCategory(ItemCategory.Metroid))
                     {
-                        if ((location.Region is SMRegion && location.Item.Type.IsInCategory(ItemCategory.Zelda))
-                            || (location.Region is Z3Region && location.Item.Type.IsInCategory(ItemCategory.Metroid)))
-                        {
-                            return GiveLocationHint(x => x.LocationHasItemFromOtherGame, location);
-                        }
-                        else
-                        {
-                            return GiveLocationHint(x => x.LocationHasItemFromCorrectGame, location);
-                        }
+                        return GiveLocationHint(x => x.LocationHasSuperMetroidItem, location, CorrectPronunciation(Tracker.World.Config.SamusName));
                     }
+                    else if (location.Item.Type.IsInCategory(ItemCategory.Zelda))
+                    {
+                        return GiveLocationHint(x => x.LocationHasZeldaItem, location, CorrectPronunciation(Tracker.World.Config.LinkName));
+                    }
+
+                    return GiveLocationHint(x => x.NoApplicableHints, location);
 
                 // Give a more useful hint: is it useful or not?
                 case 1:
+                    if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass)
+                        || (location.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard)
+                            && !Tracker.World.Config.Keysanity))
                     {
-                        if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass)
-                            || (location.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard)
-                                && !Tracker.World.Config.Keysanity))
-                        {
-                            return GiveLocationHint(x => x.LocationHasJunkItem, location);
-                        }
-
-                        var junkCategories = new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass };
-                        if (!Tracker.World.Config.Keysanity)
-                            junkCategories = junkCategories.Concat(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard }).ToArray();
-
-                        if (!location.Item.Type.IsInAnyCategory(junkCategories))
-                        {
-                            return GiveLocationHint(x => x.LocationHasUsefulItem, location);
-                        }
-
-                        return GiveLocationHint(x => x.NoApplicableHints, location);
+                        return GiveLocationHint(x => x.LocationHasJunkItem, location);
                     }
+
+                    var junkCategories = new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass };
+                    if (!Tracker.World.Config.Keysanity)
+                        junkCategories = junkCategories.Concat(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard }).ToArray();
+
+                    if (!location.Item.Type.IsInAnyCategory(junkCategories))
+                    {
+                        return GiveLocationHint(x => x.LocationHasUsefulItem, location);
+                    }
+
+                    return GiveLocationHint(x => x.NoApplicableHints, location);
 
                 // Try to give a specific hint
                 case 2:
-                    {
-                        var hint = Tracker.WorldInfo.Location(location).Hints;
-                        if (hint != null && hint.Count > 0)
-                            return GiveLocationHint(hint, location);
-                    }
+                    var hint = Tracker.WorldInfo.Location(location).Hints;
+                    if (hint != null && hint.Count > 0)
+                        return GiveLocationHint(hint, location);
                     break;
             }
 
@@ -429,11 +427,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                         var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
                         if (isOnlyInSuperMetroid)
-                            return GiveItemHint(x => x.ItemInSuperMetroid, item);
+                            return GiveItemHint(x => x.ItemInSuperMetroid, item, CorrectPronunciation(Tracker.World.Config.SamusName));
 
                         var isOnlyInALinkToThePast = itemLocations.Select(x => x.Region).All(x => x is Z3Region);
                         if (isOnlyInALinkToThePast)
-                            return GiveItemHint(x => x.ItemInALttP, item);
+                            return GiveItemHint(x => x.ItemInALttP, item, CorrectPronunciation(Tracker.World.Config.LinkName));
 
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }

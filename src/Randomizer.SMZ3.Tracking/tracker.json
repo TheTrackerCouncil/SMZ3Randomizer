@@ -1263,17 +1263,27 @@
     "Hints": {
       "EnabledHints": [
         "Toggled hints on.",
+        "Hints are now enabled.",
+        "Hints are now on.",
         "I'll give you hints when asked."
       ],
       "DisabledHints": [
         "Toggled hints off.",
+        "Hints are no longer enabled.",
+        "Hints are no longer on.",
         "I'll stop giving you hints."
       ],
       "PromptEnableItemHints": [
-        "If you want me to give a hint, say 'Hey tracker, enable hints'."
+        "If you want me to give a hint, say 'Hey tracker, enable hints'.",
+        "If you want me to give a hint, say 'Hey tracker, turn on hints'.",
+        "If you're looking for hints, ask me to enable hints.",
+        "If you're looking for hints, ask me to turn on hints."
       ],
       "PromptEnableLocationHints": [
-        "If you want me to give a hint, say 'Hey tracker, enable hints'."
+        "If you want me to give a hint, say 'Hey tracker, enable hints'.",
+        "If you want me to give a hint, say 'Hey tracker, turn on hints'.",
+        "If you're looking for hints, ask me to enable hints.",
+        "If you're looking for hints, ask me to turn on hints."
       ],
       "NoApplicableHints": [
         "Reply hazy, try again.",
@@ -1291,10 +1301,15 @@
         "You might find {0} on a strange planet.",
         "It's in a place that rhymes with 'Thebes'.",
         "It's in a place that rhymes with 'The Bees'.",
-        "It's on a planet with a name whose pronunciation nobody can agree on."
+        "It's on a planet with a name whose pronunciation nobody can agree on.",
+        "{1} might know.",
+        "{1} might be able to help you find {0}.",
+        "Try asking {1}."
       ],
       "ItemInALttP": [
-        "You might find {0} in a world of light and dark."
+        "{1} might know.",
+        "{1} might be able to help you find {0}.",
+        "Try asking {1}."
       ],
       "ItemRequiresOtherItem": [
         "You need {1} before you can find {0}.",
@@ -1309,7 +1324,8 @@
         "You won't have to search {1} for {0}, at least."
       ],
       "ItemInSphereZero": [
-        "How have you not found {0} yet?"
+        "How have you not found {0} yet?",
+        "Have you still not found {0}?"
       ],
       "ItemInEarlySphere": [
         "{0} can be found pretty early on.",
@@ -1357,12 +1373,17 @@
         "It might be worth checking out.",
         "Could have something good."
       ],
-      "LocationHasItemFromOtherGame": [
-        "It's got something from a different universe.",
-        "The item there doesn't belong in that game."
+      "LocationHasSuperMetroidItem": [
+        "{0} has something for {1}.",
+        "It's got something for {1}.",
+        "{1} might be interested in that.",
+        "{1} could make use of it."
       ],
-      "LocationHasItemFromCorrectGame": [
-        "The item there is in the correct game, at least."
+      "LocationHasZeldaItem": [
+        "{0} has something for {1}.",
+        "It's got something for {1}.",
+        "{1} might be interested in that.",
+        "{1} could make use of it."
       ]
     },
     "Spoilers": {
@@ -1375,10 +1396,12 @@
         "I'll stop giving you spoilers when asked for."
       ],
       "PromptEnableItemSpoilers": [
-        "If you want me to spoil it, say 'Hey tracker, enable spoilers'."
+        "If you want me to spoil it, say 'Hey tracker, enable spoilers'.",
+        "If you want me to spoil it, say 'Hey tracker, turn on spoilers'."
       ],
       "PromptEnableLocationSpoilers": [
-        "Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you."
+        "Why don't you go find out? Or just say 'Hey tracker, enable spoilers' and I might tell you.",
+        "Why don't you go find out? Or just say 'Hey tracker, turn on spoilers' and I might tell you."
       ],
       "TrackedAllItemsAlready": [
         "Every {0} is already in your inventory.",

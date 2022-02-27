@@ -337,7 +337,7 @@
       "X": 1924,
       "Y": 800,
       "Abbreviation": "PD",
-      "Boss": "Helmasaur King",
+      "Boss": [ "Helmasaur King", "The Mighty King Helmasaur", "Helmasaur" ],
       "TreasureRemaining": 5,
       "Column": 3,
       "Row": 5,

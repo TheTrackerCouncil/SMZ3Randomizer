@@ -100,7 +100,9 @@ namespace Randomizer.App.ViewModels
             LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
             DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
             CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
-            MenuSpeed = PatchOptions.MenuSpeed
+            MenuSpeed = PatchOptions.MenuSpeed,
+            LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
+            SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
