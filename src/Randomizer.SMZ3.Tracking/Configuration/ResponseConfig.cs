@@ -119,7 +119,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// area at once.
         /// </summary>
         public SchrodingersString TrackedMultipleItems { get; init; }
-            = new SchrodingersString("Tracked {0} items in {1}.");
+            = new SchrodingersString("Tracked {2} in {1}.");
 
         /// <summary>
         /// Gets the phrases to respond with when clearing multiple items in an

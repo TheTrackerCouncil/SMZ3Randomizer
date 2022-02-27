@@ -241,22 +241,36 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("It might be worth checking out.");
 
         /// <summary>
-        /// Gets the hints for locations that have an item from the other game.
+        /// Gets the hints for locations that have an item from Super Metroid.
         /// </summary>
         /// <remarks>
-        /// <c>{0}</c> is placeholder for the name of the location.
+        /// <c>{0}</c> is placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the name of the sprite that replaces Samus, or
+        /// "Samus".
         /// </remarks>
-        public SchrodingersString LocationHasItemFromOtherGame { get; init; }
-            = new("It's got something from a different universe.");
+        public SchrodingersString LocationHasSuperMetroidItem { get; init; }
+            = new("{0} has something for {1}.");
 
         /// <summary>
-        /// Gets the hints for locations that have an item from the correct
-        /// game.
+        /// Gets the hints for locations that have an item from A Link to the
+        /// Past.
         /// </summary>
         /// <remarks>
-        /// <c>{0}</c> is placeholder for the name of the location.
+        /// <c>{0}</c> is placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the name of the sprite that replaces Link, or
+        /// "Link".
         /// </remarks>
-        public SchrodingersString LocationHasItemFromCorrectGame { get; init; }
-            = new("The item there is in the correct game, at least.");
+        public SchrodingersString LocationHasZeldaItem { get; init; }
+            = new("{0} has something for {1}.");
+
+        /// <summary>
+        /// Gets the suggestions for areas to visit.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area that has a
+        /// progression item.
+        /// </remarks>
+        public SchrodingersString AreaSuggestion { get; init; }
+            = new("Have you been to {0} yet?");
     }
 }

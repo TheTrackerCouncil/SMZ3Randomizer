@@ -45,11 +45,6 @@ namespace Randomizer.SMZ3.Tracking
         private Dictionary<string, Progression> _progression = new();
 
         /// <summary>
-        /// Set when the progression needs to be updated for the current tracker instance
-        /// </summary>
-        public bool UpdateTrackerProgression { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
         /// <param name="config">The tracking configuration.</param>
@@ -157,6 +152,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Occurs when the tracker state has been loaded.
         /// </summary>
         public event EventHandler? StateLoaded;
+
+        /// <summary>
+        /// Set when the progression needs to be updated for the current tracker
+        /// instance
+        /// </summary>
+        public bool UpdateTrackerProgression { get; set; }
 
         /// <summary>
         /// Gets extra information about locations.
@@ -597,6 +598,19 @@ namespace Randomizer.SMZ3.Tracking
         {
             return Items.SingleOrDefault(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
                 ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
+        }
+
+        /// <summary>
+        /// Returns the first item with the specified item type.
+        /// </summary>
+        /// <param name="type">The type of the item to find.</param>
+        /// <returns>
+        /// The item data for the item type, or <c>null</c> if no item data is
+        /// present for the specified type.
+        /// </returns>
+        public ItemData? FindItemByType(ItemType type)
+        {
+            return Items.FirstOrDefault(x => x.InternalItemType == type);
         }
 
         /// <summary>
@@ -1292,7 +1306,7 @@ namespace Randomizer.SMZ3.Tracking
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
             Action? undoTrackDungeon = null;
-            
+
             var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
             if (dungeon != null)
             {
@@ -1356,13 +1370,14 @@ namespace Randomizer.SMZ3.Tracking
                 else
                 {
                     // Otherwise, start counting
-                    var itemsTracked = 0;
+                    var itemsCleared = 0;
+                    var itemsTracked = new List<ItemData>();
                     var treasureTracked = 0;
                     foreach (var location in locations)
                     {
+                        itemsCleared++;
                         if (!trackItems)
                         {
-                            itemsTracked++;
                             if (IsTreasure(location.Item))
                                 treasureTracked++;
                             location.Cleared = true;
@@ -1374,18 +1389,23 @@ namespace Randomizer.SMZ3.Tracking
                         var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
                         if (item == null || !item.Track())
                             _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
-                        itemsTracked++;
+                        else
+                            itemsTracked.Add(item);
                         if (IsTreasure(location.Item))
                             treasureTracked++;
 
                         location.Cleared = true;
                     }
 
-                    // TODO: Include the most noteworthy item (by item value, once added
-                    // to data), e.g. "Tracked 5 items in Mini Moldorm Cave,
-                    // including the Morph Ball"
-                    var responses = trackItems ? Responses.TrackedMultipleItems : Responses.ClearedMultipleItems;
-                    Say(responses.Format(itemsTracked, area.GetName()));
+                    if (trackItems)
+                    {
+                        var itemNames = NaturalLanguage.Join(itemsTracked, World.Config);
+                        Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
+                    }
+                    else
+                    {
+                        Say(x => x.ClearedMultipleItems, itemsTracked, area.GetName());
+                    }
 
                     if (dungeon != null && treasureTracked > 0)
                     {

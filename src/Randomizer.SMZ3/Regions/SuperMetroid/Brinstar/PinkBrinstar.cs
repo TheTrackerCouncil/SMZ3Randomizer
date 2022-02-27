@@ -94,7 +94,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
         public override bool CanEnter(Progression items) => Logic switch
         {
             Normal =>
-                (items.CanOpenRedDoors() && (items.CanDestroyBombWalls() || items.SpeedBooster)) ||
+                (items.CanOpenRedDoors() && items.CanDestroyBombWalls()) ||
                 items.CanUsePowerBombs() ||
                 (items.CanAccessNorfairUpperPortal() && items.Morph && items.Wave &&
                     (items.Ice || items.HiJump || items.SpaceJump)),
