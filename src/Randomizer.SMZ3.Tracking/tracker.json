@@ -1082,8 +1082,8 @@
       ]
     },
     "TrackedMultipleItems": [
-      "Tracked {0} items in {1}.",
-      "Added {0} items from {1}."
+      "Tracked {2} in {1}.",
+      "Added {2} from {1}."
     ],
     "ClearedMultipleItems": [
       "Cleared {0} items in {1}."

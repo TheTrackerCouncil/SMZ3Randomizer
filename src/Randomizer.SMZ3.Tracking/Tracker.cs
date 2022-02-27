@@ -1370,13 +1370,14 @@ namespace Randomizer.SMZ3.Tracking
                 else
                 {
                     // Otherwise, start counting
-                    var itemsTracked = 0;
+                    var itemsCleared = 0;
+                    var itemsTracked = new List<ItemData>();
                     var treasureTracked = 0;
                     foreach (var location in locations)
                     {
+                        itemsCleared++;
                         if (!trackItems)
                         {
-                            itemsTracked++;
                             if (IsTreasure(location.Item))
                                 treasureTracked++;
                             location.Cleared = true;
@@ -1388,18 +1389,23 @@ namespace Randomizer.SMZ3.Tracking
                         var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
                         if (item == null || !item.Track())
                             _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
-                        itemsTracked++;
+                        else
+                            itemsTracked.Add(item);
                         if (IsTreasure(location.Item))
                             treasureTracked++;
 
                         location.Cleared = true;
                     }
 
-                    // TODO: Include the most noteworthy item (by item value, once added
-                    // to data), e.g. "Tracked 5 items in Mini Moldorm Cave,
-                    // including the Morph Ball"
-                    var responses = trackItems ? Responses.TrackedMultipleItems : Responses.ClearedMultipleItems;
-                    Say(responses.Format(itemsTracked, area.GetName()));
+                    if (trackItems)
+                    {
+                        var itemNames = NaturalLanguage.Join(itemsTracked, World.Config);
+                        Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
+                    }
+                    else
+                    {
+                        Say(x => x.ClearedMultipleItems, itemsTracked, area.GetName());
+                    }
 
                     if (dungeon != null && treasureTracked > 0)
                     {
