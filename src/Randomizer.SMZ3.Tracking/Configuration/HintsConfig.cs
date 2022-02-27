@@ -262,5 +262,15 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString LocationHasZeldaItem { get; init; }
             = new("{0} has something for {1}.");
+
+        /// <summary>
+        /// Gets the suggestions for areas to visit.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area that has a
+        /// progression item.
+        /// </remarks>
+        public SchrodingersString AreaSuggestion { get; init; }
+            = new("Have you been to {0} yet?");
     }
 }

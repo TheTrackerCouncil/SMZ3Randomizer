@@ -72,6 +72,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var location = GetLocationFromResult(tracker, result);
                 RevealLocationItem(location);
             });
+
+            AddCommand("Give progression hint", GetProgressionHintRule(), (tracker, result) =>
+            {
+                GiveProgressionHint();
+            });
         }
 
         /// <summary>
@@ -85,6 +90,32 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// when asked about items or locations.
         /// </summary>
         public bool SpoilersEnabled { get; set; }
+
+        /// <summary>
+        /// Gives a hint about where to go next.
+        /// </summary>
+        public void GiveProgressionHint()
+        {
+            if (!HintsEnabled && !SpoilersEnabled)
+            {
+                Tracker.Say(x => x.Hints.PromptEnableItemHints);
+                return;
+            }
+
+            var progression = Tracker.GetProgression();
+            var locationWithProgressionItem = Tracker.World.Locations
+                .Where(x => !x.Cleared && x.IsAvailable(progression))
+                .Where(x => x.Item.Progression)
+                .Random();
+
+            if (locationWithProgressionItem != null)
+            {
+                Tracker.Say(x => x.Hints.AreaSuggestion, locationWithProgressionItem.Region.GetName());
+                return;
+            }
+
+            Tracker.Say(x => x.Hints.NoApplicableHints);
+        }
 
         /// <summary>
         /// Gives a hint or spoiler about the location of an item.
@@ -338,7 +369,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Try to give a specific hint
                 case 2:
-                    var hint = Tracker.WorldInfo.Location(location).Hints;
+                    var hint = Tracker.FindItemByType(location.Item.Type)?.Hints;
                     if (hint != null && hint.Count > 0)
                         return GiveLocationHint(hint, location);
                     break;
@@ -666,6 +697,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker, ")
                 .OneOf("disable", "turn off")
                 .Append("hints");
+        }
+
+        private GrammarBuilder GetProgressionHintRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("give me a hint",
+                    "give me a suggestion",
+                    "can you give me a hint?",
+                    "do you have any suggestions?",
+                    "where should I go?",
+                    "what should I do?");
         }
     }
 }

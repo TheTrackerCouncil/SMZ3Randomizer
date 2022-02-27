@@ -1384,6 +1384,13 @@
         "It's got something for {1}.",
         "{1} might be interested in that.",
         "{1} could make use of it."
+      ],
+      "AreaSuggestion": [
+        "What about {0}?",
+        "Have you been to {0} lately?",
+        "You could try {0}.",
+        "You could go to {0}.",
+        "{0} could have something."
       ]
     },
     "Spoilers": {
@@ -1461,11 +1468,12 @@
       ]
     },
     "Idle": {
-      "10m±2m": [
+      "7m±2m": [
         "Decreased content by one step.",
         "What's wrong? Am I not good enough for you anymore?",
         "I enjoy the sight of humans on their knees.",
-        "Assuming direct control."
+        "Assuming direct control.",
+        "Give me a drink, bartender."
       ]
     },
     "Moods": {
@@ -1562,12 +1570,18 @@
       "Phrases": [ "I like you" ],
       "Response": [
         "Thanks",
-        "Are you sure about that?"
+        "Are you sure about that?",
+        "Okay."
       ]
     },
     {
       "Phrases": [ "I love you" ],
       "Response": [
+        "Thanks",
+        "Okay",
+        "Don't lie.",
+        "Toggled Boots on.",
+        "That sounds like a you problem.",
         [ "Hey, thanks. Thank you. That's awesome, fucking awesome. I mean, that's cool, you can say that.", 0.2 ],
         "No.",
         [ "No homo, right?", 0.2 ]
