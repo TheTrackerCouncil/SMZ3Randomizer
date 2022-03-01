@@ -90,9 +90,9 @@ namespace Randomizer.App
 
         public World World => _tracker?.World ?? new World(new Config(), "", 0, "");
 
-        public Progression Progression => _tracker?.GetProgression(false) ?? new(_tracker?.LogicConfig);
+        public Progression Progression => _tracker?.GetProgression(false) ?? new();
 
-        public Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new(_tracker?.LogicConfig);
+        public Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new();
 
         public IEnumerable<Location> AllLocations => World.Locations.ToImmutableList();
 

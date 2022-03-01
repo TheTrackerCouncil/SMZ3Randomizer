@@ -88,7 +88,7 @@ namespace Randomizer.SMZ3
 
         public bool CanDestroyBombWalls(Progression items)
         {
-            return CanPassBombPassages(items) || items.SafeScrewAttack;
+            return CanPassBombPassages(items) || CanSafelyUseScrewAttack(items);
         }
 
         public bool CanSpringBallJump(Progression items)
@@ -134,6 +134,11 @@ namespace Randomizer.SMZ3
                     (CanSpringBallJump(items) || items.HiJump || items.Gravity) && items.Morph &&
                     (World.CanAquire(items, Reward.Agahnim) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items))
             };
+        }
+
+        public bool CanSafelyUseScrewAttack(Progression items)
+        {
+            return items.ScrewAttack && (!World.Config.LogicConfig.PreventScrewAttackSoftLock || items.Morph);
         }
 
         public World World { get;  }

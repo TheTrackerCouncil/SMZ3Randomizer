@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithoutLogicNeverHasMissingItems()
         {
-            var emptyProgression = new Progression(Config.LogicConfig);
+            var emptyProgression = new Progression();
             var missingItems = Logic.GetMissingRequiredItems(World.HyruleCastle.LinksUncle, emptyProgression);
             missingItems.Should().BeEmpty();
         }
@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithSatisfiedLogicHasNoMissingItems()
         {
-            var progression = new Progression(new[] { new Item(ItemType.Boots) }, Config.LogicConfig);
+            var progression = new Progression(new[] { new Item(ItemType.Boots) });
             var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, progression);
             missingItems.Should().BeEmpty();
         }
@@ -43,7 +43,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithSimpleLogicOnlyHasOneSetOfItems()
         {
-            var emptyProgression = new Progression(Config.LogicConfig);
+            var emptyProgression = new Progression();
             var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, emptyProgression);
             missingItems.Should().HaveCount(1);
         }
@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithSimpleLogicReturnsSingleMissingItem()
         {
-            var emptyProgression = new Progression(Config.LogicConfig);
+            var emptyProgression = new Progression();
             var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Boots });
         }
@@ -59,7 +59,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithTwoMissingItemsReturnsTwoMissingItems()
         {
-            var emptyProgression = new Progression(Item.CreateKeycards(null), Config.LogicConfig);
+            var emptyProgression = new Progression(Item.CreateKeycards(null));
             var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.ETank, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.PowerBomb });
         }
@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithMultipleOptionsReturnsAllOptions()
         {
-            var emptyProgression = new Progression(Item.CreateKeycards(null), Config.LogicConfig);
+            var emptyProgression = new Progression(Item.CreateKeycards(null));
             var missingItems = Logic.GetMissingRequiredItems(World.BlueBrinstar.Ceiling, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.SpaceJump })
                 .And.ContainEquivalentOf(new[] { ItemType.HiJump })
@@ -78,7 +78,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithThreeMissingItemsReturnsThreeMissingItems()
         {
-            var emptyProgression = new Progression(Item.CreateKeycards(null), Config.LogicConfig);
+            var emptyProgression = new Progression(Item.CreateKeycards(null));
             var missingItems = Logic.GetMissingRequiredItems(World.KraidsLair.KraidsItem, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
         }
@@ -86,15 +86,17 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationTestLogicConfig()
         {
-            LogicConfig config = new LogicConfig();
-            config.PreventScrewAttackSoftLock = false;
-            var progression = new Progression(new[] { ItemType.ScrewAttack }, config);
-            var missingItems = Logic.GetMissingRequiredItems(World.WestCrateria.Terminator, progression);
+            Config tempConfig = new Config();
+            tempConfig.LogicConfig.PreventScrewAttackSoftLock = false;
+            World tempWorld = new World(tempConfig, "", 0, "");
+            var progression = new Progression(new[] { ItemType.ScrewAttack });
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression);
             missingItems.Should().BeEmpty();
 
-            config.PreventScrewAttackSoftLock = true;
-            progression = new Progression(new[] { ItemType.ScrewAttack }, config);
-            missingItems = Logic.GetMissingRequiredItems(World.WestCrateria.Terminator, progression);
+            tempConfig.LogicConfig.PreventScrewAttackSoftLock = true;
+            tempWorld = new World(tempConfig, "", 0, "");
+            progression = new Progression(new[] { ItemType.ScrewAttack });
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression);
             missingItems.Should().NotBeEmpty();
         }
     }

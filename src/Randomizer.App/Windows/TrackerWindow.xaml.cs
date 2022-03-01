@@ -656,7 +656,7 @@ namespace Randomizer.App
             if (Options == null)
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
 
-            Tracker = _trackerFactory.Create(Options.GeneralOptions.GetTrackerOptions(), Options.ToConfig().LogicConfig);
+            Tracker = _trackerFactory.Create(Options.GeneralOptions.GetTrackerOptions());
             Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
             {
                 UpdateStats(e);

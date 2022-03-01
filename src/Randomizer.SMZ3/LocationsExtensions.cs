@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3
         /// </returns>
         public static IEnumerable<Location> Available(this IEnumerable<Location> locations, IEnumerable<Item> items)
         {
-            var progression = new Progression(items, locations.First()?.Region.World.Config.LogicConfig);
+            var progression = new Progression(items);
             return locations.Where(l => l.IsAvailable(progression));
         }
 
@@ -83,12 +83,11 @@ namespace Randomizer.SMZ3
         /// </returns>
         public static IEnumerable<Location> CanFillWithinWorld(this IEnumerable<Location> locations, Item item, IEnumerable<Item> items)
         {
-            LogicConfig logicConfig = locations.First().Region.World.Config.LogicConfig;
-            var itemWorldProgression = new Progression(items.Where(i => i.World == item.World).Append(item), logicConfig);
+            var itemWorldProgression = new Progression(items.Where(i => i.World == item.World).Append(item));
             var worldProgression = locations
                 .Select(x => x.Region.World)
                 .Distinct()
-                .ToDictionary(world => world.Id, world => new Progression(items.Where(i => i.World == world), logicConfig));
+                .ToDictionary(world => world.Id, world => new Progression(items.Where(i => i.World == world)));
 
             return locations.Where(l =>
                 l.CanFill(item, worldProgression[l.Region.World.Id])

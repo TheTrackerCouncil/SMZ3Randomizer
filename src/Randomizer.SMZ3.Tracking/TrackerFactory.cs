@@ -62,9 +62,9 @@ namespace Randomizer.SMZ3.Tracking
         /// A new <see cref="Tracker"/> instance with the specified <paramref
         /// name="options"/>.
         /// </returns>
-        public Tracker Create(TrackerOptions options, LogicConfig logicConfig)
+        public Tracker Create(TrackerOptions options)
         {
-            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options, _dbContext, logicConfig);
+            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options, _dbContext);
         }
     }
 }

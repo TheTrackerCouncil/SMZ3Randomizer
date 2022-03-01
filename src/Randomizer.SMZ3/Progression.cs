@@ -12,25 +12,21 @@ namespace Randomizer.SMZ3
     /// </summary>
     public class Progression : ICollection<ItemType>
     {
-        public Progression(LogicConfig logicConfig)
+        public Progression()
         {
             Items = new();
-            LogicConfig = logicConfig;
         }
 
-        public Progression(IEnumerable<ItemType> items, LogicConfig logicConfig)
+        public Progression(IEnumerable<ItemType> items)
         {
             Items = new(items);
-            LogicConfig = logicConfig;
         }
 
-        public Progression(IEnumerable<Item> items, LogicConfig logicConfig)
+        public Progression(IEnumerable<Item> items)
         {
             Items = new(items.Select(x => x.Type));
-            LogicConfig = logicConfig;
         }
 
-        
         public bool BigKeyEP => Contains(ItemType.BigKeyEP);
         public bool BigKeyDP => Contains(ItemType.BigKeyDP);
         public bool BigKeyTH => Contains(ItemType.BigKeyTH);
@@ -120,7 +116,6 @@ namespace Randomizer.SMZ3
         public int ReserveTank => GetCount(ItemType.ETank);
         public int Rupees => GetRupeeCount();
         public int Count => Items.Count;
-        public bool SafeScrewAttack => ScrewAttack && (Morph || !LogicConfig.PreventScrewAttackSoftLock);
         public bool IsReadOnly => false;
 
         protected LogicConfig LogicConfig { get; }
@@ -148,7 +143,7 @@ namespace Randomizer.SMZ3
             => Items.Clear();
 
         public Progression Clone()
-            => new(Items, LogicConfig);
+            => new(Items);
 
         public void CopyTo(ItemType[] array, int arrayIndex)
             => Items.CopyTo(array, arrayIndex);
