@@ -52,7 +52,7 @@ namespace Randomizer.SMZ3
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
                     var keyCards = Item.CreateKeycards(world);
-                    AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world }, cancellationToken);
+                    AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world }, config.LogicConfig, cancellationToken);
                     baseItems = baseItems.Concat(keyCards).ToList();
                 }
                 else
@@ -88,7 +88,7 @@ namespace Randomizer.SMZ3
             GanonTowerFill(worlds, junkItems, 2);
 
             _logger.LogDebug("Distributing progression items according to logic");
-            AssumedFill(progressionItems, baseItems, locations, worlds, cancellationToken);
+            AssumedFill(progressionItems, baseItems, locations, worlds, config.LogicConfig, cancellationToken);
 
             _logger.LogDebug("Distributing nice-to-have items");
             FastFill(niceItems, locations);
@@ -185,7 +185,7 @@ namespace Randomizer.SMZ3
                         break;
 
                     case ItemPlacement.Early:
-                        FrontFillItemInOwnWorld(progressionItems, itemType, world);
+                        FrontFillItemInOwnWorld(progressionItems, itemType, world, config.LogicConfig);
                         break;
                 }
             }
@@ -193,13 +193,13 @@ namespace Randomizer.SMZ3
             /* We place a PB and Super in Sphere 1 to make sure the filler
              * doesn't start locking items behind this when there are a
              * high chance of the trash fill actually making them available */
-            FrontFillItemInOwnWorld(progressionItems, ItemType.Super, world);
-            FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
+            FrontFillItemInOwnWorld(progressionItems, ItemType.Super, world, config.LogicConfig);
+            FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world, config.LogicConfig);
         }
 
         private void AssumedFill(List<Item> itemPool, List<Item> baseItems,
             IEnumerable<Location> locations, IEnumerable<World> worlds,
-            CancellationToken cancellationToken)
+            LogicConfig logicConfig, CancellationToken cancellationToken)
         {
             var assumedItems = new List<Item>(itemPool);
             while (assumedItems.Count > 0)
@@ -208,8 +208,8 @@ namespace Randomizer.SMZ3
                 var item = assumedItems.First();
                 assumedItems.Remove(item);
 
-                var inventory = CollectItems(assumedItems.Concat(baseItems), worlds);
-                var location = locations.Empty().CanFillWithinWorld(item, inventory).FirstOrDefault();
+                var inventory = CollectItems(assumedItems.Concat(baseItems), worlds, logicConfig);
+                var location = locations.Empty().CanFillWithinWorld(item, inventory, logicConfig).FirstOrDefault();
                 if (location == null)
                 {
                     _logger.LogDebug("Could not find anywhere to place {item}", item);
@@ -225,14 +225,14 @@ namespace Randomizer.SMZ3
             }
         }
 
-        private IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds)
+        private IEnumerable<Item> CollectItems(IEnumerable<Item> items, IEnumerable<World> worlds, LogicConfig logicConfig)
         {
             var assumedItems = new List<Item>(items);
             var remainingLocations = worlds.SelectMany(l => l.Locations).Filled().ToList();
 
             while (true)
             {
-                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems).ToList();
+                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems, logicConfig).ToList();
                 remainingLocations = remainingLocations.Except(availableLocations).ToList();
                 var foundItems = availableLocations.Select(x => x.Item).ToList();
                 if (foundItems.Count == 0)
@@ -244,10 +244,10 @@ namespace Randomizer.SMZ3
             return assumedItems;
         }
 
-        private void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world)
+        private void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world, LogicConfig logicConfig)
         {
             var item = itemPool.Get(itemType);
-            var location = world.Locations.Empty().Available(world.Items).Random(Random);
+            var location = world.Locations.Empty().Available(world.Items, logicConfig).Random(Random);
             if (location == null)
             {
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");

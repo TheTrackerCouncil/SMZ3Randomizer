@@ -69,7 +69,7 @@ namespace Randomizer.SMZ3
         }
 
         public static bool CanDestroyBombWalls(this Progression items) {
-            return items.CanPassBombPassages() || items.ScrewAttack;
+            return items.CanPassBombPassages() || items.SafeScrewAttack;
         }
 
         public static bool CanSpringBallJump(this Progression items) {

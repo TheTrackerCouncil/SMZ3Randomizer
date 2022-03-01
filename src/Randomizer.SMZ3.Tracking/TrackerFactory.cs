@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Extensions.Logging;
+using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -61,9 +62,9 @@ namespace Randomizer.SMZ3.Tracking
         /// A new <see cref="Tracker"/> instance with the specified <paramref
         /// name="options"/>.
         /// </returns>
-        public Tracker Create(TrackerOptions options)
+        public Tracker Create(TrackerOptions options, LogicConfig logicConfig)
         {
-            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options, _dbContext);
+            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options, _dbContext, logicConfig);
         }
     }
 }

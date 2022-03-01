@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3
             {
                 var sphere = new Sphere();
 
-                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w)));
+                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w), config.LogicConfig));
                 var newLocations = allLocations.Except(locations).ToList();
                 var newItems = newLocations.Select(l => l.Item).ToList();
                 locations.AddRange(newLocations);

@@ -64,12 +64,14 @@ namespace Randomizer.SMZ3.Tracking
             TrackerModuleFactory moduleFactory,
             ILogger<Tracker> logger,
             TrackerOptions options,
-            RandomizerContext dbContext)
+            RandomizerContext dbContext,
+            LogicConfig logicConfig)
         {
             _moduleFactory = moduleFactory;
             _logger = logger;
             Options = options;
             _dbContext = dbContext;
+            LogicConfig = logicConfig;
 
             // Initialize the tracker configuration
             Items = config.Items;
@@ -226,6 +228,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the tracking preferences.
         /// </summary>
         public TrackerOptions Options { get; }
+
+        /// <summary>
+        /// Gets the LogicConfig associated with the current seed
+        /// </summary>
+        public LogicConfig LogicConfig { get; }
 
         /// <summary>
         /// Gets a string describing tracker's mood.
@@ -656,7 +663,7 @@ namespace Randomizer.SMZ3.Tracking
                 return _progression[mapKey];
             }
 
-            var progression = new Progression();
+            var progression = new Progression(LogicConfig);
 
             if (!World.Config.Keysanity || assumeKeys)
             {
@@ -2031,7 +2038,7 @@ namespace Randomizer.SMZ3.Tracking
                     items.Add(new SMZ3.Item(item.InternalItemType));
             }
 
-            var progression = new Progression(items);
+            var progression = new Progression(items, LogicConfig);
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
         }
     }

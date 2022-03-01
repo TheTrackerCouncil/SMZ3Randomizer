@@ -93,7 +93,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     access: region.Logic switch
                     {
                         Normal => items => items.SpeedBooster && items.CanPassBombPassages() && items.CanOpenRedDoors(),
-                        _ => items => (items.CanPassBombPassages() || (items.Morph && items.ScrewAttack)) && items.CanOpenRedDoors()
+                        _ => items => items.CanPassBombPassages() && items.CanOpenRedDoors()
                     });
 
                 MainItem = new(this, 19, 0x8F8538, LocationType.Visible,

@@ -192,6 +192,13 @@ namespace Randomizer.SMZ3
         public bool MultiWorld => GameMode == GameMode.Multiworld;
         public bool Keysanity => KeyShuffle != KeyShuffle.None;
 
+        public LogicConfig LogicConfig { get; set; } = new LogicConfig();
+
+        public Config ()
+        {
+            System.Console.WriteLine("Test");
+        }
+
         public Config SeedOnly()
         {
             var clone = (Config)MemberwiseClone();
