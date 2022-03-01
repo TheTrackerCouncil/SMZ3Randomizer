@@ -194,11 +194,6 @@ namespace Randomizer.SMZ3
 
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
 
-        public Config ()
-        {
-            System.Console.WriteLine("Test");
-        }
-
         public Config SeedOnly()
         {
             var clone = (Config)MemberwiseClone();
