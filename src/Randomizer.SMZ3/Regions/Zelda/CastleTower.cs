@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override bool CanEnter(Progression items)
         {
-            return items.CanKillManyEnemies() && (items.Cape || items.MasterSword);
+            return World.AdvancedLogic.CanKillManyEnemies(items) && (items.Cape || items.MasterSword);
         }
 
         public bool CanComplete(Progression items)

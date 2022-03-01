@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 name: "Moldorm Chest",
                 vanillaItem: ItemType.TwentyRupees,
                 access: items => items.BigKeyGT && items.KeyGT >= 4 &&
-                    items.Bow && items.CanLightTorches() &&
+                    items.Bow && World.AdvancedLogic.CanLightTorches(items) &&
                     CanBeatMoldorm(items) && items.Hookshot)
                 .Allow((item, items) => new[] { ItemType.KeyGT, ItemType.BigKeyGT }.All(type => item.IsNot(type, World)));
 
@@ -136,9 +136,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
             return base.CanFill(item, items);
         }
 
-        private static bool TowerAscend(Progression items)
+        private bool TowerAscend(Progression items)
         {
-            return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && items.CanLightTorches();
+            return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && World.AdvancedLogic.CanLightTorches(items);
         }
 
         private static bool CanBeatMoldorm(Progression items)
@@ -300,8 +300,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
             private bool CanBeatArmos(Progression items)
             {
                 return items.Sword || items.Hammer || items.Bow ||
-                    (items.CanExtendMagic(2) && (items.Somaria || items.Byrna)) ||
-                    (items.CanExtendMagic(4) && (items.FireRod || items.IceRod));
+                    (World.AdvancedLogic.CanExtendMagic(items, 2) && (items.Somaria || items.Byrna)) ||
+                    (World.AdvancedLogic.CanExtendMagic(items, 4) && (items.FireRod || items.IceRod));
             }
         }
 
@@ -310,16 +310,17 @@ namespace Randomizer.SMZ3.Regions.Zelda
             public MiniHelmasaurRoomRoom(Region region)
                 : base(region, "Mini Helmasaur Room")
             {
+                GanonsTower tower = region as GanonsTower;
                 Left = new Location(this, 256 + 212, 0x1EAFD, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.ThreeBombs,
-                    access: TowerAscend)
+                    access: tower.TowerAscend)
                     .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
                 Right = new Location(this, 256 + 213, 0x1EB00, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.ThreeBombs,
-                    access: TowerAscend)
+                    access: tower.TowerAscend)
                     .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
             }
 

@@ -23,8 +23,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
             {
                 Chest = new Location(this, 256 + 64, 0x1EA8B, LocationType.Regular,
                     "Spike Cave",
-                    items => items.MoonPearl && items.Hammer && items.CanLiftLight() &&
-                        ((items.CanExtendMagic(2) && items.Cape) || items.Byrna) &&
+                    items => items.MoonPearl && items.Hammer && World.AdvancedLogic.CanLiftLight(items) &&
+                        ((World.AdvancedLogic.CanExtendMagic(items, 2) && items.Cape) || items.Byrna) &&
                         World.LightWorldDeathMountainWest.CanEnter(items));
             }
 

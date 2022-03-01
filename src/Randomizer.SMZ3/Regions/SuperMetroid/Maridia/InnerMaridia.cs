@@ -13,9 +13,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                    _ => items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                        (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump()))
+                    Normal => items => items.CardMaridiaL1 && World.AdvancedLogic.CanPassBombPassages(items),
+                    _ => items => items.CardMaridiaL1 && World.AdvancedLogic.CanPassBombPassages(items) &&
+                        (items.Gravity || items.Ice || (items.HiJump && World.AdvancedLogic.CanSpringBallJump(items)))
                 });
             PlasmaBeamRoom = new(this, 143, 0x8FC559, LocationType.Chozo,
                 name: "Plasma Beam",
@@ -23,10 +23,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 {
                     Normal => items => CanDefeatDraygon(items)
                                        && (items.ScrewAttack || items.Plasma)
-                                       && (items.HiJump || items.CanFly()),
+                                       && (items.HiJump || World.AdvancedLogic.CanFly(items)),
                     _ => items => CanDefeatDraygon(items)
-                                  && ((items.Charge && items.HasEnergyReserves(3)) || items.ScrewAttack || items.Plasma || items.SpeedBooster)
-                                  && (items.HiJump || items.CanSpringBallJump() || items.CanFly() || items.SpeedBooster)
+                                  && ((items.Charge && World.AdvancedLogic.HasEnergyReserves(items, 3)) || items.ScrewAttack || items.Plasma || items.SpeedBooster)
+                                  && (items.HiJump || World.AdvancedLogic.CanSpringBallJump(items) || World.AdvancedLogic.CanFly(items) || items.SpeedBooster)
                 });
             RightSandPitLeft = new(this, 146, 0x8FC5EB, LocationType.Visible,
                 name: "Missile (right Maridia sand pit room)",
@@ -44,7 +44,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: Logic switch
                 {
                     Normal => items => CanReachAqueduct(items) && items.Super,
-                    _ => items => CanReachAqueduct(items) && items.Super && ((items.HiJump && items.CanSpringBallJump()) || items.Gravity)
+                    _ => items => CanReachAqueduct(items) && items.Super && ((items.HiJump && World.AdvancedLogic.CanSpringBallJump(items)) || items.Gravity)
                 });
             AqueductLeft = new(this, 148, 0x8FC603, LocationType.Visible,
                 name: "Missile (pink Maridia)",
@@ -70,10 +70,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.SpringBall,
                 access: Logic switch
                 {
-                    Normal => items => items.Super && items.Grapple && items.CanUsePowerBombs() && (items.SpaceJump || items.HiJump),
-                    _ => items => items.Super && items.Grapple && items.CanUsePowerBombs() && (
-                        (items.Gravity && (items.CanFly() || items.HiJump)) ||
-                        (items.Ice && items.HiJump && items.CanSpringBallJump() && items.SpaceJump))
+                    Normal => items => items.Super && items.Grapple && World.AdvancedLogic.CanUsePowerBombs(items) && (items.SpaceJump || items.HiJump),
+                    _ => items => items.Super && items.Grapple && World.AdvancedLogic.CanUsePowerBombs(items) && (
+                        (items.Gravity && (World.AdvancedLogic.CanFly(items) || items.HiJump)) ||
+                        (items.Ice && items.HiJump && World.AdvancedLogic.CanSpringBallJump(items) && items.SpaceJump))
                 });
             PreDraygonRoom = new(this, 151, 0x8FC74D, LocationType.Hidden,
                 name: "Missile (Draygon)",
@@ -81,9 +81,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    Normal => items => items.CanAccessMaridiaPortal(World)
+                    Normal => items => World.AdvancedLogic.CanAccessMaridiaPortal(items)
                                        || (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)),
-                    _ => items => items.Gravity && (items.CanAccessMaridiaPortal(World)
+                    _ => items => items.Gravity && (World.AdvancedLogic.CanAccessMaridiaPortal(items)
                                                     || (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)))
                 });
             Botwoon = new(this, 152, 0x8FC755, LocationType.Visible,
@@ -93,7 +93,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: Logic switch
                 {
                     _ => items => (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items))
-                                  || (items.CanAccessMaridiaPortal(World) && items.CardMaridiaL2)
+                                  || (World.AdvancedLogic.CanAccessMaridiaPortal(items) && items.CardMaridiaL2)
                 });
             DraygonTreasure = new(this, 154, 0x8FC7A7, LocationType.Chozo,
                 name: "Space Jump",
@@ -143,14 +143,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             return Logic switch
             {
                 Normal => items.Gravity && (
-                    (World.UpperNorfairWest.CanEnter(items) && items.Super && items.CanUsePowerBombs() &&
-                        (items.CanFly() || items.SpeedBooster || items.Grapple)) ||
-                    items.CanAccessMaridiaPortal(World)
+                    (World.UpperNorfairWest.CanEnter(items) && items.Super && World.AdvancedLogic.CanUsePowerBombs(items) &&
+                        (World.AdvancedLogic.CanFly(items) || items.SpeedBooster || items.Grapple)) ||
+                    World.AdvancedLogic.CanAccessMaridiaPortal(items)
                 ),
                 _ =>
-                    (items.Super && World.UpperNorfairWest.CanEnter(items) && items.CanUsePowerBombs() &&
-                        (items.Gravity || (items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple))) ||
-                    items.CanAccessMaridiaPortal(World)
+                    (items.Super && World.UpperNorfairWest.CanEnter(items) && World.AdvancedLogic.CanUsePowerBombs(items) &&
+                        (items.Gravity || (items.HiJump && (items.Ice || World.AdvancedLogic.CanSpringBallJump(items)) && items.Grapple))) ||
+                    World.AdvancedLogic.CanAccessMaridiaPortal(items)
             };
         }
 
@@ -163,10 +163,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         {
             return Logic switch
             {
-                Normal => (items.CardMaridiaL1 && (items.CanFly() || items.SpeedBooster || items.Grapple))
-                         || (items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World)),
-                _ => (items.CardMaridiaL1 && (items.Gravity || (items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple)))
-                         || (items.CardMaridiaL2 && items.CanAccessMaridiaPortal(World))
+                Normal => (items.CardMaridiaL1 && (World.AdvancedLogic.CanFly(items) || items.SpeedBooster || items.Grapple))
+                         || (items.CardMaridiaL2 && World.AdvancedLogic.CanAccessMaridiaPortal(items)),
+                _ => (items.CardMaridiaL1 && (items.Gravity || (items.HiJump && (items.Ice || World.AdvancedLogic.CanSpringBallJump(items)) && items.Grapple)))
+                         || (items.CardMaridiaL2 && World.AdvancedLogic.CanAccessMaridiaPortal(items))
             };
         }
 
@@ -176,11 +176,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             {
                 Normal => (
                     (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) ||
-                    items.CanAccessMaridiaPortal(World)
-                ) && items.CardMaridiaBoss && items.Gravity && ((items.SpeedBooster && items.HiJump) || items.CanFly()),
+                    World.AdvancedLogic.CanAccessMaridiaPortal(items)
+                ) && items.CardMaridiaBoss && items.Gravity && ((items.SpeedBooster && items.HiJump) || World.AdvancedLogic.CanFly(items)),
                 _ => (
                     (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) ||
-                    items.CanAccessMaridiaPortal(World)
+                    World.AdvancedLogic.CanAccessMaridiaPortal(items)
                 ) && items.CardMaridiaBoss && items.Gravity
             };
         }
@@ -189,8 +189,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         {
             return Logic switch
             {
-                Normal => items.SpeedBooster || items.CanAccessMaridiaPortal(World),
-                _ => items.Ice || (items.SpeedBooster && items.Gravity) || items.CanAccessMaridiaPortal(World)
+                Normal => items.SpeedBooster || World.AdvancedLogic.CanAccessMaridiaPortal(items),
+                _ => items.Ice || (items.SpeedBooster && items.Gravity) || World.AdvancedLogic.CanAccessMaridiaPortal(items)
             };
         }
 
@@ -205,9 +205,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     vanillaItem: ItemType.Super,
                     access: region.Logic switch
                     {
-                        Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                        _ => items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump()))
+                        Normal => items => items.CardMaridiaL1 && World.AdvancedLogic.CanPassBombPassages(items),
+                        _ => items => items.CardMaridiaL1 && World.AdvancedLogic.CanPassBombPassages(items) &&
+                            (items.Gravity || items.Ice || (items.HiJump && World.AdvancedLogic.CanSpringBallJump(items)))
                     });
 
                 Right = new(this, 141, 0x8FC4B5, LocationType.Visible,
@@ -216,9 +216,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        Normal => items => items.CardMaridiaL1 && items.CanPassBombPassages(),
-                        _ => items => items.CardMaridiaL1 && items.CanPassBombPassages() &&
-                            (items.Gravity || items.Ice || (items.HiJump && items.CanSpringBallJump()))
+                        Normal => items => items.CardMaridiaL1 && World.AdvancedLogic.CanPassBombPassages(items),
+                        _ => items => items.CardMaridiaL1 && World.AdvancedLogic.CanPassBombPassages(items) &&
+                            (items.Gravity || items.Ice || (items.HiJump && World.AdvancedLogic.CanSpringBallJump(items)))
                     });
             }
 
@@ -238,9 +238,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        Normal => items => region.CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
+                        Normal => items => region.CanReachAqueduct(items) && items.Super && World.AdvancedLogic.CanPassBombPassages(items),
                         _ => items => region.CanReachAqueduct(items) && items.Super &&
-                            ((items.HiJump && (items.SpaceJump || items.CanSpringBallJump())) || items.Gravity)
+                            ((items.HiJump && (items.SpaceJump || World.AdvancedLogic.CanSpringBallJump(items))) || items.Gravity)
                     });
 
                 Right = new(this, 145, 0x8FC5E3, LocationType.Chozo,
@@ -249,9 +249,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     vanillaItem: ItemType.ReserveTank,
                     access: region.Logic switch
                     {
-                        Normal => items => region.CanReachAqueduct(items) && items.Super && items.CanPassBombPassages(),
+                        Normal => items => region.CanReachAqueduct(items) && items.Super && World.AdvancedLogic.CanPassBombPassages(items),
                         _ => items => region.CanReachAqueduct(items) && items.Super &&
-                            ((items.HiJump && (items.SpaceJump || items.CanSpringBallJump())) || items.Gravity)
+                            ((items.HiJump && (items.SpaceJump || World.AdvancedLogic.CanSpringBallJump(items))) || items.Gravity)
                     });
             }
 

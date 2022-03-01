@@ -14,7 +14,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => items => items.CanPassBombPassages()
+                    _ => items => World.AdvancedLogic.CanPassBombPassages(items)
                 });
             PostChozoConcertSpeedBoosterItem = new(this, 129, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
                 name: "Reserve Tank, Wrecked Ship",
@@ -22,10 +22,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 vanillaItem: ItemType.ReserveTank,
                 access: Logic switch
                 {
-                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.SpeedBooster && items.CanUsePowerBombs() &&
-                        (items.Grapple || items.SpaceJump || (items.Varia && items.HasEnergyReserves(2)) || items.HasEnergyReserves(3)),
-                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.CanUsePowerBombs() && items.SpeedBooster &&
-                        (items.Varia || items.HasEnergyReserves(2))
+                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.SpeedBooster && World.AdvancedLogic.CanUsePowerBombs(items) &&
+                        (items.Grapple || items.SpaceJump || (items.Varia && World.AdvancedLogic.HasEnergyReserves(items, 2)) || World.AdvancedLogic.HasEnergyReserves(items, 3)),
+                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && World.AdvancedLogic.CanUsePowerBombs(items) && items.SpeedBooster &&
+                        (items.Varia || World.AdvancedLogic.HasEnergyReserves(items, 2))
                 });
             PostChozoConcertBreakableChozo = new(this, 130, 0x8FC2EF, LocationType.Visible,
                 name: "Missile (Gravity Suit)",
@@ -34,8 +34,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 access: Logic switch
                 {
                     Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
-                        (items.Grapple || items.SpaceJump || (items.Varia && items.HasEnergyReserves(2)) || items.HasEnergyReserves(3)),
-                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1))
+                        (items.Grapple || items.SpaceJump || (items.Varia && World.AdvancedLogic.HasEnergyReserves(items, 2)) || World.AdvancedLogic.HasEnergyReserves(items, 3)),
+                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || World.AdvancedLogic.HasEnergyReserves(items, 1))
                 });
             AtticAssemblyLine = new(this, 131, 0x8FC319, LocationType.Visible,
                 name: "Missile (Wrecked Ship top)",
@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 {
                     Normal => items => CanUnlockShip(items) &&
                         (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
-                    _ => items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || items.CanSpringBallJump() ||
+                    _ => items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || World.AdvancedLogic.CanSpringBallJump(items) ||
                         items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity)
                 });
             LeftSuperMissileChamber = new(this, 133, 0x8FC357, LocationType.Visible,
@@ -70,8 +70,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 access: Logic switch
                 {
                     Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
-                        (items.Grapple || items.SpaceJump || (items.Varia && items.HasEnergyReserves(2)) || items.HasEnergyReserves(3)),
-                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || items.HasEnergyReserves(1))
+                        (items.Grapple || items.SpaceJump || (items.Varia && World.AdvancedLogic.HasEnergyReserves(items, 2)) || World.AdvancedLogic.HasEnergyReserves(items, 3)),
+                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || World.AdvancedLogic.HasEnergyReserves(items, 1))
                 });
         }
 
@@ -104,33 +104,33 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 Normal =>
                     items.Super && (
                         /* Over the Moat */
-                        ((Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) && (
+                        ((Config.Keysanity ? items.CardCrateriaL2 : World.AdvancedLogic.CanUsePowerBombs(items)) && (
                             items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                            (items.Gravity && (items.CanIbj() || items.HiJump))
+                            (items.Gravity && (World.AdvancedLogic.CanIbj(items) || items.HiJump))
                         )) ||
                         /* Through Maridia -> Forgotten Highway */
-                        (items.CanUsePowerBombs() && items.Gravity) ||
+                        (World.AdvancedLogic.CanUsePowerBombs(items) && items.Gravity) ||
                         /* From Maridia portal -> Forgotten Highway */
-                        (items.CanAccessMaridiaPortal(World) && items.Gravity && (
-                            (items.CanDestroyBombWalls() && items.CardMaridiaL2) ||
+                        (World.AdvancedLogic.CanAccessMaridiaPortal(items) && items.Gravity && (
+                            (World.AdvancedLogic.CanDestroyBombWalls(items) && items.CardMaridiaL2) ||
                             World.InnerMaridia.DraygonTreasure.IsAvailable(items)
                         ))
                     ),
                 _ =>
                     items.Super && (
                         /* Over the Moat */
-                        (Config.Keysanity ? items.CardCrateriaL2 : items.CanUsePowerBombs()) ||
+                        (Config.Keysanity ? items.CardCrateriaL2 : World.AdvancedLogic.CanUsePowerBombs(items)) ||
                         /* Through Maridia -> Forgotten Highway */
-                        (items.CanUsePowerBombs() && (
+                        (World.AdvancedLogic.CanUsePowerBombs(items) && (
                             items.Gravity ||
                             /* Climb Mt. Everest */
-                            (items.HiJump && (items.Ice || items.CanSpringBallJump()) && items.Grapple && items.CardMaridiaL1)
+                            (items.HiJump && (items.Ice || World.AdvancedLogic.CanSpringBallJump(items)) && items.Grapple && items.CardMaridiaL1)
                         )) ||
                         /* From Maridia portal -> Forgotten Highway */
-                        (items.CanAccessMaridiaPortal(World) && (
-                            (items.HiJump && items.CanPassBombPassages() && items.CardMaridiaL2) ||
+                        (World.AdvancedLogic.CanAccessMaridiaPortal(items) && (
+                            (items.HiJump && World.AdvancedLogic.CanPassBombPassages(items) && items.CardMaridiaL2) ||
                             (items.Gravity && (
-                                (items.CanDestroyBombWalls() && items.CardMaridiaL2) ||
+                                (World.AdvancedLogic.CanDestroyBombWalls(items) && items.CardMaridiaL2) ||
                                 World.InnerMaridia.DraygonTreasure.IsAvailable(items)
                             ))
                         ))
@@ -143,9 +143,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
             return CanEnter(items) && CanUnlockShip(items);
         }
 
-        private static bool CanUnlockShip(Progression items)
+        private bool CanUnlockShip(Progression items)
         {
-            return items.CardWreckedShipBoss && items.CanPassBombPassages();
+            return items.CardWreckedShipBoss && World.AdvancedLogic.CanPassBombPassages(items);
         }
     }
 }

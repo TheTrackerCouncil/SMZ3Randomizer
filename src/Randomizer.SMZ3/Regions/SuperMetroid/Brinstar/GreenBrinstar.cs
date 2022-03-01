@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Power Bomb (green Brinstar bottom)",
                 access: Logic switch
                 {
-                    _ => items => items.CardBrinstarL2 && items.CanUsePowerBombs()
+                    _ => items => items.CardBrinstarL2 && world.AdvancedLogic.CanUsePowerBombs(items)
                 });
             MissileBelowSuperMissile = new(this, 15, 0x8F8518, LocationType.Visible,
                 name: "Missile (green Brinstar below super missile)",
@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => items => items.CanPassBombPassages() && items.CanOpenRedDoors()
+                    _ => items => world.AdvancedLogic.CanPassBombPassages(items) && world.AdvancedLogic.CanOpenRedDoors(items)
                 });
             TopSuperMissile = new(this, 16, 0x8F851E, LocationType.Visible,
                 name: "Super Missile (green Brinstar top)",
@@ -29,8 +29,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Super,
                 access: Logic switch
                 {
-                    Normal => items => items.CanOpenRedDoors() && items.SpeedBooster,
-                    _ => items => items.CanOpenRedDoors() && (items.Morph || items.SpeedBooster)
+                    Normal => items => world.AdvancedLogic.CanOpenRedDoors(items) && items.SpeedBooster,
+                    _ => items => world.AdvancedLogic.CanOpenRedDoors(items) && (items.Morph || items.SpeedBooster)
                 });
             ReserveTank = new(this, 17, 0x8F852C, LocationType.Chozo,
                 name: "Reserve Tank, Brinstar",
@@ -38,22 +38,22 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.ReserveTank,
                 access: Logic switch
                 {
-                    Normal => items => items.CanOpenRedDoors() && items.SpeedBooster,
-                    _ => items => items.CanOpenRedDoors() && (items.Morph || items.SpeedBooster)
+                    Normal => items => world.AdvancedLogic.CanOpenRedDoors(items) && items.SpeedBooster,
+                    _ => items => world.AdvancedLogic.CanOpenRedDoors(items) && (items.Morph || items.SpeedBooster)
                 });
             ETank = new(this, 30, 0x8F87C2, LocationType.Visible,
                 name: "Energy Tank, Etecoons",
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    _ => items => items.CardBrinstarL2 && items.CanUsePowerBombs()
+                    _ => items => items.CardBrinstarL2 && world.AdvancedLogic.CanUsePowerBombs(items)
                 });
             BottomSuperMissile = new(this, 31, 0x8F87D0, LocationType.Visible,
                 name: "Super Missile (green Brinstar bottom)",
                 vanillaItem: ItemType.Super,
                 access: Logic switch
                 {
-                    _ => items => items.CardBrinstarL2 && items.CanUsePowerBombs() && items.Super
+                    _ => items => items.CardBrinstarL2 && world.AdvancedLogic.CanUsePowerBombs(items) && items.Super
                 });
             MockballHallHidden = new(this);
         }
@@ -78,7 +78,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public override bool CanEnter(Progression items)
         {
-            return items.CanDestroyBombWalls() || (Logic == SMLogic.Hard && items.SpeedBooster);
+            return World.AdvancedLogic.CanDestroyBombWalls(items) || (Logic == SMLogic.Hard && items.SpeedBooster);
         }
 
         public class MockballHallHiddenRoom : Room
@@ -92,8 +92,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        Normal => items => items.SpeedBooster && items.CanPassBombPassages() && items.CanOpenRedDoors(),
-                        _ => items => items.CanPassBombPassages() && items.CanOpenRedDoors()
+                        Normal => items => items.SpeedBooster && World.AdvancedLogic.CanPassBombPassages(items) && World.AdvancedLogic.CanOpenRedDoors(items),
+                        _ => items => World.AdvancedLogic.CanPassBombPassages(items) && World.AdvancedLogic.CanOpenRedDoors(items)
                     });
 
                 MainItem = new(this, 19, 0x8F8538, LocationType.Visible,
@@ -102,8 +102,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        Normal => items => items.SpeedBooster && items.CanOpenRedDoors() && items.Morph,
-                        _ => items => items.CanOpenRedDoors() && items.Morph
+                        Normal => items => items.SpeedBooster && World.AdvancedLogic.CanOpenRedDoors(items) && items.Morph,
+                        _ => items => World.AdvancedLogic.CanOpenRedDoors(items) && items.Morph
                     });
             }
 

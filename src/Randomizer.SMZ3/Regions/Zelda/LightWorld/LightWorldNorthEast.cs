@@ -94,7 +94,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     name: "King Zora",
                     alsoKnownAs: "Zora",
                     vanillaItem: ItemType.Flippers,
-                    access: items => (items.CanLiftLight() || items.Flippers) && items.Rupees >= 500); // Consider adding 500 rupee requirement into logic
+                    access: items => (World.AdvancedLogic.CanLiftLight(items) || items.Flippers) && items.Rupees >= 500); // Consider adding 500 rupee requirement into logic
 
                 ZoraLedge = new Location(this, 256 + 37, 0x308149, LocationType.Regular,
                     name: "Zora's Ledge",

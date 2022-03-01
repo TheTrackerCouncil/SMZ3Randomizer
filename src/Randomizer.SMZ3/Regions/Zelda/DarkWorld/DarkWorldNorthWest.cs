@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 name: "Bumper Cave",
                 alsoKnownAs: "Bumper Cave Ledge",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.CanLiftLight() && items.Cape);
+                access: items => World.AdvancedLogic.CanLiftLight(items) && items.Cape);
 
             ChestGame = new Location(this, 256 + 72, 0x1EDA8, LocationType.Regular,
                 name: "Chest Game",
@@ -29,13 +29,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 name: "Hammer Pegs",
                 alsoKnownAs: "Peg World",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.CanLiftHeavy() && items.Hammer);
+                access: items => World.AdvancedLogic.CanLiftHeavy(items) && items.Hammer);
 
             PurpleChestTurnin = new Location(this, 256 + 77, 0x6BD68, LocationType.Regular,
                 name: "Purple Chest",
                 alsoKnownAs: "Purple Chest turn-in",
                 vanillaItem: ItemType.Bottle, // ???
-                access: items => items.CanLiftHeavy());
+                access: items => World.AdvancedLogic.CanLiftHeavy(items));
         }
 
         public override string Name => "Dark World North West";
@@ -57,10 +57,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         {
             return items.MoonPearl && (((
                     World.CanAquire(items, Reward.Agahnim) ||
-                    (items.CanAccessDarkWorldPortal(Config) && items.Flippers)
-                ) && items.Hookshot && (items.Flippers || items.CanLiftLight() || items.Hammer)) ||
-                (items.Hammer && items.CanLiftLight()) ||
-                items.CanLiftHeavy()
+                    (World.AdvancedLogic.CanAccessDarkWorldPortal(items) && items.Flippers)
+                ) && items.Hookshot && (items.Flippers || World.AdvancedLogic.CanLiftLight(items) || items.Hammer)) ||
+                (items.Hammer && World.AdvancedLogic.CanLiftLight(items)) ||
+                World.AdvancedLogic.CanLiftHeavy(items)
             );
         }
 

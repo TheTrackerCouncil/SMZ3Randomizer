@@ -27,10 +27,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    Normal => items => items.CanOpenRedDoors() && (items.CanFly() || items.SpeedBooster || items.Grapple),
-                    _ => items => items.CanOpenRedDoors() && (
-                        items.CanFly() || items.SpeedBooster || items.Grapple ||
-                        (items.CanSpringBallJump() && (items.Gravity || items.HiJump))
+                    Normal => items => World.AdvancedLogic.CanOpenRedDoors(items) && (World.AdvancedLogic.CanFly(items) || items.SpeedBooster || items.Grapple),
+                    _ => items => World.AdvancedLogic.CanOpenRedDoors(items) && (
+                        World.AdvancedLogic.CanFly(items) || items.SpeedBooster || items.Grapple ||
+                        (World.AdvancedLogic.CanSpringBallJump(items) && (items.Gravity || items.HiJump))
                     )
                 });
             MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => items => items.CanOpenRedDoors()
+                    _ => items => World.AdvancedLogic.CanOpenRedDoors(items)
                 });
         }
 
@@ -60,16 +60,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             return Logic switch
             {
                 Normal => items.Gravity && (
-                        (World.UpperNorfairWest.CanEnter(items) && items.CanUsePowerBombs()) ||
-                        (items.CanAccessMaridiaPortal(World) && items.CardMaridiaL1 && items.CardMaridiaL2 && (items.CanPassBombPassages() || items.ScrewAttack))
+                        (World.UpperNorfairWest.CanEnter(items) && World.AdvancedLogic.CanUsePowerBombs(items)) ||
+                        (World.AdvancedLogic.CanAccessMaridiaPortal(items) && items.CardMaridiaL1 && items.CardMaridiaL2 && (World.AdvancedLogic.CanPassBombPassages(items) || items.ScrewAttack))
                     ),
                 _ =>
-                    (World.UpperNorfairWest.CanEnter(items) && items.CanUsePowerBombs() &&
-                        (items.Gravity || (items.HiJump && (items.CanSpringBallJump() || items.Ice)))) ||
-                    (items.CanAccessMaridiaPortal(World) && items.CardMaridiaL1 && items.CardMaridiaL2 && (
-                        items.CanPassBombPassages() ||
+                    (World.UpperNorfairWest.CanEnter(items) && World.AdvancedLogic.CanUsePowerBombs(items) &&
+                        (items.Gravity || (items.HiJump && (World.AdvancedLogic.CanSpringBallJump(items) || items.Ice)))) ||
+                    (World.AdvancedLogic.CanAccessMaridiaPortal(items) && items.CardMaridiaL1 && items.CardMaridiaL2 && (
+                        World.AdvancedLogic.CanPassBombPassages(items) ||
                         (items.Gravity && items.ScrewAttack) ||
-                        (items.Super && (items.Gravity || (items.HiJump && (items.CanSpringBallJump() || items.Ice))))
+                        (items.Super && (items.Gravity || (items.HiJump && (World.AdvancedLogic.CanSpringBallJump(items) || items.Ice))))
                     ))
             };
         }

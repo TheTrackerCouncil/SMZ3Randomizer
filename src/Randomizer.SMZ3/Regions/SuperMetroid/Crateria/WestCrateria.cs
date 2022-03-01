@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && items.HasEnergyReserves(1),
+                    Normal => items => CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.HasEnergyReserves(items, 1),
                     _ => items => CanEnterAndLeaveGauntlet(items)
                 });
             GauntletShaft = new(this);
@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         public override bool CanEnter(Progression items)
         {
-            return items.CanDestroyBombWalls() || (Logic == Hard && items.SpeedBooster);
+            return World.AdvancedLogic.CanDestroyBombWalls(items) || (Logic == Hard && items.SpeedBooster);
         }
 
         private bool CanEnterAndLeaveGauntlet(Progression items)
@@ -44,16 +44,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
             return Logic switch
             {
                 Normal =>
-                    items.CardCrateriaL1 && items.Morph && (items.CanFly() || items.SpeedBooster) && (
-                        items.CanIbj() ||
-                        (items.CanUsePowerBombs() && items.TwoPowerBombs) ||
+                    items.CardCrateriaL1 && items.Morph && (World.AdvancedLogic.CanFly(items) || items.SpeedBooster) && (
+                        World.AdvancedLogic.CanIbj(items) ||
+                        (World.AdvancedLogic.CanUsePowerBombs(items) && items.TwoPowerBombs) ||
                         items.ScrewAttack
                     ),
                 _ =>
                     items.CardCrateriaL1 && (
                         (items.Morph && (items.Bombs || items.TwoPowerBombs)) ||
                         items.ScrewAttack ||
-                        (items.SpeedBooster && items.CanUsePowerBombs() && items.HasEnergyReserves(2))
+                        (items.SpeedBooster && World.AdvancedLogic.CanUsePowerBombs(items) && World.AdvancedLogic.HasEnergyReserves(items, 2))
                     )
             };
         }
@@ -69,8 +69,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile,
                 access: region.Logic switch
                 {
-                    Normal => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                    _ => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages()
+                    Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items) && World.AdvancedLogic.HasEnergyReserves(items, 2),
+                    _ => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items)
                 });
 
                 GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
@@ -79,8 +79,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        Normal => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages() && items.HasEnergyReserves(2),
-                        _ => items => region.CanEnterAndLeaveGauntlet(items) && items.CanPassBombPassages()
+                        Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items) && World.AdvancedLogic.HasEnergyReserves(items, 2),
+                        _ => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items)
                     });
             }
 

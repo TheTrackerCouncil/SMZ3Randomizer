@@ -83,6 +83,7 @@ namespace Randomizer.SMZ3
             };
             Locations = Regions.SelectMany(x => x.Locations).ToImmutableList();
             Rooms = Regions.SelectMany(x => x.Rooms).ToImmutableList();
+            AdvancedLogic = new(this);
         }
 
         public Config Config { get; }
@@ -93,6 +94,7 @@ namespace Randomizer.SMZ3
         public IEnumerable<Room> Rooms { get; }
         public IEnumerable<Location> Locations { get; }
         public IEnumerable<Item> Items => Locations.Select(l => l.Item).Where(i => i != null);
+        public AdvancedLogic AdvancedLogic { get; }
 
         public CastleTower CastleTower { get; }
         public EasternPalace EasternPalace { get; }

@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    _ => items => items.CanUsePowerBombs()
+                    _ => items => world.AdvancedLogic.CanUsePowerBombs(items)
                 });
 
             MiddleMissile = new(this, 28, 0x8F8798, LocationType.Visible,
@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    Normal => items => items.CardBrinstarL1 && (items.CanFly() || items.HiJump || items.SpeedBooster || items.Ice),
+                    Normal => items => items.CardBrinstarL1 && (world.AdvancedLogic.CanFly(items) || items.HiJump || items.SpeedBooster || items.Ice),
                     _ => items => items.CardBrinstarL1
                 });
 
@@ -77,7 +77,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: region.Logic switch
                 {
-                    _ => items => items.CardBrinstarL1 && items.CanUsePowerBombs()
+                    _ => items => items.CardBrinstarL1 && region.World.AdvancedLogic.CanUsePowerBombs(items)
                 });
 
                 HiddenItem = new(this, 37, 0x8F883C, LocationType.Hidden,
@@ -86,7 +86,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        _ => items => items.CardBrinstarL1 && items.CanUsePowerBombs()
+                        _ => items => items.CardBrinstarL1 && region.World.AdvancedLogic.CanUsePowerBombs(items)
                     });
             }
 

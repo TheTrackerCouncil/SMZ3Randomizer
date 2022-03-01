@@ -23,7 +23,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => CanExit(items),
-                    _ => items => CanExit(items) && items.CanPassBombPassages()
+                    _ => items => CanExit(items) && World.AdvancedLogic.CanPassBombPassages(items)
                 });
             PowerBombOfShame = new(this, 76, 0x8F90C0, LocationType.Visible,
                 name: "Power Bomb (Power Bombs of shame)",
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    _ => items => CanExit(items) && items.CanUsePowerBombs()
+                    _ => items => CanExit(items) && World.AdvancedLogic.CanUsePowerBombs(items)
                 });
             ThreeMusketeersRoom = new(this, 77, 0x8F9100, LocationType.Visible,
                 name: "Missile (lower Norfair near Wave Beam)",
@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => CanExit(items),
-                    _ => items => CanExit(items) && items.Morph && items.CanDestroyBombWalls()
+                    _ => items => CanExit(items) && items.Morph && World.AdvancedLogic.CanDestroyBombWalls(items)
                 });
             RidleyTreasure = new(this, 78, 0x8F9108, LocationType.Hidden,
                 name: "Energy Tank, Ridley",
@@ -48,7 +48,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    _ => items => CanExit(items) && items.CardLowerNorfairBoss && items.CanUsePowerBombs() && items.Super
+                    _ => items => CanExit(items) && items.CardLowerNorfairBoss && World.AdvancedLogic.CanUsePowerBombs(items) && items.Super
                 });
             FirefleaRoom = new(this, 80, 0x8F9184, LocationType.Visible,
                 name: "Energy Tank, Firefleas",
@@ -82,16 +82,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         {
             Normal =>
                 items.Varia && items.CardLowerNorfairL1 && (
-                    (World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && items.SpaceJump && items.Gravity) ||
-                    (items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && items.CanUsePowerBombs() && items.CanFly())
+                    (World.UpperNorfairEast.CanEnter(items) && World.AdvancedLogic.CanUsePowerBombs(items) && items.SpaceJump && items.Gravity) ||
+                    (World.AdvancedLogic.CanAccessNorfairLowerPortal(items) && World.AdvancedLogic.CanDestroyBombWalls(items) && items.Super && World.AdvancedLogic.CanUsePowerBombs(items) && World.AdvancedLogic.CanFly(items))
                 ),
             _ =>
                 items.Varia && items.CardLowerNorfairL1 && (
-                    (World.UpperNorfairEast.CanEnter(items) && items.CanUsePowerBombs() && (items.HiJump || items.Gravity)) ||
-                    (items.CanAccessNorfairLowerPortal() && items.CanDestroyBombWalls() && items.Super && (items.CanFly() || items.CanSpringBallJump() || items.SpeedBooster))
+                    (World.UpperNorfairEast.CanEnter(items) && World.AdvancedLogic.CanUsePowerBombs(items) && (items.HiJump || items.Gravity)) ||
+                    (World.AdvancedLogic.CanAccessNorfairLowerPortal(items) && World.AdvancedLogic.CanDestroyBombWalls(items) && items.Super && (World.AdvancedLogic.CanFly(items) || World.AdvancedLogic.CanSpringBallJump(items) || items.SpeedBooster))
                 ) &&
-                (items.CanFly() || items.HiJump || items.CanSpringBallJump() || (items.Ice && items.Charge)) &&
-                (items.CanPassBombPassages() || (items.ScrewAttack && items.SpaceJump))
+                (World.AdvancedLogic.CanFly(items) || items.HiJump || World.AdvancedLogic.CanSpringBallJump(items) || (items.Ice && items.Charge)) &&
+                (World.AdvancedLogic.CanPassBombPassages(items) || (items.ScrewAttack && items.SpaceJump))
         };
 
         public bool CanComplete(Progression items)
@@ -107,10 +107,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     (items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump /*Spikey Acid Snakes and Croc Escape*/)),
                 _ => /*Vanilla LN Escape*/
                     (items.Morph && (items.CardNorfairL2 /*Bubble Mountain*/ || ((items.Missile || items.Super || items.Wave /* Blue Gate */) &&
-                                     (items.SpeedBooster || items.CanFly() || items.Grapple || (items.HiJump &&
-                                     (items.CanSpringBallJump() || items.Ice)) /*Frog Speedway or Croc Escape*/)))) ||
+                                     (items.SpeedBooster || World.AdvancedLogic.CanFly(items) || items.Grapple || (items.HiJump &&
+                                     (World.AdvancedLogic.CanSpringBallJump(items) || items.Ice)) /*Frog Speedway or Croc Escape*/)))) ||
                      /*Reverse Amphitheater*/
-                     items.HasEnergyReserves(5),
+                     World.AdvancedLogic.HasEnergyReserves(items, 5),
             };
         }
     }
