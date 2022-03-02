@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.Extensions.Logging;
-using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;

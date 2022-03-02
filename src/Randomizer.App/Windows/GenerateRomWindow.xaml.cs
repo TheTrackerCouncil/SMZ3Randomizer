@@ -82,17 +82,17 @@ namespace Randomizer.App
 
                 if (property.PropertyType == typeof(bool))
                 {
-                    var checkBox = new CheckBox();
-                    checkBox.Name = name;
-                    checkBox.Content = displayName;
-                    checkBox.IsChecked = (bool)property.GetValue(Options.LogicConfig);
-                    checkBox.ToolTip = description;
+                    var checkBox = new CheckBox
+                    {
+                        Name = name,
+                        Content = displayName,
+                        IsChecked = (bool)property.GetValue(Options.LogicConfig),
+                        ToolTip = description
+                    };
                     checkBox.Checked += LogicCheckBox_Checked;
                     checkBox.Unchecked += LogicCheckBox_Checked;
                     parent.Children.Add(checkBox);
                 }
-
-                Console.WriteLine(property.Name);
             }
         }
 

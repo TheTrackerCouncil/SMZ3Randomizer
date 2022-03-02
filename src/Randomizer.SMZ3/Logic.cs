@@ -153,7 +153,7 @@ namespace Randomizer.SMZ3
             return items.SpeedBooster && World.Config.LogicConfig.ParlorSpeedBooster;
         }
 
-        public World World { get;  }
+        public World World { get; }
 
         public static List<ItemType[]> GetMissingRequiredItems(Location location, Progression items)
         {
