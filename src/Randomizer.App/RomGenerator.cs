@@ -87,10 +87,11 @@ namespace Randomizer.App
         {
             seed = GenerateSeed(options);
 
+            var assembly = GetType().Assembly;
             var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)
             {
-                smIpsFiles.Add(GetType().Assembly.GetManifestResourceStream("Randomizer.App.spinjumprestart.ips"));
+                smIpsFiles.Add(EmbeddedResource.GetStream<App>("spinjumprestart.ips"));
             }
 
             byte[] rom;
@@ -107,7 +108,7 @@ namespace Randomizer.App
                 smIpsFiles.ForEach(x => x.Close());
             }
 
-            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips"))
+            using (var ips = EmbeddedResource.GetStream<App>("zsm.ips"))
             {
                 Rom.ApplyIps(rom, ips);
             }
@@ -115,6 +116,17 @@ namespace Randomizer.App
 
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
+
+            using (var customShipBasePatch = EmbeddedResource.GetStream<App>("custom_ship.ips"))
+            {
+                Rom.ApplySuperMetroidIps(rom, customShipBasePatch);
+            }
+
+            using (var customShip = EmbeddedResource.GetStream<App>("kirbyship.ips"))
+            {
+                Rom.ApplySuperMetroidIps(rom, customShip);
+            }
+
             return rom;
         }
         /// <summary>
