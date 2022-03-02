@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
             FloatingIsland = new Location(this, 256 + 4, 0x308141, LocationType.Regular,
                 name: "Floating Island",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.Mirror && items.MoonPearl && World.AdvancedLogic.CanLiftHeavy(items));
+                access: items => items.Mirror && items.MoonPearl && World.Logic.CanLiftHeavy(items));
 
             SpiralCave = new Location(this, 256 + 5, 0x1E9BF, LocationType.Regular,
                 name: "Spiral Cave",

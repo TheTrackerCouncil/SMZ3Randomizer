@@ -42,8 +42,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
         public override bool CanEnter(Progression items)
         {
             return items.Flute
-                || (World.AdvancedLogic.CanLiftLight(items) && items.Lamp)
-                || World.AdvancedLogic.CanAccessDeathMountainPortal(items);
+                || (World.Logic.CanLiftLight(items) && items.Lamp)
+                || World.Logic.CanAccessDeathMountainPortal(items);
         }
     }
 }

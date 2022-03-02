@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
         public override bool CanEnter(Progression items)
         {
-            return (items.Flute && World.AdvancedLogic.CanLiftHeavy(items)) || World.AdvancedLogic.CanAccessMiseryMirePortal(items);
+            return (items.Flute && World.Logic.CanLiftHeavy(items)) || World.Logic.CanAccessMiseryMirePortal(items);
         }
 
         public class MireShedRoom : Room

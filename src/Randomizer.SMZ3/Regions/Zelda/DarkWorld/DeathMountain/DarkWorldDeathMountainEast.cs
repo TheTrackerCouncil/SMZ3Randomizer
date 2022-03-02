@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
 
         public override bool CanEnter(Progression items)
         {
-            return World.AdvancedLogic.CanLiftHeavy(items) && World.LightWorldDeathMountainEast.CanEnter(items);
+            return World.Logic.CanLiftHeavy(items) && World.LightWorldDeathMountainEast.CanEnter(items);
         }
 
         public class HookshotCaveRoom : Room

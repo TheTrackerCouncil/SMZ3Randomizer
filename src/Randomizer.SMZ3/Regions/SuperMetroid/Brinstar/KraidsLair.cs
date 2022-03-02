@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => items => world.AdvancedLogic.CanUsePowerBombs(items)
+                    _ => items => world.Logic.CanUsePowerBombs(items)
                 });
         }
 
@@ -45,8 +45,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public override bool CanEnter(Progression items)
         {
-            return (World.AdvancedLogic.CanDestroyBombWalls(items) || items.SpeedBooster || World.AdvancedLogic.CanAccessNorfairUpperPortal(items)) &&
-                items.Super && World.AdvancedLogic.CanPassBombPassages(items);
+            return (World.Logic.CanDestroyBombWalls(items) || items.SpeedBooster || World.Logic.CanAccessNorfairUpperPortal(items)) &&
+                items.Super && World.Logic.CanPassBombPassages(items);
         }
 
         public bool CanComplete(Progression items)

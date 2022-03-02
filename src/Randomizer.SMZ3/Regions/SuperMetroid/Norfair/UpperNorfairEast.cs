@@ -16,8 +16,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => items.CardNorfairL2 && (
-                        World.AdvancedLogic.CanFly(items) ||
-                        (items.Grapple && items.Morph && (items.SpeedBooster || World.AdvancedLogic.CanPassBombPassages(items))) ||
+                        World.Logic.CanFly(items) ||
+                        (items.Grapple && items.Morph && (items.SpeedBooster || World.Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
                     ),
                     _ => items => items.CardNorfairL2 && items.Super
@@ -37,8 +37,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => items.CardNorfairL2 && (
-                        World.AdvancedLogic.CanFly(items) ||
-                        (items.Morph && (items.SpeedBooster || World.AdvancedLogic.CanPassBombPassages(items))) ||
+                        World.Logic.CanFly(items) ||
+                        (items.Morph && (items.SpeedBooster || World.Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
                     ),
                     _ => items => items.CardNorfairL2 && items.Super
@@ -50,8 +50,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => items.CardNorfairL2 && (
-                        World.AdvancedLogic.CanFly(items) ||
-                        (items.Morph && (items.SpeedBooster || World.AdvancedLogic.CanPassBombPassages(items))) ||
+                        World.Logic.CanFly(items) ||
+                        (items.Morph && (items.SpeedBooster || World.Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
                     ),
                     _ => items => items.CardNorfairL2 && items.Super
@@ -63,8 +63,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => (items.CardNorfairL2 && (
-                        World.AdvancedLogic.CanFly(items) ||
-                        (items.Morph && (items.SpeedBooster || World.AdvancedLogic.CanPassBombPassages(items))) ||
+                        World.Logic.CanFly(items) ||
+                        (items.Morph && (items.SpeedBooster || World.Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
                     )) ||
                     (items.SpeedBooster && items.Wave && items.Morph && items.Super),
@@ -78,13 +78,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 {
                     Normal => items => items.Morph && (
                         (items.CardNorfairL2 && (
-                            World.AdvancedLogic.CanFly(items) ||
-                            (items.Morph && (items.SpeedBooster || World.AdvancedLogic.CanPassBombPassages(items))) ||
+                            World.Logic.CanFly(items) ||
+                            (items.Morph && (items.SpeedBooster || World.Logic.CanPassBombPassages(items))) ||
                             items.HiJump || items.Ice
                         )) ||
                         (items.SpeedBooster && items.Wave && items.Morph && items.Super)
                     ),
-                    _ => items => World.AdvancedLogic.CanOpenRedDoors(items) && (items.CardNorfairL2 || items.Varia) &&
+                    _ => items => World.Logic.CanOpenRedDoors(items) && (items.CardNorfairL2 || items.Varia) &&
                         (items.Morph || items.Grapple || (items.HiJump && items.Varia) || items.SpaceJump)
                 });
             BubbleMountainHiddenHall = new(this);
@@ -115,27 +115,27 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
             return Logic switch
             {
                 Normal => (
-                        ((World.AdvancedLogic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
-                        World.AdvancedLogic.CanAccessNorfairUpperPortal(items)
+                        ((World.Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
+                        World.Logic.CanAccessNorfairUpperPortal(items)
                     ) && items.Varia && items.Super && (
                         /* Cathedral */
-                        (World.AdvancedLogic.CanOpenRedDoors(items) && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
-                            (World.AdvancedLogic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
+                        (World.Logic.CanOpenRedDoors(items) && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
+                            (World.Logic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
                         /* Frog Speedway */
-                        (items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && World.AdvancedLogic.CanUsePowerBombs(items))
+                        (items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && World.Logic.CanUsePowerBombs(items))
                     ),
                 _ => (
-                        ((World.AdvancedLogic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
-                        World.AdvancedLogic.CanAccessNorfairUpperPortal(items)
+                        ((World.Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
+                        World.Logic.CanAccessNorfairUpperPortal(items)
                     ) &&
-                    World.AdvancedLogic.CanHellRun(items) && (
+                    World.Logic.CanHellRun(items) && (
                         /* Cathedral */
-                        (World.AdvancedLogic.CanOpenRedDoors(items) && (Config.Keysanity ? items.CardNorfairL2 : items.Super) && (
-                            World.AdvancedLogic.CanFly(items) || items.HiJump || items.SpeedBooster ||
-                            World.AdvancedLogic.CanSpringBallJump(items) || (items.Varia && items.Ice)
+                        (World.Logic.CanOpenRedDoors(items) && (Config.Keysanity ? items.CardNorfairL2 : items.Super) && (
+                            World.Logic.CanFly(items) || items.HiJump || items.SpeedBooster ||
+                            World.Logic.CanSpringBallJump(items) || (items.Varia && items.Ice)
                         )) ||
                         /* Frog Speedway */
-                        (items.SpeedBooster && (items.CardNorfairL2 || items.Missile || items.Super || items.Wave) && World.AdvancedLogic.CanUsePowerBombs(items))
+                        (items.SpeedBooster && (items.CardNorfairL2 || items.Missile || items.Super || items.Wave) && World.Logic.CanUsePowerBombs(items))
                     ),
             };
         }
@@ -152,8 +152,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     access: region.Logic switch
                     {
                         Normal => items => items.CardNorfairL2 && items.Morph && (
-                            World.AdvancedLogic.CanFly(items) ||
-                            (items.Grapple && (items.SpeedBooster || World.AdvancedLogic.CanPassBombPassages(items))) ||
+                            World.Logic.CanFly(items) ||
+                            (items.Grapple && (items.SpeedBooster || World.Logic.CanPassBombPassages(items))) ||
                             items.HiJump || items.Ice
                         ),
                         _ => items => items.CardNorfairL2 && items.Morph && items.Super
@@ -166,8 +166,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     access: region.Logic switch
                     {
                         Normal => items => items.CardNorfairL2 && items.Morph && (
-                            World.AdvancedLogic.CanFly(items) ||
-                            (items.Grapple && (items.SpeedBooster || World.AdvancedLogic.CanPassBombPassages(items))) ||
+                            World.Logic.CanFly(items) ||
+                            (items.Grapple && (items.SpeedBooster || World.Logic.CanPassBombPassages(items))) ||
                             items.HiJump || items.Ice
                         ),
                         _ => items => items.CardNorfairL2 && items.Morph && items.Super

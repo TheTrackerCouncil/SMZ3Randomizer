@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.HasEnergyReserves(items, 1),
+                    Normal => items => CanEnterAndLeaveGauntlet(items) && World.Logic.HasEnergyReserves(items, 1),
                     _ => items => CanEnterAndLeaveGauntlet(items)
                 });
             GauntletShaft = new(this);
@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         public override bool CanEnter(Progression items)
         {
-            return World.AdvancedLogic.CanDestroyBombWalls(items) || (Logic == Hard && items.SpeedBooster);
+            return World.Logic.CanDestroyBombWalls(items) || World.Logic.CanParlorSpeedBoost(items);
         }
 
         private bool CanEnterAndLeaveGauntlet(Progression items)
@@ -44,16 +44,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
             return Logic switch
             {
                 Normal =>
-                    items.CardCrateriaL1 && items.Morph && (World.AdvancedLogic.CanFly(items) || items.SpeedBooster) && (
-                        World.AdvancedLogic.CanIbj(items) ||
-                        (World.AdvancedLogic.CanUsePowerBombs(items) && items.TwoPowerBombs) ||
-                        items.ScrewAttack
+                    items.CardCrateriaL1 && items.Morph && (World.Logic.CanFly(items) || items.SpeedBooster) && (
+                        World.Logic.CanIbj(items) ||
+                        (World.Logic.CanUsePowerBombs(items) && items.TwoPowerBombs) ||
+                        World.Logic.CanSafelyUseScrewAttack(items)
                     ),
                 _ =>
                     items.CardCrateriaL1 && (
                         (items.Morph && (items.Bombs || items.TwoPowerBombs)) ||
-                        items.ScrewAttack ||
-                        (items.SpeedBooster && World.AdvancedLogic.CanUsePowerBombs(items) && World.AdvancedLogic.HasEnergyReserves(items, 2))
+                        World.Logic.CanSafelyUseScrewAttack(items) ||
+                        (items.SpeedBooster && World.Logic.CanUsePowerBombs(items) && World.Logic.HasEnergyReserves(items, 2))
                     )
             };
         }
@@ -69,8 +69,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile,
                 access: region.Logic switch
                 {
-                    Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items) && World.AdvancedLogic.HasEnergyReserves(items, 2),
-                    _ => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items)
+                    Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items) && World.Logic.HasEnergyReserves(items, 2),
+                    _ => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items)
                 });
 
                 GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
@@ -79,8 +79,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                     vanillaItem: ItemType.Missile,
                     access: region.Logic switch
                     {
-                        Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items) && World.AdvancedLogic.HasEnergyReserves(items, 2),
-                        _ => items => region.CanEnterAndLeaveGauntlet(items) && World.AdvancedLogic.CanPassBombPassages(items)
+                        Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items) && World.Logic.HasEnergyReserves(items, 2),
+                        _ => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items)
                     });
             }
 

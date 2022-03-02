@@ -25,16 +25,19 @@ namespace Randomizer.App.ViewModels
             GeneralOptions = new GeneralOptions();
             SeedOptions = new SeedOptions();
             PatchOptions = new PatchOptions();
+            LogicConfig = new LogicConfig();
         }
 
         [JsonConstructor]
         public RandomizerOptions(GeneralOptions generalOptions,
             SeedOptions seedOptions,
-            PatchOptions patchOptions)
+            PatchOptions patchOptions,
+            LogicConfig logicConfig)
         {
             GeneralOptions = generalOptions ?? new();
             SeedOptions = seedOptions ?? new();
             PatchOptions = patchOptions ?? new();
+            LogicConfig = logicConfig ?? new();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -48,9 +51,13 @@ namespace Randomizer.App.ViewModels
         [JsonPropertyName("Patch")]
         public PatchOptions PatchOptions { get; }
 
+        [JsonPropertyName("Logic")]
+        public LogicConfig LogicConfig { get; }
+
         public bool ItemLocationsExpanded { get; set; } = false;
 
         public bool CustomizationExpanded { get; set; } = false;
+        public bool LogicExpanded { get; set; } = false;
 
         public bool CommonExpanded { get; set; } = true;
 
@@ -102,7 +109,8 @@ namespace Randomizer.App.ViewModels
             CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
             MenuSpeed = PatchOptions.MenuSpeed,
             LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
-            SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name
+            SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
+            LogicConfig = LogicConfig.Clone()
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

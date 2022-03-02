@@ -16,13 +16,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: Logic switch
                 {
                     Normal => items => items.Varia && (
-                            (World.AdvancedLogic.CanOpenRedDoors(items) && (World.AdvancedLogic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
+                            (World.Logic.CanOpenRedDoors(items) && (World.Logic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
                             (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
                         ) && items.Morph,
-                    _ => items => World.AdvancedLogic.CanHellRun(items) && (
-                            World.AdvancedLogic.CanOpenRedDoors(items) && (
-                                World.AdvancedLogic.CanFly(items) || items.HiJump || items.SpeedBooster ||
-                                World.AdvancedLogic.CanSpringBallJump(items) || (items.Varia && items.Ice)
+                    _ => items => World.Logic.CanHellRun(items) && (
+                            World.Logic.CanOpenRedDoors(items) && (
+                                World.Logic.CanFly(items) || items.HiJump || items.SpeedBooster ||
+                                World.Logic.CanSpringBallJump(items) || (items.Varia && items.Ice)
                             ) ||
                             (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
                         ) && items.Morph,
@@ -33,8 +33,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.Ice,
                 access: Logic switch
                 {
-                    Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && World.AdvancedLogic.CanPassBombPassages(items) && items.Varia && items.SpeedBooster,
-                    _ => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.Morph && (items.Varia || World.AdvancedLogic.HasEnergyReserves(items, 3))
+                    Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && World.Logic.CanPassBombPassages(items) && items.Varia && items.SpeedBooster,
+                    _ => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.Morph && (items.Varia || World.Logic.HasEnergyReserves(items, 3))
                 });
             CrumbleShaft = new(this, 51, 0x8F8B46, LocationType.Hidden,
                 name: "Missile (below Ice Beam)",
@@ -42,9 +42,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && World.AdvancedLogic.CanUsePowerBombs(items) && items.Varia && items.SpeedBooster,
+                    Normal => items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && World.Logic.CanUsePowerBombs(items) && items.Varia && items.SpeedBooster,
                     _ => items =>
-                        ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && World.AdvancedLogic.CanUsePowerBombs(items) && (items.Varia || World.AdvancedLogic.HasEnergyReserves(items, 3))) ||
+                        ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && World.Logic.CanUsePowerBombs(items) && (items.Varia || World.Logic.HasEnergyReserves(items, 3))) ||
                         ((items.Missile || items.Super || items.Wave) /* Blue Gate */ && items.Varia && items.SpeedBooster &&
                         /* Access to Croc's room to get spark */
                         (Config.Keysanity ? items.CardNorfairBoss : items.Super) && items.CardNorfairL1)
@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.HiJump,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanOpenRedDoors(items) && World.AdvancedLogic.CanPassBombPassages(items)
+                    _ => items => World.Logic.CanOpenRedDoors(items) && World.Logic.CanPassBombPassages(items)
                 });
             HiJumpLobbyBack = new(this, 55, 0x8F8BE6, LocationType.Visible,
                 name: "Missile (Hi-Jump Boots)",
@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanOpenRedDoors(items) && items.Morph
+                    _ => items => World.Logic.CanOpenRedDoors(items) && items.Morph
                 });
             HiJumpLobbyEntrance = new(this, 56, 0x8F8BEC, LocationType.Visible,
                 name: "Energy Tank (Hi-Jump Boots)",
@@ -71,7 +71,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanOpenRedDoors(items)
+                    _ => items => World.Logic.CanOpenRedDoors(items)
                 });
         }
         public override string Name => "Upper Norfair, West";
@@ -91,8 +91,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public override bool CanEnter(Progression items)
         {
-            return (World.AdvancedLogic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph ||
-                World.AdvancedLogic.CanAccessNorfairUpperPortal(items);
+            return (World.Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph ||
+                World.Logic.CanAccessNorfairUpperPortal(items);
         }
 
     }

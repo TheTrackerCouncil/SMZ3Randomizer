@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 {
                     Normal => items => items.Morph && (
                         items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                        (items.Gravity && (World.AdvancedLogic.CanIbj(items) || items.HiJump)) ||
+                        (items.Gravity && (World.Logic.CanIbj(items) || items.HiJump)) ||
                         World.WreckedShip.CanEnter(items)),
                     _ => items => items.Morph
                 });
@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 {
                     _ => items => World.WreckedShip.CanEnter(items)
                                                   && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                                  && World.AdvancedLogic.CanPassBombPassages(items)
+                                                  && World.Logic.CanPassBombPassages(items)
                 });
             MorphBallMaze = new(this, 3, 0x8F81F4, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship middle)",
@@ -38,7 +38,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 {
                     _ => items => World.WreckedShip.CanEnter(items)
                                                   && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                                  && World.AdvancedLogic.CanPassBombPassages(items)
+                                                  && World.Logic.CanPassBombPassages(items)
                 });
             Moat = new(this, 4, 0x8F8248, LocationType.Visible,
                 name: "Missile (Crateria moat)",
@@ -64,36 +64,36 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
             {
                 Normal =>
                     /* Ship -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.AdvancedLogic.CanUsePowerBombs(items)) && items.Super) ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && items.Super) ||
                     /* UN Portal -> Red Tower -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.AdvancedLogic.CanUsePowerBombs(items)) && World.AdvancedLogic.CanAccessNorfairUpperPortal(items) &&
+                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && World.Logic.CanAccessNorfairUpperPortal(items) &&
                         (items.Ice || items.HiJump || items.SpaceJump)) ||
                     /*Through Maridia From Portal*/
-                    (World.AdvancedLogic.CanAccessMaridiaPortal(items) && items.Gravity && items.Super && (
+                    (World.Logic.CanAccessMaridiaPortal(items) && items.Gravity && items.Super && (
                         /* Oasis -> Forgotten Highway */
-                        (items.CardMaridiaL2 && World.AdvancedLogic.CanDestroyBombWalls(items)) ||
+                        (items.CardMaridiaL2 && World.Logic.CanDestroyBombWalls(items)) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
                         World.InnerMaridia.DraygonTreasure.IsAvailable(items))) ||
                     /*Through Maridia from Pipe*/
-                    (World.AdvancedLogic.CanUsePowerBombs(items) && items.Super && items.Gravity)
+                    (World.Logic.CanUsePowerBombs(items) && items.Super && items.Gravity)
                     ,
                 _ =>
                     /* Ship -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.AdvancedLogic.CanUsePowerBombs(items)) && items.Super) ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && items.Super) ||
                     /* UN Portal -> Red Tower -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.AdvancedLogic.CanUsePowerBombs(items)) && World.AdvancedLogic.CanAccessNorfairUpperPortal(items) &&
-                        (items.Ice || items.HiJump || World.AdvancedLogic.CanFly(items) || World.AdvancedLogic.CanSpringBallJump(items))) ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && World.Logic.CanAccessNorfairUpperPortal(items) &&
+                        (items.Ice || items.HiJump || World.Logic.CanFly(items) || World.Logic.CanSpringBallJump(items))) ||
                     /*Through Maridia From Portal*/
-                    (World.AdvancedLogic.CanAccessMaridiaPortal(items) && (
+                    (World.Logic.CanAccessMaridiaPortal(items) && (
                         /* Oasis -> Forgotten Highway */
                         (items.CardMaridiaL2 && items.Super && (
-                            (items.HiJump && World.AdvancedLogic.CanPassBombPassages(items)) ||
-                            (items.Gravity && World.AdvancedLogic.CanDestroyBombWalls(items))
+                            (items.HiJump && World.Logic.CanPassBombPassages(items)) ||
+                            (items.Gravity && World.Logic.CanDestroyBombWalls(items))
                         )) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
                         (items.Gravity && World.InnerMaridia.DraygonTreasure.IsAvailable(items)))) ||
                     /*Through Maridia from Pipe*/
-                    (World.AdvancedLogic.CanUsePowerBombs(items) && items.Super && (items.Gravity || (items.HiJump && (items.Ice || World.AdvancedLogic.CanSpringBallJump(items))
+                    (World.Logic.CanUsePowerBombs(items) && items.Super && (items.Gravity || (items.HiJump && (items.Ice || World.Logic.CanSpringBallJump(items))
                                                                 && items.Grapple && items.CardMaridiaL1)))
             };
         }

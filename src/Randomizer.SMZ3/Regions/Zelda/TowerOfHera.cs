@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             BigKeyChest = new Location(this, 256 + 117, 0x1E9E6, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyTH,
-                access: items => items.KeyTH && World.AdvancedLogic.CanLightTorches(items))
+                access: items => items.KeyTH && World.Logic.CanLightTorches(items))
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyTH, World));
 
             CompassChest = new Location(this, 256 + 118, 0x1E9FB, LocationType.Regular,

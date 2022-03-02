@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 name: "Catfish",
                 alsoKnownAs: "Lake of Ill Omen",
                 vanillaItem: ItemType.Quake,
-                access: items => items.MoonPearl && World.AdvancedLogic.CanLiftLight(items));
+                access: items => items.MoonPearl && World.Logic.CanLiftLight(items));
 
             Pyramid = new Location(this, 256 + 79, 0x308147, LocationType.Regular,
                 name: "Pyramid",
@@ -34,9 +34,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         public override bool CanEnter(Progression items)
         {
             return World.CanAquire(items, Reward.Agahnim) || (items.MoonPearl && (
-                (items.Hammer && World.AdvancedLogic.CanLiftLight(items)) ||
-                (World.AdvancedLogic.CanLiftHeavy(items) && items.Flippers) ||
-                (World.AdvancedLogic.CanAccessDarkWorldPortal(items) && items.Flippers)
+                (items.Hammer && World.Logic.CanLiftLight(items)) ||
+                (World.Logic.CanLiftHeavy(items) && items.Flippers) ||
+                (World.Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
             ));
         }
 

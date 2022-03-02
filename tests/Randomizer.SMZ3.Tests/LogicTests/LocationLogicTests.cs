@@ -82,22 +82,5 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var missingItems = Logic.GetMissingRequiredItems(World.KraidsLair.KraidsItem, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
         }
-
-        [Fact]
-        public void LocationTestLogicConfig()
-        {
-            Config tempConfig = new Config();
-            tempConfig.LogicConfig.PreventScrewAttackSoftLock = false;
-            World tempWorld = new World(tempConfig, "", 0, "");
-            var progression = new Progression(new[] { ItemType.ScrewAttack });
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression);
-            missingItems.Should().BeEmpty();
-
-            tempConfig.LogicConfig.PreventScrewAttackSoftLock = true;
-            tempWorld = new World(tempConfig, "", 0, "");
-            progression = new Progression(new[] { ItemType.ScrewAttack });
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression);
-            missingItems.Should().NotBeEmpty();
-        }
     }
 }

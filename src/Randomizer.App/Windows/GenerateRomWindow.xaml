@@ -140,6 +140,26 @@
             </StackPanel>
           </Expander>
 
+          <Expander Header="Logic Options"
+                    x:Name="LogicOptionsExpander"
+                    IsExpanded="{Binding LogicExpanded}">
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,11"
+                        DataContext="{Binding LogicConfig}">
+              
+              <GroupBox Header="Basic Logic"
+                        Padding="0,5,0,0">
+                <UniformGrid Columns="2" Name="LogicGrid" />
+              </GroupBox>
+
+              <GroupBox Header="Tricks"
+                        Padding="0,5,0,0">
+                <UniformGrid Columns="2" Name="TricksGrid" />
+              </GroupBox>
+
+            </StackPanel>
+          </Expander>
+          
           <Expander Header="Customization"
                     x:Name="CustomizationExpander"
                     IsExpanded="{Binding CustomizationExpanded}">

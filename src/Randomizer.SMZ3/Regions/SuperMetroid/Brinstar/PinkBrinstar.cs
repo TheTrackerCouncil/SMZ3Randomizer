@@ -14,8 +14,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Super,
                 access: Logic switch
                 {
-                    Normal => items => items.CardBrinstarBoss && World.AdvancedLogic.CanPassBombPassages(items) && items.Super,
-                    _ => items => (items.CardBrinstarBoss || items.CardBrinstarL2) && World.AdvancedLogic.CanPassBombPassages(items) && items.Super
+                    Normal => items => items.CardBrinstarBoss && World.Logic.CanPassBombPassages(items) && items.Super,
+                    _ => items => (items.CardBrinstarBoss || items.CardBrinstarL2) && World.Logic.CanPassBombPassages(items) && items.Super
                 });
             PinkShaftTop = new(this, 21, 0x8F8608, LocationType.Visible,
                 name: "Missile (pink Brinstar top)",
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Charge,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanPassBombPassages(items)
+                    _ => items => World.Logic.CanPassBombPassages(items)
                 });
             MissionImpossible = new(this, 24, 0x8F865C, LocationType.Visible,
                 name: "Power Bomb (pink Brinstar)",
@@ -39,8 +39,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    Normal => items => World.AdvancedLogic.CanUsePowerBombs(items) && items.Super && World.AdvancedLogic.HasEnergyReserves(items, 1),
-                    _ => items => World.AdvancedLogic.CanUsePowerBombs(items) && items.Super
+                    Normal => items => World.Logic.CanUsePowerBombs(items) && items.Super && World.Logic.HasEnergyReserves(items, 1),
+                    _ => items => World.Logic.CanUsePowerBombs(items) && items.Super
                 });
             GreenHillZone = new(this, 25, 0x8F8676, LocationType.Visible,
                 name: "Missile (green Brinstar pipe)",
@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: Logic switch
                 {
                     _ => items => items.Morph &&
-                        (items.PowerBomb || items.Super || World.AdvancedLogic.CanAccessNorfairUpperPortal(items))
+                        (items.PowerBomb || items.Super || World.Logic.CanAccessNorfairUpperPortal(items))
                 });
             Waterway = new(this, 33, 0x8F87FA, LocationType.Visible,
                 name: "Energy Tank, Waterway",
@@ -57,8 +57,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanUsePowerBombs(items) && World.AdvancedLogic.CanOpenRedDoors(items) && items.SpeedBooster &&
-                        (World.AdvancedLogic.HasEnergyReserves(items, 1) || items.Gravity)
+                    _ => items => World.Logic.CanUsePowerBombs(items) && World.Logic.CanOpenRedDoors(items) && items.SpeedBooster &&
+                        (World.Logic.HasEnergyReserves(items, 1) || items.Gravity)
                 });
             WaveBeamGlitchRoom = new(this, 35, 0x8F8824, LocationType.Visible,
                 name: "Energy Tank, Brinstar Gate",
@@ -66,8 +66,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.ETank,
                 access: Logic switch
                 {
-                    Normal => items => items.CardBrinstarL2 && World.AdvancedLogic.CanUsePowerBombs(items) && items.Wave && World.AdvancedLogic.HasEnergyReserves(items, 1),
-                    _ => items => items.CardBrinstarL2 && World.AdvancedLogic.CanUsePowerBombs(items) && (items.Wave || items.Super)
+                    Normal => items => items.CardBrinstarL2 && World.Logic.CanUsePowerBombs(items) && items.Wave && World.Logic.HasEnergyReserves(items, 1),
+                    _ => items => items.CardBrinstarL2 && World.Logic.CanUsePowerBombs(items) && (items.Wave || items.Super)
                 }); // Grapple or Walljump
         }
 
@@ -94,15 +94,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
         public override bool CanEnter(Progression items) => Logic switch
         {
             Normal =>
-                (World.AdvancedLogic.CanOpenRedDoors(items) && World.AdvancedLogic.CanDestroyBombWalls(items)) ||
-                World.AdvancedLogic.CanUsePowerBombs(items) ||
-                (World.AdvancedLogic.CanAccessNorfairUpperPortal(items) && items.Morph && items.Wave &&
+                (World.Logic.CanOpenRedDoors(items) && (World.Logic.CanDestroyBombWalls(items) || World.Logic.CanParlorSpeedBoost(items))) ||
+                World.Logic.CanUsePowerBombs(items) ||
+                (World.Logic.CanAccessNorfairUpperPortal(items) && items.Morph && items.Wave &&
                     (items.Ice || items.HiJump || items.SpaceJump)),
             _ =>
-                (World.AdvancedLogic.CanOpenRedDoors(items) && (World.AdvancedLogic.CanDestroyBombWalls(items) || items.SpeedBooster)) ||
-                World.AdvancedLogic.CanUsePowerBombs(items) ||
-                (World.AdvancedLogic.CanAccessNorfairUpperPortal(items) && items.Morph && (World.AdvancedLogic.CanOpenRedDoors(items) || items.Wave) &&
-                    (items.Ice || items.HiJump || World.AdvancedLogic.CanSpringBallJump(items) || World.AdvancedLogic.CanFly(items)))
+                (World.Logic.CanOpenRedDoors(items) && (World.Logic.CanDestroyBombWalls(items) || items.SpeedBooster)) ||
+                World.Logic.CanUsePowerBombs(items) ||
+                (World.Logic.CanAccessNorfairUpperPortal(items) && items.Morph && (World.Logic.CanOpenRedDoors(items) || items.Wave) &&
+                    (items.Ice || items.HiJump || World.Logic.CanSpringBallJump(items) || World.Logic.CanFly(items)))
         };
     }
 }

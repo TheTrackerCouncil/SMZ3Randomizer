@@ -2,15 +2,18 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,6 +46,7 @@ namespace Randomizer.App
             LinkSprites.Add(Sprite.DefaultLink);
             _loadSpritesTask = Task.Run(() => LoadSprites())
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
+
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
@@ -56,6 +60,39 @@ namespace Randomizer.App
             {
                 DataContext = value;
                 _options = value;
+                PopulateLogicOptions();
+            }
+        }
+
+        /// <summary>
+        /// Populates the two grids with the logic option controls using reflection
+        /// </summary>
+        public void PopulateLogicOptions()
+        {
+            var type = Options.LogicConfig.GetType();
+
+            foreach (var property in type.GetProperties())
+            {
+                var name = property.Name;
+                var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? name;
+                var description = property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? displayName;
+                var category = property.GetCustomAttribute<CategoryAttribute>()?.Category ?? "Logic";
+
+                var parent = category == "Logic" ? LogicGrid : TricksGrid;
+
+                if (property.PropertyType == typeof(bool))
+                {
+                    var checkBox = new CheckBox();
+                    checkBox.Name = name;
+                    checkBox.Content = displayName;
+                    checkBox.IsChecked = (bool)property.GetValue(Options.LogicConfig);
+                    checkBox.ToolTip = description;
+                    checkBox.Checked += LogicCheckBox_Checked;
+                    checkBox.Unchecked += LogicCheckBox_Checked;
+                    parent.Children.Add(checkBox);
+                }
+
+                Console.WriteLine(property.Name);
             }
         }
 
@@ -289,6 +326,19 @@ namespace Randomizer.App
                     .Select(x => x.locationId)
                     .Count();
             }
+        }
+
+        /// <summary>
+        /// Updates the LogicOptions based on when a checkbox is checked/unchecked using reflection
+        /// </summary>
+        /// <param name="sender">The checkbox that was checked</param>
+        /// <param name="e">The event object</param>
+        private void LogicCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            var type = Options.LogicConfig.GetType();
+            var property = type.GetProperty(checkBox.Name);
+            property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
         }
     }
 }

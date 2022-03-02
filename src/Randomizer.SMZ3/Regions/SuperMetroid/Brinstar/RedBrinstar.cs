@@ -14,11 +14,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.XRay,
                 access: Logic switch
                 {
-                    Normal => items => World.AdvancedLogic.CanUsePowerBombs(items) && World.AdvancedLogic.CanOpenRedDoors(items) && (items.Grapple || items.SpaceJump),
-                    _ => items => World.AdvancedLogic.CanUsePowerBombs(items) && World.AdvancedLogic.CanOpenRedDoors(items) && (
+                    Normal => items => World.Logic.CanUsePowerBombs(items) && World.Logic.CanOpenRedDoors(items) && (items.Grapple || items.SpaceJump),
+                    _ => items => World.Logic.CanUsePowerBombs(items) && World.Logic.CanOpenRedDoors(items) && (
                         items.Grapple || items.SpaceJump ||
-                        ((World.AdvancedLogic.CanIbj(items) || (items.HiJump && items.SpeedBooster) || World.AdvancedLogic.CanSpringBallJump(items)) &&
-                            ((items.Varia && World.AdvancedLogic.HasEnergyReserves(items, 3)) || World.AdvancedLogic.HasEnergyReserves(items, 5))))
+                        ((World.Logic.CanIbj(items) || (items.HiJump && items.SpeedBooster) || World.Logic.CanSpringBallJump(items)) &&
+                            ((items.Varia && World.Logic.HasEnergyReserves(items, 3)) || World.Logic.HasEnergyReserves(items, 5))))
                 });
             BetaPowerBombRoom = new(this, 39, 0x8F88CA, LocationType.Visible,
                 name: "Power Bomb (red Brinstar sidehopper room)",
@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanUsePowerBombs(items) && items.Super
+                    _ => items => World.Logic.CanUsePowerBombs(items) && items.Super
                 });
             AlphaPowerBombRoom = new(this, 40, 0x8F890E, LocationType.Chozo,
                 name: "Power Bomb (red Brinstar spike room)",
@@ -34,7 +34,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.PowerBomb,
                 access: Logic switch
                 {
-                    Normal => items => (World.AdvancedLogic.CanUsePowerBombs(items) || items.Ice) && items.Super,
+                    Normal => items => (World.Logic.CanUsePowerBombs(items) || items.Ice) && items.Super,
                     _ => items => items.Super
                 });
             AlphaPowerBombRoomWall = new(this, 41, 0x8F8914, LocationType.Visible,
@@ -43,7 +43,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanUsePowerBombs(items) && items.Super
+                    _ => items => World.Logic.CanUsePowerBombs(items) && items.Super
                 });
             SpazerRoom = new(this, 42, 0x8F896E, LocationType.Chozo,
                 name: "Spazer",
@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Spazer,
                 access: Logic switch
                 {
-                    _ => items => World.AdvancedLogic.CanPassBombPassages(items) && items.Super
+                    _ => items => World.Logic.CanPassBombPassages(items) && items.Super
                 });
         }
 
@@ -74,11 +74,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             return Logic switch
             {
                 Normal =>
-                    ((World.AdvancedLogic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
-                    (World.AdvancedLogic.CanAccessNorfairUpperPortal(items) && (items.Ice || items.HiJump || items.SpaceJump)),
+                    ((World.Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
+                    (World.Logic.CanAccessNorfairUpperPortal(items) && (items.Ice || items.HiJump || items.SpaceJump)),
                 _ =>
-                    ((World.AdvancedLogic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
-                    (World.AdvancedLogic.CanAccessNorfairUpperPortal(items) && (items.Ice || World.AdvancedLogic.CanSpringBallJump(items) || items.HiJump || World.AdvancedLogic.CanFly(items)))
+                    ((World.Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
+                    (World.Logic.CanAccessNorfairUpperPortal(items) && (items.Ice || World.Logic.CanSpringBallJump(items) || items.HiJump || World.Logic.CanFly(items)))
             };
         }
 
