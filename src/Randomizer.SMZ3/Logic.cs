@@ -118,9 +118,9 @@ namespace Randomizer.SMZ3
             return items.ScrewAttack && (!World.Config.LogicConfig.PreventScrewAttackSoftLock || items.Morph);
         }
 
-        public bool CanFireRodLightDarkRooms(Progression items)
+        public bool CanPassFireRodDarkRooms(Progression items)
         {
-            return items.FireRod && World.Config.LogicConfig.FireRodDarkRooms;
+            return items.Lamp || (items.FireRod && World.Config.LogicConfig.FireRodDarkRooms);
         }
 
         public bool CanParlorSpeedBoost(Progression items)
@@ -130,11 +130,11 @@ namespace Randomizer.SMZ3
 
         public World World { get; }
 
-        public static List<ItemType[]> GetMissingRequiredItems(Location location, Progression items)
+        public static IEnumerable<ItemType[]> GetMissingRequiredItems(Location location, Progression items)
         {
             if (location.IsAvailable(items))
             {
-                return new();
+                return Enumerable.Empty<ItemType[]>();
             }
 
             // Build an item pool of all missing progression items

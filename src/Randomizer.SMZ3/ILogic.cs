@@ -52,7 +52,7 @@ namespace Randomizer.SMZ3
 
         public bool CanSafelyUseScrewAttack(Progression items);
 
-        public bool CanFireRodLightDarkRooms(Progression items);
+        public bool CanPassFireRodDarkRooms(Progression items);
 
         public bool CanParlorSpeedBoost(Progression items);
     }

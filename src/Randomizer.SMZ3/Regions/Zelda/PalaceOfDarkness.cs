@@ -139,12 +139,12 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 Left = new Location(this, 256 + 129, 0x1EA4C, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TenArrows,
-                    access: items => (items.Lamp || Logic.CanFireRodLightDarkRooms(items)) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 4 : 3));
+                    access: items => Logic.CanPassFireRodDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 4 : 3));
 
                 Right = new Location(this, 256 + 130, 0x1EA4F, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.KeyPD,
-                    access: items => (items.Lamp || Logic.CanFireRodLightDarkRooms(items)) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 4 : 3));
+                    access: items => Logic.CanPassFireRodDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 4 : 3));
             }
 
             public Location Left { get; }

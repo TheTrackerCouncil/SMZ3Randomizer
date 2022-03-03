@@ -4,19 +4,19 @@ namespace Randomizer.Shared
 {
     public class LogicConfig
     {
-        [DisplayName("Prevent Screw Attack Sock Locks"), Description("Requires the morph ball before using screw attacks in locations where you can get stuck"), Category("Logic")]
+        [DisplayName("Prevent Screw Attack Soft Locks"), Description("You're not expected to use Screw Attack without the morph ball"), Category("Logic")]
         public bool PreventScrewAttackSoftLock { get; set; }
 
-        [DisplayName("Require Ten Power Bombs"), Description("Always require at least two power bomb upgrades for navigation in Super Metroid. Will require tracking multiple power bombs."), Category("Logic")]
+        [DisplayName("Prevent Five Power Bomb Seeds"), Description("You're expected to have at least two power bomb upgrades for navigation in Super Metroid. Will require tracking multiple power bombs."), Category("Logic")]
         public bool RequireTwoPowerBombs { get; set; }
 
-        [DisplayName("Fire Rod for Dark Rooms"), Description("Having the fire rod will open up the back of Hyrule Castle, Eastern Palace Armos Knights, and select rooms in Palace of Darkness"), Category("Tricks")]
+        [DisplayName("Fire Rod for Dark Rooms"), Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness"), Category("Tricks")]
         public bool FireRodDarkRooms { get; set; }
 
-        [DisplayName("Infinite Bomb Jump"), Description("Allow using morph bombs to access high locations with specially timed morph bombs"), Category("Tricks")]
+        [DisplayName("Infinite Bomb Jump"), Description("You're expected to be able to use specially timed morph bombs to access high locations"), Category("Tricks")]
         public bool InfiniteBombJump { get; set; }
 
-        [DisplayName("Parlor Speed Booster Break In"), Description("Allow using the speed booster to burst through to the Terminator Room/Brinstar without morph bombs or screw attack"), Category("Tricks")]
+        [DisplayName("Parlor Speed Booster Break In"), Description("You're expected to be able to use the speed booster to burst through to the Terminator Room/Brinstar without morph/power bombs or screw attack"), Category("Tricks")]
         public bool ParlorSpeedBooster { get; set; }
 
         public LogicConfig Clone()
