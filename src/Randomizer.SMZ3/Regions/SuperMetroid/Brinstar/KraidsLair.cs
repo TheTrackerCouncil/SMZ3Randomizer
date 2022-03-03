@@ -20,10 +20,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Missile (Kraid)",
                 alsoKnownAs: "Warehouse Kihunter Room",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => items.CanUsePowerBombs()
-                });
+                access: items => Logic.CanUsePowerBombs(items));
         }
 
         public override string Name => "Kraid's Lair";
@@ -45,8 +42,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public override bool CanEnter(Progression items)
         {
-            return (items.CanDestroyBombWalls() || items.SpeedBooster || items.CanAccessNorfairUpperPortal()) &&
-                items.Super && items.CanPassBombPassages();
+            return (Logic.CanDestroyBombWalls(items) || items.SpeedBooster || Logic.CanAccessNorfairUpperPortal(items)) &&
+                items.Super && Logic.CanPassBombPassages(items);
         }
 
         public bool CanComplete(Progression items)

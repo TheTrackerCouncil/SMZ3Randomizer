@@ -118,6 +118,7 @@ namespace Randomizer.SMZ3
         public int Count => Items.Count;
         public bool IsReadOnly => false;
 
+        protected LogicConfig LogicConfig { get; }
         protected List<ItemType> Items { get; }
 
         public bool Contains(ItemType itemType)

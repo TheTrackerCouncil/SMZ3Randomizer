@@ -57,6 +57,11 @@ namespace Randomizer.SMZ3
         public World World => Region.World;
 
         /// <summary>
+        /// The Logic to be used to determine if certain actions can be done
+        /// </summary>
+        public ILogic Logic => World.Logic;
+
+        /// <summary>
         /// Gets the randomizer configuration options.
         /// </summary>
         public Config Config => Region.Config;

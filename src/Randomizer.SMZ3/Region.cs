@@ -63,6 +63,11 @@ namespace Randomizer.SMZ3
         public Config Config { get; }
 
         /// <summary>
+        /// The Logic to be used to determine if certain actions can be done
+        /// </summary>
+        public ILogic Logic => World.Logic;
+
+        /// <summary>
         /// Gets the list of region-specific items, e.g. keys, maps, compasses.
         /// </summary>
         protected IList<ItemType> RegionItems { get; set; } = new List<ItemType>();

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Randomizer.Shared;
-using static Randomizer.SMZ3.SMLogic;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 {
@@ -17,35 +15,26 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Power Bomb (blue Brinstar)",
                 alsoKnownAs: "Power Bomb wall (Corridor No. 1)",
                 vanillaItem: ItemType.PowerBomb,
-                access: Logic switch
-                {
-                    _ => items => items.CanUsePowerBombs()
-                });
+                access: items => Logic.CanUsePowerBombs(items)
+                );
 
             MiddleMissile = new(this, 28, 0x8F8798, LocationType.Visible,
                 name: "Missile (blue Brinstar middle)",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => items.CardBrinstarL1 && items.Morph
-                });
+                access: items => items.CardBrinstarL1 && items.Morph
+                );
 
             Ceiling = new(this, 29, 0x8F879E, LocationType.Hidden,
                 name: "Energy Tank, Brinstar Ceiling",
                 vanillaItem: ItemType.ETank,
-                access: Logic switch
-                {
-                    Normal => items => items.CardBrinstarL1 && (items.CanFly() || items.HiJump || items.SpeedBooster || items.Ice),
-                    _ => items => items.CardBrinstarL1
-                });
+                access: items => items.CardBrinstarL1 && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster || items.Ice)
+                );
 
             BottomMissile = new(this, 34, 0x8F8802, LocationType.Chozo,
                 name: "Missile (blue Brinstar bottom)",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => items.Morph
-                });
+                access: items => items.Morph
+                );
 
             BlueBrinstarTop = new(this);
         }
@@ -75,19 +64,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Main Item",
                 alsoKnownAs: new[] { "Missile (blue Brinstar top)", "Billy Mays Room" },
                 vanillaItem: ItemType.Missile,
-                access: region.Logic switch
-                {
-                    _ => items => items.CardBrinstarL1 && items.CanUsePowerBombs()
-                });
+                access: items => items.CardBrinstarL1 && Logic.CanUsePowerBombs(items));
 
                 HiddenItem = new(this, 37, 0x8F883C, LocationType.Hidden,
                     name: "Hidden Item",
                     alsoKnownAs: new[] { "Missile (blue Brinstar behind missile)", "Billy Mays Room - Hidden item" },
                     vanillaItem: ItemType.Missile,
-                    access: region.Logic switch
-                    {
-                        _ => items => items.CardBrinstarL1 && items.CanUsePowerBombs()
-                    });
+                    access: items => items.CardBrinstarL1 && Logic.CanUsePowerBombs(items));
             }
 
             public Location MainItem { get; }
