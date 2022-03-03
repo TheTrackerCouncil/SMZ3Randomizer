@@ -12,7 +12,7 @@ namespace Randomizer.Shared.Models
         public string Label { get; set; }
         public string Seed { get; set; }
         public string Settings { get; set; }
-        public int GeneratorVersion { get; set; } = 1;
+        public int GeneratorVersion { get; set; }
         public string RomPath { get; set; }
         public string SpoilerPath { get; set; }
         public TrackerState TrackerState { get; set; }

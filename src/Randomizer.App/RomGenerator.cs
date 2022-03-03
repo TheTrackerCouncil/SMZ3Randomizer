@@ -132,15 +132,16 @@ namespace Randomizer.App
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
 
-            string settings = JsonSerializer.Serialize(options.ToConfig(), jsonOptions);
+            var settings = JsonSerializer.Serialize(options.ToConfig(), jsonOptions);
 
-            GeneratedRom rom = new GeneratedRom()
+            var rom = new GeneratedRom()
             {
                 Seed = seed.Seed,
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
-                Settings = settings
+                Settings = settings,
+                GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);
             _dbContext.SaveChanges();
