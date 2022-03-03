@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Randomizer.Shared;
-using static Randomizer.SMZ3.SMLogic;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 {
@@ -12,57 +10,32 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Energy Tank, Crocomire",
                 alsoKnownAs: "Crocomire's Pit",
                 vanillaItem: ItemType.ETank,
-                access: Logic switch
-                {
-                    Normal => items => CanAccessCrocomire(items) && (items.HasEnergyReserves(1) || items.SpaceJump || items.Grapple),
-                    _ => items => CanAccessCrocomire(items)
-                });
+                access: items => CanAccessCrocomire(items) && (Logic.HasEnergyReserves(items, 1) || items.SpaceJump || items.Grapple));
             CrocomireEscape = new(this, 54, 0x8F8BC0, LocationType.Visible,
                 name: "Missile (above Crocomire)",
                 alsoKnownAs: "Crocomire Escape",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.CanFly() || items.Grapple || (items.HiJump && items.SpeedBooster),
-                    _ => items => (items.CanFly() || items.Grapple || (items.HiJump &&
-                        (items.SpeedBooster || items.CanSpringBallJump() || (items.Varia && items.Ice)))) && items.CanHellRun()
-                });
+                access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster));
             PostCrocPowerBombRoom = new(this, 57, 0x8F8C04, LocationType.Visible,
                 name: "Power Bomb (Crocomire)",
                 alsoKnownAs: "Post Crocomire Power Bomb Room",
                 vanillaItem: ItemType.PowerBomb,
-                access: Logic switch
-                {
-                    Normal => items => CanAccessCrocomire(items) && (items.CanFly() || items.HiJump || items.Grapple),
-                    _ => items => CanAccessCrocomire(items)
-                });
+                access: items => CanAccessCrocomire(items) && (Logic.CanFly(items) || items.HiJump || items.Grapple));
             CosineRoom = new(this, 58, 0x8F8C14, LocationType.Visible,
                 name: "Missile (below Crocomire)",
                 alsoKnownAs: new[] { "Cosine Room", "Post Crocomire Missile Room" },
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => CanAccessCrocomire(items) && items.Morph
-                });
+                access: items => CanAccessCrocomire(items) && items.Morph);
             IndianaJonesRoom = new(this, 59, 0x8F8C2A, LocationType.Visible,
                 name: "Missile (Grappling Beam)",
                 alsoKnownAs: new[] { "Indiana Jones Room", "Pantry", "Post Crocomire Jump Room" },
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => CanAccessCrocomire(items) && items.Morph && (items.CanFly() || (items.SpeedBooster && items.CanUsePowerBombs())),
-                    _ => items => CanAccessCrocomire(items) && (items.SpeedBooster || (items.Morph && (items.CanFly() || items.Grapple)))
-                });
+                access: items => CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))));
             GrappleBeamRoom = new(this, 60, 0x8F8C36, LocationType.Chozo,
                 name: "Grappling Beam",
                 alsoKnownAs: "Grapple Beam Room",
                 vanillaItem: ItemType.Grapple,
-                access: Logic switch
-                {
-                    Normal => items => CanAccessCrocomire(items) && items.Morph && (items.CanFly() || (items.SpeedBooster && items.CanUsePowerBombs())),
-                    _ => items => CanAccessCrocomire(items) && (items.SpaceJump || items.Morph || items.Grapple ||
-                        (items.HiJump && items.SpeedBooster))
-                });
+                access: items => CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))));
         }
 
         public override string Name => "Upper Norfair, Crocomire";
@@ -82,46 +55,24 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public override bool CanEnter(Progression items)
         {
-            return Logic switch
-            {
-                Normal => (
-                        ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
-                        items.CanAccessNorfairUpperPortal()
+            return (
+                        ((Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
+                        Logic.CanAccessNorfairUpperPortal(items)
                     ) &&
                     items.Varia && (
                         /* Ice Beam -> Croc Speedway */
-                        ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() && items.SpeedBooster) ||
+                        ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && Logic.CanUsePowerBombs(items) && items.SpeedBooster) ||
                         /* Frog Speedway */
                         (items.SpeedBooster && items.Wave) ||
                         /* Cathedral -> through the floor or Vulcano */
-                        (items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
-                            (items.CanFly() || items.HiJump || items.SpeedBooster) &&
-                            (items.CanPassBombPassages() || (items.Gravity && items.Morph)) && items.Wave)
+                        (Logic.CanOpenRedDoors(items) && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
+                            (Logic.CanFly(items) || items.HiJump || items.SpeedBooster) &&
+                            (Logic.CanPassBombPassages(items) || (items.Gravity && items.Morph)) && items.Wave)
                         ||
                         /* Reverse Lava Dive */
-                        (items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Super &&
+                        (Logic.CanAccessNorfairLowerPortal(items) && items.ScrewAttack && items.SpaceJump && items.Super &&
                         items.Gravity && items.Wave && (items.CardNorfairL2 || items.Morph))
-                      ),
-                _ => (
-                        ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
-                        items.CanAccessNorfairUpperPortal()
-                    ) && (
-                        /* Ice Beam -> Croc Speedway */
-                        ((Config.Keysanity ? items.CardNorfairL1 : items.Super) && items.CanUsePowerBombs() &&
-                            items.SpeedBooster && (items.HasEnergyReserves(3) || items.Varia)) ||
-                        /* Frog Speedway */
-                        (items.SpeedBooster && (items.HasEnergyReserves(2) || items.Varia) &&
-                            (items.Missile || items.Super || items.Wave)) /* Blue Gate */ ||
-                        /* Cathedral -> through the floor or Vulcano */
-                        (items.CanHellRun() && items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
-                            (items.CanFly() || items.HiJump || items.SpeedBooster || items.CanSpringBallJump() || (items.Varia && items.Ice)) &&
-                            (items.CanPassBombPassages() || (items.Varia && items.Morph)) &&
-                            (items.Missile || items.Super || items.Wave)) /* Blue Gate */
-                        ) ||
-                        /* Reverse Lava Dive */
-                        (items.CanAccessNorfairLowerPortal() && items.ScrewAttack && items.SpaceJump && items.Varia && items.Super &&
-                        items.HasEnergyReserves(2) && (items.CardNorfairL2 || items.Morph))
-            };
+                      );
         }
 
         private bool CanAccessCrocomire(Progression items)

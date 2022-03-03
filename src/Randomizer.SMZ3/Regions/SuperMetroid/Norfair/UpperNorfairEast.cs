@@ -13,80 +13,56 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Missile (bubble Norfair green door)",
                 alsoKnownAs: "Bubble Mountain Missile Room",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.CardNorfairL2 && (
-                        items.CanFly() ||
-                        (items.Grapple && items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                access: items => items.CardNorfairL2 && (
+                        Logic.CanFly(items) ||
+                        (items.Grapple && items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
-                    ),
-                    _ => items => items.CardNorfairL2 && items.Super
-                });
+                    ));
             BubbleMountain = new(this, 64, 0x8F8C66, LocationType.Visible,
                 name: "Missile (bubble Norfair)",
                 alsoKnownAs: "Bubble Mountain",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => items.CardNorfairL2
-                });
+                access: items => items.CardNorfairL2);
             SpeedBoosterHallCeiling = new(this, 65, 0x8F8C74, LocationType.Hidden,
                 name: "Missile (Speed Booster)",
                 alsoKnownAs: "Speed Booster Hall - Ceiling",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.CardNorfairL2 && (
-                        items.CanFly() ||
-                        (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                access: items => items.CardNorfairL2 && (
+                        Logic.CanFly(items) ||
+                        (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
-                    ),
-                    _ => items => items.CardNorfairL2 && items.Super
-                });
+                    ));
             SpeedBoosterRoom = new(this, 66, 0x8F8C82, LocationType.Chozo,
                 name: "Speed Booster",
                 alsoKnownAs: "Speed Booster Room",
                 vanillaItem: ItemType.SpeedBooster,
-                access: Logic switch
-                {
-                    Normal => items => items.CardNorfairL2 && (
-                        items.CanFly() ||
-                        (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                access: items => items.CardNorfairL2 && (
+                        Logic.CanFly(items) ||
+                        (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
-                    ),
-                    _ => items => items.CardNorfairL2 && items.Super
-                });
+                    ));
             DoubleChamber = new(this, 67, 0x8F8CBC, LocationType.Visible,
                 name: "Missile (Wave Beam)",
                 alsoKnownAs: new[] { "Double Chamber", "Grapple Crossing" },
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => (items.CardNorfairL2 && (
-                        items.CanFly() ||
-                        (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                access: items => (items.CardNorfairL2 && (
+                        Logic.CanFly(items) ||
+                        (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
                     )) ||
-                    (items.SpeedBooster && items.Wave && items.Morph && items.Super),
-                    _ => items => items.CardNorfairL2 || items.Varia
-                });
+                    (items.SpeedBooster && items.Wave && items.Morph && items.Super));
             WaveBeamRoom = new(this, 68, 0x8F8CCA, LocationType.Chozo,
                 name: "Wave Beam",
                 alsoKnownAs: "Wave Beam Room",
                 vanillaItem: ItemType.Wave,
-                access: Logic switch
-                {
-                    Normal => items => items.Morph && (
+                access: items => items.Morph && (
                         (items.CardNorfairL2 && (
-                            items.CanFly() ||
-                            (items.Morph && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                            Logic.CanFly(items) ||
+                            (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                             items.HiJump || items.Ice
                         )) ||
                         (items.SpeedBooster && items.Wave && items.Morph && items.Super)
-                    ),
-                    _ => items => items.CanOpenRedDoors() && (items.CardNorfairL2 || items.Varia) &&
-                        (items.Morph || items.Grapple || (items.HiJump && items.Varia) || items.SpaceJump)
-                });
+                    ));
             BubbleMountainHiddenHall = new(this);
         }
 
@@ -112,32 +88,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         // Todo: Ice Beam -> Croc Speedway is not considered
         public override bool CanEnter(Progression items)
         {
-            return Logic switch
-            {
-                Normal => (
-                        ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
-                        items.CanAccessNorfairUpperPortal()
+            return (
+                        ((Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
+                        Logic.CanAccessNorfairUpperPortal(items)
                     ) && items.Varia && items.Super && (
                         /* Cathedral */
-                        (items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
-                            (items.CanFly() || items.HiJump || items.SpeedBooster)) ||
+                        (Logic.CanOpenRedDoors(items) && (Config.Keysanity ? items.CardNorfairL2 : items.Super) &&
+                            (Logic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
                         /* Frog Speedway */
-                        (items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && items.CanUsePowerBombs())
-                    ),
-                _ => (
-                        ((items.CanDestroyBombWalls() || items.SpeedBooster) && items.Super && items.Morph) ||
-                        items.CanAccessNorfairUpperPortal()
-                    ) &&
-                    items.CanHellRun() && (
-                        /* Cathedral */
-                        (items.CanOpenRedDoors() && (Config.Keysanity ? items.CardNorfairL2 : items.Super) && (
-                            items.CanFly() || items.HiJump || items.SpeedBooster ||
-                            items.CanSpringBallJump() || (items.Varia && items.Ice)
-                        )) ||
-                        /* Frog Speedway */
-                        (items.SpeedBooster && (items.CardNorfairL2 || items.Missile || items.Super || items.Wave) && items.CanUsePowerBombs())
-                    ),
-            };
+                        (items.SpeedBooster && (items.CardNorfairL2 || items.Wave) && Logic.CanUsePowerBombs(items))
+                    );
         }
 
         public class BubbleMountainHiddenHallRoom : Room
@@ -149,29 +109,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     name: "Main Item",
                     alsoKnownAs: new[] { "Reserve Tank, Norfair" },
                     vanillaItem: ItemType.ReserveTank,
-                    access: region.Logic switch
-                    {
-                        Normal => items => items.CardNorfairL2 && items.Morph && (
-                            items.CanFly() ||
-                            (items.Grapple && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                    access: items => items.CardNorfairL2 && items.Morph && (
+                            Logic.CanFly(items) ||
+                            (items.Grapple && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                             items.HiJump || items.Ice
-                        ),
-                        _ => items => items.CardNorfairL2 && items.Morph && items.Super
-                    });
+                        ));
 
                 HiddenItem = new(this, 62, 0x8F8C44, LocationType.Hidden,
                     name: "Hidden Item",
                     alsoKnownAs: new[] { "Missile (Norfair Reserve Tank)" },
                     vanillaItem: ItemType.Missile,
-                    access: region.Logic switch
-                    {
-                        Normal => items => items.CardNorfairL2 && items.Morph && (
-                            items.CanFly() ||
-                            (items.Grapple && (items.SpeedBooster || items.CanPassBombPassages())) ||
+                    access: items => items.CardNorfairL2 && items.Morph && (
+                            Logic.CanFly(items) ||
+                            (items.Grapple && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                             items.HiJump || items.Ice
-                        ),
-                        _ => items => items.CardNorfairL2 && items.Morph && items.Super
-                    });
+                        ));
             }
 
             public Location MainItem { get; }

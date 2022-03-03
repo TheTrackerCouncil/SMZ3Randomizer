@@ -266,6 +266,11 @@ namespace Randomizer.SMZ3
         public Room Room { get; }
 
         /// <summary>
+        /// The Logic to be used to determine if certain actions can be done
+        /// </summary>
+        public ILogic Logic => Region.Logic;
+
+        /// <summary>
         /// Gets or sets a value indicating whether the item has been found.
         /// </summary>
         public bool Cleared { get; set; }

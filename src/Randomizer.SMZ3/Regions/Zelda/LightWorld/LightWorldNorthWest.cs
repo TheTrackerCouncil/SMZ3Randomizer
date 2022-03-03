@@ -44,7 +44,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "King's Tomb",
                 vanillaItem: ItemType.Cape,
                 access: items => items.Boots && (
-                    items.CanLiftHeavy() ||
+                    Logic.CanLiftHeavy(items) ||
                     (items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items))));
 
             BottleMerchant = new Location(this, 256 + 31, 0x5EB18, LocationType.Regular,
@@ -73,14 +73,14 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             Blacksmith = new Location(this, 256 + 76, 0x30802A, LocationType.Regular,
                 name: "Blacksmith",
                 vanillaItem: ItemType.ProgressiveSword,
-                access: items => World.DarkWorldNorthWest.CanEnter(items) && items.CanLiftHeavy());
+                access: items => World.DarkWorldNorthWest.CanEnter(items) && Logic.CanLiftHeavy(items));
 
             MagicBat = new Location(this, 256 + 35, 0x308015, LocationType.Regular,
                 name: "Magic Bat",
                 vanillaItem: ItemType.HalfMagic,
                 access: items => items.Powder
                          && (items.Hammer
-                             || (items.MoonPearl && items.Mirror && items.CanLiftHeavy())));
+                             || (items.MoonPearl && items.Mirror && Logic.CanLiftHeavy(items))));
 
             KakarikoWell = new(this);
             BlindsHideout = new(this);
