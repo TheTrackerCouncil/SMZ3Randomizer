@@ -226,6 +226,16 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Loads the config from the generated rom's Settings string
+        /// </summary>
+        /// <param name="generatedRom">The generated rom</param>
+        /// <returns>The deserialized config</returns>
+        public static Config LoadConfig(GeneratedRom generatedRom)
+        {
+            return GeneratedRom.IsValid(generatedRom) ? JsonSerializer.Deserialize<Config>(generatedRom.Settings, s_options) ?? new Config() : new Config(); ;
+        }
+
+        /// <summary>
         /// Restores the saved state to the specified tracker instance.
         /// </summary>
         /// <param name="tracker">
