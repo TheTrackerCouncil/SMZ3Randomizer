@@ -56,13 +56,13 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         {
             Config config = new Config();
 
-            config.LogicConfig.RequireTwoPowerBombs = false;
+            config.LogicConfig.PreventFivePowerBombSeed = false;
             World tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb });
             var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression);
             missingItems.Should().BeEmpty();
 
-            config.LogicConfig.RequireTwoPowerBombs = true;
+            config.LogicConfig.PreventFivePowerBombSeed = true;
             tempWorld = new World(config, "", 0, "");
             progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb });
             missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression);

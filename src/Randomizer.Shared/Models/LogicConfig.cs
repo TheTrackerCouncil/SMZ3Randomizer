@@ -8,7 +8,7 @@ namespace Randomizer.Shared
         public bool PreventScrewAttackSoftLock { get; set; }
 
         [DisplayName("Prevent Five Power Bomb Seeds"), Description("You're expected to have at least two power bomb upgrades for navigation in Super Metroid. Will require tracking multiple power bombs."), Category("Logic")]
-        public bool RequireTwoPowerBombs { get; set; }
+        public bool PreventFivePowerBombSeed { get; set; }
 
         [DisplayName("Fire Rod for Dark Rooms"), Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness"), Category("Tricks")]
         public bool FireRodDarkRooms { get; set; }

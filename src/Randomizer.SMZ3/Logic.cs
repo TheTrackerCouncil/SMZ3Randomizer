@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3
 
         public bool CanUsePowerBombs(Progression items)
         {
-            return items.Morph && (!World.Config.LogicConfig.RequireTwoPowerBombs && items.PowerBomb) || items.TwoPowerBombs;
+            return items.Morph && ((!World.Config.LogicConfig.PreventFivePowerBombSeed && items.PowerBomb) || items.TwoPowerBombs);
         }
 
         public bool CanPassBombPassages(Progression items)
