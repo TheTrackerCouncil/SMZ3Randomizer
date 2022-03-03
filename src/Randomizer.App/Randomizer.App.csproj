@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <None Remove="chozo20.ico" />
+    <None Remove="custom_ship.ips" />
+    <None Remove="kirbyship.ips" />
+    <None Remove="metroid.ips" />
     <None Remove="msu1-v6.ips" />
     <None Remove="Resources\Font Awesome 5 Free-Regular-400.otf" />
     <None Remove="Resources\Font Awesome 5 Free-Solid-900.otf" />
@@ -31,9 +34,10 @@
 
   <ItemGroup>
     <Resource Include="chozo20.ico" />
-    <EmbeddedResource Include="msu1-v6.ips" />
-    <EmbeddedResource Include="spinjumprestart.ips" />
-    <EmbeddedResource Include="zsm.ips" />
+    <EmbeddedResource Include="Patches\custom_ship.ips" />
+    <EmbeddedResource Include="Patches\msu1-v6.ips" />
+    <EmbeddedResource Include="Patches\spinjumprestart.ips" />
+    <EmbeddedResource Include="Patches\zsm.ips" />
   </ItemGroup>
 
   <ItemGroup>
