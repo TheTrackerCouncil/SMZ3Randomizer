@@ -44,6 +44,7 @@ namespace Randomizer.App
 
             SamusSprites.Add(Sprite.DefaultSamus);
             LinkSprites.Add(Sprite.DefaultLink);
+            ShipSprites.Add(ShipSprite.DefaultShip);
             _loadSpritesTask = Task.Run(() => LoadSprites())
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
 
@@ -52,6 +53,8 @@ namespace Randomizer.App
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
         public ObservableCollection<Sprite> LinkSprites { get; } = new();
+
+        public ObservableCollection<ShipSprite> ShipSprites { get; } = new();
 
         public RandomizerOptions Options
         {
@@ -105,6 +108,10 @@ namespace Randomizer.App
                 .Select(x => Sprite.LoadSprite(x))
                 .OrderBy(x => x.Name);
 
+            var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
+            var shipSprites = Directory.EnumerateFiles(shipSpritesPath, "*.ips", SearchOption.AllDirectories)
+                .Select(x => new ShipSprite(Path.GetFileNameWithoutExtension(x), Path.GetRelativePath(shipSpritesPath, x)));
+
             Dispatcher.Invoke(() =>
             {
                 foreach (var sprite in sprites)
@@ -119,6 +126,11 @@ namespace Randomizer.App
                             LinkSprites.Add(sprite);
                             break;
                     }
+                }
+
+                foreach (var ship in shipSprites)
+                {
+                    ShipSprites.Add(ship);
                 }
             }, DispatcherPriority.Loaded);
         }

@@ -23,8 +23,8 @@ namespace Randomizer.App.ViewModels
         public Sprite SamusSprite { get; set; }
             = Sprite.DefaultSamus;
 
-        public string ShipPatch { get; set; }
-            = null;
+        public ShipSprite ShipPatch { get; set; }
+            = ShipSprite.DefaultShip;
 
         public string Msu1Path
         {

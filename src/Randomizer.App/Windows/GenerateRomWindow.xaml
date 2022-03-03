@@ -180,6 +180,13 @@
                           SelectedItem="{Binding LinkSprite}" />
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Ship sprite:">
+                <ComboBox x:Name="ShipSpriteDropdown"
+                          ItemsSource="{Binding ShipSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GenerateRomWindow}}}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding ShipPatch}" />
+              </controls:LabeledControl>
+
               <controls:LabeledControl Text="Heart color:">
                 <ComboBox SelectedItem="{Binding HeartColor}"
                           ItemsSource="{Binding Source={local:EnumBindingSource {x:Type smz3:HeartColor}}}"

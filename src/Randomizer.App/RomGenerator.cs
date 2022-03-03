@@ -118,10 +118,10 @@ namespace Randomizer.App
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
 
-            if (options.PatchOptions.ShipPatch != null)
+            if (options.PatchOptions.ShipPatch?.FileName != null)
             {
 
-                var shipPatchFileName = Path.Combine(AppContext.BaseDirectory, "Ships", options.PatchOptions.ShipPatch);
+                var shipPatchFileName = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships", options.PatchOptions.ShipPatch.FileName);
                 if (File.Exists(shipPatchFileName))
                 {
                     using var customShipBasePatch = IpsPatch.CustomShip();
