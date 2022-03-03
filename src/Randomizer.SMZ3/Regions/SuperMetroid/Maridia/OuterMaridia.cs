@@ -12,11 +12,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Missile (green Maridia shinespark)",
                 alsoKnownAs: new[] { "Main Street - Ceiling (Shinespark)", "Main Street Missiles" },
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.SpeedBooster,
-                    _ => items => items.Gravity && items.SpeedBooster
-                });
+                access: items => items.SpeedBooster);
             MainStreetCrabSupers = new(this, 137, 0x8FC43D, LocationType.Visible,
                 name: "Super Missile (green Maridia)",
                 alsoKnownAs: "Main Street - Crab Supers",
@@ -25,22 +21,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Energy Tank, Mama turtle",
                 alsoKnownAs: "Mama Turtle Room",
                 vanillaItem: ItemType.ETank,
-                access: Logic switch
-                {
-                    Normal => items => World.Logic.CanOpenRedDoors(items) && (World.Logic.CanFly(items) || items.SpeedBooster || items.Grapple),
-                    _ => items => World.Logic.CanOpenRedDoors(items) && (
-                        World.Logic.CanFly(items) || items.SpeedBooster || items.Grapple ||
-                        (World.Logic.CanSpringBallJump(items) && (items.Gravity || items.HiJump))
-                    )
-                });
+                access: items => Logic.CanOpenRedDoors(items) && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple));
             MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
                 name: "Missile (green Maridia tatori)",
                 alsoKnownAs: "Mama Turtle Room - Wall item",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => World.Logic.CanOpenRedDoors(items)
-                });
+                access: items => Logic.CanOpenRedDoors(items));
         }
 
         public override string Name => "Outer Maridia";
@@ -57,21 +43,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public override bool CanEnter(Progression items)
         {
-            return Logic switch
-            {
-                Normal => items.Gravity && (
-                        (World.UpperNorfairWest.CanEnter(items) && World.Logic.CanUsePowerBombs(items)) ||
-                        (World.Logic.CanAccessMaridiaPortal(items) && items.CardMaridiaL1 && items.CardMaridiaL2 && (World.Logic.CanPassBombPassages(items) || items.ScrewAttack))
-                    ),
-                _ =>
-                    (World.UpperNorfairWest.CanEnter(items) && World.Logic.CanUsePowerBombs(items) &&
-                        (items.Gravity || (items.HiJump && (World.Logic.CanSpringBallJump(items) || items.Ice)))) ||
-                    (World.Logic.CanAccessMaridiaPortal(items) && items.CardMaridiaL1 && items.CardMaridiaL2 && (
-                        World.Logic.CanPassBombPassages(items) ||
-                        (items.Gravity && items.ScrewAttack) ||
-                        (items.Super && (items.Gravity || (items.HiJump && (World.Logic.CanSpringBallJump(items) || items.Ice))))
-                    ))
-            };
+            return items.Gravity && (
+                        (World.UpperNorfairWest.CanEnter(items) && Logic.CanUsePowerBombs(items)) ||
+                        (Logic.CanAccessMaridiaPortal(items) && items.CardMaridiaL1 && items.CardMaridiaL2 && (Logic.CanPassBombPassages(items) || items.ScrewAttack))
+                    );
         }
 
     }

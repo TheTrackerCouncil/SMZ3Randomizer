@@ -51,9 +51,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Checkerboard Cave",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && (
-                    (items.Flute && World.Logic.CanLiftHeavy(items)) ||
-                    World.Logic.CanAccessMiseryMirePortal(items)
-                ) && World.Logic.CanLiftLight(items));
+                    (items.Flute && Logic.CanLiftHeavy(items)) ||
+                    Logic.CanAccessMiseryMirePortal(items)
+                ) && Logic.CanLiftLight(items));
 
             BombosTablet = new Location(this, 256 + 58, 0x308017, LocationType.Bombos,
                 name: "Bombos Tablet",

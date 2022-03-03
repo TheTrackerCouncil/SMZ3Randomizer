@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Randomizer.Shared;
+﻿using Randomizer.Shared;
 using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
@@ -12,34 +11,26 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Missile (outside Wrecked Ship bottom)",
                 alsoKnownAs: new[] { "Flooded Cavern - under water", "West Ocean - under water" },
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => items.Morph && (
-                        items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                        (items.Gravity && (World.Logic.CanIbj(items) || items.HiJump)) ||
-                        World.WreckedShip.CanEnter(items)),
-                    _ => items => items.Morph
-                });
+                access: items => items.Morph && (
+                        items.SpeedBooster
+                        || items.Grapple
+                        || items.SpaceJump
+                        || (items.Gravity && (Logic.CanIbj(items) || items.HiJump))
+                        || World.WreckedShip.CanEnter(items)));
             SkyMissile = new(this, 2, 0x8F81EE, LocationType.Hidden,
                 name: "Missile (outside Wrecked Ship top)",
                 alsoKnownAs: "Sky Missile",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => World.WreckedShip.CanEnter(items)
+                access: items => World.WreckedShip.CanEnter(items)
                                                   && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                                  && World.Logic.CanPassBombPassages(items)
-                });
+                                                  && Logic.CanPassBombPassages(items));
             MorphBallMaze = new(this, 3, 0x8F81F4, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship middle)",
                 alsoKnownAs: "Morph Ball Maze",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => World.WreckedShip.CanEnter(items)
+                access: items => World.WreckedShip.CanEnter(items)
                                                   && (!Config.Keysanity || items.CardWreckedShipBoss)
-                                                  && World.Logic.CanPassBombPassages(items)
-                });
+                                                  && Logic.CanPassBombPassages(items));
             Moat = new(this, 4, 0x8F8248, LocationType.Visible,
                 name: "Missile (Crateria moat)",
                 alsoKnownAs: new[] { "The Moat", "Interior Lake" },
@@ -60,42 +51,20 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         public override bool CanEnter(Progression items)
         {
-            return Logic switch
-            {
-                Normal =>
+            return
                     /* Ship -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && items.Super) ||
+                    ((Config.Keysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && items.Super) ||
                     /* UN Portal -> Red Tower -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && World.Logic.CanAccessNorfairUpperPortal(items) &&
+                    ((Config.Keysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && Logic.CanAccessNorfairUpperPortal(items) &&
                         (items.Ice || items.HiJump || items.SpaceJump)) ||
                     /*Through Maridia From Portal*/
-                    (World.Logic.CanAccessMaridiaPortal(items) && items.Gravity && items.Super && (
+                    (Logic.CanAccessMaridiaPortal(items) && items.Gravity && items.Super && (
                         /* Oasis -> Forgotten Highway */
-                        (items.CardMaridiaL2 && World.Logic.CanDestroyBombWalls(items)) ||
+                        (items.CardMaridiaL2 && Logic.CanDestroyBombWalls(items)) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
                         World.InnerMaridia.DraygonTreasure.IsAvailable(items))) ||
                     /*Through Maridia from Pipe*/
-                    (World.Logic.CanUsePowerBombs(items) && items.Super && items.Gravity)
-                    ,
-                _ =>
-                    /* Ship -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && items.Super) ||
-                    /* UN Portal -> Red Tower -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && World.Logic.CanAccessNorfairUpperPortal(items) &&
-                        (items.Ice || items.HiJump || World.Logic.CanFly(items) || World.Logic.CanSpringBallJump(items))) ||
-                    /*Through Maridia From Portal*/
-                    (World.Logic.CanAccessMaridiaPortal(items) && (
-                        /* Oasis -> Forgotten Highway */
-                        (items.CardMaridiaL2 && items.Super && (
-                            (items.HiJump && World.Logic.CanPassBombPassages(items)) ||
-                            (items.Gravity && World.Logic.CanDestroyBombWalls(items))
-                        )) ||
-                        /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        (items.Gravity && World.InnerMaridia.DraygonTreasure.IsAvailable(items)))) ||
-                    /*Through Maridia from Pipe*/
-                    (World.Logic.CanUsePowerBombs(items) && items.Super && (items.Gravity || (items.HiJump && (items.Ice || World.Logic.CanSpringBallJump(items))
-                                                                && items.Grapple && items.CardMaridiaL1)))
-            };
+                    (Logic.CanUsePowerBombs(items) && items.Super && items.Gravity);
         }
     }
 }

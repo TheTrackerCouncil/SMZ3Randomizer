@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             MapChest = new Location(this, 256 + 163, 0x1E9DD, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapIP,
-                access: items => items.Hammer && World.Logic.CanLiftLight(items) && (
+                access: items => items.Hammer && Logic.CanLiftLight(items) && (
                     items.Hookshot || (items.KeyIP >= 1
                                        && CanNotWasteKeysBeforeAccessible(items, SpikeRoom, BigKeyChest))
                 ));
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             BigKeyChest = new Location(this, 256 + 164, 0x1E9A4, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyIP,
-                access: items => items.Hammer && World.Logic.CanLiftLight(items) && (
+                access: items => items.Hammer && Logic.CanLiftLight(items) && (
                     items.Hookshot || (items.KeyIP >= 1
                                        && CanNotWasteKeysBeforeAccessible(items, SpikeRoom, MapChest))
                 ));
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             KholdstareReward = new Location(this, 256 + 168, 0x308157, LocationType.Regular,
                 name: "Kholdstare",
                 vanillaItem: ItemType.HeartContainer,
-                access: items => items.BigKeyIP && items.Hammer && World.Logic.CanLiftLight(items) &&
+                access: items => items.BigKeyIP && items.Hammer && Logic.CanLiftLight(items) &&
                     items.KeyIP >= (items.Somaria ? 1 : 2));
         }
 
@@ -80,7 +80,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override bool CanEnter(Progression items)
         {
-            return items.MoonPearl && items.Flippers && World.Logic.CanLiftHeavy(items) && World.Logic.CanMeltFreezors(items);
+            return items.MoonPearl && items.Flippers && Logic.CanLiftHeavy(items) && Logic.CanMeltFreezors(items);
         }
 
         public bool CanComplete(Progression items)

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Randomizer.Shared;
-using static Randomizer.SMZ3.SMLogic;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 {
@@ -16,11 +14,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Energy Tank, Gauntlet",
                 alsoKnownAs: "Gauntlet (Chozo)",
                 vanillaItem: ItemType.ETank,
-                access: Logic switch
-                {
-                    Normal => items => CanEnterAndLeaveGauntlet(items) && World.Logic.HasEnergyReserves(items, 1),
-                    _ => items => CanEnterAndLeaveGauntlet(items)
-                });
+                access: items => CanEnterAndLeaveGauntlet(items) && Logic.HasEnergyReserves(items, 1));
             GauntletShaft = new(this);
         }
 
@@ -32,30 +26,20 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         public Location Gauntlet { get; }
 
-        public GauntletShaftRoom GauntletShaft { get;  }
+        public GauntletShaftRoom GauntletShaft { get; }
 
         public override bool CanEnter(Progression items)
         {
-            return World.Logic.CanDestroyBombWalls(items) || World.Logic.CanParlorSpeedBoost(items);
+            return Logic.CanDestroyBombWalls(items) || Logic.CanParlorSpeedBoost(items);
         }
 
         private bool CanEnterAndLeaveGauntlet(Progression items)
         {
-            return Logic switch
-            {
-                Normal =>
-                    items.CardCrateriaL1 && items.Morph && (World.Logic.CanFly(items) || items.SpeedBooster) && (
-                        World.Logic.CanIbj(items) ||
-                        (World.Logic.CanUsePowerBombs(items) && items.TwoPowerBombs) ||
-                        World.Logic.CanSafelyUseScrewAttack(items)
-                    ),
-                _ =>
-                    items.CardCrateriaL1 && (
-                        (items.Morph && (items.Bombs || items.TwoPowerBombs)) ||
-                        World.Logic.CanSafelyUseScrewAttack(items) ||
-                        (items.SpeedBooster && World.Logic.CanUsePowerBombs(items) && World.Logic.HasEnergyReserves(items, 2))
-                    )
-            };
+            return items.CardCrateriaL1 && items.Morph && (Logic.CanFly(items) || items.SpeedBooster) && (
+                        Logic.CanIbj(items) ||
+                        (Logic.CanUsePowerBombs(items) && items.TwoPowerBombs) ||
+                        Logic.CanSafelyUseScrewAttack(items)
+                    );
         }
 
         public class GauntletShaftRoom : Room
@@ -67,21 +51,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Right",
                 alsoKnownAs: "Missile (Crateria gauntlet right)",
                 vanillaItem: ItemType.Missile,
-                access: region.Logic switch
-                {
-                    Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items) && World.Logic.HasEnergyReserves(items, 2),
-                    _ => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items)
-                });
+                access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2));
 
                 GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
                     name: "Left",
                     alsoKnownAs: "Missile (Crateria gauntlet left)",
                     vanillaItem: ItemType.Missile,
-                    access: region.Logic switch
-                    {
-                        Normal => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items) && World.Logic.HasEnergyReserves(items, 2),
-                        _ => items => region.CanEnterAndLeaveGauntlet(items) && World.Logic.CanPassBombPassages(items)
-                    });
+                    access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2));
             }
 
             public Location GauntletRight { get; }

@@ -43,29 +43,12 @@ namespace Randomizer.SMZ3
 
         public bool CanAccessDarkWorldPortal(Progression items)
         {
-            return World.Config.SMLogic switch
-            {
-                Normal =>
-                    items.CardMaridiaL1 && items.CardMaridiaL2 && CanUsePowerBombs(items) && items.Super && items.Gravity && items.SpeedBooster,
-                _ =>
-                    items.CardMaridiaL1 && items.CardMaridiaL2 && CanUsePowerBombs(items) && items.Super &&
-                    (items.Charge || (items.Super && items.Missile)) &&
-                    (items.Gravity || (items.HiJump && items.Ice && items.Grapple)) &&
-                    (items.Ice || (items.Gravity && items.SpeedBooster))
-            };
+            return items.CardMaridiaL1 && items.CardMaridiaL2 && CanUsePowerBombs(items) && items.Super && items.Gravity && items.SpeedBooster;
         }
 
         public bool CanAccessMiseryMirePortal(Progression items)
         {
-            return World.Config.SMLogic switch
-            {
-                Normal =>
-                    (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && (items.Gravity && items.SpaceJump) && World.Logic.CanUsePowerBombs(items),
-                _ =>
-                    (items.CardNorfairL2 || items.SpeedBooster) && items.Varia && items.Super && (
-                        World.Logic.CanFly(items) || items.HiJump || items.SpeedBooster || CanSpringBallJump(items) || items.Ice
-                   ) && (items.Gravity || items.HiJump) && CanUsePowerBombs(items)
-            };
+            return (items.CardNorfairL2 || (items.SpeedBooster && items.Wave)) && items.Varia && items.Super && (items.Gravity && items.SpaceJump) && CanUsePowerBombs(items);
         }
 
         public bool CanIbj(Progression items)
@@ -125,17 +108,9 @@ namespace Randomizer.SMZ3
 
         public bool CanAccessMaridiaPortal(Progression items)
         {
-            return World.Config.SMLogic switch
-            {
-                Normal =>
-                    items.MoonPearl && items.Flippers &&
+            return items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
-                    (World.CanAquire(items, Reward.Agahnim) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items)),
-                _ =>
-                    items.MoonPearl && items.Flippers &&
-                    (CanSpringBallJump(items) || items.HiJump || items.Gravity) && items.Morph &&
-                    (World.CanAquire(items, Reward.Agahnim) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items))
-            };
+                    (World.CanAquire(items, Reward.Agahnim) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items));
         }
 
         public bool CanSafelyUseScrewAttack(Progression items)

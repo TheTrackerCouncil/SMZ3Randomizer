@@ -32,13 +32,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
             CompassChest = new Location(this, 256 + 173, 0x1EA64, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassMM,
-                access: items => World.Logic.CanLightTorches(items)
+                access: items => Logic.CanLightTorches(items)
                          && items.KeyMM >= (BigKeyChest.ItemIs(ItemType.BigKeyMM, World) ? 2 : 3));
 
             BigKeyChest = new Location(this, 256 + 174, 0x1EA6D, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyMM,
-                access: items => World.Logic.CanLightTorches(items)
+                access: items => Logic.CanLightTorches(items)
                          && items.KeyMM >= (CompassChest.ItemIs(ItemType.BigKeyMM, World) ? 2 : 3));
 
             BigChest = new Location(this, 256 + 175, 0x1EA67, LocationType.Regular,

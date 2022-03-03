@@ -44,9 +44,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 name: "Lanmolas",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => (
-                    World.Logic.CanLiftLight(items) ||
-                    (World.Logic.CanAccessMiseryMirePortal(items) && items.Mirror)
-                ) && items.BigKeyDP && items.KeyDP && World.Logic.CanLightTorches(items) && CanBeatBoss(items));
+                    Logic.CanLiftLight(items) ||
+                    (Logic.CanAccessMiseryMirePortal(items) && items.Mirror)
+                ) && items.BigKeyDP && items.KeyDP && Logic.CanLightTorches(items) && CanBeatBoss(items));
         }
 
         public override string Name => "Desert Palace";
@@ -71,8 +71,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public override bool CanEnter(Progression items)
         {
             return items.Book ||
-                items.Mirror && World.Logic.CanLiftHeavy(items) && items.Flute ||
-                World.Logic.CanAccessMiseryMirePortal(items) && items.Mirror;
+                items.Mirror && Logic.CanLiftHeavy(items) && items.Flute ||
+                Logic.CanAccessMiseryMirePortal(items) && items.Mirror;
         }
 
         public bool CanComplete(Progression items)

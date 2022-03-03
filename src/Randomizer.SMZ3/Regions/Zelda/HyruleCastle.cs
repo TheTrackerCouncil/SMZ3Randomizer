@@ -71,22 +71,22 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 SecretRoomLeft = new Location(this, 256 + 92, 0x1EB5D, LocationType.Regular,
                     name: "Secret Room - Left",
                     vanillaItem: ItemType.ThreeBombs,
-                    access: items => World.Logic.CanLiftLight(items) || ((items.Lamp || World.Logic.CanFireRodLightDarkRooms(items)) && items.KeyHC));
+                    access: items => Logic.CanLiftLight(items) || ((items.Lamp || Logic.CanFireRodLightDarkRooms(items)) && items.KeyHC));
 
                 SecretRoomMiddle = new Location(this, 256 + 93, 0x1EB60, LocationType.Regular,
                     name: "Secret Room - Middle",
                     vanillaItem: ItemType.ThreeHundredRupees,
-                    access: items => World.Logic.CanLiftLight(items) || ((items.Lamp || World.Logic.CanFireRodLightDarkRooms(items)) && items.KeyHC));
+                    access: items => Logic.CanLiftLight(items) || ((items.Lamp || Logic.CanFireRodLightDarkRooms(items)) && items.KeyHC));
 
                 SecretRoomRight = new Location(this, 256 + 94, 0x1EB63, LocationType.Regular,
                     name: "Secret Room - Right",
                     vanillaItem: ItemType.TenArrows,
-                    access: items => World.Logic.CanLiftLight(items) || ((items.Lamp || World.Logic.CanFireRodLightDarkRooms(items)) && items.KeyHC));
+                    access: items => Logic.CanLiftLight(items) || ((items.Lamp || Logic.CanFireRodLightDarkRooms(items)) && items.KeyHC));
 
                 DarkCross = new Location(this, 256 + 95, 0x1E96E, LocationType.Regular,
                     name: "Dark Cross",
                     vanillaItem: ItemType.KeyHC,
-                    access: items => items.Lamp || World.Logic.CanFireRodLightDarkRooms(items));
+                    access: items => items.Lamp || Logic.CanFireRodLightDarkRooms(items));
             }
 
             public Location SecretRoomLeft { get; }

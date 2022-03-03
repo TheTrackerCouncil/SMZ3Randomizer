@@ -32,10 +32,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         {
             return items.MoonPearl && (((
                     World.CanAquire(items, Reward.Agahnim) ||
-                    (World.Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
-                ) && (items.Hammer || (items.Hookshot && (items.Flippers || World.Logic.CanLiftLight(items))))) ||
-                (items.Hammer && World.Logic.CanLiftLight(items)) ||
-                World.Logic.CanLiftHeavy(items)
+                    (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
+                ) && (items.Hammer || (items.Hookshot && (items.Flippers || Logic.CanLiftLight(items))))) ||
+                (items.Hammer && Logic.CanLiftLight(items)) ||
+                Logic.CanLiftHeavy(items)
             );
         }
 

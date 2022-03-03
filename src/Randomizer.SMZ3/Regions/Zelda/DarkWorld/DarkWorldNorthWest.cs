@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 name: "Bumper Cave",
                 alsoKnownAs: "Bumper Cave Ledge",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => World.Logic.CanLiftLight(items) && items.Cape);
+                access: items => Logic.CanLiftLight(items) && items.Cape);
 
             ChestGame = new Location(this, 256 + 72, 0x1EDA8, LocationType.Regular,
                 name: "Chest Game",
@@ -29,13 +29,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 name: "Hammer Pegs",
                 alsoKnownAs: "Peg World",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => World.Logic.CanLiftHeavy(items) && items.Hammer);
+                access: items => Logic.CanLiftHeavy(items) && items.Hammer);
 
             PurpleChestTurnin = new Location(this, 256 + 77, 0x6BD68, LocationType.Regular,
                 name: "Purple Chest",
                 alsoKnownAs: "Purple Chest turn-in",
                 vanillaItem: ItemType.Bottle, // ???
-                access: items => World.Logic.CanLiftHeavy(items));
+                access: items => Logic.CanLiftHeavy(items));
         }
 
         public override string Name => "Dark World North West";
@@ -57,10 +57,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         {
             return items.MoonPearl && (((
                     World.CanAquire(items, Reward.Agahnim) ||
-                    (World.Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
-                ) && items.Hookshot && (items.Flippers || World.Logic.CanLiftLight(items) || items.Hammer)) ||
-                (items.Hammer && World.Logic.CanLiftLight(items)) ||
-                World.Logic.CanLiftHeavy(items)
+                    (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
+                ) && items.Hookshot && (items.Flippers || Logic.CanLiftLight(items) || items.Hammer)) ||
+                (items.Hammer && Logic.CanLiftLight(items)) ||
+                Logic.CanLiftHeavy(items)
             );
         }
 

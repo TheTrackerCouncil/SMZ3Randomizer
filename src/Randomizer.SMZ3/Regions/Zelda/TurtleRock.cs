@@ -81,7 +81,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 ItemType.Ether => items.Ether,
                 _ => items.Quake
             } && items.Sword &&
-                items.MoonPearl && World.Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
+                items.MoonPearl && Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
                 World.LightWorldDeathMountainEast.CanEnter(items);
         }
 

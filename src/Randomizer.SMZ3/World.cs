@@ -26,6 +26,8 @@ namespace Randomizer.SMZ3
             Id = id;
             Guid = guid;
 
+            Logic = new Logic(this);
+
             CastleTower = new(this, Config);
             EasternPalace = new(this, Config);
             DesertPalace = new(this, Config);
@@ -83,7 +85,6 @@ namespace Randomizer.SMZ3
             };
             Locations = Regions.SelectMany(x => x.Locations).ToImmutableList();
             Rooms = Regions.SelectMany(x => x.Rooms).ToImmutableList();
-            Logic = new Logic(this);
         }
 
         public Config Config { get; }
@@ -94,7 +95,7 @@ namespace Randomizer.SMZ3
         public IEnumerable<Room> Rooms { get; }
         public IEnumerable<Location> Locations { get; }
         public IEnumerable<Item> Items => Locations.Select(l => l.Item).Where(i => i != null);
-        public Logic Logic { get; }
+        public ILogic Logic { get; }
 
         public CastleTower CastleTower { get; }
         public EasternPalace EasternPalace { get; }

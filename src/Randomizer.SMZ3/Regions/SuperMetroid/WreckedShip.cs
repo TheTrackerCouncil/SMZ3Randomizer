@@ -12,31 +12,19 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 name: "Missile (Wrecked Ship middle)",
                 alsoKnownAs: "Main Shaft - Side room",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    _ => items => World.Logic.CanPassBombPassages(items)
-                });
+                access: items => Logic.CanPassBombPassages(items));
             PostChozoConcertSpeedBoosterItem = new(this, 129, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
                 name: "Reserve Tank, Wrecked Ship",
                 alsoKnownAs: new[] { "Post Chozo Concert - Speed Booster Item", "Bowling Alley - Speed Booster Item" },
                 vanillaItem: ItemType.ReserveTank,
-                access: Logic switch
-                {
-                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.SpeedBooster && World.Logic.CanUsePowerBombs(items) &&
-                        (items.Grapple || items.SpaceJump || (items.Varia && World.Logic.HasEnergyReserves(items, 2)) || World.Logic.HasEnergyReserves(items, 3)),
-                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && World.Logic.CanUsePowerBombs(items) && items.SpeedBooster &&
-                        (items.Varia || World.Logic.HasEnergyReserves(items, 2))
-                });
+                access: items => CanUnlockShip(items) && items.CardWreckedShipL1 && items.SpeedBooster && Logic.CanUsePowerBombs(items) &&
+                        (items.Grapple || items.SpaceJump || (items.Varia && Logic.HasEnergyReserves(items, 2)) || Logic.HasEnergyReserves(items, 3)));
             PostChozoConcertBreakableChozo = new(this, 130, 0x8FC2EF, LocationType.Visible,
                 name: "Missile (Gravity Suit)",
                 alsoKnownAs: "Post Chozo Concert - Breakable Chozo",
                 vanillaItem: ItemType.Missile,
-                access: Logic switch
-                {
-                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
-                        (items.Grapple || items.SpaceJump || (items.Varia && World.Logic.HasEnergyReserves(items, 2)) || World.Logic.HasEnergyReserves(items, 3)),
-                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || World.Logic.HasEnergyReserves(items, 1))
-                });
+                access: items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
+                        (items.Grapple || items.SpaceJump || (items.Varia && Logic.HasEnergyReserves(items, 2)) || Logic.HasEnergyReserves(items, 3)));
             AtticAssemblyLine = new(this, 131, 0x8FC319, LocationType.Visible,
                 name: "Missile (Wrecked Ship top)",
                 alsoKnownAs: "Attic - Assembly Line",
@@ -46,13 +34,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 name: "Energy Tank, Wrecked Ship",
                 alsoKnownAs: "Wrecked Pool",
                 vanillaItem: ItemType.ETank,
-                access: Logic switch
-                {
-                    Normal => items => CanUnlockShip(items) &&
-                        (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
-                    _ => items => CanUnlockShip(items) && (items.Bombs || items.PowerBomb || World.Logic.CanSpringBallJump(items) ||
-                        items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity)
-                });
+                access: items => CanUnlockShip(items) &&
+                        (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity));
             LeftSuperMissileChamber = new(this, 133, 0x8FC357, LocationType.Visible,
                 name: "Super Missile (Wrecked Ship left)",
                 alsoKnownAs: "Left Super Missile Chamber",
@@ -67,12 +50,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 name: "Gravity Suit",
                 alsoKnownAs: "Post Chozo Concert - Gravity Suit Chamber",
                 vanillaItem: ItemType.Gravity,
-                access: Logic switch
-                {
-                    Normal => items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
-                        (items.Grapple || items.SpaceJump || (items.Varia && World.Logic.HasEnergyReserves(items, 2)) || World.Logic.HasEnergyReserves(items, 3)),
-                    _ => items => CanUnlockShip(items) && items.CardWreckedShipL1 && (items.Varia || World.Logic.HasEnergyReserves(items, 1))
-                });
+                access: items => CanUnlockShip(items) && items.CardWreckedShipL1 &&
+                        (items.Grapple || items.SpaceJump || (items.Varia && Logic.HasEnergyReserves(items, 2)) || Logic.HasEnergyReserves(items, 3)));
         }
 
         public override string Name => "Wrecked Ship";
@@ -99,43 +78,20 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
 
         public override bool CanEnter(Progression items)
         {
-            return Logic switch
-            {
-                Normal =>
-                    items.Super && (
+            return items.Super && (
                         /* Over the Moat */
-                        ((Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) && (
+                        ((Config.Keysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && (
                             items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                            (items.Gravity && (World.Logic.CanIbj(items) || items.HiJump))
+                            (items.Gravity && (Logic.CanIbj(items) || items.HiJump))
                         )) ||
                         /* Through Maridia -> Forgotten Highway */
-                        (World.Logic.CanUsePowerBombs(items) && items.Gravity) ||
+                        (Logic.CanUsePowerBombs(items) && items.Gravity) ||
                         /* From Maridia portal -> Forgotten Highway */
-                        (World.Logic.CanAccessMaridiaPortal(items) && items.Gravity && (
-                            (World.Logic.CanDestroyBombWalls(items) && items.CardMaridiaL2) ||
+                        (Logic.CanAccessMaridiaPortal(items) && items.Gravity && (
+                            (Logic.CanDestroyBombWalls(items) && items.CardMaridiaL2) ||
                             World.InnerMaridia.DraygonTreasure.IsAvailable(items)
                         ))
-                    ),
-                _ =>
-                    items.Super && (
-                        /* Over the Moat */
-                        (Config.Keysanity ? items.CardCrateriaL2 : World.Logic.CanUsePowerBombs(items)) ||
-                        /* Through Maridia -> Forgotten Highway */
-                        (World.Logic.CanUsePowerBombs(items) && (
-                            items.Gravity ||
-                            /* Climb Mt. Everest */
-                            (items.HiJump && (items.Ice || World.Logic.CanSpringBallJump(items)) && items.Grapple && items.CardMaridiaL1)
-                        )) ||
-                        /* From Maridia portal -> Forgotten Highway */
-                        (World.Logic.CanAccessMaridiaPortal(items) && (
-                            (items.HiJump && World.Logic.CanPassBombPassages(items) && items.CardMaridiaL2) ||
-                            (items.Gravity && (
-                                (World.Logic.CanDestroyBombWalls(items) && items.CardMaridiaL2) ||
-                                World.InnerMaridia.DraygonTreasure.IsAvailable(items)
-                            ))
-                        ))
-                    ),
-            };
+                    );
         }
 
         public bool CanComplete(Progression items)
@@ -145,7 +101,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
 
         private bool CanUnlockShip(Progression items)
         {
-            return items.CardWreckedShipBoss && World.Logic.CanPassBombPassages(items);
+            return items.CardWreckedShipBoss && Logic.CanPassBombPassages(items);
         }
     }
 }

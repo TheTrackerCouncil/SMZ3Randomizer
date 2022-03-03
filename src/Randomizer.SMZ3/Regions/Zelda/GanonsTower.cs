@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 name: "Moldorm Chest",
                 vanillaItem: ItemType.TwentyRupees,
                 access: items => items.BigKeyGT && items.KeyGT >= 4 &&
-                    items.Bow && World.Logic.CanLightTorches(items) &&
+                    items.Bow && Logic.CanLightTorches(items) &&
                     CanBeatMoldorm(items) && items.Hookshot)
                 .Allow((item, items) => new[] { ItemType.KeyGT, ItemType.BigKeyGT }.All(type => item.IsNot(type, World)));
 
@@ -138,7 +138,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         private bool TowerAscend(Progression items)
         {
-            return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && World.Logic.CanLightTorches(items);
+            return items.BigKeyGT && items.KeyGT >= 3 && items.Bow && Logic.CanLightTorches(items);
         }
 
         private static bool CanBeatMoldorm(Progression items)
@@ -300,8 +300,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
             private bool CanBeatArmos(Progression items)
             {
                 return items.Sword || items.Hammer || items.Bow ||
-                    (World.Logic.CanExtendMagic(items, 2) && (items.Somaria || items.Byrna)) ||
-                    (World.Logic.CanExtendMagic(items, 4) && (items.FireRod || items.IceRod));
+                    (Logic.CanExtendMagic(items, 2) && (items.Somaria || items.Byrna)) ||
+                    (Logic.CanExtendMagic(items, 4) && (items.FireRod || items.IceRod));
             }
         }
 
