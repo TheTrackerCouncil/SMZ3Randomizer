@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             Ceiling = new(this, 29, 0x8F879E, LocationType.Hidden,
                 name: "Energy Tank, Brinstar Ceiling",
                 vanillaItem: ItemType.ETank,
-                access: items => items.CardBrinstarL1
+                access: items => items.CardBrinstarL1 && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster || items.Ice)
                 );
 
             BottomMissile = new(this, 34, 0x8F8802, LocationType.Chozo,
