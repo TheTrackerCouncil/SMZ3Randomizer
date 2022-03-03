@@ -34,12 +34,10 @@
 
   <ItemGroup>
     <Resource Include="chozo20.ico" />
-    <EmbeddedResource Include="custom_ship.ips" />
-    <EmbeddedResource Include="kirbyship.ips" />
-    <EmbeddedResource Include="metroid.ips" />
-    <EmbeddedResource Include="msu1-v6.ips" />
-    <EmbeddedResource Include="spinjumprestart.ips" />
-    <EmbeddedResource Include="zsm.ips" />
+    <EmbeddedResource Include="Patches\custom_ship.ips" />
+    <EmbeddedResource Include="Patches\msu1-v6.ips" />
+    <EmbeddedResource Include="Patches\spinjumprestart.ips" />
+    <EmbeddedResource Include="Patches\zsm.ips" />
   </ItemGroup>
 
   <ItemGroup>

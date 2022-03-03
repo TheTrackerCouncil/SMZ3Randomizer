@@ -7,6 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 
+using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
@@ -91,7 +92,7 @@ namespace Randomizer.App
             var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)
             {
-                smIpsFiles.Add(EmbeddedResource.GetStream<App>("spinjumprestart.ips"));
+                smIpsFiles.Add(IpsPatch.Respin());
             }
 
             byte[] rom;
@@ -108,7 +109,7 @@ namespace Randomizer.App
                 smIpsFiles.ForEach(x => x.Close());
             }
 
-            using (var ips = EmbeddedResource.GetStream<App>("zsm.ips"))
+            using (var ips = IpsPatch.Smz3())
             {
                 Rom.ApplyIps(rom, ips);
             }
@@ -117,14 +118,18 @@ namespace Randomizer.App
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
 
-            using (var customShipBasePatch = EmbeddedResource.GetStream<App>("custom_ship.ips"))
+            if (options.PatchOptions.ShipPatch != null)
             {
-                Rom.ApplySuperMetroidIps(rom, customShipBasePatch);
-            }
 
-            using (var customShip = EmbeddedResource.GetStream<App>("kirbyship.ips"))
-            {
-                Rom.ApplySuperMetroidIps(rom, customShip);
+                var shipPatchFileName = Path.Combine(AppContext.BaseDirectory, "Ships", options.PatchOptions.ShipPatch);
+                if (File.Exists(shipPatchFileName))
+                {
+                    using var customShipBasePatch = IpsPatch.CustomShip();
+                    Rom.ApplySuperMetroidIps(rom, customShipBasePatch);
+
+                    using var shipPatch = File.OpenRead(shipPatchFileName);
+                    Rom.ApplySuperMetroidIps(rom, shipPatch);
+                }
             }
 
             return rom;
@@ -262,7 +267,7 @@ namespace Randomizer.App
                 return false;
             }
 
-            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.msu1-v6.ips"))
+            using (var ips = IpsPatch.MsuSupport())
             {
                 Rom.ApplyIps(rom, ips);
             }
