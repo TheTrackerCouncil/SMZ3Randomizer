@@ -36,6 +36,7 @@ In addition to making IBJ completely optional, there is also:
 - **Metroid** replacement sprite for _Super Metroid by Fingersmcgee
 - **Sprite** replacement sprite for _Super Metroid_ by TarThoron
 - **Chair** replacement sprite for _Super Metroid_ by \_aitchFactor
+- **Buffed Kirby**, **Earthworm Jim**, and **Earthworm Jim** replacement sprites for _Super Metroid_ by Fredz00z
 - **AM2R**, **Last Resort**, **Metal Slug**, and **Top Hunter** replacement ship sprites for _Super Metroid_ by theonlydude
 - **Ascent** replacement ship sprite for _Super Metroid_ by Benox50
 - **Hyperion** replacement ship sprite for _Super Metroid_ by silverpaw84
