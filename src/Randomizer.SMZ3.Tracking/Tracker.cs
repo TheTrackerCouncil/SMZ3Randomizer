@@ -1404,7 +1404,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        Say(x => x.ClearedMultipleItems, itemsTracked, area.GetName());
+                        Say(x => x.ClearedMultipleItems, itemsCleared, area.GetName());
                     }
 
                     if (dungeon != null && treasureTracked > 0)
