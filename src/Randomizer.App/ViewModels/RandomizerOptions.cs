@@ -52,7 +52,7 @@ namespace Randomizer.App.ViewModels
         public PatchOptions PatchOptions { get; }
 
         [JsonPropertyName("Logic")]
-        public LogicConfig LogicConfig { get; }
+        public LogicConfig LogicConfig { get; set; }
 
         public bool ItemLocationsExpanded { get; set; } = false;
 
@@ -112,6 +112,11 @@ namespace Randomizer.App.ViewModels
             SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
             LogicConfig = LogicConfig.Clone()
         };
+
+        public RandomizerOptions Clone()
+        {
+            return (RandomizerOptions)MemberwiseClone();
+        }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

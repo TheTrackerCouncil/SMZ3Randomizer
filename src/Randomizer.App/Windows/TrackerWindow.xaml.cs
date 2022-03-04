@@ -6,7 +6,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Speech.Synthesis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,8 +18,6 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-
-using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
@@ -618,6 +615,10 @@ namespace Randomizer.App
             // If a rom was passed in, generate its seed to populate all locations and items
             if (GeneratedRom.IsValid(Rom))
             {
+                var config = SMZ3.Tracking.TrackerState.LoadConfig(Rom);
+                Options = Options.Clone();
+                Options.LogicConfig = config.LogicConfig;
+                if (Rom.GeneratorVersion == 0) Options.LogicConfig.FireRodDarkRooms = true;
                 _romGenerator.GenerateSeed(Options, Rom.Seed);
             }
 
