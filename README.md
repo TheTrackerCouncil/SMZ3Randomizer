@@ -19,6 +19,7 @@ In addition to making IBJ completely optional, there is also:
  - Item Quickswap in <cite>A Link to the Past</cite> based on a [contribution] 
    that never made it in;
  - More logic customization options;
+ - Customizable ship sprites;
  - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 
 ## Credits
@@ -35,6 +36,16 @@ In addition to making IBJ completely optional, there is also:
 - **Metroid** replacement sprite for _Super Metroid by Fingersmcgee
 - **Sprite** replacement sprite for _Super Metroid_ by TarThoron
 - **Chair** replacement sprite for _Super Metroid_ by \_aitchFactor
+- **AM2R**, **Last Resort**, **Metal Slug**, and **Top Hunter** replacement ship sprites for _Super Metroid_ by theonlydude
+- **Ascent** replacement ship sprite for _Super Metroid_ by Benox50
+- **Hyperion** replacement ship sprite for _Super Metroid_ by silverpaw84
+- **Ice Metal Uninstall** and **Metroid Fusion** replacement ship sprites for _Super Metroid_ by Crys
+- **Kirby** and **Pocket Rocket** replacement ship sprites for _Super Metroid_ by Fredz00z
+- **Lost World** replacement ship sprite for _Super Metroid_ by TROM
+- **Mario Cloud** and **Opposition** replacement ship sprites for _Super Metroid_ by mccad00
+- **Metroid Zero Mission** replacement ship sprite for _Super Metroid_ by Red-M0nk3y
+- **The Baby** replacement ship sprite for _Super Metroid_ by Chrono
+- Various Super Metroid patches were pulled from the VARIA Randomizer by theonlydude
 
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
