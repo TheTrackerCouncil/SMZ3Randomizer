@@ -7,6 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 
+using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
@@ -87,10 +88,11 @@ namespace Randomizer.App
         {
             seed = GenerateSeed(options);
 
+            var assembly = GetType().Assembly;
             var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)
             {
-                smIpsFiles.Add(GetType().Assembly.GetManifestResourceStream("Randomizer.App.spinjumprestart.ips"));
+                smIpsFiles.Add(IpsPatch.Respin());
             }
 
             byte[] rom;
@@ -107,7 +109,7 @@ namespace Randomizer.App
                 smIpsFiles.ForEach(x => x.Close());
             }
 
-            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.zsm.ips"))
+            using (var ips = IpsPatch.Smz3())
             {
                 Rom.ApplyIps(rom, ips);
             }
@@ -115,6 +117,21 @@ namespace Randomizer.App
 
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
+
+            if (options.PatchOptions.ShipPatch?.FileName != null)
+            {
+
+                var shipPatchFileName = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships", options.PatchOptions.ShipPatch.FileName);
+                if (File.Exists(shipPatchFileName))
+                {
+                    using var customShipBasePatch = IpsPatch.CustomShip();
+                    Rom.ApplySuperMetroidIps(rom, customShipBasePatch);
+
+                    using var shipPatch = File.OpenRead(shipPatchFileName);
+                    Rom.ApplySuperMetroidIps(rom, shipPatch);
+                }
+            }
+
             return rom;
         }
         /// <summary>
@@ -251,7 +268,7 @@ namespace Randomizer.App
                 return false;
             }
 
-            using (var ips = GetType().Assembly.GetManifestResourceStream("Randomizer.App.msu1-v6.ips"))
+            using (var ips = IpsPatch.MsuSupport())
             {
                 Rom.ApplyIps(rom, ips);
             }

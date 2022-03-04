@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace Randomizer.SMZ3.FileData
 {
@@ -63,23 +64,43 @@ namespace Randomizer.SMZ3.FileData
         }
 
         public static void ApplyIps(byte[] rom, Stream ips)
+            => ApplyIps(rom, ips, offset => offset);
+
+        // Applying a Super Metroid IPS to a combined SMZ3 ROM requires some switching around
+        public static void ApplySuperMetroidIps(byte[] rom, Stream ips)
+            => ApplyIps(rom, ips, TranslateSuperMetroidOffset);
+
+        public static int TranslateSuperMetroidOffset(int offset)
+        {
+            if (offset >= 0x00300000)
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, "Super Metroid offset must be below 0x00300000"); ;
+
+            var isHiBank = offset < 0x200000;
+            var baseOffset = isHiBank ? offset : offset - 0x200000;
+            var i = baseOffset / 0x8000;
+            if (isHiBank)
+                i++;
+            return baseOffset + (i * 0x8000);
+        }
+
+        public static void ApplyIps(byte[] rom, Stream ips, Func<int, int> translateOffset)
         {
             const int header = 5;
             const int footer = 3;
             ips.Seek(header, SeekOrigin.Begin);
             while (ips.Position + footer < ips.Length)
             {
-                var offset = ips.ReadByte() << 16 | ips.ReadByte() << 8 | ips.ReadByte();
-                var size = ips.ReadByte() << 8 | ips.ReadByte();
+                var offset = (ips.ReadByte() << 16) | (ips.ReadByte() << 8) | ips.ReadByte();
+                var size = (ips.ReadByte() << 8) | ips.ReadByte();
                 if (size > 0)
                 {
-                    ips.Read(rom, offset, size);
+                    ips.Read(rom, translateOffset(offset), size);
                 }
                 else
                 {
-                    var rleSize = ips.ReadByte() << 8 | ips.ReadByte();
+                    var rleSize = (ips.ReadByte() << 8) | ips.ReadByte();
                     var rleByte = (byte)ips.ReadByte();
-                    Array.Fill(rom, rleByte, offset, rleSize);
+                    Array.Fill(rom, rleByte, translateOffset(offset), rleSize);
                 }
             }
         }
