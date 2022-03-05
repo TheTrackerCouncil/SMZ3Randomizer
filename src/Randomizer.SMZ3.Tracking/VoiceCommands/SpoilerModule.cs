@@ -106,6 +106,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationWithProgressionItem = Tracker.World.Locations
                 .Where(x => !x.Cleared && x.IsAvailable(progression))
                 .Where(x => x.Item.Progression)
+                .Where(x => Tracker.FindItemByType(x.Item.Type)?.TrackingState == 0)
                 .Random();
 
             if (locationWithProgressionItem != null)
