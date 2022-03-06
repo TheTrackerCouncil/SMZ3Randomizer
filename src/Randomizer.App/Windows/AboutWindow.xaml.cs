@@ -30,5 +30,14 @@ namespace Randomizer.App
         }
 
         public string Version { get; }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = e.Uri.ToString(),
+                UseShellExecute = true
+            });
+        }
     }
 }
