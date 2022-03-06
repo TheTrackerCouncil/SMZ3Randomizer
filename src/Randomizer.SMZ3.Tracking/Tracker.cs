@@ -1403,7 +1403,9 @@ namespace Randomizer.SMZ3.Tracking
 
                     if (trackItems)
                     {
-                        var itemNames = NaturalLanguage.Join(itemsTracked, World.Config);
+                        var itemNames = confidence >= Options.MinimumSassConfidence
+                            ? NaturalLanguage.Join(itemsTracked, World.Config)
+                            : $"{itemsCleared} items";
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
                     }
                     else
