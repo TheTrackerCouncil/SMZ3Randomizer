@@ -19,6 +19,9 @@ namespace Randomizer.App.ViewModels
         [JsonIgnore]
         public string Seed { get; set; }
 
+        [JsonIgnore]
+        public string ConfigString { get; set; }
+
         public ItemPlacement SwordLocation { get; set; }
 
         public ItemPlacement MorphLocation { get; set; }

@@ -11,6 +11,7 @@ using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Regions;
@@ -42,28 +43,36 @@ namespace Randomizer.App
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
         public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
         {
-            var bytes = GenerateRomBytes(options, out var seed);
+            try
+            {
+                var bytes = GenerateRomBytes(options, out var seed);
+                var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
+                Directory.CreateDirectory(folderPath);
 
-            var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
-            Directory.CreateDirectory(folderPath);
+                var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
+                var romPath = Path.Combine(folderPath, romFileName);
+                EnableMsu1Support(options, bytes, romPath, out var msuError);
+                Rom.UpdateChecksum(bytes);
+                File.WriteAllBytes(romPath, bytes);
 
-            var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
-            var romPath = Path.Combine(folderPath, romFileName);
-            EnableMsu1Support(options, bytes, romPath, out var msuError);
-            Rom.UpdateChecksum(bytes);
-            File.WriteAllBytes(romPath, bytes);
+                var spoilerLog = GetSpoilerLog(options, seed);
+                var spoilerPath = Path.ChangeExtension(romPath, ".txt");
+                File.WriteAllText(spoilerPath, spoilerLog);
 
-            var spoilerLog = GetSpoilerLog(options, seed);
-            var spoilerPath = Path.ChangeExtension(romPath, ".txt");
-            File.WriteAllText(spoilerPath, spoilerLog);
+                rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
 
-            rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
+                error = msuError;
+                path = romPath;
 
-            error = msuError;
-            path = romPath;
-
-            return true;
-
+                return true;
+            }
+            catch (RandomizerGenerationException e)
+            {
+                path = null;
+                error = "Error generating rom\n" + e.Message;
+                rom = null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -144,12 +153,7 @@ namespace Randomizer.App
         /// <returns>The db entry for the generated rom</returns>
         protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
-            var jsonOptions = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            };
-
-            var settings = JsonSerializer.Serialize(options.ToConfig(), jsonOptions);
+            var settings = Config.ToConfigString(options.ToConfig(), true);
 
             var rom = new GeneratedRom()
             {

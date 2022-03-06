@@ -21,6 +21,7 @@ using Randomizer.App.ViewModels;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App
 {
@@ -33,6 +34,7 @@ namespace Randomizer.App
         private readonly IServiceProvider _serviceProvider;
         private readonly Smz3Randomizer _randomizer;
         private readonly RomGenerator _romGenerator;
+        private readonly LocationConfig _locationConfig;
         private RandomizerOptions _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider)
@@ -40,6 +42,7 @@ namespace Randomizer.App
             _serviceProvider = serviceProvider;
             _randomizer = serviceProvider.GetService<Smz3Randomizer>();
             _romGenerator = serviceProvider.GetService<RomGenerator>();
+            _locationConfig = serviceProvider.GetService<TrackerConfigProvider>().GetLocationConfig();
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -64,6 +67,7 @@ namespace Randomizer.App
                 DataContext = value;
                 _options = value;
                 PopulateLogicOptions();
+                PopulateLocationOptions();
             }
         }
 
@@ -97,6 +101,121 @@ namespace Randomizer.App
                     parent.Children.Add(checkBox);
                 }
             }
+        }
+
+        /// <summary>
+        /// Populates the grid with all of the locations and the item options
+        /// </summary>
+        public void PopulateLocationOptions()
+        {
+            var world = new World(new(), "", 0, "");
+
+            // Populate the regions filter dropdown
+            LocationsRegionFilter.Items.Add("");
+            foreach (var region in world.Regions.OrderBy(x => x is Z3Region))
+            {
+                var name = $"{(region is Z3Region ? "Zelda" : "Metroid")} - {region.Name}";
+                LocationsRegionFilter.Items.Add(name);
+            }
+
+            // Create rows for each location to be able to specify the items at that location
+            var row = 0;
+            foreach (var location in world.Locations.OrderBy(x => x.Room == null ? "" : x.Room.Name).ThenBy(x => x.Name))
+            {
+                var locationDetails = _locationConfig.Locations.Single(x => x.Id == location.Id);
+                var name = locationDetails.ToString();
+                var toolTip = "";
+                if (locationDetails.Name.Count > 1)
+                {
+                    toolTip = "AKA: " + string.Join(", ", locationDetails.Name.Where(x => x.Text != name).Select(x => x.Text)) + "\n";
+                }
+                toolTip += $"Vanilla item: {location.VanillaItem}";
+
+                var textBlock = new TextBlock
+                {
+                    Text = name,
+                    ToolTip = toolTip,
+                    Tag = location,
+                    Margin = new(0, 0, 10, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Visibility = Visibility.Collapsed
+                };
+
+                LocationsGrid.Children.Add(textBlock);
+                LocationsGrid.RowDefinitions.Add(new RowDefinition());
+                Grid.SetColumn(textBlock, 0);
+                Grid.SetRow(textBlock, row);
+
+                var comboBox = CreateLocationComboBox(location);
+                LocationsGrid.Children.Add(comboBox);
+                Grid.SetColumn(comboBox, 1);
+                Grid.SetRow(comboBox, row);
+
+                row++;
+            }
+        }
+
+        /// <summary>
+        /// Creates a combo box for the item options for a location
+        /// </summary>
+        /// <param name="location">The location to generate the combo box for</param>
+        /// <returns>The generated combo box</returns>
+        private ComboBox CreateLocationComboBox(Location location)
+        {
+            var comboBox = new ComboBox
+            {
+                Tag = location,
+                Visibility = Visibility.Collapsed,
+                Margin = new(0, 2, 5, 2),
+            };
+
+            var prevValue = 0;
+            if (Options.LocationItems.ContainsKey(location.Id))
+            {
+                prevValue = Options.LocationItems[location.Id];
+            }
+
+            var curIndex = 0;
+            var selectedIndex = 0;
+
+            // Add generic item placement options (Any, Progressive Items, Junk)
+            foreach (var itemPlacement in Enum.GetValues(typeof(ItemPool)))
+            {
+                if ((int)itemPlacement == prevValue)
+                {
+                    selectedIndex = curIndex;
+                }
+
+                var itemPlacementField = itemPlacement.GetType().GetField(itemPlacement.ToString());
+                var description = itemPlacementField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemPlacement, Text = description == null ? itemPlacementField.Name : description.Description });
+                curIndex++;
+            }
+
+            // Add specific progressive items
+            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
+            {
+                if (itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
+                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized }) || itemType == ItemType.Nothing)
+                {
+                    continue;
+                }
+
+                if ((int)itemType == prevValue)
+                {
+                    selectedIndex = curIndex;
+                }
+
+                var itemTypeField = itemType.GetType().GetField(itemType.ToString());
+                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemType, Text = description == null ? itemTypeField.Name : description.Description });
+                curIndex++;
+            }
+
+            comboBox.SelectedIndex = selectedIndex;
+            comboBox.SelectionChanged += LocationsItemDropdown_SelectionChanged;
+
+            return comboBox;
         }
 
         public void LoadSprites()
@@ -351,6 +470,67 @@ namespace Randomizer.App
             var type = Options.LogicConfig.GetType();
             var property = type.GetProperty(checkBox.Name);
             property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
+        }
+
+        /// <summary>
+        /// Updates to the dropdown to filter locations to specific regions
+        /// </summary>
+        /// <param name="sender">The dropdown that was updated</param>
+        /// <param name="e">The event object</param>
+        private void LocationsRegionFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            var selectedRegion = comboBox.SelectedItem as string;
+            foreach (FrameworkElement obj in LocationsGrid.Children) {
+                var location = obj.Tag as Location;
+                obj.Visibility = selectedRegion.Contains(location.Region.Name) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>
+        /// Handles updates 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LocationsItemDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            var option = comboBox.SelectedItem as LocationItemOption;
+            var location = comboBox.Tag as Location;
+            if (option.Value > 0)
+            {
+                Options.LocationItems[location.Id] = option.Value;
+            }
+            else
+            {
+                Options.LocationItems.Remove(location.Id);
+            }
+        }
+
+        /// <summary>
+        /// Resets all locations to be any item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ResetAllLocationsButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (FrameworkElement obj in LocationsGrid.Children)
+            {
+                if (obj is not ComboBox comboBox) continue;
+                var location = comboBox.Tag as Location;
+                comboBox.SelectedIndex = 0;
+                Options.LocationItems.Remove(location.Id);
+            }
+        }
+
+        /// <summary>
+        /// Internal class for the location item option combo box
+        /// </summary>
+        private class LocationItemOption
+        {
+            public int Value { get; set; }
+            public string Text { get; set; }
+            public override string ToString() => Text;
         }
     }
 }

@@ -212,7 +212,7 @@ namespace Randomizer.SMZ3.Tracking
 
             var secondsElapsed = trackerState.SecondsElapsed;
 
-            var config = GeneratedRom.IsValid(generatedRom) ? JsonSerializer.Deserialize<Config>(generatedRom.Settings, s_options) : new Config();
+            var config = GeneratedRom.IsValid(generatedRom) ? Config.FromConfigString(generatedRom.Settings) : new Config();
 
             return new TrackerState(
                 itemStates,
@@ -232,7 +232,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns>The deserialized config</returns>
         public static Config LoadConfig(GeneratedRom generatedRom)
         {
-            return GeneratedRom.IsValid(generatedRom) ? JsonSerializer.Deserialize<Config>(generatedRom.Settings, s_options) ?? new Config() : new Config(); ;
+            return GeneratedRom.IsValid(generatedRom) ? Config.FromConfigString(generatedRom.Settings) ?? new Config() : new Config(); ;
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace Randomizer.SMZ3.Tracking
 
                 if (rom != null)
                 {
-                    rom.Settings = JsonSerializer.Serialize(SeedConfig, s_options);
+                    rom.Settings = Config.ToConfigString(SeedConfig, true);
                 }
 
                 if (rom != null)

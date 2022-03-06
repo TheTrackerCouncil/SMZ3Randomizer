@@ -61,6 +61,11 @@
         /// The item is especially numerious and can be found in a large number
         /// of locations.
         /// </summary>
-        Plentiful
+        Plentiful,
+
+        /// <summary>
+        /// This is an item that is not randomized, such as filled bottles
+        /// </summary>
+        NonRandomized
     }
 }

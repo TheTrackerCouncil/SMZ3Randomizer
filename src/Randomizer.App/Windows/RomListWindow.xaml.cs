@@ -468,6 +468,22 @@ namespace Randomizer.App
         }
 
         /// <summary>
+        /// Menu item for copying the seed's config string for sending to someone else
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CopyConfigMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not MenuItem menuItem)
+                return;
+
+            if (menuItem.Tag is not GeneratedRom rom)
+                return;
+
+            Clipboard.SetText(rom.Settings);
+        }
+
+        /// <summary>
         /// Menu item for deleting a rom from the db and filesystem
         /// </summary>
         /// <param name="sender"></param>

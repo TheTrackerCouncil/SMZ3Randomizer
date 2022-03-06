@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -26,18 +27,21 @@ namespace Randomizer.App.ViewModels
             SeedOptions = new SeedOptions();
             PatchOptions = new PatchOptions();
             LogicConfig = new LogicConfig();
+            LocationItems = new Dictionary<int, int>();
         }
 
         [JsonConstructor]
         public RandomizerOptions(GeneralOptions generalOptions,
             SeedOptions seedOptions,
             PatchOptions patchOptions,
-            LogicConfig logicConfig)
+            LogicConfig logicConfig,
+            IDictionary<int, int> locationItems)
         {
             GeneralOptions = generalOptions ?? new();
             SeedOptions = seedOptions ?? new();
             PatchOptions = patchOptions ?? new();
             LogicConfig = logicConfig ?? new();
+            LocationItems = locationItems ?? new Dictionary<int, int>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -65,6 +69,8 @@ namespace Randomizer.App.ViewModels
 
         public double WindowHeight { get; set; } = 600d;
 
+        public IDictionary<int, int> LocationItems { get; set; }
+
         public string RomOutputPath
         {
             get => Directory.Exists(GeneralOptions.RomOutputPath)
@@ -84,34 +90,44 @@ namespace Randomizer.App.ViewModels
             File.WriteAllText(path, json);
         }
 
-        public Config ToConfig() => new()
+        public Config ToConfig()
         {
-            GameMode = GameMode.Normal,
-            Z3Logic = Z3Logic.Normal,
-            SMLogic = SMLogic.Normal,
-            ItemLocations =
+            if (string.IsNullOrWhiteSpace(SeedOptions.ConfigString)) {
+                return new()
+                {
+                    GameMode = GameMode.Normal,
+                    Z3Logic = Z3Logic.Normal,
+                    SMLogic = SMLogic.Normal,
+                    ItemLocations =
+                    {
+                        [ItemType.ProgressiveSword] = SeedOptions.SwordLocation,
+                        [ItemType.Morph] = SeedOptions.MorphLocation,
+                        [ItemType.Bombs] = SeedOptions.MorphBombsLocation,
+                        [ItemType.Boots] = SeedOptions.PegasusBootsLocation,
+                        [ItemType.SpaceJump] = SeedOptions.SpaceJumpLocation,
+                    },
+                    ShaktoolItemPool = SeedOptions.ShaktoolItem,
+                    PegWorldItemPool = SeedOptions.PegWorldItem,
+                    KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
+                    Race = SeedOptions.Race,
+                    ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
+                    ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
+                    HeartColor = PatchOptions.HeartColor,
+                    LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
+                    DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
+                    CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
+                    MenuSpeed = PatchOptions.MenuSpeed,
+                    LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
+                    SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
+                    LocationItems = LocationItems,
+                    LogicConfig = LogicConfig.Clone()
+                };
+            }
+            else
             {
-                [ItemType.ProgressiveSword] = SeedOptions.SwordLocation,
-                [ItemType.Morph] = SeedOptions.MorphLocation,
-                [ItemType.Bombs] = SeedOptions.MorphBombsLocation,
-                [ItemType.Boots] = SeedOptions.PegasusBootsLocation,
-                [ItemType.SpaceJump] = SeedOptions.SpaceJumpLocation,
-            },
-            ShaktoolItemPool = SeedOptions.ShaktoolItem,
-            PegWorldItemPool = SeedOptions.PegWorldItem,
-            KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
-            Race = SeedOptions.Race,
-            ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
-            ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
-            HeartColor = PatchOptions.HeartColor,
-            LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
-            DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
-            CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
-            MenuSpeed = PatchOptions.MenuSpeed,
-            LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
-            SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
-            LogicConfig = LogicConfig.Clone()
-        };
+                return Config.FromConfigString(SeedOptions.ConfigString);
+            }
+        }
 
         public RandomizerOptions Clone()
         {

@@ -99,8 +99,15 @@ namespace Randomizer.SMZ3
 
         private void ApplyItemPoolPreferences(List<Item> junkItems, List<Location> locations, List<World> worlds, Config config)
         {
-            ApplyPreference(config.ShaktoolItemPool, world => world.InnerMaridia.ShaktoolItem);
-            ApplyPreference(config.PegWorldItemPool, world => world.DarkWorldNorthWest.PegWorld);
+            // Populate items that were directly specified at locations
+            foreach (var (locationId, value) in config.LocationItems)
+            {
+                if (value < Enum.GetValues(typeof(ItemPool)).Length)
+                {
+                    var itemPool = (ItemPool)value;
+                    ApplyPreference(itemPool, world => world.Locations.First(x => x.Id == locationId));
+                }
+            }
 
             void ApplyPreference(ItemPool setting, Func<World, Location> selectLocation)
             {
@@ -169,24 +176,50 @@ namespace Randomizer.SMZ3
         {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
 
+            ILogic logic = new Logic(world);
+
+            // Populate items that were directly specified at locations
+            foreach (var (locationId, value) in config.LocationItems)
+            {
+                if (value >= Enum.GetValues(typeof(ItemPool)).Length)
+                {
+                    var itemType = (ItemType)value;
+                    var location = world.Locations.First(x => x.Id == locationId);
+                    var itemsRequired = Logic.GetMissingRequiredItems(location, new Progression());
+
+                    // If no items required or at least one combination of items required does not contain this item
+                    if ((!itemsRequired.Any() || itemsRequired.Any(x => !x.Contains(itemType))) && progressionItems.Any(x => x.Type == itemType))
+                    {
+                        FillItemAtLocation(progressionItems, itemType, location);
+                    }
+                    else
+                    {
+                        throw new RandomizerGenerationException($"{itemType} was selected as the item for {location}, but it is required to get there.");
+                    }
+                }
+            }
+
             foreach (var (itemType, itemPlacement) in config.ItemLocations)
             {
-                switch (itemPlacement)
+                if (progressionItems.Any(x => x.Type == itemType))
                 {
-                    case ItemPlacement.Original:
-                        var vanilla = GetVanillaLocation(itemType, world);
-                        if (vanilla == null)
-                        {
-                            _logger.LogError("Unable to determine vanilla location for {item}", itemType);
-                            continue;
-                        }
-                        
-                        FillItemAtLocation(progressionItems, itemType, vanilla);
-                        break;
+                    switch (itemPlacement)
+                    {
+                        case ItemPlacement.Original:
+                            var vanilla = GetVanillaLocation(itemType, world);
+                            if (vanilla == null)
+                            {
+                                _logger.LogError("Unable to determine vanilla location for {item}", itemType);
+                                continue;
+                            }
 
-                    case ItemPlacement.Early:
-                        FrontFillItemInOwnWorld(progressionItems, itemType, world);
-                        break;
+                            FillItemAtLocation(progressionItems, itemType, vanilla);
+                            break;
+
+                        case ItemPlacement.Early:
+                            FrontFillItemInOwnWorld(progressionItems, itemType, world);
+                            break;
+                    }
                 }
             }
 
@@ -202,6 +235,7 @@ namespace Randomizer.SMZ3
             CancellationToken cancellationToken)
         {
             var assumedItems = new List<Item>(itemPool);
+            var failedAttempts = new Dictionary<Item, int>();
             while (assumedItems.Count > 0)
             {
                 /* Try placing next item */
@@ -214,6 +248,17 @@ namespace Randomizer.SMZ3
                 {
                     _logger.LogDebug("Could not find anywhere to place {item}", item);
                     assumedItems.Add(item);
+
+                    if (!failedAttempts.ContainsKey(item))
+                    {
+                        failedAttempts[item] = 0;
+                    }
+                    failedAttempts[item]++;
+
+                    if (failedAttempts[item] > 500)
+                    {
+                        throw new RandomizerGenerationException("Infinite loop in generation found. Specified item location combinations may not be possible.");
+                    }
                     continue;
                 }
 
