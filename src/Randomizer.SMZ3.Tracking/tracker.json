@@ -285,7 +285,8 @@
       ]
     },
     {
-      "Name": [ "Book of Mudora", "The Sacred Texts" ],
+      "Name": [ "Book of Mudora", "Sacred Texts" ],
+      "Article": "the",
       "InternalItemType": 29,
       "Column": 4,
       "Row": 2
@@ -1386,32 +1387,39 @@
         "Did you forget already? How sad. It was {1}."
       ],
       "LocationHasJunkItem": [
-        "There's nothing important there.",
-        "I wouldn't bother going there.",
-        "I wouldn't bother."
+        "There's nothing important in {0}.",
+        "{0} has nothing important.",
+        "{0} has something for {1} but it's not important.",
+        "It's got something for {1} but I wouldn't bother with it.",
+        "{0} has something for {1} but I wouldn't bother.",
+        "I doubt {1} would care about what's at {0}.",
+        "You can skip {0}.",
+        "You can skip it."
       ],
       "LocationHasUsefulItem": [
-        "It might be worth checking out.",
-        "Could have something good."
-      ],
-      "LocationHasSuperMetroidItem": [
-        "{0} has something for {1}.",
-        "It's got something for {1}.",
+        "{0} might be worth checking out.",
+        "{0} could have something good for {1}.",
         "{1} might be interested in that.",
-        "{1} could make use of it."
-      ],
-      "LocationHasZeldaItem": [
-        "{0} has something for {1}.",
-        "It's got something for {1}.",
-        "{1} might be interested in that.",
-        "{1} could make use of it."
+        "{1} could make good use of it.",
+        "I bet {1} would appreciate it if you checked it out.",
+        "I bet {1} would appreciate it if you checked out {0}.",
+        "I wouldn't skip that if I were you.",
+        "{1} would not want you to skip it."
       ],
       "AreaSuggestion": [
         "What about {0}?",
         "Have you been to {0} lately?",
         "You could try {0}.",
         "You could go to {0}.",
-        "{0} could have something."
+        "{0} could have something.",
+        "You might've missed something in {0}."
+      ],
+      "BookHint": [
+        "If you could use {2} on {0}, it would say <break strength='weak'/> '{1}'.",
+        "If you could use {2} on {0}, it would say <break strength='weak'/> '{1}'.",
+        "If the item there was on the Master Sword Pedestal, it would say <break strength='weak'/> '{1}'.",
+        "'{1}' is what {2} would tell you.",
+        "Let me consult {2}. <break strength='1s'/> {1}."
       ]
     },
     "Spoilers": {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Text;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -334,27 +335,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             switch (HintsGiven(location))
             {
-                // Give a vague hint at first: is the item there even from the
-                // right game?
                 case 0:
-                    if (location.Item.Type.IsInCategory(ItemCategory.Metroid))
-                    {
-                        return GiveLocationHint(x => x.LocationHasSuperMetroidItem, location, CorrectPronunciation(Tracker.World.Config.SamusName));
-                    }
-                    else if (location.Item.Type.IsInCategory(ItemCategory.Zelda))
-                    {
-                        return GiveLocationHint(x => x.LocationHasZeldaItem, location, CorrectPronunciation(Tracker.World.Config.LinkName));
-                    }
+                    var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
+                        ? CorrectPronunciation(Tracker.World.Config.SamusName)
+                        : CorrectPronunciation(Tracker.World.Config.LinkName);
 
-                    return GiveLocationHint(x => x.NoApplicableHints, location);
-
-                // Give a more useful hint: is it useful or not?
-                case 1:
                     if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass)
                         || (location.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard)
                             && !Tracker.World.Config.Keysanity))
                     {
-                        return GiveLocationHint(x => x.LocationHasJunkItem, location);
+                        return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
                     }
 
                     var junkCategories = new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass };
@@ -363,17 +353,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                     if (!location.Item.Type.IsInAnyCategory(junkCategories))
                     {
-                        return GiveLocationHint(x => x.LocationHasUsefulItem, location);
+                        return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     }
 
                     return GiveLocationHint(x => x.NoApplicableHints, location);
 
                 // Try to give a specific hint
-                case 2:
+                case 1:
                     var hint = Tracker.FindItemByType(location.Item.Type)?.Hints;
                     if (hint != null && hint.Count > 0)
                         return GiveLocationHint(hint, location);
-                    break;
+
+                    return GiveLocationHint(x => x.NoApplicableHints, location);
+
+                case 2:
+                    var pedText = Texts.ItemTextbox(location.Item).Replace('\n', ' ');
+                    var bookOfMudoraName = Tracker.FindItemByType(ItemType.Book)?.NameWithArticle ?? "the Book of Mudora";
+                    return GiveLocationHint(x => x.BookHint, location, pedText, bookOfMudoraName);
             }
 
             return false;
