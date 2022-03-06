@@ -973,13 +973,13 @@ namespace Randomizer.SMZ3.Tracking
                 if (item.TryGetTrackingResponse(out var response))
                     Say(response.Format(item.Counter));
                 else if (item.Counter == 1)
-                    Say(Responses.TrackedItem.Format(itemName));
+                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 else if (item.Counter > 1)
                     Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
                 else
                 {
                     _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
-                    Say(Responses.TrackedItem.Format(itemName));
+                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 }
             }
             else
@@ -993,7 +993,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        Say(Responses.TrackedItem.Format(itemName));
+                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                     }
                 }
                 else

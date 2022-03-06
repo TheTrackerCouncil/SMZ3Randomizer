@@ -492,6 +492,7 @@
       "WhenDefeated": [
         "Toggled Kraid on. Watch out for his awful son on the way out.",
         "Toggled Kraid on. Did you get the quick kill?",
+        [ "Toggled Kraid's Awful Son's Father on.", 0.1 ],
         [ "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face.", 0.1 ]
       ]
     },
@@ -507,7 +508,12 @@
         [ "Spooky Ghost", 0.25 ]
       ],
       "Column": 9,
-      "Row": 5
+      "Row": 5,
+      "WhenDefeated": [
+        "Toggled Phantoon on.",
+        "Toggled Spooky Ghost on.",
+        "Bustin makes me feel good."
+      ]
     },
     {
       "Name": [ "Shaktool", "The Shaktool" ],
