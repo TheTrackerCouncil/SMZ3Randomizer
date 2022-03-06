@@ -335,6 +335,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             switch (HintsGiven(location))
             {
+                // Who's it for and is it any good?
                 case 0:
                     var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
                         ? CorrectPronunciation(Tracker.World.Config.SamusName)
@@ -358,7 +359,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                     return GiveLocationHint(x => x.NoApplicableHints, location);
 
-                // Try to give a specific hint
+                // Try to give a hint from the config
                 case 1:
                     var hint = Tracker.FindItemByType(location.Item.Type)?.Hints;
                     if (hint != null && hint.Count > 0)
@@ -366,6 +367,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                     return GiveLocationHint(x => x.NoApplicableHints, location);
 
+                // Consult the Book of Mudora
                 case 2:
                     var pedText = Texts.ItemTextbox(location.Item).Replace('\n', ' ');
                     var bookOfMudoraName = Tracker.FindItemByType(ItemType.Book)?.NameWithArticle ?? "the Book of Mudora";

@@ -76,7 +76,9 @@
       "Hints": [
         "You could use it to set things on fire.",
         "You can hurt people with it.",
-        "It's something magical."
+        "It's something magical.",
+        "You could use it to see things you usually can't.",
+        "It's red."
       ]
     },
     {
@@ -86,7 +88,9 @@
       "Row": 1,
       "Hints": [
         "You can hurt people with it.",
-        "It's something magical."
+        "It's something magical.",
+        "It's cold.",
+        "It's blue."
       ]
     },
     {
@@ -95,7 +99,9 @@
       "Column": 1,
       "Row": 2,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's one of the items required for Peg World.",
+        "You could find it in real life."
       ]
     },
     {
@@ -135,7 +141,8 @@
       "Column": 1,
       "Row": 0,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's blue."
       ]
     },
     {
@@ -154,7 +161,8 @@
       "Column": 2,
       "Row": 1,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's one of the medallions."
       ]
     },
     {
@@ -164,7 +172,8 @@
       "Column": 3,
       "Row": 1,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's one of the medallions."
       ]
     },
     {
@@ -177,7 +186,8 @@
       "Column": 4,
       "Row": 1,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's one of the medallions."
       ]
     },
     {
@@ -186,7 +196,9 @@
       "Column": 0,
       "Row": 2,
       "Hints": [
-        "You could use it to set things on fire."
+        "You could use it to set things on fire.",
+        "You could use it to see things you usually can't.",
+        "It's red."
       ]
     },
     {
@@ -208,7 +220,9 @@
       "Column": 2,
       "Row": 2,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "You could find it in real life.",
+        "It's blue."
       ]
     },
     {
@@ -223,7 +237,8 @@
       "Column": 1,
       "Row": 3,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's red."
       ]
     },
     {
@@ -251,7 +266,8 @@
       "Multiple": true,
       "Hints": [
         "You probably already have a lot of it.",
-        "It improves your survivability."
+        "It improves your survivability.",
+        "It's red."
       ]
     },
     {
@@ -263,7 +279,8 @@
       "Column": 2,
       "Row": 3,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's blue."
       ]
     },
     {
@@ -272,7 +289,9 @@
       "Column": 3,
       "Row": 3,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's something you could wear.",
+        "It's red."
       ]
     },
     {
@@ -300,7 +319,8 @@
       "Column": 2,
       "Row": 4,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "It's blue."
       ]
     },
     {
@@ -309,7 +329,8 @@
       "Column": 5,
       "Row": 2,
       "Hints": [
-        "It's round."
+        "It's round.",
+        "It's red."
       ]
     },
     {
@@ -320,7 +341,10 @@
       ],
       "InternalItemType": 33,
       "Column": 3,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You could find it in real life."
+      ]
     },
     {
       "Name": [ "Bombs", "Zelda Bombs" ],
@@ -352,7 +376,8 @@
       "Column": 2,
       "Row": 0,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's red."
       ]
     },
     {
@@ -365,7 +390,8 @@
       },
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -375,7 +401,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's blue."
       ]
     },
     {
@@ -389,7 +416,8 @@
       },
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's red."
       ]
     },
     {
@@ -401,14 +429,16 @@
       "Row": 3,
       "Hints": [
         "You probably already have a lot of it.",
-        "It improves your survivability."
+        "It improves your survivability.",
+        "It's red."
       ]
     },
     {
       "Name": [ "Heart Container Refill", "Sanctuary Heart Container", "Sanc Heart" ],
       "InternalItemType": 63,
       "Hints": [
-        "It improves your survivability."
+        "It improves your survivability.",
+        "It's red."
       ]
     },
     {
@@ -418,7 +448,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -428,7 +459,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -455,7 +487,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -464,7 +497,8 @@
       "Column": 1,
       "Row": 4,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "It's red."
       ]
     },
     {
@@ -472,7 +506,10 @@
       "InternalItemType": 78,
       "Artice": "",
       "Column": 3,
-      "Row": 4
+      "Row": 4,
+      "Hints": [
+        "It's green."
+      ]
     },
     {
       "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
@@ -488,7 +525,10 @@
       "Name": [ "Silver Arrows", "Silvers" ],
       "InternalItemType": 88,
       "Column": 0,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [
@@ -582,108 +622,177 @@
     },
     {
       "Name": "Ganons Tower Big Key",
-      "InternalItemType": 146
+      "InternalItemType": 146,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Turtle Rock Big Key",
-      "InternalItemType": 147
+      "InternalItemType": 147,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Thieves Town Big Key",
-      "InternalItemType": 148
+      "InternalItemType": 148,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Tower of Hera Big Key",
-      "InternalItemType": 149
+      "InternalItemType": 149,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Ice Palace Big Key",
-      "InternalItemType": 150
+      "InternalItemType": 150,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Skull Woods Big Key",
-      "InternalItemType": 151
+      "InternalItemType": 151,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Misery Mire Big Key",
-      "InternalItemType": 152
+      "InternalItemType": 152,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Palace of Darkness Big Key",
-      "InternalItemType": 153
+      "InternalItemType": 153,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Swamp Palace Big Key",
-      "InternalItemType": 154
+      "InternalItemType": 154,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Desert Palace Big Key",
-      "InternalItemType": 156
+      "InternalItemType": 156,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Eastern Palace Big Key",
-      "InternalItemType": 157
+      "InternalItemType": 157,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Sewer Key",
       "InternalItemType": 160,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Desert Palace Key",
       "InternalItemType": 163,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Castle Tower Key",
       "InternalItemType": 164,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Swamp Palace Key",
       "InternalItemType": 165,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Palace of Darkness Key",
       "InternalItemType": 166,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Misery Mire Key",
       "InternalItemType": 167,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Skull Woods Key",
       "InternalItemType": 168,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Ice Palace Key",
       "InternalItemType": 169,
       "Artice": "an",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Tower of Hera Key",
       "InternalItemType": 170,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Thieves Town Key",
       "InternalItemType": 171,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Turtle Rock Key",
       "InternalItemType": 172,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Ganons Tower Key",
       "InternalItemType": 173,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": [
@@ -703,13 +812,20 @@
       "Name": [ "X-Ray Scope", "X-Ray" ],
       "InternalItemType": 177,
       "Column": 7,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "You could use it to see things you usually can't."
+      ]
     },
     {
       "Name": [ "Varia Suit", "Various Suits" ],
       "InternalItemType": 178,
       "Column": 6,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "It's something you could wear.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": "Spring Ball",
@@ -748,7 +864,11 @@
       ],
       "InternalItemType": 182,
       "Column": 7,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "It's something you could wear.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": [ "Hi-Jump Boots", "Hi-Jump" ],
@@ -756,7 +876,8 @@
       "Column": 8,
       "Row": 2,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "It's something you could wear."
       ]
     },
     {
@@ -805,7 +926,9 @@
       "Column": 7,
       "Row": 0,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's cold.",
+        "It's blue."
       ]
     },
     {
@@ -927,67 +1050,115 @@
     },
     {
       "Name": "Crateria Level 1 Keycard",
-      "InternalItemType": 208
+      "InternalItemType": 208,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Crateria Level 2 Keycard",
-      "InternalItemType": 209
+      "InternalItemType": 209,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Crateria Boss Keycard",
-      "InternalItemType": 210
+      "InternalItemType": 210,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Brinstar Level 1 Keycard",
-      "InternalItemType": 211
+      "InternalItemType": 211,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Brinstar Level 2 Keycard",
-      "InternalItemType": 212
+      "InternalItemType": 212,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Brinstar Boss Keycard",
-      "InternalItemType": 213
+      "InternalItemType": 213,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Norfair Level 1 Keycard",
-      "InternalItemType": 214
+      "InternalItemType": 214,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Norfair Level 2 Keycard",
-      "InternalItemType": 215
+      "InternalItemType": 215,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Norfair Boss Keycard",
-      "InternalItemType": 216
+      "InternalItemType": 216,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Maridia Level 1 Keycard",
-      "InternalItemType": 217
+      "InternalItemType": 217,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Maridia Level 2 Keycard",
-      "InternalItemType": 218
+      "InternalItemType": 218,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Maridia Boss Keycard",
-      "InternalItemType": 219
+      "InternalItemType": 219,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Wrecked Ship Level 1 Keycard",
-      "InternalItemType": 220
+      "InternalItemType": 220,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Wrecked Ship Boss Keycard",
-      "InternalItemType": 221
+      "InternalItemType": 221,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Lower Norfair Level 1 Keycard",
-      "InternalItemType": 222
+      "InternalItemType": 222,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Lower Norfair Boss Keycard",
-      "InternalItemType": 223
+      "InternalItemType": 223,
+      "Hints": [
+        "It opens doors."
+      ]
     }
   ],
   "Pegs": [
