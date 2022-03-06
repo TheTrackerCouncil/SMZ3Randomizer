@@ -43,6 +43,7 @@ namespace Randomizer.SMZ3.Tracking
         private string? _mood;
         private string? _lastSpokenText;
         private Dictionary<string, Progression> _progression = new();
+        private bool _alternateTracker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -87,8 +88,11 @@ namespace Randomizer.SMZ3.Tracking
                 x => new Timer(IdleTimerElapsed, x.Key, Timeout.Infinite, Timeout.Infinite));
 
             // Initialize the text-to-speech
+            if (s_random.NextDouble() <= 0.01)
+                _alternateTracker = true;
+
             _tts = new SpeechSynthesizer();
-            _tts.SelectVoiceByHints(VoiceGender.Female);
+            _tts.SelectVoiceByHints(_alternateTracker ? VoiceGender.Male : VoiceGender.Female);
 
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
@@ -684,7 +688,7 @@ namespace Randomizer.SMZ3.Tracking
             StartTimer();
             Syntax = _moduleFactory.LoadAll(this, _recognizer);
             EnableVoiceRecognition();
-            Say(Responses.StartedTracking);
+            Say(_alternateTracker ? Responses.StartingTrackingAlternate : Responses.StartedTracking);
             RestartIdleTimers();
         }
 

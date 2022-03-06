@@ -14,6 +14,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? StartedTracking { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when tracker starts in "alternate" mode.
+        /// </summary>
+        public SchrodingersString? StartingTrackingAlternate { get; init; }
+
+        /// <summary>
         /// Gets the phrases to respond with when tracker stops.
         /// </summary>
         public SchrodingersString? StoppedTracking { get; init; }
