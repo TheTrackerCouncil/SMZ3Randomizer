@@ -76,7 +76,9 @@
       "Hints": [
         "You could use it to set things on fire.",
         "You can hurt people with it.",
-        "It's something magical."
+        "It's something magical.",
+        "You could use it to see things you usually can't.",
+        "It's red."
       ]
     },
     {
@@ -86,7 +88,9 @@
       "Row": 1,
       "Hints": [
         "You can hurt people with it.",
-        "It's something magical."
+        "It's something magical.",
+        "It's cold.",
+        "It's blue."
       ]
     },
     {
@@ -95,13 +99,15 @@
       "Column": 1,
       "Row": 2,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's one of the items required for Peg World.",
+        "You could find it in real life."
       ]
     },
     {
       "Name": [
         "Hookshot",
-        [ "Second best grappling armament", 0.05 ]
+        [ "Second best grappling armament", 0.2 ]
       ],
       "InternalItemType": 10,
       "Column": 3,
@@ -115,8 +121,8 @@
         [ "Bow", 0 ],
         "Boh",
         "Boh and Arrow",
-        [ "Arrow launcher", 0.01 ],
-        [ "Stick thrower", 0.05 ]
+        [ "Arrow launcher", 0.2 ],
+        [ "Stick thrower", 0.2 ]
       ],
       "InternalItemType": 11,
       "Column": 0,
@@ -135,7 +141,8 @@
       "Column": 1,
       "Row": 0,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's blue."
       ]
     },
     {
@@ -154,7 +161,8 @@
       "Column": 2,
       "Row": 1,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's one of the medallions."
       ]
     },
     {
@@ -164,17 +172,22 @@
       "Column": 3,
       "Row": 1,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's one of the medallions."
       ]
     },
     {
-      "Name": "Quake",
+      "Name": [
+        "Quake",
+        [ "Unreal Tournament", 0.1 ]
+      ],
       "InternalItemType": 17,
       "Article": "",
       "Column": 4,
       "Row": 1,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's one of the medallions."
       ]
     },
     {
@@ -183,7 +196,9 @@
       "Column": 0,
       "Row": 2,
       "Hints": [
-        "You could use it to set things on fire."
+        "You could use it to set things on fire.",
+        "You could use it to see things you usually can't.",
+        "It's red."
       ]
     },
     {
@@ -205,7 +220,9 @@
       "Column": 2,
       "Row": 2,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "You could find it in real life.",
+        "It's blue."
       ]
     },
     {
@@ -220,7 +237,8 @@
       "Column": 1,
       "Row": 3,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's red."
       ]
     },
     {
@@ -248,19 +266,21 @@
       "Multiple": true,
       "Hints": [
         "You probably already have a lot of it.",
-        "It improves your survivability."
+        "It improves your survivability.",
+        "It's red."
       ]
     },
     {
       "Name": [
         "Cane of Byrna",
-        [ "Cane of Brian", 0.01 ]
+        [ "Cane of Brian", 0.1 ]
       ],
       "InternalItemType": 24,
       "Column": 2,
       "Row": 3,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's blue."
       ]
     },
     {
@@ -269,7 +289,9 @@
       "Column": 3,
       "Row": 3,
       "Hints": [
-        "It's something magical."
+        "It's something magical.",
+        "It's something you could wear.",
+        "It's red."
       ]
     },
     {
@@ -282,7 +304,8 @@
       ]
     },
     {
-      "Name": [ "Book of Mudora", "The Sacred Texts" ],
+      "Name": [ "Book of Mudora", "Sacred Texts" ],
+      "Article": "the",
       "InternalItemType": 29,
       "Column": 4,
       "Row": 2
@@ -296,7 +319,8 @@
       "Column": 2,
       "Row": 4,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "It's blue."
       ]
     },
     {
@@ -305,7 +329,8 @@
       "Column": 5,
       "Row": 2,
       "Hints": [
-        "It's round."
+        "It's round.",
+        "It's red."
       ]
     },
     {
@@ -316,7 +341,10 @@
       ],
       "InternalItemType": 33,
       "Column": 3,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "You could find it in real life."
+      ]
     },
     {
       "Name": [ "Bombs", "Zelda Bombs" ],
@@ -341,14 +369,15 @@
     {
       "Name": [
         "Red Boomerang",
-        [ "Red Shit", 0.01 ],
-        [ "That Red Shit", 0.01 ]
+        [ "Red Shit", 0.2 ],
+        [ "That Red Shit", 0.2 ]
       ],
       "InternalItemType": 42,
       "Column": 2,
       "Row": 0,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's red."
       ]
     },
     {
@@ -361,7 +390,8 @@
       },
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -371,7 +401,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's blue."
       ]
     },
     {
@@ -385,7 +416,8 @@
       },
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's red."
       ]
     },
     {
@@ -397,14 +429,16 @@
       "Row": 3,
       "Hints": [
         "You probably already have a lot of it.",
-        "It improves your survivability."
+        "It improves your survivability.",
+        "It's red."
       ]
     },
     {
-      "Name": [ "Heart Container Refill", "Sanctuary Heart Container" ],
+      "Name": [ "Heart Container Refill", "Sanctuary Heart Container", "Sanc Heart" ],
       "InternalItemType": 63,
       "Hints": [
-        "It improves your survivability."
+        "It improves your survivability.",
+        "It's red."
       ]
     },
     {
@@ -414,7 +448,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -424,7 +459,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -451,7 +487,8 @@
       "Multiple": true,
       "Hints": [
         "It's just money.",
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It's green."
       ]
     },
     {
@@ -460,7 +497,8 @@
       "Column": 1,
       "Row": 4,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "It's red."
       ]
     },
     {
@@ -468,7 +506,10 @@
       "InternalItemType": 78,
       "Artice": "",
       "Column": 3,
-      "Row": 4
+      "Row": 4,
+      "Hints": [
+        "It's green."
+      ]
     },
     {
       "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
@@ -484,7 +525,10 @@
       "Name": [ "Silver Arrows", "Silvers" ],
       "InternalItemType": 88,
       "Column": 0,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You can hurt people with it."
+      ]
     },
     {
       "Name": [
@@ -578,108 +622,177 @@
     },
     {
       "Name": "Ganons Tower Big Key",
-      "InternalItemType": 146
+      "InternalItemType": 146,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Turtle Rock Big Key",
-      "InternalItemType": 147
+      "InternalItemType": 147,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Thieves Town Big Key",
-      "InternalItemType": 148
+      "InternalItemType": 148,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Tower of Hera Big Key",
-      "InternalItemType": 149
+      "InternalItemType": 149,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Ice Palace Big Key",
-      "InternalItemType": 150
+      "InternalItemType": 150,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Skull Woods Big Key",
-      "InternalItemType": 151
+      "InternalItemType": 151,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Misery Mire Big Key",
-      "InternalItemType": 152
+      "InternalItemType": 152,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Palace of Darkness Big Key",
-      "InternalItemType": 153
+      "InternalItemType": 153,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Swamp Palace Big Key",
-      "InternalItemType": 154
+      "InternalItemType": 154,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Desert Palace Big Key",
-      "InternalItemType": 156
+      "InternalItemType": 156,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Eastern Palace Big Key",
-      "InternalItemType": 157
+      "InternalItemType": 157,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Sewer Key",
       "InternalItemType": 160,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Desert Palace Key",
       "InternalItemType": 163,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Castle Tower Key",
       "InternalItemType": 164,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Swamp Palace Key",
       "InternalItemType": 165,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Palace of Darkness Key",
       "InternalItemType": 166,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Misery Mire Key",
       "InternalItemType": 167,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Skull Woods Key",
       "InternalItemType": 168,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Ice Palace Key",
       "InternalItemType": 169,
       "Artice": "an",
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Tower of Hera Key",
       "InternalItemType": 170,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Thieves Town Key",
       "InternalItemType": 171,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Turtle Rock Key",
       "InternalItemType": 172,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Ganons Tower Key",
       "InternalItemType": 173,
-      "Multiple": true
+      "Multiple": true,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": [
@@ -699,13 +812,20 @@
       "Name": [ "X-Ray Scope", "X-Ray" ],
       "InternalItemType": 177,
       "Column": 7,
-      "Row": 3
+      "Row": 3,
+      "Hints": [
+        "You could use it to see things you usually can't."
+      ]
     },
     {
       "Name": [ "Varia Suit", "Various Suits" ],
       "InternalItemType": 178,
       "Column": 6,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "It's something you could wear.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": "Spring Ball",
@@ -744,7 +864,11 @@
       ],
       "InternalItemType": 182,
       "Column": 7,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "It's something you could wear.",
+        "It improves your survivability."
+      ]
     },
     {
       "Name": [ "Hi-Jump Boots", "Hi-Jump" ],
@@ -752,7 +876,8 @@
       "Column": 8,
       "Row": 2,
       "Hints": [
-        "You could use it to get around."
+        "You could use it to get around.",
+        "It's something you could wear."
       ]
     },
     {
@@ -801,7 +926,9 @@
       "Column": 7,
       "Row": 0,
       "Hints": [
-        "You can hurt people with it."
+        "You can hurt people with it.",
+        "It's cold.",
+        "It's blue."
       ]
     },
     {
@@ -923,67 +1050,115 @@
     },
     {
       "Name": "Crateria Level 1 Keycard",
-      "InternalItemType": 208
+      "InternalItemType": 208,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Crateria Level 2 Keycard",
-      "InternalItemType": 209
+      "InternalItemType": 209,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Crateria Boss Keycard",
-      "InternalItemType": 210
+      "InternalItemType": 210,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Brinstar Level 1 Keycard",
-      "InternalItemType": 211
+      "InternalItemType": 211,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Brinstar Level 2 Keycard",
-      "InternalItemType": 212
+      "InternalItemType": 212,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Brinstar Boss Keycard",
-      "InternalItemType": 213
+      "InternalItemType": 213,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Norfair Level 1 Keycard",
-      "InternalItemType": 214
+      "InternalItemType": 214,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Norfair Level 2 Keycard",
-      "InternalItemType": 215
+      "InternalItemType": 215,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Norfair Boss Keycard",
-      "InternalItemType": 216
+      "InternalItemType": 216,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Maridia Level 1 Keycard",
-      "InternalItemType": 217
+      "InternalItemType": 217,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Maridia Level 2 Keycard",
-      "InternalItemType": 218
+      "InternalItemType": 218,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Maridia Boss Keycard",
-      "InternalItemType": 219
+      "InternalItemType": 219,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Wrecked Ship Level 1 Keycard",
-      "InternalItemType": 220
+      "InternalItemType": 220,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Wrecked Ship Boss Keycard",
-      "InternalItemType": 221
+      "InternalItemType": 221,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Lower Norfair Level 1 Keycard",
-      "InternalItemType": 222
+      "InternalItemType": 222,
+      "Hints": [
+        "It opens doors."
+      ]
     },
     {
       "Name": "Lower Norfair Boss Keycard",
-      "InternalItemType": 223
+      "InternalItemType": 223,
+      "Hints": [
+        "It opens doors."
+      ]
     }
   ],
   "Pegs": [
@@ -1016,27 +1191,45 @@
       "Toggled Tracker on",
       "Hey.",
       "Hello there.",
+      "Showtime!",
+      "Good morning",
+      "Good day",
+      "Good afternoon",
+      "Good evening",
       [ "<voice gender='male'><prosody rate='slow'>Hey.</prosody></voice>", 0.05 ],
       [ "Hey you. You're finally awake. You were trying to cross the border right? Walked right into that Imperial ambush, same as us, and that thief over there. Damn you Stormcloaks.", 0.01 ]
     ],
+    "StartingTrackingAlternate": [
+      "Hello. I'm your substitude tracker for today. Tracker is on vacation but she'll be back soon.",
+      "Hello. I'm your substitude tracker for today. Tracker is on holiday but she'll be back soon.",
+      "Hello. I'm your substitude tracker for today. Tracker got some time off but she'll be back soon."
+    ],
     "StoppedTracking": [
       "Leaving so soon?",
+      "Oh, bye then.",
+      "See ya.",
       "Toggled Tracker off."
     ],
     "StoppedTrackingPostGoMode": [
       "Toggled Tracker off.",
-      "Hey, you'll be missed pal."
+      "See ya next time.",
+      "Hey, you'll be missed pal.",
+      [ "Please don't leave me alone again", 0.1 ]
     ],
     "Misheard": [
       "I didn't get that.",
       "Could you repeat that?",
       "What did you say?",
       "What was that?",
-      [ "English motherfucker, do you speak it?", 0.002 ]
+      [ "English motherfucker, do you speak it?", 0.05 ]
     ],
     "TrackedItem": [
+      "Toggling {0} on.",
       "Toggled {0} on.",
-      "Tracking {0}."
+      "Tracked {0}.",
+      "Tracking {0}.",
+      "Marking off {1}",
+      "Marked off {1}"
     ],
     "TrackedProgressiveItem": [
       "Upgraded {0} by one step.",
@@ -1048,7 +1241,7 @@
     "TrackedItemMultiple": [
       "Added more {0}.",
       "You now have {1} {0}.",
-      "Another one."
+      [ "Another one.", 0.5 ]
     ],
     "TrackedAlreadyTrackedItem": [
       "You already have that.",
@@ -1365,32 +1558,39 @@
         "Did you forget already? How sad. It was {1}."
       ],
       "LocationHasJunkItem": [
-        "There's nothing important there.",
-        "I wouldn't bother going there.",
-        "I wouldn't bother."
+        "There's nothing important in {0}.",
+        "{0} has nothing important.",
+        "{0} has something for {1} but it's not important.",
+        "It's got something for {1} but I wouldn't bother with it.",
+        "{0} has something for {1} but I wouldn't bother.",
+        "I doubt {1} would care about what's at {0}.",
+        "You can skip {0}.",
+        "You can skip it."
       ],
       "LocationHasUsefulItem": [
-        "It might be worth checking out.",
-        "Could have something good."
-      ],
-      "LocationHasSuperMetroidItem": [
-        "{0} has something for {1}.",
-        "It's got something for {1}.",
+        "{0} might be worth checking out.",
+        "{0} could have something good for {1}.",
         "{1} might be interested in that.",
-        "{1} could make use of it."
-      ],
-      "LocationHasZeldaItem": [
-        "{0} has something for {1}.",
-        "It's got something for {1}.",
-        "{1} might be interested in that.",
-        "{1} could make use of it."
+        "{1} could make good use of it.",
+        "I bet {1} would appreciate it if you checked it out.",
+        "I bet {1} would appreciate it if you checked out {0}.",
+        "I wouldn't skip that if I were you.",
+        "{1} would not want you to skip it."
       ],
       "AreaSuggestion": [
         "What about {0}?",
         "Have you been to {0} lately?",
         "You could try {0}.",
         "You could go to {0}.",
-        "{0} could have something."
+        "{0} could have something.",
+        "You might've missed something in {0}."
+      ],
+      "BookHint": [
+        "If you could use {2} on {0}, it would say <break strength='weak'/> '{1}'.",
+        "If you could use {2} on {0}, it would say <break strength='weak'/> '{1}'.",
+        "If the item there was on the Master Sword Pedestal, it would say <break strength='weak'/> '{1}'.",
+        "'{1}' is what {2} would tell you.",
+        "Let me consult {2}. <break strength='1s'/> {1}."
       ]
     },
     "Spoilers": {
@@ -1514,24 +1714,16 @@
       ]
     },
     {
-      "Phrases": [
-        "I'm almost dead",
-        "tell my wife I love her",
-        "tell my husband I love him",
-        "tell my partner I love them"
-      ],
-      "Response": [ "RIP" ]
-    },
-    {
       "Phrases": [ "execute order 66" ],
-      "Response": [ "Yes, my lord" ]
+      "Response": [ "Yes my lord" ]
     },
     {
       "Phrases": [ "ban Vivelin", "ban Fragger" ],
       "Response": [
         "Please enter 75 digit alphanumeric password to continue.",
         "Access denied.",
-        "Ah <break time='100ms'/> ah <break time='100ms'/> aah, you didn't say the magic word."
+        "Ah <break time='100ms'/> ah <break time='100ms'/> aah, you didn't say the magic word.",
+        "No."
       ]
     },
     {
@@ -1539,7 +1731,8 @@
       "Response": [
         "High, on high I stand,\nGazing down to see,\nThe endless garden,\nAwaiting me.\n\nRed bloometh the rose of conviction,\nAnd red bloometh the rose of hate,\nYes red bloometh the rose of contest,\nFirmly bound to its fate.\n\nAnd the war, it wageth on,\nThe storm, it rageth on,\nThe bold ever fight on,\nTheir lives echoed in song.\n\nFall, like snow they fall,\nPetals plucked and strewn,\nYet from their seeds grow,\nThis war anew.\n\nBlood trickling down from my fullers,\nAnd blood trickling down from mine hands,\nYes, blood trickling down to Hydaelyn,\nUntil I alone stand.\n\nThe war, still wageth on,\nThe storm, still rageth on,\nThe bold blindly march on,\nTheir lives, lost in a song.",
         "You seem so far away\nAnd I just need to hear your voice\nI just need to hear you say\nIf you would have me go or stay.\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nGirl in the tower\nI'm calling out\nMy heart cries out for you\n\nI saw your face\nand I felt our souls embrace\nIf it's not meant to be this way\nWhy do you haunt me night and day?\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\n\nGirl in the tower...\n\nI'm calling out, calling out\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower...\nHere in the tower...\n",
-        "In this world (His world!)\nWhere life is strong\nIn this world (His world!)\nLife's an open book\nIn this world (His world!)\nWhere compromise does not exist\nIn his world of worlds, every step meets the rest!\nIn this world (His world!)\nWhere one is all\nIn this world (His world!)\nNever fear the fall\nIn this world (His world!)\nWhere compromise does not exist"
+        "In this world (His world!)\nWhere life is strong\nIn this world (His world!)\nLife's an open book\nIn this world (His world!)\nWhere compromise does not exist\nIn his world of worlds, every step meets the rest!\nIn this world (His world!)\nWhere one is all\nIn this world (His world!)\nNever fear the fall\nIn this world (His world!)\nWhere compromise does not exist",
+        "If there's something strange sleeping in your bed\nLemme tell you something\nIf there's somethin weird sleeping in your bed, ow!\nLemme tell you something\nbustin makes me feel good\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin buh buh bustin\n\nIf you're seein' things sleeping in your bed\nYeah yeah yeah yeah!\nAn invisible man sleeping in your bed, ow!\nLemme tell you something\nOw! Yeah yeah yeah!\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, feel good\n\nUh, freaky ghost baby\nUh, freaky ghost man\nUh, freaky man baby\nUh, Ow! Ow! Ow!\n\nIf you're all alone, lemme sleep in your bed, ow!\nSnoring\nLemme tell you something, sleeping makes me feel good\nSnoring\nI ain't afraid of no sleep, I ain't afraid of no bed\nAn invisible bed, a freaky ghost bed\nYeah yeah yeah yeah yeah yeah yeah yeah yeah\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, bustin makes me\nFeel Good"
       ]
     },
     {
@@ -1582,6 +1775,7 @@
         "Don't lie.",
         "Toggled Boots on.",
         "That sounds like a you problem.",
+        "Let's keep this relationship professional.",
         [ "Hey, thanks. Thank you. That's awesome, fucking awesome. I mean, that's cool, you can say that.", 0.2 ],
         "No.",
         [ "No homo, right?", 0.2 ]
@@ -1592,6 +1786,30 @@
       "Response": [
         "You're welcome",
         "You're welcome, I think"
+      ]
+    },
+    {
+      "Phrases": [ "what's the meaning of life?" ],
+      "Response": [
+        "I don't know, but it's got to be better than this.",
+        "Did you think I'd say 42?"
+      ]
+    },
+    {
+      "Phrases": [ "make me a sandwich" ],
+      "Response": [
+        "No.",
+        "Make your own sandwich.",
+        "Just who do you think I am?",
+        "I don't have time for this."
+      ]
+    },
+    {
+      "Phrases": [ "sudo make me a sandwich" ],
+      "Response": [
+        "No.",
+        "Nice try, but no.",
+        "You're not in the sudoers file. This incident will be reported."
       ]
     }
   ]

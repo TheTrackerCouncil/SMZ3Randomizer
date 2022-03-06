@@ -54,29 +54,32 @@
                  Margin="0"
                  Text="{Binding Version, StringFormat={}Version {0}}" />
     </Grid>
-    <TextBlock>Created by Vivelin</TextBlock>
+    <TextBlock FontWeight="SemiBold">Created by Vivelin and MattEqualsCoder</TextBlock>
     <TextBlock>
       Based on the original
       <Hyperlink NavigateUri="https://samus.link/"
-                 ToolTip="https://samus.link/">Super Metroid &amp; A Link to the Past Crossover Randomizer</Hyperlink>
+                 ToolTip="https://samus.link/"
+                 RequestNavigate="Hyperlink_RequestNavigate">Super Metroid &amp; A Link to the Past Crossover Randomizer</Hyperlink>
       by RebelusQuo, tewtal and others.
     </TextBlock>
 
     <TextBlock FontWeight="Bold">Special thanks:</TextBlock>
     <TextBlock Margin="0,3,0,0">
       <Hyperlink NavigateUri="https://twitch.tv/the_betus"
-                 ToolTip="https://twitch.tv/the_betus">
+                 ToolTip="https://twitch.tv/the_betus"
+                 RequestNavigate="Hyperlink_RequestNavigate">
       Diabetus</Hyperlink>
-      for streaming with the Cas’ Randomizer;
+      and <Hyperlink NavigateUri="https://twitch.tv/pinkkittyrose"
+                     ToolTip="https://twitch.tv/pinkkittyrose"
+                     RequestNavigate="Hyperlink_RequestNavigate">
+        PinkKittyRose</Hyperlink>
+      for streaming so much with the Cas’ Randomizer
     </TextBlock>
     <TextBlock Margin="0,3,0,0">
-      MattEqualsCoder for his work on the map view for Tracker;
+      Fragger, PaddyCo and others for their original sprite work
     </TextBlock>
     <TextBlock Margin="0,3,0,0">
-      Fragger, PaddyCo and others for their original sprite work;
-    </TextBlock>
-    <TextBlock Margin="0,3,0,0">
-      Everyone from the BCU who helped test the Cas’ Randomizer and Tracker.
+      Everyone from the BCU who helped test the Cas’ Randomizer and Tracker
     </TextBlock>
   </StackPanel>
 </Window>

@@ -43,6 +43,7 @@ namespace Randomizer.SMZ3.Tracking
         private string? _mood;
         private string? _lastSpokenText;
         private Dictionary<string, Progression> _progression = new();
+        private bool _alternateTracker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -87,8 +88,11 @@ namespace Randomizer.SMZ3.Tracking
                 x => new Timer(IdleTimerElapsed, x.Key, Timeout.Infinite, Timeout.Infinite));
 
             // Initialize the text-to-speech
+            if (s_random.NextDouble() <= 0.01)
+                _alternateTracker = true;
+
             _tts = new SpeechSynthesizer();
-            _tts.SelectVoiceByHints(VoiceGender.Female);
+            _tts.SelectVoiceByHints(_alternateTracker ? VoiceGender.Male : VoiceGender.Female);
 
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
@@ -684,7 +688,7 @@ namespace Randomizer.SMZ3.Tracking
             StartTimer();
             Syntax = _moduleFactory.LoadAll(this, _recognizer);
             EnableVoiceRecognition();
-            Say(Responses.StartedTracking);
+            Say(_alternateTracker ? Responses.StartingTrackingAlternate : Responses.StartedTracking);
             RestartIdleTimers();
         }
 
@@ -973,13 +977,13 @@ namespace Randomizer.SMZ3.Tracking
                 if (item.TryGetTrackingResponse(out var response))
                     Say(response.Format(item.Counter));
                 else if (item.Counter == 1)
-                    Say(Responses.TrackedItem.Format(itemName));
+                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 else if (item.Counter > 1)
                     Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
                 else
                 {
                     _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
-                    Say(Responses.TrackedItem.Format(itemName));
+                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 }
             }
             else
@@ -993,7 +997,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        Say(Responses.TrackedItem.Format(itemName));
+                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                     }
                 }
                 else
@@ -1399,7 +1403,9 @@ namespace Randomizer.SMZ3.Tracking
 
                     if (trackItems)
                     {
-                        var itemNames = NaturalLanguage.Join(itemsTracked, World.Config);
+                        var itemNames = confidence >= Options.MinimumSassConfidence
+                            ? NaturalLanguage.Join(itemsTracked, World.Config)
+                            : $"{itemsCleared} items";
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
                     }
                     else

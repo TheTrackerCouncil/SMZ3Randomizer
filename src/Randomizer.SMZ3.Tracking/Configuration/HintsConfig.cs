@@ -272,5 +272,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString AreaSuggestion { get; init; }
             = new("Have you been to {0} yet?");
+
+        /// <summary>
+        /// Gets the hint that describes an item by the text that would be shown
+        /// when using the Book of Mudora.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the text that would be displayed when using the
+        /// Book of Mudora. <c>{2}</c> is the name of the Book of Mudora, including "the".
+        /// </remarks>
+        public SchrodingersString BookHint { get; init; }
+            = new("If the item there was on the Master Sword Pedestal, it would say '{1}'.");
     }
 }
