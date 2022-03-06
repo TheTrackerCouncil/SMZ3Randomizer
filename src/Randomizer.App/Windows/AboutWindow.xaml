@@ -54,7 +54,7 @@
                  Margin="0"
                  Text="{Binding Version, StringFormat={}Version {0}}" />
     </Grid>
-    <TextBlock>Created by Vivelin and MattEqualsCoder</TextBlock>
+    <TextBlock FontWeight="SemiBold">Created by Vivelin and MattEqualsCoder</TextBlock>
     <TextBlock>
       Based on the original
       <Hyperlink NavigateUri="https://samus.link/"
@@ -73,13 +73,13 @@
                      ToolTip="https://twitch.tv/pinkkittyrose"
                      RequestNavigate="Hyperlink_RequestNavigate">
         PinkKittyRose</Hyperlink>
-      for streaming so much with the Cas’ Randomizer;
+      for streaming so much with the Cas’ Randomizer
     </TextBlock>
     <TextBlock Margin="0,3,0,0">
-      Fragger, PaddyCo and others for their original sprite work;
+      Fragger, PaddyCo and others for their original sprite work
     </TextBlock>
     <TextBlock Margin="0,3,0,0">
-      Everyone from the BCU who helped test the Cas’ Randomizer and Tracker.
+      Everyone from the BCU who helped test the Cas’ Randomizer and Tracker
     </TextBlock>
   </StackPanel>
 </Window>
