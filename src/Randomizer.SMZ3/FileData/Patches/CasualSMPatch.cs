@@ -23,7 +23,7 @@ namespace Randomizer.SMZ3.FileData.Patches
 
             // Infinite Space Jump
             // See: https://github.com/theonlydude/RandomMetroidSolver/blob/master/patches/common/patches.py#L97
-            yield return (0x382493, new byte[] { 0x80, 0x0D });
+            yield return (Rom.TranslateSuperMetroidOffset(0x82493), new byte[] { 0x80, 0x0D });
         }
     }
 }
