@@ -6,6 +6,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
     {
         public RedBrinstar(World world, Config config) : base(world, config)
         {
+            // TODO: some of these might expect you to have wall jump, but I'm not sure which or how
+
             XRayScopeRoom = new(this, 38, 0x8F8876, LocationType.Chozo,
                 name: "X-Ray Scope",
                 alsoKnownAs: "The Chozo room after the dark room with all the spikes",
@@ -38,7 +40,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Spazer",
                 alsoKnownAs: "~ S p A z E r ~",
                 vanillaItem: ItemType.Spazer,
-                access: items => Logic.CanPassBombPassages(items) && items.Super,
+                access: items => Logic.CanPassBombPassages(items) && items.Super
+                              && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy))
                 memoryAddress: 0x5,
                 memoryFlag: 0x4);
             MemoryRegionId = 1;

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+
 using Randomizer.Shared;
+
 using static Randomizer.SMZ3.SMLogic;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
@@ -43,7 +45,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Bombs",
                 alsoKnownAs: "Bomb Torizo room",
                 vanillaItem: ItemType.Bombs,
-                access: items => (Config.Keysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items)) && Logic.CanPassBombPassages(items),
+                access: items => (Config.Keysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
+                                 && (Logic.CanPassBombPassages(items) || Logic.CanWallJump(WallJumpDifficulty.Hard))
                 memoryAddress: 0x0,
                 memoryFlag: 0x80);
             MemoryRegionId = 0;

@@ -637,7 +637,8 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar+BlueBrinstarTopRoom",
       "Name": [
-        "Blue Brinstar Top"
+        "Blue Brinstar Top",
+        "Billy Mays Room"
       ],
       "X": 872,
       "Y": 340
@@ -1199,7 +1200,7 @@
     {
       "Id": 36,
       "Name": [
-        "Billy Mays Room",
+        "Billy Mays Room Main Item",
         [ "Missile (blue Brinstar top)", 0 ],
         "Blue Brinstar Top Main Item"
       ]
@@ -1207,7 +1208,7 @@
     {
       "Id": 37,
       "Name": [
-        "Billy Mays Room - Hidden item",
+        "Billy Mays Room Hidden item",
         "But wait, there's more!",
         [ "Missile (blue Brinstar behind missile)", 0 ],
         "Blue Brinstar Top Hidden Item"
@@ -3258,7 +3259,8 @@
     {
       "Id": 497,
       "Name": [
-        "Forest Clearing - Digging Spot",
+        "Forest Clearing",
+        "Digging Spot",
         "Flute Spot"
       ],
       "X": 600,

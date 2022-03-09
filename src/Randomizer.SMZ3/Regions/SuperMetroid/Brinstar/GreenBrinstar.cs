@@ -37,7 +37,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             ETank = new(this, 30, 0x8F87C2, LocationType.Visible,
                 name: "Energy Tank, Etecoons",
                 vanillaItem: ItemType.ETank,
-                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items),
+                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items)
+                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x3,
                 memoryFlag: 0x40);
             BottomSuperMissile = new(this, 31, 0x8F87D0, LocationType.Visible,

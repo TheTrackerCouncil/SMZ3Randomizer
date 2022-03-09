@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Randomizer.Shared;
+
 namespace Randomizer.SMZ3
 {
     public interface ILogic
@@ -63,5 +65,7 @@ namespace Randomizer.SMZ3
         public bool CanHyruleSouthFakeFlippers(Progression items, bool fairyChests);
 
         public bool CanNavigateMaridiaLeftSandPit(Progression items);
+        
+        public bool CanWallJump(WallJumpDifficulty difficulty);
     }
 }
