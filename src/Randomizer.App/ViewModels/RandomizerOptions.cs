@@ -27,21 +27,18 @@ namespace Randomizer.App.ViewModels
             SeedOptions = new SeedOptions();
             PatchOptions = new PatchOptions();
             LogicConfig = new LogicConfig();
-            LocationItems = new Dictionary<int, int>();
         }
 
         [JsonConstructor]
         public RandomizerOptions(GeneralOptions generalOptions,
             SeedOptions seedOptions,
             PatchOptions patchOptions,
-            LogicConfig logicConfig,
-            IDictionary<int, int> locationItems)
+            LogicConfig logicConfig)
         {
             GeneralOptions = generalOptions ?? new();
             SeedOptions = seedOptions ?? new();
             PatchOptions = patchOptions ?? new();
             LogicConfig = logicConfig ?? new();
-            LocationItems = locationItems ?? new Dictionary<int, int>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,7 +55,7 @@ namespace Randomizer.App.ViewModels
         [JsonPropertyName("Logic")]
         public LogicConfig LogicConfig { get; set; }
 
-        public bool ItemLocationsExpanded { get; set; } = false;
+        public bool EarlyItemsExpanded { get; set; } = false;
 
         public bool CustomizationExpanded { get; set; } = false;
         public bool LogicExpanded { get; set; } = false;
@@ -69,7 +66,6 @@ namespace Randomizer.App.ViewModels
 
         public double WindowHeight { get; set; } = 600d;
 
-        public IDictionary<int, int> LocationItems { get; set; }
 
         public string RomOutputPath
         {
@@ -119,7 +115,8 @@ namespace Randomizer.App.ViewModels
                     MenuSpeed = PatchOptions.MenuSpeed,
                     LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
                     SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
-                    LocationItems = LocationItems,
+                    LocationItems = SeedOptions.LocationItems,
+                    EarlyItems = SeedOptions.EarlyItems,
                     LogicConfig = LogicConfig.Clone()
                 };
             }

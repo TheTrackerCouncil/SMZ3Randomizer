@@ -199,27 +199,12 @@ namespace Randomizer.SMZ3
                 }
             }
 
-            foreach (var (itemType, itemPlacement) in config.ItemLocations)
+            // Add requested early items
+            foreach (var itemType in config.EarlyItems)
             {
                 if (progressionItems.Any(x => x.Type == itemType))
                 {
-                    switch (itemPlacement)
-                    {
-                        case ItemPlacement.Original:
-                            var vanilla = GetVanillaLocation(itemType, world);
-                            if (vanilla == null)
-                            {
-                                _logger.LogError("Unable to determine vanilla location for {item}", itemType);
-                                continue;
-                            }
-
-                            FillItemAtLocation(progressionItems, itemType, vanilla);
-                            break;
-
-                        case ItemPlacement.Early:
-                            FrontFillItemInOwnWorld(progressionItems, itemType, world);
-                            break;
-                    }
+                    FrontFillItemInOwnWorld(progressionItems, itemType, world);
                 }
             }
 

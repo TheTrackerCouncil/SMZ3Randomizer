@@ -66,8 +66,38 @@ namespace Randomizer.App
             {
                 DataContext = value;
                 _options = value;
+                PopulateItemOptions();
                 PopulateLogicOptions();
                 PopulateLocationOptions();
+            }
+        }
+
+        /// <summary>
+        /// Populates the options for early items
+        /// </summary>
+        public void PopulateItemOptions()
+        {
+            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
+            {
+                if (itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
+                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized }) || itemType == ItemType.Nothing)
+                {
+                    continue;
+                }
+
+                var itemTypeField = itemType.GetType().GetField(itemType.ToString());
+                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault().Description;
+                var checkBox = new CheckBox
+                {
+                    Name = itemTypeField.Name,
+                    Content = description,
+                    Tag = itemType,
+                    IsChecked = Options.SeedOptions.EarlyItems.Contains(itemType),
+                    ToolTip = description
+                };
+                checkBox.Checked += EarlyItemCheckbox_Checked;
+                checkBox.Unchecked += EarlyItemCheckbox_Checked;
+                EarlyItemsGrid.Children.Add(checkBox);
             }
         }
 
@@ -170,9 +200,9 @@ namespace Randomizer.App
             };
 
             var prevValue = 0;
-            if (Options.LocationItems.ContainsKey(location.Id))
+            if (Options.SeedOptions.LocationItems.ContainsKey(location.Id))
             {
-                prevValue = Options.LocationItems[location.Id];
+                prevValue = Options.SeedOptions.LocationItems[location.Id];
             }
 
             var curIndex = 0;
@@ -290,7 +320,7 @@ namespace Randomizer.App
             var config = Options.ToConfig();
             var randomizer = _serviceProvider.GetRequiredService<Smz3Randomizer>();
 
-            const int numberOfSeeds = 10000;
+            const int numberOfSeeds = 1000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
             var stats = InitStats();
             var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
@@ -499,11 +529,11 @@ namespace Randomizer.App
             var location = comboBox.Tag as Location;
             if (option.Value > 0)
             {
-                Options.LocationItems[location.Id] = option.Value;
+                Options.SeedOptions.LocationItems[location.Id] = option.Value;
             }
             else
             {
-                Options.LocationItems.Remove(location.Id);
+                Options.SeedOptions.LocationItems.Remove(location.Id);
             }
         }
 
@@ -519,8 +549,23 @@ namespace Randomizer.App
                 if (obj is not ComboBox comboBox) continue;
                 var location = comboBox.Tag as Location;
                 comboBox.SelectedIndex = 0;
-                Options.LocationItems.Remove(location.Id);
+                Options.SeedOptions.LocationItems.Remove(location.Id);
             }
+        }
+
+        /// <summary>
+        /// Updates the EarlyItems based on when a checkbox is checked/unchecked using reflection
+        /// </summary>
+        /// <param name="sender">The checkbox that was checked</param>
+        /// <param name="e">The event object</param>
+        private void EarlyItemCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            var itemType = (ItemType)checkBox.Tag;
+            if (checkBox.IsChecked.HasValue && checkBox.IsChecked.Value)
+                Options.SeedOptions.EarlyItems.Add(itemType);
+            else
+                Options.SeedOptions.EarlyItems.Remove(itemType);
         }
 
         /// <summary>

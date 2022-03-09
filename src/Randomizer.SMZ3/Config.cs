@@ -203,6 +203,7 @@ namespace Randomizer.SMZ3
         public bool Keysanity => KeyShuffle != KeyShuffle.None;
 
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
+        public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
 
         public Config SeedOnly()
