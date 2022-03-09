@@ -75,6 +75,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             });
 
+            AddCommand("Track all items in an area (including out-of-logic)", GetTrackEverythingIncludingOutOfLogicRule(), (tracker, result) =>
+            {
+                if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(tracker, result);
+                    tracker.ClearArea(room,
+                        trackItems: true,
+                        includeUnavailable: true,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RegionKey))
+                {
+                    var region = GetRegionFromResult(tracker, result);
+                    tracker.ClearArea(region,
+                        trackItems: true,
+                        includeUnavailable: true,
+                        confidence: result.Confidence);
+                }
+            });
+
             AddCommand("Untrack an item", GetUntrackItemRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out _);
@@ -139,7 +159,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .Optional("please", "would you kindly")
                 .OneOf("track", "add")
-                .OneOf("everything", "all items", "available items")
+                .OneOf("everything", "available items")
                 .OneOf("in", "from", "in the", "from the")
                 .Append(RoomKey, roomNames);
 
@@ -147,11 +167,46 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .Optional("please", "would you kindly")
                 .OneOf("track", "add")
-                .OneOf("everything", "all items", "available items")
+                .OneOf("everything", "available items")
                 .OneOf("in", "from")
                 .Append(RegionKey, regionNames);
 
             return GrammarBuilder.Combine(trackAllInRoom, trackAllInRegion);
+        }
+
+        private GrammarBuilder GetTrackEverythingIncludingOutOfLogicRule()
+        {
+            var roomNames = GetRoomNames();
+            var regionNames = GetRegionNames();
+
+            var trackAllInRoom = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("force", "sudo")
+                .OneOf("track", "add")
+                .OneOf("everything", "all items")
+                .OneOf("in", "from", "in the", "from the")
+                .Append(RoomKey, roomNames);
+
+            var trackAllInRegion = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("force", "sudo")
+                .OneOf("track", "add")
+                .OneOf("everything", "all items")
+                .OneOf("in", "from")
+                .Append(RegionKey, regionNames);
+
+            var cheatedRoom = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("sequence break", "I sequence broke", "I cheated my way to")
+                .Append(RoomKey, roomNames);
+
+            var cheatedRegion = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("sequence break", "I sequence broke", "I cheated my way to")
+                .Append(RegionKey, regionNames);
+
+            return GrammarBuilder.Combine(trackAllInRoom, trackAllInRegion,
+                cheatedRoom, cheatedRegion);
         }
 
         private GrammarBuilder GetUntrackItemRule()

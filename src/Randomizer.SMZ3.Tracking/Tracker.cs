@@ -1407,6 +1407,24 @@ namespace Randomizer.SMZ3.Tracking
                             ? NaturalLanguage.Join(itemsTracked, World.Config)
                             : $"{itemsCleared} items";
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
+
+                        var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
+                        if (someOutOfLogicLocation != null)
+                        {
+                            var someOutOfLogicItem = FindItemByType(someOutOfLogicLocation.Item.Type);
+                            var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
+                                .OrderBy(x => x.Length)
+                                .FirstOrDefault();
+                            if (missingItems != null)
+                            {
+                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                                Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
+                            }
+                            else
+                            {
+                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation));
+                            }
+                        }
                     }
                     else
                     {
