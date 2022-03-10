@@ -69,7 +69,7 @@ namespace Randomizer.App
             catch (RandomizerGenerationException e)
             {
                 path = null;
-                error = "Error generating rom\n" + e.Message;
+                error = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
                 rom = null;
                 return false;
             }
