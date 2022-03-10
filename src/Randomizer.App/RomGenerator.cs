@@ -190,7 +190,7 @@ namespace Randomizer.App
             log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
             log.AppendLine($"Generated on {DateTime.Now:F}");
             log.AppendLine($"Seed: {options.SeedOptions.Seed} (actual: {seed.Seed})");
-            log.AppendLine($"Config String: {Config.ToConfigString(seed.Playthrough.Config, true)}");
+            log.AppendLine($"Settings String: {Config.ToConfigString(seed.Playthrough.Config, true)}");
             log.AppendLine($"Early Items: {string.Join(',', seed.Playthrough.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
 
             var locationPrefs = new List<string>();
@@ -200,6 +200,11 @@ namespace Randomizer.App
                 locationPrefs.Add($"{seed.Worlds[0].World.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
             }
             log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
+
+            var type = options.LogicConfig.GetType();
+            var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(seed.Playthrough.Config.LogicConfig)}"));
+            log.AppendLine($"Logic Options: {logicOptions}");
+
             log.AppendLine((options.SeedOptions.Keysanity ? "[Keysanity] " : "")
                          + (options.SeedOptions.Race ? "[Race] " : ""));
             if (File.Exists(options.PatchOptions.Msu1Path))

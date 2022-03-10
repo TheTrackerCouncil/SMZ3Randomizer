@@ -511,9 +511,12 @@ namespace Randomizer.App
         {
             var comboBox = sender as ComboBox;
             var selectedRegion = comboBox.SelectedItem as string;
-            foreach (FrameworkElement obj in LocationsGrid.Children) {
-                var location = obj.Tag as Location;
-                obj.Visibility = selectedRegion.Contains(location.Region.Name) ? Visibility.Visible : Visibility.Collapsed;
+            foreach (FrameworkElement obj in LocationsGrid.Children)
+            {
+                if (obj.Tag is Location location)
+                {
+                    obj.Visibility = selectedRegion.Contains(location.Region.Name) ? Visibility.Visible : Visibility.Collapsed;
+                }
             }
         }
 

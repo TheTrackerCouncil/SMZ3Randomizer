@@ -191,7 +191,7 @@
                          Text="{Binding Seed}" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Config string (optional):">
+              <controls:LabeledControl Text="Import settings (optional):">
                 <TextBox x:Name="ConfigString"
                          Text="{Binding ConfigString}" />
               </controls:LabeledControl>
