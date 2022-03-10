@@ -21,9 +21,8 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [InlineData("test", 2042629884)] // Smz3Randomizer v1.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
-            var logger = GetLogger<StandardFiller>();
-            var filler = new StandardFiller(logger);
-            var randomizer = new Smz3Randomizer(filler);
+            var filler = new StandardFiller(GetLogger<StandardFiller>());
+            var randomizer = new Smz3Randomizer(filler, GetLogger<Smz3Randomizer>());
             var config = new Config();
 
             var seedData = randomizer.GenerateSeed(config, seed, default);
@@ -46,6 +45,55 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             }
             var serializedWorld = stringBuilder.ToString();
             return NonCryptographicHash.Fnv1a(serializedWorld);
+        }
+
+        [Fact]
+        public void LocationItemConfig()
+        {
+            var filler = new StandardFiller(GetLogger<StandardFiller>());
+            var randomizer = new Smz3Randomizer(filler, GetLogger<Smz3Randomizer>());
+
+            var config = new Config();
+            var region = new Regions.Zelda.LightWorld.LightWorldSouth(null, null);
+            var location1 = region.LinksHouse.Id;
+            var location2 = region.MazeRace.Id;
+            var location3 = region.IceCave.Id;
+            config.LocationItems[location1] = (int)ItemPool.Progression;
+            config.LocationItems[location2] = (int)ItemPool.Junk;
+            config.LocationItems[location3] = (int)ItemType.Firerod;
+
+            for (var i = 0; i < 3; i++)
+            {
+                var seedData = randomizer.GenerateSeed(config, null, default);
+                var world = seedData.Worlds.First().World;
+                world.Locations.First(x => x.Id == location1).Item.Progression.Should().BeTrue();
+                world.Locations.First(x => x.Id == location2).Item.Progression.Should().BeFalse();
+                var fireRodAtLocation = world.Locations.First(x => x.Id == location3).Item.Type == ItemType.Firerod;
+                var fireRodAccessible = !Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), new Progression()).Any();
+                Assert.True(fireRodAtLocation || fireRodAccessible);
+            }
+        }
+
+        [Fact]
+        public void EarlyItemConfig()
+        {
+            var filler = new StandardFiller(GetLogger<StandardFiller>());
+            var randomizer = new Smz3Randomizer(filler, GetLogger<Smz3Randomizer>());
+
+            var config = new Config();
+            config.EarlyItems.Add(ItemType.Firerod);
+            config.EarlyItems.Add(ItemType.Icerod);
+            config.EarlyItems.Add(ItemType.MoonPearl);
+
+            for (var i = 0; i < 3; i++)
+            {
+                var seedData = randomizer.GenerateSeed(config, null, default);
+                var world = seedData.Worlds.First().World;
+                var progression = new Progression();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.MoonPearl), progression).Should().BeEmpty();
+            }
         }
 
         private static ILogger<T> GetLogger<T>()

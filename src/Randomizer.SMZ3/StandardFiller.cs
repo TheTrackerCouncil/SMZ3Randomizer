@@ -83,7 +83,7 @@ namespace Randomizer.SMZ3
                 });
             }
 
-            ApplyItemPoolPreferences(junkItems, locations, worlds, config);
+            ApplyItemPoolPreferences(progressionItems, junkItems, locations, worlds, config);
             _logger.LogDebug("Filling GT with junk");
             GanonTowerFill(worlds, junkItems, 2);
 
@@ -97,37 +97,67 @@ namespace Randomizer.SMZ3
             FastFill(junkItems, locations);
         }
 
-        private void ApplyItemPoolPreferences(List<Item> junkItems, List<Location> locations, List<World> worlds, Config config)
+        private void ApplyItemPoolPreferences(List<Item> progressionItems, List<Item> junkItems, List<Location> locations, List<World> worlds, Config config)
         {
             // Populate items that were directly specified at locations
-            foreach (var (locationId, value) in config.LocationItems)
+            var configLocations = config.LocationItems.Shuffle(Random);
+            foreach (var (locationId, value) in configLocations)
             {
+                var location = worlds[0].Locations.FirstOrDefault(x => x.Id == locationId && x.Item == null);
+
+                if (location == null)
+                {
+                    _logger.LogDebug($"Location could not be found or already has an item");
+                    continue;
+                }
+
                 if (value < Enum.GetValues(typeof(ItemPool)).Length)
                 {
                     var itemPool = (ItemPool)value;
-                    ApplyPreference(itemPool, world => world.Locations.First(x => x.Id == locationId));
+
+                    if (itemPool == ItemPool.Progression && progressionItems.Any())
+                    {
+                        var item = progressionItems.First();
+                        FillItemAtLocation(progressionItems, item.Type, location);
+                    }
+                    else if(itemPool == ItemPool.Junk && junkItems.Any())
+                    {
+                        FastFill(junkItems, worlds.SelectMany(x => x.Locations.Where(y => y.Id == locationId)));
+                    }
+                }
+                else
+                {
+                    var itemType = (ItemType)value;
+
+                    if (progressionItems.Any(x => x.Type == itemType))
+                    {
+                        //var location = worlds[0].Locations.First(x => x.Id == locationId);
+                        var itemsRequired = Logic.GetMissingRequiredItems(location, new Progression());
+
+                        // If no items required or at least one combination of items required does not contain this item
+                        if (!itemsRequired.Any() || itemsRequired.Any(x => !x.Contains(itemType)))
+                        {
+                            FillItemAtLocation(progressionItems, itemType, location);
+                        }
+                        else
+                        {
+                            throw new RandomizerGenerationException($"{itemType} was selected as the item for {location}, but it is required to get there.");
+                        }
+                    }
                 }
             }
 
-            void ApplyPreference(ItemPool setting, Func<World, Location> selectLocation)
+            // Push requested progression items to the top
+            var configItems = config.EarlyItems.Shuffle(Random);
+            var addedItems = new List<ItemType>();
+            foreach (var itemType in configItems)
             {
-                switch (setting)
+                if (progressionItems.Any(x => x.Type == itemType))
                 {
-                    case ItemPool.Progression:
-                        // If we always want to have a progression item, move it
-                        // to the top of the list so it gets filled early while
-                        // we still have all progression items in the pool. We
-                        // also add a filter to prevent it from filling it with
-                        // the wrong items.
-                        var locationId = selectLocation(worlds[0]).Id;
-                        var location = locations
-                            .MoveToTop(x => x.Id == locationId)
-                            .Allow((item, items) => !item.Type.IsInCategory(ItemCategory.Scam));
-                        break;
-
-                    case ItemPool.Junk:
-                        FastFill(junkItems, worlds.Select(selectLocation));
-                        break;
+                    var accessibleLocations = worlds[0].Locations.Where(x => x.Item == null && x.IsAvailable(new Progression(addedItems))).Shuffle(Random);
+                    var location = accessibleLocations.First();
+                    FillItemAtLocation(progressionItems, itemType, location);
+                    addedItems.Add(itemType);
                 }
             }
         }
@@ -175,38 +205,6 @@ namespace Randomizer.SMZ3
         private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world, Config config)
         {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
-
-            ILogic logic = new Logic(world);
-
-            // Populate items that were directly specified at locations
-            foreach (var (locationId, value) in config.LocationItems)
-            {
-                if (value >= Enum.GetValues(typeof(ItemPool)).Length)
-                {
-                    var itemType = (ItemType)value;
-                    var location = world.Locations.First(x => x.Id == locationId);
-                    var itemsRequired = Logic.GetMissingRequiredItems(location, new Progression());
-
-                    // If no items required or at least one combination of items required does not contain this item
-                    if ((!itemsRequired.Any() || itemsRequired.Any(x => !x.Contains(itemType))) && progressionItems.Any(x => x.Type == itemType))
-                    {
-                        FillItemAtLocation(progressionItems, itemType, location);
-                    }
-                    else
-                    {
-                        throw new RandomizerGenerationException($"{itemType} was selected as the item for {location}, but it is required to get there.");
-                    }
-                }
-            }
-
-            // Add requested early items
-            foreach (var itemType in config.EarlyItems)
-            {
-                if (progressionItems.Any(x => x.Type == itemType))
-                {
-                    FrontFillItemInOwnWorld(progressionItems, itemType, world);
-                }
-            }
 
             /* We place a PB and Super in Sphere 1 to make sure the filler
              * doesn't start locking items behind this when there are a
@@ -277,7 +275,10 @@ namespace Randomizer.SMZ3
         private void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world)
         {
             var item = itemPool.Get(itemType);
-            var location = world.Locations.Empty().Available(world.Items).Random(Random);
+            var location = world.Locations.Empty()
+                .Available(world.Items)
+                .Where(x => world.Config.LocationItems == null || !world.Config.LocationItems.ContainsKey(x.Id))
+                .Random(Random);
             if (location == null)
             {
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");

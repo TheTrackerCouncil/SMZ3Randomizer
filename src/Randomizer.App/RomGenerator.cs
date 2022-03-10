@@ -190,11 +190,16 @@ namespace Randomizer.App
             log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
             log.AppendLine($"Generated on {DateTime.Now:F}");
             log.AppendLine($"Seed: {options.SeedOptions.Seed} (actual: {seed.Seed})");
-            log.AppendLine($"Sword: {options.SeedOptions.SwordLocation}");
-            log.AppendLine($"Morph: {options.SeedOptions.MorphLocation}");
-            log.AppendLine($"Bombs: {options.SeedOptions.MorphBombsLocation}");
-            log.AppendLine($"Shaktool: {options.SeedOptions.ShaktoolItem}");
-            log.AppendLine($"Peg World: {options.SeedOptions.PegWorldItem}");
+            log.AppendLine($"Config String: {Config.ToConfigString(seed.Playthrough.Config, true)}");
+            log.AppendLine($"Early Items: {string.Join(',', seed.Playthrough.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
+
+            var locationPrefs = new List<string>();
+            foreach (var (locationId, value) in seed.Playthrough.Config.LocationItems)
+            {
+                var itemPref = value < Enum.GetValues(typeof(ItemPool)).Length ? ((ItemPool)value).ToString() : ((ItemType)value).ToString();
+                locationPrefs.Add($"{seed.Worlds[0].World.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
+            }
+            log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
             log.AppendLine((options.SeedOptions.Keysanity ? "[Keysanity] " : "")
                          + (options.SeedOptions.Race ? "[Race] " : ""));
             if (File.Exists(options.PatchOptions.Msu1Path))

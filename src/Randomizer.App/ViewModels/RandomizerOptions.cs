@@ -122,7 +122,37 @@ namespace Randomizer.App.ViewModels
             }
             else
             {
-                return Config.FromConfigString(SeedOptions.ConfigString);
+                var oldConfig = Config.FromConfigString(SeedOptions.ConfigString);
+                return new Config()
+                {
+                    GameMode = GameMode.Normal,
+                    Z3Logic = Z3Logic.Normal,
+                    SMLogic = SMLogic.Normal,
+                    ItemLocations =
+                    {
+                        [ItemType.ProgressiveSword] = SeedOptions.SwordLocation,
+                        [ItemType.Morph] = SeedOptions.MorphLocation,
+                        [ItemType.Bombs] = SeedOptions.MorphBombsLocation,
+                        [ItemType.Boots] = SeedOptions.PegasusBootsLocation,
+                        [ItemType.SpaceJump] = SeedOptions.SpaceJumpLocation,
+                    },
+                    ShaktoolItemPool = SeedOptions.ShaktoolItem,
+                    PegWorldItemPool = SeedOptions.PegWorldItem,
+                    KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
+                    Race = SeedOptions.Race,
+                    ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
+                    ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
+                    HeartColor = PatchOptions.HeartColor,
+                    LowHealthBeepSpeed = PatchOptions.LowHealthBeepSpeed,
+                    DisableLowEnergyBeep = PatchOptions.DisableLowEnergyBeep,
+                    CasualSMPatches = PatchOptions.CasualSuperMetroidPatches,
+                    MenuSpeed = PatchOptions.MenuSpeed,
+                    LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
+                    SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
+                    LocationItems = oldConfig.LocationItems,
+                    EarlyItems = oldConfig.EarlyItems,
+                    LogicConfig = oldConfig.LogicConfig
+                };
             }
         }
 
