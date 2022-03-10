@@ -117,8 +117,19 @@ namespace Randomizer.SMZ3
 
                     if (itemPool == ItemPool.Progression && progressionItems.Any())
                     {
-                        var item = progressionItems.First();
-                        FillItemAtLocation(progressionItems, item.Type, location);
+                        // Some locations (AKA Shaktool) get pretty tough to tell if an item is needed there, so a workaround is to
+                        // grab an item from the opposite game to minimize chances of situations where an item required to access a
+                        // location is picked to go there
+                        var item = progressionItems.FirstOrDefault(x => (x.Type.IsInCategory(ItemCategory.Metroid) && location.Region is Z3Region) || (x.Type.IsInCategory(ItemCategory.Zelda) && location.Region is SMRegion));
+
+                        if (item != null)
+                        {
+                            FillItemAtLocation(progressionItems, item.Type, location);
+                        }
+                        else
+                        {
+                            _logger.LogDebug($"Could not find item to place at {location.Name}");
+                        }
                     }
                     else if(itemPool == ItemPool.Junk && junkItems.Any())
                     {

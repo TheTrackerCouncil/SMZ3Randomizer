@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3
                     /* With no new items added we might have a problem, so list inaccessable items */
                     var inaccessibleLocations = worlds.SelectMany(w => w.Locations).Where(l => !locations.Contains(l)).ToList();
                     if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count))
-                        throw new Exception("Too many inaccessible items, seed likely impossible.");
+                        throw new RandomizerGenerationException("Too many inaccessible items, seed likely impossible.");
 
                     sphere.InaccessibleLocations.AddRange(inaccessibleLocations);
                     break;
@@ -62,7 +62,7 @@ namespace Randomizer.SMZ3
                 spheres.Add(sphere);
 
                 if (spheres.Count > 100)
-                    throw new Exception("Too many spheres, seed likely impossible.");
+                    throw new RandomizerGenerationException("Too many spheres, seed likely impossible.");
             }
 
             return new Playthrough(config, spheres);
