@@ -86,7 +86,11 @@ namespace Randomizer.App
         {
             var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
 
-            if (successful)
+            if (!successful && !string.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
             {
                 UpdateRomList();
                 QuickLaunchRom(rom);
@@ -465,6 +469,22 @@ namespace Randomizer.App
                 return;
 
             Clipboard.SetText(rom.Seed);
+        }
+
+        /// <summary>
+        /// Menu item for copying the seed's config string for sending to someone else
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CopyConfigMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not MenuItem menuItem)
+                return;
+
+            if (menuItem.Tag is not GeneratedRom rom)
+                return;
+
+            Clipboard.SetText(rom.Settings);
         }
 
         /// <summary>

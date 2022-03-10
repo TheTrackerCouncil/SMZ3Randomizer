@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3;
 
 namespace Randomizer.App.ViewModels
@@ -18,6 +18,9 @@ namespace Randomizer.App.ViewModels
     {
         [JsonIgnore]
         public string Seed { get; set; }
+
+        [JsonIgnore]
+        public string ConfigString { get; set; }
 
         public ItemPlacement SwordLocation { get; set; }
 
@@ -36,5 +39,9 @@ namespace Randomizer.App.ViewModels
         public bool Keysanity { get; set; }
 
         public bool Race { get; set; }
+
+        public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
+
+        public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
     }
 }

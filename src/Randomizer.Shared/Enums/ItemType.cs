@@ -549,43 +549,43 @@ namespace Randomizer.Shared
         SpeedBooster = 0xBA,
 
         [Description("Bottle with Red Potion")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BottleWithRedPotion = 0x2B,
 
         [Description("Bottle with Green Potion")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BottleWithGreenPotion = 0x2C,
 
         [Description("Bottle with Blue Potion")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BottleWithBluePotion = 0x2D,
 
         [Description("Bottle with Fairy")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BottleWithFairy = 0x3D,
 
         [Description("Bottle with Bee")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BottleWithBee = 0x3C,
 
         [Description("Bottle with Gold Bee")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BottleWithGoldBee = 0x48,
 
         [Description("Red Potion Refill")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         RedContent = 0x2E,
 
         [Description("Green Potion Refill")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         GreenContent = 0x2F,
 
         [Description("Blue Potion Refill")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BlueContent = 0x30,
 
         [Description("Bee Refill")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BeeContent = 0x0E,
     }
 }

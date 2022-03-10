@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 using Randomizer.SMZ3.FileData;
 
@@ -15,10 +15,12 @@ namespace Randomizer.SMZ3.Generation
     {
         private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex s_continousSpace = new(@" +");
+        private readonly ILogger<Smz3Randomizer> _logger;
 
-        public Smz3Randomizer(IFiller filler)
+        public Smz3Randomizer(IFiller filler, ILogger<Smz3Randomizer> logger)
         {
             Filler = filler;
+            _logger = logger;
         }
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
@@ -59,6 +61,8 @@ namespace Randomizer.SMZ3.Generation
             var rng = new Random(seedNumber);
             if (config.Race)
                 rng = new Random(rng.Next());
+
+            _logger.LogDebug($"Seed: {seedNumber}");
 
             var worlds = new List<World>();
             if (config.SingleWorld)
