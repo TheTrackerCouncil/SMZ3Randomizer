@@ -320,7 +320,7 @@ namespace Randomizer.App
             var config = Options.ToConfig();
             var randomizer = _serviceProvider.GetRequiredService<Smz3Randomizer>();
 
-            const int numberOfSeeds = 50;
+            const int numberOfSeeds = 1000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
             var stats = InitStats();
             var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
