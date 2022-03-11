@@ -45,7 +45,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             TrinexxReward = new Location(this, 256 + 188, 0x308159, LocationType.Regular,
                 name: "Trinexx",
                 vanillaItem: ItemType.HeartContainer,
-                access: items => items.BigKeyTR && items.KeyTR >= 4 && items.Lamp && CanBeatBoss(items));
+                access: items => items.BigKeyTR && items.KeyTR >= 4 && Logic.CanPassSwordOnlyDarkRooms(items) && CanBeatBoss(items));
 
             RollerRoom = new(this);
             LaserBridge = new(this);
@@ -151,7 +151,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             private bool CanAccess(Progression items)
             {
-                return items.BigKeyTR && items.KeyTR >= 3 && items.Lamp && (items.Cape || items.Byrna || items.CanBlockLasers);
+                return items.BigKeyTR && items.KeyTR >= 3 && Logic.CanPassSwordOnlyDarkRooms(items) && (items.Cape || items.Byrna || items.CanBlockLasers);
             }
         }
     }

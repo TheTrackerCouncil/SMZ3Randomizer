@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             VitreousReward = new Location(this, 256 + 176, 0x308158, LocationType.Regular,
                 name: "Vitreous",
                 vanillaItem: ItemType.HeartContainer,
-                access: items => items.BigKeyMM && items.Lamp && items.Somaria);
+                access: items => items.BigKeyMM && Logic.CanPassSwordOnlyDarkRooms(items) && items.Somaria);
         }
 
         public override string Name => "Misery Mire";

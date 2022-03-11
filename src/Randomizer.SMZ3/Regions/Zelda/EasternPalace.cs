@@ -32,7 +32,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             BigKeyChest = new Location(this, 256 + 107, 0x1E9B9, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyEP,
-                access: items => items.Lamp);
+                access: items => Logic.CanPassSwordOnlyDarkRooms(items));
 
             ArmosKnightsRewards = new Location(this, 256 + 108, 0x308150, LocationType.Regular,
                 name: "Armos Knights",
