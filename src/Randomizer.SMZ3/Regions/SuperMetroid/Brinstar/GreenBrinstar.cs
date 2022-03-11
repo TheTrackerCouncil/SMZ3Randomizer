@@ -20,12 +20,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Super Missile (green Brinstar top)",
                 alsoKnownAs: "Mockball Room Attic",
                 vanillaItem: ItemType.Super,
-                access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassMockBallRoom(items));
+                access: items => Logic.CanOpenRedDoors(items) && Logic.CanMoveAtHighSpeeds(items));
             ReserveTank = new(this, 17, 0x8F852C, LocationType.Chozo,
                 name: "Reserve Tank, Brinstar",
                 alsoKnownAs: "Mockball Chozo",
                 vanillaItem: ItemType.ReserveTank,
-                access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassMockBallRoom(items));
+                access: items => Logic.CanOpenRedDoors(items) && Logic.CanMoveAtHighSpeeds(items));
             ETank = new(this, 30, 0x8F87C2, LocationType.Visible,
                 name: "Energy Tank, Etecoons",
                 vanillaItem: ItemType.ETank,
@@ -69,13 +69,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     name: "Hidden Item",
                     alsoKnownAs: new[] { "Missile (green Brinstar behind missile)", "Mockball - Back room hidden item", "Ron Popeil missiles" },
                     vanillaItem: ItemType.Missile,
-                    access: items => Logic.CanPassMockBallRoom(items) && Logic.CanPassBombPassages(items) && Logic.CanOpenRedDoors(items));
+                    access: items => Logic.CanMoveAtHighSpeeds(items) && Logic.CanPassBombPassages(items) && Logic.CanOpenRedDoors(items));
 
                 MainItem = new(this, 19, 0x8F8538, LocationType.Visible,
                     name: "Main Item",
                     alsoKnownAs: new[] { "Missile (green Brinstar behind reserve tank)", "Mockball - Back room" },
                     vanillaItem: ItemType.Missile,
-                    access: items => Logic.CanPassMockBallRoom(items) && Logic.CanOpenRedDoors(items) && items.Morph);
+                    access: items => Logic.CanMoveAtHighSpeeds(items) && Logic.CanOpenRedDoors(items) && items.Morph);
             }
 
             public Location MainItem { get; }

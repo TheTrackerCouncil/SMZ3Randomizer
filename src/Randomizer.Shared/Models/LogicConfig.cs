@@ -19,7 +19,7 @@ namespace Randomizer.Shared
         [DisplayName("Parlor Speed Booster Break In"), Description("You're expected to be able to use the speed booster to burst through to the Terminator Room/Brinstar without morph/power bombs or screw attack"), Category("Tricks")]
         public bool ParlorSpeedBooster { get; set; }
 
-        [DisplayName("Mockball"), Description("You're expected to be able to be able to use to mockball to avoid having the speed booster at the entrance to Green Brinstar and Upper Norfair West"), Category("Tricks")]
+        [DisplayName("Mockball"), Description("You're expected to be able to use to mockball to avoid having the speed booster at the entrance to Green Brinstar and Upper Norfair West"), Category("Tricks")]
         public bool MockBall { get; set; }
 
         [DisplayName("Sword Only Dark Rooms"), Description("Excluding Hyrule Castle Tower, you're expected to be able to pass through dark rooms without any light and using only your sword to navigate"), Category("Tricks")]

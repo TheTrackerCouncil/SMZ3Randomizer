@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyPD,
                 access: items => items.KeyPD >= (BigKeyChest.ItemIs(ItemType.KeyPD, World) ? 1 :
-                    (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRoom(items)) || config.Keysanity ? 6 : 5))
+                    (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRooms(items)) || config.Keysanity ? 6 : 5))
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyPD, World) && items.KeyPD >= 5);
 
             StalfosBasement = new Location(this, 256 + 123, 0x1EA49, LocationType.Regular,
@@ -46,25 +46,25 @@ namespace Randomizer.SMZ3.Regions.Zelda
             CompassChest = new Location(this, 256 + 127, 0x1EA43, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassPD,
-                access: items => items.KeyPD >= ((items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRoom(items)) || config.Keysanity ? 4 : 3));
+                access: items => items.KeyPD >= ((items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRooms(items)) || config.Keysanity ? 4 : 3));
 
             HarmlessHellway = new Location(this, 256 + 128, 0x1EA46, LocationType.Regular,
                 name: "Harmless Hellway",
                 vanillaItem: ItemType.FiveRupees,
                 access: items => items.KeyPD >= (HarmlessHellway.ItemIs(ItemType.KeyPD, World) ?
-                    (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRoom(items)) || config.Keysanity ? 4 : 3 :
-                    (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRoom(items)) || config.Keysanity ? 6 : 5))
+                    (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRooms(items)) || config.Keysanity ? 4 : 3 :
+                    (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRooms(items)) || config.Keysanity ? 6 : 5))
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyPD, World) && items.KeyPD >= 5);
 
             BigChest = new Location(this, 256 + 133, 0x1EA40, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.Hammer,
-                access: items => items.BigKeyPD && Logic.CanPassSwordOnlyDarkRoom(items) && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 6 : 5));
+                access: items => items.BigKeyPD && Logic.CanPassSwordOnlyDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || config.Keysanity ? 6 : 5));
 
             HelmasaurKingReward = new Location(this, 256 + 134, 0x308153, LocationType.Regular,
                 name: "Helmasaur King",
                 vanillaItem: ItemType.HeartContainer,
-                access: items => Logic.CanPassSwordOnlyDarkRoom(items) && items.Hammer && items.Bow && items.BigKeyPD && items.KeyPD >= 6);
+                access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.Hammer && items.Bow && items.BigKeyPD && items.KeyPD >= 6);
 
             DarkMaze = new(this);
             DarkBasement = new(this);
@@ -118,12 +118,12 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 Top = new Location(this, 256 + 131, 0x1EA55, LocationType.Regular,
                     name: "Top",
                     vanillaItem: ItemType.ThreeBombs,
-                    access: items => Logic.CanPassSwordOnlyDarkRoom(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 6 : 5));
+                    access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 6 : 5));
 
                 Bottom = new Location(this, 256 + 132, 0x1EA58, LocationType.Regular,
                     name: "Bottom",
                     vanillaItem: ItemType.KeyPD,
-                    access: items => Logic.CanPassSwordOnlyDarkRoom(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 6 : 5));
+                    access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.Keysanity ? 6 : 5));
             }
 
             public Location Top { get; }

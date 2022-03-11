@@ -24,7 +24,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
             OldManReward = new Location(this, 256 + 3, 0x1EE9FA, LocationType.Regular,
                 name: "Old Man",
                 vanillaItem: ItemType.Mirror,
-                access: items => Logic.CanPassSwordOnlyDarkRoom(items));
+                access: items => Logic.CanPassSwordOnlyDarkRooms(items));
         }
 
         public override string Name => "Light World Death Mountain West";
@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
         public override bool CanEnter(Progression items)
         {
             return items.Flute
-                || (Logic.CanLiftLight(items) && Logic.CanPassSwordOnlyDarkRoom(items))
+                || (Logic.CanLiftLight(items) && Logic.CanPassSwordOnlyDarkRooms(items))
                 || Logic.CanAccessDeathMountainPortal(items);
         }
     }

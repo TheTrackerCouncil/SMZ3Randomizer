@@ -120,10 +120,10 @@ namespace Randomizer.SMZ3
 
         public bool CanPassFireRodDarkRooms(Progression items)
         {
-            return CanPassSwordOnlyDarkRoom(items) || (items.FireRod && World.Config.LogicConfig.FireRodDarkRooms);
+            return CanPassSwordOnlyDarkRooms(items) || (items.FireRod && World.Config.LogicConfig.FireRodDarkRooms);
         }
 
-        public bool CanPassSwordOnlyDarkRoom(Progression items)
+        public bool CanPassSwordOnlyDarkRooms(Progression items)
         {
             return items.Lamp || (items.Sword && World.Config.LogicConfig.SwordOnlyDarkRooms);
         }
@@ -133,14 +133,14 @@ namespace Randomizer.SMZ3
             return items.SpeedBooster && World.Config.LogicConfig.ParlorSpeedBooster;
         }
 
-        public bool CanPassMockBallRoom(Progression items)
+        public bool CanMoveAtHighSpeeds(Progression items)
         {
             return items.SpeedBooster || (items.Morph && World.Config.LogicConfig.MockBall);
         }
 
         public bool CanHyruleSouthFakeFlippers(Progression items, bool fairyChests)
         {
-            return items.Flippers || (World.Config.LogicConfig.LightWorldSouthFakeFlippers && (!fairyChests || items.MoonPearl));
+            return World.Config.LogicConfig.LightWorldSouthFakeFlippers && (!fairyChests || items.MoonPearl);
         }
 
         public World World { get; }

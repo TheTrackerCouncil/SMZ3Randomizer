@@ -74,10 +74,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             {
                 Left = new Location(this, 256 + 254, 0x1E9B0, LocationType.Regular,
                     "Left",
-                    items => Logic.CanHyruleSouthFakeFlippers(items, true));
+                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true));
                 Right = new Location(this, 256 + 39, 0x1E9D1, LocationType.Regular,
                     "Right",
-                    items => Logic.CanHyruleSouthFakeFlippers(items, true));
+                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true));
             }
 
             public Location Left { get; }
