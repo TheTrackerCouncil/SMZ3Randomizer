@@ -71,7 +71,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Hobo",
                 alsoKnownAs: "Under the bridge",
                 vanillaItem: ItemType.Bottle,
-                access: items => items.Flippers);
+                access: items => Logic.CanHyruleSouthFakeFlippers(items, false));
 
             IceCave = new Location(this, 256 + 63, 0x1EB4E, LocationType.Regular,
                 name: "Ice Rod Cave",

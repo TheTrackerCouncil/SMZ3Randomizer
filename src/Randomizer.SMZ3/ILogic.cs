@@ -55,5 +55,11 @@ namespace Randomizer.SMZ3
         public bool CanPassFireRodDarkRooms(Progression items);
 
         public bool CanParlorSpeedBoost(Progression items);
+
+        public bool CanPassMockBallRoom(Progression items);
+
+        public bool CanPassSwordOnlyDarkRoom(Progression items);
+
+        public bool CanHyruleSouthFakeFlippers(Progression items, bool fairyChests);
     }
 }

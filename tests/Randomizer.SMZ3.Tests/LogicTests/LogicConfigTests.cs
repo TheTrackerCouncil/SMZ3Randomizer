@@ -144,5 +144,82 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression);
             missingItems.Should().BeEmpty();
         }
+
+        [Fact]
+        public void TestMockBall()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.MockBall = false;
+            World tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.Morph, ItemType.Bombs , ItemType.Missile , ItemType.PowerBomb, ItemType.ScrewAttack });
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.TopSuperMissile, progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
+
+            config.LogicConfig.MockBall = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.TopSuperMissile, progression);
+            missingItems.Should().BeEmpty();
+
+            progression = new Progression(new[] { ItemType.Bombs, ItemType.Missile, ItemType.PowerBomb, ItemType.ScrewAttack });
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.TopSuperMissile, progression);
+            missingItems.Should().HaveCount(2)
+                .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster })
+                .And.ContainEquivalentOf(new[] { ItemType.Morph });
+        }
+
+        [Fact]
+        public void TestSwordOnlyDarkRoom()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.SwordOnlyDarkRooms = false;
+            World tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.ProgressiveSword });
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.EasternPalace.BigKeyChest, progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Lamp });
+
+            config.LogicConfig.SwordOnlyDarkRooms = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.EasternPalace.BigKeyChest, progression);
+            missingItems.Should().BeEmpty();
+
+            progression = new Progression();
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.EasternPalace.BigKeyChest, progression);
+            missingItems.Should().HaveCount(3)
+                .And.ContainEquivalentOf(new[] { ItemType.ProgressiveSword })
+                .And.ContainEquivalentOf(new[] { ItemType.Lamp });
+        }
+
+        [Fact]
+        public void TestLightWorldSouthFakeFlippers()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.LightWorldSouthFakeFlippers = false;
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression();
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldSouth.UnderTheBridge, progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Flippers });
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First(), progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Flippers });
+
+            config.LogicConfig.LightWorldSouthFakeFlippers = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldSouth.UnderTheBridge, progression);
+            missingItems.Should().BeEmpty();
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First(), progression);
+            missingItems.Should().HaveCount(2)
+                .And.ContainEquivalentOf(new[] { ItemType.Flippers })
+                .And.ContainEquivalentOf(new[] { ItemType.MoonPearl });
+
+            progression = new Progression(new[] { ItemType.MoonPearl });
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.WaterfallFairy.Locations.First(), progression);
+            missingItems.Should().BeEmpty();
+        }
     }
 }
