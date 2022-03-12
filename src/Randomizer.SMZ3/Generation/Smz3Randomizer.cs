@@ -119,6 +119,57 @@ namespace Randomizer.SMZ3.Generation
             return seedData;
         }
 
+        /// <summary>
+        /// Ensures that a generated seed matches the requested preferences
+        /// </summary>
+        /// <param name="seedData">The seed data that contains the generated spheres to guarantee early items</param>
+        /// <param name="config">The confirm with the seed generation settings</param>
+        /// <returns>True if the seed matches all config settings, false otherwise</returns>
+        public bool ValidateSeedSettings(SeedData seedData, Config config)
+        {
+            // Go through and make sure specified locations are populated correctly
+            foreach (var world in seedData.Worlds.Select(x => x.World))
+            {
+                var configLocations = config.LocationItems;
+
+                foreach ((var locationId, var value) in configLocations)
+                {
+                    var location = world.Locations.First(x => x.Id == locationId);
+                    if (value < Enum.GetValues(typeof(ItemPool)).Length)
+                    {
+                        var itemPool = (ItemPool)value;
+                        if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && !location.Item.Type.IsInCategory(ItemCategory.Junk)))
+                        {
+                            _logger.LogInformation($"Location {location.Name} did not have the correct ItemType of {itemPool}. Actual item: {location.Item.Name}");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        var itemType = (ItemType)value;
+                        if (location.Item.Type != itemType)
+                        {
+                            _logger.LogInformation($"Location {location.Name} did not have the correct Item of {itemType}. Actual item: {location.Item.Name}");
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            // Through and make sure the early items are populated in early spheres
+            foreach ( var itemType in config.EarlyItems)
+            {
+                var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
+                if (sphereIndex > 2)
+                {
+                    _logger.LogInformation($"Item {itemType} did not show up early as expected. Sphere: {sphereIndex}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public World GetWorld()
         {
             Debug.WriteLine("Retrieving world on randomizer instance " + GetHashCode());

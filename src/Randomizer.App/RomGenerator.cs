@@ -6,7 +6,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
-
+using System.Windows;
+using System.Windows.Forms;
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
@@ -46,6 +47,20 @@ namespace Randomizer.App
             try
             {
                 var bytes = GenerateRomBytes(options, out var seed);
+
+                if (!_randomizer.ValidateSeedSettings(seed, options.ToConfig()))
+                {
+                    if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
+                        "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
+                        "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
+                        path = null;
+                        error = "";
+                        rom = null;
+                        return false;
+                    }
+                }
+
                 var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
                 Directory.CreateDirectory(folderPath);
 

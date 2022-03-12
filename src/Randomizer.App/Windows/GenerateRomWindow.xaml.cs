@@ -79,8 +79,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized }) || itemType == ItemType.Nothing || itemType == ItemType.SilverArrows)
+                if (!itemType.IsProgression())
                 {
                     continue;
                 }
@@ -225,8 +224,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized }) || itemType == ItemType.Nothing || itemType == ItemType.SilverArrows)
+                if (!itemType.IsProgression())
                 {
                     continue;
                 }
@@ -288,10 +286,13 @@ namespace Randomizer.App
 
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            bool successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
-            if (!successful && !string.IsNullOrEmpty(error))
+            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
+            if (!successful)
             {
-                MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
                 return;
             }
             DialogResult = true;

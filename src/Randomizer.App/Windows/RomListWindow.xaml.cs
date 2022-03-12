@@ -86,9 +86,12 @@ namespace Randomizer.App
         {
             var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
 
-            if (!successful && !string.IsNullOrEmpty(error))
+            if (!successful)
             {
-                MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             else
             {
