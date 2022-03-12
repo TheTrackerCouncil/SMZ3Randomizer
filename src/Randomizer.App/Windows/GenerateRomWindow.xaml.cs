@@ -79,8 +79,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized }) || itemType == ItemType.Nothing || itemType == ItemType.SilverArrows)
+                if (!itemType.IsProgression())
                 {
                     continue;
                 }
@@ -225,8 +224,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized }) || itemType == ItemType.Nothing || itemType == ItemType.SilverArrows)
+                if (!itemType.IsProgression())
                 {
                     continue;
                 }

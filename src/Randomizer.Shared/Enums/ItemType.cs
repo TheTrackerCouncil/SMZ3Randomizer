@@ -209,7 +209,7 @@ namespace Randomizer.Shared
         Map = 0x33,
 
         [Description("Progressive Mail")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Nice)]
         ProgressiveTunic = 0x60,
 
         [Description("Progressive Shield")]
@@ -225,7 +225,7 @@ namespace Randomizer.Shared
         Bow = 0x0B,
 
         [Description("Silver Arrows")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Nice)]
         SilverArrows = 0x58,
 
         [Description("Blue Boomerang")]
@@ -505,7 +505,7 @@ namespace Randomizer.Shared
         Wave = 0xBD,
 
         [Description("Spazer")]
-        [ItemCategory(ItemCategory.Metroid)]
+        [ItemCategory(ItemCategory.Metroid, ItemCategory.Nice)]
         Spazer = 0xBE,
 
         [Description("Plasma Beam")]

@@ -104,6 +104,8 @@ namespace Randomizer.SMZ3.Generation
                 return seedData;
             }
 
+            ValidateSeedSettings(worlds, seedData, config);
+
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
             var patchSeed = rng.Next();
             foreach (var world in worlds)
@@ -117,6 +119,53 @@ namespace Randomizer.SMZ3.Generation
             LastGeneratedWorld = worlds[0];
             LastGeneratedSeed = seedData;
             return seedData;
+        }
+
+        /// <summary>
+        /// Ensures that a generated seed matches the requested preferences
+        /// </summary>
+        /// <param name="worlds">The worlds that had the locations populated with items</param>
+        /// <param name="seedData">The seed data that contains the generated spheres to guarantee early items</param>
+        /// <param name="config">The confirm with the seed generation settings</param>
+        private static void ValidateSeedSettings(ICollection<World> worlds, SeedData seedData, Config config)
+        {
+            // Go through and make sure specified locations are populated correctly
+            foreach (var world in worlds)
+            {
+                var configLocations = config.LocationItems;
+
+                foreach ((var locationId, var value) in configLocations)
+                {
+                    var location = world.Locations.First(x => x.Id == locationId);
+                    if (value < Enum.GetValues(typeof(ItemPool)).Length)
+                    {
+                        var itemPool = (ItemPool)value;
+                        if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && location.Item.Type.IsInCategory(ItemCategory.Junk)))
+                        {
+                            throw new RandomizerGenerationException("Generated seed did not meet requested settings");
+                        }
+                    }
+                    else
+                    {
+                        var itemType = (ItemType)value;
+                        if (location.Item.Type != itemType)
+                        {
+                            throw new RandomizerGenerationException("Generated seed did not meet requested settings");
+                        }
+                    }
+                }
+            }
+
+            // Through and make sure the early items are populated in early spheres
+            foreach ( var itemType in config.EarlyItems)
+            {
+                var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
+                if (sphereIndex > 2)
+                {
+                    throw new RandomizerGenerationException("Generated seed did not meet requested settings");
+                }
+            }
+            
         }
 
         public World GetWorld()

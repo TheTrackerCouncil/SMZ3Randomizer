@@ -66,6 +66,11 @@
         /// <summary>
         /// This is an item that is not randomized, such as filled bottles
         /// </summary>
-        NonRandomized
+        NonRandomized,
+
+        /// <summary>
+        ///This is an item that is useful, but not progression
+        /// </summary>
+        Nice
     }
 }
