@@ -140,7 +140,7 @@ namespace Randomizer.SMZ3.Generation
                     if (value < Enum.GetValues(typeof(ItemPool)).Length)
                     {
                         var itemPool = (ItemPool)value;
-                        if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && location.Item.Type.IsInCategory(ItemCategory.Junk)))
+                        if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && !location.Item.Type.IsInCategory(ItemCategory.Junk)))
                         {
                             throw new RandomizerGenerationException("Generated seed did not meet requested settings");
                         }
