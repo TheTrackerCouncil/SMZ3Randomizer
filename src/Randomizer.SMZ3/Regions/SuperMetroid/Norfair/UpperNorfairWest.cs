@@ -23,14 +23,17 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Ice Beam",
                 alsoKnownAs: "Ice Beam Room",
                 vanillaItem: ItemType.Ice,
-                access: items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && Logic.CanPassBombPassages(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
+                access: items => (Config.Keysanity ? items.CardNorfairL1 : items.Super)
+                                 && Logic.CanPassBombPassages(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
                 memoryAddress: 0x6,
                 memoryFlag: 0x4);
             CrumbleShaft = new(this, 51, 0x8F8B46, LocationType.Hidden,
                 name: "Missile (below Ice Beam)",
                 alsoKnownAs: "Crumble Shaft",
                 vanillaItem: ItemType.Missile,
-                access: items => (Config.Keysanity ? items.CardNorfairL1 : items.Super) && Logic.CanUsePowerBombs(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
+                access: items => (Config.Keysanity ? items.CardNorfairL1 : items.Super)
+                                 && Logic.CanUsePowerBombs(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items)
+                                 && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x6,
                 memoryFlag: 0x8);
             HiJumpBootsRoom = new(this, 53, 0x8F8BAC, LocationType.Chozo,

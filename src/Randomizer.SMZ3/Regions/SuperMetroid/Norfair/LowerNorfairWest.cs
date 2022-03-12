@@ -17,8 +17,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Super Missile (Gold Torizo)",
                 alsoKnownAs: "Golden Torizo - Ceiling",
                 vanillaItem: ItemType.Super,
-                access: items => Logic.CanDestroyBombWalls(items) && (items.Super || items.Charge) &&
-                        (Logic.CanAccessNorfairLowerPortal(items) || (items.SpaceJump && Logic.CanUsePowerBombs(items))),
+                access: items => Logic.CanDestroyBombWalls(items)
+                                 && (items.Super || items.Charge)
+                                 && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items))
+                                 && (Logic.CanAccessNorfairLowerPortal(items) || (items.SpaceJump && Logic.CanUsePowerBombs(items))),
                 memoryAddress: 0x8,
                 memoryFlag: 0x80);
             ScrewAttackRoom = new(this, 79, 0x8F9110, LocationType.Chozo,
