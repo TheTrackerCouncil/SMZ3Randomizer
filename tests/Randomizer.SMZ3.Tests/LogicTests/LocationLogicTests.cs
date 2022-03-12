@@ -60,7 +60,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithTwoMissingItemsReturnsTwoMissingItems()
         {
             var emptyProgression = new Progression(Item.CreateKeycards(null));
-            var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.ETank, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.PowerBomb, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.PowerBomb });
         }
 
@@ -79,7 +79,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithThreeMissingItemsReturnsThreeMissingItems()
         {
             var emptyProgression = new Progression(Item.CreateKeycards(null));
-            var missingItems = Logic.GetMissingRequiredItems(World.KraidsLair.KraidsItem, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.CentralCrateria.BombTorizo, emptyProgression);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
         }
     }
