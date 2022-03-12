@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Randomizer.Shared;
-
-using static Randomizer.SMZ3.SMLogic;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid
 {
@@ -45,7 +41,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 alsoKnownAs: "Wrecked Pool",
                 vanillaItem: ItemType.ETank,
                 access: items => CanUnlockShip(items) &&
-                        ((items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy) ) || items.SpaceJump || items.SpeedBooster || items.Gravity)
+                        ((items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.SpeedBooster || items.Gravity),
                 memoryAddress: 0x10,
                 memoryFlag: 0x10);
             LeftSuperMissileChamber = new(this, 133, 0x8FC357, LocationType.Visible,

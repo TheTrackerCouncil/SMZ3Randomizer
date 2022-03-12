@@ -33,18 +33,25 @@ namespace Randomizer.Shared
         [Category("Tricks")]
         public bool ParlorSpeedBooster { get; set; }
 
+        [DisplayName("Mockball")]
+        [Description("You're expected to be able to use to mockball to avoid having the speed booster at the entrance to Green Brinstar and Upper Norfair West")]
+        [Category("Tricks")]
+        public bool MockBall { get; set; }
+
+        [DisplayName("Sword Only Dark Rooms")]
+        [Description("Excluding Hyrule Castle Tower, you're expected to be able to pass through dark rooms without any light and using only your sword to navigate")]
+        [Category("Tricks")]
+        public bool SwordOnlyDarkRooms { get; set; }
+
+        [DisplayName("Light World South Fake Flippers")]
+        [Description("You're expected to be able to use fake flippers in the Light World South near Lake Hylia to access under the bridge and, if you have the moon pearl, the waterfall fairy chests")]
+        [Category("Tricks")]
+        public bool LightWorldSouthFakeFlippers { get; set; }
+
         [DisplayName("Wall Jump Difficulty")]
         [Description("The maximum difficulty of wall jumps you're comfortable with.")]
         [Category("Tricks")]
         public WallJumpDifficulty WallJumpDifficulty { get; set; }
-        [DisplayName("Mockball"), Description("You're expected to be able to use to mockball to avoid having the speed booster at the entrance to Green Brinstar and Upper Norfair West"), Category("Tricks")]
-        public bool MockBall { get; set; }
-
-        [DisplayName("Sword Only Dark Rooms"), Description("Excluding Hyrule Castle Tower, you're expected to be able to pass through dark rooms without any light and using only your sword to navigate"), Category("Tricks")]
-        public bool SwordOnlyDarkRooms { get; set; }
-
-        [DisplayName("Light World South Fake Flippers"), Description("You're expected to be able to use fake flippers in the Light World South near Lake Hylia to access under the bridge and, if you have the moon pearl, the waterfall fairy chests"), Category("Tricks")]
-        public bool LightWorldSouthFakeFlippers { get; set; }
 
         public LogicConfig Clone()
         {
