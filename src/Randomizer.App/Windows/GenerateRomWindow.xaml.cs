@@ -286,10 +286,13 @@ namespace Randomizer.App
 
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            bool successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
-            if (!successful && !string.IsNullOrEmpty(error))
+            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
+            if (!successful)
             {
-                MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
                 return;
             }
             DialogResult = true;

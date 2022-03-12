@@ -104,8 +104,6 @@ namespace Randomizer.SMZ3.Generation
                 return seedData;
             }
 
-            ValidateSeedSettings(worlds, seedData, config);
-
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
             var patchSeed = rng.Next();
             foreach (var world in worlds)
@@ -124,13 +122,13 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Ensures that a generated seed matches the requested preferences
         /// </summary>
-        /// <param name="worlds">The worlds that had the locations populated with items</param>
         /// <param name="seedData">The seed data that contains the generated spheres to guarantee early items</param>
         /// <param name="config">The confirm with the seed generation settings</param>
-        private static void ValidateSeedSettings(ICollection<World> worlds, SeedData seedData, Config config)
+        /// <returns>True if the seed matches all config settings, false otherwise</returns>
+        public bool ValidateSeedSettings(SeedData seedData, Config config)
         {
             // Go through and make sure specified locations are populated correctly
-            foreach (var world in worlds)
+            foreach (var world in seedData.Worlds.Select(x => x.World))
             {
                 var configLocations = config.LocationItems;
 
@@ -142,7 +140,8 @@ namespace Randomizer.SMZ3.Generation
                         var itemPool = (ItemPool)value;
                         if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && !location.Item.Type.IsInCategory(ItemCategory.Junk)))
                         {
-                            throw new RandomizerGenerationException("Generated seed did not meet requested settings");
+                            _logger.LogInformation($"Location {location.Name} did not have the correct ItemType of {itemPool}. Actual item: {location.Item.Name}");
+                            return false;
                         }
                     }
                     else
@@ -150,7 +149,8 @@ namespace Randomizer.SMZ3.Generation
                         var itemType = (ItemType)value;
                         if (location.Item.Type != itemType)
                         {
-                            throw new RandomizerGenerationException("Generated seed did not meet requested settings");
+                            _logger.LogInformation($"Location {location.Name} did not have the correct Item of {itemType}. Actual item: {location.Item.Name}");
+                            return false;
                         }
                     }
                 }
@@ -162,10 +162,12 @@ namespace Randomizer.SMZ3.Generation
                 var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
                 if (sphereIndex > 2)
                 {
-                    throw new RandomizerGenerationException("Generated seed did not meet requested settings");
+                    _logger.LogInformation($"Item {itemType} did not show up early as expected. Sphere: {sphereIndex}");
+                    return false;
                 }
             }
-            
+
+            return true;
         }
 
         public World GetWorld()
