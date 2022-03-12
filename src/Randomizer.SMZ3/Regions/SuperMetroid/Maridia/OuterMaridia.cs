@@ -19,20 +19,27 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Super Missile (green Maridia)",
                 alsoKnownAs: "Main Street - Crab Supers",
                 vanillaItem: ItemType.Super,
+                access: items => Logic.CanWallJump(WallJumpDifficulty.Medium)
+                              || (Logic.CanWallJump(WallJumpDifficulty.Easy) && items.Ice)
+                              || items.HiJump,
                 memoryAddress: 0x11,
                 memoryFlag: 0x2);
             MamaTurtleRoom = new(this, 138, 0x8FC47D, LocationType.Visible,
                 name: "Energy Tank, Mama turtle",
                 alsoKnownAs: "Mama Turtle Room",
                 vanillaItem: ItemType.ETank,
-                access: items => Logic.CanOpenRedDoors(items) && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple),
+                access: items => Logic.CanOpenRedDoors(items)
+                              && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump) // Reaching the room
+                              && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple)), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x4);
             MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
                 name: "Missile (green Maridia tatori)",
                 alsoKnownAs: "Mama Turtle Room - Wall item",
                 vanillaItem: ItemType.Missile,
-                access: items => Logic.CanOpenRedDoors(items),
+                access: items => Logic.CanOpenRedDoors(items)
+                              && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump) // Reaching the room
+                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.SpeedBooster || (items.Grapple && items.HiJump))), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x8);
             MemoryRegionId = 4;
