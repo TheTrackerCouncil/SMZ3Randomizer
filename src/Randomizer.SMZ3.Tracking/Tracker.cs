@@ -1921,6 +1921,7 @@ namespace Randomizer.SMZ3.Tracking
                     Responses.Chat.UserNamePronunciation.TryGetValue(userName, out userName);
 
                     Say(x => x.Chat.GreetingResponses, userName);
+                    return;
                 }
             }
         }
