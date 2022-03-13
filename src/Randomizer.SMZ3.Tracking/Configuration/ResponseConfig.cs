@@ -581,5 +581,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the configured phrases for spoilers.
         /// </summary>
         public SpoilerConfig Spoilers { get; init; } = new();
+
+        /// <summary>
+        /// Gets the configured phrases for chat integration.
+        /// </summary>
+        public ChatConfig Chat { get; init; } = new();
     }
 }

@@ -1453,6 +1453,28 @@
     "BossNotYetDefeated": [
       "But you never defeated {0} in the first place."
     ],
+    "Chat": {
+      "RecognizedGreetings": [
+        "^(hey|hello|greetings) tracker[!.]?$",
+        "\\bgood (morning|afternoon|evening|day) tracker\\b",
+        "\\b(pkroseHello|betusHey) tracker\\b",
+        "\\btracker (pkroseHello|betusHey)\\b",
+        "^tracker!+$",
+        "\\bT R A C K E R\\b"
+      ],
+      "WhenConnected": [
+        "Hello chat.",
+        "Hey chat."
+      ],
+      "GreetingResponses": [
+        "Hey {0}",
+        "Hello {0}",
+        "What's up {0}"
+      ],
+      "UserNamePronunciation": {
+        "vivelin": "vihvelin"
+      }
+    },
     "Hints": {
       "EnabledHints": [
         "Toggled hints on.",

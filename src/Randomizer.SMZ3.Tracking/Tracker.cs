@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -105,19 +106,6 @@ namespace Randomizer.SMZ3.Tracking
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
             InitializeMicrophone();
-        }
-
-        private void ChatClient_MessageReceived(object sender, MessageReceivedEventArgs e)
-        {
-            if (e.Message.Text.Contains("hey tracker", StringComparison.CurrentCultureIgnoreCase))
-            {
-                Say($"Hey {e.Message.Sender}.");
-            }
-        }
-
-        private void ChatClient_Connected(object? sender, EventArgs e)
-        {
-            Say("Hello chat.");
         }
 
         /// <summary>
@@ -712,6 +700,16 @@ namespace Randomizer.SMZ3.Tracking
             RestartIdleTimers();
         }
 
+        /// <summary>
+        /// Connects Tracker to chat.
+        /// </summary>
+        /// <param name="userName">The user name to connect as.</param>
+        /// <param name="oauthToken">
+        /// The OAuth token for <paramref name="userName"/>.
+        /// </param>
+        /// <param name="channel">
+        /// The channel to monitor for incoming messages.
+        /// </param>
         public void ConnectToChat(string? userName, string? oauthToken, string? channel)
         {
             if (userName != null && oauthToken != null)
@@ -1912,6 +1910,25 @@ namespace Randomizer.SMZ3.Tracking
 
         private static bool IsTreasure(Item? item)
             => item != null && !item.IsDungeonItem;
+
+        private void ChatClient_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            foreach (var recognizedGreeting in Responses.Chat.RecognizedGreetings)
+            {
+                if (Regex.IsMatch(e.Message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+                {
+                    var userName = e.Message.Sender;
+                    Responses.Chat.UserNamePronunciation.TryGetValue(userName, out userName);
+
+                    Say(x => x.Chat.GreetingResponses, userName);
+                }
+            }
+        }
+
+        private void ChatClient_Connected(object? sender, EventArgs e)
+        {
+            Say(x => x.Chat.WhenConnected);
+        }
 
         private DungeonInfo? GetDungeonFromLocation(Location location)
         {
