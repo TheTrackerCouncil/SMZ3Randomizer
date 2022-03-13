@@ -7,9 +7,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.SMZ3.Twitch;
 
 namespace Randomizer.App
 {
@@ -75,6 +77,9 @@ namespace Randomizer.App
                 .AddOptionalModule<SpoilerModule>();
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
+
+            // Chat
+            services.AddSingleton<IChatClient, TwitchChatClient>();
 
             // WPF
             services.AddSingleton<OptionsFactory>();

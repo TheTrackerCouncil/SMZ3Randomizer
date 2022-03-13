@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -33,6 +34,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
         private readonly TrackerModuleFactory _moduleFactory;
+        private readonly IChatClient _chatClient;
         private readonly ILogger<Tracker> _logger;
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
@@ -56,6 +58,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="moduleFactory">
         /// Used to provide the tracking speech recognition syntax.
         /// </param>
+        /// <param name="chatClient"></param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
@@ -63,11 +66,15 @@ namespace Randomizer.SMZ3.Tracking
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
+            IChatClient chatClient,
             ILogger<Tracker> logger,
             TrackerOptions options,
             RandomizerContext dbContext)
         {
             _moduleFactory = moduleFactory;
+            _chatClient = chatClient;
+            _chatClient.Connected += ChatClient_Connected;
+            _chatClient.MessageReceived += ChatClient_MessageReceived;
             _logger = logger;
             Options = options;
             _dbContext = dbContext;
@@ -98,6 +105,19 @@ namespace Randomizer.SMZ3.Tracking
             _recognizer = new SpeechRecognitionEngine();
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
             InitializeMicrophone();
+        }
+
+        private void ChatClient_MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            if (e.Message.Text.Contains("hey tracker", StringComparison.CurrentCultureIgnoreCase))
+            {
+                Say($"Hey {e.Message.Sender}.");
+            }
+        }
+
+        private void ChatClient_Connected(object? sender, EventArgs e)
+        {
+            Say("Hello chat.");
         }
 
         /// <summary>
@@ -690,6 +710,14 @@ namespace Randomizer.SMZ3.Tracking
             EnableVoiceRecognition();
             Say(_alternateTracker ? Responses.StartingTrackingAlternate : Responses.StartedTracking);
             RestartIdleTimers();
+        }
+
+        public void ConnectToChat(string? userName, string? oauthToken, string? channel)
+        {
+            if (userName != null && oauthToken != null)
+            {
+                _chatClient.Connect(userName, oauthToken, channel ?? userName);
+            }
         }
 
         /// <summary>

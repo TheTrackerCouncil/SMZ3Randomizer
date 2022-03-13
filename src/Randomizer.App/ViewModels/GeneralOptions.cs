@@ -56,6 +56,12 @@ namespace Randomizer.App.ViewModels
 
         public bool TrackerSpoilersEnabled { get; set; }
 
+        public string TwitchUserName { get; set; }
+
+        public string TwitchOAuthToken { get; set; }
+
+        public string TwitchChannel { get; set; }
+
 
         public bool Validate()
         {

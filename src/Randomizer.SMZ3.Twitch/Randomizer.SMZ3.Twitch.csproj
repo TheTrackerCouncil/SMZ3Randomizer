@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TwitchLib.Client" Version="3.2.6-preview-5e869129649a88c4cb8d7fb824f17f9397d1668b" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj" />
+  </ItemGroup>
+
+</Project>

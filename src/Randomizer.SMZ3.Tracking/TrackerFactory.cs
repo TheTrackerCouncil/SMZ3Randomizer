@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -15,6 +16,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly LocationConfig _locationConfig;
         private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
+        private readonly IChatClient _chatClient;
         private readonly ILogger<Tracker> _logger;
         private readonly RandomizerContext _dbContext;
 
@@ -30,12 +32,14 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="moduleFactory">
         /// Used to provide the tracking speech recognition syntax.
         /// </param>
+        /// <param name="chatClient"></param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="dbContext">The database context object</param>
         public TrackerFactory(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
+            IChatClient chatClient,
             ILogger<Tracker> logger,
             RandomizerContext dbContext)
         {
@@ -43,6 +47,7 @@ namespace Randomizer.SMZ3.Tracking
             _locationConfig = locationConfig;
             _worldAccessor = worldAccessor;
             _moduleFactory = moduleFactory;
+            _chatClient = chatClient;
             _logger = logger;
             _dbContext = dbContext;
         }
@@ -63,7 +68,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Tracker Create(TrackerOptions options)
         {
-            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _logger, options, _dbContext);
+            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _chatClient, _logger, options, _dbContext);
         }
     }
 }

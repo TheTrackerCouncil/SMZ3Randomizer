@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28711.60
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3", "src\Randomizer.SMZ3\Randomizer.SMZ3.csproj", "{8E3DCE4A-6C25-4397-8F5E-CB3A205A7F4A}"
 EndProject
@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Tracking", "src\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj", "{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.SMZ3.Twitch", "src\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj", "{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.SMZ3.ChatIntegration", "src\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj", "{81708EBE-6127-4CDB-B18D-5238B204BF47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +54,14 @@ Global
 		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81708EBE-6127-4CDB-B18D-5238B204BF47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81708EBE-6127-4CDB-B18D-5238B204BF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81708EBE-6127-4CDB-B18D-5238B204BF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81708EBE-6127-4CDB-B18D-5238B204BF47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

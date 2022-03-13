@@ -24,5 +24,10 @@ namespace Randomizer.App
         {
             DialogResult = true;
         }
+
+        private void TwitchLoginButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
