@@ -13,11 +13,11 @@ namespace Randomizer.SMZ3.Twitch
     {
         private readonly TwitchClient _twitchClient;
 
-        public TwitchChatClient(ILogger<TwitchChatClient> logger)
+        public TwitchChatClient(ILogger<TwitchChatClient> logger, ILoggerFactory loggerFactory)
         {
             Logger = logger;
 
-            _twitchClient = new();
+            _twitchClient = new(logger: loggerFactory.CreateLogger<TwitchClient>());
             _twitchClient.OnConnected += _twitchClient_OnConnected;
             _twitchClient.OnDisconnected += _twitchClient_OnDisconnected;
             _twitchClient.OnMessageReceived += _twitchClient_OnMessageReceived;
@@ -37,8 +37,12 @@ namespace Randomizer.SMZ3.Twitch
 
         public void Connect(string userName, string oauthToken, string channel)
         {
-            var credentials = new ConnectionCredentials(userName, oauthToken);
-            _twitchClient.Initialize(credentials, channel);
+            if (!_twitchClient.IsInitialized)
+            {
+                var credentials = new ConnectionCredentials(userName, oauthToken);
+                _twitchClient.Initialize(credentials, channel);
+            }
+
             _twitchClient.Connect();
             ConnectedAs = userName;
             Channel = channel;
@@ -46,7 +50,8 @@ namespace Randomizer.SMZ3.Twitch
 
         public void Disconnect()
         {
-            _twitchClient.Disconnect();
+            if (_twitchClient.IsInitialized)
+                _twitchClient.Disconnect();
         }
 
         public void Dispose()
@@ -69,7 +74,8 @@ namespace Randomizer.SMZ3.Twitch
         {
             if (disposing)
             {
-                _twitchClient.Disconnect();
+                if (_twitchClient.IsInitialized)
+                    _twitchClient.Disconnect();
             }
         }
 
