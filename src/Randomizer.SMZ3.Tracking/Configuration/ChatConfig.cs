@@ -32,6 +32,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Hey {0}");
 
         /// <summary>
+        /// Gets the phrases to respond with when greeting someone for the
+        /// second time in chat.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the user name of the person in chat
+        /// to respond to.
+        /// </remarks>
+        public SchrodingersString? GreetedTwice { get; init; }
+
+        /// <summary>
         /// Gets a dictionary that contains usernames and their replacement for
         /// text-to-speech pronunciation purposes.
         /// </summary>

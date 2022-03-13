@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Speech.Synthesis.TtsEngine;
 using System.Text.RegularExpressions;
 
 using Microsoft.Extensions.Logging;
@@ -13,6 +15,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class ChatIntegrationModule : TrackerModule, IDisposable
     {
+        private readonly Dictionary<string, int> _usersGreetedTimes = new();
+
         /// <summary>
         /// Initializes a new instance of the <see
         /// cref="ChatIntegrationModule"/> class with the specified
@@ -64,14 +68,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var stopwatch = Stopwatch.StartNew();
             try
             {
+                var userName = e.Message.Sender;
+                if (Tracker.Responses.Chat.UserNamePronunciation.TryGetValue(userName, out var correctedUserName))
+                    userName = correctedUserName;
+
                 foreach (var recognizedGreeting in Tracker.Responses.Chat.RecognizedGreetings)
                 {
                     if (Regex.IsMatch(e.Message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
                     {
-                        var userName = e.Message.Sender;
-                        Tracker.Responses.Chat.UserNamePronunciation.TryGetValue(userName, out userName);
+                        if (_usersGreetedTimes.TryGetValue(e.Message.Sender, out var greeted))
+                        {
+                            if (greeted >= 2)
+                                return;
 
-                        Tracker.Say(x => x.Chat.GreetingResponses, userName);
+                            Tracker.Say(x => x.Chat.GreetedTwice, userName);
+                            _usersGreetedTimes[e.Message.Sender]++;
+                        }
+                        else
+                        {
+                            Tracker.Say(x => x.Chat.GreetingResponses, userName);
+                            _usersGreetedTimes.Add(e.Message.Sender, 1);
+                        }
                         return;
                     }
                 }
