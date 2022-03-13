@@ -74,8 +74,6 @@ namespace Randomizer.SMZ3.Tracking
         {
             _moduleFactory = moduleFactory;
             _chatClient = chatClient;
-            _chatClient.Connected += ChatClient_Connected;
-            _chatClient.MessageReceived += ChatClient_MessageReceived;
             _logger = logger;
             Options = options;
             _dbContext = dbContext;
@@ -1910,26 +1908,6 @@ namespace Randomizer.SMZ3.Tracking
 
         private static bool IsTreasure(Item? item)
             => item != null && !item.IsDungeonItem;
-
-        private void ChatClient_MessageReceived(object sender, MessageReceivedEventArgs e)
-        {
-            foreach (var recognizedGreeting in Responses.Chat.RecognizedGreetings)
-            {
-                if (Regex.IsMatch(e.Message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
-                {
-                    var userName = e.Message.Sender;
-                    Responses.Chat.UserNamePronunciation.TryGetValue(userName, out userName);
-
-                    Say(x => x.Chat.GreetingResponses, userName);
-                    return;
-                }
-            }
-        }
-
-        private void ChatClient_Connected(object? sender, EventArgs e)
-        {
-            Say(x => x.Chat.WhenConnected);
-        }
 
         private DungeonInfo? GetDungeonFromLocation(Location location)
         {
