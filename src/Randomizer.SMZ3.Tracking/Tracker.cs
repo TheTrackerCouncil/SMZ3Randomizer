@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -749,6 +748,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             DisableVoiceRecognition();
             _tts.SpeakAsyncCancelAll();
+            _chatClient.Disconnect();
             Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
             foreach (var timer in _idleTimers.Values)

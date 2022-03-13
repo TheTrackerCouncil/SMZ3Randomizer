@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 using Microsoft.Extensions.Logging;
@@ -60,16 +61,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private void ChatClient_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            foreach (var recognizedGreeting in Tracker.Responses.Chat.RecognizedGreetings)
+            var stopwatch = Stopwatch.StartNew();
+            try
             {
-                if (Regex.IsMatch(e.Message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+                foreach (var recognizedGreeting in Tracker.Responses.Chat.RecognizedGreetings)
                 {
-                    var userName = e.Message.Sender;
-                    Tracker.Responses.Chat.UserNamePronunciation.TryGetValue(userName, out userName);
+                    if (Regex.IsMatch(e.Message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+                    {
+                        var userName = e.Message.Sender;
+                        Tracker.Responses.Chat.UserNamePronunciation.TryGetValue(userName, out userName);
 
-                    Tracker.Say(x => x.Chat.GreetingResponses, userName);
-                    return;
+                        Tracker.Say(x => x.Chat.GreetingResponses, userName);
+                        return;
+                    }
                 }
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Logger.LogTrace("Processed incoming chat message in {ElapsedMs} ms", stopwatch.ElapsedMilliseconds);
             }
         }
 
