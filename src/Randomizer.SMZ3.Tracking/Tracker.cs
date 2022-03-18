@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -265,6 +267,15 @@ namespace Randomizer.SMZ3.Tracking
         /// Get if the Tracker has been updated since it was last saved
         /// </summary>
         public bool IsDirty { get; set; }
+
+        /// <summary>
+        /// Formats a string so that it will be pronounced correctly by the
+        /// text-to-speech engine.
+        /// </summary>
+        /// <param name="name">The text to correct.</param>
+        /// <returns>A string with the pronunciations replaced.</returns>
+        public static string CorrectPronunciation(string name)
+            => name.Replace("Samus", "Sammus");
 
         /// <summary>
         /// Initializes the microphone from the default audio device
@@ -858,7 +869,8 @@ namespace Randomizer.SMZ3.Tracking
             if (text == null)
                 return false;
 
-            var prompt = ParseText(text);
+            var formattedText = FormatPlaceholders(text);
+            var prompt = ParseText(formattedText);
             if (wait)
                 _tts.Speak(prompt);
             else
@@ -877,6 +889,27 @@ namespace Randomizer.SMZ3.Tracking
                 prompt.AppendSsmlMarkup(text);
                 return new Prompt(prompt);
             }
+        }
+
+        /// <summary>
+        /// Replaces global placeholders in a given string.
+        /// </summary>
+        /// <param name="text">The text with placeholders to format.</param>
+        /// <returns>The formatted text with placeholders replaced.</returns>
+        [return: NotNullIfNotNull("text")]
+        public virtual string? FormatPlaceholders(string? text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            var builder = new StringBuilder(text);
+            builder.Replace("{Link}", CorrectPronunciation(World.Config.LinkName));
+            builder.Replace("{Samus}", CorrectPronunciation(World.Config.SamusName));
+
+            // Just in case some text doesn't pass a string.Format
+            builder.Replace("{{Link}}", CorrectPronunciation(World.Config.LinkName));
+            builder.Replace("{{Samus}}", CorrectPronunciation(World.Config.SamusName));
+            return builder.ToString();
         }
 
         /// <summary>

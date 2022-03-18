@@ -183,7 +183,7 @@
       "Name": [
         "Quake",
         [ "Unreal Tournament", 0.1 ],
-        [ "Quack", 0.1]
+        [ "Quack", 0.1 ]
       ],
       "InternalItemType": 17,
       "Article": "",
@@ -305,7 +305,14 @@
       "Row": 3,
       "Hints": [
         "It's something magical."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [
+          "Toggled Mirror on.",
+          "{{Link}} pulls out their magic mirror.",
+          "{{Link}} feels a strange pulling sensation."
+        ]
+      }
     },
     {
       "Name": [ "Book of Mudora", "Sacred Texts" ],
@@ -1223,6 +1230,7 @@
       "Toggled Tracker off.",
       "See ya next time.",
       "Hey, you'll be missed pal.",
+      "Dead to rights?",
       [ "Please don't leave me alone again", 0.1 ]
     ],
     "Misheard": [
@@ -1540,14 +1548,14 @@
         "It's in a place that rhymes with 'Thebes'.",
         "It's in a place that rhymes with 'The Bees'.",
         "It's on a planet with a name whose pronunciation nobody can agree on.",
-        "{1} might know.",
-        "{1} might be able to help you find {0}.",
-        "Try asking {1}."
+        "{{Samus}} might know.",
+        "{{Samus}} might be able to help you find {0}.",
+        "Try asking {{Samus}}."
       ],
       "ItemInALttP": [
-        "{1} might know.",
-        "{1} might be able to help you find {0}.",
-        "Try asking {1}."
+        "{{Link}} might know.",
+        "{{Link}} might be able to help you find {0}.",
+        "Try asking {{Link}}."
       ],
       "ItemRequiresOtherItem": [
         "You need {1} before you can find {0}.",

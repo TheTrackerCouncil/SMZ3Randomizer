@@ -328,9 +328,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return true;
         }
 
-        private static string CorrectPronunciation(string name)
-            => name.Replace("Samus", "Sammus");
-
         private bool GiveLocationHints(Location location)
         {
             switch (HintsGiven(location))
@@ -338,8 +335,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Who's it for and is it any good?
                 case 0:
                     var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
-                        ? CorrectPronunciation(Tracker.World.Config.SamusName)
-                        : CorrectPronunciation(Tracker.World.Config.LinkName);
+                        ? Tracker.CorrectPronunciation(Tracker.World.Config.SamusName)
+                        : Tracker.CorrectPronunciation(Tracker.World.Config.LinkName);
 
                     if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass)
                         || (location.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard)
@@ -457,11 +454,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                         var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
                         if (isOnlyInSuperMetroid)
-                            return GiveItemHint(x => x.ItemInSuperMetroid, item, CorrectPronunciation(Tracker.World.Config.SamusName));
+                            return GiveItemHint(x => x.ItemInSuperMetroid, item);
 
                         var isOnlyInALinkToThePast = itemLocations.Select(x => x.Region).All(x => x is Z3Region);
                         if (isOnlyInALinkToThePast)
-                            return GiveItemHint(x => x.ItemInALttP, item, CorrectPronunciation(Tracker.World.Config.LinkName));
+                            return GiveItemHint(x => x.ItemInALttP, item);
 
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }
