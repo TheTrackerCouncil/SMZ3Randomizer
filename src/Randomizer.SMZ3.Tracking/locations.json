@@ -283,7 +283,8 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
       "Name": [
-        "Turtle Rock"
+        "Turtle Rock",
+        [ "Tortoise Rock", 0.1 ]
       ],
       "Hints": [
         "You need a medallion to get in there."
@@ -519,9 +520,14 @@
       "Name": [ "Shaktool", "The Shaktool" ],
       "Column": 6,
       "Row": 6,
-      "WhenDefeated": [
+      "WhenTracked": [
         "Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.",
         "Toggled Shaktool on. Did you get something nice?"
+      ],
+      "WhenDefeated": [
+        "How dare you?",
+        "You monster.",
+        "You'll pay for this."
       ]
     },
     {
@@ -538,7 +544,7 @@
       "Name": [ "Mother Brain" ],
       "Column": 9,
       "Row": 6,
-      "WhenDefeated": [ "GG", "Is it finally over? Can I go home now?" ]
+      "WhenDefeated": [ "GG", "Is it finally over? Can I go home now?", "Thank you for helping us help you help us make this a great seed" ]
     }
   ],
   "Rooms": [
@@ -1808,7 +1814,9 @@
       "X": 83,
       "Y": 101,
       "Hints": [ "I hope you don't need it." ],
-      "WhenTrackingJunk": [ "I'm so sorry." ],
+      "WhenMarkingJunk": [ "Phew." ],
+      "WhenMarkingProgression": [ "I'm so sorry." ],
+      "WhenTrackingJunk": [ "If only you could read." ],
       "WhenTrackingProgression": [ "I'm so sorry.", "Well, at least you found something." ]
     },
     {

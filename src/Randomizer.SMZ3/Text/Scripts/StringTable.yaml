@@ -216,7 +216,7 @@
 - no_empty_bottles: "Whoa, bucko!\nNo empty bottles."
 - game_race_boy_time: "Your time was\nᚎᚍ min ᚌᚋ sec."
 - game_race_girl: "You have 15 seconds,\nGo… Go… Go…"
-- game_race_boy_success: "Nice!\nYou can have this trash!"
+- game_race_boy_success: "You must be pretty good!\nPretty good…\npretty good… "
 - game_race_boy_failure: "Too slow!\nI keep my\nprecious!"
 - game_race_boy_already_won: "You already have your prize, dingus!"
 # $D0

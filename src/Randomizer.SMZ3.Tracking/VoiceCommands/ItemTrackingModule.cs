@@ -55,6 +55,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             });
 
+            AddCommand("Track death", GetTrackDeathRule(), (tracker, result) =>
+            {
+                var death = tracker.FindItemByName("Death");
+                if (death == null)
+                {
+                    Logger.LogWarning("Tried to track death, but could not find an item named 'Death'.");
+                    return;
+                }
+
+                tracker.TrackItem(death, confidence: result.Confidence, tryClear: false);
+            });
+
             AddCommand("Track available items in an area", GetTrackEverythingRule(), (tracker, result) =>
             {
                 if (result.Semantics.ContainsKey(RoomKey))
@@ -107,6 +119,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var count = (int)result.Semantics[ItemCountKey].Value;
                 tracker.TrackItemAmount(item, count, result.Confidence);
             });
+        }
+
+        private GrammarBuilder GetTrackDeathRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Append("I died");
         }
 
         private GrammarBuilder GetTrackItemRule()

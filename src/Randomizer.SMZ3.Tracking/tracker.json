@@ -102,7 +102,10 @@
         "You can hurt people with it.",
         "It's one of the items required for Peg World.",
         "You could find it in real life."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [ "Toggled Hammer on.", "Stop. Hammer time." ]
+      }
     },
     {
       "Name": [
@@ -179,7 +182,8 @@
     {
       "Name": [
         "Quake",
-        [ "Unreal Tournament", 0.1 ]
+        [ "Unreal Tournament", 0.1 ],
+        [ "Quack", 0.1 ]
       ],
       "InternalItemType": 17,
       "Article": "",
@@ -301,7 +305,14 @@
       "Row": 3,
       "Hints": [
         "It's something magical."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [
+          "Toggled Mirror on.",
+          "{{Link}} pulls out their magic mirror.",
+          "{{Link}} feels a strange pulling sensation."
+        ]
+      }
     },
     {
       "Name": [ "Book of Mudora", "Sacred Texts" ],
@@ -514,12 +525,14 @@
     {
       "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
       "InternalItemType": 81,
-      "Artice": ""
+      "Artice": "",
+      "Multiple": true
     },
     {
       "Name": [ "+5 Arrow Capacity", "+5 Stick Capacity", "Arrow Capacity", "Stick Capacity", "Arrow Carrying Knowledge", "Stick Carrying Knowledge" ],
       "InternalItemType": 83,
-      "Artice": ""
+      "Artice": "",
+      "Multiple": true
     },
     {
       "Name": [ "Silver Arrows", "Silvers" ],
@@ -1196,7 +1209,10 @@
       "Good day",
       "Good afternoon",
       "Good evening",
+      "Let's roll.",
+      "Let's get ready to rumble.",
       [ "<voice gender='male'><prosody rate='slow'>Hey.</prosody></voice>", 0.05 ],
+      [ "Toggled; Oh for the love of; Excuse me one second. <prosody volume='soft'>God dammit this had better be good.</prosody> <voice gender='male'><prosody volume='x-soft'>Mom says it's my turn to do the tracking.</prosody></voice> <prosody volume='soft'>The FUCK it is. Now get out of here you little shit, the seed's already started.</prosody> Sorry, I'm here; just had to deal with my little brother. Let's roll.", 0.01 ],
       [ "Hey you. You're finally awake. You were trying to cross the border right? Walked right into that Imperial ambush, same as us, and that thief over there. Damn you Stormcloaks.", 0.01 ]
     ],
     "StartingTrackingAlternate": [
@@ -1214,6 +1230,7 @@
       "Toggled Tracker off.",
       "See ya next time.",
       "Hey, you'll be missed pal.",
+      "Dead to rights?",
       [ "Please don't leave me alone again", 0.1 ]
     ],
     "Misheard": [
@@ -1229,7 +1246,8 @@
       "Tracked {0}.",
       "Tracking {0}.",
       "Marking off {1}",
-      "Marked off {1}"
+      "Marked off {1}",
+      [ "{1} is authorized.", 0.01 ]
     ],
     "TrackedProgressiveItem": [
       "Upgraded {0} by one step.",
@@ -1357,7 +1375,9 @@
       "Marked {0} as required for {1}"
     ],
     "DungeonRequirementInvalid": [
-      "{0} doesn't need medallions"
+      "{0} doesn't need medallions",
+      "What game are you playing?",
+      "Are we playing the same game?"
     ],
     "DungeonRequirementMismatch": [
       "If you say so.",
@@ -1528,14 +1548,14 @@
         "It's in a place that rhymes with 'Thebes'.",
         "It's in a place that rhymes with 'The Bees'.",
         "It's on a planet with a name whose pronunciation nobody can agree on.",
-        "{1} might know.",
-        "{1} might be able to help you find {0}.",
-        "Try asking {1}."
+        "{{Samus}} might know.",
+        "{{Samus}} might be able to help you find {0}.",
+        "Try asking {{Samus}}."
       ],
       "ItemInALttP": [
-        "{1} might know.",
-        "{1} might be able to help you find {0}.",
-        "Try asking {1}."
+        "{{Link}} might know.",
+        "{{Link}} might be able to help you find {0}.",
+        "Try asking {{Link}}."
       ],
       "ItemRequiresOtherItem": [
         "You need {1} before you can find {0}.",
@@ -1725,6 +1745,9 @@
         [ "Cannot predict now.", 0.2 ],
         [ "Concentrate and ask again.", 0.2 ],
         [ "Insert placeholder text here", 0.1 ]
+      ],
+      "jealous": [
+        "Have you been seeing other trackers on the side?"
       ]
     }
   },
@@ -1765,7 +1788,10 @@
         "High, on high I stand,\nGazing down to see,\nThe endless garden,\nAwaiting me.\n\nRed bloometh the rose of conviction,\nAnd red bloometh the rose of hate,\nYes red bloometh the rose of contest,\nFirmly bound to its fate.\n\nAnd the war, it wageth on,\nThe storm, it rageth on,\nThe bold ever fight on,\nTheir lives echoed in song.\n\nFall, like snow they fall,\nPetals plucked and strewn,\nYet from their seeds grow,\nThis war anew.\n\nBlood trickling down from my fullers,\nAnd blood trickling down from mine hands,\nYes, blood trickling down to Hydaelyn,\nUntil I alone stand.\n\nThe war, still wageth on,\nThe storm, still rageth on,\nThe bold blindly march on,\nTheir lives, lost in a song.",
         "You seem so far away\nAnd I just need to hear your voice\nI just need to hear you say\nIf you would have me go or stay.\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nGirl in the tower\nI'm calling out\nMy heart cries out for you\n\nI saw your face\nand I felt our souls embrace\nIf it's not meant to be this way\nWhy do you haunt me night and day?\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\n\nGirl in the tower...\n\nI'm calling out, calling out\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower...\nHere in the tower...\n",
         "In this world (His world!)\nWhere life is strong\nIn this world (His world!)\nLife's an open book\nIn this world (His world!)\nWhere compromise does not exist\nIn his world of worlds, every step meets the rest!\nIn this world (His world!)\nWhere one is all\nIn this world (His world!)\nNever fear the fall\nIn this world (His world!)\nWhere compromise does not exist",
-        "If there's something strange sleeping in your bed\nLemme tell you something\nIf there's somethin weird sleeping in your bed, ow!\nLemme tell you something\nbustin makes me feel good\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin buh buh bustin\n\nIf you're seein' things sleeping in your bed\nYeah yeah yeah yeah!\nAn invisible man sleeping in your bed, ow!\nLemme tell you something\nOw! Yeah yeah yeah!\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, feel good\n\nUh, freaky ghost baby\nUh, freaky ghost man\nUh, freaky man baby\nUh, Ow! Ow! Ow!\n\nIf you're all alone, lemme sleep in your bed, ow!\nSnoring\nLemme tell you something, sleeping makes me feel good\nSnoring\nI ain't afraid of no sleep, I ain't afraid of no bed\nAn invisible bed, a freaky ghost bed\nYeah yeah yeah yeah yeah yeah yeah yeah yeah\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, bustin makes me\nFeel Good"
+        "If there's something strange sleeping in your bed\nLemme tell you something\nIf there's somethin weird sleeping in your bed, ow!\nLemme tell you something\nbustin makes me feel good\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin buh buh bustin\n\nIf you're seein' things sleeping in your bed\nYeah yeah yeah yeah!\nAn invisible man sleeping in your bed, ow!\nLemme tell you something\nOw! Yeah yeah yeah!\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, feel good\n\nUh, freaky ghost baby\nUh, freaky ghost man\nUh, freaky man baby\nUh, Ow! Ow! Ow!\n\nIf you're all alone, lemme sleep in your bed, ow!\nSnoring\nLemme tell you something, sleeping makes me feel good\nSnoring\nI ain't afraid of no sleep, I ain't afraid of no bed\nAn invisible bed, a freaky ghost bed\nYeah yeah yeah yeah yeah yeah yeah yeah yeah\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, bustin makes me\nFeel Good",
+        "Fates,\nWeave their threads,\nOur lives are sewn,\nBorn,\nTo a life,\nAll but our own,\nWe feel it inside,\nOur bones.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nLoves,\nIn your life,\nLive ever on.\nHome,\nIs not where you live,\nBut who cares when you’re gone.\nThey’ll follow you to,\nThe beyond.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nRun all you like,\nFrom the place you belong.\nIt’s always there,\nIt’s in the air,\nYour dearest kin,\nBelow the skin.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.",
+        "We're no strangers to love,\nYou know the rules and so do I,\nA full commitment's what I'm thinking of,\nYou wouldn't get this from any other tracker,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nAnd if you ask me how I'm feeling,\nDon't tell me you're too blind to see,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nOoh (Give you up),\nOoh-ooh (Give you up),\nOoh-ooh,\nNever gonna give, never gonna give (Give you up),\nOoh-ooh,\nNever gonna give, never gonna give (Give you up),\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you",
+        "Good King Moggel Mog,\nGood King Mog,\nLord of all the land (Koopo!)\n\nGood King Moggel Mog,\nGood King Mog,\nRules with iron hand,\n\nGood King Moggel Mog,\nGood King Mog,\nLeads the brave and true!\n\nGood King Moggel Mog,\nGood King Mog,\nNow come along and meet his trusty crew!\nKupo!\n\nKupta Kapa will clip your tuft,\nSplit your hairs and ruffle your fluff,\n\nKupti Koop will throw you for a loop,\nBrave a wall of whiskers to find his troupe,\nKupli Kipp is sly yet sweet,\nHe'll tickle your nose then tickle your feet,\n\nJolly Kogi's eye for fun is clear,\nHe'll put an arrow straight in your rear!\n\nPukla Puki plays with fire,\nPoms a-burning on her pyre,\n\nPuksi Piko likes her buddies big,\nTo sing a little song and dance a little jig,\n\nPukna Pako shivers and shakes,\nShe'll stick you in the gut and give you bellyaches,\n\nAnd who's behind them, standing tall?\nWhy, the biggest moogle of them all!\nWho? Who?\n\nGood King Moggel Mog,\nGood King Mog,\nKind and noble lord (Hear, hear!)\nNod your noggle nog,\nAnd mind your gob,\nOr he'll put you to the sword!\n\nGood King Moggel Mog,\nGood King Mog,\nHis judgment you will dread,\n\nGood King Moggel Mog,\nGood King Mog,\nWhat do you decree?\nWhat do you decree?\nWhat do you decree?\nOff with their heads!"
       ]
     },
     {
@@ -1778,8 +1804,14 @@
       "Phrases": [ "tell me a joke", "do you know any jokes?" ],
       "Response": [
         [ "This seed.", 0.2 ],
-        "When does a joke become a dad joke? <break time='1s'/> When it becomes apparent.",
-        "I got drunk and threw up in the elevator on my way home. It was disgusting on so many levels."
+        "When does a joke become a dad joke? <break time='2s'/> When it becomes apparent.",
+        "I got drunk and threw up in the elevator on my way home. It was disgusting on so many levels.",
+        "What happened to Tataru when she slipped on a banana peel? <break time='2s'/> The lala fell.",
+        "I cosplayed as Amon. <break time='2s'/> Everyone thought I looked like a Syrcus clown.",
+        "I just saw someone mugging a Lalafell. <break time='2s'/> I didn't think anyone could stoop so low.",
+        "What would you call a Lalafell astrologian running from the law? <break time='2s'/> A small medium at large.",
+        "Why did the tank get lost? <break time='2s'/> It was a Dark Knight.",
+        "A Hyur and an Elezen walk into a bar. <break time='2s'/> The Lalafell laughs and walks under it."
       ]
     },
     {
@@ -1843,6 +1875,19 @@
         "No.",
         "Nice try, but no.",
         "You're not in the sudoers file. This incident will be reported."
+      ]
+    },
+    {
+      "Phrases": [ "I died to Kraid's Awful Son." ],
+      "Response": [
+        "Pfft. Hahahahaha.",
+        "I'm interested in this."
+      ]
+    },
+    {
+      "Phrases": [ "why am I here, if only to suffer?" ],
+      "Response": [
+        "<break time='2s'/> Pfft."
       ]
     }
   ]

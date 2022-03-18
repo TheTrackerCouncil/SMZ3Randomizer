@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {
@@ -26,6 +24,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the name of the boss.
         /// </summary>
         public SchrodingersString Name { get; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when the boss has been tracked (but
+        /// not necessarily killed).
+        /// </summary>
+        public SchrodingersString? WhenTracked { get; init; }
 
         /// <summary>
         /// Gets the phrases to respond with when the boss has been defeated.

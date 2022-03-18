@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -265,6 +267,15 @@ namespace Randomizer.SMZ3.Tracking
         /// Get if the Tracker has been updated since it was last saved
         /// </summary>
         public bool IsDirty { get; set; }
+
+        /// <summary>
+        /// Formats a string so that it will be pronounced correctly by the
+        /// text-to-speech engine.
+        /// </summary>
+        /// <param name="name">The text to correct.</param>
+        /// <returns>A string with the pronunciations replaced.</returns>
+        public static string CorrectPronunciation(string name)
+            => name.Replace("Samus", "Sammus");
 
         /// <summary>
         /// Initializes the microphone from the default audio device
@@ -858,7 +869,8 @@ namespace Randomizer.SMZ3.Tracking
             if (text == null)
                 return false;
 
-            var prompt = ParseText(text);
+            var formattedText = FormatPlaceholders(text);
+            var prompt = ParseText(formattedText);
             if (wait)
                 _tts.Speak(prompt);
             else
@@ -877,6 +889,27 @@ namespace Randomizer.SMZ3.Tracking
                 prompt.AppendSsmlMarkup(text);
                 return new Prompt(prompt);
             }
+        }
+
+        /// <summary>
+        /// Replaces global placeholders in a given string.
+        /// </summary>
+        /// <param name="text">The text with placeholders to format.</param>
+        /// <returns>The formatted text with placeholders replaced.</returns>
+        [return: NotNullIfNotNull("text")]
+        public virtual string? FormatPlaceholders(string? text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            var builder = new StringBuilder(text);
+            builder.Replace("{Link}", CorrectPronunciation(World.Config.LinkName));
+            builder.Replace("{Samus}", CorrectPronunciation(World.Config.SamusName));
+
+            // Just in case some text doesn't pass a string.Format
+            builder.Replace("{{Link}}", CorrectPronunciation(World.Config.LinkName));
+            builder.Replace("{{Samus}}", CorrectPronunciation(World.Config.SamusName));
+            return builder.ToString();
         }
 
         /// <summary>
@@ -931,12 +964,13 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="tryClear">
-        /// <c>true</c> to attempt to clear a location for the tracked item;
-        /// <c>false</c> if that is done by the caller.
+        /// <see langword="true"/> to attempt to clear a location for the
+        /// tracked item; <see langword="false"/> if that is done by the caller.
         /// </param>
         /// <returns>
-        /// <c>true</c> if the item was actually tracked; <c>false</c> if the
-        /// item could not be tracked, e.g. when tracking Bow twice.
+        /// <see langword="true"/> if the item was actually tracked; <see
+        /// langword="false"/> if the item could not be tracked, e.g. when
+        /// tracking Bow twice.
         /// </returns>
         public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true)
         {
@@ -1250,7 +1284,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null)
         {
-            GiveLocationComment(item, location, confidence);
+            GiveLocationComment(item, location, isTracking: true, confidence);
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
 
@@ -1595,8 +1629,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Marks a boss as defeated.
         /// </summary>
         /// <param name="boss">The boss that was defeated.</param>
+        /// <param name="admittedGuilt">
+        /// <see langword="true"/> if the command implies the boss was killed;
+        /// <see langword="false"/> if the boss was simply "tracked".
+        /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkBossAsDefeated(BossInfo boss, float? confidence = null)
+        public void MarkBossAsDefeated(BossInfo boss, bool admittedGuilt = true, float? confidence = null)
         {
             if (boss.Defeated)
             {
@@ -1605,7 +1643,11 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             boss.Defeated = true;
-            Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+
+            if (!admittedGuilt && boss.WhenTracked != null)
+                Say(boss.WhenTracked, boss.Name);
+            else
+                Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
 
             OnBossUpdated(new(confidence));
             AddUndo(() => boss.Defeated = false);
@@ -1704,7 +1746,7 @@ namespace Randomizer.SMZ3.Tracking
         public void MarkLocation(Location location, ItemData item, float? confidence = null)
         {
             var locationName = GetName(location);
-            GiveLocationComment(item, location, confidence);
+            GiveLocationComment(item, location, isTracking: false, confidence);
 
             if (item.InternalItemType == ItemType.Nothing)
             {
@@ -1958,7 +2000,7 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
-        private void GiveLocationComment(ItemData item, Location location, float? confidence)
+        private void GiveLocationComment(ItemData item, Location location, bool isTracking, float? confidence)
         {
             // Give some sass if the user tracks or marks the wrong item at a
             // location
@@ -1975,13 +2017,27 @@ namespace Randomizer.SMZ3.Tracking
             {
                 var locationInfo = WorldInfo.Location(location);
                 var isJunk = item.IsJunk(World.Config);
-                if (isJunk && locationInfo.WhenTrackingJunk?.Count > 0)
+                if (isJunk)
                 {
-                    Say(locationInfo.WhenTrackingJunk.Random(s_random));
+                    if (!isTracking && locationInfo.WhenMarkingJunk?.Count > 0)
+                    {
+                        Say(locationInfo.WhenMarkingJunk.Random(s_random));
+                    }
+                    else if (locationInfo.WhenTrackingJunk?.Count > 0)
+                    {
+                        Say(locationInfo.WhenTrackingJunk.Random(s_random));
+                    }
                 }
-                else if (!isJunk && locationInfo.WhenTrackingProgression?.Count > 0)
+                else if (!isJunk)
                 {
-                    Say(locationInfo.WhenTrackingProgression.Random(s_random));
+                    if (!isTracking && locationInfo.WhenMarkingProgression?.Count > 0)
+                    {
+                        Say(locationInfo.WhenMarkingProgression.Random(s_random));
+                    }
+                    else if (locationInfo.WhenTrackingProgression?.Count > 0)
+                    {
+                        Say(locationInfo.WhenTrackingProgression.Random(s_random));
+                    }
                 }
             }
         }
