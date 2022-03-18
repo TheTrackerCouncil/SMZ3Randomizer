@@ -155,7 +155,9 @@ namespace Randomizer.App
 
         private void OptionsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var optionsDialog = new OptionsWindow(Options.GeneralOptions);
+            using var scope = _serviceProvider.CreateScope();
+            var optionsDialog = scope.ServiceProvider.GetRequiredService<OptionsWindow>();
+            optionsDialog.Options = Options.GeneralOptions;
             optionsDialog.ShowDialog();
 
             try

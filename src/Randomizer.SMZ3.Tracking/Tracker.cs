@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -33,6 +34,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
         private readonly TrackerModuleFactory _moduleFactory;
+        private readonly IChatClient _chatClient;
         private readonly ILogger<Tracker> _logger;
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
@@ -56,6 +58,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="moduleFactory">
         /// Used to provide the tracking speech recognition syntax.
         /// </param>
+        /// <param name="chatClient"></param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
@@ -63,11 +66,13 @@ namespace Randomizer.SMZ3.Tracking
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
+            IChatClient chatClient,
             ILogger<Tracker> logger,
             TrackerOptions options,
             RandomizerContext dbContext)
         {
             _moduleFactory = moduleFactory;
+            _chatClient = chatClient;
             _logger = logger;
             Options = options;
             _dbContext = dbContext;
@@ -693,6 +698,24 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Connects Tracker to chat.
+        /// </summary>
+        /// <param name="userName">The user name to connect as.</param>
+        /// <param name="oauthToken">
+        /// The OAuth token for <paramref name="userName"/>.
+        /// </param>
+        /// <param name="channel">
+        /// The channel to monitor for incoming messages.
+        /// </param>
+        public void ConnectToChat(string? userName, string? oauthToken, string? channel)
+        {
+            if (userName != null && oauthToken != null)
+            {
+                _chatClient.Connect(userName, oauthToken, channel ?? userName);
+            }
+        }
+
+        /// <summary>
         /// Sets the start time of the timer
         /// </summary>
         public virtual void StartTimer()
@@ -725,6 +748,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             DisableVoiceRecognition();
             _tts.SpeakAsyncCancelAll();
+            _chatClient.Disconnect();
             Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
             foreach (var timer in _idleTimers.Values)

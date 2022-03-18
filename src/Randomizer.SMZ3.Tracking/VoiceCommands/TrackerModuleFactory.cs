@@ -11,9 +11,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// <summary>
     /// Loads and manages tracker modules.
     /// </summary>
-    public class TrackerModuleFactory
+    public class TrackerModuleFactory : IDisposable
     {
         private readonly IServiceProvider _serviceProvider;
+        private IEnumerable<TrackerModule>? _trackerModules;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerModuleFactory"/>
@@ -40,15 +41,46 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </returns>
         public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(Tracker tracker, SpeechRecognitionEngine engine)
         {
-            var modules = _serviceProvider.GetServices<TrackerModule>();
-            foreach (var module in modules)
+            _trackerModules = _serviceProvider.GetServices<TrackerModule>();
+            foreach (var module in _trackerModules)
             {
                 module.LoadInto(engine);
             }
 
-            return modules.Where(x => !x.IsSecret)
+            return _trackerModules.Where(x => !x.IsSecret)
                 .SelectMany(x => x.Syntax)
                 .ToImmutableSortedDictionary();
+        }
+
+        /// <summary>
+        /// Frees up resources used by tracker modules.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Frees up resources used by tracker modules.
+        /// </summary>
+        /// <param name="disposing">
+        /// <see langword="true"/> when called from <see cref="Dispose()"/>;
+        /// otherwise, <see langword="false"/>.
+        /// </param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_trackerModules != null)
+                {
+                    foreach (var module in _trackerModules)
+                    {
+                        if (module is IDisposable disposable)
+                            disposable.Dispose();
+                    }
+                }
+            }
         }
     }
 }

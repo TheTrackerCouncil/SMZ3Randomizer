@@ -51,7 +51,7 @@
           </Expander>
 
           <Expander Header="Tracker options"
-                    IsExpanded="True">
+                    IsExpanded="False">
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
 
@@ -169,6 +169,34 @@
                 <CheckBox Content="Enable spoilers"
                           IsChecked="{Binding TrackerSpoilersEnabled}" />
               </StackPanel>
+
+            </StackPanel>
+          </Expander>
+
+
+          <Expander Header="Chat integration"
+                    IsExpanded="True">
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,0">
+              <controls:LabeledControl Text="Twitch user name">
+                <TextBox Text="{Binding TwitchUserName, Mode=TwoWay}" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Twitch OAuth token">
+                <TextBox Text="{Binding TwitchOAuthToken, Mode=TwoWay}" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Twitch channel">
+                <TextBox Text="{Binding TwitchChannel, Mode=TwoWay}" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="">
+                <Button x:Name="TwitchLoginButton"
+                        Click="TwitchLoginButton_Click"
+                        Content="Log in with Twitch"
+                        Margin="0"
+                        HorizontalAlignment="Left"/>
+              </controls:LabeledControl>
 
             </StackPanel>
           </Expander>

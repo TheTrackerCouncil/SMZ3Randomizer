@@ -4,7 +4,10 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Media;
+
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 using Randomizer.SMZ3.Tracking;
 
@@ -14,8 +17,12 @@ namespace Randomizer.App.ViewModels
     /// Represents user-configurable options for the general working of the
     /// randomizer itself.
     /// </summary>
-    public class GeneralOptions
+    public class GeneralOptions : INotifyPropertyChanged
     {
+        private string _twitchUserName;
+        private string _twitchOAuthToken;
+        private string _twitchChannel;
+
         /// <summary>
         /// Converts the enum descriptions into a string array for displaying in a dropdown
         /// </summary>
@@ -56,6 +63,46 @@ namespace Randomizer.App.ViewModels
 
         public bool TrackerSpoilersEnabled { get; set; }
 
+        public string TwitchUserName
+        {
+            get => _twitchUserName;
+            set
+            {
+                if (_twitchUserName != value)
+                {
+                    _twitchUserName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string TwitchOAuthToken
+        {
+            get => _twitchOAuthToken;
+            set
+            {
+                if (_twitchOAuthToken != value)
+                {
+                    _twitchOAuthToken = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string TwitchChannel
+        {
+            get => _twitchChannel;
+            set
+            {
+                if (_twitchChannel != value)
+                {
+                    _twitchChannel = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public bool Validate()
         {
@@ -72,6 +119,11 @@ namespace Randomizer.App.ViewModels
             HintsEnabled = TrackerHintsEnabled,
             SpoilersEnabled = TrackerSpoilersEnabled
         };
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new(propertyName));
+        }
     }
 
     /// <summary>
