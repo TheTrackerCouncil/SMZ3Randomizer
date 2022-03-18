@@ -1814,7 +1814,9 @@
       "X": 83,
       "Y": 101,
       "Hints": [ "I hope you don't need it." ],
-      "WhenTrackingJunk": [ "I'm so sorry." ],
+      "WhenMarkingJunk": [ "Phew." ],
+      "WhenMarkingProgression": [ "I'm so sorry." ],
+      "WhenTrackingJunk": [ "If only you could read." ],
       "WhenTrackingProgression": [ "I'm so sorry.", "Well, at least you found something." ]
     },
     {

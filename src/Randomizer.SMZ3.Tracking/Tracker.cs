@@ -1284,7 +1284,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null)
         {
-            GiveLocationComment(item, location, confidence);
+            GiveLocationComment(item, location, isTracking: true, confidence);
             TrackItem(item, trackedAs, confidence, tryClear: false);
             Clear(location);
 
@@ -1746,7 +1746,7 @@ namespace Randomizer.SMZ3.Tracking
         public void MarkLocation(Location location, ItemData item, float? confidence = null)
         {
             var locationName = GetName(location);
-            GiveLocationComment(item, location, confidence);
+            GiveLocationComment(item, location, isTracking: false, confidence);
 
             if (item.InternalItemType == ItemType.Nothing)
             {
@@ -2000,7 +2000,7 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
-        private void GiveLocationComment(ItemData item, Location location, float? confidence)
+        private void GiveLocationComment(ItemData item, Location location, bool isTracking, float? confidence)
         {
             // Give some sass if the user tracks or marks the wrong item at a
             // location
@@ -2017,13 +2017,27 @@ namespace Randomizer.SMZ3.Tracking
             {
                 var locationInfo = WorldInfo.Location(location);
                 var isJunk = item.IsJunk(World.Config);
-                if (isJunk && locationInfo.WhenTrackingJunk?.Count > 0)
+                if (isJunk)
                 {
-                    Say(locationInfo.WhenTrackingJunk.Random(s_random));
+                    if (!isTracking && locationInfo.WhenMarkingJunk?.Count > 0)
+                    {
+                        Say(locationInfo.WhenMarkingJunk.Random(s_random));
+                    }
+                    else if (locationInfo.WhenTrackingJunk?.Count > 0)
+                    {
+                        Say(locationInfo.WhenTrackingJunk.Random(s_random));
+                    }
                 }
-                else if (!isJunk && locationInfo.WhenTrackingProgression?.Count > 0)
+                else if (!isJunk)
                 {
-                    Say(locationInfo.WhenTrackingProgression.Random(s_random));
+                    if (!isTracking && locationInfo.WhenMarkingProgression?.Count > 0)
+                    {
+                        Say(locationInfo.WhenMarkingProgression.Random(s_random));
+                    }
+                    else if (locationInfo.WhenTrackingProgression?.Count > 0)
+                    {
+                        Say(locationInfo.WhenTrackingProgression.Random(s_random));
+                    }
                 }
             }
         }
