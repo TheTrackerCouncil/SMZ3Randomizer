@@ -931,12 +931,13 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="tryClear">
-        /// <c>true</c> to attempt to clear a location for the tracked item;
-        /// <c>false</c> if that is done by the caller.
+        /// <see langword="true"/> to attempt to clear a location for the
+        /// tracked item; <see langword="false"/> if that is done by the caller.
         /// </param>
         /// <returns>
-        /// <c>true</c> if the item was actually tracked; <c>false</c> if the
-        /// item could not be tracked, e.g. when tracking Bow twice.
+        /// <see langword="true"/> if the item was actually tracked; <see
+        /// langword="false"/> if the item could not be tracked, e.g. when
+        /// tracking Bow twice.
         /// </returns>
         public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true)
         {

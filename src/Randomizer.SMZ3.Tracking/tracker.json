@@ -1861,6 +1861,19 @@
         "Nice try, but no.",
         "You're not in the sudoers file. This incident will be reported."
       ]
+    },
+    {
+      "Phrases": [ "I died to Kraid's Awful Son." ],
+      "Response": [
+        "Pfft. Hahahahaha.",
+        "I'm interested in this."
+      ]
+    },
+    {
+      "Phrases": [ "why am I here, if only to suffer?" ],
+      "Response": [
+        "<break time='2s'/> Pfft."
+      ]
     }
   ]
 }
