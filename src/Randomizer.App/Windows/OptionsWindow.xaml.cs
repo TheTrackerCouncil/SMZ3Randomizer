@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+
+using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3.ChatIntegration;
@@ -13,13 +16,16 @@ namespace Randomizer.App
     public partial class OptionsWindow : Window
     {
         private readonly IChatAuthenticationService _chatAuthenticationService;
+        private readonly ILogger<OptionsWindow> _logger;
         private GeneralOptions _options;
 
-        public OptionsWindow(IChatAuthenticationService chatAuthenticationService)
+        public OptionsWindow(IChatAuthenticationService chatAuthenticationService,
+            ILogger<OptionsWindow> logger)
         {
             InitializeComponent();
 
             _chatAuthenticationService = chatAuthenticationService;
+            _logger = logger;
         }
 
         public GeneralOptions Options
@@ -44,12 +50,22 @@ namespace Randomizer.App
         {
             await Dispatcher.Invoke(async () =>
             {
-                var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
-                var userName = await _chatAuthenticationService.GetUserNameAsync(token, default);
+                try
+                {
+                    var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
+                    var userName = await _chatAuthenticationService.GetUserNameAsync(token, default);
 
-                Options.TwitchUserName = userName;
-                Options.TwitchOAuthToken = token;
-                Options.TwitchChannel = string.IsNullOrEmpty(Options.TwitchChannel) ? userName : Options.TwitchChannel;
+                    Options.TwitchUserName = userName;
+                    Options.TwitchOAuthToken = token;
+                    Options.TwitchChannel = string.IsNullOrEmpty(Options.TwitchChannel) ? userName : Options.TwitchChannel;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An unknown error occurred while logging in with Twitch");
+                    MessageBox.Show(this, "An unexpected error occurred while trying to log you in with Twitch. " +
+                        "Please try again or report this issue with the log file.", "SMZ3 Cas’ Randomizer",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             });
         }
     }
