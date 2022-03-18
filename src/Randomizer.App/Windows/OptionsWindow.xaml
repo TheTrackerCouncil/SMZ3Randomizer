@@ -179,15 +179,15 @@
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
               <controls:LabeledControl Text="Twitch user name">
-                <TextBox Text="{Binding TwitchUserName}" />
+                <TextBox Text="{Binding TwitchUserName, Mode=TwoWay}" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Twitch OAuth token">
-                <TextBox Text="{Binding TwitchOAuthToken}" />
+                <TextBox Text="{Binding TwitchOAuthToken, Mode=TwoWay}" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Twitch channel">
-                <TextBox Text="{Binding TwitchChannel}" />
+                <TextBox Text="{Binding TwitchChannel, Mode=TwoWay}" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="">

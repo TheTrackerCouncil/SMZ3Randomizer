@@ -68,35 +68,49 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var stopwatch = Stopwatch.StartNew();
             try
             {
-                var userName = e.Message.Sender;
-                if (Tracker.Responses.Chat.UserNamePronunciation.TryGetValue(userName, out var correctedUserName))
-                    userName = correctedUserName;
-
-                foreach (var recognizedGreeting in Tracker.Responses.Chat.RecognizedGreetings)
-                {
-                    if (Regex.IsMatch(e.Message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
-                    {
-                        if (_usersGreetedTimes.TryGetValue(e.Message.Sender, out var greeted))
-                        {
-                            if (greeted >= 2)
-                                return;
-
-                            Tracker.Say(x => x.Chat.GreetedTwice, userName);
-                            _usersGreetedTimes[e.Message.Sender]++;
-                        }
-                        else
-                        {
-                            Tracker.Say(x => x.Chat.GreetingResponses, userName);
-                            _usersGreetedTimes.Add(e.Message.Sender, 1);
-                        }
-                        return;
-                    }
-                }
+                var userName = CorrectPronunciation(e.Message.Sender);
+                TryRespondToGreetings(e.Message, userName);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex, "An unexpected error occurred while processing incoming chat messages.");
+                Tracker.Error();
             }
             finally
             {
                 stopwatch.Stop();
                 Logger.LogTrace("Processed incoming chat message in {ElapsedMs} ms", stopwatch.ElapsedMilliseconds);
+            }
+        }
+
+        private string CorrectPronunciation(string userName)
+        {
+            if (Tracker.Responses.Chat.UserNamePronunciation.TryGetValue(userName, out var correctedUserName))
+                return correctedUserName;
+            return userName;
+        }
+
+        private void TryRespondToGreetings(ChatMessage message, string userName)
+        {
+            foreach (var recognizedGreeting in Tracker.Responses.Chat.RecognizedGreetings)
+            {
+                if (Regex.IsMatch(message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+                {
+                    if (_usersGreetedTimes.TryGetValue(message.Sender, out var greeted))
+                    {
+                        if (greeted >= 2)
+                            break;
+
+                        Tracker.Say(x => x.Chat.GreetedTwice, userName);
+                        _usersGreetedTimes[message.Sender]++;
+                    }
+                    else
+                    {
+                        Tracker.Say(x => x.Chat.GreetingResponses, userName);
+                        _usersGreetedTimes.Add(message.Sender, 1);
+                    }
+                    break;
+                }
             }
         }
 

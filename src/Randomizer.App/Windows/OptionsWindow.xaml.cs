@@ -1,33 +1,52 @@
 ﻿using System.Windows;
 
 using Randomizer.App.ViewModels;
+using Randomizer.SMZ3.ChatIntegration;
+
+using SharpYaml.Tokens;
 
 namespace Randomizer.App
 {
     /// <summary>
     /// Interaction logic for OptionsWindow.xaml
     /// </summary>
-    [NotAService]
     public partial class OptionsWindow : Window
     {
-        public OptionsWindow(GeneralOptions options)
+        private readonly IChatAuthenticationService _chatAuthenticationService;
+        private GeneralOptions _options;
+
+        public OptionsWindow(IChatAuthenticationService chatAuthenticationService)
         {
             InitializeComponent();
 
-            Options = options;
-            DataContext = Options;
+            _chatAuthenticationService = chatAuthenticationService;
         }
 
-        public GeneralOptions Options { get; }
+        public GeneralOptions Options
+        {
+            get => _options;
+            set
+            {
+                if (value != _options)
+                {
+                    _options = value;
+                    DataContext = value;
+                }
+            }
+        }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
         }
 
-        private void TwitchLoginButton_Click(object sender, RoutedEventArgs e)
+        private async void TwitchLoginButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
+            Dispatcher.Invoke(() =>
+            {
+                Options.TwitchOAuthToken = token;
+            });
         }
     }
 }

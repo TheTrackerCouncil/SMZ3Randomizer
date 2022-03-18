@@ -80,6 +80,7 @@ namespace Randomizer.App
 
             // Chat
             services.AddSingleton<IChatClient, TwitchChatClient>();
+            services.AddSingleton<IChatAuthenticationService, TwitchAuthenticationService>();
 
             // WPF
             services.AddSingleton<OptionsFactory>();
