@@ -283,7 +283,8 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
       "Name": [
-        "Turtle Rock"
+        "Turtle Rock",
+        [ "Tortoise Rock", 0.1 ]
       ],
       "Hints": [
         "You need a medallion to get in there."
@@ -538,7 +539,7 @@
       "Name": [ "Mother Brain" ],
       "Column": 9,
       "Row": 6,
-      "WhenDefeated": [ "GG", "Is it finally over? Can I go home now?" ]
+      "WhenDefeated": [ "GG", "Is it finally over? Can I go home now?", "Thank you for helping us help you help us make this a great seed" ]
     }
   ],
   "Rooms": [
