@@ -42,10 +42,14 @@ namespace Randomizer.App
 
         private async void TwitchLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
-            Dispatcher.Invoke(() =>
+            await Dispatcher.Invoke(async () =>
             {
+                var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
+                var userName = await _chatAuthenticationService.GetUserNameAsync(token, default);
+
+                Options.TwitchUserName = userName;
                 Options.TwitchOAuthToken = token;
+                Options.TwitchChannel = string.IsNullOrEmpty(Options.TwitchChannel) ? userName : Options.TwitchChannel;
             });
         }
     }

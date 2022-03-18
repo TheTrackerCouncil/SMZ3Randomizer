@@ -68,5 +68,7 @@ namespace Randomizer.SMZ3.ChatIntegration
 
             return accessToken;
         }
+
+        public abstract Task<string?> GetUserNameAsync(string accessToken, CancellationToken cancellationToken);
     }
 }
