@@ -2,6 +2,8 @@
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.Shared;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -32,7 +34,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (boss != null)
                 {
                     // Track standalone boss
-                    tracker.MarkBossAsDefeated(boss, result.Confidence);
+                    var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
+                        && !result.Text.ContainsAny("beat off", "beaten off");
+                    tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
                     return;
                 }
 
@@ -66,7 +70,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var bossNames = GetBossNames();
             var beatBoss = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("track", "I beat", "I defeated", "I beat off")
+                .OneOf("track", "I beat", "I defeated", "I beat off", "I killed")
                 .Append(BossKey, bossNames);
 
             var markBoss = new GrammarBuilder()
@@ -74,7 +78,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("mark")
                 .Append(BossKey, bossNames)
                 .Append("as")
-                .OneOf("beaten", "beaten off", "dead", "fucking dead");
+                .OneOf("beaten", "beaten off", "dead", "fucking dead", "defeated");
 
             var bossIsDead = new GrammarBuilder()
                 .Append("Hey tracker,")

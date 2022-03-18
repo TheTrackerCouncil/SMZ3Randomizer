@@ -520,9 +520,14 @@
       "Name": [ "Shaktool", "The Shaktool" ],
       "Column": 6,
       "Row": 6,
-      "WhenDefeated": [
+      "WhenTracked": [
         "Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.",
         "Toggled Shaktool on. Did you get something nice?"
+      ],
+      "WhenDefeated": [
+        "How dare you?",
+        "You monster.",
+        "You'll pay for this."
       ]
     },
     {

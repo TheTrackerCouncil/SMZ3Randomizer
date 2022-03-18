@@ -1595,8 +1595,12 @@ namespace Randomizer.SMZ3.Tracking
         /// Marks a boss as defeated.
         /// </summary>
         /// <param name="boss">The boss that was defeated.</param>
+        /// <param name="admittedGuilt">
+        /// <see langword="true"/> if the command implies the boss was killed;
+        /// <see langword="false"/> if the boss was simply "tracked".
+        /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkBossAsDefeated(BossInfo boss, float? confidence = null)
+        public void MarkBossAsDefeated(BossInfo boss, bool admittedGuilt = true, float? confidence = null)
         {
             if (boss.Defeated)
             {
@@ -1605,7 +1609,11 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             boss.Defeated = true;
-            Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+
+            if (!admittedGuilt && boss.WhenTracked != null)
+                Say(boss.WhenTracked, boss.Name);
+            else
+                Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
 
             OnBossUpdated(new(confidence));
             AddUndo(() => boss.Defeated = false);
