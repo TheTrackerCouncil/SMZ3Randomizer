@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Options - SMZ3 Cas' Randomizer"
         Height="480"
-        Width="500">
+        Width="520">
   <Window.DataContext>
     <vm:GeneralOptions></vm:GeneralOptions>
   </Window.DataContext>
@@ -24,8 +24,10 @@
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled">
         <StackPanel Orientation="Vertical">
-          <Expander Header="Randomizer options"
-                    IsExpanded="True">
+          <Expander>
+            <Expander.Header>
+              <TextBlock FontWeight="SemiBold">Randomizer options</TextBlock>
+            </Expander.Header>
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
 
@@ -50,8 +52,10 @@
             </StackPanel>
           </Expander>
 
-          <Expander Header="Tracker options"
-                    IsExpanded="False">
+          <Expander>
+            <Expander.Header>
+              <TextBlock FontWeight="SemiBold">Tracker options</TextBlock>
+            </Expander.Header>
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
 
@@ -174,19 +178,21 @@
           </Expander>
 
 
-          <Expander Header="Chat integration"
-                    IsExpanded="True">
+          <Expander>
+            <Expander.Header>
+              <TextBlock FontWeight="SemiBold">Twitch integration</TextBlock>
+            </Expander.Header>
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
-              <controls:LabeledControl Text="Twitch user name">
+              <controls:LabeledControl Text="Twitch user name:">
                 <TextBox Text="{Binding TwitchUserName, Mode=TwoWay}" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Twitch OAuth token">
+              <controls:LabeledControl Text="Twitch OAuth token:">
                 <TextBox Text="{Binding TwitchOAuthToken, Mode=TwoWay}" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Twitch channel">
+              <controls:LabeledControl Text="Twitch channel:">
                 <TextBox Text="{Binding TwitchChannel, Mode=TwoWay}" />
               </controls:LabeledControl>
 
@@ -195,7 +201,21 @@
                         Click="TwitchLoginButton_Click"
                         Content="Log in with Twitch"
                         Margin="0"
-                        HorizontalAlignment="Left"/>
+                        HorizontalAlignment="Left" />
+              </controls:LabeledControl>
+
+              <CheckBox x:Name="EnableChatGreetingCheckBox"
+                        Content="Enable responding to chat"
+                        IsChecked="{Binding EnableChatGreeting}" />
+              <controls:LabeledControl Text="Chat greeting time limit:"
+                                       IsEnabled="{Binding IsChecked, ElementName=EnableChatGreetingCheckBox}">
+                <StackPanel Orientation="Horizontal">
+                  <TextBox Text="{Binding ChatGreetingTimeLimit}"
+                           Width="40"
+                           HorizontalAlignment="Left" />
+                  <TextBlock VerticalAlignment="Center"
+                             Margin="3,0,0,0">minutes</TextBlock>
+                </StackPanel>
               </controls:LabeledControl>
 
             </StackPanel>

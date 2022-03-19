@@ -43,5 +43,17 @@ namespace Randomizer.SMZ3.Tracking
         /// when asked about an item or location.
         /// </summary>
         public bool SpoilersEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Tracker will respond to
+        /// people saying hi to her in chat.
+        /// </summary>
+        public bool ChatGreetingEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of minutes Tracker will respond to greetings
+        /// in chat after Tracker starts.
+        /// </summary>
+        public int ChatGreetingTimeLimit { get; set; }
     }
 }

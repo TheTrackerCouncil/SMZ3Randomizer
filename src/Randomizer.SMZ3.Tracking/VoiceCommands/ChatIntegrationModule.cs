@@ -69,7 +69,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             try
             {
                 var userName = CorrectPronunciation(e.Message.Sender);
-                TryRespondToGreetings(e.Message, userName);
+
+                if (ShouldRespondToGreetings)
+                    TryRespondToGreetings(e.Message, userName);
             }
             catch (Exception ex)
             {
@@ -82,6 +84,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Logger.LogTrace("Processed incoming chat message in {ElapsedMs} ms", stopwatch.ElapsedMilliseconds);
             }
         }
+
+        private bool ShouldRespondToGreetings => Tracker.Options.ChatGreetingEnabled
+            && (Tracker.Options.ChatGreetingTimeLimit == 0
+                || Tracker.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
 
         private string CorrectPronunciation(string userName)
         {
