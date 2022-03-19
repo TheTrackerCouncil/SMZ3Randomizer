@@ -94,7 +94,10 @@
       ]
     },
     {
-      "Name": "Hammer",
+      "Name": [
+        "Hammer",
+        [ "Hammer Time", 0.1 ]
+      ],
       "InternalItemType": 9,
       "Column": 1,
       "Row": 2,
@@ -299,7 +302,11 @@
       ]
     },
     {
-      "Name": [ "Magic Mirror", "Mirror" ],
+      "Name": [
+        "Magic Mirror",
+        "Mirror",
+        [ "Vanity", 0.1 ]
+      ],
       "InternalItemType": 26,
       "Column": 4,
       "Row": 3,
@@ -315,7 +322,11 @@
       }
     },
     {
-      "Name": [ "Book of Mudora", "Sacred Texts" ],
+      "Name": [
+        "Book of Mudora",
+        "Sacred Texts",
+        [ "Literature", 0.5 ]
+      ],
       "Article": "the",
       "InternalItemType": 29,
       "Column": 4,
@@ -335,7 +346,11 @@
       ]
     },
     {
-      "Name": "Moon Pearl",
+      "Name": [
+        "Moon Pearl",
+        [ "Jawbreaker", 0.1 ],
+        [ "Orb", 0.1 ]
+      ],
       "InternalItemType": 31,
       "Column": 5,
       "Row": 2,
@@ -629,7 +644,7 @@
           "Toggled Tiddy Mitts on,",
           "Congratulations with your new Tiddy Mitts.",
           [ "Toggled Itty Bitty Titty Mitty on", 0.2 ],
-          [ "Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.", 0.05 ]
+          [ "Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.", 0.2 ]
         ]
       }
     },
@@ -934,7 +949,11 @@
       ]
     },
     {
-      "Name": [ "Ice Beam", "Nice Beam" ],
+      "Name": [
+        "Ice Beam",
+        "Nice Beam",
+        [ "Ice ice baby", 0.1 ]
+      ],
       "InternalItemType": 188,
       "Column": 7,
       "Row": 0,
@@ -1806,7 +1825,9 @@
         "Fates,\nWeave their threads,\nOur lives are sewn,\nBorn,\nTo a life,\nAll but our own,\nWe feel it inside,\nOur bones.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nLoves,\nIn your life,\nLive ever on.\nHome,\nIs not where you live,\nBut who cares when you're gone.\nThey'll follow you to,\nThe beyond.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nRun all you like,\nFrom the place you belong.\nIt's always there,\nIt's in the air,\nYour dearest kin,\nBelow the skin.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.",
         "We're no strangers to love,\nYou know the rules and so do I,\nA full commitment's what I'm thinking of,\nYou wouldn't get this from any other tracker,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nAnd if you ask me how I'm feeling,\nDon't tell me you're too blind to see,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nOoh (Give you up),\nOoh-ooh (Give you up),\nOoh-ooh,\nNever gonna give, never gonna give (Give you up),\nOoh-ooh,\nNever gonna give, never gonna give (Give you up),\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you",
         "We're no strangers to love,\nYou know the rules and so do I,\nA full commitment's what I'm thinking of,\nYou wouldn't get this from any other tracker,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nAnd if you ask me how I'm feeling,\nDon't tell me you're too blind to see,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nOoh (Give you up),\nOoh-ooh (Give you up),\nOoh-ooh,\nAlways gonna give, Always gonna give (Give you up),\nOoh-ooh,\nAlways gonna give, Always gonna give (Give you up),\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you",
-        "Good King Moggel Mog,\nGood King Mog,\nLord of all the land (Koopo!)\n\nGood King Moggel Mog,\nGood King Mog,\nRules with iron hand,\n\nGood King Moggel Mog,\nGood King Mog,\nLeads the brave and true!\n\nGood King Moggel Mog,\nGood King Mog,\nNow come along and meet his trusty crew!\nKupo!\n\nKupta Kapa will clip your tuft,\nSplit your hairs and ruffle your fluff,\n\nKupti Koop will throw you for a loop,\nBrave a wall of whiskers to find his troupe,\nKupli Kipp is sly yet sweet,\nHe'll tickle your nose then tickle your feet,\n\nJolly Kogi's eye for fun is clear,\nHe'll put an arrow straight in your rear!\n\nPukla Puki plays with fire,\nPoms a-burning on her pyre,\n\nPuksi Piko likes her buddies big,\nTo sing a little song and dance a little jig,\n\nPukna Pako shivers and shakes,\nShe'll stick you in the gut and give you bellyaches,\n\nAnd who's behind them, standing tall?\nWhy, the biggest moogle of them all!\nWho? Who?\n\nGood King Moggel Mog,\nGood King Mog,\nKind and noble lord (Hear, hear!)\nNod your noggle nog,\nAnd mind your gob,\nOr he'll put you to the sword!\n\nGood King Moggel Mog,\nGood King Mog,\nHis judgment you will dread,\n\nGood King Moggel Mog,\nGood King Mog,\nWhat do you decree?\nWhat do you decree?\nWhat do you decree?\nOff with their heads!"
+        "Good King Moggel Mog,\nGood King Mog,\nLord of all the land (Koopo!)\n\nGood King Moggel Mog,\nGood King Mog,\nRules with iron hand,\n\nGood King Moggel Mog,\nGood King Mog,\nLeads the brave and true!\n\nGood King Moggel Mog,\nGood King Mog,\nNow come along and meet his trusty crew!\nKupo!\n\nKupta Kapa will clip your tuft,\nSplit your hairs and ruffle your fluff,\n\nKupti Koop will throw you for a loop,\nBrave a wall of whiskers to find his troupe,\nKupli Kipp is sly yet sweet,\nHe'll tickle your nose then tickle your feet,\n\nJolly Kogi's eye for fun is clear,\nHe'll put an arrow straight in your rear!\n\nPukla Puki plays with fire,\nPoms a-burning on her pyre,\n\nPuksi Piko likes her buddies big,\nTo sing a little song and dance a little jig,\n\nPukna Pako shivers and shakes,\nShe'll stick you in the gut and give you bellyaches,\n\nAnd who's behind them, standing tall?\nWhy, the biggest moogle of them all!\nWho? Who?\n\nGood King Moggel Mog,\nGood King Mog,\nKind and noble lord (Hear, hear!)\nNod your noggle nog,\nAnd mind your gob,\nOr he'll put you to the sword!\n\nGood King Moggel Mog,\nGood King Mog,\nHis judgment you will dread,\n\nGood King Moggel Mog,\nGood King Mog,\nWhat do you decree?\nWhat do you decree?\nWhat do you decree?\nOff with their heads!",
+        "This was a triumph\nI'm making a note here; 'Huge success'\nIt's hard to overstate my satisfaction\nAperture Science\nWe do what we must because we can\nFor the good of all of us\nExcept the ones who are dead\nBut there's no sense crying over every mistake\nYou just keep on trying till you run out of cake\nAnd the science gets done\nAnd you make a neat gun\nFor the people who are still alive\nI'm not even angry\nI'm being so sincere right now\nEven though you broke my heart and killed me\nAnd tore me to pieces\nAnd threw every piece into a fire\nAs they burned it hurt because I was so happy for you\nNow, these points of data make a beautiful line\nAnd we're out of beta we're releasing on time\nSo I'm GLaD I got burned\nThink of all the things we learned\nFor the people who are still alive\nGo ahead and leave me\nI think I'd prefer to stay inside\nMaybe you'll find someone else to help you\nMaybe Black Mesa?\nThat was a joke, Haha - Fat Chance\nAnyway this cake is great, it's so delicious and moist\nLook at me: still talking when there's science to do\nWhen I look out there, it makes me glad I'm not you\nI've experiments to run, there is research to be done\nOn the people who are Still alive\nAnd believe me I am Still alive\nI'm doing science and I'm Still alive\nI feel fantastic and I'm Still alive\nWhile you're dying I'll be Still alive\nAnd when you're dead I will be Still alive\nStill alive\n",
+        "I'm headin' down the Meridia highway\nLookin' for the Shak getaway\nHeaded for the Shak getaway,\nI got me a ship, it's as big as a whale\nAnd we're headin' on down to the love shak\nI got me a Cloud Car, it fits a big twenty\nSo hurry up and bring your jukebox money\nThe love shak is a little old place where\nWe can get more missiles\nLove shak bayyyybeee\nlove shak, baby love shak"
       ]
     },
     {
@@ -1818,7 +1839,7 @@
     {
       "Phrases": [ "tell me a joke", "do you know any jokes?" ],
       "Response": [
-        [ "This seed.", 0.2 ],
+        "This seed.",
         "When does a joke become a dad joke? <break time='2s'/> When it becomes apparent.",
         "I got drunk and threw up in the elevator on my way home. It was disgusting on so many levels.",
         "What happened to Tataru when she slipped on a banana peel? <break time='2s'/> The lala fell.",
@@ -1826,7 +1847,8 @@
         "I just saw someone mugging a Lalafell. <break time='2s'/> I didn't think anyone could stoop so low.",
         "What would you call a Lalafell astrologian running from the law? <break time='2s'/> A small medium at large.",
         "Why did the tank get lost? <break time='2s'/> It was a Dark Knight.",
-        "A Hyur and an Elezen walk into a bar. <break time='2s'/> The Lalafell laughs and walks under it."
+        "A Hyur and an Elezen walk into a bar. <break time='2s'/> The Lalafell laughs and walks under it.",
+        "How many Final Fantasy 14 players does it take to screw in a light bulb? <break time='2s'/> Four. One to tank, one to heal and two to DPS. You make a light party!"
       ]
     },
     {
