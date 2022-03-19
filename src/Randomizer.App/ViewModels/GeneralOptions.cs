@@ -102,6 +102,10 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public bool EnableChatGreeting { get; set; } = true;
+
+        public int ChatGreetingTimeLimit { get; set; } = 0;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public bool Validate()
@@ -117,7 +121,10 @@ namespace Randomizer.App.ViewModels
             MinimumExecutionConfidence = TrackerConfidenceThreshold,
             MinimumSassConfidence = TrackerConfidenceSassThreshold,
             HintsEnabled = TrackerHintsEnabled,
-            SpoilersEnabled = TrackerSpoilersEnabled
+            SpoilersEnabled = TrackerSpoilersEnabled,
+            UserName = TwitchChannel,
+            ChatGreetingEnabled = EnableChatGreeting,
+            ChatGreetingTimeLimit = ChatGreetingTimeLimit
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

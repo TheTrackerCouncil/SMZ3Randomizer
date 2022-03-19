@@ -278,6 +278,18 @@ namespace Randomizer.SMZ3.Tracking
             => name.Replace("Samus", "Sammus");
 
         /// <summary>
+        /// Attempts to replace a user name with a pronunciation-corrected version of it.
+        /// </summary>
+        /// <param name="userName">The user name to correct.</param>
+        /// <returns>The corrected user name, or <paramref name="userName"/>.</returns>
+        public string CorrectUserNamePronunciation(string userName)
+        {
+            if (Responses.Chat.UserNamePronunciation.TryGetValue(userName, out var correctedUserName))
+                return correctedUserName;
+            return userName;
+        }
+
+        /// <summary>
         /// Initializes the microphone from the default audio device
         /// </summary>
         /// <returns>
@@ -905,10 +917,12 @@ namespace Randomizer.SMZ3.Tracking
             var builder = new StringBuilder(text);
             builder.Replace("{Link}", CorrectPronunciation(World.Config.LinkName));
             builder.Replace("{Samus}", CorrectPronunciation(World.Config.SamusName));
+            builder.Replace("{User}", CorrectUserNamePronunciation(Options.UserName ?? "someone"));
 
             // Just in case some text doesn't pass a string.Format
             builder.Replace("{{Link}}", CorrectPronunciation(World.Config.LinkName));
             builder.Replace("{{Samus}}", CorrectPronunciation(World.Config.SamusName));
+            builder.Replace("{{User}}", CorrectUserNamePronunciation(Options.UserName ?? "someone"));
             return builder.ToString();
         }
 

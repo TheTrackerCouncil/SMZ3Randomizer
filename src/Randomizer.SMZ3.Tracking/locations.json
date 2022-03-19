@@ -481,7 +481,10 @@
   "Bosses": [
     {
       "Name": [ "Spore Spawn" ],
-      "WhenDefeated": [ "You must be real desperate. Very well, toggled Spore Spawn on." ]
+      "WhenDefeated": [ "Hahahaha. You must be real desperate. Very well, toggled Spore Spawn on." ]
+    },
+    {
+      "Name": [ "Botwoon" ]
     },
     {
       "Name": [

@@ -1449,12 +1449,21 @@
     ],
     "TrackedOutOfLogicItem": [
       "The racing council will hear about this!",
+      [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
       "How did you get to {1} without {2}?",
+      "But how did you get to {1} without {2}?",
+      "Don't you need {2} to get to {1}?",
+      "But I thought you needed {2} to get to {1}?",
       "By the way, nice tech."
     ],
     "TrackedOutOfLogicItemTooManyMissing": [
       "The racing council will hear about this!",
-      "How did you get to {1} with so many missing items?"
+      [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
+      "But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.",
+      "How did you get to {1} with so many missing items?",
+      "Just... how?",
+      "How? You're missing so many items to get to {1}.",
+      "Impressive tech."
     ],
     "BossDefeated": [
       "Marked {0} as defeated.",
@@ -1475,10 +1484,10 @@
     ],
     "Chat": {
       "RecognizedGreetings": [
-        "^(hey|hello|greetings) tracker[!.]?$",
+        "\\b(hi|hey|hello|greetings) tracker\\b",
         "\\bgood (morning|afternoon|evening|day) tracker\\b",
-        "\\b(pkroseHello|betusHey) tracker\\b",
-        "\\btracker (pkroseHello|betusHey)\\b",
+        "\\b(HeyGuys|ViHiYo|pkroseHello|betusHey) tracker\\b",
+        "\\btracker (HeyGuys|ViHiYo|pkroseHello|betusHey)\\b",
         "^tracker!+$",
         "\\bT R A C K E R\\b"
       ],
@@ -1503,7 +1512,10 @@
         "I've already greeted you {0}."
       ],
       "UserNamePronunciation": {
-        "vivelin": "vihvelin"
+        "vivelin": "vihvelin",
+        "PinkKittyRose": "Pink Kitty Rose",
+        "skennedysa": "s kennedy",
+        "the_betus": "the underscore beetus"
       }
     },
     "Hints": {
@@ -1618,7 +1630,8 @@
         "{0} has something for {1} but I wouldn't bother.",
         "I doubt {1} would care about what's at {0}.",
         "You can skip {0}.",
-        "You can skip it."
+        "You can skip it.",
+        [ "{0} is barren.", 0.2 ]
       ],
       "LocationHasUsefulItem": [
         "{0} might be worth checking out.",
@@ -1628,7 +1641,8 @@
         "I bet {1} would appreciate it if you checked it out.",
         "I bet {1} would appreciate it if you checked out {0}.",
         "I wouldn't skip that if I were you.",
-        "{1} would not want you to skip it."
+        "{1} would not want you to skip it.",
+        [ "{0} is on the way of the hero.", 0.2 ]
       ],
       "AreaSuggestion": [
         "What about {0}?",
@@ -1700,8 +1714,8 @@
         "{1} is there."
       ],
       "LocationHasUnknownItem": [
-        "{0} has {1}, but you can't track it.",
-        "{1} is there, but you can't track it."
+        "{0} has {1}, but I can't track it.",
+        "{1} is there, but I can't track it."
       ],
       "ItemIsAtLocation": [
         "{0} is at {1} <break strength='weak'/> in {2}.",
@@ -1789,8 +1803,9 @@
         "You seem so far away\nAnd I just need to hear your voice\nI just need to hear you say\nIf you would have me go or stay.\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nGirl in the tower\nI'm calling out\nMy heart cries out for you\n\nI saw your face\nand I felt our souls embrace\nIf it's not meant to be this way\nWhy do you haunt me night and day?\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\n\nGirl in the tower...\n\nI'm calling out, calling out\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower\nI'm reaching out\nPlease tell me what to do\nHere in the tower\nI'm calling out\nMy heart cries out for you\nGirl in the tower...\nHere in the tower...\n",
         "In this world (His world!)\nWhere life is strong\nIn this world (His world!)\nLife's an open book\nIn this world (His world!)\nWhere compromise does not exist\nIn his world of worlds, every step meets the rest!\nIn this world (His world!)\nWhere one is all\nIn this world (His world!)\nNever fear the fall\nIn this world (His world!)\nWhere compromise does not exist",
         "If there's something strange sleeping in your bed\nLemme tell you something\nIf there's somethin weird sleeping in your bed, ow!\nLemme tell you something\nbustin makes me feel good\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin buh buh bustin\n\nIf you're seein' things sleeping in your bed\nYeah yeah yeah yeah!\nAn invisible man sleeping in your bed, ow!\nLemme tell you something\nOw! Yeah yeah yeah!\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, feel good\n\nUh, freaky ghost baby\nUh, freaky ghost man\nUh, freaky man baby\nUh, Ow! Ow! Ow!\n\nIf you're all alone, lemme sleep in your bed, ow!\nSnoring\nLemme tell you something, sleeping makes me feel good\nSnoring\nI ain't afraid of no sleep, I ain't afraid of no bed\nAn invisible bed, a freaky ghost bed\nYeah yeah yeah yeah yeah yeah yeah yeah yeah\n\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, feel good\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin bustin makes me feel good, feel good, feel good, feel good, feel good, feel good, bustin makes me feel good!\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin bustin\nYeah yeah yeah!\nbustin bustin bustin bustin bustin bustin bustin makes me\nYeah yeah yeah!\nFeel good, feel good, feel good, feel good\nYeah yeah yeah!\nFeel good, feel good, bustin makes me\nFeel Good",
-        "Fates,\nWeave their threads,\nOur lives are sewn,\nBorn,\nTo a life,\nAll but our own,\nWe feel it inside,\nOur bones.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nLoves,\nIn your life,\nLive ever on.\nHome,\nIs not where you live,\nBut who cares when you’re gone.\nThey’ll follow you to,\nThe beyond.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nRun all you like,\nFrom the place you belong.\nIt’s always there,\nIt’s in the air,\nYour dearest kin,\nBelow the skin.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.\nIt’s in the blood.",
+        "Fates,\nWeave their threads,\nOur lives are sewn,\nBorn,\nTo a life,\nAll but our own,\nWe feel it inside,\nOur bones.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nLoves,\nIn your life,\nLive ever on.\nHome,\nIs not where you live,\nBut who cares when you're gone.\nThey'll follow you to,\nThe beyond.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nRun all you like,\nFrom the place you belong.\nIt's always there,\nIt's in the air,\nYour dearest kin,\nBelow the skin.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.\nIt's in the blood.",
         "We're no strangers to love,\nYou know the rules and so do I,\nA full commitment's what I'm thinking of,\nYou wouldn't get this from any other tracker,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nAnd if you ask me how I'm feeling,\nDon't tell me you're too blind to see,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nOoh (Give you up),\nOoh-ooh (Give you up),\nOoh-ooh,\nNever gonna give, never gonna give (Give you up),\nOoh-ooh,\nNever gonna give, never gonna give (Give you up),\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you,\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you,\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you",
+        "We're no strangers to love,\nYou know the rules and so do I,\nA full commitment's what I'm thinking of,\nYou wouldn't get this from any other tracker,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nAnd if you ask me how I'm feeling,\nDon't tell me you're too blind to see,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nOoh (Give you up),\nOoh-ooh (Give you up),\nOoh-ooh,\nAlways gonna give, Always gonna give (Give you up),\nOoh-ooh,\nAlways gonna give, Always gonna give (Give you up),\nWe've known each other for so long,\nYour heart's been aching, but you're too shy to say it,\nInside, we both know what's been going on,\nWe know the game, and we're gonna play it,\nI just wanna tell you how I'm feeling,\nGotta make you understand,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you,\nAlways gonna give you up,\nAlways gonna let you down,\nAlways gonna run around and desert you,\nAlways gonna make you cry,\nAlways gonna say goodbye,\nAlways gonna tell a lie and hurt you",
         "Good King Moggel Mog,\nGood King Mog,\nLord of all the land (Koopo!)\n\nGood King Moggel Mog,\nGood King Mog,\nRules with iron hand,\n\nGood King Moggel Mog,\nGood King Mog,\nLeads the brave and true!\n\nGood King Moggel Mog,\nGood King Mog,\nNow come along and meet his trusty crew!\nKupo!\n\nKupta Kapa will clip your tuft,\nSplit your hairs and ruffle your fluff,\n\nKupti Koop will throw you for a loop,\nBrave a wall of whiskers to find his troupe,\nKupli Kipp is sly yet sweet,\nHe'll tickle your nose then tickle your feet,\n\nJolly Kogi's eye for fun is clear,\nHe'll put an arrow straight in your rear!\n\nPukla Puki plays with fire,\nPoms a-burning on her pyre,\n\nPuksi Piko likes her buddies big,\nTo sing a little song and dance a little jig,\n\nPukna Pako shivers and shakes,\nShe'll stick you in the gut and give you bellyaches,\n\nAnd who's behind them, standing tall?\nWhy, the biggest moogle of them all!\nWho? Who?\n\nGood King Moggel Mog,\nGood King Mog,\nKind and noble lord (Hear, hear!)\nNod your noggle nog,\nAnd mind your gob,\nOr he'll put you to the sword!\n\nGood King Moggel Mog,\nGood King Mog,\nHis judgment you will dread,\n\nGood King Moggel Mog,\nGood King Mog,\nWhat do you decree?\nWhat do you decree?\nWhat do you decree?\nOff with their heads!"
       ]
     },
