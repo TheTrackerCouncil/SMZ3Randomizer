@@ -55,5 +55,10 @@ namespace Randomizer.SMZ3.Tracking
         /// in chat after Tracker starts.
         /// </summary>
         public int ChatGreetingTimeLimit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the current user.
+        /// </summary>
+        public string? UserName { get; set; }
     }
 }

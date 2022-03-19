@@ -122,6 +122,7 @@ namespace Randomizer.App.ViewModels
             MinimumSassConfidence = TrackerConfidenceSassThreshold,
             HintsEnabled = TrackerHintsEnabled,
             SpoilersEnabled = TrackerSpoilersEnabled,
+            UserName = TwitchChannel,
             ChatGreetingEnabled = EnableChatGreeting,
             ChatGreetingTimeLimit = ChatGreetingTimeLimit
         };
