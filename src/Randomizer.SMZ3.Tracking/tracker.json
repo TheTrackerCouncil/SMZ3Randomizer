@@ -1451,12 +1451,19 @@
       "The racing council will hear about this!",
       [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
       "How did you get to {1} without {2}?",
+      "But how did you get to {1} without {2}?",
+      "Don't you need {2} to get to {1}?",
+      "But I thought you needed {2} to get to {1}?",
       "By the way, nice tech."
     ],
     "TrackedOutOfLogicItemTooManyMissing": [
       "The racing council will hear about this!",
       [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
-      "How did you get to {1} with so many missing items?"
+      "But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.",
+      "How did you get to {1} with so many missing items?",
+      "Just... how?",
+      "How? You're missing so many items to get to {1}.",
+      "Impressive tech."
     ],
     "BossDefeated": [
       "Marked {0} as defeated.",
