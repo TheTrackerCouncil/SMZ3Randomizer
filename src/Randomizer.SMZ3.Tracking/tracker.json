@@ -1475,10 +1475,10 @@
     ],
     "Chat": {
       "RecognizedGreetings": [
-        "^(hey|hello|greetings) tracker[!.]?$",
+        "\\b(hi|hey|hello|greetings) tracker\\b",
         "\\bgood (morning|afternoon|evening|day) tracker\\b",
-        "\\b(pkroseHello|betusHey) tracker\\b",
-        "\\btracker (pkroseHello|betusHey)\\b",
+        "\\b(HeyGuys|ViHiYo|pkroseHello|betusHey) tracker\\b",
+        "\\btracker (HeyGuys|ViHiYo|pkroseHello|betusHey)\\b",
         "^tracker!+$",
         "\\bT R A C K E R\\b"
       ],
@@ -1503,7 +1503,10 @@
         "I've already greeted you {0}."
       ],
       "UserNamePronunciation": {
-        "vivelin": "vihvelin"
+        "vivelin": "vihvelin",
+        "PinkKittyRose": "Pink Kitty Rose",
+        "skennedysa": "s kennedy",
+        "the_betus": "the underscore beetus"
       }
     },
     "Hints": {
