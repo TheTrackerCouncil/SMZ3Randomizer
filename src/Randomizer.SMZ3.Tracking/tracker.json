@@ -1259,6 +1259,11 @@
       "What was that?",
       [ "English motherfucker, do you speak it?", 0.05 ]
     ],
+    "Interrupted": [
+      "Excuse me. <break strength='weak'/> As I was saying...",
+      "Can you not? <break strength='weak'/> As I was saying...",
+      "I'm talking here. <break strength='weak'/> Anyway..."
+    ],
     "TrackedItem": [
       "Toggling {0} on.",
       "Toggled {0} on.",
