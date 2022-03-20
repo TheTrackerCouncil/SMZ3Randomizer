@@ -38,6 +38,7 @@ namespace Randomizer.Shared
             return -1;
         }
 
+#nullable enable
         /// <summary>
         /// Filters a sequence of nullable values and returns only elements that
         /// have a value.
@@ -54,5 +55,6 @@ namespace Randomizer.Shared
             return source.Where(x => x != null)
                 .Select(x => x!);
         }
+#nullable restore
     }
 }

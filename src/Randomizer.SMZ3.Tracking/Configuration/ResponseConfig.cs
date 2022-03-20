@@ -325,6 +325,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Including some out of logic checks that require {2}, such as {1}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when clearing all locations in a
+        /// dungeon, but some of the cleared locations were out of logic with too many missing items.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is a placeholder for the name of a location that was missed.
+        /// </remarks>
+        public SchrodingersString DungeonClearedWithTooManyInaccessibleItems { get; init; }
+            = new("Are you sure you got everything?");
+
+        /// <summary>
         /// Gets the phrases to respond with when clearing a dungeon.
         /// </summary>
         /// <remarks>

@@ -1537,13 +1537,19 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     var anyMissedLocation = inaccessibleLocations.Random(s_random);
                     var locationInfo = WorldInfo.Location(anyMissedLocation);
-                    var missingItems = Logic.GetMissingRequiredItems(anyMissedLocation, progress)
-                        .Random(s_random)
-                        .Select(FindItemByType)
-                        .NonNull();
-                    var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
-
-                    Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
+                    var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress);
+                    if (missingItemCombinations.Any())
+                    {
+                        var missingItems = missingItemCombinations.Random(s_random)
+                                .Select(FindItemByType)
+                                .NonNull();
+                        var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
+                        Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
+                    }
+                    else
+                    {
+                        Say(x => x.DungeonClearedWithTooManyInaccessibleItems, dungeon.Name, locationInfo.Name);
+                    }
                 }
             }
             else

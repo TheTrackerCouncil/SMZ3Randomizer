@@ -1365,6 +1365,11 @@
       "Also cleared some checks that require {2}. You might want to double-check {1}.",
       "You might want to double-check {1} because it requires {2}."
     ],
+    "DungeonClearedWithTooManyInaccessibleItems": [
+      "Are you sure you cleared {0}? You're missing way too many items to get to {1}.",
+      "I doubt you got {1} though. Not with that many missing items.",
+      "I doubt you got {1} though. Not without so many items."
+    ],
     "DungeonBossCleared": [
       "Marked {1} as defeated.",
       "Congratulations on beating off {1}.",
