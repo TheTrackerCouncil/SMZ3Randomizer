@@ -452,12 +452,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible region
         /// names mapped to the primary region name.
         /// </returns>
-        protected virtual Choices GetRegionNames()
+        protected virtual Choices GetRegionNames(bool excludeDungeons = false)
         {
             var regionNames = new Choices();
 
             foreach (var region in Tracker.WorldInfo.Regions)
             {
+                if (excludeDungeons && Tracker.WorldInfo.Dungeon(region.TypeName) != null)
+                    continue;
+
                 foreach (var name in region.Name)
                     regionNames.Add(new SemanticResultValue(name.Text, region.TypeName));
             }

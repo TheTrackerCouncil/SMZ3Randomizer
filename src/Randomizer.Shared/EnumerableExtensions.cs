@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Randomizer.Shared
 {
@@ -35,6 +36,23 @@ namespace Randomizer.Shared
             }
 
             return -1;
+        }
+
+        /// <summary>
+        /// Filters a sequence of nullable values and returns only elements that
+        /// have a value.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of element in <paramref name="source"/>.
+        /// </typeparam>
+        /// <param name="source">The collection to filter on.</param>
+        /// <returns>
+        /// A new collection that has no <see langword="null"/> values.
+        /// </returns>
+        public static IEnumerable<T> NonNull<T>(this IEnumerable<T?> source)
+        {
+            return source.Where(x => x != null)
+                .Select(x => x!);
         }
     }
 }

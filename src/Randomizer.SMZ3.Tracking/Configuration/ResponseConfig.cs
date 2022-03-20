@@ -14,7 +14,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? StartedTracking { get; init; }
 
         /// <summary>
-        /// Gets the phrases to respond with when tracker starts in "alternate" mode.
+        /// Gets the phrases to respond with when tracker starts in "alternate"
+        /// mode.
         /// </summary>
         public SchrodingersString? StartingTrackingAlternate { get; init; }
 
@@ -291,13 +292,46 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new SchrodingersString("You already marked every dungeon.");
 
         /// <summary>
+        /// Gets the phrases to respond with when clearing all locations in a
+        /// dungeon.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonCleared { get; init; }
+             = new("Cleared everything in {0}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when clearing all location in a
+        /// dungeon, but all locations are already cleared.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon.
+        /// </remarks>
+        public SchrodingersString DungeonAlreadyCleared { get; init; }
+            = new("But you already got everything in {0}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when clearing all locations in a
+        /// dungeon, but some of the cleared locations were out of logic.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
+        /// is a placeholder for the name of a location that was missed.
+        /// <c>{2}</c> is a placeholder for the items that are required for a
+        /// missed location.
+        /// </remarks>
+        public SchrodingersString DungeonClearedWithInaccessibleItems { get; init; }
+            = new("Including some out of logic checks that require {2}, such as {1}.");
+
+        /// <summary>
         /// Gets the phrases to respond with when clearing a dungeon.
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the dungeon that was
         /// cleared. <c>{1}</c> is a placeholder for the boss of the dungeon.
         /// </remarks>
-        public SchrodingersString DungeonCleared { get; init; }
+        public SchrodingersString DungeonBossCleared { get; init; }
             = new SchrodingersString("Cleared {0}.", "Marked {1} as defeated.");
 
         /// <summary>
@@ -308,7 +342,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <c>{0}</c> is a placeholder for the name of the dungeon that was
         /// cleared. <c>{1}</c> is a placeholder for the boss of the dungeon.
         /// </remarks>
-        public SchrodingersString DungeonAlreadyCleared { get; init; }
+        public SchrodingersString DungeonBossAlreadyCleared { get; init; }
             = new SchrodingersString("You already cleared {0}.", "You already defeated {1}.");
 
         /// <summary>
@@ -319,7 +353,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
         /// is a placeholder for the boss of the dungeon.
         /// </remarks>
-        public SchrodingersString DungeonUncleared { get; init; }
+        public SchrodingersString DungeonBossUncleared { get; init; }
             = new SchrodingersString("Reset {0}.", "Marked {1} as still alive.");
 
         /// <summary>
@@ -330,7 +364,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <c>{0}</c> is a placeholder for the name of the dungeon. <c>{1}</c>
         /// is a placeholder for the boss of the dungeon.
         /// </remarks>
-        public SchrodingersString DungeonNotYetCleared { get; init; }
+        public SchrodingersString DungeonBossNotYetCleared { get; init; }
             = new SchrodingersString("You haven't cleared {0} yet.", "You never defeated {1} in the first place.");
 
         /// <summary>

@@ -1381,17 +1381,8 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public void ClearArea(IHasLocations area, bool trackItems, bool includeUnavailable = false, float? confidence = null, bool assumeKeys = false)
         {
-            Action? undoTrackDungeon = null;
-
-            var dungeon = WorldInfo.Dungeons.SingleOrDefault(x => area is Region region && x.Is(region));
-            if (dungeon != null)
-            {
-                assumeKeys = true; // Always assume keys when clearing the dungeon itself
-            }
-
             var locations = area.Locations
                 .Where(x => !x.Cleared)
-                .WhereIf(dungeon != null, x => x.Type != LocationType.NotInDungeon)
                 .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression(assumeKeys)))
                 .ToImmutableList();
 
@@ -1401,7 +1392,6 @@ namespace Randomizer.SMZ3.Tracking
             {
                 var outOfLogicLocations = area.Locations
                     .Where(x => !x.Cleared)
-                    .WhereIf(dungeon != null, x => x.Type != LocationType.NotInDungeon)
                     .Count();
 
                 if (outOfLogicLocations > 1)
@@ -1413,12 +1403,6 @@ namespace Randomizer.SMZ3.Tracking
             }
             else
             {
-                if (dungeon != null)
-                {
-                    dungeon.Cleared = true;
-                    OnDungeonUpdated(new(confidence));
-                }
-
                 // If there is only one (available) item here, just call the
                 // regular TrackItem instead
                 var onlyLocation = locations.TrySingle();
@@ -1502,12 +1486,6 @@ namespace Randomizer.SMZ3.Tracking
                     {
                         Say(x => x.ClearedMultipleItems, itemsCleared, area.GetName());
                     }
-
-                    if (dungeon != null && treasureTracked > 0)
-                    {
-                        TrackDungeonTreasure(dungeon, amount: treasureTracked);
-                        undoTrackDungeon = _undoHistory.Pop();
-                    }
                 }
                 OnItemTracked(new ItemTrackedEventArgs(null, confidence));
             }
@@ -1516,9 +1494,6 @@ namespace Randomizer.SMZ3.Tracking
 
             AddUndo(() =>
             {
-                if (dungeon != null)
-                    dungeon.Cleared = false;
-
                 foreach (var location in locations)
                 {
                     if (trackItems)
@@ -1529,8 +1504,61 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     location.Cleared = false;
                 }
-                undoTrackDungeon?.Invoke();
                 UpdateTrackerProgression = true;
+            });
+        }
+
+        /// <summary>
+        /// Marks all locations and treasure within a dungeon as cleared.
+        /// </summary>
+        /// <param name="dungeon">The dungeon to clear.</param>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void ClearDungeon(DungeonInfo dungeon, float? confidence = null)
+        {
+            var remaining = dungeon.TreasureRemaining;
+            if (remaining > 0)
+            {
+                dungeon.TreasureRemaining = 0;
+                dungeon.Cleared = true;
+            }
+
+            var progress = GetProgression();
+            var locations = dungeon.GetLocations(World).Where(x => !x.Cleared).ToList();
+            var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
+            if (locations.Count > 0)
+            {
+                locations.ForEach(x => x.Cleared = true);
+            }
+
+            if (remaining > 0 || locations.Count > 0)
+            {
+                Say(x => x.DungeonCleared, dungeon.Name);
+                if (inaccessibleLocations.Count > 0)
+                {
+                    var anyMissedLocation = inaccessibleLocations.Random(s_random);
+                    var locationInfo = WorldInfo.Location(anyMissedLocation);
+                    var missingItems = Logic.GetMissingRequiredItems(anyMissedLocation, progress)
+                        .Random(s_random)
+                        .Select(FindItemByType)
+                        .NonNull();
+                    var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
+
+                    Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
+                }
+            }
+            else
+            {
+                Say(x => x.DungeonAlreadyCleared, dungeon.Name);
+            }
+
+            OnDungeonUpdated(new(confidence));
+
+            AddUndo(() =>
+            {
+                dungeon.TreasureRemaining = remaining;
+                if (remaining > 0)
+                    dungeon.Cleared = false;
+                locations.ForEach(x => x.Cleared = false);
             });
         }
 
@@ -1595,12 +1623,12 @@ namespace Randomizer.SMZ3.Tracking
 
             if (dungeon.Cleared)
             {
-                Say(Responses.DungeonAlreadyCleared.Format(dungeon.Name, dungeon.Boss));
+                Say(Responses.DungeonBossAlreadyCleared.Format(dungeon.Name, dungeon.Boss));
                 return;
             }
 
             dungeon.Cleared = true;
-            Say(Responses.DungeonCleared.Format(dungeon.Name, dungeon.Boss));
+            Say(Responses.DungeonBossCleared.Format(dungeon.Name, dungeon.Boss));
 
             // Try to track the associated boss reward item
             Action? undoTrack = null;
@@ -1697,13 +1725,13 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (!dungeon.Cleared)
             {
-                Say(Responses.DungeonNotYetCleared.Format(dungeon.Name, dungeon.Boss));
+                Say(Responses.DungeonBossNotYetCleared.Format(dungeon.Name, dungeon.Boss));
                 return;
             }
 
             UpdateTrackerProgression = true;
             dungeon.Cleared = false;
-            Say(Responses.DungeonUncleared.Format(dungeon.Name, dungeon.Boss));
+            Say(Responses.DungeonBossUncleared.Format(dungeon.Name, dungeon.Boss));
 
             // Try to untrack the associated boss reward item
             Action? undoUnclear = null;

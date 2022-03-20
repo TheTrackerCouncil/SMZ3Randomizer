@@ -1352,23 +1352,34 @@
       "You did that already."
     ],
     "DungeonCleared": [
+      "Cleared all items from {0}",
+      "Marked {0} as all clear"
+    ],
+    "DungeonAlreadyCleared": [
+      "But you already cleared {0}.",
+      "But there's nothing left in {0}."
+    ],
+    "DungeonClearedWithInaccessibleItems": [
+      "Including some out of logic checks that need {2}, like {1}.",
+      "Including some inaccessible areas that require {2}, such as {1}.",
+      "Also cleared some checks that require {2}. You might want to double-check {1}.",
+      "You might want to double-check {1} because it requires {2}."
+    ],
+    "DungeonBossCleared": [
       "Marked {1} as defeated.",
       "Congratulations on beating off {1}.",
       "RIP {1}",
       [ "f", 0.05 ]
     ],
-    "DungeonAlreadyCleared": [
-      "But you already cleared {0}.",
+    "DungeonBossAlreadyCleared": [
       "But you already defeated {1}.",
       "But {1} is already dead."
     ],
-    "DungeonUncleared": [
-      "Marked {0} as incomplete.",
+    "DungeonBossUncleared": [
       "Marked {1} as still alive.",
       "Revived {1}."
     ],
-    "DungeonNotYetCleared": [
-      "But you haven't cleared {0} yet.",
+    "DungeonBossNotYetCleared": [
       "But you never defeated {1} in the first place."
     ],
     "DungeonRequirementMarked": [
