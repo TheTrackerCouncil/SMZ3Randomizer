@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Randomizer.App.Controls"
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
+        x:Name="Self"
         ResizeMode="NoResize"
         mc:Ignorable="d"
         Title="Options - SMZ3 Cas' Randomizer"
@@ -184,30 +185,39 @@
             </Expander.Header>
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
-              <controls:LabeledControl Text="Twitch user name:">
-                <TextBox Text="{Binding TwitchUserName, Mode=TwoWay}" />
+              <controls:LabeledControl Text="Twitch user name:"
+                                       ToolTip="The name of the logged-in user. This could be either your own account, or that of a bot.">
+                <TextBox Text="{Binding TwitchUserName, Mode=TwoWay}"
+                         IsEnabled="{Binding IsLoggingIn, ElementName=Self}" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Twitch OAuth token:">
-                <TextBox Text="{Binding TwitchOAuthToken, Mode=TwoWay}" />
+              <controls:LabeledControl Text="Twitch OAuth token:"
+                                       ToolTip="The OAuth access token used to access Twitch. Please keep this a secret.">
+                <TextBox Text="{Binding TwitchOAuthToken, Mode=TwoWay}"
+                         IsEnabled="{Binding IsLoggingIn, ElementName=Self}" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Twitch channel:">
-                <TextBox Text="{Binding TwitchChannel, Mode=TwoWay}" />
+              <controls:LabeledControl Text="Twitch channel:"
+                                       ToolTip="The channel to join and monitor for messages. This should be your own channel, even if you use a bot account above.">
+                <TextBox Text="{Binding TwitchChannel, Mode=TwoWay}"
+                         IsEnabled="{Binding IsLoggingIn, ElementName=Self}" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="">
                 <Button x:Name="TwitchLoginButton"
                         Click="TwitchLoginButton_Click"
                         Content="Log in with Twitch"
+                        IsEnabled="{Binding IsLoggingIn, ElementName=Self}"
                         Margin="0"
                         HorizontalAlignment="Left" />
               </controls:LabeledControl>
 
               <CheckBox x:Name="EnableChatGreetingCheckBox"
                         Content="Enable responding to chat"
+                        ToolTip="When this is checked, Tracker will monitor chat for greetings and greet viewers in response."
                         IsChecked="{Binding EnableChatGreeting}" />
-              <controls:LabeledControl Text="Chat greeting time limit:"
+              <controls:LabeledControl Text="Stop responding to chat after:"
+                                       ToolTip="After this many minutes have expired, Tracker will no longer greet users in chat."
                                        IsEnabled="{Binding IsChecked, ElementName=EnableChatGreetingCheckBox}">
                 <StackPanel Orientation="Horizontal">
                   <TextBox Text="{Binding ChatGreetingTimeLimit}"
