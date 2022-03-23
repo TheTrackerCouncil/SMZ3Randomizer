@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
@@ -22,6 +23,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.Providers;
 
 namespace Randomizer.App
 {
@@ -42,7 +44,7 @@ namespace Randomizer.App
             _serviceProvider = serviceProvider;
             _randomizer = serviceProvider.GetService<Smz3Randomizer>();
             _romGenerator = serviceProvider.GetService<RomGenerator>();
-            _locationConfig = serviceProvider.GetService<TrackerConfigProvider>().GetLocationConfig();
+            _locationConfig = serviceProvider.GetService<IConfigProvider>().GetLocationConfig();
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);

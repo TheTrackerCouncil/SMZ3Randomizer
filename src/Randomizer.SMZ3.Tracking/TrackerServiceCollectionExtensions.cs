@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.Providers;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -32,21 +32,26 @@ namespace Randomizer.SMZ3.Tracking
             services.AddBasicTrackerModules<TrackerModuleFactory>();
             services.AddScoped<TrackerModuleFactory>();
 
+#if DEBUG
+            services.AddSingleton<IConfigProvider, EmbeddedJsonConfigProvider>();
+#else
+            services.AddSingleton<IConfigProvider, TrackerConfigProvider>();
+#endif
+
             services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
-            services.AddSingleton<TrackerConfigProvider>();
             services.AddScoped(serviceProvider =>
             {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                var configProvider = serviceProvider.GetRequiredService<IConfigProvider>();
                 return configProvider.GetMapConfig();
             });
             services.AddScoped(serviceProvider =>
             {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                var configProvider = serviceProvider.GetRequiredService<IConfigProvider>();
                 return configProvider.GetTrackerConfig();
             });
             services.AddScoped(serviceProvider =>
             {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                var configProvider = serviceProvider.GetRequiredService<IConfigProvider>();
                 return configProvider.GetLocationConfig();
             });
 

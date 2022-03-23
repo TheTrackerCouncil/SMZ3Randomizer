@@ -4,17 +4,13 @@ using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
 
-using Microsoft.Extensions.Logging;
-
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.Providers
 {
     /// <summary>
-    /// Provides tracker configuration data.
+    /// Provides tracker configuration data from the embedded resources.
     /// </summary>
-    public class TrackerConfigProvider
+    public class EmbeddedJsonConfigProvider : IConfigProvider
     {
         private static readonly JsonSerializerOptions s_options = new()
         {
@@ -23,17 +19,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         };
 
-        private readonly string _basePath;
-        private readonly ILogger<TrackerConfigProvider>? _logger;
-
         /// <summary>
         /// Initializes a new instance of the <see
         /// cref="TrackerConfigProvider"/> class.
         /// </summary>
-        public TrackerConfigProvider(ILogger<TrackerConfigProvider>? logger)
+        public EmbeddedJsonConfigProvider()
         {
-            _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer"); ;
-            _logger = logger;
         }
 
         /// <summary>
@@ -69,20 +60,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         protected virtual T LoadConfig<T>(string fileName)
         {
-#if DEBUG
             return GetBuiltInConfig<T>(fileName);
-#else
-            var jsonPath = Path.Combine(_basePath, fileName);
-            if (!File.Exists(jsonPath))
-            {
-                _logger?.LogWarning("Could not find configuration file '{path}'. Falling back to embedded resource.", jsonPath);
-                return GetBuiltInConfig<T>(fileName);
-            }
-
-            var json = File.ReadAllText(jsonPath);
-            return JsonSerializer.Deserialize<T>(json, s_options)
-                ?? throw new InvalidOperationException($"The '{jsonPath}' configuration could not be loaded.");
-#endif
         }
 
         private static T GetBuiltInConfig<T>(string fileName)
