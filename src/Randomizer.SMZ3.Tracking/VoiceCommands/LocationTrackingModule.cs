@@ -40,6 +40,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         includeUnavailable: false,
                         confidence: result.Confidence);
                 }
+                else if (result.Semantics.ContainsKey(DungeonKey))
+                {
+                    var dungeon = GetDungeonFromResult(tracker, result);
+                    tracker.ClearDungeon(dungeon, result.Confidence);
+                }
                 else if (result.Semantics.ContainsKey(RegionKey))
                 {
                     var region = GetRegionFromResult(tracker, result);
@@ -106,8 +111,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetClearAreaRule()
         {
+            var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
             var roomNames = GetRoomNames();
-            var regionNames = GetRegionNames();
+            var regionNames = GetRegionNames(excludeDungeons: true);
+
+            var clearDungeon = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("clear", "please clear")
+                .Append(DungeonKey, dungeonNames);
 
             var clearRoom = new GrammarBuilder()
                 .Append("Hey tracker,")
@@ -119,7 +130,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("clear", "please clear")
                 .Append(RegionKey, regionNames);
 
-            return GrammarBuilder.Combine(clearRoom, clearRegion);
+            return GrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
         }
     }
 }

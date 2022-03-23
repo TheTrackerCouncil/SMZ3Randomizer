@@ -222,7 +222,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public IReadOnlyCollection<Location> GetLocations(World world)
         {
             var region = GetRegion(world);
-            return region.Locations.ToImmutableList();
+            return region.Locations.Where(x => x.Type != LocationType.NotInDungeon).ToImmutableList();
         }
     }
 }
