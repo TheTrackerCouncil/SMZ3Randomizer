@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.Providers
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="TrackerConfigProvider"/> class.
+        /// cref="EmbeddedJsonConfigProvider"/> class.
         /// </summary>
         public EmbeddedJsonConfigProvider()
         {

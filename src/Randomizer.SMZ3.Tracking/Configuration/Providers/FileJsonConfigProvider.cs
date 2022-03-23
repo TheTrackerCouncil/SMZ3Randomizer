@@ -1,20 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.Providers
 {
     /// <summary>
-    /// Provides tracker configuration data.
+    /// Provides tracker configuration data from the file system.
     /// </summary>
-    public class TrackerConfigProvider : IConfigProvider
+    public class FileJsonConfigProvider : IConfigProvider
     {
         private static readonly JsonSerializerOptions s_options = new()
         {
@@ -24,13 +21,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration.Providers
         };
 
         private readonly string _basePath;
-        private readonly ILogger<TrackerConfigProvider>? _logger;
+        private readonly ILogger<FileJsonConfigProvider>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="TrackerConfigProvider"/> class.
+        /// cref="FileJsonConfigProvider"/> class.
         /// </summary>
-        public TrackerConfigProvider(ILogger<TrackerConfigProvider>? logger)
+        public FileJsonConfigProvider(ILogger<FileJsonConfigProvider>? logger)
         {
             _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer"); ;
             _logger = logger;
@@ -72,25 +69,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.Providers
             var jsonPath = Path.Combine(_basePath, fileName);
             if (!File.Exists(jsonPath))
             {
-                _logger?.LogWarning("Could not find configuration file '{path}'. Falling back to embedded resource.", jsonPath);
-                return GetBuiltInConfig<T>(fileName);
+                throw new FileNotFoundException($"The '{jsonPath}' configuration file does not exist.");
             }
 
             var json = File.ReadAllText(jsonPath);
             return JsonSerializer.Deserialize<T>(json, s_options)
                 ?? throw new InvalidOperationException($"The '{jsonPath}' configuration could not be loaded.");
-        }
-
-        private static T GetBuiltInConfig<T>(string fileName)
-        {
-            var stream = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("Randomizer.SMZ3.Tracking." + fileName);
-            if (stream == null)
-                throw new FileNotFoundException($"Could not find embedded stream in Randomizer.SMZ3.Tracking for '{fileName}'.");
-
-            using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
-            return JsonSerializer.Deserialize<T>(reader.ReadToEnd(), s_options)
-                ?? throw new InvalidOperationException("The embedded tracker configuration could not be loaded.");
         }
     }
 }
