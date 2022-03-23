@@ -1530,35 +1530,34 @@ namespace Randomizer.SMZ3.Tracking
                 locations.ForEach(x => x.Cleared = true);
             }
 
-            if (remaining > 0 || locations.Count > 0)
+            if (remaining <= 0 && locations.Count <= 0)
             {
-                Say(x => x.DungeonCleared, dungeon.Name);
-                if (inaccessibleLocations.Count > 0)
-                {
-                    var anyMissedLocation = inaccessibleLocations.Random(s_random);
-                    var locationInfo = WorldInfo.Location(anyMissedLocation);
-                    var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress);
-                    if (missingItemCombinations.Any())
-                    {
-                        var missingItems = missingItemCombinations.Random(s_random)
-                                .Select(FindItemByType)
-                                .NonNull();
-                        var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
-                        Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
-                    }
-                    else
-                    {
-                        Say(x => x.DungeonClearedWithTooManyInaccessibleItems, dungeon.Name, locationInfo.Name);
-                    }
-                }
-            }
-            else
-            {
+                // We didn't do anything
                 Say(x => x.DungeonAlreadyCleared, dungeon.Name);
+                return;
+            }
+
+            Say(x => x.DungeonCleared, dungeon.Name);
+            if (inaccessibleLocations.Count > 0)
+            {
+                var anyMissedLocation = inaccessibleLocations.Random(s_random);
+                var locationInfo = WorldInfo.Location(anyMissedLocation);
+                var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress);
+                if (missingItemCombinations.Any())
+                {
+                    var missingItems = missingItemCombinations.Random(s_random)
+                            .Select(FindItemByType)
+                            .NonNull();
+                    var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
+                    Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
+                }
+                else
+                {
+                    Say(x => x.DungeonClearedWithTooManyInaccessibleItems, dungeon.Name, locationInfo.Name);
+                }
             }
 
             OnDungeonUpdated(new(confidence));
-
             AddUndo(() =>
             {
                 dungeon.TreasureRemaining = remaining;
