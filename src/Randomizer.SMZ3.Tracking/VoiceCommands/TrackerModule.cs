@@ -276,6 +276,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         {
                             Logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
                                 e.Result.Text, e.Result.Confidence);
+                            Tracker.RestartIdleTimers();
 
                             if (Tracker.SpeechQueueCount >= 1)
                                 Tracker.HandleInterruption();
@@ -293,6 +294,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 // executed, but high enough to be recognized,
                                 // let Tracker say something
                                 Tracker.Say(Tracker.Responses.Misheard);
+                                Tracker.RestartIdleTimers();
                             }
                         }
                     }

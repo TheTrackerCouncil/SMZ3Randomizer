@@ -2158,7 +2158,7 @@ namespace Randomizer.SMZ3.Tracking
             return dungeon;
         }
 
-        private void RestartIdleTimers()
+        internal void RestartIdleTimers()
         {
             foreach (var item in _idleTimers)
             {
