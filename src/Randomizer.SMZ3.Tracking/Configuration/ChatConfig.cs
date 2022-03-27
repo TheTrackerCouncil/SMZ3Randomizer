@@ -22,11 +22,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Hello chat.");
 
         /// <summary>
-        /// Gets the phrases to respond with when greeting by someone in chat.
+        /// Gets the phrases to respond with when greeted by someone in chat.
         /// </summary>
         /// <remarks>
-        /// <c>{0}</c> is a placeholder for the user name of the person in chat
-        /// to respond to.
+        /// <c>{0}</c> is a placeholder for the display name of the person in
+        /// chat to respond to.
         /// </remarks>
         public SchrodingersString GreetingResponses { get; init; }
             = new("Hey {0}");
@@ -36,10 +36,19 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// second time in chat.
         /// </summary>
         /// <remarks>
-        /// <c>{0}</c> is a placeholder for the user name of the person in chat
-        /// to respond to.
+        /// <c>{0}</c> is a placeholder for the display name of the person in
+        /// chat to respond to.
         /// </remarks>
         public SchrodingersString? GreetedTwice { get; init; }
+
+        /// <summary>
+        /// Gets the phrases to respond with when greeted by the broadcaster.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the display name of the person in
+        /// chat to respond to.
+        /// </remarks>
+        public SchrodingersString? GreetedChannel { get; init; }
 
         /// <summary>
         /// Gets a dictionary that contains usernames and their replacement for

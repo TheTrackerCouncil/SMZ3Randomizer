@@ -68,10 +68,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var stopwatch = Stopwatch.StartNew();
             try
             {
-                var userName = Tracker.CorrectUserNamePronunciation(e.Message.Sender);
+                var senderName = Tracker.CorrectUserNamePronunciation(e.Message.SenderUserName);
 
                 if (ShouldRespondToGreetings)
-                    TryRespondToGreetings(e.Message, userName);
+                    TryRespondToGreetings(e.Message, senderName);
             }
             catch (Exception ex)
             {
@@ -89,23 +89,32 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             && (Tracker.Options.ChatGreetingTimeLimit == 0
                 || Tracker.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
 
-        private void TryRespondToGreetings(ChatMessage message, string userName)
+        private void TryRespondToGreetings(ChatMessage message, string senderName)
         {
             foreach (var recognizedGreeting in Tracker.Responses.Chat.RecognizedGreetings)
             {
                 if (Regex.IsMatch(message.Text, recognizedGreeting, RegexOptions.IgnoreCase | RegexOptions.Singleline))
                 {
+                    // Sass if it was the broadcaster
+                    if (message.SenderUserName.Equals(Tracker.Options.UserName)
+                        && Tracker.Responses.Chat.GreetedChannel != null)
+                    {
+                        Tracker.Say(x => x.Chat.GreetedChannel, senderName);
+                        break;
+                    }
+
+                    // Otherwise, keep track of the number of times someone said hi
                     if (_usersGreetedTimes.TryGetValue(message.Sender, out var greeted))
                     {
                         if (greeted >= 2)
                             break;
 
-                        Tracker.Say(x => x.Chat.GreetedTwice, userName);
+                        Tracker.Say(x => x.Chat.GreetedTwice, senderName);
                         _usersGreetedTimes[message.Sender]++;
                     }
                     else
                     {
-                        Tracker.Say(x => x.Chat.GreetingResponses, userName);
+                        Tracker.Say(x => x.Chat.GreetingResponses, senderName);
                         _usersGreetedTimes.Add(message.Sender, 1);
                     }
                     break;

@@ -1234,7 +1234,7 @@
       "Good evening",
       "Let's roll.",
       "Let's get ready to rumble.",
-      [ "My fate is sealed. I have <break strength='weak'/> no choice.", 90.5 ],
+      [ "My fate is sealed. I have <break strength='weak'/> no choice.", 0.5 ],
       [ "You have selected Tracker as your computer's default voice.", 0.8 ],
       [ "<voice gender='male'><prosody rate='slow'>Hey.</prosody></voice>", 0.05 ],
       [ "Toggled; Oh for the love of; Excuse me one second. <prosody volume='soft'>God dammit this had better be good.</prosody> <voice gender='male'><prosody volume='x-soft'>Mom says it's my turn to do the tracking.</prosody></voice> <prosody volume='soft'>The FUCK it is. Now get out of here you little shit, the seed's already started.</prosody> Sorry, I'm here; just had to deal with my little brother. Let's roll.", 0.01 ],
@@ -1563,6 +1563,11 @@
         "Hi again {0}",
         "I already said hi to you {0}.",
         "I've already greeted you {0}."
+      ],
+      "GreetedChannel": [
+        "Shouldn't you focus on the seed {0}?",
+        "Is the logic too dull for you {0}?",
+        "Don't you have something better to do {0}?"
       ],
       "UserNamePronunciation": {
         "vivelin": "vihvelin",
