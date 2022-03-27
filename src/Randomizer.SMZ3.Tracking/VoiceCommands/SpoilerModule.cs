@@ -636,7 +636,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
-                .OneOf("where is", "where's", "where are", "where can I find")
+                .OneOf("where is", "where's", "where are", "where can I find",
+                    "where the fuck is", "where the hell is",
+                    "where the heck is")
                 .Optional("the", "a", "an")
                 .Append(ItemNameKey, items);
         }

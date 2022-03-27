@@ -297,9 +297,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public string CorrectUserNamePronunciation(string userName)
         {
-            if (Responses.Chat.UserNamePronunciation.TryGetValue(userName, out var correctedUserName))
-                return correctedUserName;
-            return userName;
+            var correctedUserName = Responses.Chat.UserNamePronunciation
+                .SingleOrDefault(x => x.Key.Equals(userName, StringComparison.OrdinalIgnoreCase));
+
+            return correctedUserName.Value ?? userName;
         }
 
         /// <summary>
@@ -2158,7 +2159,7 @@ namespace Randomizer.SMZ3.Tracking
             return dungeon;
         }
 
-        private void RestartIdleTimers()
+        internal void RestartIdleTimers()
         {
             foreach (var item in _idleTimers)
             {

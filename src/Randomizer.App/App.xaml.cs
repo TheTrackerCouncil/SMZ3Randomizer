@@ -79,7 +79,7 @@ namespace Randomizer.App
             services.AddScoped<TrackerLocationSyncer>();
 
             // Chat
-            services.AddSingleton<IChatClient, TwitchChatClient>();
+            services.AddScoped<IChatClient, TwitchChatClient>();
             services.AddSingleton<IChatAuthenticationService, TwitchAuthenticationService>();
 
             // WPF

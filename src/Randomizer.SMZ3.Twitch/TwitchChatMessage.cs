@@ -11,7 +11,9 @@ namespace Randomizer.SMZ3.Twitch
     public class TwitchChatMessage : ChatMessage
     {
         public TwitchChatMessage(TwitchLib.Client.Models.ChatMessage message)
-            : base(message.Username, message.Message)
+            : base(sender: message.DisplayName,
+                   userName: message.Username,
+                   text: message.Message)
         {
 
         }
