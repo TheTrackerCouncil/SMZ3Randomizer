@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -42,12 +43,15 @@ namespace Randomizer.SMZ3.Tracking
         private readonly Stack<Action> _undoHistory = new();
         private readonly RandomizerContext _dbContext;
 
+        private readonly ConcurrentQueue<string> _speechQueue = new();
+
         private DateTime _startTime = DateTime.MinValue;
         private bool _disposed;
         private string? _mood;
         private string? _lastSpokenText;
         private Dictionary<string, Progression> _progression = new();
         private bool _alternateTracker;
+        private int _interruptions = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -100,6 +104,7 @@ namespace Randomizer.SMZ3.Tracking
 
             _tts = new SpeechSynthesizer();
             _tts.SelectVoiceByHints(_alternateTracker ? VoiceGender.Male : VoiceGender.Female);
+            _tts.SpeakCompleted += (sender, e) => _speechQueue.TryDequeue(out _);
 
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
@@ -269,6 +274,11 @@ namespace Randomizer.SMZ3.Tracking
         public bool IsDirty { get; set; }
 
         /// <summary>
+        /// Gets the number of queued up speech synthesis actions.
+        /// </summary>
+        public int SpeechQueueCount => _speechQueue.Count;
+
+        /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
         /// text-to-speech engine.
         /// </summary>
@@ -278,10 +288,13 @@ namespace Randomizer.SMZ3.Tracking
             => name.Replace("Samus", "Sammus");
 
         /// <summary>
-        /// Attempts to replace a user name with a pronunciation-corrected version of it.
+        /// Attempts to replace a user name with a pronunciation-corrected
+        /// version of it.
         /// </summary>
         /// <param name="userName">The user name to correct.</param>
-        /// <returns>The corrected user name, or <paramref name="userName"/>.</returns>
+        /// <returns>
+        /// The corrected user name, or <paramref name="userName"/>.
+        /// </returns>
         public string CorrectUserNamePronunciation(string userName)
         {
             if (Responses.Chat.UserNamePronunciation.TryGetValue(userName, out var correctedUserName))
@@ -771,6 +784,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             DisableVoiceRecognition();
             _tts.SpeakAsyncCancelAll();
+            _speechQueue.Clear();
             _chatClient.Disconnect();
             Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
@@ -883,6 +897,7 @@ namespace Randomizer.SMZ3.Tracking
 
             var formattedText = FormatPlaceholders(text);
             var prompt = ParseText(formattedText);
+            _speechQueue.Enqueue(text);
             if (wait)
                 _tts.Speak(prompt);
             else
@@ -950,6 +965,7 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void ShutUp()
         {
             _tts.SpeakAsyncCancelAll();
+            _speechQueue.Clear();
         }
 
         /// <summary>
@@ -1862,6 +1878,26 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.PegWorldModeDone);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
             AddUndo(() => PegWorldMode = true);
+        }
+
+        internal void HandleInterruption()
+        {
+            if (Options.InterruptionTolerance < 0
+                || (++_interruptions % Options.InterruptionTolerance) != 0)
+            {
+                return;
+            }
+
+            if (Responses.Interrupted != null)
+            {
+                var remainingSpeech = _speechQueue.ToList();
+                _tts.SpeakAsyncCancelAll();
+
+                Say(x => x.Interrupted);
+
+                foreach (var queuedSpeech in remainingSpeech)
+                    Say(queuedSpeech);
+            }
         }
 
         /// <summary>

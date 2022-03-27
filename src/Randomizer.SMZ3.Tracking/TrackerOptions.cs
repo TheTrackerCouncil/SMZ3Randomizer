@@ -60,5 +60,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets or sets the name of the current user.
         /// </summary>
         public string? UserName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of times Tracker will tolerate being
+        /// interrupted before speaking up.
+        /// </summary>
+        public int InterruptionTolerance { get; set; } = 2;
     }
 }
