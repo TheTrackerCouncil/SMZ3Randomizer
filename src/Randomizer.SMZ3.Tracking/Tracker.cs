@@ -51,6 +51,7 @@ namespace Randomizer.SMZ3.Tracking
         private string? _lastSpokenText;
         private Dictionary<string, Progression> _progression = new();
         private bool _alternateTracker;
+        private int _interruptions = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -1881,6 +1882,12 @@ namespace Randomizer.SMZ3.Tracking
 
         internal void HandleInterruption()
         {
+            if (Options.InterruptionTolerance < 0
+                || (++_interruptions % Options.InterruptionTolerance) != 0)
+            {
+                return;
+            }
+
             if (Responses.Interrupted != null)
             {
                 var remainingSpeech = _speechQueue.ToList();

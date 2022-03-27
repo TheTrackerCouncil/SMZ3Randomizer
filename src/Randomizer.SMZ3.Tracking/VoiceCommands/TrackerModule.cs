@@ -277,7 +277,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             Logger.LogInformation("Recognized \"{text}\" with {confidence:P2} confidence.",
                                 e.Result.Text, e.Result.Confidence);
 
-                            if (Tracker.SpeechQueueCount > 1)
+                            if (Tracker.SpeechQueueCount >= 1)
                                 Tracker.HandleInterruption();
 
                             executeCommand(Tracker, e.Result);
