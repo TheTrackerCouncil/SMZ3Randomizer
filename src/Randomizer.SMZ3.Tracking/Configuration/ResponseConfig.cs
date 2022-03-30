@@ -608,6 +608,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? Interrupted { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when Tracker has been interrupted too many times.
+        /// </summary>
+        public SchrodingersString? InterruptedTooManyTimes { get; init; }
+
+        /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as
         /// expressed in the dictionary keys.

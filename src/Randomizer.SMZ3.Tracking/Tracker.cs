@@ -1883,16 +1883,32 @@ namespace Randomizer.SMZ3.Tracking
 
         internal void HandleInterruption()
         {
+            _interruptions++;
+            _logger.LogDebug("Tracker has been interrupted {Interruptions} time(s)", _interruptions);
+
             if (Options.InterruptionTolerance < 0
-                || (++_interruptions % Options.InterruptionTolerance) != 0)
+                || (_interruptions % Options.InterruptionTolerance) != 0)
             {
+                _logger.LogDebug("Tracker is tolerating the interruptions (Tolerance: {Tolerance})", Options.InterruptionTolerance);
                 return;
             }
 
-            if (Responses.Interrupted != null)
+            if (_interruptions >= Options.InterruptionLimit
+                && Responses.InterruptedTooManyTimes != null)
+            {
+                _interruptions = 0;
+                _tts.SpeakAsyncCancelAll();
+                _speechQueue.Clear();
+                _logger.LogDebug("Tracker has had enough and reach her interruption limit of {Limit}", Options.InterruptionLimit);
+
+                Say(x => x.InterruptedTooManyTimes);
+            }
+            else if (Responses.Interrupted != null)
             {
                 var remainingSpeech = _speechQueue.ToList();
                 _tts.SpeakAsyncCancelAll();
+                _speechQueue.Clear();
+                _logger.LogDebug("Tracker doesn't like being interrupted. Still has {QueueCount} items on the TTS queue.", remainingSpeech.Count);
 
                 Say(x => x.Interrupted);
 
