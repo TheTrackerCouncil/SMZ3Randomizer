@@ -78,6 +78,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 GiveProgressionHint();
             });
+
+            AddCommand("Give area hint", GetLocationUsefulnessHintRule(), (tracker, result) =>
+            {
+                var area = GetAreaFromResult(tracker, result);
+                GiveAreaHint(area);
+            });
         }
 
         /// <summary>
@@ -117,6 +123,54 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             Tracker.Say(x => x.Hints.NoApplicableHints);
+        }
+
+        /// <summary>
+        /// Gives a hint or spoiler about useful items in an area.
+        /// </summary>
+        /// <param name="area">The area to give hints about.</param>
+        public void GiveAreaHint(IHasLocations area)
+        {
+            if (!HintsEnabled && !SpoilersEnabled)
+            {
+                Tracker.Say(x => x.Hints.PromptEnableItemHints);
+                return;
+            }
+
+            var locations = area.Locations
+                .Where(x => !x.Cleared)
+                .ToImmutableList();
+            if (locations.Count == 0)
+            {
+                Tracker.Say(x => x.Hints.AreaAlreadyCleared, area.GetName());
+                return;
+            }
+
+            var items = locations
+                .Select(x => Tracker.FindItemByType(x.Item.Type))
+                .NonNull();
+            if (SpoilersEnabled)
+            {
+                var itemNames = NaturalLanguage.Join(items, Tracker.World.Config);
+                Tracker.Say(x => x.Spoilers.ItemsInArea, area.GetName(), itemNames);
+            }
+            else if (HintsEnabled)
+            {
+                if (items.Any(x => !x.IsJunk(Tracker.World.Config)))
+                {
+                    Tracker.Say(x => x.Hints.AreaHasSomethingGood, area.GetName());
+                }
+                else if (area is IHasReward region
+                    && (region.Reward == Reward.CrystalBlue
+                        || region.Reward == Reward.CrystalRed))
+                {
+                    Tracker.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
+                }
+                else
+                {
+                    Tracker.Say(x => x.Hints.AreaHasJunk, area.GetName());
+                }
+            }
         }
 
         /// <summary>
@@ -707,6 +761,35 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     "do you have any suggestions?",
                     "where should I go?",
                     "what should I do?");
+        }
+
+        private GrammarBuilder GetLocationUsefulnessHintRule()
+        {
+            var regionNames = GetRegionNames();
+            var regionGrammar = new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("is there anything useful",
+                    "is there anything I need",
+                    "is there anything good",
+                    "is there anything",
+                    "what's left",
+                    "what's")
+                .OneOf("in", "at")
+                .Append(RegionKey, regionNames);
+
+            var roomNames = GetRoomNames();
+            var roomGrammar = new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("is there anything useful",
+                    "is there anything I need",
+                    "is there anything good",
+                    "is there anything",
+                    "what's left",
+                    "what's")
+                .OneOf("in", "at")
+                .Append(RoomKey, roomNames);
+
+            return GrammarBuilder.Combine(regionGrammar, roomGrammar);
         }
     }
 }

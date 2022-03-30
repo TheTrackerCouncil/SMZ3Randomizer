@@ -280,9 +280,49 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
         /// is a placeholder for the text that would be displayed when using the
-        /// Book of Mudora. <c>{2}</c> is the name of the Book of Mudora, including "the".
+        /// Book of Mudora. <c>{2}</c> is the name of the Book of Mudora,
+        /// including "the".
         /// </remarks>
         public SchrodingersString BookHint { get; init; }
             = new("If the item there was on the Master Sword Pedestal, it would say '{1}'.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when asking for hints about an area
+        /// that was already cleared.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area.
+        /// </remarks>
+        public SchrodingersString AreaAlreadyCleared { get; init; }
+            = new("You already got everything in {0}.");
+
+        /// <summary>
+        /// Gets the hint to give for an area that might have one or more useful
+        /// items.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area.
+        /// </remarks>
+        public SchrodingersString AreaHasSomethingGood { get; init; }
+            = new("{0} might have something good.");
+
+        /// <summary>
+        /// Gets the hint to give for an area that only has junk items left.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area.
+        /// </remarks>
+        public SchrodingersString AreaHasJunk { get; init; }
+            = new("{0} isn't worth your time.");
+
+        /// <summary>
+        /// Gets the hint to give for an area that only has junk items left, but
+        /// also has a crystal as reward for beating the boss.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area.
+        /// </remarks>
+        public SchrodingersString AreaHasJunkAndCrystal { get; init; }
+            = new("{0} only has a crystal.");
     }
 }
