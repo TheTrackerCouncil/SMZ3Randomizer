@@ -1503,6 +1503,15 @@ namespace Randomizer.SMZ3.Tracking
                     {
                         Say(x => x.ClearedMultipleItems, itemsCleared, area.GetName());
                     }
+
+                    if (treasureTracked > 0)
+                    {
+                        var dungeon = GetDungeonFromArea(area);
+                        if (dungeon != null)
+                        {
+                            TrackDungeonTreasure(dungeon, amount: treasureTracked);
+                        }
+                    }
                 }
                 OnItemTracked(new ItemTrackedEventArgs(null, confidence));
             }
@@ -1536,8 +1545,11 @@ namespace Randomizer.SMZ3.Tracking
             if (remaining > 0)
             {
                 dungeon.TreasureRemaining = 0;
-                dungeon.Cleared = true;
             }
+
+            // Clear the dungeon only if there's no bosses to defeat
+            if (!dungeon.HasReward)
+                dungeon.Cleared = true;
 
             var progress = GetProgression();
             var locations = dungeon.GetLocations(World).Where(x => !x.Cleared).ToList();
@@ -1578,7 +1590,7 @@ namespace Randomizer.SMZ3.Tracking
             AddUndo(() =>
             {
                 dungeon.TreasureRemaining = remaining;
-                if (remaining > 0)
+                if (remaining > 0 && !dungeon.HasReward)
                     dungeon.Cleared = false;
                 locations.ForEach(x => x.Cleared = false);
             });
@@ -2041,6 +2053,16 @@ namespace Randomizer.SMZ3.Tracking
                 return null;
 
             return WorldInfo.Dungeons.SingleOrDefault(x => x.Is(location.Region));
+        }
+
+        private DungeonInfo? GetDungeonFromArea(IHasLocations area)
+        {
+            return area switch
+            {
+                Room room => WorldInfo.Dungeons.SingleOrDefault(x => x.Is(room.Region)),
+                Region region => WorldInfo.Dungeons.SingleOrDefault(x => x.Is(region)),
+                _ => null
+            };
         }
 
         private Action? TryTrackDungeonTreasure(ItemData item, float? confidence)
