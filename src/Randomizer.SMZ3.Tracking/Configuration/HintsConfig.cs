@@ -324,5 +324,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString AreaHasJunkAndCrystal { get; init; }
             = new("{0} only has a crystal.");
+
+        /// <summary>
+        /// Gets the hint to give for an area whose worth is complicated, e.g.
+        /// when a dungeon has only junk and is not a crystal dungeon, but the
+        /// pendant might result in something good.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the area.
+        /// </remarks>
+        public SchrodingersString AreaWorthComplicated { get; init; }
+            = new("It's complicated.");
     }
 }

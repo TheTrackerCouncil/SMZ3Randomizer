@@ -660,6 +660,20 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Returns the first item that matches the item at the specified
+        /// location.
+        /// </summary>
+        /// <param name="location">The location with the item to find.</param>
+        /// <returns>
+        /// The item data for the item at the location, or <c>null</c> if no
+        /// item data is present for the item at the location.
+        /// </returns>
+        public ItemData? FindItem(Location location)
+        {
+            return Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
+        }
+
+        /// <summary>
         /// Gets the currently available items.
         /// </summary>
         /// <returns>
@@ -1901,6 +1915,17 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
+        internal void RestartIdleTimers()
+        {
+            foreach (var item in _idleTimers)
+            {
+                var timeout = Parse.AsTimeSpan(item.Key, s_random) ?? Timeout.InfiniteTimeSpan;
+                var timer = item.Value;
+
+                timer.Change(timeout, Timeout.InfiniteTimeSpan);
+            }
+        }
+
         /// <summary>
         /// Returns the possible names of the specified location.
         /// </summary>
@@ -1921,6 +1946,86 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         protected internal virtual string GetName(ItemType item)
             => Items.SingleOrDefault(x => x.InternalItemType == item)?.NameWithArticle.ToString() ?? item.GetDescription();
+
+        /// <summary>
+        /// Determines whether or not the specified reward is worth getting.
+        /// </summary>
+        /// <param name="reward">The dungeon reward.</param>
+        /// <returns>
+        /// <see langword="true"/> if the reward leads to something good;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        protected internal bool IsWorth(Reward reward)
+        {
+            var sahasrahlaItem = FindItemByType(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla.Item.Type);
+            if (sahasrahlaItem != null && reward == Reward.PendantGreen)
+            {
+                _logger.LogDebug("{Reward} leads to {Item}...", reward, sahasrahlaItem);
+                if (IsWorth(sahasrahlaItem))
+                {
+                    _logger.LogDebug("{Reward} leads to {Item}, which is worth it", reward, sahasrahlaItem);
+                    return true;
+                }
+                _logger.LogDebug("{Reward} leads to {Item}, which is junk", reward, sahasrahlaItem);
+            }
+
+            var pedItem = FindItemByType(World.LightWorldNorthWest.MasterSwordPedestal.Item.Type);
+            if (pedItem != null && (reward == Reward.PendantGreen || reward == Reward.PendantNonGreen))
+            {
+                _logger.LogDebug("{Reward} leads to {Item}...", reward, pedItem);
+                if (IsWorth(pedItem))
+                {
+                    _logger.LogDebug("{Reward} leads to {Item}, which is worth it", reward, pedItem);
+                    return true;
+                }
+                _logger.LogDebug("{Reward} leads to {Item}, which is junk", reward, pedItem);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether or not the specified item is worth getting.
+        /// </summary>
+        /// <param name="item">The item whose worth to consider.</param>
+        /// <returns>
+        /// <see langword="true"/> is the item is worth getting or leads to
+        /// another item that is worth getting; otherwise, <see
+        /// langword="false"/>.
+        /// </returns>
+        protected internal bool IsWorth(ItemData item)
+        {
+            var leads = new Dictionary<ItemType, Location[]>()
+            {
+                [ItemType.Mushroom] = new[] { World.LightWorldNorthEast.MushroomItem },
+                [ItemType.Powder] = new[] { World.LightWorldNorthWest.MagicBat },
+                [ItemType.Book] = new[]
+                {
+                    World.LightWorldDeathMountainWest.EtherTablet,
+                    World.LightWorldSouth.BombosTablet
+                }
+            };
+
+            if (leads.TryGetValue(item.InternalItemType, out var leadsToLocation))
+            {
+                foreach (var location in leadsToLocation)
+                {
+                    var reward = FindItem(location);
+                    if (reward != null)
+                    {
+                        _logger.LogDebug("{Item} leads to {OtherItem}...", item, reward);
+                        if (IsWorth(reward))
+                        {
+                            _logger.LogDebug("{Item} leads to {OtherItem}, which is worth it", item, reward);
+                            return true;
+                        }
+                        _logger.LogDebug("{Item} leads to {OtherItem}, which is junk", item, reward);
+                    }
+                }
+            }
+
+            return item.IsGood(World.Config);
+        }
 
         /// <summary>
         /// Adds an action to be invoked to undo the last operation.
@@ -2157,17 +2262,6 @@ namespace Randomizer.SMZ3.Tracking
             // was tracked. Either way, we have to assume `dungeon` is correct.
             // If it's `null`, nobody knows.
             return dungeon;
-        }
-
-        internal void RestartIdleTimers()
-        {
-            foreach (var item in _idleTimers)
-            {
-                var timeout = Parse.AsTimeSpan(item.Key, s_random) ?? Timeout.InfiniteTimeSpan;
-                var timer = item.Value;
-
-                timer.Change(timeout, Timeout.InfiniteTimeSpan);
-            }
         }
 
         private void IdleTimerElapsed(object? state)

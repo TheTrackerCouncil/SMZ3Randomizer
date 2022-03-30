@@ -1750,6 +1750,9 @@
         "You could skip it if it didn't have a crystal.",
         "I don't think you'd care about anything in {0} but the crystal.",
         "I don't think you'd care about anything in there but the crystal."
+      ],
+      "AreaWorthComplicated": [
+        "It's complicated."
       ]
     },
     "Spoilers": {

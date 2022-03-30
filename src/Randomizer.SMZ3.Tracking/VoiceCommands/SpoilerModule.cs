@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.Extensions.Logging;
 
@@ -160,11 +161,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     Tracker.Say(x => x.Hints.AreaHasSomethingGood, area.GetName());
                 }
-                else if (area is IHasReward region
-                    && (region.Reward == Reward.CrystalBlue
-                        || region.Reward == Reward.CrystalRed))
+                else if (area is IHasReward region)
                 {
-                    Tracker.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
+                    if (region.Reward == Reward.CrystalBlue
+                        || region.Reward == Reward.CrystalRed)
+                    {
+                        Tracker.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
+                    }
+                    else if (Tracker.IsWorth(region.Reward))
+                    {
+                        Tracker.Say(x => x.Hints.AreaWorthComplicated, area.GetName());
+                    }
+                    else
+                    {
+                        Tracker.Say(x => x.Hints.AreaHasJunk, area.GetName());
+                    }
                 }
                 else
                 {
