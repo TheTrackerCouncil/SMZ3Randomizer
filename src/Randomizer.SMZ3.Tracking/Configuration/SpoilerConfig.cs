@@ -177,5 +177,15 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString ItemsAreAtOutOfLogicLocation { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.");
+
+        /// <summary>
+        /// Gets the phrases that mention all the items in an area.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the room or region.
+        /// <c>{1}</c> is a placeholder for the names of the items left.
+        /// </remarks>
+        public SchrodingersString ItemsInArea { get; init; }
+            = new("{0} has {1}");
     }
 }

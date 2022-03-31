@@ -1706,7 +1706,7 @@
         "I bet {1} would appreciate it if you checked out {0}.",
         "I wouldn't skip that if I were you.",
         "{1} would not want you to skip it.",
-        [ "{0} is on the way of the hero.", 0.2 ]
+        [ "{0} is on the way of the hero.", 0.5 ]
       ],
       "AreaSuggestion": [
         "What about {0}?",
@@ -1722,6 +1722,43 @@
         "If the item there was on the Master Sword Pedestal, it would say <break strength='weak'/> '{1}'.",
         "'{1}' is what {2} would tell you.",
         "Let me consult {2}. <break strength='1s'/> {1}."
+      ],
+      "AreaAlreadyCleared": [
+        "You already got everything in {0}.",
+        "If there was anything good in {0} you already got it."
+      ],
+      "AreaHasSomethingGood": [
+        "{0} might have something good.",
+        "It might have something good.",
+        "{0} might be worth checking out.",
+        "It might be worth checking out.",
+        "I wouldn't skip it if I were you.",
+        "I wouldn't skip {0} if I were you.",
+        [ "{0} is on the way of the hero.", 0.5 ]
+      ],
+      "AreaHasJunk": [
+        "{0} isn't worth your time.",
+        "It isn't worth your time.",
+        "There's nothing important in {0}.",
+        "There's nothing important there.",
+        "You can skip {0}.",
+        "You can skip it.",
+        "I don't think you'd care about anything in {0}.",
+        "I don't think you'd care about anything there.",
+        [ "{0} is barren.", 0.2 ]
+      ],
+      "AreaHasJunkAndCrystal": [
+        "The only thing of worth in {0} is a crystal.",
+        "The only thing of worth there is a crystal.",
+        "There's nothing important in {0} except for the crystal.",
+        "There's nothing important there except for the crystal.",
+        "You could skip {0} if it didn't have a crystal.",
+        "You could skip it if it didn't have a crystal.",
+        "I don't think you'd care about anything in {0} but the crystal.",
+        "I don't think you'd care about anything in there but the crystal."
+      ],
+      "AreaWorthComplicated": [
+        "It's complicated."
       ]
     },
     "Spoilers": {
@@ -1796,6 +1833,10 @@
       "ItemsAreAtOutOfLogicLocation": [
         "There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.",
         "{0} is at {1} <break strength='weak'/> in {2}, but it's out of logic."
+      ],
+      "ItemsInArea": [
+        "{0} has {1}",
+        "It's got {1}"
       ]
     },
     "Idle": {

@@ -290,6 +290,21 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         }
 
         /// <summary>
+        /// Determines whether the item is worth getting given the specified
+        /// configuration.
+        /// </summary>
+        /// <param name="config">The randomizer configuration.</param>
+        /// <returns>
+        /// <c>true</c> if the item is considered good; otherwise, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// This method only considers the item's value on its own. Call <see
+        /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
+        /// might logically lead to.
+        /// </remarks>
+        public bool IsGood(Config config) => !IsJunk(config);
+
+        /// <summary>
         /// Determines whether the item is junk given the specified
         /// configuration.
         /// </summary>
@@ -297,6 +312,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <returns>
         /// <c>true</c> if the item is considered junk; otherwise, <c>false</c>.
         /// </returns>
+        /// <remarks>
+        /// This method only considers the item's value on its own. Call <see
+        /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
+        /// might logically lead to.
+        /// </remarks>
         public bool IsJunk(Config config)
         {
             var junkCategories = config.Keysanity

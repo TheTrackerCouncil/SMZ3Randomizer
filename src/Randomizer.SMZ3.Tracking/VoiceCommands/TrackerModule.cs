@@ -215,6 +215,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
+        /// Returns the region or room that was detected in a voice
+        /// command.
+        /// </summary>
+        /// <param name="tracker">The tracker instance.</param>
+        /// <param name="result">The speech recognition result.</param>
+        /// <returns>
+        /// The recognized area from the recognition result.
+        /// </returns>
+        protected static IHasLocations GetAreaFromResult(Tracker tracker, RecognitionResult result)
+        {
+            if (result.Semantics.ContainsKey(RegionKey))
+                return GetRegionFromResult(tracker, result);
+            else if (result.Semantics.ContainsKey(RoomKey))
+                return GetRoomFromResult(tracker, result);
+            else
+                throw new InvalidOperationException("Could not find a region or room in the recognized voice command.");
+        }
+
+        /// <summary>
         /// Adds a new voice command that matches the specified phrase.
         /// </summary>
         /// <param name="ruleName">The name of the command.</param>
