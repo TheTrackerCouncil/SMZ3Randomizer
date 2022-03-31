@@ -1845,7 +1845,11 @@
         "Lumberjack Ledge"
       ],
       "X": 633,
-      "Y": 117
+      "Y": 117,
+      "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an Aga seed then?" ],
+      "WhenMarkingProgression": [ "Sucks to be you." ],
+      "WhenTrackingJunk": [ "Why did you bother?" ],
+      "WhenTrackingProgression": [ "Well, at least you got something." ]
     },
     {
       "Id": 274,
