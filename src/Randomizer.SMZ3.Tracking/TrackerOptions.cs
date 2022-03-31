@@ -66,5 +66,11 @@ namespace Randomizer.SMZ3.Tracking
         /// interrupted before speaking up.
         /// </summary>
         public int InterruptionTolerance { get; set; } = 2;
+
+        /// <summary>
+        /// Gets or sets the number of times Tracker will tolerate being
+        /// interrupted before quitting.
+        /// </summary>
+        public int InterruptionLimit { get; set; } = 5;
     }
 }
