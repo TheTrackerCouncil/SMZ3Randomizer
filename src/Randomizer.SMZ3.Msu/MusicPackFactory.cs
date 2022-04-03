@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
-
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Randomizer.SMZ3.Msu
 {
@@ -43,13 +37,29 @@ namespace Randomizer.SMZ3.Msu
                 .Where(x => x != null).Cast<PcmFileName>()
                 .GroupBy(x => x.TrackNumber)
                 .OrderBy(x => x.Key)
-                .ToDictionary(x => x.Key, grouping => (ICollection<PcmTrack>)grouping
-                    .OrderBy(x => x.Suffix)
-                    .Select(x => new PcmTrack(x.TrackNumber, x.Suffix, x.Path))
-                    .ToList());
+                .ToDictionary(x => x.Key, grouping =>
+                    new PcmTrackSet(grouping.Key, grouping
+                        .OrderBy(x => x.Suffix)
+                        .Select(x => new PcmTrack(x.TrackNumber, x.Suffix, x.Path))));
 
             var title = Path.GetFileName(directory) ?? baseName;
-            return new MusicPack(title, null, tracks);
+            return CreateMusicPack(title, null, tracks);
+        }
+
+        private static MusicPack CreateMusicPack(string title, string? author, Dictionary<int, PcmTrackSet> tracks)
+        {
+            var trackNumbers = tracks.Select(x => x.Key).ToList();
+
+            if (trackNumbers.All(x => SuperMetroidMusicPack.IsValidTrackNumber(x)))
+                return new SuperMetroidMusicPack(title, author, tracks);
+
+            if (trackNumbers.All(x => ALinkToThePastMusicPack.IsValidTrackNumber(x)))
+                return new ALinkToThePastMusicPack(title, author, tracks);
+
+            if (trackNumbers.All(x => Smz3MusicPack.IsValidTrackNumber(x)))
+                return new Smz3MusicPack(title, author, tracks);
+
+            return new MusicPack(title, author, tracks);
         }
 
         private PcmFileName? ParseFileName(string fileName, string baseName)

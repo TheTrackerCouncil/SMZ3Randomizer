@@ -10,10 +10,10 @@ namespace Randomizer.SMZ3.Msu
     {
         public MusicPack()
         {
-            Tracks = new Dictionary<int, ICollection<PcmTrack>>();
+            Tracks = new Dictionary<int, PcmTrackSet>();
         }
 
-        public MusicPack(string? title, string? author, IDictionary<int, ICollection<PcmTrack>> tracks)
+        public MusicPack(string? title, string? author, IDictionary<int, PcmTrackSet> tracks)
         {
             Title = title;
             Author = author;
@@ -24,7 +24,12 @@ namespace Randomizer.SMZ3.Msu
 
         public string? Author { get; set; }
 
-        public IDictionary<int, ICollection<PcmTrack>> Tracks { get; set; }
+        public IDictionary<int, PcmTrackSet> Tracks { get; set; }
+
+        public PcmTrackSet? this[int trackNumber]
+            => Tracks.TryGetValue(trackNumber, out var trackSet)
+                ? trackSet
+                : null;
 
         public override string? ToString()
         {

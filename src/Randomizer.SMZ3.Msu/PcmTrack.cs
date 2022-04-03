@@ -22,6 +22,6 @@ namespace Randomizer.SMZ3.Msu
 
         public string FileName { get; }
 
-        public override string ToString() => $"{TrackNumber}. {Title}";
+        public override string ToString() => $"Track {TrackNumber} {Title}";
     }
 }
