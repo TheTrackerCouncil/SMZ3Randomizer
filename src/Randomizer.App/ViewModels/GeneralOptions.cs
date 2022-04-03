@@ -19,6 +19,10 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class GeneralOptions : INotifyPropertyChanged
     {
+        private static readonly string s_documentsFolder = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "SMZ3 Cas Randomizer");
+
         private string _twitchUserName;
         private string _twitchOAuthToken;
         private string _twitchChannel;
@@ -43,7 +47,10 @@ namespace Randomizer.App.ViewModels
         public string SMRomPath { get; set; }
 
         public string RomOutputPath { get; set; }
-            = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
+            = Path.Combine(s_documentsFolder, "Seeds");
+
+        public string MsuPath { get; set; }
+            = Path.Combine(s_documentsFolder, "MSU packs");
 
         [Range(0.0, 1.0)]
         public float TrackerRecognitionThreshold { get; set; } = 0.75f;

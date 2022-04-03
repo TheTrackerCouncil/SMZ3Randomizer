@@ -50,6 +50,12 @@
                                           DialogTitle="Select ROM output folder" />
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="MSU-1 packs:">
+                <controls:FileSystemInput Path="{Binding MsuPath, Mode=TwoWay}"
+                                          IsFolderPicker="True"
+                                          DialogTitle="Select MSU-1 packs folder" />
+              </controls:LabeledControl>
+
             </StackPanel>
           </Expander>
 
