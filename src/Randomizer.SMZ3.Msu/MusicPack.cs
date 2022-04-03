@@ -25,5 +25,15 @@ namespace Randomizer.SMZ3.Msu
         public string? Author { get; set; }
 
         public IDictionary<int, ICollection<PcmTrack>> Tracks { get; set; }
+
+        public override string? ToString()
+        {
+            if (!string.IsNullOrEmpty(Author))
+            {
+                return $"{Title} by {Author}";
+            }
+
+            return Title;
+        }
     }
 }

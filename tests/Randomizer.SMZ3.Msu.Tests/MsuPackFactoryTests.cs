@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
@@ -15,6 +16,14 @@ namespace Randomizer.SMZ3.Msu.Tests
         {
             _loggerFactory = new LoggerFactory();
             _loggerFactory.AddProvider(new DebugLoggerProvider());
+        }
+
+        [Fact]
+        public void AutoDetectMusicPacks()
+        {
+            var factory = new MusicPackFactory(Logger<MusicPackFactory>());
+            var packs = factory.AutoDetectAll(@"C:\Users\laura\Documents\SMZ3 Cas Randomizer\MSU packs")
+                .ToList();
         }
 
         [Fact]

@@ -23,6 +23,13 @@ namespace Randomizer.SMZ3.Msu
             _logger = logger;
         }
 
+        public IEnumerable<MusicPack> AutoDetectAll(string msuPackPath)
+        {
+            return Directory.EnumerateFiles(msuPackPath, "*.msu", SearchOption.AllDirectories)
+                .Select(AutoDetect)
+                .Where(x => x.Tracks.Count > 0);
+        }
+
         public MusicPack AutoDetect(string msuFileName)
         {
             var fullPath = Path.GetFullPath(msuFileName);
