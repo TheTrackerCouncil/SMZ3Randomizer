@@ -324,7 +324,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
                 : new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
                     ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard };
 
-            return InternalItemType.IsInAnyCategory(junkCategories);
+            return InternalItemType == ItemType.Nothing
+                || InternalItemType.IsInAnyCategory(junkCategories);
         }
     }
 }
