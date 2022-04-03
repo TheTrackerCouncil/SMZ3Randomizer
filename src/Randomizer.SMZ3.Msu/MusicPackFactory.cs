@@ -65,8 +65,10 @@ namespace Randomizer.SMZ3.Msu
         private PcmFileName? ParseFileName(string fileName, string baseName)
         {
             var pcmFileName = Path.GetFileNameWithoutExtension(fileName);
-            var trackIdentifier = pcmFileName.Replace(baseName, "").TrimStart('-');
+            if (!pcmFileName.StartsWith($"{baseName}-"))
+                return null;
 
+            var trackIdentifier = pcmFileName.Substring($"{baseName}-".Length);
             var leadingNumberPattern = new Regex(@"^\d+", RegexOptions.Compiled);
             var match = leadingNumberPattern.Match(trackIdentifier);
             if (!match.Success)
