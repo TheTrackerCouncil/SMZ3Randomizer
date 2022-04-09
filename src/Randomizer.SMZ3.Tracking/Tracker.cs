@@ -43,15 +43,12 @@ namespace Randomizer.SMZ3.Tracking
         private readonly Stack<Action> _undoHistory = new();
         private readonly RandomizerContext _dbContext;
 
-        private readonly ConcurrentQueue<string> _speechQueue = new();
-
         private DateTime _startTime = DateTime.MinValue;
         private bool _disposed;
         private string? _mood;
         private string? _lastSpokenText;
         private Dictionary<string, Progression> _progression = new();
         private bool _alternateTracker;
-        private int _interruptions = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -104,7 +101,6 @@ namespace Randomizer.SMZ3.Tracking
 
             _tts = new SpeechSynthesizer();
             _tts.SelectVoiceByHints(_alternateTracker ? VoiceGender.Male : VoiceGender.Female);
-            _tts.SpeakCompleted += (sender, e) => _speechQueue.TryDequeue(out _);
 
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
@@ -274,11 +270,6 @@ namespace Randomizer.SMZ3.Tracking
         public bool IsDirty { get; set; }
 
         /// <summary>
-        /// Gets the number of queued up speech synthesis actions.
-        /// </summary>
-        public int SpeechQueueCount => _speechQueue.Count;
-
-        /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
         /// text-to-speech engine.
         /// </summary>
@@ -300,7 +291,7 @@ namespace Randomizer.SMZ3.Tracking
             var correctedUserName = Responses.Chat.UserNamePronunciation
                 .SingleOrDefault(x => x.Key.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
-            return correctedUserName.Value ?? userName;
+            return correctedUserName.Value ?? userName.Replace('_', ' ');
         }
 
         /// <summary>
@@ -799,7 +790,6 @@ namespace Randomizer.SMZ3.Tracking
         {
             DisableVoiceRecognition();
             _tts.SpeakAsyncCancelAll();
-            _speechQueue.Clear();
             _chatClient.Disconnect();
             Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
@@ -912,7 +902,6 @@ namespace Randomizer.SMZ3.Tracking
 
             var formattedText = FormatPlaceholders(text);
             var prompt = ParseText(formattedText);
-            _speechQueue.Enqueue(text);
             if (wait)
                 _tts.Speak(prompt);
             else
@@ -980,7 +969,6 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void ShutUp()
         {
             _tts.SpeakAsyncCancelAll();
-            _speechQueue.Clear();
         }
 
         /// <summary>
@@ -1905,42 +1893,6 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.PegWorldModeDone);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
             AddUndo(() => PegWorldMode = true);
-        }
-
-        internal void HandleInterruption()
-        {
-            _interruptions++;
-            _logger.LogDebug("Tracker has been interrupted {Interruptions} time(s)", _interruptions);
-
-            if (Options.InterruptionTolerance < 0
-                || (_interruptions % Options.InterruptionTolerance) != 0)
-            {
-                _logger.LogDebug("Tracker is tolerating the interruptions (Tolerance: {Tolerance})", Options.InterruptionTolerance);
-                return;
-            }
-
-            if (_interruptions >= Options.InterruptionLimit
-                && Responses.InterruptedTooManyTimes != null)
-            {
-                _interruptions = 0;
-                _tts.SpeakAsyncCancelAll();
-                _speechQueue.Clear();
-                _logger.LogDebug("Tracker has had enough and reach her interruption limit of {Limit}", Options.InterruptionLimit);
-
-                Say(x => x.InterruptedTooManyTimes);
-            }
-            else if (Responses.Interrupted != null)
-            {
-                var remainingSpeech = _speechQueue.ToList();
-                _tts.SpeakAsyncCancelAll();
-                _speechQueue.Clear();
-                _logger.LogDebug("Tracker doesn't like being interrupted. Still has {QueueCount} items on the TTS queue.", remainingSpeech.Count);
-
-                Say(x => x.Interrupted);
-
-                foreach (var queuedSpeech in remainingSpeech)
-                    Say(queuedSpeech);
-            }
         }
 
         internal void RestartIdleTimers()

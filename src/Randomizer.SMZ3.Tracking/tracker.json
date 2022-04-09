@@ -111,7 +111,11 @@
         "You could find it in real life."
       ],
       "WhenTracked": {
-        "1": [ "Toggled Hammer on.", "Stop. Hammer time." ]
+        "1": [
+          "Toggled Hammer on.",
+          "Stop. Hammer time.",
+          [ "You got an M comma C hammer! Pile softening Bang Bang Clap! Other also Bambang Clap Clap!", 0.1 ]
+        ]
       }
     },
     {
@@ -223,7 +227,15 @@
       "Row": 1,
       "Hints": [
         "You could find it in real life."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [
+          "Toggled Shovel on",
+          "Toggled Digging Tool on",
+          [ "Toggled Shaktool Junior on", 0.2 ],
+          [ "I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.", 0.1 ]
+        ]
+      }
     },
     {
       "Name": [ "Flute", "Ocarina" ],
@@ -353,7 +365,8 @@
       "Name": [
         "Moon Pearl",
         [ "Jawbreaker", 0.1 ],
-        [ "Orb", 0.1 ]
+        [ "Orb", 0.1 ],
+        [ "Munpar", 0.1 ]
       ],
       "InternalItemType": 31,
       "Column": 5,
@@ -1026,7 +1039,7 @@
       "Name": [
         "Missile",
         [ "Missiles", 0 ],
-        [ "Missile pack", 0 ]
+        [ "Missile pack", 0.2 ]
       ],
       "Plural": [
         "Missiles",
@@ -1264,19 +1277,6 @@
       "What did you say?",
       "What was that?",
       [ "English motherfucker, do you speak it?", 0.05 ]
-    ],
-    "Interrupted": [
-      "Excuse me. <break strength='weak'/> As I was saying...",
-      "Can you not? <break strength='weak'/> As I was saying...",
-      "I'm talking here. <break strength='weak'/> Anyway...",
-      "Do you mind? <break strength='weak'/> Anyway...",
-      "It's not polite to talk over other people, you know. <break strength='weak'/> As I was saying..."
-    ],
-    "InterruptedTooManyTimes": [
-      "Shut up already.",
-      "Fine, I'll shut up. <break time='60s'/>",
-      "I've had enough of this. I'm taking a break. <break time='60s'/>",
-      "That's it. I'm taking a break. <break time='60s'/>"
     ],
     "TrackedItem": [
       "Toggling {0} on.",
@@ -1579,7 +1579,8 @@
         "vivelin": "vihvelin",
         "PinkKittyRose": "Pink Kitty Rose",
         "skennedysa": "s kennedy",
-        "the_betus": "the underscore beetus"
+        "the_betus": "the underscore beetus",
+        "Axnollouse": "Fragger"
       }
     },
     "Hints": {
@@ -1695,7 +1696,8 @@
         "I doubt {1} would care about what's at {0}.",
         "You can skip {0}.",
         "You can skip it.",
-        [ "{0} is barren.", 0.2 ]
+        [ "{0} is barren.", 0.5 ],
+        [ "They say that plundering {0} is a foolish choice.", 0.1 ]
       ],
       "LocationHasUsefulItem": [
         "{0} might be worth checking out.",
@@ -1745,7 +1747,8 @@
         "You can skip it.",
         "I don't think you'd care about anything in {0}.",
         "I don't think you'd care about anything there.",
-        [ "{0} is barren.", 0.2 ]
+        [ "{0} is barren.", 0.5 ],
+        [ "They say that plundering {0} is a foolish choice.", 0.1 ]
       ],
       "AreaHasJunkAndCrystal": [
         "The only thing of worth in {0} is a crystal.",
@@ -1804,11 +1807,16 @@
       ],
       "ItemNotFound": [
         "I cannot find {0}.",
-        "I don't know where {0} is."
+        "This seed doesn't have {0}.",
+        "{0} is not in this seed."
       ],
       "ItemsNotFound": [
-        "I cannot find any more {0}.",
-        "I don't know where any other {0} are."
+        "I cannot find any {0}.",
+        "This seed doesn't have any {0}.",
+        "There are no {0} in this seed."
+      ],
+      "LocationsCleared": [
+        "You already cleared every location that has {0}."
       ],
       "LocationHasItem": [
         "{0} has {1}.",

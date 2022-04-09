@@ -109,6 +109,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("I cannot find any more {0}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when all locations that have the item are cleared.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the".
+        /// </remarks>
+        public SchrodingersString LocationsCleared { get; init; }
+            = new("You already cleared every location that has {0}.");
+
+        /// <summary>
         /// Gets the phrases that spoil the item that is at the requested
         /// location.
         /// </summary>

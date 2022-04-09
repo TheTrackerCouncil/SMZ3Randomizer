@@ -297,9 +297,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 e.Result.Text, e.Result.Confidence);
                             Tracker.RestartIdleTimers();
 
-                            if (Tracker.SpeechQueueCount >= 1)
-                                Tracker.HandleInterruption();
-
                             executeCommand(Tracker, e.Result);
                         }
                         else

@@ -94,9 +94,10 @@ namespace Randomizer.App.ViewModels
             get => _twitchChannel;
             set
             {
-                if (_twitchChannel != value)
+                var newValue = NormalizeTwitchChannel(value);
+                if (_twitchChannel != newValue)
                 {
-                    _twitchChannel = value;
+                    _twitchChannel = newValue;
                     OnPropertyChanged();
                 }
             }
@@ -130,6 +131,22 @@ namespace Randomizer.App.ViewModels
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new(propertyName));
+        }
+
+        private static string NormalizeTwitchChannel(string value)
+        {
+            try
+            {
+                value = value.Trim();
+                if (Uri.TryCreate(value, UriKind.Absolute, out var twitchUri)
+                    && twitchUri.Host == "twitch.tv")
+                {
+                    return twitchUri.AbsolutePath.TrimStart('/');
+                }
+            }
+            catch { }
+
+            return value;
         }
     }
 
