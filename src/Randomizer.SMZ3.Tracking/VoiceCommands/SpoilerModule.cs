@@ -214,28 +214,51 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
-            if (HintsEnabled && GiveItemLocationHint(item))
+            // Once we're done being a smartass, see if the item can be found at all
+            var locations = Tracker.World.Locations
+                .Where(x => x.Item.Type == item.InternalItemType)
+                .ToImmutableList();
+            if (locations.Count == 0)
+            {
+                if (item.Multiple || item.HasStages)
+                    Tracker.Say(x => x.Spoilers.ItemsNotFound, item.Plural);
+                else
+                    Tracker.Say(x => x.Spoilers.ItemNotFound, item.NameWithArticle);
                 return;
-
-            if (SpoilersEnabled && GiveItemLocationSpoiler(item))
+            }
+            else if (locations.Count > 0 && locations.All(x => x.Cleared))
+            {
+                // The item exists, but all locations are cleared
+                Tracker.Say(x => x.Spoilers.LocationsCleared, item.NameWithArticle);
                 return;
+            }
 
-            if (!HintsEnabled)
+            // Now that we're ready to give hints, make sure they're turned on
+            if (!HintsEnabled && !SpoilersEnabled)
             {
                 Tracker.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
-            if (!SpoilersEnabled)
+            // Give hints first (if enabled)
+            if (HintsEnabled && GiveItemLocationHint(item))
+                return;
+
+            // Fall back to spoilers if enabled, or prompt to turn them on if hints fail
+            if (SpoilersEnabled)
+            {
+                if (GiveItemLocationSpoiler(item))
+                    return;
+            }
+            else
             {
                 Tracker.Say(x => x.Spoilers.PromptEnableItemSpoilers);
                 return;
             }
 
-            if (item.Multiple || item.HasStages)
-                Tracker.Say(x => x.Spoilers.ItemsNotFound, item.Plural);
-            else
-                Tracker.Say(x => x.Spoilers.ItemNotFound, item.NameWithArticle);
+            // We ran out of hints?
+            Logger.LogWarning("Ran out of hints for {Item}", item.Name[0]);
+            Tracker.Say(x => x.Hints.NoApplicableHints);
         }
 
         /// <summary>
@@ -505,6 +528,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .Where(x => !x.Cleared);
 
+            if (!itemLocations.Any())
+            {
+                Logger.LogInformation("Can't find any uncleared locations with {Item}", item.InternalItemType.GetDescription());
+                return false;
+            }
+
             switch (HintsGiven(item))
             {
                 // Lv0 hints are the vaguest:
@@ -533,7 +562,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // - Where will you NOT find it?
                 case 1:
                     {
-                        if (!itemLocations.Any(x => x.IsAvailable(progression)))
+                        if (itemLocations.All(x => !x.IsAvailable(progression)))
                         {
                             var randomLocation = itemLocations.Where(x => !x.IsAvailable(progression)).Random();
                             var missingItemSets = Logic.GetMissingRequiredItems(randomLocation, progression);

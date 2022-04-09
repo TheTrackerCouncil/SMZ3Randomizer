@@ -111,7 +111,11 @@
         "You could find it in real life."
       ],
       "WhenTracked": {
-        "1": [ "Toggled Hammer on.", "Stop. Hammer time." ]
+        "1": [
+          "Toggled Hammer on.",
+          "Stop. Hammer time.",
+          [ "You got an M comma C hammer! Pile softening Bang Bang Clap! Other also Bambang Clap Clap!", 0.1 ]
+        ]
       }
     },
     {
@@ -223,7 +227,15 @@
       "Row": 1,
       "Hints": [
         "You could find it in real life."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [
+          "Toggled Shovel on",
+          "Toggled Digging Tool on",
+          [ "Toggled Shaktool Junior on", 0.2 ],
+          [ "I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.", 0.1 ]
+        ]
+      }
     },
     {
       "Name": [ "Flute", "Ocarina" ],
@@ -353,7 +365,8 @@
       "Name": [
         "Moon Pearl",
         [ "Jawbreaker", 0.1 ],
-        [ "Orb", 0.1 ]
+        [ "Orb", 0.1 ],
+        [ "Munpar", 0.1 ]
       ],
       "InternalItemType": 31,
       "Column": 5,
@@ -1026,7 +1039,7 @@
       "Name": [
         "Missile",
         [ "Missiles", 0 ],
-        [ "Missile pack", 0 ]
+        [ "Missile pack", 0.2 ]
       ],
       "Plural": [
         "Missiles",
@@ -1566,7 +1579,8 @@
         "vivelin": "vihvelin",
         "PinkKittyRose": "Pink Kitty Rose",
         "skennedysa": "s kennedy",
-        "the_betus": "the underscore beetus"
+        "the_betus": "the underscore beetus",
+        "Axnollouse": "Fragger"
       }
     },
     "Hints": {
@@ -1791,11 +1805,16 @@
       ],
       "ItemNotFound": [
         "I cannot find {0}.",
-        "I don't know where {0} is."
+        "This seed doesn't have {0}.",
+        "{0} is not in this seed."
       ],
       "ItemsNotFound": [
-        "I cannot find any more {0}.",
-        "I don't know where any other {0} are."
+        "I cannot find any {0}.",
+        "This seed doesn't have any {0}.",
+        "There are no {0} in this seed."
+      ],
+      "LocationsCleared": [
+        "You already cleared every location that has {0}."
       ],
       "LocationHasItem": [
         "{0} has {1}.",
