@@ -1575,6 +1575,32 @@
         "Is the logic too dull for you {0}?",
         "Don't you have something better to do {0}?"
       ],
+      "StartedGuessingGame": [
+        "The floor is now open for guesses.",
+        "You may now attempt to guess which chest holds the big key."
+      ],
+      "ClosedGuessingGame": [
+        "The floor is now closed for guesses.",
+        "Guesses are no longer accepted.",
+        "If you like having a soul then I hope you made your guess because the floor is now closed."
+      ],
+      "ModeratorClosedGuessingGame": [
+        "{0} closed the floor for guesses.",
+        "The floor is now closed for guesses, as decreed by {0}.",
+        "If you like having a soul then I hope you made your guess because {0} closed the floor."
+      ],
+      "DeclareGuessingGameWinners": [
+        "The winners are {1}.",
+        "{1} must be pretty good.",
+        "{1} guessed number {0}.",
+        "{1} performed the miraculous feat of having correctly guessed the number {0}."
+      ],
+      "NobodyWonGuessingGame": [
+        "Nobody guessed number {0}.",
+        "Nobody guessed {0}.",
+        "And the winners are... nobody.",
+        "Hey chat, you're all pretty bad."
+      ],
       "UserNamePronunciation": {
         "vivelin": "vihvelin",
         "PinkKittyRose": "Pink Kitty Rose",
@@ -1896,10 +1922,6 @@
         "Added your date to your calendar. Don't worry, this is a judgement free zone.",
         [ "Am I invited?", 0.1 ]
       ]
-    },
-    {
-      "Phrases": [ "execute order 66" ],
-      "Response": [ "Yes my lord" ]
     },
     {
       "Phrases": [ "ban Vivelin", "ban Fragger" ],

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
@@ -58,6 +59,17 @@ namespace Randomizer.SMZ3.Twitch
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public Task SendMessageAsync(string message, bool announce = false)
+        {
+            if (announce)
+            {
+                message = $".announce {message}";
+            }
+
+            _twitchClient.SendMessage(Channel, message);
+            return Task.CompletedTask;
         }
 
         protected virtual void OnConnected()

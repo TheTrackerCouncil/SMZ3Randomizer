@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.ChatIntegration
 {
@@ -15,5 +16,7 @@ namespace Randomizer.SMZ3.ChatIntegration
         void Connect(string userName, string oauthToken, string channel);
 
         void Disconnect();
+
+        Task SendMessageAsync(string message, bool announce = false);
     }
 }

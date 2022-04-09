@@ -51,6 +51,52 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString? GreetedChannel { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when starting the GT big key
+        /// guessing game.
+        /// </summary>
+        public SchrodingersString StartedGuessingGame { get; init; }
+            = new("The floor is now open for guesses.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when closing guesses for the GT big
+        /// key guessing game.
+        /// </summary>
+        public SchrodingersString ClosedGuessingGame { get; init; }
+            = new("The floor is now closed for guesses.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when a moderator closed guesses for
+        /// the GT big key guessing game.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the moderator that
+        /// triggered the close.
+        /// </remarks>
+        public SchrodingersString ModeratorClosedGuessingGame { get; init; }
+            = new("{0} closed the floor for guesses.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when the guessing game has
+        /// concluded.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the correct number.
+        /// <c>{1}</c> is a placeholder for the names of the winners.
+        /// </remarks>
+        public SchrodingersString DeclareGuessingGameWinners { get; init; }
+            = new("The winners who guessed number {0} are {1}.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when the guessing game has
+        /// concluded and nobody won.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the correct number.
+        /// </remarks>
+        public SchrodingersString NobodyWonGuessingGame { get; init; }
+            = new("Nobody guessed {0}.");
+
+        /// <summary>
         /// Gets a dictionary that contains usernames and their replacement for
         /// text-to-speech pronunciation purposes.
         /// </summary>
