@@ -6,6 +6,7 @@ using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis.TtsEngine;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
@@ -41,15 +42,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 StartGanonsTowerGuessingGame();
             });
 
-            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), (tracker, result) =>
+            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (tracker, result) =>
             {
-                CloseGanonsTowerGuessingGameGuesses();
+                await CloseGanonsTowerGuessingGameGuesses();
             });
 
-            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), (tracker, result) =>
+            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (tracker, result) =>
             {
                 var winningNumber = (int)result.Semantics[WinningGuessKey].Value;
-                DeclareGanonsTowerGuessingGameWinner(winningNumber);
+                await DeclareGanonsTowerGuessingGameWinner(winningNumber);
             });
         }
 
@@ -92,13 +93,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// Stops tracking GT Big Key Guessing Game guesses in chat.
         /// </summary>
-        public void CloseGanonsTowerGuessingGameGuesses(string? moderator = null)
+        public async Task CloseGanonsTowerGuessingGameGuesses(string? moderator = null)
         {
             AllowGanonsTowerGuesses = false;
 
             if (string.IsNullOrEmpty(moderator))
             {
                 Tracker.Say(x => x.Chat.ClosedGuessingGame);
+
+                var chatMessage = Tracker.Responses.Chat.ClosedGuessingGame.ToString();
+                if (chatMessage != null)
+                {
+                    await ChatClient.SendMessageAsync(chatMessage, announce: true);
+                }
             }
             else
             {
@@ -110,7 +117,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Reveals the winner of the Ganon's Tower Big Key Guessing Game.
         /// </summary>
         /// <param name="winningNumber">The correct number.</param>
-        public void DeclareGanonsTowerGuessingGameWinner(int winningNumber)
+        public async Task DeclareGanonsTowerGuessingGameWinner(int winningNumber)
         {
             var winners = GanonsTowerGuesses
                 .Where(x => x.Value == winningNumber)
@@ -120,11 +127,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (winners.Count == 0)
             {
                 Tracker.Say(x => x.Chat.NobodyWonGuessingGame, winningNumber);
+
+                var chatMessage = Tracker.Responses.Chat.NobodyWonGuessingGame.Format(winningNumber);
+                if (chatMessage != null)
+                {
+                    await ChatClient.SendMessageAsync(chatMessage, announce: true);
+                }
             }
             else
             {
-                var names = winners.Select(Tracker.CorrectUserNamePronunciation);
-                Tracker.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(names));
+                var pronouncedNames = winners.Select(Tracker.CorrectUserNamePronunciation);
+                Tracker.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
+
+                var chatMessage = Tracker.Responses.Chat.DeclareGuessingGameWinners.Format(winningNumber, NaturalLanguage.Join(winners));
+                if (chatMessage != null)
+                {
+                    await ChatClient.SendMessageAsync(chatMessage, announce: true);
+                }
             }
         }
 

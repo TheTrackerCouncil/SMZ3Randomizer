@@ -32,7 +32,7 @@ namespace Randomizer.SMZ3.Twitch
                 $"?client_id={ClientId}" +
                 $"&redirect_uri={Uri.EscapeDataString(redirectUri.ToString())}" +
                 "&response_type=token" +
-                $"&scope={Uri.EscapeDataString("chat:read chat:edit")}");
+                $"&scope={Uri.EscapeDataString("chat:read chat:edit channel:moderate")}");
         }
 
         public override async Task<string?> GetUserNameAsync(string accessToken, CancellationToken cancellationToken)

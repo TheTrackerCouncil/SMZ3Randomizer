@@ -1581,16 +1581,19 @@
       ],
       "ClosedGuessingGame": [
         "The floor is now closed for guesses.",
-        "Guesses are no longer accepted."
+        "Guesses are no longer accepted.",
+        "If you like having a soul then I hope you made your guess because the floor is now closed."
       ],
       "ModeratorClosedGuessingGame": [
         "{0} closed the floor for guesses.",
-        "The floor is now closed for guesses, as decreed by {0}."
+        "The floor is now closed for guesses, as decreed by {0}.",
+        "If you like having a soul then I hope you made your guess because {0} closed the floor."
       ],
       "DeclareGuessingGameWinners": [
         "The winners are {1}.",
         "{1} must be pretty good.",
-        "{1} guessed number {0}."
+        "{1} guessed number {0}.",
+        "{1} performed the miraculous feat of having correctly guessed the number {0}."
       ],
       "NobodyWonGuessingGame": [
         "Nobody guessed number {0}.",
