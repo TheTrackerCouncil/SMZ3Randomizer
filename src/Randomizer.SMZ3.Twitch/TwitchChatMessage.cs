@@ -13,7 +13,8 @@ namespace Randomizer.SMZ3.Twitch
         public TwitchChatMessage(TwitchLib.Client.Models.ChatMessage message)
             : base(sender: message.DisplayName,
                    userName: message.Username,
-                   text: message.Message)
+                   text: message.Message,
+                   isModerator: message.IsModerator || message.IsBroadcaster)
         {
 
         }

@@ -38,15 +38,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), (tracker, result) =>
             {
-                GanonsTowerGuesses.Clear();
-                AllowGanonsTowerGuesses = true;
-                tracker.Say(x => x.Chat.StartedGuessingGame);
+                StartGanonsTowerGuessingGame();
             });
 
             AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), (tracker, result) =>
             {
-                AllowGanonsTowerGuesses = false;
-                tracker.Say(x => x.Chat.ClosedGuessingGame);
+                CloseGanonsTowerGuessingGameGuesses();
             });
 
             AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), (tracker, result) =>
@@ -80,6 +77,33 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Starts tracking GT Big Key Guessing Game guesses in chat.
+        /// </summary>
+        public void StartGanonsTowerGuessingGame()
+        {
+            GanonsTowerGuesses.Clear();
+            AllowGanonsTowerGuesses = true;
+            Tracker.Say(x => x.Chat.StartedGuessingGame);
+        }
+
+        /// <summary>
+        /// Stops tracking GT Big Key Guessing Game guesses in chat.
+        /// </summary>
+        public void CloseGanonsTowerGuessingGameGuesses(string? moderator = null)
+        {
+            AllowGanonsTowerGuesses = false;
+
+            if (string.IsNullOrEmpty(moderator))
+            {
+                Tracker.Say(x => x.Chat.ClosedGuessingGame);
+            }
+            else
+            {
+                Tracker.Say(x => x.Chat.ModeratorClosedGuessingGame, moderator);
+            }
         }
 
         /// <summary>
@@ -132,6 +156,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 if (AllowGanonsTowerGuesses)
                     TryRecordGanonsTowerGuess(e.Message);
+
+                if (e.Message.IsFromModerator)
+                    ProcessModChatCommand(e.Message, senderName);
             }
             catch (Exception ex)
             {
@@ -197,6 +224,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                     break;
                 }
+            }
+        }
+
+        private void ProcessModChatCommand(ChatMessage message, string senderNamePronunciation)
+        {
+            if (!message.IsFromModerator)
+                return;
+
+            var closeGuessesPattern = new Regex("^(Hey tracker, )?(close( the floor( for guesses)?)?|the floor is (now )?closed( for guesses)?)$",
+                RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
+            if (closeGuessesPattern.IsMatch(message.Text))
+            {
+                CloseGanonsTowerGuessingGameGuesses(senderNamePronunciation);
             }
         }
 
