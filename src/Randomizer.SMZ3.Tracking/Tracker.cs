@@ -291,7 +291,7 @@ namespace Randomizer.SMZ3.Tracking
             var correctedUserName = Responses.Chat.UserNamePronunciation
                 .SingleOrDefault(x => x.Key.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
-            return correctedUserName.Value ?? userName;
+            return correctedUserName.Value ?? userName.Replace('_', ' ');
         }
 
         /// <summary>
