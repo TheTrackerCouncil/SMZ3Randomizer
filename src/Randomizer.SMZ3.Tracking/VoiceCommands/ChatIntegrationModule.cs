@@ -85,9 +85,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public void StartGanonsTowerGuessingGame()
         {
-            GanonsTowerGuesses.Clear();
+            if (!AllowGanonsTowerGuesses)
+            {
+                // Just in case this command gets misheard, only clear when not
+                // already allowing guesses
+                GanonsTowerGuesses.Clear();
+            }
             AllowGanonsTowerGuesses = true;
             Tracker.Say(x => x.Chat.StartedGuessingGame);
+
+            Tracker.AddUndo(() =>
+            {
+                if (AllowGanonsTowerGuesses)
+                {
+                    AllowGanonsTowerGuesses = false;
+                    GanonsTowerGuesses.Clear();
+                }
+            });
         }
 
         /// <summary>
@@ -111,6 +125,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 Tracker.Say(x => x.Chat.ModeratorClosedGuessingGame, moderator);
             }
+
+            Tracker.AddUndo(() =>
+            {
+                if (!AllowGanonsTowerGuesses)
+                    AllowGanonsTowerGuesses = true;
+            });
         }
 
         /// <summary>

@@ -2013,7 +2013,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="undo">
         /// The action to invoke to undo the last operation.
         /// </param>
-        protected virtual void AddUndo(Action undo) => _undoHistory.Push(undo);
+        protected internal virtual void AddUndo(Action undo) => _undoHistory.Push(undo);
 
         /// <summary>
         /// Cleans up resources used by this class.
