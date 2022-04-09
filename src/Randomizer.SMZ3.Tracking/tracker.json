@@ -1696,7 +1696,8 @@
         "I doubt {1} would care about what's at {0}.",
         "You can skip {0}.",
         "You can skip it.",
-        [ "{0} is barren.", 0.2 ]
+        [ "{0} is barren.", 0.5 ],
+        [ "They say that plundering {0} is a foolish choice.", 0.1 ]
       ],
       "LocationHasUsefulItem": [
         "{0} might be worth checking out.",
@@ -1746,7 +1747,8 @@
         "You can skip it.",
         "I don't think you'd care about anything in {0}.",
         "I don't think you'd care about anything there.",
-        [ "{0} is barren.", 0.2 ]
+        [ "{0} is barren.", 0.5 ],
+        [ "They say that plundering {0} is a foolish choice.", 0.1 ]
       ],
       "AreaHasJunkAndCrystal": [
         "The only thing of worth in {0} is a crystal.",
