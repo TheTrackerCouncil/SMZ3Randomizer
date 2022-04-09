@@ -574,6 +574,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             {
                                 var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression)
                                     .SelectMany(x => x)
+                                    .Where(x => x != item.InternalItemType)
                                     .Select(x => Tracker.Items.FirstOrDefault(item => item.InternalItemType == x))
                                     .Random();
                                 if (randomMissingItem != null)
