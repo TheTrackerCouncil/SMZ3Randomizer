@@ -1402,7 +1402,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             var locations = area.Locations
                 .Where(x => !x.Cleared)
-                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression(assumeKeys)))
+                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression()))
                 .ToImmutableList();
 
             UpdateTrackerProgression = true;
