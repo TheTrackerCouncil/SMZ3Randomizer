@@ -863,7 +863,7 @@
       ]
     },
     {
-      "Name": [ "Varia Suit", "Various Suits" ],
+      "Name": [ "Varia Suit", "Various Suits", "Barrier Suit" ],
       "InternalItemType": 178,
       "Column": 6,
       "Row": 2,
@@ -1578,7 +1578,9 @@
       ],
       "StartedGuessingGame": [
         "The floor is now open for guesses.",
-        "You may now attempt to guess which chest holds the big key."
+        "You may now attempt to guess which chest holds the big key.",
+        "The GT big key guessing is now open for guesses.",
+        "The GT big key guessing is now open for guesses. By the way, I'm taking a 50% cut of the souls this time."
       ],
       "ClosedGuessingGame": [
         "The floor is now closed for guesses.",
