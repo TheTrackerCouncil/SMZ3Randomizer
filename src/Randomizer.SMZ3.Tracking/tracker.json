@@ -1543,7 +1543,8 @@
     ],
     "Chat": {
       "RecognizedGreetings": [
-        "\\b(hi|hey|hello|greetings),? tracker\\b",
+        "\\b(hi|hey|hello)( there)?,? tracker\\b",
+        "\\b(greetings|hiya|howdy|'sup),? tracker\\b",
         "\\bgood (morning|afternoon|evening|day),? tracker\\b",
         "\\b(HeyGuys|ViHiYo|pkroseHello|betusHey) tracker\\b",
         "\\btracker (HeyGuys|ViHiYo|pkroseHello|betusHey)\\b",
@@ -1874,7 +1875,7 @@
       ]
     },
     "Idle": {
-      "7m±2m": [
+      "5m±2m": [
         "Decreased content by one step.",
         "What's wrong? Am I not good enough for you anymore?",
         "I enjoy the sight of humans on their knees.",

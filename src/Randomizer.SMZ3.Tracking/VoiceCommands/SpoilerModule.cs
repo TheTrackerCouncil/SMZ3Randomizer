@@ -794,7 +794,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GetProgressionHintRule()
         {
-            var normalRule = new GrammarBuilder()
+            return new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .OneOf("give me a hint",
                     "give me a suggestion",
@@ -802,11 +802,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     "do you have any suggestions?",
                     "where should I go?",
                     "what should I do?");
-
-            var townWithNoRule = new GrammarBuilder()
-                .Append("Give me a hint, tracker.");
-
-            return GrammarBuilder.Combine(normalRule, townWithNoRule);
         }
 
         private GrammarBuilder GetLocationUsefulnessHintRule()
