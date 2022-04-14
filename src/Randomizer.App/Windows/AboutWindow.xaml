@@ -65,7 +65,7 @@
 
     <TextBlock FontWeight="Bold">Special thanks:</TextBlock>
     <TextBlock Margin="0,3,0,0">
-      <Hyperlink NavigateUri="https://twitch.tv/the_betus"
+      • <Hyperlink NavigateUri="https://twitch.tv/the_betus"
                  ToolTip="https://twitch.tv/the_betus"
                  RequestNavigate="Hyperlink_RequestNavigate">
       Diabetus</Hyperlink>
@@ -75,11 +75,15 @@
         PinkKittyRose</Hyperlink>
       for streaming so much with the Cas’ Randomizer
     </TextBlock>
-    <TextBlock Margin="0,3,0,0">
-      Fragger, PaddyCo and others for their original sprite work
+    <TextBlock Margin="0,8,0,0">
+      • Fragger for the original sprite work and the original SMZ3 EmoTracker
+      customizations
     </TextBlock>
-    <TextBlock Margin="0,3,0,0">
-      Everyone from the BCU who helped test the Cas’ Randomizer and Tracker
+    <TextBlock Margin="0,8,0,0">
+      • PaddyCo and others for their original sprite work
+    </TextBlock>
+    <TextBlock Margin="0,8,0,0">
+      • Everyone from the BCU who helped test the Cas’ Randomizer and Tracker
     </TextBlock>
   </StackPanel>
 </Window>
