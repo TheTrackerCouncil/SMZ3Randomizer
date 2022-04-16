@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.Msu
 {
     public class ALinkToThePastMusicPack : MusicPack
     {
-        public ALinkToThePastMusicPack(string? title, string? author, IDictionary<int, PcmTrackSet> tracks)
+        public ALinkToThePastMusicPack(string? title, string? author, IEnumerable<PcmTrack> tracks)
             : base(title, author, tracks)
         {
         }
 
-        public virtual PcmTrackSet? this[ALttPSoundtrack track]
+        public PcmTrack? this[ALttPSoundtrack track]
             => base[(int)track];
 
-        public virtual PcmTrackSet? this[ALttpExtendedSoundtrack track]
+        public PcmTrack? this[ALttpExtendedSoundtrack track]
             => base[(int)track];
 
         public static bool IsValidTrackNumber(int trackNumber)

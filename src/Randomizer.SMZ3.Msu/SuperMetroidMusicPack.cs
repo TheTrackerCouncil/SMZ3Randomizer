@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.Msu
 {
     public class SuperMetroidMusicPack : MusicPack
     {
-        public SuperMetroidMusicPack(string? title, string? author, IDictionary<int, PcmTrackSet> tracks)
+        public SuperMetroidMusicPack(string? title, string? author, IEnumerable<PcmTrack> tracks)
             : base(title, author, tracks)
         {
         }
 
-        public virtual PcmTrackSet? this[SuperMetroidSoundtrack track]
+        public PcmTrack? this[SuperMetroidSoundtrack track]
             => base[(int)track];
 
         public static bool IsValidTrackNumber(int trackNumber)

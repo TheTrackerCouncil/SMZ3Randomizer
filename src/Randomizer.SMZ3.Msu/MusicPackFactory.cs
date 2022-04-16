@@ -35,20 +35,17 @@ namespace Randomizer.SMZ3.Msu
             var tracks = Directory.EnumerateFiles(directory, "*.pcm")
                 .Select(x => ParseFileName(x, baseName))
                 .Where(x => x != null).Cast<PcmFileName>()
-                .GroupBy(x => x.TrackNumber)
-                .OrderBy(x => x.Key)
-                .ToDictionary(x => x.Key, grouping =>
-                    new PcmTrackSet(grouping.Key, grouping
-                        .OrderBy(x => x.Suffix)
-                        .Select(x => new PcmTrack(x.TrackNumber, x.Suffix, x.Path))));
+                .Select(x => new PcmTrack(x.TrackNumber, x.Suffix, x.Path))
+                .OrderBy(x => x.TrackNumber)
+                .ThenBy(x => x.Title);
 
             var title = Path.GetFileName(directory) ?? baseName;
             return CreateMusicPack(title, null, tracks);
         }
 
-        private static MusicPack CreateMusicPack(string title, string? author, Dictionary<int, PcmTrackSet> tracks)
+        private static MusicPack CreateMusicPack(string title, string? author, IEnumerable<PcmTrack> tracks)
         {
-            var trackNumbers = tracks.Select(x => x.Key).ToList();
+            var trackNumbers = tracks.Select(x => x.TrackNumber).ToList();
 
             if (trackNumbers.All(x => SuperMetroidMusicPack.IsValidTrackNumber(x)))
                 return new SuperMetroidMusicPack(title, author, tracks);

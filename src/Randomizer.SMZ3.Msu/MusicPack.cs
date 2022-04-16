@@ -8,28 +8,27 @@ namespace Randomizer.SMZ3.Msu
 {
     public class MusicPack
     {
-        public MusicPack()
-        {
-            Tracks = new Dictionary<int, PcmTrackSet>();
-        }
-
-        public MusicPack(string? title, string? author, IDictionary<int, PcmTrackSet> tracks)
+        public MusicPack(string? title, string? author, IEnumerable<PcmTrack> tracks)
         {
             Title = title;
             Author = author;
-            Tracks = tracks ?? throw new ArgumentNullException(nameof(tracks));
+            Tracks = new List<PcmTrack>(tracks);
         }
 
         public string? Title { get; set; }
 
         public string? Author { get; set; }
 
-        public IDictionary<int, PcmTrackSet> Tracks { get; set; }
+        public IList<PcmTrack> Tracks { get; }
 
-        public PcmTrackSet? this[int trackNumber]
-            => Tracks.TryGetValue(trackNumber, out var trackSet)
-                ? trackSet
-                : null;
+        public PcmTrack? GetTrack(int trackNumber)
+            => GetTracks(trackNumber).FirstOrDefault();
+
+        public virtual IEnumerable<PcmTrack> GetTracks(int trackNumber)
+            => Tracks.Where(x => x.TrackNumber == trackNumber);
+
+        public PcmTrack? this[int trackNumber]
+            => GetTrack(trackNumber);
 
         public override string? ToString()
         {
