@@ -2,8 +2,10 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.Msu;
 
 namespace Randomizer.App.ViewModels
 {
@@ -13,7 +15,8 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class PatchOptions : INotifyPropertyChanged
     {
-        private string _msu1Path;
+        private string _musicPackPath;
+        private MusicPack _musicPack;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -26,15 +29,31 @@ namespace Randomizer.App.ViewModels
         public ShipSprite ShipPatch { get; set; }
             = ShipSprite.DefaultShip;
 
-        public string Msu1Path
+        [JsonIgnore]
+        public MusicPack MusicPack
         {
-            get => _msu1Path;
+            get => _musicPack;
             set
             {
-                if (value != _msu1Path)
+                if (value != _musicPack)
                 {
-                    _msu1Path = value;
-                    OnPropertyChanged(nameof(Msu1Path));
+                    _musicPack = value;
+                    _musicPackPath = value.FileName;
+                    OnPropertyChanged(nameof(MusicPack));
+                    OnPropertyChanged(nameof(MusicPackPath));
+                    OnPropertyChanged(nameof(CanEnableExtendedSoundtrack));
+                }
+            }
+        }
+        public string MusicPackPath
+        {
+            get => _musicPackPath;
+            set
+            {
+                if (value != _musicPackPath)
+                {
+                    _musicPackPath = value;
+                    OnPropertyChanged(nameof(MusicPackPath));
                     OnPropertyChanged(nameof(CanEnableExtendedSoundtrack));
                 }
             }
@@ -45,7 +64,7 @@ namespace Randomizer.App.ViewModels
         public MusicShuffleMode ShuffleDungeonMusic { get; set; }
             = MusicShuffleMode.Default;
 
-        public bool CanEnableExtendedSoundtrack => File.Exists(Msu1Path);
+        public bool CanEnableExtendedSoundtrack => File.Exists(MusicPack?.FileName);
 
         public HeartColor HeartColor { get; set; }
             = HeartColor.Red;

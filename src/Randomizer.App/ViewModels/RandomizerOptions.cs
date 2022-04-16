@@ -62,6 +62,8 @@ namespace Randomizer.App.ViewModels
 
         public bool CommonExpanded { get; set; } = true;
 
+        public bool MusicExpanded { get; set; } = false;
+
         public double WindowWidth { get; set; } = 500d;
 
         public double WindowHeight { get; set; } = 600d;

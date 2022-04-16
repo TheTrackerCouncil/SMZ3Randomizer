@@ -7,8 +7,8 @@ namespace Randomizer.SMZ3.Msu
 {
     public class Smz3MusicPack : MusicPack
     {
-        public Smz3MusicPack(string? title, string? author, IEnumerable<PcmTrack> tracks)
-            : base(title, author, tracks)
+        public Smz3MusicPack(string msuFileName, string? title, string? author, IEnumerable<PcmTrack> tracks)
+            : base(msuFileName, title, author, tracks)
         {
             Game = MsuGame.Smz3;
         }

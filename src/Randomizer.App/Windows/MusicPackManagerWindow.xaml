@@ -1,0 +1,54 @@
+﻿<Window x:Class="Randomizer.App.Windows.MusicPackManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Randomizer.App.Windows"
+        mc:Ignorable="d"
+        Title="Music Packs — SMZ3 Cas' Randomizer"
+        Height="200"
+        Width="400">
+  <Window.Resources>
+    <Style x:Key="MainInstruction"
+           TargetType="TextBlock">
+      <Setter Property="FontSize"
+              Value="12pt" />
+      <Setter Property="Foreground"
+              Value="#003399" />
+    </Style>
+  </Window.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <TextBlock x:Name="MainInstructionText"
+               Style="{StaticResource MainInstruction}"
+               Margin="11"
+               Grid.Row="0">More coming soon!</TextBlock>
+    <StackPanel Orientation="Vertical"
+                Grid.Row="1"
+                Margin="11,0">
+      <TextBlock>Put your MSU-1 packs in the folder below and press Auto-detect.</TextBlock>
+      <TextBlock x:Name="MsuPath"></TextBlock>
+      <Button x:Name="AutoDetectButton"
+              Click="AutoDetectButton_Click"
+              HorizontalAlignment="Left"
+              Margin="0,8">
+        Auto-detect</Button>
+    </StackPanel>
+    <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"
+            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+            BorderThickness="0,1,0,0"
+            Padding="11"
+            Grid.Row="2">
+      <StackPanel Orientation="Horizontal"
+                  HorizontalAlignment="Right">
+        <Button x:Name="CloseButton"
+                Click="CloseButton_Click">OK</Button>
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

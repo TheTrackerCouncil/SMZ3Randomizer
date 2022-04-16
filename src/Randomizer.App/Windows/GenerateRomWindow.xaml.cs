@@ -18,9 +18,11 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
+using Randomizer.App.Windows;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Msu;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App
@@ -31,10 +33,12 @@ namespace Randomizer.App
     public partial class GenerateRomWindow : Window
     {
         private readonly Task _loadSpritesTask;
+        private Task _loadMusicPacksTask;
         private readonly IServiceProvider _serviceProvider;
         private readonly Smz3Randomizer _randomizer;
         private readonly RomGenerator _romGenerator;
         private readonly LocationConfig _locationConfig;
+        private readonly MusicPackFactory _musicPackFactory;
         private RandomizerOptions _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider)
@@ -43,6 +47,7 @@ namespace Randomizer.App
             _randomizer = serviceProvider.GetService<Smz3Randomizer>();
             _romGenerator = serviceProvider.GetService<RomGenerator>();
             _locationConfig = serviceProvider.GetService<TrackerConfigProvider>().GetLocationConfig();
+            _musicPackFactory = serviceProvider.GetRequiredService<MusicPackFactory>();
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -50,7 +55,6 @@ namespace Randomizer.App
             ShipSprites.Add(ShipSprite.DefaultShip);
             _loadSpritesTask = Task.Run(() => LoadSprites())
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
-
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
@@ -58,6 +62,8 @@ namespace Randomizer.App
         public ObservableCollection<Sprite> LinkSprites { get; } = new();
 
         public ObservableCollection<ShipSprite> ShipSprites { get; } = new();
+
+        public ObservableCollection<MusicPack> MusicPacks { get; } = new();
 
         public RandomizerOptions Options
         {
@@ -69,6 +75,15 @@ namespace Randomizer.App
                 PopulateItemOptions();
                 PopulateLogicOptions();
                 PopulateLocationOptions();
+                _loadMusicPacksTask = Task.Run(async () => await LoadMusicPacks())
+                    .ContinueWith(task =>
+                    {
+                        Trace.WriteLine($"Finished loading music packs ({task.Status}).");
+                        if (task.IsFaulted)
+                        {
+                            Trace.WriteLine(task.Exception);
+                        }
+                    });
             }
         }
 
@@ -282,19 +297,47 @@ namespace Randomizer.App
             }, DispatcherPriority.Loaded);
         }
 
+        private async Task LoadMusicPacks()
+        {
+            var basePath = Options.GeneralOptions.MsuPath;
+            foreach (var packFile in Directory.EnumerateFiles(basePath, "*.msu.yml", SearchOption.AllDirectories))
+            {
+                var pack = await _musicPackFactory.LoadAsync(packFile);
+                if (pack.Game == MsuGame.Smz3)
+                    Dispatcher.Invoke(() => MusicPacks.Add(pack));
+            }
+        }
+
+        private void ManagePacksButton_Click(object sender, RoutedEventArgs e)
+        {
+            var manageWindow = new MusicPackManagerWindow(this, Options, _musicPackFactory);
+            manageWindow.ShowDialog();
+
+            Dispatcher.Invoke(() =>
+            {
+                MusicPacks.Clear();
+                foreach (var pack in manageWindow.MusicPacks)
+                {
+                    if (pack.Game == MsuGame.Smz3)
+                        MusicPacks.Add(pack);
+                }
+            });
+        }
+
         private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
 
-        private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
+        private async void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
-            if (!successful)
+            try
             {
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                await _romGenerator.GenerateRom(Options);
+            }
+            catch (RandomizerGenerationException ex)
+            {
+                MessageBox.Show(this, ex.Message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+
             DialogResult = true;
             Close();
         }

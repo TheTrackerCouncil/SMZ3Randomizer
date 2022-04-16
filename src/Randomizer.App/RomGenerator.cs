@@ -6,8 +6,12 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
+
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Logging;
+
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
@@ -15,6 +19,7 @@ using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Msu;
 using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.App
@@ -25,24 +30,27 @@ namespace Randomizer.App
     public class RomGenerator
     {
         private readonly RandomizerContext _dbContext;
+        private readonly MusicPackFactory _musicPackFactory;
+        private readonly ILogger<RomGenerator> _logger;
         private readonly Smz3Randomizer _randomizer;
 
         public RomGenerator(Smz3Randomizer randomizer,
-            RandomizerContext dbContext)
+            RandomizerContext dbContext,
+            MusicPackFactory musicPackFactory,
+            ILogger<RomGenerator> logger)
         {
             _randomizer = randomizer;
             _dbContext = dbContext;
+            _musicPackFactory = musicPackFactory;
+            _logger = logger;
         }
 
         /// <summary>
         /// Generates a rom and returns details about the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
-        /// <param name="path">The path to the rom</param>
-        /// <param name="error">Any error message from generating the rom</param>
-        /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
+        public async Task<GeneratedRom> GenerateRom(RandomizerOptions options)
         {
             try
             {
@@ -50,14 +58,11 @@ namespace Randomizer.App
 
                 if (!_randomizer.ValidateSeedSettings(seed, options.ToConfig()))
                 {
-                    if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
+                    if (MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
                         "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
-                        "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
+                        "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     {
-                        path = null;
-                        error = "";
-                        rom = null;
-                        return false;
+                        return null;
                     }
                 }
 
@@ -66,7 +71,7 @@ namespace Randomizer.App
 
                 var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
                 var romPath = Path.Combine(folderPath, romFileName);
-                EnableMsu1Support(options, bytes, romPath, out var msuError);
+                await EnableMsu1SupportAsync(options, bytes, romPath);
                 Rom.UpdateChecksum(bytes);
                 File.WriteAllBytes(romPath, bytes);
 
@@ -74,19 +79,11 @@ namespace Randomizer.App
                 var spoilerPath = Path.ChangeExtension(romPath, ".txt");
                 File.WriteAllText(spoilerPath, spoilerLog);
 
-                rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
-
-                error = msuError;
-                path = romPath;
-
-                return true;
+                return SaveSeedToDatabase(options, seed, romPath, spoilerPath);
             }
-            catch (RandomizerGenerationException e)
+            catch (RandomizerGenerationException ex)
             {
-                path = null;
-                error = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
-                rom = null;
-                return false;
+                throw new RandomizerGenerationException($"Error generating rom\n{ex.Message}\nPlease try again. If it persists, try modifying your seed settings.", ex);
             }
         }
 
@@ -222,8 +219,8 @@ namespace Randomizer.App
 
             log.AppendLine((options.SeedOptions.Keysanity ? "[Keysanity] " : "")
                          + (options.SeedOptions.Race ? "[Race] " : ""));
-            if (File.Exists(options.PatchOptions.Msu1Path))
-                log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.Msu1Path)}");
+            if (File.Exists(options.PatchOptions.MusicPackPath))
+                log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.MusicPackPath)}");
             log.AppendLine();
 
             var spheres = seed.Playthrough.GetPlaythroughText();
@@ -274,28 +271,30 @@ namespace Randomizer.App
         /// <param name="options">The randomizer generation options</param>
         /// <param name="rom">The bytes of the previously generated rom</param>
         /// <param name="romPath">The path to the rom file</param>
-        /// <param name="error">Any error that was ran into when updating the rom</param>
         /// <returns>True if successful, false otherwise</returns>
-        private bool EnableMsu1Support(RandomizerOptions options, byte[] rom, string romPath, out string error)
+        private async Task<bool> EnableMsu1SupportAsync(RandomizerOptions options, byte[] rom, string romPath)
         {
-            var msuPath = options.PatchOptions.Msu1Path;
-            if (!File.Exists(msuPath))
+            var musicPack = await GetMusicPackAsync(options);
+            if (musicPack == null)
             {
-                error = "";
                 return false;
             }
 
-            var romDrive = Path.GetPathRoot(romPath);
-            var msuDrive = Path.GetPathRoot(msuPath);
-            if (!romDrive.Equals(msuDrive, StringComparison.OrdinalIgnoreCase))
+            if (musicPack is not Smz3MusicPack msuPack)
             {
-                error = $"Due to technical limitations, the MSU-1 " +
-                    $"pack and the ROM need to be on the same drive. MSU-1 " +
-                    $"support cannot be enabled.\n\nPlease move or copy the MSU-1 " +
-                    $"files to somewhere on {romDrive}, or change the ROM output " +
-                    $"folder setting to be on the {msuDrive} drive.";
-                return false;
+                throw new ApplicationException("You must select an SMZ3 music pack.");
             }
+
+            //var romDrive = Path.GetPathRoot(romPath);
+            //var msuDrive = Path.GetPathRoot(musicPack.FileName);
+            //if (!romDrive.Equals(msuDrive, StringComparison.OrdinalIgnoreCase))
+            //{
+            //    throw new ApplicationException($"Due to technical limitations, the MSU-1 " +
+            //        $"pack and the ROM need to be on the same drive. MSU-1 " +
+            //        $"support cannot be enabled.\n\nPlease move or copy the MSU-1 " +
+            //        $"files to somewhere on {romDrive}, or change the ROM output " +
+            //        $"folder setting to be on the {msuDrive} drive.");
+            //}
 
             using (var ips = IpsPatch.MsuSupport())
             {
@@ -303,20 +302,76 @@ namespace Randomizer.App
             }
 
             var romFolder = Path.GetDirectoryName(romPath);
-            var msuFolder = Path.GetDirectoryName(msuPath);
             var romBaseName = Path.GetFileNameWithoutExtension(romPath);
-            var msuBaseName = Path.GetFileNameWithoutExtension(msuPath);
-            foreach (var msuFile in Directory.EnumerateFiles(msuFolder, $"{msuBaseName}*"))
-            {
-                var fileName = Path.GetFileName(msuFile);
-                var suffix = fileName.Replace(msuBaseName, "");
 
-                var link = Path.Combine(romFolder, romBaseName + suffix);
-                NativeMethods.CreateHardLink(link, msuFile, IntPtr.Zero);
+
+            var msuSource = Path.Combine(romFolder, $"{romBaseName}.msu");
+            var msuTarget = Path.Combine(Path.GetDirectoryName(musicPack.FileName), musicPack.MsuFileName);
+            NativeMethods.CreateHardLink(msuSource, msuTarget, IntPtr.Zero);
+
+            foreach (var smTrack in Enum.GetValues<SuperMetroidSoundtrack>())
+            {
+                var track = msuPack[smTrack];
+                if (track == null)
+                {
+                    _logger.LogInformation("Can't find Super Metroid track {Track} ({TrackNumber}) in music pack {Pack}",
+                        smTrack, (int)smTrack, musicPack.FileName);
+                    continue;
+                }
+
+                NativeMethods.CreateHardLink(LinkSource(track), LinkTarget(track), IntPtr.Zero);
             }
 
-            error = "";
+            foreach (var alttpTrack in Enum.GetValues<SMZ3.Msu.ALttPSoundtrack>())
+            {
+                var track = msuPack[alttpTrack];
+                if (track == null)
+                {
+                    _logger.LogInformation("Can't find A Link to the Past track {Track} ({TrackNumber}) in music pack {Pack}",
+                        alttpTrack, (int)alttpTrack, musicPack.FileName);
+                    continue;
+                }
+
+                NativeMethods.CreateHardLink(LinkSource(track), LinkTarget(track), IntPtr.Zero);
+            }
+
+            foreach (var extendedTrack in Enum.GetValues<SMZ3.Msu.ALttpExtendedSoundtrack>())
+            {
+                var track = msuPack[extendedTrack];
+                if (track == null)
+                {
+                    _logger.LogInformation("Can't find A Link to the Past extended track {Track} ({TrackNumber}) in music pack {Pack}",
+                        extendedTrack, (int)extendedTrack, musicPack.FileName);
+                    continue;
+                }
+
+                NativeMethods.CreateHardLink(LinkSource(track), LinkTarget(track), IntPtr.Zero);
+            }
+
+            if (msuPack.ComboCredits == null)
+            {
+                _logger.LogInformation("Can't find SMZ3 combo credits in music pack {Pack}", musicPack.FileName);
+            }
+            else
+            {
+                NativeMethods.CreateHardLink(LinkSource(msuPack.ComboCredits), LinkTarget(msuPack.ComboCredits), IntPtr.Zero);
+            }
+
             return true;
+
+            string LinkSource(PcmTrack track) => Path.Combine(romFolder, $"{romBaseName}-{track.TrackNumber}.pcm");
+            string LinkTarget(PcmTrack track) => Path.Combine(Path.GetDirectoryName(musicPack.FileName), track.FileName);
+        }
+
+        private async ValueTask<MusicPack> GetMusicPackAsync(RandomizerOptions options)
+        {
+            if (options.PatchOptions.MusicPack != null)
+                return options.PatchOptions.MusicPack;
+
+            if (File.Exists(options.PatchOptions.MusicPackPath))
+                return await _musicPackFactory.LoadAsync(options.PatchOptions.MusicPackPath);
+
+            return null;
         }
     }
 }

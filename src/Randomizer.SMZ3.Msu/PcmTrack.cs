@@ -5,6 +5,12 @@ namespace Randomizer.SMZ3.Msu
 {
     public class PcmTrack
     {
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public PcmTrack()
+        {
+            FileName = null!;
+        }
+
         public PcmTrack(string fileName)
         {
             FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
@@ -14,7 +20,7 @@ namespace Randomizer.SMZ3.Msu
 
         public string? Title { get; init; }
 
-        public string FileName { get; }
+        public string FileName { get; init; }
 
         public bool IsDefault { get; init; }
 

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.App
@@ -82,21 +83,17 @@ namespace Randomizer.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void QuickPlayButton_Click(object sender, RoutedEventArgs e)
+        private async void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
-
-            if (!successful)
+            try
             {
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            else
-            {
+                var rom = await _romGenerator.GenerateRom(Options);
                 UpdateRomList();
                 QuickLaunchRom(rom);
+            }
+            catch (RandomizerGenerationException ex)
+            {
+                MessageBox.Show(this, ex.Message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
