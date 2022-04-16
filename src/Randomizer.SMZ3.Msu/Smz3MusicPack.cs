@@ -10,6 +10,7 @@ namespace Randomizer.SMZ3.Msu
         public Smz3MusicPack(string? title, string? author, IEnumerable<PcmTrack> tracks)
             : base(title, author, tracks)
         {
+            Game = MsuGame.Smz3;
         }
 
         [YamlIgnore]

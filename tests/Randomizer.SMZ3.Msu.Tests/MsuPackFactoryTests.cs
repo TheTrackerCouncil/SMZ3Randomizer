@@ -24,8 +24,10 @@ namespace Randomizer.SMZ3.Msu.Tests
             var factory = new MusicPackFactory(Logger<MusicPackFactory>());
             var packs = factory.AutoDetectAll(@"C:\Users\laura\Documents\SMZ3 Cas Randomizer\MSU packs")
                 .ToList();
-
-            var serializer = new YamlDotNet.Serialization.Serializer();
+            var serializer = new YamlDotNet.Serialization.SerializerBuilder()
+                .ConfigureDefaultValuesHandling(YamlDotNet.Serialization.DefaultValuesHandling.OmitDefaults)
+                .EnsureRoundtrip()
+                .Build();
             var yml = serializer.Serialize(packs);
         }
 

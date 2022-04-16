@@ -35,7 +35,12 @@ namespace Randomizer.SMZ3.Msu
             var tracks = Directory.EnumerateFiles(directory, "*.pcm")
                 .Select(x => ParseFileName(x, baseName))
                 .Where(x => x != null).Cast<PcmFileName>()
-                .Select(x => new PcmTrack(x.TrackNumber, x.Suffix, x.Path))
+                .Select(x => new PcmTrack(Path.GetRelativePath(directory, x.Path))
+                {
+                    TrackNumber = x.TrackNumber,
+                    Title = x.Suffix,
+                    IsDefault = string.IsNullOrEmpty(x.Suffix)
+                })
                 .OrderBy(x => x.TrackNumber)
                 .ThenBy(x => x.Title);
 

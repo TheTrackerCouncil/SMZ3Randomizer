@@ -19,10 +19,17 @@ namespace Randomizer.SMZ3.Msu
 
         public string? Author { get; set; }
 
+        public MsuGame Game { get; set; }
+
         public IList<PcmTrack> Tracks { get; }
 
+
         public PcmTrack? GetTrack(int trackNumber)
-            => GetTracks(trackNumber).FirstOrDefault();
+        {
+            var tracks = GetTracks(trackNumber);
+            return tracks.FirstOrDefault(x => x.IsDefault)
+                ?? tracks.FirstOrDefault();
+        }
 
         public virtual IEnumerable<PcmTrack> GetTracks(int trackNumber)
             => Tracks.Where(x => x.TrackNumber == trackNumber);

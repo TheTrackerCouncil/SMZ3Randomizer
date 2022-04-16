@@ -8,6 +8,7 @@ namespace Randomizer.SMZ3.Msu
         public ALinkToThePastMusicPack(string? title, string? author, IEnumerable<PcmTrack> tracks)
             : base(title, author, tracks)
         {
+            Game = MsuGame.ALinkToThePast;
         }
 
         public PcmTrack? this[ALttPSoundtrack track]
