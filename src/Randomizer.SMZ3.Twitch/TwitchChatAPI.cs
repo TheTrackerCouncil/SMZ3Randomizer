@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Twitch
         private static readonly HttpClient s_httpClient = new();
 
 #if DEBUG
-        private const string ClientId = "26d7dd70e5035307b0c8612d6f9d83";
+        private const string ClientId = "";
         private const string ApiEndpoint = "http://localhost:8080/mock/";
 #else
         private const string ClientId = "i8sfdyflu72jddzpaho80fdt6vc3ax";
