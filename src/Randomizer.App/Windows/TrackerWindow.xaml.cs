@@ -634,7 +634,7 @@ namespace Randomizer.App
 
             Tracker.StartTracking();
             Tracker.ConnectToChat(Options.GeneralOptions.TwitchUserName, Options.GeneralOptions.TwitchOAuthToken,
-                Options.GeneralOptions.TwitchChannel);
+                Options.GeneralOptions.TwitchChannel, Options.GeneralOptions.TwitchId);
             _startTime = DateTime.Now;
             _dispatcherTimer.Start();
 

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Randomizer.SMZ3.ChatIntegration.Models;
 
 namespace Randomizer.SMZ3.ChatIntegration
 {
@@ -13,10 +16,14 @@ namespace Randomizer.SMZ3.ChatIntegration
         string? ConnectedAs { get; }
         string? Channel { get; }
 
-        void Connect(string userName, string oauthToken, string channel);
+        void Connect(string userName, string oauthToken, string channel, string id);
 
         void Disconnect();
 
         Task SendMessageAsync(string message, bool announce = false);
+
+        Task<string?> CreatePollAsync(string title, ICollection<string> options, int duration);
+
+        Task<ChatPoll> CheckPollAsync(string id);
     }
 }

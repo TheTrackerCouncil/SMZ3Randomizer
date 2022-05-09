@@ -22,6 +22,7 @@ namespace Randomizer.App.ViewModels
         private string _twitchUserName;
         private string _twitchOAuthToken;
         private string _twitchChannel;
+        private string _twitchId;
 
         /// <summary>
         /// Converts the enum descriptions into a string array for displaying in a dropdown
@@ -103,7 +104,22 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public string TwitchId
+        {
+            get => _twitchId;
+            set
+            {
+                if (_twitchId != value)
+                {
+                    _twitchId = value;
+                    OnPropertyChanged();
+                }
+            }
+
+        }
+
         public bool EnableChatGreeting { get; set; } = true;
+        public bool EnablePollCreation { get; set; } = true;
 
         public int ChatGreetingTimeLimit { get; set; } = 0;
 
@@ -125,7 +141,8 @@ namespace Randomizer.App.ViewModels
             SpoilersEnabled = TrackerSpoilersEnabled,
             UserName = TwitchChannel,
             ChatGreetingEnabled = EnableChatGreeting,
-            ChatGreetingTimeLimit = ChatGreetingTimeLimit
+            ChatGreetingTimeLimit = ChatGreetingTimeLimit,
+            PollCreationEnabled = EnablePollCreation
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

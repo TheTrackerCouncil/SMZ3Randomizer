@@ -5,7 +5,7 @@ using System.Linq;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -362,10 +362,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible item
         /// names.
         /// </returns>
-        protected virtual Choices GetItemNames()
+        protected virtual Choices GetItemNames(Func<ItemData, bool>? where = null)
         {
+            if (where == null)
+            {
+                where = a => 1 == 1;
+            }
+
             var itemNames = new Choices();
-            foreach (var itemData in Tracker.Items)
+            foreach (var itemData in Tracker.Items.Where(where))
             {
                 foreach (var name in itemData.Name)
                     itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));

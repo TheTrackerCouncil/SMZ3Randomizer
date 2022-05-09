@@ -749,11 +749,14 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="channel">
         /// The channel to monitor for incoming messages.
         /// </param>
-        public void ConnectToChat(string? userName, string? oauthToken, string? channel)
+        /// <param name="id">
+        /// The is for <paramref name="userName"/>.
+        /// </param>
+        public void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id)
         {
             if (userName != null && oauthToken != null)
             {
-                _chatClient.Connect(userName, oauthToken, channel ?? userName);
+                _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
             }
         }
 

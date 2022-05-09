@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Randomizer.SMZ3.ChatIntegration
+namespace Randomizer.SMZ3.ChatIntegration.Models
 {
     public abstract class ChatMessage
     {

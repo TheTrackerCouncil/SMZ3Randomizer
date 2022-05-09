@@ -203,6 +203,12 @@
                          IsEnabled="{Binding IsLoggingIn, ElementName=Self}" />
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Twitch id:"
+                                       ToolTip="User id from Twitch that is used for advanced Twitch integration. Requires you to be logged into your own account rather than a bot.">
+                <TextBox Text="{Binding TwitchId, Mode=TwoWay}"
+                         IsEnabled="{Binding IsLoggingIn, ElementName=Self}" />
+              </controls:LabeledControl>
+
               <controls:LabeledControl Text="">
                 <Button x:Name="TwitchLoginButton"
                         Click="TwitchLoginButton_Click"
@@ -227,6 +233,11 @@
                              Margin="3,0,0,0">minutes</TextBlock>
                 </StackPanel>
               </controls:LabeledControl>
+
+              <CheckBox x:Name="EnableChatPolls"
+                        Content="Enable poll creation"
+                        ToolTip="When this is checked, Tracker can create polls on your behalf. Note: You cannot use a bot account for this."
+                        IsChecked="{Binding EnablePollCreation}" />
 
             </StackPanel>
           </Expander>

@@ -102,5 +102,42 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         public IReadOnlyDictionary<string, string> UserNamePronunciation { get; init; }
             = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Gets the phrases for when asking the chat if content should be
+        /// increased or not
+        /// </summary>
+        public SchrodingersString AskChatAboutContent { get; init; }
+            = new("Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.");
+
+        /// <summary>
+        /// Gets the phrases for when chat decided to increase content
+        /// </summary>
+        public SchrodingersString AskChatAboutContentYes { get; init; }
+            = new("It's your lucky day. Chat has confirmed that was some hashtag content.");
+
+        /// <summary>
+        /// Gets the phrases for when chat decided not to increase content
+        /// </summary>
+        public SchrodingersString AskChatAboutContentNo { get; init; }
+            = new("I'm glad I asked. The chat has denied your request to increase your content levels.");
+
+        /// <summary>
+        /// Gets the phrases for when the poll is complete
+        /// </summary>
+        public SchrodingersString PollComplete { get; init; }
+            = new("And the results are now in.");
+
+        /// <summary>
+        /// Gets the phrases for when the poll is opened
+        /// </summary>
+        public SchrodingersString PollOpened { get; init; }
+            = new("I have opened a poll for {0} seconds.");
+
+        /// <summary>
+        /// Gets the phrases for when the poll outcome could not be determined
+        /// </summary>
+        public SchrodingersString PollError { get; init; }
+            = new("Sorry, I was unable to get the poll results.");
     }
 }

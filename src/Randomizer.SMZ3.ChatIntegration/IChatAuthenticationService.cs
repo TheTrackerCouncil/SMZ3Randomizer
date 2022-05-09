@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Randomizer.SMZ3.ChatIntegration.Models;
 
 namespace Randomizer.SMZ3.ChatIntegration
 {
@@ -7,6 +8,6 @@ namespace Randomizer.SMZ3.ChatIntegration
     {
         Task<string?> GetTokenInteractivelyAsync(CancellationToken cancellationToken);
 
-        Task<string?> GetUserNameAsync(string accessToken, CancellationToken cancellationToken);
+        Task<ChatUserData?> GetUserData(string accessToken, CancellationToken cancellationToken);
     }
 }
