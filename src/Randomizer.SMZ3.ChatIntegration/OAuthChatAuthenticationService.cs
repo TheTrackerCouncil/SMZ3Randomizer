@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Randomizer.SMZ3.ChatIntegration.Models;
 
 namespace Randomizer.SMZ3.ChatIntegration
 {
@@ -69,6 +70,6 @@ namespace Randomizer.SMZ3.ChatIntegration
             return accessToken;
         }
 
-        public abstract Task<string?> GetUserNameAsync(string accessToken, CancellationToken cancellationToken);
+        public abstract Task<AuthenticatedUserData?> GetUserData(string accessToken, CancellationToken cancellationToken);
     }
 }

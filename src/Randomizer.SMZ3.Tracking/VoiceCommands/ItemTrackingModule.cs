@@ -131,7 +131,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetTrackItemRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-            var itemNames = GetItemNames();
+            var itemNames = GetItemNames(x => x.Name[0] != "Content");
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();
 

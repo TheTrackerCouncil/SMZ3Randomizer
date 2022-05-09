@@ -72,5 +72,10 @@ namespace Randomizer.SMZ3.Tracking
         /// interrupted before quitting.
         /// </summary>
         public int InterruptionLimit { get; set; } = 5;
+
+        /// <summary>
+        /// If tracker can create chat polls
+        /// </summary>
+        public bool PollCreationEnabled { get; set; }
     }
 }

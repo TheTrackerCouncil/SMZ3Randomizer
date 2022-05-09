@@ -73,11 +73,13 @@ namespace Randomizer.App
                     try
                     {
                         var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
-                        var userName = await _chatAuthenticationService.GetUserNameAsync(token, default);
+                        var userData = await _chatAuthenticationService.GetUserData(token, default);
 
-                        Options.TwitchUserName = userName;
+                        Options.TwitchUserName = userData.Name;
                         Options.TwitchOAuthToken = token;
-                        Options.TwitchChannel = string.IsNullOrEmpty(Options.TwitchChannel) ? userName : Options.TwitchChannel;
+                        Options.TwitchChannel = string.IsNullOrEmpty(Options.TwitchChannel) ? userData.Name : Options.TwitchChannel;
+                        Options.TwitchId = userData.Id;
+
                     }
                     catch (Exception ex)
                     {

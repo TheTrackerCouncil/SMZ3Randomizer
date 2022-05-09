@@ -1610,7 +1610,36 @@
         "skennedysa": "s kennedy",
         "the_betus": "the underscore beetus",
         "Axnollouse": "Fragger"
-      }
+      },
+      "AskChatAboutContent": [
+        "Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.",
+        "Do you really think that was high quality hashtag content? Let's get some unbiased opinions from chat to confirm.",
+        "Error. My metrics calculation algorithm could not determine the quality of that hashtag content. Falling back to chat confirmation of content quality."
+      ],
+      "AskChatAboutContentYes": [
+        "It's your lucky day. Chat has confirmed that was some hashtag content.",
+        "I can't say that I agree with the results, but the chat indeed believes that was some hashtag content.",
+        "Congratulations! You're the lucky winner of our grand prize."
+      ],
+      "AskChatAboutContentNo": [
+        "I'm glad I asked. The chat has denied your request to increase your content levels.",
+        "The racing council regrets to inform you that your application for additional content has been denied.",
+        "Ouch. The chat did not think that was some hashtag content. I can see the metrics dropping."
+      ],
+      "PollOpened": [
+        "I have opened a poll for {0} seconds.",
+        "Chat, you have {0} seconds to respond to the poll.",
+        "The polls are now opened, but only for {0} seconds."
+      ],
+      "PollComplete": [
+        "And the results are now in.",
+        "Let's see. I am crunching the numbers.",
+        "The poll is now closed."
+      ],
+      "PollError": [
+        "Sorry, I was unable to get the poll results.",
+        "Whoops. I couldn't get the poll results."
+      ]
     },
     "Hints": {
       "EnabledHints": [

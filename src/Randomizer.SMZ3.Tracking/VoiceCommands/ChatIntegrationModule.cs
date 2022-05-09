@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.ChatIntegration.Models;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -19,8 +21,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class ChatIntegrationModule : TrackerModule, IDisposable
     {
+        private static readonly Random s_random = new();
         private const string WinningGuessKey = "WinningGuess";
         private readonly Dictionary<string, int> _usersGreetedTimes = new();
+        private bool AskChatAboutContentCheckPollResults = true;
+        private string? AskChatAboutContentPollId;
+        private int AskChatAboutContentPollTime = 60;
+        private bool HasAskedChatAboutContent = false;
 
         /// <summary>
         /// Initializes a new instance of the <see
@@ -51,6 +58,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var winningNumber = (int)result.Semantics[WinningGuessKey].Value;
                 await DeclareGanonsTowerGuessingGameWinner(winningNumber);
+            });
+
+            AddCommand("Track Content", GetTrackContent(), async (tracker, result) =>
+            {
+                await AskChatAboutContent();
             });
         }
 
@@ -168,6 +180,85 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
+        /// Asks the chat if tracker should increase content by one step
+        /// </summary>
+        /// <returns></returns>
+        public async Task AskChatAboutContent()
+        {
+            var contentItemData = Tracker.Items.Where(x => "Content".Equals(x.Name.First(), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if(contentItemData == null)
+            {
+                Logger.LogError("Unable to determine content item data");
+                Tracker.Say(x => x.Error);
+                return;
+            }
+
+            // Always ask the first time, otherwise it's a random change. Can probably change to always be random later.
+            var shouldAskChat = !HasAskedChatAboutContent || s_random.Next(0, 4) == 0;
+            if (!ShouldCreatePolls || !shouldAskChat)
+            {
+                Tracker.TrackItem(contentItemData);
+                return;
+            }
+
+            AskChatAboutContentPollId = await ChatClient.CreatePollAsync("Do you think that was some high quality #content?", new List<string>() { "Yes", "No" }, AskChatAboutContentPollTime);
+
+            if (AskChatAboutContentPollId == null)
+            {
+                Tracker.TrackItem(contentItemData);
+                return;
+            }
+
+            Tracker.Say(x => x.Chat.AskChatAboutContent);
+            Tracker.Say(x => x.Chat.PollOpened, AskChatAboutContentPollTime);
+            AskChatAboutContentCheckPollResults = true;
+            HasAskedChatAboutContent = true;
+
+            Tracker.AddUndo(() =>
+            {
+                AskChatAboutContentCheckPollResults = false;
+            });
+
+            await Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(AskChatAboutContentPollTime + 5));
+
+                do
+                {
+                    var result = await ChatClient.CheckPollAsync(AskChatAboutContentPollId);
+                    if (result.IsComplete && AskChatAboutContentCheckPollResults)
+                    {
+                        AskChatAboutContentCheckPollResults = false;
+
+                        if (result.IsSuccessful)
+                        {
+                            Tracker.Say(x => x.Chat.PollComplete);
+
+                            if ("Yes".Equals(result.WinningChoice, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Tracker.Say(x => x.Chat.AskChatAboutContentYes);
+                                Tracker.TrackItem(contentItemData);
+                            }
+                            else
+                            {
+                                Tracker.Say(x => x.Chat.AskChatAboutContentNo);
+                            }
+                        }
+                        else
+                        {
+                            Tracker.Say(x => x.Chat.PollError);
+                        }
+                    }
+                    else if (AskChatAboutContentCheckPollResults)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(5));
+                    }
+                } while (AskChatAboutContentCheckPollResults);
+            });
+
+        }
+
+        /// <summary>
         /// Frees up resources used by the <see cref="ChatIntegrationModule"/>.
         /// </summary>
         /// <param name="disposing">
@@ -214,6 +305,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private bool ShouldRespondToGreetings => Tracker.Options.ChatGreetingEnabled
             && (Tracker.Options.ChatGreetingTimeLimit == 0
                 || Tracker.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
+
+        private bool ShouldCreatePolls => Tracker.Options.PollCreationEnabled;
 
         private void TryRecordGanonsTowerGuess(ChatMessage message)
         {
@@ -329,6 +422,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     "the winning number is",
                     "the correct number is")
                 .Append(WinningGuessKey, validGuesses);
+        }
+
+        private GrammarBuilder GetTrackContent()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Optional("please", "would you kindly")
+                .OneOf("track", "add")
+                .Append("content");
         }
     }
 }

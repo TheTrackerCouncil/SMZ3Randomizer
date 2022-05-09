@@ -1,58 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
-
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.ChatIntegration.Models;
+using Randomizer.SMZ3.Twitch.Models;
 
 namespace Randomizer.SMZ3.Twitch
 {
     public class TwitchAuthenticationService : OAuthChatAuthenticationService
     {
-        private const string ClientId = "i8sfdyflu72jddzpaho80fdt6vc3ax";
+        private readonly IChatApi _twitchChatAPI;
 
-        private static readonly HttpClient s_httpClient = new();
-        private readonly ILogger<TwitchAuthenticationService> _logger;
-
-        public TwitchAuthenticationService(ILogger<TwitchAuthenticationService> logger)
+        public TwitchAuthenticationService(IChatApi twitchChatAPI)
         {
-            _logger = logger;
+            _twitchChatAPI = twitchChatAPI;
         }
 
         public override Uri GetOAuthUrl(Uri redirectUri)
         {
             return new Uri("https://id.twitch.tv/oauth2/authorize" +
-                $"?client_id={ClientId}" +
+                $"?client_id={_twitchChatAPI.GetClientId()}" +
                 $"&redirect_uri={Uri.EscapeDataString(redirectUri.ToString())}" +
                 "&response_type=token" +
-                $"&scope={Uri.EscapeDataString("chat:read chat:edit channel:moderate")}");
+                $"&scope={Uri.EscapeDataString("chat:read chat:edit channel:moderate channel:read:polls channel:manage:polls channel:read:predictions channel:manage:predictions")}");
         }
 
-        public override async Task<string?> GetUserNameAsync(string accessToken, CancellationToken cancellationToken)
+        public override async Task<AuthenticatedUserData?> GetUserData(string accessToken, CancellationToken cancellationToken)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.twitch.tv/helix/users");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            request.Headers.TryAddWithoutValidation("Client-Id", ClientId);
-
-            var response = await s_httpClient.SendAsync(request, cancellationToken);
-            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            if (!response.IsSuccessStatusCode)
+            _twitchChatAPI.SetAccessToken(accessToken);
+            var user = await _twitchChatAPI.MakeApiCallAsync<TwitchUser>("users", HttpMethod.Get, cancellationToken);
+            return user == null ? null : new()
             {
-                _logger.LogError("{RequestMethod} {RequestUri} returned unexpected {StatusCode} response: {Body}",
-                    request.Method.Method, request.RequestUri, (int)response.StatusCode, responseContent);
-                return null;
-            }
-
-            var responseObject = JsonDocument.Parse(responseContent);
-            var user = responseObject.RootElement.GetProperty("data")[0];
-            return user.GetProperty("login").GetString();
+                Name = user.Login,
+                DisplayName = user.DisplayName,
+                Id = user.Id
+            };
         }
     }
 }
