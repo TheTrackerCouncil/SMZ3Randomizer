@@ -65,7 +65,17 @@ namespace Randomizer.SMZ3.Twitch
 
         private async Task<T?> GetHttpResponseAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var response = await s_httpClient.SendAsync(request, cancellationToken);
+            HttpResponseMessage response;
+            try
+            {
+                response = await s_httpClient.SendAsync(request, cancellationToken);
+            }
+            catch (HttpRequestException e)
+            {
+                _logger.LogError("Unable to reach out to Twitch API {0}", e);
+                return default;
+            }
+
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
 
             if (!response.IsSuccessStatusCode)

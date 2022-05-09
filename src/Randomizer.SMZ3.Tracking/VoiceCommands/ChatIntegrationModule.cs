@@ -427,7 +427,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .Optional("please", "would you kindly")
                 .OneOf("track", "add")
-                .Append("content");
+                .OneOf("content", "con-tent");
         }
     }
 }
