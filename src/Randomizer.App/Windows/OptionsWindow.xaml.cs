@@ -73,7 +73,7 @@ namespace Randomizer.App
                     try
                     {
                         var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
-                        var userData = await _chatAuthenticationService.GetUserData(token, default);
+                        var userData = await _chatAuthenticationService.GetAuthenticatedUserDataAsync(token, default);
 
                         Options.TwitchUserName = userData.Name;
                         Options.TwitchOAuthToken = token;
