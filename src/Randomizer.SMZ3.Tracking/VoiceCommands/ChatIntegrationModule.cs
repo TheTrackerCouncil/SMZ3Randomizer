@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -59,9 +60,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 await DeclareGanonsTowerGuessingGameWinner(winningNumber);
             });
 
-            AddCommand("Track Content", GetTrackContent(), (tracker, result) =>
+            AddCommand("Track Content", GetTrackContent(), async (tracker, result) =>
             {
-                var task = AskChatAboutContent();
+                await AskChatAboutContent();
             });
         }
 
@@ -184,11 +185,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns></returns>
         public async Task AskChatAboutContent()
         {
+            var contentItemData = Tracker.Items.Where(x => "Content".Equals(x.Name.First(), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if(contentItemData == null)
+            {
+                Logger.LogError("Unable to determine content item data");
+                Tracker.Say(x => x.Error);
+                return;
+            }
+
             // Always ask the first time, otherwise it's a random change. Can probably change to always be random later.
             var shouldAskChat = !HasAskedChatAboutContent || s_random.Next(0, 4) == 0;
             if (!ShouldCreatePolls || !shouldAskChat)
             {
-                Tracker.TrackItem(Tracker.Items.Where(x => x.Name.First() == "Content").First());
+                Tracker.TrackItem(contentItemData);
                 return;
             }
 
@@ -196,7 +205,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (AskChatAboutContentPollId == null)
             {
-                Tracker.TrackItem(Tracker.Items.Where(x => x.Name.First() == "Content").First());
+                Tracker.TrackItem(contentItemData);
                 return;
             }
 
@@ -204,9 +213,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Tracker.Say(x => x.Chat.PollOpened, AskChatAboutContentPollTime);
             AskChatAboutContentCheckPollResults = true;
             HasAskedChatAboutContent = true;
-            var task = Task.Run(async () =>
+
+            Tracker.AddUndo(() =>
             {
-                await Task.Delay(AskChatAboutContentPollTime * 1000 + 5000);
+                AskChatAboutContentCheckPollResults = false;
+            });
+
+            await Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(AskChatAboutContentPollTime + 5));
 
                 do
                 {
@@ -219,10 +234,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         {
                             Tracker.Say(x => x.Chat.PollComplete);
 
-                            if ("Yes" == result.WinningChoice)
+                            if ("Yes".Equals(result.WinningChoice, StringComparison.OrdinalIgnoreCase))
                             {
                                 Tracker.Say(x => x.Chat.AskChatAboutContentYes);
-                                Tracker.TrackItem(Tracker.Items.Where(x => x.Name.First() == "Content").First());
+                                Tracker.TrackItem(contentItemData);
                             }
                             else
                             {
@@ -236,15 +251,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                     else if (AskChatAboutContentCheckPollResults)
                     {
-                        await Task.Delay(5 * 1000);
+                        await Task.Delay(TimeSpan.FromSeconds(5));
                     }
                 } while (AskChatAboutContentCheckPollResults);
             });
 
-            Tracker.AddUndo(() =>
-            {
-                AskChatAboutContentCheckPollResults = false;
-            });
         }
 
         /// <summary>

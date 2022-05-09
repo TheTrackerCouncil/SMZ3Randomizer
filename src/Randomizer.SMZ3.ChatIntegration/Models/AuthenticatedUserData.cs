@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.ChatIntegration.Models
 {
-    public class ChatUserData
+    public class AuthenticatedUserData
     {
         public string? Id { get; set; }
         public string? Name { get; set; }

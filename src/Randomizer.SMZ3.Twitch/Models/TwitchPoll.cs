@@ -27,8 +27,10 @@ namespace Randomizer.SMZ3.Twitch.Models
         [JsonPropertyName("status")]
         public string? Status { get; set; }
 
-        public bool IsComplete => "ACTIVE" != Status;
+        public bool IsComplete => !"ACTIVE".Equals(Status, StringComparison.OrdinalIgnoreCase);
 
-        public bool Successful => "COMPLETED" == Status;
+        public bool Successful => WinningChoice != null && "COMPLETED".Equals(Status, StringComparison.OrdinalIgnoreCase);
+
+        public TwitchPollChoice? WinningChoice => Choices?.OrderByDescending(x => x.Votes).FirstOrDefault();
     }
 }

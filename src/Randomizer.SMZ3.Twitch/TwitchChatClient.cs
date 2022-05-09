@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Twitch
             _twitchClient.Connect();
             ConnectedAs = userName;
             Channel = channel;
-            Id = userName.Equals(channel, StringComparison.CurrentCultureIgnoreCase) ? id : null;
+            Id = userName.Equals(channel, StringComparison.OrdinalIgnoreCase) ? id : null;
             _chatApi.SetAccessToken(oauthToken);
         }
 
@@ -149,11 +149,13 @@ namespace Randomizer.SMZ3.Twitch
                 };
             }
 
+            Logger.LogInformation("Poll complete with status {0} and winning choice of {1}", poll.Status, poll.WinningChoice?.Title);
+
             return new()
             {
                 IsComplete = poll.IsComplete,
                 IsSuccessful = poll.Successful,
-                WinningChoice = poll.Choices.OrderByDescending(x => x.Votes).FirstOrDefault()?.Title
+                WinningChoice = poll.WinningChoice?.Title
             };
         }
 
