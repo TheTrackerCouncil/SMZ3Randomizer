@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Twitch
                 $"&scope={Uri.EscapeDataString("chat:read chat:edit channel:moderate channel:read:polls channel:manage:polls channel:read:predictions channel:manage:predictions")}");
         }
 
-        public override async Task<AuthenticatedUserData?> GetUserData(string accessToken, CancellationToken cancellationToken)
+        public override async Task<AuthenticatedUserData?> GetAuthenticatedUserDataAsync(string accessToken, CancellationToken cancellationToken)
         {
             _twitchChatAPI.SetAccessToken(accessToken);
             var user = await _twitchChatAPI.MakeApiCallAsync<TwitchUser>("users", HttpMethod.Get, cancellationToken);

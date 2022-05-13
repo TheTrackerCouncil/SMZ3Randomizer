@@ -8,6 +8,6 @@ namespace Randomizer.SMZ3.ChatIntegration
     {
         Task<string?> GetTokenInteractivelyAsync(CancellationToken cancellationToken);
 
-        Task<AuthenticatedUserData?> GetUserData(string accessToken, CancellationToken cancellationToken);
+        Task<AuthenticatedUserData?> GetAuthenticatedUserDataAsync(string accessToken, CancellationToken cancellationToken);
     }
 }

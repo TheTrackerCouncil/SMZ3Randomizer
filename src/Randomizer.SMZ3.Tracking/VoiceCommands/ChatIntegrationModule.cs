@@ -219,42 +219,39 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 AskChatAboutContentCheckPollResults = false;
             });
 
-            await Task.Run(async () =>
+            await Task.Delay(TimeSpan.FromSeconds(AskChatAboutContentPollTime + 5));
+
+            do
             {
-                await Task.Delay(TimeSpan.FromSeconds(AskChatAboutContentPollTime + 5));
-
-                do
+                var result = await ChatClient.CheckPollAsync(AskChatAboutContentPollId);
+                if (result.IsComplete && AskChatAboutContentCheckPollResults)
                 {
-                    var result = await ChatClient.CheckPollAsync(AskChatAboutContentPollId);
-                    if (result.IsComplete && AskChatAboutContentCheckPollResults)
+                    AskChatAboutContentCheckPollResults = false;
+
+                    if (result.IsSuccessful)
                     {
-                        AskChatAboutContentCheckPollResults = false;
+                        Tracker.Say(x => x.Chat.PollComplete);
 
-                        if (result.IsSuccessful)
+                        if ("Yes".Equals(result.WinningChoice, StringComparison.OrdinalIgnoreCase))
                         {
-                            Tracker.Say(x => x.Chat.PollComplete);
-
-                            if ("Yes".Equals(result.WinningChoice, StringComparison.OrdinalIgnoreCase))
-                            {
-                                Tracker.Say(x => x.Chat.AskChatAboutContentYes);
-                                Tracker.TrackItem(contentItemData);
-                            }
-                            else
-                            {
-                                Tracker.Say(x => x.Chat.AskChatAboutContentNo);
-                            }
+                            Tracker.Say(x => x.Chat.AskChatAboutContentYes);
+                            Tracker.TrackItem(contentItemData);
                         }
                         else
                         {
-                            Tracker.Say(x => x.Chat.PollError);
+                            Tracker.Say(x => x.Chat.AskChatAboutContentNo);
                         }
                     }
-                    else if (AskChatAboutContentCheckPollResults)
+                    else
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(5));
+                        Tracker.Say(x => x.Chat.PollError);
                     }
-                } while (AskChatAboutContentCheckPollResults);
-            });
+                }
+                else if (AskChatAboutContentCheckPollResults)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                }
+            } while (AskChatAboutContentCheckPollResults);
 
         }
 
@@ -430,7 +427,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .Optional("please", "would you kindly")
                 .OneOf("track", "add")
-                .Append("content");
+                .OneOf("content", "con-tent");
         }
     }
 }
