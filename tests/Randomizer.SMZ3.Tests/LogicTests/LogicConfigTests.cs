@@ -260,12 +260,12 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.LeftSandPitRequiresSpringBall = true;
             tempWorld = new World(config, "", 0, "");
             missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.LeftSandPit.Left, progression);
-            missingItems.Should().HaveCount(1)
-                .And.ContainEquivalentOf(new[] { ItemType.SpringBall });
+            missingItems.Should().HaveCount(2)
+                .And.ContainEquivalentOf(new[] { ItemType.SpringBall , ItemType.HiJump });
             tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeFalse();
             tempWorld.InnerMaridia.LeftSandPit.Right.IsAvailable(progression).Should().BeFalse();
 
-            progression = new Progression(new[] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump, ItemType.SpringBall });
+            progression = new Progression(new[] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump, ItemType.SpringBall, ItemType.HiJump });
             missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.LeftSandPit.Left, progression);
             missingItems.Should().BeEmpty();
             tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeTrue();

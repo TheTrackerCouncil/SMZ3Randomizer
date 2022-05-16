@@ -151,7 +151,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .OneOf("I beat", "I defeated", "I beat off", "I killed")
                 .Append(BossKey, bossNames)
-                .OneOf("Without getting hit", "Without taking damage", "And didn't get hit", "And didn't take damage");
+                .OneOf("Without getting hit", "Without taking damage", "And didn't get hit", "And didn't take damage", "In one cycle");
 
             var oneCycled = new GrammarBuilder()
                 .Append("Hey tracker,")
