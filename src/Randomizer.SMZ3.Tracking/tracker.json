@@ -1430,7 +1430,8 @@
     ],
     "DungeonBossClearedAddContent": [
       "That was some impressive work.",
-      "Good job. I didn't think you had it in you."
+      "Good job. I didn't think you had it in you.",
+      "Someone is trying extra hard today."
     ],
     "DungeonRequirementMarked": [
       "Marked {0} as required for {1}"
