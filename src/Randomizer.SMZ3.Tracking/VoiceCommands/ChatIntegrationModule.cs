@@ -194,7 +194,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             // Always ask the first time, otherwise it's a random change. Can probably change to always be random later.
-            var shouldAskChat = !HasAskedChatAboutContent || s_random.Next(0, 4) == 0;
+            var shouldAskChat = !HasAskedChatAboutContent || s_random.Next(0, 3) == 0;
             if (!ShouldCreatePolls || !shouldAskChat)
             {
                 Tracker.TrackItem(contentItemData);

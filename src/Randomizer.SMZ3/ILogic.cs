@@ -61,5 +61,7 @@ namespace Randomizer.SMZ3
         public bool CanPassSwordOnlyDarkRooms(Progression items);
 
         public bool CanHyruleSouthFakeFlippers(Progression items, bool fairyChests);
+
+        public bool CanNavigateMaridiaLeftSandPit(Progression items);
     }
 }

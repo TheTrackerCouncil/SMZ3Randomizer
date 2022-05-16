@@ -158,13 +158,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     name: "Left",
                     alsoKnownAs: new[] { "Missile (left Maridia sand pit room)" },
                     vanillaItem: ItemType.Missile,
-                    access: items => region.CanReachAqueduct(items) && items.Super && Logic.CanPassBombPassages(items));
+                    access: items => region.CanReachAqueduct(items) && items.Super && Logic.CanPassBombPassages(items) && Logic.CanNavigateMaridiaLeftSandPit(items));
 
                 Right = new(this, 145, 0x8FC5E3, LocationType.Chozo,
                     name: "Right",
                     alsoKnownAs: new[] { "Reserve Tank, Maridia" },
                     vanillaItem: ItemType.ReserveTank,
-                    access: items => region.CanReachAqueduct(items) && items.Super && Logic.CanPassBombPassages(items));
+                    access: items => region.CanReachAqueduct(items) && items.Super && Logic.CanPassBombPassages(items) && Logic.CanNavigateMaridiaLeftSandPit(items));
             }
 
             public Location Left { get; }
