@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
@@ -63,6 +63,43 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
             });
+
+            AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (tracker, result) =>
+            {
+                var contentItemData = Tracker.Items.Where(x => "Content".Equals(x.Name.First(), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+
+                var dungeon = GetBossDungeonFromResult(tracker, result);
+                if (dungeon != null)
+                {
+                    if (contentItemData != null)
+                    {
+                        Tracker.Say(x => x.DungeonBossClearedAddContent);
+                        Tracker.TrackItem(contentItemData);
+                    }
+
+                    // Track boss with associated dungeon
+                    tracker.MarkDungeonAsCleared(dungeon, result.Confidence);
+                    return;
+                }
+
+                var boss = GetBossFromResult(tracker, result);
+                if (boss != null)
+                {
+                    if (contentItemData != null)
+                    {
+                        Tracker.Say(x => x.DungeonBossClearedAddContent);
+                        Tracker.TrackItem(contentItemData);
+                    }
+
+                    // Track standalone boss
+                    var admittedGuilt = result.Text.ContainsAny("killed", "beat", "defeated", "dead")
+                        && !result.Text.ContainsAny("beat off", "beaten off");
+                    tracker.MarkBossAsDefeated(boss, admittedGuilt, result.Confidence);
+                    return;
+                }
+
+                throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
+            });
         }
 
         private GrammarBuilder GetMarkBossAsDefeatedRule()
@@ -105,6 +142,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("is alive", "is still alive");
 
             return GrammarBuilder.Combine(markBoss, bossIsAlive);
+        }
+
+        private GrammarBuilder GetBossDefeatedWithContentRule()
+        {
+            var bossNames = GetBossNames();
+            var beatBoss = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("I beat", "I defeated", "I beat off", "I killed")
+                .Append(BossKey, bossNames)
+                .OneOf("Without getting hit", "Without taking damage", "And didn't get hit", "And didn't take damage");
+
+            var oneCycled = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("I one cycled", "I quick killed")
+                .Append(BossKey, bossNames);
+
+            return GrammarBuilder.Combine(beatBoss, oneCycled);
         }
     }
 }

@@ -1428,6 +1428,10 @@
     "DungeonBossNotYetCleared": [
       "But you never defeated {1} in the first place."
     ],
+    "DungeonBossClearedAddContent": [
+      "That was some impressive work.",
+      "Good job. I didn't think you had it in you."
+    ],
     "DungeonRequirementMarked": [
       "Marked {0} as required for {1}"
     ],
