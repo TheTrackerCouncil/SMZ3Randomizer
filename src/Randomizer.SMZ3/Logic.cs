@@ -143,6 +143,11 @@ namespace Randomizer.SMZ3
             return World.Config.LogicConfig.LightWorldSouthFakeFlippers && (!fairyChests || items.MoonPearl);
         }
 
+        public bool CanNavigateMaridiaLeftSandPit(Progression items)
+        {
+            return !World.Config.LogicConfig.LeftSandPitRequiresSpringBall || (items.SpringBall && items.HiJump);
+        }
+
         public World World { get; }
 
         public static IEnumerable<ItemType[]> GetMissingRequiredItems(Location location, Progression items)

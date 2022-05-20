@@ -379,6 +379,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new SchrodingersString("You haven't cleared {0} yet.", "You never defeated {1} in the first place.");
 
         /// <summary>
+        /// Gets the phrases to respond with when the player defeated a boss
+        /// with remarkable skill and add content!
+        /// </summary>
+        public SchrodingersString DungeonBossClearedAddContent { get; init; }
+            = new SchrodingersString("That was some impressive work.");
+
+        /// <summary>
         /// Gets the phrases to respond with when marking the medallion
         /// requirement of a dungeon.
         /// </summary>
