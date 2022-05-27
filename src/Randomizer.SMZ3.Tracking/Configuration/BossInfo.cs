@@ -64,5 +64,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <returns>A string representing this boss.</returns>
         public override string? ToString() => Name[0];
+
+        /// <summary>
+        /// The memory address offset stored as a string hex value
+        /// for where the boss defeated status is stored in memory
+        /// </summary>
+        public string? MemoryAddress { get; set; }
+
+        /// <summary>
+        /// The flag to check against to see if the boss has been
+        /// defeated or not
+        /// </summary>
+        public string? MemoryFlag { get; set; }
     }
 }

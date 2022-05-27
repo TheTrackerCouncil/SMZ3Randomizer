@@ -130,9 +130,6 @@ local function on_tick()
 	end
 end
 
-local function init()
-	connect()
-end
-
 emu.registerbefore(on_tick)
-init()
+connect()
+

@@ -12,6 +12,7 @@ namespace Randomizer.Shared
         ZeldaRoom,
         ZeldaNPC,
         ZeldaOverworld,
-        ZeldaMisc
+        ZeldaMisc,
+        SMLocation
     }
 }
