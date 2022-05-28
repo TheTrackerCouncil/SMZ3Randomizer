@@ -2,7 +2,7 @@ local socket = require('socket.core')
 local json = require('json')
 
 local HOST_ADDRESS = '127.0.0.1'
-local HOST_PORT = 43884
+local HOST_PORT = 6969
 local RECONNECT_DELAY = 5
 
 local tcp = nil
@@ -10,21 +10,6 @@ local connected = false
 local lastConnectionAttempt = os.time()
 local part = nil
 
-local function translate_address(address, domain)
-	if domain == "WRAM" then
-		return 0x7e0000 + address
-	elseif domain == "CARTRAM" then
-		return 0x700000 + address
-	elseif domain == "CARTROM" then
-		return address
-	end
-
-	return address
-end
-
-local function read_byte_range(address, length, domain)
-	return memory.readbyterange(translate_address(address, domain), length)
-end
 
 local function ends_with(str, ending)
    return ending == "" or str:sub(-#ending) == ending
@@ -74,7 +59,7 @@ local function process_message(message)
 	-- print('address', address);
 	-- print('length', length);
 	if (action == 'read_block') then
-		bytes = read_byte_range(address, length, domain)
+		bytes = memory.readbyterange(address, length)
 	end
 	
 	local result = {
@@ -83,7 +68,7 @@ local function process_message(message)
 		Length = length,
 		Bytes = bytes
 	}
-	print('result', json.encode(result))
+	-- print('result', json.encode(result))
 	local ret, err = tcp:send(json.encode(result) .. "\n")
 	if ret == nil then
 	 	print('Failed to send:', err)

@@ -14,13 +14,12 @@ using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
-    public class AutoTrackerModule : TrackerModule
+    public class AutoTrackerModule : TrackerModule, IDisposable
     {
         private static readonly JsonSerializerOptions s_serializerOptions = new()
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
-
 
         private Tracker _tracker;
         private ILogger<AutoTrackerModule> _logger;
@@ -28,10 +27,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         List<AutoTrackerMessage> _requestMessages = new List<AutoTrackerMessage>();
         Dictionary<int, Action<AutoTrackerMessage>> _responseActions = new Dictionary<int, Action<AutoTrackerMessage>>();
         Dictionary<int, int[]> _previousResponses = new Dictionary<int, int[]>();
-        int currentRequestIndex = 0;
-        bool isInSM = false;
-        bool isInLttP = false;
-        Game currentGame;
+        int _currentRequestIndex = 0;
+        Game _currentGame;
+        TcpListener _tcpListener;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BossTrackingModule"/>
@@ -50,10 +48,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddEvent("read_block", CorrectSRAMAddress(0xa173fe), 0x1, Game.Both, (AutoTrackerMessage message) =>
             {
                 var value = Read8(message.Bytes, 0);
-                isInLttP = value == 0x00;
-                isInSM = value == 0xff;
-                currentGame = isInLttP ? Game.Zelda : Game.SM;
-                _logger.LogInformation("IsInLttp: " + isInLttP + " | IsInSM: " + isInSM);
+                _currentGame = value == 0x00 ? Game.Zelda : Game.SM;
                 _previousResponses[message.Address] = message.Bytes;
             });
 
@@ -130,38 +125,45 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         protected void StartServer()
         {
-            var listener = new TcpListener(IPAddress.Loopback, 43884);
-            listener.Start();
+            _tcpListener = new TcpListener(IPAddress.Loopback, 6969);
+            _tcpListener.Start();
             while (keepListening)
             {
-                var socket = listener.AcceptSocket();
-                if (socket.Connected)
+                try
                 {
-                    using (var stream = new NetworkStream(socket))
-                    using (var writer = new StreamWriter(stream))
-                    using (var reader = new StreamReader(stream))
+                    var socket = _tcpListener.AcceptSocket();
+                    if (socket.Connected)
                     {
-                        try
+                        using (var stream = new NetworkStream(socket))
+                        using (var writer = new StreamWriter(stream))
+                        using (var reader = new StreamReader(stream))
                         {
-                            _ = Task.Factory.StartNew(() => SendMessages(socket));
-                            var line = reader.ReadLine();
-                            while (line != null && socket.Connected)
+                            try
                             {
-                                var message = JsonSerializer.Deserialize<AutoTrackerMessage>(line);
-                                if (message != null && _responseActions.ContainsKey(message.Address) && !Enumerable.SequenceEqual(_previousResponses[message.Address], message.Bytes))
+                                _ = Task.Factory.StartNew(() => SendMessages(socket));
+                                var line = reader.ReadLine();
+                                while (line != null && socket.Connected)
                                 {
-                                    _responseActions[message.Address].Invoke(message);
-                                }
-                                line = reader.ReadLine();
+                                    var message = JsonSerializer.Deserialize<AutoTrackerMessage>(line);
+                                    if (message != null && _responseActions.ContainsKey(message.Address) && !Enumerable.SequenceEqual(_previousResponses[message.Address], message.Bytes))
+                                    {
+                                        _responseActions[message.Address].Invoke(message);
+                                    }
+                                    line = reader.ReadLine();
 
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "Error sending message");
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError(DateTime.Now.ToString() + " !! -- " + ex.Message);
-                        }
-                    }
 
+                    }
+                }
+                catch (SocketException se)
+                {
+                    _logger.LogError(se, "Error in accepting socket");
                 }
             }
         }
@@ -173,20 +175,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 try
                 {
-                    while (_requestMessages[currentRequestIndex].Game != Game.Both && _requestMessages[currentRequestIndex].Game != currentGame)
+                    while (_requestMessages[_currentRequestIndex].Game != Game.Both && _requestMessages[_currentRequestIndex].Game != _currentGame)
                     {
-                        currentRequestIndex = (currentRequestIndex + 1) % _requestMessages.Count;
+                        _currentRequestIndex = (_currentRequestIndex + 1) % _requestMessages.Count;
                     }
 
-                    var message = JsonSerializer.Serialize(_requestMessages[currentRequestIndex]) + "\0";
+                    var message = JsonSerializer.Serialize(_requestMessages[_currentRequestIndex]) + "\0";
                     socket.Send(Encoding.ASCII.GetBytes(message));
-                    currentRequestIndex = (currentRequestIndex + 1) % _requestMessages.Count;
+                    _currentRequestIndex = (_currentRequestIndex + 1) % _requestMessages.Count;
                     Task.Delay(TimeSpan.FromSeconds(0.25f)).Wait();
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e.Message);
-                    _logger.LogTrace(e.StackTrace);
+                    _logger.LogError(e.StackTrace, "Error sending message");
                     break;
                 }
             }
@@ -304,7 +305,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         protected void CheckSMBosses(AutoTrackerMessage message)
         {
-            foreach (var bossInfo in _tracker.WorldInfo.Bosses)
+            foreach (var bossInfo in _tracker.WorldInfo.Bosses.Where(x => x.MemoryAddress != null))
             {
                 try
                 {
@@ -375,6 +376,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected int CorrectSRAMAddress(int address)
         {
             return address;
+        }
+
+        public void Dispose() {
+            keepListening = false;
+            _tcpListener.Stop();
         }
     }
 }

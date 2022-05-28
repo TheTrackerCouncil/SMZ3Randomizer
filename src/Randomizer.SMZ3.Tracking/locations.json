@@ -1069,7 +1069,7 @@
       ],
       "MemoryType": 5,
       "MemoryAddress": "0x2",
-      "MemoryFlag": "0x5"
+      "MemoryFlag": "0x8"
     },
     {
       "Id": 21,
@@ -1157,7 +1157,7 @@
       "Y": 404,
       "MemoryType": 5,
       "MemoryAddress": "0x3",
-      "MemoryFlag": "0x5"
+      "MemoryFlag": "0x8"
     },
     {
       "Id": 28,
@@ -2484,7 +2484,10 @@
       "Id": 300,
       "Name": [
         "Sahasrahla"
-      ]
+      ],
+      "MemoryType": 2,
+      "MemoryAddress": "0x00",
+      "MemoryFlag": "0xA"
     },
     {
       "Id": 301,
@@ -2719,8 +2722,8 @@
       "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." ],
       "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ],
       "MemoryType": 1,
-      "MemoryAddress": "0x124",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": "0x127",
+      "MemoryFlag": "0xA"
     },
     {
       "Id": 332,
@@ -3526,7 +3529,7 @@
         [ "Thieves' Town Attic", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x64",
+      "MemoryAddress": "0x65",
       "MemoryFlag": "0x4"
     },
     {
@@ -3731,7 +3734,7 @@
         "Roller Room Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1",
+      "MemoryAddress": "0xB7",
       "MemoryFlag": "0x4"
     },
     {
@@ -3788,7 +3791,7 @@
         "Eye Bridge Top Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD4",
+      "MemoryAddress": "0xD5",
       "MemoryFlag": "0x4"
     },
     {
@@ -3798,7 +3801,7 @@
         "Eye Bridge Top Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD4",
+      "MemoryAddress": "0xD5",
       "MemoryFlag": "0x5"
     },
     {
@@ -3808,7 +3811,7 @@
         "Eye Bridge Bottom Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD4",
+      "MemoryAddress": "0xD5",
       "MemoryFlag": "0x6"
     },
     {
@@ -3818,7 +3821,7 @@
         "Eye Bridge Bottom Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD4",
+      "MemoryAddress": "0xD5",
       "MemoryFlag": "0x7"
     },
     {
