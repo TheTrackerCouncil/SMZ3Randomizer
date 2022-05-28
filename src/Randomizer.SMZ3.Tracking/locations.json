@@ -543,12 +543,22 @@
     {
       "Name": [ "Draygon" ],
       "Column": 7,
-      "Row": 6
+      "Row": 6,
+      "WhenDefeated": [
+        "Toggled Draygon on.",
+        [ "How could you? She has a family.", 0.25 ],
+        [ "Toggled Draygon on. Did you microwave her?", 0.25 ]
+      ]
     },
     {
       "Name": [ "Ridley" ],
       "Column": 8,
-      "Row": 6
+      "Row": 6,
+      "WhenDefeated": [
+        "Toggled Ridley on.",
+        [ "It's a living", 0.25 ],
+        [ "Toggled Ridley on. I'm sure they'll revive him in the next game.", 0.25 ]
+      ]
     },
     {
       "Name": [ "Mother Brain" ],

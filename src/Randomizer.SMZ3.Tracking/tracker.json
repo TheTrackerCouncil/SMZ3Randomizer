@@ -457,7 +457,7 @@
       "Artice": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Seriously?", "This is not the con-tent you are looking for." ],
+        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place." ],
         "2": null
       },
       "Hints": [
