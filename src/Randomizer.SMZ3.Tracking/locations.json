@@ -293,7 +293,7 @@
   ],
   "Dungeons": [
     {
-      "Name": [ "Eastern Palace" ],
+      "Name": [ "Eastern Palace", "Easturd Palace" ],
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.EasternPalace",
       "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
       "X": 1925,
@@ -504,19 +504,26 @@
       "Name": [ "Crocomire" ],
       "Image": "stoke.png",
       "Column": 8,
-      "Row": 5
+      "Row": 5,
+      "WhenDefeated": [
+        "Toggled Crocomire on.",
+        "Toggled Crocomire on. Did you actually have to kill him this time?",
+        [ "Toggled Crocomire on. It looks like you brought more than three super missiles. Good job.", 0.1 ]
+      ]
     },
     {
       "Name": [
         "Phantoon",
-        [ "Spooky Ghost", 0.25 ]
+        [ "Spooky Ghost", 0.25 ],
+        [ "Phanturd", 0.25 ]
       ],
       "Column": 9,
       "Row": 5,
       "WhenDefeated": [
         "Toggled Phantoon on.",
         "Toggled Spooky Ghost on.",
-        "Bustin makes me feel good."
+        "Bustin makes me feel good.",
+        [ "Toggled Phanturd on", 0.25 ]
       ]
     },
     {
@@ -536,12 +543,22 @@
     {
       "Name": [ "Draygon" ],
       "Column": 7,
-      "Row": 6
+      "Row": 6,
+      "WhenDefeated": [
+        "Toggled Draygon on.",
+        [ "How could you? She has a family.", 0.25 ],
+        [ "Toggled Draygon on. Did you microwave her?", 0.25 ]
+      ]
     },
     {
       "Name": [ "Ridley" ],
       "Column": 8,
-      "Row": 6
+      "Row": 6,
+      "WhenDefeated": [
+        "Toggled Ridley on.",
+        [ "It's a living", 0.25 ],
+        [ "Toggled Ridley on. I'm sure they'll revive him in the next game.", 0.25 ]
+      ]
     },
     {
       "Name": [ "Mother Brain" ],
@@ -1846,7 +1863,7 @@
       ],
       "X": 633,
       "Y": 117,
-      "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an Aga seed then?" ],
+      "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AGA seed then?" ],
       "WhenMarkingProgression": [ "Sucks to be you." ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
       "WhenTrackingProgression": [ "Well, at least you got something." ]
