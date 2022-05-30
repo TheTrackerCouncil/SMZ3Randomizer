@@ -49,7 +49,6 @@
                                           IsFolderPicker="True"
                                           DialogTitle="Select ROM output folder" />
               </controls:LabeledControl>
-
             </StackPanel>
           </Expander>
 
@@ -168,6 +167,14 @@
                 </Grid>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Autotracker Scripts folder:">
+                <controls:FileSystemInput Path="{Binding AutotrackerScriptsOutputPath, Mode=TwoWay}"
+                                          IsFolderPicker="True"
+                                          DialogTitle="Select Autotracker scripts folder" />
+              </controls:LabeledControl>
+
+              <CheckBox Content="Run Autotracker on Start" IsChecked="{Binding AutotrackerAutoStart}" />
+
               <StackPanel Orientation="Horizontal">
                 <CheckBox Content="Enable hints"
                           IsChecked="{Binding TrackerHintsEnabled}" />
@@ -177,7 +184,6 @@
 
             </StackPanel>
           </Expander>
-
 
           <Expander>
             <Expander.Header>

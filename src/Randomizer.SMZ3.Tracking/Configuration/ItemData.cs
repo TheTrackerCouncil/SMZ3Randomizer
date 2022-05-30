@@ -138,13 +138,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The memory address offset stored as a string hex value
         /// for where the item is stored in memory
         /// </summary>
-        public string? MemoryAddress { get; set; }
+        public int? MemoryAddress { get; set; }
 
         /// <summary>
         /// The flag to check against to see if the item is currently
         /// held or not
         /// </summary>
-        public string? MemoryFlag { get; set; }
+        public int? MemoryFlag { get; set; }
 
         /// <summary>
         /// Returns the stage of the item with the specifies name.

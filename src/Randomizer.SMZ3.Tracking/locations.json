@@ -304,8 +304,8 @@
       "Column": 0,
       "Row": 5,
       "LocationId": 364,
-      "MemoryAddress": "0xC8",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 200,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Desert Palace", "Dessert Palace" ],
@@ -319,8 +319,8 @@
       "Column": 1,
       "Row": 5,
       "LocationId": 370,
-      "MemoryAddress": "0x33",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 51,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Tower of Hera" ],
@@ -334,8 +334,8 @@
       "Column": 2,
       "Row": 5,
       "LocationId": 376,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 7,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Palace of Darkness", "Dark Palace", "Palace of Dorkness", "Dork Palace" ],
@@ -349,8 +349,8 @@
       "Column": 3,
       "Row": 5,
       "LocationId": 390,
-      "MemoryAddress": "0x5A",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 90,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Swamp Palace" ],
@@ -364,8 +364,8 @@
       "Column": 4,
       "Row": 5,
       "LocationId": 400,
-      "MemoryAddress": "0xC8",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 200,
+      "MemoryFlag": 6
     },
     {
       "Name": [ "Skull Woods", "Skill Woods" ],
@@ -382,8 +382,8 @@
       "Column": 0,
       "Row": 6,
       "LocationId": 408,
-      "MemoryAddress": "0x29",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 41,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Thieves' Town" ],
@@ -397,8 +397,8 @@
       "Column": 1,
       "Row": 6,
       "LocationId": 416,
-      "MemoryAddress": "0xAC",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 172,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Ice Palace" ],
@@ -412,8 +412,8 @@
       "Column": 2,
       "Row": 6,
       "LocationId": 424,
-      "MemoryAddress": "0xDE",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 222,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Misery Mire" ],
@@ -427,8 +427,8 @@
       "Column": 3,
       "Row": 6,
       "LocationId": 432,
-      "MemoryAddress": "0x90",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 144,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Turtle Rock" ],
@@ -442,8 +442,8 @@
       "Column": 4,
       "Row": 6,
       "LocationId": 444,
-      "MemoryAddress": "0xA4",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 164,
+      "MemoryFlag": 11
     },
     {
       "Name": [
@@ -466,8 +466,8 @@
       "Row": 6,
       "TreasureRemaining": 20,
       "HasReward": false,
-      "MemoryAddress": "0xD",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 13,
+      "MemoryFlag": 11
     },
     {
       "Name": [ "Hyrule Castle" ],
@@ -521,8 +521,8 @@
         [ "Toggled Kraid's Awful Son's Father on.", 0.1 ],
         [ "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face.", 0.1 ]
       ],
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 1,
+      "MemoryFlag": 1
     },
     {
       "Name": [ "Crocomire" ],
@@ -542,8 +542,8 @@
         "Toggled Spooky Ghost on.",
         "Bustin makes me feel good."
       ],
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 3,
+      "MemoryFlag": 1
     },
     {
       "Name": [ "Shaktool", "The Shaktool" ],
@@ -563,15 +563,15 @@
       "Name": [ "Draygon" ],
       "Column": 7,
       "Row": 6,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 4,
+      "MemoryFlag": 1
     },
     {
       "Name": [ "Ridley" ],
       "Column": 8,
       "Row": 6,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 2,
+      "MemoryFlag": 1
     },
     {
       "Name": [ "Mother Brain" ],
@@ -839,8 +839,8 @@
       "X": 968,
       "Y": 116,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 0,
+      "MemoryFlag": 1
     },
     {
       "Id": 1,
@@ -852,8 +852,8 @@
       "X": 1128,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 0,
+      "MemoryFlag": 2
     },
     {
       "Id": 2,
@@ -864,8 +864,8 @@
       "X": 1160,
       "Y": 84,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 0,
+      "MemoryFlag": 4
     },
     {
       "Id": 3,
@@ -876,8 +876,8 @@
       "X": 1128,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 0,
+      "MemoryFlag": 8
     },
     {
       "Id": 4,
@@ -889,8 +889,8 @@
       "X": 1064,
       "Y": 212,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 0,
+      "MemoryFlag": 16
     },
     {
       "Id": 5,
@@ -901,8 +901,8 @@
       "X": 456,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 0,
+      "MemoryFlag": 32
     },
     {
       "Id": 6,
@@ -914,8 +914,8 @@
       "X": 552,
       "Y": 660,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 0,
+      "MemoryFlag": 64
     },
     {
       "Id": 7,
@@ -927,8 +927,8 @@
       "X": 712,
       "Y": 276,
       "MemoryType": 5,
-      "MemoryAddress": "0x0",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 0,
+      "MemoryFlag": 128
     },
     {
       "Id": 8,
@@ -940,8 +940,8 @@
       "X": 296,
       "Y": 276,
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 1,
+      "MemoryFlag": 1
     },
     {
       "Id": 9,
@@ -950,8 +950,8 @@
         [ "Missile (Crateria gauntlet right)", 0 ]
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 1,
+      "MemoryFlag": 2
     },
     {
       "Id": 10,
@@ -960,8 +960,8 @@
         [ "Missile (Crateria gauntlet left)", 0 ]
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 1,
+      "MemoryFlag": 4
     },
     {
       "Id": 11,
@@ -972,8 +972,8 @@
       "X": 680,
       "Y": 372,
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 1,
+      "MemoryFlag": 8
     },
     {
       "Id": 12,
@@ -986,8 +986,8 @@
       "X": 424,
       "Y": 308,
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 1,
+      "MemoryFlag": 16
     },
     {
       "Id": 13,
@@ -997,8 +997,8 @@
       "X": 328,
       "Y": 308,
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 1,
+      "MemoryFlag": 32
     },
     {
       "Id": 14,
@@ -1009,8 +1009,8 @@
       "X": 712,
       "Y": 372,
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 1,
+      "MemoryFlag": 64
     },
     {
       "Id": 15,
@@ -1021,8 +1021,8 @@
       "X": 296,
       "Y": 212,
       "MemoryType": 5,
-      "MemoryAddress": "0x1",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 1,
+      "MemoryFlag": 128
     },
     {
       "Id": 16,
@@ -1033,8 +1033,8 @@
       "X": 264,
       "Y": 180,
       "MemoryType": 5,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 2,
+      "MemoryFlag": 1
     },
     {
       "Id": 17,
@@ -1045,8 +1045,8 @@
       "X": 360,
       "Y": 212,
       "MemoryType": 5,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 2,
+      "MemoryFlag": 2
     },
     {
       "Id": 18,
@@ -1057,8 +1057,8 @@
         "Mockball Hall Hidden Room Hidden Item"
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 2,
+      "MemoryFlag": 4
     },
     {
       "Id": 19,
@@ -1068,8 +1068,8 @@
         "Mockball Hall Hidden Room Main Item"
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 2,
+      "MemoryFlag": 8
     },
     {
       "Id": 21,
@@ -1081,8 +1081,8 @@
       "X": 488,
       "Y": 308,
       "MemoryType": 5,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 2,
+      "MemoryFlag": 32
     },
     {
       "Id": 22,
@@ -1094,8 +1094,8 @@
       "X": 488,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 2,
+      "MemoryFlag": 64
     },
     {
       "Id": 23,
@@ -1106,8 +1106,8 @@
       "X": 488,
       "Y": 436,
       "MemoryType": 5,
-      "MemoryAddress": "0x2",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 2,
+      "MemoryFlag": 128
     },
     {
       "Id": 24,
@@ -1119,8 +1119,8 @@
       "X": 424,
       "Y": 340,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 3,
+      "MemoryFlag": 1
     },
     {
       "Id": 25,
@@ -1132,8 +1132,8 @@
       "X": 648,
       "Y": 436,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 3,
+      "MemoryFlag": 2
     },
     {
       "Id": 26,
@@ -1144,8 +1144,8 @@
       "X": 744,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 3,
+      "MemoryFlag": 4
     },
     {
       "Id": 27,
@@ -1156,8 +1156,8 @@
       "X": 680,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 3,
+      "MemoryFlag": 8
     },
     {
       "Id": 28,
@@ -1167,8 +1167,8 @@
       "X": 968,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 3,
+      "MemoryFlag": 16
     },
     {
       "Id": 29,
@@ -1179,8 +1179,8 @@
       "X": 936,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 3,
+      "MemoryFlag": 32
     },
     {
       "Id": 30,
@@ -1192,8 +1192,8 @@
       "X": 136,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 3,
+      "MemoryFlag": 64
     },
     {
       "Id": 31,
@@ -1203,8 +1203,8 @@
       "X": 104,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 3,
+      "MemoryFlag": 128
     },
     {
       "Id": 33,
@@ -1215,8 +1215,8 @@
       "X": 200,
       "Y": 500,
       "MemoryType": 5,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 4,
+      "MemoryFlag": 2
     },
     {
       "Id": 34,
@@ -1226,8 +1226,8 @@
       "X": 840,
       "Y": 436,
       "MemoryType": 5,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 4,
+      "MemoryFlag": 4
     },
     {
       "Id": 35,
@@ -1239,8 +1239,8 @@
       "X": 616,
       "Y": 340,
       "MemoryType": 5,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 4,
+      "MemoryFlag": 8
     },
     {
       "Id": 36,
@@ -1250,8 +1250,8 @@
         "Blue Brinstar Top Main Item"
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 4,
+      "MemoryFlag": 16
     },
     {
       "Id": 37,
@@ -1262,8 +1262,8 @@
         "Blue Brinstar Top Hidden Item"
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 4,
+      "MemoryFlag": 32
     },
     {
       "Id": 38,
@@ -1274,8 +1274,8 @@
       "X": 680,
       "Y": 564,
       "MemoryType": 5,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 4,
+      "MemoryFlag": 64
     },
     {
       "Id": 39,
@@ -1286,8 +1286,8 @@
       "X": 1064,
       "Y": 340,
       "MemoryType": 5,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 4,
+      "MemoryFlag": 128
     },
     {
       "Id": 40,
@@ -1298,8 +1298,8 @@
       "X": 1064,
       "Y": 436,
       "MemoryType": 5,
-      "MemoryAddress": "0x5",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 5,
+      "MemoryFlag": 1
     },
     {
       "Id": 41,
@@ -1310,8 +1310,8 @@
       "X": 1032,
       "Y": 436,
       "MemoryType": 5,
-      "MemoryAddress": "0x5",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 5,
+      "MemoryFlag": 2
     },
     {
       "Id": 42,
@@ -1322,8 +1322,8 @@
       "X": 1160,
       "Y": 628,
       "MemoryType": 5,
-      "MemoryAddress": "0x5",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 5,
+      "MemoryFlag": 4
     },
     {
       "Id": 43,
@@ -1333,8 +1333,8 @@
       "X": 1320,
       "Y": 692,
       "MemoryType": 5,
-      "MemoryAddress": "0x5",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 5,
+      "MemoryFlag": 8
     },
     {
       "Id": 44,
@@ -1345,8 +1345,8 @@
       "X": 1448,
       "Y": 660,
       "MemoryType": 5,
-      "MemoryAddress": "0x5",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 5,
+      "MemoryFlag": 16
     },
     {
       "Id": 48,
@@ -1357,8 +1357,8 @@
       "X": 1768,
       "Y": 692,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 6,
+      "MemoryFlag": 1
     },
     {
       "Id": 49,
@@ -1370,8 +1370,8 @@
       "X": 568,
       "Y": 212,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 6,
+      "MemoryFlag": 2
     },
     {
       "Id": 50,
@@ -1382,8 +1382,8 @@
       "X": 216,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 6,
+      "MemoryFlag": 4
     },
     {
       "Id": 51,
@@ -1394,8 +1394,8 @@
       "X": 120,
       "Y": 212,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 6,
+      "MemoryFlag": 8
     },
     {
       "Id": 52,
@@ -1406,8 +1406,8 @@
       "X": 664,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 6,
+      "MemoryFlag": 16
     },
     {
       "Id": 53,
@@ -1418,8 +1418,8 @@
       "X": 280,
       "Y": 276,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 6,
+      "MemoryFlag": 32
     },
     {
       "Id": 54,
@@ -1430,8 +1430,8 @@
       "X": 408,
       "Y": 276,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 6,
+      "MemoryFlag": 64
     },
     {
       "Id": 55,
@@ -1442,8 +1442,8 @@
       "X": 312,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 6,
+      "MemoryFlag": 128
     },
     {
       "Id": 56,
@@ -1454,8 +1454,8 @@
       "X": 344,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 7,
+      "MemoryFlag": 1
     },
     {
       "Id": 57,
@@ -1466,8 +1466,8 @@
       "X": 344,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 7,
+      "MemoryFlag": 2
     },
     {
       "Id": 58,
@@ -1479,8 +1479,8 @@
       "X": 504,
       "Y": 564,
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 7,
+      "MemoryFlag": 4
     },
     {
       "Id": 59,
@@ -1493,8 +1493,8 @@
       "X": 312,
       "Y": 564,
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 7,
+      "MemoryFlag": 8
     },
     {
       "Id": 60,
@@ -1505,8 +1505,8 @@
       "X": 152,
       "Y": 596,
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 7,
+      "MemoryFlag": 16
     },
     {
       "Id": 61,
@@ -1515,8 +1515,8 @@
         "Bubble Mountain Hidden Hall Main Item"
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 7,
+      "MemoryFlag": 32
     },
     {
       "Id": 62,
@@ -1525,8 +1525,8 @@
         "Bubble Mountain Hidden Hall Hidden Item"
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 7,
+      "MemoryFlag": 64
     },
     {
       "Id": 63,
@@ -1537,8 +1537,8 @@
       "X": 728,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 7,
+      "MemoryFlag": 128
     },
     {
       "Id": 64,
@@ -1549,8 +1549,8 @@
       "X": 792,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x8",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 8,
+      "MemoryFlag": 1
     },
     {
       "Id": 65,
@@ -1561,8 +1561,8 @@
       "X": 1208,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x8",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 8,
+      "MemoryFlag": 2
     },
     {
       "Id": 66,
@@ -1573,8 +1573,8 @@
       "X": 1240,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x8",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 8,
+      "MemoryFlag": 4
     },
     {
       "Id": 67,
@@ -1586,8 +1586,8 @@
       "X": 888,
       "Y": 212,
       "MemoryType": 5,
-      "MemoryAddress": "0x8",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 8,
+      "MemoryFlag": 8
     },
     {
       "Id": 68,
@@ -1598,8 +1598,8 @@
       "X": 984,
       "Y": 212,
       "MemoryType": 5,
-      "MemoryAddress": "0x8",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 8,
+      "MemoryFlag": 16
     },
     {
       "Id": 70,
@@ -1610,8 +1610,8 @@
       "X": 632,
       "Y": 564,
       "MemoryType": 5,
-      "MemoryAddress": "0x8",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 8,
+      "MemoryFlag": 64
     },
     {
       "Id": 71,
@@ -1622,8 +1622,8 @@
       "X": 664,
       "Y": 564,
       "MemoryType": 5,
-      "MemoryAddress": "0x8",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 8,
+      "MemoryFlag": 128
     },
     {
       "Id": 73,
@@ -1634,8 +1634,8 @@
       "X": 952,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 9,
+      "MemoryFlag": 2
     },
     {
       "Id": 74,
@@ -1646,8 +1646,8 @@
       "X": 1176,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 9,
+      "MemoryFlag": 4
     },
     {
       "Id": 75,
@@ -1658,8 +1658,8 @@
       "X": 1240,
       "Y": 276,
       "MemoryType": 5,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 9,
+      "MemoryFlag": 8
     },
     {
       "Id": 76,
@@ -1670,8 +1670,8 @@
       "X": 1080,
       "Y": 532,
       "MemoryType": 5,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 9,
+      "MemoryFlag": 16
     },
     {
       "Id": 77,
@@ -1683,8 +1683,8 @@
       "X": 984,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 9,
+      "MemoryFlag": 32
     },
     {
       "Id": 78,
@@ -1696,8 +1696,8 @@
       "Y": 628,
       "Hints": [ "I hear Ridley is about to open one of Kraid's Christmas presents again." ],
       "MemoryType": 5,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 9,
+      "MemoryFlag": 64
     },
     {
       "Id": 79,
@@ -1707,8 +1707,8 @@
       "X": 696,
       "Y": 596,
       "MemoryType": 5,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 9,
+      "MemoryFlag": 128
     },
     {
       "Id": 80,
@@ -1719,8 +1719,8 @@
       "X": 1240,
       "Y": 436,
       "MemoryType": 5,
-      "MemoryAddress": "0xA",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 10,
+      "MemoryFlag": 1
     },
     {
       "Id": 128,
@@ -1731,8 +1731,8 @@
       "X": 408,
       "Y": 340,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 16,
+      "MemoryFlag": 1
     },
     {
       "Id": 129,
@@ -1744,8 +1744,8 @@
       "X": 504,
       "Y": 180,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 16,
+      "MemoryFlag": 2
     },
     {
       "Id": 130,
@@ -1756,8 +1756,8 @@
       "X": 440,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 16,
+      "MemoryFlag": 4
     },
     {
       "Id": 131,
@@ -1768,8 +1768,8 @@
       "X": 696,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 16,
+      "MemoryFlag": 8
     },
     {
       "Id": 132,
@@ -1780,8 +1780,8 @@
       "X": 600,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 16,
+      "MemoryFlag": 16
     },
     {
       "Id": 133,
@@ -1792,8 +1792,8 @@
       "X": 504,
       "Y": 372,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 16,
+      "MemoryFlag": 32
     },
     {
       "Id": 134,
@@ -1804,8 +1804,8 @@
       "X": 696,
       "Y": 372,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 16,
+      "MemoryFlag": 64
     },
     {
       "Id": 135,
@@ -1816,8 +1816,8 @@
       "X": 344,
       "Y": 244,
       "MemoryType": 5,
-      "MemoryAddress": "0x10",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 16,
+      "MemoryFlag": 128
     },
     {
       "Id": 136,
@@ -1829,8 +1829,8 @@
       "X": 232,
       "Y": 468,
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 17,
+      "MemoryFlag": 1
     },
     {
       "Id": 137,
@@ -1841,8 +1841,8 @@
       "X": 264,
       "Y": 436,
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 17,
+      "MemoryFlag": 2
     },
     {
       "Id": 138,
@@ -1853,8 +1853,8 @@
       "X": 488,
       "Y": 468,
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 17,
+      "MemoryFlag": 4
     },
     {
       "Id": 139,
@@ -1865,8 +1865,8 @@
       "X": 520,
       "Y": 500,
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 17,
+      "MemoryFlag": 8
     },
     {
       "Id": 140,
@@ -1875,8 +1875,8 @@
         [ "Super Missile (yellow Maridia)", 0 ]
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 17,
+      "MemoryFlag": 16
     },
     {
       "Id": 141,
@@ -1885,8 +1885,8 @@
         [ "Missile (yellow Maridia super missile)", 0 ]
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 17,
+      "MemoryFlag": 32
     },
     {
       "Id": 142,
@@ -1897,8 +1897,8 @@
       "X": 552,
       "Y": 276,
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 17,
+      "MemoryFlag": 64
     },
     {
       "Id": 143,
@@ -1908,8 +1908,8 @@
       "X": 808,
       "Y": 148,
       "MemoryType": 5,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 17,
+      "MemoryFlag": 128
     },
     {
       "Id": 144,
@@ -1918,8 +1918,8 @@
         [ "Missile (left Maridia sand pit room)", 0 ]
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 18,
+      "MemoryFlag": 1
     },
     {
       "Id": 145,
@@ -1928,8 +1928,8 @@
         [ "Reserve Tank, Maridia", 0 ]
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x2"
+      "MemoryAddress": 18,
+      "MemoryFlag": 2
     },
     {
       "Id": 146,
@@ -1940,8 +1940,8 @@
       "X": 648,
       "Y": 532,
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 18,
+      "MemoryFlag": 4
     },
     {
       "Id": 147,
@@ -1952,8 +1952,8 @@
       "X": 680,
       "Y": 564,
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 18,
+      "MemoryFlag": 8
     },
     {
       "Id": 148,
@@ -1964,8 +1964,8 @@
       "X": 680,
       "Y": 372,
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 18,
+      "MemoryFlag": 16
     },
     {
       "Id": 149,
@@ -1976,8 +1976,8 @@
       "X": 712,
       "Y": 372,
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 18,
+      "MemoryFlag": 32
     },
     {
       "Id": 150,
@@ -2001,8 +2001,8 @@
         "Never doubt the Shak."
       ],
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 18,
+      "MemoryFlag": 64
     },
     {
       "Id": 151,
@@ -2014,8 +2014,8 @@
       "X": 1256,
       "Y": 308,
       "MemoryType": 5,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 18,
+      "MemoryFlag": 128
     },
     {
       "Id": 152,
@@ -2026,8 +2026,8 @@
       "X": 840,
       "Y": 340,
       "MemoryType": 5,
-      "MemoryAddress": "0x13",
-      "MemoryFlag": "0x1"
+      "MemoryAddress": 19,
+      "MemoryFlag": 1
     },
     {
       "Id": 154,
@@ -2038,8 +2038,8 @@
       "X": 1128,
       "Y": 404,
       "MemoryType": 5,
-      "MemoryAddress": "0x13",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 19,
+      "MemoryFlag": 4
     },
     {
       "Id": 256,
@@ -2049,8 +2049,8 @@
       "X": 844,
       "Y": 38,
       "MemoryType": 2,
-      "MemoryAddress": "0x01",
-      "MemoryFlag": "0x01"
+      "MemoryAddress": 1,
+      "MemoryFlag": 1
     },
     {
       "Id": 257,
@@ -2060,8 +2060,8 @@
       "X": 980,
       "Y": 178,
       "MemoryType": 3,
-      "MemoryAddress": "0x3",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 3,
+      "MemoryFlag": 64
     },
     {
       "Id": 258,
@@ -2071,8 +2071,8 @@
       "X": 980,
       "Y": 290,
       "MemoryType": 1,
-      "MemoryAddress": "0xEA",
-      "MemoryFlag": "0xa"
+      "MemoryAddress": 234,
+      "MemoryFlag": 10
     },
     {
       "Id": 259,
@@ -2082,8 +2082,8 @@
       "X": 816,
       "Y": 378,
       "MemoryType": 2,
-      "MemoryAddress": "0x00",
-      "MemoryFlag": "0x01"
+      "MemoryAddress": 0,
+      "MemoryFlag": 1
     },
     {
       "Id": 260,
@@ -2093,8 +2093,8 @@
       "X": 1627,
       "Y": 40,
       "MemoryType": 3,
-      "MemoryAddress": "0x5",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 5,
+      "MemoryFlag": 64
     },
     {
       "Id": 261,
@@ -2104,8 +2104,8 @@
       "X": 1598,
       "Y": 180,
       "MemoryType": 1,
-      "MemoryAddress": "0xFE",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 254,
+      "MemoryFlag": 4
     },
     {
       "Id": 262,
@@ -2113,8 +2113,8 @@
         "Paradox Cave Upper - Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xFF",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 255,
+      "MemoryFlag": 4
     },
     {
       "Id": 263,
@@ -2122,8 +2122,8 @@
         "Paradox Cave Upper - Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xFF",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 255,
+      "MemoryFlag": 5
     },
     {
       "Id": 264,
@@ -2131,8 +2131,8 @@
         "Paradox Cave Lower - Far Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xEF",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 239,
+      "MemoryFlag": 4
     },
     {
       "Id": 265,
@@ -2140,8 +2140,8 @@
         "Paradox Cave Lower - Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xEF",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 239,
+      "MemoryFlag": 5
     },
     {
       "Id": 266,
@@ -2149,8 +2149,8 @@
         "Paradox Cave Lower - Middle"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xEF",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 239,
+      "MemoryFlag": 8
     },
     {
       "Id": 267,
@@ -2158,8 +2158,8 @@
         "Paradox Cave Lower - Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xEF",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 239,
+      "MemoryFlag": 6
     },
     {
       "Id": 268,
@@ -2167,8 +2167,8 @@
         "Paradox Cave Lower - Far Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xEF",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 239,
+      "MemoryFlag": 7
     },
     {
       "Id": 269,
@@ -2176,8 +2176,8 @@
         "Mimic Cave"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x10C",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 268,
+      "MemoryFlag": 4
     },
     {
       "Id": 270,
@@ -2194,8 +2194,8 @@
       "WhenTrackingJunk": [ "If only you could read." ],
       "WhenTrackingProgression": [ "I'm so sorry.", "Well, at least you found something." ],
       "MemoryType": 3,
-      "MemoryAddress": "0x80",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 128,
+      "MemoryFlag": 64
     },
     {
       "Id": 271,
@@ -2205,8 +2205,8 @@
       "X": 240,
       "Y": 180,
       "MemoryType": 2,
-      "MemoryAddress": "0x01",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 1,
+      "MemoryFlag": 16
     },
     {
       "Id": 272,
@@ -2216,8 +2216,8 @@
       "X": 320,
       "Y": 260,
       "MemoryType": 1,
-      "MemoryAddress": "0xE1",
-      "MemoryFlag": "0x9"
+      "MemoryAddress": 225,
+      "MemoryFlag": 9
     },
     {
       "Id": 273,
@@ -2232,8 +2232,8 @@
       "WhenTrackingJunk": [ "Why did you bother?" ],
       "WhenTrackingProgression": [ "Well, at least you got something." ],
       "MemoryType": 1,
-      "MemoryAddress": "0xE2",
-      "MemoryFlag": "0x9"
+      "MemoryAddress": 226,
+      "MemoryFlag": 9
     },
     {
       "Id": 274,
@@ -2244,8 +2244,8 @@
       "X": 777,
       "Y": 590,
       "MemoryType": 1,
-      "MemoryAddress": "0x124",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 292,
+      "MemoryFlag": 4
     },
     {
       "Id": 275,
@@ -2255,8 +2255,8 @@
       "X": 1132,
       "Y": 549,
       "MemoryType": 1,
-      "MemoryAddress": "0x11b",
-      "MemoryFlag": "0x9"
+      "MemoryAddress": 283,
+      "MemoryFlag": 9
     },
     {
       "Id": 276,
@@ -2266,8 +2266,8 @@
       "X": 1207,
       "Y": 598,
       "MemoryType": 1,
-      "MemoryAddress": "0x113",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 275,
+      "MemoryFlag": 4
     },
     {
       "Id": 277,
@@ -2276,8 +2276,8 @@
         "Kakariko Well Top"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2f",
-      "MemoryFlag": "0x04"
+      "MemoryAddress": 47,
+      "MemoryFlag": 4
     },
     {
       "Id": 278,
@@ -2285,8 +2285,8 @@
         "Kakariko Well Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2f",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 47,
+      "MemoryFlag": 5
     },
     {
       "Id": 279,
@@ -2294,8 +2294,8 @@
         "Kakariko Well Middle"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2f",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 47,
+      "MemoryFlag": 6
     },
     {
       "Id": 280,
@@ -2303,8 +2303,8 @@
         "Kakariko Well Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2f",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 47,
+      "MemoryFlag": 7
     },
     {
       "Id": 281,
@@ -2312,8 +2312,8 @@
         "Kakariko Well Bottom"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2f",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 47,
+      "MemoryFlag": 8
     },
     {
       "Id": 282,
@@ -2322,8 +2322,8 @@
         "Blind's Hideout Top"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11D",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 285,
+      "MemoryFlag": 4
     },
     {
       "Id": 283,
@@ -2331,8 +2331,8 @@
         "Blind's Hideout Far Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11D",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 285,
+      "MemoryFlag": 7
     },
     {
       "Id": 284,
@@ -2340,8 +2340,8 @@
         "Blind's Hideout Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11D",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 285,
+      "MemoryFlag": 5
     },
     {
       "Id": 285,
@@ -2349,8 +2349,8 @@
         "Blind's Hideout Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11D",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 285,
+      "MemoryFlag": 6
     },
     {
       "Id": 286,
@@ -2358,8 +2358,8 @@
         "Blind's Hideout Far Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11D",
-      "MemoryFlag": "0x8"
+      "MemoryAddress": 285,
+      "MemoryFlag": 8
     },
     {
       "Id": 287,
@@ -2372,8 +2372,8 @@
         "You know it's a scam, right?"
       ],
       "MemoryType": 4,
-      "MemoryAddress": "0xC9",
-      "MemoryFlag": "0x02"
+      "MemoryAddress": 201,
+      "MemoryFlag": 2
     },
     {
       "Id": 289,
@@ -2384,8 +2384,8 @@
       "X": 314,
       "Y": 1060,
       "MemoryType": 2,
-      "MemoryAddress": "0x00",
-      "MemoryFlag": "0x04"
+      "MemoryAddress": 0,
+      "MemoryFlag": 4
     },
     {
       "Id": 290,
@@ -2396,8 +2396,8 @@
       "X": 320,
       "Y": 1145,
       "MemoryType": 1,
-      "MemoryAddress": "0x103",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 259,
+      "MemoryFlag": 4
     },
     {
       "Id": 291,
@@ -2407,8 +2407,8 @@
       "X": 650,
       "Y": 1127,
       "MemoryType": 2,
-      "MemoryAddress": "0x01",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 1,
+      "MemoryFlag": 128
     },
     {
       "Id": 292,
@@ -2420,8 +2420,8 @@
         "You know it's a scam, right?"
       ],
       "MemoryType": 2,
-      "MemoryAddress": "0x00",
-      "MemoryFlag": "0x02"
+      "MemoryAddress": 0,
+      "MemoryFlag": 2
     },
     {
       "Id": 293,
@@ -2429,8 +2429,8 @@
         "Zora's Ledge"
       ],
       "MemoryType": 3,
-      "MemoryAddress": "0x81",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 129,
+      "MemoryFlag": 64
     },
     {
       "Id": 295,
@@ -2438,8 +2438,8 @@
         "Waterfall Fairy Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x114",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 276,
+      "MemoryFlag": 4
     },
     {
       "Id": 296,
@@ -2450,8 +2450,8 @@
       "X": 1607,
       "Y": 670,
       "MemoryType": 2,
-      "MemoryAddress": "0x01",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 1,
+      "MemoryFlag": 32
     },
     {
       "Id": 297,
@@ -2459,8 +2459,8 @@
         "Sahasrahla's Hut Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x105",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 261,
+      "MemoryFlag": 4
     },
     {
       "Id": 298,
@@ -2468,8 +2468,8 @@
         "Sahasrahla's Hut Middle"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x105",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 261,
+      "MemoryFlag": 5
     },
     {
       "Id": 299,
@@ -2477,8 +2477,8 @@
         "Sahasrahla's Hut Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x105",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 261,
+      "MemoryFlag": 6
     },
     {
       "Id": 300,
@@ -2486,8 +2486,8 @@
         "Sahasrahla"
       ],
       "MemoryType": 2,
-      "MemoryAddress": "0x00",
-      "MemoryFlag": "0xA"
+      "MemoryAddress": 0,
+      "MemoryFlag": 10
     },
     {
       "Id": 301,
@@ -2498,8 +2498,8 @@
       "X": 111,
       "Y": 1354,
       "MemoryType": 3,
-      "MemoryAddress": "0x28",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 40,
+      "MemoryFlag": 64
     },
     {
       "Id": 307,
@@ -2507,8 +2507,8 @@
         "Mini Moldorm Cave Far Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x123",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 291,
+      "MemoryFlag": 4
     },
     {
       "Id": 308,
@@ -2516,8 +2516,8 @@
         "Mini Moldorm Cave Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x123",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 291,
+      "MemoryFlag": 5
     },
     {
       "Id": 309,
@@ -2525,8 +2525,8 @@
         "Mini Moldorm Cave NPC"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x123",
-      "MemoryFlag": "0xa"
+      "MemoryAddress": 291,
+      "MemoryFlag": 10
     },
     {
       "Id": 310,
@@ -2534,8 +2534,8 @@
         "Mini Moldorm Cave Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x123",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 291,
+      "MemoryFlag": 6
     },
     {
       "Id": 314,
@@ -2545,8 +2545,8 @@
       "X": 440,
       "Y": 1845,
       "MemoryType": 2,
-      "MemoryAddress": "0x01",
-      "MemoryFlag": "0x02"
+      "MemoryAddress": 1,
+      "MemoryFlag": 2
     },
     {
       "Id": 315,
@@ -2554,8 +2554,8 @@
         "Floodgate Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x10B",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 267,
+      "MemoryFlag": 4
     },
     {
       "Id": 316,
@@ -2563,8 +2563,8 @@
         "Sunken Treasure"
       ],
       "MemoryType": 3,
-      "MemoryAddress": "0x3B",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 59,
+      "MemoryFlag": 64
     },
     {
       "Id": 317,
@@ -2574,8 +2574,8 @@
       "X": 1450,
       "Y": 1666,
       "MemoryType": 3,
-      "MemoryAddress": "0x35",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 53,
+      "MemoryFlag": 64
     },
     {
       "Id": 318,
@@ -2586,8 +2586,8 @@
       "X": 1390,
       "Y": 1390,
       "MemoryType": 4,
-      "MemoryAddress": "0xC9",
-      "MemoryFlag": "0x01"
+      "MemoryAddress": 201,
+      "MemoryFlag": 1
     },
     {
       "Id": 319,
@@ -2598,8 +2598,8 @@
       "X": 1795,
       "Y": 1547,
       "MemoryType": 1,
-      "MemoryAddress": "0x120",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 288,
+      "MemoryFlag": 4
     },
     {
       "Id": 320,
@@ -2609,8 +2609,8 @@
       "X": 1151,
       "Y": 294,
       "MemoryType": 1,
-      "MemoryAddress": "0x117",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 279,
+      "MemoryFlag": 4
     },
     {
       "Id": 321,
@@ -2618,8 +2618,8 @@
         "Hookshot Cave - Top Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3C",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 60,
+      "MemoryFlag": 4
     },
     {
       "Id": 322,
@@ -2627,8 +2627,8 @@
         "Hookshot Cave - Top Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3C",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 60,
+      "MemoryFlag": 5
     },
     {
       "Id": 323,
@@ -2636,8 +2636,8 @@
         "Hookshot Cave - Bottom Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3C",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 60,
+      "MemoryFlag": 6
     },
     {
       "Id": 324,
@@ -2645,8 +2645,8 @@
         "Hookshot Cave - Bottom Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3C",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 60,
+      "MemoryFlag": 7
     },
     {
       "Id": 325,
@@ -2654,8 +2654,8 @@
         "Superbunny Cave - Top"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xF8",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 248,
+      "MemoryFlag": 4
     },
     {
       "Id": 326,
@@ -2663,8 +2663,8 @@
         "Superbunny Cave - Bottom"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xF8",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 248,
+      "MemoryFlag": 5
     },
     {
       "Id": 327,
@@ -2675,8 +2675,8 @@
       "X": 687,
       "Y": 340,
       "MemoryType": 3,
-      "MemoryAddress": "0x30",
-      "MemoryFlag": "0x4A"
+      "MemoryAddress": 48,
+      "MemoryFlag": 74
     },
     {
       "Id": 328,
@@ -2686,8 +2686,8 @@
       "X": 100,
       "Y": 936,
       "MemoryType": 1,
-      "MemoryAddress": "0x106",
-      "MemoryFlag": "0xa"
+      "MemoryAddress": 262,
+      "MemoryFlag": 10
     },
     {
       "Id": 329,
@@ -2697,8 +2697,8 @@
       "X": 414,
       "Y": 969,
       "MemoryType": 1,
-      "MemoryAddress": "0x11C",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 284,
+      "MemoryFlag": 4
     },
     {
       "Id": 330,
@@ -2708,8 +2708,8 @@
       "X": 219,
       "Y": 1171,
       "MemoryType": 1,
-      "MemoryAddress": "0x106",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 262,
+      "MemoryFlag": 4
     },
     {
       "Id": 331,
@@ -2722,8 +2722,8 @@
       "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." ],
       "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ],
       "MemoryType": 1,
-      "MemoryAddress": "0x127",
-      "MemoryFlag": "0xA"
+      "MemoryAddress": 295,
+      "MemoryFlag": 10
     },
     {
       "Id": 332,
@@ -2733,8 +2733,8 @@
       "X": 616,
       "Y": 1054,
       "MemoryType": 2,
-      "MemoryAddress": "0x01",
-      "MemoryFlag": "0x04"
+      "MemoryAddress": 1,
+      "MemoryFlag": 4
     },
     {
       "Id": 333,
@@ -2745,8 +2745,8 @@
       "X": 616,
       "Y": 1054,
       "MemoryType": 4,
-      "MemoryAddress": "0xC9",
-      "MemoryFlag": "0x10"
+      "MemoryAddress": 201,
+      "MemoryFlag": 16
     },
     {
       "Id": 334,
@@ -2761,8 +2761,8 @@
         "You know it's a scam, right?"
       ],
       "MemoryType": 2,
-      "MemoryAddress": "0x00",
-      "MemoryFlag": "0x20"
+      "MemoryAddress": 0,
+      "MemoryFlag": 32
     },
     {
       "Id": 335,
@@ -2773,8 +2773,8 @@
       "X": 1164,
       "Y": 922,
       "MemoryType": 3,
-      "MemoryAddress": "0x5B",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 91,
+      "MemoryFlag": 64
     },
     {
       "Id": 336,
@@ -2783,8 +2783,8 @@
         "Pyramid Fairy Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x116",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 278,
+      "MemoryFlag": 4
     },
     {
       "Id": 337,
@@ -2793,8 +2793,8 @@
         "Pyramid Fairy Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x116",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 278,
+      "MemoryFlag": 5
     },
     {
       "Id": 338,
@@ -2804,8 +2804,8 @@
       "X": 100,
       "Y": 1385,
       "MemoryType": 3,
-      "MemoryAddress": "0x68",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 104,
+      "MemoryFlag": 64
     },
     {
       "Id": 339,
@@ -2816,8 +2816,8 @@
       "X": 620,
       "Y": 1371,
       "MemoryType": 2,
-      "MemoryAddress": "0x00",
-      "MemoryFlag": "0x08"
+      "MemoryAddress": 0,
+      "MemoryFlag": 8
     },
     {
       "Id": 340,
@@ -2825,8 +2825,8 @@
         "Hype Cave Top"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11E",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 286,
+      "MemoryFlag": 4
     },
     {
       "Id": 341,
@@ -2834,8 +2834,8 @@
         "Hype Cave Middle Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11E",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 286,
+      "MemoryFlag": 5
     },
     {
       "Id": 342,
@@ -2843,8 +2843,8 @@
         "Hype Cave Middle Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11E",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 286,
+      "MemoryFlag": 6
     },
     {
       "Id": 343,
@@ -2852,8 +2852,8 @@
         "Hype Cave Bottom"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11E",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 286,
+      "MemoryFlag": 7
     },
     {
       "Id": 344,
@@ -2861,8 +2861,8 @@
         "Hype Cave NPC"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11E",
-      "MemoryFlag": "0xa"
+      "MemoryAddress": 286,
+      "MemoryFlag": 10
     },
     {
       "Id": 345,
@@ -2870,8 +2870,8 @@
         "Mire Shed - Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x10D",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 269,
+      "MemoryFlag": 4
     },
     {
       "Id": 346,
@@ -2879,8 +2879,8 @@
         "Mire Shed - Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x10D",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 269,
+      "MemoryFlag": 5
     },
     {
       "Id": 347,
@@ -2888,8 +2888,8 @@
         "Sanctuary"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x12",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 18,
+      "MemoryFlag": 4
     },
     {
       "Id": 348,
@@ -2899,8 +2899,8 @@
         [ "Sewers Secret Room - Left", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 17,
+      "MemoryFlag": 4
     },
     {
       "Id": 349,
@@ -2910,8 +2910,8 @@
         [ "Sewers Secret Room - Middle", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 17,
+      "MemoryFlag": 5
     },
     {
       "Id": 350,
@@ -2921,8 +2921,8 @@
         [ "Sewers Secret Room - Right", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x11",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 17,
+      "MemoryFlag": 6
     },
     {
       "Id": 351,
@@ -2930,8 +2930,8 @@
         "Dark Cross"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x32",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 50,
+      "MemoryFlag": 4
     },
     {
       "Id": 352,
@@ -2939,8 +2939,8 @@
         "Hyrule Castle Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x72",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 114,
+      "MemoryFlag": 4
     },
     {
       "Id": 353,
@@ -2949,8 +2949,8 @@
         [ "Hyrule Castle Boomerang Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x71",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 113,
+      "MemoryFlag": 4
     },
     {
       "Id": 354,
@@ -2959,8 +2959,8 @@
         [ "Hyrule Castle Zelda's Cell", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x80",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 128,
+      "MemoryFlag": 4
     },
     {
       "Id": 355,
@@ -2968,8 +2968,8 @@
         "Link's Uncle"
       ],
       "MemoryType": 4,
-      "MemoryAddress": "0xC6",
-      "MemoryFlag": "0x01"
+      "MemoryAddress": 198,
+      "MemoryFlag": 1
     },
     {
       "Id": 356,
@@ -2978,8 +2978,8 @@
         [ "Hyrule Castle Secret Passage", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x55",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 85,
+      "MemoryFlag": 4
     },
     {
       "Id": 357,
@@ -3000,8 +3000,8 @@
         [ "Eastern Palace Cannonball Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xB9",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 185,
+      "MemoryFlag": 4
     },
     {
       "Id": 360,
@@ -3009,8 +3009,8 @@
         "Eastern Palace Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xAA",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 170,
+      "MemoryFlag": 4
     },
     {
       "Id": 361,
@@ -3018,8 +3018,8 @@
         "Eastern Palace Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xA8",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 168,
+      "MemoryFlag": 4
     },
     {
       "Id": 362,
@@ -3027,8 +3027,8 @@
         "Eastern Palace Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xA9",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 169,
+      "MemoryFlag": 4
     },
     {
       "Id": 363,
@@ -3036,8 +3036,8 @@
         "Eastern Palace Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xB8",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 184,
+      "MemoryFlag": 4
     },
     {
       "Id": 364,
@@ -3048,8 +3048,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xC8",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 200,
+      "MemoryFlag": 11
     },
     {
       "Id": 365,
@@ -3058,8 +3058,8 @@
         "Dessert Palace Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x73",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 115,
+      "MemoryFlag": 4
     },
     {
       "Id": 366,
@@ -3069,8 +3069,8 @@
         [ "Dessert Palace Torch", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x73",
-      "MemoryFlag": "0xA"
+      "MemoryAddress": 115,
+      "MemoryFlag": 10
     },
     {
       "Id": 367,
@@ -3079,8 +3079,8 @@
         "Dessert Palace Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x74",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 116,
+      "MemoryFlag": 4
     },
     {
       "Id": 368,
@@ -3089,8 +3089,8 @@
         "Dessert Palace Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x75",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 117,
+      "MemoryFlag": 4
     },
     {
       "Id": 369,
@@ -3099,8 +3099,8 @@
         "Dessert Palace Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x85",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 133,
+      "MemoryFlag": 4
     },
     {
       "Id": 370,
@@ -3111,8 +3111,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x33",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 51,
+      "MemoryFlag": 11
     },
     {
       "Id": 371,
@@ -3121,8 +3121,8 @@
         [ "Tower of Hera Basement Cage", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x87",
-      "MemoryFlag": "0xA"
+      "MemoryAddress": 135,
+      "MemoryFlag": 10
     },
     {
       "Id": 372,
@@ -3130,8 +3130,8 @@
         "Tower of Hera Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x77",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 119,
+      "MemoryFlag": 4
     },
     {
       "Id": 373,
@@ -3139,8 +3139,8 @@
         "Tower of Hera Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x87",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 135,
+      "MemoryFlag": 4
     },
     {
       "Id": 374,
@@ -3148,8 +3148,8 @@
         "Tower of Hera Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x27",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 39,
+      "MemoryFlag": 5
     },
     {
       "Id": 375,
@@ -3157,8 +3157,8 @@
         "Tower of Hera Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x27",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 39,
+      "MemoryFlag": 4
     },
     {
       "Id": 376,
@@ -3169,8 +3169,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 7,
+      "MemoryFlag": 11
     },
     {
       "Id": 377,
@@ -3179,8 +3179,8 @@
         [ "Palace of Darkness Shooter Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x9",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 9,
+      "MemoryFlag": 4
     },
     {
       "Id": 378,
@@ -3188,8 +3188,8 @@
         "Palace of Darkness Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3A",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 58,
+      "MemoryFlag": 4
     },
     {
       "Id": 379,
@@ -3198,8 +3198,8 @@
         [ "Palace of Darkness Stalfos Basement", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xA",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 10,
+      "MemoryFlag": 5
     },
     {
       "Id": 380,
@@ -3208,8 +3208,8 @@
         [ "Palace of Darkness The Arena - Bridge", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2A",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 42,
+      "MemoryFlag": 5
     },
     {
       "Id": 381,
@@ -3218,8 +3218,8 @@
         [ "Palace of Darkness The Arena - Ledge", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2A",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 42,
+      "MemoryFlag": 11
     },
     {
       "Id": 382,
@@ -3227,8 +3227,8 @@
         "Palace of Darkness Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2B",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 43,
+      "MemoryFlag": 4
     },
     {
       "Id": 383,
@@ -3236,8 +3236,8 @@
         "Palace of Darkness Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x19",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 25,
+      "MemoryFlag": 4
     },
     {
       "Id": 384,
@@ -3246,8 +3246,8 @@
         [ "Palace of Darkness Harmless Hellway", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x19",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 25,
+      "MemoryFlag": 5
     },
     {
       "Id": 385,
@@ -3255,8 +3255,8 @@
         "Dark Basement Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x6A",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 106,
+      "MemoryFlag": 4
     },
     {
       "Id": 386,
@@ -3264,8 +3264,8 @@
         "Dark Basement Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x6A",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 106,
+      "MemoryFlag": 5
     },
     {
       "Id": 387,
@@ -3273,8 +3273,8 @@
         "Dark Maze Top"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1A",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 26,
+      "MemoryFlag": 5
     },
     {
       "Id": 388,
@@ -3282,8 +3282,8 @@
         "Dark Maze Bottom"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1A",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 26,
+      "MemoryFlag": 6
     },
     {
       "Id": 389,
@@ -3291,8 +3291,8 @@
         "Palace of Darkness Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1A",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 26,
+      "MemoryFlag": 4
     },
     {
       "Id": 390,
@@ -3303,8 +3303,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x5A",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 90,
+      "MemoryFlag": 11
     },
     {
       "Id": 391,
@@ -3312,8 +3312,8 @@
         "Swamp Palace Entrance"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x28",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 40,
+      "MemoryFlag": 4
     },
     {
       "Id": 392,
@@ -3321,8 +3321,8 @@
         "Swamp Palace Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x37",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 55,
+      "MemoryFlag": 4
     },
     {
       "Id": 393,
@@ -3330,8 +3330,8 @@
         "Swamp Palace Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x36",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 54,
+      "MemoryFlag": 4
     },
     {
       "Id": 394,
@@ -3339,8 +3339,8 @@
         "Swamp Palace Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x46",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 70,
+      "MemoryFlag": 4
     },
     {
       "Id": 395,
@@ -3348,8 +3348,8 @@
         "Swamp Palace West Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x34",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 52,
+      "MemoryFlag": 4
     },
     {
       "Id": 396,
@@ -3357,8 +3357,8 @@
         "Swamp Palace Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x35",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 53,
+      "MemoryFlag": 4
     },
     {
       "Id": 397,
@@ -3366,8 +3366,8 @@
         "Flooded Room Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x76",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 118,
+      "MemoryFlag": 4
     },
     {
       "Id": 398,
@@ -3375,8 +3375,8 @@
         "Flooded Room Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x76",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 118,
+      "MemoryFlag": 5
     },
     {
       "Id": 399,
@@ -3385,8 +3385,8 @@
         [ "Swamp Palace Waterfall Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x66",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 102,
+      "MemoryFlag": 4
     },
     {
       "Id": 400,
@@ -3397,8 +3397,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x6",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 6,
+      "MemoryFlag": 11
     },
     {
       "Id": 401,
@@ -3408,8 +3408,8 @@
         [ "Skill Woods Pot Prison", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x57",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 87,
+      "MemoryFlag": 5
     },
     {
       "Id": 402,
@@ -3418,8 +3418,8 @@
         "Skill Woods Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x67",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 103,
+      "MemoryFlag": 4
     },
     {
       "Id": 403,
@@ -3428,8 +3428,8 @@
         "Skill Woods Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x58",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 88,
+      "MemoryFlag": 4
     },
     {
       "Id": 404,
@@ -3438,8 +3438,8 @@
         "Skill Woods Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x58",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 88,
+      "MemoryFlag": 5
     },
     {
       "Id": 405,
@@ -3449,8 +3449,8 @@
         [ "Skill Woods Pinball Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x68",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 104,
+      "MemoryFlag": 4
     },
     {
       "Id": 406,
@@ -3459,8 +3459,8 @@
         "Skill Woods Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "057",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 57,
+      "MemoryFlag": 4
     },
     {
       "Id": 407,
@@ -3470,8 +3470,8 @@
         [ "Skill Woods Bridge Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x59",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 89,
+      "MemoryFlag": 4
     },
     {
       "Id": 408,
@@ -3482,8 +3482,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x29",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 41,
+      "MemoryFlag": 11
     },
     {
       "Id": 409,
@@ -3491,8 +3491,8 @@
         "Thieves' Town Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xDB",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 219,
+      "MemoryFlag": 4
     },
     {
       "Id": 410,
@@ -3501,8 +3501,8 @@
         [ "Thieves' Town Ambush Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xCB",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 203,
+      "MemoryFlag": 4
     },
     {
       "Id": 411,
@@ -3510,8 +3510,8 @@
         "Thieves' Town Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xDC",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 220,
+      "MemoryFlag": 4
     },
     {
       "Id": 412,
@@ -3519,8 +3519,8 @@
         "Thieves' Town Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xDB",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 219,
+      "MemoryFlag": 5
     },
     {
       "Id": 413,
@@ -3529,8 +3529,8 @@
         [ "Thieves' Town Attic", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x65",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 101,
+      "MemoryFlag": 4
     },
     {
       "Id": 414,
@@ -3539,8 +3539,8 @@
         [ "Thieves' Town Blind's Cell", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x45",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 69,
+      "MemoryFlag": 4
     },
     {
       "Id": 415,
@@ -3548,8 +3548,8 @@
         "Thieves' Town Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x44",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 68,
+      "MemoryFlag": 4
     },
     {
       "Id": 416,
@@ -3561,8 +3561,8 @@
         "It will explain everything."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xAC",
-      "MemoryFlag": "0xA"
+      "MemoryAddress": 172,
+      "MemoryFlag": 10
     },
     {
       "Id": 417,
@@ -3570,8 +3570,8 @@
         "Ice Palace Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x2E",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 46,
+      "MemoryFlag": 4
     },
     {
       "Id": 418,
@@ -3580,8 +3580,8 @@
         [ "Ice Palace Spike Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x5F",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 95,
+      "MemoryFlag": 4
     },
     {
       "Id": 419,
@@ -3589,8 +3589,8 @@
         "Ice Palace Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3F",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 63,
+      "MemoryFlag": 4
     },
     {
       "Id": 420,
@@ -3598,8 +3598,8 @@
         "Ice Palace Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1F",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 31,
+      "MemoryFlag": 4
     },
     {
       "Id": 421,
@@ -3608,8 +3608,8 @@
         [ "Ice Palace Iced T Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7E",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 126,
+      "MemoryFlag": 4
     },
     {
       "Id": 422,
@@ -3618,8 +3618,8 @@
         [ "Ice Palace Freezor Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xAE",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 174,
+      "MemoryFlag": 4
     },
     {
       "Id": 423,
@@ -3627,8 +3627,8 @@
         "Ice Palace Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x9E",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 158,
+      "MemoryFlag": 4
     },
     {
       "Id": 424,
@@ -3639,8 +3639,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xDE",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 222,
+      "MemoryFlag": 11
     },
     {
       "Id": 425,
@@ -3648,8 +3648,8 @@
         "Misery Mire Main Lobby"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xA2",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 162,
+      "MemoryFlag": 4
     },
     {
       "Id": 426,
@@ -3657,8 +3657,8 @@
         "Misery Mire Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xC3",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 195,
+      "MemoryFlag": 5
     },
     {
       "Id": 427,
@@ -3667,8 +3667,8 @@
         [ "Misery Mire Bridge Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xB3",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 179,
+      "MemoryFlag": 4
     },
     {
       "Id": 428,
@@ -3677,8 +3677,8 @@
         [ "Misery Mire Spike Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xC2",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 194,
+      "MemoryFlag": 4
     },
     {
       "Id": 429,
@@ -3686,8 +3686,8 @@
         "Misery Mire Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xC1",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 193,
+      "MemoryFlag": 4
     },
     {
       "Id": 430,
@@ -3695,8 +3695,8 @@
         "Misery Mire Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD1",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 209,
+      "MemoryFlag": 4
     },
     {
       "Id": 431,
@@ -3704,8 +3704,8 @@
         "Misery Mire Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xC3",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 195,
+      "MemoryFlag": 4
     },
     {
       "Id": 432,
@@ -3716,8 +3716,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x90",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 144,
+      "MemoryFlag": 11
     },
     {
       "Id": 433,
@@ -3725,8 +3725,8 @@
         "Turtle Rock Compass Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD6",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 214,
+      "MemoryFlag": 4
     },
     {
       "Id": 434,
@@ -3734,8 +3734,8 @@
         "Roller Room Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xB7",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 183,
+      "MemoryFlag": 4
     },
     {
       "Id": 435,
@@ -3743,8 +3743,8 @@
         "Roller Room Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xB7",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 183,
+      "MemoryFlag": 5
     },
     {
       "Id": 436,
@@ -3753,8 +3753,8 @@
         [ "Turtle Rock Chain Chomps", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xB6",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 182,
+      "MemoryFlag": 4
     },
     {
       "Id": 437,
@@ -3762,8 +3762,8 @@
         "Turtle Rock Big Key Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x14",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 20,
+      "MemoryFlag": 4
     },
     {
       "Id": 438,
@@ -3771,8 +3771,8 @@
         "Turtle Rock Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x24",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 36,
+      "MemoryFlag": 4
     },
     {
       "Id": 439,
@@ -3781,8 +3781,8 @@
         [ "Turtle Rock Crystaroller Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x4",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 4,
+      "MemoryFlag": 4
     },
     {
       "Id": 440,
@@ -3791,8 +3791,8 @@
         "Eye Bridge Top Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD5",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 213,
+      "MemoryFlag": 4
     },
     {
       "Id": 441,
@@ -3801,8 +3801,8 @@
         "Eye Bridge Top Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD5",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 213,
+      "MemoryFlag": 5
     },
     {
       "Id": 442,
@@ -3811,8 +3811,8 @@
         "Eye Bridge Bottom Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD5",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 213,
+      "MemoryFlag": 6
     },
     {
       "Id": 443,
@@ -3821,8 +3821,8 @@
         "Eye Bridge Bottom Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xD5",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 213,
+      "MemoryFlag": 7
     },
     {
       "Id": 444,
@@ -3833,8 +3833,8 @@
         "One of the dungeon bosses has it."
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0xA4",
-      "MemoryFlag": "0xB"
+      "MemoryAddress": 164,
+      "MemoryFlag": 11
     },
     {
       "Id": 445,
@@ -3842,8 +3842,8 @@
         "Bob's Torch"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x8C",
-      "MemoryFlag": "0xA"
+      "MemoryAddress": 140,
+      "MemoryFlag": 10
     },
     {
       "Id": 446,
@@ -3851,8 +3851,8 @@
         "DMs Room Top Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x8C",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 140,
+      "MemoryFlag": 4
     },
     {
       "Id": 447,
@@ -3860,8 +3860,8 @@
         "DMs Room Top Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x8C",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 140,
+      "MemoryFlag": 5
     },
     {
       "Id": 448,
@@ -3869,8 +3869,8 @@
         "DMs Room Bottom Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x8C",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 140,
+      "MemoryFlag": 6
     },
     {
       "Id": 449,
@@ -3878,8 +3878,8 @@
         "DMs Room Bottom Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x8C",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 140,
+      "MemoryFlag": 7
     },
     {
       "Id": 450,
@@ -3887,8 +3887,8 @@
         "Ganon's Tower Map Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x8B",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 139,
+      "MemoryFlag": 4
     },
     {
       "Id": 451,
@@ -3896,8 +3896,8 @@
         "Firesnake Room"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7D",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 125,
+      "MemoryFlag": 4
     },
     {
       "Id": 452,
@@ -3905,8 +3905,8 @@
         "Randomizer Room Top Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7B",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 123,
+      "MemoryFlag": 4
     },
     {
       "Id": 453,
@@ -3914,8 +3914,8 @@
         "Randomizer Room Top Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7B",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 123,
+      "MemoryFlag": 5
     },
     {
       "Id": 454,
@@ -3923,8 +3923,8 @@
         "Randomizer Room Bottom Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7B",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 123,
+      "MemoryFlag": 6
     },
     {
       "Id": 455,
@@ -3932,8 +3932,8 @@
         "Randomizer Room Bottom Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7B",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 123,
+      "MemoryFlag": 7
     },
     {
       "Id": 456,
@@ -3942,8 +3942,8 @@
         "Hope Room Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1C",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 28,
+      "MemoryFlag": 4
     },
     {
       "Id": 457,
@@ -3952,8 +3952,8 @@
         "Hope Room Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1C",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 28,
+      "MemoryFlag": 5
     },
     {
       "Id": 458,
@@ -3962,8 +3962,8 @@
         [ "Ganon's Tower Tile Room", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x1C",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 28,
+      "MemoryFlag": 6
     },
     {
       "Id": 459,
@@ -3971,8 +3971,8 @@
         "Compass Room Top Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7C",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 124,
+      "MemoryFlag": 4
     },
     {
       "Id": 460,
@@ -3980,8 +3980,8 @@
         "Compass Room Top Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7C",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 124,
+      "MemoryFlag": 5
     },
     {
       "Id": 461,
@@ -3989,8 +3989,8 @@
         "Compass Room Bottom Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7C",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 124,
+      "MemoryFlag": 6
     },
     {
       "Id": 462,
@@ -3998,8 +3998,8 @@
         "Compass Room Bottom Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x7C",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 124,
+      "MemoryFlag": 7
     },
     {
       "Id": 463,
@@ -4008,8 +4008,8 @@
         [ "Ganon's Tower Bob's Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x9D",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 157,
+      "MemoryFlag": 4
     },
     {
       "Id": 464,
@@ -4017,8 +4017,8 @@
         "Ganon's Tower Big Chest"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x8D",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 141,
+      "MemoryFlag": 4
     },
     {
       "Id": 465,
@@ -4027,8 +4027,8 @@
         [ "Big Key Room Bottom Big Key Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x9D",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 157,
+      "MemoryFlag": 5
     },
     {
       "Id": 466,
@@ -4036,8 +4036,8 @@
         "Big Key Room Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x9D",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 157,
+      "MemoryFlag": 6
     },
     {
       "Id": 467,
@@ -4045,8 +4045,8 @@
         "Big Key Room Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x9D",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 157,
+      "MemoryFlag": 7
     },
     {
       "Id": 468,
@@ -4054,8 +4054,8 @@
         "Mini Helmasaur Room Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3D",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 61,
+      "MemoryFlag": 4
     },
     {
       "Id": 469,
@@ -4063,8 +4063,8 @@
         "Mini Helmasaur Room Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3D",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 61,
+      "MemoryFlag": 5
     },
     {
       "Id": 470,
@@ -4073,8 +4073,8 @@
         [ "Ganon's Tower Pre-Moldorm Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x3D",
-      "MemoryFlag": "0x6"
+      "MemoryAddress": 61,
+      "MemoryFlag": 6
     },
     {
       "Id": 471,
@@ -4083,8 +4083,8 @@
         [ "Ganon's Tower Moldorm Chest", 0 ]
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x4D",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 77,
+      "MemoryFlag": 4
     },
     {
       "Id": 496,
@@ -4094,8 +4094,8 @@
       "X": 313,
       "Y": 1310,
       "MemoryType": 2,
-      "MemoryAddress": "0x00",
-      "MemoryFlag": "0x80"
+      "MemoryAddress": 0,
+      "MemoryFlag": 128
     },
     {
       "Id": 497,
@@ -4106,8 +4106,8 @@
       "X": 600,
       "Y": 1350,
       "MemoryType": 3,
-      "MemoryAddress": "0x2A",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 42,
+      "MemoryFlag": 64
     },
     {
       "Id": 498,
@@ -4118,8 +4118,8 @@
       "X": 552,
       "Y": 1693,
       "MemoryType": 1,
-      "MemoryAddress": "0x11b",
-      "MemoryFlag": "0xa"
+      "MemoryAddress": 283,
+      "MemoryFlag": 10
     },
     {
       "Id": 499,
@@ -4129,8 +4129,8 @@
       "X": 1097,
       "Y": 1366,
       "MemoryType": 1,
-      "MemoryAddress": "0x104",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 260,
+      "MemoryFlag": 4
     },
     {
       "Id": 500,
@@ -4141,8 +4141,8 @@
       "X": 400,
       "Y": 1655,
       "MemoryType": 1,
-      "MemoryAddress": "0x10a",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 266,
+      "MemoryFlag": 4
     },
     {
       "Id": 506,
@@ -4153,8 +4153,8 @@
       "X": 197,
       "Y": 1066,
       "MemoryType": 1,
-      "MemoryAddress": "0x108",
-      "MemoryFlag": "0x4"
+      "MemoryAddress": 264,
+      "MemoryFlag": 4
     },
     {
       "Id": 507,
@@ -4162,8 +4162,8 @@
         "Mini Moldorm Cave Far Right"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x123",
-      "MemoryFlag": "0x7"
+      "MemoryAddress": 291,
+      "MemoryFlag": 7
     },
     {
       "Id": 508,
@@ -4173,8 +4173,8 @@
       "X": 40,
       "Y": 1835,
       "MemoryType": 3,
-      "MemoryAddress": "0x30",
-      "MemoryFlag": "0x40"
+      "MemoryAddress": 48,
+      "MemoryFlag": 64
     },
     {
       "Id": 509,
@@ -4184,8 +4184,8 @@
       "X": 354,
       "Y": 1560,
       "MemoryType": 1,
-      "MemoryAddress": "0x126",
-      "MemoryFlag": "0x9"
+      "MemoryAddress": 294,
+      "MemoryFlag": 9
     },
     {
       "Id": 510,
@@ -4193,8 +4193,9 @@
         "Waterfall Fairy Left"
       ],
       "MemoryType": 1,
-      "MemoryAddress": "0x114",
-      "MemoryFlag": "0x5"
+      "MemoryAddress": 276,
+      "MemoryFlag": 5
     }
   ]
 }
+

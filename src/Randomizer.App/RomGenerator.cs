@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
+using Microsoft.Extensions.Logging;
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
@@ -26,12 +27,15 @@ namespace Randomizer.App
     {
         private readonly RandomizerContext _dbContext;
         private readonly Smz3Randomizer _randomizer;
+        private readonly ILogger<RomGenerator>? _logger;
 
         public RomGenerator(Smz3Randomizer randomizer,
-            RandomizerContext dbContext)
+            RandomizerContext dbContext,
+            ILogger<RomGenerator> logger)
         {
             _randomizer = randomizer;
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         /// <summary>
@@ -73,6 +77,25 @@ namespace Randomizer.App
                 var spoilerLog = GetSpoilerLog(options, seed);
                 var spoilerPath = Path.ChangeExtension(romPath, ".txt");
                 File.WriteAllText(spoilerPath, spoilerLog);
+
+                try
+                {
+#if DEBUG
+                    var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutotrackerScripts");
+#else
+                    var autoTrackerSourcePath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\AutotrackerScripts");
+#endif
+                    var autoTrackerDestPath = options.AutotrackerScriptsOutputPath;
+
+                    if (!autoTrackerSourcePath.Equals(autoTrackerDestPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        CopyDirectory(autoTrackerSourcePath, autoTrackerDestPath, true, true);
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Unable to copy Autotracker Scripts");
+                }
 
                 rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
 
@@ -317,6 +340,51 @@ namespace Randomizer.App
 
             error = "";
             return true;
+        }
+
+        private string GetSourceDirectory()
+        {
+            var currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            var directory = Directory.GetParent(currentDirectory);
+            while (directory.Name != "src")
+            {
+                directory = Directory.GetParent(directory.FullName);
+            }
+            return directory.FullName;
+        }
+
+        private void CopyDirectory(string source, string dest, bool recursive, bool overwrite)
+        {
+            var sourceDir = new DirectoryInfo(source);
+
+            DirectoryInfo[] sourceSubDirs = sourceDir.GetDirectories();
+
+            if (!Directory.Exists(dest))
+            {
+                Directory.CreateDirectory(dest);
+            }
+
+            foreach (var file in sourceDir.GetFiles())
+            {
+                if (overwrite && File.Exists(Path.Combine(dest, file.Name)))
+                {
+                    File.Delete(Path.Combine(dest, file.Name));
+                }
+
+                if (!File.Exists(Path.Combine(dest, file.Name)))
+                {
+                    file.CopyTo(Path.Combine(dest, file.Name));
+                }
+            }
+
+            if (recursive)
+            {
+                foreach (var subDir in sourceSubDirs)
+                {
+                    var destSubDir = Path.Combine(dest, subDir.Name);
+                    CopyDirectory(subDir.FullName, destSubDir, recursive, overwrite);
+                }
+            }
         }
     }
 }

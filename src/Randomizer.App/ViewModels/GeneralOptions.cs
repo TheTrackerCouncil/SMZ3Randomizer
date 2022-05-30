@@ -45,6 +45,9 @@ namespace Randomizer.App.ViewModels
         public string RomOutputPath { get; set; }
             = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
 
+        public string AutotrackerScriptsOutputPath { get; set; }
+            = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutotrackerScripts");
+
         [Range(0.0, 1.0)]
         public float TrackerRecognitionThreshold { get; set; } = 0.75f;
 
@@ -63,6 +66,8 @@ namespace Randomizer.App.ViewModels
         public bool TrackerHintsEnabled { get; set; }
 
         public bool TrackerSpoilersEnabled { get; set; }
+
+        public bool AutotrackerAutoStart { get; set; }
 
         public string TwitchUserName
         {
@@ -154,6 +159,7 @@ namespace Randomizer.App.ViewModels
         {
             try
             {
+                if (value == null) return null;
                 value = value.Trim();
                 if (Uri.TryCreate(value, UriKind.Absolute, out var twitchUri)
                     && twitchUri.Host == "twitch.tv")

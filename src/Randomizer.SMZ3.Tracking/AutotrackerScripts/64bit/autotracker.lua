@@ -3,13 +3,14 @@ local json = require('json')
 
 local HOST_ADDRESS = '127.0.0.1'
 local HOST_PORT = 6969
+local DISCONNECT_DELAY = 5
 local RECONNECT_DELAY = 5
 
 local tcp = nil
 local connected = false
 local lastConnectionAttempt = os.time()
+local lastMessage = os.time()
 local part = nil
-
 
 local function ends_with(str, ending)
    return ending == "" or str:sub(-#ending) == ending
@@ -26,7 +27,6 @@ local function check_for_message()
 		if err ~= 'timeout' then
 			message('Connection lost:' .. err)
 			connected = false
-			connect()
 		else
 			--print('null', err)
 			--print('null', part)
@@ -85,6 +85,7 @@ local function connect()
 		message('Connection established')
 		tcp:settimeout(0)
 		connected = true
+        lastMessage = os.time()
 	else
 		message('Failed to open socket:' .. err)
 		tcp:close()
@@ -104,9 +105,15 @@ local function on_tick()
 			-- local ret, err = tcp:send("hello\n")
 			-- if ret == nil then
 			-- 	print('Failed to send:', err)
-			-- end
+			-- end 
+            lastMessage = os.time()
 			message = check_for_message()
 		end
+
+        local currentTime = os.time()
+        if lastMessage + DISCONNECT_DELAY <= currentTime then
+            connected = false
+        end
 	else
 		local currentTime = os.time()
 		if lastConnectionAttempt + RECONNECT_DELAY <= currentTime then

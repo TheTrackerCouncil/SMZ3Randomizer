@@ -74,6 +74,18 @@ namespace Randomizer.App.ViewModels
                     : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
         }
 
+        public string AutotrackerScriptsOutputPath
+        {
+            get => Directory.Exists(GeneralOptions.AutotrackerScriptsOutputPath)
+                    ? GeneralOptions.AutotrackerScriptsOutputPath
+                    : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutotrackerScripts");
+        }
+
+        public bool AutotrackerAutoStart
+        {
+            get => GeneralOptions.AutotrackerAutoStart;
+        }
+
         public static RandomizerOptions Load(string path)
         {
             var json = File.ReadAllText(path);

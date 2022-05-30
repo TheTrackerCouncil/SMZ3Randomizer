@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
+using Randomizer.App.Windows;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
@@ -47,6 +49,7 @@ namespace Randomizer.App
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
+        private AutotrackerWindow _autotrackerHelpWindow;
         private TrackerLocationSyncer _locationSyncer;
         private RomGenerator _romGenerator;
 
@@ -652,6 +655,8 @@ namespace Randomizer.App
             _trackerMapWindow = _serviceProvider.GetRequiredService<TrackerMapWindow>();
             _trackerMapWindow.Syncer = _locationSyncer;
             _trackerMapWindow.Show();
+
+            InitializeAutoTracker();
         }
 
         private void InitializeTracker()
@@ -711,6 +716,104 @@ namespace Randomizer.App
                 TrackerStatusBar.Background = Tracker.GoMode ? Brushes.Green : null;
                 StatusBarGoMode.Visibility = Tracker.GoMode ? Visibility.Visible : Visibility.Collapsed;
             });
+        }
+
+        private ContextMenu CreateAutoTrackerMenu(bool enableAutoTracker)
+        {
+            var menu = new ContextMenu
+            {
+                Style = Application.Current.FindResource("DarkContextMenu") as Style
+            };
+
+            if (enableAutoTracker)
+            {
+                var enable = new MenuItem
+                {
+                    Header = "Enable Auto Tracker",
+                };
+                enable.Click += (sender, e) =>
+                {
+                    Tracker.AutoTracker.Enable();
+                };
+                menu.Items.Add(enable);
+            }
+            else
+            {
+                var disable = new MenuItem
+                {
+                    Header = "Disable Auto Tracker",
+                };
+                disable.Click += (sender, e) =>
+                {
+                    Tracker.AutoTracker.Disable();
+                };
+                menu.Items.Add(disable);
+            }
+
+            var folder = new MenuItem
+            {
+                Header = "Open Autotracker Scripts Folder",
+            };
+            folder.Click += (sender, e) =>
+            {
+                var path = Options.AutotrackerScriptsOutputPath;
+                if (string.IsNullOrEmpty(path))
+                {
+                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutotrackerScripts");
+                }
+                path = Path.Combine(path, "32bit");
+                Process.Start("explorer.exe", $"/select,\"{path}\"");
+            };
+            menu.Items.Add(folder);
+
+            var help = new MenuItem
+            {
+                Header = "Open Autotracker Help",
+            };
+            help.Click += (sender, e) =>
+            {
+                OpenAutotrackerHelp();
+            };
+            menu.Items.Add(help);
+
+            return menu;
+        }
+
+        public void InitializeAutoTracker()
+        {
+            StatusBarAutoTrackerEnabled.ContextMenu = CreateAutoTrackerMenu(false);
+            StatusBarAutoTrackerConnected.ContextMenu = CreateAutoTrackerMenu(false);
+            StatusBarAutoTrackerDisabled.ContextMenu = CreateAutoTrackerMenu(true);
+            
+            Tracker.AutoTracker.AutoTrackerEnabled += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Visibility.Visible;
+                StatusBarAutoTrackerDisabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
+            });
+            Tracker.AutoTracker.AutoTrackerDisabled += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerDisabled.Visibility = Visibility.Visible;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
+            });
+            Tracker.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerDisabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Visible;
+            });
+            Tracker.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Tracker.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
+                StatusBarAutoTrackerDisabled.Visibility = Tracker.AutoTracker.IsEnabled ? Visibility.Collapsed : Visibility.Visible;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
+            });
+
+            if (Options.AutotrackerAutoStart)
+            {
+                Tracker.AutoTracker.Enable();
+            }
         }
 
         private void UpdateStats(TrackerEventArgs e)
@@ -786,6 +889,11 @@ namespace Randomizer.App
                 _trackerHelpWindow = new TrackerHelpWindow(Tracker);
                 _trackerHelpWindow.Show();
             }
+        }
+
+        private void AutotrackerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenAutotrackerHelp();
         }
 
         private async void LoadSavedStateMenuItem_Click(object sender, RoutedEventArgs e)
@@ -967,5 +1075,18 @@ namespace Randomizer.App
         /// Occurs when the the tracker's state has been saved
         /// </summary>
         public event EventHandler SavedState;
+
+        protected void OpenAutotrackerHelp()
+        {
+            if (Application.Current.Windows.OfType<AutotrackerWindow>().Any())
+            {
+                _autotrackerHelpWindow.Activate();
+            }
+            else
+            {
+                _autotrackerHelpWindow = new AutotrackerWindow();
+                _autotrackerHelpWindow.Show();
+            }
+        }
     }
 }

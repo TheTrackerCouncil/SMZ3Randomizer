@@ -240,6 +240,11 @@ namespace Randomizer.SMZ3.Tracking
         public TrackerOptions Options { get; }
 
         /// <summary>
+        /// The generated rom
+        /// </summary>
+        public GeneratedRom Rom { get; private set; }
+
+        /// <summary>
         /// Gets a string describing tracker's mood.
         /// </summary>
         public string Mood
@@ -268,6 +273,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Get if the Tracker has been updated since it was last saved
         /// </summary>
         public bool IsDirty { get; set; }
+
+        /// <summary>
+        /// The AutoTracker for the Tracker
+        /// </summary>
+        public AutoTrackerModule AutoTracker { get; set; }
 
         /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
@@ -341,11 +351,13 @@ namespace Randomizer.SMZ3.Tracking
         public bool Load(GeneratedRom rom)
         {
             IsDirty = false;
+            Rom = rom;
             var state = TrackerState.Load(_dbContext, rom);
             if (state != null)
             {
                 state.Apply(this);
                 OnStateLoaded();
+                
                 return true;
             }
             return false;

@@ -93,6 +93,68 @@
         </Setter>
       </Style>
 
+      <Style x:Key="AutoTrackerEnabledStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,5,5">
+                <TextBlock Text="&#xf0c1;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,0,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Solid"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
+      <Style x:Key="AutoTrackerDisabledStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Foreground" Value="IndianRed" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,5,5">
+                <TextBlock Text="&#xf127;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,0,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Solid"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
+      <Style x:Key="AutoTrackerConnectedStatusBarItem"
+             TargetType="StatusBarItem">
+        <Setter Property="Foreground" Value="LimeGreen" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="StatusBarItem">
+              <StackPanel Orientation="Horizontal"
+                          VerticalAlignment="Center"
+                          Margin="5,5,5,5">
+                <TextBlock Text="&#xf0c1;"
+                           VerticalAlignment="Center"
+                           Margin="0,1,0,0"
+                           FontFamily="./Resources/#Font Awesome 5 Free Solid"
+                           TextOptions.TextFormattingMode="Ideal" />
+                <ContentPresenter />
+              </StackPanel>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+
       <Style TargetType="controls:LabeledControl">
         <Setter Property="Template">
           <Setter.Value>
@@ -120,6 +182,7 @@
                 Value="0,0,0,11" />
       </Style>
 
+      
       <!-- General styles -->
       <Style TargetType="Menu">
         <Setter Property="Padding"

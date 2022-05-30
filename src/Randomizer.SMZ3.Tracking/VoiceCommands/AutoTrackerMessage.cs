@@ -13,12 +13,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public int Length { get; set; }
         public int[] Bytes { get; set; }
         public Game Game { get; set; } = Game.Both;
+
+        public bool ShouldSend(Game currentGame, bool hasStartedGame)
+        {
+            return (!hasStartedGame && Game == Game.Neither) || (hasStartedGame && Game != Game.Neither && (Game == Game.Both || Game == currentGame));
+        }
     }
 
     public enum Game
     {
-        Both,
+        Neither,
         SM,
-        Zelda
+        Zelda,
+        Both
     }
 }

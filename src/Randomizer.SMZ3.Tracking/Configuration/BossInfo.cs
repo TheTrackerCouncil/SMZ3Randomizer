@@ -69,12 +69,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The memory address offset stored as a string hex value
         /// for where the boss defeated status is stored in memory
         /// </summary>
-        public string? MemoryAddress { get; set; }
+        public int? MemoryAddress { get; set; }
 
         /// <summary>
         /// The flag to check against to see if the boss has been
         /// defeated or not
         /// </summary>
-        public string? MemoryFlag { get; set; }
+        public int? MemoryFlag { get; set; }
     }
 }
