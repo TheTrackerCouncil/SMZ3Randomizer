@@ -46,6 +46,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             // 7e0010 - Can tell if in OW or Dungeon
             // 7e00A0 - Can tell the room, which can probably be used to determine dungeon
+            // 007E0C9 - Dungeon number?
 
             // Check if the game has started. SM locations start as cleared in memory until you get to the title screen.
             AddEvent("read_block", 0x7e0020, 0x1, Game.Neither, (AutoTrackerMessage message) =>
