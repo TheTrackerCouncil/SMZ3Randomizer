@@ -1,5 +1,6 @@
 local socket = require('socket.core')
-local json = require('json')
+local emulator = loadfile('emulator.lua')()
+local json = loadfile('json.lua')()
 
 local HOST_ADDRESS = '127.0.0.1'
 local HOST_PORT = 6969
@@ -16,29 +17,20 @@ local function ends_with(str, ending)
    return ending == "" or str:sub(-#ending) == ending
 end
 
-local function message(msg)
-	emu.message(msg)
-	print(msg)
-end
-
 local function check_for_message()
 	local data, err, tempPart = tcp:receive(n, part)
 	if data == nil then
 		if err ~= 'timeout' then
-			message('Connection lost:' .. err)
+			emulator.print('Connection lost:' .. err)
 			connected = false
 		else
-			--print('null', err)
-			--print('null', part)
 			part = tempPart
 		end
 	else
-		--print('part')
 		part = nil
 	end
-	-- print('part', part)
-	-- print('data', data)
-	if (ends_with(part, "\0")) then
+
+	if part ~= nil and ends_with(part, "\0") then
 		data = part
 		part = nil
 		return data
@@ -51,24 +43,24 @@ end
 local function process_message(message)
 	local data = json.decode(message)
 	local action = data['Action']
+	local domain = data['Domain']
 	local address = data['Address']
 	local length = data['Length']
+	
 	local bytes = nil
 	
-	-- print('action', action);
-	-- print('address', address);
-	-- print('length', length);
 	if (action == 'read_block') then
-		bytes = memory.readbyterange(address, length)
+		bytes = emulator.read_bytes(address, length, domain)
 	end
-	
+
 	local result = {
 		Action = action,
 		Address = address,
 		Length = length,
 		Bytes = bytes
 	}
-	-- print('result', json.encode(result))
+
+	-- print(json.encode(result))
 	local ret, err = tcp:send(json.encode(result) .. "\n")
 	if ret == nil then
 	 	print('Failed to send:', err)
@@ -82,12 +74,12 @@ local function connect()
 	
 	local ret, err = tcp:connect(HOST_ADDRESS, HOST_PORT)
 	if ret == 1 then
-		message('Connection established')
+		emulator.print('Connection established')
 		tcp:settimeout(0)
 		connected = true
         lastMessage = os.time()
 	else
-		message('Failed to open socket:' .. err)
+		emulator.print('Failed to open socket:' .. err)
 		tcp:close()
 		tcp = nil
 		connected = false
@@ -100,12 +92,6 @@ local function on_tick()
 		while message ~= nil do
 			-- print(message)
 			process_message(message);
-			-- local dataObject = json.decode(data);
-			-- print(data)
-			-- local ret, err = tcp:send("hello\n")
-			-- if ret == nil then
-			-- 	print('Failed to send:', err)
-			-- end 
             lastMessage = os.time()
 			message = check_for_message()
 		end
@@ -122,6 +108,6 @@ local function on_tick()
 	end
 end
 
-emu.registerbefore(on_tick)
+emulator.start_tick(on_tick)
 connect()
 

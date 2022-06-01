@@ -25,12 +25,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly ILogger<AutoTrackerModule> _logger;
         private readonly List<AutoTrackerMessage> _requestMessages = new();
         private readonly Dictionary<int, Action<AutoTrackerMessage>> _responseActions = new();
-        private readonly Dictionary<int, int[]> _previousResponses = new();
+        private readonly Dictionary<int, AutoTrackerMessage> _previousResponses = new();
         private int _currentRequestIndex = 0;
         private Game _currentGame;
         private TcpListener? _tcpListener = null;
         private bool _hasStarted;
         private Socket? _socket = null;
+        private AutoTrackerZeldaState _previousZeldaState;
+        private AutoTrackerMetroidState _previousMetroidState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BossTrackingModule"/>
@@ -44,86 +46,99 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             _logger = logger;
             _tracker.AutoTracker = this;
 
-            // 7e0010 - Can tell if in OW or Dungeon
-            // 7e00A0 - Can tell the room, which can probably be used to determine dungeon
-            // 007E0C9 - Dungeon number?
-
             // Check if the game has started. SM locations start as cleared in memory until you get to the title screen.
-            AddEvent("read_block", 0x7e0020, 0x1, Game.Neither, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "WRAM", 0x7e0020, 0x1, Game.Neither, (AutoTrackerMessage message) =>
             {
-                var value = ReadUInt8(message.Bytes, 0);
+                var value = message.ReadUInt8(0);
                 if (value != 0)
                 {
                     _logger.LogInformation("Game started");
                     _hasStarted = true;
                     Tracker.Say(x => x.Autotracker.GameStarted, Tracker.Rom.Seed);
                 }
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
             });
 
             // Active game
-            AddEvent("read_block", 0xa173fe, 0x1, Game.Both, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "CARTRAM", 0x7033fe, 0x2, Game.Both, (AutoTrackerMessage message) =>
             {
-                var value = ReadUInt8(message.Bytes, 0);
-                _currentGame = value == 0x00 ? Game.Zelda : Game.SM;
-                _logger.LogInformation($"Game changed to: {_currentGame}");
-                _previousResponses[message.Address] = message.Bytes;
+                var value = message.ReadUInt8(0);
+                if (value == 0x00)
+                    _currentGame = Game.Zelda;
+                else if (value == 0xFF)
+                    _currentGame = Game.SM;
+                _logger.LogInformation($"Game changed to: {_currentGame} {value}");
+                _previousResponses[message.Address] = message;
             });
 
             // Zelda Room Locations
-            AddEvent("read_block", 0x7ef000, 0x250, Game.Zelda, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "WRAM", 0x7ef000, 0x250, Game.Zelda, (AutoTrackerMessage message) =>
             {
                 CheckLocations(message, LocationMemoryType.ZeldaRoom, true);
                 CheckDungeons(message);
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
             });
 
             // Zelda NPC Locations
-            AddEvent("read_block", 0x7ef410, 0x2, Game.Zelda, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "WRAM", 0x7ef410, 0x2, Game.Zelda, (AutoTrackerMessage message) =>
             {
                 CheckLocations(message, LocationMemoryType.ZeldaNPC, false);
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
             });
 
             // Zelda Overworld Locations
-            AddEvent("read_block", 0x7ef280, 0x82, Game.Zelda, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "WRAM", 0x7ef280, 0x82, Game.Zelda, (AutoTrackerMessage message) =>
             {
                 CheckLocations(message, LocationMemoryType.ZeldaOverworld, false);
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
             });
 
             // Zelda items while playing Zelda
-            AddEvent("read_block", 0x7ef300, 0xD0, Game.Zelda, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "WRAM", 0x7ef300, 0xD0, Game.Zelda, (AutoTrackerMessage message) =>
             {
                 // CheckZeldaItemMemory
                 CheckLocations(message, LocationMemoryType.ZeldaMisc, false);
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
             });
 
             // Super Metroid locations
-            AddEvent("read_block", 0x7ed870, 0x20, Game.SM, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "WRAM", 0x7ed870, 0x20, Game.SM, (AutoTrackerMessage message) =>
             {
                 CheckLocations(message, LocationMemoryType.SMLocation, false);
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
             });
 
             // Super Metroid bosses
-            AddEvent("read_block", 0x7ed828, 0x08, Game.SM, (AutoTrackerMessage message) =>
+            AddEvent("read_block", "WRAM", 0x7ed828, 0x08, Game.SM, (AutoTrackerMessage message) =>
             {
                 CheckSMBosses(message);
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
+            });
+
+            // Zelda State Checks
+            AddEvent("read_block", "WRAM", 0x7e0000, 0x250, Game.Zelda, (AutoTrackerMessage message) =>
+            {
+                ZeldaStateChecks(message);
+                _previousResponses[message.Address] = message;
+            });
+
+            // Metroid State Checks
+            AddEvent("read_block", "WRAM", 0x7e0750, 0x400, Game.SM, (AutoTrackerMessage message) =>
+            {
+                MetroidStateChecks(message);
+                _previousResponses[message.Address] = message;
             });
 
 
             // SM items while playing Zelda
             /*AddEvent("read_block", CorrectSRAMAddress(0xa17900), 0x10, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                var speed = Check8(message.Bytes, 0x03, 0x20);
-                var plasma = Check8(message.Bytes, 0x06, 0x08);
-                var gravity = Check8(message.Bytes, 0x02, 0x20);
-                var bombs = Check8(message.Bytes, 0x03, 0x10);
+                var speed = message.Check8(0x03, 0x20);
+                var plasma = message.Check8(0x06, 0x08);
+                var gravity = message.Check8( 0x02, 0x20);
+                var bombs = message.Check8(0x03, 0x10);
                 _logger.LogInformation($"speed {speed} | plasma {plasma} | Gravity suit {gravity} | morph bombs {bombs}");
-                _previousResponses[message.Address] = message.Bytes;
+                _previousResponses[message.Address] = message;
             });*/
         }
 
@@ -184,22 +199,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Adds a memory request/response to be processed
         /// </summary>
         /// <param name="action">The command for the lua script to execute</param>
+        /// <param name="domain"></param>
         /// <param name="address">The initial memory address</param>
         /// <param name="length">The number of bytes to obtain</param>
         /// <param name="game">Which game(s) this should be executed over</param>
         /// <param name="response">The action to perform upon receiving a response</param>
-        protected void AddEvent(string action, int address, int length, Game game, Action<AutoTrackerMessage> response)
+        protected void AddEvent(string action, string domain, int address, int length, Game game, Action<AutoTrackerMessage> response)
         {
             var request = new AutoTrackerMessage()
             {
                 Action = action,
+                Domain = domain,
                 Address = address,
                 Length = length,
                 Game = game
             };
             _requestMessages.Add(request);
             _responseActions.Add(address, response);
-            _previousResponses.Add(address, new int[0]);
+            _previousResponses.Add(address, new());
         }
 
         /// <summary>
@@ -229,7 +246,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 while (line != null && _socket.Connected)
                                 {
                                     var message = JsonSerializer.Deserialize<AutoTrackerMessage>(line);
-                                    if (message != null && _responseActions.ContainsKey(message.Address) && !Enumerable.SequenceEqual(_previousResponses[message.Address], message.Bytes))
+                                    if (message != null && _responseActions.ContainsKey(message.Address) && !message.IsMemoryEqualTo(_previousResponses[message.Address]))
                                     {
                                         _responseActions[message.Address].Invoke(message);
                                     }
@@ -297,7 +314,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     int numBottles = 0;
                     for (var i = 0; i < 4; i++)
                     {
-                        if (CompareUInt8(message.Bytes, message.Address, location + i, item.MemoryFlag ?? 0))
+                        if (message.CompareUInt8(_previousResponses[message.Address], message.Address, location + i, item.MemoryFlag ?? 0))
                         {
                             numBottles++;
                         }
@@ -310,8 +327,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else if (item.InternalItemType == ItemType.Mirror)
                 {
-                    var valueChanged = CompareUInt8(message.Bytes, message.Address, location, item.MemoryFlag);
-                    var value = ReadUInt8(message.Bytes, location);
+                    var valueChanged = message.CompareUInt8(_previousResponses[message.Address], message.Address, location, item.MemoryFlag);
+                    var value = message.ReadUInt8(location);
                     if (valueChanged && (value == 1 || value == 2) && item.TrackingState == 0)
                     {
                         giveItem = true;
@@ -319,8 +336,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else if (item.Multiple && item.HasStages)
                 {
-                    var valueChanged = CompareUInt8(message.Bytes, message.Address, location, item.MemoryFlag);
-                    var value = ReadUInt8(message.Bytes, location);
+                    var valueChanged = message.CompareUInt8(_previousResponses[message.Address], message.Address, location, item.MemoryFlag);
+                    var value = message.ReadUInt8(location);
                     if (valueChanged && item.TrackingState < value)
                     {
                         giveItem = true;
@@ -328,7 +345,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else
                 {
-                    giveItem = CompareUInt8(message.Bytes, message.Address, location, item.MemoryFlag) && item.TrackingState == 0;
+                    giveItem = message.CompareUInt8(_previousResponses[message.Address], message.Address, location, item.MemoryFlag) && item.TrackingState == 0;
                 }
 
                 if (giveItem)
@@ -353,7 +370,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     var loc = locationInfo.MemoryAddress ?? 0;
                     var flag = locationInfo.MemoryFlag ?? 0;
                     var location = _tracker.World.Locations.Where(x => x.Id == locationInfo.Id).First();
-                    if (!location.Cleared && ((is16Bit && CheckUInt16(message.Bytes, loc, flag)) || (!is16Bit && CheckUInt8(message.Bytes, loc, flag))))
+                    if (!location.Cleared && ((is16Bit && message.CheckUInt16(loc * 2, flag)) || (!is16Bit && message.CheckUInt8(loc, flag))))
                     {
                         if (!location.Item.Type.IsInAnyCategory(ItemCategory.Map, ItemCategory.Compass))
                         {
@@ -387,7 +404,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 try
                 {
-                    if (!dungeonInfo.Cleared && CheckUInt16(message.Bytes, dungeonInfo.MemoryAddress ?? 0, dungeonInfo.MemoryFlag ?? 0))
+                    if (!dungeonInfo.Cleared && message.CheckUInt16(dungeonInfo.MemoryAddress * 2 ?? 0, dungeonInfo.MemoryFlag ?? 0))
                     {
                         _tracker.MarkDungeonAsCleared(dungeonInfo);
                         _logger.LogInformation($"Auto tracked {dungeonInfo.Name} as cleared");
@@ -413,7 +430,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 try
                 {
-                    if (!bossInfo.Defeated && CheckUInt8(message.Bytes, bossInfo.MemoryAddress ?? 0, bossInfo.MemoryFlag ?? 0))
+                    if (!bossInfo.Defeated && message.CheckUInt8(bossInfo.MemoryAddress ?? 0, bossInfo.MemoryFlag ?? 0))
                     {
                         _tracker.MarkBossAsDefeated(bossInfo);
                         _logger.LogInformation($"Auto tracked {bossInfo.Name} as defeated");
@@ -429,83 +446,71 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
-        /// Returns the memory value at a location
+        /// Tracks the current memory state of LttP for Tracker voice lines
         /// </summary>
-        /// <param name="bytes">All of the bytes to check</param>
-        /// <param name="location">The offset location to check</param>
-        /// <returns>The value from the byte array at that location</returns>
-        protected static int ReadUInt8(int[] bytes, int location)
+        /// <param name="message">The message from the emulator with the memory state</param>
+        protected void ZeldaStateChecks(AutoTrackerMessage message)
         {
-            return bytes[location];
-        }
-
-        /// <summary>
-        /// Gets the memory value for a location and returns if it matches a given flag
-        /// </summary>
-        /// <param name="bytes">All of the bytes to check</param>
-        /// <param name="location">The offset location to check</param>
-        /// <param name="flag">The flag to check against</param>
-        /// <returns>True if the flag is set for the memory location.</returns>
-        protected static bool CheckUInt8(int[] bytes, int location, int flag)
-        {
-            return (ReadUInt8(bytes, location) & flag) == flag;
-        }
-
-        /// <summary>
-        /// Checks if a value in memory matches a flag or has been increased to denote obtaining an item
-        /// </summary>
-        /// <param name="bytes">All of the bytes to check</param>
-        /// <param name="address">The origin location in memory</param>
-        /// <param name="location">The offset location to check</param>
-        /// <param name="flag">The flag to check against</param>
-        /// <returns>True if the value in memory was set or increased</returns>
-        protected bool CompareUInt8(int[] bytes, int address, int location, int? flag)
-        {
-            var prevValue = _previousResponses[address].Length > location ? ReadUInt8(_previousResponses[address], location) : -1;
-            var newValue = ReadUInt8(bytes, location);
-
-            if (newValue > prevValue)
+            AutoTrackerZeldaState state = new(message);
+            _logger.LogInformation(state.ToString());
+            if (_previousZeldaState == null)
             {
-                if (flag != null)
-                {
-                    if ((newValue & flag) == flag)
-                    {
-                        return true;
-                    }
-                }
-                else if(newValue > 0)
-                {
-                    return true;
-                }
+                _previousZeldaState = state;
+                return;
             }
 
-            return false;
+            // Falling down from Moldorm
+            if (state.CurrentRoom == 23 && state.PreviousRoom == 7 && _previousZeldaState.CurrentRoom == 7)
+            {
+                Tracker.Say(x => x.Autotracker.FallFromMoldorm);
+            }
+            // Hera pot
+            else if (state.CurrentRoom == 167 && _previousZeldaState.CurrentRoom == 119 && Tracker.Items.First(x => x.InternalItemType == ItemType.BigKeyTH).TrackingState != 0)
+            {
+                Tracker.Say(x => x.Autotracker.HeraPot);
+            }
+            // Death
+            else if (state.State == 18 && state.Substate == 9 && _previousZeldaState.Substate != 9)
+            {
+                // Here we should be able to track where the player died
+                Tracker.TrackItem(Tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
+            }
+
+            _previousZeldaState = state;
         }
 
         /// <summary>
-        /// Returns the memory value at a location
+        /// Tracks the current memory state of SM for Tracker voice lines
         /// </summary>
-        /// <param name="bytes">All of the bytes to check</param>
-        /// <param name="location">The offset location to check</param>
-        /// <returns>The value from the byte array at that location</returns>
-        protected static int ReadUInt16(int[] bytes, int location)
+        /// <param name="message">The message from the emulator with the memory state</param>
+        protected void MetroidStateChecks(AutoTrackerMessage message)
         {
-            return bytes[location * 2 + 1] * 256 + bytes[location * 2];
-        }
+            AutoTrackerMetroidState state = new(message);
+            _logger.LogInformation(state.ToString());
+            if (_previousMetroidState == null)
+            {
+                _previousMetroidState = state;
+                return;
+            }
 
-        /// <summary>
-        /// Gets the memory value for a location and returns if it matches a given flag
-        /// </summary>
-        /// <param name="bytes">All of the bytes to check</param>
-        /// <param name="location">The offset location to check</param>
-        /// <param name="flag">The flag to check against</param>
-        /// <returns>True if the flag is set for the memory location.</returns>
-        protected static bool CheckUInt16(int[] bytes, int location, int flag)
-        {
-            var data = ReadUInt16(bytes, location);
-            var adjustedFlag = 1 << flag;
-            var temp = data & adjustedFlag;
-            return temp == adjustedFlag;
+            // Approaching Kraid's Awful Son
+            if (state.CurrentRegion == 1 && state.CurrentRoomInRegion == 45 && _previousMetroidState.CurrentRoomInRegion == 44)
+            {
+                Tracker.Say(x => x.Autotracker.NearKraidsAwfulSon);
+            }
+            // Approaching Shaktool
+            else if (state.CurrentRegion == 4 && state.CurrentRoomInRegion == 36 && _previousMetroidState.CurrentRoomInRegion == 28)
+            {
+                Tracker.Say(x => x.Autotracker.NearShaktool);
+            }
+            // Death
+            else if (state.Health == 0 && state.ReserveTanks == 0 && _previousMetroidState.Health != 0)
+            {
+                // Here we should be able to track where the player died
+                Tracker.TrackItem(Tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
+            }
+
+            _previousMetroidState = state;
         }
 
         /// <summary>
@@ -515,4 +520,5 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Disable();
         }
     }
+
 }

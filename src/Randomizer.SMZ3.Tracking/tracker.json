@@ -1992,6 +1992,22 @@
       "GameStarted": [
         "Good luck. You'll need it.",
         "PB incoming for seed {0}"
+      ],
+      "NearKraidsAwfulSon": [
+        "Oh no. Please avert your eyes to avoid seeing an imminent disaster.",
+        "I'm suddenly feeling rather nautious. Is that Kraid's Awful Son I'm sensing?"
+      ],
+      "NearShaktool": [
+        "Finally, we're nearly to Shaktool. I've been waiting for this since you started playing.",
+        "Shaktool content imminent. I can feel the metrics rising."
+      ],
+      "FallFromMoldorm": [
+        "Ha ha. Moldorm strikes again. Content increased by one step.",
+        "You're back here again? I take it things didn't go so well."
+      ],
+      "HeraPot": [
+        "Good job on the tech. Was it a first try?",
+        "Big Twitch has requested that I remind all kids not to do pot. But nice tech."
       ]
     }
   },
