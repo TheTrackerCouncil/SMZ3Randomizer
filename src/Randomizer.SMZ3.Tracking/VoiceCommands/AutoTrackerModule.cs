@@ -465,7 +465,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Tracker.Say(x => x.Autotracker.FallFromMoldorm);
             }
             // Hera pot
-            else if (state.CurrentRoom == 167 && _previousZeldaState.CurrentRoom == 119 && Tracker.Items.First(x => x.InternalItemType == ItemType.BigKeyTH).TrackingState != 0)
+            else if (state.CurrentRoom == 167 && _previousZeldaState.CurrentRoom == 119 && Tracker.Items.First(x => x.InternalItemType == ItemType.BigKeyTH).TrackingState == 0)
             {
                 Tracker.Say(x => x.Autotracker.HeraPot);
             }
