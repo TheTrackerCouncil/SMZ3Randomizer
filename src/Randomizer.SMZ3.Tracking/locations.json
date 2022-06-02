@@ -2217,6 +2217,8 @@
       "Name": [
         "Mimic Cave"
       ],
+      "X": 1731,
+      "Y": 180,
       "MemoryType": 1,
       "MemoryAddress": 268,
       "MemoryFlag": 4
