@@ -2005,9 +2005,29 @@
         "Ha ha. Moldorm strikes again. Content increased by one step.",
         "You're back here again? I take it things didn't go so well."
       ],
+      "FallFromGanon": [
+        "Oops. Don't worry, I'm sure no one saw you fall from Ganon's Room.",
+        "Goodbye Ganon. We'll meet again soon."
+      ],
       "HeraPot": [
         "Good job on the tech. Was it a first try?",
         "Big Twitch has requested that I remind all kids not to do pot. But nice tech."
+      ],
+      "IceBreaker": [
+        "Good job on the tech. Was it a first try?",
+        "That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?"
+      ],
+      "DiverDown": [
+        "Good job on the tech. Was it a first try?",
+        "Is this underwater?"
+      ],
+      "EnterHyruleCastleTower": [
+        "Ouch. So it's come to this then?",
+        "This must be a rough seed if you're here."
+      ],
+      "EnterPendantDungeon": [
+        "I hope dipping into this pendant dungeon will be worth it for you.",
+        "Didn't you say that {0} had the {1}? You must be getting desperate."
       ]
     }
   },

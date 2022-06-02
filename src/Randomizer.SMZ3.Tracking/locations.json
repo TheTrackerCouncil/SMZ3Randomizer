@@ -305,7 +305,10 @@
       "Row": 5,
       "LocationId": 364,
       "MemoryAddress": 200,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        201
+      ]
     },
     {
       "Name": [ "Desert Palace", "Dessert Palace" ],
@@ -320,7 +323,12 @@
       "Row": 5,
       "LocationId": 370,
       "MemoryAddress": 51,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        132,
+        131,
+        99
+      ]
     },
     {
       "Name": [ "Tower of Hera" ],
@@ -335,7 +343,10 @@
       "Row": 5,
       "LocationId": 376,
       "MemoryAddress": 7,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        119
+      ]
     },
     {
       "Name": [ "Palace of Darkness", "Dark Palace", "Palace of Dorkness", "Dork Palace" ],
@@ -350,7 +361,10 @@
       "Row": 5,
       "LocationId": 390,
       "MemoryAddress": 90,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        74
+      ]
     },
     {
       "Name": [ "Swamp Palace" ],
@@ -365,7 +379,10 @@
       "Row": 5,
       "LocationId": 400,
       "MemoryAddress": 6,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        40
+      ]
     },
     {
       "Name": [ "Skull Woods", "Skill Woods" ],
@@ -383,7 +400,13 @@
       "Row": 6,
       "LocationId": 408,
       "MemoryAddress": 41,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        87,
+        88,
+        103,
+        104
+      ]
     },
     {
       "Name": [ "Thieves' Town" ],
@@ -398,7 +421,10 @@
       "Row": 6,
       "LocationId": 416,
       "MemoryAddress": 172,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        219
+      ]
     },
     {
       "Name": [ "Ice Palace" ],
@@ -413,7 +439,10 @@
       "Row": 6,
       "LocationId": 424,
       "MemoryAddress": 222,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        14
+      ]
     },
     {
       "Name": [ "Misery Mire" ],
@@ -428,7 +457,10 @@
       "Row": 6,
       "LocationId": 432,
       "MemoryAddress": 144,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        152
+      ]
     },
     {
       "Name": [ "Turtle Rock" ],
@@ -443,7 +475,10 @@
       "Row": 6,
       "LocationId": 444,
       "MemoryAddress": 164,
-      "MemoryFlag": 11
+      "MemoryFlag": 11,
+      "StartingRooms": [
+        214
+      ]
     },
     {
       "Name": [
@@ -465,7 +500,10 @@
       "Column": 5,
       "Row": 6,
       "TreasureRemaining": 20,
-      "HasReward": false
+      "HasReward": false,
+      "StartingRooms": [
+        12
+      ]
     },
     {
       "Name": [ "Hyrule Castle" ],
@@ -480,7 +518,10 @@
       "Column": 5,
       "Row": 5,
       "TreasureRemaining": 6,
-      "HasReward": false
+      "HasReward": false,
+      "StartingRooms": [
+        97
+      ]
     },
     {
       "Name": [ "Agahnim's Tower", "Castle Tower" ],
@@ -495,7 +536,10 @@
       "Row": 5,
       "TreasureRemaining": 0,
       "HasReward": true,
-      "Reward": 6
+      "Reward": 6,
+      "StartingRooms": [
+        224
+      ]
     }
   ],
   "Bosses": [

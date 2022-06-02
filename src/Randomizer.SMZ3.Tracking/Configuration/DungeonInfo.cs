@@ -236,5 +236,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// checked or not
         /// </summary>
         public int? MemoryFlag { get; set; }
+
+        /// <summary>
+        /// Collection of room ids for the entrances to a dungeon
+        /// </summary>
+        public ICollection<int> StartingRooms { get; set; }
     }
 }

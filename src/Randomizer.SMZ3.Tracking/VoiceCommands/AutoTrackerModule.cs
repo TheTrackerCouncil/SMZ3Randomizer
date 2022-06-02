@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -33,6 +34,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private Socket? _socket = null;
         private AutoTrackerZeldaState _previousZeldaState;
         private AutoTrackerMetroidState _previousMetroidState;
+        private HashSet<DungeonInfo> _enteredDungeons = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BossTrackingModule"/>
@@ -459,15 +461,47 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
-            // Falling down from Moldorm
+            // Falling down from Moldorm (detect if player was in Moldorm room and is now in the room below it)
             if (state.CurrentRoom == 23 && state.PreviousRoom == 7 && _previousZeldaState.CurrentRoom == 7)
             {
                 Tracker.Say(x => x.Autotracker.FallFromMoldorm);
             }
-            // Hera pot
+            // Falling down from Ganon (detect if player was in Ganon room and is now in the room below it)
+            else if (state.CurrentRoom == 16 && state.PreviousRoom == 0 && _previousZeldaState.CurrentRoom == 0)
+            {
+                Tracker.Say(x => x.Autotracker.FallFromGanon);
+            }
+            // Hera pot (player is in the pot room but does not have the big key)
             else if (state.CurrentRoom == 167 && _previousZeldaState.CurrentRoom == 119 && Tracker.Items.First(x => x.InternalItemType == ItemType.BigKeyTH).TrackingState == 0)
             {
                 Tracker.Say(x => x.Autotracker.HeraPot);
+            }
+            // Ice breaker (player is on the right side of the wall but was previous in the room to the left)
+            else if (state.CurrentRoom == 31 && state.PreviousRoom == 30 && state.LinkX >= 0x48 && _previousZeldaState.LinkX < 0x48)
+            {
+                Tracker.Say(x => x.Autotracker.IceBreaker);
+            }
+            // Diver Down (player is now at the lower section and on the ground, but not from the ladder)
+            else if (state.CurrentRoom == 118 && state.LinkX < 0x9F && state.LinkX != 0x68 && state.LinkY <= 0x98 && _previousZeldaState.LinkY > 0x98 && state.LinkState == 0)
+            {
+                Tracker.Say(x => x.Autotracker.DiverDown);
+            }
+            // Entered a dungeon (now in Dungeon state but was previously in Overworld or entering Dungeon state)
+            else if (state.State == 0x07 && (_previousZeldaState.State == 0x06 || _previousZeldaState.State == 0x09 || _previousZeldaState.State == 0x0F || _previousZeldaState.State == 0x10 || _previousZeldaState.State == 0x11))
+            {
+                var dungeonInfo = Tracker.WorldInfo.Dungeons.FirstOrDefault(x => x.StartingRooms != null && x.StartingRooms.Contains(state.CurrentRoom));
+                if (dungeonInfo == null || _enteredDungeons.Contains(dungeonInfo)) return;
+
+                if (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant)
+                {
+                    Tracker.Say(x => x.Autotracker.EnterPendantDungeon, dungeonInfo.Name, dungeonInfo.Reward.GetName());
+                }
+                else if (dungeonInfo.Is(Tracker.World.CastleTower))
+                {
+                    Tracker.Say(x => x.Autotracker.EnterHyruleCastleTower);
+                }
+
+                _enteredDungeons.Add(dungeonInfo);
             }
             // Death
             else if (state.State == 18 && state.Substate == 9 && _previousZeldaState.Substate != 9)

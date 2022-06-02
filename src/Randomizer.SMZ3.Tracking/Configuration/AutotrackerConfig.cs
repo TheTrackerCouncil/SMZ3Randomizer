@@ -39,10 +39,40 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Ha ha. Moldorm strikes again. Content increased by one step.");
 
         /// <summary>
+        /// Gets the phrases to respond with when falling down the pit from moldorm
+        /// </summary>
+        public SchrodingersString FallFromGanon { get; init; }
+            = new("Oops. Don't worry, I'm sure no one saw that.");
+
+        /// <summary>
         /// Gets the phrases to respond with when performing Hera Pot tech
         /// </summary>
         public SchrodingersString HeraPot { get; init; }
             = new("Good job on the tech. Was it a first try?");
+
+        /// <summary>
+        /// Gets the phrases to respond with when performing Ice Breaker tech
+        /// </summary>
+        public SchrodingersString IceBreaker { get; init; }
+            = new("Good job on the tech. Was it a first try?");
+
+        /// <summary>
+        /// Gets the phrases to respond with when performing Diver Down tech
+        /// </summary>
+        public SchrodingersString DiverDown { get; init; }
+            = new("Good job on the tech. Was it a first try?");
+
+        /// <summary>
+        /// Gets the phrases to respond with when entering Hyrule Castle tower
+        /// </summary>
+        public SchrodingersString EnterHyruleCastleTower { get; init; }
+            = new("Ouch. So it's come to this, then?");
+
+        /// <summary>
+        /// Gets the phrases to respond with when entering a pendant dungeon
+        /// </summary>
+        public SchrodingersString EnterPendantDungeon { get; init; }
+            = new("Ouch. So it's come to this, then?");
 
     }
 }
