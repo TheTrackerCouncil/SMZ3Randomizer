@@ -4,7 +4,7 @@
 #include "CodeDependencies.iss"
 
 #define MyAppName "SMZ3 Cas' Randomizer"
-#define MyAppVersion "4.2.5"
+#define MyAppVersion "4.3.0"
 #define MyAppPublisher "Vivelin"
 #define MyAppURL "https://github.com/Vivelin/SMZ3Randomizer"
 #define MyAppExeName "Randomizer.App.exe"
@@ -72,7 +72,7 @@ Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\*"; DestDir: "
 Source: "..\src\Randomizer.SMZ3.Tracking\tracker.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\locations.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
-Source: "..\src\Randomizer.SMZ3.Tracking\AutotrackerScripts"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\src\Randomizer.SMZ3.Tracking\AutotrackerScripts\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\AutotrackerScripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
