@@ -365,7 +365,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
             if (closeGuessesPattern.IsMatch(message.Text))
             {
-                CloseGanonsTowerGuessingGameGuesses(senderNamePronunciation);
+                var _ = CloseGanonsTowerGuessingGameGuesses(senderNamePronunciation);
             }
         }
 
@@ -386,7 +386,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     "order 66");
 
             var fromSpeech = new GrammarBuilder()
-                // .Append("Hey tracker,") // Re-add this if this is causing too many matches
+                .Append("Hey tracker,")
                 .OneOf("It's time for the GT big key guessing game",
                     "The GT big key guessing game is now open for guesses");
 

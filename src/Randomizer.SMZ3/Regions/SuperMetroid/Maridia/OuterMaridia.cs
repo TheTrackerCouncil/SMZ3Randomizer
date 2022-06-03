@@ -12,21 +12,29 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Missile (green Maridia shinespark)",
                 alsoKnownAs: new[] { "Main Street - Ceiling (Shinespark)", "Main Street Missiles" },
                 vanillaItem: ItemType.Missile,
-                access: items => items.SpeedBooster);
+                access: items => items.SpeedBooster,
+                memoryAddress: 0x11,
+                memoryFlag: 0x1);
             MainStreetCrabSupers = new(this, 137, 0x8FC43D, LocationType.Visible,
                 name: "Super Missile (green Maridia)",
                 alsoKnownAs: "Main Street - Crab Supers",
-                vanillaItem: ItemType.Super);
+                vanillaItem: ItemType.Super,
+                memoryAddress: 0x11,
+                memoryFlag: 0x2);
             MamaTurtleRoom = new(this, 138, 0x8FC47D, LocationType.Visible,
                 name: "Energy Tank, Mama turtle",
                 alsoKnownAs: "Mama Turtle Room",
                 vanillaItem: ItemType.ETank,
-                access: items => Logic.CanOpenRedDoors(items) && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple));
+                access: items => Logic.CanOpenRedDoors(items) && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple),
+                memoryAddress: 0x11,
+                memoryFlag: 0x4);
             MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
                 name: "Missile (green Maridia tatori)",
                 alsoKnownAs: "Mama Turtle Room - Wall item",
                 vanillaItem: ItemType.Missile,
-                access: items => Logic.CanOpenRedDoors(items));
+                access: items => Logic.CanOpenRedDoors(items),
+                memoryAddress: 0x11,
+                memoryFlag: 0x8);
         }
 
         public override string Name => "Outer Maridia";

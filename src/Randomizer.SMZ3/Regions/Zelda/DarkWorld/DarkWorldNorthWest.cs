@@ -11,31 +11,45 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 name: "Bumper Cave",
                 alsoKnownAs: "Bumper Cave Ledge",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => Logic.CanLiftLight(items) && items.Cape);
+                access: items => Logic.CanLiftLight(items) && items.Cape,
+                memoryAddress: 0x30,
+                memoryFlag: 0x40,
+                memoryType: LocationMemoryType.ZeldaOverworld);
 
             ChestGame = new Location(this, 256 + 72, 0x1EDA8, LocationType.Regular,
                 name: "Chest Game",
-                vanillaItem: ItemType.HeartPiece);
+                vanillaItem: ItemType.HeartPiece,
+                memoryAddress: 0x106,
+                memoryFlag: 0xA);
 
             CShapedHouse = new Location(this, 256 + 73, 0x1E9EF, LocationType.Regular,
                 name: "C-Shaped House", // ???
-                vanillaItem: ItemType.ThreeHundredRupees); // ???
+                vanillaItem: ItemType.ThreeHundredRupees, // ???
+                memoryAddress: 0x11C,
+                memoryFlag: 0x4);
 
             Brewery = new Location(this, 256 + 74, 0x1E9EC, LocationType.Regular,
                 name: "Brewery", // ???
-                vanillaItem: ItemType.ThreeHundredRupees);
+                vanillaItem: ItemType.ThreeHundredRupees,
+                memoryAddress: 0x106,
+                memoryFlag: 0x4);
 
             PegWorld = new Location(this, 256 + 75, 0x308006, LocationType.Regular,
                 name: "Hammer Pegs",
                 alsoKnownAs: "Peg World",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => Logic.CanLiftHeavy(items) && items.Hammer);
+                access: items => Logic.CanLiftHeavy(items) && items.Hammer,
+                memoryAddress: 0x127,
+                memoryFlag: 0xA);
 
             PurpleChestTurnin = new Location(this, 256 + 77, 0x6BD68, LocationType.Regular,
                 name: "Purple Chest",
                 alsoKnownAs: "Purple Chest turn-in",
                 vanillaItem: ItemType.Bottle, // ???
-                access: items => Logic.CanLiftHeavy(items));
+                access: items => Logic.CanLiftHeavy(items),
+                memoryAddress: 0xC9,
+                memoryFlag: 0x10,
+                memoryType: LocationMemoryType.ZeldaMisc);
         }
 
         public override string Name => "Dark World North West";

@@ -28,11 +28,15 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 Left = new Location(this, 256 + 89, 0x1EA73, LocationType.Regular,
                     "Mire Shed - Left",
                     ItemType.HeartPiece,
-                    items => items.MoonPearl);
+                    items => items.MoonPearl,
+                    memoryAddress: 0x10D,
+                    memoryFlag: 0x4);
                 Right = new Location(this, 256 + 90, 0x1EA76, LocationType.Regular,
                     "Mire Shed - Right",
                     ItemType.TwentyRupees,
-                    items => items.MoonPearl);
+                    items => items.MoonPearl,
+                    memoryAddress: 0x10D,
+                    memoryFlag: 0x5);
             }
 
             public Location Left { get; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {
@@ -16,10 +17,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The fully qualified name of the region type.
         /// </param>
         /// <param name="name">The possible names for the region.</param>
-        public RegionInfo(string typeName, SchrodingersString name)
+        /// <param name="mapName">The map name to display for the region.</param>
+        public RegionInfo(string typeName, SchrodingersString name, string mapName)
         {
             TypeName = typeName;
             Name = name;
+            MapName = mapName;
         }
 
         /// <summary>
@@ -37,6 +40,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the possible hints for the region, if any are defined.
         /// </summary>
         public SchrodingersString? Hints { get; init; }
+
+        /// <summary>
+        /// The name of the map to display for this region
+        /// </summary>
+        public string MapName { get; init; }
 
         /// <summary>
         /// Returns the <see cref="Region"/> that matches the region info in the

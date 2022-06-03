@@ -245,15 +245,15 @@ namespace Randomizer.SMZ3.FileData
             {
                 if (_myWorld.Config.MultiWorld)
                 {
-                    _patches.Add((Snes(location.Address), UshortBytes(GetSMItemPLM(location))));
+                    _patches.Add((Snes(location.RomAddress), UshortBytes(GetSMItemPLM(location))));
                     _patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 }
                 else
                 {
                     var plmId = GetSMItemPLM(location);
-                    _patches.Add((Snes(location.Address), UshortBytes(plmId)));
+                    _patches.Add((Snes(location.RomAddress), UshortBytes(plmId)));
                     if (plmId >= 0xEFE0)
-                        _patches.Add((Snes(location.Address + 5), new byte[] { GetZ3ItemId(location) }));
+                        _patches.Add((Snes(location.RomAddress + 5), new byte[] { GetZ3ItemId(location) }));
                 }
             }
         }
@@ -338,12 +338,12 @@ namespace Randomizer.SMZ3.FileData
 
                 if (_myWorld.Config.MultiWorld)
                 {
-                    _patches.Add((Snes(location.Address), new byte[] { (byte)(location.Id - 256) }));
+                    _patches.Add((Snes(location.RomAddress), new byte[] { (byte)(location.Id - 256) }));
                     _patches.Add(ItemTablePatch(location, GetZ3ItemId(location)));
                 }
                 else
                 {
-                    _patches.Add((Snes(location.Address), new byte[] { GetZ3ItemId(location) }));
+                    _patches.Add((Snes(location.RomAddress), new byte[] { GetZ3ItemId(location) }));
                 }
             }
         }

@@ -11,12 +11,18 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 name: "Catfish",
                 alsoKnownAs: "Lake of Ill Omen",
                 vanillaItem: ItemType.Quake,
-                access: items => items.MoonPearl && Logic.CanLiftLight(items));
+                access: items => items.MoonPearl && Logic.CanLiftLight(items),
+                memoryAddress: 0x0,
+                memoryFlag: 0x20,
+                memoryType: LocationMemoryType.ZeldaNPC);
 
             Pyramid = new Location(this, 256 + 79, 0x308147, LocationType.Regular,
                 name: "Pyramid",
                 alsoKnownAs: "Pyramid of Power",
-                vanillaItem: ItemType.HeartPiece);
+                vanillaItem: ItemType.HeartPiece,
+                memoryAddress: 0x5B,
+                memoryFlag: 0x40,
+                memoryType: LocationMemoryType.ZeldaOverworld);
 
             PyramidFairy = new(this);
         }
@@ -51,13 +57,17 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                     "Left",
                     ItemType.ProgressiveSword, 
                     items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))));
+                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))),
+                    memoryAddress: 0x116,
+                    memoryFlag: 0x4);
 
                 Right = new Location(this, 256 + 81, 0x1E983, LocationType.Regular,
                     "Right",
                     ItemType.SilverArrows, 
                     items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))));
+                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))),
+                    memoryAddress: 0x116,
+                    memoryFlag: 0x5);
             }
 
             public Location Left { get; }

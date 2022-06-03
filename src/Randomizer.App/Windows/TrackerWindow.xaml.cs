@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
+using Randomizer.App.Windows;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
@@ -47,6 +49,7 @@ namespace Randomizer.App
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
+        private AutoTrackerWindow _autoTrackerHelpWindow;
         private TrackerLocationSyncer _locationSyncer;
         private RomGenerator _romGenerator;
 
@@ -537,6 +540,52 @@ namespace Randomizer.App
                 menu.Items.Add(toggleSilverArrows);
             }
 
+            if (item.InternalItemType == ItemType.Flute || "Duck".Equals(item.Name[0], StringComparison.OrdinalIgnoreCase))
+            {
+                var flute = Tracker.Items.SingleOrDefault(x => x.InternalItemType == ItemType.Flute);
+                var toggleFlute = new MenuItem
+                {
+                    Header = flute.TrackingState > 0 ? "Untrack Flute" : "Track Flute",
+                    Icon = new Image
+                    {
+                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", "flute.png")))
+                    }
+                };
+                toggleFlute.Click += (sender, e) =>
+                {
+                    if (flute.TrackingState > 0)
+                        flute.Untrack();
+                    else
+                        flute.Track();
+                    Tracker.UpdateTrackerProgression = true;
+                    RefreshGridItems();
+                };
+
+                var duck = Tracker.Items.SingleOrDefault(x => "Duck".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+                var toggleDuck = new MenuItem
+                {
+                    Header = duck.TrackingState > 0 ? "Untrack Duck" : "Track Duck",
+                    Icon = new Image
+                    {
+                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", "duck.png")))
+                    }
+                };
+                toggleDuck.Click += (sender, e) =>
+                {
+                    if (duck.TrackingState > 0)
+                        duck.Untrack();
+                    else
+                        duck.Track();
+                    Tracker.UpdateTrackerProgression = true;
+                    RefreshGridItems();
+                };
+
+                menu.Items.Add(toggleFlute);
+                menu.Items.Add(toggleDuck);
+            }
+
             return menu.Items.Count > 0 ? menu : null;
         }
 
@@ -652,6 +701,8 @@ namespace Randomizer.App
             _trackerMapWindow = _serviceProvider.GetRequiredService<TrackerMapWindow>();
             _trackerMapWindow.Syncer = _locationSyncer;
             _trackerMapWindow.Show();
+
+            InitializeAutoTracker();
         }
 
         private void InitializeTracker()
@@ -711,6 +762,107 @@ namespace Randomizer.App
                 TrackerStatusBar.Background = Tracker.GoMode ? Brushes.Green : null;
                 StatusBarGoMode.Visibility = Tracker.GoMode ? Visibility.Visible : Visibility.Collapsed;
             });
+            Tracker.MapUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                _trackerMapWindow.UpdateMap(Tracker.CurrentMap);
+            });
+        }
+
+        private ContextMenu CreateAutoTrackerMenu(bool enableAutoTracker)
+        {
+            var menu = new ContextMenu
+            {
+                Style = Application.Current.FindResource("DarkContextMenu") as Style
+            };
+
+            if (enableAutoTracker)
+            {
+                var enable = new MenuItem
+                {
+                    Header = "Enable Auto Tracker",
+                };
+                enable.Click += (sender, e) =>
+                {
+                    Tracker.AutoTracker.Enable();
+                };
+                menu.Items.Add(enable);
+            }
+            else
+            {
+                var disable = new MenuItem
+                {
+                    Header = "Disable Auto Tracker",
+                };
+                disable.Click += (sender, e) =>
+                {
+                    Tracker.AutoTracker.Disable();
+                };
+                menu.Items.Add(disable);
+            }
+
+            var folder = new MenuItem
+            {
+                Header = "Show Auto Tracker Scripts Folder",
+            };
+            folder.Click += (sender, e) =>
+            {
+                var path = Options.AutoTrackerScriptsOutputPath;
+                if (string.IsNullOrEmpty(path))
+                {
+                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
+                }
+                Process.Start("explorer.exe", $"/select,\"{path}\"");
+            };
+            menu.Items.Add(folder);
+
+            var help = new MenuItem
+            {
+                Header = "Open Auto Tracker Help",
+            };
+            help.Click += (sender, e) =>
+            {
+                OpenAutoTrackerHelp();
+            };
+            menu.Items.Add(help);
+
+            return menu;
+        }
+
+        public void InitializeAutoTracker()
+        {
+            StatusBarAutoTrackerEnabled.ContextMenu = CreateAutoTrackerMenu(false);
+            StatusBarAutoTrackerConnected.ContextMenu = CreateAutoTrackerMenu(false);
+            StatusBarAutoTrackerDisabled.ContextMenu = CreateAutoTrackerMenu(true);
+            
+            Tracker.AutoTracker.AutoTrackerEnabled += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Visibility.Visible;
+                StatusBarAutoTrackerDisabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
+            });
+            Tracker.AutoTracker.AutoTrackerDisabled += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerDisabled.Visibility = Visibility.Visible;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
+            });
+            Tracker.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerDisabled.Visibility = Visibility.Collapsed;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Visible;
+            });
+            Tracker.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                StatusBarAutoTrackerEnabled.Visibility = Tracker.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
+                StatusBarAutoTrackerDisabled.Visibility = Tracker.AutoTracker.IsEnabled ? Visibility.Collapsed : Visibility.Visible;
+                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
+            });
+
+            if (Options.AutotrackerAutoStart)
+            {
+                Tracker.AutoTracker.Enable();
+            }
         }
 
         private void UpdateStats(TrackerEventArgs e)
@@ -786,6 +938,11 @@ namespace Randomizer.App
                 _trackerHelpWindow = new TrackerHelpWindow(Tracker);
                 _trackerHelpWindow.Show();
             }
+        }
+
+        private void AutoTrackerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenAutoTrackerHelp();
         }
 
         private async void LoadSavedStateMenuItem_Click(object sender, RoutedEventArgs e)
@@ -967,5 +1124,18 @@ namespace Randomizer.App
         /// Occurs when the the tracker's state has been saved
         /// </summary>
         public event EventHandler SavedState;
+
+        protected void OpenAutoTrackerHelp()
+        {
+            if (Application.Current.Windows.OfType<AutoTrackerWindow>().Any())
+            {
+                _autoTrackerHelpWindow.Activate();
+            }
+            else
+            {
+                _autoTrackerHelpWindow = new AutoTrackerWindow();
+                _autoTrackerHelpWindow.Show();
+            }
+        }
     }
 }

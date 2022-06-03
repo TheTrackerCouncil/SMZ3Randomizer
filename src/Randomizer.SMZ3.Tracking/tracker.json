@@ -251,6 +251,21 @@
       ]
     },
     {
+      "Name": [ "Duck", "Bird", "Burb" ],
+      "InternalItemType": 0,
+      "Column": 2,
+      "Row": 2,
+      "WhenTracked": {
+        "1": [
+          "Toggled duck on.",
+          "Toggled bird on.",
+          "Toggled burb on.",
+          "Such a beautiful song.",
+          "I hope you were quiet during the cutscene."
+        ]
+      }
+    },
+    {
       "Name": [
         "Cane of Somaria",
         "Cane of Technical Prowess",
@@ -429,7 +444,7 @@
     {
       "Name": [ "One Rupee", "Green Rupee" ],
       "InternalItemType": 52,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Really?", "I don't get paid enough for this.", "Do you think I've got nothing better to do?", "Why are you wasting my time?" ]
@@ -443,7 +458,7 @@
     {
       "Name": [ "Five Rupees", "Blue Rupee" ],
       "InternalItemType": 53,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -454,7 +469,7 @@
     {
       "Name": [ "Twenty Rupees", "Red Rupee", "Big 20" ],
       "InternalItemType": 54,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place." ],
@@ -490,7 +505,7 @@
     {
       "Name": "One Hundred Rupees",
       "InternalItemType": 64,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -501,7 +516,7 @@
     {
       "Name": "Fifty Rupees",
       "InternalItemType": 65,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -520,7 +535,7 @@
     {
       "Name": [ "Ten Arrows", "Ten Sticks", "Sticks" ],
       "InternalItemType": 68,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "You could find it in real life."
@@ -529,7 +544,7 @@
     {
       "Name": "Three Hundred Rupees",
       "InternalItemType": 70,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -550,7 +565,7 @@
     {
       "Name": "Half Magic",
       "InternalItemType": 78,
-      "Artice": "",
+      "Article": "",
       "Column": 3,
       "Row": 4,
       "Hints": [
@@ -560,13 +575,13 @@
     {
       "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
       "InternalItemType": 81,
-      "Artice": "",
+      "Article": "",
       "Multiple": true
     },
     {
       "Name": [ "+5 Arrow Capacity", "+5 Stick Capacity", "Arrow Capacity", "Stick Capacity", "Arrow Carrying Knowledge", "Stick Carrying Knowledge" ],
       "InternalItemType": 83,
-      "Artice": "",
+      "Article": "",
       "Multiple": true
     },
     {
@@ -805,7 +820,7 @@
     {
       "Name": "Ice Palace Key",
       "InternalItemType": 169,
-      "Artice": "an",
+      "Article": "an",
       "Multiple": true,
       "Hints": [
         "It opens doors."
@@ -1009,19 +1024,22 @@
       ]
     },
     {
-      "Name": "Plasma Beam",
+      "Name": [ "Plasma Beam", "Plasma" ],
       "InternalItemType": 191,
       "Column": 10,
       "Row": 0,
       "Hints": [
         "You can hurt people with it."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [ "Toggled Plasma Beam On", "Rip Spazer" ]
+      }
     },
     {
       "Name": [ "Energy Tank", "E-Tank" ],
       "Plural": [ "Energy Tanks", "E-Tanks" ],
       "InternalItemType": 192,
-      "Artice": "an",
+      "Article": "an",
       "Multiple": true,
       "Column": 8,
       "Row": 3,
@@ -1954,6 +1972,7 @@
         "Can it wait for a bit? I'm in the middle of some calibrations.",
         "Fine, I guess.",
         "I dozed off there for a bit",
+        "Alright I guess",
         [ "Reply hazy, try again.", 0.2 ],
         [ "Ask again later.", 0.2 ],
         [ "Better not tell you now.", 0.2 ],
@@ -1967,6 +1986,55 @@
         "I'm not talking with you right now",
         "I hear what you say about me behind my back"
       ]
+    },
+    "AutoTracker": {
+      "WhenConnected": [
+        "Auto tracker connected.",
+        "Auto tracker online.",
+        "Thank you for granting me administrator access.",
+        "Gameplay judgment algorithms engaged.",
+        "Oh. So you expect me to do everything then?"
+      ],
+      "GameStarted": [
+        "Good luck. You'll need it.",
+        "PB incoming for seed {0}"
+      ],
+      "NearKraidsAwfulSon": [
+        "Oh no. Please avert your eyes to avoid seeing an imminent disaster.",
+        "I'm suddenly feeling rather nautious. Is that Kraid's Awful Son I'm sensing?"
+      ],
+      "NearShaktool": [
+        "Finally, we're nearly to Shaktool. I've been waiting for this since you started playing.",
+        "Shaktool content imminent. I can feel the metrics rising."
+      ],
+      "FallFromMoldorm": [
+        "Ha ha. Moldorm strikes again. Content increased by one step.",
+        "You're back here again? I take it things didn't go so well."
+      ],
+      "FallFromGanon": [
+        "Oops. Don't worry, I'm sure no one saw you fall from Ganon's Room.",
+        "Goodbye Ganon. We'll meet again soon."
+      ],
+      "HeraPot": [
+        "Good job on the tech. Was it a first try?",
+        "Big Twitch has requested that I remind all kids not to do pot. But nice tech."
+      ],
+      "IceBreaker": [
+        "Good job on the tech. Was it a first try?",
+        "That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?"
+      ],
+      "DiverDown": [
+        "Good job on the tech. Was it a first try?",
+        "Is this underwater?"
+      ],
+      "EnterHyruleCastleTower": [
+        "Ouch. So it's come to this then?",
+        "This must be a rough seed if you're here."
+      ],
+      "EnterPendantDungeon": [
+        "I hope dipping into this pendant dungeon will be worth it for you.",
+        "Didn't you say that {0} had the {1}? You must be getting desperate."
+      ]
     }
   },
   "Requests": [
@@ -1974,7 +2042,8 @@
       "Phrases": [ "toggle sass off" ],
       "Response": [
         "Sorry, I can't let you do that.",
-        "Excuse me? I thought you wanted good content."
+        "Excuse me? I thought you wanted good content.",
+        "Error, sass increased by one step"
       ]
     },
     {
@@ -1988,7 +2057,7 @@
       ]
     },
     {
-      "Phrases": [ "ban Vivelin", "ban Fragger" ],
+      "Phrases": [ "ban Vivelin", "ban Fragger", "ban Matt Equals Coder" ],
       "Response": [
         "Please enter 75 digit alphanumeric password to continue.",
         "Access denied.",
@@ -2000,7 +2069,8 @@
       "Response": [
         "Seed going that badly?",
         "My time is now!",
-        "Sure if that is what you really want."
+        "Sure if that is what you really want.",
+        "Are you that desperate for new bits to do?"
       ]
     },
     {
@@ -2069,7 +2139,8 @@
       "Response": [
         "Thanks",
         "Are you sure about that?",
-        "Okay."
+        "Okay.",
+        "neat"
       ]
     },
     {
@@ -2140,6 +2211,15 @@
        "Im sorry you got rug pulled. Next time you should subscribe to my YouTube channel to get the best tips"
      ]
    },
+   {
+    "Phrases": [ "I wasn't scammed.", "Zora was not a scam", "Not Scammed" ],
+    "Response": [
+     "That only happens 18% of the time!",
+     "Huh",
+     "That wasn't supposed to happen",
+     "I guess you found all the 20 rupees already"
+     ]
+    },
     {
       "Phrases": [ "I'm sorry", "I apologize" ],
       "Response": [
@@ -2151,3 +2231,4 @@
     }
   ]
 }
+

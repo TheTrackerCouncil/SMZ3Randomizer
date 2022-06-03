@@ -1,8 +1,9 @@
-﻿<Window x:Class="Randomizer.App.TrackerWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:Randomizer.App.Controls" x:Class="Randomizer.App.TrackerWindow"
         mc:Ignorable="d"
         Title="Tracker — SMZ3 Cas' Randomizer"
         Height="250"
@@ -40,6 +41,9 @@
         <MenuItem Header="_Help"
                   x:Name="HelpMenuItem"
                   Click="HelpMenuItem_Click" />
+        <MenuItem Header="_Auto Tracker Help"
+                  x:Name="AutoTrackerMenuItem"
+                  Click="AutoTrackerMenuItem_Click" />
       </MenuItem>
     </Menu>
 
@@ -58,6 +62,19 @@
                      ToolTip="Elapsed time. Right click to pause/resume. Double click to reset."
                      MouseRightButtonUp="StatusBarTimer_MouseRightButtonUp"
                      MouseDoubleClick="StatusBarTimer_MouseDoubleClick" />
+
+      <StatusBarItem x:Name="StatusBarAutoTrackerEnabled"
+                     Style="{StaticResource AutoTrackerEnabledStatusBarItem}"
+                     ToolTip="Auto tracker enabled and waiting for a connection. Right click for options."
+                     Visibility="Collapsed" />
+      <StatusBarItem x:Name="StatusBarAutoTrackerConnected"
+                     Style="{StaticResource AutoTrackerConnectedStatusBarItem}"
+                     ToolTip="Auto tracker connected. Right click for options."
+                     Visibility="Collapsed" />
+      <StatusBarItem x:Name="StatusBarAutoTrackerDisabled"
+                     Style="{StaticResource AutoTrackerDisabledStatusBarItem}"
+                     ToolTip="Auto tracker disabled. Right click for options."
+                     Visibility="Visible" />
       <StatusBarItem x:Name="StatusBarGoMode"
                      Style="{StaticResource GoModeStatusBarItem}"
                      Content="GO MODE"
@@ -74,13 +91,14 @@
                      ToolTip="Voice recognition disabled. Double click to attempt to enable voice recognition."
                      MouseDoubleClick="StatusBarVoiceDisabled_MouseDoubleClick"
                      Visibility="Collapsed" />
+
       <StatusBarItem x:Name="StatusBarRecognizedPhrase">
-        <StatusBarItem.Content>
-          <TextBlock x:Name="RecognizedPhraseText"
+        <TextBlock x:Name="RecognizedPhraseText"
                      MaxWidth="250"
                      TextTrimming="WordEllipsis" />
-        </StatusBarItem.Content>
       </StatusBarItem>
+
     </StatusBar>
+    <Controls:LabeledControl Content="LabeledControl" HorizontalAlignment="Left" Height="203" Margin="128,-54,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="209"/>
   </Grid>
 </Window>

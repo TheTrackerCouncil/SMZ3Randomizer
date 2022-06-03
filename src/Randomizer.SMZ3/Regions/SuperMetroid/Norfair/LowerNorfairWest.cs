@@ -10,16 +10,22 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Missile (Gold Torizo)",
                 alsoKnownAs: "Gold Torizo - Drop down",
                 vanillaItem: ItemType.Missile,
-                access: items => Logic.CanUsePowerBombs(items) && items.SpaceJump && items.Super);
+                access: items => Logic.CanUsePowerBombs(items) && items.SpaceJump && items.Super,
+                memoryAddress: 0x8,
+                memoryFlag: 0x40);
             GoldTorizoCeiling = new(this, 71, 0x8F8E74, LocationType.Hidden,
                 name: "Super Missile (Gold Torizo)",
                 alsoKnownAs: "Golden Torizo - Ceiling",
                 vanillaItem: ItemType.Super,
                 access: items => Logic.CanDestroyBombWalls(items) && (items.Super || items.Charge) &&
-                        (Logic.CanAccessNorfairLowerPortal(items) || (items.SpaceJump && Logic.CanUsePowerBombs(items))));
+                        (Logic.CanAccessNorfairLowerPortal(items) || (items.SpaceJump && Logic.CanUsePowerBombs(items))),
+                memoryAddress: 0x8,
+                memoryFlag: 0x80);
             ScrewAttackRoom = new(this, 79, 0x8F9110, LocationType.Chozo,
                 name: "Screw Attack",
-                access: items => Logic.CanDestroyBombWalls(items) && (items.SpaceJump && Logic.CanUsePowerBombs(items) || Logic.CanAccessNorfairLowerPortal(items)));
+                access: items => Logic.CanDestroyBombWalls(items) && (items.SpaceJump && Logic.CanUsePowerBombs(items) || Logic.CanAccessNorfairLowerPortal(items)),
+                memoryAddress: 0x9,
+                memoryFlag: 0x80);
             MickeyMouseClubhouse = new(this, 73, 0x8F8F30, LocationType.Visible,
                 name: "Missile (Mickey Mouse room)",
                 alsoKnownAs: "Mickey Mouse Clubhouse",
@@ -29,7 +35,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                         (((items.CardLowerNorfairL1 || items.Gravity /*Vanilla or Reverse Lava Dive*/) && items.CardNorfairL2) /*Bubble Mountain*/ ||
                         (items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump)) /*Spikey Acid Snakes and Croc Escape*/ ||
                         /*Exit via GT fight and Portal*/
-                        (Logic.CanUsePowerBombs(items) && items.SpaceJump && (items.Super || items.Charge))));
+                        (Logic.CanUsePowerBombs(items) && items.SpaceJump && (items.Super || items.Charge))),
+                memoryAddress: 0x9,
+                memoryFlag: 0x2);
         }
 
         public override string Name => "Lower Norfair, West";

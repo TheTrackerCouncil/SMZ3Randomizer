@@ -11,42 +11,58 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Super Missile (pink Brinstar)",
                 alsoKnownAs: "Spore Spawn's item",
                 vanillaItem: ItemType.Super,
-                access: items => items.CardBrinstarBoss && Logic.CanPassBombPassages(items) && items.Super);
+                access: items => items.CardBrinstarBoss && Logic.CanPassBombPassages(items) && items.Super,
+                memoryAddress: 0x1,
+                memoryFlag: 0x40);
             PinkShaftTop = new(this, 21, 0x8F8608, LocationType.Visible,
                 name: "Missile (pink Brinstar top)",
                 alsoKnownAs: new[] { "Pink Shaft (top)", "Big Pink (top)" },
-                vanillaItem: ItemType.Missile); // Grapple or WallJump
+                vanillaItem: ItemType.Missile,
+                memoryAddress: 0x2,
+                memoryFlag: 0x20); // Grapple or WallJump
             PinkShaftBottom = new(this, 22, 0x8F860E, LocationType.Visible,
                 name: "Missile (pink Brinstar bottom)",
                 alsoKnownAs: new[] { "Pink Shaft (bottom)", "Big Pink (bottom)" },
-                vanillaItem: ItemType.Missile);
+                vanillaItem: ItemType.Missile,
+                memoryAddress: 0x2,
+                memoryFlag: 0x40);
             PinkShaftChozo = new(this, 23, 0x8F8614, LocationType.Chozo,
                 name: "Charge Beam",
                 alsoKnownAs: "Pink Shaft - Chozo",
                 vanillaItem: ItemType.Charge,
-                access: items => Logic.CanPassBombPassages(items));
+                access: items => Logic.CanPassBombPassages(items),
+                memoryAddress: 0x2,
+                memoryFlag: 0x80);
             MissionImpossible = new(this, 24, 0x8F865C, LocationType.Visible,
                 name: "Power Bomb (pink Brinstar)",
                 alsoKnownAs: new[] { "Mission: Impossible", "Pink Brinstar Power Bomb Room" },
                 vanillaItem: ItemType.PowerBomb,
-                access: items => Logic.CanUsePowerBombs(items) && items.Super && Logic.HasEnergyReserves(items, 1));
+                access: items => Logic.CanUsePowerBombs(items) && items.Super && Logic.HasEnergyReserves(items, 1),
+                memoryAddress: 0x3,
+                memoryFlag: 0x1);
             GreenHillZone = new(this, 25, 0x8F8676, LocationType.Visible,
                 name: "Missile (green Brinstar pipe)",
                 alsoKnownAs: new[] { "Green Hill Zone", "Jungle slope" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.Morph &&
-                        (items.PowerBomb || items.Super || Logic.CanAccessNorfairUpperPortal(items)));
+                        (items.PowerBomb || items.Super || Logic.CanAccessNorfairUpperPortal(items)),
+                memoryAddress: 0x3,
+                memoryFlag: 0x2);
             Waterway = new(this, 33, 0x8F87FA, LocationType.Visible,
                 name: "Energy Tank, Waterway",
                 alsoKnownAs: "Waterway",
                 vanillaItem: ItemType.ETank,
                 access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && items.SpeedBooster &&
-                        (Logic.HasEnergyReserves(items, 1) || items.Gravity));
+                        (Logic.HasEnergyReserves(items, 1) || items.Gravity),
+                memoryAddress: 0x4,
+                memoryFlag: 0x2);
             WaveBeamGlitchRoom = new(this, 35, 0x8F8824, LocationType.Visible,
                 name: "Energy Tank, Brinstar Gate",
                 alsoKnownAs: new[] { "Hoptank Room", "Wave Beam Glitch room" },
                 vanillaItem: ItemType.ETank,
-                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items) && items.Wave && Logic.HasEnergyReserves(items, 1)); // Grapple or Walljump
+                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items) && items.Wave && Logic.HasEnergyReserves(items, 1),
+                memoryAddress: 0x4,
+                memoryFlag: 0x8); // Grapple or Walljump
         }
 
         public override string Name => "Pink Brinstar";

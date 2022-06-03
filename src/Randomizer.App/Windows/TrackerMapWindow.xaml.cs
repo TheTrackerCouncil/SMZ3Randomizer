@@ -63,7 +63,7 @@ namespace Randomizer.App
             }
 
             TrackerMapViewModel = new TrackerMapViewModel();
-            TrackerMapViewModel.MapNames = Maps.Select(x => x.Name).ToList();
+            TrackerMapViewModel.MapNames = Maps.Select(x => x.ToString()).ToList();
             DataContext = TrackerMapViewModel;
 
             App.RestoreWindowPositionAndSize(this);
@@ -99,6 +99,25 @@ namespace Randomizer.App
         }
 
         /// <summary>
+        /// Updates the displayed map
+        /// </summary>
+        /// <param name="mapName">The name of the map to display</param>
+        public void UpdateMap(string mapName)
+        {
+            UpdateMap(Maps.First(x => x.ToString() == mapName));
+        }
+
+        /// <summary>
+        /// Updates the displayed map
+        /// </summary>
+        /// <param name="map">The map to display</param>
+        public void UpdateMap(TrackerMap map)
+        {
+            CurrentMap = map;
+            TrackerMapViewModel.CurrentMap = CurrentMap;
+        }
+
+        /// <summary>
         /// When the canvas's parent grid size changes. Used for updating the
         /// canvas size to the correct proportions.
         /// </summary>
@@ -121,8 +140,7 @@ namespace Randomizer.App
                 _logger.LogError("Map json was not loaded successfully");
                 return;
             }
-            CurrentMap = Maps.First();
-            TrackerMapViewModel.CurrentMap = CurrentMap;
+            UpdateMap(Maps.Last());
         }
 
         /// <summary>
@@ -133,8 +151,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void MapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            CurrentMap = Maps.ElementAt(MapComboBox.SelectedIndex);
-            TrackerMapViewModel.CurrentMap = CurrentMap;
+            UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex));
         }
 
         private void PropertyChanged(object sender, PropertyChangedEventArgs e)
