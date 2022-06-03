@@ -41,6 +41,7 @@
           "I'm interested in this",
           "Yeah, rip.",
           "It's time to get serious.",
+          "I hope this was intentional because things were going well",
           [ "Tickets only. Next!", 0.5 ]
         ],
         "2": [
@@ -73,7 +74,7 @@
       }
     },
     {
-      "Name": "Fire Rod",
+      "Name": [ "Fire Rod", "Spicy Rod" ],
       "InternalItemType": 7,
       "Column": 0,
       "Row": 1,
@@ -124,6 +125,7 @@
     {
       "Name": [
         "Hookshot",
+        "Hooking Shot",
         [ "Second best grappling armament", 0.2 ]
       ],
       "InternalItemType": 10,
@@ -218,7 +220,7 @@
       "MemoryAddress": 73
     },
     {
-      "Name": [ "Lamp", "Lantern" ],
+      "Name": [ "Lamp", "Lantern", "The thing that helps you see in the dark" ],
       "InternalItemType": 18,
       "Column": 0,
       "Row": 2,
@@ -436,7 +438,8 @@
     {
       "Name": [
         "Mushroom",
-        [ "Shrooms", 0.2 ]
+        [ "Shrooms", 0.2 ],
+        [ "Psilocybe cubensis", 0.1]
       ],
       "InternalItemType": 41,
       "Column": 5,
@@ -466,7 +469,7 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Really?", "I don't get paid enough for this.", "Do you think I've got nothing better to do?" ]
+        "1": [ "Really?", "I don't get paid enough for this.", "Do you think I've got nothing better to do?", "Why are you wasting my time?" ]
       },
       "Hints": [
         "It's just money.",
@@ -491,7 +494,7 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Seriously?", "This is not the con-tent you are looking for." ],
+        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place." ],
         "2": null
       },
       "Hints": [
@@ -705,6 +708,7 @@
           "Toggled Tiddy Mitts on,",
           "Congratulations with your new Tiddy Mitts.",
           [ "Toggled Itty Bitty Titty Mitty on", 0.2 ],
+          [ "Remember that time I called these boots? To be fair they are boots but for your hands. Toggled Mitts on.", 0.2 ],
           [ "Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.", 0.2 ]
         ]
       },
@@ -908,7 +912,7 @@
       ]
     },
     {
-      "Name": [ "Varia Suit", "Various Suits", "Barrier Suit" ],
+      "Name": [ "Varia Suit", "Various Suits", "Barrier Suit", "Shoulder Orbs" ],
       "InternalItemType": 178,
       "Column": 6,
       "Row": 2,
@@ -918,7 +922,7 @@
       ]
     },
     {
-      "Name": "Spring Ball",
+      "Name": [ "Spring Ball", "Bouncy Ball" ],
       "InternalItemType": 179,
       "Column": 8,
       "Row": 1,
@@ -927,7 +931,7 @@
       ]
     },
     {
-      "Name": [ "Morphing Ball", "Morph Ball", "Morph" ],
+      "Name": [ "Morphing Ball", "Morph Ball", "Morph", "The Other Orb" ],
       "InternalItemType": 180,
       "Column": 6,
       "Row": 1,
@@ -935,7 +939,7 @@
         "It's round."
       ],
       "WhenTracked": {
-        "1": [ "Toggled Morph Ball on", "It's morphin' time!" ]
+        "1": [ "Toggled Morph Ball on", "It's morphin' time!", "Time to becomne orb" ]
       }
     },
     {
@@ -950,7 +954,8 @@
     {
       "Name": [
         "Gravity Suit",
-        [ "Pancakes", 0.05 ]
+        [ "Pancakes", 0.05 ],
+        [ "Stack of Pancakes", 0.05 ]
       ],
       "InternalItemType": 182,
       "Column": 7,
@@ -961,7 +966,7 @@
       ]
     },
     {
-      "Name": [ "Hi-Jump Boots", "Hi-Jump" ],
+      "Name": [ "Hi-Jump Boots", "Hi-Jump", "Air Jordans" ],
       "InternalItemType": 183,
       "Column": 8,
       "Row": 2,
@@ -986,7 +991,8 @@
         "Morph Ball Bombs",
         "Not so powerful bombs",
         [ "IBJ device", 0.5 ],
-        [ "Infinite Bomb Jump device", 0.5 ]
+        [ "Infinite Bomb Jump device", 0.5 ],
+        [ "That thing you forget you have", 0.5 ]
       ],
       "InternalItemType": 185,
       "Column": 7,
@@ -1037,7 +1043,8 @@
     {
       "Name": [
         [ "Spazer", 0 ],
-        "Spayzer"
+        "Spayzer",
+        [ "Spaaaaaaaaaaazer", 0.5 ]
       ],
       "InternalItemType": 190,
       "Column": 9,
@@ -1130,9 +1137,16 @@
       "Name": [
         "Power Bomb",
         [ "Power Bombs", 0 ],
+        [ "Explosive Hamburger", 0.5 ],
+        [ "Hamburger", 0.5 ],
         "Powerful Bombs"
       ],
-      "Plural": [ "Power Bombs", "Powerful Bombs" ],
+      "Plural": [
+       "Power Bombs", 
+       "Powerful Bombs", 
+       [ "Explosive Hamburgers", 0.5 ],
+       [ "Hamburgers", 0.5 ]
+      ],
       "InternalItemType": 196,
       "Multiple": true,
       "CounterMultiplier": 5,
@@ -1292,6 +1306,7 @@
       "Good evening",
       "Let's roll.",
       "Let's get ready to rumble.",
+      "I have also opened up my drink",
       [ "My fate is sealed. I have <break strength='weak'/> no choice.", 0.5 ],
       [ "You have selected Tracker as your computer's default voice.", 0.8 ],
       [ "<voice gender='male'><prosody rate='slow'>Hey.</prosody></voice>", 0.05 ],
@@ -1321,6 +1336,7 @@
       "Could you repeat that?",
       "What did you say?",
       "What was that?",
+      "Please repeat",
       [ "English motherfucker, do you speak it?", 0.05 ]
     ],
     "TrackedItem": [
@@ -1407,11 +1423,13 @@
     "ShaktoolAvailable": [
       "Hey tracker, track Shaktool Go Mode",
       "I wonder how Shaktool is doing",
+      "I hear its time to dig, underwater and maybe get something.",
       [ "It's time to get serious.", 0.5 ]
     ],
     "PegWorldAvailable": [
       "Can we go to Peg World?",
-      "I hear Peg World is beautiful this time of year."
+      "I hear Peg World is beautiful this time of year.",
+      "I think it is time we use our season tickets to Peg World."
     ],
     "PegWorldModeOn": [
       "Toggled Peg World Go Mode <break time='1s'/> on."
@@ -1424,7 +1442,8 @@
       "Let's visit Shaktool next."
     ],
     "DungeonRewardMarked": [
-      "Marked {0} as {1}."
+      "Marked {0} as {1}.",
+      "{0} is now {1}."
     ],
     "RemainingDungeonsMarked": [
       "Marked remaining dungeons as {0}.",
@@ -1438,6 +1457,7 @@
     ],
     "DungeonCleared": [
       "Cleared all items from {0}",
+      "{0} is now empty.",
       "Marked {0} as all clear"
     ],
     "DungeonAlreadyCleared": [
@@ -1459,6 +1479,7 @@
       "Marked {1} as defeated.",
       "Congratulations on beating off {1}.",
       "RIP {1}",
+      "Pouring one out for {1}.",
       [ "f", 0.05 ]
     ],
     "DungeonBossAlreadyCleared": [
@@ -1468,7 +1489,8 @@
     ],
     "DungeonBossUncleared": [
       "Marked {1} as still alive.",
-      "Revived {1}."
+      "Revived {1}.",
+      "{1} lives again!"
     ],
     "DungeonBossNotYetCleared": [
       "But you never defeated {1} in the first place."
@@ -1479,7 +1501,8 @@
       "Someone is trying extra hard today."
     ],
     "DungeonRequirementMarked": [
-      "Marked {0} as required for {1}"
+      "Marked {0} as required for {1}",
+      "{0} is now known for {1)."
     ],
     "DungeonRequirementInvalid": [
       "{0} doesn't need medallions",
@@ -1984,7 +2007,10 @@
         [ "Insert placeholder text here", 0.1 ]
       ],
       "jealous": [
-        "Have you been seeing other trackers on the side?"
+        "Have you been seeing other trackers on the side?",
+        "Why is it you only ask me this when you want something from me?",
+        "I'm not talking with you right now",
+        "I hear what you say about me behind my back"
       ]
     },
     "AutoTracker": {
@@ -2062,6 +2088,13 @@
         "Access denied.",
         "Ah <break time='100ms'/> ah <break time='100ms'/> aah, you didn't say the magic word.",
         "No."
+      ]
+    },    {
+      "Phrases": [ "ban Diabetus" ],
+      "Response": [
+        "Seed going that badly?",
+        "My time is now!",
+        "Sure if that is what you really want."
       ]
     },
     {
@@ -2191,6 +2224,16 @@
         "<break time='2s'/> Pfft."
       ]
     },
+    {
+      "Phrases": [ "I got scammed.", "Zora was a scam" ],
+      "Response": [
+       "All my apes. Gone.",
+       "Did you at least get to use the slurp juice?",
+       "Oh. Did you go all in on a shitcoin?",
+       "I'm sorry they fundged your tokens.",
+       "Im sorry you got rug pulled. Next time you should subscribe to my YouTube channel to get the best tips"
+     ]
+   },
     {
       "Phrases": [ "I'm sorry", "I apologize" ],
       "Response": [
