@@ -466,7 +466,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected void ZeldaStateChecks(AutoTrackerMessage message)
         {
             AutoTrackerZeldaState state = new(message);
+#if DEBUG
             _logger.LogInformation(state.ToString());
+#endif
             if (_previousZeldaState == null)
             {
                 _previousZeldaState = state;
@@ -540,7 +542,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected void MetroidStateChecks(AutoTrackerMessage message)
         {
             AutoTrackerMetroidState state = new(message);
+#if DEBUG
             _logger.LogInformation(state.ToString());
+#endif
             if (_previousMetroidState == null)
             {
                 _previousMetroidState = state;
