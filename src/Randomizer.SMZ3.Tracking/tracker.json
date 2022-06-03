@@ -266,6 +266,12 @@
       "MemoryFlag": 2
     },
     {
+      "Name": [ "Duck", "Bird", "Burb" ],
+      "InternalItemType": 0,
+      "Column": 2,
+      "Row": 2
+    },
+    {
       "Name": [
         "Cane of Somaria",
         "Cane of Technical Prowess",

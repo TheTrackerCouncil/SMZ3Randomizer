@@ -540,6 +540,52 @@ namespace Randomizer.App
                 menu.Items.Add(toggleSilverArrows);
             }
 
+            if (item.InternalItemType == ItemType.Flute || "Duck".Equals(item.Name[0], StringComparison.OrdinalIgnoreCase))
+            {
+                var flute = Tracker.Items.SingleOrDefault(x => x.InternalItemType == ItemType.Flute);
+                var toggleFlute = new MenuItem
+                {
+                    Header = flute.TrackingState > 0 ? "Untrack Flute" : "Track Flute",
+                    Icon = new Image
+                    {
+                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", "flute.png")))
+                    }
+                };
+                toggleFlute.Click += (sender, e) =>
+                {
+                    if (flute.TrackingState > 0)
+                        flute.Untrack();
+                    else
+                        flute.Track();
+                    Tracker.UpdateTrackerProgression = true;
+                    RefreshGridItems();
+                };
+
+                var duck = Tracker.Items.SingleOrDefault(x => "Duck".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+                var toggleDuck = new MenuItem
+                {
+                    Header = duck.TrackingState > 0 ? "Untrack Duck" : "Track Duck",
+                    Icon = new Image
+                    {
+                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", "duck.png")))
+                    }
+                };
+                toggleDuck.Click += (sender, e) =>
+                {
+                    if (duck.TrackingState > 0)
+                        duck.Untrack();
+                    else
+                        duck.Track();
+                    Tracker.UpdateTrackerProgression = true;
+                    RefreshGridItems();
+                };
+
+                menu.Items.Add(toggleFlute);
+                menu.Items.Add(toggleDuck);
+            }
+
             return menu.Items.Count > 0 ? menu : null;
         }
 
