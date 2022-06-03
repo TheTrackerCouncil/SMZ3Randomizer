@@ -18,9 +18,9 @@ namespace Randomizer.App.Windows
     /// <summary>
     /// Interaction logic for AutotrackerWindow.xaml
     /// </summary>
-    public partial class AutotrackerWindow : Window
+    public partial class AutoTrackerWindow : Window
     {
-        public AutotrackerWindow()
+        public AutoTrackerWindow()
         {
             InitializeComponent();
         }

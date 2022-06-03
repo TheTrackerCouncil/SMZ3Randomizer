@@ -640,8 +640,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public ChatConfig Chat { get; init; } = new();
 
         /// <summary>
-        /// Gets the configured phrases for autotracking.
+        /// Gets the configured phrases for auto tracking.
         /// </summary>
-        public AutotrackerConfig Autotracker { get; init; } = new();
+        public AutoTrackerConfig AutoTracker { get; init; } = new();
     }
 }

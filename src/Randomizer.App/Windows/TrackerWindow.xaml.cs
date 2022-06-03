@@ -49,7 +49,7 @@ namespace Randomizer.App
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
-        private AutotrackerWindow _autotrackerHelpWindow;
+        private AutoTrackerWindow _autoTrackerHelpWindow;
         private TrackerLocationSyncer _locationSyncer;
         private RomGenerator _romGenerator;
 
@@ -716,6 +716,10 @@ namespace Randomizer.App
                 TrackerStatusBar.Background = Tracker.GoMode ? Brushes.Green : null;
                 StatusBarGoMode.Visibility = Tracker.GoMode ? Visibility.Visible : Visibility.Collapsed;
             });
+            Tracker.MapUpdated += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                _trackerMapWindow.UpdateMap(Tracker.CurrentMap);
+            });
         }
 
         private ContextMenu CreateAutoTrackerMenu(bool enableAutoTracker)
@@ -752,14 +756,14 @@ namespace Randomizer.App
 
             var folder = new MenuItem
             {
-                Header = "Open Autotracker Scripts Folder",
+                Header = "Open Auto Tracker Scripts Folder",
             };
             folder.Click += (sender, e) =>
             {
-                var path = Options.AutotrackerScriptsOutputPath;
+                var path = Options.AutoTrackerScriptsOutputPath;
                 if (string.IsNullOrEmpty(path))
                 {
-                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutotrackerScripts");
+                    path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
                 }
                 path = Path.Combine(path, "32bit");
                 Process.Start("explorer.exe", $"/select,\"{path}\"");
@@ -768,11 +772,11 @@ namespace Randomizer.App
 
             var help = new MenuItem
             {
-                Header = "Open Autotracker Help",
+                Header = "Open Auto Tracker Help",
             };
             help.Click += (sender, e) =>
             {
-                OpenAutotrackerHelp();
+                OpenAutoTrackerHelp();
             };
             menu.Items.Add(help);
 
@@ -891,9 +895,9 @@ namespace Randomizer.App
             }
         }
 
-        private void AutotrackerMenuItem_Click(object sender, RoutedEventArgs e)
+        private void AutoTrackerMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            OpenAutotrackerHelp();
+            OpenAutoTrackerHelp();
         }
 
         private async void LoadSavedStateMenuItem_Click(object sender, RoutedEventArgs e)
@@ -1076,16 +1080,16 @@ namespace Randomizer.App
         /// </summary>
         public event EventHandler SavedState;
 
-        protected void OpenAutotrackerHelp()
+        protected void OpenAutoTrackerHelp()
         {
-            if (Application.Current.Windows.OfType<AutotrackerWindow>().Any())
+            if (Application.Current.Windows.OfType<AutoTrackerWindow>().Any())
             {
-                _autotrackerHelpWindow.Activate();
+                _autoTrackerHelpWindow.Activate();
             }
             else
             {
-                _autotrackerHelpWindow = new AutotrackerWindow();
-                _autotrackerHelpWindow.Show();
+                _autoTrackerHelpWindow = new AutoTrackerWindow();
+                _autoTrackerHelpWindow.Show();
             }
         }
     }

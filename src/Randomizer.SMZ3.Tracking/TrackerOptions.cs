@@ -77,5 +77,10 @@ namespace Randomizer.SMZ3.Tracking
         /// If tracker can create chat polls
         /// </summary>
         public bool PollCreationEnabled { get; set; }
+
+        /// <summary>
+        /// If auto tracker should change maps when changing locations
+        /// </summary>
+        public bool AutoTrackerChangeMap { get; set; }
     }
 }

@@ -41,9 +41,9 @@
         <MenuItem Header="_Help"
                   x:Name="HelpMenuItem"
                   Click="HelpMenuItem_Click" />
-        <MenuItem Header="_Autotracker Help"
-                  x:Name="AutotrackerMenuItem"
-                  Click="AutotrackerMenuItem_Click" />
+        <MenuItem Header="_Auto Tracker Help"
+                  x:Name="AutoTrackerMenuItem"
+                  Click="AutoTrackerMenuItem_Click" />
       </MenuItem>
     </Menu>
 
@@ -65,15 +65,15 @@
 
       <StatusBarItem x:Name="StatusBarAutoTrackerEnabled"
                      Style="{StaticResource AutoTrackerEnabledStatusBarItem}"
-                     ToolTip="Autotracker enabled and waiting for a connection. Right click for options."
+                     ToolTip="Auto tracker enabled and waiting for a connection. Right click for options."
                      Visibility="Collapsed" />
       <StatusBarItem x:Name="StatusBarAutoTrackerConnected"
                      Style="{StaticResource AutoTrackerConnectedStatusBarItem}"
-                     ToolTip="Autotracker connected. Right click for options."
+                     ToolTip="Auto tracker connected. Right click for options."
                      Visibility="Collapsed" />
       <StatusBarItem x:Name="StatusBarAutoTrackerDisabled"
                      Style="{StaticResource AutoTrackerDisabledStatusBarItem}"
-                     ToolTip="Autotracker disabled. Right click for options."
+                     ToolTip="Auto tracker disabled. Right click for options."
                      Visibility="Visible" />
       <StatusBarItem x:Name="StatusBarGoMode"
                      Style="{StaticResource GoModeStatusBarItem}"

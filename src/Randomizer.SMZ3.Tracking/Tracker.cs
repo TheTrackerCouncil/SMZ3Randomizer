@@ -166,6 +166,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler? StateLoaded;
 
         /// <summary>
+        /// Occurs when the map has been updated
+        /// </summary>
+        public event EventHandler? MapUpdated;
+
+        /// <summary>
         /// Set when the progression needs to be updated for the current tracker
         /// instance
         /// </summary>
@@ -245,6 +250,16 @@ namespace Randomizer.SMZ3.Tracking
         public GeneratedRom Rom { get; private set; }
 
         /// <summary>
+        /// The region the player is currently in
+        /// </summary>
+        public RegionInfo CurrentRegion { get; private set; }
+
+        /// <summary>
+        /// The map to display for the player
+        /// </summary>
+        public string CurrentMap { get; private set; }
+
+        /// <summary>
         /// Gets a string describing tracker's mood.
         /// </summary>
         public string Mood
@@ -275,7 +290,7 @@ namespace Randomizer.SMZ3.Tracking
         public bool IsDirty { get; set; }
 
         /// <summary>
-        /// The AutoTracker for the Tracker
+        /// The Auto Tracker for the Tracker
         /// </summary>
         public AutoTrackerModule AutoTracker { get; set; }
 
@@ -1908,6 +1923,40 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.PegWorldModeDone);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
             AddUndo(() => PegWorldMode = true);
+        }
+
+        /// <summary>
+        /// Updates the region that the player is in
+        /// </summary>
+        /// <param name="region">The region the player is in</param>
+        /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
+        public void UpdateRegion(Region region, bool updateMap = false)
+        {
+            UpdateRegion(WorldInfo.Regions.First(x => x.GetRegion(World) == region), updateMap);
+        }
+
+        /// <summary>
+        /// Updates the region that the player is in
+        /// </summary>
+        /// <param name="region">The region the player is in</param>
+        /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
+        public void UpdateRegion(RegionInfo region, bool updateMap = false)
+        {
+            CurrentRegion = region;
+            if (updateMap)
+            {
+                UpdateMap(region.MapName);
+            }
+        }
+
+        /// <summary>
+        /// Updates the map to display for the user
+        /// </summary>
+        /// <param name="map">The name of the map</param>
+        public void UpdateMap(string map)
+        {
+            CurrentMap = map;
+            MapUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         internal void RestartIdleTimers()

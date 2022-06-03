@@ -46,6 +46,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         protected const string RegionKey = "RegionName";
 
+        /// <summary>
+        /// Gets the semantic result key used to identify the name of a map.
+        /// </summary>
+        protected const string MapKey = "Map";
+
         private readonly Dictionary<string, IEnumerable<string>> _syntax = new();
 
         /// <summary>

@@ -7,50 +7,58 @@
       ],
       "Hints": [
         "Samus might have been there before."
-      ]
+      ],
+      "MapName": "Brinstar"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.GreenBrinstar",
       "Name": [
         "Green Brinstar"
-      ]
+      ],
+      "MapName": "Brinstar"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.KraidsLair",
       "Name": [
         "Kraid's Lair",
         "Warehouse"
-      ]
+      ],
+      "MapName": "Brinstar"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.PinkBrinstar",
       "Name": [
         "Pink Brinstar"
-      ]
+      ],
+      "MapName": "Brinstar"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.RedBrinstar",
       "Name": [
         "Red Brinstar"
-      ]
+      ],
+      "MapName": "Brinstar"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.CentralCrateria",
       "Name": [
         "Central Crateria"
-      ]
+      ],
+      "MapName": "Crateria"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.EastCrateria",
       "Name": [
         "East Crateria"
-      ]
+      ],
+      "MapName": "Crateria"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.WestCrateria",
       "Name": [
         "West Crateria"
-      ]
+      ],
+      "MapName": "Crateria"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.InnerMaridia",
@@ -60,7 +68,8 @@
       "Hints": [
         "You should go see Shaktool when you're in the area.",
         "It's in a wet place."
-      ]
+      ],
+      "MapName": "Maridia"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.OuterMaridia",
@@ -69,7 +78,8 @@
       ],
       "Hints": [
         "It's in a wet place."
-      ]
+      ],
+      "MapName": "Maridia"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.LowerNorfairEast",
@@ -78,37 +88,43 @@
       ],
       "Hints": [
         "I heard Ridley hangs out around there."
-      ]
+      ],
+      "MapName": "Norfair"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.LowerNorfairWest",
       "Name": [
         "Lower Norfair, West"
-      ]
+      ],
+      "MapName": "Norfair"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairCrocomire",
       "Name": [
         "Upper Norfair, Crocomire"
-      ]
+      ],
+      "MapName": "Norfair"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairEast",
       "Name": [
         "Upper Norfair, East"
-      ]
+      ],
+      "MapName": "Norfair"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairWest",
       "Name": [
         "Upper Norfair, West"
-      ]
+      ],
+      "MapName": "Norfair"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.WreckedShip",
       "Name": [
         "Wrecked Ship"
-      ]
+      ],
+      "MapName": "Wrecked Ship"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower",
@@ -116,7 +132,8 @@
         "Castle Tower",
         "Agahnim's Tower",
         "Hyrule Castle Tower"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
@@ -125,13 +142,15 @@
       ],
       "Hints": [
         "It's in a wet place."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
       "Name": [
         "Dark World North East"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
@@ -140,25 +159,29 @@
       ],
       "Hints": [
         "Check around the villages."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth",
       "Name": [
         "Dark World South"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast",
       "Name": [
         "Dark World Death Mountain East"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
       "Name": [
         "Dark World Death Mountain West"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DesertPalace",
@@ -168,13 +191,15 @@
       ],
       "Hints": [
         "I don't like sand. It's coarse, rough and irritating, and it gets everywhere."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.EasternPalace",
       "Name": [
         "Eastern Palace"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
@@ -183,13 +208,15 @@
       ],
       "Hints": [
         "I hope you don't need it."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.HyruleCastle",
       "Name": [
         "Hyrule Castle"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.IcePalace",
@@ -199,25 +226,29 @@
       "Hints": [
         "Are you going to break the ice?",
         "You're not sending ME to cooler!"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast",
       "Name": [
         "Light World Death Mountain East"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest",
       "Name": [
         "Light World Death Mountain West"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
       "Name": [
         "Light World North East"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest",
@@ -226,13 +257,15 @@
       ],
       "Hints": [
         "Check around the villages."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth",
       "Name": [
         "Light World South"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
@@ -243,21 +276,24 @@
         "It's pretty miserable.",
         "It's in a wet place.",
         "You need a medallion to get in there."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
       "Name": [
         "Palace of Darkness",
         "Palace of Dorkness"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SkullWoods",
       "Name": [
         "Skull Woods",
         "Skill Woods"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace",
@@ -266,19 +302,22 @@
       ],
       "Hints": [
         "It's in a wet place."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.ThievesTown",
       "Name": [
         "Thieves' Town"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TowerOfHera",
       "Name": [
         "Tower of Hera"
-      ]
+      ],
+      "MapName": "Zelda Combined"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
@@ -288,7 +327,8 @@
       ],
       "Hints": [
         "You need a medallion to get in there."
-      ]
+      ],
+      "MapName": "Zelda Combined"
     }
   ],
   "Dungeons": [

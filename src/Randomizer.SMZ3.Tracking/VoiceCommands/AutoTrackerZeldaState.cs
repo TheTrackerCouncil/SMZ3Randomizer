@@ -33,9 +33,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         public int LinkState => _message.ReadUInt8(0x5D);
 
+        public int OverworldValue => _message.ReadUInt8(0x7B);
+
         public override string ToString()
         {
-            return $"CurrentRoom: {CurrentRoom} | PreviousRoom: {PreviousRoom} | State: {State} | Substate: {Substate} | LinkX: {LinkX} | LinkY: {LinkY} | LinkState: {LinkState}";
+            return $"Room: {PreviousRoom}->{CurrentRoom} | State: {State}/{Substate} | X,Y: {LinkX},{LinkY} | LinkState: {LinkState} | OW: {OverworldValue}";
         }
     }
 }

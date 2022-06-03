@@ -161,7 +161,10 @@
       ]
     },
     {
-      "Name": "Zelda Combined",
+      "Name": [
+        "Zelda Combined",
+        "Hyrule"
+      ],
       "Image": "lttp_both.png",
       "Width": 4064,
       "Height": 2007,
@@ -445,7 +448,11 @@
       ]
     },
     {
-      "Name": "Metroid Combined",
+      "Name": [
+        "Metroid Combined",
+        "Zebes",
+        "Zeebs"
+      ],
       "Image": "map_full.png",
       "Width": 2288,
       "Height": 1916,
@@ -545,7 +552,10 @@
       ]
     },
     {
-      "Name": "SMZ3 Combined",
+      "Name": [
+        "SMZ3 Combined",
+        "Everything"
+      ],
       "Image": "smz3_fullmap.png",
       "Width": 3246,
       "Height": 1916,

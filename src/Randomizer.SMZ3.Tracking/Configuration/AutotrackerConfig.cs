@@ -6,13 +6,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     /// <summary>
     /// Provides the phrases for chat integration.
     /// </summary>
-    public class AutotrackerConfig
+    public class AutoTrackerConfig
     {
         /// <summary>
         /// Gets the phrases to respond with when connected to to emulator.
         /// </summary>
         public SchrodingersString WhenConnected { get; init; }
-            = new("Autotracker connected");
+            = new("Auto tracker connected");
 
         /// <summary>
         /// Gets the phrases to respond with when the game is started.

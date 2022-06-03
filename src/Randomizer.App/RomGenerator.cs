@@ -85,7 +85,7 @@ namespace Randomizer.App
 #else
                     var autoTrackerSourcePath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\AutotrackerScripts");
 #endif
-                    var autoTrackerDestPath = options.AutotrackerScriptsOutputPath;
+                    var autoTrackerDestPath = options.AutoTrackerScriptsOutputPath;
 
                     if (!autoTrackerSourcePath.Equals(autoTrackerDestPath, StringComparison.OrdinalIgnoreCase))
                     {

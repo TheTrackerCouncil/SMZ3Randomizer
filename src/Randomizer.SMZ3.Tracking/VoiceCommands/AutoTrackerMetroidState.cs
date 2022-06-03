@@ -29,9 +29,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         public int ReserveTanks => _message.ReadUInt8(0x7E09D6 - 0x7E0750);
 
+        public int SamusX => _message.ReadUInt8(0x7E0AF6 - 0x7E0750);
+
+        public int SamusY => _message.ReadUInt8(0x7E0AFA - 0x7E0750);
+
+
         public override string ToString()
         {
-            return $"CurrentRoom: {CurrentRoom} | CurrentRoomInRegion: {CurrentRoomInRegion} | CurrentRegion: {CurrentRegion} | Health: {Health} | ReserveTanks: {ReserveTanks}";
+            return $"CurrentRoom: {CurrentRoom} | CurrentRoomInRegion: {CurrentRoomInRegion} | CurrentRegion: {CurrentRegion} | Health: {Health},{ReserveTanks} | X,Y {SamusX},{SamusY}";
         }
     }
 }

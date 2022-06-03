@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <param name="width">The width of the map image in pixels</param>
         /// <param name="height">The height of the map image in pixels</param>
         /// <param name="regions">A list of all regions that are a part of this map</param>
-        public TrackerMap(string name, string image, int width, int height, IReadOnlyCollection<TrackerMapLocation> regions)
+        public TrackerMap(SchrodingersString name, string image, int width, int height, IReadOnlyCollection<TrackerMapLocation> regions)
         {
             Name = name;
             Image = image;
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// The name of the map in the dropdown menu
         /// </summary>
-        public string Name { get; }
+        public SchrodingersString Name { get; }
 
         /// <summary>
         /// The image file to use for the map
@@ -60,5 +60,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// List of all actual locations that are underneath the region
         /// </summary>
         public List<TrackerMapLocation> FullLocations { get; set; }
+
+        /// <summary>
+        /// Returns a string representation of the map.
+        /// </summary>
+        /// <returns>A string representation of this map.</returns>
+        public override string? ToString() => Name[0];
     }
 }

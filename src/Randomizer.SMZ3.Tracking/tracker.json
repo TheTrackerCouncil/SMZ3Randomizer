@@ -457,7 +457,7 @@
     {
       "Name": [ "One Rupee", "Green Rupee" ],
       "InternalItemType": 52,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Really?", "I don't get paid enough for this.", "Do you think I've got nothing better to do?" ]
@@ -471,7 +471,7 @@
     {
       "Name": [ "Five Rupees", "Blue Rupee" ],
       "InternalItemType": 53,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -482,7 +482,7 @@
     {
       "Name": [ "Twenty Rupees", "Red Rupee", "Big 20" ],
       "InternalItemType": 54,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Seriously?", "This is not the con-tent you are looking for." ],
@@ -518,7 +518,7 @@
     {
       "Name": "One Hundred Rupees",
       "InternalItemType": 64,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -529,7 +529,7 @@
     {
       "Name": "Fifty Rupees",
       "InternalItemType": 65,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -548,7 +548,7 @@
     {
       "Name": [ "Ten Arrows", "Ten Sticks", "Sticks" ],
       "InternalItemType": 68,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "You could find it in real life."
@@ -557,7 +557,7 @@
     {
       "Name": "Three Hundred Rupees",
       "InternalItemType": 70,
-      "Artice": "",
+      "Article": "",
       "Multiple": true,
       "Hints": [
         "It's just money.",
@@ -579,7 +579,7 @@
     {
       "Name": "Half Magic",
       "InternalItemType": 78,
-      "Artice": "",
+      "Article": "",
       "Column": 3,
       "Row": 4,
       "Hints": [
@@ -590,13 +590,13 @@
     {
       "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
       "InternalItemType": 81,
-      "Artice": "",
+      "Article": "",
       "Multiple": true
     },
     {
       "Name": [ "+5 Arrow Capacity", "+5 Stick Capacity", "Arrow Capacity", "Stick Capacity", "Arrow Carrying Knowledge", "Stick Carrying Knowledge" ],
       "InternalItemType": 83,
-      "Artice": "",
+      "Article": "",
       "Multiple": true
     },
     {
@@ -840,7 +840,7 @@
     {
       "Name": "Ice Palace Key",
       "InternalItemType": 169,
-      "Artice": "an",
+      "Article": "an",
       "Multiple": true,
       "Hints": [
         "It opens doors."
@@ -1053,7 +1053,7 @@
       "Name": [ "Energy Tank", "E-Tank" ],
       "Plural": [ "Energy Tanks", "E-Tanks" ],
       "InternalItemType": 192,
-      "Artice": "an",
+      "Article": "an",
       "Multiple": true,
       "Column": 8,
       "Row": 3,
@@ -1981,10 +1981,10 @@
         "Have you been seeing other trackers on the side?"
       ]
     },
-    "Autotracker": {
+    "AutoTracker": {
       "WhenConnected": [
-        "Autotracker connected.",
-        "Autotracker online.",
+        "Auto tracker connected.",
+        "Auto tracker online.",
         "Thank you for granting me administrator access.",
         "Gameplay judgment algorithms engaged.",
         "Oh. So you expect me to do everything then?"

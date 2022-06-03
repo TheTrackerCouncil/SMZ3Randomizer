@@ -167,13 +167,16 @@
                 </Grid>
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Autotracker Scripts folder:">
+              <controls:LabeledControl Text="Auto Tracker Scripts folder:">
                 <controls:FileSystemInput Path="{Binding AutotrackerScriptsOutputPath, Mode=TwoWay}"
                                           IsFolderPicker="True"
-                                          DialogTitle="Select Autotracker scripts folder" />
+                                          DialogTitle="Select Auto Tracker scripts folder" />
               </controls:LabeledControl>
 
-              <CheckBox Content="Run Autotracker on Start" IsChecked="{Binding AutotrackerAutoStart}" />
+              <StackPanel Orientation="Horizontal">
+                <CheckBox Content="Run Auto Tracker on Start" IsChecked="{Binding AutoTrackerAutoStart}" />
+                <CheckBox Content="Update Map Automatically" IsChecked="{Binding AutoTrackerChangeMap}" />
+              </StackPanel>
 
               <StackPanel Orientation="Horizontal">
                 <CheckBox Content="Enable hints"
