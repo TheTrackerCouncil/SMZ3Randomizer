@@ -29,6 +29,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly Dictionary<int, Action<AutoTrackerMessage>> _responseActions = new();
         private readonly Dictionary<int, AutoTrackerMessage> _previousResponses = new();
         private int _currentRequestIndex = 0;
+        private Game _previousGame;
         private Game _currentGame;
         private TcpListener? _tcpListener = null;
         private bool _hasStarted;
@@ -66,9 +67,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Active game
             AddEvent("read_block", "CARTRAM", 0x7033fe, 0x2, Game.Both, (AutoTrackerMessage message) =>
             {
+                _previousGame = _currentGame;
                 var value = message.ReadUInt8(0);
                 if (value == 0x00)
                 {
+                    
                     _currentGame = Game.Zelda;
                     _previousMetroidRegionValue = -1;
                     if (Tracker.Options.AutoTrackerChangeMap)
@@ -80,66 +83,93 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     _currentGame = Game.SM;
                 }
-                _logger.LogInformation($"Game changed to: {_currentGame} {value}");
+                if (_previousGame != _currentGame)
+                {
+                    _logger.LogInformation($"Game changed to: {_currentGame} {value}");
+                }
                 _previousResponses[message.Address] = message;
             });
 
             // Zelda Room Locations
             AddEvent("read_block", "WRAM", 0x7ef000, 0x250, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.Default, true, Game.Zelda);
-                CheckDungeons(message);
+                if (message.IsMemoryEqualTo(_previousResponses[message.Address]))
+                {
+                    CheckLocations(message, LocationMemoryType.Default, true, Game.Zelda);
+                    CheckDungeons(message);
+                }
                 _previousResponses[message.Address] = message;
             });
 
             // Zelda NPC Locations
             AddEvent("read_block", "WRAM", 0x7ef410, 0x2, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.ZeldaNPC, false, Game.Zelda);
+                if (message.IsMemoryEqualTo(_previousResponses[message.Address]))
+                {
+                    CheckLocations(message, LocationMemoryType.ZeldaNPC, false, Game.Zelda);
+                }
                 _previousResponses[message.Address] = message;
             });
 
             // Zelda Overworld Locations
             AddEvent("read_block", "WRAM", 0x7ef280, 0x82, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.ZeldaOverworld, false, Game.Zelda);
+                if (message.IsMemoryEqualTo(_previousResponses[message.Address]))
+                {
+                    CheckLocations(message, LocationMemoryType.ZeldaOverworld, false, Game.Zelda);
+                }
                 _previousResponses[message.Address] = message;
             });
 
             // Zelda items while playing Zelda
             AddEvent("read_block", "WRAM", 0x7ef300, 0xD0, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                // CheckZeldaItemMemory
-                CheckLocations(message, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
+                if (message.IsMemoryEqualTo(_previousResponses[message.Address]))
+                {
+                    // CheckZeldaItemMemory
+                    CheckLocations(message, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
+                }
                 _previousResponses[message.Address] = message;
             });
 
             // Super Metroid locations
             AddEvent("read_block", "WRAM", 0x7ed870, 0x20, Game.SM, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.Default, false, Game.SM);
+                if (message.IsMemoryEqualTo(_previousResponses[message.Address]))
+                {
+                    CheckLocations(message, LocationMemoryType.Default, false, Game.SM);
+                }
                 _previousResponses[message.Address] = message;
             });
 
             // Super Metroid bosses
             AddEvent("read_block", "WRAM", 0x7ed828, 0x08, Game.SM, (AutoTrackerMessage message) =>
             {
-                CheckSMBosses(message);
+                if (message.IsMemoryEqualTo(_previousResponses[message.Address]))
+                {
+                    CheckSMBosses(message);
+                }
                 _previousResponses[message.Address] = message;
             });
 
             // Zelda State Checks
             AddEvent("read_block", "WRAM", 0x7e0000, 0x250, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                ZeldaStateChecks(message);
-                _previousResponses[message.Address] = message;
+                if (_previousGame == _currentGame)
+                {
+                    ZeldaStateChecks(message);
+                    _previousResponses[message.Address] = message;
+                }
             });
 
             // Metroid State Checks
             AddEvent("read_block", "WRAM", 0x7e0750, 0x400, Game.SM, (AutoTrackerMessage message) =>
             {
-                MetroidStateChecks(message);
-                _previousResponses[message.Address] = message;
+                if (_previousGame == _currentGame)
+                {
+                    MetroidStateChecks(message);
+                    _previousResponses[message.Address] = message;
+                }
             });
 
 
@@ -259,7 +289,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 while (line != null && _socket.Connected)
                                 {
                                     var message = JsonSerializer.Deserialize<AutoTrackerMessage>(line);
-                                    if (message != null && _responseActions.ContainsKey(message.Address) && !message.IsMemoryEqualTo(_previousResponses[message.Address]))
+                                    if (message != null)
                                     {
                                         _responseActions[message.Address].Invoke(message);
                                     }
@@ -380,13 +410,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="game">The game that is being checked</param>
         protected void CheckLocations(AutoTrackerMessage message, LocationMemoryType type, bool is16Bit, Game game)
         {
-            foreach (var locationInfo in _tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))))
+            foreach (var location in _tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))))
             {
                 try
                 {
-                    var loc = locationInfo.MemoryAddress ?? 0;
-                    var flag = locationInfo.MemoryFlag ?? 0;
-                    var location = _tracker.World.Locations.Where(x => x.Id == locationInfo.Id).First();
+                    var loc = location.MemoryAddress ?? 0;
+                    var flag = location.MemoryFlag ?? 0;
                     if (!location.Cleared && ((is16Bit && message.CheckUInt16(loc * 2, flag)) || (!is16Bit && message.CheckUInt8(loc, flag))))
                     {
                         if (!location.Item.Type.IsInAnyCategory(ItemCategory.Map, ItemCategory.Compass))
@@ -404,7 +433,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError("Unable to auto track Zelda Room: " + locationInfo.Name);
+                    _logger.LogError("Unable to auto track Zelda Room: " + location.Name);
                     _logger.LogError(e.Message);
                     _logger.LogTrace(e.StackTrace);
                 }
