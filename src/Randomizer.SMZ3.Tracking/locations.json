@@ -1905,7 +1905,7 @@
       ],
       "X": 633,
       "Y": 117,
-      "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AGA seed then?" ],
+      "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AhGah seed then?" ],
       "WhenMarkingProgression": [ "Sucks to be you." ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
       "WhenTrackingProgression": [ "Well, at least you got something." ]
@@ -3209,7 +3209,11 @@
         "Library"
       ],
       "X": 313,
-      "Y": 1310
+      "Y": 1310,
+      "WhenMarkingJunk": [ "Its never bullshit to visit your local Library", "Not an AGuh seed then?" ],
+      "WhenMarkingProgression": [ "Sucks to be you." ],
+      "WhenTrackingJunk": [ "Does your head hurt?", "Did you get a nice book at least?" ],
+      "WhenTrackingProgression": [ "Toggled boots off. Kidding." ]
     },
     {
       "Id": 497,

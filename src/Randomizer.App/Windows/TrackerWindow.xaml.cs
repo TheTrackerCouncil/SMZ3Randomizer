@@ -802,7 +802,7 @@ namespace Randomizer.App
 
             var folder = new MenuItem
             {
-                Header = "Open Auto Tracker Scripts Folder",
+                Header = "Show Auto Tracker Scripts Folder",
             };
             folder.Click += (sender, e) =>
             {
@@ -811,7 +811,6 @@ namespace Randomizer.App
                 {
                     path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
                 }
-                path = Path.Combine(path, "32bit");
                 Process.Start("explorer.exe", $"/select,\"{path}\"");
             };
             menu.Items.Add(folder);

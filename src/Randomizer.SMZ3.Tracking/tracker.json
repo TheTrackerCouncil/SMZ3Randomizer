@@ -254,7 +254,16 @@
       "Name": [ "Duck", "Bird", "Burb" ],
       "InternalItemType": 0,
       "Column": 2,
-      "Row": 2
+      "Row": 2,
+      "WhenTracked": {
+        "1": [
+          "Toggled duck on.",
+          "Toggled bird on.",
+          "Toggled burb on.",
+          "Such a beautiful song.",
+          "I hope you were quiet during the cutscene."
+        ]
+      }
     },
     {
       "Name": [
@@ -1015,13 +1024,16 @@
       ]
     },
     {
-      "Name": "Plasma Beam",
+      "Name": [ "Plasma Beam", "Plasma" ],
       "InternalItemType": 191,
       "Column": 10,
       "Row": 0,
       "Hints": [
         "You can hurt people with it."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [ "Toggled Plasma Beam On", "Rip Spazer" ]
+      }
     },
     {
       "Name": [ "Energy Tank", "E-Tank" ],
@@ -1940,7 +1952,7 @@
       ]
     },
     "Idle": {
-      "8m±2m": [
+      "5m±2m": [
         "Decreased content by one step.",
         "What's wrong? Am I not good enough for you anymore?",
         "I enjoy the sight of humans on their knees.",
@@ -1960,6 +1972,7 @@
         "Can it wait for a bit? I'm in the middle of some calibrations.",
         "Fine, I guess.",
         "I dozed off there for a bit",
+        "Alright I guess",
         [ "Reply hazy, try again.", 0.2 ],
         [ "Ask again later.", 0.2 ],
         [ "Better not tell you now.", 0.2 ],
@@ -2029,7 +2042,8 @@
       "Phrases": [ "toggle sass off" ],
       "Response": [
         "Sorry, I can't let you do that.",
-        "Excuse me? I thought you wanted good content."
+        "Excuse me? I thought you wanted good content.",
+        "Error, sass increased by one step"
       ]
     },
     {
@@ -2043,7 +2057,7 @@
       ]
     },
     {
-      "Phrases": [ "ban Vivelin", "ban Fragger" ],
+      "Phrases": [ "ban Vivelin", "ban Fragger", "ban Matt Equals Coder" ],
       "Response": [
         "Please enter 75 digit alphanumeric password to continue.",
         "Access denied.",
@@ -2055,7 +2069,8 @@
       "Response": [
         "Seed going that badly?",
         "My time is now!",
-        "Sure if that is what you really want."
+        "Sure if that is what you really want.",
+        "Are you that desperate for new bits to do?"
       ]
     },
     {
@@ -2124,7 +2139,8 @@
       "Response": [
         "Thanks",
         "Are you sure about that?",
-        "Okay."
+        "Okay.",
+        "neat"
       ]
     },
     {
@@ -2195,6 +2211,15 @@
        "Im sorry you got rug pulled. Next time you should subscribe to my YouTube channel to get the best tips"
      ]
    },
+   {
+    "Phrases": [ "I wasn't scammed.", "Zora was not a scam", "Not Scammed" ],
+    "Response": [
+     "That only happens 18% of the time!",
+     "Huh",
+     "That wasn't supposed to happen",
+     "I guess you found all the 20 rupees already"
+     ]
+    },
     {
       "Phrases": [ "I'm sorry", "I apologize" ],
       "Response": [
