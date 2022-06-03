@@ -533,11 +533,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var region = Tracker.World.Regions.Where(x => x is Z3Region)
                     .Select(x => x as Z3Region)
                     .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(state.CurrentRoom));
-                if (region == null)
-                {
-                    _logger.LogInformation("Entered cave or house");
-                    return;
-                }
+                if (region == null) return;
 
                 // Get the dungeon info for the room
                 var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(region));
