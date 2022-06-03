@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -32,10 +33,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private TcpListener? _tcpListener = null;
         private bool _hasStarted;
         private Socket? _socket = null;
-        private AutoTrackerZeldaState _previousZeldaState;
-        private AutoTrackerMetroidState _previousMetroidState;
-        private HashSet<DungeonInfo> _enteredDungeons = new();
-        private int _previousZeldaOverworldValue = -1;
+        private AutoTrackerZeldaState? _previousZeldaState;
+        private AutoTrackerMetroidState? _previousMetroidState;
+        private readonly HashSet<DungeonInfo> _enteredDungeons = new();
         private int _previousMetroidRegionValue = -1;
 
         /// <summary>
@@ -79,7 +79,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 else if (value == 0xFF)
                 {
                     _currentGame = Game.SM;
-                    _previousZeldaOverworldValue = -1;
                 }
                 _logger.LogInformation($"Game changed to: {_currentGame} {value}");
                 _previousResponses[message.Address] = message;
@@ -88,7 +87,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Zelda Room Locations
             AddEvent("read_block", "WRAM", 0x7ef000, 0x250, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.ZeldaRoom, true);
+                CheckLocations(message, LocationMemoryType.Default, true, Game.Zelda);
                 CheckDungeons(message);
                 _previousResponses[message.Address] = message;
             });
@@ -96,14 +95,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Zelda NPC Locations
             AddEvent("read_block", "WRAM", 0x7ef410, 0x2, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.ZeldaNPC, false);
+                CheckLocations(message, LocationMemoryType.ZeldaNPC, false, Game.Zelda);
                 _previousResponses[message.Address] = message;
             });
 
             // Zelda Overworld Locations
             AddEvent("read_block", "WRAM", 0x7ef280, 0x82, Game.Zelda, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.ZeldaOverworld, false);
+                CheckLocations(message, LocationMemoryType.ZeldaOverworld, false, Game.Zelda);
                 _previousResponses[message.Address] = message;
             });
 
@@ -111,14 +110,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddEvent("read_block", "WRAM", 0x7ef300, 0xD0, Game.Zelda, (AutoTrackerMessage message) =>
             {
                 // CheckZeldaItemMemory
-                CheckLocations(message, LocationMemoryType.ZeldaMisc, false);
+                CheckLocations(message, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
                 _previousResponses[message.Address] = message;
             });
 
             // Super Metroid locations
             AddEvent("read_block", "WRAM", 0x7ed870, 0x20, Game.SM, (AutoTrackerMessage message) =>
             {
-                CheckLocations(message, LocationMemoryType.SMLocation, false);
+                CheckLocations(message, LocationMemoryType.Default, false, Game.SM);
                 _previousResponses[message.Address] = message;
             });
 
@@ -312,10 +311,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
         }
 
+        /*
         /// <summary>
         /// Tracks changes to the Zelda inventory in memory
         /// </summary>
         /// <param name="message"></param>
+        ///
         protected void CheckZeldaInventory(AutoTrackerMessage message)
         {
             foreach (var item in _tracker.Items.Where(x => x.InternalItemType.IsInCategory(ItemCategory.Zelda) && x.MemoryAddress != null))
@@ -328,7 +329,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     int numBottles = 0;
                     for (var i = 0; i < 4; i++)
                     {
-                        if (message.CompareUInt8(_previousResponses[message.Address], message.Address, location + i, item.MemoryFlag ?? 0))
+                        if (message.CompareUInt8(_previousResponses[message.Address], location + i, item.MemoryFlag ?? 0))
                         {
                             numBottles++;
                         }
@@ -341,7 +342,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else if (item.InternalItemType == ItemType.Mirror)
                 {
-                    var valueChanged = message.CompareUInt8(_previousResponses[message.Address], message.Address, location, item.MemoryFlag);
+                    var valueChanged = message.CompareUInt8(_previousResponses[message.Address], location, item.MemoryFlag);
                     var value = message.ReadUInt8(location);
                     if (valueChanged && (value == 1 || value == 2) && item.TrackingState == 0)
                     {
@@ -350,7 +351,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else if (item.Multiple && item.HasStages)
                 {
-                    var valueChanged = message.CompareUInt8(_previousResponses[message.Address], message.Address, location, item.MemoryFlag);
+                    var valueChanged = message.CompareUInt8(_previousResponses[message.Address], location, item.MemoryFlag);
                     var value = message.ReadUInt8(location);
                     if (valueChanged && item.TrackingState < value)
                     {
@@ -359,7 +360,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else
                 {
-                    giveItem = message.CompareUInt8(_previousResponses[message.Address], message.Address, location, item.MemoryFlag) && item.TrackingState == 0;
+                    giveItem = message.CompareUInt8(_previousResponses[message.Address], location, item.MemoryFlag) && item.TrackingState == 0;
                 }
 
                 if (giveItem)
@@ -368,6 +369,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             }
         }
+        */
 
         /// <summary>
         /// Checks locations to see if they have accessed or not
@@ -375,9 +377,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="message">The response from the lua script</param>
         /// <param name="type">The type of location to find the correct LocationInfo objects</param>
         /// <param name="is16Bit">Set to true if this is a 16 bit value or false for 8 bit</param>
-        protected void CheckLocations(AutoTrackerMessage message, LocationMemoryType type, bool is16Bit)
+        /// <param name="game">The game that is being checked</param>
+        protected void CheckLocations(AutoTrackerMessage message, LocationMemoryType type, bool is16Bit, Game game)
         {
-            foreach (var locationInfo in _tracker.WorldInfo.Locations.Where(x => x.MemoryType == type))
+            foreach (var locationInfo in _tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))))
             {
                 try
                 {
@@ -416,9 +419,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             foreach (var dungeonInfo in _tracker.WorldInfo.Dungeons)
             {
+                var region = _tracker.World.Regions.First(x => dungeonInfo.Is(x) && x is Z3Region) as Z3Region;
+                if (region == null)
+                {
+                    _logger.LogError($"Could not find region for {dungeonInfo.Name}");
+                    continue;
+                }
+
                 try
                 {
-                    if (!dungeonInfo.Cleared && message.CheckUInt16(dungeonInfo.MemoryAddress * 2 ?? 0, dungeonInfo.MemoryFlag ?? 0))
+                    if (!dungeonInfo.Cleared && message.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0))
                     {
                         _tracker.MarkDungeonAsCleared(dungeonInfo);
                         _logger.LogInformation($"Auto tracked {dungeonInfo.Name} as cleared");
@@ -440,22 +450,32 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="message">The response from the lua script</param>
         protected void CheckSMBosses(AutoTrackerMessage message)
         {
-            foreach (var bossInfo in _tracker.WorldInfo.Bosses.Where(x => x.MemoryAddress != null))
+            var boss = _tracker.WorldInfo.Bosses.First(x => "Kraid".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            if (!boss.Defeated && message.CheckUInt8(0x1, 0x1))
             {
-                try
-                {
-                    if (!bossInfo.Defeated && message.CheckUInt8(bossInfo.MemoryAddress ?? 0, bossInfo.MemoryFlag ?? 0))
-                    {
-                        _tracker.MarkBossAsDefeated(bossInfo);
-                        _logger.LogInformation($"Auto tracked {bossInfo.Name} as defeated");
-                    }
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError("Unable to mark boss as defated: " + bossInfo.Name);
-                    _logger.LogError(e.Message);
-                    _logger.LogTrace(e.StackTrace);
-                }
+                _tracker.MarkBossAsDefeated(boss);
+                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
+            }
+
+            boss = _tracker.WorldInfo.Bosses.First(x => "Ridley".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            if (!boss.Defeated && message.CheckUInt8(0x2, 0x1))
+            {
+                _tracker.MarkBossAsDefeated(boss);
+                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
+            }
+
+            boss = _tracker.WorldInfo.Bosses.First(x => "Phantoon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            if (!boss.Defeated && message.CheckUInt8(0x3, 0x1))
+            {
+                _tracker.MarkBossAsDefeated(boss);
+                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
+            }
+
+            boss = _tracker.WorldInfo.Bosses.First(x => "Draygon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            if (!boss.Defeated && message.CheckUInt8(0x4, 0x1))
+            {
+                _tracker.MarkBossAsDefeated(boss);
+                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
             }
         }
 
@@ -509,14 +529,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Entered a dungeon (now in Dungeon state but was previously in Overworld or entering Dungeon state)
             else if (state.State == 0x07 && (_previousZeldaState.State == 0x06 || _previousZeldaState.State == 0x09 || _previousZeldaState.State == 0x0F || _previousZeldaState.State == 0x10 || _previousZeldaState.State == 0x11))
             {
-                var dungeonInfo = Tracker.WorldInfo.Dungeons.FirstOrDefault(x => x.StartingRooms != null && x.StartingRooms.Contains(state.CurrentRoom));
-                if (dungeonInfo == null || _enteredDungeons.Contains(dungeonInfo)) return;
+                // Get the region for the room 
+                var region = Tracker.World.Regions.Where(x => x is Z3Region)
+                    .Select(x => x as Z3Region)
+                    .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(state.CurrentRoom));
+                if (region == null)
+                {
+                    _logger.LogInformation("Entered cave or house");
+                    return;
+                }
+
+                // Get the dungeon info for the room
+                var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(region));
 
                 if (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant)
                 {
                     Tracker.Say(x => x.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, dungeonInfo.Reward.GetName());
                 }
-                else if (dungeonInfo.Is(Tracker.World.CastleTower))
+                else if (region is CastleTower)
                 {
                     Tracker.Say(x => x.AutoTracker.EnterHyruleCastleTower);
                 }
@@ -571,7 +601,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     Tracker.UpdateRegion(Tracker.World.InnerMaridia, Tracker.Options.AutoTrackerChangeMap);
                 }
                 _previousMetroidRegionValue = state.CurrentRegion;
-                _previousZeldaOverworldValue = -1;
             }
 
             // Approaching Kraid's Awful Son

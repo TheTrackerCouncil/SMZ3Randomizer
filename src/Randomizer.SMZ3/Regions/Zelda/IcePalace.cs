@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
@@ -14,13 +15,17 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             CompassChest = new Location(this, 256 + 161, 0x1E9D4, LocationType.Regular,
                 name: "Compass Chest",
-                vanillaItem: ItemType.CompassIP);
+                vanillaItem: ItemType.CompassIP,
+                memoryAddress: 0x2E,
+                memoryFlag: 0x4);
 
             SpikeRoom = new Location(this, 256 + 162, 0x1E9E0, LocationType.Regular,
                 name: "Spike Room",
                 vanillaItem: ItemType.KeyIP,
                 access: items => items.Hookshot || (items.KeyIP >= 1
-                                            && CanNotWasteKeysBeforeAccessible(items, MapChest, BigKeyChest)));
+                                            && CanNotWasteKeysBeforeAccessible(items, MapChest, BigKeyChest)),
+                memoryAddress: 0x5F,
+                memoryFlag: 0x4);
 
             MapChest = new Location(this, 256 + 163, 0x1E9DD, LocationType.Regular,
                 name: "Map Chest",
@@ -28,7 +33,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 access: items => items.Hammer && Logic.CanLiftLight(items) && (
                     items.Hookshot || (items.KeyIP >= 1
                                        && CanNotWasteKeysBeforeAccessible(items, SpikeRoom, BigKeyChest))
-                ));
+                ),
+                memoryAddress: 0x3F,
+                memoryFlag: 0x4);
 
             BigKeyChest = new Location(this, 256 + 164, 0x1E9A4, LocationType.Regular,
                 name: "Big Key Chest",
@@ -36,26 +43,40 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 access: items => items.Hammer && Logic.CanLiftLight(items) && (
                     items.Hookshot || (items.KeyIP >= 1
                                        && CanNotWasteKeysBeforeAccessible(items, SpikeRoom, MapChest))
-                ));
+                ),
+                memoryAddress: 0x1F,
+                memoryFlag: 0x4);
 
             IcedTRoom = new Location(this, 256 + 165, 0x1E9E3, LocationType.Regular,
                 name: "Iced T Room",
-                vanillaItem: ItemType.KeyIP);
+                vanillaItem: ItemType.KeyIP,
+                memoryAddress: 0xAE,
+                memoryFlag: 0x4);
 
             FreezorChest = new Location(this, 256 + 166, 0x1E995, LocationType.Regular,
                 name: "Freezor Chest",
-                vanillaItem: ItemType.ThreeBombs);
+                vanillaItem: ItemType.ThreeBombs,
+                memoryAddress: 0x7E,
+                memoryFlag: 0x4);
 
             BigChest = new Location(this, 256 + 167, 0x1E9AA, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveTunic,
-                access: items => items.BigKeyIP);
+                access: items => items.BigKeyIP,
+                memoryAddress: 0x9E,
+                memoryFlag: 0x4);
 
             KholdstareReward = new Location(this, 256 + 168, 0x308157, LocationType.Regular,
                 name: "Kholdstare",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyIP && items.Hammer && Logic.CanLiftLight(items) &&
-                    items.KeyIP >= (items.Somaria ? 1 : 2));
+                    items.KeyIP >= (items.Somaria ? 1 : 2),
+                memoryAddress: 0xDE,
+                memoryFlag: 0xB);
+
+            MemoryAddress = 0xDE;
+            MemoryFlag = 0xB;
+            StartingRooms = new List<int> { 0xE };
         }
 
         public override string Name => "Ice Palace";

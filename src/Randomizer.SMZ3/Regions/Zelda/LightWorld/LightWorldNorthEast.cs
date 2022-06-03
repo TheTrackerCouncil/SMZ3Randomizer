@@ -11,7 +11,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Potion Shop",
                 alsoKnownAs: "Mushroom Item",
                 vanillaItem: ItemType.Powder,
-                access: items => items.Mushroom);
+                access: items => items.Mushroom,
+                memoryAddress: 0x1,
+                memoryFlag: 0x20,
+                memoryType: LocationMemoryType.ZeldaNPC);
 
             SahasrahlasHideout = new(this);
             WaterfallFairy = new(this);
@@ -39,23 +42,32 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             {
                 LeftChest = new Location(this, 256 + 41, 0x1EA82, LocationType.Regular,
                     name: "Left",
-                    vanillaItem: ItemType.FiftyRupees)
+                    vanillaItem: ItemType.FiftyRupees,
+                    memoryAddress: 0x105,
+                    memoryFlag: 0x4)
                     .Weighted(SphereOne);
 
                 MiddleChest = new Location(this, 256 + 42, 0x1EA85, LocationType.Regular,
                     name: "Middle",
-                    vanillaItem: ItemType.ThreeBombs)
+                    vanillaItem: ItemType.ThreeBombs,
+                    memoryAddress: 0x105,
+                    memoryFlag: 0x5)
                     .Weighted(SphereOne);
 
                 RightChest = new Location(this, 256 + 43, 0x1EA88, LocationType.Regular,
                     name: "Right",
-                    vanillaItem: ItemType.FiftyRupees)
+                    vanillaItem: ItemType.FiftyRupees,
+                    memoryAddress: 0x105,
+                    memoryFlag: 0x6)
                     .Weighted(SphereOne);
 
                 Sahasrahla = new Location(this, 256 + 44, 0x5F1FC, LocationType.Regular,
                     name: "Sahasrahla",
                     vanillaItem: ItemType.Boots,
-                    access: items => World.CanAquire(items, Reward.PendantGreen));
+                    access: items => World.CanAquire(items, Reward.PendantGreen),
+                    memoryAddress: 0x0,
+                    memoryFlag: 0xA,
+                    memoryType: LocationMemoryType.ZeldaNPC);
             }
 
             public Location LeftChest { get; }
@@ -74,10 +86,14 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             {
                 Left = new Location(this, 256 + 254, 0x1E9B0, LocationType.Regular,
                     "Left",
-                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true));
+                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true),
+                    memoryAddress: 0x114,
+                    memoryFlag: 0x4);
                 Right = new Location(this, 256 + 39, 0x1E9D1, LocationType.Regular,
                     "Right",
-                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true));
+                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true),
+                    memoryAddress: 0x114,
+                    memoryFlag: 0x5);
             }
 
             public Location Left { get; }
@@ -94,12 +110,18 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     name: "King Zora",
                     alsoKnownAs: "Zora",
                     vanillaItem: ItemType.Flippers,
-                    access: items => (Logic.CanLiftLight(items) || items.Flippers) && items.Rupees >= 500); // Consider adding 500 rupee requirement into logic
+                    access: items => (Logic.CanLiftLight(items) || items.Flippers) && items.Rupees >= 500,
+                    memoryAddress: 0x0,
+                    memoryFlag: 0x2,
+                    memoryType: LocationMemoryType.ZeldaNPC);
 
                 ZoraLedge = new Location(this, 256 + 37, 0x308149, LocationType.Regular,
                     name: "Zora's Ledge",
                     vanillaItem: ItemType.HeartPiece,
-                    access: items => items.Flippers);
+                    access: items => items.Flippers,
+                    memoryAddress: 0x81,
+                    memoryFlag: 0x40,
+                    memoryType: LocationMemoryType.ZeldaOverworld);
             }
 
             public Location Zora { get; }

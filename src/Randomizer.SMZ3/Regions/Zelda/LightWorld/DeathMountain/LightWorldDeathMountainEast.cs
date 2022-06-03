@@ -10,16 +10,23 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
             FloatingIsland = new Location(this, 256 + 4, 0x308141, LocationType.Regular,
                 name: "Floating Island",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.Mirror && items.MoonPearl && Logic.CanLiftHeavy(items));
+                access: items => items.Mirror && items.MoonPearl && Logic.CanLiftHeavy(items),
+                memoryAddress: 0x5,
+                memoryFlag: 0x40,
+                memoryType: LocationMemoryType.ZeldaOverworld);
 
             SpiralCave = new Location(this, 256 + 5, 0x1E9BF, LocationType.Regular,
                 name: "Spiral Cave",
-                vanillaItem: ItemType.FiftyRupees);
+                vanillaItem: ItemType.FiftyRupees,
+                memoryAddress: 0xFE,
+                memoryFlag: 0x4);
 
             MirrorCave = new Location(this, 256 + 13, 0x1E9C5, LocationType.Regular,
                 name: "Mimic Cave",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items));
+                access: items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items),
+                memoryAddress: 0x10C,
+                memoryFlag: 0x4);
 
             ParadoxCave = new(this);
         }
@@ -52,31 +59,45 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
             {
                 LowerLeft = new Location(this, 256 + 6, 0x1EB39, LocationType.Regular,
                     name: "Paradox Cave Upper - Left",
-                    vanillaItem: ItemType.ThreeBombs);
+                    vanillaItem: ItemType.ThreeBombs,
+                    memoryAddress: 0xFF,
+                    memoryFlag: 0x4);
 
                 LowerRight = new Location(this, 256 + 7, 0x1EB3C, LocationType.Regular,
                     name: "Paradox Cave Upper - Right",
-                    vanillaItem: ItemType.TenArrows);
+                    vanillaItem: ItemType.TenArrows,
+                    memoryAddress: 0xFF,
+                    memoryFlag: 0x5);
 
                 UpperFarLeft = new Location(this, 256 + 8, 0x1EB2A, LocationType.Regular,
                     name: "Paradox Cave Lower - Far Left",
-                    vanillaItem: ItemType.TwentyRupees);
+                    vanillaItem: ItemType.TwentyRupees,
+                    memoryAddress: 0xEF,
+                    memoryFlag: 0x4);
 
                 UpperLeft = new Location(this, 256 + 9, 0x1EB2D, LocationType.Regular,
                     name: "Paradox Cave Lower - Left",
-                    vanillaItem: ItemType.TwentyRupees);
+                    vanillaItem: ItemType.TwentyRupees,
+                    memoryAddress: 0xEF,
+                    memoryFlag: 0x5);
 
                 UpperMiddle = new Location(this, 256 + 10, 0x1EB36, LocationType.Regular,
                     name: "Paradox Cave Lower - Middle",
-                    vanillaItem: ItemType.TwentyRupees);
+                    vanillaItem: ItemType.TwentyRupees,
+                    memoryAddress: 0xEF,
+                    memoryFlag: 0x8);
 
                 UpperRight = new Location(this, 256 + 11, 0x1EB30, LocationType.Regular,
                     name: "Paradox Cave Lower - Right",
-                    vanillaItem: ItemType.TwentyRupees);
+                    vanillaItem: ItemType.TwentyRupees,
+                    memoryAddress: 0xEF,
+                    memoryFlag: 0x6);
 
                 UpperFarRight = new Location(this, 256 + 12, 0x1EB33, LocationType.Regular,
                     name: "Paradox Cave Lower - Far Right",
-                    vanillaItem: ItemType.TwentyRupees);
+                    vanillaItem: ItemType.TwentyRupees,
+                    memoryAddress: 0xEF,
+                    memoryFlag: 0x7);
             }
 
             public Location LowerLeft { get; }

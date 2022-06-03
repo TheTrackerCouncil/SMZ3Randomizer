@@ -27,7 +27,7 @@ namespace Randomizer.App
     {
         private readonly RandomizerContext _dbContext;
         private readonly Smz3Randomizer _randomizer;
-        private readonly ILogger<RomGenerator>? _logger;
+        private readonly ILogger<RomGenerator> _logger;
 
         public RomGenerator(Smz3Randomizer randomizer,
             RandomizerContext dbContext,

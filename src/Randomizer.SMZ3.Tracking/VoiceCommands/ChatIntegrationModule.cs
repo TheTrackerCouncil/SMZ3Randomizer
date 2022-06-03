@@ -365,7 +365,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(500));
             if (closeGuessesPattern.IsMatch(message.Text))
             {
-                CloseGanonsTowerGuessingGameGuesses(senderNamePronunciation);
+                var _ = CloseGanonsTowerGuessingGameGuesses(senderNamePronunciation);
             }
         }
 

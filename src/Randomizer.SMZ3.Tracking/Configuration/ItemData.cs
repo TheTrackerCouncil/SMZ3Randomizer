@@ -135,18 +135,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public int TrackingState { get; set; }
 
         /// <summary>
-        /// The memory address offset stored as a string hex value
-        /// for where the item is stored in memory
-        /// </summary>
-        public int? MemoryAddress { get; set; }
-
-        /// <summary>
-        /// The flag to check against to see if the item is currently
-        /// held or not
-        /// </summary>
-        public int? MemoryFlag { get; set; }
-
-        /// <summary>
         /// Returns the stage of the item with the specifies name.
         /// </summary>
         /// <param name="name">The name of the stage.</param>

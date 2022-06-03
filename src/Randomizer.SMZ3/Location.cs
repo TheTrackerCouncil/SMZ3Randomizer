@@ -28,16 +28,19 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
-        public Location(Region region, int id, int address, LocationType type, string name)
-            : this(region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+            : this(region, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name)
-                    : this(room, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
@@ -47,19 +50,22 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         /// <param name="vanillaItem">
         /// The item that can be found in this location in the regular game.
         /// </param>
-        public Location(Region region, int id, int address, LocationType type, string name, ItemType vanillaItem)
-            : this(region, id, address, type, name, Array.Empty<string>(), vanillaItem, _ => true)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+            : this(region, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name, ItemType vanillaItem)
-                    : this(room, id, address, type, name, Array.Empty<string>(), vanillaItem, _ => true)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
@@ -69,7 +75,7 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         /// <param name="alsoKnownAs">
@@ -78,13 +84,16 @@ namespace Randomizer.SMZ3
         /// <param name="vanillaItem">
         /// The item that can be found in this location in the regular game.
         /// </param>
-        public Location(Region region, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem)
-            : this(region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+            : this(region, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem)
-                    : this(room, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
@@ -94,7 +103,7 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         /// <param name="alsoKnownAs">
@@ -103,13 +112,16 @@ namespace Randomizer.SMZ3
         /// <param name="vanillaItem">
         /// The item that can be found in this location in the regular game.
         /// </param>
-        public Location(Region region, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem)
-            : this(region, id, address, type, name, alsoKnownAs, vanillaItem, _ => true)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+            : this(region, id, romAddress, type, name, alsoKnownAs, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem)
-                    : this(room, id, address, type, name, alsoKnownAs, vanillaItem, _ => true)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room, id, romAddress, type, name, alsoKnownAs, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
         {
         }
 
@@ -120,19 +132,22 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         /// <param name="access">
         /// The requirement for being able to access the location.
         /// </param>
-        public Location(Region region, int id, int address, LocationType type, string name, Requirement access)
-            : this(region, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, access)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+            : this(region, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, access, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name, Requirement access)
-                    : this(room, id, address, type, name, Array.Empty<string>(), ItemType.Nothing, access)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, access, memoryAddress, memoryFlag, memoryType)
         {
         }
 
@@ -143,7 +158,7 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         /// <param name="vanillaItem">
@@ -152,13 +167,16 @@ namespace Randomizer.SMZ3
         /// <param name="access">
         /// The requirement for being able to access the location.
         /// </param>
-        public Location(Region region, int id, int address, LocationType type, string name, ItemType vanillaItem, Requirement access)
-            : this(region, id, address, type, name, Array.Empty<string>(), vanillaItem, access)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+            : this(region, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, access, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name, ItemType vanillaItem, Requirement access)
-                    : this(room, id, address, type, name, Array.Empty<string>(), vanillaItem, access)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, access, memoryAddress, memoryFlag, memoryType)
         {
         }
 
@@ -169,7 +187,7 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         /// <param name="alsoKnownAs">
@@ -181,18 +199,21 @@ namespace Randomizer.SMZ3
         /// <param name="access">
         /// The requirement for being able to access the location.
         /// </param>
-        public Location(Region region, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access)
-            : this(region, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, access)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+            : this(region, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, access, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access)
-                    : this(room, id, address, type, name, new[] { alsoKnownAs }, vanillaItem, access)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, access, memoryAddress, memoryFlag, memoryType)
         {
         }
 
-        public Location(Room room, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access)
-                    : this(room.Region, id, address, type, name, alsoKnownAs, vanillaItem, access)
+        public Location(Room room, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+                    : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType)
         {
             Room = room;
         }
@@ -204,7 +225,7 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="region">The region that contains this location.</param>
         /// <param name="id">The internal ID of the location.</param>
-        /// <param name="address">The byte address of the location.</param>
+        /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
         /// <param name="alsoKnownAs">
@@ -216,18 +237,24 @@ namespace Randomizer.SMZ3
         /// <param name="access">
         /// The requirement for being able to access the location.
         /// </param>
-        public Location(Region region, int id, int address, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access)
+        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
+        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
+        /// <param name="memoryType">The type of location</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
         {
             Region = region;
             Id = id;
             Name = name;
             Type = type;
-            Address = address;
+            RomAddress = romAddress;
             AlternateNames = new ReadOnlyCollection<string>(alsoKnownAs);
             VanillaItem = vanillaItem;
             _canAccess = access;
             _alwaysAllow = (_, _) => false;
             _allow = (_, _) => true;
+            MemoryAddress = memoryAddress;
+            MemoryFlag = memoryFlag;
+            MemoryType = memoryType;
         }
 
         /// <summary>
@@ -248,7 +275,7 @@ namespace Randomizer.SMZ3
         /// <summary>
         /// Gets the byte address of the location.
         /// </summary>
-        public int Address { get; }
+        public int RomAddress { get; }
 
         /// <summary>
         /// Gets or sets the item that can be found in this location.
@@ -285,6 +312,22 @@ namespace Randomizer.SMZ3
         /// game.
         /// </summary>
         public ItemType VanillaItem { get; }
+
+        /// <summary>
+        /// The location in memory for detecting if the location was cleared
+        /// </summary>
+        public int? MemoryAddress { get; init; }
+
+        /// <summary>
+        /// The flag to determine if the location was cleared or not
+        /// </summary>
+        public int? MemoryFlag { get; init; }
+
+        /// <summary>
+        /// The type of location for accessing memory
+        /// </summary>
+
+        public LocationMemoryType MemoryType { get; init; }
 
         /// <summary>
         /// Gets the relative weight of this location, where negative values

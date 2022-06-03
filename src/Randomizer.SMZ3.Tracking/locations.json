@@ -343,12 +343,7 @@
       "TreasureRemaining": 3,
       "Column": 0,
       "Row": 5,
-      "LocationId": 364,
-      "MemoryAddress": 200,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        201
-      ]
+      "LocationId": 364
     },
     {
       "Name": [ "Desert Palace", "Dessert Palace" ],
@@ -361,14 +356,7 @@
       "TreasureRemaining": 2,
       "Column": 1,
       "Row": 5,
-      "LocationId": 370,
-      "MemoryAddress": 51,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        132,
-        131,
-        99
-      ]
+      "LocationId": 370
     },
     {
       "Name": [ "Tower of Hera" ],
@@ -381,12 +369,7 @@
       "TreasureRemaining": 2,
       "Column": 2,
       "Row": 5,
-      "LocationId": 376,
-      "MemoryAddress": 7,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        119
-      ]
+      "LocationId": 376
     },
     {
       "Name": [ "Palace of Darkness", "Dark Palace", "Palace of Dorkness", "Dork Palace" ],
@@ -399,12 +382,7 @@
       "TreasureRemaining": 5,
       "Column": 3,
       "Row": 5,
-      "LocationId": 390,
-      "MemoryAddress": 90,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        74
-      ]
+      "LocationId": 390
     },
     {
       "Name": [ "Swamp Palace" ],
@@ -417,12 +395,7 @@
       "TreasureRemaining": 6,
       "Column": 4,
       "Row": 5,
-      "LocationId": 400,
-      "MemoryAddress": 6,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        40
-      ]
+      "LocationId": 400
     },
     {
       "Name": [ "Skull Woods", "Skill Woods" ],
@@ -438,15 +411,7 @@
       "TreasureRemaining": 2,
       "Column": 0,
       "Row": 6,
-      "LocationId": 408,
-      "MemoryAddress": 41,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        87,
-        88,
-        103,
-        104
-      ]
+      "LocationId": 408
     },
     {
       "Name": [ "Thieves' Town" ],
@@ -459,12 +424,7 @@
       "TreasureRemaining": 4,
       "Column": 1,
       "Row": 6,
-      "LocationId": 416,
-      "MemoryAddress": 172,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        219
-      ]
+      "LocationId": 416
     },
     {
       "Name": [ "Ice Palace" ],
@@ -477,12 +437,7 @@
       "TreasureRemaining": 3,
       "Column": 2,
       "Row": 6,
-      "LocationId": 424,
-      "MemoryAddress": 222,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        14
-      ]
+      "LocationId": 424
     },
     {
       "Name": [ "Misery Mire" ],
@@ -495,12 +450,7 @@
       "TreasureRemaining": 2,
       "Column": 3,
       "Row": 6,
-      "LocationId": 432,
-      "MemoryAddress": 144,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        152
-      ]
+      "LocationId": 432
     },
     {
       "Name": [ "Turtle Rock" ],
@@ -513,12 +463,7 @@
       "TreasureRemaining": 5,
       "Column": 4,
       "Row": 6,
-      "LocationId": 444,
-      "MemoryAddress": 164,
-      "MemoryFlag": 11,
-      "StartingRooms": [
-        214
-      ]
+      "LocationId": 444
     },
     {
       "Name": [
@@ -540,10 +485,7 @@
       "Column": 5,
       "Row": 6,
       "TreasureRemaining": 20,
-      "HasReward": false,
-      "StartingRooms": [
-        12
-      ]
+      "HasReward": false
     },
     {
       "Name": [ "Hyrule Castle" ],
@@ -558,10 +500,7 @@
       "Column": 5,
       "Row": 5,
       "TreasureRemaining": 6,
-      "HasReward": false,
-      "StartingRooms": [
-        97
-      ]
+      "HasReward": false
     },
     {
       "Name": [ "Agahnim's Tower", "Castle Tower" ],
@@ -576,10 +515,7 @@
       "Row": 5,
       "TreasureRemaining": 0,
       "HasReward": true,
-      "Reward": 6,
-      "StartingRooms": [
-        224
-      ]
+      "Reward": 6
     }
   ],
   "Bosses": [
@@ -602,9 +538,7 @@
         "Toggled Kraid on. Did you get the quick kill?",
         [ "Toggled Kraid's Awful Son's Father on.", 0.1 ],
         [ "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face.", 0.1 ]
-      ],
-      "MemoryAddress": 1,
-      "MemoryFlag": 1
+      ]
     },
     {
       "Name": [ "Crocomire" ],
@@ -630,9 +564,7 @@
         "Toggled Spooky Ghost on.",
         "Bustin makes me feel good.",
         [ "Toggled Phanturd on", 0.25 ]
-      ],
-      "MemoryAddress": 3,
-      "MemoryFlag": 1
+      ]
     },
     {
       "Name": [ "Shaktool", "The Shaktool" ],
@@ -656,9 +588,7 @@
         "Toggled Draygon on.",
         [ "How could you? She has a family.", 0.25 ],
         [ "Toggled Draygon on. Did you microwave her?", 0.25 ]
-      ],
-      "MemoryAddress": 4,
-      "MemoryFlag": 1
+      ]
     },
     {
       "Name": [ "Ridley" ],
@@ -668,9 +598,7 @@
         "Toggled Ridley on.",
         [ "It's a living", 0.25 ],
         [ "Toggled Ridley on. I'm sure they'll revive him in the next game.", 0.25 ]
-      ],
-      "MemoryAddress": 2,
-      "MemoryFlag": 1
+      ]
     },
     {
       "Name": [ "Mother Brain" ],
@@ -936,10 +864,7 @@
         [ "Power Bomb (Crateria surface)", 0 ]
       ],
       "X": 968,
-      "Y": 116,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 1
+      "Y": 116
     },
     {
       "Id": 1,
@@ -949,10 +874,7 @@
         [ "Missile (outside Wrecked Ship bottom)", 0 ]
       ],
       "X": 1128,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 2
+      "Y": 244
     },
     {
       "Id": 2,
@@ -961,10 +883,7 @@
         [ "Missile (outside Wrecked Ship top)", 0 ]
       ],
       "X": 1160,
-      "Y": 84,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 4
+      "Y": 84
     },
     {
       "Id": 3,
@@ -973,10 +892,7 @@
         [ "Missile (outside Wrecked Ship middle)", 0 ]
       ],
       "X": 1128,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 8
+      "Y": 148
     },
     {
       "Id": 4,
@@ -986,10 +902,7 @@
         [ "Missile (Crateria moat)", 0 ]
       ],
       "X": 1064,
-      "Y": 212,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 16
+      "Y": 212
     },
     {
       "Id": 5,
@@ -998,10 +911,7 @@
         [ "Energy Tank, Gauntlet", 0 ]
       ],
       "X": 456,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 32
+      "Y": 148
     },
     {
       "Id": 6,
@@ -1011,10 +921,7 @@
         [ "Missile (Crateria bottom)", 0 ]
       ],
       "X": 552,
-      "Y": 660,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 64
+      "Y": 660
     },
     {
       "Id": 7,
@@ -1024,10 +931,7 @@
         [ "Bombs", 0 ]
       ],
       "X": 712,
-      "Y": 276,
-      "MemoryType": 5,
-      "MemoryAddress": 0,
-      "MemoryFlag": 128
+      "Y": 276
     },
     {
       "Id": 8,
@@ -1037,30 +941,21 @@
         [ "Energy Tank, Terminator", 0 ]
       ],
       "X": 296,
-      "Y": 276,
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 1
+      "Y": 276
     },
     {
       "Id": 9,
       "Name": [
         "Gauntlet Shaft Right",
         [ "Missile (Crateria gauntlet right)", 0 ]
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 2
+      ]
     },
     {
       "Id": 10,
       "Name": [
         "Gauntlet Shaft Left",
         [ "Missile (Crateria gauntlet left)", 0 ]
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 11,
@@ -1069,10 +964,7 @@
         [ "Super Missile (Crateria)", 0 ]
       ],
       "X": 680,
-      "Y": 372,
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 8
+      "Y": 372
     },
     {
       "Id": 12,
@@ -1083,10 +975,7 @@
         [ "Missile (Crateria middle)", 0 ]
       ],
       "X": 424,
-      "Y": 308,
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 16
+      "Y": 308
     },
     {
       "Id": 13,
@@ -1094,10 +983,7 @@
         "Power Bomb (green Brinstar bottom)"
       ],
       "X": 328,
-      "Y": 308,
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 32
+      "Y": 308
     },
     {
       "Id": 14,
@@ -1106,10 +992,7 @@
         [ "Super Missile (pink Brinstar)", 0 ]
       ],
       "X": 712,
-      "Y": 372,
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 64
+      "Y": 372
     },
     {
       "Id": 15,
@@ -1118,10 +1001,7 @@
         [ "Missile (green Brinstar below super missile)", 0 ]
       ],
       "X": 296,
-      "Y": 212,
-      "MemoryType": 5,
-      "MemoryAddress": 1,
-      "MemoryFlag": 128
+      "Y": 212
     },
     {
       "Id": 16,
@@ -1130,10 +1010,7 @@
         [ "Super Missile (green Brinstar top)", 0 ]
       ],
       "X": 264,
-      "Y": 180,
-      "MemoryType": 5,
-      "MemoryAddress": 2,
-      "MemoryFlag": 1
+      "Y": 180
     },
     {
       "Id": 17,
@@ -1142,10 +1019,7 @@
         [ "Reserve Tank, Brinstar", 0 ]
       ],
       "X": 360,
-      "Y": 212,
-      "MemoryType": 5,
-      "MemoryAddress": 2,
-      "MemoryFlag": 2
+      "Y": 212
     },
     {
       "Id": 18,
@@ -1154,10 +1028,7 @@
         [ "Missile (green Brinstar behind missile)", 0 ],
         "Ron Popeil missiles",
         "Mockball Hall Hidden Room Hidden Item"
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 2,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 19,
@@ -1165,10 +1036,7 @@
         "Mockball Back room",
         [ "Missile (green Brinstar behind reserve tank)", 0 ],
         "Mockball Hall Hidden Room Main Item"
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 2,
-      "MemoryFlag": 8
+      ]
     },
     {
       "Id": 21,
@@ -1178,10 +1046,7 @@
         [ "Missile (pink Brinstar top)", 0 ]
       ],
       "X": 488,
-      "Y": 308,
-      "MemoryType": 5,
-      "MemoryAddress": 2,
-      "MemoryFlag": 32
+      "Y": 308
     },
     {
       "Id": 22,
@@ -1191,10 +1056,7 @@
         [ "Missile (pink Brinstar bottom)", 0 ]
       ],
       "X": 488,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 2,
-      "MemoryFlag": 64
+      "Y": 404
     },
     {
       "Id": 23,
@@ -1203,10 +1065,7 @@
         [ "Charge Beam", 0 ]
       ],
       "X": 488,
-      "Y": 436,
-      "MemoryType": 5,
-      "MemoryAddress": 2,
-      "MemoryFlag": 128
+      "Y": 436
     },
     {
       "Id": 24,
@@ -1216,10 +1075,7 @@
         [ "Power Bomb (pink Brinstar)", 0 ]
       ],
       "X": 424,
-      "Y": 340,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 1
+      "Y": 340
     },
     {
       "Id": 25,
@@ -1229,10 +1085,7 @@
         [ "Missile (green Brinstar pipe)", 0 ]
       ],
       "X": 648,
-      "Y": 436,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 2
+      "Y": 436
     },
     {
       "Id": 26,
@@ -1241,10 +1094,7 @@
         "Morphing Ball"
       ],
       "X": 744,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 4
+      "Y": 404
     },
     {
       "Id": 27,
@@ -1253,10 +1103,7 @@
         [ "Power Bomb (blue Brinstar)", 0 ]
       ],
       "X": 680,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 8
+      "Y": 404
     },
     {
       "Id": 28,
@@ -1264,10 +1111,7 @@
         "Missile (blue Brinstar middle)"
       ],
       "X": 968,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 16
+      "Y": 404
     },
     {
       "Id": 29,
@@ -1276,10 +1120,7 @@
         [ "Energy Tank, Brinstar Ceiling", 0 ]
       ],
       "X": 936,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 32
+      "Y": 404
     },
     {
       "Id": 30,
@@ -1289,10 +1130,7 @@
         [ "Energy Tank, Etecoons", 0 ]
       ],
       "X": 136,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 64
+      "Y": 404
     },
     {
       "Id": 31,
@@ -1300,10 +1138,7 @@
         "Super Missile (green Brinstar bottom)"
       ],
       "X": 104,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 3,
-      "MemoryFlag": 128
+      "Y": 404
     },
     {
       "Id": 33,
@@ -1312,10 +1147,7 @@
         [ "Energy Tank, Waterway", 0 ]
       ],
       "X": 200,
-      "Y": 500,
-      "MemoryType": 5,
-      "MemoryAddress": 4,
-      "MemoryFlag": 2
+      "Y": 500
     },
     {
       "Id": 34,
@@ -1323,10 +1155,7 @@
         "Missile (blue Brinstar bottom)"
       ],
       "X": 840,
-      "Y": 436,
-      "MemoryType": 5,
-      "MemoryAddress": 4,
-      "MemoryFlag": 4
+      "Y": 436
     },
     {
       "Id": 35,
@@ -1336,10 +1165,7 @@
         [ "Energy Tank, Brinstar Gate", 0 ]
       ],
       "X": 616,
-      "Y": 340,
-      "MemoryType": 5,
-      "MemoryAddress": 4,
-      "MemoryFlag": 8
+      "Y": 340
     },
     {
       "Id": 36,
@@ -1347,10 +1173,7 @@
         "Billy Mays Room",
         [ "Missile (blue Brinstar top)", 0 ],
         "Blue Brinstar Top Main Item"
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 4,
-      "MemoryFlag": 16
+      ]
     },
     {
       "Id": 37,
@@ -1359,10 +1182,7 @@
         "But wait, there's more!",
         [ "Missile (blue Brinstar behind missile)", 0 ],
         "Blue Brinstar Top Hidden Item"
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 4,
-      "MemoryFlag": 32
+      ]
     },
     {
       "Id": 38,
@@ -1371,10 +1191,7 @@
         "X-Ray Scope"
       ],
       "X": 680,
-      "Y": 564,
-      "MemoryType": 5,
-      "MemoryAddress": 4,
-      "MemoryFlag": 64
+      "Y": 564
     },
     {
       "Id": 39,
@@ -1383,10 +1200,7 @@
         "Power Bomb (red Brinstar sidehopper room)"
       ],
       "X": 1064,
-      "Y": 340,
-      "MemoryType": 5,
-      "MemoryAddress": 4,
-      "MemoryFlag": 128
+      "Y": 340
     },
     {
       "Id": 40,
@@ -1395,10 +1209,7 @@
         "Power Bomb (red Brinstar spike room)"
       ],
       "X": 1064,
-      "Y": 436,
-      "MemoryType": 5,
-      "MemoryAddress": 5,
-      "MemoryFlag": 1
+      "Y": 436
     },
     {
       "Id": 41,
@@ -1407,10 +1218,7 @@
         "Missile (red Brinstar spike room)"
       ],
       "X": 1032,
-      "Y": 436,
-      "MemoryType": 5,
-      "MemoryAddress": 5,
-      "MemoryFlag": 2
+      "Y": 436
     },
     {
       "Id": 42,
@@ -1419,10 +1227,7 @@
         "Spazer"
       ],
       "X": 1160,
-      "Y": 628,
-      "MemoryType": 5,
-      "MemoryAddress": 5,
-      "MemoryFlag": 4
+      "Y": 628
     },
     {
       "Id": 43,
@@ -1430,10 +1235,7 @@
         "Energy Tank, Kraid"
       ],
       "X": 1320,
-      "Y": 692,
-      "MemoryType": 5,
-      "MemoryAddress": 5,
-      "MemoryFlag": 8
+      "Y": 692
     },
     {
       "Id": 44,
@@ -1442,10 +1244,7 @@
         "Missile (Kraid)"
       ],
       "X": 1448,
-      "Y": 660,
-      "MemoryType": 5,
-      "MemoryAddress": 5,
-      "MemoryFlag": 16
+      "Y": 660
     },
     {
       "Id": 48,
@@ -1454,10 +1253,7 @@
         [ "Varia Suit", 0 ]
       ],
       "X": 1768,
-      "Y": 692,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 1
+      "Y": 692
     },
     {
       "Id": 49,
@@ -1467,10 +1263,7 @@
         [ "Missile (lava room)", 0 ]
       ],
       "X": 568,
-      "Y": 212,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 2
+      "Y": 212
     },
     {
       "Id": 50,
@@ -1479,10 +1272,7 @@
         "Ice Beam"
       ],
       "X": 216,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 4
+      "Y": 148
     },
     {
       "Id": 51,
@@ -1491,10 +1281,7 @@
         [ "Missile (below Ice Beam)", 0 ]
       ],
       "X": 120,
-      "Y": 212,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 8
+      "Y": 212
     },
     {
       "Id": 52,
@@ -1503,10 +1290,7 @@
         [ "Energy Tank, Crocomire", 0 ]
       ],
       "X": 664,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 16
+      "Y": 404
     },
     {
       "Id": 53,
@@ -1515,10 +1299,7 @@
         "Hi-Jump Boots"
       ],
       "X": 280,
-      "Y": 276,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 32
+      "Y": 276
     },
     {
       "Id": 54,
@@ -1527,10 +1308,7 @@
         [ "Missile (above Crocomire)", 0 ]
       ],
       "X": 408,
-      "Y": 276,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 64
+      "Y": 276
     },
     {
       "Id": 55,
@@ -1539,10 +1317,7 @@
         [ "Missile (Hi-Jump Boots)", 0 ]
       ],
       "X": 312,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 6,
-      "MemoryFlag": 128
+      "Y": 244
     },
     {
       "Id": 56,
@@ -1551,10 +1326,7 @@
         [ "Energy Tank (Hi-Jump Boots)", 0 ]
       ],
       "X": 344,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 1
+      "Y": 244
     },
     {
       "Id": 57,
@@ -1563,10 +1335,7 @@
         [ "Power Bomb (Crocomire)", 0 ]
       ],
       "X": 344,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 2
+      "Y": 404
     },
     {
       "Id": 58,
@@ -1576,10 +1345,7 @@
         [ "Missile (below Crocomire)", 0 ]
       ],
       "X": 504,
-      "Y": 564,
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 4
+      "Y": 564
     },
     {
       "Id": 59,
@@ -1590,10 +1356,7 @@
         [ "Missile (Grappling Beam)", 0 ]
       ],
       "X": 312,
-      "Y": 564,
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 8
+      "Y": 564
     },
     {
       "Id": 60,
@@ -1602,30 +1365,21 @@
         "Grappling Beam"
       ],
       "X": 152,
-      "Y": 596,
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 16
+      "Y": 596
     },
     {
       "Id": 61,
       "Name": [
         "Reserve Tank, Norfair",
         "Bubble Mountain Hidden Hall Main Item"
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 32
+      ]
     },
     {
       "Id": 62,
       "Name": [
         "Missile (Norfair Reserve Tank)",
         "Bubble Mountain Hidden Hall Hidden Item"
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 64
+      ]
     },
     {
       "Id": 63,
@@ -1634,10 +1388,7 @@
         [ "Missile (bubble Norfair green door)", 0 ]
       ],
       "X": 728,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 7,
-      "MemoryFlag": 128
+      "Y": 148
     },
     {
       "Id": 64,
@@ -1646,10 +1397,7 @@
         [ "Missile (bubble Norfair)", 0 ]
       ],
       "X": 792,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 8,
-      "MemoryFlag": 1
+      "Y": 244
     },
     {
       "Id": 65,
@@ -1658,10 +1406,7 @@
         [ "Missile (Speed Booster)", 0 ]
       ],
       "X": 1208,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 8,
-      "MemoryFlag": 2
+      "Y": 148
     },
     {
       "Id": 66,
@@ -1670,10 +1415,7 @@
         "Speed Booster"
       ],
       "X": 1240,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 8,
-      "MemoryFlag": 4
+      "Y": 148
     },
     {
       "Id": 67,
@@ -1683,10 +1425,7 @@
         [ "Missile (Wave Beam)", 0 ]
       ],
       "X": 888,
-      "Y": 212,
-      "MemoryType": 5,
-      "MemoryAddress": 8,
-      "MemoryFlag": 8
+      "Y": 212
     },
     {
       "Id": 68,
@@ -1695,10 +1434,7 @@
         "Wave Beam"
       ],
       "X": 984,
-      "Y": 212,
-      "MemoryType": 5,
-      "MemoryAddress": 8,
-      "MemoryFlag": 16
+      "Y": 212
     },
     {
       "Id": 70,
@@ -1707,10 +1443,7 @@
         [ "Missile (Gold Torizo)", 0 ]
       ],
       "X": 632,
-      "Y": 564,
-      "MemoryType": 5,
-      "MemoryAddress": 8,
-      "MemoryFlag": 64
+      "Y": 564
     },
     {
       "Id": 71,
@@ -1719,10 +1452,7 @@
         [ "Super Missile (Gold Torizo)", 0 ]
       ],
       "X": 664,
-      "Y": 564,
-      "MemoryType": 5,
-      "MemoryAddress": 8,
-      "MemoryFlag": 128
+      "Y": 564
     },
     {
       "Id": 73,
@@ -1731,10 +1461,7 @@
         [ "Missile (Mickey Mouse room)", 0 ]
       ],
       "X": 952,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 9,
-      "MemoryFlag": 2
+      "Y": 404
     },
     {
       "Id": 74,
@@ -1743,10 +1470,7 @@
         [ "Missile (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1176,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 9,
-      "MemoryFlag": 4
+      "Y": 244
     },
     {
       "Id": 75,
@@ -1755,10 +1479,7 @@
         [ "Power Bomb (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1240,
-      "Y": 276,
-      "MemoryType": 5,
-      "MemoryAddress": 9,
-      "MemoryFlag": 8
+      "Y": 276
     },
     {
       "Id": 76,
@@ -1767,10 +1488,7 @@
         [ "Power Bomb (Power Bombs of shame)", 0 ]
       ],
       "X": 1080,
-      "Y": 532,
-      "MemoryType": 5,
-      "MemoryAddress": 9,
-      "MemoryFlag": 16
+      "Y": 532
     },
     {
       "Id": 77,
@@ -1780,10 +1498,7 @@
         [ "Missile (lower Norfair near Wave Beam)", 0 ]
       ],
       "X": 984,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 9,
-      "MemoryFlag": 32
+      "Y": 244
     },
     {
       "Id": 78,
@@ -1793,10 +1508,7 @@
       ],
       "X": 760,
       "Y": 628,
-      "Hints": [ "I hear Ridley is about to open one of Kraid's Christmas presents again." ],
-      "MemoryType": 5,
-      "MemoryAddress": 9,
-      "MemoryFlag": 64
+      "Hints": [ "I hear Ridley is about to open one of Kraid's Christmas presents again." ]
     },
     {
       "Id": 79,
@@ -1804,10 +1516,7 @@
         "Screw Attack"
       ],
       "X": 696,
-      "Y": 596,
-      "MemoryType": 5,
-      "MemoryAddress": 9,
-      "MemoryFlag": 128
+      "Y": 596
     },
     {
       "Id": 80,
@@ -1816,10 +1525,7 @@
         [ "Energy Tank, Firefleas", 0 ]
       ],
       "X": 1240,
-      "Y": 436,
-      "MemoryType": 5,
-      "MemoryAddress": 10,
-      "MemoryFlag": 1
+      "Y": 436
     },
     {
       "Id": 128,
@@ -1828,10 +1534,7 @@
         [ "Missile (Wrecked Ship middle)", 0 ]
       ],
       "X": 408,
-      "Y": 340,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 1
+      "Y": 340
     },
     {
       "Id": 129,
@@ -1841,10 +1544,7 @@
         [ "Reserve Tank, Wrecked Ship", 0 ]
       ],
       "X": 504,
-      "Y": 180,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 2
+      "Y": 180
     },
     {
       "Id": 130,
@@ -1853,10 +1553,7 @@
         [ "Missile (Gravity Suit)", 0 ]
       ],
       "X": 440,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 4
+      "Y": 244
     },
     {
       "Id": 131,
@@ -1865,10 +1562,7 @@
         [ "Missile (Wrecked Ship top)", 0 ]
       ],
       "X": 696,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 8
+      "Y": 148
     },
     {
       "Id": 132,
@@ -1877,10 +1571,7 @@
         [ "Energy Tank, Wrecked Ship", 0 ]
       ],
       "X": 600,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 16
+      "Y": 244
     },
     {
       "Id": 133,
@@ -1889,10 +1580,7 @@
         [ "Super Missile (Wrecked Ship left)", 0 ]
       ],
       "X": 504,
-      "Y": 372,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 32
+      "Y": 372
     },
     {
       "Id": 134,
@@ -1901,10 +1589,7 @@
         [ "Right Super, Wrecked Ship", 0 ]
       ],
       "X": 696,
-      "Y": 372,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 64
+      "Y": 372
     },
     {
       "Id": 135,
@@ -1913,10 +1598,7 @@
         [ "Gravity Suit", 0 ]
       ],
       "X": 344,
-      "Y": 244,
-      "MemoryType": 5,
-      "MemoryAddress": 16,
-      "MemoryFlag": 128
+      "Y": 244
     },
     {
       "Id": 136,
@@ -1926,10 +1608,7 @@
         [ "Missile (green Maridia shinespark)", 0 ]
       ],
       "X": 232,
-      "Y": 468,
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 1
+      "Y": 468
     },
     {
       "Id": 137,
@@ -1938,10 +1617,7 @@
         [ "Super Missile (green Maridia)", 0 ]
       ],
       "X": 264,
-      "Y": 436,
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 2
+      "Y": 436
     },
     {
       "Id": 138,
@@ -1950,10 +1626,7 @@
         [ "Energy Tank, Mama turtle", 0 ]
       ],
       "X": 488,
-      "Y": 468,
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 4
+      "Y": 468
     },
     {
       "Id": 139,
@@ -1962,30 +1635,21 @@
         [ "Missile (green Maridia tatori)", 0 ]
       ],
       "X": 520,
-      "Y": 500,
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 8
+      "Y": 500
     },
     {
       "Id": 140,
       "Name": [
         "Watering Hole Left",
         [ "Super Missile (yellow Maridia)", 0 ]
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 16
+      ]
     },
     {
       "Id": 141,
       "Name": [
         "Watering Hole Right",
         [ "Missile (yellow Maridia super missile)", 0 ]
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 32
+      ]
     },
     {
       "Id": 142,
@@ -1994,10 +1658,7 @@
         [ "Missile (yellow Maridia false wall)", 0 ]
       ],
       "X": 552,
-      "Y": 276,
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 64
+      "Y": 276
     },
     {
       "Id": 143,
@@ -2005,30 +1666,21 @@
         "Plasma Beam"
       ],
       "X": 808,
-      "Y": 148,
-      "MemoryType": 5,
-      "MemoryAddress": 17,
-      "MemoryFlag": 128
+      "Y": 148
     },
     {
       "Id": 144,
       "Name": [
         "Left Sand Pit Left",
         [ "Missile (left Maridia sand pit room)", 0 ]
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 1
+      ]
     },
     {
       "Id": 145,
       "Name": [
         "Left Sand Pit Right",
         [ "Reserve Tank, Maridia", 0 ]
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 2
+      ]
     },
     {
       "Id": 146,
@@ -2037,10 +1689,7 @@
         [ "Missile (right Maridia sand pit room)", 0 ]
       ],
       "X": 648,
-      "Y": 532,
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 4
+      "Y": 532
     },
     {
       "Id": 147,
@@ -2049,10 +1698,7 @@
         [ "Power Bomb (right Maridia sand pit room)", 0 ]
       ],
       "X": 680,
-      "Y": 564,
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 8
+      "Y": 564
     },
     {
       "Id": 148,
@@ -2061,10 +1707,7 @@
         [ "Missile (pink Maridia)", 0 ]
       ],
       "X": 680,
-      "Y": 372,
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 16
+      "Y": 372
     },
     {
       "Id": 149,
@@ -2073,10 +1716,7 @@
         [ "Super Missile (pink Maridia)", 0 ]
       ],
       "X": 712,
-      "Y": 372,
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 32
+      "Y": 372
     },
     {
       "Id": 150,
@@ -2098,10 +1738,7 @@
         "I always had faith",
         "I knew Shaktool wouldn't let you down.",
         "Never doubt the Shak."
-      ],
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 64
+      ]
     },
     {
       "Id": 151,
@@ -2111,10 +1748,7 @@
         [ "Missile (Draygon)", 0 ]
       ],
       "X": 1256,
-      "Y": 308,
-      "MemoryType": 5,
-      "MemoryAddress": 18,
-      "MemoryFlag": 128
+      "Y": 308
     },
     {
       "Id": 152,
@@ -2123,10 +1757,7 @@
         [ "Energy Tank, Botwoon", 0 ]
       ],
       "X": 840,
-      "Y": 340,
-      "MemoryType": 5,
-      "MemoryAddress": 19,
-      "MemoryFlag": 1
+      "Y": 340
     },
     {
       "Id": 154,
@@ -2135,10 +1766,7 @@
         [ "Space Jump", 0 ]
       ],
       "X": 1128,
-      "Y": 404,
-      "MemoryType": 5,
-      "MemoryAddress": 19,
-      "MemoryFlag": 4
+      "Y": 404
     },
     {
       "Id": 256,
@@ -2146,10 +1774,7 @@
         "Ether Tablet"
       ],
       "X": 844,
-      "Y": 38,
-      "MemoryType": 2,
-      "MemoryAddress": 1,
-      "MemoryFlag": 1
+      "Y": 38
     },
     {
       "Id": 257,
@@ -2157,10 +1782,7 @@
         "Spectacle Rock"
       ],
       "X": 980,
-      "Y": 178,
-      "MemoryType": 3,
-      "MemoryAddress": 3,
-      "MemoryFlag": 64
+      "Y": 178
     },
     {
       "Id": 258,
@@ -2168,10 +1790,7 @@
         "Spectacle Rock Cave"
       ],
       "X": 980,
-      "Y": 290,
-      "MemoryType": 1,
-      "MemoryAddress": 234,
-      "MemoryFlag": 10
+      "Y": 290
     },
     {
       "Id": 259,
@@ -2179,10 +1798,7 @@
         "Old Man"
       ],
       "X": 816,
-      "Y": 378,
-      "MemoryType": 2,
-      "MemoryAddress": 0,
-      "MemoryFlag": 1
+      "Y": 378
     },
     {
       "Id": 260,
@@ -2190,10 +1806,7 @@
         "Floating Island"
       ],
       "X": 1627,
-      "Y": 40,
-      "MemoryType": 3,
-      "MemoryAddress": 5,
-      "MemoryFlag": 64
+      "Y": 40
     },
     {
       "Id": 261,
@@ -2201,73 +1814,49 @@
         "Spiral Cave"
       ],
       "X": 1598,
-      "Y": 180,
-      "MemoryType": 1,
-      "MemoryAddress": 254,
-      "MemoryFlag": 4
+      "Y": 180
     },
     {
       "Id": 262,
       "Name": [
         "Paradox Cave Upper - Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 255,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 263,
       "Name": [
         "Paradox Cave Upper - Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 255,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 264,
       "Name": [
         "Paradox Cave Lower - Far Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 239,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 265,
       "Name": [
         "Paradox Cave Lower - Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 239,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 266,
       "Name": [
         "Paradox Cave Lower - Middle"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 239,
-      "MemoryFlag": 8
+      ]
     },
     {
       "Id": 267,
       "Name": [
         "Paradox Cave Lower - Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 239,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 268,
       "Name": [
         "Paradox Cave Lower - Far Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 239,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 269,
@@ -2275,10 +1864,7 @@
         "Mimic Cave"
       ],
       "X": 1731,
-      "Y": 180,
-      "MemoryType": 1,
-      "MemoryAddress": 268,
-      "MemoryFlag": 4
+      "Y": 180
     },
     {
       "Id": 270,
@@ -2293,10 +1879,7 @@
       "WhenMarkingJunk": [ "Phew." ],
       "WhenMarkingProgression": [ "I'm so sorry." ],
       "WhenTrackingJunk": [ "If only you could read." ],
-      "WhenTrackingProgression": [ "I'm so sorry.", "Well, at least you found something." ],
-      "MemoryType": 3,
-      "MemoryAddress": 128,
-      "MemoryFlag": 64
+      "WhenTrackingProgression": [ "I'm so sorry.", "Well, at least you found something." ]
     },
     {
       "Id": 271,
@@ -2304,10 +1887,7 @@
         "Mushroom"
       ],
       "X": 240,
-      "Y": 180,
-      "MemoryType": 2,
-      "MemoryAddress": 1,
-      "MemoryFlag": 16
+      "Y": 180
     },
     {
       "Id": 272,
@@ -2315,10 +1895,7 @@
         "Lost Woods Hideout"
       ],
       "X": 320,
-      "Y": 260,
-      "MemoryType": 1,
-      "MemoryAddress": 225,
-      "MemoryFlag": 9
+      "Y": 260
     },
     {
       "Id": 273,
@@ -2331,10 +1908,7 @@
       "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AGA seed then?" ],
       "WhenMarkingProgression": [ "Sucks to be you." ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
-      "WhenTrackingProgression": [ "Well, at least you got something." ],
-      "MemoryType": 1,
-      "MemoryAddress": 226,
-      "MemoryFlag": 9
+      "WhenTrackingProgression": [ "Well, at least you got something." ]
     },
     {
       "Id": 274,
@@ -2343,10 +1917,7 @@
         "Pegasus Rocks"
       ],
       "X": 777,
-      "Y": 590,
-      "MemoryType": 1,
-      "MemoryAddress": 292,
-      "MemoryFlag": 4
+      "Y": 590
     },
     {
       "Id": 275,
@@ -2354,10 +1925,7 @@
         "Graveyard Ledge"
       ],
       "X": 1132,
-      "Y": 549,
-      "MemoryType": 1,
-      "MemoryAddress": 283,
-      "MemoryFlag": 9
+      "Y": 549
     },
     {
       "Id": 276,
@@ -2365,102 +1933,69 @@
         "King's Tomb"
       ],
       "X": 1207,
-      "Y": 598,
-      "MemoryType": 1,
-      "MemoryAddress": 275,
-      "MemoryFlag": 4
+      "Y": 598
     },
     {
       "Id": 277,
       "Name": [
         "Kakariko Well Back cave",
         "Kakariko Well Top"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 47,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 278,
       "Name": [
         "Kakariko Well Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 47,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 279,
       "Name": [
         "Kakariko Well Middle"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 47,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 280,
       "Name": [
         "Kakariko Well Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 47,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 281,
       "Name": [
         "Kakariko Well Bottom"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 47,
-      "MemoryFlag": 8
+      ]
     },
     {
       "Id": 282,
       "Name": [
         "Blind's Hideout Back Room",
         "Blind's Hideout Top"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 285,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 283,
       "Name": [
         "Blind's Hideout Far Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 285,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 284,
       "Name": [
         "Blind's Hideout Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 285,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 285,
       "Name": [
         "Blind's Hideout Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 285,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 286,
       "Name": [
         "Blind's Hideout Far Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 285,
-      "MemoryFlag": 8
+      ]
     },
     {
       "Id": 287,
@@ -2471,10 +2006,7 @@
       "Y": 933,
       "Hints": [
         "You know it's a scam, right?"
-      ],
-      "MemoryType": 4,
-      "MemoryAddress": 201,
-      "MemoryFlag": 2
+      ]
     },
     {
       "Id": 289,
@@ -2483,10 +2015,7 @@
         "Bug Catching Kid's House"
       ],
       "X": 314,
-      "Y": 1060,
-      "MemoryType": 2,
-      "MemoryAddress": 0,
-      "MemoryFlag": 4
+      "Y": 1060
     },
     {
       "Id": 290,
@@ -2495,10 +2024,7 @@
         "Inn back room"
       ],
       "X": 320,
-      "Y": 1145,
-      "MemoryType": 1,
-      "MemoryAddress": 259,
-      "MemoryFlag": 4
+      "Y": 1145
     },
     {
       "Id": 291,
@@ -2506,10 +2032,7 @@
         "Magic Bat"
       ],
       "X": 650,
-      "Y": 1127,
-      "MemoryType": 2,
-      "MemoryAddress": 1,
-      "MemoryFlag": 128
+      "Y": 1127
     },
     {
       "Id": 292,
@@ -2519,28 +2042,19 @@
       ],
       "Hints": [
         "You know it's a scam, right?"
-      ],
-      "MemoryType": 2,
-      "MemoryAddress": 0,
-      "MemoryFlag": 2
+      ]
     },
     {
       "Id": 293,
       "Name": [
         "Zora's Ledge"
-      ],
-      "MemoryType": 3,
-      "MemoryAddress": 129,
-      "MemoryFlag": 64
+      ]
     },
     {
       "Id": 295,
       "Name": [
         "Waterfall Fairy Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 276,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 296,
@@ -2549,46 +2063,31 @@
         "Mushroom Item"
       ],
       "X": 1607,
-      "Y": 670,
-      "MemoryType": 2,
-      "MemoryAddress": 1,
-      "MemoryFlag": 32
+      "Y": 670
     },
     {
       "Id": 297,
       "Name": [
         "Sahasrahla's Hut Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 261,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 298,
       "Name": [
         "Sahasrahla's Hut Middle"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 261,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 299,
       "Name": [
         "Sahasrahla's Hut Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 261,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 300,
       "Name": [
         "Sahasrahla"
-      ],
-      "MemoryType": 2,
-      "MemoryAddress": 0,
-      "MemoryFlag": 10
+      ]
     },
     {
       "Id": 301,
@@ -2597,46 +2096,31 @@
         "Racing Game"
       ],
       "X": 111,
-      "Y": 1354,
-      "MemoryType": 3,
-      "MemoryAddress": 40,
-      "MemoryFlag": 64
+      "Y": 1354
     },
     {
       "Id": 307,
       "Name": [
         "Mini Moldorm Cave Far Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 291,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 308,
       "Name": [
         "Mini Moldorm Cave Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 291,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 309,
       "Name": [
         "Mini Moldorm Cave NPC"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 291,
-      "MemoryFlag": 10
+      ]
     },
     {
       "Id": 310,
       "Name": [
         "Mini Moldorm Cave Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 291,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 314,
@@ -2644,28 +2128,19 @@
         "Bombos Tablet"
       ],
       "X": 440,
-      "Y": 1845,
-      "MemoryType": 2,
-      "MemoryAddress": 1,
-      "MemoryFlag": 2
+      "Y": 1845
     },
     {
       "Id": 315,
       "Name": [
         "Floodgate Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 267,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 316,
       "Name": [
         "Sunken Treasure"
-      ],
-      "MemoryType": 3,
-      "MemoryAddress": 59,
-      "MemoryFlag": 64
+      ]
     },
     {
       "Id": 317,
@@ -2673,10 +2148,7 @@
         "Lake Hylia Island"
       ],
       "X": 1450,
-      "Y": 1666,
-      "MemoryType": 3,
-      "MemoryAddress": 53,
-      "MemoryFlag": 64
+      "Y": 1666
     },
     {
       "Id": 318,
@@ -2685,10 +2157,7 @@
         "Hobo"
       ],
       "X": 1390,
-      "Y": 1390,
-      "MemoryType": 4,
-      "MemoryAddress": 201,
-      "MemoryFlag": 1
+      "Y": 1390
     },
     {
       "Id": 319,
@@ -2697,10 +2166,7 @@
         "Ice Rod Cave"
       ],
       "X": 1795,
-      "Y": 1547,
-      "MemoryType": 1,
-      "MemoryAddress": 288,
-      "MemoryFlag": 4
+      "Y": 1547
     },
     {
       "Id": 320,
@@ -2708,64 +2174,43 @@
         "Spike Cave"
       ],
       "X": 1151,
-      "Y": 294,
-      "MemoryType": 1,
-      "MemoryAddress": 279,
-      "MemoryFlag": 4
+      "Y": 294
     },
     {
       "Id": 321,
       "Name": [
         "Hookshot Cave - Top Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 60,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 322,
       "Name": [
         "Hookshot Cave - Top Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 60,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 323,
       "Name": [
         "Hookshot Cave - Bottom Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 60,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 324,
       "Name": [
         "Hookshot Cave - Bottom Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 60,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 325,
       "Name": [
         "Superbunny Cave - Top"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 248,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 326,
       "Name": [
         "Superbunny Cave - Bottom"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 248,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 327,
@@ -2774,10 +2219,7 @@
         "Bumper Cave"
       ],
       "X": 687,
-      "Y": 340,
-      "MemoryType": 3,
-      "MemoryAddress": 48,
-      "MemoryFlag": 64
+      "Y": 340
     },
     {
       "Id": 328,
@@ -2785,10 +2227,7 @@
         "Chest Game"
       ],
       "X": 100,
-      "Y": 936,
-      "MemoryType": 1,
-      "MemoryAddress": 262,
-      "MemoryFlag": 10
+      "Y": 936
     },
     {
       "Id": 329,
@@ -2796,10 +2235,7 @@
         "C-Shaped House"
       ],
       "X": 414,
-      "Y": 969,
-      "MemoryType": 1,
-      "MemoryAddress": 284,
-      "MemoryFlag": 4
+      "Y": 969
     },
     {
       "Id": 330,
@@ -2807,10 +2243,7 @@
         "Brewery"
       ],
       "X": 219,
-      "Y": 1171,
-      "MemoryType": 1,
-      "MemoryAddress": 262,
-      "MemoryFlag": 4
+      "Y": 1171
     },
     {
       "Id": 331,
@@ -2821,10 +2254,7 @@
       "X": 636,
       "Y": 1214,
       "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." ],
-      "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ],
-      "MemoryType": 1,
-      "MemoryAddress": 295,
-      "MemoryFlag": 10
+      "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ]
     },
     {
       "Id": 332,
@@ -2832,10 +2262,7 @@
         "Blacksmith"
       ],
       "X": 616,
-      "Y": 1054,
-      "MemoryType": 2,
-      "MemoryAddress": 1,
-      "MemoryFlag": 4
+      "Y": 1054
     },
     {
       "Id": 333,
@@ -2844,10 +2271,7 @@
         "Purple Chest"
       ],
       "X": 616,
-      "Y": 1054,
-      "MemoryType": 4,
-      "MemoryAddress": 201,
-      "MemoryFlag": 16
+      "Y": 1054
     },
     {
       "Id": 334,
@@ -2860,10 +2284,7 @@
       "Y": 347,
       "Hints": [
         "You know it's a scam, right?"
-      ],
-      "MemoryType": 2,
-      "MemoryAddress": 0,
-      "MemoryFlag": 32
+      ]
     },
     {
       "Id": 335,
@@ -2872,30 +2293,21 @@
         "Pyramid"
       ],
       "X": 1164,
-      "Y": 922,
-      "MemoryType": 3,
-      "MemoryAddress": 91,
-      "MemoryFlag": 64
+      "Y": 922
     },
     {
       "Id": 336,
       "Name": [
         "Cursed Fairy Left",
         "Pyramid Fairy Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 278,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 337,
       "Name": [
         "Cursed Fairy Right",
         "Pyramid Fairy Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 278,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 338,
@@ -2903,10 +2315,7 @@
         "Digging Game"
       ],
       "X": 100,
-      "Y": 1385,
-      "MemoryType": 3,
-      "MemoryAddress": 104,
-      "MemoryFlag": 64
+      "Y": 1385
     },
     {
       "Id": 339,
@@ -2915,82 +2324,55 @@
         "Stumpy"
       ],
       "X": 620,
-      "Y": 1371,
-      "MemoryType": 2,
-      "MemoryAddress": 0,
-      "MemoryFlag": 8
+      "Y": 1371
     },
     {
       "Id": 340,
       "Name": [
         "Hype Cave Top"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 286,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 341,
       "Name": [
         "Hype Cave Middle Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 286,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 342,
       "Name": [
         "Hype Cave Middle Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 286,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 343,
       "Name": [
         "Hype Cave Bottom"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 286,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 344,
       "Name": [
         "Hype Cave NPC"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 286,
-      "MemoryFlag": 10
+      ]
     },
     {
       "Id": 345,
       "Name": [
         "Mire Shed - Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 269,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 346,
       "Name": [
         "Mire Shed - Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 269,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 347,
       "Name": [
         "Sanctuary"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 18,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 348,
@@ -2998,10 +2380,7 @@
         "Secret Room - Left",
         "Back of Escape - Left",
         [ "Sewers Secret Room - Left", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 17,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 349,
@@ -3009,10 +2388,7 @@
         "Secret Room - Middle",
         "Back of Escape - Middle",
         [ "Sewers Secret Room - Middle", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 17,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 350,
@@ -3020,131 +2396,89 @@
         "Secret Room - Right",
         "Back of Escape - Right",
         [ "Sewers Secret Room - Right", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 17,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 351,
       "Name": [
         "Dark Cross"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 50,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 352,
       "Name": [
         "Hyrule Castle Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 114,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 353,
       "Name": [
         "Boomerang Chest",
         [ "Hyrule Castle Boomerang Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 113,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 354,
       "Name": [
         "Zelda's Cell",
         [ "Hyrule Castle Zelda's Cell", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 128,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 355,
       "Name": [
         "Link's Uncle"
-      ],
-      "MemoryType": 4,
-      "MemoryAddress": 198,
-      "MemoryFlag": 1
+      ]
     },
     {
       "Id": 356,
       "Name": [
         "Secret Passage",
         [ "Hyrule Castle Secret Passage", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 85,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 357,
       "Name": [
         "Castle Tower Foyer"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 224,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 358,
       "Name": [
         "Castle Tower - Dark Maze"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 208,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 359,
       "Name": [
         "Cannonball Chest",
         [ "Eastern Palace Cannonball Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 185,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 360,
       "Name": [
         "Eastern Palace Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 170,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 361,
       "Name": [
         "Eastern Palace Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 168,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 362,
       "Name": [
         "Eastern Palace Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 169,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 363,
       "Name": [
         "Eastern Palace Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 184,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 364,
@@ -3153,20 +2487,14 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 200,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 365,
       "Name": [
         "Desert Palace Big Chest",
         "Dessert Palace Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 115,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 366,
@@ -3174,40 +2502,28 @@
         "Torch",
         [ "Desert Palace Torch", 0 ],
         [ "Dessert Palace Torch", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 115,
-      "MemoryFlag": 10
+      ]
     },
     {
       "Id": 367,
       "Name": [
         "Desert Palace Map Chest",
         "Dessert Palace Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 116,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 368,
       "Name": [
         "Desert Palace Big Key Chest",
         "Dessert Palace Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 117,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 369,
       "Name": [
         "Desert Palace Compass Chest",
         "Dessert Palace Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 133,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 370,
@@ -3216,56 +2532,38 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 51,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 371,
       "Name": [
         "Basement Cage",
         [ "Tower of Hera Basement Cage", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 135,
-      "MemoryFlag": 10
+      ]
     },
     {
       "Id": 372,
       "Name": [
         "Tower of Hera Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 119,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 373,
       "Name": [
         "Tower of Hera Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 135,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 374,
       "Name": [
         "Tower of Hera Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 39,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 375,
       "Name": [
         "Tower of Hera Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 39,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 376,
@@ -3274,132 +2572,90 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 7,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 377,
       "Name": [
         "Shooter Room",
         [ "Palace of Darkness Shooter Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 9,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 378,
       "Name": [
         "Palace of Darkness Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 58,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 379,
       "Name": [
         "Stalfos Basement",
         [ "Palace of Darkness Stalfos Basement", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 10,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 380,
       "Name": [
         "The Arena - Bridge",
         [ "Palace of Darkness The Arena - Bridge", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 42,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 381,
       "Name": [
         "The Arena - Ledge",
         [ "Palace of Darkness The Arena - Ledge", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 42,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 382,
       "Name": [
         "Palace of Darkness Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 43,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 383,
       "Name": [
         "Palace of Darkness Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 26,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 384,
       "Name": [
         "Harmless Hellway",
         [ "Palace of Darkness Harmless Hellway", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 26,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 385,
       "Name": [
         "Dark Basement Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 106,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 386,
       "Name": [
         "Dark Basement Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 106,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 387,
       "Name": [
         "Dark Maze Top"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 25,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 388,
       "Name": [
         "Dark Maze Bottom"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 25,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 389,
       "Name": [
         "Palace of Darkness Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 26,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 390,
@@ -3408,92 +2664,62 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 90,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 391,
       "Name": [
         "Swamp Palace Entrance"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 40,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 392,
       "Name": [
         "Swamp Palace Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 55,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 393,
       "Name": [
         "Swamp Palace Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 54,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 394,
       "Name": [
         "Swamp Palace Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 70,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 395,
       "Name": [
         "Swamp Palace West Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 52,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 396,
       "Name": [
         "Swamp Palace Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 53,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 397,
       "Name": [
         "Flooded Room Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 118,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 398,
       "Name": [
         "Flooded Room Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 118,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 399,
       "Name": [
         "Waterfall Room",
         [ "Swamp Palace Waterfall Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 102,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 400,
@@ -3502,10 +2728,7 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 6,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 401,
@@ -3513,40 +2736,28 @@
         "Pot Prison",
         [ "Skull Woods Pot Prison", 0 ],
         [ "Skill Woods Pot Prison", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 87,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 402,
       "Name": [
         "Skull Woods Compass Chest",
         "Skill Woods Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 103,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 403,
       "Name": [
         "Skull Woods Big Chest",
         "Skill Woods Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 88,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 404,
       "Name": [
         "Skull Woods Map Chest",
         "Skill Woods Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 88,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 405,
@@ -3554,20 +2765,14 @@
         "Pinball Room",
         [ "Skull Woods Pinball Room", 0 ],
         [ "Skill Woods Pinball Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 104,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 406,
       "Name": [
         "Skull Woods Big Key Chest",
         "Skill Woods Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 57,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 407,
@@ -3575,10 +2780,7 @@
         "Bridge Room",
         [ "Skull Woods Bridge Room", 0 ],
         [ "Skill Woods Bridge Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 89,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 408,
@@ -3587,76 +2789,52 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 41,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 409,
       "Name": [
         "Thieves' Town Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 219,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 410,
       "Name": [
         "Ambush Chest",
         [ "Thieves' Town Ambush Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 203,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 411,
       "Name": [
         "Thieves' Town Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 220,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 412,
       "Name": [
         "Thieves' Town Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 219,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 413,
       "Name": [
         "Attic",
         [ "Thieves' Town Attic", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 101,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 414,
       "Name": [
         "Blind's Cell",
         [ "Thieves' Town Blind's Cell", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 69,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 415,
       "Name": [
         "Thieves' Town Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 68,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 416,
@@ -3666,76 +2844,52 @@
       "Hints": [
         "One of the dungeon bosses has it.",
         "It will explain everything."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 172,
-      "MemoryFlag": 10
+      ]
     },
     {
       "Id": 417,
       "Name": [
         "Ice Palace Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 46,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 418,
       "Name": [
         "Spike Room",
         [ "Ice Palace Spike Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 95,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 419,
       "Name": [
         "Ice Palace Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 63,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 420,
       "Name": [
         "Ice Palace Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 31,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 421,
       "Name": [
         "Iced T Room",
         [ "Ice Palace Iced T Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 174,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 422,
       "Name": [
         "Freezor Chest",
         [ "Ice Palace Freezor Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 126,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 423,
       "Name": [
         "Ice Palace Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 158,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 424,
@@ -3744,75 +2898,51 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 222,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 425,
       "Name": [
         "Misery Mire Main Lobby"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 194,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 426,
       "Name": [
         "Misery Mire Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 195,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 427,
       "Name": [
         "Bridge Chest",
         [ "Misery Mire Bridge Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 162,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 428,
       "Name": [
         "Spike Chest",
         [ "Misery Mire Spike Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 179,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 429,
       "Name": [
         "Misery Mire Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 193,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 430,
       "Name": [
         "Misery Mire Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 209,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 431,
       "Name": [
         "Misery Mire Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 195,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 432,
@@ -3821,115 +2951,79 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 144,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 433,
       "Name": [
         "Turtle Rock Compass Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 214,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 434,
       "Name": [
         "Roller Room Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 183,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 435,
       "Name": [
         "Roller Room Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 183,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 436,
       "Name": [
         "Chain Chomps",
         [ "Turtle Rock Chain Chomps", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 182,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 437,
       "Name": [
         "Turtle Rock Big Key Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 20,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 438,
       "Name": [
         "Turtle Rock Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 36,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 439,
       "Name": [
         "Crystaroller Room",
         [ "Turtle Rock Crystaroller Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 4,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 440,
       "Name": [
         "Laser Bridge Top Right",
         "Eye Bridge Top Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 213,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 441,
       "Name": [
         "Laser Bridge Top Left",
         "Eye Bridge Top Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 213,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 442,
       "Name": [
         "Laser Bridge Bottom Right",
         "Eye Bridge Bottom Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 213,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 443,
       "Name": [
         "Laser Bridge Bottom Left",
         "Eye Bridge Bottom Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 213,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 444,
@@ -3938,260 +3032,176 @@
       ],
       "Hints": [
         "One of the dungeon bosses has it."
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 164,
-      "MemoryFlag": 11
+      ]
     },
     {
       "Id": 445,
       "Name": [
         "Bob's Torch"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 140,
-      "MemoryFlag": 10
+      ]
     },
     {
       "Id": 446,
       "Name": [
         "DMs Room Top Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 123,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 447,
       "Name": [
         "DMs Room Top Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 123,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 448,
       "Name": [
         "DMs Room Bottom Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 123,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 449,
       "Name": [
         "DMs Room Bottom Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 123,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 450,
       "Name": [
         "Ganon's Tower Map Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 139,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 451,
       "Name": [
         "Firesnake Room"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 125,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 452,
       "Name": [
         "Randomizer Room Top Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 124,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 453,
       "Name": [
         "Randomizer Room Top Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 124,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 454,
       "Name": [
         "Randomizer Room Bottom Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 124,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 455,
       "Name": [
         "Randomizer Room Bottom Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 124,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 456,
       "Name": [
         "Right Side First Room Left",
         "Hope Room Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 140,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 457,
       "Name": [
         "Right Side First Room Right",
         "Hope Room Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 140,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 458,
       "Name": [
         "Tile Room",
         [ "Ganon's Tower Tile Room", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 141,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 459,
       "Name": [
         "Compass Room Top Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 157,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 460,
       "Name": [
         "Compass Room Top Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 157,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 461,
       "Name": [
         "Compass Room Bottom Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 157,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 462,
       "Name": [
         "Compass Room Bottom Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 157,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 463,
       "Name": [
         "Bob's Chest",
         [ "Ganon's Tower Bob's Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 140,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 464,
       "Name": [
         "Ganon's Tower Big Chest"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 140,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 465,
       "Name": [
         "Bottom Big Key Chest",
         [ "Big Key Room Bottom Big Key Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 28,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 466,
       "Name": [
         "Big Key Room Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 28,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 467,
       "Name": [
         "Big Key Room Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 28,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 468,
       "Name": [
         "Mini Helmasaur Room Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 61,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 469,
       "Name": [
         "Mini Helmasaur Room Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 61,
-      "MemoryFlag": 5
+      ]
     },
     {
       "Id": 470,
       "Name": [
         "Pre-Moldorm Chest",
         [ "Ganon's Tower Pre-Moldorm Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 61,
-      "MemoryFlag": 6
+      ]
     },
     {
       "Id": 471,
       "Name": [
         "Moldorm Chest",
         [ "Ganon's Tower Moldorm Chest", 0 ]
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 77,
-      "MemoryFlag": 4
+      ]
     },
     {
       "Id": 496,
@@ -4199,10 +3209,7 @@
         "Library"
       ],
       "X": 313,
-      "Y": 1310,
-      "MemoryType": 2,
-      "MemoryAddress": 0,
-      "MemoryFlag": 128
+      "Y": 1310
     },
     {
       "Id": 497,
@@ -4211,10 +3218,7 @@
         "Flute Spot"
       ],
       "X": 600,
-      "Y": 1350,
-      "MemoryType": 3,
-      "MemoryAddress": 42,
-      "MemoryFlag": 64
+      "Y": 1350
     },
     {
       "Id": 498,
@@ -4223,10 +3227,7 @@
         "South of Grove"
       ],
       "X": 552,
-      "Y": 1693,
-      "MemoryType": 1,
-      "MemoryAddress": 283,
-      "MemoryFlag": 10
+      "Y": 1693
     },
     {
       "Id": 499,
@@ -4234,10 +3235,7 @@
         "Link's House"
       ],
       "X": 1097,
-      "Y": 1366,
-      "MemoryType": 1,
-      "MemoryAddress": 260,
-      "MemoryFlag": 4
+      "Y": 1366
     },
     {
       "Id": 500,
@@ -4246,10 +3244,7 @@
         "Aggina's Cave"
       ],
       "X": 400,
-      "Y": 1655,
-      "MemoryType": 1,
-      "MemoryAddress": 266,
-      "MemoryFlag": 4
+      "Y": 1655
     },
     {
       "Id": 506,
@@ -4258,19 +3253,13 @@
         "Chicken Lady's House"
       ],
       "X": 197,
-      "Y": 1066,
-      "MemoryType": 1,
-      "MemoryAddress": 264,
-      "MemoryFlag": 4
+      "Y": 1066
     },
     {
       "Id": 507,
       "Name": [
         "Mini Moldorm Cave Far Right"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 291,
-      "MemoryFlag": 7
+      ]
     },
     {
       "Id": 508,
@@ -4278,10 +3267,7 @@
         "Desert Ledge"
       ],
       "X": 40,
-      "Y": 1835,
-      "MemoryType": 3,
-      "MemoryAddress": 48,
-      "MemoryFlag": 64
+      "Y": 1835
     },
     {
       "Id": 509,
@@ -4289,19 +3275,13 @@
         "Checkerboard Cave"
       ],
       "X": 354,
-      "Y": 1560,
-      "MemoryType": 1,
-      "MemoryAddress": 294,
-      "MemoryFlag": 9
+      "Y": 1560
     },
     {
       "Id": 510,
       "Name": [
         "Waterfall Fairy Left"
-      ],
-      "MemoryType": 1,
-      "MemoryAddress": 276,
-      "MemoryFlag": 4
+      ]
     }
   ]
 }

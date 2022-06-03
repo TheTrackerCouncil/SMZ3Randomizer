@@ -16,13 +16,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: items => items.CardNorfairL2 && (
                         Logic.CanFly(items) ||
                         (items.Grapple && items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
-                        items.HiJump || items.Ice
-                    ));
+                        items.HiJump || items.Ice),
+                memoryAddress: 0x7,
+                memoryFlag: 0x80);
             BubbleMountain = new(this, 64, 0x8F8C66, LocationType.Visible,
                 name: "Missile (bubble Norfair)",
                 alsoKnownAs: "Bubble Mountain",
                 vanillaItem: ItemType.Missile,
-                access: items => items.CardNorfairL2);
+                access: items => items.CardNorfairL2,
+                memoryAddress: 0x8,
+                memoryFlag: 0x1);
             SpeedBoosterHallCeiling = new(this, 65, 0x8F8C74, LocationType.Hidden,
                 name: "Missile (Speed Booster)",
                 alsoKnownAs: "Speed Booster Hall - Ceiling",
@@ -30,8 +33,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: items => items.CardNorfairL2 && (
                         Logic.CanFly(items) ||
                         (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
-                        items.HiJump || items.Ice
-                    ));
+                        items.HiJump || items.Ice),
+                memoryAddress: 0x8,
+                memoryFlag: 0x2);
             SpeedBoosterRoom = new(this, 66, 0x8F8C82, LocationType.Chozo,
                 name: "Speed Booster",
                 alsoKnownAs: "Speed Booster Room",
@@ -39,8 +43,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: items => items.CardNorfairL2 && (
                         Logic.CanFly(items) ||
                         (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
-                        items.HiJump || items.Ice
-                    ));
+                        items.HiJump || items.Ice),
+                memoryAddress: 0x8,
+                memoryFlag: 0x4);
             DoubleChamber = new(this, 67, 0x8F8CBC, LocationType.Visible,
                 name: "Missile (Wave Beam)",
                 alsoKnownAs: new[] { "Double Chamber", "Grapple Crossing" },
@@ -50,7 +55,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                         (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                         items.HiJump || items.Ice
                     )) ||
-                    (items.SpeedBooster && items.Wave && items.Morph && items.Super));
+                    (items.SpeedBooster && items.Wave && items.Morph && items.Super),
+                memoryAddress: 0x8,
+                memoryFlag: 0x8);
             WaveBeamRoom = new(this, 68, 0x8F8CCA, LocationType.Chozo,
                 name: "Wave Beam",
                 alsoKnownAs: "Wave Beam Room",
@@ -61,8 +68,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                             (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
                             items.HiJump || items.Ice
                         )) ||
-                        (items.SpeedBooster && items.Wave && items.Morph && items.Super)
-                    ));
+                        (items.SpeedBooster && items.Wave && items.Morph && items.Super)),
+                memoryAddress: 0x8,
+                memoryFlag: 0x10);
             BubbleMountainHiddenHall = new(this);
         }
 
@@ -112,8 +120,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     access: items => items.CardNorfairL2 && items.Morph && (
                             Logic.CanFly(items) ||
                             (items.Grapple && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
-                            items.HiJump || items.Ice
-                        ));
+                            items.HiJump || items.Ice),
+                    memoryAddress: 0x7,
+                    memoryFlag: 0x20);
 
                 HiddenItem = new(this, 62, 0x8F8C44, LocationType.Hidden,
                     name: "Hidden Item",
@@ -122,8 +131,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     access: items => items.CardNorfairL2 && items.Morph && (
                             Logic.CanFly(items) ||
                             (items.Grapple && (items.SpeedBooster || Logic.CanPassBombPassages(items))) ||
-                            items.HiJump || items.Ice
-                        ));
+                            items.HiJump || items.Ice),
+                    memoryAddress: 0x7,
+                    memoryFlag: 0x40);
             }
 
             public Location MainItem { get; }

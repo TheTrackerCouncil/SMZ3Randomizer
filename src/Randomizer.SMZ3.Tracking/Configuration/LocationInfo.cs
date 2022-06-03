@@ -125,23 +125,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <returns>A string representation of this location.</returns>
         public override string? ToString() => Name[0];
-
-        /// <summary>
-        /// Denotes the block of memory that this location is associated
-        /// with
-        /// </summary>
-        public LocationMemoryType? MemoryType { get; set; }
-
-        /// <summary>
-        /// The memory address offset stored as a string hex value
-        /// for where the location is stored in memory
-        /// </summary>
-        public int? MemoryAddress { get; set; }
-
-        /// <summary>
-        /// The flag to check against to see if the location has been
-        /// checked or not
-        /// </summary>
-        public int? MemoryFlag { get; set; }
     }
 }

@@ -84,8 +84,7 @@
         "It's something magical.",
         "You could use it to see things you usually can't.",
         "It's red."
-      ],
-      "MemoryAddress": 69
+      ]
     },
     {
       "Name": [ "Ice Rod", "Nice Rod" ],
@@ -97,8 +96,7 @@
         "It's something magical.",
         "It's cold.",
         "It's blue."
-      ],
-      "MemoryAddress": 70
+      ]
     },
     {
       "Name": [
@@ -119,8 +117,7 @@
           "Stop. Hammer time.",
           [ "You got an M comma C hammer! Pile softening Bang Bang Clap! Other also Bambang Clap Clap!", 0.1 ]
         ]
-      },
-      "MemoryAddress": 75
+      }
     },
     {
       "Name": [
@@ -133,8 +130,7 @@
       "Row": 0,
       "Hints": [
         "You could use it to get around."
-      ],
-      "MemoryAddress": 66
+      ]
     },
     {
       "Name": [
@@ -149,8 +145,7 @@
       "Row": 0,
       "Hints": [
         "You can hurt people with it."
-      ],
-      "MemoryAddress": 64
+      ]
     },
     {
       "Name": [
@@ -164,9 +159,7 @@
       "Hints": [
         "You can hurt people with it.",
         "It's blue."
-      ],
-      "MemoryAddress": 140,
-      "MemoryFlag": 128
+      ]
     },
     {
       "Name": [ "Magic Powder", "Drugs" ],
@@ -175,9 +168,7 @@
       "Row": 0,
       "Hints": [
         "It's something magical."
-      ],
-      "MemoryAddress": 140,
-      "MemoryFlag": 16
+      ]
     },
     {
       "Name": "Bombos",
@@ -188,8 +179,7 @@
       "Hints": [
         "It's something magical.",
         "It's one of the medallions."
-      ],
-      "MemoryAddress": 71
+      ]
     },
     {
       "Name": "Ether",
@@ -200,8 +190,7 @@
       "Hints": [
         "It's something magical.",
         "It's one of the medallions."
-      ],
-      "MemoryAddress": 72
+      ]
     },
     {
       "Name": [
@@ -216,8 +205,7 @@
       "Hints": [
         "It's something magical.",
         "It's one of the medallions."
-      ],
-      "MemoryAddress": 73
+      ]
     },
     {
       "Name": [ "Lamp", "Lantern", "The thing that helps you see in the dark" ],
@@ -228,8 +216,7 @@
         "You could use it to set things on fire.",
         "You could use it to see things you usually can't.",
         "It's red."
-      ],
-      "MemoryAddress": 74
+      ]
     },
     {
       "Name": [
@@ -250,9 +237,7 @@
           [ "Toggled Shaktool Junior on", 0.2 ],
           [ "I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.", 0.1 ]
         ]
-      },
-      "MemoryAddress": 140,
-      "MemoryFlag": 4
+      }
     },
     {
       "Name": [ "Flute", "Ocarina" ],
@@ -263,9 +248,7 @@
         "You could use it to get around.",
         "You could find it in real life.",
         "It's blue."
-      ],
-      "MemoryAddress": 140,
-      "MemoryFlag": 2
+      ]
     },
     {
       "Name": [ "Duck", "Bird", "Burb" ],
@@ -287,8 +270,7 @@
       "Hints": [
         "It's something magical.",
         "It's red."
-      ],
-      "MemoryAddress": 80
+      ]
     },
     {
       "Name": [
@@ -306,8 +288,7 @@
       "Row": 3,
       "Hints": [
         "You could find it in real life."
-      ],
-      "MemoryAddress": 92
+      ]
     },
     {
       "Name": [ "Heart piece", "Piece of Heart" ],
@@ -331,8 +312,7 @@
       "Hints": [
         "It's something magical.",
         "It's blue."
-      ],
-      "MemoryAddress": 81
+      ]
     },
     {
       "Name": [ "Magic Cape", "Cape" ],
@@ -343,8 +323,7 @@
         "It's something magical.",
         "It's something you could wear.",
         "It's red."
-      ],
-      "MemoryAddress": 82
+      ]
     },
     {
       "Name": [
@@ -364,8 +343,7 @@
           "{{Link}} pulls out their magic mirror.",
           "{{Link}} feels a strange pulling sensation."
         ]
-      },
-      "MemoryAddress": 83
+      }
     },
     {
       "Name": [
@@ -376,8 +354,7 @@
       "Article": "the",
       "InternalItemType": 29,
       "Column": 4,
-      "Row": 2,
-      "MemoryAddress": 78
+      "Row": 2
     },
     {
       "Name": [
@@ -390,8 +367,7 @@
       "Hints": [
         "You could use it to get around.",
         "It's blue."
-      ],
-      "MemoryAddress": 86
+      ]
     },
     {
       "Name": [
@@ -406,8 +382,7 @@
       "Hints": [
         "It's round.",
         "It's red."
-      ],
-      "MemoryAddress": 87
+      ]
     },
     {
       "Name": [
@@ -420,8 +395,7 @@
       "Row": 2,
       "Hints": [
         "You could find it in real life."
-      ],
-      "MemoryAddress": 77
+      ]
     },
     {
       "Name": [ "Bombs", "Zelda Bombs" ],
@@ -432,8 +406,7 @@
       "Hints": [
         "You probably already have a lot of it.",
         "It's round."
-      ],
-      "MemoryAddress": 67
+      ]
     },
     {
       "Name": [
@@ -443,9 +416,7 @@
       ],
       "InternalItemType": 41,
       "Column": 5,
-      "Row": 0,
-      "MemoryAddress": 140,
-      "MemoryFlag": 32
+      "Row": 0
     },
     {
       "Name": [
@@ -459,9 +430,7 @@
       "Hints": [
         "You can hurt people with it.",
         "It's red."
-      ],
-      "MemoryAddress": 140,
-      "MemoryFlag": 64
+      ]
     },
     {
       "Name": [ "One Rupee", "Green Rupee" ],
@@ -582,8 +551,7 @@
       "Hints": [
         "You could use it to get around.",
         "It's red."
-      ],
-      "MemoryAddress": 85
+      ]
     },
     {
       "Name": "Half Magic",
@@ -593,8 +561,7 @@
       "Row": 4,
       "Hints": [
         "It's green."
-      ],
-      "MemoryAddress": 123
+      ]
     },
     {
       "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
@@ -615,9 +582,7 @@
       "Row": 0,
       "Hints": [
         "You can hurt people with it."
-      ],
-      "MemoryAddress": 142,
-      "MemoryFlag": 64
+      ]
     },
     {
       "Name": [
@@ -641,8 +606,7 @@
       },
       "Hints": [
         "You can hurt people with it."
-      ],
-      "MemoryAddress": 89
+      ]
     },
     {
       "Name": [
@@ -660,8 +624,7 @@
       "Row": 4,
       "Hints": [
         "It improves your survivability."
-      ],
-      "MemoryAddress": 90
+      ]
     },
     {
       "Name": [
@@ -683,8 +646,7 @@
       },
       "Hints": [
         "It improves your survivability."
-      ],
-      "MemoryAddress": 91
+      ]
     },
     {
       "Name": [
@@ -711,8 +673,7 @@
           [ "Remember that time I called these boots? To be fair they are boots but for your hands. Toggled Mitts on.", 0.2 ],
           [ "Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.", 0.2 ]
         ]
-      },
-      "MemoryAddress": 84
+      }
     },
     {
       "Name": "Ganons Tower Big Key",

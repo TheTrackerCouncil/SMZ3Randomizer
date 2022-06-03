@@ -22,40 +22,60 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             PotPrison = new Location(this, 256 + 145, 0x1E9A1, LocationType.Regular,
                 name: "Pot Prison",
-                vanillaItem: ItemType.KeySW);
+                vanillaItem: ItemType.KeySW,
+                memoryAddress: 0x57,
+                memoryFlag: 0x5);
 
             CompassChest = new Location(this, 256 + 146, 0x1E992, LocationType.Regular,
                 name: "Compass Chest",
-                vanillaItem: ItemType.CompassSW);
+                vanillaItem: ItemType.CompassSW,
+                memoryAddress: 0x67,
+                memoryFlag: 0x4);
 
             BigChest = new Location(this, 256 + 147, 0x1E998, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.Firerod,
-                access: items => items.BigKeySW)
+                access: items => items.BigKeySW,
+                memoryAddress: 0x58,
+                memoryFlag: 0x4)
                 .AlwaysAllow((item, items) => item.Is(ItemType.BigKeySW, World));
 
             MapChest = new Location(this, 256 + 148, 0x1E99B, LocationType.Regular,
                 name: "Map Chest",
-                vanillaItem: ItemType.MapSW);
+                vanillaItem: ItemType.MapSW,
+                memoryAddress: 0x58,
+                memoryFlag: 0x5);
 
             PinballRoom = new Location(this, 256 + 149, 0x1E9C8, LocationType.Regular,
                 name: "Pinball Room",
-                vanillaItem: ItemType.KeySW)
+                vanillaItem: ItemType.KeySW,
+                memoryAddress: 0x68,
+                memoryFlag: 0x4)
                 .Allow((item, items) => item.Is(ItemType.KeySW, World));
 
             BigKeyChest = new Location(this, 256 + 150, 0x1E99E, LocationType.Regular,
                 name: "Big Key Chest",
-                vanillaItem: ItemType.BigKeySW);
+                vanillaItem: ItemType.BigKeySW,
+                memoryAddress: 0x39,
+                memoryFlag: 0x4);
 
             BridgeRoom = new Location(this, 256 + 151, 0x1E9FE, LocationType.Regular,
                 name: "Bridge Room",
                 vanillaItem: ItemType.KeySW,
-                access: items => items.FireRod);
+                access: items => items.FireRod,
+                memoryAddress: 0x59,
+                memoryFlag: 0x4);
 
             MothulaReward = new Location(this, 256 + 152, 0x308155, LocationType.Regular,
                 name: "Mothula",
                 vanillaItem: ItemType.HeartContainer,
-                access: items => items.FireRod && items.Sword && items.KeySW >= 3);
+                access: items => items.FireRod && items.Sword && items.KeySW >= 3,
+                memoryAddress: 0x29,
+                memoryFlag: 0xB);
+
+            MemoryAddress = 0x29;
+            MemoryFlag = 0xB;
+            StartingRooms = new List<int> { 0x57, 0x58, 0x67, 0x68 };
         }
 
         public override string Name => "Skull Woods";

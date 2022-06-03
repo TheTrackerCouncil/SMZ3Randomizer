@@ -8,11 +8,9 @@ namespace Randomizer.Shared
 {
     public enum LocationMemoryType
     {
-        None,
-        ZeldaRoom,
+        Default,
         ZeldaNPC,
         ZeldaOverworld,
-        ZeldaMisc,
-        SMLocation
+        ZeldaMisc
     }
 }

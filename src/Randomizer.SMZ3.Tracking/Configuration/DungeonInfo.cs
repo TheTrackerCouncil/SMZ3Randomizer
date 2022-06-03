@@ -224,22 +224,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             var region = GetRegion(world);
             return region.Locations.Where(x => x.Type != LocationType.NotInDungeon).ToImmutableList();
         }
-
-        /// <summary>
-        /// The memory address offset stored as a string hex value
-        /// for where the dungeon clear status is stored in memory
-        /// </summary>
-        public int? MemoryAddress { get; set; }
-
-        /// <summary>
-        /// The flag to check against to see if the dungeon has been
-        /// checked or not
-        /// </summary>
-        public int? MemoryFlag { get; set; }
-
-        /// <summary>
-        /// Collection of room ids for the entrances to a dungeon
-        /// </summary>
-        public ICollection<int> StartingRooms { get; set; }
     }
 }

@@ -17,13 +17,17 @@ namespace Randomizer.SMZ3.Regions.Zelda
             BobsTorch = new Location(this, 256 + 189, 0x308161, LocationType.Regular,
                 name: "Bob's Torch",
                 vanillaItem: ItemType.KeyGT,
-                access: items => items.Boots);
+                access: items => items.Boots,
+                memoryAddress: 0x8C,
+                memoryFlag: 0xA);
 
             MapChest = new Location(this, 256 + 194, 0x1EAD3, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapGT,
                 access: items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
-                    (new[] { ItemType.BigKeyGT, ItemType.KeyGT }.Any(type => MapChest.ItemIs(type, World)) ? 3 : 4))
+                    (new[] { ItemType.BigKeyGT, ItemType.KeyGT }.Any(type => MapChest.ItemIs(type, World)) ? 3 : 4),
+                memoryAddress: 0x8B,
+                memoryFlag: 0x4)
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyGT, World) && items.KeyGT >= 3);
 
             FiresnakeRoom = new Location(this, 256 + 195, 0x1EAD0, LocationType.Regular,
@@ -35,32 +39,42 @@ namespace Randomizer.SMZ3.Regions.Zelda
                             RandomizerRoom.BottomLeft,
                             RandomizerRoom.BottomRight
                     }.Any(l => l.ItemIs(ItemType.BigKeyGT, World))
-                    || FiresnakeRoom.ItemIs(ItemType.KeyGT, World) ? 2 : 3));
+                    || FiresnakeRoom.ItemIs(ItemType.KeyGT, World) ? 2 : 3),
+                memoryAddress: 0x7D,
+                memoryFlag: 0x4);
 
             TileRoom = new Location(this, 256 + 202, 0x1EAE2, LocationType.Regular,
                 name: "Tile Room",
                 vanillaItem: ItemType.KeyGT,
-                access: items => items.Somaria);
+                access: items => items.Somaria,
+                memoryAddress: 0x8D,
+                memoryFlag: 0x4);
 
             BobsChest = new Location(this, 256 + 207, 0x1EADF, LocationType.Regular,
                 name: "Bob's Chest",
                 vanillaItem: ItemType.TenArrows,
                 access: items => items.KeyGT >= 3 && (
                     (items.Hammer && items.Hookshot) ||
-                    (items.Somaria && items.FireRod)));
+                    (items.Somaria && items.FireRod)),
+                memoryAddress: 0x8C,
+                memoryFlag: 0x7);
 
             BigChest = new Location(this, 256 + 208, 0x1EAD6, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveTunic,
                 access: items => items.BigKeyGT && items.KeyGT >= 3 && (
                     (items.Hammer && items.Hookshot) ||
-                    (items.Somaria && items.FireRod)))
+                    (items.Somaria && items.FireRod)),
+                memoryAddress: 0x8C,
+                memoryFlag: 0x4)
                 .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
             PreMoldormChest = new Location(this, 256 + 214, 0x1EB03, LocationType.Regular,
                 name: "Pre-Moldorm Chest",
                 vanillaItem: ItemType.KeyGT,
-                access: TowerAscend)
+                access: TowerAscend,
+                memoryAddress: 0x3D,
+                memoryFlag: 0x6)
                 .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
             MoldormChest = new Location(this, 256 + 215, 0x1EB06, LocationType.Regular,
@@ -68,7 +82,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 vanillaItem: ItemType.TwentyRupees,
                 access: items => items.BigKeyGT && items.KeyGT >= 4 &&
                     items.Bow && Logic.CanLightTorches(items) &&
-                    CanBeatMoldorm(items) && items.Hookshot)
+                    CanBeatMoldorm(items) && items.Hookshot,
+                memoryAddress: 0x4D,
+                memoryFlag: 0x4)
                 .Allow((item, items) => new[] { ItemType.KeyGT, ItemType.BigKeyGT }.All(type => item.IsNot(type, World)));
 
             DMsRoom = new(this);
@@ -77,6 +93,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
             CompassRoom = new(this);
             BigKeyRoom = new(this);
             MiniHelmasaurRoom = new(this);
+
+            StartingRooms = new List<int> { 0xC };
         }
 
         public override string Name => "Ganon's Tower";
@@ -154,16 +172,24 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 // "bombs, arrows, and Rupees" - but what?
                 TopLeft = new Location(this, 256 + 190, 0x1EAB8, LocationType.Regular,
                     "Top Left",
-                    items => items.Hammer && items.Hookshot);
+                    items => items.Hammer && items.Hookshot,
+                    memoryAddress: 0x7B,
+                    memoryFlag: 0x4);
                 TopRight = new Location(this, 256 + 191, 0x1EABB, LocationType.Regular,
                     "Top Right",
-                    items => items.Hammer && items.Hookshot);
+                    items => items.Hammer && items.Hookshot,
+                    memoryAddress: 0x7B,
+                    memoryFlag: 0x5);
                 BottomLeft = new Location(this, 256 + 192, 0x1EABE, LocationType.Regular,
                     "Bottom Left",
-                    items => items.Hammer && items.Hookshot);
+                    items => items.Hammer && items.Hookshot,
+                    memoryAddress: 0x7B,
+                    memoryFlag: 0x6);
                 BottomRight = new Location(this, 256 + 193, 0x1EAC1, LocationType.Regular,
                     "Bottom Right",
-                    items => items.Hammer && items.Hookshot);
+                    items => items.Hammer && items.Hookshot,
+                    memoryAddress: 0x7B,
+                    memoryFlag: 0x7);
             }
 
             public Location TopLeft { get; }
@@ -182,16 +208,24 @@ namespace Randomizer.SMZ3.Regions.Zelda
             {
                 TopLeft = new Location(this, 256 + 196, 0x1EAC4, LocationType.Regular,
                     "Top Left",
-                    items => LeftSide(items, new[] { TopRight, BottomLeft, BottomRight }));
+                    items => LeftSide(items, new[] { TopRight, BottomLeft, BottomRight }),
+                    memoryAddress: 0x7C,
+                    memoryFlag: 0x4);
                 TopRight = new Location(this, 256 + 197, 0x1EAC7, LocationType.Regular,
                     "Top Right",
-                    items => LeftSide(items, new[] { TopLeft, BottomLeft, BottomRight }));
+                    items => LeftSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
+                    memoryAddress: 0x7C,
+                    memoryFlag: 0x5);
                 BottomLeft = new Location(this, 256 + 198, 0x1EACA, LocationType.Regular,
                     "Bottom Left",
-                    items => LeftSide(items, new[] { TopRight, TopLeft, BottomRight }));
+                    items => LeftSide(items, new[] { TopRight, TopLeft, BottomRight }),
+                    memoryAddress: 0x7C,
+                    memoryFlag: 0x6);
                 BottomRight = new Location(this, 256 + 199, 0x1EACD, LocationType.Regular,
                     "Bottom Right",
-                    items => LeftSide(items, new[] { TopRight, TopLeft, BottomLeft }));
+                    items => LeftSide(items, new[] { TopRight, TopLeft, BottomLeft }),
+                    memoryAddress: 0x7C,
+                    memoryFlag: 0x7);
             }
 
             public Location TopLeft { get; }
@@ -215,11 +249,15 @@ namespace Randomizer.SMZ3.Regions.Zelda
             {
                 Left = new Location(this, 256 + 200, 0x1EAD9, LocationType.Regular,
                     name: "Left",
-                    vanillaItem: ItemType.TenArrows);
+                    vanillaItem: ItemType.TenArrows,
+                    memoryAddress: 0x8C,
+                    memoryFlag: 0x5);
 
                 Right = new Location(this, 256 + 201, 0x1EADC, LocationType.Regular,
                     name: "Right",
-                    vanillaItem: ItemType.ThreeBombs);
+                    vanillaItem: ItemType.ThreeBombs,
+                    memoryAddress: 0x8C,
+                    memoryFlag: 0x6);
             }
 
             public Location Left { get; }
@@ -235,19 +273,27 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 TopLeft = new Location(this, 256 + 203, 0x1EAE5, LocationType.Regular,
                     name: "Top Left",
                     vanillaItem: ItemType.CompassGT,
-                    access: items => RightSide(items, new[] { TopRight, BottomLeft, BottomRight }));
+                    access: items => RightSide(items, new[] { TopRight, BottomLeft, BottomRight }),
+                    memoryAddress: 0x9D,
+                    memoryFlag: 0x4);
 
                 TopRight = new Location(this, 256 + 204, 0x1EAE8, LocationType.Regular,
                     "Top Right",
-                    items => RightSide(items, new[] { TopLeft, BottomLeft, BottomRight }));
+                    items => RightSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
+                    memoryAddress: 0x9D,
+                    memoryFlag: 0x5);
 
                 BottomLeft = new Location(this, 256 + 205, 0x1EAEB, LocationType.Regular,
                     "Bottom Left",
-                    items => RightSide(items, new[] { TopRight, TopLeft, BottomRight }));
+                    items => RightSide(items, new[] { TopRight, TopLeft, BottomRight }),
+                    memoryAddress: 0x9D,
+                    memoryFlag: 0x6);
 
                 BottomRight = new Location(this, 256 + 206, 0x1EAEE, LocationType.Regular,
                     "Bottom Right",
-                    items => RightSide(items, new[] { TopRight, TopLeft, BottomLeft }));
+                    items => RightSide(items, new[] { TopRight, TopLeft, BottomLeft }),
+                    memoryAddress: 0x9D,
+                    memoryFlag: 0x7);
             }
 
             public Location TopLeft { get; }
@@ -272,17 +318,23 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 Bottom = new Location(this, 256 + 209, 0x1EAF1, LocationType.Regular,
                     name: "Bottom Big Key Chest",
                     vanillaItem: ItemType.BigKeyGT,
-                    access: BigKeyRoom);
+                    access: BigKeyRoom,
+                    memoryAddress: 0x1C,
+                    memoryFlag: 0x4);
 
                 Left = new Location(this, 256 + 210, 0x1EAF4, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TenArrows,
-                    access: BigKeyRoom);
+                    access: BigKeyRoom,
+                    memoryAddress: 0x1C,
+                    memoryFlag: 0x5);
 
                 Right = new Location(this, 256 + 211, 0x1EAF7, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.ThreeBombs,
-                    access: BigKeyRoom);
+                    access: BigKeyRoom,
+                    memoryAddress: 0x1C,
+                    memoryFlag: 0x6);
             }
 
             public Location Bottom { get; }
@@ -310,17 +362,21 @@ namespace Randomizer.SMZ3.Regions.Zelda
             public MiniHelmasaurRoomRoom(Region region)
                 : base(region, "Mini Helmasaur Room")
             {
-                GanonsTower tower = region as GanonsTower;
+                var tower = region as GanonsTower;
                 Left = new Location(this, 256 + 212, 0x1EAFD, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.ThreeBombs,
-                    access: tower.TowerAscend)
+                    access: tower.TowerAscend,
+                    memoryAddress: 0x3D,
+                    memoryFlag: 0x4)
                     .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
                 Right = new Location(this, 256 + 213, 0x1EB00, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.ThreeBombs,
-                    access: tower.TowerAscend)
+                    access: tower.TowerAscend,
+                    memoryAddress: 0x3D,
+                    memoryFlag: 0x5)
                     .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
             }
 

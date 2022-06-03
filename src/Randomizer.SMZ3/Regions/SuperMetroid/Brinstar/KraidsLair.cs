@@ -10,17 +10,23 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             ETank = new(this, 43, 0x8F899C, LocationType.Hidden,
                 name: "Energy Tank, Kraid",
                 vanillaItem: ItemType.ETank,
-                access: items => items.CardBrinstarBoss);
+                access: items => items.CardBrinstarBoss,
+                memoryAddress: 0x5,
+                memoryFlag: 0x8);
             KraidsItem = new(this, 48, 0x8F8ACA, LocationType.Chozo,
                 name: "Varia Suit",
                 alsoKnownAs: "Kraid's Reliquary",
                 vanillaItem: ItemType.Varia,
-                access: items => items.CardBrinstarBoss);
+                access: items => items.CardBrinstarBoss,
+                memoryAddress: 0x6,
+                memoryFlag: 0x1);
             MissileBeforeKraid = new(this, 44, 0x8F89EC, LocationType.Hidden,
                 name: "Missile (Kraid)",
                 alsoKnownAs: "Warehouse Kihunter Room",
                 vanillaItem: ItemType.Missile,
-                access: items => Logic.CanUsePowerBombs(items));
+                access: items => Logic.CanUsePowerBombs(items),
+                memoryAddress: 0x5,
+                memoryFlag: 0x10);
         }
 
         public override string Name => "Kraid's Lair";

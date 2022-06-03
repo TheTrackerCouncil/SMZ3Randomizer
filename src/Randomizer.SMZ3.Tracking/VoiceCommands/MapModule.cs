@@ -4,12 +4,21 @@ using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
+    /// <summary>
+    /// Module for changing the map
+    /// </summary>
     public class MapModule : TrackerModule
     {
         Tracker _tracker;
         TrackerMapConfig _config;
         ILogger<MapModule> _logger;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="tracker"></param>
+        /// <param name="logger"></param>
+        /// <param name="config"></param>
         public MapModule(Tracker tracker, ILogger<MapModule> logger, TrackerMapConfig config)
             : base(tracker, logger)
         {

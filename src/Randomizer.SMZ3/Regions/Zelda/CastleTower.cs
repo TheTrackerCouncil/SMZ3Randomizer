@@ -12,6 +12,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             Foyer = new(this);
             DarkMaze = new(this);
+
+            StartingRooms = new List<int>() { 0xE0 };
         }
 
         public override string Name => "Castle Tower";
@@ -40,7 +42,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             public FoyerRoom(Region region)
                 : base(region, "Foyer")
             {
-                Chest = new(region, 256 + 101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer");
+                Chest = new(region, 256 + 101, 0x1EAB5, LocationType.Regular, "Castle Tower - Foyer", 0xE0, 0x4);
             }
 
             public Location Chest { get; }
@@ -52,7 +54,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 : base(region, "Dark Maze")
             {
                 Chest = new(region, 256 + 102, 0x1EAB2, LocationType.Regular, "Castle Tower - Dark Maze",
-                    items => items.Lamp && items.KeyCT >= 1);
+                    items => items.Lamp && items.KeyCT >= 1, 0xD0, 0x4);
             }
 
             public Location Chest { get; }

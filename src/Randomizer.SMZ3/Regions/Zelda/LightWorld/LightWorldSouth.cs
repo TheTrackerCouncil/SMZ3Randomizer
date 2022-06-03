@@ -11,72 +11,102 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
         {
             MazeRace = new Location(this, 256 + 45, 0x308142, LocationType.Regular,
                 name: "Maze Race",
-                vanillaItem: ItemType.HeartPiece)
+                vanillaItem: ItemType.HeartPiece,
+                memoryAddress: 0x28,
+                memoryFlag: 0x40,
+                memoryType: LocationMemoryType.ZeldaOverworld)
                 .Weighted(SphereOne);
 
             Library = new Location(this, 256 + 240, 0x308012, LocationType.Regular,
                 name: "Library",
                 vanillaItem: ItemType.Book,
-                access: items => items.Boots);
+                access: items => items.Boots,
+                memoryAddress: 0x0,
+                memoryFlag: 0x80,
+                memoryType: LocationMemoryType.ZeldaNPC);
 
             ForestClearingDigSpot = new Location(this, 256 + 241, 0x30814A, LocationType.Regular,
                 name: "Flute Spot",
                 alsoKnownAs: "Forest Clearing - Digging Spot",
                 vanillaItem: ItemType.Flute,
-                access: items => items.Shovel);
+                access: items => items.Shovel,
+                memoryAddress: 0x2A,
+                memoryFlag: 0x40,
+                memoryType: LocationMemoryType.ZeldaOverworld);
 
             Cave45 = new Location(this, 256 + 242, 0x308003, LocationType.Regular,
                 name: "South of Grove",
                 alsoKnownAs: "Cave #45",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.Mirror && World.DarkWorldSouth.CanEnter(items));
+                access: items => items.Mirror && World.DarkWorldSouth.CanEnter(items),
+                memoryAddress: 0x11B,
+                memoryFlag: 0xA);
 
             LinksHouse = new Location(this, 256 + 243, 0x1E9BC, LocationType.Regular,
                 name: "Link's House",
-                vanillaItem: ItemType.Lamp)
+                vanillaItem: ItemType.Lamp,
+                memoryAddress: 0x104,
+                memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
             Aginah = new Location(this, 256 + 244, 0x1E9F2, LocationType.Regular,
                 name: "Aginah's Cave",
                 alsoKnownAs: "Aggina's Cave",
-                vanillaItem: ItemType.HeartPiece)
+                vanillaItem: ItemType.HeartPiece,
+                memoryAddress: 0x10A,
+                memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
             DesertLedge = new Location(this, 256 + 252, 0x308143, LocationType.Regular,
                 name: "Desert Ledge",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => World.DesertPalace.CanEnter(items));
+                access: items => World.DesertPalace.CanEnter(items),
+                memoryAddress: 0x30,
+                memoryFlag: 0x40,
+                memoryType: LocationMemoryType.ZeldaOverworld);
 
             CheckerboardCave = new Location(this, 256 + 253, 0x308005, LocationType.Regular,
                 name: "Checkerboard Cave",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && (
                     (items.Flute && Logic.CanLiftHeavy(items)) ||
-                    Logic.CanAccessMiseryMirePortal(items)
-                ) && Logic.CanLiftLight(items));
+                        Logic.CanAccessMiseryMirePortal(items)
+                    ) && Logic.CanLiftLight(items),
+                memoryAddress: 0x126, memoryFlag: 0x9);
 
             BombosTablet = new Location(this, 256 + 58, 0x308017, LocationType.Bombos,
                 name: "Bombos Tablet",
                 vanillaItem: ItemType.Bombos,
-                access: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items));
+                access: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items),
+                memoryAddress: 0x1,
+                memoryFlag: 0x2,
+                memoryType: LocationMemoryType.ZeldaNPC);
 
             LakeHyliaIsland = new Location(this, 256 + 61, 0x308144, LocationType.Regular,
                 name: "Lake Hylia Island",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Flippers && items.MoonPearl && items.Mirror && (
                     World.DarkWorldSouth.CanEnter(items) ||
-                    World.DarkWorldNorthEast.CanEnter(items)));
+                    World.DarkWorldNorthEast.CanEnter(items)),
+                memoryAddress: 0x35,
+                memoryFlag: 0x40,
+                memoryType: LocationMemoryType.ZeldaOverworld);
 
             UnderTheBridge = new Location(this, 256 + 62, 0x6BE7D, LocationType.Regular,
                 name: "Hobo",
                 alsoKnownAs: "Under the bridge",
                 vanillaItem: ItemType.Bottle,
-                access: items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, false));
+                access: items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, false),
+                memoryAddress: 0xC9,
+                memoryFlag: 0x1,
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             IceCave = new Location(this, 256 + 63, 0x1EB4E, LocationType.Regular,
                 name: "Ice Rod Cave",
                 alsoKnownAs: "Ice Cave",
-                vanillaItem: ItemType.Icerod)
+                vanillaItem: ItemType.Icerod,
+                memoryAddress: 0x120,
+                memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
             MiniMoldormCave = new(this);
@@ -122,27 +152,37 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             {
                 FarLeftChest = new Location(this, 256 + 51, 0x1EB42, LocationType.Regular,
                     name: "Far Left",
-                    vanillaItem: ItemType.ThreeBombs)
+                    vanillaItem: ItemType.ThreeBombs,
+                    memoryAddress: 0x123,
+                    memoryFlag: 0x4)
                     .Weighted(SphereOne);
 
                 LeftChest = new Location(this, 256 + 52, 0x1EB45, LocationType.Regular,
                     name: "Left",
-                    vanillaItem: ItemType.TwentyRupees)
+                    vanillaItem: ItemType.TwentyRupees,
+                    memoryAddress: 0x123,
+                    memoryFlag: 0x5)
                     .Weighted(SphereOne);
 
                 Npc = new Location(this, 256 + 53, 0x308010, LocationType.Regular,
                     name: "NPC",
-                    vanillaItem: ItemType.ThreeHundredRupees)
+                    vanillaItem: ItemType.ThreeHundredRupees,
+                    memoryAddress: 0x123,
+                    memoryFlag: 0xA)
                     .Weighted(SphereOne);
 
                 RightChest = new Location(this, 256 + 54, 0x1EB48, LocationType.Regular,
                     name: "Right",
-                    vanillaItem: ItemType.TwentyRupees)
+                    vanillaItem: ItemType.TwentyRupees,
+                    memoryAddress: 0x123,
+                    memoryFlag: 0x6)
                     .Weighted(SphereOne);
 
                 FarRightChest = new Location(this, 256 + 251, 0x1EB4B, LocationType.Regular,
                     name: "Far Right",
-                    vanillaItem: ItemType.TenArrows)
+                    vanillaItem: ItemType.TenArrows,
+                    memoryAddress: 0x123,
+                    memoryFlag: 0x7)
                     .Weighted(SphereOne);
             }
 
@@ -164,12 +204,17 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             {
                 FloodgateChest = new Location(this, 256 + 59, 0x1E98C, LocationType.Regular,
                    name: "Floodgate Chest",
-                   vanillaItem: ItemType.ThreeBombs)
+                   vanillaItem: ItemType.ThreeBombs,
+                   memoryAddress: 0x10B,
+                   memoryFlag: 0x4)
                    .Weighted(SphereOne);
 
                 SunkedTreasure = new Location(this, 256 + 60, 0x308145, LocationType.Regular,
                     name: "Sunken Treasure",
-                    vanillaItem: ItemType.HeartPiece)
+                    vanillaItem: ItemType.HeartPiece,
+                    memoryAddress: 0x3B,
+                    memoryFlag: 0x40,
+                    memoryType: LocationMemoryType.ZeldaOverworld)
                     .Weighted(SphereOne);
             }
 
