@@ -22,7 +22,7 @@ function emulator.start_tick(callback)
 end
 
 function emulator.print(message)
-    emu.message(msg)
+    emu.message(message)
 	print(message)
 end
 
