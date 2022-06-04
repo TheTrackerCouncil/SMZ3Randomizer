@@ -104,7 +104,7 @@ namespace Randomizer.App
         /// <param name="mapName">The name of the map to display</param>
         public void UpdateMap(string mapName)
         {
-            UpdateMap(Maps.First(x => x.ToString() == mapName));
+            UpdateMap(Maps.FirstOrDefault(x => x.ToString() == mapName));
         }
 
         /// <summary>
@@ -113,8 +113,11 @@ namespace Randomizer.App
         /// <param name="map">The map to display</param>
         public void UpdateMap(TrackerMap map)
         {
-            CurrentMap = map;
-            TrackerMapViewModel.CurrentMap = CurrentMap;
+            if (map != null)
+            {
+                CurrentMap = map;
+                TrackerMapViewModel.CurrentMap = CurrentMap;
+            }
         }
 
         /// <summary>

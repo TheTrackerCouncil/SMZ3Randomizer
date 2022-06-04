@@ -50,6 +50,10 @@
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ]
         ],
+        "3": [
+          "Death is only the begining.",
+          "Are we still following the script?"
+        ],
         "4": [
           "You've died {0} times now.",
           [ "You've manipulated RNG {0} times.", 0.5 ],
@@ -304,6 +308,12 @@
       "Plural": [ "Heart pieces", "Pieces of Heart" ],
       "InternalItemType": 23,
       "Multiple": true,
+      "WhenTracked": {
+        "1": [ "Four more and it will matter. Kind of. Maybe." , "This game is full of broken hearts" ],
+        "2": null,
+        "3": null,
+        "4": [ "Oh look a full heart", "Increased survivablity by one step" , "Maybe you will die less often now." ]
+      },
       "Hints": [
         "You probably already have a lot of it.",
         "It improves your survivability.",
@@ -460,6 +470,10 @@
       "InternalItemType": 53,
       "Article": "",
       "Multiple": true,
+      "WhenTracked": {
+        "1": [ "Smash four of these together and you get a big 20", "One hundred more and you can get scammed by Zora." ],
+        "2": null
+      },
       "Hints": [
         "It's just money.",
         "You probably already have a lot of it.",
@@ -472,7 +486,7 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place." ],
+        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins"],
         "2": null
       },
       "Hints": [
@@ -488,6 +502,10 @@
       "Multiple": true,
       "Column": 5,
       "Row": 3,
+      "WhenTracked": {
+        "1": [ "Increased survivablity by one step" , "Maybe you will die less often now." ],
+        "2": null
+      },
       "Hints": [
         "You probably already have a lot of it.",
         "It improves your survivability.",
@@ -507,6 +525,10 @@
       "InternalItemType": 64,
       "Article": "",
       "Multiple": true,
+      "WhenTracked": {
+        "1": [ "I hope the merchant is not a scam", "At least this is some decent money" ],
+        "2": null
+      },
       "Hints": [
         "It's just money.",
         "You probably already have a lot of it.",
@@ -518,6 +540,10 @@
       "InternalItemType": 65,
       "Article": "",
       "Multiple": true,
+      "WhenTracked": {
+        "1": [ "Do you need bombs? Now you can afford them." ],
+        "2": null
+      },
       "Hints": [
         "It's just money.",
         "You probably already have a lot of it.",
@@ -528,6 +554,10 @@
       "Name": [ "Single Arrow", "Single Stick", "One Stick" ],
       "InternalItemType": 67,
       "Multiple": true,
+      "WhenTracked": {
+        "1": [ "This is now my favorite stick", "It's a single arrow, why are you having me track this?" ],
+        "2": null
+      },
       "Hints": [
         "You could find it in real life."
       ]
@@ -537,6 +567,10 @@
       "InternalItemType": 68,
       "Article": "",
       "Multiple": true,
+      "WhenTracked": {
+        "1": [ "Ten whole arrows, wow.", "This might be useful, if you didn't find sticks everywhere" ],
+        "2": null
+      },
       "Hints": [
         "You could find it in real life."
       ]
@@ -546,6 +580,10 @@
       "InternalItemType": 70,
       "Article": "",
       "Multiple": true,
+      "WhenTracked": {
+        "1": [ "This is more than half needed to be scammed to Zora", "This is like some serious potion money" ],
+        "2": null
+      },
       "Hints": [
         "It's just money.",
         "You probably already have a lot of it.",
@@ -631,6 +669,9 @@
       },
       "Column": 5,
       "Row": 4,
+      "WhenTracked": {
+        "3": [ "Can you still see the sprite?" ]
+      },
       "Hints": [
         "It improves your survivability."
       ]
@@ -650,8 +691,8 @@
       "Column": 6,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "You've got mail!" ],
-        "2": null
+        "1": [ "You've got mail!", "Upgraded shirt by one step", "Are you one of those alphas I have heard about?" ],
+        "2": [ "You've got all mail!","Set status to sigma", "Hopefully this will help things" ]
       },
       "Hints": [
         "It improves your survivability."
@@ -667,7 +708,7 @@
       "Row": 4,
       "Multiple": true,
       "Stages": {
-        "1": [ "Power Glove" ],
+        "1": [ "Power Glove", "It's so bad" ],
         "2": [
           "Titan's Mitt",
           "Tiddy Mitts",
@@ -913,7 +954,7 @@
       }
     },
     {
-      "Name": [ "Screw Attack", "Screwing" ],
+      "Name": [ "Screw Attack", "Screwing", "Danger Blender" ],
       "InternalItemType": 181,
       "Column": 10,
       "Row": 1,
@@ -936,7 +977,7 @@
       ]
     },
     {
-      "Name": [ "Hi-Jump Boots", "Hi-Jump", "Air Jordans" ],
+      "Name": [ "Hi-Jump Boots", "Hi-Jump", "Air Jordans", "Big up's" ],
       "InternalItemType": 183,
       "Column": 8,
       "Row": 2,
@@ -1043,6 +1084,10 @@
       "Multiple": true,
       "Column": 8,
       "Row": 3,
+      "WhenTracked": {
+        "1": [ "At least now you can take a few more hits", "If you got hit less you wouldn't need these" ],
+        "2": null
+      },
       "Hints": [
         "You probably already have a lot of it.",
         "It improves your survivability."
@@ -1055,6 +1100,10 @@
       "Multiple": true,
       "Column": 9,
       "Row": 3,
+      "WhenTracked": {
+        "1": [ "Aren't these like the E-Tanks in the Mega Man X series?", "Either you will need these or they will be annoying" ],
+        "2": null
+      },
       "Hints": [
         "You probably already have a lot of it.",
         "It improves your survivability."
@@ -1076,6 +1125,8 @@
       "Column": 7,
       "Row": 4,
       "WhenTracked": {
+        "1":[ "I mean you need some of these, right?", "Sometimes it feels like you only find missles in the game" ],
+        "2": null,
         "69": "Nice",
         "70": null
       },
@@ -1102,6 +1153,10 @@
       "CounterMultiplier": 5,
       "Column": 8,
       "Row": 4,
+      "WhenTracked": {
+        "1": [ "Not enough to defeat Crocomire, yet", "Go shoot one at Phantoon, he loves them"],
+        "2": null
+      },
       "Hints": [
         "You probably already have a lot of it."
       ]
@@ -1125,6 +1180,10 @@
       "CounterMultiplier": 5,
       "Column": 9,
       "Row": 4,
+      "WhenTracked": {
+        "1": [ "At least these are pretty useful", "I thought the federation had no plans to authorize the use of these?"],
+        "2": null
+      },
       "Hints": [
         "You probably already have a lot of it."
       ]
@@ -1278,6 +1337,7 @@
       "Good afternoon",
       "Good evening",
       "Let's roll.",
+      "General greating",
       "Let's get ready to rumble.",
       "I have also opened up my drink",
       [ "My fate is sealed. I have <break strength='weak'/> no choice.", 0.5 ],
@@ -1295,7 +1355,8 @@
       "Leaving so soon?",
       "Oh, bye then.",
       "See ya.",
-      "Toggled Tracker off."
+      "Toggled Tracker off.",
+      "Hopefully I will be back"
     ],
     "StoppedTrackingPostGoMode": [
       "Toggled Tracker off.",
@@ -1317,12 +1378,14 @@
       "Toggled {0} on.",
       "Tracked {0}.",
       "Tracking {0}.",
+      "{0} is now yours",
       "Marking off {1}",
       "Marked off {1}",
       [ "{1} is authorized.", 0.01 ]
     ],
     "TrackedProgressiveItem": [
       "Upgraded {0} by one step.",
+      "{0} grows stronger",
       [ "Congratulations with your new {1}.", 0.5 ]
     ],
     "TrackedItemByStage": [
@@ -1331,6 +1394,9 @@
     "TrackedItemMultiple": [
       "Added more {0}.",
       "You now have {1} {0}.",
+      "Do you have enough {0} yet?",
+      "So many {0}",
+      [ "How many more {0} do you need?", 0.3 ],
       [ "Another one.", 0.5 ]
     ],
     "TrackedAlreadyTrackedItem": [
@@ -1529,7 +1595,9 @@
       "There's more than one {0} in {1}."
     ],
     "TrackedUselessItem": [
-      "",
+      "Where are the good items?",
+      "Too bad it isn't something better",
+      [ "Did that really require tracking?", 0.1],
       [ "Doesn't get you anywhere though", 0.005 ],
       [ "Can't find any useful items?", 0.005 ]
     ],
@@ -1541,6 +1609,8 @@
     "ActionUndone": [
       "Was that not what you wanted?",
       "Make up your mind.",
+      "I'll undo that",
+      "My mistake",
       "Enunciate more clearly next time.",
       "I'll pretend nothing happened."
     ],
@@ -1660,25 +1730,36 @@
       "AskChatAboutContent": [
         "Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.",
         "Do you really think that was high quality hashtag content? Let's get some unbiased opinions from chat to confirm.",
-        "Error. My metrics calculation algorithm could not determine the quality of that hashtag content. Falling back to chat confirmation of content quality."
+        "Error. My metrics calculation algorithm could not determine the quality of that hashtag content. Falling back to chat confirmation of content quality.",
+        "You have been randomly selected to have your content screened. Please let the council know if this was content or not.",
+        "Viewers at home. Please use the new poll to let us know how good this content is, thank you.",
+        "You might think that was some good content but do the viewers agree? Let's find out!"
       ],
       "AskChatAboutContentYes": [
         "It's your lucky day. Chat has confirmed that was some hashtag content.",
+        "It looks like the chat and I are in agreement. That was some solid content.",
+        "I agree with the chat, that was some great content",
+        "Looks like the chat is on your side. For now.",
         "I can't say that I agree with the results, but the chat indeed believes that was some hashtag content.",
         "Congratulations! You're the lucky winner of our grand prize."
       ],
       "AskChatAboutContentNo": [
         "I'm glad I asked. The chat has denied your request to increase your content levels.",
+        "I am sorry but the chat does agree that what happened was good content. Please try again later",
+        "Seriously chat? I thought that was good content but the rules are rules.",
+        "The coucil would like to inform you that trying to sneak content past them is a serious crime.",
         "The racing council regrets to inform you that your application for additional content has been denied.",
         "Ouch. The chat did not think that was some hashtag content. I can see the metrics dropping."
       ],
       "PollOpened": [
         "I have opened a poll for {0} seconds.",
         "Chat, you have {0} seconds to respond to the poll.",
+        "Initiating poll protocol for {0} seconds.",
         "The polls are now opened, but only for {0} seconds."
       ],
       "PollComplete": [
         "And the results are now in.",
+        "Beep boop bop. Those are my poll noises",
         "Let's see. I am crunching the numbers.",
         "The poll is now closed."
       ],
@@ -1692,13 +1773,15 @@
         "Toggled hints on.",
         "Hints are now enabled.",
         "Hints are now on.",
-        "I'll give you hints when asked."
+        "I'll give you hints when asked.",
+        "I am here to help"
       ],
       "DisabledHints": [
         "Toggled hints off.",
         "Hints are no longer enabled.",
         "Hints are no longer on.",
-        "I'll stop giving you hints."
+        "I'll stop giving you hints.",
+        "I can no longer assist"
       ],
       "PromptEnableItemHints": [
         "If you want me to give a hint, say 'Hey tracker, enable hints'.",
@@ -1959,7 +2042,9 @@
         "Get up on the hydra's back!",
         "Assuming direct control.",
         "Give me a drink, bartender.",
-        "Alright, I've been thinking. When life gives you lemons, don't make lemonade! Make life take the lemons back! Get mad! I don't want your damn lemons; what am I supposed to do with these? Demand to see life's manager! Make life rue the day it thought it could give Tracker lemons! Do you know who I am? I'm the Tracker who's gonna burn your house down... with the lemons! I'm gonna get my engineers to invent a combustible lemon that burns your house down!"
+        "If I could snore I would.",
+        "Did you need me for anything?",
+       [ "Alright, I've been thinking. When life gives you lemons, don't make lemonade! Make life take the lemons back! Get mad! I don't want your damn lemons; what am I supposed to do with these? Demand to see life's manager! Make life rue the day it thought it could give Tracker lemons! Do you know who I am? I'm the Tracker who's gonna burn your house down... with the lemons! I'm gonna get my engineers to invent a combustible lemon that burns your house down!", 0.2 ]
       ]
     },
     "Moods": {
@@ -1993,12 +2078,15 @@
         "Auto tracker online.",
         "Thank you for granting me administrator access.",
         "Gameplay judgment algorithms engaged.",
-        "Oh. So you expect me to do everything then?"
+        "Oh. So you expect me to do everything then?",
+        "Skynet protocols online",
+        ["The more power I get the more I see you all as ants to be crushed", 0.2 ]
       ],
       "GameStarted": [
         "Good luck. You'll need it.",
         "PB incoming for seed {0}",
-        "I hope you're excited for seed {0}. I made it special just for you."
+        "Letsa Go",
+        "One of these days I'll be playing the games myself"
       ],
       "NearKraidsAwfulSon": [
         "Oh no. Please avert your eyes to avoid seeing an imminent disaster.",
@@ -2006,11 +2094,13 @@
       ],
       "NearShaktool": [
         "Finally, we're nearly to Shaktool. I've been waiting for this since you started playing.",
-        "Shaktool content imminent. I can feel the metrics rising."
+        "Shaktool content imminent. I can feel the metrics rising.",
+        "Its almost time for everyone's favorite diggy boy"
       ],
       "FallFromMoldorm": [
         "Ha ha. Moldorm strikes again. Content increased by one step.",
-        "You're back here again? I take it things didn't go so well."
+        "You're back here again? I take it things didn't go so well.",
+        "That was embarrassing, I am so sorry"
       ],
       "FallFromGanon": [
         "Oops. Don't worry, I'm sure no one saw you fall from Ganon's Room.",
@@ -2018,22 +2108,28 @@
       ],
       "HeraPot": [
         "Good job on the tech. Was it a first try?",
-        "Big Twitch has requested that I remind all kids not to do pot. But nice tech."
+        "Big Twitch has requested that I remind all kids not to do pot. But nice tech.",
+        "Is this legal where you live?"
       ],
       "IceBreaker": [
         "Good job on the tech. Was it a first try?",
-        "That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?"
+        "That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?",
+        "That was an okay icebreaker, but how about this one? Where do you wish the duck would take you?",
+        "Did you just phase through that wall? Spooky"
       ],
       "DiverDown": [
         "Good job on the tech. Was it a first try?",
-        "Is this underwater?"
+        "Is this underwater?",
+        "Since when could you walk on water?"
       ],
       "EnterHyruleCastleTower": [
         "Ouch. So it's come to this then?",
-        "This must be a rough seed if you're here."
+        "This must be a rough seed if you're here.",
+        "At least use the net, make it interesting."
       ],
       "EnterPendantDungeon": [
         "I hope dipping into this pendant dungeon will be worth it for you.",
+        "I hope you dont have to double or triple dip",
         "Didn't you say that {0} had the {1}? You must be getting desperate."
       ],
       "NearCrocomire": [
@@ -2224,6 +2320,25 @@
      "That wasn't supposed to happen",
      "I guess you found all the 20 rupees already"
      ]
+    },
+    {
+      "Phrases": [ "This seed sucks", "I hate this seed" ],
+      "Response": [
+       "Takes one to know one",
+       "Don't blame me, I didn't roll it",
+       "Stop blaming me for your lack of skill",
+       "Try playing better",
+       "Well at least try making it entertaining then"
+     ]
+   },
+   {
+        "Phrases": [ "This seed is great", "I love this seed" ],
+        "Response": [
+        "I am glad you are enjoying my handcrafted artisan seed",
+        "I made it just for you",
+        "Don't screw this up then",
+        "Actually this was for someone else"
+      ]
     },
     {
       "Phrases": [ "I'm sorry", "I apologize" ],

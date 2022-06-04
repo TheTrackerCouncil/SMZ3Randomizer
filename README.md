@@ -25,7 +25,7 @@ In addition to making IBJ completely optional, there is also:
 ## Credits
 - **Captain Novolin** replacement sprite for _Super Metroid_ by PaddyCo
 - **Rash** and **King Graham** replacement sprites for _Super Metroid_ by Fragger
-- **Captain Novolin** replacement sprite for _A Link to the Past_ by Fragger
+- **Captain Novolin**, **Rash**, **Shaktool** and **Love Shak** replacement sprite for _A Link to the Past_ by Fragger
 - **Non-Binary** Samus sprite for _Super Metroid_ by Glove
 - **Trans**, **Backwards**, **Upside down** and **180°** Samus sprites for _Super Metroid_ by TarThoron
 - **Shaktool** and **Shaktool Jr.** replacement sprites for _Super Metroid_ by Pneumatic
