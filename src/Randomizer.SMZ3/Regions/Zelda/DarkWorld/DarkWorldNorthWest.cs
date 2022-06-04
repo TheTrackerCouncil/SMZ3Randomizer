@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 alsoKnownAs: "Bumper Cave Ledge",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => Logic.CanLiftLight(items) && items.Cape,
-                memoryAddress: 0x30,
+                memoryAddress: 0x4A,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaOverworld);
 

@@ -23,7 +23,13 @@
         "Kraid's Lair",
         "Warehouse"
       ],
-      "MapName": "Brinstar"
+      "MapName": "Brinstar",
+      "WhenDiedInRoom": {
+        "47": [
+          "I see Kraid got the quick kill on you.",
+          "Seriously? To Kraid?"
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.PinkBrinstar",
@@ -227,7 +233,13 @@
         "Are you going to break the ice?",
         "You're not sending ME to cooler!"
       ],
-      "MapName": "Dark World"
+      "MapName": "Dark World",
+      "WhenDiedInRoom": {
+        "222": [
+          "Death just cold stared you in the face. Welcome back to S M Z 3 randomizer.",
+          "That was cold."
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast",

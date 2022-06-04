@@ -658,9 +658,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Death (health and reserve tanks all 0 (have to check to make sure the player isn't warping between games)
             else if (state.Health == 0 && state.ReserveTanks == 0 && _previousMetroidState.Health != 0 && !(state.CurrentRoom == 0 && state.CurrentRegion == 0 && state.SamusY == 0))
             {
-                if (Tracker.CurrentRegion != null && Tracker.CurrentRegion.WhenDiedInRoom != null && Tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(state.CurrentRoomInRegion.ToString()))
+                var region = Tracker.World.Regions.Select(x => x as SMRegion)
+                    .Where(x => x != null && x.MemoryRegionId == state.CurrentRegion)
+                    .Select(x => Tracker.WorldInfo.Regions.FirstOrDefault(y => y.GetRegion(Tracker.World) == x && y.WhenDiedInRoom != null))
+                    .FirstOrDefault(x => x!= null && x.WhenDiedInRoom != null && x.WhenDiedInRoom.ContainsKey(state.CurrentRoomInRegion.ToString()));
+                if (region != null)
                 {
-                    Tracker.Say(Tracker.CurrentRegion.WhenDiedInRoom[state.CurrentRoomInRegion.ToString()]);
+                    SayOnce(region.WhenDiedInRoom[state.CurrentRoomInRegion.ToString()]);
                 }
                 Tracker.TrackItem(Tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
             }
