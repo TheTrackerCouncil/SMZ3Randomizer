@@ -8,6 +8,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
             : base(world, config)
         {
             SpikeCave = new(this);
+            StartingRooms = new List<int>() { 67 };
+            IsOverworld = true;
         }
 
         public override string Name => "Dark World Death Mountain West";

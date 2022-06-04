@@ -1030,12 +1030,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <see langword="true"/> to attempt to clear a location for the
         /// tracked item; <see langword="false"/> if that is done by the caller.
         /// </param>
+        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
         /// <returns>
         /// <see langword="true"/> if the item was actually tracked; <see
         /// langword="false"/> if the item could not be tracked, e.g. when
         /// tracking Bow twice.
         /// </returns>
-        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true)
+        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false)
         {
             var didTrack = false;
             var accessibleBefore = GetAccessibleLocations();
@@ -1157,7 +1158,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
 
                 var items = GetProgression();
-                if (!location.IsAvailable(items) && confidence >= Options.MinimumSassConfidence)
+                if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                 {
                     var locationInfo = WorldInfo.Location(location);
                     var missingItems = Logic.GetMissingRequiredItems(location, items)
@@ -1177,13 +1178,17 @@ namespace Randomizer.SMZ3.Tracking
 
             IsDirty = true;
 
-            AddUndo(() =>
+            if (!autoTracked)
             {
-                undoTrack();
-                undoClear?.Invoke();
-                undoTrackDungeonTreasure?.Invoke();
-                UpdateTrackerProgression = true;
-            });
+                AddUndo(() =>
+                {
+                    undoTrack();
+                    undoClear?.Invoke();
+                    undoTrackDungeonTreasure?.Invoke();
+                    UpdateTrackerProgression = true;
+                });
+            }
+            
             GiveLocationHint(accessibleBefore);
             RestartIdleTimers();
 
@@ -1345,7 +1350,8 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="location">The location the item was found in.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null)
+        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null, bool autoTracked = false)
         {
             GiveLocationComment(item, location, isTracking: true, confidence);
             TrackItem(item, trackedAs, confidence, tryClear: false);

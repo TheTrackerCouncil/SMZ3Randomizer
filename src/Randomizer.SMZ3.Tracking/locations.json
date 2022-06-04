@@ -143,14 +143,14 @@
       "Hints": [
         "It's in a wet place."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
       "Name": [
         "Dark World North East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
@@ -160,28 +160,28 @@
       "Hints": [
         "Check around the villages."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth",
       "Name": [
         "Dark World South"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast",
       "Name": [
         "Dark World Death Mountain East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
       "Name": [
         "Dark World Death Mountain West"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DesertPalace",
@@ -192,14 +192,14 @@
       "Hints": [
         "I don't like sand. It's coarse, rough and irritating, and it gets everywhere."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.EasternPalace",
       "Name": [
         "Eastern Palace"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
@@ -209,14 +209,14 @@
       "Hints": [
         "I hope you don't need it."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.HyruleCastle",
       "Name": [
         "Hyrule Castle"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.IcePalace",
@@ -227,28 +227,28 @@
         "Are you going to break the ice?",
         "You're not sending ME to cooler!"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast",
       "Name": [
         "Light World Death Mountain East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Lgith World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest",
       "Name": [
         "Light World Death Mountain West"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
       "Name": [
         "Light World North East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest",
@@ -258,14 +258,14 @@
       "Hints": [
         "Check around the villages."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth",
       "Name": [
         "Light World South"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
@@ -277,7 +277,7 @@
         "It's in a wet place.",
         "You need a medallion to get in there."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
@@ -285,7 +285,7 @@
         "Palace of Darkness",
         "Palace of Dorkness"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SkullWoods",
@@ -293,7 +293,7 @@
         "Skull Woods",
         "Skill Woods"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace",
@@ -303,21 +303,21 @@
       "Hints": [
         "It's in a wet place."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.ThievesTown",
       "Name": [
         "Thieves' Town"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TowerOfHera",
       "Name": [
         "Tower of Hera"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
@@ -328,7 +328,7 @@
       "Hints": [
         "You need a medallion to get in there."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     }
   ],
   "Dungeons": [

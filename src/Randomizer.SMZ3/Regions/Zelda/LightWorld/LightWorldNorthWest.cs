@@ -1,4 +1,5 @@
-﻿using Randomizer.Shared;
+﻿using System.Collections.Generic;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 {
@@ -116,6 +117,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             KakarikoWell = new(this);
             BlindsHideout = new(this);
+
+            StartingRooms = new List<int>() { 0, 2, 10, 16, 17, 18, 19, 20, 24, 26, 34};
+            IsOverworld = true;
         }
 
         public override string Name => "Light World North West";

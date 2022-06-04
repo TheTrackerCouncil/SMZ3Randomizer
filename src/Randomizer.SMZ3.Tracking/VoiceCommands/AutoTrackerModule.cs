@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private AutoTrackerZeldaState? _previousZeldaState;
         private AutoTrackerMetroidState? _previousMetroidState;
         private readonly HashSet<DungeonInfo> _enteredDungeons = new();
+        private readonly HashSet<SchrodingersString> _statedMessages = new();
         private int _previousMetroidRegionValue = -1;
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddEvent("read_block", "WRAM", 0x7e0020, 0x1, Game.Neither, (AutoTrackerMessage message) =>
             {
                 var value = message.ReadUInt8(0);
-                if (value != 0)
+                if (value != 0 && !_hasStarted)
                 {
                     _logger.LogInformation("Game started");
                     _hasStarted = true;
@@ -74,10 +75,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     
                     _currentGame = Game.Zelda;
                     _previousMetroidRegionValue = -1;
-                    if (Tracker.Options.AutoTrackerChangeMap)
-                    {
-                        Tracker.UpdateMap("Zelda Combined");
-                    }
                 }
                 else if (value == 0xFF)
                 {
@@ -418,15 +415,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     var flag = location.MemoryFlag ?? 0;
                     if (!location.Cleared && ((is16Bit && message.CheckUInt16(loc * 2, flag)) || (!is16Bit && message.CheckUInt8(loc, flag))))
                     {
-                        if (!location.Item.Type.IsInAnyCategory(ItemCategory.Map, ItemCategory.Compass))
-                        {
-                            _tracker.TrackItem(_tracker.Items.Where(x => x.InternalItemType == location.Item.Type).First(), location);
-                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
-                        }
-                        else
+                        if (location.Item.Type.IsInAnyCategory(ItemCategory.Map, ItemCategory.Compass) || (location.Item.Type.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey) && true))
                         {
                             _tracker.Clear(location);
                             _logger.LogInformation($"Auto tracked {location.Name} as cleared");
+                        }
+                        else
+                        {
+                            _tracker.TrackItem(_tracker.Items.Where(x => x.InternalItemType == location.Item.Type).First(), location, null, null, true);
+                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
                         }
                     }
 
@@ -530,30 +527,32 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 _previousMetroidRegionValue = -1;
             }*/
 
+            SchrodingersString? toSay;
+
             // Falling down from Moldorm (detect if player was in Moldorm room and is now in the room below it)
             if (state.CurrentRoom == 23 && state.PreviousRoom == 7 && _previousZeldaState.CurrentRoom == 7)
             {
-                Tracker.Say(x => x.AutoTracker.FallFromMoldorm);
+                SayOnce(Tracker.Responses.AutoTracker.FallFromMoldorm);
             }
             // Falling down from Ganon (detect if player was in Ganon room and is now in the room below it)
             else if (state.CurrentRoom == 16 && state.PreviousRoom == 0 && _previousZeldaState.CurrentRoom == 0)
             {
-                Tracker.Say(x => x.AutoTracker.FallFromGanon);
+                SayOnce(Tracker.Responses.AutoTracker.FallFromGanon);
             }
             // Hera pot (player is in the pot room but does not have the big key)
             else if (state.CurrentRoom == 167 && _previousZeldaState.CurrentRoom == 119 && Tracker.Items.First(x => x.InternalItemType == ItemType.BigKeyTH).TrackingState == 0)
             {
-                Tracker.Say(x => x.AutoTracker.HeraPot);
+                SayOnce(Tracker.Responses.AutoTracker.HeraPot);
             }
             // Ice breaker (player is on the right side of the wall but was previous in the room to the left)
-            else if (state.CurrentRoom == 31 && state.PreviousRoom == 30 && state.LinkX >= 0x48 && _previousZeldaState.LinkX < 0x48)
+            else if (state.CurrentRoom == 31 && state.PreviousRoom == 30 && state.LinkX >= 0x48 && _previousZeldaState.LinkX < 0x48 && state.IsOnRightHalfOfRoom && _previousZeldaState.IsOnRightHalfOfRoom)
             {
-                Tracker.Say(x => x.AutoTracker.IceBreaker);
+                SayOnce(Tracker.Responses.AutoTracker.IceBreaker);
             }
-            // Diver Down (player is now at the lower section and on the ground, but not from the ladder)
-            else if (state.CurrentRoom == 118 && state.LinkX < 0x9F && state.LinkX != 0x68 && state.LinkY <= 0x98 && _previousZeldaState.LinkY > 0x98 && state.LinkState == 0)
+            // Back Diver Down (player is now at the lower section and on the ground, but not from the ladder)
+            else if (state.CurrentRoom == 118 && state.LinkX < 0x9F && state.LinkX != 0x68 && state.LinkY <= 0x98 && _previousZeldaState.LinkY > 0x98 && state.LinkState == 0 && state.IsOnBottomHalfOfroom)
             {
-                Tracker.Say(x => x.AutoTracker.DiverDown);
+                SayOnce(Tracker.Responses.AutoTracker.DiverDown);
             }
             // Entered a dungeon (now in Dungeon state but was previously in Overworld or entering Dungeon state)
             else if (state.State == 0x07 && (_previousZeldaState.State == 0x06 || _previousZeldaState.State == 0x09 || _previousZeldaState.State == 0x0F || _previousZeldaState.State == 0x10 || _previousZeldaState.State == 0x11))
@@ -561,25 +560,37 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Get the region for the room 
                 var region = Tracker.World.Regions.Where(x => x is Z3Region)
                     .Select(x => x as Z3Region)
-                    .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(state.CurrentRoom));
+                    .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(state.CurrentRoom) && !x.IsOverworld);
                 if (region == null) return;
 
                 // Get the dungeon info for the room
                 var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(region));
 
-                if (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant)
+                if (!_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant))
                 {
                     Tracker.Say(x => x.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, dungeonInfo.Reward.GetName());
                 }
                 else if (region is CastleTower)
                 {
-                    Tracker.Say(x => x.AutoTracker.EnterHyruleCastleTower);
+                    SayOnce(Tracker.Responses.AutoTracker.EnterHyruleCastleTower);
                 }
 
+                Tracker.UpdateRegion(region, Tracker.Options.AutoTrackerChangeMap);
                 _enteredDungeons.Add(dungeonInfo);
             }
+            // Changed overworld (either the state was changed to overworld or the overworld screen changed)
+            else if(state.State == 0x09 && (_previousZeldaState.State != 0x09 || state.OverworldScreen != _previousZeldaState.OverworldScreen))
+            {
+                // Get the region for the room 
+                var region = Tracker.World.Regions.Where(x => x is Z3Region)
+                    .Select(x => x as Z3Region)
+                    .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(state.OverworldScreen) && x.IsOverworld);
+                if (region == null) return;
+
+                Tracker.UpdateRegion(region, Tracker.Options.AutoTrackerChangeMap);
+            }
             // Death
-            else if (state.State == 18 && state.Substate == 9 && _previousZeldaState.Substate != 9)
+            else if (state.State is 0x5 or 0x0E or 0x1B && _previousZeldaState.State == 0x12)
             {
                 // Here we should be able to track where the player died
                 Tracker.TrackItem(Tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
@@ -631,12 +642,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Approaching Kraid's Awful Son
             if (state.CurrentRegion == 1 && state.CurrentRoomInRegion == 45 && _previousMetroidState.CurrentRoomInRegion == 44)
             {
-                Tracker.Say(x => x.AutoTracker.NearKraidsAwfulSon);
+                SayOnce(Tracker.Responses.AutoTracker.NearKraidsAwfulSon);
             }
             // Approaching Shaktool
             else if (state.CurrentRegion == 4 && state.CurrentRoomInRegion == 36 && _previousMetroidState.CurrentRoomInRegion == 28)
             {
-                Tracker.Say(x => x.AutoTracker.NearShaktool);
+                SayOnce(Tracker.Responses.AutoTracker.NearShaktool);
+            }
+            // Approaching Crocomire
+            else if (state.CurrentRegion == 2 && state.CurrentRoomInRegion == 9 && state.SamusX >= 3000 && state.SamusY > 500)// && !_tracker.WorldInfo.Bosses.First(x => "Crocomire".Equals(x.Name[0])).Defeated)
+            {
+                SayOnce(Tracker.Responses.AutoTracker.NearCrocomire, state.SuperMissiles, state.MaxSuperMissiles);
             }
             // Death (health and reserve tanks all 0 (have to check to make sure the player isn't warping between games)
             else if (state.Health == 0 && state.ReserveTanks == 0 && _previousMetroidState.Health != 0 && !(state.CurrentRoom == 0 && state.CurrentRegion == 0 && state.SamusY == 0))
@@ -644,8 +660,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Here we should be able to track where the player died
                 Tracker.TrackItem(Tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
             }
-
+            
             _previousMetroidState = state;
+        }
+
+        /// <summary>
+        /// Have Tracker say a message, but only one time
+        /// </summary>
+        /// <param name="statement">The response(s) to say</param>
+        /// <param name="args">Arguments for the statement</param>
+        protected void SayOnce(SchrodingersString statement, params object?[] args)
+        {
+            if (!_statedMessages.Contains(statement))
+            {
+                _tracker.Say(statement, args);
+                _statedMessages.Add(statement);
+            }
         }
 
         /// <summary>

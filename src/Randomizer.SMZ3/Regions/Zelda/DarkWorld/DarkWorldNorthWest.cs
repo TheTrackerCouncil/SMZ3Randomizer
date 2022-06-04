@@ -50,6 +50,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 memoryAddress: 0xC9,
                 memoryFlag: 0x10,
                 memoryType: LocationMemoryType.ZeldaMisc);
+
+            StartingRooms = new List<int>() { 64, 66, 74, 80, 81, 82, 83, 84, 88, 90, 98 };
+            IsOverworld = true;
         }
 
         public override string Name => "Dark World North West";

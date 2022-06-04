@@ -29,6 +29,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
                 memoryFlag: 0x4);
 
             ParadoxCave = new(this);
+
+            StartingRooms = new List<int>() { 5, 7 };
+            IsOverworld = true;
         }
 
         public override string Name => "Light World Death Mountain East";

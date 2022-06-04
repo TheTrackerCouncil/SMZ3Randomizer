@@ -17,6 +17,7 @@ namespace Randomizer.SMZ3
             StartingRooms = startingRooms;
         }
 
+        public bool IsOverworld { get; init; }
         public int? MemoryAddress { get; init; }
 
         public int? MemoryFlag { get; init; }

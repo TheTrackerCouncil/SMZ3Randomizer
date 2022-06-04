@@ -1475,7 +1475,7 @@
     ],
     "DungeonRequirementMarked": [
       "Marked {0} as required for {1}",
-      "{0} is now known for {1)."
+      "{0} is now known for {1}."
     ],
     "DungeonRequirementInvalid": [
       "{0} doesn't need medallions",
@@ -1997,7 +1997,8 @@
       ],
       "GameStarted": [
         "Good luck. You'll need it.",
-        "PB incoming for seed {0}"
+        "PB incoming for seed {0}",
+        "I hope you're excited for seed {0}. I made it special just for you."
       ],
       "NearKraidsAwfulSon": [
         "Oh no. Please avert your eyes to avoid seeing an imminent disaster.",
@@ -2034,6 +2035,10 @@
       "EnterPendantDungeon": [
         "I hope dipping into this pendant dungeon will be worth it for you.",
         "Didn't you say that {0} had the {1}? You must be getting desperate."
+      ],
+      "NearCrocomire": [
+        "You currently have {0} out of {1} super missiles. Do you think you have enough?",
+        "Are you sure that {0} super missiles are enough for Crocomire?"
       ]
     }
   },

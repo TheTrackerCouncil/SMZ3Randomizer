@@ -19,6 +19,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             SahasrahlasHideout = new(this);
             WaterfallFairy = new(this);
             ZorasDomain = new(this);
+
+            StartingRooms = new List<int>() { 15, 21, 22, 23, 27, 29, 30, 37, 45, 46, 47, 129 };
+            IsOverworld = true;
         }
 
         public override string Name => "Light World North East";
@@ -66,7 +69,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     vanillaItem: ItemType.Boots,
                     access: items => World.CanAquire(items, Reward.PendantGreen),
                     memoryAddress: 0x0,
-                    memoryFlag: 0xA,
+                    memoryFlag: 0x10,
                     memoryType: LocationMemoryType.ZeldaNPC);
             }
 

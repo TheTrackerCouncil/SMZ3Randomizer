@@ -66,12 +66,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public int OverworldValue => _message.ReadUInt8(0x7B);
 
         /// <summary>
+        /// True if Link is on the bottom half of the current room
+        /// </summary>
+        public bool IsOnBottomHalfOfroom => _message.ReadUInt8(0xAA) == 2;
+
+        /// <summary>
+        /// True if Link is on the right half of the current room
+        /// </summary>
+        public bool IsOnRightHalfOfRoom => _message.ReadUInt8(0xA9) == 1;
+
+        /// <summary>
+        /// The overworld screen that the player is on
+        /// </summary>
+        public int OverworldScreen => _message.ReadUInt8(0x8A);
+
+        /// <summary>
         /// Get debug string
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return $"Room: {PreviousRoom}->{CurrentRoom} | State: {State}/{Substate} | X,Y: {LinkX},{LinkY} | LinkState: {LinkState} | OW: {OverworldValue}";
+            return $"Room: {PreviousRoom}->{CurrentRoom} | State: {State}/{Substate} | X,Y: {LinkX},{LinkY} | LinkState: {LinkState} | OW: {OverworldValue} | {_message.ReadUInt8(0x8A)}";
         }
     }
 }
