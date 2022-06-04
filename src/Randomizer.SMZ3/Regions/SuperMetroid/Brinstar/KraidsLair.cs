@@ -27,6 +27,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: items => Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x5,
                 memoryFlag: 0x10);
+            MemoryRegionId = 1;
         }
 
         public override string Name => "Kraid's Lair";

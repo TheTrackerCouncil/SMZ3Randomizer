@@ -82,6 +82,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
             WateringHole = new(this);
             LeftSandPit = new(this);
+            MemoryRegionId = 4;
         }
 
         public override string Name => "Inner Maridia";

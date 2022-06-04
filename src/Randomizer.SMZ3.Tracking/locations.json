@@ -265,7 +265,13 @@
       "Name": [
         "Light World South"
       ],
-      "MapName": "Light World"
+      "MapName": "Light World",
+      "WhenDiedInRoom": {
+        "55": [
+          "Oh no. Did you get crabs?",
+          "And you were so close too."
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
@@ -310,7 +316,13 @@
       "Name": [
         "Thieves' Town"
       ],
-      "MapName": "Dark World"
+      "MapName": "Dark World",
+      "WhenDiedInRoom": {
+        "172": [
+          "Ha ha. You were killed by a blind woman.",
+          "Did that explain everything?"
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TowerOfHera",

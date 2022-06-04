@@ -46,6 +46,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 access: items => (Config.Keysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items)) && Logic.CanPassBombPassages(items),
                 memoryAddress: 0x0,
                 memoryFlag: 0x80);
+            MemoryRegionId = 0;
         }
 
         public override string Name => "Central Crateria";

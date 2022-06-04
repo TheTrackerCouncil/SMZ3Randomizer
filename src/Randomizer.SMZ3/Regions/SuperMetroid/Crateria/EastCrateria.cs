@@ -43,6 +43,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 vanillaItem: ItemType.Missile,
                 memoryAddress: 0x0,
                 memoryFlag: 0x10);
+            MemoryRegionId = 0;
         }
 
         public override string Name => "East Crateria";

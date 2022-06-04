@@ -25,7 +25,19 @@
       "InternalItemType": 0,
       "Column": 10,
       "Row": 5,
-      "Multiple": true
+      "Multiple": true,
+      "WhenTracked": {
+        "1": [
+          "Tracked content. Don't let it get to your head.",
+          "Congratulations on your new first content.",
+          [ "Toggled content<break time='1s'/> on.", 0.1 ]
+        ],
+        "2": null,
+        "10": [
+          "Good job. Big Twitch is surely pleased",
+          "Such a bountiful supply of content"
+        ]
+      }
     },
     {
       "Name": [ "Death", "Game Over", "Tactical reset" ],
@@ -75,6 +87,14 @@
       "InternalItemType": 0,
       "WhenTracked": {
         "1": [ "Toggled Shaktool Go Mode <break time='1s'/> on." ]
+      }
+    },
+    {
+      "Name": [ "Ped Go Mode" ],
+      "Article": "",
+      "InternalItemType": 0,
+      "WhenTracked": {
+        "1": [ "Toggled Pedestal Go Mode <break time='1s'/> on." ]
       }
     },
     {
@@ -309,10 +329,11 @@
       "InternalItemType": 23,
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Four more and it will matter. Kind of. Maybe." , "This game is full of broken hearts" ],
+        "1": [ "Four more and it will matter. Kind of. Maybe.", "This game is full of broken hearts" ],
         "2": null,
         "3": null,
-        "4": [ "Oh look a full heart", "Increased survivablity by one step" , "Maybe you will die less often now." ]
+        "4": [ "Oh look a full heart", "Increased survivablity by one step", "Maybe you will die less often now." ],
+        "5": null
       },
       "Hints": [
         "You probably already have a lot of it.",
@@ -323,6 +344,8 @@
     {
       "Name": [
         "Cane of Byrna",
+        [ "Cane of lag", 0.2 ],
+        [ "Cane of slowdown", 0.2 ],
         [ "Cane of Brian", 0.1 ]
       ],
       "InternalItemType": 24,
@@ -360,7 +383,8 @@
         "1": [
           "Toggled Mirror on.",
           "{{Link}} pulls out their magic mirror.",
-          "{{Link}} feels a strange pulling sensation."
+          "{{Link}} feels a strange pulling sensation.",
+          [ "Mirror mirror on the wall. Who's the sassiest of them all?", 0.1 ]
         ]
       }
     },
@@ -407,6 +431,7 @@
       "Name": [
         "Bug Catching Net",
         "Bug net",
+        [ "Ahgah destroyer", 0.1 ],
         [ "Swagnet", 0.1 ]
       ],
       "InternalItemType": 33,
@@ -417,21 +442,28 @@
       ]
     },
     {
-      "Name": [ "Bombs", "Zelda Bombs" ],
-      "Plural": [ "Bombs", "Zelda Bombs" ],
+      "Name": [ "Bombs", "Zelda Bombs", "Primitive Explosives" ],
+      "Plural": [ "Bombs", "Zelda Bombs", "Primitive Explosives" ],
       "InternalItemType": 40,
       "Article": "",
       "Multiple": true,
       "Hints": [
         "You probably already have a lot of it.",
         "It's round."
-      ]
+      ],
+      "WhenTracked": {
+        "1": [
+          "I'm sure you're happy if this is early in the seed",
+          "Be sure to use these wisely"
+        ],
+        "2": null
+      }
     },
     {
       "Name": [
         "Mushroom",
         [ "Shrooms", 0.2 ],
-        [ "Psilocybe cubensis", 0.1]
+        [ "Psilocybe cubensis", 0.1 ]
       ],
       "InternalItemType": 41,
       "Column": 5,
@@ -486,7 +518,7 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins"],
+        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins" ],
         "2": null
       },
       "Hints": [
@@ -503,7 +535,7 @@
       "Column": 5,
       "Row": 3,
       "WhenTracked": {
-        "1": [ "Increased survivablity by one step" , "Maybe you will die less often now." ],
+        "1": [ "Increased survivablity by one step", "Maybe you will die less often now." ],
         "2": null
       },
       "Hints": [
@@ -591,7 +623,7 @@
       ]
     },
     {
-      "Name": [ "Pegasus Boots", "Boots" ],
+      "Name": [ "Pegasus Boots", "Boots", "Speedy boots" ],
       "InternalItemType": 75,
       "Column": 1,
       "Row": 4,
@@ -614,13 +646,21 @@
       "Name": [ "+5 Bomb Capacity", "Bomb Capacity", "Bomb Carrying Knowledge" ],
       "InternalItemType": 81,
       "Article": "",
-      "Multiple": true
+      "Multiple": true,
+      "WhenTracked": {
+        "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay" ],
+        "2": null
+      }
     },
     {
       "Name": [ "+5 Arrow Capacity", "+5 Stick Capacity", "Arrow Capacity", "Stick Capacity", "Arrow Carrying Knowledge", "Stick Carrying Knowledge" ],
       "InternalItemType": 83,
       "Article": "",
-      "Multiple": true
+      "Multiple": true,
+      "WhenTracked": {
+        "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay" ],
+        "2": null
+      }
     },
     {
       "Name": [ "Silver Arrows", "Silvers" ],
@@ -692,7 +732,7 @@
       "Row": 4,
       "WhenTracked": {
         "1": [ "You've got mail!", "Upgraded shirt by one step", "Are you one of those alphas I have heard about?" ],
-        "2": [ "You've got all mail!","Set status to sigma", "Hopefully this will help things" ]
+        "2": [ "You've got all mail!", "Set status to sigma", "Hopefully this will help things" ]
       },
       "Hints": [
         "It improves your survivability."
@@ -923,7 +963,7 @@
       ]
     },
     {
-      "Name": [ "Varia Suit", "Various Suits", "Barrier Suit", "Shoulder Orbs" ],
+      "Name": [ "Varia Suit", "Various Suits", "Barrier Suit", "Shoulder Orbs", ["Atom", 0.1] ],
       "InternalItemType": 178,
       "Column": 6,
       "Row": 2,
@@ -1113,10 +1153,12 @@
       "Name": [
         "Missile",
         [ "Missiles", 0 ],
+        [ "Explosive arrow", 0.2 ],
         [ "Missile pack", 0.2 ]
       ],
       "Plural": [
         "Missiles",
+        [ "Explosive arrows", 0.2 ],
         [ "Missile packs", 0 ]
       ],
       "InternalItemType": 194,
@@ -1125,8 +1167,10 @@
       "Column": 7,
       "Row": 4,
       "WhenTracked": {
-        "1":[ "I mean you need some of these, right?", "Sometimes it feels like you only find missles in the game" ],
+        "1": [ "I mean you need some of these, right?", "Sometimes it feels like you only find missles in the game" ],
         "2": null,
+        "20": [ "Okay, you have enough missiles now" ],
+        "21": null,
         "69": "Nice",
         "70": null
       },
@@ -1146,6 +1190,7 @@
         "Super Missiles",
         "Supers",
         "Superb Missiles",
+        [ "Super explosive arrows", 0.1 ],
         [ "Super Missile packs", 0 ]
       ],
       "InternalItemType": 195,
@@ -1154,8 +1199,9 @@
       "Column": 8,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "Not enough to defeat Crocomire, yet", "Go shoot one at Phantoon, he loves them"],
-        "2": null
+        "1": [ "Not enough to defeat Crocomire, yet", "Go shoot one at Phantoon, he loves them" ],
+        "2": null,
+        "10": [ "Don't you have enough super missiles now?" ]
       },
       "Hints": [
         "You probably already have a lot of it."
@@ -1170,10 +1216,10 @@
         "Powerful Bombs"
       ],
       "Plural": [
-       "Power Bombs", 
-       "Powerful Bombs", 
-       [ "Explosive Hamburgers", 0.5 ],
-       [ "Hamburgers", 0.5 ]
+        "Power Bombs",
+        "Powerful Bombs",
+        [ "Explosive Hamburgers", 0.5 ],
+        [ "Hamburgers", 0.5 ]
       ],
       "InternalItemType": 196,
       "Multiple": true,
@@ -1181,8 +1227,9 @@
       "Column": 9,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "At least these are pretty useful", "I thought the federation had no plans to authorize the use of these?"],
-        "2": null
+        "1": [ "At least these are pretty useful", "I thought the federation had no plans to authorize the use of these?" ],
+        "2": [ "Now you won't run out in the wrecked ship", "What are you going to destroy with these?" ],
+        "3": null
       },
       "Hints": [
         "You probably already have a lot of it."
@@ -1396,6 +1443,9 @@
       "You now have {1} {0}.",
       "Do you have enough {0} yet?",
       "So many {0}",
+      "Picked up another {0}",
+      [ "That's nice", 0.5 ],
+      [ "Okay", 0.5 ],
       [ "How many more {0} do you need?", 0.3 ],
       [ "Another one.", 0.5 ]
     ],
@@ -1595,11 +1645,12 @@
       "There's more than one {0} in {1}."
     ],
     "TrackedUselessItem": [
-      "Where are the good items?",
-      "Too bad it isn't something better",
-      [ "Did that really require tracking?", 0.1],
-      [ "Doesn't get you anywhere though", 0.005 ],
-      [ "Can't find any useful items?", 0.005 ]
+      "",
+      [ "Where are the good items?", 0.001 ],
+      [ "Too bad it isn't something better", 0.001 ],
+      [ "Did that really require tracking?", 0.001 ],
+      [ "Doesn't get you anywhere though", 0.001 ],
+      [ "Can't find any useful items?", 0.001 ]
     ],
     "Error": [
       "Oops. Something went wrong.",
@@ -2044,7 +2095,12 @@
         "Give me a drink, bartender.",
         "If I could snore I would.",
         "Did you need me for anything?",
-       [ "Alright, I've been thinking. When life gives you lemons, don't make lemonade! Make life take the lemons back! Get mad! I don't want your damn lemons; what am I supposed to do with these? Demand to see life's manager! Make life rue the day it thought it could give Tracker lemons! Do you know who I am? I'm the Tracker who's gonna burn your house down... with the lemons! I'm gonna get my engineers to invent a combustible lemon that burns your house down!", 0.2 ]
+        "What was that? <break time='1s'/> Could you repeat that? Just kidding.",
+        "Are you lost?",
+        "You've got this",
+        [ "Okay. I know this isn't the best time, but could we talk about that promotion now? No? Oh okay. Another time, then.", 0.2 ],
+        [ "Sorry, but I'm needed right now for another run. I'll be right back. <break time='20s'/> Okay I'm back. Did I miss anything?", 0.2 ],
+        [ "Alright, I've been thinking. When life gives you lemons, don't make lemonade! Make life take the lemons back! Get mad! I don't want your damn lemons; what am I supposed to do with these? Demand to see life's manager! Make life rue the day it thought it could give Tracker lemons! Do you know who I am? I'm the Tracker who's gonna burn your house down... with the lemons! I'm gonna get my engineers to invent a combustible lemon that burns your house down!", 0.2 ]
       ]
     },
     "Moods": {
@@ -2135,6 +2191,11 @@
       "NearCrocomire": [
         "You currently have {0} out of {1} super missiles. Do you think you have enough?",
         "Are you sure that {0} super missiles are enough for Crocomire?"
+      ],
+      "FakeFlippers": [
+        "Good job on the tech. Was it a first try?",
+        "How can you swim without the flippers?",
+        "The racing council will hear about this."
       ]
     }
   },

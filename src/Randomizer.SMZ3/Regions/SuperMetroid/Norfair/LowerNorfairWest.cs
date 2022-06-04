@@ -38,6 +38,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                         (Logic.CanUsePowerBombs(items) && items.SpaceJump && (items.Super || items.Charge))),
                 memoryAddress: 0x9,
                 memoryFlag: 0x2);
+            MemoryRegionId = 2;
         }
 
         public override string Name => "Lower Norfair, West";

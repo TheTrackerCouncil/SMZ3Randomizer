@@ -54,6 +54,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: items => Logic.CanOpenRedDoors(items),
                 memoryAddress: 0x7,
                 memoryFlag: 0x1);
+            MemoryRegionId = 2;
         }
         public override string Name => "Upper Norfair, West";
         public override string Area => "Upper Norfair";

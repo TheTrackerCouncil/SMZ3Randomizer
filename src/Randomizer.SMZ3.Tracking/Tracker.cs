@@ -781,7 +781,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id)
         {
-            if (userName != null && oauthToken != null)
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(oauthToken))
             {
                 _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
             }
@@ -1354,20 +1354,23 @@ namespace Randomizer.SMZ3.Tracking
         public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null, bool autoTracked = false)
         {
             GiveLocationComment(item, location, isTracking: true, confidence);
-            TrackItem(item, trackedAs, confidence, tryClear: false);
-            Clear(location);
+            TrackItem(item, trackedAs, confidence, tryClear: false, autoTracked: autoTracked);
+            Clear(location, null, autoTracked);
 
             UpdateTrackerProgression = true;
             IsDirty = true;
 
-            var undoClear = _undoHistory.Pop();
-            var undoTrack = _undoHistory.Pop();
-            AddUndo(() =>
+            if (!autoTracked)
             {
-                undoClear();
-                undoTrack();
-                UpdateTrackerProgression = true;
-            });
+                var undoClear = _undoHistory.Pop();
+                var undoTrack = _undoHistory.Pop();
+                AddUndo(() =>
+                {
+                    undoClear();
+                    undoTrack();
+                    UpdateTrackerProgression = true;
+                });
+            }
         }
 
         /// <summary>
@@ -1639,7 +1642,8 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="location">The location to clear.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void Clear(Location location, float? confidence = null)
+        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+        public void Clear(Location location, float? confidence = null, bool autoTracked = false)
         {
             UpdateTrackerProgression = true;
             location.Cleared = true;
@@ -1662,25 +1666,37 @@ namespace Randomizer.SMZ3.Tracking
             if (dungeon != null && IsTreasure(location.Item))
             {
                 TrackDungeonTreasure(dungeon, confidence);
-                undoTrackTreasure = _undoHistory.Pop();
+
+                if (!autoTracked)
+                {
+                    undoTrackTreasure = _undoHistory.Pop();
+                }
             }
 
             Action? undoStopPegWorldMode = null;
             if (location == World.DarkWorldNorthWest.PegWorld)
             {
                 StopPegWorldMode();
-                undoStopPegWorldMode = _undoHistory.Pop();
+
+                if (!autoTracked)
+                {
+                    undoStopPegWorldMode = _undoHistory.Pop();
+                }
             }
 
             IsDirty = true;
 
-            AddUndo(() =>
+            if (!autoTracked)
             {
-                location.Cleared = false;
-                undoTrackTreasure?.Invoke();
-                undoStopPegWorldMode?.Invoke();
-                UpdateTrackerProgression = true;
-            });
+                AddUndo(() =>
+                {
+                    location.Cleared = false;
+                    undoTrackTreasure?.Invoke();
+                    undoStopPegWorldMode?.Invoke();
+                    UpdateTrackerProgression = true;
+                });
+            }
+            
             OnLocationCleared(new(location, confidence));
         }
 

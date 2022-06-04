@@ -80,5 +80,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString EnterPendantDungeon { get; init; }
             = new("Ouch. So it's come to this, then?");
 
+        /// <summary>
+        /// Gets the phrases to respond with when swimming without flippers
+        /// </summary>
+        public SchrodingersString FakeFlippers { get; init; }
+            = new("How can you swim without the flippers?");
+
     }
 }

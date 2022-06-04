@@ -43,6 +43,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 memoryFlag: 0x4);
 
             BlueBrinstarTop = new(this);
+
+            MemoryRegionId = 1;
         }
 
         public override string Name => "Blue Brinstar";

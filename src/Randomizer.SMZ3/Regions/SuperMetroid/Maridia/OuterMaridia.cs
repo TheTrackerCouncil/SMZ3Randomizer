@@ -35,6 +35,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: items => Logic.CanOpenRedDoors(items),
                 memoryAddress: 0x11,
                 memoryFlag: 0x8);
+            MemoryRegionId = 4;
         }
 
         public override string Name => "Outer Maridia";

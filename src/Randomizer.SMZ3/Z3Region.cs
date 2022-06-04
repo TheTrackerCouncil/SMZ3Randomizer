@@ -18,6 +18,7 @@ namespace Randomizer.SMZ3
         }
 
         public bool IsOverworld { get; init; }
+
         public int? MemoryAddress { get; init; }
 
         public int? MemoryFlag { get; init; }

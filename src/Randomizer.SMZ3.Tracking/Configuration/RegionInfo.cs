@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Shared;
 
@@ -66,5 +67,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <returns>A string representation of this region.</returns>
         public override string? ToString() => Name[0];
+
+        /// <summary>
+        /// Text for Tracker to say when dying in a room or screen in the region
+        /// </summary>
+        public Dictionary<string, SchrodingersString> WhenDiedInRoom { get; init; }
     }
 }

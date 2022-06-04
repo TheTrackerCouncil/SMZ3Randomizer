@@ -417,7 +417,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     {
                         if (location.Item.Type.IsInAnyCategory(ItemCategory.Map, ItemCategory.Compass) || (location.Item.Type.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey) && true))
                         {
-                            _tracker.Clear(location);
+                            _tracker.Clear(location, null, true);
                             _logger.LogInformation($"Auto tracked {location.Name} as cleared");
                         }
                         else
@@ -527,8 +527,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 _previousMetroidRegionValue = -1;
             }*/
 
-            SchrodingersString? toSay;
-
             // Falling down from Moldorm (detect if player was in Moldorm room and is now in the room below it)
             if (state.CurrentRoom == 23 && state.PreviousRoom == 7 && _previousZeldaState.CurrentRoom == 7)
             {
@@ -579,7 +577,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 _enteredDungeons.Add(dungeonInfo);
             }
             // Changed overworld (either the state was changed to overworld or the overworld screen changed)
-            else if(state.State == 0x09 && (_previousZeldaState.State != 0x09 || state.OverworldScreen != _previousZeldaState.OverworldScreen))
+            else if (state.State == 0x09 && (_previousZeldaState.State != 0x09 || state.OverworldScreen != _previousZeldaState.OverworldScreen))
             {
                 // Get the region for the room 
                 var region = Tracker.World.Regions.Where(x => x is Z3Region)
@@ -592,8 +590,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Death
             else if (state.State is 0x5 or 0x0E or 0x1B && _previousZeldaState.State == 0x12)
             {
-                // Here we should be able to track where the player died
+                // Say specific message for dying in the particular screen/room the player is in
+                if (Tracker.CurrentRegion != null && Tracker.CurrentRegion.WhenDiedInRoom != null)
+                {
+                    var region = Tracker.CurrentRegion.GetRegion(Tracker.World) as Z3Region;
+                    if (region != null && region.IsOverworld && Tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(_previousZeldaState.OverworldScreen.ToString()))
+                    {
+                        Tracker.Say(Tracker.CurrentRegion.WhenDiedInRoom[_previousZeldaState.OverworldScreen.ToString()]);
+                    }
+                    else if (region != null && !region.IsOverworld && Tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(_previousZeldaState.CurrentRoom.ToString()))
+                    {
+                        Tracker.Say(Tracker.CurrentRegion.WhenDiedInRoom[_previousZeldaState.CurrentRoom.ToString()]);
+                    }
+                }
+                
                 Tracker.TrackItem(Tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
+            }
+            // Swimming without flippers
+            else if (state.LinkState == 0x04 && _previousZeldaState.LinkState == 0x04 && Tracker.Items.Any(x => x.InternalItemType == ItemType.Flippers && x.TrackingState == 0))
+            {
+                SayOnce(Tracker.Responses.AutoTracker.FakeFlippers);
             }
 
             _previousZeldaState = state;
@@ -616,25 +632,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Update the region that the player is currently in
             if (state.CurrentRegion != _previousMetroidRegionValue)
             {
-                if (state.CurrentRegion == 0)
+                var newRegion = Tracker.World.Regions.Select(x => x as SMRegion).FirstOrDefault(x => x != null && x.MemoryRegionId == state.CurrentRegion);
+                if (newRegion != null)
                 {
-                    Tracker.UpdateRegion(Tracker.World.CentralCrateria, Tracker.Options.AutoTrackerChangeMap);
-                }
-                else if (state.CurrentRegion == 1)
-                {
-                    Tracker.UpdateRegion(Tracker.World.GreenBrinstar, Tracker.Options.AutoTrackerChangeMap);
-                }
-                else if (state.CurrentRegion == 2)
-                {
-                    Tracker.UpdateRegion(Tracker.World.UpperNorfairEast, Tracker.Options.AutoTrackerChangeMap);
-                }
-                else if (state.CurrentRegion == 3)
-                {
-                    Tracker.UpdateRegion(Tracker.World.WreckedShip, Tracker.Options.AutoTrackerChangeMap);
-                }
-                else if (state.CurrentRegion == 4)
-                {
-                    Tracker.UpdateRegion(Tracker.World.InnerMaridia, Tracker.Options.AutoTrackerChangeMap);
+                    Tracker.UpdateRegion(newRegion, Tracker.Options.AutoTrackerChangeMap);
                 }
                 _previousMetroidRegionValue = state.CurrentRegion;
             }
@@ -657,7 +658,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             // Death (health and reserve tanks all 0 (have to check to make sure the player isn't warping between games)
             else if (state.Health == 0 && state.ReserveTanks == 0 && _previousMetroidState.Health != 0 && !(state.CurrentRoom == 0 && state.CurrentRegion == 0 && state.SamusY == 0))
             {
-                // Here we should be able to track where the player died
+                if (Tracker.CurrentRegion != null && Tracker.CurrentRegion.WhenDiedInRoom != null && Tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(state.CurrentRoomInRegion.ToString()))
+                {
+                    Tracker.Say(Tracker.CurrentRegion.WhenDiedInRoom[state.CurrentRoomInRegion.ToString()]);
+                }
                 Tracker.TrackItem(Tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
             }
             
