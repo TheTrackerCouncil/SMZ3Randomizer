@@ -23,7 +23,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class AutoTrackerModule : TrackerModule, IDisposable
     {
-        private readonly Tracker _tracker;
         private readonly ILogger<AutoTrackerModule> _logger;
         private readonly List<AutoTrackerMessage> _requestMessages = new();
         private readonly Dictionary<int, Action<AutoTrackerMessage>> _responseActions = new();
@@ -48,9 +47,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="logger">Used to write logging information.</param>
         public AutoTrackerModule(Tracker tracker, ILogger<AutoTrackerModule> logger) : base(tracker, logger)
         {
-            _tracker = tracker;
             _logger = logger;
-            _tracker.AutoTracker = this;
+            Tracker.AutoTracker = this;
 
             // Check if the game has started. SM locations start as cleared in memory until you get to the title screen.
             AddEvent("read_block", "WRAM", 0x7e0020, 0x1, Game.Neither, (AutoTrackerMessage message) =>
@@ -346,7 +344,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         ///
         protected void CheckZeldaInventory(AutoTrackerMessage message)
         {
-            foreach (var item in _tracker.Items.Where(x => x.InternalItemType.IsInCategory(ItemCategory.Zelda) && x.MemoryAddress != null))
+            foreach (var item in Tracker.Items.Where(x => x.InternalItemType.IsInCategory(ItemCategory.Zelda) && x.MemoryAddress != null))
             {
                 var location = item.MemoryAddress ?? 0;
                 var giveItem = false;
@@ -392,7 +390,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 if (giveItem)
                 {
-                    _tracker.TrackItem(item);
+                    Tracker.TrackItem(item);
                 }
             }
         }
@@ -407,7 +405,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="game">The game that is being checked</param>
         protected void CheckLocations(AutoTrackerMessage message, LocationMemoryType type, bool is16Bit, Game game)
         {
-            foreach (var location in _tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))))
+            foreach (var location in Tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))))
             {
                 try
                 {
@@ -415,24 +413,26 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     var flag = location.MemoryFlag ?? 0;
                     if (!location.Cleared && ((is16Bit && message.CheckUInt16(loc * 2, flag)) || (!is16Bit && message.CheckUInt8(loc, flag))))
                     {
-                        if (location.Item.Type.IsInAnyCategory(ItemCategory.Map, ItemCategory.Compass) || (location.Item.Type.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey) && true))
+                        var item = Tracker.Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
+                        if (item != null)
                         {
-                            _tracker.Clear(location, null, true);
-                            _logger.LogInformation($"Auto tracked {location.Name} as cleared");
+                            Tracker.TrackItem(item, location, null, null, true);
+                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
                         }
                         else
                         {
-                            _tracker.TrackItem(_tracker.Items.Where(x => x.InternalItemType == location.Item.Type).First(), location, null, null, true);
-                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
+                            Tracker.Clear(location, null, true);
+                            _logger.LogInformation($"Auto tracked {location.Name} as cleared");
                         }
                     }
 
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError("Unable to auto track Zelda Room: " + location.Name);
+                    _logger.LogError("Unable to auto track location: " + location.Name);
                     _logger.LogError(e.Message);
                     _logger.LogTrace(e.StackTrace);
+                    Tracker.Error();
                 }
             }
         }
@@ -443,9 +443,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="message">The response from the lua script</param>
         protected void CheckDungeons(AutoTrackerMessage message)
         {
-            foreach (var dungeonInfo in _tracker.WorldInfo.Dungeons)
+            foreach (var dungeonInfo in Tracker.WorldInfo.Dungeons)
             {
-                var region = _tracker.World.Regions.First(x => dungeonInfo.Is(x) && x is Z3Region) as Z3Region;
+                var region = Tracker.World.Regions.First(x => dungeonInfo.Is(x) && x is Z3Region) as Z3Region;
                 if (region == null)
                 {
                     _logger.LogError($"Could not find region for {dungeonInfo.Name}");
@@ -456,7 +456,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     if (!dungeonInfo.Cleared && message.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0))
                     {
-                        _tracker.MarkDungeonAsCleared(dungeonInfo);
+                        Tracker.MarkDungeonAsCleared(dungeonInfo);
                         _logger.LogInformation($"Auto tracked {dungeonInfo.Name} as cleared");
                     }
 
@@ -476,31 +476,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="message">The response from the lua script</param>
         protected void CheckSMBosses(AutoTrackerMessage message)
         {
-            var boss = _tracker.WorldInfo.Bosses.First(x => "Kraid".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            var boss = Tracker.WorldInfo.Bosses.First(x => "Kraid".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
             if (!boss.Defeated && message.CheckUInt8(0x1, 0x1))
             {
-                _tracker.MarkBossAsDefeated(boss);
+                Tracker.MarkBossAsDefeated(boss);
                 _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
             }
 
-            boss = _tracker.WorldInfo.Bosses.First(x => "Ridley".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            boss = Tracker.WorldInfo.Bosses.First(x => "Ridley".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
             if (!boss.Defeated && message.CheckUInt8(0x2, 0x1))
             {
-                _tracker.MarkBossAsDefeated(boss);
+                Tracker.MarkBossAsDefeated(boss);
                 _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
             }
 
-            boss = _tracker.WorldInfo.Bosses.First(x => "Phantoon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            boss = Tracker.WorldInfo.Bosses.First(x => "Phantoon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
             if (!boss.Defeated && message.CheckUInt8(0x3, 0x1))
             {
-                _tracker.MarkBossAsDefeated(boss);
+                Tracker.MarkBossAsDefeated(boss);
                 _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
             }
 
-            boss = _tracker.WorldInfo.Bosses.First(x => "Draygon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+            boss = Tracker.WorldInfo.Bosses.First(x => "Draygon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
             if (!boss.Defeated && message.CheckUInt8(0x4, 0x1))
             {
-                _tracker.MarkBossAsDefeated(boss);
+                Tracker.MarkBossAsDefeated(boss);
                 _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
             }
         }
@@ -651,7 +651,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 SayOnce(Tracker.Responses.AutoTracker.NearShaktool);
             }
             // Approaching Crocomire
-            else if (state.CurrentRegion == 2 && state.CurrentRoomInRegion == 9 && state.SamusX >= 3000 && state.SamusY > 500)// && !_tracker.WorldInfo.Bosses.First(x => "Crocomire".Equals(x.Name[0])).Defeated)
+            else if (state.CurrentRegion == 2 && state.CurrentRoomInRegion == 9 && state.SamusX >= 3000 && state.SamusY > 500)// && !Tracker.WorldInfo.Bosses.First(x => "Crocomire".Equals(x.Name[0])).Defeated)
             {
                 SayOnce(Tracker.Responses.AutoTracker.NearCrocomire, state.SuperMissiles, state.MaxSuperMissiles);
             }
@@ -677,7 +677,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (!_statedMessages.Contains(statement))
             {
-                _tracker.Say(statement, args);
+                Tracker.Say(statement, args);
                 _statedMessages.Add(statement);
             }
         }

@@ -1043,6 +1043,7 @@ namespace Randomizer.SMZ3.Tracking
             var itemName = item.Name;
             var originalTrackingState = item.TrackingState;
             UpdateTrackerProgression = true;
+            var stateItem = !autoTracked || !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey) || World.Config.Keysanity;
 
             if (item.HasStages)
             {
@@ -1055,41 +1056,47 @@ namespace Randomizer.SMZ3.Tracking
                     var stageName = item.Stages[stage.Value].ToString();
 
                     didTrack = item.Track(stage.Value);
-                    if (didTrack)
+                    if (stateItem)
                     {
-                        if (item.TryGetTrackingResponse(out var response))
+                        if (didTrack)
                         {
-                            Say(response.Format(item.Counter));
+                            if (item.TryGetTrackingResponse(out var response))
+                            {
+                                Say(response.Format(item.Counter));
+                            }
+                            else
+                            {
+                                Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                            }
                         }
                         else
                         {
-                            Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                            Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Stages[item.TrackingState].ToString()));
                         }
-                    }
-                    else
-                    {
-                        Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Stages[item.TrackingState].ToString()));
                     }
                 }
                 else
                 {
                     // Tracked by regular name, upgrade by one step
                     didTrack = item.Track();
-                    if (didTrack)
+                    if (stateItem)
                     {
-                        if (item.TryGetTrackingResponse(out var response))
+                        if (didTrack)
                         {
-                            Say(response.Format(item.Counter));
+                            if (item.TryGetTrackingResponse(out var response))
+                            {
+                                Say(response.Format(item.Counter));
+                            }
+                            else
+                            {
+                                var stageName = item.Stages[item.TrackingState].ToString();
+                                Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                            }
                         }
                         else
                         {
-                            var stageName = item.Stages[item.TrackingState].ToString();
-                            Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                            Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
                         }
-                    }
-                    else
-                    {
-                        Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
                     }
                 }
             }
@@ -1097,34 +1104,47 @@ namespace Randomizer.SMZ3.Tracking
             {
                 didTrack = item.Track();
                 if (item.TryGetTrackingResponse(out var response))
-                    Say(response.Format(item.Counter));
+                {
+                    if (stateItem)
+                        Say(response.Format(item.Counter));
+                }
                 else if (item.Counter == 1)
-                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                {
+                    if (stateItem)
+                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                }
                 else if (item.Counter > 1)
-                    Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
+                {
+                    if (stateItem)
+                        Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
+                }
                 else
                 {
                     _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
-                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                    if (stateItem)
+                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 }
             }
             else
             {
                 didTrack = item.Track();
-                if (didTrack)
+                if (stateItem)
                 {
-                    if (item.TryGetTrackingResponse(out var response))
+                    if (didTrack)
                     {
-                        Say(response.Format(item.Counter));
+                        if (item.TryGetTrackingResponse(out var response))
+                        {
+                            Say(response.Format(item.Counter));
+                        }
+                        else
+                        {
+                            Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                        }
                     }
                     else
                     {
-                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                        Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
                     }
-                }
-                else
-                {
-                    Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
                 }
             }
 

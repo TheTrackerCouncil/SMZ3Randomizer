@@ -133,7 +133,7 @@
         "Agahnim's Tower",
         "Hyrule Castle Tower"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
@@ -1918,7 +1918,7 @@
       "X": 633,
       "Y": 117,
       "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AhGah seed then?" ],
-      "WhenMarkingProgression": [ "Sucks to be you." , "It's going to be one of those seeds." ],
+      "WhenMarkingProgression": [ "Sucks to be you." , "It's going to be one of those seeds.", "Hold on, let me grab some popcorn" ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
       "WhenTrackingProgression": [ "Well, at least you got something." ]
     },
