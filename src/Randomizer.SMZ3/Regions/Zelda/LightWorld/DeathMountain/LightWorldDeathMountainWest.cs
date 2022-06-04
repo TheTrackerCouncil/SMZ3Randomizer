@@ -36,6 +36,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
                 memoryAddress: 0x0,
                 memoryFlag: 0x1,
                 memoryType: LocationMemoryType.ZeldaNPC);
+
+            StartingRooms = new List<int>() { 3 };
+            IsOverworld = true;
         }
 
         public override string Name => "Light World Death Mountain West";

@@ -20,6 +20,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 memoryAddress: 0x0,
                 memoryFlag: 0x20);
             GauntletShaft = new(this);
+            MemoryRegionId = 0;
         }
 
         public override string Name => "West Crateria";

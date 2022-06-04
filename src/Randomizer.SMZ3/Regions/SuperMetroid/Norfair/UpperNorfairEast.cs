@@ -72,6 +72,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryAddress: 0x8,
                 memoryFlag: 0x10);
             BubbleMountainHiddenHall = new(this);
+            MemoryRegionId = 2;
         }
 
         public override string Name => "Upper Norfair, East";

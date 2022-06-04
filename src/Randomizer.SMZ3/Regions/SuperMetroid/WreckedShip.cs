@@ -68,6 +68,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                         (items.Grapple || items.SpaceJump || (items.Varia && Logic.HasEnergyReserves(items, 2)) || Logic.HasEnergyReserves(items, 3)),
                 memoryAddress: 0x10,
                 memoryFlag: 0x80);
+            MemoryRegionId = 3;
         }
 
         public override string Name => "Wrecked Ship";

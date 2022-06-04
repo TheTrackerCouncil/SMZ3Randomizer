@@ -8,6 +8,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         public DarkWorldMire(World world, Config config) : base(world, config)
         {
             MireShed = new(this);
+
+            StartingRooms = new List<int>() { 112 };
+            IsOverworld = true;
         }
 
         public override string Name => "Dark World Mire";

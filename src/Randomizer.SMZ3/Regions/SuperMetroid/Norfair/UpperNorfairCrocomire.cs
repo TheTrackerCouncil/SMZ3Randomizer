@@ -48,6 +48,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: items => CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))),
                 memoryAddress: 0x7,
                 memoryFlag: 0x10);
+            MemoryRegionId = 2;
         }
 
         public override string Name => "Upper Norfair, Crocomire";

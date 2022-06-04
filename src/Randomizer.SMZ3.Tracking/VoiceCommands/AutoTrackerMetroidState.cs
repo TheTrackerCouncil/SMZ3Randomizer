@@ -41,22 +41,32 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// The amount of health
         /// </summary>
-        public int Health => _message.ReadUInt8(0x7E09C2 - 0x7E0750);
+        public int Health => _message.ReadUInt8(0x7E09C2 - 0x7E0750) + _message.ReadUInt8(0x7E09C3 - 0x7E0750) * 0xFF;
 
         /// <summary>
         /// The amount currently in reserve tanks
         /// </summary>
-        public int ReserveTanks => _message.ReadUInt8(0x7E09D6 - 0x7E0750);
+        public int ReserveTanks => _message.ReadUInt8(0x7E09D6 - 0x7E0750) + _message.ReadUInt8(0x7E09D7 - 0x7E0750) * 0xFF;
 
         /// <summary>
         /// Samus's X Location
         /// </summary>
-        public int SamusX => _message.ReadUInt8(0x7E0AF6 - 0x7E0750);
+        public int SamusX => _message.ReadUInt8(0x7E0AF6 - 0x7E0750) + _message.ReadUInt8(0x7E0AF7 - 0x7E0750) * 0xFF;
 
         /// <summary>
         /// Samus's Y Location
         /// </summary>
-        public int SamusY => _message.ReadUInt8(0x7E0AFA - 0x7E0750);
+        public int SamusY => _message.ReadUInt8(0x7E0AFA - 0x7E0750) + _message.ReadUInt8(0x7E0AFB - 0x7E0750) * 0xFF;
+
+        /// <summary>
+        /// Samus's current super missile count
+        /// </summary>
+        public int SuperMissiles => _message.ReadUInt8(0x7E09CA - 0x7E0750);
+
+        /// <summary>
+        /// Samus's max super missile count
+        /// </summary>
+        public int MaxSuperMissiles => _message.ReadUInt8(0x7E09CC - 0x7E0750);
 
         /// <summary>
         /// Prints debug data for the state

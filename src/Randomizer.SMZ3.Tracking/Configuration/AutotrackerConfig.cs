@@ -33,6 +33,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Finally, the moment we've all been waiting for since the start of this run. We get to see Shaktool.");
 
         /// <summary>
+        /// Gets the phrases to respond with when nearing crocomire
+        /// </summary>
+        public SchrodingersString NearCrocomire { get; init; }
+            = new("You currently have {0} out of {1} super missiles. Do you think you have enough?");
+
+        /// <summary>
         /// Gets the phrases to respond with when falling down the pit from moldorm
         /// </summary>
         public SchrodingersString FallFromMoldorm { get; init; }
@@ -73,6 +79,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         public SchrodingersString EnterPendantDungeon { get; init; }
             = new("Ouch. So it's come to this, then?");
+
+        /// <summary>
+        /// Gets the phrases to respond with when swimming without flippers
+        /// </summary>
+        public SchrodingersString FakeFlippers { get; init; }
+            = new("How can you swim without the flippers?");
 
     }
 }

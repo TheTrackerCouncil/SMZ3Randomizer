@@ -41,6 +41,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: items => Logic.CanPassBombPassages(items) && items.Super,
                 memoryAddress: 0x5,
                 memoryFlag: 0x4);
+            MemoryRegionId = 1;
         }
 
         public override string Name => "Red Brinstar";

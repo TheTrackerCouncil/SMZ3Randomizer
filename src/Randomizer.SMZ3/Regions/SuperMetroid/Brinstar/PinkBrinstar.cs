@@ -63,6 +63,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items) && items.Wave && Logic.HasEnergyReserves(items, 1),
                 memoryAddress: 0x4,
                 memoryFlag: 0x8); // Grapple or Walljump
+            MemoryRegionId = 1;
         }
 
         public override string Name => "Pink Brinstar";

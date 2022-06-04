@@ -47,6 +47,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 memoryAddress: 0x3,
                 memoryFlag: 0x80);
             MockballHallHidden = new(this);
+
+            MemoryRegionId = 1;
         }
 
         public override string Name => "Green Brinstar";

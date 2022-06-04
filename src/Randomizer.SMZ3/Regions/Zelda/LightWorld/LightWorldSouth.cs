@@ -112,6 +112,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             MiniMoldormCave = new(this);
 
             SwampRuins = new(this);
+
+            StartingRooms = new List<int>() { 40, 41, 42, 43, 44, 45, 48, 50, 51, 52, 53, 55, 58, 59, 60, 63 };
+            IsOverworld = true;
         }
 
         public override string Name => "Light World South";

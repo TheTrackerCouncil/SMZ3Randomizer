@@ -10,6 +10,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
         {
             HookshotCave = new(this);
             SuperbunnyCave = new(this);
+            StartingRooms = new List<int>() { 69, 71 };
+            IsOverworld = true;
         }
 
         public override string Name => "Dark World Death Mountain East";

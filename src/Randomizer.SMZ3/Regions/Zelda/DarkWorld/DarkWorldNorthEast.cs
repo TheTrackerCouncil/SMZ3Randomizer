@@ -25,6 +25,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 memoryType: LocationMemoryType.ZeldaOverworld);
 
             PyramidFairy = new(this);
+
+            StartingRooms = new List<int>() { 79, 85, 86, 87, 91, 93, 94, 101, 109, 110, 111 };
+            IsOverworld = true;
         }
 
         public override string Name => "Dark World North East";

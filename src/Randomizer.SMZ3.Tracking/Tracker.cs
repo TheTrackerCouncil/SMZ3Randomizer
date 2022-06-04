@@ -781,7 +781,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public void ConnectToChat(string? userName, string? oauthToken, string? channel, string? id)
         {
-            if (userName != null && oauthToken != null)
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(oauthToken))
             {
                 _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
             }
@@ -1030,18 +1030,20 @@ namespace Randomizer.SMZ3.Tracking
         /// <see langword="true"/> to attempt to clear a location for the
         /// tracked item; <see langword="false"/> if that is done by the caller.
         /// </param>
+        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
         /// <returns>
         /// <see langword="true"/> if the item was actually tracked; <see
         /// langword="false"/> if the item could not be tracked, e.g. when
         /// tracking Bow twice.
         /// </returns>
-        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true)
+        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false)
         {
             var didTrack = false;
             var accessibleBefore = GetAccessibleLocations();
             var itemName = item.Name;
             var originalTrackingState = item.TrackingState;
             UpdateTrackerProgression = true;
+            var stateItem = !autoTracked || !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey) || World.Config.Keysanity;
 
             if (item.HasStages)
             {
@@ -1054,41 +1056,47 @@ namespace Randomizer.SMZ3.Tracking
                     var stageName = item.Stages[stage.Value].ToString();
 
                     didTrack = item.Track(stage.Value);
-                    if (didTrack)
+                    if (stateItem)
                     {
-                        if (item.TryGetTrackingResponse(out var response))
+                        if (didTrack)
                         {
-                            Say(response.Format(item.Counter));
+                            if (item.TryGetTrackingResponse(out var response))
+                            {
+                                Say(response.Format(item.Counter));
+                            }
+                            else
+                            {
+                                Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                            }
                         }
                         else
                         {
-                            Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                            Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Stages[item.TrackingState].ToString()));
                         }
-                    }
-                    else
-                    {
-                        Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Stages[item.TrackingState].ToString()));
                     }
                 }
                 else
                 {
                     // Tracked by regular name, upgrade by one step
                     didTrack = item.Track();
-                    if (didTrack)
+                    if (stateItem)
                     {
-                        if (item.TryGetTrackingResponse(out var response))
+                        if (didTrack)
                         {
-                            Say(response.Format(item.Counter));
+                            if (item.TryGetTrackingResponse(out var response))
+                            {
+                                Say(response.Format(item.Counter));
+                            }
+                            else
+                            {
+                                var stageName = item.Stages[item.TrackingState].ToString();
+                                Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                            }
                         }
                         else
                         {
-                            var stageName = item.Stages[item.TrackingState].ToString();
-                            Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                            Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
                         }
-                    }
-                    else
-                    {
-                        Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
                     }
                 }
             }
@@ -1096,34 +1104,47 @@ namespace Randomizer.SMZ3.Tracking
             {
                 didTrack = item.Track();
                 if (item.TryGetTrackingResponse(out var response))
-                    Say(response.Format(item.Counter));
+                {
+                    if (stateItem)
+                        Say(response.Format(item.Counter));
+                }
                 else if (item.Counter == 1)
-                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                {
+                    if (stateItem)
+                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                }
                 else if (item.Counter > 1)
-                    Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
+                {
+                    if (stateItem)
+                        Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
+                }
                 else
                 {
                     _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
-                    Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                    if (stateItem)
+                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 }
             }
             else
             {
                 didTrack = item.Track();
-                if (didTrack)
+                if (stateItem)
                 {
-                    if (item.TryGetTrackingResponse(out var response))
+                    if (didTrack)
                     {
-                        Say(response.Format(item.Counter));
+                        if (item.TryGetTrackingResponse(out var response))
+                        {
+                            Say(response.Format(item.Counter));
+                        }
+                        else
+                        {
+                            Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                        }
                     }
                     else
                     {
-                        Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
+                        Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
                     }
-                }
-                else
-                {
-                    Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
                 }
             }
 
@@ -1157,7 +1178,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
 
                 var items = GetProgression();
-                if (!location.IsAvailable(items) && confidence >= Options.MinimumSassConfidence)
+                if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                 {
                     var locationInfo = WorldInfo.Location(location);
                     var missingItems = Logic.GetMissingRequiredItems(location, items)
@@ -1177,13 +1198,17 @@ namespace Randomizer.SMZ3.Tracking
 
             IsDirty = true;
 
-            AddUndo(() =>
+            if (!autoTracked)
             {
-                undoTrack();
-                undoClear?.Invoke();
-                undoTrackDungeonTreasure?.Invoke();
-                UpdateTrackerProgression = true;
-            });
+                AddUndo(() =>
+                {
+                    undoTrack();
+                    undoClear?.Invoke();
+                    undoTrackDungeonTreasure?.Invoke();
+                    UpdateTrackerProgression = true;
+                });
+            }
+            
             GiveLocationHint(accessibleBefore);
             RestartIdleTimers();
 
@@ -1345,23 +1370,27 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="location">The location the item was found in.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null)
+        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null, bool autoTracked = false)
         {
             GiveLocationComment(item, location, isTracking: true, confidence);
-            TrackItem(item, trackedAs, confidence, tryClear: false);
-            Clear(location);
+            TrackItem(item, trackedAs, confidence, tryClear: false, autoTracked: autoTracked);
+            Clear(location, null, autoTracked);
 
             UpdateTrackerProgression = true;
             IsDirty = true;
 
-            var undoClear = _undoHistory.Pop();
-            var undoTrack = _undoHistory.Pop();
-            AddUndo(() =>
+            if (!autoTracked)
             {
-                undoClear();
-                undoTrack();
-                UpdateTrackerProgression = true;
-            });
+                var undoClear = _undoHistory.Pop();
+                var undoTrack = _undoHistory.Pop();
+                AddUndo(() =>
+                {
+                    undoClear();
+                    undoTrack();
+                    UpdateTrackerProgression = true;
+                });
+            }
         }
 
         /// <summary>
@@ -1633,7 +1662,8 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="location">The location to clear.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void Clear(Location location, float? confidence = null)
+        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+        public void Clear(Location location, float? confidence = null, bool autoTracked = false)
         {
             UpdateTrackerProgression = true;
             location.Cleared = true;
@@ -1656,25 +1686,37 @@ namespace Randomizer.SMZ3.Tracking
             if (dungeon != null && IsTreasure(location.Item))
             {
                 TrackDungeonTreasure(dungeon, confidence);
-                undoTrackTreasure = _undoHistory.Pop();
+
+                if (!autoTracked)
+                {
+                    undoTrackTreasure = _undoHistory.Pop();
+                }
             }
 
             Action? undoStopPegWorldMode = null;
             if (location == World.DarkWorldNorthWest.PegWorld)
             {
                 StopPegWorldMode();
-                undoStopPegWorldMode = _undoHistory.Pop();
+
+                if (!autoTracked)
+                {
+                    undoStopPegWorldMode = _undoHistory.Pop();
+                }
             }
 
             IsDirty = true;
 
-            AddUndo(() =>
+            if (!autoTracked)
             {
-                location.Cleared = false;
-                undoTrackTreasure?.Invoke();
-                undoStopPegWorldMode?.Invoke();
-                UpdateTrackerProgression = true;
-            });
+                AddUndo(() =>
+                {
+                    location.Cleared = false;
+                    undoTrackTreasure?.Invoke();
+                    undoStopPegWorldMode?.Invoke();
+                    UpdateTrackerProgression = true;
+                });
+            }
+            
             OnLocationCleared(new(location, confidence));
         }
 

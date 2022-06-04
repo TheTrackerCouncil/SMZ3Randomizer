@@ -23,7 +23,13 @@
         "Kraid's Lair",
         "Warehouse"
       ],
-      "MapName": "Brinstar"
+      "MapName": "Brinstar",
+      "WhenDiedInRoom": {
+        "47": [
+          "I see Kraid got the quick kill on you.",
+          "Seriously? To Kraid?"
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.PinkBrinstar",
@@ -133,7 +139,7 @@
         "Agahnim's Tower",
         "Hyrule Castle Tower"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
@@ -143,14 +149,14 @@
       "Hints": [
         "It's in a wet place."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
       "Name": [
         "Dark World North East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
@@ -160,28 +166,28 @@
       "Hints": [
         "Check around the villages."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth",
       "Name": [
         "Dark World South"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast",
       "Name": [
         "Dark World Death Mountain East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
       "Name": [
         "Dark World Death Mountain West"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.DesertPalace",
@@ -192,14 +198,14 @@
       "Hints": [
         "I don't like sand. It's coarse, rough and irritating, and it gets everywhere."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.EasternPalace",
       "Name": [
         "Eastern Palace"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
@@ -209,14 +215,14 @@
       "Hints": [
         "I hope you don't need it."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.HyruleCastle",
       "Name": [
         "Hyrule Castle"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.IcePalace",
@@ -227,28 +233,34 @@
         "Are you going to break the ice?",
         "You're not sending ME to cooler!"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World",
+      "WhenDiedInRoom": {
+        "222": [
+          "Death just cold stared you in the face. Welcome back to S M Z 3 randomizer.",
+          "That was cold."
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast",
       "Name": [
         "Light World Death Mountain East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest",
       "Name": [
         "Light World Death Mountain West"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
       "Name": [
         "Light World North East"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest",
@@ -258,14 +270,20 @@
       "Hints": [
         "Check around the villages."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth",
       "Name": [
         "Light World South"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World",
+      "WhenDiedInRoom": {
+        "55": [
+          "Oh no. Did you get crabs?",
+          "And you were so close too."
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
@@ -277,7 +295,7 @@
         "It's in a wet place.",
         "You need a medallion to get in there."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
@@ -285,7 +303,7 @@
         "Palace of Darkness",
         "Palace of Dorkness"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SkullWoods",
@@ -293,7 +311,7 @@
         "Skull Woods",
         "Skill Woods"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace",
@@ -303,21 +321,27 @@
       "Hints": [
         "It's in a wet place."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.ThievesTown",
       "Name": [
         "Thieves' Town"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World",
+      "WhenDiedInRoom": {
+        "172": [
+          "Ha ha. You were killed by a blind woman.",
+          "Did that explain everything?"
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TowerOfHera",
       "Name": [
         "Tower of Hera"
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Light World"
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
@@ -328,7 +352,7 @@
       "Hints": [
         "You need a medallion to get in there."
       ],
-      "MapName": "Zelda Combined"
+      "MapName": "Dark World"
     }
   ],
   "Dungeons": [
@@ -440,7 +464,7 @@
       "LocationId": 424
     },
     {
-      "Name": [ "Misery Mire" ],
+      "Name": [ "Misery Mire", "Miserable Mire" ],
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
       "RegionTypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
       "X": 150,
@@ -1906,7 +1930,7 @@
       "X": 633,
       "Y": 117,
       "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AhGah seed then?" ],
-      "WhenMarkingProgression": [ "Sucks to be you." ],
+      "WhenMarkingProgression": [ "Sucks to be you." , "It's going to be one of those seeds.", "Hold on, let me grab some popcorn" ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
       "WhenTrackingProgression": [ "Well, at least you got something." ]
     },
@@ -2253,7 +2277,7 @@
       ],
       "X": 636,
       "Y": 1214,
-      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." ],
+      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." , "At least the season pass was cheap" ],
       "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ]
     },
     {
@@ -3210,10 +3234,10 @@
       ],
       "X": 313,
       "Y": 1310,
-      "WhenMarkingJunk": [ "Its never bullshit to visit your local Library", "Not an AGuh seed then?" ],
-      "WhenMarkingProgression": [ "Sucks to be you." ],
-      "WhenTrackingJunk": [ "Does your head hurt?", "Did you get a nice book at least?" ],
-      "WhenTrackingProgression": [ "Toggled boots off. Kidding." ]
+      "WhenMarkingJunk": [ "Its never bullshit to visit your local Library", "Don't you want to get something nice to read?" ],
+      "WhenMarkingProgression": [ "Hopefully the boots are not too hard to find." , "At least this isnt that far out of the way." ],
+      "WhenTrackingJunk": [ "Did you get a nice book at least?" ],
+      "WhenTrackingProgression": [ "Toggled boots off. Kidding." , "Did you grab the book I had on reserve?"]
     },
     {
       "Id": 497,
