@@ -787,8 +787,9 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
                 }
-                catch (Exception e)
+                catch (AggregateException e)
                 {
+                    _logger.LogError("Error in connection to Twitch chat", e);
                     Say(x => x.Chat.WhenDisconnected);
                 }
             }
