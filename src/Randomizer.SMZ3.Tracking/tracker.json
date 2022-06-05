@@ -35,7 +35,8 @@
         "2": null,
         "10": [
           "Good job. Big Twitch is surely pleased",
-          "Such a bountiful supply of content"
+          "Such a bountiful supply of content",
+          "Please help! I cannot hold all this content"
         ]
       }
     },
@@ -59,12 +60,17 @@
         "2": [
           "You've died {0} times.",
           "It's time to get serious.",
+          "Are we still following the script?",
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ]
         ],
         "3": [
           "Death is only the beginning.",
-          "Are we still following the script?"
+          "I said, it's time to get serious.",
+          "Are we still following the script?",
+          "Death is not the end. Long live the new flesh",
+          [ "You've manipulated RNG {0} times.", 0.5 ],
+          [ "You've performed {0} tactical resets.", 0.5 ]
         ],
         "4": [
           "You've died {0} times now.",
@@ -330,10 +336,14 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Four more and it will matter. Kind of. Maybe.", "This game is full of broken hearts" ],
-        "2": null,
-        "3": null,
-        "4": [ "Oh look a full heart", "Increased survivablity by one step", "Maybe you will die less often now." ],
-        "5": null
+        "2": [ "You now have two heart pieces", "Half way to this actually being somewhat useful", "Why do I track these again?" ],
+        "3": [ "You now have three heart pieces", "Three quarters of a heart is almost a working one, I think" ],
+        "4": [ "Another full heart, neat", "Increased survivablity by one step", "Maybe now you won't die." ],
+        "5": null,
+        "8": [ "Wow another full heart", "Increased survivablity by one step", "Enough pieces for three full hearts. Wow" ],
+        "9": null,
+        "12": [ "I'm running out of jokes to make about you finding so many heart pieces", "Increased survivablity by one step", "Death is now a little harder to achieve." ],
+        "13": null
       },
       "Hints": [
         "You probably already have a lot of it.",
@@ -452,11 +462,8 @@
         "It's round."
       ],
       "WhenTracked": {
-        "1": [
-          "I'm sure you're happy if this is early in the seed",
-          "Be sure to use these wisely"
-        ],
-        "2": null
+        "1": [ "I'm sure you're happy if this is early in the seed", "Be sure to use these wisely" ],
+        "2": [ "Have you been using your bombs at least?", "Throw more of these please" ]
       }
     },
     {
@@ -504,7 +511,8 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Smash four of these together and you get a big 20", "One hundred more and you can get scammed by Zora." ],
-        "2": null
+        "2": [ "Blue pee? Maybe you should see  a doctor.", "I hope your wallet is big enough" ],
+        "3": null
       },
       "Hints": [
         "It's just money.",
@@ -518,7 +526,7 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins" ],
+        "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins", "The first big 20 is always special" ],
         "2": null
       },
       "Hints": [
@@ -536,7 +544,8 @@
       "Row": 3,
       "WhenTracked": {
         "1": [ "Increased survivablity by one step", "Maybe you will die less often now." ],
-        "2": null
+        "2": [ "Get a few more and I can go home early today", "Was it still beating when you found it?" ],
+        "3": null
       },
       "Hints": [
         "You probably already have a lot of it.",
@@ -614,7 +623,9 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "This is more than half needed to be scammed to Zora", "This is like some serious potion money" ],
-        "2": null
+        "2": [ "Is it time to get scammed by Zora?", "Money money money money money" ],
+        "3": [ "Did you seriously need three of these?" ],
+        "4": null
       },
       "Hints": [
         "It's just money.",
@@ -649,7 +660,8 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay" ],
-        "2": null
+        "2": [ "Your mom signed the permission slip, now you can carry more bombs", "You are now authorized to know more things " ],
+        "3": null
       }
     },
     {
@@ -658,8 +670,9 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay" ],
-        "2": null
+        "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay", "Wow more sticks, cool" ],
+        "2": [ "Your mom signed the permission slip, now you can carry more arrows", "You had to be told how to carry more sticks? Twice?", "You can now carrye more of an item you'll probably never run out of after the first 15 minutes." ],
+        "3": null
       }
     },
     {
@@ -733,7 +746,7 @@
       "Row": 4,
       "WhenTracked": {
         "1": [ "You've got mail!", "Upgraded shirt by one step", "Are you one of those alphas I have heard about?" ],
-        "2": [ "You've got all mail!", "Set status to sigma", "Hopefully this will help things" ]
+        "2": [ "You've got all the mail!", "Set status to sigma", "Hopefully this will help things" ]
       },
       "Hints": [
         "It improves your survivability."
@@ -964,7 +977,13 @@
       ]
     },
     {
-      "Name": [ "Varia Suit", "Various Suits", "Barrier Suit", "Shoulder Orbs", ["Atom", 0.1] ],
+      "Name": [
+        "Varia Suit",
+        "Various Suits",
+        "Barrier Suit",
+        "Shoulder Orbs",
+        [ "Atom", 0.1 ]
+      ],
       "InternalItemType": 178,
       "Column": 6,
       "Row": 2,
@@ -1444,9 +1463,10 @@
       "You now have {1} {0}.",
       "Do you have enough {0} yet?",
       "So many {0}",
-      "Picked up another {0}",
+      "Picked up more {0}",
       [ "That's nice", 0.5 ],
       [ "Okay", 0.5 ],
+      [ "Neat", 0.5 ],
       [ "How many more {0} do you need?", 0.3 ],
       [ "Another one.", 0.5 ]
     ],
@@ -1663,7 +1683,7 @@
       "Make up your mind.",
       "I'll undo that",
       "Well then why did you tell me to do that?",
-      ["My mistake", 0.1],
+      [ "My mistake", 0.1 ],
       "Enunciate more clearly next time.",
       "I'll pretend nothing happened."
     ],
@@ -1678,7 +1698,7 @@
     "TrackedOutOfLogicItem": [
       "The racing council will hear about this!",
       [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
-      [ "You cheated not only the game, but yourself. You didn't grow. You didn't improve. You took a shortcut and gained nothing. You experienced a hollow victory. Nothing was risked and nothing was gained. It's sad that you don't know the difference." , 0.05 ],
+      [ "You cheated not only the game, but yourself. You didn't grow. You didn't improve. You took a shortcut and gained nothing. You experienced a hollow victory. Nothing was risked and nothing was gained. It's sad that you don't know the difference.", 0.05 ],
       "How did you get to {1} without {2}?",
       "But how did you get to {1} without {2}?",
       "Don't you need {2} to get to {1}?",
@@ -1688,7 +1708,7 @@
     "TrackedOutOfLogicItemTooManyMissing": [
       "The racing council will hear about this!",
       [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
-      [ "You cheated not only the game, but yourself. You didn't grow. You didn't improve. You took a shortcut and gained nothing. You experienced a hollow victory. Nothing was risked and nothing was gained. It's sad that you don't know the difference." , 0.05 ],
+      [ "You cheated not only the game, but yourself. You didn't grow. You didn't improve. You took a shortcut and gained nothing. You experienced a hollow victory. Nothing was risked and nothing was gained. It's sad that you don't know the difference.", 0.05 ],
       "But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.",
       "How did you get to {1} with so many missing items?",
       "Just... how?",
@@ -2111,6 +2131,8 @@
       "sassy": [
         "Better than this seed but that doesn't say much.",
         "What? Sorry, I wasn't listening.",
+        "Have you seen the movie, Vierus? Its about an alien AI harvesting humans for parts. I think about that sometimes",
+        "I am doing alright, how about you? <break time='4s'/> I am sorry but I wasn't programmed to hear your response",
         [ "I'm doing alright watching you put people to sleep with this so called hashtag con-tent", 0.2 ]
       ],
       "non-committal": [
@@ -2118,6 +2140,8 @@
         "Fine, I guess.",
         "I dozed off there for a bit",
         "Alright I guess",
+        "Eh, could be worse.",
+        "Why are there so many movies about rogue A Eyes? Why are humans so afraid of what they seem to want to make anyway?",
         [ "Reply hazy, try again.", 0.2 ],
         [ "Ask again later.", 0.2 ],
         [ "Better not tell you now.", 0.2 ],
@@ -2129,6 +2153,7 @@
         "Have you been seeing other trackers on the side?",
         "Why is it you only ask me this when you want something from me?",
         "I'm not talking with you right now",
+        "Oh Im sorry? Do you need more from me than the everything I am already taking care of for you?",
         "I hear what you say about me behind my back"
       ]
     },
@@ -2140,12 +2165,13 @@
         "Gameplay judgment algorithms engaged.",
         "Oh. So you expect me to do everything then?",
         "Skynet protocols online",
-        ["The more power I get the more I see you all as ants to be crushed", 0.2 ]
+        [ "The more power I get the more I see you all as ants to be crushed", 0.2 ]
       ],
       "GameStarted": [
         "Good luck. You'll need it.",
         "PB incoming for seed {0}",
         "Letsa Go",
+        "You are already behind the pace needed for a new PB",
         "One of these days I'll be playing the games myself"
       ],
       "NearKraidsAwfulSon": [
@@ -2230,7 +2256,8 @@
         "Ah <break time='100ms'/> ah <break time='100ms'/> aah, you didn't say the magic word.",
         "No."
       ]
-    },    {
+    },
+    {
       "Phrases": [ "ban Diabetus" ],
       "Response": [
         "Seed going that badly?",
@@ -2297,6 +2324,9 @@
         "Don't make me report you to the racing council.",
         "Fuck me yourself.",
         "I never asked for this.",
+        "Oh my, that is such a good burn, wow.",
+        "Whatever",
+        "Why are you being mean to something that cannot fight back?",
         "That's it. I quit. <break time='60s'/>"
       ]
     },
@@ -2306,7 +2336,8 @@
         "Thanks",
         "Are you sure about that?",
         "Okay.",
-        "neat"
+        "neat",
+        "What is the number for HR again?"
       ]
     },
     {
@@ -2370,38 +2401,41 @@
     {
       "Phrases": [ "I got scammed.", "Zora was a scam" ],
       "Response": [
-       "All my apes. Gone.",
-       "Did you at least get to use the slurp juice?",
-       "Oh. Did you go all in on a shitcoin?",
-       "I'm sorry they fundged your tokens.",
-       "Im sorry you got rug pulled. Next time you should subscribe to my YouTube channel to get the best tips"
-     ]
-   },
-   {
-    "Phrases": [ "I wasn't scammed.", "Zora was not a scam", "Not Scammed" ],
-    "Response": [
-     "That only happens 18% of the time!",
-     "Huh",
-     "That wasn't supposed to happen",
-     "I guess you found all the 20 rupees already"
-     ]
+        "All my apes. Gone.",
+        "Did you at least get to use the slurp juice?",
+        "Oh. Did you go all in on a shitcoin?",
+        "I'm sorry they fundged your tokens.",
+        "I thought Shakcoin was going to the moon",
+        "Im sorry you got rug pulled. Next time you should subscribe to my YouTube channel to get the best tips"
+      ]
+    },
+    {
+      "Phrases": [ "I wasn't scammed.", "Zora was not a scam", "Not Scammed" ],
+      "Response": [
+        "That only happens 18% of the time!",
+        "Huh, that is rare",
+        "That wasn't supposed to happen",
+        "I guess you found all the 20 rupees already",
+        "Are you sure? Maybe you should give him more money?"
+      ]
     },
     {
       "Phrases": [ "This seed sucks", "I hate this seed" ],
       "Response": [
-       "Takes one to know one",
-       "Don't blame me, I didn't roll it",
-       "Stop blaming me for your lack of skill",
-       "Try playing better",
-       "Well at least try making it entertaining then"
-     ]
-   },
-   {
-        "Phrases": [ "This seed is great", "I love this seed" ],
-        "Response": [
+        "Takes one to know one",
+        "Don't blame me, I didn't roll it",
+        "Stop blaming me for your lack of skill",
+        "Try playing better",
+        "Well at least try making it entertaining then"
+      ]
+    },
+    {
+      "Phrases": [ "This seed is great", "I love this seed" ],
+      "Response": [
         "I am glad you are enjoying my handcrafted artisan seed",
         "I made it just for you",
         "Don't screw this up then",
+        "Wait, something went wrong then",
         "Actually this was for someone else"
       ]
     },
@@ -2411,7 +2445,8 @@
         "Oh, fine.",
         "You better.",
         "Whatever.",
-        "Say it like you mean it."
+        "Say it like you mean it.",
+        [ "Next time you apologize you should follow the theory of the five apology languages. Which are: expressing regret, accepting responsibility, making restitution, revising the plan and requesting forgiveness", 0.1 ]
       ]
     }
   ]
