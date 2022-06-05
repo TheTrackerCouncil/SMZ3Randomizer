@@ -31,7 +31,7 @@
           "Tracked content. Don't let it get to your head.",
           "Congratulations on your new first content.",
           [ "Toggled content<break time='1s'/> on.", 0.1 ],
-          [ "Tracked content. Be good or I'll take it away.", 100]
+          [ "Tracked content. Be good or I'll take it away.", 0.1 ]
         ],
         "2": null,
         "10": [
