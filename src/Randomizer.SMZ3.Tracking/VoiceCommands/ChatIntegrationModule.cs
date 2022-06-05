@@ -43,6 +43,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             ChatClient = chatClient;
             ChatClient.Connected += ChatClient_Connected;
             ChatClient.MessageReceived += ChatClient_MessageReceived;
+            ChatClient.Disconnected += ChatClient_Disconnected;
+            ChatClient.SendMessageFailure += ChatClient_SendMessageFailure;
 
             AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), (tracker, result) =>
             {
@@ -97,6 +99,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public void StartGanonsTowerGuessingGame()
         {
+            if (!ChatClient.IsConnected)
+            {
+                Tracker.Say(x => x.Chat.NoConnection);
+                return;
+            }
+
             if (!AllowGanonsTowerGuesses)
             {
                 // Just in case this command gets misheard, only clear when not
@@ -121,6 +129,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public async Task CloseGanonsTowerGuessingGameGuesses(string? moderator = null)
         {
+            if (!ChatClient.IsConnected)
+            {
+                Tracker.Say(x => x.Chat.NoConnection);
+                return;
+            }
+
             AllowGanonsTowerGuesses = false;
 
             if (string.IsNullOrEmpty(moderator))
@@ -151,6 +165,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="winningNumber">The correct number.</param>
         public async Task DeclareGanonsTowerGuessingGameWinner(int winningNumber)
         {
+            if (!ChatClient.IsConnected)
+            {
+                Tracker.Say(x => x.Chat.NoConnection);
+                return;
+            }
+
             var winners = GanonsTowerGuesses
                 .Where(x => x.Value == winningNumber)
                 .Select(x => x.Key)
@@ -372,6 +392,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private void ChatClient_Connected(object? sender, EventArgs e)
         {
             Tracker.Say(x => x.Chat.WhenConnected);
+        }
+
+        private void ChatClient_Disconnected(object? sender, EventArgs e)
+        {
+            Tracker.Say(x => x.Chat.WhenDisconnected);
+        }
+
+        private void ChatClient_SendMessageFailure(object? sender, EventArgs e)
+        {
+            Tracker.Error();
         }
 
         private GrammarBuilder GetStartGuessingGameRule()

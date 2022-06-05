@@ -22,6 +22,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Hello chat.");
 
         /// <summary>
+        /// Gets the phrases to respond with when disconnected to chat.
+        /// </summary>
+        public SchrodingersString WhenDisconnected { get; init; }
+            = new("Error with Twitch chat connection. Please save and restart tracker.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when disconnected to chat.
+        /// </summary>
+        public SchrodingersString NoConnection { get; init; }
+            = new("I'm not currently connected to Twitch chat.");
+
+        /// <summary>
         /// Gets the phrases to respond with when greeted by someone in chat.
         /// </summary>
         /// <remarks>

@@ -783,7 +783,15 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(oauthToken))
             {
-                _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
+                try
+                {
+                    _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
+                }
+                catch (AggregateException e)
+                {
+                    _logger.LogError(e, "Error in connection to Twitch chat");
+                    Say(x => x.Chat.WhenDisconnected);
+                }
             }
         }
 
