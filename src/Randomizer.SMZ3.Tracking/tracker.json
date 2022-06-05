@@ -30,14 +30,21 @@
         "1": [
           "Tracked content. Don't let it get to your head.",
           "Congratulations on your new first content.",
-          [ "Toggled content<break time='1s'/> on.", 0.1 ]
+          [ "Toggled content<break time='1s'/> on.", 0.1 ],
+          [ "Tracked content. Be good or I'll take it away.", 100]
         ],
         "2": null,
         "10": [
           "Good job. Big Twitch is surely pleased",
           "Such a bountiful supply of content",
           "Please help! I cannot hold all this content"
-        ]
+        ],
+        "11": null,
+        "15": [
+          "I'm beginning to think you're lying about all this content.",
+          "Is there really this much content?"
+        ],
+        "16" : null
       }
     },
     {
@@ -145,6 +152,7 @@
         "1": [
           "Toggled Hammer on.",
           "Stop. Hammer time.",
+          [ "Tracked pegging device", 0.1 ],
           [ "You got an M comma C hammer! Pile softening Bang Bang Clap! Other also Bambang Clap Clap!", 0.1 ]
         ]
       }
@@ -1154,8 +1162,8 @@
       ]
     },
     {
-      "Name": "Reserve Tank",
-      "Plural": "Reserve Tanks",
+      "Name": [ "Reserve Tank", "Energy tank but worse" ],
+      "Plural": [ "Reserve Tanks", "Energy tanks but worse" ],
       "InternalItemType": 193,
       "Multiple": true,
       "Column": 9,
@@ -1697,8 +1705,9 @@
     ],
     "TrackedOutOfLogicItem": [
       "The racing council will hear about this!",
-      [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
+      [ "The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
       [ "You cheated not only the game, but yourself. You didn't grow. You didn't improve. You took a shortcut and gained nothing. You experienced a hollow victory. Nothing was risked and nothing was gained. It's sad that you don't know the difference.", 0.05 ],
+      [ "I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without {2}. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.", 0.05 ],
       "How did you get to {1} without {2}?",
       "But how did you get to {1} without {2}?",
       "Don't you need {2} to get to {1}?",
@@ -1707,8 +1716,9 @@
     ],
     "TrackedOutOfLogicItemTooManyMissing": [
       "The racing council will hear about this!",
-      [ "The racing council will hear about this! <break time='1s'/> <prosody volume='soft'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
+      [ "The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?", 0.05 ],
       [ "You cheated not only the game, but yourself. You didn't grow. You didn't improve. You took a shortcut and gained nothing. You experienced a hollow victory. Nothing was risked and nothing was gained. It's sad that you don't know the difference.", 0.05 ],
+      [ "I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without {2}. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.", 0.05 ],
       "But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.",
       "How did you get to {1} with so many missing items?",
       "Just... how?",
@@ -1747,7 +1757,8 @@
         "Hey chat.",
         "Hello Twitch chat.",
         "Hey Twitch chat.",
-        [ "Hey chat, be nice or I'll ban each and every one of you.", 0.1 ]
+        [ "Hey chat, be nice or I'll ban each and every one of you.", 0.1 ],
+        [ "Hey chat, I'm happy so many of you have come to this Twitch stream to see me.", 0.1 ]
       ],
       "GreetingResponses": [
         "Hey {0}",
@@ -1800,7 +1811,8 @@
         "PinkKittyRose": "Pink Kitty Rose",
         "skennedysa": "s kennedy",
         "the_betus": "the underscore beetus",
-        "Axnollouse": "Fragger"
+        "Axnollouse": "Fragger",
+        "MattEqualsCoder": "matt equals coder"
       },
       "AskChatAboutContent": [
         "Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.",
@@ -2406,7 +2418,8 @@
         "Oh. Did you go all in on a shitcoin?",
         "I'm sorry they fundged your tokens.",
         "I thought Shakcoin was going to the moon",
-        "Im sorry you got rug pulled. Next time you should subscribe to my YouTube channel to get the best tips"
+        "Im sorry you got rug pulled. Next time you should subscribe to my YouTube channel to get the best tips",
+        "Next time don't take financial advice from Kraid"
       ]
     },
     {
@@ -2416,7 +2429,8 @@
         "Huh, that is rare",
         "That wasn't supposed to happen",
         "I guess you found all the 20 rupees already",
-        "Are you sure? Maybe you should give him more money?"
+        "Are you sure? Maybe you should give him more money?",
+        "I suppose a broken clock is right twice a day"
       ]
     },
     {
