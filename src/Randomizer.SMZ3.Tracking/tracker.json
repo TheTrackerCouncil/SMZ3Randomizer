@@ -668,7 +668,7 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay" ],
-        "2": [ "Your mom signed the permission slip, now you can carry more bombs", "You are now authorized to know more things " ],
+        "2": [ "Your mom signed the permission slip, now you can carry more bombs", "You are now authorized to know more things" ],
         "3": null
       }
     },
@@ -679,7 +679,7 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay", "Wow more sticks, cool" ],
-        "2": [ "Your mom signed the permission slip, now you can carry more arrows", "You had to be told how to carry more sticks? Twice?", "You can now carrye more of an item you'll probably never run out of after the first 15 minutes." ],
+        "2": [ "Your mom signed the permission slip, now you can carry more arrows", "You had to be told how to carry more sticks? Twice?", "You can now carry more of an item you'll probably never run out of after the first 15 minutes." ],
         "3": null
       }
     },
