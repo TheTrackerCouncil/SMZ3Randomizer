@@ -20,7 +20,6 @@ namespace Randomizer.SMZ3.Twitch
         public TwitchChatClient(ILogger<TwitchChatClient> logger, ILoggerFactory loggerFactory, IChatApi chatApi)
         {
             Logger = logger;
-
             _twitchClient = new(logger: loggerFactory.CreateLogger<TwitchClient>());
             _twitchClient.OnConnected += _twitchClient_OnConnected;
             _twitchClient.OnDisconnected += _twitchClient_OnDisconnected;
@@ -29,6 +28,10 @@ namespace Randomizer.SMZ3.Twitch
         }
 
         public event EventHandler? Connected;
+
+        public event EventHandler? Disconnected;
+
+        public event EventHandler? SendMessageFailure;
 
         public event MessageReceivedEventHandler? MessageReceived;
 
@@ -62,7 +65,10 @@ namespace Randomizer.SMZ3.Twitch
         public void Disconnect()
         {
             if (_twitchClient.IsInitialized)
+            {
+                IsConnected = false;
                 _twitchClient.Disconnect();
+            }
         }
 
         public void Dispose()
@@ -78,13 +84,28 @@ namespace Randomizer.SMZ3.Twitch
                 message = $".announce {message}";
             }
 
-            _twitchClient.SendMessage(Channel, message);
+            try
+            {
+                _twitchClient.SendMessage(Channel, message);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError("Error in sending chat message", e);
+                SendMessageFailure?.Invoke(this, new());
+            }
+            
             return Task.CompletedTask;
         }
 
         protected virtual void OnConnected()
         {
             Connected?.Invoke(this, new());
+        }
+
+        protected virtual void OnDisconnected()
+        {
+            Logger.LogWarning("Connection to chat lost");
+            Disconnected?.Invoke(this, new());
         }
 
         protected virtual void OnMessageReceived(MessageReceivedEventArgs e)
@@ -96,8 +117,7 @@ namespace Randomizer.SMZ3.Twitch
         {
             if (disposing)
             {
-                if (_twitchClient.IsInitialized)
-                    _twitchClient.Disconnect();
+                Disconnect();
             }
         }
 
@@ -109,6 +129,10 @@ namespace Randomizer.SMZ3.Twitch
 
         private void _twitchClient_OnDisconnected(object? sender, TwitchLib.Communication.Events.OnDisconnectedEventArgs e)
         {
+            if (IsConnected)
+            {
+                OnDisconnected();
+            }
             IsConnected = false;
         }
 
@@ -133,7 +157,7 @@ namespace Randomizer.SMZ3.Twitch
 
             poll = await _chatApi.MakeApiCallAsync<TwitchPoll, TwitchPoll>("polls", poll, HttpMethod.Post, default);
 
-            return poll?.Id;
+            return poll != null && poll.Successful ? poll.Id : null;
         }
 
         public async Task<ChatPoll> CheckPollAsync(string id)

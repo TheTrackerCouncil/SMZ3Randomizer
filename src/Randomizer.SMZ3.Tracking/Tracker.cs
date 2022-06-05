@@ -783,7 +783,14 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(oauthToken))
             {
-                _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
+                try
+                {
+                    _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
+                }
+                catch (Exception e)
+                {
+                    Say(x => x.Chat.WhenDisconnected);
+                }
             }
         }
 

@@ -10,6 +10,10 @@ namespace Randomizer.SMZ3.ChatIntegration
     {
         event EventHandler? Connected;
 
+        event EventHandler? Disconnected;
+
+        event EventHandler? SendMessageFailure;
+
         event MessageReceivedEventHandler? MessageReceived;
 
         bool IsConnected { get; }
