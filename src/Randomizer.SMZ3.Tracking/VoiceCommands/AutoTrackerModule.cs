@@ -330,7 +330,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 catch (Exception e)
                 {
                     AutoTrackerDisconnected?.Invoke(this, new());
-                    _logger.LogError(e.StackTrace, "Error sending message");
+                    _logger.LogError(e, "Error sending message");
                     break;
                 }
             }

@@ -8,6 +8,7 @@ using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
 using Randomizer.SMZ3.Twitch.Models;
 using TwitchLib.Client;
+using TwitchLib.Client.Exceptions;
 using TwitchLib.Client.Models;
 
 namespace Randomizer.SMZ3.Twitch
@@ -88,9 +89,9 @@ namespace Randomizer.SMZ3.Twitch
             {
                 _twitchClient.SendMessage(Channel, message);
             }
-            catch (Exception e)
+            catch (BadStateException e)
             {
-                Logger.LogError("Error in sending chat message", e);
+                Logger.LogError(e, "Error in sending chat message");
                 SendMessageFailure?.Invoke(this, new());
             }
             

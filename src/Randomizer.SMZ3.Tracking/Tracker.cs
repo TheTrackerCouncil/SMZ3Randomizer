@@ -789,7 +789,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
                 catch (AggregateException e)
                 {
-                    _logger.LogError("Error in connection to Twitch chat", e);
+                    _logger.LogError(e, "Error in connection to Twitch chat");
                     Say(x => x.Chat.WhenDisconnected);
                 }
             }

@@ -72,7 +72,7 @@ namespace Randomizer.SMZ3.Twitch
             }
             catch (HttpRequestException e)
             {
-                _logger.LogError("Unable to reach out to Twitch API {0}", e);
+                _logger.LogError(e, "Unable to reach out to Twitch API");
                 return default;
             }
 
