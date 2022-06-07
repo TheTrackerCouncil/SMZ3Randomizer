@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.AutoTracking;
 
 namespace Randomizer.App.ViewModels
 {
@@ -32,6 +33,20 @@ namespace Randomizer.App.ViewModels
             get
             {
                 var attributes = typeof(LaunchButtonOptions).GetMembers()
+                    .SelectMany(member => member.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
+                    .ToList();
+                return attributes.Select(x => x.Description);
+            }
+        }
+
+        /// <summary>
+        /// Converts the enum descriptions into a string array for displaying in a dropdown
+        /// </summary>
+        public static IEnumerable<string> AutoTrackerConnectorOptions
+        {
+            get
+            {
+                var attributes = typeof(EmulatorConnectorType).GetMembers()
                     .SelectMany(member => member.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
                     .ToList();
                 return attributes.Select(x => x.Description);
@@ -67,7 +82,7 @@ namespace Randomizer.App.ViewModels
 
         public bool TrackerSpoilersEnabled { get; set; }
 
-        public bool AutoTrackerAutoStart { get; set; }
+        public int AutoTrackerConnectorType { get; set; } = (int)EmulatorConnectorType.None;
 
         public bool AutoTrackerChangeMap { get; set; } = true;
 

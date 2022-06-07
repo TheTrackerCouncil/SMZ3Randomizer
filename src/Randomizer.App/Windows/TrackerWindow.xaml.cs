@@ -52,6 +52,9 @@ namespace Randomizer.App
         private AutoTrackerWindow _autoTrackerHelpWindow;
         private TrackerLocationSyncer _locationSyncer;
         private RomGenerator _romGenerator;
+        private MenuItem _autoTrackerDisableMenuItem;
+        private MenuItem _autoTrackerLuaMenuItem;
+        private MenuItem _autoTrackerUSB2SNESMenuItem;
 
         public TrackerWindow(IServiceProvider serviceProvider,
             TrackerFactory trackerFactory,
@@ -775,30 +778,38 @@ namespace Randomizer.App
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (enableAutoTracker)
+            _autoTrackerDisableMenuItem = new MenuItem
             {
-                var enable = new MenuItem
-                {
-                    Header = "Enable Auto Tracker",
-                };
-                enable.Click += (sender, e) =>
-                {
-                    Tracker.AutoTracker.Enable();
-                };
-                menu.Items.Add(enable);
-            }
-            else
+                Header = "Disable Auto Tracker",
+                IsCheckable = true
+            };
+            _autoTrackerDisableMenuItem.Click += (sender, e) =>
             {
-                var disable = new MenuItem
-                {
-                    Header = "Disable Auto Tracker",
-                };
-                disable.Click += (sender, e) =>
-                {
-                    Tracker.AutoTracker.Disable();
-                };
-                menu.Items.Add(disable);
-            }
+                Tracker.AutoTracker.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.None);
+            };
+            menu.Items.Add(_autoTrackerDisableMenuItem);
+
+            _autoTrackerLuaMenuItem = new MenuItem
+            {
+                Header = "Lua Auto Tracker",
+                IsCheckable = true
+            };
+            _autoTrackerLuaMenuItem.Click += (sender, e) =>
+            {
+                Tracker.AutoTracker.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.Lua);
+            };
+            menu.Items.Add(_autoTrackerLuaMenuItem);
+
+            _autoTrackerUSB2SNESMenuItem = new MenuItem
+            {
+                Header = "USB2SNES Auto Tracker",
+                IsCheckable = true
+            };
+            _autoTrackerUSB2SNESMenuItem.Click += (sender, e) =>
+            {
+                Tracker.AutoTracker.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.USB2SNES);
+            };
+            menu.Items.Add(_autoTrackerUSB2SNESMenuItem);
 
             var folder = new MenuItem
             {
@@ -830,39 +841,27 @@ namespace Randomizer.App
 
         public void InitializeAutoTracker()
         {
-            StatusBarAutoTrackerEnabled.ContextMenu = CreateAutoTrackerMenu(false);
-            StatusBarAutoTrackerConnected.ContextMenu = CreateAutoTrackerMenu(false);
-            StatusBarAutoTrackerDisabled.ContextMenu = CreateAutoTrackerMenu(true);
+            var menu = CreateAutoTrackerMenu(true);
+            StatusBarAutoTrackerEnabled.ContextMenu = menu;
+            StatusBarAutoTrackerConnected.ContextMenu = menu;
+            StatusBarAutoTrackerDisabled.ContextMenu = menu;
             
-            Tracker.AutoTracker.AutoTrackerEnabled += (sender, e) => Dispatcher.Invoke(() =>
-            {
-                StatusBarAutoTrackerEnabled.Visibility = Visibility.Visible;
-                StatusBarAutoTrackerDisabled.Visibility = Visibility.Collapsed;
-                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
-            });
-            Tracker.AutoTracker.AutoTrackerDisabled += (sender, e) => Dispatcher.Invoke(() =>
-            {
-                StatusBarAutoTrackerEnabled.Visibility = Visibility.Collapsed;
-                StatusBarAutoTrackerDisabled.Visibility = Visibility.Visible;
-                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
-            });
-            Tracker.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(() =>
-            {
-                StatusBarAutoTrackerEnabled.Visibility = Visibility.Collapsed;
-                StatusBarAutoTrackerDisabled.Visibility = Visibility.Collapsed;
-                StatusBarAutoTrackerConnected.Visibility = Visibility.Visible;
-            });
-            Tracker.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(() =>
-            {
-                StatusBarAutoTrackerEnabled.Visibility = Tracker.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
-                StatusBarAutoTrackerDisabled.Visibility = Tracker.AutoTracker.IsEnabled ? Visibility.Collapsed : Visibility.Visible;
-                StatusBarAutoTrackerConnected.Visibility = Visibility.Collapsed;
-            });
+            Tracker.AutoTracker.AutoTrackerEnabled += (sender, e) => Dispatcher.Invoke(() => UpdateAutoTrackerMenu());
+            Tracker.AutoTracker.AutoTrackerDisabled += (sender, e) => Dispatcher.Invoke(() => UpdateAutoTrackerMenu());
+            Tracker.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(() => UpdateAutoTrackerMenu());
+            Tracker.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(() => UpdateAutoTrackerMenu());
 
-            if (Options.AutotrackerAutoStart)
-            {
-                Tracker.AutoTracker.Enable();
-            }
+            Tracker.AutoTracker.SetConnector(Options.AutotrackerAutoStart);
+        }
+
+        private void UpdateAutoTrackerMenu()
+        {
+            StatusBarAutoTrackerDisabled.Visibility = !Tracker.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarAutoTrackerEnabled.Visibility = Tracker.AutoTracker.IsEnabled && !Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
+            StatusBarAutoTrackerConnected.Visibility = Tracker.AutoTracker.IsEnabled && Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
+            _autoTrackerDisableMenuItem.IsChecked = Tracker.AutoTracker.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.None;
+            _autoTrackerLuaMenuItem.IsChecked = Tracker.AutoTracker.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.Lua;
+            _autoTrackerUSB2SNESMenuItem.IsChecked = Tracker.AutoTracker.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.USB2SNES;
         }
 
         private void UpdateStats(TrackerEventArgs e)

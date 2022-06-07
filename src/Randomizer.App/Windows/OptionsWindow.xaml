@@ -173,9 +173,23 @@
                                           DialogTitle="Select Auto Tracker scripts folder" />
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Auto Tracker Default Connection:"
+                                       ToolTip="Determines the starting connection type when starting the tracker">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <ComboBox ItemsSource="{Binding AutoTrackerConnectorOptions}"
+                            SelectedIndex="{Binding AutoTrackerConnectorType}"
+                            Height="23"
+                            VerticalAlignment="Top">
+                  </ComboBox>
+                </Grid>
+              </controls:LabeledControl>
+
               <StackPanel Orientation="Horizontal">
-                <CheckBox Content="Run Auto Tracker on Start" IsChecked="{Binding AutoTrackerAutoStart}" />
-                <CheckBox Content="Update Map Automatically" IsChecked="{Binding AutoTrackerChangeMap}" />
+                <CheckBox Content="Auto Tracker Updates Map Automatically" IsChecked="{Binding AutoTrackerChangeMap}" />
               </StackPanel>
 
               <StackPanel Orientation="Horizontal">

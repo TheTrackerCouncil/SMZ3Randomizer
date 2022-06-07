@@ -10,6 +10,7 @@ using Randomizer.SMZ3;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.SMZ3.Twitch;
 
@@ -80,6 +81,7 @@ namespace Randomizer.App
 
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
+            services.AddScoped<AutoTracker>();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();

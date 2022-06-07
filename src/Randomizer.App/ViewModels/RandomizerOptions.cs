@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 
 using Randomizer.Shared;
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.Tracking.AutoTracking;
 
 namespace Randomizer.App.ViewModels
 {
@@ -81,9 +82,9 @@ namespace Randomizer.App.ViewModels
                     : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
         }
 
-        public bool AutotrackerAutoStart
+        public EmulatorConnectorType AutotrackerAutoStart
         {
-            get => GeneralOptions.AutoTrackerAutoStart;
+            get => (EmulatorConnectorType)GeneralOptions.AutoTrackerConnectorType;
         }
 
         public static RandomizerOptions Load(string path)

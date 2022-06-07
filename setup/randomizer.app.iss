@@ -72,7 +72,7 @@ Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\*"; DestDir: "
 Source: "..\src\Randomizer.SMZ3.Tracking\tracker.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\locations.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
-Source: "..\src\Randomizer.SMZ3.Tracking\AutoTrackerScripts\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\AutoTrackerScripts"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\src\Randomizer.SMZ3.Tracking\AutoTracking\LuaScripts\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\AutoTrackerScripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

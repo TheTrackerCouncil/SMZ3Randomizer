@@ -20,6 +20,7 @@ using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -292,7 +293,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// The Auto Tracker for the Tracker
         /// </summary>
-        public AutoTrackerModule AutoTracker { get; set; }
+        public AutoTracker AutoTracker { get; set; }
 
         /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
