@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.ChatIntegration.Models
 {
-    public class ChatPoll
+    /// <summary>
+    /// Base class to be extended for TwitchAPI responses
+    /// </summary>
+    public class TwitchAPIResponse
     {
-        public bool IsPollComplete { get; set; }
-        public bool IsPollSuccessful { get; set; }
-        public string? WinningChoice { get; set; }
+        public bool IsSuccessful { get; set; }
     }
 }

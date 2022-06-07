@@ -223,7 +223,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AskChatAboutContentPollId = await ChatClient.CreatePollAsync("Do you think that was some high quality #content?", new List<string>() { "Yes", "No" }, AskChatAboutContentPollTime);
 
-            if (AskChatAboutContentPollId == null)
+            if (string.IsNullOrEmpty(AskChatAboutContentPollId))
             {
                 Tracker.TrackItem(contentItemData);
                 return;
@@ -244,11 +244,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             do
             {
                 var result = await ChatClient.CheckPollAsync(AskChatAboutContentPollId);
-                if (result.IsComplete && AskChatAboutContentCheckPollResults)
+                if (result.IsPollComplete && AskChatAboutContentCheckPollResults)
                 {
                     AskChatAboutContentCheckPollResults = false;
 
-                    if (result.IsSuccessful)
+                    if (result.IsPollSuccessful)
                     {
                         Tracker.Say(x => x.Chat.PollComplete);
 

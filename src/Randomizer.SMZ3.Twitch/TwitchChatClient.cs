@@ -158,7 +158,7 @@ namespace Randomizer.SMZ3.Twitch
 
             poll = await _chatApi.MakeApiCallAsync<TwitchPoll, TwitchPoll>("polls", poll, HttpMethod.Post, default);
 
-            return poll != null && poll.Successful ? poll.Id : null;
+            return poll != null && poll.IsSuccessful ? poll.Id : null;
         }
 
         public async Task<ChatPoll> CheckPollAsync(string id)
@@ -169,8 +169,8 @@ namespace Randomizer.SMZ3.Twitch
             {
                 return new ChatPoll
                 {
-                    IsComplete = true,
-                    IsSuccessful = false
+                    IsPollComplete = true,
+                    IsPollSuccessful = false
                 };
             }
 
@@ -178,8 +178,8 @@ namespace Randomizer.SMZ3.Twitch
 
             return new()
             {
-                IsComplete = poll.IsComplete,
-                IsSuccessful = poll.Successful,
+                IsPollComplete = poll.IsPollComplete,
+                IsPollSuccessful = poll.IsPollSuccessful,
                 WinningChoice = poll.WinningChoice?.Title
             };
         }
