@@ -11,6 +11,10 @@ namespace Randomizer.SMZ3.ChatIntegration.Models
     /// </summary>
     public class TwitchAPIResponse
     {
+        /// <summary>
+        /// If the Twitch API returned a successful response and
+        /// was able to be parsed successfully
+        /// </summary>
         public bool IsSuccessful { get; set; }
     }
 }
