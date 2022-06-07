@@ -451,9 +451,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError("Unable to auto track location: " + location.Name);
-                    _logger.LogError(e.Message);
-                    _logger.LogTrace(e.StackTrace);
+                    _logger.LogError(e, "Unable to auto track location: " + location.Name);
                     Tracker.Error();
                 }
             }
@@ -471,6 +469,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (region == null)
                 {
                     _logger.LogError($"Could not find region for {dungeonInfo.Name}");
+                    Tracker.Error();
                     continue;
                 }
 
@@ -485,9 +484,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError("Unable to auto track Dungeon: " + dungeonInfo.Name);
-                    _logger.LogError(e.Message);
-                    _logger.LogTrace(e.StackTrace);
+                    _logger.LogError(e, "Unable to auto track Dungeon: " + dungeonInfo.Name);
+                    Tracker.Error();
                 }
             }
         }

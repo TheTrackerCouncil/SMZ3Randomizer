@@ -851,7 +851,7 @@ namespace Randomizer.App
             Tracker.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(() => UpdateAutoTrackerMenu());
             Tracker.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(() => UpdateAutoTrackerMenu());
 
-            Tracker.AutoTracker.SetConnector(Options.AutotrackerAutoStart);
+            Tracker.AutoTracker.SetConnector(Options.AutoTrackerDefaultConnector);
         }
 
         private void UpdateAutoTrackerMenu()

@@ -181,7 +181,7 @@
                   </Grid.ColumnDefinitions>
 
                   <ComboBox ItemsSource="{Binding AutoTrackerConnectorOptions}"
-                            SelectedIndex="{Binding AutoTrackerConnectorType}"
+                            SelectedIndex="{Binding AutoTrackerDefaultConnector}"
                             Height="23"
                             VerticalAlignment="Top">
                   </ComboBox>

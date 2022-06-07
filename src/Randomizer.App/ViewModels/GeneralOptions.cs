@@ -82,7 +82,7 @@ namespace Randomizer.App.ViewModels
 
         public bool TrackerSpoilersEnabled { get; set; }
 
-        public int AutoTrackerConnectorType { get; set; } = (int)EmulatorConnectorType.None;
+        public int AutoTrackerDefaultConnector { get; set; } = (int)EmulatorConnectorType.None;
 
         public bool AutoTrackerChangeMap { get; set; } = true;
 

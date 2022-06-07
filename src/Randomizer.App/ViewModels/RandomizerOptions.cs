@@ -82,9 +82,9 @@ namespace Randomizer.App.ViewModels
                     : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
         }
 
-        public EmulatorConnectorType AutotrackerAutoStart
+        public EmulatorConnectorType AutoTrackerDefaultConnector
         {
-            get => (EmulatorConnectorType)GeneralOptions.AutoTrackerConnectorType;
+            get => (EmulatorConnectorType)GeneralOptions.AutoTrackerDefaultConnector;
         }
 
         public static RandomizerOptions Load(string path)
