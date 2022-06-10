@@ -61,16 +61,17 @@
           "I'm interested in this",
           "Yeah, rip.",
           "It's time to get serious.",
-          "It's time to get seewwious.",
           "I hope this was intentional because things were going well",
-          [ "Tickets only. Next!", 0.5 ]
+          [ "Tickets only. Next!", 0.5 ],
+          [ "It's time to get seewwious.", 0.5 ]
         ],
         "2": [
           "You've died {0} times.",
           "It's time to get serious.",
           "Are we still following the script?",
           [ "You've manipulated RNG {0} times.", 0.5 ],
-          [ "You've performed {0} tactical resets.", 0.5 ]
+          [ "You've performed {0} tactical resets.", 0.5 ],
+          [ "It's time to get seewwious.", 0.5 ]
         ],
         "3": [
           "Death is only the beginning.",
@@ -78,7 +79,8 @@
           "Are we still following the script?",
           "Death is not the end. Long live the new flesh",
           [ "You've manipulated RNG {0} times.", 0.5 ],
-          [ "You've performed {0} tactical resets.", 0.5 ]
+          [ "You've performed {0} tactical resets.", 0.5 ],
+          [ "It's time to get seewwious.", 0.5 ]
         ],
         "4": [
           "You've died {0} times now.",
@@ -345,7 +347,7 @@
       "InternalItemType": 23,
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Four more and it will matter. Kind of. Maybe.", "This game is full of broken hearts" ],
+        "1": [ "Four more and it will matter. Kind of. Maybe.", "Toggled broken heart on" ],
         "2": [ "You now have two heart pieces", "Half way to this actually being somewhat useful", "Why do I track these again?" ],
         "3": [ "You now have three heart pieces", "Three quarters of a heart is almost a working one, I think" ],
         "4": [ "Another full heart, neat", "Increased survivablity by one step", "Maybe now you won't die." ],
@@ -473,7 +475,8 @@
       ],
       "WhenTracked": {
         "1": [ "I'm sure you're happy if this is early in the seed", "Be sure to use these wisely" ],
-        "2": [ "Have you been using your bombs at least?", "Throw more of these please" ]
+        "2": [ "Have you been using them?", "Throw more of these please" ],
+        "3": null
       }
     },
     {
@@ -537,7 +540,10 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins", "The first big 20 is always special" ],
-        "2": null
+        "2": [ "Only your second? I'm surprised.", "You now have 2 big twenties. Out of like five thousand."],
+        "3": null,
+        "4": [ "You now have 4 20 rupee's. Nice."],
+        "5": null
       },
       "Hints": [
         "It's just money.",
@@ -554,7 +560,7 @@
       "Row": 3,
       "WhenTracked": {
         "1": [ "Increased survivablity by one step", "Maybe you will die less often now." ],
-        "2": [ "Get a few more and I can go home early today", "Was it still beating when you found it?" ],
+        "2": [ "Get a few more and I can sleep early today", "Was it still beating when you found it?" ],
         "3": null
       },
       "Hints": [
@@ -577,7 +583,7 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "I hope the merchant is not a scam", "At least this is some decent money" ],
+        "1": [ "Don't spend it all in one place", "At least this is some decent money" ],
         "2": null
       },
       "Hints": [
@@ -1156,7 +1162,9 @@
       "Row": 3,
       "WhenTracked": {
         "1": [ "At least now you can take a few more hits", "If you got hit less you wouldn't need these" ],
-        "2": null
+        "2": [ "Two whole tanks of energy. Wow.", "FYI You shouldn't drink these.", "Warning, do not injest"],
+        "3": null,
+        "14": [ "You actually did it, you got all the E-Tanks in the game."]
       },
       "Hints": [
         "You probably already have a lot of it.",
@@ -1171,7 +1179,7 @@
       "Column": 9,
       "Row": 3,
       "WhenTracked": {
-        "1": [ "Aren't these like the E-Tanks in the Mega Man X series?", "Either you will need these oar they will be annoying" ],
+        "1": [ "Aren't these like the E-Tanks in the Mega Man X series?", "Hopefully you will not need these." ],
         "2": null
       },
       "Hints": [
@@ -1230,7 +1238,8 @@
       "Row": 4,
       "WhenTracked": {
         "1": [ "Not enough to defeat Crocomire, yet", "Go shoot one at Phantoon, he loves them" ],
-        "2": null,
+        "2": [ "You now have the bare mininum to kill Crocomire. Don't miss.", "That's a lot of soup!" ],
+        "3": null,
         "10": [ "Don't you have enough super missiles now?" ]
       },
       "Hints": [
@@ -1258,7 +1267,7 @@
       "Row": 4,
       "WhenTracked": {
         "1": [ "At least these are pretty useful", "I thought the federation had no plans to authorize the use of these?" ],
-        "2": [ "Now you won't run out in the wrecked ship", "What are you going to destroy with these?" ],
+        "2": [ "Now you won't run out in the wrecked ship", "What are you going to destroy with these?", "Time to get things done in Metroid?" ],
         "3": null
       },
       "Hints": [
@@ -1544,6 +1553,7 @@
       "Hey tracker, track Shaktool Go Mode",
       "I wonder how Shaktool is doing",
       "I hear its time to dig, underwater and maybe get something.",
+      ["It's time to get seewwious.", 0.5],
       [ "It's time to get serious.", 0.5 ]
     ],
     "PegWorldAvailable": [
@@ -1836,7 +1846,7 @@
         "I'm glad I asked. The chat has denied your request to increase your content levels.",
         "I am sorry but the chat does agree that what happened was good content. Please try again later",
         "Seriously chat? I thought that was good content but the rules are rules.",
-        "The coucil would like to inform you that trying to sneak content past them is a serious crime.",
+        "The council would like to inform you that trying to sneak content past them is a serious crime. This has been added to your file.",
         "The racing council regrets to inform you that your application for additional content has been denied.",
         "Ouch. The chat did not think that was some hashtag content. I can see the metrics dropping."
       ],
@@ -2179,6 +2189,7 @@
         "Gameplay judgment algorithms engaged.",
         "Oh. So you expect me to do everything then?",
         "Skynet protocols online",
+        "Connection established with the Council",
         [ "The more power I get the more I see you all as ants to be crushed", 0.2 ]
       ],
       "GameStarted": [
@@ -2233,12 +2244,14 @@
         "Didn't you say that {0} had the {1}? You must be getting desperate."
       ],
       "NearCrocomire": [
-        "You currently have {0} out of {1} super missiles. Do you think you have enough?",
-        "Are you sure that {0} super missiles are enough for Crocomire?"
+        "",
+        [ "You currently have {0} out of {1} super missiles. Do you think you have enough?", 0.25 ],
+        [ "Are you sure that {0} super missiles are enough for Crocomire?", 0.25 ]
       ],
       "FakeFlippers": [
         "Good job on the tech. Was it a first try?",
         "How can you swim without the flippers?",
+        "Are your feet wet?",
         "The racing council will hear about this."
       ],
       "MockBall": [
