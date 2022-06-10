@@ -8,8 +8,8 @@ namespace Randomizer.SMZ3.ChatIntegration.Models
 {
     public class ChatPoll
     {
-        public bool IsComplete { get; set; }
-        public bool IsSuccessful { get; set; }
+        public bool IsPollComplete { get; set; }
+        public bool IsPollSuccessful { get; set; }
         public string? WinningChoice { get; set; }
     }
 }

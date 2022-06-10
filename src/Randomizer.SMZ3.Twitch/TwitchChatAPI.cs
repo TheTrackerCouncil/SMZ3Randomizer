@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.ChatIntegration.Models;
 
 namespace Randomizer.SMZ3.Twitch
 {
@@ -37,14 +38,14 @@ namespace Randomizer.SMZ3.Twitch
             _logger = logger;
         }
 
-        public async Task<TResponse?> MakeApiCallAsync<TRequest, TResponse>(string api, TRequest requestData, HttpMethod method, CancellationToken cancellationToken)
+        public async Task<TResponse?> MakeApiCallAsync<TRequest, TResponse>(string api, TRequest requestData, HttpMethod method, CancellationToken cancellationToken) where TResponse : TwitchAPIResponse
         {
             var request = GetHttpRequestMessage(api, method);
             request.Content = new StringContent(JsonSerializer.Serialize(requestData, s_serializerOptions), Encoding.UTF8, "application/json");
             return await GetHttpResponseAsync<TResponse>(request, cancellationToken);
         }
 
-        public async Task<T?> MakeApiCallAsync<T>(string api, HttpMethod method, CancellationToken cancellationToken)
+        public async Task<T?> MakeApiCallAsync<T>(string api, HttpMethod method, CancellationToken cancellationToken) where T : TwitchAPIResponse
         {
             var request = GetHttpRequestMessage(api, method);
             return await GetHttpResponseAsync<T>(request, cancellationToken);
@@ -63,7 +64,7 @@ namespace Randomizer.SMZ3.Twitch
             return request;
         }
 
-        private async Task<T?> GetHttpResponseAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
+        private async Task<T?> GetHttpResponseAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken) where T : TwitchAPIResponse
         {
             HttpResponseMessage response;
             try
@@ -94,15 +95,23 @@ namespace Randomizer.SMZ3.Twitch
 
             try
             {
+                _logger.LogInformation("{RequestMethod} {RequestUri} returned successful response: {Body}",
+                    request.Method.Method, request.RequestUri, responseContent);
                 var responseObject = JsonDocument.Parse(responseContent).RootElement.GetProperty("data");
 
                 if (!typeof(T).IsGenericType)
                 {
-                    return JsonSerializer.Deserialize<T>(responseObject[0].GetRawText());
+                    var toReturn = JsonSerializer.Deserialize<T>(responseObject[0].GetRawText());
+                    if (toReturn != null)
+                        toReturn.IsSuccessful = true;
+                    return toReturn;
                 }
                 else
                 {
-                    return JsonSerializer.Deserialize<T>(responseObject.GetRawText());
+                    var toReturn = JsonSerializer.Deserialize<T>(responseObject.GetRawText());
+                    if (toReturn != null)
+                        toReturn.IsSuccessful = true;
+                    return toReturn;
                 }
             }
             catch (JsonException)

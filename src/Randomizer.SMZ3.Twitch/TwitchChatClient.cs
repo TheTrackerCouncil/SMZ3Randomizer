@@ -156,31 +156,31 @@ namespace Randomizer.SMZ3.Twitch
                 Duration = duration
             };
 
-            poll = await _chatApi.MakeApiCallAsync<TwitchPoll, TwitchPoll>("polls", poll, HttpMethod.Post, default);
+            var pollApiResponse = await _chatApi.MakeApiCallAsync<TwitchPoll, TwitchPoll>("polls", poll, HttpMethod.Post, default);
 
-            return poll != null && poll.Successful ? poll.Id : null;
+            return pollApiResponse != null && pollApiResponse.IsSuccessful ? pollApiResponse.Id : null;
         }
 
         public async Task<ChatPoll> CheckPollAsync(string id)
         {
-            var poll = await _chatApi.MakeApiCallAsync<TwitchPoll>($"polls?broadcaster_id={Id}&id={id}", HttpMethod.Get, default);
+            var pollApiResponse = await _chatApi.MakeApiCallAsync<TwitchPoll>($"polls?broadcaster_id={Id}&id={id}", HttpMethod.Get, default);
 
-            if (poll == null)
+            if (pollApiResponse == null)
             {
                 return new ChatPoll
                 {
-                    IsComplete = true,
-                    IsSuccessful = false
+                    IsPollComplete = true,
+                    IsPollSuccessful = false
                 };
             }
 
-            Logger.LogInformation("Poll complete with status {0} and winning choice of {1}", poll.Status, poll.WinningChoice?.Title);
+            Logger.LogInformation("Poll complete with status {0} and winning choice of {1}", pollApiResponse.Status, pollApiResponse.WinningChoice?.Title);
 
             return new()
             {
-                IsComplete = poll.IsComplete,
-                IsSuccessful = poll.Successful,
-                WinningChoice = poll.WinningChoice?.Title
+                IsPollComplete = pollApiResponse.IsPollComplete,
+                IsPollSuccessful = pollApiResponse.IsPollSuccessful,
+                WinningChoice = pollApiResponse.WinningChoice?.Title
             };
         }
 
