@@ -1171,7 +1171,7 @@
       "Column": 9,
       "Row": 3,
       "WhenTracked": {
-        "1": [ "Aren't these like the E-Tanks in the Mega Man X series?", "Either you will need these or they will be annoying" ],
+        "1": [ "Aren't these like the E-Tanks in the Mega Man X series?", "Either you will need these oar they will be annoying" ],
         "2": null
       },
       "Hints": [
@@ -2253,7 +2253,7 @@
       ],
       "RidleyFace": [
         "<prosody rate='x-slow' pitch='x-high'>Ahhhh</prosody>. Sorry, I'm still working on my Ridley voice",
-        "Ridley wanted me to tell you, Bet you can't wait to face me. Welcome back to SMZ3 Randomizer.",
+        "Bet you can't wait to face Ridley. Welcome back to SMZ3 Randomizer.",
         "Oh hi there"
       ],
       "EnteredGTEarly": [
