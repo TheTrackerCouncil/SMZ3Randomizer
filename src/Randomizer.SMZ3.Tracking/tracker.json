@@ -61,6 +61,7 @@
           "I'm interested in this",
           "Yeah, rip.",
           "It's time to get serious.",
+          "It's time to get seewwious.",
           "I hope this was intentional because things were going well",
           [ "Tickets only. Next!", 0.5 ]
         ],
@@ -81,6 +82,7 @@
         ],
         "4": [
           "You've died {0} times now.",
+          "Are you ever going to get seewwious?",
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ],
           [ "Maybe I should take over", 0.5 ]
