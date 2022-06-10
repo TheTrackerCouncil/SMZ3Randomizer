@@ -128,7 +128,9 @@
     {
       "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.WreckedShip",
       "Name": [
-        "Wrecked Ship"
+        "Wrecked Ship",
+        "Wrecked Shit",
+        "Haunted Ship"
       ],
       "MapName": "Wrecked Ship"
     },
@@ -942,10 +944,13 @@
       "Name": [
         "Mother Brain's reliquary",
         "Pit Room",
+        "Mother Brain's toilet",
         [ "Missile (Crateria bottom)", 0 ]
       ],
       "X": 552,
-      "Y": 660
+      "Y": 660,
+      "WhenTrackingJunk": [ "Of course this location would have a shitty item", "What a poopy item. No wonder it got flushed." ],
+      "WhenTrackingProgression": [ "That's not bad for being in the toilet", "Who flushed this down the toilet?"]
     },
     {
       "Id": 7,
@@ -1565,7 +1570,8 @@
       "Name": [
         "Post Chozo Concert - Speed Booster Item",
         "Bowling Alley - Speed Booster Item",
-        [ "Reserve Tank, Wrecked Ship", 0 ]
+        [ "Reserve Tank, Wrecked Ship", 0 ],
+        [ "Wrecked Ship, Reserve Tank", 0 ]
       ],
       "X": 504,
       "Y": 180
@@ -1592,6 +1598,8 @@
       "Id": 132,
       "Name": [
         "Wrecked Pool",
+        "Ruined Pool",
+        "Wrecked Ship Bullshit Room",
         [ "Energy Tank, Wrecked Ship", 0 ]
       ],
       "X": 600,
@@ -1830,7 +1838,11 @@
         "Floating Island"
       ],
       "X": 1627,
-      "Y": 40
+      "Y": 40,
+      "WhenMarkingJunk": [ "This island makes no sense!", "Sky floating crap is kind of rare to see." ],
+      "WhenMarkingProgression": [ "Maybe the mitts are right around the corner.", "At least this isnt that far out of the way." ],
+      "WhenTrackingJunk": [ "I hope you didn't blind grab that", "I bet the view is better than what you got." ],
+      "WhenTrackingProgression": [ "That took so much effort to get, amazing.", "What's next?"]
     },
     {
       "Id": 261,
@@ -1929,10 +1941,10 @@
       ],
       "X": 633,
       "Y": 117,
-      "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AhGah seed then?" ],
+      "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AhGah seed then?", "That's a good sign? Right?", "Oops, I sent you the wrong seed" ],
       "WhenMarkingProgression": [ "Sucks to be you." , "It's going to be one of those seeds.", "Hold on, let me grab some popcorn" ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
-      "WhenTrackingProgression": [ "Well, at least you got something." ]
+      "WhenTrackingProgression": [ "Well, at least you got something.", "Maybe things will happen now." ]
     },
     {
       "Id": 274,
@@ -2172,7 +2184,11 @@
         "Lake Hylia Island"
       ],
       "X": 1450,
-      "Y": 1666
+      "Y": 1666,
+      "WhenMarkingJunk": [ "That was an easy peek at least." ],
+      "WhenMarkingProgression": [ "Hopefully you get the mirror soon.", "At least this isnt that far out of the way." ],
+      "WhenTrackingJunk": [ "At least it's easy to get", "That was pretty simple." ],
+      "WhenTrackingProgression": [ "You stole that from the Buzz Blob!", "You better escape before you get zapped."]
     },
     {
       "Id": 318,
@@ -2277,7 +2293,7 @@
       ],
       "X": 636,
       "Y": 1214,
-      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." , "At least the season pass was cheap" ],
+      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." , "At least the season pass was cheap", "At least the food is nice." ],
       "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ]
     },
     {
