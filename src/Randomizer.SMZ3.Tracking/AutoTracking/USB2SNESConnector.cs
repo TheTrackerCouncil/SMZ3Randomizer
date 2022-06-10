@@ -119,7 +119,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         public void Dispose()
         {
-            _client.Dispose();
+            try
+            {
+                _client.Dispose();
+            }
+            catch (ObjectDisposedException e)
+            {
+                _logger.LogError(e, "Already disposed USB2SNES client");
+            }
             GC.SuppressFinalize(this);
         }
 

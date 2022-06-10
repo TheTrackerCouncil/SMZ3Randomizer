@@ -83,7 +83,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>The value from the byte array at that location</returns>
         public int ReadUInt16(int location)
         {
-            return _bytes[location + 1] * 0xFF +  _bytes[location];
+            return _bytes[location + 1] * 256 +  _bytes[location];
         }
 
         /// <summary>

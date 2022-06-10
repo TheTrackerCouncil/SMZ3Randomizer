@@ -81,10 +81,52 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Ouch. So it's come to this, then?");
 
         /// <summary>
+        /// Entered GT without all crystals
+        /// </summary>
+        public SchrodingersString EnteredGTEarly { get; init; }
+            = new("How did you get here without all seven crystals?");
+
+        /// <summary>
         /// Gets the phrases to respond with when swimming without flippers
         /// </summary>
         public SchrodingersString FakeFlippers { get; init; }
             = new("How can you swim without the flippers?");
+
+        /// <summary>
+        /// Gets the phrases to respond with when performing mockball
+        /// </summary>
+        public SchrodingersString MockBall { get; init; }
+            = new("You just had to get these items early?");
+
+        /// <summary>
+        /// Skipping spore spawn
+        /// </summary>
+        public SchrodingersString SkipSporeSpawn { get; init; }
+            = new("Skipping spore spawn again?");
+
+        /// <summary>
+        /// Seeing Ridley's face entrance
+        /// </summary>
+        public SchrodingersString RidleyFace { get; init; }
+            = new("Oh hi there");
+
+        /// <summary>
+        /// Player asked auto tracker to look at something, but there was nothing
+        /// </summary>
+        public SchrodingersString LookedAtNothing { get; init; }
+            = new("What am I supposed to be looking at?");
+
+        /// <summary>
+        /// Light world only has pendants
+        /// </summary>
+        public SchrodingersString LightWorldAllCrystals { get; init; }
+            = new("That's a relief, I'm sure.");
+
+        /// <summary>
+        /// Misery Mire and Turtle Rock have pendants
+        /// </summary>
+        public SchrodingersString DarkWorldNoMedallions { get; init; }
+            = new("I hope you don't find any medallions soon.");
 
     }
 }

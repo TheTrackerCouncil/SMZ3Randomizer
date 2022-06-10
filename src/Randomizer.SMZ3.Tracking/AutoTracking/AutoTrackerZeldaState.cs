@@ -8,8 +8,9 @@ using Randomizer.SMZ3.Tracking.AutoTracking;
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
     /// <summary>
-    /// Used to retrieve certain states based on the memory in Metroid
-    /// Seee http://alttp.run/hacking/index.php?title=RAM:_Bank_0x7E:_Page_0x00 for details on the memory
+    /// Used to retrieve certain states based on the memory in Zelda
+    /// See http://alttp.run/hacking/index.php?title=RAM:_Bank_0x7E:_Page_0x00 for details on the memory
+    /// These memory address values are the offset from 0x7E0000
     /// </summary>
     public class AutoTrackerZeldaState
     {
@@ -47,12 +48,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// The player's Y location
         /// </summary>
-        public int LinkY => _data.ReadUInt8(0x20);
+        public int LinkY => _data.ReadUInt16(0x20);
 
         /// <summary>
         /// The player's X Location
         /// </summary>
-        public int LinkX => _data.ReadUInt8(0x22);
+        public int LinkX => _data.ReadUInt16(0x22);
 
         /// <summary>
         /// What the player is currently doing
@@ -82,12 +83,28 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public int OverworldScreen => _data.ReadUInt8(0x8A);
 
         /// <summary>
+        /// Reads a specific block of memory
+        /// </summary>
+        /// <param name="address">The address offset from 0x7E0000</param>
+        /// <returns></returns>
+        public int ReadUInt8(int address) => _data.ReadUInt8(address);
+
+        /// <summary>
+        /// Reads a specific block of memory
+        /// </summary>
+        /// <param name="address">The address offset from 0x7E0000</param>
+        /// <returns></returns>
+        public int ReadUInt16(int address) => _data.ReadUInt16(address);
+
+        /// <summary>
         /// Get debug string
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return $"Room: {PreviousRoom}->{CurrentRoom} | State: {State}/{Substate} | X,Y: {LinkX},{LinkY} | LinkState: {LinkState} | OW Screen: {OverworldScreen}";
+            var vertical = IsOnBottomHalfOfroom ? "Bottom" : "Top";
+            var horizontal = IsOnRightHalfOfRoom ? "Right" : "Left";
+            return $"Room: {PreviousRoom}->{CurrentRoom} ({vertical}{horizontal}) | State: {State}/{Substate} | X,Y: {LinkX},{LinkY} | LinkState: {LinkState} | OW Screen: {OverworldScreen}";
         }
     }
 }

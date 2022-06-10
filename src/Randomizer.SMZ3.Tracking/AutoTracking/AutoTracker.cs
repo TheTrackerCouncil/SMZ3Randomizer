@@ -5,7 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
+using Randomizer.SMZ3.Regions.Zelda.DarkWorld;
+using Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain;
+using Randomizer.SMZ3.Regions.Zelda.LightWorld;
+using Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
@@ -28,7 +33,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly HashSet<SchrodingersString> _statedMessages = new();
         private IEmulatorConnector? _connector;
         private readonly ILoggerFactory _loggerFactory;
-
+        private bool _hasFairy;
+        
         /// <summary>
         /// Constructor for Auto Tracker
         /// </summary>
@@ -230,6 +236,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public event EventHandler? AutoTrackerDisconnected;
 
         /// <summary>
+        /// The action to run when the player asks Tracker to look at the game
+        /// </summary>
+        public AutoTrackerViewedAction LatestViewAction;
+
+        /// <summary>
         /// If a connector is currently enabled
         /// </summary>
         public bool IsEnabled => _connector != null;
@@ -389,7 +400,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             if (action.CurrentData != null && !action.HasDataChanged())
             {
-                // CheckZeldaItemMemory
+                // Check if the player has any bottled fairies for detecting deaths
+                _hasFairy = false;
+                for (var i = 0; i < 4; i++)
+                {
+                    _hasFairy |= action.CurrentData.ReadUInt8(0x5c + i) == 6;
+                }
                 CheckLocations(action.CurrentData, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
             }
         }
@@ -439,7 +455,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         if (item != null)
                         {
                             Tracker.TrackItem(item, location, null, null, true);
-                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
+                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name} {loc} {flag} {is16Bit}");
                         }
                         else
                         {
@@ -547,19 +563,28 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 SayOnce(Tracker.Responses.AutoTracker.FallFromGanon);
             }
-            // Hera pot (player is in the pot room but does not have the big key)
-            else if (ZeldaState.CurrentRoom == 167 && prevState.CurrentRoom == 119 && Tracker.Items.First(x => x.InternalItemType == ItemType.BigKeyTH).TrackingState == 0)
+            // Hera pot (player is in the pot room and did not get there from falling from the two rooms above it)
+            else if (ZeldaState.CurrentRoom == 167 && prevState.CurrentRoom == 119 && prevState.PreviousRoom != 49)
             {
+                _logger.LogInformation("Hera Pot detected");
                 SayOnce(Tracker.Responses.AutoTracker.HeraPot);
             }
             // Ice breaker (player is on the right side of the wall but was previous in the room to the left)
-            else if (ZeldaState.CurrentRoom == 31 && ZeldaState.PreviousRoom == 30 && ZeldaState.LinkX >= 0x48 && prevState.LinkX < 0x48 && ZeldaState.IsOnRightHalfOfRoom && prevState.IsOnRightHalfOfRoom)
+            else if (ZeldaState.CurrentRoom == 31 && ZeldaState.PreviousRoom == 30 && ZeldaState.LinkX >= 7961 && prevState.LinkX < 7961 && ZeldaState.IsOnRightHalfOfRoom && prevState.IsOnRightHalfOfRoom)
             {
+                _logger.LogInformation("Ice breaker detected");
                 SayOnce(Tracker.Responses.AutoTracker.IceBreaker);
             }
             // Back Diver Down (player is now at the lower section and on the ground, but not from the ladder)
-            else if (ZeldaState.CurrentRoom == 118 && ZeldaState.LinkX < 0x9F && ZeldaState.LinkX != 0x68 && ZeldaState.LinkY <= 0x98 && prevState.LinkY > 0x98 && ZeldaState.LinkState == 0 && ZeldaState.IsOnBottomHalfOfroom)
+            else if (ZeldaState.CurrentRoom == 118 && ZeldaState.LinkX < 3474 && (ZeldaState.LinkX < 3400 || ZeldaState.LinkX > 3430) && ZeldaState.LinkY <= 3975 && prevState.LinkY > 3975 && (ZeldaState.LinkState is 0 or 6 or 3) && ZeldaState.IsOnBottomHalfOfroom && ZeldaState.IsOnRightHalfOfRoom)
             {
+                _logger.LogInformation("Diver down detected");
+                SayOnce(Tracker.Responses.AutoTracker.DiverDown);
+            }
+            // Left side diver down (player is now in the lower section to the right and on the ground, but not from the ladder)
+            else if (ZeldaState.CurrentRoom == 53 && ZeldaState.PreviousRoom == 54 && ZeldaState.LinkX > 2800 && ZeldaState.LinkX < 2850 && ZeldaState.LinkY <= 1915 && prevState.LinkY > 1915 && (ZeldaState.LinkState is 0 or 6 or 3))
+            {
+                _logger.LogInformation("Diver down detected");
                 SayOnce(Tracker.Responses.AutoTracker.DiverDown);
             }
             // Entered a dungeon (now in Dungeon state but was previously in Overworld or entering Dungeon state)
@@ -576,13 +601,24 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 if (!_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant))
                 {
-                    Tracker.Say(x => x.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, dungeonInfo.Reward.GetName());
+                    Tracker.Say(Tracker.Responses.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, dungeonInfo.Reward.GetName());
                 }
                 else if (region is CastleTower)
                 {
                     SayOnce(Tracker.Responses.AutoTracker.EnterHyruleCastleTower);
                 }
-
+                else if (region is GanonsTower)
+                {
+                    var clearedCrystalDungeonCount = Tracker.WorldInfo.Dungeons
+                                                        .Where(x => x.Cleared)
+                                                        .Select(x => x.GetRegion(Tracker.World) as IHasReward)
+                                                        .Count(x => x != null && x.Reward is Reward.CrystalBlue or Reward.CrystalRed);
+                    if (clearedCrystalDungeonCount < 7)
+                    {
+                        SayOnce(Tracker.Responses.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);
+                    }
+                }
+                
                 Tracker.UpdateRegion(region, Tracker.Options.AutoTrackerChangeMap);
                 _enteredDungeons.Add(dungeonInfo);
             }
@@ -597,9 +633,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 Tracker.UpdateRegion(region, Tracker.Options.AutoTrackerChangeMap);
             }
-            // Death
-            else if (ZeldaState.State is 0x5 or 0x0E or 0x1B && prevState.State == 0x12)
+            // Death (entered death state without a fairy)
+            else if (ZeldaState.State == 0x12 && prevState.State != 0x12 && !_hasFairy)
             {
+                _logger.LogInformation("Zelda death detected");
+
                 // Say specific message for dying in the particular screen/room the player is in
                 if (Tracker.CurrentRegion != null && Tracker.CurrentRegion.WhenDiedInRoom != null)
                 {
@@ -621,6 +659,88 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 SayOnce(Tracker.Responses.AutoTracker.FakeFlippers);
             }
+            // Looked at full map
+            else if (ZeldaState.State == 14 && ZeldaState.Substate == 7 && ZeldaState.ReadUInt8(0xE0) == 0x80 && (LatestViewAction == null || !LatestViewAction.IsValid))
+            {
+                var currentRegion = Tracker?.CurrentRegion?.GetRegion(Tracker.World);
+                if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest)
+                {
+                    LatestViewAction = new AutoTrackerViewedAction(UpdateLightWorldRewards);
+                }
+                else if (currentRegion is DarkWorldNorthWest or DarkWorldNorthEast or DarkWorldSouth or DarkWorldMire or DarkWorldDeathMountainEast or DarkWorldDeathMountainWest)
+                {
+                    LatestViewAction = new AutoTrackerViewedAction(UpdateDarkWorldRewards);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Marks all of the rewards for the light world dungeons
+        /// </summary>
+        private void UpdateLightWorldRewards()
+        {
+            var rewards = new List<Reward>();
+
+            var ep = Tracker.World.EasternPalace;
+            var epInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(ep));
+            rewards.Add(ep.Reward);
+
+            var dp = Tracker.World.DesertPalace;
+            var dpInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(dp));
+            rewards.Add(dp.Reward);
+
+            var toh = Tracker.World.TowerOfHera;
+            var tohInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(toh));
+            rewards.Add(toh.Reward);
+
+            if (rewards.Count(x => x == Reward.CrystalRed || x == Reward.CrystalBlue) == 3)
+            {
+                SayOnce(Tracker.Responses.AutoTracker.LightWorldAllCrystals);
+            }
+
+            Tracker.SetDungeonReward(epInfo, ConvertReward(ep.Reward));
+            Tracker.SetDungeonReward(dpInfo, ConvertReward(dp.Reward));
+            Tracker.SetDungeonReward(tohInfo, ConvertReward(toh.Reward));
+        }
+
+        /// <summary>
+        /// Marks all of the rewards for the dark world dungeons
+        /// </summary>
+        protected void UpdateDarkWorldRewards()
+        {
+            var pod = Tracker.World.PalaceOfDarkness;
+            var podInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(pod));
+            
+            var sp = Tracker.World.SwampPalace;
+            var spInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(sp));
+            
+            var sw = Tracker.World.SkullWoods;
+            var swInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(sw));
+            
+            var tt = Tracker.World.ThievesTown;
+            var ttInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(tt));
+            
+            var ip = Tracker.World.IcePalace;
+            var ipInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(ip));
+            
+            var mm = Tracker.World.MiseryMire;
+            var mmInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(mm));
+            
+            var tr = Tracker.World.TurtleRock;
+            var trInfo = Tracker.WorldInfo.Dungeons.First(x => x.Is(tr));
+
+            if (mm.Reward != Reward.CrystalRed && mm.Reward != Reward.CrystalBlue && tr.Reward != Reward.CrystalRed && tr.Reward != Reward.CrystalBlue)
+            {
+                SayOnce(Tracker.Responses.AutoTracker.DarkWorldNoMedallions);
+            }
+
+            Tracker.SetDungeonReward(podInfo, ConvertReward(pod.Reward));
+            Tracker.SetDungeonReward(spInfo, ConvertReward(sp.Reward));
+            Tracker.SetDungeonReward(swInfo, ConvertReward(sw.Reward));
+            Tracker.SetDungeonReward(ttInfo, ConvertReward(tt.Reward));
+            Tracker.SetDungeonReward(ipInfo, ConvertReward(ip.Reward));
+            Tracker.SetDungeonReward(mmInfo, ConvertReward(mm.Reward));
+            Tracker.SetDungeonReward(trInfo, ConvertReward(tr.Reward));
         }
 
         /// <summary>
@@ -661,6 +781,34 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 SayOnce(Tracker.Responses.AutoTracker.NearCrocomire, MetroidState.SuperMissiles, MetroidState.MaxSuperMissiles);
             }
+            // Brinstar Mockball (got past gates without speed booster)
+            else if (MetroidState.CurrentRegion == 1 && MetroidState.CurrentRoomInRegion == 3 && MetroidState.SamusX >= 560 && prevState.SamusX < 560 && MetroidState.SamusX < 800 && Tracker?.FindItemByType(ItemType.SpeedBooster)?.TrackingState == 0)
+            {
+                _logger.LogInformation("Mockball detected");
+                SayOnce(Tracker.Responses.AutoTracker.MockBall);
+
+            }
+            // Norfair Mockball (got past gates without speed booster)
+            else if (MetroidState.CurrentRegion == 2 && MetroidState.CurrentRoomInRegion == 4 && MetroidState.SamusX <= 1016 && prevState.SamusX > 1016 && MetroidState.SamusX > 800 && Tracker?.FindItemByType(ItemType.SpeedBooster)?.TrackingState == 0)
+            {
+                _logger.LogInformation("Mockball detected");
+                SayOnce(Tracker.Responses.AutoTracker.MockBall);
+
+            }
+            // Skip spore spawn (entered spore spawn item room from tall brinstar room)
+            else if (MetroidState.CurrentRegion == 1 && MetroidState.CurrentRoomInRegion == 22 && prevState.CurrentRoomInRegion == 9)
+            {
+                _logger.LogInformation("Spore spawn skip");
+                SayOnce(Tracker.Responses.AutoTracker.SkipSporeSpawn);
+
+            }
+            // Ridley face
+            else if (MetroidState.CurrentRegion == 2 && MetroidState.CurrentRoomInRegion == 37 && MetroidState.SamusX <= 375 && MetroidState.SamusX >= 100 && MetroidState.SamusY <= 200)
+            {
+                _logger.LogInformation("Greeting Ridley face");
+                SayOnce(Tracker.Responses.AutoTracker.RidleyFace);
+
+            }
             // Death (health and reserve tanks all 0 (have to check to make sure the player isn't warping between games)
             else if (MetroidState.Health == 0 && MetroidState.ReserveTanks == 0 && prevState.Health != 0 && !(MetroidState.CurrentRoom == 0 && MetroidState.CurrentRegion == 0 && MetroidState.SamusY == 0))
             {
@@ -687,6 +835,29 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 Tracker.Say(statement, args);
                 _statedMessages.Add(statement);
+            }
+        }
+
+        /// <summary>
+        /// Converts Rewards to RewardItems
+        /// TODO: Try to figure out how to determine between blue and red pendants
+        /// </summary>
+        /// <param name="reward"></param>
+        /// <returns></returns>
+        private RewardItem ConvertReward(Reward reward)
+        {
+            switch (reward)
+            {
+                case Reward.CrystalRed:
+                    return RewardItem.RedCrystal;
+                case Reward.CrystalBlue:
+                    return RewardItem.Crystal;
+                case Reward.PendantGreen:
+                    return RewardItem.GreenPendant;
+                case Reward.PendantNonGreen:
+                    return RewardItem.RedPendant;
+                default:
+                    return RewardItem.Unknown;
             }
         }
     }

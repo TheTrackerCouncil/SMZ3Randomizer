@@ -2238,6 +2238,42 @@
         "Good job on the tech. Was it a first try?",
         "How can you swim without the flippers?",
         "The racing council will hear about this."
+      ],
+      "MockBall": [
+        "Good job on the tech. Was it a first try?",
+        "You just had to get these items early didn't you?",
+        "Do you know why I pulled you over? You were going 15 over the speed limit."
+      ],
+      "SkipSporeSpawn": [
+        "Skipping spore spawn again?",
+        "Why don't we go visit spore spawn for old times sake?",
+        "What? You don't want to fight spore spawn?"
+      ],
+      "RidleyFace": [
+        "<prosody rate='x-slow' pitch='x-high'>Ahhhh</prosody>. Sorry, I'm still working on my Ridley voice",
+        "Ridley wanted me to tell you, Bet you can't wait to face me. Welcome back to SMZ3 Randomizer.",
+        "Oh hi there"
+      ],
+      "EnteredGTEarly": [
+        "Are you not capable of collecting everything required to finish this seed?",
+        "How did you get into Gannon's tower without all 7 crystals? Surely this isn't legal",
+        "<voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I would like to remind {{User}} that purr article 5 section 2 entering Gannon's Tower without all 7 crystals is illegal. Repeated offenses will result in reprimanding by content removal. Thank you.</prosody></voice>"
+      ],
+      "LookedAtNothing": [
+        "What am I supposed to be looking at?",
+        "Did you think I would be impressed?",
+        "I'd rather watch something else",
+        "Yeah sure I'm watching"
+      ],
+      "LightWorldAllPendants": [
+        "That's a relief, I'm sure",
+        "Off to a promising start I see",
+        "Perhaps you were lucky with this seed"
+      ],
+      "DarkWorldNoMedallions": [
+        "I hope you don't find any medallions soon.",
+        "Maybe you won't have to dip into Misery Mire or Turtle Rock",
+        "This could be worse"
       ]
     }
   },

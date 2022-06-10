@@ -79,7 +79,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if the data has changed, false otherwise</returns>
         public bool HasDataChanged()
         {
-            return CurrentData != null && CurrentData.Equals(PreviousData);
+            return CurrentData != null && !CurrentData.Equals(PreviousData);
         }
 
     }

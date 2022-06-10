@@ -35,6 +35,28 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             autoTracker.Tracker = tracker;
             Tracker.AutoTracker = autoTracker;
             _autoTracker = autoTracker;
+
+            AddCommand("Look at this", GetLookAtGameRule(), (tracker, result) =>
+            {
+                LookAtGame();
+            });
+        }
+
+        private GrammarBuilder GetLookAtGameRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Optional("please", "would you please")
+                .OneOf("look at this", "look here", "record this", "log this", "take a look at this")
+                .Optional("shit", "crap");
+        }
+
+        private void LookAtGame()
+        {
+            if (_autoTracker.LatestViewAction == null || _autoTracker.LatestViewAction.Invoke() == false)
+            {
+                Tracker.Say(x => x.AutoTracker.LookedAtNothing);
+            }
         }
 
         /// <summary>
