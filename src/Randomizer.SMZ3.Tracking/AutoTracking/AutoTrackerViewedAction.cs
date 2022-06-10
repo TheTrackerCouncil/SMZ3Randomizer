@@ -21,13 +21,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public AutoTrackerViewedAction(Action action)
         {
             _action = action;
-            Expire();
+            _ = ExpireAsync();
         }
 
         /// <summary>
         /// Expires the action after a period of time
         /// </summary>
-        private async void Expire()
+        private async Task ExpireAsync()
         {
             await Task.Delay(TimeSpan.FromSeconds(15));
             _action = null;
