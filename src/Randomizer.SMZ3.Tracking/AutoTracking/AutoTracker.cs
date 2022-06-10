@@ -259,7 +259,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             Tracker.Say(x => x.AutoTracker.WhenConnected);
             AutoTrackerConnected?.Invoke(this, new());
-            _ = Task.Factory.StartNew(() => SendMessages());
+            SendMessages();
             _currentIndex = 0;
         }
 
@@ -288,7 +288,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Sends requests out to the connected lua script
         /// </summary>
-        protected void SendMessages()
+        protected async void SendMessages()
         {
             while (_connector != null && _connector.IsConnected())
             {
@@ -298,7 +298,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 }
                 _connector.SendMessage(_readActions[_currentIndex]);
                 _currentIndex = (_currentIndex + 1) % _readActions.Count;
-                Task.Delay(TimeSpan.FromSeconds(0.1f)).Wait();
+                await Task.Delay(TimeSpan.FromSeconds(0.1f));
             }
         }
 

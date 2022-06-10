@@ -2259,7 +2259,7 @@
       "MockBall": [
         "Good job on the tech. Was it a first try?",
         "You just had to get these items early didn't you?",
-        "Do you know why I pulled you over? You were going 15 over the speed limit."
+        "License and registration please <break time='1s'/>Do you know why I pulled you over? You were going 15 over the speed limit."
       ],
       "SkipSporeSpawn": [
         "Skipping spore spawn again?",

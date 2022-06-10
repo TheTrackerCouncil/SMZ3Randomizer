@@ -123,10 +123,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 _client.Dispose();
             }
-            catch (ObjectDisposedException e)
-            {
-                _logger.LogError(e, "Already disposed USB2SNES client");
-            }
+            catch (ObjectDisposedException e) { }
             GC.SuppressFinalize(this);
         }
 
