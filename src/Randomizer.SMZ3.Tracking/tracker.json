@@ -2244,9 +2244,11 @@
         "Didn't you say that {0} had the {1}? You must be getting desperate."
       ],
       "NearCrocomire": [
-        "",
-        [ "You currently have {0} out of {1} super missiles. Do you think you have enough?", 0.25 ],
-        [ "Are you sure that {0} super missiles are enough for Crocomire?", 0.25 ]
+        "Who's ready to melt a dinosaur?",
+        "It's time for the most adorable Metroid boss",
+        "You don't really need to kill Crocomire do you?",
+        [ "You currently have {0} out of {1} super missiles. Do you think you have enough?", 0.2 ],
+        [ "Are you sure that {0} super missiles are enough for Crocomire?", 0.2 ]
       ],
       "FakeFlippers": [
         "Good job on the tech. Was it a first try?",
