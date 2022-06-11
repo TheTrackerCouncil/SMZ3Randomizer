@@ -570,7 +570,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 SayOnce(Tracker.Responses.AutoTracker.HeraPot);
             }
             // Ice breaker (player is on the right side of the wall but was previous in the room to the left)
-            else if (ZeldaState.CurrentRoom == 31 && ZeldaState.PreviousRoom == 30 && ZeldaState.LinkX >= 7961 && prevState.LinkX < 7961 && ZeldaState.IsOnRightHalfOfRoom && prevState.IsOnRightHalfOfRoom)
+            else if (ZeldaState.CurrentRoom == 31 && ZeldaState.PreviousRoom == 30 && ZeldaState.LinkX >= 8000 && prevState.LinkX < 8000 && ZeldaState.IsOnRightHalfOfRoom && prevState.IsOnRightHalfOfRoom)
             {
                 _logger.LogInformation("Ice breaker detected");
                 SayOnce(Tracker.Responses.AutoTracker.IceBreaker);
