@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
                 access: items => items.Mirror && items.MoonPearl && Logic.CanLiftHeavy(items),
                 memoryAddress: 0x5,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             SpiralCave = new Location(this, 256 + 5, 0x1E9BF, LocationType.Regular,
                 name: "Spiral Cave",

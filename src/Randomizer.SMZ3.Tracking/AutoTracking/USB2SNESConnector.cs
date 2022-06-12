@@ -171,5 +171,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 }
             }
         }
+
+        /// <summary>
+        /// Returns if the connector is ready for another message to be sent
+        /// </summary>
+        /// <returns>True if the connector is ready for another message, false otherwise</returns>
+        public bool CanSendMessage() => _lastMessage == null;
     }
 }

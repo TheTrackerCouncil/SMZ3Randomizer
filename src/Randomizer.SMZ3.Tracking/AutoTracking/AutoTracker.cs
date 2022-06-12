@@ -78,37 +78,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Action = CheckZeldaRooms
             });
 
-            // Check Zelda NPCs
-            AddReadAction(new()
-            {
-                Type = EmulatorActionType.ReadBlock,
-                Domain = MemoryDomain.WRAM,
-                Address = 0x7ef410,
-                Length = 0x2,
-                Game = Game.Zelda,
-                Action = CheckZeldaNPCs
-            });
-
-            // Check Zelda Overworld
+            // Check Zelda overworld and NPC locations and inventory
             AddReadAction(new()
             {
                 Type = EmulatorActionType.ReadBlock,
                 Domain = MemoryDomain.WRAM,
                 Address = 0x7ef280,
-                Length = 0x82,
+                Length = 0x200,
                 Game = Game.Zelda,
-                Action = CheckZeldaOverworld
-            });
-
-            // Check Zelda Inventory
-            AddReadAction(new()
-            {
-                Type = EmulatorActionType.ReadBlock,
-                Domain = MemoryDomain.WRAM,
-                Address = 0x7ef300,
-                Length = 0xD0,
-                Game = Game.Zelda,
-                Action = CheckZeldaInventory
+                Action = CheckZeldaMisc
             });
 
             // Check Zelda state
@@ -282,7 +260,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected void Connector_MessageReceived(object? sender, EmulatorDataReceivedEventArgs e)
         {
-            _readActionMap[e.Address].Invoke(e.Data);
+            // Verify that message we received is still valid
+            if (_readActionMap[e.Address].ShouldProcess(CurrentGame, _hasStarted))
+            {
+                _readActionMap[e.Address].Invoke(e.Data);
+            }
         }
 
         /// <summary>
@@ -292,12 +274,16 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             while (_connector != null && _connector.IsConnected())
             {
-                while (!_readActions[_currentIndex].ShouldSend(CurrentGame, _hasStarted))
+                if (_connector.CanSendMessage())
                 {
+                    while (!_readActions[_currentIndex].ShouldProcess(CurrentGame, _hasStarted))
+                    {
+                        _currentIndex = (_currentIndex + 1) % _readActions.Count;
+                    }
+                    _connector.SendMessage(_readActions[_currentIndex]);
                     _currentIndex = (_currentIndex + 1) % _readActions.Count;
                 }
-                _connector.SendMessage(_readActions[_currentIndex]);
-                _currentIndex = (_currentIndex + 1) % _readActions.Count;
+
                 await Task.Delay(TimeSpan.FromSeconds(0.1f));
             }
         }
@@ -348,7 +334,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
             if (_previousGame != CurrentGame)
             {
-                _logger.LogInformation($"Game changed to: {CurrentGame} {value}");
+                _logger.LogInformation($"Game changed to: {CurrentGame}");
             }
         }
 
@@ -359,54 +345,29 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckZeldaRooms(EmulatorAction action)
         {
-            if (action.CurrentData != null && !action.HasDataChanged())
+            if (action.CurrentData != null && action.PreviousData != null)
             {
-                CheckLocations(action.CurrentData, LocationMemoryType.Default, true, Game.Zelda);
-                CheckDungeons(action.CurrentData);
+                CheckLocations(action, LocationMemoryType.Default, true, Game.Zelda);
+                CheckDungeons(action.CurrentData, action.PreviousData);
             }
         }
 
         /// <summary>
-        /// Checks if the player has cleared Zelda NPC locations
+        /// Checks if the player has cleared misc Zelda locations (overworld, NPCs)
+        /// Also where you can check inventory (inventory starts at an offset of 0x80)
         /// </summary>
         /// <param name="action"></param>
-        protected void CheckZeldaNPCs(EmulatorAction action)
+        protected void CheckZeldaMisc(EmulatorAction action)
         {
-            if (action.CurrentData != null && !action.HasDataChanged())
+            if (action.CurrentData != null && action.PreviousData != null)
             {
-                CheckLocations(action.CurrentData, LocationMemoryType.ZeldaNPC, false, Game.Zelda);
-            }
-        }
+                CheckLocations(action, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
 
-        /// <summary>
-        /// Checks if the player has cleared Zelda Overworld locations
-        /// </summary>
-        /// <param name="action"></param>
-        protected void CheckZeldaOverworld(EmulatorAction action)
-        {
-            if (action.CurrentData != null && !action.HasDataChanged())
-            {
-                CheckLocations(action.CurrentData, LocationMemoryType.ZeldaOverworld, false, Game.Zelda);
-            }
-        }
-
-        /// <summary>
-        /// Various checks for the Zelda inventory memory locations
-        /// Currently this checks some Zelda locations that are oddly in the same memory
-        /// block as the inventory, such as Link's uncle
-        /// </summary>
-        /// <param name="action"></param>
-        protected void CheckZeldaInventory(EmulatorAction action)
-        {
-            if (action.CurrentData != null && !action.HasDataChanged())
-            {
-                // Check if the player has any bottled fairies for detecting deaths
                 _hasFairy = false;
                 for (var i = 0; i < 4; i++)
                 {
-                    _hasFairy |= action.CurrentData.ReadUInt8(0x5c + i) == 6;
+                    _hasFairy |= action.CurrentData.ReadUInt8(0xDC + i) == 6;
                 }
-                CheckLocations(action.CurrentData, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
             }
         }
 
@@ -416,9 +377,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckMetroidLocations(EmulatorAction action)
         {
-            if (action.CurrentData != null && !action.HasDataChanged())
+            if (action.CurrentData != null && action.PreviousData != null)
             {
-                CheckLocations(action.CurrentData, LocationMemoryType.Default, false, Game.SM);
+                CheckLocations(action, LocationMemoryType.Default, false, Game.SM);
             }
         }
 
@@ -428,7 +389,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckMetroidBosses(EmulatorAction action)
         {
-            if (action.CurrentData != null && !action.HasDataChanged())
+            if (action.CurrentData != null && action.PreviousData != null)
             {
                 CheckSMBosses(action.CurrentData);
             }
@@ -437,19 +398,30 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Checks locations to see if they have accessed or not
         /// </summary>
-        /// <param name="data">The memory returned from the emulator</param>
+        /// <param name="action">The emulator action with the emulator memory data</param>
         /// <param name="type">The type of location to find the correct LocationInfo objects</param>
         /// <param name="is16Bit">Set to true if this is a 16 bit value or false for 8 bit</param>
         /// <param name="game">The game that is being checked</param>
-        protected void CheckLocations(EmulatorMemoryData data, LocationMemoryType type, bool is16Bit, Game game)
+        protected void CheckLocations(EmulatorAction action, LocationMemoryType type, bool is16Bit, Game game)
         {
-            foreach (var location in Tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))))
+            var currentData = action.CurrentData;
+            var prevData = action.PreviousData;
+
+            // Store the locations for this action so that we don't need to grab them each time every half a second or so
+            if (action.Locations == null)
+            {
+                action.Locations = Tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))).ToList();
+            }
+
+            foreach (var location in action.Locations)
             {
                 try
                 {
                     var loc = location.MemoryAddress ?? 0;
                     var flag = location.MemoryFlag ?? 0;
-                    if (!location.Cleared && ((is16Bit && data.CheckUInt16(loc * 2, flag)) || (!is16Bit && data.CheckBinary8Bit(loc, flag))))
+                    var currentCleared = (is16Bit && currentData.CheckUInt16(loc * 2, flag)) || (!is16Bit && currentData.CheckBinary8Bit(loc, flag));
+                    var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
+                    if (!location.Cleared && currentCleared && prevCleared)
                     {
                         var item = Tracker.Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
                         if (item != null)
@@ -476,8 +448,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Checks the status of if dungeons have been cleared
         /// </summary>
-        /// <param name="data">The memory returned from the emulator</param>
-        protected void CheckDungeons(EmulatorMemoryData data)
+        /// <param name="currentData">The latest memory data returned from the emulator</param>
+        /// <param name="prevData">The previous memory data returned from the emulator</param>
+        protected void CheckDungeons(EmulatorMemoryData currentData, EmulatorMemoryData prevData)
         {
             foreach (var dungeonInfo in Tracker.WorldInfo.Dungeons)
             {
@@ -491,7 +464,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 try
                 {
-                    if (!dungeonInfo.Cleared && data.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0))
+                    var prevValue = prevData.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0);
+                    var currentValue = currentData.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0);
+                    if (!dungeonInfo.Cleared && prevValue && currentValue)
                     {
                         Tracker.MarkDungeonAsCleared(dungeonInfo);
                         _logger.LogInformation($"Auto tracked {dungeonInfo.Name} as cleared");

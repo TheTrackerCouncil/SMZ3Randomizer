@@ -44,7 +44,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             LinksUncle = new Location(this, 256 + 99, 0x5DF45, LocationType.NotInDungeon,
                 "Link's Uncle",
                 ItemType.ProgressiveSword,
-                memoryAddress: 0xC6,
+                memoryAddress: 0x146,
                 memoryFlag: 0x1,
                 memoryType: LocationMemoryType.ZeldaMisc)
                 .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem)

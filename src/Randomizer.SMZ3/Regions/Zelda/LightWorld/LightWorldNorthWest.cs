@@ -16,14 +16,14 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 access: items => World.CanAquireAll(items, Reward.PendantGreen, Reward.PendantNonGreen),
                 memoryAddress: 0x80,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             Mushroom = new Location(this, 256 + 15, 0x308013, LocationType.Regular,
                 name: "Mushroom",
                 vanillaItem: ItemType.Mushroom,
-                memoryAddress: 0x1,
+                memoryAddress: 0x191,
                 memoryFlag: 0x10,
-                memoryType: LocationMemoryType.ZeldaNPC)
+                memoryType: LocationMemoryType.ZeldaMisc)
                 .Weighted(SphereOne);
 
             LostWoodsHideout = new Location(this, 256 + 16, 0x308000, LocationType.Regular,
@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             BottleMerchant = new Location(this, 256 + 31, 0x5EB18, LocationType.Regular,
                 name: "Bottle Merchant",
                 vanillaItem: ItemType.Bottle,
-                memoryAddress: 0xC9,
+                memoryAddress: 0x149,
                 memoryFlag: 0x2,
                 memoryType: LocationMemoryType.ZeldaMisc)
                 .Weighted(SphereOne);
@@ -85,9 +85,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 alsoKnownAs: "Bug Catching Kid's House",
                 vanillaItem: ItemType.Bugnet,
                 access: items => items.Bottle,
-                memoryAddress: 0x0,
+                memoryAddress: 0x190,
                 memoryFlag: 0x4,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             TavernBackRoom = new Location(this, 256 + 34, 0x1E9CE, LocationType.Regular,
                 name: "Kakariko Tavern",
@@ -101,9 +101,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Blacksmith",
                 vanillaItem: ItemType.ProgressiveSword,
                 access: items => World.DarkWorldNorthWest.CanEnter(items) && Logic.CanLiftHeavy(items),
-                memoryAddress: 0x1,
+                memoryAddress: 0x191,
                 memoryFlag: 0x4,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             MagicBat = new Location(this, 256 + 35, 0x308015, LocationType.Regular,
                 name: "Magic Bat",
@@ -111,9 +111,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 access: items => items.Powder
                          && (items.Hammer
                              || (items.MoonPearl && items.Mirror && Logic.CanLiftHeavy(items))),
-                memoryAddress: 0x1,
+                memoryAddress: 0x191,
                 memoryFlag: 0x80,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             KakarikoWell = new(this);
             BlindsHideout = new(this);

@@ -12,9 +12,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 alsoKnownAs: "Mushroom Item",
                 vanillaItem: ItemType.Powder,
                 access: items => items.Mushroom,
-                memoryAddress: 0x1,
+                memoryAddress: 0x191,
                 memoryFlag: 0x20,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             SahasrahlasHideout = new(this);
             WaterfallFairy = new(this);
@@ -68,9 +68,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     name: "Sahasrahla",
                     vanillaItem: ItemType.Boots,
                     access: items => World.CanAquire(items, Reward.PendantGreen),
-                    memoryAddress: 0x0,
+                    memoryAddress: 0x190,
                     memoryFlag: 0x10,
-                    memoryType: LocationMemoryType.ZeldaNPC);
+                    memoryType: LocationMemoryType.ZeldaMisc);
             }
 
             public Location LeftChest { get; }
@@ -114,9 +114,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     alsoKnownAs: "Zora",
                     vanillaItem: ItemType.Flippers,
                     access: items => (Logic.CanLiftLight(items) || items.Flippers) && items.Rupees >= 500,
-                    memoryAddress: 0x0,
+                    memoryAddress: 0x190,
                     memoryFlag: 0x2,
-                    memoryType: LocationMemoryType.ZeldaNPC);
+                    memoryType: LocationMemoryType.ZeldaMisc);
 
                 ZoraLedge = new Location(this, 256 + 37, 0x308149, LocationType.Regular,
                     name: "Zora's Ledge",
@@ -124,7 +124,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     access: items => items.Flippers,
                     memoryAddress: 0x81,
                     memoryFlag: 0x40,
-                    memoryType: LocationMemoryType.ZeldaOverworld);
+                    memoryType: LocationMemoryType.ZeldaMisc);
             }
 
             public Location Zora { get; }

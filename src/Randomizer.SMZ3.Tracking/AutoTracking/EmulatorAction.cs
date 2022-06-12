@@ -68,7 +68,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="currentGame">The game the player is currently in</param>
         /// <param name="hasStartedGame">If the player has actually started the game</param>
         /// <returns>True if the message should be sent.</returns>
-        public bool ShouldSend(Game currentGame, bool hasStartedGame)
+        public bool ShouldProcess(Game currentGame, bool hasStartedGame)
         {
             return (!hasStartedGame && Game == Game.Neither) || (hasStartedGame && Game != Game.Neither && (Game == Game.Both || Game == currentGame));
         }
@@ -81,6 +81,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             return CurrentData != null && !CurrentData.Equals(PreviousData);
         }
+
+        /// <summary>
+        /// Cached set of locations for this action
+        /// </summary>
+        public ICollection<Location>? Locations { get; set; }
 
     }
 
