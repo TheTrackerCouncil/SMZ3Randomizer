@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Randomizer.SMZ3.Tracking.AutoTracking;
-
-namespace Randomizer.SMZ3.Tracking.AutoTracking
+﻿namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
     /// <summary>
     /// Used to retrieve certain states based on the memory in Zelda

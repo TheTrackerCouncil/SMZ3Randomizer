@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
@@ -11,8 +7,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
     /// </summary>
     public class USB2SNESRequest
     {
-        public string Opcode { get; set; }
-        public string Space { get; set; }
-        public ICollection<string> Operands { get; set; }
+        /// <summary>
+        /// The type of request being sent to USB2SNES
+        /// </summary>
+        public string? Opcode { get; set; }
+        /// <summary>
+        /// Where to get the data from in USB2SNES (always should be SNES probably?)
+        /// </summary>
+        public string? Space { get; set; }
+        /// <summary>
+        /// Parameters for the request
+        /// </summary>
+        public ICollection<string>? Operands { get; set; }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
@@ -83,7 +79,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>The value from the byte array at that location</returns>
         public int ReadUInt16(int location)
         {
-            return _bytes[location + 1] * 256 +  _bytes[location];
+            return _bytes[location + 1] * 256 + _bytes[location];
         }
 
         /// <summary>

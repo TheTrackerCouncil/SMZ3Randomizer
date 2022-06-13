@@ -50,6 +50,7 @@ namespace Randomizer.SMZ3.Tracking
         private string? _lastSpokenText;
         private Dictionary<string, Progression> _progression = new();
         private bool _alternateTracker;
+        private HashSet<SchrodingersString> _saidLines = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -248,17 +249,17 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// The generated rom
         /// </summary>
-        public GeneratedRom Rom { get; private set; }
+        public GeneratedRom? Rom { get; private set; }
 
         /// <summary>
         /// The region the player is currently in
         /// </summary>
-        public RegionInfo CurrentRegion { get; private set; }
+        public RegionInfo? CurrentRegion { get; private set; }
 
         /// <summary>
         /// The map to display for the player
         /// </summary>
-        public string CurrentMap { get; private set; }
+        public string CurrentMap { get; private set; } = "";
 
         /// <summary>
         /// Gets a string describing tracker's mood.
@@ -293,7 +294,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// The Auto Tracker for the Tracker
         /// </summary>
-        public AutoTracker AutoTracker { get; set; }
+        public AutoTracker? AutoTracker { get; set; }
 
         /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
@@ -786,7 +787,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 try
                 {
-                    _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
+                    _chatClient.Connect(userName, oauthToken, channel ?? userName, id ?? "");
                 }
                 catch (AggregateException e)
                 {
@@ -920,6 +921,78 @@ namespace Randomizer.SMZ3.Tracking
         public virtual bool Say(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
         {
             return Say(selectResponse(Responses), args);
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech only one time.
+        /// </summary>
+        /// <param name="text">The possible sentences to speak.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+        /// name="text"/> was <c>null</c>.
+        /// </returns>
+        public virtual bool SayOnce(SchrodingersString? text)
+        {
+            if (text == null)
+                return false;
+
+            if (!_saidLines.Contains(text))
+            {
+                _saidLines.Add(text);
+                return Say(text.ToString());
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech only one time.
+        /// </summary>
+        /// <param name="selectResponse">Selects the response to use.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse)
+        {
+            return SayOnce(selectResponse(Responses));
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech only one time.
+        /// </summary>
+        /// <param name="text">The possible sentences to speak.</param>
+        /// <param name="args">The arguments used to format the text.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
+        /// name="text"/> was <c>null</c>.
+        /// </returns>
+        public virtual bool SayOnce(SchrodingersString? text, params object?[] args)
+        {
+            if (text == null)
+                return false;
+
+            if (!_saidLines.Contains(text))
+            {
+                _saidLines.Add(text);
+                return Say(text.Format(args), wait: false);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Speak a sentence using text-to-speech only one time.
+        /// </summary>
+        /// <param name="selectResponse">Selects the response to use.</param>
+        /// <param name="args">The arguments used to format the text.</param>
+        /// <returns>
+        /// <c>true</c> if a sentence was spoken, <c>false</c> if the selected
+        /// response was <c>null</c>.
+        /// </returns>
+        public virtual bool SayOnce(Func<ResponseConfig, SchrodingersString?> selectResponse, params object?[] args)
+        {
+            return SayOnce(selectResponse(Responses), args);
         }
 
         /// <summary>

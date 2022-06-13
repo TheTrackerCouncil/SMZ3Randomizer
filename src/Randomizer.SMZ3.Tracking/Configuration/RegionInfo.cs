@@ -71,6 +71,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Text for Tracker to say when dying in a room or screen in the region
         /// </summary>
-        public Dictionary<string, SchrodingersString> WhenDiedInRoom { get; init; }
+        public Dictionary<string, SchrodingersString>? WhenDiedInRoom { get; init; }
     }
 }

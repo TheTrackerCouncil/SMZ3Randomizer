@@ -66,7 +66,7 @@ namespace Randomizer.SMZ3
         public bool CardWreckedShipBoss => Contains(ItemType.CardWreckedShipBoss);
         public bool CardLowerNorfairL1 => Contains(ItemType.CardLowerNorfairL1);
         public bool CardLowerNorfairBoss => Contains(ItemType.CardLowerNorfairBoss);
-        public bool CanBlockLasers => Contains(ItemType.CardWreckedShipBoss, 3);
+        public bool CanBlockLasers => Contains(ItemType.ProgressiveShield, 3);
         public bool Sword => Contains(ItemType.ProgressiveSword);
         public bool MasterSword => Contains(ItemType.ProgressiveSword, 2);
         public bool Bow => Contains(ItemType.Bow);
