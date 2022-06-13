@@ -4,7 +4,7 @@
     /// Zelda State check for breaking into the Tower of Hera pot
     /// player is in the pot room and did not get there from falling from the two rooms above it
     /// </summary>
-    public class HeraPot : ZeldaStateCheck
+    public class HeraPot : IZeldaStateCheck
     {
         /// <summary>
         /// Executes the check for the current state
@@ -12,7 +12,8 @@
         /// <param name="tracker">The tracker instance</param>
         /// <param name="currentState">The current state in Zelda</param>
         /// <param name="prevState">The previous state in Zelda</param>
-        public override bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+        /// <returns>True if the check was identified, false otherwise</returns>
+        public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
             if (currentState.CurrentRoom == 167 && prevState.CurrentRoom == 119 && prevState.PreviousRoom != 49)
             {

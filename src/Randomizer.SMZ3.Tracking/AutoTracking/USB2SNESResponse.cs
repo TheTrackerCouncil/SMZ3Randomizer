@@ -7,6 +7,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
     /// </summary>
     public class USB2SNESResponse
     {
-        public ICollection<string> Results { get; set; }
+        /// <summary>
+        /// List of all values returned by USB2SNES
+        /// </summary>
+        public ICollection<string>? Results { get; set; }
     }
 }

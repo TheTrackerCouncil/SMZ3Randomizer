@@ -16,7 +16,9 @@ using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
-    
+    /// <summary>
+    /// Module for creating the auto tracker and interacting with the auto tracker
+    /// </summary>
     public class AutoTrackerModule : TrackerModule, IDisposable
     {
         private readonly ILogger<AutoTrackerModule> _logger;

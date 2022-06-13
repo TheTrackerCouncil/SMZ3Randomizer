@@ -19,20 +19,22 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly ILogger<AutoTracker> _logger;
         private readonly List<EmulatorAction> _readActions = new();
         private readonly Dictionary<int, EmulatorAction> _readActionMap = new();
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IEnumerable<IZeldaStateCheck?> _zeldaStateChecks;
+        private readonly IEnumerable<IMetroidStateCheck?> _metroidStateChecks;
         private int _currentIndex = 0;
         private Game _previousGame;
         private bool _hasStarted;
         private IEmulatorConnector? _connector;
-        private readonly ILoggerFactory _loggerFactory;
-        private ICollection<ZeldaStateCheck?> _zeldaStateChecks;
-        private ICollection<MetroidStateCheck?> _metroidStateChecks;
 
         /// <summary>
         /// Constructor for Auto Tracker
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="loggerFactory"></param>
-        public AutoTracker(ILogger<AutoTracker> logger, ILoggerFactory loggerFactory)
+        /// <param name="zeldaStateChecks"></param>
+        /// <param name="metroidStateChecks"></param>
+        public AutoTracker(ILogger<AutoTracker> logger, ILoggerFactory loggerFactory, IEnumerable<IZeldaStateCheck> zeldaStateChecks, IEnumerable<IMetroidStateCheck> metroidStateChecks)
         {
             _logger = logger;
             _loggerFactory = loggerFactory;
@@ -125,20 +127,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Action = CheckMetroidState
             });
 
-            var assemblies = new[] { System.Reflection.Assembly.GetExecutingAssembly() };
-
-            _zeldaStateChecks = assemblies
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t != typeof(ZeldaStateCheck) && typeof(ZeldaStateCheck).IsAssignableFrom(t) && !t.IsAbstract)
-                .Select(t => (ZeldaStateCheck?)Activator.CreateInstance(t))
-                .ToList();
+            _zeldaStateChecks = zeldaStateChecks;
+            _metroidStateChecks = metroidStateChecks;
             _logger.LogInformation($"Zelda state checks: {_zeldaStateChecks.Count()}");
-
-            _metroidStateChecks = assemblies
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t != typeof(MetroidStateCheck) && typeof(MetroidStateCheck).IsAssignableFrom(t) && !t.IsAbstract)
-                .Select(t => (MetroidStateCheck?)Activator.CreateInstance(t))
-                .ToList();
             _logger.LogInformation($"Metroid state checks: {_metroidStateChecks.Count()}");
         }
 
@@ -224,7 +215,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// The action to run when the player asks Tracker to look at the game
         /// </summary>
-        public AutoTrackerViewedAction LatestViewAction;
+        public AutoTrackerViewedAction? LatestViewAction;
 
         /// <summary>
         /// If a connector is currently enabled
@@ -248,7 +239,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected void Connector_Connected(object? sender, EventArgs e)
         {
-            Tracker.Say(x => x.AutoTracker.WhenConnected);
+            Tracker?.Say(x => x.AutoTracker.WhenConnected);
             AutoTrackerConnected?.Invoke(this, new());
             _ = SendMessagesAsync();
             _currentIndex = 0;
@@ -261,7 +252,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected void Connector_Disconnected(object? sender, EventArgs e)
         {
-            Tracker.Say("Auto tracker disconnected");
+            Tracker?.Say("Auto tracker disconnected");
             _logger.LogInformation("Disconnected");
             AutoTrackerDisconnected?.Invoke(this, new());
         }
@@ -323,7 +314,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 _logger.LogInformation("Game started");
                 _hasStarted = true;
-                Tracker?.Say(x => x.AutoTracker.GameStarted, Tracker.Rom.Seed);
+                Tracker?.Say(x => x.AutoTracker.GameStarted, Tracker.Rom?.Seed);
             }
         }
 
@@ -419,6 +410,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             var currentData = action.CurrentData;
             var prevData = action.PreviousData;
 
+            if (Tracker == null || currentData == null || prevData == null) return;
+
             // Store the locations for this action so that we don't need to grab them each time every half a second or so
             if (action.Locations == null)
             {
@@ -464,6 +457,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="prevData">The previous memory data returned from the emulator</param>
         protected void CheckDungeons(EmulatorMemoryData currentData, EmulatorMemoryData prevData)
         {
+            if (Tracker == null) return;
+
             foreach (var dungeonInfo in Tracker.WorldInfo.Dungeons)
             {
                 var region = Tracker.World.Regions.First(x => dungeonInfo.Is(x) && x is Z3Region) as Z3Region;
@@ -496,9 +491,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Checks the status of if the Super Metroid bosses have been defeated
         /// </summary>
-        /// <param name="message">The response from the lua script</param>
+        /// <param name="data">The response from the lua script</param>
         protected void CheckSMBosses(EmulatorMemoryData data)
         {
+            if (Tracker == null) return;
             var boss = Tracker.WorldInfo.Bosses.First(x => "Kraid".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
             if (!boss.Defeated && data.CheckBinary8Bit(0x1, 0x1))
             {
@@ -531,10 +527,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Tracks the current memory state of LttP for Tracker voice lines
         /// </summary>
-        /// <param name="message">The message from the emulator with the memory state</param>
+        /// <param name="action">The message from the emulator with the memory state</param>
         protected void CheckZeldaState(EmulatorAction action)
         {
-            if (_previousGame != CurrentGame) return;
+            if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
             var prevState = ZeldaState;
             ZeldaState = new(action.CurrentData);
             _logger.LogDebug(ZeldaState.ToString());
@@ -552,10 +548,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Tracks the current memory state of SM for Tracker voice lines
         /// </summary>
-        /// <param name="message">The message from the emulator with the memory state</param>
+        /// <param name="action">The message from the emulator with the memory state</param>
         protected void CheckMetroidState(EmulatorAction action)
         {
-            if (_previousGame != CurrentGame) return;
+            if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
             var prevState = MetroidState;
             MetroidState = new(action.CurrentData);
             _logger.LogDebug(MetroidState.ToString());

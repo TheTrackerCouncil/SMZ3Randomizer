@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     /// Zelda State check for when dying
     /// Checks if the player is in the death spiral animation without a fairy
     /// </summary>
-    public class ZeldaDeath : ZeldaStateCheck
+    public class ZeldaDeath : IZeldaStateCheck
     {
         /// <summary>
         /// Executes the check for the current state
@@ -15,9 +15,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// <param name="tracker">The tracker instance</param>
         /// <param name="currentState">The current state in Zelda</param>
         /// <param name="prevState">The previous state in Zelda</param>
-        public override bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+        /// <returns>True if the check was identified, false otherwise</returns>
+        public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
-            if (currentState.State == 0x12 && prevState.State != 0x12 && !tracker.AutoTracker.PlayerHasFairy)
+            if (tracker.AutoTracker == null) return false;
+
+            if (currentState.State == 0x12 && prevState.State != 0x12 && tracker.AutoTracker.PlayerHasFairy)
             {
                 // Say specific message for dying in the particular screen/room the player is in
                 if (tracker.CurrentRegion != null && tracker.CurrentRegion.WhenDiedInRoom != null)

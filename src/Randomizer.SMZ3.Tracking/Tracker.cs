@@ -249,17 +249,17 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// The generated rom
         /// </summary>
-        public GeneratedRom Rom { get; private set; }
+        public GeneratedRom? Rom { get; private set; }
 
         /// <summary>
         /// The region the player is currently in
         /// </summary>
-        public RegionInfo CurrentRegion { get; private set; }
+        public RegionInfo? CurrentRegion { get; private set; }
 
         /// <summary>
         /// The map to display for the player
         /// </summary>
-        public string CurrentMap { get; private set; }
+        public string CurrentMap { get; private set; } = "";
 
         /// <summary>
         /// Gets a string describing tracker's mood.
@@ -294,7 +294,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// The Auto Tracker for the Tracker
         /// </summary>
-        public AutoTracker AutoTracker { get; set; }
+        public AutoTracker? AutoTracker { get; set; }
 
         /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
@@ -787,7 +787,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 try
                 {
-                    _chatClient.Connect(userName, oauthToken, channel ?? userName, id);
+                    _chatClient.Connect(userName, oauthToken, channel ?? userName, id ?? "");
                 }
                 catch (AggregateException e)
                 {

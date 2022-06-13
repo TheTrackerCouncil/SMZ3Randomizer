@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     /// Zelda State check for viewing the map
     /// Checks if the game state is viewing the map and the value for viewing the full map is set
     /// </summary>
-    public class ViewedMap : ZeldaStateCheck
+    public class ViewedMap : IZeldaStateCheck
     {
         private Tracker? _tracker;
 
@@ -22,8 +22,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// <param name="tracker">The tracker instance</param>
         /// <param name="currentState">The current state in Zelda</param>
         /// <param name="prevState">The previous state in Zelda</param>
-        public override bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+        /// <returns>True if the check was identified, false otherwise</returns>
+        public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
+            if (tracker.AutoTracker == null) return false;
+
             if (currentState.State == 14 && currentState.Substate == 7 && currentState.ReadUInt8(0xE0) == 0x80 && (tracker.AutoTracker.LatestViewAction == null || !tracker.AutoTracker.LatestViewAction.IsValid))
             {
                 _tracker = tracker;

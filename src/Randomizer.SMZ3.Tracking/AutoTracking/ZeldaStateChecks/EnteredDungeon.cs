@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     /// Zelda State check for detecting entering a dungeon
     /// Player is now in the dungeon state from the overworld in one of the designated starting rooms
     /// </summary>
-    public class EnteredDungeon : ZeldaStateCheck
+    public class EnteredDungeon : IZeldaStateCheck
     {
         private readonly HashSet<DungeonInfo> _enteredDungeons = new();
 
@@ -21,7 +21,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// <param name="tracker">The tracker instance</param>
         /// <param name="currentState">The current state in Zelda</param>
         /// <param name="prevState">The previous state in Zelda</param>
-        public override bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+        /// <returns>True if the check was identified, false otherwise</returns>
+        public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
             if (currentState.State == 0x07 && (prevState.State == 0x06 || prevState.State == 0x09 || prevState.State == 0x0F || prevState.State == 0x10 || prevState.State == 0x11))
             {

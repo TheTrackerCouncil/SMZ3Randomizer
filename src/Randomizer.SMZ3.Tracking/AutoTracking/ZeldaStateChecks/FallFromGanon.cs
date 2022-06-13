@@ -4,7 +4,7 @@
     /// Zelda State check for falling from Ganon's room
     /// Checks if the current room is the one below Ganon and the previous room was the Ganon room
     /// </summary>
-    public class FallFromGanon : ZeldaStateCheck
+    public class FallFromGanon : IZeldaStateCheck
     {
         /// <summary>
         /// Executes the check for the current state
@@ -12,7 +12,8 @@
         /// <param name="tracker">The tracker instance</param>
         /// <param name="currentState">The current state in Zelda</param>
         /// <param name="prevState">The previous state in Zelda</param>
-        public override bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+        /// <returns>True if the check was identified, false otherwise</returns>
+        public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
             if (currentState.CurrentRoom == 16 && currentState.PreviousRoom == 0 && prevState.CurrentRoom == 0)
             {

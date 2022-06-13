@@ -5,6 +5,9 @@
     /// </summary>
     public enum EmulatorActionType
     {
+        /// <summary>
+        /// Read a block from memory
+        /// </summary>
         ReadBlock
     }
 }

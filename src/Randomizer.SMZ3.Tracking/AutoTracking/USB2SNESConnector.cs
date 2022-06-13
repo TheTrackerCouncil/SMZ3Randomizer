@@ -122,7 +122,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 _client.Dispose();
             }
-            catch (ObjectDisposedException e) { }
+            catch (ObjectDisposedException) { }
             GC.SuppressFinalize(this);
         }
 
@@ -132,7 +132,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             if (msg.MessageType == WebSocketMessageType.Text)
             {
                 var response = JsonSerializer.Deserialize<USB2SNESResponse>(msg.Text);
-                if (response == null || response.Results.Count == 0)
+                if (response == null || response.Results == null || response.Results.Count == 0)
                 {
                     _logger.LogError("Invalid json response " + WebSocketMessageType.Text);
                     return;

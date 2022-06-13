@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
-
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
+using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -56,6 +58,24 @@ namespace Randomizer.SMZ3.Tracking
                 var factory = serviceProvider.GetRequiredService<TrackerFactory>();
                 return factory.Instance ?? throw new InvalidOperationException("Cannot resolve Tracker instance before TrackerFactory.Create has been called.");
             });
+
+            var assemblies = new[] { Assembly.GetExecutingAssembly() };
+
+            var zeldaStateChecks = assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(nameof(IZeldaStateCheck)) == typeof(IZeldaStateCheck));
+            foreach (var stateCheck in zeldaStateChecks)
+            {
+                services.Add(new ServiceDescriptor(typeof(IZeldaStateCheck), stateCheck, ServiceLifetime.Transient));
+            }
+
+            var metroidStateChecks = assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(t => !t.IsAbstract && t.IsClass && t.GetInterface(nameof(IMetroidStateCheck)) == typeof(IMetroidStateCheck));
+            foreach (var stateCheck in metroidStateChecks)
+            {
+                services.Add(new ServiceDescriptor(typeof(IMetroidStateCheck), stateCheck, ServiceLifetime.Transient));
+            }
 
             return services;
         }

@@ -4,17 +4,16 @@
     /// Metroid state check for nearing Kraid's awful son
     /// Player enters the same room as KAD from the left
     /// </summary>
-    public class KraidsAwfulSon : MetroidStateCheck
+    public class KraidsAwfulSon : IMetroidStateCheck
     {
-        private int _previousMetroidRegionValue = -1;
-
         /// <summary>
         /// Executes the check for the current state
         /// </summary>
         /// <param name="tracker">The tracker instance</param>
-        /// <param name="currentState">The current state in Zelda</param>
-        /// <param name="prevState">The previous state in Zelda</param>
-        public override bool ExecuteCheck(Tracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
+        /// <param name="currentState">The current state in Super Metroid</param>
+        /// <param name="prevState">The previous state in Super Metroid</param>
+        /// <returns>True if the check was identified, false otherwise</returns>
+        public bool ExecuteCheck(Tracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
             if (currentState.CurrentRegion == 1 && currentState.CurrentRoomInRegion == 45 && prevState.CurrentRoomInRegion == 44)
             {

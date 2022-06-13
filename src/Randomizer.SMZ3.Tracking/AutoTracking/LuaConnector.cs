@@ -62,7 +62,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="message">The message to send to the emulator</param>
         public void SendMessage(EmulatorAction message)
         {
-            if (!_isEnabled) return;
+            if (!_isEnabled || _socket == null) return;
             LuaMessage? request = null;
             _lastMessage = message;
 

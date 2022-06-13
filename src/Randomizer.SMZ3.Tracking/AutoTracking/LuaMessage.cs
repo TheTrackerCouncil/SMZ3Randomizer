@@ -1,5 +1,8 @@
 ﻿namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
+    /// <summary>
+    /// Class for requests/responses from the Lua script
+    /// </summary>
     public class LuaMessage
     {
         /// <summary>
