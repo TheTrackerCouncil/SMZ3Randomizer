@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         {
             if (tracker.AutoTracker == null) return false;
 
-            if (currentState.State == 0x12 && prevState.State != 0x12 && tracker.AutoTracker.PlayerHasFairy)
+            if (currentState.State == 0x12 && prevState.State != 0x12 && !tracker.AutoTracker.PlayerHasFairy)
             {
                 // Say specific message for dying in the particular screen/room the player is in
                 if (tracker.CurrentRegion != null && tracker.CurrentRegion.WhenDiedInRoom != null)
