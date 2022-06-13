@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         /// <param name="prevState">The previous state in Zelda</param>
         public override bool ExecuteCheck(Tracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
-            if (currentState.CurrentRegion != _previousMetroidRegionValue)
+            if (currentState.CurrentRegion != _previousMetroidRegionValue || tracker.CurrentRegion.GetRegion(tracker.World) is Z3Region)
             {
                 var newRegion = tracker.World.Regions.Select(x => x as SMRegion).FirstOrDefault(x => x != null && x.MemoryRegionId == currentState.CurrentRegion);
                 if (newRegion != null)
