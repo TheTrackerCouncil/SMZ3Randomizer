@@ -37,5 +37,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <param name="message">The message to send to the emulator</param>
         public void SendMessage(EmulatorAction message);
+
+        /// <summary>
+        /// Returns if the connector is ready for another message to be sent
+        /// </summary>
+        /// <returns>True if the connector is ready for another message, false otherwise</returns>
+        public bool CanSendMessage();
     }
 }

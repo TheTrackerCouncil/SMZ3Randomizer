@@ -12,9 +12,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 alsoKnownAs: "Lake of Ill Omen",
                 vanillaItem: ItemType.Quake,
                 access: items => items.MoonPearl && Logic.CanLiftLight(items),
-                memoryAddress: 0x0,
+                memoryAddress: 0x190,
                 memoryFlag: 0x20,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             Pyramid = new Location(this, 256 + 79, 0x308147, LocationType.Regular,
                 name: "Pyramid",
@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x5B,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             PyramidFairy = new(this);
 

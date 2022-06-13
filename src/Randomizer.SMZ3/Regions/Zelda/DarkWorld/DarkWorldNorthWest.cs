@@ -14,7 +14,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 access: items => Logic.CanLiftLight(items) && items.Cape,
                 memoryAddress: 0x4A,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             ChestGame = new Location(this, 256 + 72, 0x1EDA8, LocationType.Regular,
                 name: "Chest Game",
@@ -47,7 +47,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 alsoKnownAs: "Purple Chest turn-in",
                 vanillaItem: ItemType.Bottle, // ???
                 access: items => Logic.CanLiftHeavy(items),
-                memoryAddress: 0xC9,
+                memoryAddress: 0x149,
                 memoryFlag: 0x10,
                 memoryType: LocationMemoryType.ZeldaMisc);
 

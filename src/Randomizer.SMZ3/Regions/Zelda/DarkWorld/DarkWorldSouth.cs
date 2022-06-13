@@ -12,15 +12,15 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x68,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             Stumpy = new Location(this, 256 + 83, 0x6B0C7, LocationType.Regular,
                 name: "Stumpy",
                 alsoKnownAs: "Haunted Grove",
                 vanillaItem: ItemType.Shovel,
-                memoryAddress: 0x0,
+                memoryAddress: 0x190,
                 memoryFlag: 0x8,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             HypeCave = new(this);
 

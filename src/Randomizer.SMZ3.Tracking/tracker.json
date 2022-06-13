@@ -44,7 +44,7 @@
           "I'm beginning to think you're lying about all this content.",
           "Is there really this much content?"
         ],
-        "16" : null
+        "16": null
       }
     },
     {
@@ -337,6 +337,10 @@
       },
       "Column": 0,
       "Row": 3,
+      "WhenTracked": {
+        "1": [ "I hope you enjoy your first bottle", "Was there a bee in this one?", "Potion storage increased by one step", "I won't tell if you want to sneak some booze in one" ],
+        "2": null
+      },
       "Hints": [
         "You could find it in real life."
       ]
@@ -347,7 +351,7 @@
       "InternalItemType": 23,
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Four more and it will matter. Kind of. Maybe.", "Toggled broken heart on" ],
+        "1": [ "Four more and it will matter. Kind of. Maybe.", "Neat. A whole quarter of a heart" ],
         "2": [ "You now have two heart pieces", "Half way to this actually being somewhat useful", "Why do I track these again?" ],
         "3": [ "You now have three heart pieces", "Three quarters of a heart is almost a working one, I think" ],
         "4": [ "Another full heart, neat", "Increased survivablity by one step", "Maybe now you won't die." ],
@@ -540,9 +544,9 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins", "The first big 20 is always special" ],
-        "2": [ "Only your second? I'm surprised.", "You now have 2 big twenties. Out of like five thousand."],
+        "2": [ "Only your second? I'm surprised.", "You now have 2 big twenties. Out of like five thousand." ],
         "3": null,
-        "4": [ "You now have 4 20 rupee's. Nice."],
+        "4": [ "You now have 4 20 rupee's. Nice." ],
         "5": null
       },
       "Hints": [
@@ -786,6 +790,7 @@
         ]
       },
       "WhenTracked": {
+        "1": [ "I love the power glove, it's so bad", "Upgraded hands by one step", "Upgraded gloves by one step." ],
         "2": [
           "Toggled Tiddy Mitts on,",
           "Congratulations with your new Tiddy Mitts.",
@@ -1162,9 +1167,9 @@
       "Row": 3,
       "WhenTracked": {
         "1": [ "At least now you can take a few more hits", "If you got hit less you wouldn't need these" ],
-        "2": [ "Two whole tanks of energy. Wow.", "FYI You shouldn't drink these.", "Warning, do not injest"],
+        "2": [ "Two whole tanks of energy. Wow.", "FYI You shouldn't drink these.", "Upgraded caffeine by one step" ],
         "3": null,
-        "14": [ "You actually did it, you got all the E-Tanks in the game."]
+        "14": [ "You actually did it, you got all the E-Tanks in the game." ]
       },
       "Hints": [
         "You probably already have a lot of it.",
@@ -1179,8 +1184,9 @@
       "Column": 9,
       "Row": 3,
       "WhenTracked": {
-        "1": [ "Aren't these like the E-Tanks in the Mega Man X series?", "Hopefully you will not need these." ],
-        "2": null
+        "1": [ "Aren't these like the E-Tanks in the Mega Man X series?", "Hopefully you will not need these.", "I reserve the right to not care." ],
+        "2": [ "<break time='3s'/> Oh I'm sorry. Was I supposed to care about Reserve Tanks?", "Oh. Neat. Wow. Reserve Tanks." ],
+        "3": null
       },
       "Hints": [
         "You probably already have a lot of it.",
@@ -1205,8 +1211,11 @@
       "Column": 7,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "I mean you need some of these, right?", "Sometimes it feels like you only find missles in the game" ],
-        "2": null,
+        "1": [ "I have to count so manny of these", "Missles. Good. Now you can get things done when I don't give you any beams", "Time to blow some things up" ],
+        "2": [ "Ten missles. Neat.", "The second missle pack is always special", "More Missiles" ],
+        "3": null,
+        "4": [ "You need some of these, right?", "Sometimes it feels like you only find missles in the game" ],
+        "5": null,
         "20": [ "Okay, you have enough missiles now" ],
         "21": null,
         "69": "Nice",
@@ -1238,9 +1247,10 @@
       "Row": 4,
       "WhenTracked": {
         "1": [ "Not enough to defeat Crocomire, yet", "Go shoot one at Phantoon, he loves them" ],
-        "2": [ "You now have the bare mininum to kill Crocomire. Don't miss.", "That's a lot of soup!" ],
+        "2": [ "You now have the bare mininum to kill Crocomire. Don't miss.", "Stockpiled more soup" ],
         "3": null,
-        "10": [ "Don't you have enough super missiles now?" ]
+        "10": [ "Don't you have enough super missiles now?", "That's a lot of soup!" ],
+        "13": null
       },
       "Hints": [
         "You probably already have a lot of it."
@@ -1266,9 +1276,11 @@
       "Column": 9,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "At least these are pretty useful", "I thought the federation had no plans to authorize the use of these?" ],
+        "1": [ "At least these are pretty useful", "I thought that Adam had no plans to authorize the use of these?", "A wild borger!" ],
         "2": [ "Now you won't run out in the wrecked ship", "What are you going to destroy with these?", "Time to get things done in Metroid?" ],
-        "3": null
+        "3": null,
+        "4": [ "Can you even eat that many burgs?", "You should have enough now, I think" ],
+        "5": null
       },
       "Hints": [
         "You probably already have a lot of it."
@@ -1472,6 +1484,7 @@
     "TrackedProgressiveItem": [
       "Upgraded {0} by one step.",
       "Your {0} grows stronger",
+      "Your {0} is now even better",
       [ "Congratulations with your new {1}.", 0.5 ]
     ],
     "TrackedItemByStage": [
@@ -1483,8 +1496,13 @@
       "Do you have enough {0} yet?",
       "So many {0}",
       "Picked up more {0}",
+      "Even more {0}",
+      "Cool, more {0}",
+      "Your {0} collection is getting somehwere.",
+      "More {0}?",
       [ "That's nice", 0.5 ],
       [ "Okay", 0.5 ],
+      [ "Sweet", 0.5 ],
       [ "Neat", 0.5 ],
       [ "How many more {0} do you need?", 0.3 ],
       [ "Another one.", 0.5 ]
@@ -1553,7 +1571,7 @@
       "Hey tracker, track Shaktool Go Mode",
       "I wonder how Shaktool is doing",
       "I hear its time to dig, underwater and maybe get something.",
-      ["It's time to get seewwious.", 0.5],
+      [ "It's time to get seewwious.", 0.5 ],
       [ "It's time to get serious.", 0.5 ]
     ],
     "PegWorldAvailable": [
@@ -1832,7 +1850,8 @@
         "Error. My metrics calculation algorithm could not determine the quality of that hashtag content. Falling back to chat confirmation of content quality.",
         "You have been randomly selected to have your content screened. Please let the council know if this was content or not.",
         "Viewers at home. Please use the new poll to let us know how good this content is, thank you.",
-        "You might think that was some good content but do the viewers agree? Let's find out!"
+        "You might think that was some good content but do the viewers agree? Let's find out!",
+        "Hold on there. are you sure that was content? I think I need to check with the chat."
       ],
       "AskChatAboutContentYes": [
         "It's your lucky day. Chat has confirmed that was some hashtag content.",
@@ -1840,11 +1859,11 @@
         "I agree with the chat, that was some great content",
         "Looks like the chat is on your side. For now.",
         "I can't say that I agree with the results, but the chat indeed believes that was some hashtag content.",
-        "Congratulations! You're the lucky winner of our grand prize."
+        "Congratulations! You're the lucky winner of our grand prize. It's some content."
       ],
       "AskChatAboutContentNo": [
         "I'm glad I asked. The chat has denied your request to increase your content levels.",
-        "I am sorry but the chat does agree that what happened was good content. Please try again later",
+        "I am sorry but the chat does not agree that what happened was good content. Please try again later",
         "Seriously chat? I thought that was good content but the rules are rules.",
         "The council would like to inform you that trying to sneak content past them is a serious crime. This has been added to your file.",
         "The racing council regrets to inform you that your application for additional content has been denied.",
@@ -1860,7 +1879,8 @@
         "And the results are now in.",
         "Beep boop bop. Those are my poll noises",
         "Let's see. I am crunching the numbers.",
-        "The poll is now closed."
+        "The poll is now closed.",
+        "Poll is now complete."
       ],
       "PollError": [
         "Sorry, I was unable to get the poll results.",
@@ -2264,6 +2284,7 @@
       "SkipSporeSpawn": [
         "Skipping spore spawn again?",
         "Why don't we go visit spore spawn for old times sake?",
+        "One day I will force you to fight him again",
         "What? You don't want to fight spore spawn?"
       ],
       "RidleyFace": [
@@ -2274,13 +2295,16 @@
       "EnteredGTEarly": [
         "Are you not capable of collecting everything required to finish this seed?",
         "How did you get into Gannon's tower without all 7 crystals? Surely this isn't legal",
-        "<voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I would like to remind {{User}} that purr article 5 section 2 entering Gannon's Tower without all 7 crystals is illegal. Repeated offenses will result in reprimanding by content removal. Thank you.</prosody></voice>"
+        "The council is on the other line, what do you want me to tell them?",
+        "<voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I would like to remind {{User}} that purr article 5 section 2, entering Gannon's Tower without all 7 crystals is illegal. Repeated offenses will result in reprimanding by content removal. Thank you.</prosody></voice>"
       ],
       "LookedAtNothing": [
         "What am I supposed to be looking at?",
         "Did you think I would be impressed?",
         "I'd rather watch something else",
-        "Yeah sure I'm watching"
+        "Yeah sure I'm watching",
+        "Wait, you want me to watch too?",
+        "Are you winning yet?"
       ],
       "LightWorldAllPendants": [
         "That's a relief, I'm sure",
@@ -2319,7 +2343,8 @@
         "Please enter 75 digit alphanumeric password to continue.",
         "Access denied.",
         "Ah <break time='100ms'/> ah <break time='100ms'/> aah, you didn't say the magic word.",
-        "No."
+        "No.",
+        "What did you do wrong this time?"
       ]
     },
     {
@@ -2391,6 +2416,7 @@
         "I never asked for this.",
         "Oh my, that is such a good burn, wow.",
         "Whatever",
+        "I hope you aren't having a heated gamer moment right now.",
         "Why are you being mean to something that cannot fight back?",
         "That's it. I quit. <break time='60s'/>"
       ]
@@ -2493,7 +2519,8 @@
         "Don't blame me, I didn't roll it",
         "Stop blaming me for your lack of skill",
         "Try playing better",
-        "Well at least try making it entertaining then"
+        "Well at least try making it entertaining then",
+        "You think it sucks now? Just you wait."
       ]
     },
     {
@@ -2503,7 +2530,8 @@
         "I made it just for you",
         "Don't screw this up then",
         "Wait, something went wrong then",
-        "Actually this was for someone else"
+        "Actually this was for someone else",
+        "I cannot process this positivity, increasing sass by one step"
       ]
     },
     {

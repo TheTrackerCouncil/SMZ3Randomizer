@@ -14,16 +14,16 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x28,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld)
+                memoryType: LocationMemoryType.ZeldaMisc)
                 .Weighted(SphereOne);
 
             Library = new Location(this, 256 + 240, 0x308012, LocationType.Regular,
                 name: "Library",
                 vanillaItem: ItemType.Book,
                 access: items => items.Boots,
-                memoryAddress: 0x0,
+                memoryAddress: 0x190,
                 memoryFlag: 0x80,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             ForestClearingDigSpot = new Location(this, 256 + 241, 0x30814A, LocationType.Regular,
                 name: "Flute Spot",
@@ -32,7 +32,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 access: items => items.Shovel,
                 memoryAddress: 0x2A,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             Cave45 = new Location(this, 256 + 242, 0x308003, LocationType.Regular,
                 name: "South of Grove",
@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 access: items => World.DesertPalace.CanEnter(items),
                 memoryAddress: 0x30,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             CheckerboardCave = new Location(this, 256 + 253, 0x308005, LocationType.Regular,
                 name: "Checkerboard Cave",
@@ -78,9 +78,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Bombos Tablet",
                 vanillaItem: ItemType.Bombos,
                 access: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items),
-                memoryAddress: 0x1,
+                memoryAddress: 0x191,
                 memoryFlag: 0x2,
-                memoryType: LocationMemoryType.ZeldaNPC);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             LakeHyliaIsland = new Location(this, 256 + 61, 0x308144, LocationType.Regular,
                 name: "Lake Hylia Island",
@@ -90,14 +90,14 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     World.DarkWorldNorthEast.CanEnter(items)),
                 memoryAddress: 0x35,
                 memoryFlag: 0x40,
-                memoryType: LocationMemoryType.ZeldaOverworld);
+                memoryType: LocationMemoryType.ZeldaMisc);
 
             UnderTheBridge = new Location(this, 256 + 62, 0x6BE7D, LocationType.Regular,
                 name: "Hobo",
                 alsoKnownAs: "Under the bridge",
                 vanillaItem: ItemType.Bottle,
                 access: items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, false),
-                memoryAddress: 0xC9,
+                memoryAddress: 0x149,
                 memoryFlag: 0x1,
                 memoryType: LocationMemoryType.ZeldaMisc);
 
@@ -217,7 +217,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     vanillaItem: ItemType.HeartPiece,
                     memoryAddress: 0x3B,
                     memoryFlag: 0x40,
-                    memoryType: LocationMemoryType.ZeldaOverworld)
+                    memoryType: LocationMemoryType.ZeldaMisc)
                     .Weighted(SphereOne);
             }
 
