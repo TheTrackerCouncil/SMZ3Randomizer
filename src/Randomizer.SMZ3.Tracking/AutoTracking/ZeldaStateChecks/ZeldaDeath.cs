@@ -1,0 +1,42 @@
+﻿using System;
+using System.Linq;
+
+namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
+{
+    /// <summary>
+    /// Zelda State check for when dying
+    /// Checks if the player is in the death spiral animation without a fairy
+    /// </summary>
+    public class ZeldaDeath : ZeldaStateCheck
+    {
+        /// <summary>
+        /// Executes the check for the current state
+        /// </summary>
+        /// <param name="tracker">The tracker instance</param>
+        /// <param name="currentState">The current state in Zelda</param>
+        /// <param name="prevState">The previous state in Zelda</param>
+        public override bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
+        {
+            if (currentState.State == 0x12 && prevState.State != 0x12 && !tracker.AutoTracker.PlayerHasFairy)
+            {
+                // Say specific message for dying in the particular screen/room the player is in
+                if (tracker.CurrentRegion != null && tracker.CurrentRegion.WhenDiedInRoom != null)
+                {
+                    var region = tracker.CurrentRegion.GetRegion(tracker.World) as Z3Region;
+                    if (region != null && region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.OverworldScreen.ToString()))
+                    {
+                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.OverworldScreen.ToString()]);
+                    }
+                    else if (region != null && !region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.CurrentRoom.ToString()))
+                    {
+                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.CurrentRoom.ToString()]);
+                    }
+                }
+
+                tracker.TrackItem(tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
+                return true;
+            }
+            return false;
+        }
+    }
+}

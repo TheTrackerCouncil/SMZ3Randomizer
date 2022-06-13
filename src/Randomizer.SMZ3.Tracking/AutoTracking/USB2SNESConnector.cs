@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -111,7 +110,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Operands = new List<string>() { address, length }
                 }));
             }
-            
+
         }
 
         /// <summary>
