@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0x90;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0x98 };
+            StartingRooms = new List<int> { 152 };
         }
 
         public override string Name => "Misery Mire";

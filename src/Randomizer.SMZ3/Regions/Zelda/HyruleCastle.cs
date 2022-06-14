@@ -60,7 +60,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             BackOfEscape = new(this);
 
-            StartingRooms = new List<int> { 0x61 };
+            StartingRooms = new List<int> { 96, 97, 98 };
         }
 
         public override string Name => "Hyrule Castle";

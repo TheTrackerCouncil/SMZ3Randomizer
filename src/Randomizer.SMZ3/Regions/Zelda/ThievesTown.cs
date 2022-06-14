@@ -68,7 +68,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0xAC;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0xDB };
+            StartingRooms = new List<int> { 219 };
         }
 
         public override string Name => "Thieves' Town";

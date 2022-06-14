@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             Foyer = new(this);
             DarkMaze = new(this);
 
-            StartingRooms = new List<int>() { 0xE0 };
+            StartingRooms = new List<int>() { 224 };
         }
 
         public override string Name => "Castle Tower";

@@ -75,7 +75,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0x29;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0x57, 0x58, 0x67, 0x68 };
+            StartingRooms = new List<int> { 86, 87, 88, 89, 103, 104 };
         }
 
         public override string Name => "Skull Woods";
