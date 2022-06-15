@@ -364,6 +364,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             if (action.CurrentData != null && action.PreviousData != null)
             {
+                // Failsafe to prevent incorrect checking
+                if (action.CurrentData?.ReadUInt8(0x190) == 0xFF && action.CurrentData?.ReadUInt8(0x191) == 0xFF)
+                {
+                    _logger.LogInformation("Ignoring due to transition");
+                    return;
+                }
+
                 CheckLocations(action, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
 
                 PlayerHasFairy = false;
@@ -432,7 +439,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         if (item != null)
                         {
                             Tracker.TrackItem(item, location, null, null, true);
-                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name} {loc} {flag} {is16Bit}");
+                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
                         }
                         else
                         {
