@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0x5A;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0x4A };
+            StartingRooms = new List<int> { 74 };
         }
 
         public override string Name => "Palace of Darkness";

@@ -61,7 +61,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0x33;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0x63, 0x83, 0x84 };
+            StartingRooms = new List<int> { 99, 131, 132, 133 };
         }
 
         public override string Name => "Desert Palace";

@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0xC8;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0xC9 };
+            StartingRooms = new List<int> { 201 };
         }
 
         public override string Name => "Eastern Palace";

@@ -65,7 +65,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0xA4;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0xD6 };
+            StartingRooms = new List<int> { 35, 36, 213, 214 };
         }
 
         public override string Name => "Turtle Rock";

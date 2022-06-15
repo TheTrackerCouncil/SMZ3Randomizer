@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0x6;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0x28 };
+            StartingRooms = new List<int> { 40 };
         }
 
         public override string Name => "Swamp Palace";

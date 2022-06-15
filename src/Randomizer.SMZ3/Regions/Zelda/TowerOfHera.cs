@@ -58,7 +58,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             MemoryAddress = 0x7;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 0x77 };
+            StartingRooms = new List<int> { 119 };
         }
 
         public override string Name => "Tower of Hera";
