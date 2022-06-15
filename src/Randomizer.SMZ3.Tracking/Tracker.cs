@@ -1198,7 +1198,7 @@ namespace Randomizer.SMZ3.Tracking
                 else if (item.Counter > 1)
                 {
                     if (stateItem)
-                        Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter));
+                        Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter, item.Name));
                 }
                 else
                 {
@@ -1508,7 +1508,7 @@ namespace Randomizer.SMZ3.Tracking
             }
             else if (newItemCount > oldItemCount)
             {
-                Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Counter));
+                Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{item.Name}s", item.Counter, item.Name));
             }
             else
             {
