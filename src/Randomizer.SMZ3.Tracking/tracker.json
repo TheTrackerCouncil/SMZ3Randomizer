@@ -62,6 +62,7 @@
           "Yeah, rip.",
           "It's time to get serious.",
           "I hope this was intentional because things were going well",
+          "Good job",
           [ "Tickets only. Next!", 0.5 ],
           [ "It's time to get seewwious.", 0.5 ]
         ],
@@ -94,7 +95,9 @@
           "Such devastation... This was not my intention!",
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ],
-          [ "Maybe I should take over", 0.5 ]
+          [ "Maybe I should take over", 0.5 ],
+          [ "How many times have you died now? Oh right, {0}", 0.5 ],
+          [ "Wow you're good at this aren't you?", 0.5 ]
         ]
       }
     },
@@ -428,7 +431,8 @@
     {
       "Name": [
         [ "Zora's Flippers", 0 ],
-        "Flippers"
+        "Flippers",
+        [ "Floatys", 0.1 ]
       ],
       "InternalItemType": 30,
       "Column": 2,
@@ -479,7 +483,11 @@
       ],
       "WhenTracked": {
         "1": [ "I'm sure you're happy if this is early in the seed", "Be sure to use these wisely" ],
-        "2": [ "Have you been using them?", "Throw more of these please" ],
+        "2": [
+          "Have you been using them?",
+          "Throw more of these please",
+          [ "I do enjoy seeing explosions", 0.5 ]
+        ],
         "3": null
       }
     },
@@ -527,8 +535,8 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Smash four of these together and you get a big 20", "One hundred more and you can get scammed by Zora." ],
-        "2": [ "Blue pee? Maybe you should see  a doctor.", "I hope your wallet is big enough" ],
+        "1": [ "Smash four of these together and you get a big 20", "One hundred more and you can get scammed by Zora.", "That's some nice couch cash" ],
+        "2": [ "Blue pee? Maybe you should see a doctor.", "I hope your wallet is big enough" ],
         "3": null
       },
       "Hints": [
@@ -644,7 +652,7 @@
       "WhenTracked": {
         "1": [ "This is more than half needed to be scammed to Zora", "This is like some serious potion money" ],
         "2": [ "Is it time to get scammed by Zora?", "Money money money money money" ],
-        "3": [ "Did you seriously need three of these?" ],
+        "3": [ "Did you seriously need three of these?", "Well aren't you rich now?" ],
         "4": null
       },
       "Hints": [
@@ -721,6 +729,8 @@
       "Column": 4,
       "Row": 4,
       "WhenTracked": {
+        "1": [ "Tracked sword", "You can now poke things", "Don't forget to use the pointy end" ],
+        "2": null,
         "3": [ "Toggled Bacon on", "Hmm... Bacon" ],
         "4": null
       },
@@ -743,7 +753,17 @@
       "Column": 5,
       "Row": 4,
       "WhenTracked": {
-        "3": [ "Can you still see the sprite?" ]
+        "1": [
+          "Tracked shield",
+          "Congratulations on your new Fighter's Shield",
+          ["Do you really need this?", 0.5]
+        ],
+        "2": null,
+        "3": [
+          "Can you still see the sprite?",
+          "Increased lag by one step",
+          "Tracked beam blocking device"
+        ]
       },
       "Hints": [
         "It improves your survivability."
@@ -1262,11 +1282,13 @@
         [ "Power Bombs", 0 ],
         [ "Explosive Hamburger", 0.5 ],
         [ "Hamburger", 0.5 ],
+        [ "Borger", 0.25 ],
         "Powerful Bombs"
       ],
       "Plural": [
         "Power Bombs",
         "Powerful Bombs",
+        [ "Borgers", 0.25 ],
         [ "Explosive Hamburgers", 0.5 ],
         [ "Hamburgers", 0.5 ]
       ],
@@ -1498,14 +1520,17 @@
       "Picked up more {0}",
       "Even more {0}",
       "Cool, more {0}",
-      "Your {0} collection is getting somehwere.",
+      "Your {0} collection is getting somewhere.",
       "More {0}?",
+      "Yay. More {0}",
+      [ "Tossed another {0} on to the pile", 0.5 ],
       [ "That's nice", 0.5 ],
       [ "Okay", 0.5 ],
       [ "Sweet", 0.5 ],
       [ "Neat", 0.5 ],
+      [ "Another one.", 0.5 ],
       [ "How many more {0} do you need?", 0.3 ],
-      [ "Another one.", 0.5 ]
+      [ "You now have {1} more {0} than you started with", 0.3 ]
     ],
     "TrackedAlreadyTrackedItem": [
       "You already have that.",
@@ -2541,6 +2566,7 @@
         "You better.",
         "Whatever.",
         "Say it like you mean it.",
+        "Somehow I don't believe you",
         [ "Next time you apologize you should follow the theory of the five apology languages. Which are: expressing regret, accepting responsibility, making restitution, revising the plan and requesting forgiveness", 0.1 ]
       ]
     }
