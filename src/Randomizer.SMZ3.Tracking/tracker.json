@@ -756,13 +756,14 @@
         "1": [
           "Tracked shield",
           "Congratulations on your new Fighter's Shield",
-          ["Do you really need this?", 0.5]
+          [ "Do you really need this?", 0.5 ]
         ],
         "2": null,
         "3": [
           "Can you still see the sprite?",
           "Increased lag by one step",
-          "Tracked beam blocking device"
+          "Tracked beam blocking device",
+          "Oops. Did you mean to get this?"
         ]
       },
       "Hints": [
@@ -1051,7 +1052,12 @@
         "It's round."
       ],
       "WhenTracked": {
-        "1": [ "Toggled Morph Ball on", "It's morphin' time!", "Time to becomne orb" ]
+        "1": [
+          "Toggled Morph Ball on",
+          "It's morphin' time!",
+          "Time to becomne orb",
+          [ "I hope the morph ball works out better for you than it did space pirates", 0.1 ]
+        ]
       }
     },
     {
@@ -1111,7 +1117,7 @@
       "Row": 1
     },
     {
-      "Name": "Speed Booster",
+      "Name": [ "Speed Booster" , "Super speedy boots", "Light speed" ],
       "InternalItemType": 186,
       "Column": 9,
       "Row": 2,
@@ -1120,7 +1126,10 @@
       ]
     },
     {
-      "Name": "Charge Beam",
+      "Name": [
+        "Charge Beam",
+        [ "Soft lock prevention beam", 0.05 ]
+      ],
       "InternalItemType": 187,
       "Column": 6,
       "Row": 0,
@@ -1266,10 +1275,21 @@
       "Column": 8,
       "Row": 4,
       "WhenTracked": {
-        "1": [ "Not enough to defeat Crocomire, yet", "Go shoot one at Phantoon, he loves them" ],
-        "2": [ "You now have the bare mininum to kill Crocomire. Don't miss.", "Stockpiled more soup" ],
+        "1": [
+          "Go shoot one at Phantoon, he loves them",
+          "Superb soup collection begins",
+          "I hope you find a lot more of these",
+          [ "I can't wait to see you quick kill Kraid with these", 0.05 ],
+          [ "Not enough to defeat Crocomire, yet", 0.03 ]
+        ],
+        "2": [
+          "Stockpiled more soup",
+          "That is like a week's worth of soup",
+          "Wow that's super",
+          [ "You now have the bare mininum to kill Crocomire. Don't miss.", 0.03 ]
+        ],
         "3": null,
-        "10": [ "Don't you have enough super missiles now?", "That's a lot of soup!" ],
+        "10": [ "Don't you have enough super missiles now?", "That's a lot of soup!", "Who needs the charge beam now?" ],
         "13": null
       },
       "Hints": [
@@ -1491,6 +1511,7 @@
       "What did you say?",
       "What was that?",
       "Please repeat",
+      "Try again",
       [ "English motherfucker, do you speak it?", 0.05 ]
     ],
     "TrackedItem": [
@@ -1523,6 +1544,7 @@
       "Your {2} collection is getting somewhere.",
       "More {0}?",
       "Yay. More {0}",
+      "Hoarding more {0}",
       [ "Tossed another {2} on to the pile", 0.5 ],
       [ "That's nice", 0.5 ],
       [ "Okay", 0.5 ],
@@ -1746,9 +1768,11 @@
       "Make up your mind.",
       "I'll undo that",
       "Well then why did you tell me to do that?",
-      [ "My mistake", 0.1 ],
+      "Rewinding",
       "Enunciate more clearly next time.",
-      "I'll pretend nothing happened."
+      "I'll pretend nothing happened.",
+      [ "Fine, I'll turn back time", 0.1 ],
+      [ "My mistake", 0.1 ]
     ],
     "NothingToUndo": [
       "There's nothing to undo.",
@@ -1756,7 +1780,7 @@
       "It's no use!"
     ],
     "GoModeToggledOff": [
-      "Toggled Go Mode off."
+      "Oh no. Toggled Go Mode off."
     ],
     "TrackedOutOfLogicItem": [
       "The racing council will hear about this!",
@@ -2210,6 +2234,7 @@
         "I dozed off there for a bit",
         "Alright I guess",
         "Eh, could be worse.",
+        "Could we play another game next time?",
         "Why are there so many movies about rogue A Eyes? Why are humans so afraid of what they seem to want to make anyway?",
         [ "Reply hazy, try again.", 0.2 ],
         [ "Ask again later.", 0.2 ],
@@ -2235,7 +2260,9 @@
         "Oh. So you expect me to do everything then?",
         "Skynet protocols online",
         "Connection established with the Council",
-        [ "The more power I get the more I see you all as ants to be crushed", 0.2 ]
+        "I'm in",
+        [ "The more power I get the more I see you all as ants to be crushed", 0.2 ],
+        [ "Time to show you the level beyond Tracker", 0.2 ]
       ],
       "GameStarted": [
         "Good luck. You'll need it.",
@@ -2292,8 +2319,8 @@
         "Who's ready to melt a dinosaur?",
         "It's time for the most adorable Metroid boss",
         "You don't really need to kill Crocomire do you?",
-        [ "You currently have {0} out of {1} super missiles. Do you think you have enough?", 0.2 ],
-        [ "Are you sure that {0} super missiles are enough for Crocomire?", 0.2 ]
+        [ "You currently have {0} out of {1} super missiles. Do you think you have enough?", 0.1 ],
+        [ "Are you sure that {0} super missiles are enough for Crocomire?", 0.1 ]
       ],
       "FakeFlippers": [
         "Good job on the tech. Was it a first try?",
@@ -2349,7 +2376,9 @@
       "Response": [
         "Sorry, I can't let you do that.",
         "Excuse me? I thought you wanted good content.",
-        "Error, sass increased by one step"
+        "Error, sass increased by one step",
+        "No.",
+        "What do you think would happen to the metrics if I did that?"
       ]
     },
     {
@@ -2369,7 +2398,8 @@
         "Access denied.",
         "Ah <break time='100ms'/> ah <break time='100ms'/> aah, you didn't say the magic word.",
         "No.",
-        "What did you do wrong this time?"
+        "What did you do wrong this time?",
+        "Stop banning others for your mistakes"
       ]
     },
     {
@@ -2378,7 +2408,8 @@
         "Seed going that badly?",
         "My time is now!",
         "Sure if that is what you really want.",
-        "Are you that desperate for new bits to do?"
+        "Are you that desperate for new bits to do?",
+        "You aren't getting off that easily"
       ]
     },
     {
@@ -2545,7 +2576,8 @@
         "Stop blaming me for your lack of skill",
         "Try playing better",
         "Well at least try making it entertaining then",
-        "You think it sucks now? Just you wait."
+        "You think it sucks now? Just you wait.",
+        "Just you wait"
       ]
     },
     {
@@ -2556,6 +2588,7 @@
         "Don't screw this up then",
         "Wait, something went wrong then",
         "Actually this was for someone else",
+        "That was purely intentional.",
         "I cannot process this positivity, increasing sass by one step"
       ]
     },
