@@ -1513,7 +1513,7 @@
       "Please repeat",
       "Try again",
       [ "English motherfucker, do you speak it?", 0.05 ],
-      [ "Toggled boots on. <break time='750ms'/> Just kidding, I have no idea what you were trying to say.", 50 ]
+      [ "Toggled boots on. <break time='750ms'/> Just kidding, I have no idea what you were trying to say.", 0.05 ]
     ],
     "TrackedItem": [
       "Toggling {0} on.",
