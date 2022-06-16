@@ -1512,7 +1512,8 @@
       "What was that?",
       "Please repeat",
       "Try again",
-      [ "English motherfucker, do you speak it?", 0.05 ]
+      [ "English motherfucker, do you speak it?", 0.05 ],
+      [ "Toggled boots on. Just kidding, I have no idea what you were trying to say.", 0.05 ]
     ],
     "TrackedItem": [
       "Toggling {0} on.",
