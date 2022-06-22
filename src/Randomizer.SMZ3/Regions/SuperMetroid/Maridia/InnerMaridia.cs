@@ -1,9 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-using Npgsql.PostgresTypes;
-
-using Randomizer.Shared;
-using static Randomizer.SMZ3.SMLogic;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 {
