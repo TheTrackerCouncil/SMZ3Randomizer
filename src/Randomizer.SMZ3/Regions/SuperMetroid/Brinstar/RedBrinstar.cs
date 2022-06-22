@@ -41,7 +41,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 alsoKnownAs: "~ S p A z E r ~",
                 vanillaItem: ItemType.Spazer,
                 access: items => Logic.CanPassBombPassages(items) && items.Super
-                              && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy))
+                              && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy)),
                 memoryAddress: 0x5,
                 memoryFlag: 0x4);
             MemoryRegionId = 1;

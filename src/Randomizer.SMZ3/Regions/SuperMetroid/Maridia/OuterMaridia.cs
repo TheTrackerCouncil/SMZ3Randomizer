@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.ETank,
                 access: items => Logic.CanOpenRedDoors(items)
                               && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump) // Reaching the room
-                              && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple)), // Reaching the item
+                              && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x4);
             MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanOpenRedDoors(items)
                               && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump) // Reaching the room
-                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.SpeedBooster || (items.Grapple && items.HiJump))), // Reaching the item
+                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.SpeedBooster || (items.Grapple && items.HiJump)), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x8);
             MemoryRegionId = 4;

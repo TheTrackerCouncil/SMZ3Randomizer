@@ -148,6 +148,11 @@ namespace Randomizer.SMZ3
             return !World.Config.LogicConfig.LeftSandPitRequiresSpringBall || (items.SpringBall && items.HiJump);
         }
 
+        public bool CanWallJump(WallJumpDifficulty difficulty)
+        {
+            return World.Config.LogicConfig.WallJumpDifficulty >= difficulty;
+        }
+
         public World World { get; }
 
         public static IEnumerable<ItemType[]> GetMissingRequiredItems(Location location, Progression items)

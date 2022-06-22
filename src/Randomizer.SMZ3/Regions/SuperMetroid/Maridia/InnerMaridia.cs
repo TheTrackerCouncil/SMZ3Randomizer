@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Power Bomb (right Maridia sand pit room)",
                 alsoKnownAs: "Right Sand Pit - Right item",
                 vanillaItem: ItemType.PowerBomb,
-                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump)
+                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
                 memoryAddress: 0x12,
                 memoryFlag: 0x8);
             AqueductLeft = new(this, 148, 0x8FC603, LocationType.Visible,
@@ -184,17 +184,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     name: "Left",
                     alsoKnownAs: new[] { "Missile (left Maridia sand pit room)" },
                     vanillaItem: ItemType.Missile,
-                    access: items => region.CanReachAqueduct(items) && items.Super && Logic.CanPassBombPassages(items) && Logic.CanNavigateMaridiaLeftSandPit(items),
+                    access: items => CanEnter(items) && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanNavigateMaridiaLeftSandPit(items)), //! Double check the logic here
                     memoryAddress: 0x12,
                     memoryFlag: 0x1);
-                    access: items => CanEnter(items) && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump));
 
                 Right = new(this, 145, 0x8FC5E3, LocationType.Chozo,
                     name: "Right",
                     alsoKnownAs: new[] { "Reserve Tank, Maridia" },
                     vanillaItem: ItemType.ReserveTank,
-                    access: items => CanEnter(items) && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
-                    access: items => region.CanReachAqueduct(items) && items.Super && Logic.CanPassBombPassages(items) && Logic.CanNavigateMaridiaLeftSandPit(items),
+                    access: items => CanEnter(items) && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanNavigateMaridiaLeftSandPit(items)), //! Double check the logic here
                     memoryAddress: 0x12,
                     memoryFlag: 0x2);
             }
