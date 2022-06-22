@@ -5,6 +5,7 @@ using System.Linq;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -15,6 +16,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         private readonly IServiceProvider _serviceProvider;
         private IEnumerable<TrackerModule>? _trackerModules;
+        private ILogger<TrackerModuleFactory> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerModuleFactory"/>
@@ -23,9 +25,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="serviceProvider">
         /// Used to load available tracker modules.
         /// </param>
-        public TrackerModuleFactory(IServiceProvider serviceProvider)
+        public TrackerModuleFactory(IServiceProvider serviceProvider, ILogger<TrackerModuleFactory> logger)
         {
             _serviceProvider = serviceProvider;
+            _logger = logger;
         }
 
         /// <summary>
@@ -36,15 +39,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="engine">
         /// The speech recognition engine to initialize.
         /// </param>
+        /// <param name="moduleLoadError"></param>
         /// <returns>
         /// A dictionary that contains the loaded speech recognition syntax.
         /// </returns>
-        public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(Tracker tracker, SpeechRecognitionEngine engine)
+        public IReadOnlyDictionary<string, IEnumerable<string>> LoadAll(Tracker tracker, SpeechRecognitionEngine engine, out bool moduleLoadError)
         {
+            moduleLoadError = false;
             _trackerModules = _serviceProvider.GetServices<TrackerModule>();
             foreach (var module in _trackerModules)
             {
-                module.LoadInto(engine);
+                try
+                {
+                    module.LoadInto(engine);
+                }
+                catch (InvalidOperationException e)
+                {
+                    _logger.LogError(e, $"Error with loading module {module.GetType().Name}");
+                    moduleLoadError = true;
+                }
             }
 
             return _trackerModules.Where(x => !x.IsSecret)

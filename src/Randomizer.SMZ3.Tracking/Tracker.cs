@@ -758,14 +758,25 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Starts voice recognition.
         /// </summary>
-        public virtual void StartTracking()
+        public virtual bool TryStartTracking()
         {
             // Load the modules for voice recognition
             StartTimer();
-            Syntax = _moduleFactory.LoadAll(this, _recognizer);
-            EnableVoiceRecognition();
+            Syntax = _moduleFactory.LoadAll(this, _recognizer, out var loadError);
+
+            try
+            {
+                EnableVoiceRecognition();
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogError(e, "Error enabling voice recognition");
+                loadError = true;
+            }
+            
             Say(_alternateTracker ? Responses.StartingTrackingAlternate : Responses.StartedTracking);
             RestartIdleTimers();
+            return !loadError;
         }
 
         /// <summary>

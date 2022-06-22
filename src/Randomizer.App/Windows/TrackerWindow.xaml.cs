@@ -684,7 +684,11 @@ namespace Randomizer.App
                 Tracker.Load(Rom);
             }
 
-            Tracker.StartTracking();
+            if (!Tracker.TryStartTracking())
+            {
+                ShowModuleWarning();
+            }
+
             Tracker.ConnectToChat(Options.GeneralOptions.TwitchUserName, Options.GeneralOptions.TwitchOAuthToken,
                 Options.GeneralOptions.TwitchChannel, Options.GeneralOptions.TwitchId);
             _startTime = DateTime.Now;
@@ -1092,7 +1096,17 @@ namespace Randomizer.App
                     return;
                 }
             }
-            Tracker.EnableVoiceRecognition();
+
+            try
+            {
+                Tracker.EnableVoiceRecognition();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Error enabling voice recognition");
+                ShowModuleWarning();
+            }
+            
             StatusBarConfidence.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Visible : Visibility.Collapsed;
             StatusBarVoiceDisabled.Visibility = Tracker.VoiceRecognitionEnabled ? Visibility.Collapsed : Visibility.Visible;
         }
@@ -1104,6 +1118,12 @@ namespace Randomizer.App
         {
             MessageBox.Show(this, "There is a problem with your microphone. Please check your sound settings to ensure you have a microphone enabled.\n\n" +
                 "Voice recognition has been disabled. You can attempt to re-enable it by double clicking on the Voice Disabled text.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void ShowModuleWarning()
+        {
+            MessageBox.Show(this, "There was a problem with loading one or more of the tracker modules.\n" +
+                    "Some tracking functionality may be limited.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void MapMenuItem_Click(object sender, RoutedEventArgs e)
