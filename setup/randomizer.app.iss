@@ -66,9 +66,11 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "netcorecheck.exe"; Flags: dontcopy noencryption
 Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
-Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\src\Randomizer.App\Sprites\*"; DestDir: "{app}\Sprites"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\win-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: IsWin64;
+Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: IsWin64;
+Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\win-x86\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not IsWin64";
+Source: "..\src\Randomizer.App\bin\Release\net5.0-windows\publish\win-x86\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: "not IsWin64";
 Source: "..\src\Randomizer.SMZ3.Tracking\tracker.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\locations.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
