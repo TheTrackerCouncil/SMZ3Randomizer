@@ -45,6 +45,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Ha ha. Moldorm strikes again. Content increased by one step.");
 
         /// <summary>
+        /// Gets the phrases to respond with when falling down the pit from moldorm in GT
+        /// </summary>
+        public SchrodingersString FallFromGTMoldorm { get; init; }
+            = new("Ha ha. Moldorm strikes again. Content increased by one step.");
+
+        /// <summary>
         /// Gets the phrases to respond with when falling down the pit from moldorm
         /// </summary>
         public SchrodingersString FallFromGanon { get; init; }

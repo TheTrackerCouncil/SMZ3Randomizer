@@ -24,7 +24,7 @@
             // Ganon's Tower
             else if (currentState.CurrentRoom == 166 && currentState.PreviousRoom == 77 && prevState.CurrentRoom == 77)
             {
-                tracker.SayOnce(x => x.AutoTracker.FallFromMoldorm);
+                tracker.SayOnce(x => x.AutoTracker.FallFromGTMoldorm);
                 return true;
             }
             return false;

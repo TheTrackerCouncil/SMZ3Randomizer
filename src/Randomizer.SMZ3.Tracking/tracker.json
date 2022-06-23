@@ -2286,6 +2286,12 @@
         "You're back here again? I take it things didn't go so well.",
         "That was embarrassing, I am so sorry"
       ],
+      "FallFromGTMoldorm": [
+        "Ha ha. Moldorm strikes again. Content increased by one step.",
+        "I'd say this seed was successfully validated.",
+        "That was embarrassing, I am so sorry",
+        "I hope you weren't trying to do some tech"
+      ],
       "FallFromGanon": [
         "Oops. Don't worry, I'm sure no one saw you fall from Ganon's Room.",
         "Goodbye Ganon. We'll meet again soon."

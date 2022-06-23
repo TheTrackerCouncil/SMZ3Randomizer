@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Randomizer.Shared;
+using static Randomizer.SMZ3.Tracking.SchrodingersString;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -23,8 +24,9 @@ namespace Randomizer.SMZ3.Tracking
             RewardItem.RedCrystal => new SchrodingersString("Red crystal"),
             RewardItem.GreenPendant => new SchrodingersString("Green pendant", "Pendant of Courage"),
             RewardItem.RedPendant => new SchrodingersString("Red pendant", "Pendant of Wisdom"),
-            RewardItem.BluePendant => new SchrodingersString("Blue pendant", "Pendant of Courage"),
+            RewardItem.BluePendant => new SchrodingersString("Blue pendant", "Pendant of Power"),
             RewardItem.Agahnim => new SchrodingersString("Agahnim"),
+            RewardItem.NonGreenPendant => new SchrodingersString("Red or blue pendant", "Non green pendant", "Even worse pendant", "More useless pendant", "Pendant of pointlessness", "Time wasting pendant", "Pendant of power or wisdom or whatever", new Possibility("Pendant of power or wisdom or whatever. They changed the colors after this game and it's so hard to keep track.", 0.1)),
             _ => throw new System.NotImplementedException(),
         };
     }

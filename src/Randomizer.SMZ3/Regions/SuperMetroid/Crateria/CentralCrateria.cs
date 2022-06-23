@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Super Missile (Crateria)",
                 alsoKnownAs: "Old Tourian launchpad",
                 vanillaItem: ItemType.Super,
-                access: items => Logic.CanUsePowerBombs(items) && Logic.HasEnergyReserves(items, 2) && items.SpeedBooster,
+                access: items => Logic.CanUsePowerBombs(items) && Logic.HasEnergyReserves(items, 2) && items.SpeedBooster && (!World.Config.LogicConfig.LaunchPadRequiresIceBeam || items.Ice),
                 memoryAddress: 0x1,
                 memoryFlag: 0x8);
             BombTorizo = new(this, 7, 0x8F8404, LocationType.Chozo,

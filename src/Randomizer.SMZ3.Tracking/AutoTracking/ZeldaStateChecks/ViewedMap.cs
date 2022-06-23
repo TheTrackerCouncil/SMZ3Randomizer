@@ -134,7 +134,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 case Reward.PendantGreen:
                     return RewardItem.GreenPendant;
                 case Reward.PendantNonGreen:
-                    return RewardItem.RedPendant;
+                    return RewardItem.NonGreenPendant;
                 default:
                     return RewardItem.Unknown;
             }

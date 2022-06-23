@@ -167,6 +167,21 @@
                 </Grid>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Tracker voice frequency:"
+                                       ToolTip="Determines how much tracker will say in response to events.">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <ComboBox ItemsSource="{Binding TrackerVoiceFrequencyOptions}"
+                            SelectedIndex="{Binding VoiceFrequency}"
+                            Height="23"
+                            VerticalAlignment="Top">
+                  </ComboBox>
+                </Grid>
+              </controls:LabeledControl>
+
               <controls:LabeledControl Text="Auto Tracker Scripts folder:">
                 <controls:FileSystemInput Path="{Binding AutotrackerScriptsOutputPath, Mode=TwoWay}"
                                           IsFolderPicker="True"

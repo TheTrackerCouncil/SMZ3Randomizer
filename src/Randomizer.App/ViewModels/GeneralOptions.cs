@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media;
 
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 
@@ -53,6 +53,20 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Converts the enum descriptions into a string array for displaying in a dropdown
+        /// </summary>
+        public static IEnumerable<string> TrackerVoiceFrequencyOptions
+        {
+            get
+            {
+                var attributes = typeof(TrackerVoiceFrequency).GetMembers()
+                    .SelectMany(member => member.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
+                    .ToList();
+                return attributes.Select(x => x.Description);
+            }
+        }
+
         public string Z3RomPath { get; set; }
 
         public string SMRomPath { get; set; }
@@ -77,6 +91,8 @@ namespace Randomizer.App.ViewModels
         public bool TrackerShadows { get; set; } = true;
 
         public int LaunchButton { get; set; } = (int)LaunchButtonOptions.PlayAndTrack;
+
+        public int VoiceFrequency { get; set; } = (int)TrackerVoiceFrequency.All;
 
         public bool TrackerHintsEnabled { get; set; }
 
@@ -165,7 +181,8 @@ namespace Randomizer.App.ViewModels
             ChatGreetingEnabled = EnableChatGreeting,
             ChatGreetingTimeLimit = ChatGreetingTimeLimit,
             PollCreationEnabled = EnablePollCreation,
-            AutoTrackerChangeMap = AutoTrackerChangeMap
+            AutoTrackerChangeMap = AutoTrackerChangeMap,
+            VoiceFrequency = (TrackerVoiceFrequency)VoiceFrequency
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
