@@ -49,6 +49,12 @@ namespace Randomizer.Shared
         /// </summary>
         [Description("Agahnim")]
         Agahnim = 6,
+
+        /// <summary>
+        /// Specifies the reward is the either the red or blue pendant.
+        /// </summary>
+        [Description("Non green pendant")]
+        NonGreenPendant = 7,
     }
 
 }

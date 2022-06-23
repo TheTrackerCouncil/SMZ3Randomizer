@@ -271,5 +271,30 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeTrue();
             tempWorld.InnerMaridia.LeftSandPit.Right.IsAvailable(progression).Should().BeTrue();
         }
+
+        [Fact]
+        public void TestLaunchPadRequiresIceBeam()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.LaunchPadRequiresIceBeam = false;
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb});
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeTrue();
+
+            config.LogicConfig.LaunchPadRequiresIceBeam = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Ice });
+            tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeFalse();
+
+            progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Ice });
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeTrue();
+        }
     }
 }

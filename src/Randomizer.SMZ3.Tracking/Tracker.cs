@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Regions;
@@ -1023,6 +1024,11 @@ namespace Randomizer.SMZ3.Tracking
             if (text == null)
                 return false;
 
+            if (Options.VoiceFrequency == TrackerVoiceFrequency.Disabled)
+            {
+                return false;
+            }
+
             var formattedText = FormatPlaceholders(text);
             var prompt = ParseText(formattedText);
             if (wait)
@@ -1074,6 +1080,11 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void Repeat()
         {
+            if (Options.VoiceFrequency == TrackerVoiceFrequency.Disabled)
+            {
+                return;
+            }
+
             if (_lastSpokenText == null)
             {
                 Say("I haven't said anything yet.");

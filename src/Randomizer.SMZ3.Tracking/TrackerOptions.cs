@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -82,5 +83,10 @@ namespace Randomizer.SMZ3.Tracking
         /// If auto tracker should change maps when changing locations
         /// </summary>
         public bool AutoTrackerChangeMap { get; set; }
+
+        /// <summary>
+        /// The frequency in which tracker will say things
+        /// </summary>
+        public TrackerVoiceFrequency VoiceFrequency { get; set; }
     }
 }
