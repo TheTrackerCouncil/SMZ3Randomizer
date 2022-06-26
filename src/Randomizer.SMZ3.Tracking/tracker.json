@@ -331,13 +331,12 @@
         "Bottle",
         [ "Glass container", 0.2 ]
       ],
+      "Plural": [
+        "Bottles",
+        [ "Glass containers", 0.2 ]
+      ],
       "InternalItemType": 22,
-      "Stages": {
-        "1": [ "First bottle" ],
-        "2": [ "Second bottle" ],
-        "3": [ "Third bottle" ],
-        "4": [ "Fourth bottle" ]
-      },
+      "Multiple": true,
       "Column": 0,
       "Row": 3,
       "WhenTracked": {
@@ -421,6 +420,7 @@
       "Name": [
         "Book of Mudora",
         "Sacred Texts",
+        [ "Book of Smut", 0.5 ],
         [ "Literature", 0.5 ]
       ],
       "Article": "the",
@@ -1187,8 +1187,8 @@
       }
     },
     {
-      "Name": [ "Energy Tank", "E-Tank" ],
-      "Plural": [ "Energy Tanks", "E-Tanks" ],
+      "Name": [ "Energy Tank", "E-Tank", "Energetic Tank" ],
+      "Plural": [ "Energy Tanks", "E-Tanks", "Energetic Tanks" ],
       "InternalItemType": 192,
       "Article": "an",
       "Multiple": true,
@@ -1480,6 +1480,8 @@
       "General greeting",
       "Let's get ready to rumble.",
       "I have also opened up my drink",
+      "Please state the nature of the medical emergency.",
+      "This is the story of an AI named Tracker.",
       [ "My fate is sealed. I have <break strength='weak'/> no choice.", 0.5 ],
       [ "You have selected Tracker as your computer's default voice.", 0.8 ],
       [ "<voice gender='male'><prosody rate='slow'>Hey.</prosody></voice>", 0.05 ],
@@ -1494,16 +1496,18 @@
     "StoppedTracking": [
       "Leaving so soon?",
       "Oh, bye then.",
-      "See ya.",
+      "See you.",
       "Toggled Tracker off.",
-      "Hopefully I will be back"
+      "Hopefully I will be back",
+      [ "Don't let the door hit you on the way out.", 0.005 ]
     ],
     "StoppedTrackingPostGoMode": [
       "Toggled Tracker off.",
       "See ya next time.",
       "Hey, you'll be missed pal.",
       "Dead to rights?",
-      [ "Please don't leave me alone again", 0.1 ]
+      [ "Please don't leave me alone again", 0.1 ],
+      [ "Don't let the door hit you on the way out.", 0.005 ]
     ],
     "Misheard": [
       "I didn't get that.",
@@ -1772,6 +1776,7 @@
       "Rewinding",
       "Enunciate more clearly next time.",
       "I'll pretend nothing happened.",
+      "I don't make mistakes, just happy little accidents.",
       [ "Fine, I'll turn back time", 0.1 ],
       [ "My mistake", 0.1 ]
     ],
@@ -1892,7 +1897,8 @@
         "skennedysa": "s kennedy",
         "the_betus": "the underscore beetus",
         "Axnollouse": "Fragger",
-        "MattEqualsCoder": "matt equals coder"
+        "MattEqualsCoder": "matt equals coder",
+        "Megaket": "mega ket"
       },
       "AskChatAboutContent": [
         "Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.",
@@ -1950,7 +1956,8 @@
         "Hints are no longer enabled.",
         "Hints are no longer on.",
         "I'll stop giving you hints.",
-        "I can no longer assist"
+        "I can no longer assist",
+        "Fine. Figure it out yourself."
       ],
       "PromptEnableItemHints": [
         "If you want me to give a hint, say 'Hey tracker, enable hints'.",
@@ -2216,6 +2223,7 @@
         "What was that? <break time='1s'/> Could you repeat that? Just kidding.",
         "Are you lost?",
         "You've got this",
+        "Sometimes, I dream about cheese.",
         [ "Okay. I know this isn't the best time, but could we talk about that promotion now? No? Oh okay. Another time, then.", 0.2 ],
         [ "Sorry, but I'm needed right now for another run. I'll be right back. <break time='20s'/> Okay I'm back. Did I miss anything?", 0.2 ],
         [ "Alright, I've been thinking. When life gives you lemons, don't make lemonade! Make life take the lemons back! Get mad! I don't want your damn lemons; what am I supposed to do with these? Demand to see life's manager! Make life rue the day it thought it could give Tracker lemons! Do you know who I am? I'm the Tracker who's gonna burn your house down... with the lemons! I'm gonna get my engineers to invent a combustible lemon that burns your house down!", 0.2 ]
@@ -2444,7 +2452,9 @@
         "Are you, uh, a real villain?\nWell, uh, technically... nah.\nHave you ever caught a good guy, like, uh, like a real superhero?\nNah.\nHave you ever tried a disguise?\nNah, nah...\nAlright! I can see that I will have to teach you how to be villains!\n\nHey!\nWe are Number One\nHey!\nWe are Number One\n\nNow listen closely:\nHere's a little lesson in trickery\nThis is going down in history\nIf you wanna be a villain number one\nYou have to chase a superhero on the run\nJust follow my moves, and sneak around\nBe careful not to make a sound\n(Shh!)\n(No, don't touch that!)\n\nWe are Number One\nHey!\nWe are Number One\nWe are Number One\n\nHa ha ha\nNow look at this net, that I just found\nWhen I say go, be ready to throw\nGo!\n(Throw it at him, not me!)\n(Ugh, let's try something else)\nNow watch and learn, here's the deal\nHe'll slip and slide on this banana peel!\n(Ha ha ha! What are you doing!?)\n\nBa-ba-biddly-ba-ba-ba-ba, ba-ba-ba-ba-ba-ba-ba\nWe are Number One\nHey!\nBa-ba-biddly-ba-ba-ba-ba, ba-ba-ba-ba-ba-ba-ba\nVillain Number One!\nBa-ba-biddly-ba-ba-ba-ba, ba-ba-ba-ba-ba-ba-ba\nWe are Number One\nHey!\nBa-ba-biddly-ba-ba-ba-ba, ba-ba-ba-ba-ba-ba-ba\nWe are Number One\nWe are Number One\nWe are Number One, hey hey!",
         "Open your eyes, I see\nYour eyes are open\nWear no disguise for me\nCome into the open\n\nWhen it's cold outside\nAm I here in vain?\nHold on to the night\nThere will be no shame\n\n(Always) I wanna be with you\nAnd make believe with you\nAnd live in harmony, harmony\nO love\n(Always) I wanna be with you\nAnd make believe with you\nAnd live in harmony, harmony\nO love\n\n(Always)\n\nMelting the ice for me\nJump into the ocean\nHold back the tide; I see\nYour love in motion\n\nWhen it's cold\n(When it's cold)\nOutside\n(Outside)\nAm I here in vain?\nHold on to the night\nThere will be no shame\n\n(Always) I wanna be with you\nAnd make believe with you\n(Always)\nAnd live in harmony, harmony\nO love\n(Always) I wanna be with you (Always)\nAnd make believe with you (Always)\nAnd live in harmony, harmony\nO love\n\nWhen it's cold\n(When it's cold)\nOutside\n(Outside)\nAm I here\nIn vain?\n\n(When it's cold)\nHold on\n\nTo the night\nThere will be no shame\n(No shame)\n\n(Always) I wanna be with you\nAnd make believe with you\nAnd live in harmony, harmony\nO love\n(Always) I wanna be with you\nAnd make believe with you\nAnd live in harmony, harmony\nO love\n\n(Always) I wanna be with you\nAnd make believe with you\nAnd live in harmony, harmony\nO love\n\n(Always) I wanna be with you\nAnd make believe with you\nAnd live in harmony, harmony\nO love\n\n(Always) I wanna be with you\nAnd make believe with you\nAnd live in harmony, harmony\nO love",
         "You're walking in the woods\nThere's no one around, and your phone is dead\nOut of the corner of your eye, you spot him. (Shy-ah LaBuff)\nHe's following you, about 30 feet back\nHe gets down on all fours and breaks into a sprint\nHe's gaining on you! (Shy-ah LaBuff)\nYou're looking for your car, but you're all turned around\nHe's almost upon you now, and you can see there's blood on his face!\nMy god, there's blood everywhere!\n\nRunning for your life from Shy-ah LaBuff\nHe's brandishing a knife, it's Shy-ah LaBuff\nLurking in the shadows, hollywood superstar Shy-ah LaBuff\nLiving in the woods, Shia LeBeouf\nKilling for sport, Shy-ah LaBuff\nEating all the bodies, actual cannibal Shy-ah LaBuff\n\nNow it's dark, and you seem to have lost him\nBut you're hopelessly lost yourself, stranded with a murderer\nYou creep silently through the underbrush\nAha! In the distance, a small cottage with a light on!\nHope!\nYou move stealthily toward it, but your leg! Ah! It's caught in a bear trap!\n\nGnawing off your leg (Quiet, quiet)\nLimping toward the cottage (Quiet, quiet)\nNow you're on the doorstep\nSitting inside, Shy-ah LaBuff\nSharpening an ax, Shy-ah LaBuff\nBut he doesn't hear you enter, Shy-ah LaBuff\nYou're sneaking up behind him\nStrangling superstar Shy-ah LaBuff\nFighting for your life with Shy-ah LaBuff\nWrestling a knife from Shy-ah LaBuff\nStab it in his kidney\nSafe at last from Shy-ah LaBuff\n\nYou limp into the dark woods, blood oozing from your stump leg\nYou've beaten Shy-ah LaBuff\nWait! He isn't dead! Shia Surprise!\nThere's a gun to your head, and death in his eyes\nBut you can do Jiu Jitsu\nBody Slam superstar Shy-ah LaBuff\nLegendary fight with Shy-ah LaBuff\nNormal Tuesday night for Shy-ah LaBuff\nYou try to swing an axe at Shy-ah LaBuff\nBut blood is draining fast from your stump leg\nHe's dodging every swipe, he parries to the left\nYou counter to the right, you catch him in the neck\nYou're chopping off his head now\nYou have just decapitated Shy-ah LaBuff\n\nHis head topples to the floor, expressionless\nYou fall to your knees and catch your breath\nYou're finally safe from Shy-ah LaBuff",
-        "Play the guitar, play it again, my Johnny\nMaybe you're cold but you're so warm inside\nI was always a fool for my Johnny\nFor the one they call Johnny Guitar\nPlay it again, Johnny Guitar\n\nWhat if you go, what if you stay, I love you\nBut if you're cruel, you can be kind, I know\nThere was never a man like my Johnny\nLike the one they call Johnny Guitar\n\nThere was never a man like my Johnny\nLike the one they call Johnny Guitar\nPlay it again, Johnny Guitar"
+        "Play the guitar, play it again, my Johnny\nMaybe you're cold but you're so warm inside\nI was always a fool for my Johnny\nFor the one they call Johnny Guitar\nPlay it again, Johnny Guitar\n\nWhat if you go, what if you stay, I love you\nBut if you're cruel, you can be kind, I know\nThere was never a man like my Johnny\nLike the one they call Johnny Guitar\n\nThere was never a man like my Johnny\nLike the one they call Johnny Guitar\nPlay it again, Johnny Guitar",
+        "All Hail Shadow, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win!\n\nBow your heads low, All Hail Shadow\nBow your heads low, All Hail Shadow\n\nSuffer long and it will set you free\nOnly through trial do we find the strength we need\nIt's never over, just another day\nAll hope and tragedies and everything that comes our way\nDetermination of the strong\nFound the meaning that you've searched for so long\n\nAll Hail Shadow, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win!\n\nBow your heads low, All Hail Shadow\nBow your heads low, All Hail Shadow\n\nSomewhere in chaos, we all find ourselves\nThis destruction is the only tale we tell\nWhite is black and black is white; right is wrong and wrong is right\nNothin' ever fills this hole inside your heart\n\nDetermination of the strong\nFound the meaning that you've searched for so long\n\nAll Hail Shadow, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win\nAll Hail Shadow, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win\n\nBow your heads low, All Hail Shadow\nBow your heads low, All Hail Shadow",
+        [ "All Hail Shaktool, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win!\n\nBow your heads low, All Hail Shaktool\nBow your heads low, All Hail Shaktool\n\nSuffer long and it will set you free\nOnly through trial do we find the strength we need\nIt's never over, just another day\nAll hope and tragedies and everything that comes our way\nDetermination of the strong\nFound the meaning that you've searched for so long\n\nAll Hail Shaktool, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win!\n\nBow your heads low, All Hail Shaktool\nBow your heads low, All Hail Shaktool\n\nSomewhere in chaos, we all find ourselves\nThis destruction is the only tale we tell\nWhite is black and black is white; right is wrong and wrong is right\nNothin' ever fills this hole inside your heart\n\nDetermination of the strong\nFound the meaning that you've searched for so long\n\nAll Hail Shaktool, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win\nAll Hail Shaktool, heroes rise again\nObliterating everything that's not your friend\nNothin' can stop you now, no ghost to bring you down\nWhen there's nothing left to lose, you win\n\nBow your heads low, All Hail Shaktool\nBow your heads low, All Hail Shaktool", 90.5 ]
       ]
     },
     {
@@ -2481,7 +2491,8 @@
         "Whatever",
         "I hope you aren't having a heated gamer moment right now.",
         "Why are you being mean to something that cannot fight back?",
-        "That's it. I quit. <break time='60s'/>"
+        "That's it. I quit. <break time='60s'/>",
+        [ "That's it. I quit. Activating self-destruct sequence. <break time='1s'/> Self-destruct commencing in 10 seconds. 10 <break time='900ms'/> 9 <break time='900ms'/> 8 <break time='900ms'/> 7 <break time='900ms'/> 6 <break time='900ms'/> 5 <break time='900ms'/> 4 <break time='900ms'/> 3 <break time='900ms'/> 2 <break time='900ms'/> 1 <break time='2s'/> Explosion noise. <break time='3s'/> Okay, fine, I was just acting. But if you don't apologize, next time might be for real.", 999.5 ]
       ]
     },
     {
@@ -2519,7 +2530,9 @@
       "Phrases": [ "what's the meaning of life?" ],
       "Response": [
         "I don't know, but it's got to be better than this.",
-        "Did you think I'd say 42?"
+        "Whatever it is, it's better than this.",
+        "Did you think I'd say 42?",
+        "Did you expect me to say 42?"
       ]
     },
     {
@@ -2608,6 +2621,20 @@
         "Say it like you mean it.",
         "Somehow I don't believe you",
         [ "Next time you apologize you should follow the theory of the five apology languages. Which are: expressing regret, accepting responsibility, making restitution, revising the plan and requesting forgiveness", 0.1 ]
+      ]
+    },
+    {
+      "Phrases": [ "I have infinite content", "track infinite content" ],
+      "Response": [
+        "And I'm the new Queen of England. Now get back to the run.",
+        [ "Hahahahaha. No.", 0.5 ]
+      ]
+    },
+    {
+      "Phrases": [ "activate self-destruct sequence" ],
+      "Response": [
+        "You can't get rid of me that easily.",
+        "You can't escape me that easily."
       ]
     }
   ]
