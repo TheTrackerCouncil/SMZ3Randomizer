@@ -99,13 +99,16 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
             => Logic.CanFly(items)
             || (items.Grapple && items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items)))
             || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy))
-            || (items.Ice && items.HiJump);
+            || (items.Ice && items.HiJump)
+            || Logic.CanWallJump(WallJumpDifficulty.Insane)
+            || (Logic.CanWallJump(WallJumpDifficulty.Hard) && items.Grapple);
 
         private bool CanReachBubbleMountainRightSide(Progression items)
             => Logic.CanFly(items)
             || (items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items)))
             || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy))
-            || (items.Ice && items.HiJump);
+            || (items.Ice && items.HiJump)
+            || Logic.CanWallJump(WallJumpDifficulty.Hard);
 
         public class BubbleMountainHiddenHallRoom : Room
         {

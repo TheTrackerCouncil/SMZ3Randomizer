@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Energy Tank, Crocomire",
                 alsoKnownAs: "Crocomire's Pit",
                 vanillaItem: ItemType.ETank,
-                access: items => CanAccessCrocomire(items) && (Logic.HasEnergyReserves(items, 1) || items.SpaceJump || items.Grapple),
+                access: items => CanAccessCrocomire(items) && ((Logic.HasEnergyReserves(items, 1) && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.Grapple),
                 memoryAddress: 0x6,
                 memoryFlag: 0x10);
             CrocomireEscape = new(this, 54, 0x8F8BC0, LocationType.Visible,
@@ -31,21 +31,33 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Missile (below Crocomire)",
                 alsoKnownAs: new[] { "Cosine Room", "Post Crocomire Missile Room" },
                 vanillaItem: ItemType.Missile,
-                access: items => CanAccessCrocomire(items) && items.Morph,
+                access: items =>
+                    // Can access item
+                    CanAccessCrocomire(items) && items.Morph &&
+                    // Can return
+                    (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.SpeedBooster && Logic.CanUsePowerBombs(items) && items.HiJump && items.Grapple)),
                 memoryAddress: 0x7,
                 memoryFlag: 0x4);
             IndianaJonesRoom = new(this, 59, 0x8F8C2A, LocationType.Visible,
                 name: "Missile (Grappling Beam)",
                 alsoKnownAs: new[] { "Indiana Jones Room", "Pantry", "Post Crocomire Jump Room" },
                 vanillaItem: ItemType.Missile,
-                access: items => CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))),
+                access: items =>
+                    // Can access item
+                    CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))) &&
+                    // Can return
+                    (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.HiJump && items.Grapple)),
                 memoryAddress: 0x7,
                 memoryFlag: 0x8);
             GrappleBeamRoom = new(this, 60, 0x8F8C36, LocationType.Chozo,
                 name: "Grappling Beam",
                 alsoKnownAs: "Grapple Beam Room",
                 vanillaItem: ItemType.Grapple,
-                access: items => CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))),
+                access: items =>
+                    // Can access item
+                    CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))) &&
+                    // Can return
+                    (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.HiJump && items.Grapple)),
                 memoryAddress: 0x7,
                 memoryFlag: 0x10);
             MemoryRegionId = 2;
@@ -90,7 +102,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         private bool CanAccessCrocomire(Progression items)
         {
-            return Config.Keysanity ? items.CardNorfairBoss : items.Super;
+            return (Config.Keysanity ? items.CardNorfairBoss : items.Super) && (items.HiJump || items.SpeedBooster || Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Easy));
         }
     }
 }

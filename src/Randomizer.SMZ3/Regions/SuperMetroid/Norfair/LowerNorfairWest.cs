@@ -32,7 +32,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Missile (Mickey Mouse room)",
                 alsoKnownAs: "Mickey Mouse Clubhouse",
                 vanillaItem: ItemType.Missile,
-                access: items => Logic.CanFly(items) && items.Morph && items.Super &&
+                access: items => items.Morph && items.Super && (
+                            Logic.CanWallJump(WallJumpDifficulty.Insane) ||
+                            (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Hard)) ||
+                            Logic.CanFly(items)
+                        ) && 
                         /*Exit to Upper Norfair*/
                         (((items.CardLowerNorfairL1 || items.Gravity /*Vanilla or Reverse Lava Dive*/) && items.CardNorfairL2) /*Bubble Mountain*/ ||
                         (items.Gravity && items.Wave /* Volcano Room and Blue Gate */ && (items.Grapple || items.SpaceJump)) /*Spikey Acid Snakes and Croc Escape*/ ||
@@ -59,7 +63,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         public override bool CanEnter(Progression items)
         {
             return items.Varia && (
-                        World.UpperNorfairEast.CanEnter(items) && Logic.CanUsePowerBombs(items) && items.SpaceJump && items.Gravity && (
+                        World.UpperNorfairEast.CanEnter(items) && Logic.CanUsePowerBombs(items) && Logic.CanFly(items) && items.Gravity && (
                             /* Trivial case, Bubble Mountain access */
                             items.CardNorfairL2 ||
                             /* Frog Speedway -> UN Farming Room gate */
