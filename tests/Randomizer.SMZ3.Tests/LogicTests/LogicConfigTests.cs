@@ -266,7 +266,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LeftSandPitRequiresSpringBallIfConfigured()
         {
             Config config = new Config();
-            config.LogicConfig.WallJumpDifficulty = WallJumpDifficulty.None;
+            config.LogicConfig.WallJumpDifficulty = WallJumpDifficulty.Medium;
             config.LogicConfig.LeftSandPitRequiresSpringBall = true;
 
             var tempWorld = new World(config, "", 0, "");

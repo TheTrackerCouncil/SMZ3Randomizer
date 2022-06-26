@@ -51,11 +51,13 @@ namespace Randomizer.Shared
         [DisplayName("Wall Jump Difficulty")]
         [Description("The maximum difficulty of wall jumps you're comfortable with.")]
         [Category("Tricks")]
+        [DefaultValue(WallJumpDifficulty.Medium)]
         public WallJumpDifficulty WallJumpDifficulty { get; set; }
+            = WallJumpDifficulty.Medium; // Not very cas’, but this seems to be closest to previous assumptions
 
         public LogicConfig Clone()
         {
             return (LogicConfig)MemberwiseClone();
         }
-    }
+    } 
 }
