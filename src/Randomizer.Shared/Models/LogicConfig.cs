@@ -14,13 +14,19 @@ namespace Randomizer.Shared
         [Category("Logic")]
         public bool PreventFivePowerBombSeed { get; set; }
 
-        [DisplayName("Left Sand Pit Needs Spring Ball"), Description("You're expected to have the spring ball and hi jump boots to navigate the left sand pit in Maridia."), Category("Logic")]
+        [DisplayName("Left Sand Pit Needs Spring Ball")]
+        [Description("You're expected to have the spring ball and hi jump boots to navigate the left sand pit in Maridia.")]
+        [Category("Logic")]
         public bool LeftSandPitRequiresSpringBall { get; set; }
 
-        [DisplayName("Launchpad Needs Ice Beam"), Description("You're expected to have the ice beam to freeze the boyons to run over to get speed for a shine spark in the old Tourian launchpad in central Crateria"), Category("Logic")]
+        [DisplayName("Launchpad Needs Ice Beam")]
+        [Description("You're expected to have the ice beam to freeze the boyons to run over to get speed for a shine spark in the old Tourian launchpad in central Crateria")]
+        [Category("Logic")]
         public bool LaunchPadRequiresIceBeam { get; set; }
 
-        [DisplayName("Fire Rod for Dark Rooms"), Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness"), Category("Tricks")]
+        [DisplayName("Fire Rod for Dark Rooms")]
+        [Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness")]
+        [Category("Tricks")]
         public bool FireRodDarkRooms { get; set; }
 
         [DisplayName("Infinite Bomb Jump")]
