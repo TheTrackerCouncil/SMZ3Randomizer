@@ -59,5 +59,5 @@ namespace Randomizer.Shared
         {
             return (LogicConfig)MemberwiseClone();
         }
-    } 
+    }
 }
