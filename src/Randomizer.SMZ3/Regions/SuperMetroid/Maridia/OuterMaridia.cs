@@ -28,18 +28,20 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Energy Tank, Mama turtle",
                 alsoKnownAs: "Mama Turtle Room",
                 vanillaItem: ItemType.ETank,
-                access: items => Logic.CanOpenRedDoors(items)
-                              && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump) // Reaching the room
-                              && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple), // Reaching the item
+                access: items => CanReachTurtleRoom(items)
+                              && (Logic.CanFly(items)
+                                  || items.SpeedBooster
+                                  || items.Grapple), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x4);
             MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
                 name: "Missile (green Maridia tatori)",
                 alsoKnownAs: "Mama Turtle Room - Wall item",
                 vanillaItem: ItemType.Missile,
-                access: items => Logic.CanOpenRedDoors(items)
-                              && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump) // Reaching the room
-                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.SpeedBooster || (items.Grapple && items.HiJump)), // Reaching the item
+                access: items => CanReachTurtleRoom(items)
+                              && (Logic.CanWallJump(WallJumpDifficulty.Easy)
+                                  || items.SpeedBooster
+                                  || (items.Grapple && items.HiJump)), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x8);
             MemoryRegionId = 4;
@@ -59,12 +61,18 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public override bool CanEnter(Progression items)
         {
-            return items.Gravity && (
-                        (World.UpperNorfairWest.CanEnter(items) && Logic.CanUsePowerBombs(items)) ||
-                        (Logic.CanAccessMaridiaPortal(items) && items.CardMaridiaL1 && items.CardMaridiaL2 && (Logic.CanPassBombPassages(items) || items.ScrewAttack))
-                    );
+            return items.Gravity
+                && ((World.UpperNorfairWest.CanEnter(items) && Logic.CanUsePowerBombs(items))
+                    || (Logic.CanAccessMaridiaPortal(items)
+                    && items.CardMaridiaL1
+                    && items.CardMaridiaL2
+                    && (Logic.CanPassBombPassages(items) || items.ScrewAttack)));
         }
 
+        public bool CanReachTurtleRoom(Progression items) => Logic.CanOpenRedDoors(items)
+            && (Logic.CanWallJump(WallJumpDifficulty.Medium)
+                || (Logic.CanWallJump(WallJumpDifficulty.Easy) && (items.Plasma || items.ScrewAttack))
+                || items.HiJump);
     }
 
 }

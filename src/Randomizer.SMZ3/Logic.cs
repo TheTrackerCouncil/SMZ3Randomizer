@@ -145,7 +145,9 @@ namespace Randomizer.SMZ3
 
         public bool CanNavigateMaridiaLeftSandPit(Progression items)
         {
-            return !World.Config.LogicConfig.LeftSandPitRequiresSpringBall || (items.SpringBall && items.HiJump);
+            return (World.Config.LogicConfig.LeftSandPitRequiresSpringBall && items.SpringBall && items.HiJump)
+                || CanWallJump(WallJumpDifficulty.Medium)
+                || (CanWallJump(WallJumpDifficulty.Easy) && items.SpringBall);
         }
 
         public bool CanWallJump(WallJumpDifficulty difficulty)

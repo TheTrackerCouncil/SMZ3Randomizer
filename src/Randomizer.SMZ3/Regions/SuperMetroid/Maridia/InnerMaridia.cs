@@ -16,8 +16,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
             PlasmaBeamRoom = new(this, 143, 0x8FC559, LocationType.Chozo,
                 name: "Plasma Beam",
                 access: items => CanDefeatDraygon(items)
-                                       && (items.ScrewAttack || items.Plasma)
-                                       && ((items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium)) || Logic.CanFly(items)),
+                              && (items.ScrewAttack || items.Plasma)
+                              && ((items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium)) || Logic.CanFly(items)),
                 memoryAddress: 0x11,
                 memoryFlag: 0x80);
             RightSandPitLeft = new(this, 146, 0x8FC5EB, LocationType.Visible,
@@ -53,7 +53,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 alsoKnownAs: "Shaktool's item",
                 vanillaItem: ItemType.SpringBall,
                 access: items => items.Super && items.Grapple && Logic.CanUsePowerBombs(items)
-                              && (items.SpaceJump || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium))),
+                              && (items.SpaceJump || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium)))
+                              && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.SpringBall || items.SpaceJump), // Leaving again
                 memoryAddress: 0x12,
                 memoryFlag: 0x40);
             PreDraygonRoom = new(this, 151, 0x8FC74D, LocationType.Hidden,
@@ -179,7 +180,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     name: "Left",
                     alsoKnownAs: new[] { "Missile (left Maridia sand pit room)" },
                     vanillaItem: ItemType.Missile,
-                    access: items => CanEnter(items) && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanNavigateMaridiaLeftSandPit(items)), //! Double check the logic here
+                    access: items => CanEnter(items) && Logic.CanNavigateMaridiaLeftSandPit(items),
                     memoryAddress: 0x12,
                     memoryFlag: 0x1);
 
@@ -187,7 +188,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     name: "Right",
                     alsoKnownAs: new[] { "Reserve Tank, Maridia" },
                     vanillaItem: ItemType.ReserveTank,
-                    access: items => CanEnter(items) && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanNavigateMaridiaLeftSandPit(items)), //! Double check the logic here
+                    access: items => CanEnter(items) && Logic.CanNavigateMaridiaLeftSandPit(items),
                     memoryAddress: 0x12,
                     memoryFlag: 0x2);
             }
