@@ -245,23 +245,35 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         }
 
         [Fact]
-        public void TestLeftSandPitRequiresSpringBall()
+        public void LeftSandPitRequiresWallJumpsWithoutSpringBallOption()
         {
             Config config = new Config();
-
+            config.LogicConfig.WallJumpDifficulty = WallJumpDifficulty.Medium;
             config.LogicConfig.LeftSandPitRequiresSpringBall = false;
+
             var tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new [] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump });
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.LeftSandPit.Left, progression);
-            missingItems.Should().BeEmpty();
             tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeTrue();
             tempWorld.InnerMaridia.LeftSandPit.Right.IsAvailable(progression).Should().BeTrue();
 
+            config.LogicConfig.WallJumpDifficulty = WallJumpDifficulty.None;
+            tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeFalse();
+            tempWorld.InnerMaridia.LeftSandPit.Right.IsAvailable(progression).Should().BeFalse();
+
+        }
+
+        [Fact]
+        public void LeftSandPitRequiresSpringBallIfConfigured()
+        {
+            Config config = new Config();
+            config.LogicConfig.WallJumpDifficulty = WallJumpDifficulty.None;
             config.LogicConfig.LeftSandPitRequiresSpringBall = true;
-            tempWorld = new World(config, "", 0, "");
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.LeftSandPit.Left, progression);
+
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump });
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.LeftSandPit.Left, progression);
             missingItems.Should().HaveCount(2)
-                .And.ContainEquivalentOf(new[] { ItemType.SpringBall , ItemType.HiJump });
+                .And.ContainEquivalentOf(new[] { ItemType.SpringBall, ItemType.HiJump });
             tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeFalse();
             tempWorld.InnerMaridia.LeftSandPit.Right.IsAvailable(progression).Should().BeFalse();
 
