@@ -1854,33 +1854,6 @@ namespace Randomizer.SMZ3.Tracking
 
             dungeon.Cleared = true;
             Say(Responses.DungeonBossCleared.Format(dungeon.Name, dungeon.Boss));
-
-            // Try to track the associated boss reward item
-            Action? undoTrack = null;
-            if (dungeon.LocationId != null)
-            {
-                var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
-                if (!rewardLocation.Cleared)
-                {
-                    if (rewardLocation.Item != null && SpoilersEnabled)
-                    {
-                        var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
-                        if (item != null)
-                        {
-                            TrackItem(item, rewardLocation);
-                            undoTrack = _undoHistory.Pop();
-                        }
-                    }
-
-                    if (undoTrack == null)
-                    {
-                        // Couldn't track an item, so just clear the location
-                        Clear(rewardLocation);
-                        undoTrack = _undoHistory.Pop();
-                    }
-                }
-            }
-
             IsDirty = true;
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
@@ -1888,7 +1861,6 @@ namespace Randomizer.SMZ3.Tracking
             {
                 UpdateTrackerProgression = true;
                 dungeon.Cleared = false;
-                undoTrack?.Invoke();
             });
         }
 
