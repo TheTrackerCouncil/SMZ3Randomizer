@@ -56,7 +56,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
             BigKeyChest = new Location(this, 256 + 150, 0x1E99E, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeySW,
-                memoryAddress: 0x39,
+                memoryAddress: 0x57,
                 memoryFlag: 0x4);
 
             BridgeRoom = new Location(this, 256 + 151, 0x1E9FE, LocationType.Regular,

@@ -450,6 +450,7 @@ namespace Randomizer.App
                         turtleRock.Requirement = Medallion.None;
                     if (miseryMire.Requirement == medallion)
                         miseryMire.Requirement = Medallion.None;
+                    _locationSyncer.OnLocationUpdated("");
                     RefreshGridItems();
                 };
 
@@ -463,6 +464,7 @@ namespace Randomizer.App
                     turtleRock.Requirement = medallion;
                     if (miseryMire.Requirement == medallion)
                         miseryMire.Requirement = Medallion.None;
+                    _locationSyncer.OnLocationUpdated("");
                     RefreshGridItems();
                 };
 
@@ -476,6 +478,7 @@ namespace Randomizer.App
                     if (turtleRock.Requirement == medallion)
                         turtleRock.Requirement = Medallion.None;
                     miseryMire.Requirement = medallion;
+                    _locationSyncer.OnLocationUpdated("");
                     RefreshGridItems();
                 };
 
@@ -488,6 +491,7 @@ namespace Randomizer.App
                 {
                     turtleRock.Requirement = medallion;
                     miseryMire.Requirement = medallion;
+                    _locationSyncer.OnLocationUpdated("");
                     RefreshGridItems();
                 };
 
@@ -670,6 +674,8 @@ namespace Randomizer.App
                 var config = SMZ3.Tracking.TrackerState.LoadConfig(Rom);
                 Options = Options.Clone();
                 Options.LogicConfig = config.LogicConfig;
+                Options.SeedOptions.Race = config.Race;
+                Options.SeedOptions.Keysanity = config.Keysanity;
                 if (Rom.GeneratorVersion == 0) Options.LogicConfig.FireRodDarkRooms = true;
                 _romGenerator.GenerateSeed(Options, Rom.Seed);
             }
