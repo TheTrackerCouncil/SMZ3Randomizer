@@ -1750,7 +1750,7 @@ namespace Randomizer.SMZ3.Tracking
                 var anyMissedLocation = inaccessibleLocations.Random(s_random);
                 var locationInfo = WorldInfo.Location(anyMissedLocation);
                 var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress);
-                if (missingItemCombinations.Any())
+                if (missingItemCombinations.Any() && (HintsEnabled || SpoilersEnabled))
                 {
                     var missingItems = missingItemCombinations.Random(s_random)
                             .Select(FindItemByType)
