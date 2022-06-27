@@ -38,28 +38,29 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public SpoilerModule(Tracker tracker, ILogger<SpoilerModule> logger)
             : base(tracker, logger)
         {
-            HintsEnabled = tracker.Options.HintsEnabled;
-            SpoilersEnabled = tracker.Options.SpoilersEnabled;
+            Tracker.HintsEnabled = !tracker.World.Config.Race && tracker.Options.HintsEnabled;
+            Tracker.SpoilersEnabled = !tracker.World.Config.Race && tracker.Options.SpoilersEnabled;
+            if (tracker.World.Config.Race) return;
             _playthrough = Playthrough.Generate(new[] { tracker.World }, tracker.World.Config);
 
             AddCommand("Enable hints", GetEnableHintsRule(), (tracker, result) =>
             {
-                HintsEnabled = true;
+                Tracker.HintsEnabled = true;
                 tracker.Say(x => x.Hints.EnabledHints);
             });
             AddCommand("Disable hints", GetDisableHintsRule(), (tracker, result) =>
             {
-                HintsEnabled = false;
+                Tracker.HintsEnabled = false;
                 tracker.Say(x => x.Hints.DisabledHints);
             });
             AddCommand("Enable spoilers", GetEnableSpoilersRule(), (tracker, result) =>
             {
-                SpoilersEnabled = true;
+                Tracker.SpoilersEnabled = true;
                 tracker.Say(x => x.Spoilers.EnabledSpoilers);
             });
             AddCommand("Disable spoilers", GetDisableSpoilersRule(), (tracker, result) =>
             {
-                SpoilersEnabled = false;
+                Tracker.SpoilersEnabled = false;
                 tracker.Say(x => x.Spoilers.DisabledSpoilers);
             });
 
@@ -87,24 +88,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             });
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether Tracker may give hints when
-        /// asked about items or locations.
-        /// </summary>
-        public bool HintsEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Tracker may give spoilers
-        /// when asked about items or locations.
-        /// </summary>
-        public bool SpoilersEnabled { get; set; }
+        
 
         /// <summary>
         /// Gives a hint about where to go next.
         /// </summary>
         public void GiveProgressionHint()
         {
-            if (!HintsEnabled && !SpoilersEnabled)
+            if (!Tracker.HintsEnabled && !Tracker.SpoilersEnabled)
             {
                 Tracker.Say(x => x.Hints.PromptEnableItemHints);
                 return;
@@ -132,7 +123,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="area">The area to give hints about.</param>
         public void GiveAreaHint(IHasLocations area)
         {
-            if (!HintsEnabled && !SpoilersEnabled)
+            if (!Tracker.HintsEnabled && !Tracker.SpoilersEnabled)
             {
                 Tracker.Say(x => x.Hints.PromptEnableItemHints);
                 return;
@@ -150,12 +141,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var items = locations
                 .Select(x => Tracker.FindItemByType(x.Item.Type))
                 .NonNull();
-            if (SpoilersEnabled)
+            if (Tracker.SpoilersEnabled)
             {
                 var itemNames = NaturalLanguage.Join(items, Tracker.World.Config);
                 Tracker.Say(x => x.Spoilers.ItemsInArea, area.GetName(), itemNames);
             }
-            else if (HintsEnabled)
+            else if (Tracker.HintsEnabled)
             {
                 if (items.Any(x => !x.IsJunk(Tracker.World.Config)))
                 {
@@ -234,18 +225,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             // Now that we're ready to give hints, make sure they're turned on
-            if (!HintsEnabled && !SpoilersEnabled)
+            if (!Tracker.HintsEnabled && !Tracker.SpoilersEnabled)
             {
                 Tracker.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
             // Give hints first (if enabled)
-            if (HintsEnabled && GiveItemLocationHint(item))
+            if (Tracker.HintsEnabled && GiveItemLocationHint(item))
                 return;
 
             // Fall back to spoilers if enabled, or prompt to turn them on if hints fail
-            if (SpoilersEnabled)
+            if (Tracker.SpoilersEnabled)
             {
                 if (GiveItemLocationSpoiler(item))
                     return;
@@ -270,7 +261,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationName = Tracker.WorldInfo.Location(location).Name;
             if (location.Cleared)
             {
-                if (HintsEnabled || SpoilersEnabled)
+                if (Tracker.HintsEnabled || Tracker.SpoilersEnabled)
                 {
                     var itemName = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
                         ?? location.Item?.Name
@@ -291,19 +282,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
-            if (HintsEnabled && GiveLocationHints(location))
+            if (Tracker.HintsEnabled && GiveLocationHints(location))
                 return;
 
-            if (SpoilersEnabled && GiveLocationSpoiler(location))
+            if (Tracker.SpoilersEnabled && GiveLocationSpoiler(location))
                 return;
 
-            if (!HintsEnabled)
+            if (!Tracker.HintsEnabled)
             {
                 Tracker.Say(x => x.Hints.PromptEnableLocationHints);
                 return;
             }
 
-            if (!SpoilersEnabled)
+            if (!Tracker.SpoilersEnabled)
             {
                 Tracker.Say(x => x.Spoilers.PromptEnableLocationSpoilers);
                 return;

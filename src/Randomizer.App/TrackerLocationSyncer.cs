@@ -6,8 +6,9 @@ using System.Linq;
 using System.Windows;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
 
@@ -177,9 +178,51 @@ namespace Randomizer.App
         public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
             return !location.Cleared
-                && (location.IsAvailable(Progression)
-                || (!requireKeys && location.IsAvailable(ProgressionWithKeys))
+                && ((location.IsAvailable(requireKeys ? Progression : ProgressionWithKeys) && SpecialLocationLogic(location))
                 || (allowOutOfLogic && ShowOutOfLogicLocations));
+        }
+
+        /// <summary>
+        /// Special logic for hiding particular locations from the tracker.
+        /// Needs to be done because of how rewards work with the SMZ3 logic and because
+        /// players can have medallions before seeing the dungeon
+        /// </summary>
+        /// <param name="location">The location to check</param>
+        /// <returns>True if the location should be shown. False otherwise</returns>
+        private bool SpecialLocationLogic(Location location)
+        {
+            // Don't show MM or TR unless we're sure we have the identified medallion
+            if (location.Region is MiseryMire or TurtleRock)
+            {
+                var dungeonInfo = _tracker.WorldInfo.Dungeons.First(x => x.GetRegion(_tracker.World) == location.Region);
+                return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
+                    (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
+                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake);
+            }
+            // Don't show Mimic/Mirror cave unless TR is accessible
+            else if (location == _tracker.World.LightWorldDeathMountainEast.MirrorCave)
+            {
+                var dungeonInfo = _tracker.WorldInfo.Dungeons.First(x => x.GetRegion(_tracker.World) == _tracker.World.TurtleRock);
+                return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
+                    (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
+                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake);
+            }
+            // Make sure all 3 pendants have been grabbed for Master Sword Pedestal 
+            else if (location == _tracker.World.LightWorldNorthWest.MasterSwordPedestal)
+            {
+                return _tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.GreenPendant or RewardItem.BluePendant or RewardItem.RedPendant or RewardItem.NonGreenPendant) >= 3;
+            }
+            // Make sure Aga is defeated for the lumberjack tree
+            else if (location == _tracker.World.LightWorldNorthWest.LumberjackTree)
+            {
+                return _tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.Agahnim);
+            }
+            // Make sure the red crystals are retrieved for pyramid fairy
+            else if (location.Room == _tracker.World.DarkWorldNorthEast.PyramidFairy)
+            {
+                return _tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.RedCrystal) >= 2;
+            }
+            else return true;
         }
 
         /// <summary>

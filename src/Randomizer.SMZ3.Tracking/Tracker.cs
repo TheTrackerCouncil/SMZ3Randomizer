@@ -298,6 +298,18 @@ namespace Randomizer.SMZ3.Tracking
         public AutoTracker? AutoTracker { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether Tracker may give hints when
+        /// asked about items or locations.
+        /// </summary>
+        public bool HintsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Tracker may give spoilers
+        /// when asked about items or locations.
+        /// </summary>
+        public bool SpoilersEnabled { get; set; }
+
+        /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
         /// text-to-speech engine.
         /// </summary>
@@ -633,10 +645,11 @@ namespace Randomizer.SMZ3.Tracking
             {
                 if (region is INeedsMedallion medallionRegion
                     && medallionRegion.Medallion != ItemType.Nothing
-                    && medallionRegion.Medallion != medallion.Value.ToItemType())
+                    && medallionRegion.Medallion != medallion.Value.ToItemType()
+                    && (HintsEnabled || SpoilersEnabled))
                 {
                     Say(Responses.DungeonRequirementMismatch?.Format(
-                        medallionRegion.Medallion.ToString(),
+                        HintsEnabled ? "a different medallion" : medallionRegion.Medallion.ToString(),
                         dungeon.Name,
                         medallion.Value.ToString()));
                 }
@@ -1849,7 +1862,7 @@ namespace Randomizer.SMZ3.Tracking
                 var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
                 if (!rewardLocation.Cleared)
                 {
-                    if (rewardLocation.Item != null)
+                    if (rewardLocation.Item != null && SpoilersEnabled)
                     {
                         var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
                         if (item != null)
@@ -2393,13 +2406,15 @@ namespace Randomizer.SMZ3.Tracking
         {
             // Give some sass if the user tracks or marks the wrong item at a
             // location
-            if (location.Item != null && !item.Is(location.Item.Type))
+            if (location.Item != null && !item.Is(location.Item.Type) && (HintsEnabled || SpoilersEnabled))
             {
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;
 
                 var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
                         ?? location.Item.Name;
+                if (HintsEnabled) actualItemName = "another item";
+
                 Say(Responses.LocationHasDifferentItem?.Format(item.NameWithArticle, actualItemName));
             }
             else
