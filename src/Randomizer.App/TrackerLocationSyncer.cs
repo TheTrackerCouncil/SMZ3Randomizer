@@ -207,6 +207,11 @@ namespace Randomizer.App
                     (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
                     (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake);
             }
+            // Don't show GT in logic unless all crystals are gathered
+            else if (location.Region is GanonsTower)
+            {
+                return _tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.Crystal or RewardItem.RedCrystal) >= 7;
+            }
             // Make sure all 3 pendants have been grabbed for Master Sword Pedestal 
             else if (location == _tracker.World.LightWorldNorthWest.MasterSwordPedestal)
             {
@@ -221,6 +226,11 @@ namespace Randomizer.App
             else if (location.Room == _tracker.World.DarkWorldNorthEast.PyramidFairy)
             {
                 return _tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.RedCrystal) >= 2;
+            }
+            // Make sure that the green pendant was grabbed for Sahasrahla
+            else if (location == _tracker.World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla)
+            {
+                return _tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.GreenPendant);
             }
             else return true;
         }
