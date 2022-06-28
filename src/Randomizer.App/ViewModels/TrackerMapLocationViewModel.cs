@@ -51,8 +51,8 @@ namespace Randomizer.App.ViewModels
 
             Locations.ForEach(x =>
             {
-                numClearable += Syncer.IsLocationClearable(x, allowOutOfLogic: false, requireKeys: Region.Name == "Hyrule Castle") ? 1 : 0;
-                numOutOfLogic += Syncer.IsLocationClearable(x, allowOutOfLogic: true) && !Syncer.IsLocationClearable(x, allowOutOfLogic: false) ? 1 : 0;
+                numClearable += Syncer.IsLocationClearable(x, allowOutOfLogic: false, requireKeys: Region.Name == "Hyrule Castle" || syncer.Tracker.World.Config.Keysanity) ? 1 : 0;
+                numOutOfLogic += Syncer.IsLocationClearable(x, allowOutOfLogic: true) && !Syncer.IsLocationClearable(x, allowOutOfLogic: false, requireKeys: Region.Name == "Hyrule Castle" || syncer.Tracker.World.Config.Keysanity) ? 1 : 0;
                 numUncleared += !x.Cleared ? 1 : 0;
                 numCleared += x.Cleared ? 1 : 0;
             });
@@ -199,7 +199,7 @@ namespace Randomizer.App.ViewModels
         /// Get the tag to use for the location. Use the region for dungeons
         ///  and the list of locations for all other places
         /// </summary>
-        public object Tag => Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x)).ToList();
+        public object Tag => Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x, true, Syncer.Tracker.World.Config.Keysanity)).ToList();
 
         /// <summary>
         /// LocationSyncer to use for keeping locations in sync between the

@@ -23,7 +23,6 @@ namespace Randomizer.App
     {
         private bool _isDesign;
         private Region _stickyRegion = null;
-        private Tracker _tracker = null;
         private readonly ILogger<TrackerLocationSyncer> _logger;
         private bool _showOutOfLogicLocations;
 
@@ -39,33 +38,33 @@ namespace Randomizer.App
         /// <param name="tracker">The tracker to keep things in sync with</param>
         public TrackerLocationSyncer(Tracker tracker, ILogger<TrackerLocationSyncer> logger)
         {
-            _tracker = tracker;
+            Tracker = tracker;
             _logger = logger;
 
             // Set all events from the tracker to point to the two in this class
-            _tracker.MarkedLocationsUpdated += (_, _) => MarkedLocationUpdated.Invoke(this, new(""));
-            _tracker.LocationCleared += (_, e) =>
+            Tracker.MarkedLocationsUpdated += (_, _) => MarkedLocationUpdated.Invoke(this, new(""));
+            Tracker.LocationCleared += (_, e) =>
             {
                 _stickyRegion = e.Location.Region;
                 TrackedLocationUpdated.Invoke(this, new(e.Location.Name));
                 MarkedLocationUpdated.Invoke(this, new(e.Location.Name));
             };
-            _tracker.DungeonUpdated += (_, _) =>
+            Tracker.DungeonUpdated += (_, _) =>
             {
                 TrackedLocationUpdated.Invoke(this, new(""));
                 MarkedLocationUpdated.Invoke(this, new(""));
             };
-            _tracker.ItemTracked += (_, _) =>
+            Tracker.ItemTracked += (_, _) =>
             {
                 TrackedLocationUpdated.Invoke(this, new(""));
                 MarkedLocationUpdated.Invoke(this, new(""));
             };
-            _tracker.ActionUndone += (_, _) =>
+            Tracker.ActionUndone += (_, _) =>
             {
                 TrackedLocationUpdated.Invoke(this, new(""));
                 MarkedLocationUpdated.Invoke(this, new(""));
             };
-            _tracker.StateLoaded += (_, _) =>
+            Tracker.StateLoaded += (_, _) =>
             {
                 TrackedLocationUpdated.Invoke(this, new(""));
                 MarkedLocationUpdated.Invoke(this, new(""));
@@ -89,17 +88,19 @@ namespace Randomizer.App
             }
         }
 
-        public World World => _tracker?.World ?? new World(new Config(), "", 0, "");
+        public Tracker Tracker { get; private set; }
 
-        public Progression Progression => _tracker?.GetProgression(false) ?? new();
+        public World World => Tracker?.World ?? new World(new Config(), "", 0, "");
 
-        public Progression ProgressionWithKeys => _tracker?.GetProgression(true) ?? new();
+        public Progression Progression => Tracker?.GetProgression(false) ?? new();
+
+        public Progression ProgressionWithKeys => Tracker?.GetProgression(true) ?? new();
 
         public IEnumerable<Location> AllLocations => World.Locations.ToImmutableList();
 
         public IEnumerable<Location> AllClearableLocations => World.Locations.Where(x => IsLocationClearable(x)).ToImmutableList();
 
-        public Dictionary<int, ItemData> MarkedLocations => _tracker?.MarkedLocations;
+        public Dictionary<int, ItemData> MarkedLocations => Tracker?.MarkedLocations;
 
         /// <summary>
         /// Calls the event handlers when a location has been updated somehow
@@ -178,7 +179,7 @@ namespace Randomizer.App
         public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
             return !location.Cleared
-                && ((location.IsAvailable(requireKeys || _tracker.World.Config.Keysanity ? Progression : ProgressionWithKeys) && SpecialLocationLogic(location))
+                && ((location.IsAvailable(requireKeys ? Progression : ProgressionWithKeys) && SpecialLocationLogic(location))
                 || (allowOutOfLogic && ShowOutOfLogicLocations));
         }
 
@@ -194,15 +195,15 @@ namespace Randomizer.App
             // Don't show MM or TR unless we're sure we have the identified medallion
             if (location.Region is MiseryMire or TurtleRock)
             {
-                var dungeonInfo = _tracker.WorldInfo.Dungeons.First(x => x.GetRegion(_tracker.World) == location.Region);
+                var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.GetRegion(Tracker.World) == location.Region);
                 return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
                     (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
                     (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake);
             }
             // Don't show Mimic/Mirror cave unless TR is accessible
-            else if (location == _tracker.World.LightWorldDeathMountainEast.MirrorCave)
+            else if (location == Tracker.World.LightWorldDeathMountainEast.MirrorCave)
             {
-                var dungeonInfo = _tracker.WorldInfo.Dungeons.First(x => x.GetRegion(_tracker.World) == _tracker.World.TurtleRock);
+                var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.GetRegion(Tracker.World) == Tracker.World.TurtleRock);
                 return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
                     (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
                     (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake);
@@ -210,27 +211,27 @@ namespace Randomizer.App
             // Don't show GT in logic unless all crystals are gathered
             else if (location.Region is GanonsTower)
             {
-                return _tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.Crystal or RewardItem.RedCrystal) >= 7;
+                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.Crystal or RewardItem.RedCrystal) >= 7;
             }
             // Make sure all 3 pendants have been grabbed for Master Sword Pedestal 
-            else if (location == _tracker.World.LightWorldNorthWest.MasterSwordPedestal)
+            else if (location == Tracker.World.LightWorldNorthWest.MasterSwordPedestal)
             {
-                return _tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.GreenPendant or RewardItem.BluePendant or RewardItem.RedPendant or RewardItem.NonGreenPendant) >= 3;
+                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.GreenPendant or RewardItem.BluePendant or RewardItem.RedPendant or RewardItem.NonGreenPendant) >= 3;
             }
             // Make sure Aga is defeated for the lumberjack tree
-            else if (location == _tracker.World.LightWorldNorthWest.LumberjackTree)
+            else if (location == Tracker.World.LightWorldNorthWest.LumberjackTree)
             {
-                return _tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.Agahnim);
+                return Tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.Agahnim);
             }
             // Make sure the red crystals are retrieved for pyramid fairy
-            else if (location.Room == _tracker.World.DarkWorldNorthEast.PyramidFairy)
+            else if (location.Room == Tracker.World.DarkWorldNorthEast.PyramidFairy)
             {
-                return _tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.RedCrystal) >= 2;
+                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.RedCrystal) >= 2;
             }
             // Make sure that the green pendant was grabbed for Sahasrahla
-            else if (location == _tracker.World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla)
+            else if (location == Tracker.World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla)
             {
-                return _tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.GreenPendant);
+                return Tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.GreenPendant);
             }
             else return true;
         }
@@ -241,7 +242,7 @@ namespace Randomizer.App
         /// <param name="location">The SMZ3 location to update</param>
         public void ClearLocation(Location location)
         {
-            _tracker.Clear(location);
+            Tracker.Clear(location);
             _stickyRegion = location.Region;
         }
 
@@ -253,7 +254,7 @@ namespace Randomizer.App
         {
             locations.Where(x => !x.Cleared)
                 .ToList()
-                .ForEach(x => _tracker.Clear(x));
+                .ForEach(x => Tracker.Clear(x));
             if (locations.Select(x => x.Region).Count() == 1) _stickyRegion = locations.First().Region;
         }
 
@@ -275,7 +276,7 @@ namespace Randomizer.App
                 assumeKeys = false;
             }
 
-            _tracker.ClearArea(region, trackItems, false, null, assumeKeys);
+            Tracker.ClearArea(region, trackItems, false, null, assumeKeys);
         }
 
         /// <summary>
@@ -287,7 +288,7 @@ namespace Randomizer.App
         /// <returns>
         /// The first name configured for <paramref name="location"/>.
         /// </returns>
-        public string GetName(Location location) => _tracker.WorldInfo.Location(location).Name[0];
+        public string GetName(Location location) => Tracker.WorldInfo.Location(location).Name[0];
 
         /// <summary>
         /// Gets the primary name for the specified room.
@@ -296,7 +297,7 @@ namespace Randomizer.App
         /// <returns>
         /// The first name configured for <paramref name="room"/>.
         /// </returns>
-        public string GetName(Room room) => _tracker.WorldInfo.Room(room).Name[0];
+        public string GetName(Room room) => Tracker.WorldInfo.Room(room).Name[0];
 
         /// <summary>
         /// Gets the primary name for the specified region.
@@ -307,7 +308,7 @@ namespace Randomizer.App
         /// <returns>
         /// The first name configured for <paramref name="region"/>.
         /// </returns>
-        public string GetName(Region region) => _tracker.WorldInfo.Region(region).Name[0];
+        public string GetName(Region region) => Tracker.WorldInfo.Region(region).Name[0];
 
         /// <summary>
         /// Gets the primary name for the specified map location.
@@ -325,7 +326,7 @@ namespace Randomizer.App
             if (location != null)
                 return GetName(location);
 
-            var dungeon = _tracker.WorldInfo.Dungeons.SingleOrDefault(x => x.Name.Contains(mapLocation.Name, StringComparison.OrdinalIgnoreCase));
+            var dungeon = Tracker.WorldInfo.Dungeons.SingleOrDefault(x => x.Name.Contains(mapLocation.Name, StringComparison.OrdinalIgnoreCase));
             if (dungeon != null)
                 return dungeon.Name[0];
 
