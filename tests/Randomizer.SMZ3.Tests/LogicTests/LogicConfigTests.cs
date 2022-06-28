@@ -252,7 +252,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.LeftSandPitRequiresSpringBall = false;
 
             var tempWorld = new World(config, "", 0, "");
-            var progression = new Progression(new [] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump });
+            var progression = new Progression(new [] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.Grapple });
             tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeTrue();
             tempWorld.InnerMaridia.LeftSandPit.Right.IsAvailable(progression).Should().BeTrue();
 
