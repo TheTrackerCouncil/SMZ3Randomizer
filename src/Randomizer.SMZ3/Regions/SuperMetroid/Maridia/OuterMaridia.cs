@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 vanillaItem: ItemType.Super,
                 access: items => Logic.CanWallJump(WallJumpDifficulty.Medium)
                               || (Logic.CanWallJump(WallJumpDifficulty.Easy) && items.Ice)
-                              || items.HiJump,
+                              || items.HiJump || Logic.CanFly(items),
                 memoryAddress: 0x11,
                 memoryFlag: 0x2);
             MamaTurtleRoom = new(this, 138, 0x8FC47D, LocationType.Visible,
@@ -41,7 +41,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 access: items => CanReachTurtleRoom(items)
                               && (Logic.CanWallJump(WallJumpDifficulty.Easy)
                                   || items.SpeedBooster
-                                  || (items.Grapple && items.HiJump)), // Reaching the item
+                                  || (items.Grapple && items.HiJump)
+                                  || Logic.CanFly(items)), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x8);
             MemoryRegionId = 4;
@@ -72,7 +73,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         public bool CanReachTurtleRoom(Progression items) => Logic.CanOpenRedDoors(items)
             && (Logic.CanWallJump(WallJumpDifficulty.Medium)
                 || (Logic.CanWallJump(WallJumpDifficulty.Easy) && (items.Plasma || items.ScrewAttack))
-                || items.HiJump);
+                || items.HiJump
+                || Logic.CanFly(items));
     }
 
 }

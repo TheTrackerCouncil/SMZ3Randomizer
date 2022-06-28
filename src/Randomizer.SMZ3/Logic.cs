@@ -151,7 +151,8 @@ namespace Randomizer.SMZ3
             }
 
             return CanWallJump(WallJumpDifficulty.Medium)
-                || (CanWallJump(WallJumpDifficulty.Easy) && items.SpringBall);
+                || (CanWallJump(WallJumpDifficulty.Easy) && items.SpringBall)
+                || CanFly(items);
         }
 
         public bool CanWallJump(WallJumpDifficulty difficulty)

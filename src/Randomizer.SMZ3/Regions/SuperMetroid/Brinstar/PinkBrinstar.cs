@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 name: "Missile (pink Brinstar top)",
                 alsoKnownAs: new[] { "Pink Shaft (top)", "Big Pink (top)" },
                 vanillaItem: ItemType.Missile,
-                access: items => items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy),
+                access: items => items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items),
                 memoryAddress: 0x2,
                 memoryFlag: 0x20);
             PinkShaftBottom = new(this, 22, 0x8F860E, LocationType.Visible,
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 alsoKnownAs: new[] { "Mission: Impossible", "Pink Brinstar Power Bomb Room" },
                 vanillaItem: ItemType.PowerBomb,
                 access: items => Logic.CanUsePowerBombs(items) && items.Super && Logic.HasEnergyReserves(items, 1)
-                              && (items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy)),
+                              && (items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x3,
                 memoryFlag: 0x1);
             GreenHillZone = new(this, 25, 0x8F8676, LocationType.Visible,
@@ -48,7 +48,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Missile,
                 access: items => items.Morph
                               && (items.PowerBomb || items.Super || Logic.CanAccessNorfairUpperPortal(items))
-                              && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy)),
+                              && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x3,
                 memoryFlag: 0x2);
             Waterway = new(this, 33, 0x8F87FA, LocationType.Visible,
@@ -65,7 +65,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.ETank,
                 access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items)
                               && items.Wave && Logic.HasEnergyReserves(items, 1)
-                              && (items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy)),
+                              && (items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x4,
                 memoryFlag: 0x8); // Grapple or Walljump
             MemoryRegionId = 1;

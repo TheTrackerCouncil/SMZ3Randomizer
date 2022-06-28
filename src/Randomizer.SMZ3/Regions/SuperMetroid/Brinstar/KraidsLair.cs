@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
         {
             return (Logic.CanDestroyBombWalls(items) || items.SpeedBooster || Logic.CanAccessNorfairUpperPortal(items))
                 && items.Super && Logic.CanPassBombPassages(items)
-                && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Medium));
+                && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Medium) || Logic.CanFly(items));
         }
 
         public bool CanComplete(Progression items)

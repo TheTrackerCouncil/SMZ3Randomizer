@@ -24,14 +24,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Missile (right Maridia sand pit room)",
                 alsoKnownAs: "Right Sand Pit - Left item",
                 vanillaItem: ItemType.Missile,
-                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
+                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump || items.SpaceJump),
                 memoryAddress: 0x12,
                 memoryFlag: 0x4);
             RightSandPitRight = new(this, 147, 0x8FC5F1, LocationType.Visible,
                 name: "Power Bomb (right Maridia sand pit room)",
                 alsoKnownAs: "Right Sand Pit - Right item",
                 vanillaItem: ItemType.PowerBomb,
-                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
+                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump || items.SpaceJump),
                 memoryAddress: 0x12,
                 memoryFlag: 0x8);
             AqueductLeft = new(this, 148, 0x8FC603, LocationType.Visible,
@@ -139,10 +139,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         private bool CanDefeatBotwoon(Progression items)
             => (items.SpeedBooster || Logic.CanAccessMaridiaPortal(items))
-                && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.Grapple);
+                && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.Grapple || Logic.CanFly(items));
 
         private bool CanPassPipeCrossroads(Progression items)
-            => Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump;
+            => Logic.CanWallJump(WallJumpDifficulty.Medium) || items.HiJump || Logic.CanFly(items);
 
         public class WateringHoleRoom : Room
         {

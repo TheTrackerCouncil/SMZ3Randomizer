@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             public bool CanEnter(Progression items)
                 => items.CardBrinstarL1 && Logic.CanUsePowerBombs(items)
                 && (((items.HiJump || items.Gravity) && items.SpeedBooster)
-                    || Logic.CanWallJump(WallJumpDifficulty.Medium));
+                    || Logic.CanWallJump(WallJumpDifficulty.Medium) || items.SpaceJump);
         }
     }
 }
