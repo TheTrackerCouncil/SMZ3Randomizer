@@ -10,7 +10,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
             PowerBomb = new(this, 13, 0x8F84AC, LocationType.Chozo,
                 name: "Power Bomb (green Brinstar bottom)",
-                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items),
+                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items)
+                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x1,
                 memoryFlag: 0x20);
             MissileBelowSuperMissile = new(this, 15, 0x8F8518, LocationType.Visible,
@@ -37,13 +38,15 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             ETank = new(this, 30, 0x8F87C2, LocationType.Visible,
                 name: "Energy Tank, Etecoons",
                 vanillaItem: ItemType.ETank,
-                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items),
+                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items)
+                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x3,
                 memoryFlag: 0x40);
             BottomSuperMissile = new(this, 31, 0x8F87D0, LocationType.Visible,
                 name: "Super Missile (green Brinstar bottom)",
                 vanillaItem: ItemType.Super,
-                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items) && items.Super,
+                access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items) && items.Super
+                              && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x3,
                 memoryFlag: 0x80);
             MockballHallHidden = new(this);

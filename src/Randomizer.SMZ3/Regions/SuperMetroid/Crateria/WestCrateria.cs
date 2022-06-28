@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         private bool CanEnterAndLeaveGauntlet(Progression items)
         {
-            return items.CardCrateriaL1 && items.Morph && (Logic.CanFly(items) || items.SpeedBooster) && (
+            return items.CardCrateriaL1 && items.Morph && (Logic.CanFly(items) || items.SpeedBooster || Logic.CanWallJump(WallJumpDifficulty.Hard)) && (
                         Logic.CanIbj(items) ||
                         (Logic.CanUsePowerBombs(items) && items.TwoPowerBombs) ||
                         Logic.CanSafelyUseScrewAttack(items)

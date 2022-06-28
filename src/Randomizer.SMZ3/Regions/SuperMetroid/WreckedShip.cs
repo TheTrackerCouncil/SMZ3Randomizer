@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Randomizer.Shared;
-using static Randomizer.SMZ3.SMLogic;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.SuperMetroid
 {
@@ -43,7 +41,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                 alsoKnownAs: "Wrecked Pool",
                 vanillaItem: ItemType.ETank,
                 access: items => CanUnlockShip(items) &&
-                        (items.HiJump || items.SpaceJump || items.SpeedBooster || items.Gravity),
+                        ((items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.SpeedBooster || items.Gravity),
                 memoryAddress: 0x10,
                 memoryFlag: 0x10);
             LeftSuperMissileChamber = new(this, 133, 0x8FC357, LocationType.Visible,
@@ -99,16 +97,26 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                         /* Over the Moat */
                         ((Config.Keysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && (
                             items.SpeedBooster || items.Grapple || items.SpaceJump ||
-                            (items.Gravity && (Logic.CanIbj(items) || items.HiJump))
+                            (items.Gravity && (Logic.CanIbj(items) || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy))))
+                            || Logic.CanWallJump(WallJumpDifficulty.Insane)
                         )) ||
                         /* Through Maridia -> Forgotten Highway */
-                        (Logic.CanUsePowerBombs(items) && items.Gravity) ||
+                        (Logic.CanUsePowerBombs(items) && CanPassReverseForgottenHighway(items)) ||
                         /* From Maridia portal -> Forgotten Highway */
-                        (Logic.CanAccessMaridiaPortal(items) && items.Gravity && (
+                        (Logic.CanAccessMaridiaPortal(items) && CanPassReverseForgottenHighway(items) && (
                             (Logic.CanDestroyBombWalls(items) && items.CardMaridiaL2) ||
                             World.InnerMaridia.DraygonTreasure.IsAvailable(items)
                         ))
                     );
+        }
+
+        public bool CanPassReverseForgottenHighway(Progression items)
+        {
+            return items.Gravity && (
+                Logic.CanFly(items) ||
+                Logic.CanWallJump(WallJumpDifficulty.Easy) ||
+                (items.HiJump && items.Ice)
+            );
         }
 
         public bool CanComplete(Progression items)

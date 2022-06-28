@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
+
 using BunLabs.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -112,6 +114,8 @@ namespace Randomizer.App
 
             _logger = _host.Services.GetRequiredService<ILogger<App>>();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
             var mainWindow = _host.Services.GetRequiredService<RomListWindow>();
             mainWindow.Show();

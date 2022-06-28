@@ -7,6 +7,7 @@
         xmlns:controls="clr-namespace:Randomizer.App.Controls"
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
         xmlns:smz3="clr-namespace:Randomizer.SMZ3;assembly=Randomizer.SMZ3"
+        xmlns:shared="clr-namespace:Randomizer.Shared;assembly=Randomizer.Shared"
         d:DataContext="{d:DesignInstance vm:RandomizerOptions, IsDesignTimeCreatable=True}"
         mc:Ignorable="d"
         Closing="Window_Closing"
@@ -73,7 +74,18 @@
 
               <GroupBox Header="Tricks"
                         Padding="0,5,0,0">
-                <UniformGrid Columns="2" Name="TricksGrid" />
+                <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
+                  <UniformGrid Columns="2"
+                               Name="TricksGrid" />
+                  <controls:LabeledControl Text="Wall jump difficulty:"
+                                           ToolTip="The kind of wall jumps you're expected to be able to do."
+                                           Margin="0,4,0,0">
+                    <ComboBox SelectedItem="{Binding WallJumpDifficulty}"
+                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:WallJumpDifficulty}}}"
+                              HorizontalAlignment="Left"
+                              MinWidth="75" />
+                  </controls:LabeledControl>
+                </StackPanel>
               </GroupBox>
 
             </StackPanel>

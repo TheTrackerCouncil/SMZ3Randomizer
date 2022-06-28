@@ -70,8 +70,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         public Location FirefleaRoom { get; }
 
         public override bool CanEnter(Progression items) => items.Varia && items.CardLowerNorfairL1 && (
-                    (World.UpperNorfairEast.CanEnter(items) && Logic.CanUsePowerBombs(items) && items.SpaceJump && items.Gravity) ||
-                    (Logic.CanAccessNorfairLowerPortal(items) && Logic.CanDestroyBombWalls(items) && items.Super && Logic.CanUsePowerBombs(items) && Logic.CanFly(items))
+                    // Access via elevator from upper norfair east past Ridley's mouth
+                    (World.UpperNorfairEast.CanEnter(items) && Logic.CanUsePowerBombs(items) && Logic.CanFly(items) && items.Gravity) ||
+                    // Access via Zelda portal and passing worst room in the game
+                    (Logic.CanAccessNorfairLowerPortal(items) && Logic.CanDestroyBombWalls(items) && items.Super && Logic.CanUsePowerBombs(items) && (
+                        Logic.CanWallJump(WallJumpDifficulty.Insane) ||
+                        (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Hard)) ||
+                        Logic.CanFly(items)
+                    ))
                 );
 
         public bool CanComplete(Progression items)

@@ -50,7 +50,6 @@ namespace Randomizer.App
             ShipSprites.Add(ShipSprite.DefaultShip);
             _loadSpritesTask = Task.Run(() => LoadSprites())
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
-
         }
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();

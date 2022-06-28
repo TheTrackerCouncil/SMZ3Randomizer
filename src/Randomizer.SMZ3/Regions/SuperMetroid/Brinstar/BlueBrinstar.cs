@@ -66,13 +66,13 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
         public class BlueBrinstarTopRoom : Room
         {
             public BlueBrinstarTopRoom(BlueBrinstar region)
-                : base(region, "Blue Brinstar Top")
+                : base(region, "Blue Brinstar Top", "Billy Mays Room")
             {
                 MainItem = new(this, 36, 0x8F8836, LocationType.Visible,
                     name: "Main Item",
                     alsoKnownAs: new[] { "Missile (blue Brinstar top)", "Billy Mays Room" },
                     vanillaItem: ItemType.Missile,
-                    access: items => items.CardBrinstarL1 && Logic.CanUsePowerBombs(items),
+                    access: CanEnter,
                     memoryAddress: 0x4,
                     memoryFlag: 0x10);
 
@@ -80,7 +80,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                     name: "Hidden Item",
                     alsoKnownAs: new[] { "Missile (blue Brinstar behind missile)", "Billy Mays Room - Hidden item" },
                     vanillaItem: ItemType.Missile,
-                    access: items => items.CardBrinstarL1 && Logic.CanUsePowerBombs(items),
+                    access: CanEnter,
                     memoryAddress: 0x4,
                     memoryFlag: 0x20);
             }
@@ -89,6 +89,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
             public Location HiddenItem { get; }
 
+            public bool CanEnter(Progression items)
+                => items.CardBrinstarL1 && Logic.CanUsePowerBombs(items)
+                && (((items.HiJump || items.Gravity) && items.SpeedBooster)
+                    || Logic.CanWallJump(WallJumpDifficulty.Medium) || items.SpaceJump);
         }
     }
 }
