@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
             return items.Gravity && (
                 Logic.CanFly(items) ||
                 Logic.CanWallJump(WallJumpDifficulty.Easy) ||
-                (items.HiJump || items.Ice)
+                (items.HiJump && items.Ice)
             );
         }
 
