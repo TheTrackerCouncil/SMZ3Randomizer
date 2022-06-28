@@ -1633,7 +1633,7 @@ namespace Randomizer.SMZ3.Tracking
                         itemsCleared++;
                         if (!trackItems)
                         {
-                            if (IsTreasure(location.Item))
+                            if (IsTreasure(location.Item) || World.Config.Keysanity)
                                 treasureTracked++;
                             location.Cleared = true;
                             OnLocationCleared(new(location, confidence));
@@ -1646,7 +1646,7 @@ namespace Randomizer.SMZ3.Tracking
                             _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
                         else
                             itemsTracked.Add(item);
-                        if (IsTreasure(location.Item))
+                        if (IsTreasure(location.Item) || World.Config.Keysanity)
                             treasureTracked++;
 
                         location.Cleared = true;
@@ -1800,7 +1800,7 @@ namespace Randomizer.SMZ3.Tracking
 
             Action? undoTrackTreasure = null;
             var dungeon = GetDungeonFromLocation(location);
-            if (dungeon != null && IsTreasure(location.Item))
+            if (dungeon != null && (IsTreasure(location.Item) || World.Config.Keysanity))
             {
                 TrackDungeonTreasure(dungeon, confidence);
 
@@ -2343,7 +2343,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var dungeon = GetDungeonFromItem(item);
-            if (dungeon != null && IsTreasure(item))
+            if (dungeon != null && (IsTreasure(item) || World.Config.Keysanity))
             {
                 if (TrackDungeonTreasure(dungeon, confidence))
                     return _undoHistory.Pop();
@@ -2364,7 +2364,7 @@ namespace Randomizer.SMZ3.Tracking
                 var region = world.Regions.SingleOrDefault(x => dungeon.Is(x));
                 if (region != null)
                 {
-                    dungeon.TreasureRemaining = region.Locations.Count(x => !x.Item.IsDungeonItem && x.Type != LocationType.NotInDungeon);
+                    dungeon.TreasureRemaining = region.Locations.Count(x => (IsTreasure(x.Item) || World.Config.Keysanity) && x.Type != LocationType.NotInDungeon);
                     _logger.LogDebug("Found {TreasureRemaining} item(s) in {dungeon}", dungeon.TreasureRemaining, dungeon.Name);
                 }
                 else
