@@ -178,7 +178,7 @@ namespace Randomizer.App
         public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
             return !location.Cleared
-                && ((location.IsAvailable(requireKeys ? Progression : ProgressionWithKeys) && SpecialLocationLogic(location))
+                && ((location.IsAvailable(requireKeys || _tracker.World.Config.Keysanity ? Progression : ProgressionWithKeys) && SpecialLocationLogic(location))
                 || (allowOutOfLogic && ShowOutOfLogicLocations));
         }
 
