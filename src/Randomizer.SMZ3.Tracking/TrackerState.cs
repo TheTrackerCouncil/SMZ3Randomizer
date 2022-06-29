@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3.Tracking
@@ -255,7 +256,8 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="tracker">
         /// The tracker instance to apply the state to.
         /// </param>
-        public void Apply(Tracker tracker)
+        /// <param name="worldAccessor">Used to set the loaded world.</param>
+        public void Apply(Tracker tracker, IWorldAccessor worldAccessor)
         {
             var world = new World(SeedConfig, "", 0, "");
 
@@ -315,7 +317,7 @@ namespace Randomizer.SMZ3.Tracking
                 boss.Defeated = bossState.Defeated;
             }
             tracker.History.LoadHistory(tracker, this);
-            tracker.World = world;
+            worldAccessor.World = world;
             tracker.SavedElapsedTime = TimeSpan.FromSeconds(SecondsElapsed);
         }
 

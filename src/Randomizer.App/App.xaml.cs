@@ -10,7 +10,9 @@ using Microsoft.Win32;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Infrastructure;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -74,8 +76,9 @@ namespace Randomizer.App
             // Randomizer + Tracker
             services.AddSingleton<RandomizerContext>();
             services.AddSingleton<IFiller, StandardFiller>();
+            services.AddSingleton<IWorldAccessor, WorldAccessor>();
             services.AddSingleton<Smz3Randomizer>();
-            services.AddTracker<Smz3Randomizer>()
+            services.AddTracker()
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()
                 .AddOptionalModule<AutoTrackerModule>()

@@ -1,7 +1,9 @@
 ﻿
 using Microsoft.Extensions.Logging;
+
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 

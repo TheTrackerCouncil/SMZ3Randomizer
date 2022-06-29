@@ -20,6 +20,7 @@ using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
@@ -38,6 +39,7 @@ namespace Randomizer.SMZ3.Tracking
 
         private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
+        private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly IChatClient _chatClient;
         private readonly ILogger<Tracker> _logger;
@@ -86,13 +88,13 @@ namespace Randomizer.SMZ3.Tracking
             _logger = logger;
             Options = options;
             _dbContext = dbContext;
+            _worldAccessor = worldAccessor;
 
             // Initialize the tracker configuration
             Items = config.Items;
             Pegs = config.Pegs;
             Responses = config.Responses;
             Requests = config.Requests;
-            World = worldAccessor.GetWorld();
             WorldInfo = locationConfig;
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
@@ -203,7 +205,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the world for the currently tracked playthrough.
         /// </summary>
-        public World World { get; internal set; }
+        public World World => _worldAccessor.World;
 
         /// <summary>
         /// Indicates whether Tracker is in Go Mode.
@@ -390,7 +392,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
-            state.Apply(this);
+            state.Apply(this, _worldAccessor);
             History.LoadHistory(this, state);
             OnStateLoaded();
         }
@@ -407,7 +409,7 @@ namespace Randomizer.SMZ3.Tracking
             var state = TrackerState.Load(_dbContext, rom);
             if (state != null)
             {
-                state.Apply(this);
+                state.Apply(this, _worldAccessor);
                 History.LoadHistory(this, state);
                 OnStateLoaded();
                 
