@@ -38,54 +38,61 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public SpoilerModule(Tracker tracker, ILogger<SpoilerModule> logger)
             : base(tracker, logger)
         {
-            Tracker.HintsEnabled = !tracker.World.Config.Race && tracker.Options.HintsEnabled;
-            Tracker.SpoilersEnabled = !tracker.World.Config.Race && tracker.Options.SpoilersEnabled;
+            Tracker.HintsEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerHints && tracker.Options.HintsEnabled;
+            Tracker.SpoilersEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerSpoilers && tracker.Options.SpoilersEnabled;
             if (tracker.World.Config.Race) return;
             _playthrough = Playthrough.Generate(new[] { tracker.World }, tracker.World.Config);
 
-            AddCommand("Enable hints", GetEnableHintsRule(), (tracker, result) =>
+            if (!tracker.World.Config.DisableTrackerHints)
             {
-                Tracker.HintsEnabled = true;
-                tracker.Say(x => x.Hints.EnabledHints);
-            });
-            AddCommand("Disable hints", GetDisableHintsRule(), (tracker, result) =>
-            {
-                Tracker.HintsEnabled = false;
-                tracker.Say(x => x.Hints.DisabledHints);
-            });
-            AddCommand("Enable spoilers", GetEnableSpoilersRule(), (tracker, result) =>
-            {
-                Tracker.SpoilersEnabled = true;
-                tracker.Say(x => x.Spoilers.EnabledSpoilers);
-            });
-            AddCommand("Disable spoilers", GetDisableSpoilersRule(), (tracker, result) =>
-            {
-                Tracker.SpoilersEnabled = false;
-                tracker.Say(x => x.Spoilers.DisabledSpoilers);
-            });
+                AddCommand("Enable hints", GetEnableHintsRule(), (tracker, result) =>
+                {
+                    Tracker.HintsEnabled = true;
+                    tracker.Say(x => x.Hints.EnabledHints);
+                });
+                AddCommand("Disable hints", GetDisableHintsRule(), (tracker, result) =>
+                {
+                    Tracker.HintsEnabled = false;
+                    tracker.Say(x => x.Hints.DisabledHints);
+                });
+                AddCommand("Give progression hint", GetProgressionHintRule(), (tracker, result) =>
+                {
+                    GiveProgressionHint();
+                });
 
-            AddCommand("Reveal item location", GetItemSpoilerRule(), (tracker, result) =>
-            {
-                var item = GetItemFromResult(tracker, result, out var itemName);
-                RevealItemLocation(item);
-            });
+                AddCommand("Give area hint", GetLocationUsefulnessHintRule(), (tracker, result) =>
+                {
+                    var area = GetAreaFromResult(tracker, result);
+                    GiveAreaHint(area);
+                });
+            }
 
-            AddCommand("Reveal location item", GetLocationSpoilerRule(), (tracker, result) =>
+            if (!tracker.World.Config.DisableTrackerSpoilers)
             {
-                var location = GetLocationFromResult(tracker, result);
-                RevealLocationItem(location);
-            });
+                AddCommand("Enable spoilers", GetEnableSpoilersRule(), (tracker, result) =>
+                {
+                    Tracker.SpoilersEnabled = true;
+                    tracker.Say(x => x.Spoilers.EnabledSpoilers);
+                });
+                AddCommand("Disable spoilers", GetDisableSpoilersRule(), (tracker, result) =>
+                {
+                    Tracker.SpoilersEnabled = false;
+                    tracker.Say(x => x.Spoilers.DisabledSpoilers);
+                });
 
-            AddCommand("Give progression hint", GetProgressionHintRule(), (tracker, result) =>
-            {
-                GiveProgressionHint();
-            });
+                AddCommand("Reveal item location", GetItemSpoilerRule(), (tracker, result) =>
+                {
+                    var item = GetItemFromResult(tracker, result, out var itemName);
+                    RevealItemLocation(item);
+                });
 
-            AddCommand("Give area hint", GetLocationUsefulnessHintRule(), (tracker, result) =>
-            {
-                var area = GetAreaFromResult(tracker, result);
-                GiveAreaHint(area);
-            });
+                AddCommand("Reveal location item", GetLocationSpoilerRule(), (tracker, result) =>
+                {
+                    var location = GetLocationFromResult(tracker, result);
+                    RevealLocationItem(location);
+                });
+            }
+            
         }
 
         

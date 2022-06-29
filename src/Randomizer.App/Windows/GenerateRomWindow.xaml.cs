@@ -68,6 +68,7 @@ namespace Randomizer.App
                 PopulateItemOptions();
                 PopulateLogicOptions();
                 PopulateLocationOptions();
+                UpdateRaceCheckBoxes();
             }
         }
 
@@ -579,6 +580,23 @@ namespace Randomizer.App
             public int Value { get; set; }
             public string Text { get; set; }
             public override string ToString() => Text;
+        }
+
+        private void RaceCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateRaceCheckBoxes();
+        }
+
+        private void RaceCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UpdateRaceCheckBoxes();
+        }
+
+        private void UpdateRaceCheckBoxes()
+        {
+            DisableSpoilerLogCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+            DisableTrackerHintsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+            DisableTrackerSpoilersCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
         }
     }
 }
