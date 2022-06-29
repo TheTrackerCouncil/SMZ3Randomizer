@@ -192,11 +192,35 @@
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,11"
                         DataContext="{Binding SeedOptions}">
-              <StackPanel Orientation="Horizontal"
-                          Margin="0,0,0,4">
-                <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
-                <CheckBox IsChecked="{Binding Race}">Race</CheckBox>
-              </StackPanel>
+
+              <GroupBox Header="Game Mode Settings"
+                        Padding="0,5,0,0"
+                        Margin="0,0,0,10">
+                <UniformGrid Columns="2">
+                  <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
+                </UniformGrid>
+              </GroupBox>
+
+              <GroupBox Header="Race Settings"
+                        Padding="0,5,0,0"
+                        Margin="0,0,0,10">
+                <UniformGrid Columns="2">
+                  <CheckBox IsChecked="{Binding Race}"
+                            Checked="RaceCheckBox_Checked"
+                            Unchecked="RaceCheckBox_Unchecked"
+                            Content="Generate Race Seed"
+                            ToolTip="Generates a seed used for races and disables all forms of hints and spoilers"/>
+                  <CheckBox IsChecked="{Binding DisableSpoilerLog}"
+                            Name="DisableSpoilerLogCheckBox"
+                            Content="Disable Spoiler Log" />
+                  <CheckBox IsChecked="{Binding DisableTrackerHints}"
+                            Name="DisableTrackerHintsCheckBox"
+                            Content="Disable Tracker Hints" />
+                  <CheckBox IsChecked="{Binding DisableTrackerSpoilers}"
+                            Name="DisableTrackerSpoilersCheckBox"
+                            Content="Disable Tracker Spoilers" />
+                </UniformGrid>
+              </GroupBox>
 
               <controls:LabeledControl Text="Seed (optional):">
                 <TextBox x:Name="SeedInput"
@@ -204,8 +228,11 @@
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Import settings (optional):">
-                <TextBox x:Name="ConfigString"
+                <StackPanel Orientation="Vertical">
+                  <TextBox x:Name="ConfigString"
                          Text="{Binding ConfigString}" />
+                  <CheckBox IsChecked="{Binding CopySeedAndRaceSettings}" Margin="0,5,0,0">Also import seed and race settings</CheckBox>
+                </StackPanel>
               </controls:LabeledControl>
             </StackPanel>
           </Expander>

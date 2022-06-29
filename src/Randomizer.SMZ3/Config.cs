@@ -183,6 +183,9 @@ namespace Randomizer.SMZ3
         public Goal Goal { get; set; } = Goal.DefeatBoth;
         public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Race { get; set; } = false;
+        public bool DisableSpoilerLog { get; set; } = false;
+        public bool DisableTrackerSpoilers { get; set; } = false;
+        public bool DisableTrackerHints { get; set; } = false;
         public GanonInvincible GanonInvincible { get; set; } = GanonInvincible.BeforeCrystals;
         public bool ExtendedMsuSupport { get; set; } = false;
         public MusicShuffleMode ShuffleDungeonMusic { get; set; } = MusicShuffleMode.Default;
@@ -201,6 +204,7 @@ namespace Randomizer.SMZ3
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;
         public bool Keysanity => KeyShuffle != KeyShuffle.None;
+        public string Seed { get; set; }
 
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();

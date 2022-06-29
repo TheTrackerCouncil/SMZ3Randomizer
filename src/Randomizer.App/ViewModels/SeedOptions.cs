@@ -40,6 +40,15 @@ namespace Randomizer.App.ViewModels
 
         public bool Race { get; set; }
 
+        public bool DisableSpoilerLog { get; set; }
+
+        public bool DisableTrackerHints { get; set; }
+
+        public bool DisableTrackerSpoilers { get; set; }
+
+        [JsonIgnore]
+        public bool CopySeedAndRaceSettings { get; set; }
+
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
 
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();

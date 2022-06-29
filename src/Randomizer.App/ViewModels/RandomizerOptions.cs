@@ -119,6 +119,9 @@ namespace Randomizer.App.ViewModels
                     PegWorldItemPool = SeedOptions.PegWorldItem,
                     KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
                     Race = SeedOptions.Race,
+                    DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
+                    DisableTrackerHints = SeedOptions.DisableTrackerHints,
+                    DisableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers,
                     ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
                     ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
                     HeartColor = PatchOptions.HeartColor,
@@ -130,7 +133,8 @@ namespace Randomizer.App.ViewModels
                     SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
                     LocationItems = SeedOptions.LocationItems,
                     EarlyItems = SeedOptions.EarlyItems,
-                    LogicConfig = LogicConfig.Clone()
+                    LogicConfig = LogicConfig.Clone(),
+                    Seed = SeedOptions.Seed,
                 };
             }
             else
@@ -152,7 +156,10 @@ namespace Randomizer.App.ViewModels
                     ShaktoolItemPool = SeedOptions.ShaktoolItem,
                     PegWorldItemPool = SeedOptions.PegWorldItem,
                     KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
-                    Race = SeedOptions.Race,
+                    Race = SeedOptions.CopySeedAndRaceSettings ? oldConfig.Race : SeedOptions.Race,
+                    DisableSpoilerLog = SeedOptions.CopySeedAndRaceSettings ? oldConfig.DisableSpoilerLog : SeedOptions.DisableSpoilerLog,
+                    DisableTrackerHints = SeedOptions.CopySeedAndRaceSettings ? oldConfig.DisableTrackerHints : SeedOptions.DisableTrackerHints,
+                    DisableTrackerSpoilers = SeedOptions.CopySeedAndRaceSettings ? oldConfig.DisableTrackerSpoilers : SeedOptions.DisableTrackerSpoilers,
                     ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
                     ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
                     HeartColor = PatchOptions.HeartColor,
@@ -164,7 +171,8 @@ namespace Randomizer.App.ViewModels
                     SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
                     LocationItems = oldConfig.LocationItems,
                     EarlyItems = oldConfig.EarlyItems,
-                    LogicConfig = oldConfig.LogicConfig
+                    LogicConfig = oldConfig.LogicConfig,
+                    Seed = SeedOptions.CopySeedAndRaceSettings ? oldConfig.Seed : SeedOptions.Seed,
                 };
             }
         }

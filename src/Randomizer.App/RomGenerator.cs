@@ -52,7 +52,8 @@ namespace Randomizer.App
             {
                 var bytes = GenerateRomBytes(options, out var seed);
 
-                if (!_randomizer.ValidateSeedSettings(seed, options.ToConfig()))
+                var config = options.ToConfig();
+                if (!_randomizer.ValidateSeedSettings(seed, config))
                 {
                     if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
                         "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
@@ -74,7 +75,7 @@ namespace Randomizer.App
                 Rom.UpdateChecksum(bytes);
                 File.WriteAllBytes(romPath, bytes);
 
-                var spoilerLog = GetSpoilerLog(options, seed);
+                var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
                 var spoilerPath = Path.ChangeExtension(romPath, ".txt");
                 File.WriteAllText(spoilerPath, spoilerLog);
 
@@ -122,7 +123,7 @@ namespace Randomizer.App
         public SeedData GenerateSeed(RandomizerOptions options, string seed = null)
         {
             var config = options.ToConfig();
-            return _randomizer.GenerateSeed(config, seed ?? options.SeedOptions.Seed, CancellationToken.None);
+            return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
         }
 
         /// <summary>
@@ -191,7 +192,9 @@ namespace Randomizer.App
         /// <returns>The db entry for the generated rom</returns>
         protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
-            var settings = Config.ToConfigString(options.ToConfig(), true);
+            var config = options.ToConfig();
+            config.Seed = seed.Seed;
+            var settings = Config.ToConfigString(config, true);
 
             var rom = new GeneratedRom()
             {
@@ -221,8 +224,9 @@ namespace Randomizer.App
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
         /// <param name="seed">The previously generated seed data</param>
+        /// <param name="configOnly">If the spoiler log should only have config settings printed</param>
         /// <returns>The string output of the spoiler log file</returns>
-        private string GetSpoilerLog(RandomizerOptions options, SeedData seed)
+        private string GetSpoilerLog(RandomizerOptions options, SeedData seed, bool configOnly)
         {
             var log = new StringBuilder();
             log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
@@ -248,6 +252,11 @@ namespace Randomizer.App
             if (File.Exists(options.PatchOptions.Msu1Path))
                 log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.Msu1Path)}");
             log.AppendLine();
+
+            if (configOnly)
+            {
+                return log.ToString();
+            }
 
             var spheres = seed.Playthrough.GetPlaythroughText();
             for (var i = 0; i < spheres.Count; i++)
