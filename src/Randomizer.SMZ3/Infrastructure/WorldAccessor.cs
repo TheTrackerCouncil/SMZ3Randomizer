@@ -9,7 +9,10 @@ namespace Randomizer.SMZ3.Infrastructure
     /// </summary>
     public class WorldAccessor : IWorldAccessor
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets or sets the current <see cref="SMZ3.World"/>, if one is
+        /// available.
+        /// </summary>
         public World World { get; set; }
     }
 }
