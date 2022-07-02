@@ -9,6 +9,7 @@ using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
 using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -48,12 +49,8 @@ namespace Randomizer.SMZ3.Tracking
                 return configProvider.GetLocationConfig();
             });
 
-            services.AddScoped<TrackerFactory>();
-            services.AddScoped(serviceProvider =>
-            {
-                var factory = serviceProvider.GetRequiredService<TrackerFactory>();
-                return factory.Instance ?? throw new InvalidOperationException("Cannot resolve Tracker instance before TrackerFactory.Create has been called.");
-            });
+            services.AddScoped<TrackerOptionsAccessor>();
+            services.AddScoped<Tracker>();
 
             var assemblies = new[] { Assembly.GetExecutingAssembly() };
 

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.App
@@ -178,16 +179,6 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Launches the tracker window with no rom selected
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StartTracker_Click(object sender, RoutedEventArgs e)
-        {
-            LaunchTracker(null);
-        }
-
-        /// <summary>
         /// Launches the about menu
         /// </summary>
         /// <param name="sender"></param>
@@ -263,6 +254,9 @@ namespace Randomizer.App
             try
             {
                 var scope = _serviceProvider.CreateScope();
+                var trackerOptionsAccessor = scope.ServiceProvider.GetRequiredService<TrackerOptionsAccessor>();
+                trackerOptionsAccessor.Options = Options.GeneralOptions.GetTrackerOptions();
+
                 _trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
                 _trackerWindow.Options = Options;
                 _trackerWindow.Closed += (_, _) => scope.Dispose();
@@ -273,7 +267,6 @@ namespace Randomizer.App
                 }
 
                 _trackerWindow.SavedState += _trackerWindow_SavedState;
-
                 _trackerWindow.Show();
             }
             catch (Exception ex)

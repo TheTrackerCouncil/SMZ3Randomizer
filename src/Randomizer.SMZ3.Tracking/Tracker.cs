@@ -24,6 +24,7 @@ using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -43,6 +44,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly IChatClient _chatClient;
         private readonly ILogger<Tracker> _logger;
+        private readonly TrackerOptionsAccessor _trackerOptions;
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
         private readonly RandomizerContext _dbContext;
@@ -70,7 +72,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="chatClient"></param>
         /// <param name="logger">Used to write logging information.</param>
-        /// <param name="options">Provides Tracker preferences.</param>
+        /// <param name="trackerOptions">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
         /// <param name="historyService">Service for</param>
         public Tracker(TrackerConfig config,
@@ -79,16 +81,19 @@ namespace Randomizer.SMZ3.Tracking
             TrackerModuleFactory moduleFactory,
             IChatClient chatClient,
             ILogger<Tracker> logger,
-            TrackerOptions options,
-            RandomizerContext dbContext,
+            TrackerOptionsAccessor trackerOptions,
+            RandomizerContext dbContext)
             IHistoryService historyService)
         {
+            if (trackerOptions.Options == null)
+                throw new InvalidOperationException("Tracker options have not yet been activated.");
+
+            _worldAccessor = worldAccessor;
             _moduleFactory = moduleFactory;
             _chatClient = chatClient;
             _logger = logger;
-            Options = options;
+            _trackerOptions = trackerOptions;
             _dbContext = dbContext;
-            _worldAccessor = worldAccessor;
 
             // Initialize the tracker configuration
             Items = config.Items;
@@ -253,7 +258,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the tracking preferences.
         /// </summary>
-        public TrackerOptions Options { get; }
+        public TrackerOptions Options => _trackerOptions.Options!;
 
         /// <summary>
         /// The generated rom

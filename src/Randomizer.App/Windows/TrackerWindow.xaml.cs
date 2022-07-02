@@ -28,6 +28,7 @@ using Randomizer.SMZ3;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App
 {
@@ -39,7 +40,6 @@ namespace Randomizer.App
         private const int GridItemPx = 32;
         private const int GridItemMargin = 3;
         private readonly DispatcherTimer _dispatcherTimer;
-        private readonly TrackerFactory _trackerFactory;
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly List<object> _mouseDownSenders = new();
@@ -55,7 +55,6 @@ namespace Randomizer.App
         private MenuItem _autoTrackerUSB2SNESMenuItem;
 
         public TrackerWindow(IServiceProvider serviceProvider,
-            TrackerFactory trackerFactory,
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator
         )
@@ -63,7 +62,6 @@ namespace Randomizer.App
             InitializeComponent();
 
             _serviceProvider = serviceProvider;
-            _trackerFactory = trackerFactory;
             _logger = logger;
             _romGenerator = romGenerator;
 
@@ -722,7 +720,7 @@ namespace Randomizer.App
             if (Options == null)
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
 
-            Tracker = _trackerFactory.Create(Options.GeneralOptions.GetTrackerOptions());
+            Tracker = _serviceProvider.GetRequiredService<Tracker>();
             Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
             {
                 UpdateStats(e);
