@@ -473,7 +473,7 @@ namespace Randomizer.App
             if (menuItem.Tag is not GeneratedRom rom)
                 return;
 
-            Clipboard.SetText(rom.Seed);
+            CopyTextToClipboard(rom.Seed);
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace Randomizer.App
             if (menuItem.Tag is not GeneratedRom rom)
                 return;
 
-            Clipboard.SetText(rom.Settings);
+            CopyTextToClipboard(rom.Settings);
         }
 
         /// <summary>
@@ -581,6 +581,18 @@ namespace Randomizer.App
                 return;
 
             UpdateName(grid);
+        }
+
+        private void CopyTextToClipboard(string text)
+        {
+            try
+            {
+                Clipboard.SetText(text);
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                Clipboard.SetDataObject(text);
+            }
         }
     }
 }

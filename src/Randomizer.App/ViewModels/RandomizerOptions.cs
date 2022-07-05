@@ -102,7 +102,7 @@ namespace Randomizer.App.ViewModels
         public Config ToConfig()
         {
             if (string.IsNullOrWhiteSpace(SeedOptions.ConfigString)) {
-                return new()
+                var config = new Config()
                 {
                     GameMode = GameMode.Normal,
                     Z3Logic = Z3Logic.Normal,
@@ -134,8 +134,11 @@ namespace Randomizer.App.ViewModels
                     LocationItems = SeedOptions.LocationItems,
                     EarlyItems = SeedOptions.EarlyItems,
                     LogicConfig = LogicConfig.Clone(),
+                    CopySeedAndRaceSettings = true,
                     Seed = SeedOptions.Seed,
                 };
+                config.SettingsString = Config.ToConfigString(config, true);
+                return config;
             }
             else
             {
@@ -172,6 +175,8 @@ namespace Randomizer.App.ViewModels
                     LocationItems = oldConfig.LocationItems,
                     EarlyItems = oldConfig.EarlyItems,
                     LogicConfig = oldConfig.LogicConfig,
+                    SettingsString = SeedOptions.ConfigString,
+                    CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings,
                     Seed = SeedOptions.CopySeedAndRaceSettings ? oldConfig.Seed : SeedOptions.Seed,
                 };
             }
