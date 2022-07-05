@@ -205,7 +205,8 @@ namespace Randomizer.SMZ3
         public bool MultiWorld => GameMode == GameMode.Multiworld;
         public bool Keysanity => KeyShuffle != KeyShuffle.None;
         public string Seed { get; set; }
-
+        public string SettingsString { get; set; }
+        public bool CopySeedAndRaceSettings { get; set; }
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();

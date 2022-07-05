@@ -676,6 +676,8 @@ namespace Randomizer.App
                 Options.LogicConfig = config.LogicConfig;
                 Options.SeedOptions.Race = config.Race;
                 Options.SeedOptions.Keysanity = config.Keysanity;
+                Options.SeedOptions.ConfigString = config.SettingsString;
+                Options.SeedOptions.CopySeedAndRaceSettings = config.CopySeedAndRaceSettings;
                 if (Rom.GeneratorVersion == 0) Options.LogicConfig.FireRodDarkRooms = true;
                 _romGenerator.GenerateSeed(Options, Rom.Seed);
             }
