@@ -64,7 +64,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyTT && items.KeyTT && CanBeatBoss(items),
                 memoryAddress: 0xAC,
-                memoryFlag: 0xA);
+                memoryFlag: 0xB);
 
             MemoryAddress = 0xAC;
             MemoryFlag = 0xB;

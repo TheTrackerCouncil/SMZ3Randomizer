@@ -154,8 +154,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Operands = new List<string>() { "SMZ3 Tracker" }
                 }));
 
-                _isConnected = true;
-                OnConnected?.Invoke(this, new());
+                // Wait a second before showing as connecting to avoid issues with reading memory too early
+                Task.Run(new Action(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    _isConnected = true;
+                    OnConnected?.Invoke(this, new());
+                }));
+                
             }
             // If it's a binary response, find the last requested message to use it as the address since
             // USB2SNES returns with NO context for what this is a response to...
