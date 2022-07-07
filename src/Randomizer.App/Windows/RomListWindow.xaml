@@ -52,6 +52,7 @@
                   <MenuItem Header="Open _Folder" Tag="{Binding Rom}" Click="OpenFolderMenuItem_Click"></MenuItem>
                   <MenuItem Header="Open _Tracker" Tag="{Binding Rom}" Click="OpenTrackerMenuItem_Click"></MenuItem>
                   <MenuItem Header="View _Spoiler Log" Tag="{Binding Rom}" Click="ViewSpoilerMenuItem_Click"></MenuItem>
+                  <MenuItem Header="View _Progression Log" Tag="{Binding Rom}" Click="ProgressionLogMenuItem_Click"></MenuItem>
                   <MenuItem Header="_Edit Label" Tag="{Binding Rom}" Click="EditLabelMenuItem_Click"></MenuItem>
                   <MenuItem Header="_Copy Seed" Tag="{Binding Rom}" Click="CopySeedMenuItem_Click"></MenuItem>
                   <MenuItem Header="Copy _Randomizer Settings String" Tag="{Binding Rom}" Click="CopyConfigMenuItem_Click"></MenuItem>

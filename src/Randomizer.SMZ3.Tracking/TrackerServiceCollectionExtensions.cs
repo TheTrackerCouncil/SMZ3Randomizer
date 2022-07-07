@@ -36,6 +36,7 @@ namespace Randomizer.SMZ3.Tracking
 
             services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
             services.AddSingleton<TrackerConfigProvider>();
+            services.AddSingleton<IHistoryService, HistoryService>();
             services.AddScoped(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();

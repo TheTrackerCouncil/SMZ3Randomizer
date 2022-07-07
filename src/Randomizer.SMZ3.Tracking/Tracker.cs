@@ -68,6 +68,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
+        /// <param name="historyService">Service for</param>
         public Tracker(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
@@ -75,7 +76,8 @@ namespace Randomizer.SMZ3.Tracking
             IChatClient chatClient,
             ILogger<Tracker> logger,
             TrackerOptions options,
-            RandomizerContext dbContext)
+            RandomizerContext dbContext,
+            IHistoryService historyService)
         {
             _moduleFactory = moduleFactory;
             _chatClient = chatClient;
@@ -92,6 +94,8 @@ namespace Randomizer.SMZ3.Tracking
             WorldInfo = locationConfig;
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
+
+            History = historyService;
 
             // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
@@ -298,6 +302,11 @@ namespace Randomizer.SMZ3.Tracking
         public AutoTracker? AutoTracker { get; set; }
 
         /// <summary>
+        /// Module that houses the history
+        /// </summary>
+        public IHistoryService History { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether Tracker may give hints when
         /// asked about items or locations.
         /// </summary>
@@ -370,6 +379,7 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
             state.Apply(this);
+            History.LoadHistory(this, state);
             OnStateLoaded();
         }
 
@@ -386,10 +396,12 @@ namespace Randomizer.SMZ3.Tracking
             if (state != null)
             {
                 state.Apply(this);
+                History.LoadHistory(this, state);
                 OnStateLoaded();
                 
                 return true;
             }
+            History.StartHistory(this);
             return false;
         }
 
@@ -1313,6 +1325,13 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            History.AddEvent(
+                HistoryEventType.TrackedItem,
+                item.InternalItemType.IsProgression(),
+                item.NameWithArticle,
+                location
+            );
+
             IsDirty = true;
 
             if (!autoTracked)
@@ -1852,6 +1871,12 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
+            History.AddEvent(
+                HistoryEventType.BeatBoss,
+                true,
+                dungeon.Boss.ToString() ?? $"boss of {dungeon.Name}"
+            );
+
             dungeon.Cleared = true;
             Say(Responses.DungeonBossCleared.Format(dungeon.Name, dungeon.Boss));
             IsDirty = true;
@@ -1887,6 +1912,12 @@ namespace Randomizer.SMZ3.Tracking
                 Say(boss.WhenTracked, boss.Name);
             else
                 Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+
+            History.AddEvent(
+                HistoryEventType.BeatBoss,
+                true,
+                boss.Name ?? "boss"
+            );
 
             OnBossUpdated(new(confidence));
             AddUndo(() => boss.Defeated = false);
@@ -2073,6 +2104,15 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
         public void UpdateRegion(RegionInfo region, bool updateMap = false)
         {
+            if (region != CurrentRegion)
+            {
+                History.AddEvent(
+                    HistoryEventType.EnteredRegion,
+                    true,
+                    region.Name
+                );
+            }
+
             CurrentRegion = region;
             if (updateMap)
             {

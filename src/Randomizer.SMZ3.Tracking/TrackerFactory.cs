@@ -19,6 +19,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly IChatClient _chatClient;
         private readonly ILogger<Tracker> _logger;
         private readonly RandomizerContext _dbContext;
+        private readonly IHistoryService _historyService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerFactory"/> class
@@ -35,13 +36,15 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="chatClient"></param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="dbContext">The database context object</param>
+        /// <param name="historyService">History service</param>
         public TrackerFactory(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             IChatClient chatClient,
             ILogger<Tracker> logger,
-            RandomizerContext dbContext)
+            RandomizerContext dbContext,
+            IHistoryService historyService)
         {
             _config = config;
             _locationConfig = locationConfig;
@@ -50,6 +53,7 @@ namespace Randomizer.SMZ3.Tracking
             _chatClient = chatClient;
             _logger = logger;
             _dbContext = dbContext;
+            _historyService = historyService;
         }
 
         /// <summary>
@@ -68,7 +72,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         public Tracker Create(TrackerOptions options)
         {
-            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _chatClient, _logger, options, _dbContext);
+            return Instance = new(_config, _locationConfig, _worldAccessor, _moduleFactory, _chatClient, _logger, options, _dbContext, _historyService);
         }
     }
 }

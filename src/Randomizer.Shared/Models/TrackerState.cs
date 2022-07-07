@@ -18,6 +18,7 @@ namespace Randomizer.Shared.Models {
         public ICollection<TrackerDungeonState> DungeonStates { get; set; }
         public ICollection<TrackerMarkedLocation> MarkedLocations { get; set; }
         public ICollection<TrackerBossState> BossStates { get; set; }
+        public ICollection<TrackerHistoryEvent> History { get; set; }
     }
 
 }

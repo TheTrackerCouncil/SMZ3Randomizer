@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.App
 {
@@ -26,12 +27,14 @@ namespace Randomizer.App
         private readonly RandomizerContext _dbContext;
         private readonly RomGenerator _romGenerator;
         private TrackerWindow _trackerWindow;
+        private readonly IHistoryService _historyService;
 
         public RomListWindow(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListWindow> logger,
             RandomizerContext dbContext,
-            RomGenerator romGenerator)
+            RomGenerator romGenerator,
+            IHistoryService historyService)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -40,6 +43,7 @@ namespace Randomizer.App
             InitializeComponent();
             CheckSpeechRecognition();
             Options = optionsFactory.Create();
+            _historyService = historyService;
 
             Model = new GeneratedRomsViewModel();
             DataContext = Model;
@@ -593,6 +597,40 @@ namespace Randomizer.App
             {
                 Clipboard.SetDataObject(text);
             }
+        }
+
+        private void ProgressionLogMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not MenuItem menuItem)
+                return;
+
+            if (menuItem.Tag is not GeneratedRom rom)
+                return;
+
+            if (rom.TrackerState == null)
+            {
+                MessageBox.Show(this, "There is no history for the selected rom.",
+                        "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            _dbContext.Entry(rom.TrackerState).Collection(x => x.History).Load();
+
+            if (rom.TrackerState.History == null || rom.TrackerState.History.Count == 0)
+            {
+                MessageBox.Show(this, "There is no history for the selected rom.",
+                        "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath).Replace("Spoiler_Log", "Progression_Log");
+            var historyText = _historyService.GenerateHistoryText(rom, rom.TrackerState.History.ToList(), true);
+            File.WriteAllText(path, historyText);
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = path,
+                UseShellExecute = true
+            });
         }
     }
 }
