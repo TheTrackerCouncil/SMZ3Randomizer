@@ -14,6 +14,7 @@ namespace Randomizer.Shared.Models {
         public string LocationName { get; set; }
         public string ObjectName { get; set; }
         public bool IsImportant { get; set; }
+        public bool IsUndone { get; set; }
         public double Time { get; set; }
     }
 

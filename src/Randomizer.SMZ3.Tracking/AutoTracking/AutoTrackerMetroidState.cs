@@ -62,6 +62,11 @@
         /// </summary>
         public int MaxSuperMissiles => _data.ReadUInt8(0x7E09CC - 0x7E0750);
 
+        public bool IsSamusInArea(int minX, int maxX, int minY, int maxY)
+        {
+            return SamusX >= minX && SamusX <= maxX && SamusY >= minY && SamusY <= maxY;
+        }
+
         /// <summary>
         /// Prints debug data for the state
         /// </summary>

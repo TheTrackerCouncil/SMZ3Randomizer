@@ -1325,7 +1325,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
-            History.AddEvent(
+            var addedEvent = History.AddEvent(
                 HistoryEventType.TrackedItem,
                 item.InternalItemType.IsProgression(),
                 item.NameWithArticle,
@@ -1342,6 +1342,7 @@ namespace Randomizer.SMZ3.Tracking
                     undoClear?.Invoke();
                     undoTrackDungeonTreasure?.Invoke();
                     UpdateTrackerProgression = true;
+                    addedEvent.IsUndone = true;
                 });
             }
             
@@ -1871,7 +1872,7 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
-            History.AddEvent(
+            var addedEvent = History.AddEvent(
                 HistoryEventType.BeatBoss,
                 true,
                 dungeon.Boss.ToString() ?? $"boss of {dungeon.Name}"
@@ -1886,6 +1887,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 UpdateTrackerProgression = true;
                 dungeon.Cleared = false;
+                addedEvent.IsUndone = true;
             });
         }
 
@@ -1913,14 +1915,18 @@ namespace Randomizer.SMZ3.Tracking
             else
                 Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
 
-            History.AddEvent(
+            var addedEvent = History.AddEvent(
                 HistoryEventType.BeatBoss,
                 true,
                 boss.Name ?? "boss"
             );
 
             OnBossUpdated(new(confidence));
-            AddUndo(() => boss.Defeated = false);
+            AddUndo(() =>
+            {
+                boss.Defeated = false;
+                addedEvent.IsUndone = true;
+            });
         }
 
         /// <summary>
@@ -2092,9 +2098,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="region">The region the player is in</param>
         /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-        public void UpdateRegion(Region region, bool updateMap = false)
+        /// <param name="resetTime">If the time should be reset if this is the first region update</param>
+        public void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
         {
-            UpdateRegion(WorldInfo.Regions.First(x => x.GetRegion(World) == region), updateMap);
+            UpdateRegion(WorldInfo.Regions.First(x => x.GetRegion(World) == region), updateMap, resetTime);
         }
 
         /// <summary>
@@ -2102,10 +2109,16 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="region">The region the player is in</param>
         /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-        public void UpdateRegion(RegionInfo region, bool updateMap = false)
+        /// <param name="resetTime">If the time should be reset if this is the first region update</param>
+        public void UpdateRegion(RegionInfo region, bool updateMap = false, bool resetTime = false)
         {
             if (region != CurrentRegion)
             {
+                if (resetTime && History.GetHistory().Count == 0)
+                {
+                    ResetTimer();
+                }
+
                 History.AddEvent(
                     HistoryEventType.EnteredRegion,
                     true,
