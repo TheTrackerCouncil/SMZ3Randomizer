@@ -376,7 +376,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 PlayerHasFairy = false;
                 for (var i = 0; i < 4; i++)
                 {
-                    PlayerHasFairy |= action.CurrentData.ReadUInt8(0xDC + i) == 6;
+                    PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
                 }
             }
         }

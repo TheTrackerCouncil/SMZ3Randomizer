@@ -19,8 +19,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     public class HistoryService : IHistoryService
     {
         ILogger<HistoryService> _logger;
-        Tracker _tracker;
-        List<TrackerHistoryEvent> _events;
+        Tracker? _tracker;
+        List<TrackerHistoryEvent>? _events;
 
         /// <summary>
         /// Constructor
@@ -71,7 +71,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 ObjectName = objectName,
                 LocationName = location != null ? $"{regionName} - {locationName}" : null,
                 LocationId = location?.Id,
-                Time = _tracker.TotalElapsedTime.TotalSeconds
+                Time = _tracker?.TotalElapsedTime.TotalSeconds ?? 0
             };
             AddEvent(addedEvent);
             return addedEvent;
@@ -92,9 +92,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Type = type,
                 IsImportant = isImportant,
                 ObjectName = objectName,
-                LocationName = location.Name.ToString(),
+                LocationName = location?.Name.ToString(),
                 LocationId = location?.Id,
-                Time = _tracker.TotalElapsedTime.TotalSeconds
+                Time = _tracker?.TotalElapsedTime.TotalSeconds ?? 0
             };
             AddEvent(addedEvent);
             return addedEvent;
@@ -106,7 +106,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="histEvent">The event to add</param>
         public void AddEvent(TrackerHistoryEvent histEvent)
         {
-            _events.Add(histEvent);
+            _events?.Add(histEvent);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public void RemoveLastEvent()
         {
-            if (_events.Count > 0)
+            if (_events?.Count > 0)
             {
                 Remove(_events[_events.Count-1]);
             }
@@ -126,7 +126,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="histEvent">The event to log</param>
         public void Remove(TrackerHistoryEvent histEvent)
         {
-            _events.Remove(histEvent);
+            _events?.Remove(histEvent);
         }
 
         /// <summary>

@@ -1959,7 +1959,7 @@ namespace Randomizer.SMZ3.Tracking
             var addedEvent = History.AddEvent(
                 HistoryEventType.BeatBoss,
                 true,
-                boss.Name ?? "boss"
+                boss.Name.ToString() ?? "boss"
             );
 
             OnBossUpdated(new(confidence));
@@ -2163,7 +2163,7 @@ namespace Randomizer.SMZ3.Tracking
                 History.AddEvent(
                     HistoryEventType.EnteredRegion,
                     true,
-                    region.Name
+                    region.Name.ToString() ?? "new region"
                 );
             }
 

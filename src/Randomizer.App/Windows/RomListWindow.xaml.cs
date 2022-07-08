@@ -251,6 +251,13 @@ namespace Randomizer.App
                 return;
             }
 
+            if (_trackerWindow != null && _trackerWindow.IsVisible)
+            {
+                MessageBox.Show(this, $"An instance of tracker is already open.",
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
                 var scope = _serviceProvider.CreateScope();
