@@ -851,7 +851,7 @@ namespace Randomizer.SMZ3.Tracking
 
             if (!isInitial)
             {
-                Say("Timer resumed");
+                Say(Responses.TimerResumed);
                 AddUndo(() => _startTime = _undoStartTime);
             }
         }
@@ -869,7 +869,7 @@ namespace Randomizer.SMZ3.Tracking
 
             if (!isInitial)
             {
-                Say("Timer reset");
+                Say(Responses.TimerReset);
                 AddUndo(() =>
                 {
                     SavedElapsedTime = _undoSavedTime;
@@ -889,7 +889,7 @@ namespace Randomizer.SMZ3.Tracking
             SavedElapsedTime = TotalElapsedTime;
             _startTime = DateTime.MinValue;
 
-            Say("Timer paused");
+            Say(Responses.TimerPaused);
 
             AddUndo(() =>
             {

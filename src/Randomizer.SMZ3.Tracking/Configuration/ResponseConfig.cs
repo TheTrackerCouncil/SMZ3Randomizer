@@ -610,6 +610,24 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new SchrodingersString("But you haven't defeated {0} yet.");
 
         /// <summary>
+        /// Gets the phrases to respond with when the timer is resumed
+        /// </summary>
+        public SchrodingersString TimerResumed { get; init; }
+             = new SchrodingersString("Timer resumed.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when the timer is reset
+        /// </summary>
+        public SchrodingersString TimerReset { get; init; }
+             = new SchrodingersString("Timer reset");
+
+        /// <summary>
+        /// Gets the phrases to respond with when the timer is paused
+        /// </summary>
+        public SchrodingersString TimerPaused { get; init; }
+             = new SchrodingersString("Timer paused");
+
+        /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as
         /// expressed in the dictionary keys.

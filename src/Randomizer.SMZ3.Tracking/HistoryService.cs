@@ -18,9 +18,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class HistoryService : IHistoryService
     {
-        ILogger<HistoryService> _logger;
-        Tracker? _tracker;
-        List<TrackerHistoryEvent>? _events;
+        private ILogger<HistoryService> _logger;
+        private Tracker? _tracker;
+        private List<TrackerHistoryEvent>? _events;
 
         /// <summary>
         /// Constructor

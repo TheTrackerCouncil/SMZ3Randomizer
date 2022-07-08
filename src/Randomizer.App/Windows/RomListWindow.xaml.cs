@@ -140,6 +140,7 @@ namespace Randomizer.App
         {
             var models = _dbContext.GeneratedRoms
                     .Include(x => x.TrackerState)
+                    .Include(x => x.TrackerState.History)
                     .OrderByDescending(x => x.Id)
                     .ToList();
             Model.UpdateList(models);
@@ -532,6 +533,7 @@ namespace Randomizer.App
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.DungeonStates).Load();
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.MarkedLocations).Load();
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.BossStates).Load();
+                _dbContext.Entry(rom.TrackerState).Collection(x => x.History).Load();
 
                 _dbContext.TrackerStates.Remove(rom.TrackerState);
             }

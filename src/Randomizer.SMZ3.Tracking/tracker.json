@@ -1831,6 +1831,15 @@
     "BossNotYetDefeated": [
       "But you never defeated {0} in the first place."
     ],
+    "TimerResumed": [
+      "Timer resumed"
+    ],
+    "TimerPaused": [
+      "Timer paused"
+    ],
+    "TimerReset": [
+      "Timer reset"
+    ],
     "Chat": {
       "RecognizedGreetings": [
         "\\b(hi|hey|hello)( there)?,? tracker\\b",
