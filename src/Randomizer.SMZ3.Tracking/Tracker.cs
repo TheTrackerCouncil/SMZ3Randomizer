@@ -859,7 +859,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Resets the timer to 0
         /// </summary>
-        public virtual void ResetTimer()
+        public virtual void ResetTimer(bool isInitial = false)
         {
             _undoSavedTime = SavedElapsedTime;
             _undoStartTime = _startTime;
@@ -867,13 +867,15 @@ namespace Randomizer.SMZ3.Tracking
             SavedElapsedTime = TimeSpan.Zero;
             _startTime = DateTime.Now;
 
-            Say("Timer reset");
-
-            AddUndo(() =>
+            if (!isInitial)
             {
-                SavedElapsedTime = _undoSavedTime;
-                _startTime = _undoStartTime;
-            });
+                Say("Timer reset");
+                AddUndo(() =>
+                {
+                    SavedElapsedTime = _undoSavedTime;
+                    _startTime = _undoStartTime;
+                });
+            }
         }
 
         /// <summary>
