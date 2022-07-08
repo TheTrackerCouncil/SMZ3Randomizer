@@ -438,7 +438,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         var item = Tracker.Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
                         if (item != null)
                         {
-                            Tracker.TrackItem(item, location, null, null, true);
+                            Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
                             _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
                         }
                         else

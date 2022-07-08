@@ -1203,12 +1203,13 @@ namespace Randomizer.SMZ3.Tracking
         /// tracked item; <see langword="false"/> if that is done by the caller.
         /// </param>
         /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+        /// <param name="location">The location an item was tracked from</param>
         /// <returns>
         /// <see langword="true"/> if the item was actually tracked; <see
         /// langword="false"/> if the item could not be tracked, e.g. when
         /// tracking Bow twice.
         /// </returns>
-        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false)
+        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null)
         {
             var didTrack = false;
             var accessibleBefore = GetAccessibleLocations();
@@ -1327,9 +1328,15 @@ namespace Randomizer.SMZ3.Tracking
             Action? undoClear = null;
             Action? undoTrackDungeonTreasure = null;
 
-            var location = World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
+            if (location == null)
+            {
+                World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
+            }
+
             if (location != null)
             {
+                GiveLocationComment(item, location, isTracking: true, confidence);
+
                 if (tryClear)
                 {
                     // If this item was in a dungeon, track treasure count
@@ -1542,38 +1549,6 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Tracks the specified item and clears the specified location.
-        /// </summary>
-        /// <param name="item">The item data to track.</param>
-        /// <param name="trackedAs">
-        /// The text that was tracked, when triggered by voice command.
-        /// </param>
-        /// <param name="location">The location the item was found in.</param>
-        /// <param name="confidence">The speech recognition confidence.</param>
-        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null, bool autoTracked = false)
-        {
-            GiveLocationComment(item, location, isTracking: true, confidence);
-            TrackItem(item, trackedAs, confidence, tryClear: false, autoTracked: autoTracked);
-            Clear(location, null, autoTracked);
-
-            UpdateTrackerProgression = true;
-            IsDirty = true;
-
-            if (!autoTracked)
-            {
-                var undoClear = _undoHistory.Pop();
-                var undoTrack = _undoHistory.Pop();
-                AddUndo(() =>
-                {
-                    undoClear();
-                    undoTrack();
-                    UpdateTrackerProgression = true;
-                });
-            }
-        }
-
-        /// <summary>
         /// Sets the item count for the specified item.
         /// </summary>
         /// <param name="item">The item to track.</param>
@@ -1681,7 +1656,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            TrackItem(item, onlyLocation, confidence: confidence);
+                            TrackItem(item: item, trackedAs: null, confidence: confidence, tryClear: true, autoTracked: false, location: onlyLocation);
                         }
                     }
                 }
@@ -2159,7 +2134,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 if (resetTime && History.GetHistory().Count == 0)
                 {
-                    ResetTimer();
+                    ResetTimer(true);
                 }
 
                 History.AddEvent(

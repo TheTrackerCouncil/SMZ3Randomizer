@@ -43,9 +43,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 else if (result.Semantics.ContainsKey(LocationKey))
                 {
                     var location = GetLocationFromResult(tracker, result);
-                    tracker.TrackItem(item, location,
+                    tracker.TrackItem(item: item,
                         trackedAs: itemName,
-                        confidence: result.Confidence);
+                        confidence: result.Confidence,
+                        tryClear: true,
+                        autoTracked: false,
+                        location: location);
                 }
                 else
                 {
