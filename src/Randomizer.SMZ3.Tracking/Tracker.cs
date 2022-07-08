@@ -46,6 +46,8 @@ namespace Randomizer.SMZ3.Tracking
         private readonly RandomizerContext _dbContext;
 
         private DateTime _startTime = DateTime.MinValue;
+        private DateTime _undoStartTime = DateTime.MinValue;
+        private TimeSpan _undoSavedTime;
         private bool _disposed;
         private string? _mood;
         private string? _lastSpokenText;
@@ -280,6 +282,11 @@ namespace Randomizer.SMZ3.Tracking
                 return _mood;
             }
         }
+
+        /// <summary>
+        /// The previous saved elapsed time
+        /// </summary>
+        public TimeSpan UndoSavedElapsedTime { get; set; }
 
         /// <summary>
         /// The previous saved elapsed time
@@ -787,7 +794,7 @@ namespace Randomizer.SMZ3.Tracking
         public virtual bool TryStartTracking()
         {
             // Load the modules for voice recognition
-            StartTimer();
+            StartTimer(true);
             Syntax = _moduleFactory.LoadAll(this, _recognizer, out var loadError);
 
             try
@@ -837,9 +844,16 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Sets the start time of the timer
         /// </summary>
-        public virtual void StartTimer()
+        public virtual void StartTimer(bool isInitial = false)
         {
+            _undoStartTime = _startTime;
             _startTime = DateTime.Now;
+
+            if (!isInitial)
+            {
+                Say("Timer resumed");
+                AddUndo(() => _startTime = _undoStartTime);
+            }
         }
 
         /// <summary>
@@ -847,8 +861,19 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void ResetTimer()
         {
+            _undoSavedTime = SavedElapsedTime;
+            _undoStartTime = _startTime;
+
             SavedElapsedTime = TimeSpan.Zero;
-            StartTimer();
+            _startTime = DateTime.Now;
+
+            Say("Timer reset");
+
+            AddUndo(() =>
+            {
+                SavedElapsedTime = _undoSavedTime;
+                _startTime = _undoStartTime;
+            });
         }
 
         /// <summary>
@@ -856,9 +881,25 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void PauseTimer()
         {
+            _undoSavedTime = SavedElapsedTime;
+            _undoStartTime = _startTime;
+
             SavedElapsedTime = TotalElapsedTime;
             _startTime = DateTime.MinValue;
+
+            Say("Timer paused");
+
+            AddUndo(() =>
+            {
+                SavedElapsedTime = _undoSavedTime;
+                _startTime = _undoStartTime;
+            });
         }
+
+        /// <summary>
+        /// If the timer is currently paused
+        /// </summary>
+        public virtual bool IsTimerPaused => _startTime == DateTime.MinValue;
 
         /// <summary>
         /// Stops voice recognition.
