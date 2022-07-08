@@ -46,6 +46,8 @@ namespace Randomizer.SMZ3.Tracking
         private readonly RandomizerContext _dbContext;
 
         private DateTime _startTime = DateTime.MinValue;
+        private DateTime _undoStartTime = DateTime.MinValue;
+        private TimeSpan _undoSavedTime;
         private bool _disposed;
         private string? _mood;
         private string? _lastSpokenText;
@@ -68,6 +70,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="options">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
+        /// <param name="historyService">Service for</param>
         public Tracker(TrackerConfig config,
             LocationConfig locationConfig,
             IWorldAccessor worldAccessor,
@@ -75,7 +78,8 @@ namespace Randomizer.SMZ3.Tracking
             IChatClient chatClient,
             ILogger<Tracker> logger,
             TrackerOptions options,
-            RandomizerContext dbContext)
+            RandomizerContext dbContext,
+            IHistoryService historyService)
         {
             _moduleFactory = moduleFactory;
             _chatClient = chatClient;
@@ -92,6 +96,8 @@ namespace Randomizer.SMZ3.Tracking
             WorldInfo = locationConfig;
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
+
+            History = historyService;
 
             // Initalize the timers used to trigger idle responses
             _idleTimers = Responses.Idle.ToDictionary(
@@ -280,6 +286,11 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// The previous saved elapsed time
         /// </summary>
+        public TimeSpan UndoSavedElapsedTime { get; set; }
+
+        /// <summary>
+        /// The previous saved elapsed time
+        /// </summary>
         public TimeSpan SavedElapsedTime { get; set; }
 
         /// <summary>
@@ -296,6 +307,11 @@ namespace Randomizer.SMZ3.Tracking
         /// The Auto Tracker for the Tracker
         /// </summary>
         public AutoTracker? AutoTracker { get; set; }
+
+        /// <summary>
+        /// Module that houses the history
+        /// </summary>
+        public IHistoryService History { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Tracker may give hints when
@@ -370,6 +386,7 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
             state.Apply(this);
+            History.LoadHistory(this, state);
             OnStateLoaded();
         }
 
@@ -386,10 +403,12 @@ namespace Randomizer.SMZ3.Tracking
             if (state != null)
             {
                 state.Apply(this);
+                History.LoadHistory(this, state);
                 OnStateLoaded();
                 
                 return true;
             }
+            History.StartHistory(this);
             return false;
         }
 
@@ -775,7 +794,7 @@ namespace Randomizer.SMZ3.Tracking
         public virtual bool TryStartTracking()
         {
             // Load the modules for voice recognition
-            StartTimer();
+            StartTimer(true);
             Syntax = _moduleFactory.LoadAll(this, _recognizer, out var loadError);
 
             try
@@ -825,18 +844,38 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Sets the start time of the timer
         /// </summary>
-        public virtual void StartTimer()
+        public virtual void StartTimer(bool isInitial = false)
         {
+            _undoStartTime = _startTime;
             _startTime = DateTime.Now;
+
+            if (!isInitial)
+            {
+                Say(Responses.TimerResumed);
+                AddUndo(() => _startTime = _undoStartTime);
+            }
         }
 
         /// <summary>
         /// Resets the timer to 0
         /// </summary>
-        public virtual void ResetTimer()
+        public virtual void ResetTimer(bool isInitial = false)
         {
+            _undoSavedTime = SavedElapsedTime;
+            _undoStartTime = _startTime;
+
             SavedElapsedTime = TimeSpan.Zero;
-            StartTimer();
+            _startTime = DateTime.Now;
+
+            if (!isInitial)
+            {
+                Say(Responses.TimerReset);
+                AddUndo(() =>
+                {
+                    SavedElapsedTime = _undoSavedTime;
+                    _startTime = _undoStartTime;
+                });
+            }
         }
 
         /// <summary>
@@ -844,9 +883,25 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void PauseTimer()
         {
+            _undoSavedTime = SavedElapsedTime;
+            _undoStartTime = _startTime;
+
             SavedElapsedTime = TotalElapsedTime;
             _startTime = DateTime.MinValue;
+
+            Say(Responses.TimerPaused);
+
+            AddUndo(() =>
+            {
+                SavedElapsedTime = _undoSavedTime;
+                _startTime = _undoStartTime;
+            });
         }
+
+        /// <summary>
+        /// If the timer is currently paused
+        /// </summary>
+        public virtual bool IsTimerPaused => _startTime == DateTime.MinValue;
 
         /// <summary>
         /// Stops voice recognition.
@@ -1148,12 +1203,13 @@ namespace Randomizer.SMZ3.Tracking
         /// tracked item; <see langword="false"/> if that is done by the caller.
         /// </param>
         /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+        /// <param name="location">The location an item was tracked from</param>
         /// <returns>
         /// <see langword="true"/> if the item was actually tracked; <see
         /// langword="false"/> if the item could not be tracked, e.g. when
         /// tracking Bow twice.
         /// </returns>
-        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false)
+        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null)
         {
             var didTrack = false;
             var accessibleBefore = GetAccessibleLocations();
@@ -1272,9 +1328,15 @@ namespace Randomizer.SMZ3.Tracking
             Action? undoClear = null;
             Action? undoTrackDungeonTreasure = null;
 
-            var location = World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
+            if (location == null)
+            {
+                World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
+            }
+
             if (location != null)
             {
+                GiveLocationComment(item, location, isTracking: true, confidence);
+
                 if (tryClear)
                 {
                     // If this item was in a dungeon, track treasure count
@@ -1313,6 +1375,13 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            var addedEvent = History.AddEvent(
+                HistoryEventType.TrackedItem,
+                item.InternalItemType.IsProgression(),
+                item.NameWithArticle,
+                location
+            );
+
             IsDirty = true;
 
             if (!autoTracked)
@@ -1323,6 +1392,7 @@ namespace Randomizer.SMZ3.Tracking
                     undoClear?.Invoke();
                     undoTrackDungeonTreasure?.Invoke();
                     UpdateTrackerProgression = true;
+                    addedEvent.IsUndone = true;
                 });
             }
             
@@ -1479,38 +1549,6 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Tracks the specified item and clears the specified location.
-        /// </summary>
-        /// <param name="item">The item data to track.</param>
-        /// <param name="trackedAs">
-        /// The text that was tracked, when triggered by voice command.
-        /// </param>
-        /// <param name="location">The location the item was found in.</param>
-        /// <param name="confidence">The speech recognition confidence.</param>
-        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-        public void TrackItem(ItemData item, Location location, string? trackedAs = null, float? confidence = null, bool autoTracked = false)
-        {
-            GiveLocationComment(item, location, isTracking: true, confidence);
-            TrackItem(item, trackedAs, confidence, tryClear: false, autoTracked: autoTracked);
-            Clear(location, null, autoTracked);
-
-            UpdateTrackerProgression = true;
-            IsDirty = true;
-
-            if (!autoTracked)
-            {
-                var undoClear = _undoHistory.Pop();
-                var undoTrack = _undoHistory.Pop();
-                AddUndo(() =>
-                {
-                    undoClear();
-                    undoTrack();
-                    UpdateTrackerProgression = true;
-                });
-            }
-        }
-
-        /// <summary>
         /// Sets the item count for the specified item.
         /// </summary>
         /// <param name="item">The item to track.</param>
@@ -1618,7 +1656,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            TrackItem(item, onlyLocation, confidence: confidence);
+                            TrackItem(item: item, trackedAs: null, confidence: confidence, tryClear: true, autoTracked: false, location: onlyLocation);
                         }
                     }
                 }
@@ -1852,6 +1890,12 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
+            var addedEvent = History.AddEvent(
+                HistoryEventType.BeatBoss,
+                true,
+                dungeon.Boss.ToString() ?? $"boss of {dungeon.Name}"
+            );
+
             dungeon.Cleared = true;
             Say(Responses.DungeonBossCleared.Format(dungeon.Name, dungeon.Boss));
             IsDirty = true;
@@ -1861,6 +1905,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 UpdateTrackerProgression = true;
                 dungeon.Cleared = false;
+                addedEvent.IsUndone = true;
             });
         }
 
@@ -1888,8 +1933,18 @@ namespace Randomizer.SMZ3.Tracking
             else
                 Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
 
+            var addedEvent = History.AddEvent(
+                HistoryEventType.BeatBoss,
+                true,
+                boss.Name.ToString() ?? "boss"
+            );
+
             OnBossUpdated(new(confidence));
-            AddUndo(() => boss.Defeated = false);
+            AddUndo(() =>
+            {
+                boss.Defeated = false;
+                addedEvent.IsUndone = true;
+            });
         }
 
         /// <summary>
@@ -2061,9 +2116,10 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="region">The region the player is in</param>
         /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-        public void UpdateRegion(Region region, bool updateMap = false)
+        /// <param name="resetTime">If the time should be reset if this is the first region update</param>
+        public void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
         {
-            UpdateRegion(WorldInfo.Regions.First(x => x.GetRegion(World) == region), updateMap);
+            UpdateRegion(WorldInfo.Regions.First(x => x.GetRegion(World) == region), updateMap, resetTime);
         }
 
         /// <summary>
@@ -2071,8 +2127,23 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="region">The region the player is in</param>
         /// <param name="updateMap">Set to true to update the map for the player to match the region</param>
-        public void UpdateRegion(RegionInfo region, bool updateMap = false)
+        /// <param name="resetTime">If the time should be reset if this is the first region update</param>
+        public void UpdateRegion(RegionInfo region, bool updateMap = false, bool resetTime = false)
         {
+            if (region != CurrentRegion)
+            {
+                if (resetTime && History.GetHistory().Count == 0)
+                {
+                    ResetTimer(true);
+                }
+
+                History.AddEvent(
+                    HistoryEventType.EnteredRegion,
+                    true,
+                    region.Name.ToString() ?? "new region"
+                );
+            }
+
             CurrentRegion = region;
             if (updateMap)
             {

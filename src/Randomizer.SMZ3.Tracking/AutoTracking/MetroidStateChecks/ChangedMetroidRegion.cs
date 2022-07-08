@@ -21,10 +21,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         {
             if (currentState.CurrentRegion != _previousMetroidRegionValue || tracker.CurrentRegion?.GetRegion(tracker.World) is Z3Region)
             {
+                var startedAtShip = currentState.CurrentRoomInRegion == 0 && currentState.CurrentRegion == 0 && currentState.IsSamusInArea(1125, 1175, 1050, 1100);
                 var newRegion = tracker.World.Regions.Select(x => x as SMRegion).FirstOrDefault(x => x != null && x.MemoryRegionId == currentState.CurrentRegion);
                 if (newRegion != null)
                 {
-                    tracker.UpdateRegion(newRegion, tracker.Options.AutoTrackerChangeMap);
+                    tracker.UpdateRegion(newRegion, tracker.Options.AutoTrackerChangeMap, startedAtShip);
                 }
                 _previousMetroidRegionValue = currentState.CurrentRegion;
                 return true;

@@ -69,6 +69,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         throw new ArgumentException($"The threshold setting '{thresholdSetting}' was not recognized.");
                 }
             });
+
+            AddCommand("Pause timer", GetPauseTimerRule(), (tracker, result) =>
+            {
+                tracker.PauseTimer();
+            });
+
+            AddCommand("Start timer", GetResumeTimerRule(), (tracker, result) =>
+            {
+                tracker.StartTimer();
+            });
+
+            AddCommand("Reset timer", GetResetTimerRule(), (tracker, result) =>
+            {
+                tracker.ResetTimer();
+            });
         }
 
         private static Choices GetIncreaseDecrease()
@@ -136,6 +151,30 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("threshold", "confidence")
                 .Append("by")
                 .Append(ValueKey, values);
+        }
+
+        private GrammarBuilder GetPauseTimerRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Optional("please")
+                .OneOf("pause the timer", "stop the timer");
+        }
+
+        private GrammarBuilder GetResumeTimerRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Optional("please")
+                .OneOf("resume the timer", "start the timer");
+        }
+
+        private GrammarBuilder GetResetTimerRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Optional("please")
+                .OneOf("reset the timer");
         }
     }
 }

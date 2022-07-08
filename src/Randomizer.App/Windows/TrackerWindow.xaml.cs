@@ -44,8 +44,6 @@ namespace Randomizer.App
         private readonly IServiceProvider _serviceProvider;
         private readonly List<object> _mouseDownSenders = new();
         private bool _pegWorldMode;
-        private DateTime _startTime;
-        private TimeSpan _elapsedTime;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
@@ -699,7 +697,6 @@ namespace Randomizer.App
 
             Tracker.ConnectToChat(Options.GeneralOptions.TwitchUserName, Options.GeneralOptions.TwitchOAuthToken,
                 Options.GeneralOptions.TwitchChannel, Options.GeneralOptions.TwitchId);
-            _startTime = DateTime.Now;
             _dispatcherTimer.Start();
 
             // Show proper voice status bar icon and warn the user if no mic is available
@@ -969,7 +966,7 @@ namespace Randomizer.App
             if (GeneratedRom.IsValid(Rom))
             {
                 Tracker.Load(Rom);
-                Tracker.StartTimer();
+                Tracker.StartTimer(true);
                 if (_dispatcherTimer.IsEnabled)
                 {
                     _dispatcherTimer.Start();
@@ -1056,23 +1053,18 @@ namespace Randomizer.App
         private void StatusBarTimer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             // Reset timer on double click
-            _startTime = DateTime.Now;
             Tracker.ResetTimer();
         }
 
         private void StatusBarTimer_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             // Pause/resume timer on right click
-            if (_dispatcherTimer.IsEnabled)
+            if (!Tracker.IsTimerPaused)
             {
-                _elapsedTime = DateTime.Now - _startTime;
-                _dispatcherTimer.Stop();
                 Tracker.PauseTimer();
             }
             else
             {
-                _startTime = DateTime.Now - _elapsedTime;
-                _dispatcherTimer.Start();
                 Tracker.StartTimer();
             }
         }

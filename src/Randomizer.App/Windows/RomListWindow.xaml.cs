@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.App
 {
@@ -26,12 +27,14 @@ namespace Randomizer.App
         private readonly RandomizerContext _dbContext;
         private readonly RomGenerator _romGenerator;
         private TrackerWindow _trackerWindow;
+        private readonly IHistoryService _historyService;
 
         public RomListWindow(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListWindow> logger,
             RandomizerContext dbContext,
-            RomGenerator romGenerator)
+            RomGenerator romGenerator,
+            IHistoryService historyService)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -40,6 +43,7 @@ namespace Randomizer.App
             InitializeComponent();
             CheckSpeechRecognition();
             Options = optionsFactory.Create();
+            _historyService = historyService;
 
             Model = new GeneratedRomsViewModel();
             DataContext = Model;
@@ -136,6 +140,7 @@ namespace Randomizer.App
         {
             var models = _dbContext.GeneratedRoms
                     .Include(x => x.TrackerState)
+                    .Include(x => x.TrackerState.History)
                     .OrderByDescending(x => x.Id)
                     .ToList();
             Model.UpdateList(models);
@@ -243,6 +248,13 @@ namespace Randomizer.App
             if (!CanStartTracker)
             {
                 MessageBox.Show(this, $"No speech recognition capabilities detected. Please check Windows settings under Time & Language > Speech.",
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (_trackerWindow != null && _trackerWindow.IsVisible)
+            {
+                MessageBox.Show(this, $"An instance of tracker is already open.",
                     "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -521,6 +533,7 @@ namespace Randomizer.App
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.DungeonStates).Load();
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.MarkedLocations).Load();
                 _dbContext.Entry(rom.TrackerState).Collection(x => x.BossStates).Load();
+                _dbContext.Entry(rom.TrackerState).Collection(x => x.History).Load();
 
                 _dbContext.TrackerStates.Remove(rom.TrackerState);
             }
@@ -593,6 +606,40 @@ namespace Randomizer.App
             {
                 Clipboard.SetDataObject(text);
             }
+        }
+
+        private void ProgressionLogMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not MenuItem menuItem)
+                return;
+
+            if (menuItem.Tag is not GeneratedRom rom)
+                return;
+
+            if (rom.TrackerState == null)
+            {
+                MessageBox.Show(this, "There is no history for the selected rom.",
+                        "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            _dbContext.Entry(rom.TrackerState).Collection(x => x.History).Load();
+
+            if (rom.TrackerState.History == null || rom.TrackerState.History.Count == 0)
+            {
+                MessageBox.Show(this, "There is no history for the selected rom.",
+                        "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath).Replace("Spoiler_Log", "Progression_Log");
+            var historyText = _historyService.GenerateHistoryText(rom, rom.TrackerState.History.ToList(), true);
+            File.WriteAllText(path, historyText);
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = path,
+                UseShellExecute = true
+            });
         }
     }
 }

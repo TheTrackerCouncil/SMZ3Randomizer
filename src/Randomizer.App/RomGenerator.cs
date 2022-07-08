@@ -69,14 +69,16 @@ namespace Randomizer.App
                 var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
                 Directory.CreateDirectory(folderPath);
 
-                var romFileName = $"SMZ3_Cas_{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}.sfc";
+                var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}";
+                var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
                 var romPath = Path.Combine(folderPath, romFileName);
                 EnableMsu1Support(options, bytes, romPath, out var msuError);
                 Rom.UpdateChecksum(bytes);
                 File.WriteAllBytes(romPath, bytes);
 
                 var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
-                var spoilerPath = Path.ChangeExtension(romPath, ".txt");
+                var spoilerFileName = $"Spoiler_Log_{fileSuffix}.txt";
+                var spoilerPath = Path.Combine(folderPath, spoilerFileName);
                 File.WriteAllText(spoilerPath, spoilerLog);
 
                 try

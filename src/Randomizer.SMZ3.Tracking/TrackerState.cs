@@ -40,6 +40,7 @@ namespace Randomizer.SMZ3.Tracking
             IReadOnlyCollection<DungeonState> dungeonStates,
             IReadOnlyCollection<MarkedLocation> markedLocations,
             IReadOnlyCollection<BossState> bossStates,
+            IReadOnlyCollection<TrackerHistoryEvent> trackerHistoryEvents,
             double secondsElapsed,
             Config seedConfig)
         {
@@ -49,6 +50,7 @@ namespace Randomizer.SMZ3.Tracking
             DungeonStates = dungeonStates;
             MarkedLocations = markedLocations;
             BossStates = bossStates;
+            HistoryEvents = trackerHistoryEvents;
             SecondsElapsed = secondsElapsed;
             SeedConfig = seedConfig;
         }
@@ -82,6 +84,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets a collection of marked locations.
         /// </summary>
         public IReadOnlyCollection<BossState> BossStates { get; }
+
+        /// <summary>
+        /// Gets a collection of marked locations.
+        /// </summary>
+        public IReadOnlyCollection<TrackerHistoryEvent> HistoryEvents { get; }
 
         /// <summary>
         /// Gets the <see cref="Config"/> used to generate the seed being
@@ -126,6 +133,7 @@ namespace Randomizer.SMZ3.Tracking
             var bossStates = tracker.WorldInfo.Bosses
                 .Select(x => new BossState(x.Name[0], x.Defeated))
                 .ToImmutableList();
+            var historyEvents = tracker.History.GetHistory();
             var seedConfig = tracker.World.Config;
             var secondsElapsed = tracker.TotalElapsedTime.TotalSeconds;
             return new TrackerState(
@@ -135,6 +143,7 @@ namespace Randomizer.SMZ3.Tracking
                 dungeonStates,
                 markedLocations,
                 bossStates,
+                historyEvents,
                 secondsElapsed,
                 seedConfig);
         }
@@ -185,6 +194,7 @@ namespace Randomizer.SMZ3.Tracking
             dbContext.Entry(trackerState).Collection(x => x.DungeonStates).Load();
             dbContext.Entry(trackerState).Collection(x => x.MarkedLocations).Load();
             dbContext.Entry(trackerState).Collection(x => x.BossStates).Load();
+            dbContext.Entry(trackerState).Collection(x => x.History).Load();
 
             var itemStates = trackerState.ItemStates
                 .Select(x => new ItemState(x.ItemName, x.TrackingState))
@@ -210,6 +220,9 @@ namespace Randomizer.SMZ3.Tracking
                 .Select(x => new BossState(x.BossName, x.Defeated))
                 .ToImmutableList();
 
+            var historyEvents = trackerState.History
+                .ToImmutableList();
+
             var secondsElapsed = trackerState.SecondsElapsed;
 
             var config = GeneratedRom.IsValid(generatedRom) ? Config.FromConfigString(generatedRom.Settings) : new Config();
@@ -221,6 +234,7 @@ namespace Randomizer.SMZ3.Tracking
                 dungeonStates,
                 markedLocations,
                 bossStates,
+                historyEvents,
                 secondsElapsed,
                 config ?? new Config());
         }
@@ -300,7 +314,7 @@ namespace Randomizer.SMZ3.Tracking
 
                 boss.Defeated = bossState.Defeated;
             }
-
+            tracker.History.LoadHistory(tracker, this);
             tracker.World = world;
             tracker.SavedElapsedTime = TimeSpan.FromSeconds(SecondsElapsed);
         }
@@ -393,6 +407,9 @@ namespace Randomizer.SMZ3.Tracking
                     })
                     .ToList();
 
+                trackerState.History = HistoryEvents
+                    .ToList();
+
                 if (rom != null)
                 {
                     rom.Settings = Config.ToConfigString(SeedConfig, true);
@@ -413,6 +430,7 @@ namespace Randomizer.SMZ3.Tracking
                 trackerState.RegionStates.ToList().ForEach(x => CopyRegionState(x, RegionStates.First(y => y.TypeName == x.TypeName)));
                 trackerState.DungeonStates.ToList().ForEach(x => CopyDungeonState(x, DungeonStates.First(y => y.Name == x.Name)));
                 trackerState.BossStates.ToList().ForEach(x => CopyBossState(x, BossStates.First(y => y.Name == x.BossName)));
+                trackerState.History = HistoryEvents.ToList();
 
                 trackerState.MarkedLocations = MarkedLocations
                     .Select(x => new TrackerMarkedLocation()

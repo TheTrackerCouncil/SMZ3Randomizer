@@ -79,6 +79,8 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public Visibility ProgressionLogVisibility => Rom.TrackerState?.History?.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
         public string TimeLabel
         {
             get

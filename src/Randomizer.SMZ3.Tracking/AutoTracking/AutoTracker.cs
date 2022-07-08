@@ -376,7 +376,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 PlayerHasFairy = false;
                 for (var i = 0; i < 4; i++)
                 {
-                    PlayerHasFairy |= action.CurrentData.ReadUInt8(0xDC + i) == 6;
+                    PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
                 }
             }
         }
@@ -438,7 +438,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         var item = Tracker.Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
                         if (item != null)
                         {
-                            Tracker.TrackItem(item, location, null, null, true);
+                            Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
                             _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
                         }
                         else
