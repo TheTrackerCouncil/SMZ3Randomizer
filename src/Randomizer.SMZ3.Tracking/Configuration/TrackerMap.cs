@@ -20,7 +20,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <param name="width">The width of the map image in pixels</param>
         /// <param name="height">The height of the map image in pixels</param>
         /// <param name="regions">A list of all regions that are a part of this map</param>
-        public TrackerMap(SchrodingersString name, string image, int width, int height, IReadOnlyCollection<TrackerMapLocation> regions)
+        /// <param name="isDarkRoomMap">If this is a map for a dark room</param>
+        /// <param name="memoryRoomNumbers">The rooms applicable for this particular map</param>
+        public TrackerMap(SchrodingersString name, string image, int width, int height, IReadOnlyCollection<TrackerMapLocation> regions, bool? isDarkRoomMap, IReadOnlyCollection<int>? memoryRoomNumbers)
         {
             Name = name;
             Image = image;
@@ -28,6 +30,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             Height = height;
             Regions = regions;
             FullLocations = new();
+            IsDarkRoomMap = isDarkRoomMap;
+            MemoryRoomNumbers = memoryRoomNumbers;
         }
 
         /// <summary>
@@ -55,6 +59,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// should be placed on the map
         /// </summary>
         public IReadOnlyCollection<TrackerMapLocation> Regions { get; }
+
+        /// <summary>
+        /// If this is a map for showing dark rooms
+        /// </summary>
+        public bool? IsDarkRoomMap { get; }
+
+        /// <summary>
+        /// A list of rooms numbers in memory that are applicable for this map
+        /// </summary>
+        public IReadOnlyCollection<int>? MemoryRoomNumbers { get; }
 
         /// <summary>
         /// List of all actual locations that are underneath the region

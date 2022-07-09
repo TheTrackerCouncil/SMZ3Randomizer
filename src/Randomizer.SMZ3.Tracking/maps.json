@@ -553,6 +553,83 @@
     },
     {
       "Name": [
+        "Eastern Palace Side",
+        "Eastern Palace East",
+        "Eastern Palace Right",
+        "Eastern Palace Right Side",
+        "Eastern Palace East Side"
+      ],
+      "Image": "ep_side.png",
+      "Width": 960,
+      "Height": 416,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 186 ]
+    },
+    {
+      "Name": [
+        "Eastern Palace Back",
+        "Eastern Palace Eyegore Room"
+      ],
+      "Image": "ep_back.png",
+      "Width": 704,
+      "Height": 416,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 153 ]
+    },
+    {
+      "Name": [
+        "Death Mountain Cave",
+        "Death Mountain Dark Cave",
+        "Old Man Cave"
+      ],
+      "Image": "dm_cave.png",
+      "Width": 1028,
+      "Height": 512,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 240, 241 ]
+    },
+    {
+      "Name": [
+        "Dark Palace Maze",
+        "Dark Palace Maze Room"
+      ],
+      "Image": "pod_maze.png",
+      "Width": 528,
+      "Height": 928,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 25 ]
+    },
+    {
+      "Name": [
+        "Dark Palace Dark Basement",
+        "Dark Palace Back",
+        "Dark Palace Basement"
+      ],
+      "Image": "pod_basement.png",
+      "Width": 1514,
+      "Height": 992,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 106, 11 ]
+    },
+    {
+      "Name": [
+        "Hyrule Castle Escape",
+        "Dark Cross"
+      ],
+      "Image": "hc_escape.png",
+      "Width": 1008,
+      "Height": 1163,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 33, 34, 50, 65, 66 ]
+    },
+    {
+      "Name": [
         "SMZ3 Combined",
         "Everything"
       ],

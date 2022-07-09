@@ -661,5 +661,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the configured phrases for auto tracking.
         /// </summary>
         public AutoTrackerConfig AutoTracker { get; init; } = new();
+
+        /// <summary>
+        /// Gets the configured phrases for the map
+        /// </summary>
+        public MapResponseConfig Map { get; init; } = new();
     }
 }

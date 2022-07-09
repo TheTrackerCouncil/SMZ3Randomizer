@@ -151,7 +151,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void MapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex));
+            _syncer.Tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
         }
 
         private void PropertyChanged(object sender, PropertyChangedEventArgs e)

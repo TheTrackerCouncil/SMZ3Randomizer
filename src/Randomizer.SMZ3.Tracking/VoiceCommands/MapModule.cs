@@ -1,4 +1,6 @@
-﻿using System.Speech.Recognition;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using Randomizer.SMZ3.Tracking.Configuration;
 
@@ -9,9 +11,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class MapModule : TrackerModule
     {
-        Tracker _tracker;
-        TrackerMapConfig _config;
-        ILogger<MapModule> _logger;
+        private readonly TrackerMapConfig _config;
+        private readonly ILogger<MapModule> _logger;
+        private readonly IReadOnlyCollection<TrackerMap> _darkRoomMaps;
+        private string _prevMap = "";
 
         /// <summary>
         /// Constructor
@@ -22,20 +25,65 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public MapModule(Tracker tracker, ILogger<MapModule> logger, TrackerMapConfig config)
             : base(tracker, logger)
         {
-            _tracker = tracker;
             _logger = logger;
             _config = config;
 
-            var maps = config.Maps;
-            foreach(var map in maps)
-            {
-                logger.LogInformation(map.Name);
-            }
+            _darkRoomMaps = config.Maps.Where(x => x.IsDarkRoomMap == true && x.MemoryRoomNumbers?.Count > 0).ToList();
 
             AddCommand("Update map", GetChangeMapRule(), (tracker, result) =>
             {
                 var mapName = (string)result.Semantics[MapKey].Value;
                 Tracker.UpdateMap(mapName);
+                Tracker.Say(x => x.Map.UpdateMap, mapName);
+            });
+
+            AddCommand("Show dark room map", DarkRoomRule(), (tracker, result) =>
+            {
+                // If the player is not in a Zelda cave/dungeon
+                if (Tracker.AutoTracker?.CurrentGame != AutoTracking.Game.Zelda || Tracker.AutoTracker?.ZeldaState?.OverworldScreen != 0)
+                {
+                    Tracker.Say(x => x.Map.NotInDarkRoom);
+                    return;
+                }
+
+                // Get the room and map for the player
+                var roomNumber = Tracker.AutoTracker?.ZeldaState?.CurrentRoom ?? -1;
+                var map = _darkRoomMaps.FirstOrDefault(x => x.MemoryRoomNumbers?.Contains(roomNumber) == true);
+
+                if (map != null)
+                {
+                    if (Tracker.Items.First(x => x.InternalItemType == Shared.ItemType.Lamp).TrackingState > 0)
+                    {
+                        Tracker.Say(x => x.Map.HasLamp);
+                        return;
+                    }
+
+                    _prevMap = Tracker.CurrentMap;
+                    if (string.IsNullOrEmpty(_prevMap))
+                    {
+                        _prevMap = _config.Maps.Last().ToString() ?? "";
+                    }
+                    Tracker.UpdateMap(map.ToString() ?? _prevMap);
+                    Tracker.Say(x => x.Map.ShowDarkRoomMap, map.Name);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Map.NotInDarkRoom);
+                }
+            });
+
+            AddCommand("Hide dark room map", CanSeeRule(), (tracker, result) =>
+            {
+                if (string.IsNullOrEmpty(_prevMap))
+                {
+                    Tracker.Say(x => x.Map.NoPrevDarkRoomMap);
+                }
+                else
+                {
+                    Tracker.UpdateMap(_prevMap);
+                    Tracker.Say(x => x.Map.HideDarkRoomMap, _prevMap);
+                    _prevMap = "";
+                }
             });
         }
 
@@ -70,6 +118,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Optional("map");
 
             return GrammarBuilder.Combine(version1, version2);
+        }
+
+        private GrammarBuilder DarkRoomRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("it's dark in here", "I can't see", "show me this dark room map");
+        }
+
+        private GrammarBuilder CanSeeRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("I can see now", "I can see clearly now", "it's no longer dark", "I'm out of the dark room", "stop showing me the dark room map");
         }
     }
 }
