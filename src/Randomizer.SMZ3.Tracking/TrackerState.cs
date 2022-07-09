@@ -410,7 +410,7 @@ namespace Randomizer.SMZ3.Tracking
                 trackerState.History = HistoryEvents
                     .ToList();
 
-                if (rom != null)
+                if (rom != null && string.IsNullOrEmpty(rom.Settings))
                 {
                     rom.Settings = Config.ToConfigString(SeedConfig, true);
                 }

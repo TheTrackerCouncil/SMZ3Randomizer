@@ -1330,7 +1330,7 @@ namespace Randomizer.SMZ3.Tracking
 
             if (location == null)
             {
-                World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
+                location = World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
             }
 
             if (location != null)
@@ -1340,7 +1340,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (tryClear)
                 {
                     // If this item was in a dungeon, track treasure count
-                    undoTrackDungeonTreasure = TryTrackDungeonTreasure(item, confidence);
+                    undoTrackDungeonTreasure = TryTrackDungeonTreasure(location, confidence);
 
                     // Important: clear only after tracking dungeon treasure, as
                     // the "guess dungeon from location" algorithm excludes
@@ -1836,17 +1836,7 @@ namespace Randomizer.SMZ3.Tracking
                 OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
             }
 
-            Action? undoTrackTreasure = null;
-            var dungeon = GetDungeonFromLocation(location);
-            if (dungeon != null && (IsTreasure(location.Item) || World.Config.Keysanity))
-            {
-                TrackDungeonTreasure(dungeon, confidence);
-
-                if (!autoTracked)
-                {
-                    undoTrackTreasure = _undoHistory.Pop();
-                }
-            }
+            Action? undoTrackTreasure = TryTrackDungeonTreasure(location, confidence);
 
             Action? undoStopPegWorldMode = null;
             if (location == World.DarkWorldNorthWest.PegWorld)
@@ -2415,6 +2405,27 @@ namespace Randomizer.SMZ3.Tracking
 
             var dungeon = GetDungeonFromItem(item);
             if (dungeon != null && (IsTreasure(item) || World.Config.Keysanity))
+            {
+                if (TrackDungeonTreasure(dungeon, confidence))
+                    return _undoHistory.Pop();
+            }
+
+            IsDirty = true;
+
+            return null;
+        }
+
+        private Action? TryTrackDungeonTreasure(Location location, float? confidence)
+        {
+            if (confidence < Options.MinimumSassConfidence)
+            {
+                // Tracker response could give away the location of an item if
+                // it is in a dungeon but tracker misheard.
+                return null;
+            }
+
+            var dungeon = GetDungeonFromLocation(location);
+            if (dungeon != null && (IsTreasure(location.Item) || World.Config.Keysanity))
             {
                 if (TrackDungeonTreasure(dungeon, confidence))
                     return _undoHistory.Pop();

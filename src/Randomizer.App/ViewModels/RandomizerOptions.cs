@@ -137,7 +137,6 @@ namespace Randomizer.App.ViewModels
                     CopySeedAndRaceSettings = true,
                     Seed = SeedOptions.Seed,
                 };
-                config.SettingsString = Config.ToConfigString(config, true);
                 return config;
             }
             else

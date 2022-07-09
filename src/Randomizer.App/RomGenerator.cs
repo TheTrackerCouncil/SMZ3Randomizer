@@ -52,8 +52,8 @@ namespace Randomizer.App
             {
                 var bytes = GenerateRomBytes(options, out var seed);
 
-                var config = options.ToConfig();
-                if (!_randomizer.ValidateSeedSettings(seed, config))
+                var config = seed.Playthrough.Config;
+                if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
                 {
                     if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
                         "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
@@ -194,9 +194,7 @@ namespace Randomizer.App
         /// <returns>The db entry for the generated rom</returns>
         protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
-            var config = options.ToConfig();
-            config.Seed = seed.Seed;
-            var settings = Config.ToConfigString(config, true);
+            var config = seed.Playthrough.Config;
 
             var rom = new GeneratedRom()
             {
@@ -204,7 +202,7 @@ namespace Randomizer.App
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
-                Settings = settings,
+                Settings = config.SettingsString,
                 GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);
@@ -234,7 +232,7 @@ namespace Randomizer.App
             log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
             log.AppendLine($"Generated on {DateTime.Now:F}");
             log.AppendLine($"Seed: {options.SeedOptions.Seed} (actual: {seed.Seed})");
-            log.AppendLine($"Settings String: {Config.ToConfigString(seed.Playthrough.Config, true)}");
+            log.AppendLine($"Settings String: {seed.Playthrough.Config.SettingsString}");
             log.AppendLine($"Early Items: {string.Join(',', seed.Playthrough.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
 
             var locationPrefs = new List<string>();

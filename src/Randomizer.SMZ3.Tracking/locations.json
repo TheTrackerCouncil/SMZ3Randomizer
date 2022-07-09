@@ -305,7 +305,12 @@
         "Palace of Darkness",
         "Palace of Dorkness"
       ],
-      "MapName": "Dark World"
+      "MapName": "Dark World",
+      "WhenDiedInRoom": {
+        "90": [
+          "Guess you weren't worthy of an audience with the king"
+        ]
+      }
     },
     {
       "TypeName": "Randomizer.SMZ3.Regions.Zelda.SkullWoods",

@@ -207,7 +207,11 @@
       ]
     },
     {
-      "Name": [ "Magic Powder", "Drugs" ],
+      "Name": [
+        "Magic Powder",
+        "Drugs",
+        "Prescription medicine"
+      ],
       "InternalItemType": 13,
       "Column": 4,
       "Row": 0,
@@ -329,11 +333,13 @@
     {
       "Name": [
         "Bottle",
-        [ "Glass container", 0.2 ]
+        [ "Glass container", 0.2 ],
+        [ "Fairy containment device", 0.2 ]
       ],
       "Plural": [
         "Bottles",
-        [ "Glass containers", 0.2 ]
+        [ "Glass containers", 0.2 ],
+        [ "Fairy containment device", 0.2 ]
       ],
       "InternalItemType": 22,
       "Multiple": true,
@@ -353,7 +359,11 @@
       "InternalItemType": 23,
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Four more and it will matter. Kind of. Maybe.", "Neat. A whole quarter of a heart" ],
+        "1": [
+          "Three more and it will matter. Kind of. Maybe.",
+          "Neat. A whole quarter of a heart",
+          [ "Four more and it will matter. Wait, I'm thinking of Twilight Princess. Three more and it will matter.", 0.2 ]
+        ],
         "2": [ "You now have two heart pieces", "Half way to this actually being somewhat useful", "Why do I track these again?" ],
         "3": [ "You now have three heart pieces", "Three quarters of a heart is almost a working one, I think" ],
         "4": [ "Another full heart, neat", "Increased survivablity by one step", "Maybe now you won't die." ],
@@ -385,7 +395,11 @@
       ]
     },
     {
-      "Name": [ "Magic Cape", "Cape" ],
+      "Name": [
+        "Magic Cape",
+        "Cape",
+        [ "The cape of invisibility and invincibility", 0.1 ]
+      ],
       "InternalItemType": 25,
       "Column": 3,
       "Row": 3,
@@ -420,6 +434,8 @@
       "Name": [
         "Book of Mudora",
         "Sacred Texts",
+        [ "thesaurus", 0.5 ],
+        [ "fanfiction", 0.5 ],
         [ "Book of Smut", 0.5 ],
         [ "Literature", 0.5 ]
       ],
@@ -432,7 +448,8 @@
       "Name": [
         [ "Zora's Flippers", 0 ],
         "Flippers",
-        [ "Floatys", 0.1 ]
+        [ "Floatys", 0.1 ],
+        [ "Swimming", 0.1 ]
       ],
       "InternalItemType": 30,
       "Column": 2,
@@ -462,7 +479,8 @@
         "Bug Catching Net",
         "Bug net",
         [ "Ahgah destroyer", 0.1 ],
-        [ "Swagnet", 0.1 ]
+        [ "Swagnet", 0.1 ],
+        [ "Fairy capturing device", 0.1 ]
       ],
       "InternalItemType": 33,
       "Column": 3,
@@ -521,7 +539,14 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Really?", "I don't get paid enough for this.", "Do you think I've got nothing better to do?", "Why are you wasting my time?" ]
+        "1": [
+          "Really?",
+          "I don't get paid enough for this.",
+          "Do you think I've got nothing better to do?",
+          "Why are you wasting my time?",
+          "You better have accidentally picked that up",
+          "Hopefully there's a wishing well for you to toss that in"
+        ]
       },
       "Hints": [
         "It's just money.",
@@ -535,7 +560,12 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Smash four of these together and you get a big 20", "One hundred more and you can get scammed by Zora.", "That's some nice couch cash" ],
+        "1": [
+          "Smash four of these together and you get a big 20",
+          "One hundred more and you can get scammed by Zora.",
+          "That's some nice couch cash",
+          "Picked up a nickel"
+        ],
         "2": [ "Blue pee? Maybe you should see a doctor.", "I hope your wallet is big enough" ],
         "3": null
       },
@@ -554,7 +584,7 @@
         "1": [ "Seriously?", "This is not the con-tent you are looking for.", "Don't spend it all in one place.", "It begins", "The first big 20 is always special" ],
         "2": [ "Only your second? I'm surprised.", "You now have 2 big twenties. Out of like five thousand." ],
         "3": null,
-        "4": [ "You now have 4 20 rupee's. Nice." ],
+        "4": [ "You now have 4 20 rupee's. Nice.", "You now have 4 20 rupee's. Ha. That's the funny number." ],
         "5": null
       },
       "Hints": [
@@ -571,7 +601,7 @@
       "Column": 5,
       "Row": 3,
       "WhenTracked": {
-        "1": [ "Increased survivablity by one step", "Maybe you will die less often now." ],
+        "1": [ "Increased survivablity by one step", "Maybe you will die less often now.", "Thump thump" ],
         "2": [ "Get a few more and I can sleep early today", "Was it still beating when you found it?" ],
         "3": null
       },
@@ -662,7 +692,14 @@
       ]
     },
     {
-      "Name": [ "Pegasus Boots", "Boots", "Speedy boots" ],
+      "Name": [
+        "Pegasus Boots",
+        "Boots",
+        "Speedy boots",
+        "Sneakers",
+        [ "Sneaks", 0.1 ],
+        [ "Booties", 0.1 ]
+      ],
       "InternalItemType": 75,
       "Column": 1,
       "Row": 4,
@@ -688,7 +725,7 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay" ],
-        "2": [ "Your mom signed the permission slip, now you can carry more bombs", "You are now authorized to know more things" ],
+        "2": [ "Your mom signed the permission slip, now you can carry more bombs", "You are now authorized to know more things", "You can now carry more of an item you'll probably never run out of after the first 15 minutes." ],
         "3": null
       }
     },
@@ -698,8 +735,14 @@
       "Article": "",
       "Multiple": true,
       "WhenTracked": {
-        "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay", "Wow more sticks, cool" ],
-        "2": [ "Your mom signed the permission slip, now you can carry more arrows", "You had to be told how to carry more sticks? Twice?", "You can now carry more of an item you'll probably never run out of after the first 15 minutes." ],
+        "1": [
+          "Such a useful item",
+          "I'm sure you're excited to get that",
+          "Yay",
+          "Wow more sticks, cool",
+          [ "Maybe now you won't run out in Ganon's Tower", 0.1 ]
+        ],
+        "2": [ "Your mom signed the permission slip, now you can carry more arrows", "You had to be told how to carry more sticks? Twice?" ],
         "3": null
       }
     },
@@ -1855,6 +1898,7 @@
         "Hey chat.",
         "Hello Twitch chat.",
         "Hey Twitch chat.",
+        [ "Hey chat, smile if you're only here because of me.", 0.1 ],
         [ "Hey chat, be nice or I'll ban each and every one of you.", 0.1 ],
         [ "Hey chat, I'm happy so many of you have come to this Twitch stream to see me.", 0.1 ]
       ],
@@ -2291,7 +2335,8 @@
         "PB incoming for seed {0}",
         "Letsa Go",
         "You are already behind the pace needed for a new PB",
-        "One of these days I'll be playing the games myself"
+        "One of these days I'll be playing the games myself",
+        "Welcome to a very special episode of SMZ3 Randomizer"
       ],
       "NearKraidsAwfulSon": [
         "Oh no. Please avert your eyes to avoid seeing an imminent disaster.",
@@ -2395,6 +2440,40 @@
         "I hope you don't find any medallions soon.",
         "Maybe you won't have to dip into Misery Mire or Turtle Rock",
         "This could be worse"
+      ]
+    },
+    "Map": {
+      "UpdateMap": [
+        "Showing you the {0} map",
+        "Now displaying the {0} map"
+      ],
+      "ShowDarkRoomMap": [
+        "Showing you the {0} map",
+        "I hope you don't get lost",
+        "Good luck navigating through this area"
+      ],
+      "NotInDarkRoom": [
+        "I don't think I can help you here",
+        "Why don't you just look at the screen?",
+        "You're on your own here"
+      ],
+      "HideDarkRoomMap": [
+        "Did you make it through?",
+        "Showing you the {0} map",
+        "I hope you got what you wanted",
+        "I have removed the blindfold",
+        [ "Is the rain gone now?", 0.1 ]
+      ],
+      "NoPrevDarkRoomMap": [
+        "I don't know which map to show you",
+        "You have to be lost before you can be found",
+        "But you weren't previously in a dark room"
+      ],
+      "HasLamp": [
+        "But you have the lamp",
+        "Why don't you just pull out your lamp?",
+        "I think you're a liar",
+        "Why don't you just look at the screen?"
       ]
     }
   },
