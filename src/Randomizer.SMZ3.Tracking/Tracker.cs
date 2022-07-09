@@ -1836,17 +1836,7 @@ namespace Randomizer.SMZ3.Tracking
                 OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
             }
 
-            Action? undoTrackTreasure = null;
-            var dungeon = GetDungeonFromLocation(location);
-            if (dungeon != null && (IsTreasure(location.Item) || World.Config.Keysanity))
-            {
-                TrackDungeonTreasure(dungeon, confidence);
-
-                if (!autoTracked)
-                {
-                    undoTrackTreasure = _undoHistory.Pop();
-                }
-            }
+            Action? undoTrackTreasure = TryTrackDungeonTreasure(location, confidence);
 
             Action? undoStopPegWorldMode = null;
             if (location == World.DarkWorldNorthWest.PegWorld)
