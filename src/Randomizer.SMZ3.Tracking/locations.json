@@ -893,6 +893,7 @@
     {
       "Name": [
         "Chozo Ruins entrance",
+        "that room opposite the Gauntlet",
         [ "Power Bomb (Crateria surface)", 0 ]
       ],
       "X": 968,
@@ -903,6 +904,7 @@
       "Name": [
         "Flooded Cavern - under water",
         "West Ocean - under water",
+        "that room before Wrecked Ship that's underwater",
         [ "Missile (outside Wrecked Ship bottom)", 0 ]
       ],
       "X": 1128,
@@ -912,6 +914,7 @@
       "Id": 2,
       "Name": [
         "Sky Missile",
+        "that spot all the way up in the sky after Wrecked Ship",
         [ "Missile (outside Wrecked Ship top)", 0 ]
       ],
       "X": 1160,
@@ -931,6 +934,7 @@
       "Name": [
         "The Moat",
         "Interior Lake",
+        "that room between Crateria and Wrecked Ship with the item on the water",
         [ "Missile (Crateria moat)", 0 ]
       ],
       "X": 1064,
@@ -940,6 +944,7 @@
       "Id": 5,
       "Name": [
         "Gauntlet (Chozo)",
+        "the room in the middle of the Gauntlet",
         [ "Energy Tank, Gauntlet", 0 ]
       ],
       "X": 456,
@@ -951,6 +956,7 @@
         "Mother Brain's reliquary",
         "Pit Room",
         "Mother Brain's toilet",
+        "the spot underneath the place Mother Brain used to be",
         [ "Missile (Crateria bottom)", 0 ]
       ],
       "X": 552,
@@ -973,6 +979,7 @@
       "Name": [
         "Terminator Room",
         "Fungal Slope",
+        "that room in Crateria with the mushrooms",
         [ "Energy Tank, Terminator", 0 ]
       ],
       "X": 296,
@@ -982,6 +989,7 @@
       "Id": 9,
       "Name": [
         "Gauntlet Shaft Right",
+        "that spot on the right side after the Gauntlet",
         [ "Missile (Crateria gauntlet right)", 0 ]
       ]
     },
@@ -989,6 +997,7 @@
       "Id": 10,
       "Name": [
         "Gauntlet Shaft Left",
+        "that spot on the left side after the Gauntlet",
         [ "Missile (Crateria gauntlet left)", 0 ]
       ]
     },
@@ -1007,6 +1016,7 @@
         "Final Missile Bombway",
         "The Final Missile",
         "Dental Plan Missiles",
+        "the room in Crateria on the other side of the entrance to Zelda",
         [ "Missile (Crateria middle)", 0 ]
       ],
       "X": 424,
@@ -1015,7 +1025,10 @@
     {
       "Id": 13,
       "Name": [
-        "Power Bomb (green Brinstar bottom)"
+        "Hell",
+        "Etecoon shaft",
+        "that room where the animals are wall jumping",
+        [ "Power Bomb (green Brinstar bottom)", 0 ]
       ],
       "X": 328,
       "Y": 308
@@ -1033,6 +1046,7 @@
       "Id": 15,
       "Name": [
         "Mockball Room - Fail item",
+        "that spot you get to when failing the mock ball in Green Brinstar",
         [ "Missile (green Brinstar below super missile)", 0 ]
       ],
       "X": 296,
@@ -1042,6 +1056,7 @@
       "Id": 16,
       "Name": [
         "Mockball Room Attic",
+        "that spot on your way out of the mockball room",
         [ "Super Missile (green Brinstar top)", 0 ]
       ],
       "X": 264,
@@ -1051,6 +1066,8 @@
       "Id": 17,
       "Name": [
         "Mockball Chozo",
+        "the room after you use the Speed Booster in Green Brinstar",
+        "the room after you use the mockball glitch in Green Brinstar",
         [ "Reserve Tank, Brinstar", 0 ]
       ],
       "X": 360,
@@ -1060,6 +1077,8 @@
       "Id": 18,
       "Name": [
         "Mockball Back room hidden item",
+        "the room behind the room after you use the Speed Booster in Green Brinstar",
+        "the room behind the room after you use the mockball glitch in Green Brinstar",
         [ "Missile (green Brinstar behind missile)", 0 ],
         "Ron Popeil missiles",
         "Mockball Hall Hidden Room Hidden Item"
@@ -1069,6 +1088,8 @@
       "Id": 19,
       "Name": [
         "Mockball Back room",
+        "that spot in the wall in the room behind the room after you use the Speed Booster in Green Brinstar",
+        "that spot in the wall in the room behind the room after you use the mockball glitch in Green Brinstar",
         [ "Missile (green Brinstar behind reserve tank)", 0 ],
         "Mockball Hall Hidden Room Main Item"
       ]
@@ -1078,6 +1099,7 @@
       "Name": [
         "Pink Shaft (top)",
         "Big Pink (top)",
+        "that spot in Pink Brinstar on the other side of the grapple ceiling",
         [ "Missile (pink Brinstar top)", 0 ]
       ],
       "X": 488,
@@ -1088,6 +1110,7 @@
       "Name": [
         "Pink Shaft (bottom)",
         "Big Pink (bottom)",
+        "that spot on the bottom of Pink Brinstar",
         [ "Missile (pink Brinstar bottom)", 0 ]
       ],
       "X": 488,
@@ -1097,6 +1120,7 @@
       "Id": 23,
       "Name": [
         "Pink Shaft - Chozo",
+        "the room underneath Pink Brinstar",
         [ "Charge Beam", 0 ]
       ],
       "X": 488,
@@ -1126,7 +1150,8 @@
       "Id": 26,
       "Name": [
         "Morph Ball (Corridor No. 1)",
-        "Morphing Ball"
+        "Morphing Ball",
+        "the only place you can get to in Super Metroid without any items"
       ],
       "X": 744,
       "Y": 404
@@ -1135,6 +1160,7 @@
       "Id": 27,
       "Name": [
         "Power Bomb wall (Corridor No. 1)",
+        "that spot behind the Morph Ball",
         [ "Power Bomb (blue Brinstar)", 0 ]
       ],
       "X": 680,
@@ -1143,7 +1169,8 @@
     {
       "Id": 28,
       "Name": [
-        "Missile (blue Brinstar middle)"
+        "that spot all the way to the right of Blue Brinstar",
+        [ "Missile (blue Brinstar middle)", 0 ]
       ],
       "X": 968,
       "Y": 404
@@ -1152,6 +1179,7 @@
       "Id": 29,
       "Name": [
         "Blue Brinstar Ceiling",
+        "that spot in the ceiling in Blue Brinstar",
         [ "Energy Tank, Brinstar Ceiling", 0 ]
       ],
       "X": 936,
@@ -1160,8 +1188,7 @@
     {
       "Id": 30,
       "Name": [
-        "Hell",
-        "Etecoon shaft",
+        "that spot right after the false floor in Green Brinstar",
         [ "Energy Tank, Etecoons", 0 ]
       ],
       "X": 136,
@@ -1170,7 +1197,8 @@
     {
       "Id": 31,
       "Name": [
-        "Super Missile (green Brinstar bottom)"
+        "that room after the false floor in Green Brinstar",
+        [ "Super Missile (green Brinstar bottom)", 0 ]
       ],
       "X": 104,
       "Y": 404
@@ -1187,7 +1215,8 @@
     {
       "Id": 34,
       "Name": [
-        "Missile (blue Brinstar bottom)"
+        "that Chozo room at the bottom of Blue Brinstar",
+        [ "Missile (blue Brinstar bottom)", 0 ]
       ],
       "X": 840,
       "Y": 436
@@ -1197,6 +1226,7 @@
       "Name": [
         "Hoptank Room",
         "Wave Beam Glitch room",
+        "the room where everyone does the Wave Beam Glitch",
         [ "Energy Tank, Brinstar Gate", 0 ]
       ],
       "X": 616,
@@ -1223,7 +1253,8 @@
       "Id": 38,
       "Name": [
         "The Chozo room after the dark room with all the spikes",
-        "X-Ray Scope"
+        "X-Ray Scope",
+        [ "X-Ray", 0 ]
       ],
       "X": 680,
       "Y": 564
