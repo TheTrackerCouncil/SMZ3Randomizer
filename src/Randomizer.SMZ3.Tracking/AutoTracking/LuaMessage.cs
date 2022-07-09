@@ -29,5 +29,10 @@
         /// The base 64 byte string
         /// </summary>
         public string? Bytes { get; set; }
+
+        /// <summary>
+        /// A single uint8 or uint16 value
+        /// </summary>
+        public int? Value { get; set; }
     }
 }

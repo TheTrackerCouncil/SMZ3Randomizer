@@ -110,6 +110,22 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Operands = new List<string>() { address, length }
                 }));
             }
+            else if (message.Type == EmulatorActionType.WriteUInt8)
+            {
+                _client.Send(JsonSerializer.Serialize(new USB2SNESRequest()
+                {
+                    Opcode = "PutAddress",
+                    Space = "SNES",
+                    Operands = new List<string>() { address, "1" }
+                }));
+
+                _client.Send(JsonSerializer.Serialize(new USB2SNESRequest()
+                {
+                    Opcode = "Binary",
+                    Space = "SNES",
+                    Operands = new List<string>() { message.WriteValue.ToString() }
+                }));
+            }
 
         }
 

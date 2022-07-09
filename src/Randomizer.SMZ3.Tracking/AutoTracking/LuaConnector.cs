@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private bool _isConnected = false;
         private Socket? _socket = null;
         private ILogger<LuaConnector> _logger;
-        private EmulatorAction? _lastMessage;
+        private EmulatorAction? _lastReadMessage;
 
         /// <summary>
         /// Constructor
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             _logger = logger;
             _isEnabled = true;
-            _lastMessage = null;
+            _lastReadMessage = null;
             _ = Task.Factory.StartNew(() => StartSocketServer());
         }
 
@@ -64,17 +64,28 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             if (!_isEnabled || _socket == null) return;
             LuaMessage? request = null;
-            _lastMessage = message;
 
             // Request memory from the emulator
             if (message.Type == EmulatorActionType.ReadBlock)
             {
+                _lastReadMessage = message;
                 request = new()
                 {
                     Action = "read_block",
                     Address = message.Address,
                     Length = message.Length,
                     Domain = GetDomainString(message.Domain)
+                };
+            }
+            // Write memory to the emulator
+            else if (message.Type is EmulatorActionType.WriteUInt8 or EmulatorActionType.WriteUInt16)
+            {
+                request = new()
+                {
+                    Action = message.Type == EmulatorActionType.WriteUInt8 ? "write_uint8" : "write_uint16",
+                    Address = message.Address,
+                    Domain = GetDomainString(message.Domain),
+                    Value = message.WriteValue
                 };
             }
 
@@ -84,6 +95,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             try
             {
                 _socket.Send(Encoding.ASCII.GetBytes(msgString));
+                //_logger.LogInformation(DateTime.Now.ToLongTimeString() + " Sending " + request.Action);
             }
             catch (SocketException ex)
             {
@@ -132,7 +144,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         {
                             try
                             {
-                                _lastMessage = null;
+                                _lastReadMessage = null;
                                 _isConnected = true;
                                 _logger.LogInformation("Socket connected");
                                 OnConnected?.Invoke(this, new());
@@ -142,9 +154,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                                     var message = JsonSerializer.Deserialize<LuaMessage>(line);
                                     if (message != null && message.Bytes != null)
                                     {
+                                        //_logger.LogInformation(DateTime.Now.ToLongTimeString() + " Received " + message.Action);
                                         var data = new EmulatorMemoryData(Convert.FromBase64String(message.Bytes));
                                         MessageReceived?.Invoke(this, new(message.Address, data));
-                                        _lastMessage = null;
+                                        _lastReadMessage = null;
                                     }
                                     line = reader.ReadLine();
                                 }
@@ -154,7 +167,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                                 _logger.LogError(ex, "Error with connection");
                                 if (_isConnected)
                                 {
-                                    _lastMessage = null;
+                                    _lastReadMessage = null;
                                     _isConnected = false;
                                     OnDisconnected?.Invoke(this, new());
                                 }
@@ -189,6 +202,6 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// Returns if the connector is ready for another message to be sent
         /// </summary>
         /// <returns>True if the connector is ready for another message, false otherwise</returns>
-        public bool CanSendMessage() => _lastMessage == null;
+        public bool CanSendMessage() => _lastReadMessage == null;
     }
 }
