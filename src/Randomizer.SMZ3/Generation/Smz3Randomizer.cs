@@ -59,8 +59,10 @@ namespace Randomizer.SMZ3.Generation
         {
             var seedNumber = ParseSeed(ref seed);
             var rng = new Random(seedNumber);
+            config.Seed = seedNumber.ToString();
             if (config.Race)
                 rng = new Random(rng.Next());
+            config.SettingsString = Config.ToConfigString(config, true);
 
             _logger.LogDebug($"Seed: {seedNumber} | Race: {config.Race} | Keysanity: {config.Keysanity}");
 
