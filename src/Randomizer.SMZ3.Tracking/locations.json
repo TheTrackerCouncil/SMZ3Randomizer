@@ -962,7 +962,7 @@
       "X": 552,
       "Y": 660,
       "WhenTrackingJunk": [ "Of course this location would have a shitty item", "What a poopy item. No wonder it got flushed." ],
-      "WhenTrackingProgression": [ "That's not bad for being in the toilet", "Who flushed this down the toilet?"]
+      "WhenTrackingProgression": [ "That's not bad for being in the toilet", "Who flushed this down the toilet?" ]
     },
     {
       "Id": 7,
@@ -1189,6 +1189,7 @@
       "Id": 30,
       "Name": [
         "that spot right after the false floor in Green Brinstar",
+        "Highway to Hell",
         [ "Energy Tank, Etecoons", 0 ]
       ],
       "X": 136,
@@ -1469,7 +1470,7 @@
       "Name": [
         "Missile (Norfair Reserve Tank)",
         "Bubble Mountain Hidden Hall Hidden Item",
-          "the hidden spot in the hidden room on the left side of Bubble Mountain"
+        "the hidden spot in the hidden room on the left side of Bubble Mountain"
       ]
     },
     {
@@ -1637,6 +1638,7 @@
       "Id": 128,
       "Name": [
         "Main Shaft - Side room",
+        "the room behind the bombeable wall on the left side of Wrecked Ship",
         [ "Missile (Wrecked Ship middle)", 0 ]
       ],
       "X": 408,
@@ -1647,6 +1649,7 @@
       "Name": [
         "Post Chozo Concert - Speed Booster Item",
         "Bowling Alley - Speed Booster Item",
+        "the spot that requires the Speed Booster in Wrecked Ship",
         [ "Reserve Tank, Wrecked Ship", 0 ],
         [ "Wrecked Ship, Reserve Tank", 0 ]
       ],
@@ -1657,6 +1660,7 @@
       "Id": 130,
       "Name": [
         "Post Chozo Concert - Breakable Chozo",
+        "the breakable Chozo in Wrecked Ship",
         [ "Missile (Gravity Suit)", 0 ]
       ],
       "X": 440,
@@ -1666,6 +1670,7 @@
       "Id": 131,
       "Name": [
         "Attic - Assembly Line",
+        "the room with the conveyors and robots",
         [ "Missile (Wrecked Ship top)", 0 ]
       ],
       "X": 696,
@@ -1677,6 +1682,7 @@
         "Wrecked Pool",
         "Ruined Pool",
         "Wrecked Ship Bullshit Room",
+        "that room in Wrecked Ship with all the water where you always reset",
         [ "Energy Tank, Wrecked Ship", 0 ]
       ],
       "X": 600,
@@ -1686,6 +1692,7 @@
       "Id": 133,
       "Name": [
         "Left Super Missile Chamber",
+        "the room that opens up on the left side after defeating Phantoon",
         [ "Super Missile (Wrecked Ship left)", 0 ]
       ],
       "X": 504,
@@ -1695,6 +1702,7 @@
       "Id": 134,
       "Name": [
         "Right Super Missile Chamber",
+        "the room that opens up on the right side after defeating Phantoon",
         [ "Right Super, Wrecked Ship", 0 ]
       ],
       "X": 696,
@@ -1704,6 +1712,7 @@
       "Id": 135,
       "Name": [
         "Post Chozo Concert - Gravity Suit Chamber",
+        "the room after the Chozo concert",
         [ "Gravity Suit", 0 ]
       ],
       "X": 344,
@@ -1714,6 +1723,7 @@
       "Name": [
         "Main Street - Ceiling (Shinespark)",
         "Main Street Missiles",
+        "the spot in the ceiling in Maridia that requires Shinespark",
         [ "Missile (green Maridia shinespark)", 0 ]
       ],
       "X": 232,
@@ -1723,6 +1733,7 @@
       "Id": 137,
       "Name": [
         "Main Street - Crab Supers",
+        "the tiny room where you watch crabs walking into the wall",
         [ "Super Missile (green Maridia)", 0 ]
       ],
       "X": 264,
@@ -1732,6 +1743,7 @@
       "Id": 138,
       "Name": [
         "Mama Turtle Room",
+        "the room with the turtles",
         [ "Energy Tank, Mama turtle", 0 ]
       ],
       "X": 488,
@@ -1741,6 +1753,7 @@
       "Id": 139,
       "Name": [
         "Mama Turtle Room - Wall item",
+        "the spot in the wall in the turtle room",
         [ "Missile (green Maridia tatori)", 0 ]
       ],
       "X": 520,
@@ -1750,6 +1763,7 @@
       "Id": 140,
       "Name": [
         "Watering Hole Left",
+        "the left side of the pit with two items in the northeast of Maridia",
         [ "Super Missile (yellow Maridia)", 0 ]
       ]
     },
@@ -1757,6 +1771,7 @@
       "Id": 141,
       "Name": [
         "Watering Hole Right",
+        "the right side of the pit with two items in the northeast of Maridia",
         [ "Missile (yellow Maridia super missile)", 0 ]
       ]
     },
@@ -1764,6 +1779,7 @@
       "Id": 142,
       "Name": [
         "Pseudo Plasma Spark Room",
+        "the room leading up to the pit with two items in the northeast of Maridia",
         [ "Missile (yellow Maridia false wall)", 0 ]
       ],
       "X": 552,
@@ -1772,7 +1788,10 @@
     {
       "Id": 143,
       "Name": [
-        "Plasma Beam"
+        "Plasma Beam",
+        "Plasma Chamber",
+        "Plasma Beam room",
+        "the room in Maridia near the forgotten highway to Wrecked Ship"
       ],
       "X": 808,
       "Y": 148
@@ -1781,6 +1800,7 @@
       "Id": 144,
       "Name": [
         "Left Sand Pit Left",
+        "the left side of the left sand pit",
         [ "Missile (left Maridia sand pit room)", 0 ]
       ]
     },
@@ -1788,6 +1808,7 @@
       "Id": 145,
       "Name": [
         "Left Sand Pit Right",
+        "the right side of the left sand pit",
         [ "Reserve Tank, Maridia", 0 ]
       ]
     },
@@ -1795,6 +1816,7 @@
       "Id": 146,
       "Name": [
         "Right Sand Pit - Left item",
+        "the left side of the right sand pit",
         [ "Missile (right Maridia sand pit room)", 0 ]
       ],
       "X": 648,
@@ -1804,6 +1826,7 @@
       "Id": 147,
       "Name": [
         "Right Sand Pit - Right item",
+        "the right side of the right sand pit",
         [ "Power Bomb (right Maridia sand pit room)", 0 ]
       ],
       "X": 680,
@@ -1833,6 +1856,8 @@
         "Shaktool",
         "Shak's Stash",
         "Shaktool's item",
+        "the room that everyone's favorite diggy boy helps you get to",
+        "the room after everyone's favorite diggy boy",
         [ "Spring Ball", 0 ]
       ],
       "X": 968,
@@ -1854,6 +1879,7 @@
       "Name": [
         "The Precious Room",
         "Pre-Draygon Room",
+        "the wall in the room before Draygon",
         [ "Missile (Draygon)", 0 ]
       ],
       "X": 1256,
@@ -1863,6 +1889,7 @@
       "Id": 152,
       "Name": [
         "Sandy Path",
+        "the room after Botwoon",
         [ "Energy Tank, Botwoon", 0 ]
       ],
       "X": 840,
@@ -1872,6 +1899,7 @@
       "Id": 154,
       "Name": [
         "Draygon's Reliquary",
+        "the room after Draygon",
         [ "Space Jump", 0 ]
       ],
       "X": 1128,
@@ -1919,7 +1947,7 @@
       "WhenMarkingJunk": [ "This island makes no sense!", "Sky floating crap is kind of rare to see." ],
       "WhenMarkingProgression": [ "Maybe the mitts are right around the corner.", "At least this isnt that far out of the way." ],
       "WhenTrackingJunk": [ "I hope you didn't blind grab that", "I bet the view is better than what you got." ],
-      "WhenTrackingProgression": [ "That took so much effort to get, amazing.", "What's next?"]
+      "WhenTrackingProgression": [ "That took so much effort to get, amazing.", "What's next?" ]
     },
     {
       "Id": 261,
@@ -2019,7 +2047,7 @@
       "X": 633,
       "Y": 117,
       "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AhGah seed then?", "That's a good sign? Right?", "Oops, I sent you the wrong seed" ],
-      "WhenMarkingProgression": [ "Sucks to be you." , "It's going to be one of those seeds.", "Hold on, let me grab some popcorn" ],
+      "WhenMarkingProgression": [ "Sucks to be you.", "It's going to be one of those seeds.", "Hold on, let me grab some popcorn" ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
       "WhenTrackingProgression": [ "Well, at least you got something.", "Maybe things will happen now." ]
     },
@@ -2265,7 +2293,7 @@
       "WhenMarkingJunk": [ "That was an easy peek at least." ],
       "WhenMarkingProgression": [ "Hopefully you get the mirror soon.", "At least this isnt that far out of the way." ],
       "WhenTrackingJunk": [ "At least it's easy to get", "That was pretty simple." ],
-      "WhenTrackingProgression": [ "You stole that from the Buzz Blob!", "You better escape before you get zapped."]
+      "WhenTrackingProgression": [ "You stole that from the Buzz Blob!", "You better escape before you get zapped." ]
     },
     {
       "Id": 318,
@@ -2370,7 +2398,7 @@
       ],
       "X": 636,
       "Y": 1214,
-      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." , "At least the season pass was cheap", "At least the food is nice." ],
+      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund.", "At least the season pass was cheap", "At least the food is nice." ],
       "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ]
     },
     {
@@ -3328,9 +3356,9 @@
       "X": 313,
       "Y": 1310,
       "WhenMarkingJunk": [ "Its never bullshit to visit your local Library", "Don't you want to get something nice to read?" ],
-      "WhenMarkingProgression": [ "Hopefully the boots are not too hard to find." , "At least this isnt that far out of the way." ],
+      "WhenMarkingProgression": [ "Hopefully the boots are not too hard to find.", "At least this isnt that far out of the way." ],
       "WhenTrackingJunk": [ "Did you get a nice book at least?" ],
-      "WhenTrackingProgression": [ "Toggled boots off. Kidding." , "Did you grab the book I had on reserve?"]
+      "WhenTrackingProgression": [ "Toggled boots off. Kidding.", "Did you grab the book I had on reserve?" ]
     },
     {
       "Id": 497,
@@ -3407,4 +3435,3 @@
     }
   ]
 }
-
