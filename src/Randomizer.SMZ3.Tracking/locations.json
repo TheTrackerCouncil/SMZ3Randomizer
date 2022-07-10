@@ -1237,7 +1237,8 @@
       "Name": [
         "Billy Mays Room Main Item",
         [ "Missile (blue Brinstar top)", 0 ],
-        "Blue Brinstar Top Main Item"
+        "Blue Brinstar Top Main Item",
+        "the visible spot in the Billy Mays Room"
       ]
     },
     {
@@ -1246,7 +1247,8 @@
         "Billy Mays Room Hidden item",
         "But wait, there's more!",
         [ "Missile (blue Brinstar behind missile)", 0 ],
-        "Blue Brinstar Top Hidden Item"
+        "Blue Brinstar Top Hidden Item",
+        "the hidden spot in the Billy Mays Room"
       ]
     },
     {
@@ -1263,7 +1265,9 @@
       "Id": 39,
       "Name": [
         "Beta Power Bomb Room",
-        "Power Bomb (red Brinstar sidehopper room)"
+        "Power Bomb (red Brinstar sidehopper room)",
+        "the room underneath the flower in Red Brinstar",
+        "the room underneath the Samus Eater in Red Brinstar"
       ],
       "X": 1064,
       "Y": 340
@@ -1272,7 +1276,9 @@
       "Id": 40,
       "Name": [
         "Alpha Power Bomb Room",
-        "Power Bomb (red Brinstar spike room)"
+        "Power Bomb (red Brinstar spike room)",
+        "the Chozo room in Red Brinstar with the jumping enemies you can freeze",
+        "the Chozo room in Red Brinstar with the Boyons"
       ],
       "X": 1064,
       "Y": 436
@@ -1281,7 +1287,8 @@
       "Id": 41,
       "Name": [
         "Alpha Power Bomb Room - Behind the wall",
-        "Missile (red Brinstar spike room)"
+        "Missile (red Brinstar spike room)",
+        "the room behind the wall in the Chozo room in Red Brinstar"
       ],
       "X": 1032,
       "Y": 436
@@ -1290,7 +1297,8 @@
       "Id": 42,
       "Name": [
         "~ S p A z E r ~",
-        "Spazer"
+        "Spazer",
+        "the Chozo room above the entrance to Maridia in Red Brinstar"
       ],
       "X": 1160,
       "Y": 628
@@ -1298,7 +1306,8 @@
     {
       "Id": 43,
       "Name": [
-        "Energy Tank, Kraid"
+        "Energy Tank, Kraid",
+        "the room that opens up on your way out after defeating Kraid"
       ],
       "X": 1320,
       "Y": 692
@@ -1307,7 +1316,8 @@
       "Id": 44,
       "Name": [
         "Warehouse Kihunter Room",
-        "Missile (Kraid)"
+        "Missile (Kraid)",
+        "the room before the corridor with Kraid's Awful Son"
       ],
       "X": 1448,
       "Y": 660
@@ -1316,6 +1326,7 @@
       "Id": 48,
       "Name": [
         "Kraid's Reliquary",
+        "the room after Kraid",
         [ "Varia Suit", 0 ]
       ],
       "X": 1768,
@@ -1326,6 +1337,7 @@
       "Name": [
         "Lava Room - Submerged in wall",
         "Cathedral",
+        "the room in Upper Norfair with the item in the lava",
         [ "Missile (lava room)", 0 ]
       ],
       "X": 568,
@@ -1335,7 +1347,8 @@
       "Id": 50,
       "Name": [
         "Ice Beam Room",
-        "Ice Beam"
+        "Ice Beam",
+        "the room in Upper Norfair after the Speed Booster gates"
       ],
       "X": 216,
       "Y": 148
@@ -1344,6 +1357,7 @@
       "Id": 51,
       "Name": [
         "Crumble Shaft",
+        "the room with all the crumbling platforms",
         [ "Missile (below Ice Beam)", 0 ]
       ],
       "X": 120,
@@ -1353,7 +1367,8 @@
       "Id": 52,
       "Name": [
         "Crocomire's Pit",
-        [ "Energy Tank, Crocomire", 0 ]
+        [ "Energy Tank, Crocomire", 0 ],
+        "the room where you fight Crocomire"
       ],
       "X": 664,
       "Y": 404
@@ -1362,7 +1377,8 @@
       "Id": 53,
       "Name": [
         "Hi-Jump Boots Room",
-        "Hi-Jump Boots"
+        "Hi-Jump Boots",
+        "the Chozo room after the room in Upper Norfair where you have to wait a long time for an enemy before you can leave again"
       ],
       "X": 280,
       "Y": 276
@@ -1371,7 +1387,8 @@
       "Id": 54,
       "Name": [
         "Crocomire Escape",
-        [ "Missile (above Crocomire)", 0 ]
+        [ "Missile (above Crocomire)", 0 ],
+        "the room with the item beyond a Super Missile gate you can peak at in Upper Norfair"
       ],
       "X": 408,
       "Y": 276
@@ -1380,6 +1397,7 @@
       "Id": 55,
       "Name": [
         "Hi-Jump Lobby - Back",
+        "the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again",
         [ "Missile (Hi-Jump Boots)", 0 ]
       ],
       "X": 312,
@@ -1389,6 +1407,7 @@
       "Id": 56,
       "Name": [
         "Hi-Jump Lobby - Entrance",
+        "the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again",
         [ "Energy Tank (Hi-Jump Boots)", 0 ]
       ],
       "X": 344,
@@ -1398,6 +1417,7 @@
       "Id": 57,
       "Name": [
         "Post Crocomire Power Bomb Room",
+        "the room directly on the other side of Crocomire's room",
         [ "Power Bomb (Crocomire)", 0 ]
       ],
       "X": 344,
@@ -1408,6 +1428,7 @@
       "Name": [
         "Cosine Room",
         "Post Crocomire Missile Room",
+        "the wavy room below Crocomire",
         [ "Missile (below Crocomire)", 0 ]
       ],
       "X": 504,
@@ -1419,6 +1440,7 @@
         "Indiana Jones Room",
         "Pantry",
         "Post Crocomire Jump Room",
+        "the big empty room after Crocomire that use the Speed Booster to get",
         [ "Missile (Grappling Beam)", 0 ]
       ],
       "X": 312,
@@ -1428,7 +1450,8 @@
       "Id": 60,
       "Name": [
         "Grapple Beam Room",
-        "Grappling Beam"
+        "Grappling Beam",
+        "the Chozo room after the big empty room past Crocomire"
       ],
       "X": 152,
       "Y": 596
@@ -1437,20 +1460,23 @@
       "Id": 61,
       "Name": [
         "Reserve Tank, Norfair",
-        "Bubble Mountain Hidden Hall Main Item"
+        "Bubble Mountain Hidden Hall Main Item",
+        "the hidden room on the left side of Bubble Mountain"
       ]
     },
     {
       "Id": 62,
       "Name": [
         "Missile (Norfair Reserve Tank)",
-        "Bubble Mountain Hidden Hall Hidden Item"
+        "Bubble Mountain Hidden Hall Hidden Item",
+          "the hidden spot in the hidden room on the left side of Bubble Mountain"
       ]
     },
     {
       "Id": 63,
       "Name": [
         "Bubble Mountain Missile Room",
+        "the room on the left side of Bubble Mountain",
         [ "Missile (bubble Norfair green door)", 0 ]
       ],
       "X": 728,
@@ -1460,6 +1486,7 @@
       "Id": 64,
       "Name": [
         "Bubble Mountain",
+        "the spot near the spikes on the bottom of Bubble Mountain",
         [ "Missile (bubble Norfair)", 0 ]
       ],
       "X": 792,
@@ -1469,6 +1496,7 @@
       "Id": 65,
       "Name": [
         "Speed Booster Hall - Ceiling",
+        "the spot in the ceiling on the right side of Bubble Mountain",
         [ "Missile (Speed Booster)", 0 ]
       ],
       "X": 1208,
@@ -1478,7 +1506,9 @@
       "Id": 66,
       "Name": [
         "Speed Booster Room",
-        "Speed Booster"
+        "Speed Booster",
+        "the room to the right of Bubble Mountain",
+        "the Chozo room in Bubble Mountain"
       ],
       "X": 1240,
       "Y": 148
@@ -1506,6 +1536,7 @@
       "Id": 70,
       "Name": [
         "Gold Torizo - Drop down",
+        "the spot before you drop down to fight Gold Torizo",
         [ "Missile (Gold Torizo)", 0 ]
       ],
       "X": 632,
@@ -1515,6 +1546,7 @@
       "Id": 71,
       "Name": [
         "Golden Torizo - Ceiling",
+        "the spot where Gold Torizo hides before the fight",
         [ "Super Missile (Gold Torizo)", 0 ]
       ],
       "X": 664,
@@ -1524,6 +1556,8 @@
       "Id": 73,
       "Name": [
         "Mickey Mouse Clubhouse",
+        "Mickey Mouse room",
+        "the room that looks like Mickey Mouse",
         [ "Missile (Mickey Mouse room)", 0 ]
       ],
       "X": 952,
@@ -1533,6 +1567,7 @@
       "Id": 74,
       "Name": [
         "Spring Ball Maze Room",
+        "the room right before the Spring Ball Maze",
         [ "Missile (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1176,
@@ -1542,6 +1577,7 @@
       "Id": 75,
       "Name": [
         "Escape Power Bomb Room",
+        "the room in lower Norfair that you hope doesn't have anything because you need to go through a morph ball maze",
         [ "Power Bomb (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1240,
@@ -1550,7 +1586,8 @@
     {
       "Id": 76,
       "Name": [
-        "Wasteland - Power Bomb of Shame",
+        "Power Bomb of Shame",
+        "the room to the left before the spiky elevator to Ridley",
         [ "Power Bomb (Power Bombs of shame)", 0 ]
       ],
       "X": 1080,
@@ -1570,6 +1607,7 @@
       "Id": 78,
       "Name": [
         "Ridley's Reliquary",
+        "the room after Ridley",
         [ "Energy Tank, Ridley", 0 ]
       ],
       "X": 760,
@@ -1579,7 +1617,8 @@
     {
       "Id": 79,
       "Name": [
-        "Screw Attack"
+        "Screw Attack",
+        "the Chozo below the portal to Misery Mire"
       ],
       "X": 696,
       "Y": 596
@@ -1588,6 +1627,7 @@
       "Id": 80,
       "Name": [
         "Fireflea Room",
+        "the dark room in lower Norfair with the fire flies",
         [ "Energy Tank, Firefleas", 0 ]
       ],
       "X": 1240,
