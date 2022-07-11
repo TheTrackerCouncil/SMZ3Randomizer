@@ -1,6 +1,3 @@
 [submodule "alttp_sm_combo_randomizer_rom"]
 	path = alttp_sm_combo_randomizer_rom
 	url = https://github.com/Vivelin/alttp_sm_combo_randomizer_rom.git
-[submodule "sm_randomizer_rom"]
-	path = sm_randomizer_rom
-	url = https://github.com/tewtal/sm_randomizer_rom.git
