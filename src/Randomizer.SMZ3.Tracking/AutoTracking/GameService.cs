@@ -10,23 +10,25 @@ using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
-    public class GameInteractor
-    {
-        private readonly AutoTracker _autoTracker;
-        private readonly Tracker _tracker;
+    /// <summary>
+    /// Service that handles interacting with the game via
+    /// auto tracker
+    /// </summary>
+    public class GameService : TrackerModule
+    { 
+        private AutoTracker? _autoTracker => Tracker.AutoTracker;
+        private readonly ILogger<GameService> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameInteractor"/>
+        /// Initializes a new instance of the <see cref="GameService"/>
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
-        /// <param name="autoTracker">The auto tracker to associate with this module</param>
-        public GameInteractor(Tracker tracker, AutoTracker autoTracker)
+        /// <param name="logger">The logger to associate with this module</param>
+        public GameService(Tracker tracker, ILogger<GameService> logger) : base(tracker, logger)
         {
-            _tracker = tracker;
-            _autoTracker = autoTracker;
-            tracker.GameInteractor = this;
-            autoTracker.GameInteractor = this;
+            Tracker.GameService = this;
+            _logger = logger;
         }
 
         /// <summary>
@@ -34,8 +36,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <param name="item">The item to give</param>
         /// <param name="fromPlayerId">The id of the player giving the item to the player (0 for tracker)</param>
-        public void GiveItem(ItemData item, int fromPlayerId = 0)
+        /// <returns>False if it is currently unable to give an item to the player</returns>
+        public bool TryGiveItem(ItemData item, int fromPlayerId = 0)
         {
+            if (_autoTracker == null || !_autoTracker.IsConnected)
+            {
+                return false;
+            }
+
             // First give the player the item by the requested 
             var bytes = new List<byte>();
             bytes.AddRange(Int16ToBytes(fromPlayerId + 1));
@@ -60,16 +68,24 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _autoTracker.WriteToMemory(action);
 
             // Track the item
-            _tracker.TrackItem(item, null, null, false, true);
+            Tracker.TrackItem(item, null, null, false, true);
 
             ItemCounter++;
+
+            return true;
         }
 
         /// <summary>
         /// Restores the player to max health
         /// </summary>
-        public void HealPlayer()
+        /// <returns>False if it is currently unable to give an item to the player</returns>
+        public bool TryHealPlayer()
         {
+            if (_autoTracker == null || !_autoTracker.IsConnected)
+            {
+                return false;
+            }
+
             if (_autoTracker.CurrentGame == Game.Zelda)
             {
                 _autoTracker.WriteToMemory(new EmulatorAction()
@@ -79,10 +95,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Address = 0x7EF372,
                     WriteValues = new List<byte>() { 0xA0 }
                 });
+
+                return true;
             }
             else if (_autoTracker.CurrentGame == Game.SM && _autoTracker.MetroidState != null)
             {
-                var maxHealth = _autoTracker.MetroidState.MaxHealth;
+                var maxHealth = _autoTracker.MetroidState.MaxEnergy;
                 var maxReserves = _autoTracker.MetroidState.MaxReserveTanks;
                 _autoTracker.WriteToMemory(new EmulatorAction()
                 {
@@ -99,7 +117,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Address = 0x7E09D6,
                     WriteValues = Int16ToBytes(maxReserves)
                 });
+
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>

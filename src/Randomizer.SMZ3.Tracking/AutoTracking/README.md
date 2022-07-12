@@ -29,12 +29,12 @@ USB2SNES - Starts at memory location 0xE00000
 
 | snes9x    | bizhawk    | usb2snes   | 
 |-----------|------------|------------|
-| A06000    | 700000     | E00000     |
-| A07000    | 701000     | E01000     |
-| A16000    | 702000     | E02000     |
-| A17000    | 703000     | E03000     |
-| A17000    | 703000     | E03000     |
-| BF7000    | 73E000     | E3E000     |
+| A06000    | 000000     | E00000     |
+| A07000    | 001000     | E01000     |
+| A16000    | 002000     | E02000     |
+| A17000    | 003000     | E03000     |
+| A17000    | 003000     | E03000     |
+| BF7000    | 03E000     | E3E000     |
 
 ## CartROM - Cartridge Game Data
 This is the data of the game itself, including the randomized data. So far this isn't used at all, but could theoretically be used for things like detecting pendant and item locations if we didn't have it from the generation.

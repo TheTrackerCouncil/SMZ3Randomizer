@@ -33,9 +33,9 @@
         public int CurrentRegion => _data.ReadUInt8(0x7E079F - 0x7E0750);
 
         /// <summary>
-        /// The amount of health
+        /// The amount of energy/health
         /// </summary>
-        public int Health => _data.ReadUInt16(0x7E09C2 - 0x7E0750);
+        public int Energy => _data.ReadUInt16(0x7E09C2 - 0x7E0750);
 
         /// <summary>
         /// The amount currently in reserve tanks
@@ -45,7 +45,7 @@
         /// <summary>
         /// The max of health
         /// </summary>
-        public int MaxHealth => _data.ReadUInt16(0x7E09C4 - 0x7E0750);
+        public int MaxEnergy => _data.ReadUInt16(0x7E09C4 - 0x7E0750);
 
         /// <summary>
         /// The max in reserve tanks
@@ -83,7 +83,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return $"CurrentRoom: {CurrentRoom} | CurrentRoomInRegion: {CurrentRoomInRegion} | CurrentRegion: {CurrentRegion} | Health: {Health},{ReserveTanks} | X,Y {SamusX},{SamusY}";
+            return $"CurrentRoom: {CurrentRoom} | CurrentRoomInRegion: {CurrentRoomInRegion} | CurrentRegion: {CurrentRegion} | Health: {Energy},{ReserveTanks} | X,Y {SamusX},{SamusY}";
         }
     }
 }

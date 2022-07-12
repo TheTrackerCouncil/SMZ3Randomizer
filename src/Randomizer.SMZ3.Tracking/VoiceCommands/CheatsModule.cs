@@ -35,13 +35,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Heal player", HealPlayerRule(), (tracker, result) =>
             {
-                tracker.GameInteractor?.HealPlayer();
+                tracker.GameService?.TryHealPlayer();
             });
 
             AddCommand("Give item", GiveItemRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
-                tracker.GameInteractor?.GiveItem(item);
+                tracker.GameService?.TryGiveItem(item);
             });
         }
 
@@ -56,8 +56,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var heal = new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .Optional("please", "would you please")
-                .OneOf("heal me");
-
+                .OneOf("heal me", "I need healing");
             return GrammarBuilder.Combine(restore, heal);
         }
 

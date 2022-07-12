@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         /// <returns>True if the check was identified, false otherwise</returns>
         public bool ExecuteCheck(Tracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
-            if (currentState.Health == 0 && currentState.ReserveTanks == 0 && prevState.Health != 0 && !(currentState.CurrentRoom == 0 && currentState.CurrentRegion == 0 && currentState.SamusY == 0))
+            if (currentState.Energy == 0 && currentState.ReserveTanks == 0 && prevState.Energy != 0 && !(currentState.CurrentRoom == 0 && currentState.CurrentRegion == 0 && currentState.SamusY == 0))
             {
                 // Check if there is a special message for dying in this room
                 var region = tracker.World.Regions.Select(x => x as SMRegion)

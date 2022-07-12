@@ -28,6 +28,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private bool _hasStarted;
         private IEmulatorConnector? _connector;
         private readonly Queue<EmulatorAction> _sendActions = new();
+        private CancellationTokenSource? _stopSendingMessages;
 
         /// <summary>
         /// Constructor for Auto Tracker
@@ -139,9 +140,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Game = Game.Both,
                 Action = (EmulatorAction test) =>
                 {
-                    if (GameInteractor != null)
+                    if (Tracker?.GameService != null)
                     {
-                        GameInteractor.ItemCounter = test.CurrentData?.ReadUInt16(0) ?? 0;
+                        Tracker.GameService.ItemCounter = test.CurrentData?.ReadUInt16(0) ?? 0;
                     }
                 }
             });
@@ -156,11 +157,6 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// The tracker associated with this auto tracker
         /// </summary>
         public Tracker? Tracker { get; set; }
-
-        /// <summary>
-        /// Service to interact with the game
-        /// </summary>
-        public GameInteractor GameInteractor { get; set; }
 
         /// <summary>
         /// The type of connector that the auto tracker is currently using
@@ -257,11 +253,6 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public bool IsSendingMessages { get; set; }
 
         /// <summary>
-        /// Cancellation token to kill the previous SendMessageAsync task
-        /// </summary>
-        public CancellationTokenSource StopSendMessagesToken { get; set; }
-
-        /// <summary>
         /// If the player currently has a fairy
         /// </summary>
         public bool PlayerHasFairy { get; protected set; }
@@ -278,8 +269,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 Tracker?.Say(x => x.AutoTracker.WhenConnected);
                 AutoTrackerConnected?.Invoke(this, new());
-                StopSendMessagesToken = new CancellationTokenSource();
-                _ = SendMessagesAsync(StopSendMessagesToken.Token);
+                _stopSendingMessages = new CancellationTokenSource();
+                _ = SendMessagesAsync(_stopSendingMessages.Token);
                 _currentIndex = 0;
             }
         }
@@ -299,7 +290,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             Tracker?.Say("Auto tracker disconnected");
             _logger.LogInformation("Disconnected");
             AutoTrackerDisconnected?.Invoke(this, new());
-            StopSendMessagesToken.Cancel();
+            _stopSendingMessages?.Cancel();
             IsSendingMessages = false;
         }
 
@@ -603,7 +594,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
             var prevState = ZeldaState;
             ZeldaState = new(action.CurrentData);
-            //_logger.LogDebug(ZeldaState.ToString());
+            _logger.LogDebug(ZeldaState.ToString());
             if (prevState == null) return;
 
             foreach (var check in _zeldaStateChecks)
