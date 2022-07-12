@@ -713,6 +713,7 @@ namespace Randomizer.SMZ3.FileData
         private void WritePlayerNames()
         {
             _patches.AddRange(_allWorlds.Select(world => (0x385000 + (world.Id * 16), PlayerNameBytes(world.Player))));
+            _patches.Add((0x385000 + (_allWorlds.Count * 16), PlayerNameBytes("Tracker")));
         }
 
         private byte[] PlayerNameBytes(string name)
@@ -732,7 +733,7 @@ namespace Randomizer.SMZ3.FileData
             var configField =
                 ((_myWorld.Config.Race ? 1 : 0) << 15) |
                 ((_myWorld.Config.Keysanity ? 1 : 0) << 13) |
-                ((_myWorld.Config.MultiWorld ? 1 : 0) << 12) |
+                ((_myWorld.Config.MultiWorld || true ? 1 : 0) << 12) |
                 ((int)_myWorld.Config.Z3Logic << 10) |
                 ((int)_myWorld.Config.SMLogic << 8) |
                 (Generation.Smz3Randomizer.Version.Major << 4) |
@@ -750,8 +751,8 @@ namespace Randomizer.SMZ3.FileData
         private void WriteCommonFlags()
         {
             /* Common Combo Configuration flags at [asm]/config.asm */
-            if (_myWorld.Config.MultiWorld)
-                _patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
+            //if (_myWorld.Config.MultiWorld || true)
+            _patches.Add((Snes(0xF47000), UshortBytes(0x0001)));
             if (_myWorld.Config.Keysanity)
                 _patches.Add((Snes(0xF47006), UshortBytes(0x0001)));
         }

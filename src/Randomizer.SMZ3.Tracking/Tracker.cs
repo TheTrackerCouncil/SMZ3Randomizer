@@ -309,6 +309,11 @@ namespace Randomizer.SMZ3.Tracking
         public AutoTracker? AutoTracker { get; set; }
 
         /// <summary>
+        /// Service that handles modifying the game via auto tracker
+        /// </summary>
+        public GameInteractor? GameInteractor { get; set; }
+
+        /// <summary>
         /// Module that houses the history
         /// </summary>
         public IHistoryService History { get; set; }

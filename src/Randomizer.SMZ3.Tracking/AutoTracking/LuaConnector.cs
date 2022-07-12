@@ -78,14 +78,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 };
             }
             // Write memory to the emulator
-            else if (message.Type is EmulatorActionType.WriteUInt8 or EmulatorActionType.WriteUInt16)
+            else if (message.Type is EmulatorActionType.WriteBytes)
             {
                 request = new()
                 {
-                    Action = message.Type == EmulatorActionType.WriteUInt8 ? "write_uint8" : "write_uint16",
+                    Action = "write_bytes",
                     Address = message.Address,
                     Domain = GetDomainString(message.Domain),
-                    Value = message.WriteValue
+                    WriteValues = message.WriteValues
                 };
             }
 

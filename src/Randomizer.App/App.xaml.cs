@@ -84,6 +84,7 @@ namespace Randomizer.App
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();
+            services.AddScoped<GameInteractor>();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();

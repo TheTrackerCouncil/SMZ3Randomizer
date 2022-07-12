@@ -57,7 +57,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 Type = EmulatorActionType.ReadBlock,
                 Domain = MemoryDomain.CartRAM,
-                Address = 0x7033fe,
+                Address = 0xA173FE,
                 Length = 0x2,
                 Game = Game.Both,
                 Action = CheckGame
@@ -129,15 +129,21 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Action = CheckMetroidState
             });
 
-            // Check whether the player is in Zelda or Metroid
+            // Get the number of items given to the player via the interactor
             AddReadAction(new()
             {
                 Type = EmulatorActionType.ReadBlock,
                 Domain = MemoryDomain.CartRAM,
-                Address = 0x70036C,
-                Length = 0x1,
-                Game = Game.Zelda,
-                Action = Test
+                Address = 0xA26602,
+                Length = 0x2,
+                Game = Game.Both,
+                Action = (EmulatorAction test) =>
+                {
+                    if (GameInteractor != null)
+                    {
+                        GameInteractor.ItemCounter = test.CurrentData?.ReadUInt16(0) ?? 0;
+                    }
+                }
             });
 
             _zeldaStateChecks = zeldaStateChecks;
@@ -146,15 +152,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _logger.LogInformation($"Metroid state checks: {_metroidStateChecks.Count()}");
         }
 
-        protected void Test(EmulatorAction test)
-        {
-            _logger.LogInformation($"Health: {test.CurrentData.ReadUInt8(0)}");
-        }
-
         /// <summary>
         /// The tracker associated with this auto tracker
         /// </summary>
         public Tracker? Tracker { get; set; }
+
+        /// <summary>
+        /// Service to interact with the game
+        /// </summary>
+        public GameInteractor GameInteractor { get; set; }
 
         /// <summary>
         /// The type of connector that the auto tracker is currently using
@@ -274,29 +280,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 AutoTrackerConnected?.Invoke(this, new());
                 StopSendMessagesToken = new CancellationTokenSource();
                 _ = SendMessagesAsync(StopSendMessagesToken.Token);
-                _ = TestAsync();
                 _currentIndex = 0;
             }
         }
 
-        protected async Task TestAsync()
+        public void WriteToMemory(EmulatorAction action)
         {
-            while (_connector != null && _connector.IsConnected())
-            {
-                if (CurrentGame == Game.Zelda && _sendActions.Count == 0)
-                {
-                    _sendActions.Enqueue(new EmulatorAction()
-                    {
-                        Type = EmulatorActionType.WriteUInt8,
-                        Address = 0x7E004B,
-                        WriteValue = 0x0C
-                    });
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(5f));
-
-            }
-            
+            _sendActions.Enqueue(action);
         }
 
         /// <summary>

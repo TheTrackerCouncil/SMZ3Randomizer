@@ -43,6 +43,16 @@
         public int ReserveTanks => _data.ReadUInt16(0x7E09D6 - 0x7E0750);
 
         /// <summary>
+        /// The max of health
+        /// </summary>
+        public int MaxHealth => _data.ReadUInt16(0x7E09C4 - 0x7E0750);
+
+        /// <summary>
+        /// The max in reserve tanks
+        /// </summary>
+        public int MaxReserveTanks => _data.ReadUInt16(0x7E09D4 - 0x7E0750);
+
+        /// <summary>
         /// Samus's X Location
         /// </summary>
         public int SamusX => _data.ReadUInt16(0x7E0AF6 - 0x7E0750);

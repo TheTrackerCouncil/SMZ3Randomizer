@@ -49,7 +49,7 @@ local function process_message(message)
 	local length = data['Length']
 	
 	local bytes = nil
-	
+
 	if (action == 'read_block') then
 		bytes = emulator.read_bytes(address, length, domain)
 	end

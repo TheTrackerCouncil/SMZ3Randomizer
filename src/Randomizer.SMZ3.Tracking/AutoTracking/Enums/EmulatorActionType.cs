@@ -11,13 +11,8 @@
         ReadBlock,
 
         /// <summary>
-        /// Write a uint8 value to memory
+        /// Write data to memory
         /// </summary>
-        WriteUInt8,
-
-        /// <summary>
-        /// Write a uint16 value to memory
-        /// </summary>
-        WriteUInt16
+        WriteBytes
     }
 }

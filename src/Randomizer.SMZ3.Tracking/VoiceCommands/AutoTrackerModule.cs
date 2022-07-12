@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             autoTracker.Tracker = tracker;
             Tracker.AutoTracker = autoTracker;
             _autoTracker = autoTracker;
+            _ = new GameInteractor(tracker, autoTracker);
 
             AddCommand("Look at this", GetLookAtGameRule(), (tracker, result) =>
             {

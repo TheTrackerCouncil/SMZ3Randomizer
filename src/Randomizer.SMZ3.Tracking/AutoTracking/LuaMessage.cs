@@ -1,4 +1,6 @@
-﻿namespace Randomizer.SMZ3.Tracking.AutoTracking
+﻿using System.Collections.Generic;
+
+namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
     /// <summary>
     /// Class for requests/responses from the Lua script
@@ -33,6 +35,6 @@
         /// <summary>
         /// A single uint8 or uint16 value
         /// </summary>
-        public int? Value { get; set; }
+        public ICollection<byte> WriteValues { get; set; }
     }
 }

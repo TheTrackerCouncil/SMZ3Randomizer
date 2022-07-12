@@ -96,13 +96,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public void SendMessage(EmulatorAction message)
         {
             if (_lastMessage != null) return;
-            _lastMessage = message;
-            var convertedAddress = message.Address + (message.Domain == MemoryDomain.CartRAM ? 0x700000 : 0x770000);
-            var address = convertedAddress.ToString("X");
+
+            var address = TranslateAddress(message).ToString("X");
             var length = message.Length.ToString("X");
 
             if (message.Type == EmulatorActionType.ReadBlock)
             {
+                _lastMessage = message;
                 _client.Send(JsonSerializer.Serialize(new USB2SNESRequest()
                 {
                     Opcode = "GetAddress",
@@ -110,23 +110,24 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Operands = new List<string>() { address, length }
                 }));
             }
-            else if (message.Type == EmulatorActionType.WriteUInt8)
+            else if (message.Type == EmulatorActionType.WriteBytes && message.WriteValues != null)
             {
-                _client.Send(JsonSerializer.Serialize(new USB2SNESRequest()
-                {
-                    Opcode = "PutAddress",
-                    Space = "SNES",
-                    Operands = new List<string>() { address, "1" }
-                }));
-
-                _client.Send(JsonSerializer.Serialize(new USB2SNESRequest()
-                {
-                    Opcode = "Binary",
-                    Space = "SNES",
-                    Operands = new List<string>() { message.WriteValue.ToString() }
-                }));
+                SendBinaryData(address, message.WriteValues.ToArray());
             }
 
+        }
+
+        private void SendBinaryData(string address, byte[] data)
+        {
+            var message = JsonSerializer.Serialize(new USB2SNESRequest()
+            {
+                Opcode = "PutAddress",
+                Space = "SNES",
+                Operands = new List<string>() { address, data.Length.ToString() }
+            });
+
+            _client.Send(message);
+            _client.Send(data);
         }
 
         /// <summary>
@@ -198,5 +199,34 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <returns>True if the connector is ready for another message, false otherwise</returns>
         public bool CanSendMessage() => _lastMessage == null;
+
+        /// <summary>
+        /// USB2SNES (and Bizhawk) have the SRAM/CartRAM
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>Translated address</returns>
+        private int TranslateAddress(EmulatorAction message)
+        {
+            if (message.Domain == MemoryDomain.CartROM)
+            {
+                return message.Address;
+            }
+            else if (message.Domain == MemoryDomain.CartRAM)
+            {
+                var offset = 0x0;
+                var remaining = message.Address - 0xa06000;
+                while (remaining >= 0x2000)
+                {
+                    remaining -= 0x10000;
+                    offset += 0x2000;
+                }
+                return 0xE00000 + offset + remaining;
+            }
+            else if (message.Domain == MemoryDomain.WRAM)
+            {
+                return message.Address + 0x770000;
+            }
+            return message.Address;
+        }
     }
 }
