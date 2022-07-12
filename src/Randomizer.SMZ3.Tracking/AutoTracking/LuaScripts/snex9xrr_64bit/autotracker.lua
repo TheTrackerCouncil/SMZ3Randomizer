@@ -46,18 +46,19 @@ local function process_message(message)
 	local domain = data['Domain']
 	local address = data['Address']
 	local length = data['Length']
-    local value = data['Value']
+    local values = data['WriteValues']
 
-    print(action)
-	
 	local bytes = nil
 	
 	if (action == 'read_block') then
 		bytes = emulator.read_bytes(address, length, domain)
-    elseif (action == 'write_uint8') then
-		emulator.write_uint8(address, value, domain)
-    elseif (action == 'write_uint16') then
-		emulator.write_uint16(address, value, domain)
+    elseif (action == 'write_bytes') then
+        print(action)
+        local adr = tonumber(address)
+        for k, v in pairs(values) do
+            print(adr + k - 1 .. ' - ' .. tonumber(v))
+            emulator.write_byte(adr + k - 1, tonumber(v), domain)
+        end
 	end
 
     if (bytes ~= nil) then

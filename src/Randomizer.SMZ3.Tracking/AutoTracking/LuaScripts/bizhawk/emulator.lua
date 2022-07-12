@@ -41,8 +41,8 @@ function emulator.read_bytes(address, length, domain)
     return base64_encode(memory.readbyterange(translate_address(address, domain), length, domain), length)
 end
 
-function emulator.write_uint8(address, value, domain)
-  memory.write_u8(translate_address(address, domain), value, domain)
+function emulator.write_byte(address, value, domain)
+    memory.writebyte(translate_address(address, domain), value, domain)
 end
 
 function emulator.write_uint16(address, value, domain)
