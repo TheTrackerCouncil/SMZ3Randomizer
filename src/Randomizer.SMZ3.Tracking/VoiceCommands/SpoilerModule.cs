@@ -445,7 +445,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Try to give a hint from the config
                 case 1:
-                    var hint = ItemService.Get(location.Item.Type)?.Hints;
+                    var hint = ItemService.Get(location)?.Hints;
                     if (hint != null && hint.Count > 0)
                         return GiveLocationHint(hint, location);
 
@@ -470,7 +470,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return true;
             }
 
-            var item = ItemService.Get(location.Item.Type);
+            var item = ItemService.Get(location);
             if (item != null)
             {
                 Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.NameWithArticle);

@@ -45,10 +45,9 @@ namespace Randomizer.SMZ3.Tracking.Services
         public virtual IEnumerable<ItemData> TrackedItems()
             => Items.Where(x => x.TrackingState > 0);
 
+        [Obsolete("Use LocationService to get items from location when available")]
         public virtual ItemData? Get(Location location)
-        {
-            throw new NotImplementedException();
-        }
+            => Get(location.Item.Type);
 
         /// <summary>
         /// Returns a random name for the specified item including article,

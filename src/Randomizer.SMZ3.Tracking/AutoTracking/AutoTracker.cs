@@ -496,7 +496,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
                     if (!location.Cleared && currentCleared && prevCleared)
                     {
-                        var item = _itemService.Get(location.Item.Type);
+                        var item = _itemService.Get(location);
                         if (item != null)
                         {
                             Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
