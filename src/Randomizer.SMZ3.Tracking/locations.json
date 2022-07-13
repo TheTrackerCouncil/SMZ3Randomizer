@@ -1815,7 +1815,7 @@
     {
       "Id": 146,
       "Name": [
-        "Right Sand Pit - Left item",
+        "Right Sand Pit Left",
         "the left side of the right sand pit",
         [ "Missile (right Maridia sand pit room)", 0 ]
       ],
@@ -1825,7 +1825,7 @@
     {
       "Id": 147,
       "Name": [
-        "Right Sand Pit - Right item",
+        "Right Sand Pit Right",
         "the right side of the right sand pit",
         [ "Power Bomb (right Maridia sand pit room)", 0 ]
       ],
@@ -2910,6 +2910,7 @@
       "Id": 405,
       "Name": [
         "Pinball Room",
+        "the room with all the bumpers and gib-does",
         [ "Skull Woods Pinball Room", 0 ],
         [ "Skill Woods Pinball Room", 0 ]
       ]
