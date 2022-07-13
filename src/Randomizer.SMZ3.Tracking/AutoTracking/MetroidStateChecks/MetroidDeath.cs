@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using Randomizer.SMZ3.Tracking.Services;
+
 namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
 {
     /// <summary>
@@ -9,6 +11,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
     /// </summary>
     public class MetroidDeath : IMetroidStateCheck
     {
+        public MetroidDeath(ItemService itemService)
+        {
+            Items = itemService;
+        }
+
+        protected ItemService Items { get; }
+
         /// <summary>
         /// Executes the check for the current state
         /// </summary>
@@ -29,8 +38,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
                 {
                     tracker.SayOnce(region.WhenDiedInRoom[currentState.CurrentRoomInRegion.ToString()]);
                 }
-                tracker.TrackItem(tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
-                return true;
+
+                var death = Items.Find("Death");
+                if (death is not null)
+                {
+                    tracker.TrackItem(death);
+                    return true;
+                }
             }
             return false;
         }

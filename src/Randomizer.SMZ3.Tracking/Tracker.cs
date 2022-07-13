@@ -82,7 +82,8 @@ namespace Randomizer.SMZ3.Tracking
             IChatClient chatClient,
             ILogger<Tracker> logger,
             TrackerOptionsAccessor trackerOptions,
-            RandomizerContext dbContext)
+            RandomizerContext dbContext,
+            ItemService itemService,
             IHistoryService historyService)
         {
             if (trackerOptions.Options == null)
@@ -94,9 +95,9 @@ namespace Randomizer.SMZ3.Tracking
             _logger = logger;
             _trackerOptions = trackerOptions;
             _dbContext = dbContext;
+            ItemService = itemService;
 
             // Initialize the tracker configuration
-            Items = config.Items;
             Pegs = config.Pegs;
             Responses = config.Responses;
             Requests = config.Requests;
@@ -198,9 +199,9 @@ namespace Randomizer.SMZ3.Tracking
         public LocationConfig WorldInfo { get; }
 
         /// <summary>
-        /// Gets a collection of trackable items.
+        /// Gets a reference to the <see cref="ItemService"/>.
         /// </summary>
-        public IReadOnlyCollection<ItemData> Items { get; }
+        public ItemService ItemService { get; }
 
         /// <summary>
         /// Get a collection of pegs in Peg World mode.
@@ -397,7 +398,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
-            state.Apply(this, _worldAccessor);
+            state.Apply(this, _worldAccessor, ItemService);
             History.LoadHistory(this, state);
             OnStateLoaded();
         }
@@ -414,7 +415,7 @@ namespace Randomizer.SMZ3.Tracking
             var state = TrackerState.Load(_dbContext, rom);
             if (state != null)
             {
-                state.Apply(this, _worldAccessor);
+                state.Apply(this, _worldAccessor, ItemService);
                 History.LoadHistory(this, state);
                 OnStateLoaded();
                 
@@ -432,7 +433,7 @@ namespace Randomizer.SMZ3.Tracking
         public Task SaveAsync(Stream destination)
         {
             IsDirty = false;
-            var state = TrackerState.TakeSnapshot(this);
+            var state = TrackerState.TakeSnapshot(this, ItemService);
             return state.SaveAsync(destination);
         }
 
@@ -444,7 +445,7 @@ namespace Randomizer.SMZ3.Tracking
         public Task SaveAsync(GeneratedRom rom)
         {
             IsDirty = false;
-            var state = TrackerState.TakeSnapshot(this);
+            var state = TrackerState.TakeSnapshot(this, ItemService);
             return state.SaveAsync(_dbContext, rom);
         }
 
@@ -694,51 +695,6 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Returns the item that has the specified name.
-        /// </summary>
-        /// <param name="name">The name of the item to find.</param>
-        /// <returns>
-        /// The <see cref="ItemData"/> with the specified name, or <c>null</c>
-        /// if no items have a matching name.
-        /// </returns>
-        /// <remarks>
-        /// Names are case insensitive, and items can be found either by their
-        /// default name, additional names, or stage names.
-        /// </remarks>
-        public ItemData? FindItemByName(string name)
-        {
-            return Items.SingleOrDefault(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-                ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
-        }
-
-        /// <summary>
-        /// Returns the first item with the specified item type.
-        /// </summary>
-        /// <param name="type">The type of the item to find.</param>
-        /// <returns>
-        /// The item data for the item type, or <c>null</c> if no item data is
-        /// present for the specified type.
-        /// </returns>
-        public ItemData? FindItemByType(ItemType type)
-        {
-            return Items.FirstOrDefault(x => x.InternalItemType == type);
-        }
-
-        /// <summary>
-        /// Returns the first item that matches the item at the specified
-        /// location.
-        /// </summary>
-        /// <param name="location">The location with the item to find.</param>
-        /// <returns>
-        /// The item data for the item at the location, or <c>null</c> if no
-        /// item data is present for the item at the location.
-        /// </returns>
-        public ItemData? FindItem(Location location)
-        {
-            return Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
-        }
-
-        /// <summary>
         /// Gets the currently available items.
         /// </summary>
         /// <returns>
@@ -790,10 +746,9 @@ namespace Randomizer.SMZ3.Tracking
                     progression.AddRange(Item.CreateDungeonPool(World));
             }
 
-            foreach (var item in Items)
+            foreach (var item in ItemService.TrackedItems())
             {
-                if (item.TrackingState > 0)
-                    progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
+                progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
             }
 
             _progression[mapKey] = progression;
@@ -1664,7 +1619,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        var item = Items.SingleOrDefault(x => x.InternalItemType == onlyLocation.Item.Type);
+                        var item = ItemService.Get(onlyLocation.Item.Type);
                         if (item == null)
                         {
                             // Probably just the compass or something. Clear the
@@ -1696,7 +1651,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
 
                         var itemType = location.Item?.Type;
-                        var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
+                        var item = itemType != null ? ItemService.Get(itemType.Value) : null;
                         if (item == null || !item.Track())
                             _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
                         else
@@ -1717,13 +1672,13 @@ namespace Randomizer.SMZ3.Tracking
                         var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
                         if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                         {
-                            var someOutOfLogicItem = FindItemByType(someOutOfLogicLocation.Item.Type);
+                            var someOutOfLogicItem = ItemService.Get(someOutOfLogicLocation.Item.Type);
                             var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
                                 .OrderBy(x => x.Length)
                                 .FirstOrDefault();
                             if (missingItems != null)
                             {
-                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
                                 Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
                             }
                             else
@@ -1757,7 +1712,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     if (trackItems)
                     {
-                        var item = Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
+                        var item = ItemService.Get(location.Item.Type);
                         if (item != null && item.TrackingState > 0)
                             item.TrackingState--;
                     }
@@ -1808,7 +1763,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (missingItemCombinations.Any())
                 {
                     var missingItems = missingItemCombinations.Random(s_random)
-                            .Select(FindItemByType)
+                            .Select(ItemService.Get)
                             .NonNull();
                     var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
                     Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
@@ -2001,7 +1956,7 @@ namespace Randomizer.SMZ3.Tracking
                 var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
                 if (rewardLocation.Item != null)
                 {
-                    var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
+                    var item = ItemService.Get(rewardLocation.Item.Type);
                     if (item != null && item.TrackingState > 0)
                     {
                         UntrackItem(item);
@@ -2191,16 +2146,6 @@ namespace Randomizer.SMZ3.Tracking
             => WorldInfo.Location(location).Name;
 
         /// <summary>
-        /// Returns a name for the specified item.
-        /// </summary>
-        /// <param name="item">The type of item whose name to get.</param>
-        /// <returns>
-        /// One of the possible names for the <paramref name="item"/>.
-        /// </returns>
-        protected internal virtual string GetName(ItemType item)
-            => Items.SingleOrDefault(x => x.InternalItemType == item)?.NameWithArticle.ToString() ?? item.GetDescription();
-
-        /// <summary>
         /// Determines whether or not the specified reward is worth getting.
         /// </summary>
         /// <param name="reward">The dungeon reward.</param>
@@ -2210,7 +2155,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         protected internal bool IsWorth(Reward reward)
         {
-            var sahasrahlaItem = FindItemByType(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla.Item.Type);
+            var sahasrahlaItem = ItemService.Get(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla.Item.Type);
             if (sahasrahlaItem != null && reward == Reward.PendantGreen)
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, sahasrahlaItem);
@@ -2222,7 +2167,7 @@ namespace Randomizer.SMZ3.Tracking
                 _logger.LogDebug("{Reward} leads to {Item}, which is junk", reward, sahasrahlaItem);
             }
 
-            var pedItem = FindItemByType(World.LightWorldNorthWest.MasterSwordPedestal.Item.Type);
+            var pedItem = ItemService.Get(World.LightWorldNorthWest.MasterSwordPedestal.Item.Type);
             if (pedItem != null && (reward == Reward.PendantGreen || reward == Reward.PendantNonGreen))
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, pedItem);
@@ -2263,7 +2208,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 foreach (var location in leadsToLocation)
                 {
-                    var reward = FindItem(location);
+                    var reward = ItemService.Get(location.Item.Type);
                     if (reward != null)
                     {
                         _logger.LogDebug("{Item} leads to {OtherItem}...", item, reward);
@@ -2482,8 +2427,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;
 
-                var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
-                        ?? location.Item.Name;
+                var actualItemName = ItemService.GetName(location.Item.Type);
                 if (HintsEnabled) actualItemName = "another item";
 
                 Say(Responses.LocationHasDifferentItem?.Format(item.NameWithArticle, actualItemName));
@@ -2593,7 +2537,7 @@ namespace Randomizer.SMZ3.Tracking
                 return Enumerable.Empty<Location>();
 
             var items = new List<SMZ3.Item>();
-            foreach (var item in Items)
+            foreach (var item in ItemService.TrackedItems())
             {
                 for (var i = 0; i < item.TrackingState; i++)
                     items.Add(new SMZ3.Item(item.InternalItemType));

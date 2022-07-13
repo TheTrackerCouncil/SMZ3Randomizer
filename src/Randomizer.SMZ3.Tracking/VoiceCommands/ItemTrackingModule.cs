@@ -5,6 +5,8 @@ using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.SMZ3.Tracking.Services;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -20,7 +22,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public ItemTrackingModule(Tracker tracker, ILogger<ItemTrackingModule> logger) : base(tracker, logger)
+        public ItemTrackingModule(Tracker tracker, ItemService itemService, ILogger<ItemTrackingModule> logger)
+            : base(tracker, itemService, logger)
         {
             AddCommand("Track item", GetTrackItemRule(), (tracker, result) =>
             {
@@ -60,10 +63,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Track death", GetTrackDeathRule(), (tracker, result) =>
             {
-                var death = tracker.FindItemByName("Death");
+                var death = itemService.Find("Death");
                 if (death == null)
                 {
-                    Logger.LogWarning("Tried to track death, but could not find an item named 'Death'.");
+                    Logger.LogError("Tried to track death, but could not find an item named 'Death'.");
+                    tracker.Say(x => x.Error);
                     return;
                 }
 

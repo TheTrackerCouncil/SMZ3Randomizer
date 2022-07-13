@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
 using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
@@ -21,6 +22,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly List<EmulatorAction> _readActions = new();
         private readonly Dictionary<int, EmulatorAction> _readActionMap = new();
         private readonly ILoggerFactory _loggerFactory;
+        private readonly ItemService _itemService;
         private readonly IEnumerable<IZeldaStateCheck?> _zeldaStateChecks;
         private readonly IEnumerable<IMetroidStateCheck?> _metroidStateChecks;
         private int _currentIndex = 0;
@@ -37,10 +39,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="loggerFactory"></param>
         /// <param name="zeldaStateChecks"></param>
         /// <param name="metroidStateChecks"></param>
-        public AutoTracker(ILogger<AutoTracker> logger, ILoggerFactory loggerFactory, IEnumerable<IZeldaStateCheck> zeldaStateChecks, IEnumerable<IMetroidStateCheck> metroidStateChecks)
+        public AutoTracker(ILogger<AutoTracker> logger,
+            ILoggerFactory loggerFactory,
+            ItemService itemService,
+            IEnumerable<IZeldaStateCheck> zeldaStateChecks,
+            IEnumerable<IMetroidStateCheck> metroidStateChecks)
         {
             _logger = logger;
             _loggerFactory = loggerFactory;
+            _itemService = itemService;
 
             // Check if the game has started or not
             AddReadAction(new()
@@ -489,7 +496,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
                     if (!location.Cleared && currentCleared && prevCleared)
                     {
-                        var item = Tracker.Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
+                        var item = _itemService.Get(location.Item.Type);
                         if (item != null)
                         {
                             Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);

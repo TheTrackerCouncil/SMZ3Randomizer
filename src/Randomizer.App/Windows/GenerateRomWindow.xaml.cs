@@ -42,7 +42,7 @@ namespace Randomizer.App
             _serviceProvider = serviceProvider;
             _randomizer = serviceProvider.GetService<Smz3Randomizer>();
             _romGenerator = serviceProvider.GetService<RomGenerator>();
-            _locationConfig = serviceProvider.GetService<TrackerConfigProvider>().GetLocationConfig();
+            _locationConfig = serviceProvider.GetService<LocationConfig>();
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);

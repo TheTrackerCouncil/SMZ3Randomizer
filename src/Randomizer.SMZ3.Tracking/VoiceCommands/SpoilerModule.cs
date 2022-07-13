@@ -10,6 +10,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Text;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -29,19 +30,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
         private readonly Dictionary<int, int> _locationHintsGiven = new();
         private readonly Playthrough _playthrough;
+        private readonly ItemService _itemService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public SpoilerModule(Tracker tracker, ILogger<SpoilerModule> logger)
-            : base(tracker, logger)
+        public SpoilerModule(Tracker tracker, ItemService itemService, ILogger<SpoilerModule> logger)
+            : base(tracker, itemService, logger)
         {
             Tracker.HintsEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerHints && tracker.Options.HintsEnabled;
             Tracker.SpoilersEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerSpoilers && tracker.Options.SpoilersEnabled;
             if (tracker.World.Config.Race) return;
             _playthrough = Playthrough.Generate(new[] { tracker.World }, tracker.World.Config);
+            _itemService = itemService;
 
             if (!tracker.World.Config.DisableTrackerHints)
             {
@@ -92,7 +95,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     RevealLocationItem(location);
                 });
             }
-            
+            _itemService = itemService;
         }
 
         
@@ -112,7 +115,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationWithProgressionItem = Tracker.World.Locations
                 .Where(x => !x.Cleared && x.IsAvailable(progression))
                 .Where(x => x.Item.Progression)
-                .Where(x => Tracker.FindItemByType(x.Item.Type)?.TrackingState == 0)
+                .Where(x => !ItemService.IsTracked(x.Item.Type))
                 .Random();
 
             if (locationWithProgressionItem != null)
@@ -146,7 +149,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var items = locations
-                .Select(x => Tracker.FindItemByType(x.Item.Type))
+                .Select(x => ItemService.Get(x))
                 .NonNull();
             if (Tracker.SpoilersEnabled)
             {
@@ -270,9 +273,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (Tracker.HintsEnabled || Tracker.SpoilersEnabled)
                 {
-                    var itemName = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
-                        ?? location.Item?.Name
-                        ?? "an unknown item";
+                    var itemName = _itemService.GetName(location.Item.Type);
                     Tracker.Say(x => x.Hints.LocationAlreadyClearedSpoiler, locationName, itemName);
                     return;
                 }
@@ -444,7 +445,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Try to give a hint from the config
                 case 1:
-                    var hint = Tracker.FindItemByType(location.Item.Type)?.Hints;
+                    var hint = ItemService.Get(location.Item.Type)?.Hints;
                     if (hint != null && hint.Count > 0)
                         return GiveLocationHint(hint, location);
 
@@ -453,7 +454,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Consult the Book of Mudora
                 case 2:
                     var pedText = Texts.ItemTextbox(location.Item).Replace('\n', ' ');
-                    var bookOfMudoraName = Tracker.FindItemByType(ItemType.Book)?.NameWithArticle ?? "the Book of Mudora";
+                    var bookOfMudoraName = ItemService.GetName(ItemType.Book);
                     return GiveLocationHint(x => x.BookHint, location, pedText, bookOfMudoraName);
             }
 
@@ -469,7 +470,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return true;
             }
 
-            var item = Tracker.Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
+            var item = ItemService.Get(location.Item.Type);
             if (item != null)
             {
                 Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.NameWithArticle);
@@ -573,7 +574,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression)
                                     .SelectMany(x => x)
                                     .Where(x => x != item.InternalItemType)
-                                    .Select(x => Tracker.Items.FirstOrDefault(item => item.InternalItemType == x))
+                                    .Select(x => ItemService.Get(x))
                                     .Random();
                                 if (randomMissingItem != null)
                                     return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.NameWithArticle);
@@ -680,7 +681,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 return GiveItemHint(x => x.ItemHasBadVanillaLocationName, item, randomLocation.Name);
                             }
 
-                            var vanillaItem = Tracker.Items.FirstOrDefault(x => x.InternalItemType == randomLocation.VanillaItem);
+                            var vanillaItem = ItemService.Get(randomLocation.VanillaItem);
                             return GiveItemHint(x => x.ItemIsInVanillaJunkLocation, item, vanillaItem?.Name ?? randomLocation.VanillaItem.GetDescription());
                         }
 

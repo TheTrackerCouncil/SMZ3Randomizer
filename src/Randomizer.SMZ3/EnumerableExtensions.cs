@@ -14,6 +14,36 @@ namespace Randomizer.SMZ3
             return list.ElementAt(rnd.Next(list.Count));
         }
 
+        /// <summary>
+        /// Returns a random element matching the specified predicate in a
+        /// sequence.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of elements in <paramref name="source"/>.
+        /// </typeparam>
+        /// <param name="source">The collection to search in.</param>
+        /// <param name="predicate">
+        /// A function to test each elements for a condition.
+        /// </param>
+        /// <param name="rng">
+        /// The random number generator used to pick a random matching element.
+        /// </param>
+        /// <returns>
+        /// A random element from <paramref name="source"/> that matches
+        /// <paramref name="predicate"/>, or <see langword="null"/> if no
+        /// elements in <paramref name="source"/> match <paramref
+        /// name="predicate"/>.
+        /// </returns>
+        public static T RandomOrDefault<T>(this IEnumerable<T> source, Func<T, bool> predicate, Random rng)
+        {
+            var matchingElements = source.Where(predicate).ToList();
+            if (matchingElements.Count == 0)
+                return default;
+
+            var randomIndex = rng.Next(matchingElements.Count);
+            return matchingElements.ElementAt(randomIndex);
+        }
+
         public static List<T> Shuffle<T>(this IEnumerable<T> source, Random rnd)
         {
             var copy = new List<T>(source);

@@ -10,6 +10,7 @@ using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -112,9 +113,9 @@ namespace Randomizer.SMZ3.Tracking
         /// A new <see cref="TrackerState"/> object representing the state of
         /// <paramref name="tracker"/>.
         /// </returns>
-        public static TrackerState TakeSnapshot(Tracker tracker)
+        public static TrackerState TakeSnapshot(Tracker tracker, ItemService itemService)
         {
-            var itemStates = tracker.Items
+            var itemStates = itemService.AllItems()
                 .Select(x => new ItemState(x.Name[0], x.TrackingState))
                 .ToImmutableList();
             var locationStates = tracker.World.Locations
@@ -257,13 +258,13 @@ namespace Randomizer.SMZ3.Tracking
         /// The tracker instance to apply the state to.
         /// </param>
         /// <param name="worldAccessor">Used to set the loaded world.</param>
-        public void Apply(Tracker tracker, IWorldAccessor worldAccessor)
+        public void Apply(Tracker tracker, IWorldAccessor worldAccessor, ItemService itemService)
         {
             var world = new World(SeedConfig, "", 0, "");
 
             foreach (var itemState in ItemStates)
             {
-                var item = tracker.FindItemByName(itemState.Name)
+                var item = itemService.Find(itemState.Name)
                     ?? throw new ArgumentException($"Could not find loaded item data for '{itemState.Name}'.", nameof(tracker));
 
                 item.TrackingState = itemState.TrackingState;
@@ -303,7 +304,7 @@ namespace Randomizer.SMZ3.Tracking
             tracker.MarkedLocations.Clear();
             foreach (var markedLocation in MarkedLocations)
             {
-                var item = tracker.FindItemByName(markedLocation.ItemName)
+                var item = itemService.Find(markedLocation.ItemName)
                     ?? throw new ArgumentException($"Could not find loaded item data for '{markedLocation.ItemName}'.", nameof(tracker));
 
                 tracker.MarkedLocations[markedLocation.LocationId] = item;

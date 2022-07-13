@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.SMZ3.Tracking.Services;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -20,8 +22,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public PersonalityModule(Tracker tracker, ILogger<PersonalityModule> logger)
-            : base(tracker, logger)
+        public PersonalityModule(Tracker tracker, ItemService itemService, ILogger<PersonalityModule> logger)
+            : base(tracker, itemService, logger)
         {
             AddCommand("Ask about tracker's mood", GetMoodRule(), (tracker, result) =>
             {

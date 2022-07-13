@@ -3,6 +3,8 @@ using System.Linq;
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.SMZ3.Tracking.Services;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -16,7 +18,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public PegWorldModeModule(Tracker tracker, ILogger<PegWorldModeModule> logger) : base(tracker, logger)
+        public PegWorldModeModule(Tracker tracker, ItemService itemService, ILogger<PegWorldModeModule> logger)
+            : base(tracker, itemService, logger)
         {
             AddCommand("Toggle Peg World mode on", new[] {
                 "Hey tracker, toggle Peg World Mode on",
