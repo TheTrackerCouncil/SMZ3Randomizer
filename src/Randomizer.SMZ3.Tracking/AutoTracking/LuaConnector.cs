@@ -95,7 +95,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             try
             {
                 _socket.Send(Encoding.ASCII.GetBytes(msgString));
-                //_logger.LogDebug(DateTime.Now.ToLongTimeString() + " Sending " + request.Action);
+                _logger.LogTrace("Sending " + request.Action);
             }
             catch (SocketException ex)
             {
@@ -154,7 +154,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                                     var message = JsonSerializer.Deserialize<LuaMessage>(line);
                                     if (message != null && message.Bytes != null)
                                     {
-                                        //_logger.LogDebug(DateTime.Now.ToLongTimeString() + " Received " + message.Action);
+                                        _logger.LogTrace("Received " + message.Action);
                                         var data = new EmulatorMemoryData(Convert.FromBase64String(message.Bytes));
                                         MessageReceived?.Invoke(this, new(message.Address, data));
                                         _lastReadMessage = null;

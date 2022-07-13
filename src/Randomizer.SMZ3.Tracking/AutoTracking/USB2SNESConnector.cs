@@ -97,6 +97,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             if (_lastMessage != null) return;
 
+            _logger.LogTrace("Sending " + message.Type.ToString());
+
             var address = TranslateAddress(message).ToString("X");
             var length = message.Length.ToString("X");
 
@@ -148,6 +150,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // For text responses it should be the device info, so we need to attach ourselves to that device
             if (msg.MessageType == WebSocketMessageType.Text)
             {
+                _logger.LogTrace($"Receiving text data: {msg.Text}");
+
                 var response = JsonSerializer.Deserialize<USB2SNESResponse>(msg.Text);
                 if (response == null || response.Results == null || response.Results.Count == 0)
                 {
@@ -188,8 +192,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 if (_lastMessage != null)
                 {
+                    _logger.LogTrace($"Receiving {_lastMessage.Type} unknown binary data");
                     MessageReceived?.Invoke(this, new(_lastMessage.Address, data));
                     _lastMessage = null;
+                }
+                else
+                {
+                    _logger.LogTrace("Receiving unknown binary data");
                 }
             }
         }

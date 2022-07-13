@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .OneOf("enable", "turn on")
-                .OneOf("cheats", "cheat codes");
+                .OneOf("cheats", "cheat codes", "sv_cheats");
         }
 
         private static GrammarBuilder GetDisableHintsRule()
@@ -123,7 +123,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .OneOf("disable", "turn off")
-                .OneOf("cheats", "cheat codes");
+                .OneOf("cheats", "cheat codes", "sv_cheats");
         }
 
         private static GrammarBuilder FillRule()
