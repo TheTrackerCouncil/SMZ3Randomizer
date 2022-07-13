@@ -666,5 +666,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the configured phrases for the map
         /// </summary>
         public MapResponseConfig Map { get; init; } = new();
+
+        /// <summary>
+        /// Gets the configured phrases for cheats
+        /// </summary>
+        public CheatsConfig Cheats { get; init; } = new();
     }
 }

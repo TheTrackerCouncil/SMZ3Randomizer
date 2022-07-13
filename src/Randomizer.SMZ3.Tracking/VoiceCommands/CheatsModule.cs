@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Speech.Recognition;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -21,8 +22,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class CheatsModule : TrackerModule
     {
-        private readonly ILogger<AutoTrackerModule> _logger;
+        private static readonly string s_fillCheatKey = "FillType";
+        private static readonly List<string> s_fillHealthChoices = new() { "health", "hp", "energy", "hearts" };
 
+        private readonly ILogger<AutoTrackerModule> _logger;
+        private bool _cheatsEnabled = false;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
         /// class.
@@ -33,30 +38,109 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             _logger = logger;
 
-            AddCommand("Heal player", HealPlayerRule(), (tracker, result) =>
+            AddCommand("Enable cheats", GetEnableCheatsRule(), (tracker, result) =>
             {
-                tracker.GameService?.TryHealPlayer();
+                _cheatsEnabled = true;
+                Tracker.Say(x => x.Cheats.EnabledCheats);
+            });
+
+            AddCommand("Disable cheats", GetDisableHintsRule(), (tracker, result) =>
+            {
+                _cheatsEnabled = false;
+                Tracker.Say(x => x.Cheats.DisabledCheats);
+            });
+
+            AddCommand("Fill rule", FillRule(), (tracker, result) =>
+            {
+                var fillType = result.Semantics.ContainsKey(s_fillCheatKey) ? (string)result.Semantics[s_fillCheatKey].Value : s_fillHealthChoices.First();
+                Fill(fillType);
             });
 
             AddCommand("Give item", GiveItemRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
-                tracker.GameService?.TryGiveItem(item);
+                GiveItem(item);
             });
         }
 
-        private GrammarBuilder HealPlayerRule()
+        private bool PlayerCanCheat()
         {
+            if (!_cheatsEnabled)
+            {
+                Tracker.Say(x => x.Cheats.PromptEnableCheats);
+                return false;
+            }
+            else if (Tracker.AutoTracker == null || !Tracker.AutoTracker.IsConnected)
+            {
+                Tracker.Say(x => x.Cheats.PromptEnableAutoTracker);
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Fills different types of pools for the player (health, bombs, missiles, etc.)
+        /// </summary>
+        /// <param name="fillType">What should be filled</param>
+        private void Fill(string fillType)
+        {
+            if (!PlayerCanCheat()) return;
+
+            if (s_fillHealthChoices.Contains(fillType) && Tracker.GameService?.TryHealPlayer() == true)
+            {
+                Tracker.Say(x => x.Cheats.CheatPerformed);
+            }
+            else
+            {
+                Tracker.Say(x => x.Cheats.CheatFailed);
+            }
+        }
+
+        private void GiveItem(ItemData? item)
+        {
+            if (!PlayerCanCheat()) return;
+
+            if (item != null && Tracker.GameService?.TryGiveItem(item) == true)
+            {
+                Tracker.Say(x => x.Cheats.CheatPerformed);
+            }
+            else
+            {
+                Tracker.Say(x => x.Cheats.CheatFailed);
+            }
+        }
+
+        private static GrammarBuilder GetEnableCheatsRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("enable", "turn on")
+                .OneOf("cheats", "cheat codes");
+        }
+
+        private static GrammarBuilder GetDisableHintsRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("disable", "turn off")
+                .OneOf("cheats", "cheat codes");
+        }
+
+        private static GrammarBuilder FillRule()
+        {
+            var fillChoices = new Choices();
+            fillChoices.Add(s_fillHealthChoices.ToArray());
             var restore = new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .Optional("please", "would you please")
                 .OneOf("restore my", "fill my")
-                .OneOf("health", "hp", "energy", "hearts");
+                .Append(s_fillCheatKey, fillChoices);
 
             var heal = new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .Optional("please", "would you please")
                 .OneOf("heal me", "I need healing");
+
             return GrammarBuilder.Combine(restore, heal);
         }
 

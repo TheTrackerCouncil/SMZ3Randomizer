@@ -2475,6 +2475,34 @@
         "I think you're a liar",
         "Why don't you just look at the screen?"
       ]
+    },
+    "Cheats": {
+      "EnabledCheats": [
+        "Toggled cheats on",
+        "I have hacked into the mainframe",
+        "Cheat codes activated",
+        [ "The racing council won't be happy about this, but since when have you cared about them?", 0.1 ]
+      ],
+      "DisabledCheats": [
+        "Toggled cheats off",
+        "You are no longer a cheater",
+        "Putting the genie back in the lamp"
+      ],
+      "PromptEnableCheats": [
+        "If you would like to cheat, say 'Hey tracker, enable cheats'"
+      ],
+      "PromptEnableAutoTracker": [
+        "If you would like to cheat, please enable auto tracking"
+      ],
+      "CheatPerformed": [
+        "I have added that one to your tab",
+        "You owe me for that one",
+        "I have done your bidding. This time.",
+        "I hope that helps"
+      ],
+      "CheatFailed": [
+        "Sorry, I can't perform that cheat for you at this time"
+      ]
     }
   },
   "Requests": [
