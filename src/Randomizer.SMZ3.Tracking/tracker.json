@@ -1892,8 +1892,9 @@
         "\\b(hi|hey|hello)( there)?,? tracker\\b",
         "\\b(greetings|hiya|howdy|'sup),? tracker\\b",
         "\\bgood (morning|afternoon|evening|day),? tracker\\b",
-        "\\b(HeyGuys|ViHiYo|pkroseHello|betusHey) tracker\\b",
-        "\\btracker (HeyGuys|ViHiYo|pkroseHello|betusHey)\\b",
+        "\\b(morning|afternoon|evening),? tracker\\b",
+        "\\b(HeyGuys|VoHiYo|pkroseHello|betusHey) tracker\\b",
+        "\\btracker (HeyGuys|VoHiYo|pkroseHello|betusHey)\\b",
         "^tracker!+$",
         "\\bT R A C K E R\\b"
       ],
