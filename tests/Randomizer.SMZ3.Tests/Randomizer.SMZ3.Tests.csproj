@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <IsPackable>false</IsPackable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -16,6 +16,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj" />
     <ProjectReference Include="..\..\src\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
   </ItemGroup>
 </Project>
