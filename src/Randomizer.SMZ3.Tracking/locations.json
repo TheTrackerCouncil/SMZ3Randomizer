@@ -893,6 +893,7 @@
     {
       "Name": [
         "Chozo Ruins entrance",
+        "that room opposite the Gauntlet",
         [ "Power Bomb (Crateria surface)", 0 ]
       ],
       "X": 968,
@@ -903,6 +904,7 @@
       "Name": [
         "Flooded Cavern - under water",
         "West Ocean - under water",
+        "that room before Wrecked Ship that's underwater",
         [ "Missile (outside Wrecked Ship bottom)", 0 ]
       ],
       "X": 1128,
@@ -912,6 +914,7 @@
       "Id": 2,
       "Name": [
         "Sky Missile",
+        "that spot all the way up in the sky after Wrecked Ship",
         [ "Missile (outside Wrecked Ship top)", 0 ]
       ],
       "X": 1160,
@@ -931,6 +934,7 @@
       "Name": [
         "The Moat",
         "Interior Lake",
+        "that room between Crateria and Wrecked Ship with the item on the water",
         [ "Missile (Crateria moat)", 0 ]
       ],
       "X": 1064,
@@ -940,6 +944,7 @@
       "Id": 5,
       "Name": [
         "Gauntlet (Chozo)",
+        "the room in the middle of the Gauntlet",
         [ "Energy Tank, Gauntlet", 0 ]
       ],
       "X": 456,
@@ -951,12 +956,13 @@
         "Mother Brain's reliquary",
         "Pit Room",
         "Mother Brain's toilet",
+        "the spot underneath the place Mother Brain used to be",
         [ "Missile (Crateria bottom)", 0 ]
       ],
       "X": 552,
       "Y": 660,
       "WhenTrackingJunk": [ "Of course this location would have a shitty item", "What a poopy item. No wonder it got flushed." ],
-      "WhenTrackingProgression": [ "That's not bad for being in the toilet", "Who flushed this down the toilet?"]
+      "WhenTrackingProgression": [ "That's not bad for being in the toilet", "Who flushed this down the toilet?" ]
     },
     {
       "Id": 7,
@@ -973,6 +979,7 @@
       "Name": [
         "Terminator Room",
         "Fungal Slope",
+        "that room in Crateria with the mushrooms",
         [ "Energy Tank, Terminator", 0 ]
       ],
       "X": 296,
@@ -982,6 +989,7 @@
       "Id": 9,
       "Name": [
         "Gauntlet Shaft Right",
+        "that spot on the right side after the Gauntlet",
         [ "Missile (Crateria gauntlet right)", 0 ]
       ]
     },
@@ -989,6 +997,7 @@
       "Id": 10,
       "Name": [
         "Gauntlet Shaft Left",
+        "that spot on the left side after the Gauntlet",
         [ "Missile (Crateria gauntlet left)", 0 ]
       ]
     },
@@ -1007,6 +1016,7 @@
         "Final Missile Bombway",
         "The Final Missile",
         "Dental Plan Missiles",
+        "the room in Crateria on the other side of the entrance to Zelda",
         [ "Missile (Crateria middle)", 0 ]
       ],
       "X": 424,
@@ -1015,7 +1025,10 @@
     {
       "Id": 13,
       "Name": [
-        "Power Bomb (green Brinstar bottom)"
+        "Hell",
+        "Etecoon shaft",
+        "that room where the animals are wall jumping",
+        [ "Power Bomb (green Brinstar bottom)", 0 ]
       ],
       "X": 328,
       "Y": 308
@@ -1033,6 +1046,7 @@
       "Id": 15,
       "Name": [
         "Mockball Room - Fail item",
+        "that spot you get to when failing the mock ball in Green Brinstar",
         [ "Missile (green Brinstar below super missile)", 0 ]
       ],
       "X": 296,
@@ -1042,6 +1056,7 @@
       "Id": 16,
       "Name": [
         "Mockball Room Attic",
+        "that spot on your way out of the mockball room",
         [ "Super Missile (green Brinstar top)", 0 ]
       ],
       "X": 264,
@@ -1051,6 +1066,8 @@
       "Id": 17,
       "Name": [
         "Mockball Chozo",
+        "the room after you use the Speed Booster in Green Brinstar",
+        "the room after you use the mockball glitch in Green Brinstar",
         [ "Reserve Tank, Brinstar", 0 ]
       ],
       "X": 360,
@@ -1060,6 +1077,8 @@
       "Id": 18,
       "Name": [
         "Mockball Back room hidden item",
+        "the room behind the room after you use the Speed Booster in Green Brinstar",
+        "the room behind the room after you use the mockball glitch in Green Brinstar",
         [ "Missile (green Brinstar behind missile)", 0 ],
         "Ron Popeil missiles",
         "Mockball Hall Hidden Room Hidden Item"
@@ -1069,6 +1088,8 @@
       "Id": 19,
       "Name": [
         "Mockball Back room",
+        "that spot in the wall in the room behind the room after you use the Speed Booster in Green Brinstar",
+        "that spot in the wall in the room behind the room after you use the mockball glitch in Green Brinstar",
         [ "Missile (green Brinstar behind reserve tank)", 0 ],
         "Mockball Hall Hidden Room Main Item"
       ]
@@ -1078,6 +1099,7 @@
       "Name": [
         "Pink Shaft (top)",
         "Big Pink (top)",
+        "that spot in Pink Brinstar on the other side of the grapple ceiling",
         [ "Missile (pink Brinstar top)", 0 ]
       ],
       "X": 488,
@@ -1088,6 +1110,7 @@
       "Name": [
         "Pink Shaft (bottom)",
         "Big Pink (bottom)",
+        "that spot on the bottom of Pink Brinstar",
         [ "Missile (pink Brinstar bottom)", 0 ]
       ],
       "X": 488,
@@ -1097,6 +1120,7 @@
       "Id": 23,
       "Name": [
         "Pink Shaft - Chozo",
+        "the room underneath Pink Brinstar",
         [ "Charge Beam", 0 ]
       ],
       "X": 488,
@@ -1126,7 +1150,8 @@
       "Id": 26,
       "Name": [
         "Morph Ball (Corridor No. 1)",
-        "Morphing Ball"
+        "Morphing Ball",
+        "the only place you can get to in Super Metroid without any items"
       ],
       "X": 744,
       "Y": 404
@@ -1135,6 +1160,7 @@
       "Id": 27,
       "Name": [
         "Power Bomb wall (Corridor No. 1)",
+        "that spot behind the Morph Ball",
         [ "Power Bomb (blue Brinstar)", 0 ]
       ],
       "X": 680,
@@ -1143,7 +1169,8 @@
     {
       "Id": 28,
       "Name": [
-        "Missile (blue Brinstar middle)"
+        "that spot all the way to the right of Blue Brinstar",
+        [ "Missile (blue Brinstar middle)", 0 ]
       ],
       "X": 968,
       "Y": 404
@@ -1152,6 +1179,7 @@
       "Id": 29,
       "Name": [
         "Blue Brinstar Ceiling",
+        "that spot in the ceiling in Blue Brinstar",
         [ "Energy Tank, Brinstar Ceiling", 0 ]
       ],
       "X": 936,
@@ -1160,8 +1188,8 @@
     {
       "Id": 30,
       "Name": [
-        "Hell",
-        "Etecoon shaft",
+        "that spot right after the false floor in Green Brinstar",
+        "Highway to Hell",
         [ "Energy Tank, Etecoons", 0 ]
       ],
       "X": 136,
@@ -1170,7 +1198,8 @@
     {
       "Id": 31,
       "Name": [
-        "Super Missile (green Brinstar bottom)"
+        "that room after the false floor in Green Brinstar",
+        [ "Super Missile (green Brinstar bottom)", 0 ]
       ],
       "X": 104,
       "Y": 404
@@ -1187,7 +1216,8 @@
     {
       "Id": 34,
       "Name": [
-        "Missile (blue Brinstar bottom)"
+        "that Chozo room at the bottom of Blue Brinstar",
+        [ "Missile (blue Brinstar bottom)", 0 ]
       ],
       "X": 840,
       "Y": 436
@@ -1197,6 +1227,7 @@
       "Name": [
         "Hoptank Room",
         "Wave Beam Glitch room",
+        "the room where everyone does the Wave Beam Glitch",
         [ "Energy Tank, Brinstar Gate", 0 ]
       ],
       "X": 616,
@@ -1207,7 +1238,8 @@
       "Name": [
         "Billy Mays Room Main Item",
         [ "Missile (blue Brinstar top)", 0 ],
-        "Blue Brinstar Top Main Item"
+        "Blue Brinstar Top Main Item",
+        "the visible spot in the Billy Mays Room"
       ]
     },
     {
@@ -1216,14 +1248,16 @@
         "Billy Mays Room Hidden item",
         "But wait, there's more!",
         [ "Missile (blue Brinstar behind missile)", 0 ],
-        "Blue Brinstar Top Hidden Item"
+        "Blue Brinstar Top Hidden Item",
+        "the hidden spot in the Billy Mays Room"
       ]
     },
     {
       "Id": 38,
       "Name": [
         "The Chozo room after the dark room with all the spikes",
-        "X-Ray Scope"
+        "X-Ray Scope",
+        [ "X-Ray", 0 ]
       ],
       "X": 680,
       "Y": 564
@@ -1232,7 +1266,9 @@
       "Id": 39,
       "Name": [
         "Beta Power Bomb Room",
-        "Power Bomb (red Brinstar sidehopper room)"
+        "Power Bomb (red Brinstar sidehopper room)",
+        "the room underneath the flower in Red Brinstar",
+        "the room underneath the Samus Eater in Red Brinstar"
       ],
       "X": 1064,
       "Y": 340
@@ -1241,7 +1277,9 @@
       "Id": 40,
       "Name": [
         "Alpha Power Bomb Room",
-        "Power Bomb (red Brinstar spike room)"
+        "Power Bomb (red Brinstar spike room)",
+        "the Chozo room in Red Brinstar with the jumping enemies you can freeze",
+        "the Chozo room in Red Brinstar with the Boyons"
       ],
       "X": 1064,
       "Y": 436
@@ -1250,7 +1288,8 @@
       "Id": 41,
       "Name": [
         "Alpha Power Bomb Room - Behind the wall",
-        "Missile (red Brinstar spike room)"
+        "Missile (red Brinstar spike room)",
+        "the room behind the wall in the Chozo room in Red Brinstar"
       ],
       "X": 1032,
       "Y": 436
@@ -1259,7 +1298,8 @@
       "Id": 42,
       "Name": [
         "~ S p A z E r ~",
-        "Spazer"
+        "Spazer",
+        "the Chozo room above the entrance to Maridia in Red Brinstar"
       ],
       "X": 1160,
       "Y": 628
@@ -1267,7 +1307,8 @@
     {
       "Id": 43,
       "Name": [
-        "Energy Tank, Kraid"
+        "Energy Tank, Kraid",
+        "the room that opens up on your way out after defeating Kraid"
       ],
       "X": 1320,
       "Y": 692
@@ -1276,7 +1317,8 @@
       "Id": 44,
       "Name": [
         "Warehouse Kihunter Room",
-        "Missile (Kraid)"
+        "Missile (Kraid)",
+        "the room before the corridor with Kraid's Awful Son"
       ],
       "X": 1448,
       "Y": 660
@@ -1285,6 +1327,7 @@
       "Id": 48,
       "Name": [
         "Kraid's Reliquary",
+        "the room after Kraid",
         [ "Varia Suit", 0 ]
       ],
       "X": 1768,
@@ -1295,6 +1338,7 @@
       "Name": [
         "Lava Room - Submerged in wall",
         "Cathedral",
+        "the room in Upper Norfair with the item in the lava",
         [ "Missile (lava room)", 0 ]
       ],
       "X": 568,
@@ -1304,7 +1348,8 @@
       "Id": 50,
       "Name": [
         "Ice Beam Room",
-        "Ice Beam"
+        "Ice Beam",
+        "the room in Upper Norfair after the Speed Booster gates"
       ],
       "X": 216,
       "Y": 148
@@ -1313,6 +1358,7 @@
       "Id": 51,
       "Name": [
         "Crumble Shaft",
+        "the room with all the crumbling platforms",
         [ "Missile (below Ice Beam)", 0 ]
       ],
       "X": 120,
@@ -1322,7 +1368,8 @@
       "Id": 52,
       "Name": [
         "Crocomire's Pit",
-        [ "Energy Tank, Crocomire", 0 ]
+        [ "Energy Tank, Crocomire", 0 ],
+        "the room where you fight Crocomire"
       ],
       "X": 664,
       "Y": 404
@@ -1331,7 +1378,8 @@
       "Id": 53,
       "Name": [
         "Hi-Jump Boots Room",
-        "Hi-Jump Boots"
+        "Hi-Jump Boots",
+        "the Chozo room after the room in Upper Norfair where you have to wait a long time for an enemy before you can leave again"
       ],
       "X": 280,
       "Y": 276
@@ -1340,7 +1388,8 @@
       "Id": 54,
       "Name": [
         "Crocomire Escape",
-        [ "Missile (above Crocomire)", 0 ]
+        [ "Missile (above Crocomire)", 0 ],
+        "the room with the item beyond a Super Missile gate you can peak at in Upper Norfair"
       ],
       "X": 408,
       "Y": 276
@@ -1349,6 +1398,7 @@
       "Id": 55,
       "Name": [
         "Hi-Jump Lobby - Back",
+        "the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again",
         [ "Missile (Hi-Jump Boots)", 0 ]
       ],
       "X": 312,
@@ -1358,6 +1408,7 @@
       "Id": 56,
       "Name": [
         "Hi-Jump Lobby - Entrance",
+        "the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again",
         [ "Energy Tank (Hi-Jump Boots)", 0 ]
       ],
       "X": 344,
@@ -1367,6 +1418,7 @@
       "Id": 57,
       "Name": [
         "Post Crocomire Power Bomb Room",
+        "the room directly on the other side of Crocomire's room",
         [ "Power Bomb (Crocomire)", 0 ]
       ],
       "X": 344,
@@ -1377,6 +1429,7 @@
       "Name": [
         "Cosine Room",
         "Post Crocomire Missile Room",
+        "the wavy room below Crocomire",
         [ "Missile (below Crocomire)", 0 ]
       ],
       "X": 504,
@@ -1388,6 +1441,7 @@
         "Indiana Jones Room",
         "Pantry",
         "Post Crocomire Jump Room",
+        "the big empty room after Crocomire that use the Speed Booster to get",
         [ "Missile (Grappling Beam)", 0 ]
       ],
       "X": 312,
@@ -1397,7 +1451,8 @@
       "Id": 60,
       "Name": [
         "Grapple Beam Room",
-        "Grappling Beam"
+        "Grappling Beam",
+        "the Chozo room after the big empty room past Crocomire"
       ],
       "X": 152,
       "Y": 596
@@ -1406,20 +1461,23 @@
       "Id": 61,
       "Name": [
         "Reserve Tank, Norfair",
-        "Bubble Mountain Hidden Hall Main Item"
+        "Bubble Mountain Hidden Hall Main Item",
+        "the hidden room on the left side of Bubble Mountain"
       ]
     },
     {
       "Id": 62,
       "Name": [
         "Missile (Norfair Reserve Tank)",
-        "Bubble Mountain Hidden Hall Hidden Item"
+        "Bubble Mountain Hidden Hall Hidden Item",
+        "the hidden spot in the hidden room on the left side of Bubble Mountain"
       ]
     },
     {
       "Id": 63,
       "Name": [
         "Bubble Mountain Missile Room",
+        "the room on the left side of Bubble Mountain",
         [ "Missile (bubble Norfair green door)", 0 ]
       ],
       "X": 728,
@@ -1429,6 +1487,7 @@
       "Id": 64,
       "Name": [
         "Bubble Mountain",
+        "the spot near the spikes on the bottom of Bubble Mountain",
         [ "Missile (bubble Norfair)", 0 ]
       ],
       "X": 792,
@@ -1438,6 +1497,7 @@
       "Id": 65,
       "Name": [
         "Speed Booster Hall - Ceiling",
+        "the spot in the ceiling on the right side of Bubble Mountain",
         [ "Missile (Speed Booster)", 0 ]
       ],
       "X": 1208,
@@ -1447,7 +1507,9 @@
       "Id": 66,
       "Name": [
         "Speed Booster Room",
-        "Speed Booster"
+        "Speed Booster",
+        "the room to the right of Bubble Mountain",
+        "the Chozo room in Bubble Mountain"
       ],
       "X": 1240,
       "Y": 148
@@ -1475,6 +1537,7 @@
       "Id": 70,
       "Name": [
         "Gold Torizo - Drop down",
+        "the spot before you drop down to fight Gold Torizo",
         [ "Missile (Gold Torizo)", 0 ]
       ],
       "X": 632,
@@ -1484,6 +1547,7 @@
       "Id": 71,
       "Name": [
         "Golden Torizo - Ceiling",
+        "the spot where Gold Torizo hides before the fight",
         [ "Super Missile (Gold Torizo)", 0 ]
       ],
       "X": 664,
@@ -1493,6 +1557,8 @@
       "Id": 73,
       "Name": [
         "Mickey Mouse Clubhouse",
+        "Mickey Mouse room",
+        "the room that looks like Mickey Mouse",
         [ "Missile (Mickey Mouse room)", 0 ]
       ],
       "X": 952,
@@ -1502,6 +1568,7 @@
       "Id": 74,
       "Name": [
         "Spring Ball Maze Room",
+        "the room right before the Spring Ball Maze",
         [ "Missile (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1176,
@@ -1511,6 +1578,7 @@
       "Id": 75,
       "Name": [
         "Escape Power Bomb Room",
+        "the room in lower Norfair that you hope doesn't have anything because you need to go through a morph ball maze",
         [ "Power Bomb (lower Norfair above fire flea room)", 0 ]
       ],
       "X": 1240,
@@ -1519,7 +1587,8 @@
     {
       "Id": 76,
       "Name": [
-        "Wasteland - Power Bomb of Shame",
+        "Power Bomb of Shame",
+        "the room to the left before the spiky elevator to Ridley",
         [ "Power Bomb (Power Bombs of shame)", 0 ]
       ],
       "X": 1080,
@@ -1539,6 +1608,7 @@
       "Id": 78,
       "Name": [
         "Ridley's Reliquary",
+        "the room after Ridley",
         [ "Energy Tank, Ridley", 0 ]
       ],
       "X": 760,
@@ -1548,7 +1618,8 @@
     {
       "Id": 79,
       "Name": [
-        "Screw Attack"
+        "Screw Attack",
+        "the Chozo below the portal to Misery Mire"
       ],
       "X": 696,
       "Y": 596
@@ -1557,6 +1628,7 @@
       "Id": 80,
       "Name": [
         "Fireflea Room",
+        "the dark room in lower Norfair with the fire flies",
         [ "Energy Tank, Firefleas", 0 ]
       ],
       "X": 1240,
@@ -1566,6 +1638,7 @@
       "Id": 128,
       "Name": [
         "Main Shaft - Side room",
+        "the room behind the bombeable wall on the left side of Wrecked Ship",
         [ "Missile (Wrecked Ship middle)", 0 ]
       ],
       "X": 408,
@@ -1576,6 +1649,7 @@
       "Name": [
         "Post Chozo Concert - Speed Booster Item",
         "Bowling Alley - Speed Booster Item",
+        "the spot that requires the Speed Booster in Wrecked Ship",
         [ "Reserve Tank, Wrecked Ship", 0 ],
         [ "Wrecked Ship, Reserve Tank", 0 ]
       ],
@@ -1586,6 +1660,7 @@
       "Id": 130,
       "Name": [
         "Post Chozo Concert - Breakable Chozo",
+        "the breakable Chozo in Wrecked Ship",
         [ "Missile (Gravity Suit)", 0 ]
       ],
       "X": 440,
@@ -1595,6 +1670,7 @@
       "Id": 131,
       "Name": [
         "Attic - Assembly Line",
+        "the room with the conveyors and robots",
         [ "Missile (Wrecked Ship top)", 0 ]
       ],
       "X": 696,
@@ -1606,6 +1682,7 @@
         "Wrecked Pool",
         "Ruined Pool",
         "Wrecked Ship Bullshit Room",
+        "that room in Wrecked Ship with all the water where you always reset",
         [ "Energy Tank, Wrecked Ship", 0 ]
       ],
       "X": 600,
@@ -1615,6 +1692,7 @@
       "Id": 133,
       "Name": [
         "Left Super Missile Chamber",
+        "the room that opens up on the left side after defeating Phantoon",
         [ "Super Missile (Wrecked Ship left)", 0 ]
       ],
       "X": 504,
@@ -1624,6 +1702,7 @@
       "Id": 134,
       "Name": [
         "Right Super Missile Chamber",
+        "the room that opens up on the right side after defeating Phantoon",
         [ "Right Super, Wrecked Ship", 0 ]
       ],
       "X": 696,
@@ -1633,6 +1712,7 @@
       "Id": 135,
       "Name": [
         "Post Chozo Concert - Gravity Suit Chamber",
+        "the room after the Chozo concert",
         [ "Gravity Suit", 0 ]
       ],
       "X": 344,
@@ -1643,6 +1723,7 @@
       "Name": [
         "Main Street - Ceiling (Shinespark)",
         "Main Street Missiles",
+        "the spot in the ceiling in Maridia that requires Shinespark",
         [ "Missile (green Maridia shinespark)", 0 ]
       ],
       "X": 232,
@@ -1652,6 +1733,7 @@
       "Id": 137,
       "Name": [
         "Main Street - Crab Supers",
+        "the tiny room where you watch crabs walking into the wall",
         [ "Super Missile (green Maridia)", 0 ]
       ],
       "X": 264,
@@ -1661,6 +1743,7 @@
       "Id": 138,
       "Name": [
         "Mama Turtle Room",
+        "the room with the turtles",
         [ "Energy Tank, Mama turtle", 0 ]
       ],
       "X": 488,
@@ -1670,6 +1753,7 @@
       "Id": 139,
       "Name": [
         "Mama Turtle Room - Wall item",
+        "the spot in the wall in the turtle room",
         [ "Missile (green Maridia tatori)", 0 ]
       ],
       "X": 520,
@@ -1679,6 +1763,7 @@
       "Id": 140,
       "Name": [
         "Watering Hole Left",
+        "the left side of the pit with two items in the northeast of Maridia",
         [ "Super Missile (yellow Maridia)", 0 ]
       ]
     },
@@ -1686,6 +1771,7 @@
       "Id": 141,
       "Name": [
         "Watering Hole Right",
+        "the right side of the pit with two items in the northeast of Maridia",
         [ "Missile (yellow Maridia super missile)", 0 ]
       ]
     },
@@ -1693,6 +1779,7 @@
       "Id": 142,
       "Name": [
         "Pseudo Plasma Spark Room",
+        "the room leading up to the pit with two items in the northeast of Maridia",
         [ "Missile (yellow Maridia false wall)", 0 ]
       ],
       "X": 552,
@@ -1701,7 +1788,10 @@
     {
       "Id": 143,
       "Name": [
-        "Plasma Beam"
+        "Plasma Beam",
+        "Plasma Chamber",
+        "Plasma Beam room",
+        "the room in Maridia near the forgotten highway to Wrecked Ship"
       ],
       "X": 808,
       "Y": 148
@@ -1710,6 +1800,7 @@
       "Id": 144,
       "Name": [
         "Left Sand Pit Left",
+        "the left side of the left sand pit",
         [ "Missile (left Maridia sand pit room)", 0 ]
       ]
     },
@@ -1717,13 +1808,15 @@
       "Id": 145,
       "Name": [
         "Left Sand Pit Right",
+        "the right side of the left sand pit",
         [ "Reserve Tank, Maridia", 0 ]
       ]
     },
     {
       "Id": 146,
       "Name": [
-        "Right Sand Pit - Left item",
+        "Right Sand Pit Left",
+        "the left side of the right sand pit",
         [ "Missile (right Maridia sand pit room)", 0 ]
       ],
       "X": 648,
@@ -1732,7 +1825,8 @@
     {
       "Id": 147,
       "Name": [
-        "Right Sand Pit - Right item",
+        "Right Sand Pit Right",
+        "the right side of the right sand pit",
         [ "Power Bomb (right Maridia sand pit room)", 0 ]
       ],
       "X": 680,
@@ -1762,6 +1856,8 @@
         "Shaktool",
         "Shak's Stash",
         "Shaktool's item",
+        "the room that everyone's favorite diggy boy helps you get to",
+        "the room after everyone's favorite diggy boy",
         [ "Spring Ball", 0 ]
       ],
       "X": 968,
@@ -1783,6 +1879,7 @@
       "Name": [
         "The Precious Room",
         "Pre-Draygon Room",
+        "the wall in the room before Draygon",
         [ "Missile (Draygon)", 0 ]
       ],
       "X": 1256,
@@ -1792,6 +1889,7 @@
       "Id": 152,
       "Name": [
         "Sandy Path",
+        "the room after Botwoon",
         [ "Energy Tank, Botwoon", 0 ]
       ],
       "X": 840,
@@ -1801,6 +1899,7 @@
       "Id": 154,
       "Name": [
         "Draygon's Reliquary",
+        "the room after Draygon",
         [ "Space Jump", 0 ]
       ],
       "X": 1128,
@@ -1848,7 +1947,7 @@
       "WhenMarkingJunk": [ "This island makes no sense!", "Sky floating crap is kind of rare to see." ],
       "WhenMarkingProgression": [ "Maybe the mitts are right around the corner.", "At least this isnt that far out of the way." ],
       "WhenTrackingJunk": [ "I hope you didn't blind grab that", "I bet the view is better than what you got." ],
-      "WhenTrackingProgression": [ "That took so much effort to get, amazing.", "What's next?"]
+      "WhenTrackingProgression": [ "That took so much effort to get, amazing.", "What's next?" ]
     },
     {
       "Id": 261,
@@ -1948,7 +2047,7 @@
       "X": 633,
       "Y": 117,
       "WhenMarkingJunk": [ "That's a relief, I'm sure.", "Not an AhGah seed then?", "That's a good sign? Right?", "Oops, I sent you the wrong seed" ],
-      "WhenMarkingProgression": [ "Sucks to be you." , "It's going to be one of those seeds.", "Hold on, let me grab some popcorn" ],
+      "WhenMarkingProgression": [ "Sucks to be you.", "It's going to be one of those seeds.", "Hold on, let me grab some popcorn" ],
       "WhenTrackingJunk": [ "Why did you bother?" ],
       "WhenTrackingProgression": [ "Well, at least you got something.", "Maybe things will happen now." ]
     },
@@ -2194,12 +2293,13 @@
       "WhenMarkingJunk": [ "That was an easy peek at least." ],
       "WhenMarkingProgression": [ "Hopefully you get the mirror soon.", "At least this isnt that far out of the way." ],
       "WhenTrackingJunk": [ "At least it's easy to get", "That was pretty simple." ],
-      "WhenTrackingProgression": [ "You stole that from the Buzz Blob!", "You better escape before you get zapped."]
+      "WhenTrackingProgression": [ "You stole that from the Buzz Blob!", "You better escape before you get zapped." ]
     },
     {
       "Id": 318,
       "Name": [
         "Under the bridge",
+        "the guy under the bridge",
         "Hobo"
       ],
       "X": 1390,
@@ -2262,7 +2362,8 @@
       "Id": 327,
       "Name": [
         "Bumper Cave Ledge",
-        "Bumper Cave"
+        "Bumper Cave",
+        "Bumper Ledge"
       ],
       "X": 687,
       "Y": 340
@@ -2299,7 +2400,7 @@
       ],
       "X": 636,
       "Y": 1214,
-      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund." , "At least the season pass was cheap", "At least the food is nice." ],
+      "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund.", "At least the season pass was cheap", "At least the food is nice." ],
       "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ]
     },
     {
@@ -2809,6 +2910,7 @@
       "Id": 405,
       "Name": [
         "Pinball Room",
+        "the room with all the bumpers and gib-does",
         [ "Skull Woods Pinball Room", 0 ],
         [ "Skill Woods Pinball Room", 0 ]
       ]
@@ -3257,9 +3359,9 @@
       "X": 313,
       "Y": 1310,
       "WhenMarkingJunk": [ "Its never bullshit to visit your local Library", "Don't you want to get something nice to read?" ],
-      "WhenMarkingProgression": [ "Hopefully the boots are not too hard to find." , "At least this isnt that far out of the way." ],
+      "WhenMarkingProgression": [ "Hopefully the boots are not too hard to find.", "At least this isnt that far out of the way." ],
       "WhenTrackingJunk": [ "Did you get a nice book at least?" ],
-      "WhenTrackingProgression": [ "Toggled boots off. Kidding." , "Did you grab the book I had on reserve?"]
+      "WhenTrackingProgression": [ "Toggled boots off. Kidding.", "Did you grab the book I had on reserve?" ]
     },
     {
       "Id": 497,
@@ -3275,6 +3377,7 @@
       "Id": 498,
       "Name": [
         "Cave #45",
+        "Cave 45",
         "South of Grove"
       ],
       "X": 552,
@@ -3336,4 +3439,3 @@
     }
   ]
 }
-
