@@ -282,6 +282,64 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         }
 
         /// <summary>
+        /// Kills the player by removing their health and dealing damage to them
+        /// </summary>
+        /// <returns>True if successful</returns>
+        public bool TryKillPlayer()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected)
+            {
+                return false;
+            }
+
+            if (_autoTracker.CurrentGame == Game.Zelda)
+            {
+                // Set health to 0
+                _autoTracker.WriteToMemory(new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.WRAM,
+                    Address = 0x7EF36D,
+                    WriteValues = new List<byte>() { 0x0 }
+                });
+
+                // Deal 1 heart of damage
+                _autoTracker.WriteToMemory(new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.WRAM,
+                    Address = 0x7E0373,
+                    WriteValues = new List<byte>() { 0x8 }
+                });
+
+                return true;
+            }
+            else if (_autoTracker.CurrentGame == Game.SM)
+            {
+                // Set HP to 1 (to prevent saving with 0 energy)
+                _autoTracker.WriteToMemory(new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.WRAM,
+                    Address = 0x7E09C2,
+                    WriteValues = new List<byte>() { 0x1, 0x0 }
+                });
+
+                // Deal 255 damage to player
+                _autoTracker.WriteToMemory(new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.WRAM,
+                    Address = 0x7E0A50,
+                    WriteValues = new List<byte>() { 0xFF }
+                });
+
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// The number of items given to the player
         /// </summary>
         public int ItemCounter { get; set; }

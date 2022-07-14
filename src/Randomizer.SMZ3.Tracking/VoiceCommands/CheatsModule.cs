@@ -70,6 +70,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 var item = GetItemFromResult(tracker, result, out var itemName);
                 GiveItem(item);
             });
+
+            AddCommand("Kill player", KillPlayerRule(), (tracker, result) =>
+            {
+                if (!PlayerCanCheat()) return;
+
+                if (Tracker.GameService?.TryKillPlayer() == true)
+                {
+                    Tracker.Say(x => x.Cheats.CheatPerformed);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Cheats.CheatFailed);
+                }
+            });
         }
 
         private bool PlayerCanCheat()
@@ -206,7 +220,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(ItemNameKey, itemNames);
         }
 
-
+        private GrammarBuilder KillPlayerRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Optional("please", "would you kindly")
+                .OneOf("kill me", "give me a tactical reset");
+        }
     }
 
 }
