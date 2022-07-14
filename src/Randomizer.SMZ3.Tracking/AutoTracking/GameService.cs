@@ -125,6 +125,163 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         }
 
         /// <summary>
+        /// Fully fills the player's magic
+        /// </summary>
+        /// <returns>False if it is currently unable to give magic to the player</returns>
+        public bool TryFillMagic()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            {
+                return false;
+            }
+
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7EF373,
+                WriteValues = new List<byte>() { 0x80 }
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Fully fills the player's bombs to capacity
+        /// </summary>
+        /// <returns>False if it is currently unable to give bombs to the player</returns>
+        public bool TryFillZeldaBombs()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            {
+                return false;
+            }
+
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7EF375,
+                WriteValues = new List<byte>() { 0xFF }
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Fully fills the player's arrows
+        /// </summary>
+        /// <returns>False if it is currently unable to give arrows to the player</returns>
+        public bool TryFillArrows()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            {
+                return false;
+            }
+
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7EF376,
+                WriteValues = new List<byte>() { 0x80 }
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Fully fills the player's rupees (sets to 2000)
+        /// </summary>
+        /// <returns>False if it is currently unable to give rupees to the player</returns>
+        public bool TryFillRupees()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            {
+                return false;
+            }
+
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7EF360,
+                WriteValues = new List<byte>() { 0x13, 0x88, 0x13, 0x88 }
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Fully fills the player's missiles
+        /// </summary>
+        /// <returns>False if it is currently unable to give missiles to the player</returns>
+        public bool TryFillMissiles()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            {
+                return false;
+            }
+
+            var maxMissiles = _autoTracker.MetroidState?.MaxMissiles ?? 0;
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09C6,
+                WriteValues = Int16ToBytes(maxMissiles)
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Fully fills the player's super missiles
+        /// </summary>
+        /// <returns>False if it is currently unable to give super missiles to the player</returns>
+        public bool TryFillSuperMissiles()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            {
+                return false;
+            }
+
+            var maxSuperMissiles = _autoTracker.MetroidState?.MaxSuperMissiles ?? 0;
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09CA,
+                WriteValues = Int16ToBytes(maxSuperMissiles)
+            });
+
+            return true;
+        }
+
+        /// <summary>
+        /// Fully fills the player's power bombs
+        /// </summary>
+        /// <returns>False if it is currently unable to give power bombs to the player</returns>
+        public bool TryFillPowerBombs()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            {
+                return false;
+            }
+
+            var maxPowerMissiles = _autoTracker.MetroidState?.MaxPowerBombs ?? 0;
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09CE,
+                WriteValues = Int16ToBytes(maxPowerMissiles)
+            });
+
+            return true;
+        }
+
+        /// <summary>
         /// The number of items given to the player
         /// </summary>
         public int ItemCounter { get; set; }

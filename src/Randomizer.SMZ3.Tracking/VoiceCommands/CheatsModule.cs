@@ -24,6 +24,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         private static readonly string s_fillCheatKey = "FillType";
         private static readonly List<string> s_fillHealthChoices = new() { "health", "hp", "energy", "hearts" };
+        private static readonly List<string> s_fillMagicChoices = new() { "magic", "mana", "magic meter" };
+        private static readonly List<string> s_fillBombsChoices = new() { "bombs", "zelda bombs" };
+        private static readonly List<string> s_fillArrowsChoices = new() { "arrows", "sticks" };
+        private static readonly List<string> s_fillRupeesChoices = new() { "rupees", "money" };
+        private static readonly List<string> s_fillMissilesChoices = new() { "missiles" };
+        private static readonly List<string> s_fillSuperMissileChoices = new() { "super missiles", "soup" };
+        private static readonly List<string> s_fillPowerBombsChoices = new() { "power bombs", "hamburgers" };
 
         private readonly ILogger<AutoTrackerModule> _logger;
         private bool _cheatsEnabled = false;
@@ -86,9 +93,43 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="fillType">What should be filled</param>
         private void Fill(string fillType)
         {
-            if (!PlayerCanCheat()) return;
+            if (!PlayerCanCheat() || Tracker.GameService == null) return;
 
-            if (s_fillHealthChoices.Contains(fillType) && Tracker.GameService?.TryHealPlayer() == true)
+            var successful = false;
+            if (s_fillHealthChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryHealPlayer();
+            }
+            else if (s_fillMagicChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryFillMagic();
+            }
+            else if (s_fillBombsChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryFillZeldaBombs();
+            }
+            else if (s_fillArrowsChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryFillArrows();
+            }
+            else if (s_fillRupeesChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryFillRupees();
+            }
+            else if (s_fillMissilesChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryFillMissiles();
+            }
+            else if (s_fillSuperMissileChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryFillSuperMissiles();
+            }
+            else if (s_fillPowerBombsChoices.Contains(fillType))
+            {
+                successful = Tracker.GameService.TryFillPowerBombs();
+            }
+
+            if (successful)
             {
                 Tracker.Say(x => x.Cheats.CheatPerformed);
             }
@@ -132,6 +173,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var fillChoices = new Choices();
             fillChoices.Add(s_fillHealthChoices.ToArray());
+            fillChoices.Add(s_fillMagicChoices.ToArray());
+            fillChoices.Add(s_fillBombsChoices.ToArray());
+            fillChoices.Add(s_fillArrowsChoices.ToArray());
+            fillChoices.Add(s_fillRupeesChoices.ToArray());
+            fillChoices.Add(s_fillMissilesChoices.ToArray());
+            fillChoices.Add(s_fillSuperMissileChoices.ToArray());
+            fillChoices.Add(s_fillPowerBombsChoices.ToArray());
             var restore = new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .Optional("please", "would you please")
