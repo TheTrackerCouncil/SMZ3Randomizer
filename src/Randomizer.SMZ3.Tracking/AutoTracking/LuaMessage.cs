@@ -33,8 +33,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public string? Bytes { get; set; }
 
         /// <summary>
-        /// A single uint8 or uint16 value
+        /// A collection of bytes to write to the emulator
         /// </summary>
-        public ICollection<byte> WriteValues { get; set; }
+        public ICollection<byte>? WriteValues { get; set; }
     }
 }

@@ -143,6 +143,27 @@ namespace Randomizer.App.ViewModels
             else
             {
                 var oldConfig = Config.FromConfigString(SeedOptions.ConfigString);
+
+                var keyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None;
+                var race = SeedOptions.Race;
+                var disableSpoilerLog = SeedOptions.DisableSpoilerLog;
+                var disableTrackerHints = SeedOptions.DisableTrackerHints;
+                var disableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers;
+                var disableCheats = SeedOptions.DisableCheats;
+                var seed = SeedOptions.Seed;
+
+                if (SeedOptions.CopySeedAndRaceSettings)
+                {
+                    keyShuffle = oldConfig.KeyShuffle;
+                    race = oldConfig.Race;
+                    disableSpoilerLog = oldConfig.DisableSpoilerLog;
+                    disableTrackerHints = oldConfig.DisableTrackerHints;
+                    disableTrackerSpoilers = oldConfig.DisableTrackerSpoilers;
+                    disableCheats = oldConfig.DisableCheats;
+                    seed = oldConfig.Seed;
+                }
+
+
                 return new Config()
                 {
                     GameMode = GameMode.Normal,
@@ -158,12 +179,13 @@ namespace Randomizer.App.ViewModels
                     },
                     ShaktoolItemPool = SeedOptions.ShaktoolItem,
                     PegWorldItemPool = SeedOptions.PegWorldItem,
-                    KeyShuffle = SeedOptions.CopySeedAndRaceSettings ? oldConfig.KeyShuffle : SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
-                    Race = SeedOptions.CopySeedAndRaceSettings ? oldConfig.Race : SeedOptions.Race,
-                    DisableSpoilerLog = SeedOptions.CopySeedAndRaceSettings ? oldConfig.DisableSpoilerLog : SeedOptions.DisableSpoilerLog,
-                    DisableTrackerHints = SeedOptions.CopySeedAndRaceSettings ? oldConfig.DisableTrackerHints : SeedOptions.DisableTrackerHints,
-                    DisableTrackerSpoilers = SeedOptions.CopySeedAndRaceSettings ? oldConfig.DisableTrackerSpoilers : SeedOptions.DisableTrackerSpoilers,
-                    DisableCheats = SeedOptions.CopySeedAndRaceSettings ? oldConfig.DisableCheats : SeedOptions.DisableCheats,
+                    KeyShuffle = keyShuffle,
+                    Race = race,
+                    DisableSpoilerLog = disableSpoilerLog,
+                    DisableTrackerHints = disableTrackerHints,
+                    DisableTrackerSpoilers = disableTrackerSpoilers,
+                    DisableCheats = disableCheats,
+                    Seed = seed,
                     ExtendedMsuSupport = PatchOptions.CanEnableExtendedSoundtrack && PatchOptions.EnableExtendedSoundtrack,
                     ShuffleDungeonMusic = PatchOptions.ShuffleDungeonMusic,
                     HeartColor = PatchOptions.HeartColor,
@@ -177,8 +199,7 @@ namespace Randomizer.App.ViewModels
                     EarlyItems = oldConfig.EarlyItems,
                     LogicConfig = oldConfig.LogicConfig,
                     SettingsString = SeedOptions.ConfigString,
-                    CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings,
-                    Seed = SeedOptions.CopySeedAndRaceSettings ? oldConfig.Seed : SeedOptions.Seed,
+                    CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings
                 };
             }
         }
