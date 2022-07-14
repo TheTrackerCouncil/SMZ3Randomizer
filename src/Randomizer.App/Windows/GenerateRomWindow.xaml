@@ -219,6 +219,9 @@
                   <CheckBox IsChecked="{Binding DisableTrackerSpoilers}"
                             Name="DisableTrackerSpoilersCheckBox"
                             Content="Disable Tracker Spoilers" />
+                  <CheckBox IsChecked="{Binding DisableCheats}"
+                    x:Name="DisableCheatsCheckBox"
+                    Content="Disable Cheats" />
                 </UniformGrid>
               </GroupBox>
 

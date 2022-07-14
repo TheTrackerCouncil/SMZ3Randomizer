@@ -36,6 +36,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="logger">Used to write logging information.</param>
         public CheatsModule(Tracker tracker, ILogger<AutoTrackerModule> logger) : base(tracker, logger)
         {
+            if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
+
             _logger = logger;
 
             AddCommand("Enable cheats", GetEnableCheatsRule(), (tracker, result) =>

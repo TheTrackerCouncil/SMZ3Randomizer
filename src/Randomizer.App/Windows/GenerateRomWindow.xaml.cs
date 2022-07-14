@@ -597,6 +597,7 @@ namespace Randomizer.App
             DisableSpoilerLogCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableTrackerHintsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableTrackerSpoilersCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+            DisableCheatsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
         }
     }
 }
