@@ -130,6 +130,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
             _client.Send(message);
 
+            // Wait to make sure both messages send in the appropriate order
+            // as USB2SNES needs to receive the PutAddress OpCode first
             await Task.Delay(TimeSpan.FromSeconds(0.05));
 
             _client.Send(data);
