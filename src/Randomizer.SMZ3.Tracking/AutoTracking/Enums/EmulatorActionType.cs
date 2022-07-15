@@ -8,6 +8,11 @@
         /// <summary>
         /// Read a block from memory
         /// </summary>
-        ReadBlock
+        ReadBlock,
+
+        /// <summary>
+        /// Write data to memory
+        /// </summary>
+        WriteBytes
     }
 }

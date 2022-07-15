@@ -84,7 +84,7 @@ namespace Randomizer.App
                 try
                 {
 #if DEBUG
-                    var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutotrackerScripts");
+                    var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutoTracking\\LuaScripts");
 #else
                     var autoTrackerSourcePath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\AutotrackerScripts");
 #endif

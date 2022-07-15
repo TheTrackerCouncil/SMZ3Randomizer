@@ -79,7 +79,8 @@ namespace Randomizer.App
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()
                 .AddOptionalModule<AutoTrackerModule>()
-                .AddOptionalModule<MapModule>();
+                .AddOptionalModule<MapModule>()
+                .AddOptionalModule<GameService>();
 
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();

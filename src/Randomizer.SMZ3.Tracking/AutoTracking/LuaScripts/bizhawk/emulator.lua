@@ -1,3 +1,5 @@
+local base64 = require('base64')
+
 local emulator = { }
 
 local function base64_encode(bytes, length)
@@ -9,10 +11,16 @@ local function base64_encode(bytes, length)
 end
 
 local function translate_address(address, domain)
-	if domain == "WRAM" then
-		return address - 0x7e0000
+    if domain == "WRAM" then
+		return address - 0x7e0000;
 	elseif domain == "CARTRAM" then
-		return address - 0x700000
+        local offset = 0x0
+        local remaining_addr = address - 0xA06000
+        while remaining_addr >= 0x2000 do
+            remaining_addr = remaining_addr - 0x10000
+            offset = offset + 0x2000
+        end
+		return offset + remaining_addr
 	elseif domain == "CARTROM" then
 		return address
 	end
@@ -33,6 +41,14 @@ end
 
 function emulator.read_bytes(address, length, domain)
     return base64_encode(memory.readbyterange(translate_address(address, domain), length, domain), length)
+end
+
+function emulator.write_byte(address, value, domain)
+    memory.writebyte(translate_address(address, domain), value, domain)
+end
+
+function emulator.write_uint16(address, value, domain)
+	memory.write_u16_le(translate_address(address, domain), value, domain)
 end
 
 return emulator;

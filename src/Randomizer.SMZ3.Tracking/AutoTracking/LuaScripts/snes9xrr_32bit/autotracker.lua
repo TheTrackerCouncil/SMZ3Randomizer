@@ -46,25 +46,33 @@ local function process_message(message)
 	local domain = data['Domain']
 	local address = data['Address']
 	local length = data['Length']
-	
+    local values = data['WriteValues']
+
 	local bytes = nil
 	
 	if (action == 'read_block') then
 		bytes = emulator.read_bytes(address, length, domain)
+    elseif (action == 'write_bytes') then
+        local adr = tonumber(address)
+        for k, v in pairs(values) do
+            emulator.write_byte(adr + k - 1, tonumber(v), domain)
+        end
 	end
 
-	local result = {
-		Action = action,
-		Address = address,
-		Length = length,
-		Bytes = bytes
-	}
+    if (bytes ~= nil) then
+	    local result = {
+		    Action = action,
+		    Address = address,
+		    Length = length,
+		    Bytes = bytes
+	    }
 
-	-- print(json.encode(result))
-	local ret, err = tcp:send(json.encode(result) .. "\n")
-	if ret == nil then
-	 	print('Failed to send:', err)
-	end
+	    -- print(json.encode(result))
+	    local ret, err = tcp:send(json.encode(result) .. "\n")
+	    if ret == nil then
+	 	    print('Failed to send:', err)
+	    end
+    end
 end
 
 local function connect()

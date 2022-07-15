@@ -1,4 +1,6 @@
-﻿namespace Randomizer.SMZ3.Tracking.AutoTracking
+﻿using System.Collections.Generic;
+
+namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
     /// <summary>
     /// Class for requests/responses from the Lua script
@@ -29,5 +31,10 @@
         /// The base 64 byte string
         /// </summary>
         public string? Bytes { get; set; }
+
+        /// <summary>
+        /// A collection of bytes to write to the emulator
+        /// </summary>
+        public ICollection<byte>? WriteValues { get; set; }
     }
 }

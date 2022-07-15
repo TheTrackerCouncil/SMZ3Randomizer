@@ -46,6 +46,8 @@ namespace Randomizer.App.ViewModels
 
         public bool DisableTrackerSpoilers { get; set; }
 
+        public bool DisableCheats { get; set; }
+
         [JsonIgnore]
         public bool CopySeedAndRaceSettings { get; set; }
 

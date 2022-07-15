@@ -24,6 +24,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public int Length { get; set; }
 
         /// <summary>
+        /// Values for writing
+        /// </summary>
+        public ICollection<byte>? WriteValues { get; set; }
+
+        /// <summary>
         /// The type of memory to read or modify (WRAM, CARTRAM, CARTROM)
         /// </summary>
         public MemoryDomain Domain { get; set; }

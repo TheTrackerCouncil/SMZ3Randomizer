@@ -96,13 +96,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public void SendMessage(EmulatorAction message)
         {
             if (_lastMessage != null) return;
-            _lastMessage = message;
-            var convertedAddress = message.Address + (message.Domain == MemoryDomain.CartRAM ? 0x700000 : 0x770000);
-            var address = convertedAddress.ToString("X");
+
+            _logger.LogTrace("Sending " + message.Type.ToString());
+
+            var address = TranslateAddress(message).ToString("X");
             var length = message.Length.ToString("X");
 
             if (message.Type == EmulatorActionType.ReadBlock)
             {
+                _lastMessage = message;
                 _client.Send(JsonSerializer.Serialize(new USB2SNESRequest()
                 {
                     Opcode = "GetAddress",
@@ -110,7 +112,29 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Operands = new List<string>() { address, length }
                 }));
             }
+            else if (message.Type == EmulatorActionType.WriteBytes && message.WriteValues != null)
+            {
+                _ = SendBinaryDataAsync(address, message.WriteValues.ToArray());
+            }
 
+        }
+
+        private async Task SendBinaryDataAsync(string address, byte[] data)
+        {
+            var message = JsonSerializer.Serialize(new USB2SNESRequest()
+            {
+                Opcode = "PutAddress",
+                Space = "SNES",
+                Operands = new List<string>() { address, data.Length.ToString() }
+            });
+
+            _client.Send(message);
+
+            // Wait to make sure both messages send in the appropriate order
+            // as USB2SNES needs to receive the PutAddress OpCode first
+            await Task.Delay(TimeSpan.FromSeconds(0.05));
+
+            _client.Send(data);
         }
 
         /// <summary>
@@ -131,6 +155,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // For text responses it should be the device info, so we need to attach ourselves to that device
             if (msg.MessageType == WebSocketMessageType.Text)
             {
+                _logger.LogTrace($"Receiving text data: {msg.Text}");
+
                 var response = JsonSerializer.Deserialize<USB2SNESResponse>(msg.Text);
                 if (response == null || response.Results == null || response.Results.Count == 0)
                 {
@@ -171,8 +197,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 if (_lastMessage != null)
                 {
+                    _logger.LogTrace($"Receiving {_lastMessage.Type} unknown binary data");
                     MessageReceived?.Invoke(this, new(_lastMessage.Address, data));
                     _lastMessage = null;
+                }
+                else
+                {
+                    _logger.LogTrace("Receiving unknown binary data");
                 }
             }
         }
@@ -182,5 +213,34 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <returns>True if the connector is ready for another message, false otherwise</returns>
         public bool CanSendMessage() => _lastMessage == null;
+
+        /// <summary>
+        /// USB2SNES (and Bizhawk) have the SRAM/CartRAM
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>Translated address</returns>
+        private int TranslateAddress(EmulatorAction message)
+        {
+            if (message.Domain == MemoryDomain.CartROM)
+            {
+                return message.Address;
+            }
+            else if (message.Domain == MemoryDomain.CartRAM)
+            {
+                var offset = 0x0;
+                var remaining = message.Address - 0xa06000;
+                while (remaining >= 0x2000)
+                {
+                    remaining -= 0x10000;
+                    offset += 0x2000;
+                }
+                return 0xE00000 + offset + remaining;
+            }
+            else if (message.Domain == MemoryDomain.WRAM)
+            {
+                return message.Address + 0x770000;
+            }
+            return message.Address;
+        }
     }
 }

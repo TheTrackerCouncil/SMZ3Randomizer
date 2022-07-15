@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
@@ -26,6 +27,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private Game _previousGame;
         private bool _hasStarted;
         private IEmulatorConnector? _connector;
+        private readonly Queue<EmulatorAction> _sendActions = new();
+        private CancellationTokenSource? _stopSendingMessages;
 
         /// <summary>
         /// Constructor for Auto Tracker
@@ -55,7 +58,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 Type = EmulatorActionType.ReadBlock,
                 Domain = MemoryDomain.CartRAM,
-                Address = 0x7033fe,
+                Address = 0xA173FE,
                 Length = 0x2,
                 Game = Game.Both,
                 Action = CheckGame
@@ -125,6 +128,23 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Length = 0x400,
                 Game = Game.SM,
                 Action = CheckMetroidState
+            });
+
+            // Get the number of items given to the player via the interactor
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.CartRAM,
+                Address = 0xA26602,
+                Length = 0x2,
+                Game = Game.Both,
+                Action = (EmulatorAction test) =>
+                {
+                    if (Tracker?.GameService != null)
+                    {
+                        Tracker.GameService.ItemCounter = test.CurrentData?.ReadUInt16(0) ?? 0;
+                    }
+                }
             });
 
             _zeldaStateChecks = zeldaStateChecks;
@@ -228,6 +248,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public bool IsConnected => _connector != null && _connector.IsConnected();
 
         /// <summary>
+        /// If the auto tracker is currently sending messages
+        /// </summary>
+        public bool IsSendingMessages { get; set; }
+
+        /// <summary>
         /// If the player currently has a fairy
         /// </summary>
         public bool PlayerHasFairy { get; protected set; }
@@ -237,12 +262,22 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Connector_Connected(object? sender, EventArgs e)
+        protected async void Connector_Connected(object? sender, EventArgs e)
         {
-            Tracker?.Say(x => x.AutoTracker.WhenConnected);
-            AutoTrackerConnected?.Invoke(this, new());
-            _ = SendMessagesAsync();
-            _currentIndex = 0;
+            await Task.Delay(TimeSpan.FromSeconds(0.1f));
+            if (!IsSendingMessages)
+            {
+                Tracker?.Say(x => x.AutoTracker.WhenConnected);
+                AutoTrackerConnected?.Invoke(this, new());
+                _stopSendingMessages = new CancellationTokenSource();
+                _ = SendMessagesAsync(_stopSendingMessages.Token);
+                _currentIndex = 0;
+            }
+        }
+
+        public void WriteToMemory(EmulatorAction action)
+        {
+            _sendActions.Enqueue(action);
         }
 
         /// <summary>
@@ -255,6 +290,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             Tracker?.Say("Auto tracker disconnected");
             _logger.LogInformation("Disconnected");
             AutoTrackerDisconnected?.Invoke(this, new());
+            _stopSendingMessages?.Cancel();
+            IsSendingMessages = false;
         }
 
         /// <summary>
@@ -274,22 +311,39 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Sends requests out to the connected lua script
         /// </summary>
-        protected async Task SendMessagesAsync()
+        protected async Task SendMessagesAsync(CancellationToken cancellationToken)
         {
-            while (_connector != null && _connector.IsConnected())
+            Thread.CurrentThread.Name = DateTime.Now.ToString();
+            _logger.LogInformation("Start sending messages " + Thread.CurrentThread.Name);
+            IsSendingMessages = true;
+            while (_connector != null && _connector.IsConnected() && !cancellationToken.IsCancellationRequested)
             {
                 if (_connector.CanSendMessage())
                 {
-                    while (!_readActions[_currentIndex].ShouldProcess(CurrentGame, _hasStarted))
+                    if (_sendActions.Count > 0)
                     {
+                        var nextAction = _sendActions.Dequeue();
+
+                        if (nextAction != null && nextAction.ShouldProcess(CurrentGame, _hasStarted))
+                        {
+                            _connector.SendMessage(nextAction);
+                        }
+                    }
+                    else
+                    {
+                        while (!_readActions[_currentIndex].ShouldProcess(CurrentGame, _hasStarted))
+                        {
+                            _currentIndex = (_currentIndex + 1) % _readActions.Count;
+                        }
+                        _connector.SendMessage(_readActions[_currentIndex]);
                         _currentIndex = (_currentIndex + 1) % _readActions.Count;
                     }
-                    _connector.SendMessage(_readActions[_currentIndex]);
-                    _currentIndex = (_currentIndex + 1) % _readActions.Count;
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(0.1f));
             }
+            IsSendingMessages = false;
+            _logger.LogInformation("Stop sending messages " + Thread.CurrentThread.Name);
         }
 
         /// <summary>
