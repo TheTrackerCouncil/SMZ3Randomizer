@@ -1,3 +1,5 @@
+local base64 = require('base64')
+
 local emulator = { }
 
 local function base64_encode(bytes, length)

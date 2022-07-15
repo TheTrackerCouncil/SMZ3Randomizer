@@ -114,12 +114,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
             else if (message.Type == EmulatorActionType.WriteBytes && message.WriteValues != null)
             {
-                SendBinaryData(address, message.WriteValues.ToArray());
+                _ = SendBinaryDataAsync(address, message.WriteValues.ToArray());
             }
 
         }
 
-        private void SendBinaryData(string address, byte[] data)
+        private async Task SendBinaryDataAsync(string address, byte[] data)
         {
             var message = JsonSerializer.Serialize(new USB2SNESRequest()
             {
@@ -129,6 +129,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             });
 
             _client.Send(message);
+
+            await Task.Delay(TimeSpan.FromSeconds(0.05));
+
             _client.Send(data);
         }
 

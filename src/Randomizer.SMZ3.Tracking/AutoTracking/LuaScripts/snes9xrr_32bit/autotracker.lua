@@ -53,10 +53,8 @@ local function process_message(message)
 	if (action == 'read_block') then
 		bytes = emulator.read_bytes(address, length, domain)
     elseif (action == 'write_bytes') then
-        print(action)
         local adr = tonumber(address)
         for k, v in pairs(values) do
-            print(adr + k - 1 .. ' - ' .. tonumber(v))
             emulator.write_byte(adr + k - 1, tonumber(v), domain)
         end
 	end
