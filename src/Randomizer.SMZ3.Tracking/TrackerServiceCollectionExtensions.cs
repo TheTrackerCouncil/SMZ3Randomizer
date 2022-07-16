@@ -51,6 +51,7 @@ namespace Randomizer.SMZ3.Tracking
 
             services.AddScoped<TrackerOptionsAccessor>();
             services.AddScoped<ItemService>();
+            services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<Tracker>();
 
             var assemblies = new[] { Assembly.GetExecutingAssembly() };

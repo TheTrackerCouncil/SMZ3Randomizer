@@ -38,7 +38,6 @@ namespace Randomizer.SMZ3.Tracking
         private const int RepeatRateModifier = 2;
         private static readonly Random s_random = new();
 
-        private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
         private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
@@ -48,7 +47,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
         private readonly RandomizerContext _dbContext;
-
+        private readonly ICommunicator _communicator;
         private DateTime _startTime = DateTime.MinValue;
         private DateTime _undoStartTime = DateTime.MinValue;
         private TimeSpan _undoSavedTime;
@@ -84,6 +83,7 @@ namespace Randomizer.SMZ3.Tracking
             TrackerOptionsAccessor trackerOptions,
             RandomizerContext dbContext,
             ItemService itemService,
+            ICommunicator communicator,
             IHistoryService historyService)
         {
             if (trackerOptions.Options == null)
@@ -96,6 +96,7 @@ namespace Randomizer.SMZ3.Tracking
             _trackerOptions = trackerOptions;
             _dbContext = dbContext;
             ItemService = itemService;
+            _communicator = communicator;
 
             // Initialize the tracker configuration
             Pegs = config.Pegs;
@@ -114,10 +115,10 @@ namespace Randomizer.SMZ3.Tracking
 
             // Initialize the text-to-speech
             if (s_random.NextDouble() <= 0.01)
+            {
                 _alternateTracker = true;
-
-            _tts = new SpeechSynthesizer();
-            _tts.SelectVoiceByHints(_alternateTracker ? VoiceGender.Male : VoiceGender.Female);
+                _communicator.UseAlternateVoice();
+            }
 
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
@@ -876,7 +877,7 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void StopTracking()
         {
             DisableVoiceRecognition();
-            _tts.SpeakAsyncCancelAll();
+            _communicator.Abort();
             _chatClient.Disconnect();
             Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
@@ -1065,25 +1066,12 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var formattedText = FormatPlaceholders(text);
-            var prompt = ParseText(formattedText);
             if (wait)
-                _tts.Speak(prompt);
+                _communicator.SayWait(formattedText);
             else
-                _tts.SpeakAsync(prompt);
+                _communicator.Say(formattedText);
             _lastSpokenText = text;
             return true;
-
-            static Prompt ParseText(string text)
-            {
-                // If text does not contain any XML elements, just interpret it
-                // as text
-                if (!text.Contains("<") && !text.Contains("/>"))
-                    return new Prompt(text);
-
-                var prompt = new PromptBuilder();
-                prompt.AppendSsmlMarkup(text);
-                return new Prompt(prompt);
-            }
         }
 
         /// <summary>
@@ -1126,10 +1114,10 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
-            _tts.Speak("I said");
-            _tts.Rate -= RepeatRateModifier;
+            _communicator.SayWait("I said");
+            _communicator.SlowDown();
             Say(_lastSpokenText, wait: true);
-            _tts.Rate += RepeatRateModifier;
+            _communicator.SpeedUp();
         }
 
         /// <summary>
@@ -1137,7 +1125,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void ShutUp()
         {
-            _tts.SpeakAsyncCancelAll();
+            _communicator.Abort();
         }
 
         /// <summary>
@@ -2246,7 +2234,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (disposing)
                 {
                     _recognizer.Dispose();
-                    _tts.Dispose();
+                    (_communicator as IDisposable)?.Dispose();
 
                     foreach (var timer in _idleTimers.Values)
                         timer.Dispose();
