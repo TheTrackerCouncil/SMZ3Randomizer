@@ -68,7 +68,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _autoTracker.WriteToMemory(action);
 
             // Track the item
-            Tracker.TrackItem(item, null, null, false, true);
+            Tracker.TrackItem(item,
+                              trackedAs: null,
+                              confidence: null,
+                              tryClear: false,
+                              autoTracked: true,
+                              location: null,
+                              giftedItem: true);
 
             ItemCounter++;
 
