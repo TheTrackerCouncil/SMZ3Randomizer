@@ -218,11 +218,6 @@ namespace Randomizer.App
             {
                 return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.GreenPendant or RewardItem.BluePendant or RewardItem.RedPendant or RewardItem.NonGreenPendant) >= 3;
             }
-            // Make sure Aga is defeated for the lumberjack tree
-            else if (location == Tracker.World.LightWorldNorthWest.LumberjackTree)
-            {
-                return Tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.Agahnim);
-            }
             // Make sure the red crystals are retrieved for pyramid fairy
             else if (location.Room == Tracker.World.DarkWorldNorthEast.PyramidFairy)
             {
