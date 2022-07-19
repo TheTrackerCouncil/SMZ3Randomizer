@@ -670,7 +670,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (region is INeedsMedallion medallionRegion
                     && medallionRegion.Medallion != ItemType.Nothing
                     && medallionRegion.Medallion != medallion.Value.ToItemType()
-                    && (HintsEnabled || SpoilersEnabled))
+                    && confidence >= Options.MinimumSassConfidence)
                 {
                     Say(Responses.DungeonRequirementMismatch?.Format(
                         HintsEnabled ? "a different medallion" : medallionRegion.Medallion.ToString(),
@@ -1366,7 +1366,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
 
                     var items = GetProgression();
-                    if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked) && (HintsEnabled || SpoilersEnabled))
+                    if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
                         var locationInfo = WorldInfo.Location(location);
                         var missingItems = Logic.GetMissingRequiredItems(location, items)
@@ -1708,7 +1708,7 @@ namespace Randomizer.SMZ3.Tracking
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
 
                         var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
-                        if (someOutOfLogicLocation != null && (HintsEnabled || SpoilersEnabled))
+                        if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                         {
                             var someOutOfLogicItem = FindItemByType(someOutOfLogicLocation.Item.Type);
                             var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
@@ -1793,7 +1793,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             Say(x => x.DungeonCleared, dungeon.Name);
-            if (inaccessibleLocations.Count > 0 && (HintsEnabled || SpoilersEnabled))
+            if (inaccessibleLocations.Count > 0 && confidence >= Options.MinimumSassConfidence)
             {
                 var anyMissedLocation = inaccessibleLocations.Random(s_random);
                 var locationInfo = WorldInfo.Location(anyMissedLocation);
@@ -2470,7 +2470,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             // Give some sass if the user tracks or marks the wrong item at a
             // location
-            if (location.Item != null && !item.Is(location.Item.Type) && (HintsEnabled || SpoilersEnabled))
+            if (location.Item != null && !item.Is(location.Item.Type))
             {
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;
