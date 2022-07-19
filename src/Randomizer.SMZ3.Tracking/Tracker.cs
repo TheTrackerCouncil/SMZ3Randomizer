@@ -670,7 +670,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (region is INeedsMedallion medallionRegion
                     && medallionRegion.Medallion != ItemType.Nothing
                     && medallionRegion.Medallion != medallion.Value.ToItemType()
-                    && (HintsEnabled || SpoilersEnabled))
+                    && confidence >= Options.MinimumSassConfidence)
                 {
                     Say(Responses.DungeonRequirementMismatch?.Format(
                         HintsEnabled ? "a different medallion" : medallionRegion.Medallion.ToString(),
@@ -1209,12 +1209,13 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="autoTracked">If this was tracked by the auto tracker</param>
         /// <param name="location">The location an item was tracked from</param>
+        /// <param name="giftedItem">If the item was gifted to the player by tracker or another player</param>
         /// <returns>
         /// <see langword="true"/> if the item was actually tracked; <see
         /// langword="false"/> if the item could not be tracked, e.g. when
         /// tracking Bow twice.
         /// </returns>
-        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null)
+        public bool TrackItem(ItemData item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false)
         {
             var didTrack = false;
             var accessibleBefore = GetAccessibleLocations();
@@ -1333,53 +1334,57 @@ namespace Randomizer.SMZ3.Tracking
             Action? undoClear = null;
             Action? undoTrackDungeonTreasure = null;
 
-            if (location == null)
+            // If this was not gifted to the player, try to clear the location
+            if (!giftedItem)
             {
-                location = World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
-            }
-
-            if (location != null)
-            {
-                GiveLocationComment(item, location, isTracking: true, confidence);
-
-                if (tryClear)
+                if (location == null)
                 {
-                    // If this item was in a dungeon, track treasure count
-                    undoTrackDungeonTreasure = TryTrackDungeonTreasure(location, confidence);
-
-                    // Important: clear only after tracking dungeon treasure, as
-                    // the "guess dungeon from location" algorithm excludes
-                    // cleared items
-                    location.Cleared = true;
-                    OnLocationCleared(new(location, confidence));
-
-                    undoClear = () => location.Cleared = false;
-                    if (MarkedLocations.ContainsKey(location.Id))
-                    {
-                        MarkedLocations.Remove(location.Id);
-                        OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
-                    }
+                    location = World.Locations.TrySingle(x => x.Cleared == false && x.Item.Type == item.InternalItemType);
                 }
 
-                var items = GetProgression();
-                if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
+                if (location != null)
                 {
-                    var locationInfo = WorldInfo.Location(location);
-                    var missingItems = Logic.GetMissingRequiredItems(location, items)
-                        .OrderBy(x => x.Length)
-                        .FirstOrDefault();
-                    if (missingItems == null)
+                    GiveLocationComment(item, location, isTracking: true, confidence);
+
+                    if (tryClear)
                     {
-                        Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                        // If this item was in a dungeon, track treasure count
+                        undoTrackDungeonTreasure = TryTrackDungeonTreasure(location, confidence);
+
+                        // Important: clear only after tracking dungeon treasure, as
+                        // the "guess dungeon from location" algorithm excludes
+                        // cleared items
+                        location.Cleared = true;
+                        OnLocationCleared(new(location, confidence));
+
+                        undoClear = () => location.Cleared = false;
+                        if (MarkedLocations.ContainsKey(location.Id))
+                        {
+                            MarkedLocations.Remove(location.Id);
+                            OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
+                        }
                     }
-                    else
+
+                    var items = GetProgression();
+                    if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
-                        var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
-                        Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                        var locationInfo = WorldInfo.Location(location);
+                        var missingItems = Logic.GetMissingRequiredItems(location, items)
+                            .OrderBy(x => x.Length)
+                            .FirstOrDefault();
+                        if (missingItems == null)
+                        {
+                            Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                        }
+                        else
+                        {
+                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                            Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                        }
                     }
                 }
             }
-
+            
             var addedEvent = History.AddEvent(
                 HistoryEventType.TrackedItem,
                 item.InternalItemType.IsProgression(),
@@ -1703,7 +1708,7 @@ namespace Randomizer.SMZ3.Tracking
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
 
                         var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
-                        if (someOutOfLogicLocation != null)
+                        if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                         {
                             var someOutOfLogicItem = FindItemByType(someOutOfLogicLocation.Item.Type);
                             var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
@@ -1788,12 +1793,12 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             Say(x => x.DungeonCleared, dungeon.Name);
-            if (inaccessibleLocations.Count > 0)
+            if (inaccessibleLocations.Count > 0 && confidence >= Options.MinimumSassConfidence)
             {
                 var anyMissedLocation = inaccessibleLocations.Random(s_random);
                 var locationInfo = WorldInfo.Location(anyMissedLocation);
                 var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress);
-                if (missingItemCombinations.Any() && (HintsEnabled || SpoilersEnabled))
+                if (missingItemCombinations.Any())
                 {
                     var missingItems = missingItemCombinations.Random(s_random)
                             .Select(FindItemByType)
@@ -2465,7 +2470,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             // Give some sass if the user tracks or marks the wrong item at a
             // location
-            if (location.Item != null && !item.Is(location.Item.Type) && (HintsEnabled || SpoilersEnabled))
+            if (location.Item != null && !item.Is(location.Item.Type))
             {
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;
