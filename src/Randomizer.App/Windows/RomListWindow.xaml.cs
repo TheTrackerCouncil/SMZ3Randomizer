@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -300,11 +301,20 @@ namespace Randomizer.App
             var path = Path.Combine(Options.RomOutputPath, rom.RomPath);
             if (File.Exists(path))
             {
-                Process.Start(new ProcessStartInfo
+                try
                 {
-                    FileName = path,
-                    UseShellExecute = true
-                });
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = path,
+                        UseShellExecute = true
+                    });
+                }
+                catch (Win32Exception e)
+                {
+                    _logger.LogError(e, "Could not open rom file");
+                    MessageBox.Show(this, $"Could not open rom file.\nVerify you have a default application for sfc files.",
+                        "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
