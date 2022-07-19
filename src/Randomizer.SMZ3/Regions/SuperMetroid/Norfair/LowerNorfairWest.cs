@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x80);
             ScrewAttackRoom = new(this, 79, 0x8F9110, LocationType.Chozo,
                 name: "Screw Attack",
-                access: items => Logic.CanDestroyBombWalls(items) && (items.SpaceJump && Logic.CanUsePowerBombs(items) || Logic.CanAccessNorfairLowerPortal(items)),
+                access: items => (Logic.CanDestroyBombWalls(items) || items.ScrewAttack) && (items.SpaceJump && Logic.CanUsePowerBombs(items) || Logic.CanAccessNorfairLowerPortal(items)),
                 memoryAddress: 0x9,
                 memoryFlag: 0x80);
             MickeyMouseClubhouse = new(this, 73, 0x8F8F30, LocationType.Visible,
