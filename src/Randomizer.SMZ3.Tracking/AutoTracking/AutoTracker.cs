@@ -522,11 +522,16 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
             foreach (var dungeonInfo in Tracker.WorldInfo.Dungeons)
             {
-                var region = Tracker.World.Regions.First(x => dungeonInfo.Is(x) && x is Z3Region) as Z3Region;
-                if (region == null)
+                if (Tracker.World.Regions.First(x => dungeonInfo.Is(x) && x is Z3Region) is not Z3Region region)
                 {
                     _logger.LogError($"Could not find region for {dungeonInfo.Name}");
                     Tracker.Error();
+                    continue;
+                }
+
+                // Skip if we don't have any memory addresses saved for this dungeon
+                if (region.MemoryAddress == null || region.MemoryFlag == null)
+                {
                     continue;
                 }
 
