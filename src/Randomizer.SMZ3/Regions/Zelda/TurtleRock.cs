@@ -92,8 +92,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override bool CanEnter(Progression items)
         {
-            return ((Medallion == ItemType.Bombos && items.Bombos) || (Medallion == ItemType.Ether && items.Ether) || (Medallion == ItemType.Quake && items.Quake)) &&
-                items.Sword && items.MoonPearl && Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
+            return items.Contains(Medallion) && items.Sword && items.MoonPearl &&
+                Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
                 World.LightWorldDeathMountainEast.CanEnter(items);
         }
 
