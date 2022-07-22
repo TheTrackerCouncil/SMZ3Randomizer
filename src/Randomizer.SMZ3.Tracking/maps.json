@@ -630,6 +630,32 @@
     },
     {
       "Name": [
+        "Misery Mire Basement",
+        "Mire Basement",
+        "Misery Mire Dark Basement",
+        "Mire Dark Basement"
+      ],
+      "Image": "mm_basement.png",
+      "Width": 958,
+      "Height": 478,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 146, 147 ]
+    },
+    {
+      "Name": [
+        "Turtle Rock Dark Room",
+        "Turtle Rock Dark Maze"
+      ],
+      "Image": "tr_maze.png",
+      "Width": 992,
+      "Height": 960,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 181 ]
+    },
+    {
+      "Name": [
         "SMZ3 Combined",
         "Everything"
       ],
