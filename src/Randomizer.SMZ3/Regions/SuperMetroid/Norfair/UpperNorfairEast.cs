@@ -9,21 +9,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         public UpperNorfairEast(World world, Config config) : base(world, config)
         {
             
-            BubbleMountainMissileRoom = new(this, 63, 0x8F8C52, LocationType.Visible,
+            BubbleMountainMissileRoom = new Location(this, 63, 0x8F8C52, LocationType.Visible,
                 name: "Missile (bubble Norfair green door)",
                 alsoKnownAs: "Bubble Mountain Missile Room",
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2 && CanReachBubbleMountainLeftSide(items),
                 memoryAddress: 0x7,
                 memoryFlag: 0x80);
-            BubbleMountain = new(this, 64, 0x8F8C66, LocationType.Visible,
+            BubbleMountain = new Location(this, 64, 0x8F8C66, LocationType.Visible,
                 name: "Missile (bubble Norfair)",
                 alsoKnownAs: "Bubble Mountain",
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2,
                 memoryAddress: 0x8,
                 memoryFlag: 0x1);
-            SpeedBoosterHallCeiling = new(this, 65, 0x8F8C74, LocationType.Hidden,
+            SpeedBoosterHallCeiling = new Location(this, 65, 0x8F8C74, LocationType.Hidden,
                 name: "Missile (Speed Booster)",
                 alsoKnownAs: "Speed Booster Hall - Ceiling",
                 vanillaItem: ItemType.Missile,
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
                 memoryAddress: 0x8,
                 memoryFlag: 0x2);
-            SpeedBoosterRoom = new(this, 66, 0x8F8C82, LocationType.Chozo,
+            SpeedBoosterRoom = new Location(this, 66, 0x8F8C82, LocationType.Chozo,
                 name: "Speed Booster",
                 alsoKnownAs: "Speed Booster Room",
                 vanillaItem: ItemType.SpeedBooster,
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
                 memoryAddress: 0x8,
                 memoryFlag: 0x4);
-            DoubleChamber = new(this, 67, 0x8F8CBC, LocationType.Visible,
+            DoubleChamber = new Location(this, 67, 0x8F8CBC, LocationType.Visible,
                 name: "Missile (Wave Beam)",
                 alsoKnownAs: new[] { "Double Chamber", "Grapple Crossing" },
                 vanillaItem: ItemType.Missile,
@@ -47,7 +47,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     (items.SpeedBooster && items.Wave && items.Morph && items.Super),
                 memoryAddress: 0x8,
                 memoryFlag: 0x8);
-            WaveBeamRoom = new(this, 68, 0x8F8CCA, LocationType.Chozo,
+            WaveBeamRoom = new Location(this, 68, 0x8F8CCA, LocationType.Chozo,
                 name: "Wave Beam",
                 alsoKnownAs: "Wave Beam Room",
                 vanillaItem: ItemType.Wave,
@@ -57,7 +57,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     ),
                 memoryAddress: 0x8,
                 memoryFlag: 0x10);
-            BubbleMountainHiddenHall = new(this);
+            BubbleMountainHiddenHall = new BubbleMountainHiddenHallRoom(this);
             MemoryRegionId = 2;
         }
 
@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
             public BubbleMountainHiddenHallRoom(UpperNorfairEast region)
                 : base(region, "Bubble Mountain Hidden Hall")
             {
-                MainItem = new(this, 61, 0x8F8C3E, LocationType.Chozo,
+                MainItem = new Location(this, 61, 0x8F8C3E, LocationType.Chozo,
                     name: "Main Item",
                     alsoKnownAs: new[] { "Reserve Tank, Norfair" },
                     vanillaItem: ItemType.ReserveTank,
@@ -123,7 +123,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                     memoryAddress: 0x7,
                     memoryFlag: 0x20);
 
-                HiddenItem = new(this, 62, 0x8F8C44, LocationType.Hidden,
+                HiddenItem = new Location(this, 62, 0x8F8C44, LocationType.Hidden,
                     name: "Hidden Item",
                     alsoKnownAs: new[] { "Missile (Norfair Reserve Tank)" },
                     vanillaItem: ItemType.Missile,

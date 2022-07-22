@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
                 memoryAddress: 0x10C,
                 memoryFlag: 0x4);
 
-            ParadoxCave = new(this);
+            ParadoxCave = new ParadoxCaveRoom(this);
 
             StartingRooms = new List<int>() { 5, 7 };
             IsOverworld = true;

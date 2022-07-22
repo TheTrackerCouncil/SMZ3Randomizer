@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
     {
         public UpperNorfairWest(World world, Config config) : base(world, config)
         {
-            LavaRoom = new(this, 49, 0x8F8AE4, LocationType.Hidden,
+            LavaRoom = new Location(this, 49, 0x8F8AE4, LocationType.Hidden,
                 name: "Missile (lava room)",
                 alsoKnownAs: new[] { "Lava Room - Submerged in wall", "Cathedral" },
                 vanillaItem: ItemType.Missile,
@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                         ) && items.Morph,
                 memoryAddress: 0x6,
                 memoryFlag: 0x2);
-            IceBeamRoom = new(this, 50, 0x8F8B24, LocationType.Chozo,
+            IceBeamRoom = new Location(this, 50, 0x8F8B24, LocationType.Chozo,
                 name: "Ice Beam",
                 alsoKnownAs: "Ice Beam Room",
                 vanillaItem: ItemType.Ice,
@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                                  && Logic.CanPassBombPassages(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
                 memoryAddress: 0x6,
                 memoryFlag: 0x4);
-            CrumbleShaft = new(this, 51, 0x8F8B46, LocationType.Hidden,
+            CrumbleShaft = new Location(this, 51, 0x8F8B46, LocationType.Hidden,
                 name: "Missile (below Ice Beam)",
                 alsoKnownAs: "Crumble Shaft",
                 vanillaItem: ItemType.Missile,
@@ -36,21 +36,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x6,
                 memoryFlag: 0x8);
-            HiJumpBootsRoom = new(this, 53, 0x8F8BAC, LocationType.Chozo,
+            HiJumpBootsRoom = new Location(this, 53, 0x8F8BAC, LocationType.Chozo,
                 name: "Hi-Jump Boots",
                 alsoKnownAs: "Hi-Jump Boots Room",
                 vanillaItem: ItemType.HiJump,
                 access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassBombPassages(items),
                 memoryAddress: 0x6,
                 memoryFlag: 0x20);
-            HiJumpLobbyBack = new(this, 55, 0x8F8BE6, LocationType.Visible,
+            HiJumpLobbyBack = new Location(this, 55, 0x8F8BE6, LocationType.Visible,
                 name: "Missile (Hi-Jump Boots)",
                 alsoKnownAs: "Hi-Jump Lobby - Back",
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanOpenRedDoors(items) && items.Morph,
                 memoryAddress: 0x6,
                 memoryFlag: 0x80);
-            HiJumpLobbyEntrance = new(this, 56, 0x8F8BEC, LocationType.Visible,
+            HiJumpLobbyEntrance = new Location(this, 56, 0x8F8BEC, LocationType.Visible,
                 name: "Energy Tank (Hi-Jump Boots)",
                 alsoKnownAs: "Hi-Jump Lobby - Entrance",
                 vanillaItem: ItemType.ETank,

@@ -81,7 +81,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public override string Name => "Skull Woods";
 
         public override List<string> AlsoKnownAs { get; }
-            = new() { "Skill Woods" };
+            = new List<string>() { "Skill Woods" };
 
         public Reward Reward { get; set; } = Reward.None;
 

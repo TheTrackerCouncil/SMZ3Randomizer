@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
         public DarkWorldDeathMountainWest(World world, Config config)
             : base(world, config)
         {
-            SpikeCave = new(this);
+            SpikeCave = new SpikeCaveRoom(this);
             StartingRooms = new List<int>() { 67 };
             IsOverworld = true;
         }
@@ -24,8 +24,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
                 : base(region, "Spike Cave")
             {
                 Chest = new Location(this, 256 + 64, 0x1EA8B, LocationType.Regular,
-                    "Spike Cave",
-                    items => items.MoonPearl && items.Hammer && Logic.CanLiftLight(items) &&
+                    name: "Spike Cave",
+                    access: items => items.MoonPearl && items.Hammer && Logic.CanLiftLight(items) &&
                         ((Logic.CanExtendMagic(items, 2) && items.Cape) || items.Byrna) &&
                         World.LightWorldDeathMountainWest.CanEnter(items),
                     memoryAddress: 0x117,

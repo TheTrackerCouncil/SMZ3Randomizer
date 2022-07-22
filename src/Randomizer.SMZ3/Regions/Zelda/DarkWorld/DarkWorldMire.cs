@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
     {
         public DarkWorldMire(World world, Config config) : base(world, config)
         {
-            MireShed = new(this);
+            MireShed = new MireShedRoom(this);
 
             StartingRooms = new List<int>() { 112 };
             IsOverworld = true;
@@ -29,15 +29,15 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
             public MireShedRoom(Region region) : base(region, "Mire Shed")
             {
                 Left = new Location(this, 256 + 89, 0x1EA73, LocationType.Regular,
-                    "Mire Shed - Left",
-                    ItemType.HeartPiece,
-                    items => items.MoonPearl,
+                    name: "Mire Shed - Left",
+                    vanillaItem: ItemType.HeartPiece,
+                    access: items => items.MoonPearl,
                     memoryAddress: 0x10D,
                     memoryFlag: 0x4);
                 Right = new Location(this, 256 + 90, 0x1EA76, LocationType.Regular,
-                    "Mire Shed - Right",
-                    ItemType.TwentyRupees,
-                    items => items.MoonPearl,
+                    name: "Mire Shed - Right",
+                    vanillaItem: ItemType.TwentyRupees,
+                    access: items => items.MoonPearl,
                     memoryAddress: 0x10D,
                     memoryFlag: 0x5);
             }

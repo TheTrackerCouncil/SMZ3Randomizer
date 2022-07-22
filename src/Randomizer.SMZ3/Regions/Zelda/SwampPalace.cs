@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x6,
                 memoryFlag: 0xB);
 
-            FloodedRoom = new(this);
+            FloodedRoom = new FloodedRoomRoom(this);
 
             MemoryAddress = 0x6;
             MemoryFlag = 0xB;

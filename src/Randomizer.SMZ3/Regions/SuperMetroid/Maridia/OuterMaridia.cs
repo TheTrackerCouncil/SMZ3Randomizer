@@ -8,14 +8,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
     {
         public OuterMaridia(World world, Config config) : base(world, config)
         {
-            MainStreetCeiling = new(this, 136, 0x8FC437, LocationType.Visible,
+            MainStreetCeiling = new Location(this, 136, 0x8FC437, LocationType.Visible,
                 name: "Missile (green Maridia shinespark)",
                 alsoKnownAs: new[] { "Main Street - Ceiling (Shinespark)", "Main Street Missiles" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.SpeedBooster,
                 memoryAddress: 0x11,
                 memoryFlag: 0x1);
-            MainStreetCrabSupers = new(this, 137, 0x8FC43D, LocationType.Visible,
+            MainStreetCrabSupers = new Location(this, 137, 0x8FC43D, LocationType.Visible,
                 name: "Super Missile (green Maridia)",
                 alsoKnownAs: "Main Street - Crab Supers",
                 vanillaItem: ItemType.Super,
@@ -24,7 +24,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                               || items.HiJump || Logic.CanFly(items),
                 memoryAddress: 0x11,
                 memoryFlag: 0x2);
-            MamaTurtleRoom = new(this, 138, 0x8FC47D, LocationType.Visible,
+            MamaTurtleRoom = new Location(this, 138, 0x8FC47D, LocationType.Visible,
                 name: "Energy Tank, Mama turtle",
                 alsoKnownAs: "Mama Turtle Room",
                 vanillaItem: ItemType.ETank,
@@ -34,7 +34,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                                   || items.Grapple), // Reaching the item
                 memoryAddress: 0x11,
                 memoryFlag: 0x4);
-            MamaTurtleWallItem = new(this, 139, 0x8FC483, LocationType.Hidden,
+            MamaTurtleWallItem = new Location(this, 139, 0x8FC483, LocationType.Hidden,
                 name: "Missile (green Maridia tatori)",
                 alsoKnownAs: "Mama Turtle Room - Wall item",
                 vanillaItem: ItemType.Missile,

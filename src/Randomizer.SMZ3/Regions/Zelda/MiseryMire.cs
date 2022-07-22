@@ -98,12 +98,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
         // Need "CanKillManyEnemies" if implementing swordless
         public override bool CanEnter(Progression items)
         {
-            return Medallion switch
-            {
-                ItemType.Bombos => items.Bombos,
-                ItemType.Ether => items.Ether,
-                _ => items.Quake
-            } && items.Sword &&
+            return ((Medallion == ItemType.Bombos && items.Bombos) || (Medallion == ItemType.Ether && items.Ether) || (Medallion == ItemType.Quake && items.Quake)) && items.Sword &&
                 items.MoonPearl && (items.Boots || items.Hookshot) &&
                 World.DarkWorldMire.CanEnter(items);
         }

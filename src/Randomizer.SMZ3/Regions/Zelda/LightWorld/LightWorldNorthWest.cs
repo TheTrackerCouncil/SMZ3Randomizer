@@ -115,8 +115,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 memoryFlag: 0x80,
                 memoryType: LocationMemoryType.ZeldaMisc);
 
-            KakarikoWell = new(this);
-            BlindsHideout = new(this);
+            KakarikoWell = new KakarikoWellArea(this);
+            BlindsHideout = new BlindsHideoutRoom(this);
 
             StartingRooms = new List<int>() { 0, 2, 10, 16, 17, 18, 19, 20, 24, 26, 34, 128};
             IsOverworld = true;
@@ -215,27 +215,27 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 : base(region, "Blind's Hideout")
             {
                 BackRoom = new Location(this, 256 + 26, 0x1EB0F, LocationType.Regular,
-                    "Top",
+                    name: "Top",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x4)
                     .Weighted(SphereOne);
                 FarLeft = new Location(this, 256 + 27, 0x1EB18, LocationType.Regular,
-                    "Far Left",
+                    name: "Far Left",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x7)
                     .Weighted(SphereOne);
                 Left = new Location(this, 256 + 28, 0x1EB12, LocationType.Regular,
-                    "Left",
+                    name: "Left",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x5)
                     .Weighted(SphereOne);
                 Right = new Location(this, 256 + 29, 0x1EB15, LocationType.Regular,
-                    "Right",
+                    name: "Right",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x6)
                     .Weighted(SphereOne);
                 FarRight = new Location(this, 256 + 30, 0x1EB1B, LocationType.Regular,
-                    "Far Right",
+                    name: "Far Right",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x8)
                     .Weighted(SphereOne);

@@ -16,9 +16,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 memoryFlag: 0x20,
                 memoryType: LocationMemoryType.ZeldaMisc);
 
-            SahasrahlasHideout = new(this);
-            WaterfallFairy = new(this);
-            ZorasDomain = new(this);
+            SahasrahlasHideout = new SahasrahlasHideoutRoom(this);
+            WaterfallFairy = new WaterfallFairyChamber(this);
+            ZorasDomain = new ZorasDomainArea(this);
 
             StartingRooms = new List<int>() { 15, 21, 22, 23, 27, 29, 30, 37, 45, 46, 47, 129 };
             IsOverworld = true;
@@ -88,13 +88,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 : base(region, "Waterfall Fairy")
             {
                 Left = new Location(this, 256 + 254, 0x1E9B0, LocationType.Regular,
-                    "Left",
-                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true),
+                    name: "Left",
+                    access: items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true),
                     memoryAddress: 0x114,
                     memoryFlag: 0x4);
                 Right = new Location(this, 256 + 39, 0x1E9D1, LocationType.Regular,
-                    "Right",
-                    items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true),
+                    name: "Right",
+                    access: items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, true),
                     memoryAddress: 0x114,
                     memoryFlag: 0x5);
             }

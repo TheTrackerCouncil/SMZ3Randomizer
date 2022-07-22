@@ -109,9 +109,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
-            MiniMoldormCave = new(this);
+            MiniMoldormCave = new MiniMoldormCaveRoom(this);
 
-            SwampRuins = new(this);
+            SwampRuins = new SwampRuinsRoom(this);
 
             StartingRooms = new List<int>() { 40, 41, 42, 43, 44, 45, 48, 50, 51, 52, 53, 55, 58, 59, 60, 63 };
             IsOverworld = true;

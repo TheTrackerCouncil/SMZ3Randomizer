@@ -6,42 +6,42 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
     {
         public LowerNorfairEast(World world, Config config) : base(world, config)
         {
-            SpringBallMaze = new(this, 74, 0x8F8FCA, LocationType.Visible,
+            SpringBallMaze = new Location(this, 74, 0x8F8FCA, LocationType.Visible,
                 name: "Missile (lower Norfair above fire flea room)",
                 alsoKnownAs: "Spring Ball Maze Room",
                 vanillaItem: ItemType.Missile,
                 access: items => CanExit(items),
                 memoryAddress: 0x9,
                 memoryFlag: 0x4);
-            EscapePowerBombRoom = new(this, 75, 0x8F8FD2, LocationType.Visible,
+            EscapePowerBombRoom = new Location(this, 75, 0x8F8FD2, LocationType.Visible,
                 name: "Power Bomb (lower Norfair above fire flea room)",
                 alsoKnownAs: "Escape Power Bomb Room",
                 vanillaItem: ItemType.PowerBomb,
                 access: items => CanExit(items),
                 memoryAddress: 0x9,
                 memoryFlag: 0x8);
-            PowerBombOfShame = new(this, 76, 0x8F90C0, LocationType.Visible,
+            PowerBombOfShame = new Location(this, 76, 0x8F90C0, LocationType.Visible,
                 name: "Power Bomb (Power Bombs of shame)",
                 alsoKnownAs: "Wasteland - Power Bomb of Shame",
                 vanillaItem: ItemType.PowerBomb,
                 access: items => CanExit(items) && Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x9,
                 memoryFlag: 0x10);
-            ThreeMusketeersRoom = new(this, 77, 0x8F9100, LocationType.Visible,
+            ThreeMusketeersRoom = new Location(this, 77, 0x8F9100, LocationType.Visible,
                 name: "Missile (lower Norfair near Wave Beam)",
                 alsoKnownAs: new[] { "Three Musketeer's Room", "FrankerZ Missiles" },
                 vanillaItem: ItemType.Missile,
                 access: items => CanExit(items),
                 memoryAddress: 0x9,
                 memoryFlag: 0x20);
-            RidleyTreasure = new(this, 78, 0x8F9108, LocationType.Hidden,
+            RidleyTreasure = new Location(this, 78, 0x8F9108, LocationType.Hidden,
                 name: "Energy Tank, Ridley",
                 alsoKnownAs: "Ridley's Reliquary",
                 vanillaItem: ItemType.ETank,
                 access: items => CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super,
                 memoryAddress: 0x9,
                 memoryFlag: 0x40);
-            FirefleaRoom = new(this, 80, 0x8F9184, LocationType.Visible,
+            FirefleaRoom = new Location(this, 80, 0x8F9184, LocationType.Visible,
                 name: "Energy Tank, Firefleas",
                 alsoKnownAs: "Fireflea Room",
                 vanillaItem: ItemType.ETank,

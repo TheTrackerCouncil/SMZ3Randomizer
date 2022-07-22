@@ -24,8 +24,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
                 memoryType: LocationMemoryType.ZeldaMisc);
 
             SpectacleRockCave = new Location(this, 256 + 2, 0x308002, LocationType.Regular,
-                "Spectacle Rock Cave",
-                ItemType.HeartPiece,
+                name: "Spectacle Rock Cave",
+                vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0xEA,
                 memoryFlag: 0xA);
 
