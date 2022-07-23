@@ -82,7 +82,7 @@ namespace Randomizer.SMZ3.Tracking
             ILogger<Tracker> logger,
             TrackerOptionsAccessor trackerOptions,
             RandomizerContext dbContext,
-            ItemService itemService,
+            IItemService itemService,
             ICommunicator communicator,
             IHistoryService historyService)
         {
@@ -95,7 +95,7 @@ namespace Randomizer.SMZ3.Tracking
             _logger = logger;
             _trackerOptions = trackerOptions;
             _dbContext = dbContext;
-            ItemService = itemService;
+            IItemService = itemService;
             _communicator = communicator;
 
             // Initialize the tracker configuration
@@ -200,9 +200,9 @@ namespace Randomizer.SMZ3.Tracking
         public LocationConfig WorldInfo { get; }
 
         /// <summary>
-        /// Gets a reference to the <see cref="ItemService"/>.
+        /// Gets a reference to the <see cref="IItemService"/>.
         /// </summary>
-        public ItemService ItemService { get; }
+        public IItemService IItemService { get; }
 
         /// <summary>
         /// Get a collection of pegs in Peg World mode.
@@ -399,7 +399,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
-            state.Apply(this, _worldAccessor, ItemService);
+            state.Apply(this, _worldAccessor, IItemService);
             History.LoadHistory(this, state);
             OnStateLoaded();
         }
@@ -416,7 +416,7 @@ namespace Randomizer.SMZ3.Tracking
             var state = TrackerState.Load(_dbContext, rom);
             if (state != null)
             {
-                state.Apply(this, _worldAccessor, ItemService);
+                state.Apply(this, _worldAccessor, IItemService);
                 History.LoadHistory(this, state);
                 OnStateLoaded();
                 
@@ -434,7 +434,7 @@ namespace Randomizer.SMZ3.Tracking
         public Task SaveAsync(Stream destination)
         {
             IsDirty = false;
-            var state = TrackerState.TakeSnapshot(this, ItemService);
+            var state = TrackerState.TakeSnapshot(this, IItemService);
             return state.SaveAsync(destination);
         }
 
@@ -446,7 +446,7 @@ namespace Randomizer.SMZ3.Tracking
         public Task SaveAsync(GeneratedRom rom)
         {
             IsDirty = false;
-            var state = TrackerState.TakeSnapshot(this, ItemService);
+            var state = TrackerState.TakeSnapshot(this, IItemService);
             return state.SaveAsync(_dbContext, rom);
         }
 
@@ -747,7 +747,7 @@ namespace Randomizer.SMZ3.Tracking
                     progression.AddRange(Item.CreateDungeonPool(World));
             }
 
-            foreach (var item in ItemService.TrackedItems())
+            foreach (var item in IItemService.TrackedItems())
             {
                 progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
             }
@@ -1328,7 +1328,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
+                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(IItemService.GetName));
                             Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
                         }
                     }
@@ -1607,7 +1607,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        var item = ItemService.Get(onlyLocation);
+                        var item = IItemService.Get(onlyLocation);
                         if (item == null)
                         {
                             // Probably just the compass or something. Clear the
@@ -1639,7 +1639,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
 
                         var itemType = location.Item?.Type;
-                        var item = itemType != null ? ItemService.Get(itemType.Value) : null;
+                        var item = itemType != null ? IItemService.Get(itemType.Value) : null;
                         if (item == null || !item.Track())
                             _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
                         else
@@ -1660,13 +1660,13 @@ namespace Randomizer.SMZ3.Tracking
                         var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
                         if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                         {
-                            var someOutOfLogicItem = ItemService.Get(someOutOfLogicLocation);
+                            var someOutOfLogicItem = IItemService.Get(someOutOfLogicLocation);
                             var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
                                 .OrderBy(x => x.Length)
                                 .FirstOrDefault();
                             if (missingItems != null)
                             {
-                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
+                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(IItemService.GetName));
                                 Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
                             }
                             else
@@ -1700,7 +1700,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     if (trackItems)
                     {
-                        var item = ItemService.Get(location);
+                        var item = IItemService.Get(location);
                         if (item != null && item.TrackingState > 0)
                             item.TrackingState--;
                     }
@@ -1751,7 +1751,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (missingItemCombinations.Any())
                 {
                     var missingItems = missingItemCombinations.Random(s_random)
-                            .Select(ItemService.Get)
+                            .Select(IItemService.Get)
                             .NonNull();
                     var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
                     Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
@@ -1944,7 +1944,7 @@ namespace Randomizer.SMZ3.Tracking
                 var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
                 if (rewardLocation.Item != null)
                 {
-                    var item = ItemService.Get(rewardLocation);
+                    var item = IItemService.Get(rewardLocation);
                     if (item != null && item.TrackingState > 0)
                     {
                         UntrackItem(item);
@@ -2143,7 +2143,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         protected internal bool IsWorth(Reward reward)
         {
-            var sahasrahlaItem = ItemService.Get(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla);
+            var sahasrahlaItem = IItemService.Get(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla);
             if (sahasrahlaItem != null && reward == Reward.PendantGreen)
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, sahasrahlaItem);
@@ -2155,7 +2155,7 @@ namespace Randomizer.SMZ3.Tracking
                 _logger.LogDebug("{Reward} leads to {Item}, which is junk", reward, sahasrahlaItem);
             }
 
-            var pedItem = ItemService.Get(World.LightWorldNorthWest.MasterSwordPedestal);
+            var pedItem = IItemService.Get(World.LightWorldNorthWest.MasterSwordPedestal);
             if (pedItem != null && (reward == Reward.PendantGreen || reward == Reward.PendantNonGreen))
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, pedItem);
@@ -2196,7 +2196,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 foreach (var location in leadsToLocation)
                 {
-                    var reward = ItemService.Get(location);
+                    var reward = IItemService.Get(location);
                     if (reward != null)
                     {
                         _logger.LogDebug("{Item} leads to {OtherItem}...", item, reward);
@@ -2415,7 +2415,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;
 
-                var actualItemName = ItemService.GetName(location.Item.Type);
+                var actualItemName = IItemService.GetName(location.Item.Type);
                 if (HintsEnabled) actualItemName = "another item";
 
                 Say(Responses.LocationHasDifferentItem?.Format(item.NameWithArticle, actualItemName));
@@ -2525,7 +2525,7 @@ namespace Randomizer.SMZ3.Tracking
                 return Enumerable.Empty<Location>();
 
             var items = new List<SMZ3.Item>();
-            foreach (var item in ItemService.TrackedItems())
+            foreach (var item in IItemService.TrackedItems())
             {
                 for (var i = 0; i < item.TrackingState; i++)
                     items.Add(new SMZ3.Item(item.InternalItemType));

@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public PegWorldModeModule(Tracker tracker, ItemService itemService, ILogger<PegWorldModeModule> logger)
+        public PegWorldModeModule(Tracker tracker, IItemService itemService, ILogger<PegWorldModeModule> logger)
             : base(tracker, itemService, logger)
         {
             AddCommand("Toggle Peg World mode on", new[] {

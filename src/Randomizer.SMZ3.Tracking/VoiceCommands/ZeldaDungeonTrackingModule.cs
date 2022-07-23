@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public ZeldaDungeonTrackingModule(Tracker tracker, ItemService itemService, ILogger<ZeldaDungeonTrackingModule> logger)
+        public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, ILogger<ZeldaDungeonTrackingModule> logger)
             : base(tracker, itemService, logger)
         {
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>

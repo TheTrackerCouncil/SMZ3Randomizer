@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public CheatsModule(Tracker tracker, ItemService itemService, ILogger<AutoTrackerModule> logger)
+        public CheatsModule(Tracker tracker, IItemService itemService, ILogger<AutoTrackerModule> logger)
             : base(tracker, itemService, logger)
         {
             if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;

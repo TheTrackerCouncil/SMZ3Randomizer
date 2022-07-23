@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3.Tracking
             });
 
             services.AddScoped<TrackerOptionsAccessor>();
-            services.AddScoped<ItemService>();
+            services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<Tracker>();
 

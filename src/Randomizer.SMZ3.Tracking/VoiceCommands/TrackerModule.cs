@@ -60,10 +60,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="logger">Used to log information.</param>
-        protected TrackerModule(Tracker tracker, ItemService itemService, ILogger logger)
+        protected TrackerModule(Tracker tracker, IItemService itemService, ILogger logger)
         {
             Tracker = tracker;
-            ItemService = itemService;
+            IItemService = itemService;
             Logger = logger;
         }
 
@@ -85,7 +85,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         protected Tracker Tracker { get; }
 
-        protected ItemService ItemService { get; }
+        protected IItemService IItemService { get; }
 
         /// <summary>
         /// Gets a list of speech recognition grammars provided by the module.
@@ -172,7 +172,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected ItemData GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
-            var itemData = ItemService.Find(itemName);
+            var itemData = IItemService.Find(itemName);
 
             return itemData ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
         }
@@ -349,7 +349,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
-            foreach (var itemData in ItemService.AllItems().Where(x => x.Multiple && !x.HasStages))
+            foreach (var itemData in IItemService.AllItems().Where(x => x.Multiple && !x.HasStages))
             {
                 if (itemData.Plural == null)
                 {
@@ -379,7 +379,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var itemNames = new Choices();
-            foreach (var itemData in ItemService.AllItems().Where(where))
+            foreach (var itemData in IItemService.AllItems().Where(where))
             {
                 foreach (var name in itemData.Name)
                     itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));

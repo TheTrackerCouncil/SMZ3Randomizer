@@ -113,7 +113,7 @@ namespace Randomizer.SMZ3.Tracking
         /// A new <see cref="TrackerState"/> object representing the state of
         /// <paramref name="tracker"/>.
         /// </returns>
-        public static TrackerState TakeSnapshot(Tracker tracker, ItemService itemService)
+        public static TrackerState TakeSnapshot(Tracker tracker, IItemService itemService)
         {
             var itemStates = itemService.AllItems()
                 .Select(x => new ItemState(x.Name[0], x.TrackingState))
@@ -258,7 +258,7 @@ namespace Randomizer.SMZ3.Tracking
         /// The tracker instance to apply the state to.
         /// </param>
         /// <param name="worldAccessor">Used to set the loaded world.</param>
-        public void Apply(Tracker tracker, IWorldAccessor worldAccessor, ItemService itemService)
+        public void Apply(Tracker tracker, IWorldAccessor worldAccessor, IItemService itemService)
         {
             var world = new World(SeedConfig, "", 0, "");
 

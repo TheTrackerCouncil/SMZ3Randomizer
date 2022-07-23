@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public BossTrackingModule(Tracker tracker, ItemService itemService, ILogger<BossTrackingModule> logger)
+        public BossTrackingModule(Tracker tracker, IItemService itemService, ILogger<BossTrackingModule> logger)
             : base(tracker, itemService, logger)
         {
             AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (tracker, result) =>

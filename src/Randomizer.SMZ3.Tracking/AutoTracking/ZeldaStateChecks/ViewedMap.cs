@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         private Tracker? _tracker;
         private readonly IWorldAccessor _worldAccessor;
 
-        public ViewedMap(IWorldAccessor worldAccessor, ItemService itemService)
+        public ViewedMap(IWorldAccessor worldAccessor, IItemService itemService)
         {
             _worldAccessor = worldAccessor;
             Items = itemService;
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 
         protected World World => _worldAccessor.World;
 
-        protected ItemService Items { get; }
+        protected IItemService Items { get; }
 
         /// <summary>
         /// Executes the check for the current state

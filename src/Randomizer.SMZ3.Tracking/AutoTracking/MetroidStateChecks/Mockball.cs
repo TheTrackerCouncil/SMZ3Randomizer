@@ -9,9 +9,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
     /// </summary>
     public class Mockball : IMetroidStateCheck
     {
-        private readonly ItemService _itemService;
+        private readonly IItemService _itemService;
 
-        public Mockball(ItemService itemService)
+        public Mockball(IItemService itemService)
         {
             _itemService = itemService;
         }

@@ -42,7 +42,7 @@ namespace Randomizer.App
         private readonly DispatcherTimer _dispatcherTimer;
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ItemService _itemService;
+        private readonly IItemService _itemService;
         private readonly List<object> _mouseDownSenders = new();
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
@@ -56,7 +56,7 @@ namespace Randomizer.App
         private MenuItem _autoTrackerUSB2SNESMenuItem;
 
         public TrackerWindow(IServiceProvider serviceProvider,
-            ItemService itemService,
+            IItemService itemService,
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator
         )

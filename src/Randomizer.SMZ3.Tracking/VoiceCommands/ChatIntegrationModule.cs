@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private static readonly Random s_random = new();
         private const string WinningGuessKey = "WinningGuess";
         private readonly Dictionary<string, int> _usersGreetedTimes = new();
-        private readonly ItemService _itemService;
+        private readonly IItemService _itemService;
         private bool AskChatAboutContentCheckPollResults = true;
         private string? AskChatAboutContentPollId;
         private int AskChatAboutContentPollTime = 60;
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="chatClient">The chat client to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, ItemService itemService, ILogger<ChatIntegrationModule> logger)
+        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, ILogger<ChatIntegrationModule> logger)
             : base(tracker, itemService, logger)
         {
             ChatClient = chatClient;

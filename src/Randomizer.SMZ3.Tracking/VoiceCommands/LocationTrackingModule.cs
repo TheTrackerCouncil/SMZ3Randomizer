@@ -17,7 +17,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public LocationTrackingModule(Tracker tracker, ItemService itemService, ILogger<LocationTrackingModule> logger)
+        public LocationTrackingModule(Tracker tracker, IItemService itemService, ILogger<LocationTrackingModule> logger)
             : base(tracker, itemService, logger)
         {
             AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (tracker, result) =>

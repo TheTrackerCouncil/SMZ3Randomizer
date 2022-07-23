@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public ItemTrackingModule(Tracker tracker, ItemService itemService, ILogger<ItemTrackingModule> logger)
+        public ItemTrackingModule(Tracker tracker, IItemService itemService, ILogger<ItemTrackingModule> logger)
             : base(tracker, itemService, logger)
         {
             AddCommand("Track item", GetTrackItemRule(), (tracker, result) =>

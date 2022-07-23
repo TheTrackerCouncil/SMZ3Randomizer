@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly List<EmulatorAction> _readActions = new();
         private readonly Dictionary<int, EmulatorAction> _readActionMap = new();
         private readonly ILoggerFactory _loggerFactory;
-        private readonly ItemService _itemService;
+        private readonly IItemService _itemService;
         private readonly IEnumerable<IZeldaStateCheck?> _zeldaStateChecks;
         private readonly IEnumerable<IMetroidStateCheck?> _metroidStateChecks;
         private int _currentIndex = 0;
@@ -41,7 +41,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="metroidStateChecks"></param>
         public AutoTracker(ILogger<AutoTracker> logger,
             ILoggerFactory loggerFactory,
-            ItemService itemService,
+            IItemService itemService,
             IEnumerable<IZeldaStateCheck> zeldaStateChecks,
             IEnumerable<IMetroidStateCheck> metroidStateChecks)
         {

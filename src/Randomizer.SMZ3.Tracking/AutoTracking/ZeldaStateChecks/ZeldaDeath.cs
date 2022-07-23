@@ -11,12 +11,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     /// </summary>
     public class ZeldaDeath : IZeldaStateCheck
     {
-        public ZeldaDeath(ItemService itemService)
+        public ZeldaDeath(IItemService itemService)
         {
             Items = itemService;
         }
 
-        public ItemService Items { get; }
+        public IItemService Items { get; }
 
         /// <summary>
         /// Executes the check for the current state

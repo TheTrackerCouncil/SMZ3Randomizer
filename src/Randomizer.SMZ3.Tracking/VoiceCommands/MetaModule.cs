@@ -24,7 +24,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public MetaModule(Tracker tracker, ItemService itemService, ILogger<MetaModule> logger)
+        public MetaModule(Tracker tracker, IItemService itemService, ILogger<MetaModule> logger)
             : base(tracker, itemService, logger)
         {
             AddCommand("Repeat that", GetRepeatThatRule(), (tracker, result) =>
