@@ -264,7 +264,7 @@ namespace Randomizer.SMZ3.Tracking
 
             foreach (var itemState in ItemStates)
             {
-                var item = itemService.Find(itemState.Name)
+                var item = itemService.FindOrDefault(itemState.Name)
                     ?? throw new ArgumentException($"Could not find loaded item data for '{itemState.Name}'.", nameof(tracker));
 
                 item.TrackingState = itemState.TrackingState;
@@ -304,7 +304,7 @@ namespace Randomizer.SMZ3.Tracking
             tracker.MarkedLocations.Clear();
             foreach (var markedLocation in MarkedLocations)
             {
-                var item = itemService.Find(markedLocation.ItemName)
+                var item = itemService.FindOrDefault(markedLocation.ItemName)
                     ?? throw new ArgumentException($"Could not find loaded item data for '{markedLocation.ItemName}'.", nameof(tracker));
 
                 tracker.MarkedLocations[markedLocation.LocationId] = item;

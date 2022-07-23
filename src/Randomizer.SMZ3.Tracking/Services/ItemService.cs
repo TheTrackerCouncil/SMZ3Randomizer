@@ -43,7 +43,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// name, or <see langword="null"/> if there is no item that has the
         /// specified name.
         /// </returns>
-        public virtual ItemData? Find(string name)
+        public virtual ItemData? FindOrDefault(string name)
             => Items.SingleOrDefault(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
             ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
 
@@ -57,7 +57,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured items with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        public virtual ItemData? Get(ItemType itemType)
+        public virtual ItemData? GetOrDefault(ItemType itemType)
             => Items.RandomOrDefault(x => x.InternalItemType == itemType, s_random);
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// specified location, or <see langword="null"/> if the location has no
         /// item or if the item at the location is not configured.
         /// </returns>
-        public virtual ItemData? Get(Location location) // TODO: move this to IWorldService, whenever that becomes available
-            => Get(location.Item.Type);
+        public virtual ItemData? GetOrDefault(Location location) // TODO: move this to IWorldService, whenever that becomes available
+            => GetOrDefault(location.Item.Type);
 
         /// <summary>
         /// Indicates whether an item of the specified type has been tracked.
@@ -110,7 +110,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public virtual string GetName(ItemType itemType)
         {
-            var item = Get(itemType);
+            var item = GetOrDefault(itemType);
             return item?.NameWithArticle ?? itemType.GetDescription();
         }
 

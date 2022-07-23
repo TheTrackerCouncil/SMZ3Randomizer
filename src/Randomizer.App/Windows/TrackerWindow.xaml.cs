@@ -502,7 +502,7 @@ namespace Randomizer.App
 
             if (item.InternalItemType is ItemType.Bow or ItemType.SilverArrows)
             {
-                var bow = _itemService.Get(ItemType.Bow);
+                var bow = _itemService.GetOrDefault(ItemType.Bow);
                 var toggleBow = new MenuItem
                 {
                     Header = bow.TrackingState > 0 ? "Untrack Bow" : "Track Bow",
@@ -522,7 +522,7 @@ namespace Randomizer.App
                     RefreshGridItems();
                 };
 
-                var silverArrows = _itemService.Get(ItemType.SilverArrows);
+                var silverArrows = _itemService.GetOrDefault(ItemType.SilverArrows);
                 var toggleSilverArrows = new MenuItem
                 {
                     Header = silverArrows.TrackingState > 0 ? "Untrack Silver Arrows" : "Track Silver Arrows",
@@ -548,7 +548,7 @@ namespace Randomizer.App
 
             if (item.InternalItemType == ItemType.Flute || "Duck".Equals(item.Name[0], StringComparison.OrdinalIgnoreCase))
             {
-                var flute = _itemService.Get(ItemType.Flute);
+                var flute = _itemService.GetOrDefault(ItemType.Flute);
                 var toggleFlute = new MenuItem
                 {
                     Header = flute.TrackingState > 0 ? "Untrack Flute" : "Track Flute",
@@ -568,7 +568,7 @@ namespace Randomizer.App
                     RefreshGridItems();
                 };
 
-                var duck = _itemService.Find("Duck");
+                var duck = _itemService.FindOrDefault("Duck");
                 var toggleDuck = new MenuItem
                 {
                     Header = duck.TrackingState > 0 ? "Untrack Duck" : "Track Duck",

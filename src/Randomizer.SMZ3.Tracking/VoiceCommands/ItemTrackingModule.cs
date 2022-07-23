@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Track death", GetTrackDeathRule(), (tracker, result) =>
             {
-                var death = itemService.Find("Death");
+                var death = itemService.FindOrDefault("Death");
                 if (death == null)
                 {
                     Logger.LogError("Tried to track death, but could not find an item named 'Death'.");

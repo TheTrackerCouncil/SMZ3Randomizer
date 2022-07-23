@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
                     tracker.SayOnce(region.WhenDiedInRoom[currentState.CurrentRoomInRegion.ToString()]);
                 }
 
-                var death = Items.Find("Death");
+                var death = Items.FindOrDefault("Death");
                 if (death is not null)
                 {
                     tracker.TrackItem(death);

@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected TrackerModule(Tracker tracker, IItemService itemService, ILogger logger)
         {
             Tracker = tracker;
-            IItemService = itemService;
+            ItemService = itemService;
             Logger = logger;
         }
 
@@ -85,7 +85,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         protected Tracker Tracker { get; }
 
-        protected IItemService IItemService { get; }
+        protected IItemService ItemService { get; }
 
         /// <summary>
         /// Gets a list of speech recognition grammars provided by the module.
@@ -172,7 +172,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected ItemData GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
-            var itemData = IItemService.Find(itemName);
+            var itemData = ItemService.FindOrDefault(itemName);
 
             return itemData ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
         }
@@ -349,7 +349,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
-            foreach (var itemData in IItemService.AllItems().Where(x => x.Multiple && !x.HasStages))
+            foreach (var itemData in ItemService.AllItems().Where(x => x.Multiple && !x.HasStages))
             {
                 if (itemData.Plural == null)
                 {
@@ -379,7 +379,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var itemNames = new Choices();
-            foreach (var itemData in IItemService.AllItems().Where(where))
+            foreach (var itemData in ItemService.AllItems().Where(where))
             {
                 foreach (var name in itemData.Name)
                     itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));

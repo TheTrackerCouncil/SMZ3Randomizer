@@ -45,7 +45,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                     }
                 }
 
-                var death = Items.Find("Death");
+                var death = Items.FindOrDefault("Death");
                 if (death is not null)
                 {
                     tracker.TrackItem(death);

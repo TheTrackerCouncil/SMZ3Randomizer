@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationWithProgressionItem = Tracker.World.Locations
                 .Where(x => !x.Cleared && x.IsAvailable(progression))
                 .Where(x => x.Item.Progression)
-                .Where(x => !IItemService.IsTracked(x.Item.Type))
+                .Where(x => !ItemService.IsTracked(x.Item.Type))
                 .Random();
 
             if (locationWithProgressionItem != null)
@@ -149,7 +149,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var items = locations
-                .Select(x => IItemService.Get(x))
+                .Select(x => ItemService.GetOrDefault(x))
                 .NonNull();
             if (Tracker.SpoilersEnabled)
             {
@@ -445,7 +445,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Try to give a hint from the config
                 case 1:
-                    var hint = IItemService.Get(location)?.Hints;
+                    var hint = ItemService.GetOrDefault(location)?.Hints;
                     if (hint != null && hint.Count > 0)
                         return GiveLocationHint(hint, location);
 
@@ -454,7 +454,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Consult the Book of Mudora
                 case 2:
                     var pedText = Texts.ItemTextbox(location.Item).Replace('\n', ' ');
-                    var bookOfMudoraName = IItemService.GetName(ItemType.Book);
+                    var bookOfMudoraName = ItemService.GetName(ItemType.Book);
                     return GiveLocationHint(x => x.BookHint, location, pedText, bookOfMudoraName);
             }
 
@@ -470,7 +470,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return true;
             }
 
-            var item = IItemService.Get(location);
+            var item = ItemService.GetOrDefault(location);
             if (item != null)
             {
                 Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.NameWithArticle);
@@ -574,7 +574,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression)
                                     .SelectMany(x => x)
                                     .Where(x => x != item.InternalItemType)
-                                    .Select(x => IItemService.Get(x))
+                                    .Select(x => ItemService.GetOrDefault(x))
                                     .Random();
                                 if (randomMissingItem != null)
                                     return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.NameWithArticle);
@@ -681,7 +681,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 return GiveItemHint(x => x.ItemHasBadVanillaLocationName, item, randomLocation.Name);
                             }
 
-                            var vanillaItem = IItemService.Get(randomLocation.VanillaItem);
+                            var vanillaItem = ItemService.GetOrDefault(randomLocation.VanillaItem);
                             return GiveItemHint(x => x.ItemIsInVanillaJunkLocation, item, vanillaItem?.Name ?? randomLocation.VanillaItem.GetDescription());
                         }
 

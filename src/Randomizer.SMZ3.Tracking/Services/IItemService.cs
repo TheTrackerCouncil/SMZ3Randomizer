@@ -35,7 +35,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// name, or <see langword="null"/> if there is no item that has the
         /// specified name.
         /// </returns>
-        ItemData? Find(string name);
+        ItemData? FindOrDefault(string name);
 
         /// <summary>
         /// Finds an item with the specified item type.
@@ -47,7 +47,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured items with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        ItemData? Get(ItemType itemType);
+        ItemData? GetOrDefault(ItemType itemType);
 
         /// <summary>
         /// Returns the item data of the item at the specified location.
@@ -58,7 +58,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// specified location, or <see langword="null"/> if the location has no
         /// item or if the item at the location is not configured.
         /// </returns>
-        ItemData? Get(Location location);
+        ItemData? GetOrDefault(Location location);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
