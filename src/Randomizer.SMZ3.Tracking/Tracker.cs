@@ -1328,7 +1328,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
                             Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
                         }
                     }
