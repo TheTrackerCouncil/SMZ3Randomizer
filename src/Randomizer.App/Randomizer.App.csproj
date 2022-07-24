@@ -24,6 +24,7 @@
     <None Remove="kirbyship.ips" />
     <None Remove="metroid.ips" />
     <None Remove="msu1-v6.ips" />
+    <None Remove="Patches\Shaktool_without_grapple.ips" />
     <None Remove="Resources\Font Awesome 5 Free-Regular-400.otf" />
     <None Remove="Resources\Font Awesome 5 Free-Solid-900.otf" />
     <None Remove="Resources\LICENSE.txt" />
@@ -36,6 +37,7 @@
     <Resource Include="chozo20.ico" />
     <EmbeddedResource Include="Patches\custom_ship.ips" />
     <EmbeddedResource Include="Patches\msu1-v6.ips" />
+    <EmbeddedResource Include="Patches\Shaktool_without_grapple.ips" />
     <EmbeddedResource Include="Patches\spinjumprestart.ips" />
     <EmbeddedResource Include="Patches\zsm.ips" />
   </ItemGroup>
