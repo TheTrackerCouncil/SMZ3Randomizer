@@ -24,7 +24,7 @@ In addition to making IBJ completely optional, there is also:
 
 ## Credits
 - **Captain Novolin** replacement sprite for _Super Metroid_ by PaddyCo
-- **Rash** and **King Graham** replacement sprites for _Super Metroid_ by Fragger
+- **Rash**, **King Graham** and **Richter Belmont** replacement sprites for _Super Metroid_ by Fragger
 - **Captain Novolin**, **Rash**, **Shaktool** and **Love Shak** replacement sprite for _A Link to the Past_ by Fragger
 - **Non-Binary** Samus sprite for _Super Metroid_ by Glove
 - **Trans**, **Backwards**, **Upside down** and **180°** Samus sprites for _Super Metroid_ by TarThoron
@@ -36,12 +36,16 @@ In addition to making IBJ completely optional, there is also:
 - **Metroid** replacement sprite for _Super Metroid by Fingersmcgee
 - **Sprite** replacement sprite for _Super Metroid_ by TarThoron
 - **Chair** replacement sprite for _Super Metroid_ by \_aitchFactor
-- **Buffed Kirby**, **Earthworm Jim**, and **Earthworm Jim** replacement sprites for _Super Metroid_ by Fredz00z
+- **Buffed Kirby**, **Earthworm Jim**, **Earthworm Jim**, **Sonic**, **Knuckles**, **Tails** and **Wario** replacement sprites for _Super Metroid_ by Fredz00z
+- **Kirby** and **Dread Samus** replacement sprites for _Super Metroid_ by Wandering✝Spider
+- **Yoshi & Baby Mario** and **Mario (Dream Team)** replacement sprites for _Super Metroid_ by Dawn
+- **B.O.B.** replaceement sprites for _Super Metroid_ and _A Link To The Past_ by SpoonyBard
+- **Combat Armor** replacement sprite for _Super Metroid_ by Munchy (ripped by TarThoron)
 - **AM2R**, **Last Resort**, **Metal Slug**, and **Top Hunter** replacement ship sprites for _Super Metroid_ by theonlydude
 - **Ascent** replacement ship sprite for _Super Metroid_ by Benox50
 - **Hyperion** replacement ship sprite for _Super Metroid_ by silverpaw84
 - **Ice Metal Uninstall** and **Metroid Fusion** replacement ship sprites for _Super Metroid_ by Crys
-- **Kirby** and **Pocket Rocket** replacement ship sprites for _Super Metroid_ by Fredz00z
+- **Kirby**, **Pocket Rocket**,**N64**, **Bowser Ship** and **Egg Prision** replacement ship sprites for _Super Metroid_ by Fredz00z
 - **Lost World** replacement ship sprite for _Super Metroid_ by TROM
 - **Mario Cloud** and **Opposition** replacement ship sprites for _Super Metroid_ by mccad00
 - **Metroid Zero Mission** replacement ship sprite for _Super Metroid_ by Red-M0nk3y
