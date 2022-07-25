@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
         {
             PowerBombRoom = new Location(this, 0, 0x8F81CC, LocationType.Visible,
                 name: "Power Bomb (Crateria surface)",
-                alsoKnownAs: "Chozo Ruins entrance", // Referring to Metroid Zero Mission, I guess?
+                alsoKnownAs: new[] { "Chozo Ruins entrance" }, // Referring to Metroid Zero Mission, I guess?
                 vanillaItem: ItemType.PowerBomb,
                 access: items => (Config.Keysanity ? items.CardCrateriaL1 : Logic.CanUsePowerBombs(items)) && (items.SpeedBooster || Logic.CanFly(items)),
                 memoryAddress: 0x0,
@@ -36,14 +36,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 memoryFlag: 0x40);
             SuperMissile = new Location(this, 11, 0x8F8478, LocationType.Visible,
                 name: "Super Missile (Crateria)",
-                alsoKnownAs: "Old Tourian launchpad",
+                alsoKnownAs: new[] { "Old Tourian launchpad" },
                 vanillaItem: ItemType.Super,
                 access: items => Logic.CanUsePowerBombs(items) && Logic.HasEnergyReserves(items, 2) && items.SpeedBooster && (!World.Config.LogicConfig.LaunchPadRequiresIceBeam || items.Ice),
                 memoryAddress: 0x1,
                 memoryFlag: 0x8);
             BombTorizo = new Location(this, 7, 0x8F8404, LocationType.Chozo,
                 name: "Bombs",
-                alsoKnownAs: "Bomb Torizo room",
+                alsoKnownAs: new[] { "Bomb Torizo room" },
                 vanillaItem: ItemType.Bombs,
                 access: items => (Config.Keysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
                                  && (Logic.CanPassBombPassages(items) || Logic.CanWallJump(WallJumpDifficulty.Hard)),

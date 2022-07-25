@@ -8,21 +8,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         {
             Crocomire = new Location(this, 52, 0x8F8BA4, LocationType.Visible,
                 name: "Energy Tank, Crocomire",
-                alsoKnownAs: "Crocomire's Pit",
+                alsoKnownAs: new[] { "Crocomire's Pit" },
                 vanillaItem: ItemType.ETank,
                 access: items => CanAccessCrocomire(items) && ((Logic.HasEnergyReserves(items, 1) && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.Grapple),
                 memoryAddress: 0x6,
                 memoryFlag: 0x10);
             CrocomireEscape = new Location(this, 54, 0x8F8BC0, LocationType.Visible,
                 name: "Missile (above Crocomire)",
-                alsoKnownAs: "Crocomire Escape",
+                alsoKnownAs: new[] { "Crocomire Escape" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster),
                 memoryAddress: 0x6,
                 memoryFlag: 0x40);
             PostCrocPowerBombRoom = new Location(this, 57, 0x8F8C04, LocationType.Visible,
                 name: "Power Bomb (Crocomire)",
-                alsoKnownAs: "Post Crocomire Power Bomb Room",
+                alsoKnownAs: new[] { "Post Crocomire Power Bomb Room" },
                 vanillaItem: ItemType.PowerBomb,
                 access: items => CanAccessCrocomire(items) && (Logic.CanFly(items) || items.HiJump || items.Grapple),
                 memoryAddress: 0x7,
@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x8);
             GrappleBeamRoom = new Location(this, 60, 0x8F8C36, LocationType.Chozo,
                 name: "Grappling Beam",
-                alsoKnownAs: "Grapple Beam Room",
+                alsoKnownAs: new[] { "Grapple Beam Room" },
                 vanillaItem: ItemType.Grapple,
                 access: items =>
                     // Can access item

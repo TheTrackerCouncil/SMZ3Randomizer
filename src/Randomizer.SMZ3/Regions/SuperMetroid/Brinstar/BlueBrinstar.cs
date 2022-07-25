@@ -8,14 +8,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
         {
             MorphBall = new Location(this, 26, 0x8F86EC, LocationType.Visible,
                 name: "Morphing Ball",
-                alsoKnownAs: "Morph Ball (Corridor No. 1)",
+                alsoKnownAs: new[] { "Morph Ball (Corridor No. 1)" },
                 vanillaItem: ItemType.Morph,
                 memoryAddress: 0x3,
                 memoryFlag: 0x4);
 
             PowerBomb = new Location(this, 27, 0x8F874C, LocationType.Visible,
                 name: "Power Bomb (blue Brinstar)",
-                alsoKnownAs: "Power Bomb wall (Corridor No. 1)",
+                alsoKnownAs: new[] { "Power Bomb wall (Corridor No. 1)" },
                 vanillaItem: ItemType.PowerBomb,
                 access: items => Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x3,

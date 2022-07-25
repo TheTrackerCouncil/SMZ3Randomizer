@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x2);
             IceBeamRoom = new Location(this, 50, 0x8F8B24, LocationType.Chozo,
                 name: "Ice Beam",
-                alsoKnownAs: "Ice Beam Room",
+                alsoKnownAs: new[] { "Ice Beam Room" },
                 vanillaItem: ItemType.Ice,
                 access: items => (Config.Keysanity ? items.CardNorfairL1 : items.Super)
                                  && Logic.CanPassBombPassages(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x4);
             CrumbleShaft = new Location(this, 51, 0x8F8B46, LocationType.Hidden,
                 name: "Missile (below Ice Beam)",
-                alsoKnownAs: "Crumble Shaft",
+                alsoKnownAs: new[] { "Crumble Shaft" },
                 vanillaItem: ItemType.Missile,
                 access: items => (Config.Keysanity ? items.CardNorfairL1 : items.Super)
                                  && Logic.CanUsePowerBombs(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items)
@@ -38,21 +38,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x8);
             HiJumpBootsRoom = new Location(this, 53, 0x8F8BAC, LocationType.Chozo,
                 name: "Hi-Jump Boots",
-                alsoKnownAs: "Hi-Jump Boots Room",
+                alsoKnownAs: new[] { "Hi-Jump Boots Room" },
                 vanillaItem: ItemType.HiJump,
                 access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassBombPassages(items),
                 memoryAddress: 0x6,
                 memoryFlag: 0x20);
             HiJumpLobbyBack = new Location(this, 55, 0x8F8BE6, LocationType.Visible,
                 name: "Missile (Hi-Jump Boots)",
-                alsoKnownAs: "Hi-Jump Lobby - Back",
+                alsoKnownAs: new[] { "Hi-Jump Lobby - Back" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanOpenRedDoors(items) && items.Morph,
                 memoryAddress: 0x6,
                 memoryFlag: 0x80);
             HiJumpLobbyEntrance = new Location(this, 56, 0x8F8BEC, LocationType.Visible,
                 name: "Energy Tank (Hi-Jump Boots)",
-                alsoKnownAs: "Hi-Jump Lobby - Entrance",
+                alsoKnownAs: new[] { "Hi-Jump Lobby - Entrance" },
                 vanillaItem: ItemType.ETank,
                 access: items => Logic.CanOpenRedDoors(items),
                 memoryAddress: 0x7,

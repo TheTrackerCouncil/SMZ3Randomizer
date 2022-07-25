@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
             Attic = new Location(this, 256 + 157, 0x1EA0D, LocationType.Regular,
                 name: "Attic", // ??? Vanilla item ???
-                items => items.BigKeyTT && items.KeyTT,
+                access: items => items.BigKeyTT && items.KeyTT,
                 memoryAddress: 0x65,
                 memoryFlag: 0x4);
 

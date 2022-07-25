@@ -14,7 +14,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 memoryFlag: 0x1);
             Gauntlet = new Location(this, 5, 0x8F8264, LocationType.Visible,
                 name: "Energy Tank, Gauntlet",
-                alsoKnownAs: "Gauntlet (Chozo)",
+                alsoKnownAs: new[] { "Gauntlet (Chozo)" },
                 vanillaItem: ItemType.ETank,
                 access: items => CanEnterAndLeaveGauntlet(items) && Logic.HasEnergyReserves(items, 1),
                 memoryAddress: 0x0,
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
             {
                 GauntletRight = new Location(this, 9, 0x8F8464, LocationType.Visible,
                 name: "Right",
-                alsoKnownAs: "Missile (Crateria gauntlet right)",
+                alsoKnownAs: new[] { "Missile (Crateria gauntlet right)" },
                 vanillaItem: ItemType.Missile,
                 access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2),
                 memoryAddress: 0x1,
@@ -62,7 +62,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
                 GauntletLeft = new Location(this, 10, 0x8F846A, LocationType.Visible,
                     name: "Left",
-                    alsoKnownAs: "Missile (Crateria gauntlet left)",
+                    alsoKnownAs: new[] { "Missile (Crateria gauntlet left)" },
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2),
                     memoryAddress: 0x1,

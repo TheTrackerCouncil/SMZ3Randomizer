@@ -11,21 +11,21 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
             
             BubbleMountainMissileRoom = new Location(this, 63, 0x8F8C52, LocationType.Visible,
                 name: "Missile (bubble Norfair green door)",
-                alsoKnownAs: "Bubble Mountain Missile Room",
+                alsoKnownAs: new[] { "Bubble Mountain Missile Room" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2 && CanReachBubbleMountainLeftSide(items),
                 memoryAddress: 0x7,
                 memoryFlag: 0x80);
             BubbleMountain = new Location(this, 64, 0x8F8C66, LocationType.Visible,
                 name: "Missile (bubble Norfair)",
-                alsoKnownAs: "Bubble Mountain",
+                alsoKnownAs: new[] { "Bubble Mountain" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2,
                 memoryAddress: 0x8,
                 memoryFlag: 0x1);
             SpeedBoosterHallCeiling = new Location(this, 65, 0x8F8C74, LocationType.Hidden,
                 name: "Missile (Speed Booster)",
-                alsoKnownAs: "Speed Booster Hall - Ceiling",
+                alsoKnownAs: new[] { "Speed Booster Hall - Ceiling" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)
                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x2);
             SpeedBoosterRoom = new Location(this, 66, 0x8F8C82, LocationType.Chozo,
                 name: "Speed Booster",
-                alsoKnownAs: "Speed Booster Room",
+                alsoKnownAs: new[] { "Speed Booster Room" },
                 vanillaItem: ItemType.SpeedBooster,
                 access: items => items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)
                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x8);
             WaveBeamRoom = new Location(this, 68, 0x8F8CCA, LocationType.Chozo,
                 name: "Wave Beam",
-                alsoKnownAs: "Wave Beam Room",
+                alsoKnownAs: new[] { "Wave Beam Room" },
                 vanillaItem: ItemType.Wave,
                 access: items => items.Morph && (
                         (items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)) ||

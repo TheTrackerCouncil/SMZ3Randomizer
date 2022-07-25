@@ -17,7 +17,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x1);
             MainStreetCrabSupers = new Location(this, 137, 0x8FC43D, LocationType.Visible,
                 name: "Super Missile (green Maridia)",
-                alsoKnownAs: "Main Street - Crab Supers",
+                alsoKnownAs: new[] { "Main Street - Crab Supers" },
                 vanillaItem: ItemType.Super,
                 access: items => Logic.CanWallJump(WallJumpDifficulty.Medium)
                               || (Logic.CanWallJump(WallJumpDifficulty.Easy) && items.Ice)
@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x2);
             MamaTurtleRoom = new Location(this, 138, 0x8FC47D, LocationType.Visible,
                 name: "Energy Tank, Mama turtle",
-                alsoKnownAs: "Mama Turtle Room",
+                alsoKnownAs: new[] { "Mama Turtle Room" },
                 vanillaItem: ItemType.ETank,
                 access: items => CanReachTurtleRoom(items)
                               && (Logic.CanFly(items)
@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x4);
             MamaTurtleWallItem = new Location(this, 139, 0x8FC483, LocationType.Hidden,
                 name: "Missile (green Maridia tatori)",
-                alsoKnownAs: "Mama Turtle Room - Wall item",
+                alsoKnownAs: new[] { "Mama Turtle Room - Wall item" },
                 vanillaItem: ItemType.Missile,
                 access: items => CanReachTurtleRoom(items)
                               && (Logic.CanWallJump(WallJumpDifficulty.Easy)

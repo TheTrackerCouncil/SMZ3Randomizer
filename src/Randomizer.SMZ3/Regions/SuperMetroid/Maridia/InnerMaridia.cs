@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         {
             PseudoSparkRoom = new Location(this, 142, 0x8FC533, LocationType.Visible,
                 name: "Missile (yellow Maridia false wall)",
-                alsoKnownAs: "Pseudo Plasma Spark Room",
+                alsoKnownAs: new[] { "Pseudo Plasma Spark Room" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && CanPassPipeCrossroads(items),
                 memoryAddress: 0x11,
@@ -22,35 +22,35 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x80);
             RightSandPitLeft = new Location(this, 146, 0x8FC5EB, LocationType.Visible,
                 name: "Missile (right Maridia sand pit room)",
-                alsoKnownAs: "Right Sand Pit - Left item",
+                alsoKnownAs: new[] { "Right Sand Pit - Left item" },
                 vanillaItem: ItemType.Missile,
-                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump || items.SpaceJump),
+                access: items => CanReachAqueduct(items, Logic) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump || items.SpaceJump),
                 memoryAddress: 0x12,
                 memoryFlag: 0x4);
             RightSandPitRight = new Location(this, 147, 0x8FC5F1, LocationType.Visible,
                 name: "Power Bomb (right Maridia sand pit room)",
-                alsoKnownAs: "Right Sand Pit - Right item",
+                alsoKnownAs: new[] { "Right Sand Pit - Right item" },
                 vanillaItem: ItemType.PowerBomb,
-                access: items => CanReachAqueduct(items) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump || items.SpaceJump),
+                access: items => CanReachAqueduct(items, Logic) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump || items.SpaceJump),
                 memoryAddress: 0x12,
                 memoryFlag: 0x8);
             AqueductLeft = new Location(this, 148, 0x8FC603, LocationType.Visible,
                 name: "Missile (pink Maridia)",
-                alsoKnownAs: "Aqueduct - Left item",
+                alsoKnownAs: new[] { "Aqueduct - Left item" },
                 vanillaItem: ItemType.Missile,
-                access: items => CanReachAqueduct(items) && items.SpeedBooster,
+                access: items => CanReachAqueduct(items, Logic) && items.SpeedBooster,
                 memoryAddress: 0x12,
                 memoryFlag: 0x10);
             AqueductRight = new Location(this, 149, 0x8FC609, LocationType.Visible,
                 name: "Super Missile (pink Maridia)",
-                alsoKnownAs: "Aqueduct - Right item",
+                alsoKnownAs: new[] { "Aqueduct - Right item" },
                 vanillaItem: ItemType.Super,
-                access: items => CanReachAqueduct(items) && items.SpeedBooster,
+                access: items => CanReachAqueduct(items, Logic) && items.SpeedBooster,
                 memoryAddress: 0x12,
                 memoryFlag: 0x20);
             ShaktoolItem = new Location(this, 150, 0x8FC6E5, LocationType.Chozo,
                 name: "Spring Ball",
-                alsoKnownAs: "Shaktool's item",
+                alsoKnownAs: new[] { "Shaktool's item" },
                 vanillaItem: ItemType.SpringBall,
                 access: items => items.Super && items.Grapple && Logic.CanUsePowerBombs(items)
                               && (items.SpaceJump || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium)))
@@ -68,7 +68,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x80);
             Botwoon = new Location(this, 152, 0x8FC755, LocationType.Visible,
                 name: "Energy Tank, Botwoon",
-                alsoKnownAs: "Sandy Path",
+                alsoKnownAs: new[] { "Sandy Path" },
                 vanillaItem: ItemType.ETank,
                 access: items => (items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items))
                                   || (Logic.CanAccessMaridiaPortal(items) && items.CardMaridiaL2),
@@ -76,7 +76,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x1);
             DraygonTreasure = new Location(this, 154, 0x8FC7A7, LocationType.Chozo,
                 name: "Space Jump",
-                alsoKnownAs: "Draygon's Reliquary",
+                alsoKnownAs: new[] { "Draygon's Reliquary" },
                 vanillaItem: ItemType.SpaceJump,
                 access: items => CanDefeatDraygon(items),
                 memoryAddress: 0x13,
@@ -126,9 +126,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         public bool CanComplete(Progression items)
             => DraygonTreasure.IsAvailable(items);
 
-        private bool CanReachAqueduct(Progression items)
-            => (items.CardMaridiaL1 && (Logic.CanFly(items) || items.SpeedBooster || items.Grapple))
-                         || (items.CardMaridiaL2 && Logic.CanAccessMaridiaPortal(items));
+        private static bool CanReachAqueduct(Progression items, ILogic logic)
+            => (items.CardMaridiaL1 && (logic.CanFly(items) || items.SpeedBooster || items.Grapple))
+                         || (items.CardMaridiaL2 && logic.CanAccessMaridiaPortal(items));
 
         private bool CanDefeatDraygon(Progression items)
             => ((items.CardMaridiaL1 && items.CardMaridiaL2 && CanDefeatBotwoon(items)) || Logic.CanAccessMaridiaPortal(items))
@@ -197,10 +197,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
             public Location Right { get; }
 
-            public new InnerMaridia Region
-                => (InnerMaridia)base.Region;
-
-            public bool CanEnter(Progression items) => Region.CanReachAqueduct(items) && items.Super && Logic.CanPassBombPassages(items);
+            public bool CanEnter(Progression items)
+                => InnerMaridia.CanReachAqueduct(items, Logic) && items.Super && Logic.CanPassBombPassages(items);
         }
     }
 }

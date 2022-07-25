@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 memoryFlag: 0x2);
             SkyMissile = new Location(this, 2, 0x8F81EE, LocationType.Hidden,
                 name: "Missile (outside Wrecked Ship top)",
-                alsoKnownAs: "Sky Missile",
+                alsoKnownAs: new[] { "Sky Missile" },
                 vanillaItem: ItemType.Missile,
                 access: items => World.WreckedShip.CanEnter(items)
                               && (!Config.Keysanity || items.CardWreckedShipBoss)
@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 memoryFlag: 0x4);
             MorphBallMaze = new Location(this, 3, 0x8F81F4, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship middle)",
-                alsoKnownAs: "Morph Ball Maze",
+                alsoKnownAs: new[] { "Morph Ball Maze" },
                 vanillaItem: ItemType.Missile,
                 access: items => World.WreckedShip.CanEnter(items)
                               && (!Config.Keysanity || items.CardWreckedShipBoss)

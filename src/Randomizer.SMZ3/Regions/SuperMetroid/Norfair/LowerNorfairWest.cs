@@ -8,14 +8,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         {
             BeforeGoldTorizo = new Location(this, 70, 0x8F8E6E, LocationType.Visible,
                 name: "Missile (Gold Torizo)",
-                alsoKnownAs: "Gold Torizo - Drop down",
+                alsoKnownAs: new[] { "Gold Torizo - Drop down" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanUsePowerBombs(items) && items.SpaceJump && items.Super,
                 memoryAddress: 0x8,
                 memoryFlag: 0x40);
             GoldTorizoCeiling = new Location(this, 71, 0x8F8E74, LocationType.Hidden,
                 name: "Super Missile (Gold Torizo)",
-                alsoKnownAs: "Golden Torizo - Ceiling",
+                alsoKnownAs: new[] { "Golden Torizo - Ceiling" },
                 vanillaItem: ItemType.Super,
                 access: items => Logic.CanDestroyBombWalls(items)
                                  && (items.Super || items.Charge)
@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 memoryFlag: 0x80);
             MickeyMouseClubhouse = new Location(this, 73, 0x8F8F30, LocationType.Visible,
                 name: "Missile (Mickey Mouse room)",
-                alsoKnownAs: "Mickey Mouse Clubhouse",
+                alsoKnownAs: new[] { "Mickey Mouse Clubhouse" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.Morph && items.Super && (
                             Logic.CanWallJump(WallJumpDifficulty.Insane) ||

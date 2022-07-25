@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             Weight = -4;
             SporeSpawnReward = new Location(this, 14, 0x8F84E4, LocationType.Chozo,
                 name: "Super Missile (pink Brinstar)",
-                alsoKnownAs: "Spore Spawn's item",
+                alsoKnownAs: new[] { "Spore Spawn's item" },
                 vanillaItem: ItemType.Super,
                 access: items => items.CardBrinstarBoss && Logic.CanPassBombPassages(items) && items.Super,
                 memoryAddress: 0x1,
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 memoryFlag: 0x40);
             PinkShaftChozo = new Location(this, 23, 0x8F8614, LocationType.Chozo,
                 name: "Charge Beam",
-                alsoKnownAs: "Pink Shaft - Chozo",
+                alsoKnownAs: new[] { "Pink Shaft - Chozo" },
                 vanillaItem: ItemType.Charge,
                 access: items => Logic.CanPassBombPassages(items),
                 memoryAddress: 0x2,
@@ -53,7 +53,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 memoryFlag: 0x2);
             Waterway = new Location(this, 33, 0x8F87FA, LocationType.Visible,
                 name: "Energy Tank, Waterway",
-                alsoKnownAs: "Waterway",
+                alsoKnownAs: new[] { "Waterway" },
                 vanillaItem: ItemType.ETank,
                 access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && items.SpeedBooster &&
                         (Logic.HasEnergyReserves(items, 1) || items.Gravity),

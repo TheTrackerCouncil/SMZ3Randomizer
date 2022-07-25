@@ -16,7 +16,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
             Stumpy = new Location(this, 256 + 83, 0x6B0C7, LocationType.Regular,
                 name: "Stumpy",
-                alsoKnownAs: "Haunted Grove",
+                alsoKnownAs: new[] { "Haunted Grove" },
                 vanillaItem: ItemType.Shovel,
                 memoryAddress: 0x190,
                 memoryFlag: 0x8,

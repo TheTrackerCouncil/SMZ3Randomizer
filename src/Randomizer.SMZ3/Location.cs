@@ -21,198 +21,10 @@ namespace Randomizer.SMZ3
         private Verification _allow;
 
         private int? _weight;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class that
-        /// is always considered accessible if the region can be entered.
-        /// </summary>
-        /// <param name="region">The region that contains this location.</param>
-        /// <param name="id">The internal ID of the location.</param>
-        /// <param name="romAddress">The byte address of the location.</param>
-        /// <param name="type">The type of location.</param>
-        /// <param name="name">The name of the location.</param>
-        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
-        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
-        /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-            : this(region, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class that
-        /// is always considered accessible if the region can be entered.
-        /// </summary>
-        /// <param name="region">The region that contains this location.</param>
-        /// <param name="id">The internal ID of the location.</param>
-        /// <param name="romAddress">The byte address of the location.</param>
-        /// <param name="type">The type of location.</param>
-        /// <param name="name">The name of the location.</param>
-        /// <param name="vanillaItem">
-        /// The item that can be found in this location in the regular game.
-        /// </param>
-        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
-        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
-        /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-            : this(region, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class that
-        /// is always considered accessible if the region can be entered.
-        /// </summary>
-        /// <param name="region">The region that contains this location.</param>
-        /// <param name="id">The internal ID of the location.</param>
-        /// <param name="romAddress">The byte address of the location.</param>
-        /// <param name="type">The type of location.</param>
-        /// <param name="name">The name of the location.</param>
-        /// <param name="alsoKnownAs">
-        /// An alternative name for the item or location.
-        /// </param>
-        /// <param name="vanillaItem">
-        /// The item that can be found in this location in the regular game.
-        /// </param>
-        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
-        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
-        /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-            : this(region, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class that
-        /// is always considered accessible if the region can be entered.
-        /// </summary>
-        /// <param name="region">The region that contains this location.</param>
-        /// <param name="id">The internal ID of the location.</param>
-        /// <param name="romAddress">The byte address of the location.</param>
-        /// <param name="type">The type of location.</param>
-        /// <param name="name">The name of the location.</param>
-        /// <param name="alsoKnownAs">
-        /// A collection of alternate names for the item or location.
-        /// </param>
-        /// <param name="vanillaItem">
-        /// The item that can be found in this location in the regular game.
-        /// </param>
-        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
-        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
-        /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-            : this(region, id, romAddress, type, name, alsoKnownAs, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room, id, romAddress, type, name, alsoKnownAs, vanillaItem, _ => true, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class with
-        /// a specific access requirement in addition the requirements for the
-        /// region itself.
-        /// </summary>
-        /// <param name="region">The region that contains this location.</param>
-        /// <param name="id">The internal ID of the location.</param>
-        /// <param name="romAddress">The byte address of the location.</param>
-        /// <param name="type">The type of location.</param>
-        /// <param name="name">The name of the location.</param>
-        /// <param name="access">
-        /// The requirement for being able to access the location.
-        /// </param>
-        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
-        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
-        /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-            : this(region, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, access, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room, id, romAddress, type, name, Array.Empty<string>(), ItemType.Nothing, access, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class with
-        /// a specific access requirement in addition the requirements for the
-        /// region itself.
-        /// </summary>
-        /// <param name="region">The region that contains this location.</param>
-        /// <param name="id">The internal ID of the location.</param>
-        /// <param name="romAddress">The byte address of the location.</param>
-        /// <param name="type">The type of location.</param>
-        /// <param name="name">The name of the location.</param>
-        /// <param name="vanillaItem">
-        /// The item that can be found in this location in the regular game.
-        /// </param>
-        /// <param name="access">
-        /// The requirement for being able to access the location.
-        /// </param>
-        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
-        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
-        /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-            : this(region, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, access, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room, id, romAddress, type, name, Array.Empty<string>(), vanillaItem, access, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Location"/> class with
-        /// a specific access requirement in addition the requirements for the
-        /// region itself.
-        /// </summary>
-        /// <param name="region">The region that contains this location.</param>
-        /// <param name="id">The internal ID of the location.</param>
-        /// <param name="romAddress">The byte address of the location.</param>
-        /// <param name="type">The type of location.</param>
-        /// <param name="name">The name of the location.</param>
-        /// <param name="alsoKnownAs">
-        /// An alternative name for the item or location.
-        /// </param>
-        /// <param name="vanillaItem">
-        /// The item that can be found in this location in the regular game.
-        /// </param>
-        /// <param name="access">
-        /// The requirement for being able to access the location.
-        /// </param>
-        /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
-        /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
-        /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-            : this(region, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, access, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, string alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room, id, romAddress, type, name, new[] { alsoKnownAs }, vanillaItem, access, memoryAddress, memoryFlag, memoryType)
-        {
-        }
-
-        public Location(Room room, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+ 
+#nullable enable
+        public Location(Room room, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+            Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default)
                     : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType)
         {
             Room = room;
@@ -240,22 +52,25 @@ namespace Randomizer.SMZ3
         /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
         /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
         /// <param name="memoryType">The type of location</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, string[] alsoKnownAs, ItemType vanillaItem, Requirement access, int? memoryAddress, int? memoryFlag, LocationMemoryType memoryType = LocationMemoryType.Default)
+
+        public Location(Region region, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+            Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default)
         {
             Region = region;
             Id = id;
             Name = name;
             Type = type;
             RomAddress = romAddress;
-            AlternateNames = new ReadOnlyCollection<string>(alsoKnownAs);
+            AlternateNames = new ReadOnlyCollection<string>(alsoKnownAs ?? Array.Empty<string>());
             VanillaItem = vanillaItem;
-            _canAccess = access;
+            _canAccess = access ?? (_ => true);
             _alwaysAllow = (_, _) => false;
             _allow = (_, _) => true;
             MemoryAddress = memoryAddress;
             MemoryFlag = memoryFlag;
             MemoryType = memoryType;
         }
+#nullable disable
 
         /// <summary>
         /// Gets the internal identifier of the location.

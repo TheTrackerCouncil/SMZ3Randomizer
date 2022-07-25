@@ -43,7 +43,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 : base(region, "Foyer")
             {
                 Chest = new Location(region, 256 + 101, 0x1EAB5, LocationType.Regular, 
-                    name: "Castle Tower - Foyer", 
+                    name: "Castle Tower - Foyer",
                     memoryAddress: 0xE0, 
                     memoryFlag: 0x4);
             }

@@ -58,7 +58,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem)
                 .Weighted(SphereOne);
 
-            BackOfEscape = new Sewers(this);
+            BackOfEscape = new BackOfEscapeRoom(this);
 
             StartingRooms = new List<int> { 96, 97, 98 };
         }
@@ -77,11 +77,11 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public Location SecretPassage { get; }
 
-        public Sewers BackOfEscape { get; }
+        public BackOfEscapeRoom BackOfEscape { get; }
 
-        public class Sewers : Room
+        public class BackOfEscapeRoom : Room
         {
-            public Sewers(Region region)
+            public BackOfEscapeRoom(Region region)
                 : base(region, "Sewers", "Back of Escape")
             {
                 SecretRoomLeft = new Location(this, 256 + 92, 0x1EB5D, LocationType.Regular,
