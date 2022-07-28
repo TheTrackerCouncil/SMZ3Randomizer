@@ -61,8 +61,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
-        /// <param name="config">The tracking configuration.</param>
-        /// <param name="locationConfig">The location configuration.</param>
+        /// <param name="configProvider">Used to access external configuration.</param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
@@ -74,8 +73,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="trackerOptions">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
         /// <param name="historyService">Service for</param>
-        public Tracker(TrackerConfig config,
-            LocationConfig locationConfig,
+        public Tracker(TrackerConfigProvider configProvider,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             IChatClient chatClient,
@@ -99,10 +97,11 @@ namespace Randomizer.SMZ3.Tracking
             _communicator = communicator;
 
             // Initialize the tracker configuration
+            var config = configProvider.GetTrackerConfig();
             Pegs = config.Pegs;
             Responses = config.Responses;
             Requests = config.Requests;
-            WorldInfo = locationConfig;
+            WorldInfo = configProvider.GetLocationConfig();
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
 

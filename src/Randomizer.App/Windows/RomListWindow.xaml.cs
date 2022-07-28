@@ -113,7 +113,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            var generateWindow = new GenerateRomWindow(_serviceProvider);
+            var generateWindow = _serviceProvider.GetRequiredService<GenerateRomWindow>();
             generateWindow.Owner = this;
             generateWindow.Options = Options;
             var successful = generateWindow.ShowDialog();
