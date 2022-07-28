@@ -6,20 +6,20 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
     {
         public WestCrateria(World world, Config config) : base(world, config)
         {
-            Terminator = new(this, 8, 0x8F8432, LocationType.Visible,
+            Terminator = new Location(this, 8, 0x8F8432, LocationType.Visible,
                 name: "Energy Tank, Terminator",
                 alsoKnownAs: new[] { "Terminator Room", "Fungal Slope" },
                 vanillaItem: ItemType.ETank,
                 memoryAddress: 0x1,
                 memoryFlag: 0x1);
-            Gauntlet = new(this, 5, 0x8F8264, LocationType.Visible,
+            Gauntlet = new Location(this, 5, 0x8F8264, LocationType.Visible,
                 name: "Energy Tank, Gauntlet",
-                alsoKnownAs: "Gauntlet (Chozo)",
+                alsoKnownAs: new[] { "Gauntlet (Chozo)" },
                 vanillaItem: ItemType.ETank,
                 access: items => CanEnterAndLeaveGauntlet(items) && Logic.HasEnergyReserves(items, 1),
                 memoryAddress: 0x0,
                 memoryFlag: 0x20);
-            GauntletShaft = new(this);
+            GauntletShaft = new GauntletShaftRoom(this);
             MemoryRegionId = 0;
         }
 
@@ -52,17 +52,17 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
             public GauntletShaftRoom(WestCrateria region)
                 : base(region, "Gauntlet Shaft")
             {
-                GauntletRight = new(this, 9, 0x8F8464, LocationType.Visible,
+                GauntletRight = new Location(this, 9, 0x8F8464, LocationType.Visible,
                 name: "Right",
-                alsoKnownAs: "Missile (Crateria gauntlet right)",
+                alsoKnownAs: new[] { "Missile (Crateria gauntlet right)" },
                 vanillaItem: ItemType.Missile,
                 access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2),
                 memoryAddress: 0x1,
                 memoryFlag: 0x2);
 
-                GauntletLeft = new(this, 10, 0x8F846A, LocationType.Visible,
+                GauntletLeft = new Location(this, 10, 0x8F846A, LocationType.Visible,
                     name: "Left",
-                    alsoKnownAs: "Missile (Crateria gauntlet left)",
+                    alsoKnownAs: new[] { "Missile (Crateria gauntlet left)" },
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2),
                     memoryAddress: 0x1,

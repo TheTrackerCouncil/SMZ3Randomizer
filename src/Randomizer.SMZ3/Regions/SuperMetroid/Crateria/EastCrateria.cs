@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
     {
         public EastCrateria(World world, Config config) : base(world, config)
         {
-            FloodedCavernUnderWater = new(this, 1, 0x8F81E8, LocationType.Visible,
+            FloodedCavernUnderWater = new Location(this, 1, 0x8F81E8, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship bottom)",
                 alsoKnownAs: new[] { "Flooded Cavern - under water", "West Ocean - under water" },
                 vanillaItem: ItemType.Missile,
@@ -19,25 +19,25 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                         || World.WreckedShip.CanEnter(items)),
                 memoryAddress: 0x0,
                 memoryFlag: 0x2);
-            SkyMissile = new(this, 2, 0x8F81EE, LocationType.Hidden,
+            SkyMissile = new Location(this, 2, 0x8F81EE, LocationType.Hidden,
                 name: "Missile (outside Wrecked Ship top)",
-                alsoKnownAs: "Sky Missile",
+                alsoKnownAs: new[] { "Sky Missile" },
                 vanillaItem: ItemType.Missile,
                 access: items => World.WreckedShip.CanEnter(items)
                               && (!Config.Keysanity || items.CardWreckedShipBoss)
                               && Logic.CanPassBombPassages(items),
                 memoryAddress: 0x0,
                 memoryFlag: 0x4);
-            MorphBallMaze = new(this, 3, 0x8F81F4, LocationType.Visible,
+            MorphBallMaze = new Location(this, 3, 0x8F81F4, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship middle)",
-                alsoKnownAs: "Morph Ball Maze",
+                alsoKnownAs: new[] { "Morph Ball Maze" },
                 vanillaItem: ItemType.Missile,
                 access: items => World.WreckedShip.CanEnter(items)
                               && (!Config.Keysanity || items.CardWreckedShipBoss)
                               && Logic.CanPassBombPassages(items),
                 memoryAddress: 0x0,
                 memoryFlag: 0x8);
-            Moat = new(this, 4, 0x8F8248, LocationType.Visible,
+            Moat = new Location(this, 4, 0x8F8248, LocationType.Visible,
                 name: "Missile (Crateria moat)",
                 alsoKnownAs: new[] { "The Moat", "Interior Lake" },
                 vanillaItem: ItemType.Missile,

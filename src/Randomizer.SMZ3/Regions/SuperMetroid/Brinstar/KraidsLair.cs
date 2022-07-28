@@ -7,22 +7,22 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
     {
         public KraidsLair(World world, Config config) : base(world, config)
         {
-            ETank = new(this, 43, 0x8F899C, LocationType.Hidden,
+            ETank = new Location(this, 43, 0x8F899C, LocationType.Hidden,
                 name: "Energy Tank, Kraid",
                 vanillaItem: ItemType.ETank,
                 access: items => items.CardBrinstarBoss,
                 memoryAddress: 0x5,
                 memoryFlag: 0x8);
-            KraidsItem = new(this, 48, 0x8F8ACA, LocationType.Chozo,
+            KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
                 name: "Varia Suit",
-                alsoKnownAs: "Kraid's Reliquary",
+                alsoKnownAs: new[] { "Kraid's Reliquary" },
                 vanillaItem: ItemType.Varia,
                 access: items => items.CardBrinstarBoss,
                 memoryAddress: 0x6,
                 memoryFlag: 0x1);
-            MissileBeforeKraid = new(this, 44, 0x8F89EC, LocationType.Hidden,
+            MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
                 name: "Missile (Kraid)",
-                alsoKnownAs: "Warehouse Kihunter Room",
+                alsoKnownAs: new[] { "Warehouse Kihunter Room" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x5,
@@ -34,7 +34,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public override string Area => "Brinstar";
 
-        public override List<string> AlsoKnownAs { get; } = new()
+        public override List<string> AlsoKnownAs { get; } = new List<string>()
         {
             "Warehouse"
         };

@@ -57,17 +57,18 @@ namespace Randomizer.SMZ3.Regions.Zelda
                     Logic.CanLiftLight(items) ||
                     (Logic.CanAccessMiseryMirePortal(items) && items.Mirror)
                 ) && items.BigKeyDP && items.KeyDP && Logic.CanLightTorches(items) && CanBeatBoss(items),
-                memoryAddress: 0x33, memoryFlag: 0xB);
+                memoryAddress: 0x33, 
+                memoryFlag: 0xB);
 
             MemoryAddress = 0x33;
             MemoryFlag = 0xB;
-            StartingRooms = new List<int> { 99, 131, 132, 133 };
+            StartingRooms = new List<int>() { 99, 131, 132, 133 };
         }
 
         public override string Name => "Desert Palace";
 
         public override List<string> AlsoKnownAs { get; }
-            = new() { "Dessert Palace" };
+            = new List<string>() { "Dessert Palace" };
 
         public Reward Reward { get; set; } = Reward.None;
 

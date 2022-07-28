@@ -60,8 +60,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0xA4,
                 memoryFlag: 0xB);
 
-            RollerRoom = new(this);
-            LaserBridge = new(this);
+            RollerRoom = new RollerRoomRoom(this);
+            LaserBridge = new LaserBridgeRoom(this);
 
             MemoryAddress = 0xA4;
             MemoryFlag = 0xB;
@@ -92,13 +92,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override bool CanEnter(Progression items)
         {
-            return Medallion switch
-            {
-                ItemType.Bombos => items.Bombos,
-                ItemType.Ether => items.Ether,
-                _ => items.Quake
-            } && items.Sword &&
-                items.MoonPearl && Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
+            return items.Contains(Medallion) && items.Sword && items.MoonPearl &&
+                Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
                 World.LightWorldDeathMountainEast.CanEnter(items);
         }
 
@@ -118,15 +113,15 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 : base(region, "Roller Room")
             {
                 Left = new Location(this, 256 + 178, 0x1EA1C, LocationType.Regular,
-                    "Left",
-                    ItemType.MapTR,
-                    items => items.FireRod,
+                    name: "Left",
+                    vanillaItem: ItemType.MapTR,
+                    access: items => items.FireRod,
                     memoryAddress: 0xB7,
                     memoryFlag: 0x4);
                 Right = new Location(this, 256 + 179, 0x1EA1F, LocationType.Regular,
-                    "Right",
-                    ItemType.KeyTR,
-                    items => items.FireRod,
+                    name: "Right",
+                    vanillaItem: ItemType.KeyTR,
+                    access: items => items.FireRod,
                     memoryAddress: 0xB7,
                     memoryFlag: 0x5);
             }

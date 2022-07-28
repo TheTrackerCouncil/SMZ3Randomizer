@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
         {
             MasterSwordPedestal = new Location(this, 256 + 14, 0x589B0, LocationType.Pedestal,
                 name: "Master Sword Pedestal",
-                alsoKnownAs: "Ped",
+                alsoKnownAs: new[] { "Ped" },
                 vanillaItem: ItemType.ProgressiveSword,
                 access: items => World.CanAquireAll(items, Reward.PendantGreen, Reward.PendantNonGreen),
                 memoryAddress: 0x80,
@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             PegasusRocks = new Location(this, 256 + 18, 0x1EB3F, LocationType.Regular,
                 name: "Pegasus Rocks",
-                alsoKnownAs: "Bonk Rocks",
+                alsoKnownAs: new[] { "Bonk Rocks" },
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Boots,
                 memoryAddress: 0x124,
@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             ChickenHouse = new Location(this, 256 + 250, 0x1E9E9, LocationType.Regular,
                 name: "Chicken House",
-                alsoKnownAs: "Chicken Lady's House",
+                alsoKnownAs: new[] { "Chicken Lady's House" },
                 vanillaItem: ItemType.TenArrows,
                 memoryAddress: 0x108,
                 memoryFlag: 0x4)
@@ -82,7 +82,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             SickKid = new Location(this, 256 + 33, 0x6B9CF, LocationType.Regular,
                 name: "Sick Kid",
-                alsoKnownAs: "Bug Catching Kid's House",
+                alsoKnownAs: new[] { "Bug Catching Kid's House" },
                 vanillaItem: ItemType.Bugnet,
                 access: items => items.Bottle,
                 memoryAddress: 0x190,
@@ -91,7 +91,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             TavernBackRoom = new Location(this, 256 + 34, 0x1E9CE, LocationType.Regular,
                 name: "Kakariko Tavern",
-                alsoKnownAs: "Inn back room",
+                alsoKnownAs: new[] { "Inn back room" },
                 vanillaItem: ItemType.Bottle,
                 memoryAddress: 0x103,
                 memoryFlag: 0x4)
@@ -115,8 +115,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 memoryFlag: 0x80,
                 memoryType: LocationMemoryType.ZeldaMisc);
 
-            KakarikoWell = new(this);
-            BlindsHideout = new(this);
+            KakarikoWell = new KakarikoWellArea(this);
+            BlindsHideout = new BlindsHideoutRoom(this);
 
             StartingRooms = new List<int>() { 0, 2, 10, 16, 17, 18, 19, 20, 24, 26, 34, 128};
             IsOverworld = true;
@@ -163,7 +163,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             {
                 BackCave = new Location(this, 256 + 21, 0x1EA8E, LocationType.Regular,
                     name: "Top",
-                    alsoKnownAs: "Back cave",
+                    alsoKnownAs: new[] { "Back cave" },
                     vanillaItem: ItemType.HeartPiece,
                     memoryAddress: 0x2F,
                     memoryFlag: 0x4)
@@ -215,27 +215,27 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 : base(region, "Blind's Hideout")
             {
                 BackRoom = new Location(this, 256 + 26, 0x1EB0F, LocationType.Regular,
-                    "Top",
+                    name: "Top",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x4)
                     .Weighted(SphereOne);
                 FarLeft = new Location(this, 256 + 27, 0x1EB18, LocationType.Regular,
-                    "Far Left",
+                    name: "Far Left",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x7)
                     .Weighted(SphereOne);
                 Left = new Location(this, 256 + 28, 0x1EB12, LocationType.Regular,
-                    "Left",
+                    name: "Left",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x5)
                     .Weighted(SphereOne);
                 Right = new Location(this, 256 + 29, 0x1EB15, LocationType.Regular,
-                    "Right",
+                    name: "Right",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x6)
                     .Weighted(SphereOne);
                 FarRight = new Location(this, 256 + 30, 0x1EB1B, LocationType.Regular,
-                    "Far Right",
+                    name: "Far Right",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x8)
                     .Weighted(SphereOne);

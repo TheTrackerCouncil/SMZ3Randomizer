@@ -12,38 +12,38 @@ namespace Randomizer.SMZ3.Regions.Zelda
             RegionItems = new[] { ItemType.KeyHC, ItemType.MapHC };
 
             Sanctuary = new Location(this, 256 + 91, 0x1EA79, LocationType.Regular,
-                "Sanctuary",
-                ItemType.HeartContainer,
+                name: "Sanctuary",
+                vanillaItem: ItemType.HeartContainer,
                 memoryAddress: 0x12,
                 memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
             MapChest = new Location(this, 256 + 96, 0x1EB0C, LocationType.Regular,
-                "Map Chest",
-                ItemType.MapHC,
+                name: "Map Chest",
+                vanillaItem: ItemType.MapHC,
                 memoryAddress: 0x72,
                 memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
             BoomerangChest = new Location(this, 256 + 97, 0x1E974, LocationType.Regular,
-                "Boomerang Chest",
-                ItemType.BlueBoomerang,
-                items => items.KeyHC,
+                name: "Boomerang Chest",
+                vanillaItem: ItemType.BlueBoomerang,
+                access: items => items.KeyHC,
                 memoryAddress: 0x71,
                 memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
             ZeldasCell = new Location(this, 256 + 98, 0x1EB09, LocationType.Regular,
-                "Zelda's Cell",
-                ItemType.FiveRupees,
-                items => items.KeyHC,
+                name: "Zelda's Cell",
+                vanillaItem: ItemType.FiveRupees,
+                access: items => items.KeyHC,
                 memoryAddress: 0x80,
                 memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
             LinksUncle = new Location(this, 256 + 99, 0x5DF45, LocationType.NotInDungeon,
-                "Link's Uncle",
-                ItemType.ProgressiveSword,
+                name: "Link's Uncle",
+                vanillaItem: ItemType.ProgressiveSword,
                 memoryAddress: 0x146,
                 memoryFlag: 0x1,
                 memoryType: LocationMemoryType.ZeldaMisc)
@@ -51,14 +51,14 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 .Weighted(SphereOne);
 
             SecretPassage = new Location(this, 256 + 100, 0x1E971, LocationType.NotInDungeon,
-                "Secret Passage",
-                ItemType.FiveRupees,
+                name: "Secret Passage",
+                vanillaItem: ItemType.FiveRupees,
                 memoryAddress: 0x55,
                 memoryFlag: 0x4)
                 .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem)
                 .Weighted(SphereOne);
 
-            BackOfEscape = new(this);
+            BackOfEscape = new BackOfEscapeRoom(this);
 
             StartingRooms = new List<int> { 96, 97, 98 };
         }
@@ -77,11 +77,11 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public Location SecretPassage { get; }
 
-        public Sewers BackOfEscape { get; }
+        public BackOfEscapeRoom BackOfEscape { get; }
 
-        public class Sewers : Room
+        public class BackOfEscapeRoom : Room
         {
-            public Sewers(Region region)
+            public BackOfEscapeRoom(Region region)
                 : base(region, "Sewers", "Back of Escape")
             {
                 SecretRoomLeft = new Location(this, 256 + 92, 0x1EB5D, LocationType.Regular,

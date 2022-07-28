@@ -8,8 +8,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
         public DarkWorldDeathMountainEast(World world, Config config)
             : base(world, config)
         {
-            HookshotCave = new(this);
-            SuperbunnyCave = new(this);
+            HookshotCave = new HookshotCaveRoom(this);
+            SuperbunnyCave = new SuperbunnyCaveRoom(this);
             StartingRooms = new List<int>() { 69, 71 };
             IsOverworld = true;
         }
@@ -33,27 +33,27 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
                 : base(region, "Hookshot Cave")
             {
                 TopRight = new Location(this, 256 + 65, 0x1EB51, LocationType.Regular,
-                    "Hookshot Cave - Top Right",
-                    ItemType.FiftyRupees,
-                    items => items.MoonPearl && items.Hookshot,
+                    name: "Hookshot Cave - Top Right",
+                    vanillaItem: ItemType.FiftyRupees,
+                    access: items => items.MoonPearl && items.Hookshot,
                     memoryAddress: 0x3C,
                     memoryFlag: 0x4);
                 TopLeft = new Location(this, 256 + 66, 0x1EB54, LocationType.Regular,
-                    "Hookshot Cave - Top Left",
-                    ItemType.FiftyRupees,
-                    items => items.MoonPearl && items.Hookshot,
+                    name: "Hookshot Cave - Top Left",
+                    vanillaItem: ItemType.FiftyRupees,
+                    access: items => items.MoonPearl && items.Hookshot,
                     memoryAddress: 0x3C,
                     memoryFlag: 0x5);
                 BottomLeft =new Location(this, 256 + 67, 0x1EB57, LocationType.Regular,
-                    "Hookshot Cave - Bottom Left",
-                    ItemType.FiftyRupees,
-                    items => items.MoonPearl && items.Hookshot,
+                    name: "Hookshot Cave - Bottom Left",
+                    vanillaItem: ItemType.FiftyRupees,
+                    access: items => items.MoonPearl && items.Hookshot,
                     memoryAddress: 0x3C,
                     memoryFlag: 0x6);
                 BottomRight = new Location(this, 256 + 68, 0x1EB5A, LocationType.Regular,
-                    "Hookshot Cave - Bottom Right",
-                    ItemType.FiftyRupees,
-                    items => items.MoonPearl && (items.Hookshot || items.Boots),
+                    name: "Hookshot Cave - Bottom Right",
+                    vanillaItem: ItemType.FiftyRupees,
+                    access: items => items.MoonPearl && (items.Hookshot || items.Boots),
                     memoryAddress: 0x3C,
                     memoryFlag: 0x7);
             }
@@ -73,13 +73,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
                 : base(region, "Superbunny Cave")
             {
                 Top = new Location(this, 256 + 69, 0x1EA7C, LocationType.Regular,
-                    "Superbunny Cave - Top",
-                    items => items.MoonPearl,
+                    name: "Superbunny Cave - Top",
+                    access: items => items.MoonPearl,
                     memoryAddress: 0xF8,
                     memoryFlag: 0x4);
                 Bottom = new Location(this, 256 + 70, 0x1EA7F, LocationType.Regular,
-                    "Superbunny Cave - Bottom",
-                    items => items.MoonPearl,
+                    name: "Superbunny Cave - Bottom",
+                    access: items => items.MoonPearl,
                     memoryAddress: 0xF8,
                     memoryFlag: 0x5);
             }

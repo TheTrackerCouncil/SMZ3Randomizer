@@ -16,13 +16,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
             Stumpy = new Location(this, 256 + 83, 0x6B0C7, LocationType.Regular,
                 name: "Stumpy",
-                alsoKnownAs: "Haunted Grove",
+                alsoKnownAs: new[] { "Haunted Grove" },
                 vanillaItem: ItemType.Shovel,
                 memoryAddress: 0x190,
                 memoryFlag: 0x8,
                 memoryType: LocationMemoryType.ZeldaMisc);
 
-            HypeCave = new(this);
+            HypeCave = new HypeCaveRoom(this);
 
             StartingRooms = new List<int>() { 104, 105, 106, 107, 108, 109, 114, 115, 116, 117, 119, 122, 123, 124, 127 };
             IsOverworld = true;

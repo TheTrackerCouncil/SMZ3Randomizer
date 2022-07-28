@@ -87,8 +87,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x5A,
                 memoryFlag: 0xB);
 
-            DarkMaze = new(this);
-            DarkBasement = new(this);
+            DarkMaze = new DarkMazeRoom(this);
+            DarkBasement = new DarkBasementRoom(this);
 
             MemoryAddress = 0x5A;
             MemoryFlag = 0xB;

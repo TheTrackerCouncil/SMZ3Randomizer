@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         {
             Catfish = new Location(this, 256 + 78, 0x1DE185, LocationType.Regular,
                 name: "Catfish",
-                alsoKnownAs: "Lake of Ill Omen",
+                alsoKnownAs: new[] { "Lake of Ill Omen" },
                 vanillaItem: ItemType.Quake,
                 access: items => items.MoonPearl && Logic.CanLiftLight(items),
                 memoryAddress: 0x190,
@@ -18,13 +18,13 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
             Pyramid = new Location(this, 256 + 79, 0x308147, LocationType.Regular,
                 name: "Pyramid",
-                alsoKnownAs: "Pyramid of Power",
+                alsoKnownAs: new[] { "Pyramid of Power" },
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x5B,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc);
 
-            PyramidFairy = new(this);
+            PyramidFairy = new PyramidFairyChamber(this);
 
             StartingRooms = new List<int>() { 79, 85, 86, 87, 91, 93, 94, 101, 109, 110, 111 };
             IsOverworld = true;
@@ -57,17 +57,17 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 // Vanilla has torches instead of chests, but allows trading in
                 // Lv3 sword for Lv4 sword and bow & arrow for silvers.
                 Left = new Location(this, 256 + 80, 0x1E980, LocationType.Regular,
-                    "Left",
-                    ItemType.ProgressiveSword, 
-                    items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
+                    name: "Left",
+                    vanillaItem: ItemType.ProgressiveSword, 
+                    access: items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
                              (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))),
                     memoryAddress: 0x116,
                     memoryFlag: 0x4);
 
                 Right = new Location(this, 256 + 81, 0x1E983, LocationType.Regular,
-                    "Right",
-                    ItemType.SilverArrows, 
-                    items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
+                    name: "Right",
+                    vanillaItem: ItemType.SilverArrows, 
+                    access: items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
                              (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))),
                     memoryAddress: 0x116,
                     memoryFlag: 0x5);

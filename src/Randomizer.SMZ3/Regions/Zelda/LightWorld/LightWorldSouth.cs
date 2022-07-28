@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             ForestClearingDigSpot = new Location(this, 256 + 241, 0x30814A, LocationType.Regular,
                 name: "Flute Spot",
-                alsoKnownAs: "Forest Clearing - Digging Spot",
+                alsoKnownAs: new[] { "Forest Clearing - Digging Spot" },
                 vanillaItem: ItemType.Flute,
                 access: items => items.Shovel,
                 memoryAddress: 0x2A,
@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             Cave45 = new Location(this, 256 + 242, 0x308003, LocationType.Regular,
                 name: "South of Grove",
-                alsoKnownAs: "Cave #45",
+                alsoKnownAs: new[] { "Cave #45" },
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && World.DarkWorldSouth.CanEnter(items),
                 memoryAddress: 0x11B,
@@ -51,7 +51,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             Aginah = new Location(this, 256 + 244, 0x1E9F2, LocationType.Regular,
                 name: "Aginah's Cave",
-                alsoKnownAs: "Aggina's Cave",
+                alsoKnownAs: new[] { "Aggina's Cave" },
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x10A,
                 memoryFlag: 0x4)
@@ -94,7 +94,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             UnderTheBridge = new Location(this, 256 + 62, 0x6BE7D, LocationType.Regular,
                 name: "Hobo",
-                alsoKnownAs: "Under the bridge",
+                alsoKnownAs: new[] { "Under the bridge" },
                 vanillaItem: ItemType.Bottle,
                 access: items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, false),
                 memoryAddress: 0x149,
@@ -103,15 +103,15 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
 
             IceCave = new Location(this, 256 + 63, 0x1EB4E, LocationType.Regular,
                 name: "Ice Rod Cave",
-                alsoKnownAs: "Ice Cave",
+                alsoKnownAs: new[] { "Ice Cave" },
                 vanillaItem: ItemType.Icerod,
                 memoryAddress: 0x120,
                 memoryFlag: 0x4)
                 .Weighted(SphereOne);
 
-            MiniMoldormCave = new(this);
+            MiniMoldormCave = new MiniMoldormCaveRoom(this);
 
-            SwampRuins = new(this);
+            SwampRuins = new SwampRuinsRoom(this);
 
             StartingRooms = new List<int>() { 40, 41, 42, 43, 44, 45, 48, 50, 51, 52, 53, 55, 58, 59, 60, 63 };
             IsOverworld = true;

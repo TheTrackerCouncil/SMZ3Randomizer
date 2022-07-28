@@ -87,12 +87,12 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryFlag: 0x4)
                 .Allow((item, items) => new[] { ItemType.KeyGT, ItemType.BigKeyGT }.All(type => item.IsNot(type, World)));
 
-            DMsRoom = new(this);
-            RandomizerRoom = new(this);
-            HopeRoom = new(this);
-            CompassRoom = new(this);
-            BigKeyRoom = new(this);
-            MiniHelmasaurRoom = new(this);
+            DMsRoom = new DMsRoomRoom(this);
+            RandomizerRoom = new RandomizerRoomRoom(this);
+            HopeRoom = new HopeRoomRoom(this);
+            CompassRoom = new CompassRoomRoom(this);
+            BigKeyRoom = new BigKeyRoomRoom(this);
+            MiniHelmasaurRoom = new MiniHelmasaurRoomRoom(this);
 
             StartingRooms = new List<int> { 0xC };
         }
@@ -171,23 +171,23 @@ namespace Randomizer.SMZ3.Regions.Zelda
             {
                 // "bombs, arrows, and Rupees" - but what?
                 TopLeft = new Location(this, 256 + 190, 0x1EAB8, LocationType.Regular,
-                    "Top Left",
-                    items => items.Hammer && items.Hookshot,
+                    name: "Top Left",
+                    access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
                     memoryFlag: 0x4);
                 TopRight = new Location(this, 256 + 191, 0x1EABB, LocationType.Regular,
-                    "Top Right",
-                    items => items.Hammer && items.Hookshot,
+                    name: "Top Right",
+                    access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
                     memoryFlag: 0x5);
                 BottomLeft = new Location(this, 256 + 192, 0x1EABE, LocationType.Regular,
-                    "Bottom Left",
-                    items => items.Hammer && items.Hookshot,
+                    name: "Bottom Left",
+                    access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
                     memoryFlag: 0x6);
                 BottomRight = new Location(this, 256 + 193, 0x1EAC1, LocationType.Regular,
-                    "Bottom Right",
-                    items => items.Hammer && items.Hookshot,
+                    name: "Bottom Right",
+                    access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
                     memoryFlag: 0x7);
             }
@@ -207,23 +207,23 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 : base(region, "Randomizer Room") // The room with all the floor tiles
             {
                 TopLeft = new Location(this, 256 + 196, 0x1EAC4, LocationType.Regular,
-                    "Top Left",
-                    items => LeftSide(items, new[] { TopRight, BottomLeft, BottomRight }),
+                    name: "Top Left",
+                    access: items => LeftSide(items, new[] { TopRight, BottomLeft, BottomRight }),
                     memoryAddress: 0x7C,
                     memoryFlag: 0x4);
                 TopRight = new Location(this, 256 + 197, 0x1EAC7, LocationType.Regular,
-                    "Top Right",
-                    items => LeftSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
+                    name: "Top Right",
+                    access: items => LeftSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
                     memoryAddress: 0x7C,
                     memoryFlag: 0x5);
                 BottomLeft = new Location(this, 256 + 198, 0x1EACA, LocationType.Regular,
-                    "Bottom Left",
-                    items => LeftSide(items, new[] { TopRight, TopLeft, BottomRight }),
+                    name: "Bottom Left",
+                    access: items => LeftSide(items, new[] { TopRight, TopLeft, BottomRight }),
                     memoryAddress: 0x7C,
                     memoryFlag: 0x6);
                 BottomRight = new Location(this, 256 + 199, 0x1EACD, LocationType.Regular,
-                    "Bottom Right",
-                    items => LeftSide(items, new[] { TopRight, TopLeft, BottomLeft }),
+                    name: "Bottom Right",
+                    access: items => LeftSide(items, new[] { TopRight, TopLeft, BottomLeft }),
                     memoryAddress: 0x7C,
                     memoryFlag: 0x7);
             }
@@ -278,20 +278,20 @@ namespace Randomizer.SMZ3.Regions.Zelda
                     memoryFlag: 0x4);
 
                 TopRight = new Location(this, 256 + 204, 0x1EAE8, LocationType.Regular,
-                    "Top Right",
-                    items => RightSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
+                    name: "Top Right",
+                    access: items => RightSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
                     memoryAddress: 0x9D,
                     memoryFlag: 0x5);
 
                 BottomLeft = new Location(this, 256 + 205, 0x1EAEB, LocationType.Regular,
-                    "Bottom Left",
-                    items => RightSide(items, new[] { TopRight, TopLeft, BottomRight }),
+                    name: "Bottom Left",
+                    access: items => RightSide(items, new[] { TopRight, TopLeft, BottomRight }),
                     memoryAddress: 0x9D,
                     memoryFlag: 0x6);
 
                 BottomRight = new Location(this, 256 + 206, 0x1EAEE, LocationType.Regular,
-                    "Bottom Right",
-                    items => RightSide(items, new[] { TopRight, TopLeft, BottomLeft }),
+                    name: "Bottom Right",
+                    access: items => RightSide(items, new[] { TopRight, TopLeft, BottomLeft }),
                     memoryAddress: 0x9D,
                     memoryFlag: 0x7);
             }
