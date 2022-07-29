@@ -141,9 +141,9 @@ namespace Randomizer.App
             var assembly = GetType().Assembly;
             var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)
-            {
                 smIpsFiles.Add(IpsPatch.Respin());
-            }
+            if (options.PatchOptions.ShaktoolWithoutGrapple)
+                smIpsFiles.Add(IpsPatch.ShaktoolWithoutGrapple());
 
             byte[] rom;
             try

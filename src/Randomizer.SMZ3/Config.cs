@@ -211,6 +211,7 @@ namespace Randomizer.SMZ3
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
+        public bool ShaktoolWithoutGrapple { get; set; }
 
         public Config SeedOnly()
         {
