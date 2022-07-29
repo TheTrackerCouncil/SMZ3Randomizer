@@ -60,6 +60,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x33, 
                 memoryFlag: 0xB);
 
+            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
+                name: "Desert Palace Reward",
+                vanillaItem: ItemType.PendantNonGreen,
+                access: items => CanComplete(items),
+                memoryAddress: 0x33,
+                memoryFlag: 0xB);
+
             MemoryAddress = 0x33;
             MemoryFlag = 0xB;
             StartingRooms = new List<int>() { 99, 131, 132, 133 };
@@ -83,6 +90,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location CompassChest { get; }
 
         public Location LanmolasReward { get; }
+
+        public Location DungeonReward { get; }
+
+        public Location RewardLocation => DungeonReward;
 
         public override bool CanEnter(Progression items)
         {

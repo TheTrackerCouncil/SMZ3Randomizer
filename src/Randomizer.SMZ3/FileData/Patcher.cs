@@ -182,8 +182,8 @@ namespace Randomizer.SMZ3.FileData
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var crystalRegions = regions.Where(x => x.Reward == Reward.CrystalBlue).Concat(regions.Where(x => x.Reward == Reward.CrystalRed));
-            var pendantRegions = regions.Where(x => x.Reward == Reward.PendantGreen).Concat(regions.Where(x => x.Reward == Reward.PendantNonGreen));
+            var crystalRegions = regions.Where(x => x.RewardItem.Type is ItemType.CrystalRed or ItemType.CrystalBlue);
+            var pendantRegions = regions.Where(x => x.RewardItem.Type is ItemType.PendantGreen or ItemType.PendantNonGreen);
 
             _patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
             _patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));

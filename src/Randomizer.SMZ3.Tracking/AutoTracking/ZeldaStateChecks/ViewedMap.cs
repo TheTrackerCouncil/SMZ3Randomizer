@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda.DarkWorld;
 using Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain;
 using Randomizer.SMZ3.Regions.Zelda.LightWorld;
@@ -51,15 +52,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         private void UpdateLightWorldRewards()
         {
             if (_tracker == null) return;
-            var rewards = new List<Reward>();
+            var rewards = new List<ItemType>();
 
             if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapEP))
             {
                 var ep = _tracker.World.EasternPalace;
                 var epInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(ep));
-                if (epInfo.Reward == RewardItem.Unknown)
+                if (epInfo.RewardItem == ItemType.Nothing)
                 {
-                    rewards.Add(ep.Reward);
+                    rewards.Add(ep.RewardLocation.Item.Type);
                     _tracker.SetDungeonReward(epInfo, ConvertReward(ep.Reward));
                 }
             }
@@ -68,9 +69,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             {
                 var dp = _tracker.World.DesertPalace;
                 var dpInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(dp));
-                if (dpInfo.Reward == RewardItem.Unknown)
+                if (dpInfo.RewardItem == ItemType.Nothing)
                 {
-                    rewards.Add(dp.Reward);
+                    rewards.Add(dp.RewardLocation.Item.Type);
                     _tracker.SetDungeonReward(dpInfo, ConvertReward(dp.Reward));
                 }
             }
@@ -79,9 +80,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             {
                 var toh = _tracker.World.TowerOfHera;
                 var tohInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(toh));
-                if (tohInfo.Reward == RewardItem.Unknown)
+                if (tohInfo.RewardItem == ItemType.Nothing)
                 {
-                    rewards.Add(toh.Reward);
+                    rewards.Add(toh.RewardLocation.Item.Type);
                     _tracker.SetDungeonReward(tohInfo, ConvertReward(toh.Reward));
                 }
             }

@@ -73,6 +73,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x29,
                 memoryFlag: 0xB);
 
+            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
+                name: "Skull Woods Reward",
+                vanillaItem: ItemType.CrystalBlue,
+                access: items => CanComplete(items),
+                memoryAddress: 0x29,
+                memoryFlag: 0xB);
+
             MemoryAddress = 0x29;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 86, 87, 88, 89, 103, 104 };
@@ -100,6 +107,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location BridgeRoom { get; }
 
         public Location MothulaReward { get; }
+
+        public Location DungeonReward { get; }
+
+        public Location RewardLocation => DungeonReward;
 
         public override bool CanEnter(Progression items)
         {

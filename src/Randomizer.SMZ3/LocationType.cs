@@ -11,7 +11,10 @@
 
         Visible,
         Chozo,
-        Hidden
+        Hidden,
+
+        ZeldaReward,
+        MetroidBoss
     }
 
 }

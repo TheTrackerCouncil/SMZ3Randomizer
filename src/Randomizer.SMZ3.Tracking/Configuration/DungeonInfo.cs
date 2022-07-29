@@ -82,7 +82,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// when you beat the dungeon boss.
         /// </summary>
         public RewardItem Reward { get; set; }
-            = RewardItem.Unknown;
+            = Randomizer.Shared.RewardItem.Unknown;
+
+        public ItemType RewardItem { get; set; } = ItemType.Nothing;
 
         /// <summary>
         /// Gets a value indicating whether the dungeon has a reward when the

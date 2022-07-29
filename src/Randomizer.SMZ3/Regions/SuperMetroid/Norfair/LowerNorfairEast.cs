@@ -48,6 +48,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 access: items => CanExit(items),
                 memoryAddress: 0xA,
                 memoryFlag: 0x1);
+            BossReward = new Location(this, -1, -1, LocationType.MetroidBoss,
+                name: "Ridley Reward",
+                vanillaItem: ItemType.GoldenFourBoss,
+                access: items => CanComplete(items),
+                memoryAddress: null,
+                memoryFlag: null);
             MemoryRegionId = 2;
         }
 
@@ -68,6 +74,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         public Location RidleyTreasure { get; }
 
         public Location FirefleaRoom { get; }
+
+        public Location BossReward { get; }
+
+        public Location RewardLocation => BossReward;
 
         public override bool CanEnter(Progression items) => items.Varia && items.CardLowerNorfairL1 && (
                     // Access via elevator from upper norfair east past Ridley's mouth

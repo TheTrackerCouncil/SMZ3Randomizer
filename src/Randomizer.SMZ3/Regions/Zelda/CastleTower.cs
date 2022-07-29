@@ -13,6 +13,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
             Foyer = new FoyerRoom(this);
             DarkMaze = new DarkMazeRoom(this);
 
+            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
+                name: "Castle Tower Reward",
+                vanillaItem: ItemType.Agahnim,
+                access: items => CanComplete(items),
+                memoryAddress: null,
+                memoryFlag: null);
+
             StartingRooms = new List<int>() { 224 };
         }
 
@@ -22,6 +29,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
             = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
 
         public Reward Reward { get; set; } = Reward.Agahnim;
+
+        public Location DungeonReward { get; }
+
+        public Location RewardLocation => DungeonReward;
 
         public FoyerRoom Foyer { get; }
 

@@ -587,5 +587,29 @@ namespace Randomizer.Shared
         [Description("Bee Refill")]
         [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
         BeeContent = 0x0E,
+
+        [Description("Agahnim")]
+        [ItemCategory(ItemCategory.Reward)]
+        Agahnim = 0xF0,
+
+        [Description("Green Pendant")]
+        [ItemCategory(ItemCategory.Reward)]
+        PendantGreen = 0xF1,
+
+        [Description("Blue/Red Pendant")]
+        [ItemCategory(ItemCategory.Reward)]
+        PendantNonGreen = 0xF2,
+
+        [Description("Blue Crystal")]
+        [ItemCategory(ItemCategory.Reward)]
+        CrystalBlue = 0xF3,
+
+        [Description("Red Crystal")]
+        [ItemCategory(ItemCategory.Reward)]
+        CrystalRed = 0xF4,
+
+        [Description("Golden Four Boss")]
+        [ItemCategory(ItemCategory.Reward)]
+        GoldenFourBoss = 0xF5
     }
 }

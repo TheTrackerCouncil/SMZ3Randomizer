@@ -52,6 +52,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0xC8,
                 memoryFlag: 0xB);
 
+            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
+                name: "Eastern Palace Reward",
+                vanillaItem: ItemType.PendantGreen,
+                access: items => ArmosKnightsRewards.IsAvailable(items),
+                memoryAddress: 0xC8,
+                memoryFlag: 0xB);
+
             MemoryAddress = 0xC8;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 201 };
@@ -72,6 +79,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location BigKeyChest { get; }
 
         public Location ArmosKnightsRewards { get; }
+
+        public Location DungeonReward { get; }
+
+        public Location RewardLocation => DungeonReward;
 
         public bool CanComplete(Progression items)
             => ArmosKnightsRewards.IsAvailable(items);

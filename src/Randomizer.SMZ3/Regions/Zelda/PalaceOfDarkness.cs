@@ -87,6 +87,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x5A,
                 memoryFlag: 0xB);
 
+            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
+                name: "Palace of Darkness Reward",
+                vanillaItem: ItemType.CrystalBlue,
+                access: items => CanComplete(items),
+                memoryAddress: 0x5A,
+                memoryFlag: 0xB);
+
             DarkMaze = new DarkMazeRoom(this);
             DarkBasement = new DarkBasementRoom(this);
 
@@ -124,6 +131,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public DarkMazeRoom DarkMaze { get; }
 
         public DarkBasementRoom DarkBasement { get; }
+
+        public Location DungeonReward { get; }
+
+        public Location RewardLocation => DungeonReward;
 
         public override bool CanEnter(Progression items)
         {

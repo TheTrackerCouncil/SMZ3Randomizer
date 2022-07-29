@@ -71,6 +71,11 @@
         /// <summary>
         ///This is an item that is useful, but not progression
         /// </summary>
-        Nice
+        Nice,
+
+        /// <summary>
+        /// This is a reward for a dungeon or beating a boss
+        /// </summary>
+        Reward
     }
 }

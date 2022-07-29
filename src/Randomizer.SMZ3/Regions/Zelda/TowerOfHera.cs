@@ -56,6 +56,13 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x7,
                 memoryFlag: 0xB);
 
+            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
+                name: "Tower of Hera Reward",
+                vanillaItem: ItemType.PendantNonGreen,
+                access: items => CanComplete(items),
+                memoryAddress: 0x7,
+                memoryFlag: 0xB);
+
             MemoryAddress = 0x7;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 119 };
@@ -76,6 +83,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location BigChest { get; }
 
         public Location MoldormReward { get; }
+
+        public Location DungeonReward { get; }
+
+        public Location RewardLocation => DungeonReward;
 
         public override bool CanEnter(Progression items)
         {

@@ -14,6 +14,10 @@ namespace Randomizer.SMZ3.Regions
         /// </summary>
         Reward Reward { get; set; }
 
+        Location? RewardLocation { get; }
+
+        Item RewardItem => RewardLocation.Item;
+
         /// <summary>
         /// Determines whether the reward for the region can be obtained.
         /// </summary>

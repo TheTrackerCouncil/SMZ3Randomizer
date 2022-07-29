@@ -27,6 +27,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 access: items => Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x5,
                 memoryFlag: 0x10);
+            BossReward = new Location(this, -1, -1, LocationType.MetroidBoss,
+                name: "Kraid Reward",
+                vanillaItem: ItemType.GoldenFourBoss,
+                access: items => CanComplete(items),
+                memoryAddress: null,
+                memoryFlag: null);
             MemoryRegionId = 1;
         }
 
@@ -46,6 +52,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
         public Location KraidsItem { get; }
 
         public Location MissileBeforeKraid { get; }
+
+        public Location BossReward { get; }
+
+        public Location RewardLocation => BossReward;
 
         public override bool CanEnter(Progression items)
         {
