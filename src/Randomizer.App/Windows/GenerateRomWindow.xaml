@@ -154,6 +154,10 @@
                 </CheckBox.ToolTip>
               </CheckBox>
 
+              <CheckBox IsChecked="{Binding ShaktoolWithoutGrapple}"
+                        Content="Shaktool does not require Grapple Beam"
+                        ToolTip="Shaktool's front door is always open :)" />
+
               <controls:LabeledControl Text="Custom music pack:">
                 <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
                                           Filter="MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*"

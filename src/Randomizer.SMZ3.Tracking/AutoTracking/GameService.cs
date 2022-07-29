@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
@@ -25,7 +26,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">The logger to associate with this module</param>
-        public GameService(Tracker tracker, ILogger<GameService> logger) : base(tracker, logger)
+        public GameService(Tracker tracker, IItemService itemService, ILogger<GameService> logger)
+            : base(tracker, itemService, logger)
         {
             Tracker.GameService = this;
             _logger = logger;

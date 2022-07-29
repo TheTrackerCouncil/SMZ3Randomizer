@@ -1,0 +1,29 @@
+* Add transition tables to ALTTP
+* Fix SM transitions to allow left and right directions
+* Add transition tables to SM
+* Add support for ALTTP items in SM
+* Fix deleting saves in ALTTP
+* Fix deleting saves in SM
+* Fix copying saves in SM
+* Fix copying saves in ALTTP
+* Add support for SM items in ALTTP
+* Integrate randomizer patches into ALTTP
+* Temporary: Always boot into SM, and when creating a new file in SM, copy a "blank" ALTTP file into ALTTP SRAM
+* Add all ALTTP items into SM
+* Integrate randomizer patches into SM
+----------------------------------------
+
+* Fix Silver Arrow Downgrade issue
+* Implement Progressive items
+* Fix ALTTP credits crash
+
+
+Update randomizer logic
+Update both SM and ALTTP base ROM's with all the newest changes
+Fix save slot issues (always uses slot 1 for both SM/ALTTP)
+Create a unified "wrapper" around both games when starting/ending
+...
+EVERYTHING ELSE :)
+
+
+* = Done

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -24,6 +25,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private static readonly Random s_random = new();
         private const string WinningGuessKey = "WinningGuess";
         private readonly Dictionary<string, int> _usersGreetedTimes = new();
+        private readonly IItemService _itemService;
         private bool AskChatAboutContentCheckPollResults = true;
         private string? AskChatAboutContentPollId;
         private int AskChatAboutContentPollTime = 60;
@@ -37,10 +39,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="chatClient">The chat client to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, ILogger<ChatIntegrationModule> logger)
-            : base(tracker, logger)
+        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, ILogger<ChatIntegrationModule> logger)
+            : base(tracker, itemService, logger)
         {
             ChatClient = chatClient;
+            _itemService = itemService;
             ChatClient.Connected += ChatClient_Connected;
             ChatClient.MessageReceived += ChatClient_MessageReceived;
             ChatClient.Disconnected += ChatClient_Disconnected;
@@ -205,8 +208,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns></returns>
         public async Task AskChatAboutContent()
         {
-            var contentItemData = Tracker.Items.Where(x => "Content".Equals(x.Name.First(), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            if(contentItemData == null)
+            var contentItemData = _itemService.FindOrDefault("Content");
+            if (contentItemData == null)
             {
                 Logger.LogError("Unable to determine content item data");
                 Tracker.Say(x => x.Error);

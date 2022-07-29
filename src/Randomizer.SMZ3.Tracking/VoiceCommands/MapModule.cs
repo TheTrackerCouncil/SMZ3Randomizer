@@ -3,6 +3,7 @@ using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -22,8 +23,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker"></param>
         /// <param name="logger"></param>
         /// <param name="config"></param>
-        public MapModule(Tracker tracker, ILogger<MapModule> logger, TrackerMapConfig config)
-            : base(tracker, logger)
+        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, TrackerMapConfig config)
+            : base(tracker, itemService, logger)
         {
             _logger = logger;
             _config = config;
@@ -52,7 +53,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 if (map != null)
                 {
-                    if (Tracker.Items.First(x => x.InternalItemType == Shared.ItemType.Lamp).TrackingState > 0)
+                    if (itemService.IsTracked(Shared.ItemType.Lamp))
                     {
                         Tracker.Say(x => x.Map.HasLamp);
                         return;

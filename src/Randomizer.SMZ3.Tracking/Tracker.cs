@@ -20,9 +20,11 @@ using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -36,15 +38,16 @@ namespace Randomizer.SMZ3.Tracking
         private const int RepeatRateModifier = 2;
         private static readonly Random s_random = new();
 
-        private readonly SpeechSynthesizer _tts;
         private readonly SpeechRecognitionEngine _recognizer;
+        private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly IChatClient _chatClient;
         private readonly ILogger<Tracker> _logger;
+        private readonly TrackerOptionsAccessor _trackerOptions;
         private readonly Dictionary<string, Timer> _idleTimers;
         private readonly Stack<Action> _undoHistory = new();
         private readonly RandomizerContext _dbContext;
-
+        private readonly ICommunicator _communicator;
         private DateTime _startTime = DateTime.MinValue;
         private DateTime _undoStartTime = DateTime.MinValue;
         private TimeSpan _undoSavedTime;
@@ -58,8 +61,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
         /// </summary>
-        /// <param name="config">The tracking configuration.</param>
-        /// <param name="locationConfig">The location configuration.</param>
+        /// <param name="configProvider">Used to access external configuration.</param>
         /// <param name="worldAccessor">
         /// Used to get the world to track in.
         /// </param>
@@ -68,32 +70,38 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="chatClient"></param>
         /// <param name="logger">Used to write logging information.</param>
-        /// <param name="options">Provides Tracker preferences.</param>
+        /// <param name="trackerOptions">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
         /// <param name="historyService">Service for</param>
-        public Tracker(TrackerConfig config,
-            LocationConfig locationConfig,
+        public Tracker(TrackerConfigProvider configProvider,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             IChatClient chatClient,
             ILogger<Tracker> logger,
-            TrackerOptions options,
+            TrackerOptionsAccessor trackerOptions,
             RandomizerContext dbContext,
+            IItemService itemService,
+            ICommunicator communicator,
             IHistoryService historyService)
         {
+            if (trackerOptions.Options == null)
+                throw new InvalidOperationException("Tracker options have not yet been activated.");
+
+            _worldAccessor = worldAccessor;
             _moduleFactory = moduleFactory;
             _chatClient = chatClient;
             _logger = logger;
-            Options = options;
+            _trackerOptions = trackerOptions;
             _dbContext = dbContext;
+            ItemService = itemService;
+            _communicator = communicator;
 
             // Initialize the tracker configuration
-            Items = config.Items;
+            var config = configProvider.GetTrackerConfig();
             Pegs = config.Pegs;
             Responses = config.Responses;
             Requests = config.Requests;
-            World = worldAccessor.GetWorld();
-            WorldInfo = locationConfig;
+            WorldInfo = configProvider.GetLocationConfig();
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
 
@@ -106,10 +114,10 @@ namespace Randomizer.SMZ3.Tracking
 
             // Initialize the text-to-speech
             if (s_random.NextDouble() <= 0.01)
+            {
                 _alternateTracker = true;
-
-            _tts = new SpeechSynthesizer();
-            _tts.SelectVoiceByHints(_alternateTracker ? VoiceGender.Male : VoiceGender.Female);
+                _communicator.UseAlternateVoice();
+            }
 
             // Initialize the speech recognition engine
             _recognizer = new SpeechRecognitionEngine();
@@ -191,9 +199,9 @@ namespace Randomizer.SMZ3.Tracking
         public LocationConfig WorldInfo { get; }
 
         /// <summary>
-        /// Gets a collection of trackable items.
+        /// Gets a reference to the <see cref="ItemService"/>.
         /// </summary>
-        public IReadOnlyCollection<ItemData> Items { get; }
+        public IItemService ItemService { get; }
 
         /// <summary>
         /// Get a collection of pegs in Peg World mode.
@@ -203,7 +211,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the world for the currently tracked playthrough.
         /// </summary>
-        public World World { get; internal set; }
+        public World World => _worldAccessor.World;
 
         /// <summary>
         /// Indicates whether Tracker is in Go Mode.
@@ -251,7 +259,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets the tracking preferences.
         /// </summary>
-        public TrackerOptions Options { get; }
+        public TrackerOptions Options => _trackerOptions.Options!;
 
         /// <summary>
         /// The generated rom
@@ -390,7 +398,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             IsDirty = false;
             var state = await TrackerState.LoadAsync(stream);
-            state.Apply(this);
+            state.Apply(this, _worldAccessor, ItemService);
             History.LoadHistory(this, state);
             OnStateLoaded();
         }
@@ -407,7 +415,7 @@ namespace Randomizer.SMZ3.Tracking
             var state = TrackerState.Load(_dbContext, rom);
             if (state != null)
             {
-                state.Apply(this);
+                state.Apply(this, _worldAccessor, ItemService);
                 History.LoadHistory(this, state);
                 OnStateLoaded();
                 
@@ -425,7 +433,7 @@ namespace Randomizer.SMZ3.Tracking
         public Task SaveAsync(Stream destination)
         {
             IsDirty = false;
-            var state = TrackerState.TakeSnapshot(this);
+            var state = TrackerState.TakeSnapshot(this, ItemService);
             return state.SaveAsync(destination);
         }
 
@@ -437,7 +445,7 @@ namespace Randomizer.SMZ3.Tracking
         public Task SaveAsync(GeneratedRom rom)
         {
             IsDirty = false;
-            var state = TrackerState.TakeSnapshot(this);
+            var state = TrackerState.TakeSnapshot(this, ItemService);
             return state.SaveAsync(_dbContext, rom);
         }
 
@@ -687,51 +695,6 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Returns the item that has the specified name.
-        /// </summary>
-        /// <param name="name">The name of the item to find.</param>
-        /// <returns>
-        /// The <see cref="ItemData"/> with the specified name, or <c>null</c>
-        /// if no items have a matching name.
-        /// </returns>
-        /// <remarks>
-        /// Names are case insensitive, and items can be found either by their
-        /// default name, additional names, or stage names.
-        /// </remarks>
-        public ItemData? FindItemByName(string name)
-        {
-            return Items.SingleOrDefault(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-                ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
-        }
-
-        /// <summary>
-        /// Returns the first item with the specified item type.
-        /// </summary>
-        /// <param name="type">The type of the item to find.</param>
-        /// <returns>
-        /// The item data for the item type, or <c>null</c> if no item data is
-        /// present for the specified type.
-        /// </returns>
-        public ItemData? FindItemByType(ItemType type)
-        {
-            return Items.FirstOrDefault(x => x.InternalItemType == type);
-        }
-
-        /// <summary>
-        /// Returns the first item that matches the item at the specified
-        /// location.
-        /// </summary>
-        /// <param name="location">The location with the item to find.</param>
-        /// <returns>
-        /// The item data for the item at the location, or <c>null</c> if no
-        /// item data is present for the item at the location.
-        /// </returns>
-        public ItemData? FindItem(Location location)
-        {
-            return Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type);
-        }
-
-        /// <summary>
         /// Gets the currently available items.
         /// </summary>
         /// <returns>
@@ -783,10 +746,9 @@ namespace Randomizer.SMZ3.Tracking
                     progression.AddRange(Item.CreateDungeonPool(World));
             }
 
-            foreach (var item in Items)
+            foreach (var item in ItemService.TrackedItems())
             {
-                if (item.TrackingState > 0)
-                    progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
+                progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
             }
 
             _progression[mapKey] = progression;
@@ -914,7 +876,7 @@ namespace Randomizer.SMZ3.Tracking
         public virtual void StopTracking()
         {
             DisableVoiceRecognition();
-            _tts.SpeakAsyncCancelAll();
+            _communicator.Abort();
             _chatClient.Disconnect();
             Say(GoMode ? Responses.StoppedTrackingPostGoMode : Responses.StoppedTracking, wait: true);
 
@@ -1103,25 +1065,12 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var formattedText = FormatPlaceholders(text);
-            var prompt = ParseText(formattedText);
             if (wait)
-                _tts.Speak(prompt);
+                _communicator.SayWait(formattedText);
             else
-                _tts.SpeakAsync(prompt);
+                _communicator.Say(formattedText);
             _lastSpokenText = text;
             return true;
-
-            static Prompt ParseText(string text)
-            {
-                // If text does not contain any XML elements, just interpret it
-                // as text
-                if (!text.Contains("<") && !text.Contains("/>"))
-                    return new Prompt(text);
-
-                var prompt = new PromptBuilder();
-                prompt.AppendSsmlMarkup(text);
-                return new Prompt(prompt);
-            }
         }
 
         /// <summary>
@@ -1164,10 +1113,10 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
-            _tts.Speak("I said");
-            _tts.Rate -= RepeatRateModifier;
+            _communicator.SayWait("I said");
+            _communicator.SlowDown();
             Say(_lastSpokenText, wait: true);
-            _tts.Rate += RepeatRateModifier;
+            _communicator.SpeedUp();
         }
 
         /// <summary>
@@ -1175,7 +1124,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void ShutUp()
         {
-            _tts.SpeakAsyncCancelAll();
+            _communicator.Abort();
         }
 
         /// <summary>
@@ -1378,7 +1327,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
                             Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
                         }
                     }
@@ -1657,7 +1606,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        var item = Items.SingleOrDefault(x => x.InternalItemType == onlyLocation.Item.Type);
+                        var item = ItemService.GetOrDefault(onlyLocation);
                         if (item == null)
                         {
                             // Probably just the compass or something. Clear the
@@ -1689,7 +1638,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
 
                         var itemType = location.Item?.Type;
-                        var item = Items.SingleOrDefault(x => x.InternalItemType == itemType);
+                        var item = itemType != null ? ItemService.GetOrDefault(itemType.Value) : null;
                         if (item == null || !item.Track())
                             _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
                         else
@@ -1710,13 +1659,13 @@ namespace Randomizer.SMZ3.Tracking
                         var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
                         if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                         {
-                            var someOutOfLogicItem = FindItemByType(someOutOfLogicLocation.Item.Type);
+                            var someOutOfLogicItem = ItemService.GetOrDefault(someOutOfLogicLocation);
                             var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
                                 .OrderBy(x => x.Length)
                                 .FirstOrDefault();
                             if (missingItems != null)
                             {
-                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(GetName));
+                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
                                 Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
                             }
                             else
@@ -1750,7 +1699,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     if (trackItems)
                     {
-                        var item = Items.SingleOrDefault(x => x.InternalItemType == location.Item.Type);
+                        var item = ItemService.GetOrDefault(location);
                         if (item != null && item.TrackingState > 0)
                             item.TrackingState--;
                     }
@@ -1801,7 +1750,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (missingItemCombinations.Any())
                 {
                     var missingItems = missingItemCombinations.Random(s_random)
-                            .Select(FindItemByType)
+                            .Select(ItemService.GetOrDefault)
                             .NonNull();
                     var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
                     Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
@@ -1994,7 +1943,7 @@ namespace Randomizer.SMZ3.Tracking
                 var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
                 if (rewardLocation.Item != null)
                 {
-                    var item = Items.FirstOrDefault(x => x.InternalItemType == rewardLocation.Item.Type);
+                    var item = ItemService.GetOrDefault(rewardLocation);
                     if (item != null && item.TrackingState > 0)
                     {
                         UntrackItem(item);
@@ -2184,16 +2133,6 @@ namespace Randomizer.SMZ3.Tracking
             => WorldInfo.Location(location).Name;
 
         /// <summary>
-        /// Returns a name for the specified item.
-        /// </summary>
-        /// <param name="item">The type of item whose name to get.</param>
-        /// <returns>
-        /// One of the possible names for the <paramref name="item"/>.
-        /// </returns>
-        protected internal virtual string GetName(ItemType item)
-            => Items.SingleOrDefault(x => x.InternalItemType == item)?.NameWithArticle.ToString() ?? item.GetDescription();
-
-        /// <summary>
         /// Determines whether or not the specified reward is worth getting.
         /// </summary>
         /// <param name="reward">The dungeon reward.</param>
@@ -2203,7 +2142,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         protected internal bool IsWorth(Reward reward)
         {
-            var sahasrahlaItem = FindItemByType(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla.Item.Type);
+            var sahasrahlaItem = ItemService.GetOrDefault(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla);
             if (sahasrahlaItem != null && reward == Reward.PendantGreen)
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, sahasrahlaItem);
@@ -2215,7 +2154,7 @@ namespace Randomizer.SMZ3.Tracking
                 _logger.LogDebug("{Reward} leads to {Item}, which is junk", reward, sahasrahlaItem);
             }
 
-            var pedItem = FindItemByType(World.LightWorldNorthWest.MasterSwordPedestal.Item.Type);
+            var pedItem = ItemService.GetOrDefault(World.LightWorldNorthWest.MasterSwordPedestal);
             if (pedItem != null && (reward == Reward.PendantGreen || reward == Reward.PendantNonGreen))
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, pedItem);
@@ -2256,7 +2195,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 foreach (var location in leadsToLocation)
                 {
-                    var reward = FindItem(location);
+                    var reward = ItemService.GetOrDefault(location);
                     if (reward != null)
                     {
                         _logger.LogDebug("{Item} leads to {OtherItem}...", item, reward);
@@ -2294,7 +2233,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (disposing)
                 {
                     _recognizer.Dispose();
-                    _tts.Dispose();
+                    (_communicator as IDisposable)?.Dispose();
 
                     foreach (var timer in _idleTimers.Values)
                         timer.Dispose();
@@ -2475,8 +2414,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;
 
-                var actualItemName = Items.FirstOrDefault(x => x.InternalItemType == location.Item.Type)?.NameWithArticle
-                        ?? location.Item.Name;
+                var actualItemName = ItemService.GetName(location.Item.Type);
                 if (HintsEnabled) actualItemName = "another item";
 
                 Say(Responses.LocationHasDifferentItem?.Format(item.NameWithArticle, actualItemName));
@@ -2586,7 +2524,7 @@ namespace Randomizer.SMZ3.Tracking
                 return Enumerable.Empty<Location>();
 
             var items = new List<SMZ3.Item>();
-            foreach (var item in Items)
+            foreach (var item in ItemService.TrackedItems())
             {
                 for (var i = 0; i < item.TrackingState; i++)
                     items.Add(new SMZ3.Item(item.InternalItemType));

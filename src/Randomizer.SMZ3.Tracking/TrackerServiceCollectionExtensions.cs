@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-using Randomizer.SMZ3;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
 using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking
@@ -20,45 +22,37 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Adds the services required to start using Tracker.
         /// </summary>
-        /// <typeparam name="TWorldAccessor">
-        /// A type implementing <see cref="IWorldAccessor"/>. The type should
-        /// already be registered as a singleton.
-        /// </typeparam>
         /// <param name="services">
         /// The service collection to add Tracker to.
         /// </param>
         /// <returns>A reference to <paramref name="services"/>.</returns>
-        public static IServiceCollection AddTracker<TWorldAccessor>(this IServiceCollection services)
-            where TWorldAccessor : class, IWorldAccessor
+        public static IServiceCollection AddTracker(this IServiceCollection services)
         {
             services.AddBasicTrackerModules<TrackerModuleFactory>();
             services.AddScoped<TrackerModuleFactory>();
 
-            services.AddSingleton<IWorldAccessor>(x => x.GetRequiredService<TWorldAccessor>());
             services.AddSingleton<TrackerConfigProvider>();
             services.AddSingleton<IHistoryService, HistoryService>();
-            services.AddScoped(serviceProvider =>
+            services.AddTransient(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetMapConfig();
             });
-            services.AddScoped(serviceProvider =>
+            services.AddTransient(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetTrackerConfig();
             });
-            services.AddScoped(serviceProvider =>
+            services.AddTransient(serviceProvider =>
             {
                 var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
                 return configProvider.GetLocationConfig();
             });
 
-            services.AddScoped<TrackerFactory>();
-            services.AddScoped(serviceProvider =>
-            {
-                var factory = serviceProvider.GetRequiredService<TrackerFactory>();
-                return factory.Instance ?? throw new InvalidOperationException("Cannot resolve Tracker instance before TrackerFactory.Create has been called.");
-            });
+            services.AddScoped<TrackerOptionsAccessor>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
+            services.AddScoped<Tracker>();
 
             var assemblies = new[] { Assembly.GetExecutingAssembly() };
 

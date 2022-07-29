@@ -2,6 +2,8 @@
 
 using Microsoft.Extensions.Logging;
 
+using Randomizer.SMZ3.Tracking.Services;
+
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
@@ -14,7 +16,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public GoModeModule(Tracker tracker, ILogger<GoModeModule> logger) : base(tracker, logger)
+        public GoModeModule(Tracker tracker, IItemService itemService, ILogger<GoModeModule> logger)
+            : base(tracker, itemService, logger)
         {
             AddCommand("Toggle Go Mode", "Hey tracker, track Go Mode.", (tracker, result) =>
             {

@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Randomizer.Shared;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda.DarkWorld;
 using Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain;
 using Randomizer.SMZ3.Regions.Zelda.LightWorld;
 using Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {
@@ -16,6 +19,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     public class ViewedMap : IZeldaStateCheck
     {
         private Tracker? _tracker;
+        private readonly IWorldAccessor _worldAccessor;
+
+        public ViewedMap(IWorldAccessor worldAccessor, IItemService itemService)
+        {
+            _worldAccessor = worldAccessor;
+            Items = itemService;
+        }
+
+        protected World World => _worldAccessor.World;
+
+        protected IItemService Items { get; }
 
         /// <summary>
         /// Executes the check for the current state
@@ -40,7 +54,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 {
                     tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateDarkWorldRewards);
                 }
-                
+
                 return true;
             }
             return false;
@@ -52,38 +66,25 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         private void UpdateLightWorldRewards()
         {
             if (_tracker == null) return;
-            var rewards = new List<ItemType>();
 
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapEP))
-            {
-                var ep = _tracker.World.EasternPalace;
-                var epInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(ep));
-                if (epInfo.RewardItem == ItemType.Nothing)
-                {
-                    rewards.Add(ep.RewardLocation.Item.Type);
-                    _tracker.SetDungeonReward(epInfo, ConvertReward(ep.Reward));
-                }
-            }
+            var rewards = new List<Reward>();
+            var dungeons = new (Region Region, ItemType Map)[] {
+                (World.EasternPalace, ItemType.MapEP),
+                (World.DesertPalace, ItemType.MapDP),
+                (World.TowerOfHera, ItemType.MapTH)
+            };
 
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapDP))
+            foreach (var (region, map) in dungeons)
             {
-                var dp = _tracker.World.DesertPalace;
-                var dpInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(dp));
-                if (dpInfo.RewardItem == ItemType.Nothing)
-                {
-                    rewards.Add(dp.RewardLocation.Item.Type);
-                    _tracker.SetDungeonReward(dpInfo, ConvertReward(dp.Reward));
-                }
-            }
+                if (World.Config.Keysanity && !Items.IsTracked(map))
+                    continue;
 
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapTH))
-            {
-                var toh = _tracker.World.TowerOfHera;
-                var tohInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(toh));
-                if (tohInfo.RewardItem == ItemType.Nothing)
+                var reward = ((IHasReward)region).Reward;
+                var dungeonInfo = _tracker.WorldInfo.Dungeon(region);
+                if (dungeonInfo.Reward == RewardItem.Unknown)
                 {
-                    rewards.Add(toh.RewardLocation.Item.Type);
-                    _tracker.SetDungeonReward(tohInfo, ConvertReward(toh.Reward));
+                    rewards.Add(reward);
+                    _tracker.SetDungeonReward(dungeonInfo, ConvertReward(reward));
                 }
             }
 
@@ -105,84 +106,28 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             if (_tracker == null) return;
 
             var stateMedallionMessage = true;
-            var addedReward = false;
+            var rewards = new List<Reward>();
+            var dungeons = new (Region Region, ItemType Map)[] {
+                (World.PalaceOfDarkness, ItemType.MapPD),
+                (World.SwampPalace, ItemType.MapSP),
+                (World.SkullWoods, ItemType.MapSW),
+                (World.ThievesTown, ItemType.MapTT),
+                (World.IcePalace, ItemType.MapIP),
+                (World.MiseryMire, ItemType.MapMM),
+                (World.TurtleRock, ItemType.MapTR)
+            };
 
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapPD))
+            foreach (var (region, map) in dungeons)
             {
-                var pod = _tracker.World.PalaceOfDarkness;
-                var podInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(pod));
-                if (podInfo.Reward == RewardItem.Unknown)
-                {
-                    _tracker.SetDungeonReward(podInfo, ConvertReward(pod.Reward));
-                    addedReward = true;
-                }
-            }
+                if (World.Config.Keysanity && !Items.IsTracked(map))
+                    continue;
 
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapSP))
-            {
-                var sp = _tracker.World.SwampPalace;
-                var spInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(sp));
-                if (spInfo.Reward == RewardItem.Unknown)
+                var reward = ((IHasReward)region).Reward;
+                var dungeonInfo = _tracker.WorldInfo.Dungeon(region);
+                if (dungeonInfo.Reward == RewardItem.Unknown)
                 {
-                    _tracker.SetDungeonReward(spInfo, ConvertReward(sp.Reward));
-                    addedReward = true;
-                }
-            }
-
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapSW))
-            {
-                var sw = _tracker.World.SkullWoods;
-                var swInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(sw));
-                if (swInfo.Reward == RewardItem.Unknown)
-                {
-                    _tracker.SetDungeonReward(swInfo, ConvertReward(sw.Reward));
-                    addedReward = true;
-                }
-            }
-
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapTT))
-            {
-                var tt = _tracker.World.ThievesTown;
-                var ttInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(tt));
-                if (ttInfo.Reward == RewardItem.Unknown)
-                {
-                    _tracker.SetDungeonReward(ttInfo, ConvertReward(tt.Reward));
-                    addedReward = true;
-                }
-            }
-
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapIP))
-            {
-                var ip = _tracker.World.IcePalace;
-                var ipInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(ip));
-                if (ipInfo.Reward == RewardItem.Unknown)
-                {
-                    _tracker.SetDungeonReward(ipInfo, ConvertReward(ip.Reward));
-                    addedReward = true;
-                }
-            }
-
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapMM))
-            {
-                var mm = _tracker.World.MiseryMire;
-                var mmInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(mm));
-                if (mmInfo.Reward == RewardItem.Unknown)
-                {
-                    _tracker.SetDungeonReward(mmInfo, ConvertReward(mm.Reward));
-                    addedReward = true;
-                    if (mm.Reward == Reward.CrystalRed || mm.Reward == Reward.CrystalBlue) stateMedallionMessage = false;
-                }
-            }
-
-            if (!_tracker.World.Config.Keysanity || _tracker.Items.Any(x => x.TrackingState > 0 && x.InternalItemType == ItemType.MapTR))
-            {
-                var tr = _tracker.World.TurtleRock;
-                var trInfo = _tracker.WorldInfo.Dungeons.First(x => x.Is(tr));
-                if (trInfo.Reward == RewardItem.Unknown)
-                {
-                    _tracker.SetDungeonReward(trInfo, ConvertReward(tr.Reward));
-                    addedReward = true;
-                    if (tr.Reward == Reward.CrystalRed || tr.Reward == Reward.CrystalBlue) stateMedallionMessage = false;
+                    rewards.Add(reward);
+                    _tracker.SetDungeonReward(dungeonInfo, ConvertReward(reward));
                 }
             }
 
@@ -190,7 +135,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             {
                 _tracker.SayOnce(x => x.AutoTracker.DarkWorldNoMedallions);
             }
-            else if(!addedReward)
+            else if (rewards.Count == 0)
             {
                 _tracker.Say(x => x.AutoTracker.LookedAtNothing);
             }
@@ -203,21 +148,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// </summary>
         /// <param name="reward"></param>
         /// <returns></returns>
-        private RewardItem ConvertReward(Reward reward)
+        private static RewardItem ConvertReward(Reward reward) => reward switch
         {
-            switch (reward)
-            {
-                case Reward.CrystalRed:
-                    return RewardItem.RedCrystal;
-                case Reward.CrystalBlue:
-                    return RewardItem.Crystal;
-                case Reward.PendantGreen:
-                    return RewardItem.GreenPendant;
-                case Reward.PendantNonGreen:
-                    return RewardItem.NonGreenPendant;
-                default:
-                    return RewardItem.Unknown;
-            }
-        }
+            Reward.CrystalRed => RewardItem.RedCrystal,
+            Reward.CrystalBlue => RewardItem.Crystal,
+            Reward.PendantGreen => RewardItem.GreenPendant,
+            Reward.PendantNonGreen => RewardItem.NonGreenPendant,
+            _ => RewardItem.Unknown,
+        };
     }
 }
