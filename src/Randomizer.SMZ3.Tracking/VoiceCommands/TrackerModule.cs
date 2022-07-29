@@ -7,6 +7,7 @@ using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -59,9 +60,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="logger">Used to log information.</param>
-        protected TrackerModule(Tracker tracker, ILogger logger)
+        protected TrackerModule(Tracker tracker, IItemService itemService, ILogger logger)
         {
             Tracker = tracker;
+            ItemService = itemService;
             Logger = logger;
         }
 
@@ -82,6 +84,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Gets the Tracker instance.
         /// </summary>
         protected Tracker Tracker { get; }
+
+        protected IItemService ItemService { get; }
 
         /// <summary>
         /// Gets a list of speech recognition grammars provided by the module.
@@ -165,10 +169,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// An <see cref="ItemData"/> from the recognition result.
         /// </returns>
-        protected static ItemData GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
+        protected ItemData GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
-            var itemData = tracker.FindItemByName(itemName);
+            var itemData = ItemService.FindOrDefault(itemName);
 
             return itemData ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
         }
@@ -345,7 +349,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
-            foreach (var itemData in Tracker.Items.Where(x => x.Multiple && !x.HasStages))
+            foreach (var itemData in ItemService.AllItems().Where(x => x.Multiple && !x.HasStages))
             {
                 if (itemData.Plural == null)
                 {
@@ -375,7 +379,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var itemNames = new Choices();
-            foreach (var itemData in Tracker.Items.Where(where))
+            foreach (var itemData in ItemService.AllItems().Where(where))
             {
                 foreach (var name in itemData.Name)
                     itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));

@@ -28,6 +28,7 @@ using Randomizer.SMZ3;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App
 {
@@ -39,9 +40,9 @@ namespace Randomizer.App
         private const int GridItemPx = 32;
         private const int GridItemMargin = 3;
         private readonly DispatcherTimer _dispatcherTimer;
-        private readonly TrackerFactory _trackerFactory;
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IItemService _itemService;
         private readonly List<object> _mouseDownSenders = new();
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
@@ -55,7 +56,7 @@ namespace Randomizer.App
         private MenuItem _autoTrackerUSB2SNESMenuItem;
 
         public TrackerWindow(IServiceProvider serviceProvider,
-            TrackerFactory trackerFactory,
+            IItemService itemService,
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator
         )
@@ -63,7 +64,7 @@ namespace Randomizer.App
             InitializeComponent();
 
             _serviceProvider = serviceProvider;
-            _trackerFactory = trackerFactory;
+            _itemService = itemService;
             _logger = logger;
             _romGenerator = romGenerator;
 
@@ -262,7 +263,7 @@ namespace Randomizer.App
             }
             else
             {
-                foreach (var item in Tracker.Items.Where(x => x.Column != null && x.Row != null))
+                foreach (var item in _itemService.AllItems().Where(x => x.Column != null && x.Row != null))
                 {
                     var fileName = GetItemSpriteFileName(item);
                     var overlay = GetOverlayImageFileName(item);
@@ -501,7 +502,7 @@ namespace Randomizer.App
 
             if (item.InternalItemType is ItemType.Bow or ItemType.SilverArrows)
             {
-                var bow = Tracker.Items.SingleOrDefault(x => x.InternalItemType == ItemType.Bow);
+                var bow = _itemService.GetOrDefault(ItemType.Bow);
                 var toggleBow = new MenuItem
                 {
                     Header = bow.TrackingState > 0 ? "Untrack Bow" : "Track Bow",
@@ -521,7 +522,7 @@ namespace Randomizer.App
                     RefreshGridItems();
                 };
 
-                var silverArrows = Tracker.Items.SingleOrDefault(x => x.InternalItemType == ItemType.SilverArrows);
+                var silverArrows = _itemService.GetOrDefault(ItemType.SilverArrows);
                 var toggleSilverArrows = new MenuItem
                 {
                     Header = silverArrows.TrackingState > 0 ? "Untrack Silver Arrows" : "Track Silver Arrows",
@@ -547,7 +548,7 @@ namespace Randomizer.App
 
             if (item.InternalItemType == ItemType.Flute || "Duck".Equals(item.Name[0], StringComparison.OrdinalIgnoreCase))
             {
-                var flute = Tracker.Items.SingleOrDefault(x => x.InternalItemType == ItemType.Flute);
+                var flute = _itemService.GetOrDefault(ItemType.Flute);
                 var toggleFlute = new MenuItem
                 {
                     Header = flute.TrackingState > 0 ? "Untrack Flute" : "Track Flute",
@@ -567,7 +568,7 @@ namespace Randomizer.App
                     RefreshGridItems();
                 };
 
-                var duck = Tracker.Items.SingleOrDefault(x => "Duck".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
+                var duck = _itemService.FindOrDefault("Duck");
                 var toggleDuck = new MenuItem
                 {
                     Header = duck.TrackingState > 0 ? "Untrack Duck" : "Track Duck",
@@ -722,7 +723,7 @@ namespace Randomizer.App
             if (Options == null)
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
 
-            Tracker = _trackerFactory.Create(Options.GeneralOptions.GetTrackerOptions());
+            Tracker = _serviceProvider.GetRequiredService<Tracker>();
             Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
             {
                 UpdateStats(e);
@@ -890,14 +891,14 @@ namespace Randomizer.App
 
         private void ResetGridSize()
         {
-            var columns = Math.Max(Tracker.Items.Max(x => x.Column) ?? 0,
+            var columns = Math.Max(_itemService.AllItems().Max(x => x.Column) ?? 0,
                 Tracker.WorldInfo.Dungeons.Max(x => x.Column) ?? 0);
 
             TrackerGrid.ColumnDefinitions.Clear();
             for (var i = 0; i <= columns; i++)
                 TrackerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(GridItemPx + GridItemMargin) });
 
-            var rows = Math.Max(Tracker.Items.Max(x => x.Row) ?? 0,
+            var rows = Math.Max(_itemService.AllItems().Max(x => x.Row) ?? 0,
                 Tracker.WorldInfo.Dungeons.Max(x => x.Row) ?? 0);
 
             TrackerGrid.RowDefinitions.Clear();

@@ -13,6 +13,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -31,7 +32,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="autoTracker">The auto tracker to associate with this module</param>
-        public AutoTrackerModule(Tracker tracker, ILogger<AutoTrackerModule> logger, AutoTracker autoTracker) : base(tracker, logger)
+        public AutoTrackerModule(Tracker tracker, IItemService itemService, ILogger<AutoTrackerModule> logger, AutoTracker autoTracker)
+            : base(tracker, itemService, logger)
         {
             _logger = logger;
             autoTracker.Tracker = tracker;

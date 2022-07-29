@@ -1,0 +1,204 @@
+===============================================================================
+ROM
+===============================================================================
+
+Bank            Mirror banks    Content
+------------    ------------    ---------  
+00:8000-FFFF    20, 40, 60      ALTTP Bank #00
+...                             ALTTP Bank #01-1E
+1F:8000-FFFF    3F, 5F, 7F      ALTTP Bank #1F
+
+40:0000-7FFF    60              -- ALTTP Randomizer Tables --
+41:0000-7FFF    61              -- ALTTP Item code and definitions for SM Items --
+42:0000-7FFF    62              -- ALTTP Randomizer RNG Block --
+
+43:0000-7FFF    63              -- Free space --
+
+44:0000-7FFF    64              -- SM Custom Sprite ---
+...                             -- SM Custom Sprite ---
+4B:0000-7FFF    6B              -- SM Custom Sprite ---
+
+4C:0000-7FFF    6C              -- Free space --
+...                             -- Free space --
+4F:0000-7FFF    6F              -- Free space --
+
+50:0000-7FFF    70              -- ALTTP Additional Graphics --
+...                             -- ALTTP Additional Graphics --
+53:0000-7FFF    73              -- ALTTP Additional Graphics --
+
+54:0000-7FFF    74              -- SM Custom Sprite ---
+...                             -- SM Custom Sprite ---
+5A:0000-7FFF    7A              -- SM Custom Sprite ---
+
+5B:0000-7FFF    7B              -- Free space --
+...                             -- Free space --
+5D:0000-7FFF    7D              -- Free space --
+
+5E:0000-7FFF    --              -- ALTTP Init Code and SRAM --
+5F:0000-7FFF    --              -- Event data --
+
+80:8000-CD8F    C0              SM Bank #80
+80:FC00-FCFF    C0              -- Common IRQ Vector --
+80:FD00-FDFF    C0              -- SM Init Patches --
+80:FE00-FFFF    C0              -- SM HiROM Patches --
+81:8000-EF1F    C1              SM Bank #81
+82:8000-F70F    C2              SM Bank #82
+82:F710-F73F    C2              -- SM Transition Code --
+82:F800-FEFF    C2              -- SM Seed display code --
+82:FF00-FFFF    C2              -- SM Menu Code --
+83:8000-AD6F    C3              SM Bank #83 - Doors
+83:AE00-AE7F    C3              -- New LN Refill Exit (Teleport) Door Data --
+84:8000-EFDF    C4              SM Bank #84 - PLMs
+84:EFE0-FFFF    C4              -- SM PLM's for ALTTP Items --
+85:8000-964F    C5              SM Bank #85
+85:9650-AFFF    C5              -- SM Extended message boxes --
+86:8000-F4AF    C6              SM Bank #86
+87:8000-C96F    C7              SM Bank #87
+87:F000-FFFF    C7              -- ALTTP Randomizer Static Code --
+88:8000-EE3F    C8              SM Bank #88
+88:F000-F700    C8              -- SM Messagebox Lowercase Code and Data --
+89:8000-AEFF    C9              SM Bank #89 - Item Graphics
+89:AF00-FFFF    C9              -- SM ALTTP Item Graphics --
+8A:8000-E97F    CA              SM Bank #8A
+8A:E980-FFFF    CA              -- ALTTP Extended Item Tables and Code --
+8B:8000-F75F    CB              SM Bank #8B
+8C:8000-F3EF    CC              SM Bank #8C
+8D:8000-FFFF    CD              SM Bank #8D
+8E:8000-E5FF    CE              SM Bank #8E
+8E:F000-FFFF    CE              -- SM Keysanity Keycard Code --
+8F:8000-E99F    CF              SM Bank #8F - Room MDB
+8F:EA00-EAFF    CF              -- SM Golden 4 Skip --
+8F:EB00-EBFF    CF              -- SM Wake Zebes --
+8F:EC00-ECFF    CF              -- SM Escape Climb fix --
+8F:ED00-EDFF    CF              -- New LN Refill Room Header --
+8F:F700-F800    CF              -- SM PLM Injection Code --
+8F:F800-FFFF    CF              -- SM PLM Injection Table --
+90:8000-F63F    D0              SM Bank #90
+91:8000-FFFF    D1              SM Bank #91
+92:8000-EDFF    D2              SM Bank #92
+93:8000-F61F    D3              SM Bank #93
+94:8000-FFFF    D4              SM Bank #94
+95:8000-FFFF    D5              SM Bank #95
+96:8000-FFFF    D6              SM Bank #96
+97:8000-FFFF    D7              SM Bank #97
+98:8000-FFFF    D8              SM Bank #98
+99:8000-EE1F    D9              SM Bank #99
+9A:8000-FFFF    DA              SM Bank #9A
+9B:8000-FFFF    DB              SM Bank #9B
+9C:8000-FFFF    DC              SM Bank #9C
+9D:8000-F77F    DD              SM Bank #9D
+9E:8000-F6BF    DE              SM Bank #9E
+9F:8000-F73F    DF              SM Bank #9F
+A0:8000-F7DF    E0              SM Bank #A0
+A1:8000-EBDF    E1              SM Bank #A1
+A1:EC00-FFFF    E1              -- SM Stat tracking code --
+A2:8000-F49F    E2              SM Bank #A2
+A3:8000-F31F    E3              SM Bank #A3
+A4:8000-F6BF    E4              SM Bank #A4
+A5:8000-F95F    E5              SM Bank #A5
+A6:8000-FFFF    E6              SM Bank #A6
+A7:8000-FFFF    E7              SM Bank #A7
+A8:8000-FFFF    E8              SM Bank #A8
+A9:8000-FFFF    E9              SM Bank #A9
+AA:8000-F7DF    EA              SM Bank #AA
+AA:F800-FCFF    EA              -- Zelda Transition Code --
+AA:FD00-FFFF    EA              -- SM Transition Code --
+AB:8000-F7FF    EB              SM Bank #AB
+AC:8000-EDFF    EC              SM Bank #AC
+AD:8000-F44F    ED              SM Bank #AD
+AE:8000-FFFF    EE              SM Bank #AE
+AF:8000-EBFF    EF              SM Bank #AF
+B0:8000-EDFF    F0              SM Bank #B0
+B1:8000-FFFF    F1              SM Bank #B1
+B2:8000-FFFF    F2              SM Bank #B2
+B3:8000-ED7F    F3              SM Bank #B3
+B4:8000-F4BF    F4              SM Bank #B4
+B4:F500-FFFF    F4              -- SM Configuration flags --
+B5:8000-EFFF    F5              SM Bank #B5
+B6:8000-F1FF    F6              SM Bank #B6
+B7:8000-FCFF    F7              SM Bank #B7
+B7:FD00-FFFF    F7              -- SM/ALTTP End Game Patches --
+B8:8000-FFFF    F8              -- ALTTP Randomizer Code --
+B9:8000-FFFF    F9              SM Bank #B9
+BA:8000-FFFF    FA              SM Bank #BA
+BB:8000-FFFF    FB              SM Bank #BB
+BC:8000-FFFF    FC              SM Bank #BC
+BD:8000-FFFF    FD              SM Bank #BD
+BE:8000-FFFF    FE              SM Bank #BE
+BF:8000-FFFF    FF              SM Bank #BF
+C0:0000-7FFF    --              SM Bank #C0
+C1:0000-7FFF    --              SM Bank #C1
+C2:0000-7FFF    --              SM Bank #C2
+C3:0000-7FFF    --              SM Bank #C3
+C4:0000-7FFF    --              SM Bank #C4
+C5:0000-7FFF    --              SM Bank #C5
+C6:0000-7FFF    --              SM Bank #C6
+C7:0000-7FFF    --              SM Bank #C7
+C8:0000-7FFF    --              SM Bank #C8
+C9:0000-7FFF    --              SM Bank #C9
+CA:0000-7FFF    --              SM Bank #CA
+CB:0000-7FFF    --              SM Bank #CB
+CC:0000-7FFF    --              SM Bank #CC
+CD:0000-7FFF    --              SM Bank #CD
+CE:0000-7FFF    --              SM Bank #CE
+CF:0000-7FFF    --              SM Bank #CF
+D0:0000-7FFF    --              SM Bank #D0
+D1:0000-7FFF    --              SM Bank #D1
+D2:0000-7FFF    --              SM Bank #D2
+D3:0000-7FFF    --              SM Bank #D3
+D4:0000-7FFF    --              SM Bank #D4
+D5:0000-7FFF    --              SM Bank #D5
+D6:0000-7FFF    --              SM Bank #D6
+D7:0000-7FFF    --              SM Bank #D7
+D8:0000-7FFF    --              SM Bank #D8
+D9:0000-7FFF    --              SM Bank #D9
+DA:0000-7FFF    --              SM Bank #DA
+DB:0000-7FFF    --              SM Bank #DB
+DC:0000-7FFF    --              SM Bank #DC
+DD:0000-7FFF    --              SM Bank #DD
+DE:0000-7FFF    --              SM Bank #DE
+DF:0000-7FFF    --              SM Bank #DF
+
+E0:0000-7FFF    --              -- ALTTP State data --
+...                             -- ALTTP State data --
+E5:0000-7FFF    --              -- ALTTP State data --
+
+E6:0000-7FFF    --              -- SM State data --
+...                             -- SM State data --
+F1:0000-7FFF    --              -- SM State data --
+
+F2:0000-3FFF    --              -- ALTTP Teleport Code and Tables --
+F2:4000-7FFF    --              -- SM Teleport Code and Tables --
+
+F3:0000-7FFF    --              -- SM Item table for ALTTP Items --
+
+F4:0000-6FFF    --              -- Common routines (VRAM DMA etc) --
+F4:7000-7FFF    --              -- Common configuration flags --
+
+F5:0000-7FFF    --              -- SPC Player Routines and SPC header --
+F6:0000-7FFF    --              -- SPC Data (first 32kb) --
+F7:0000-7FFF    --              -- SPC Data (last 32kb) --
+
+F8:0000-0FFF    --              -- Multiworld common code --
+F8:1000-2FFF    --              -- Multiworld ALTTP code --
+F8:3000-4EFF    --              -- Multiworld SM code --
+F8:4F00-7FFF    --              -- Multiworld data tables --
+
+F9:0000-7FFF    --              -- Free space --
+...                             -- Free space --
+FC:0000-7FFF    --              -- Free space --
+
+FD:0000-7FFF    --              -- Common credits tilemap --
+FE:0000-7FFF    --              -- Common credits graphics --
+FF:0000-7FFF    --              -- Common credits code and data --
+
+
+===============================================================================
+SRAM
+===============================================================================
+
+Bank            Mirror banks    Content
+------------    ------------    ---------  
+a0:6000-7FFF    --              -- ALTTP Main SRAM --
+a1:6000-732F    --              -- SM Main SRAM --
+a1:7330-7FD0    --              -- Randomizer SRAM --

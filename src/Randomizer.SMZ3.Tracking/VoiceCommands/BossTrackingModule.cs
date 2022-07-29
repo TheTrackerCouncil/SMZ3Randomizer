@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -17,8 +18,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public BossTrackingModule(Tracker tracker, ILogger<BossTrackingModule> logger)
-            : base(tracker, logger)
+        public BossTrackingModule(Tracker tracker, IItemService itemService, ILogger<BossTrackingModule> logger)
+            : base(tracker, itemService, logger)
         {
             AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (tracker, result) =>
             {
@@ -66,7 +67,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (tracker, result) =>
             {
-                var contentItemData = Tracker.Items.Where(x => "Content".Equals(x.Name.First(), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                var contentItemData = itemService.FindOrDefault("Content");
 
                 var dungeon = GetBossDungeonFromResult(tracker, result);
                 if (dungeon != null)

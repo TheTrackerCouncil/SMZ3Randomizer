@@ -32,17 +32,17 @@ namespace Randomizer.App
     {
         private readonly Task _loadSpritesTask;
         private readonly IServiceProvider _serviceProvider;
-        private readonly Smz3Randomizer _randomizer;
         private readonly RomGenerator _romGenerator;
         private readonly LocationConfig _locationConfig;
         private RandomizerOptions _options;
 
-        public GenerateRomWindow(IServiceProvider serviceProvider)
+        public GenerateRomWindow(IServiceProvider serviceProvider,
+            RomGenerator romGenerator,
+            TrackerConfigProvider configProvider)
         {
             _serviceProvider = serviceProvider;
-            _randomizer = serviceProvider.GetService<Smz3Randomizer>();
-            _romGenerator = serviceProvider.GetService<RomGenerator>();
-            _locationConfig = serviceProvider.GetService<TrackerConfigProvider>().GetLocationConfig();
+            _romGenerator = romGenerator;
+            _locationConfig = configProvider.GetLocationConfig();
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -151,7 +151,7 @@ namespace Randomizer.App
             var row = 0;
             foreach (var location in world.Locations.OrderBy(x => x.Room == null ? "" : x.Room.Name).ThenBy(x => x.Name))
             {
-                var locationDetails = _locationConfig.Locations.Single(x => x.Id == location.Id);
+                var locationDetails = _locationConfig.Locations.Single(x => x.Id == location.Id); //TODO: Refactor into IWorldService
                 var name = locationDetails.ToString();
                 var toolTip = "";
                 if (locationDetails.Name.Count > 1)

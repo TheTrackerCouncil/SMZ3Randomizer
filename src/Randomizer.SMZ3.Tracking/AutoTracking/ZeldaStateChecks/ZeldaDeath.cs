@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using Randomizer.SMZ3.Tracking.Services;
+
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {
     /// <summary>
@@ -9,6 +11,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     /// </summary>
     public class ZeldaDeath : IZeldaStateCheck
     {
+        public ZeldaDeath(IItemService itemService)
+        {
+            Items = itemService;
+        }
+
+        public IItemService Items { get; }
+
         /// <summary>
         /// Executes the check for the current state
         /// </summary>
@@ -36,8 +45,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                     }
                 }
 
-                tracker.TrackItem(tracker.Items.First(x => x.ToString().Equals("Death", StringComparison.OrdinalIgnoreCase)));
-                return true;
+                var death = Items.FindOrDefault("Death");
+                if (death is not null)
+                {
+                    tracker.TrackItem(death);
+                    return true;
+                }
             }
             return false;
         }

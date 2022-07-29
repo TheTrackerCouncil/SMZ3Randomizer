@@ -14,6 +14,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -41,7 +42,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public CheatsModule(Tracker tracker, ILogger<AutoTrackerModule> logger) : base(tracker, logger)
+        public CheatsModule(Tracker tracker, IItemService itemService, ILogger<AutoTrackerModule> logger)
+            : base(tracker, itemService, logger)
         {
             if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
 

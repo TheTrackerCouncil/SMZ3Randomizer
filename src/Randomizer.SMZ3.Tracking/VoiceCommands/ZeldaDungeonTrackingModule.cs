@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -24,7 +25,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to log information.</param>
-        public ZeldaDungeonTrackingModule(Tracker tracker, ILogger<ZeldaDungeonTrackingModule> logger) : base(tracker, logger)
+        public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, ILogger<ZeldaDungeonTrackingModule> logger)
+            : base(tracker, itemService, logger)
         {
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>
             {
