@@ -92,6 +92,14 @@
         /// </summary>
         public int MaxPowerBombs => _data.ReadUInt8(0x7E09D0 - 0x7E0750);
 
+        /// <summary>
+        /// Returns if Samus is in a certain position
+        /// </summary>
+        /// <param name="minX"></param>
+        /// <param name="maxX"></param>
+        /// <param name="minY"></param>
+        /// <param name="maxY"></param>
+        /// <returns></returns>
         public bool IsSamusInArea(int minX, int maxX, int minY, int maxY)
         {
             return SamusX >= minX && SamusX <= maxX && SamusY >= minY && SamusY <= maxY;

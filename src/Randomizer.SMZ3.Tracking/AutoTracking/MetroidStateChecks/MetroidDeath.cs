@@ -11,6 +11,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
     /// </summary>
     public class MetroidDeath : IMetroidStateCheck
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="itemService"></param>
         public MetroidDeath(IItemService itemService)
         {
             Items = itemService;

@@ -133,7 +133,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Retrieves the current history log
         /// </summary>
         /// <returns>The collection of events</returns>
-        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _events;
+        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _events ?? new List<TrackerHistoryEvent>();
 
         /// <summary>
         /// Creates the progression log based off of the history

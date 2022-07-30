@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="loggerFactory"></param>
+        /// <param name="itemService"></param>
         /// <param name="zeldaStateChecks"></param>
         /// <param name="metroidStateChecks"></param>
         public AutoTracker(ILogger<AutoTracker> logger,
@@ -282,6 +283,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
         }
 
+        /// <summary>
+        /// Queues up an action to be sent to the emulator to write to memory
+        /// </summary>
+        /// <param name="action">The action to be written</param>
         public void WriteToMemory(EmulatorAction action)
         {
             _sendActions.Enqueue(action);
