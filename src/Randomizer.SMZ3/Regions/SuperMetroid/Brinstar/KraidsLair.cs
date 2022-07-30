@@ -49,7 +49,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public Location MissileBeforeKraid { get; }
 
-
         public override bool CanEnter(Progression items)
         {
             return (Logic.CanDestroyBombWalls(items) || items.SpeedBooster || Logic.CanAccessNorfairUpperPortal(items))

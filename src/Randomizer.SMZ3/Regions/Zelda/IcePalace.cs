@@ -101,7 +101,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public Location KholdstareReward { get; }
 
-
         public override bool CanEnter(Progression items)
         {
             return items.MoonPearl && items.Flippers && Logic.CanLiftHeavy(items) && Logic.CanMeltFreezors(items);

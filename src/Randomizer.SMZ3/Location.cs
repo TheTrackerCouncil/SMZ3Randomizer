@@ -98,11 +98,6 @@ namespace Randomizer.SMZ3
         public Item Item { get; set; }
 
         /// <summary>
-        /// Gets or sets the item that is the region reward
-        /// </summary>
-        public Item RegionRewardItem { get; set; }
-
-        /// <summary>
         /// Gets the region the location is in.
         /// </summary>
         public Region Region { get; }

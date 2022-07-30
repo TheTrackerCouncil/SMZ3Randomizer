@@ -177,9 +177,7 @@ namespace Randomizer.SMZ3.FileData
             var crystalsRed = new[] { 6, 7 }.Shuffle(_rnd);
             var crystalRewards = crystalsBlue.Concat(crystalsRed);
 
-            var pendantsGreen = new[] { 1 };
-            var pendantsBlueRed = new[] { 2, 3 };
-            var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
+            var pendantRewards = new[] { 1, 2, 3 };
 
             var regions = _myWorld.Regions.OfType<IHasReward>();
             var crystalRegions = regions.Where(x => x.Reward is ItemType.CrystalRed or ItemType.CrystalBlue).OrderBy(x => (int)x.Reward);
