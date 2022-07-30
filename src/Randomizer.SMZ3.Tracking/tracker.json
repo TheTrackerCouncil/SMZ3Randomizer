@@ -1,7 +1,7 @@
 ﻿{
   "Items": [
     {
-      "Name": [ "Nothing" ],
+      "Name": [ "Nothing", "Unknown" ],
       "Article": "",
       "InternalItemType": 0
     },
@@ -1160,7 +1160,7 @@
       "Row": 1
     },
     {
-      "Name": [ "Speed Booster" , "Super speedy boots", "Light speed" ],
+      "Name": [ "Speed Booster", "Super speedy boots", "Light speed" ],
       "InternalItemType": 186,
       "Column": 9,
       "Row": 2,
@@ -1482,6 +1482,71 @@
       "Hints": [
         "It opens doors."
       ]
+    },
+    {
+      "Name": "Agahnim",
+      "InternalItemType": 240
+    },
+    {
+      "Name": [
+        "Green Pendant",
+        [ "Slightly better pendant", 0.1 ],
+        [ "Less useless pendant", 0.1 ],
+        [ "That pendant that you turn into Sahasrahla as a last resort to hope you get something good", 0.05 ]
+      ],
+      "InternalItemType": 241
+    },
+    {
+      "Name": [
+        "Red Pendant",
+        "Pendant of Wisdom",
+        [ "Even worse pendant", 0.1 ],
+        [ "More useless pendant", 0.1 ],
+        [ "Time wasting pendant", 0.1 ],
+        [ "Pendant of Wisdom. I think. I get confused as they changed the colors later in this series", 0.05 ],
+        [ "Pendant of Power. Wait. I meant Wisdom. I get confused as they changed the colors later in this series", 0.05 ]
+      ],
+      "InternalItemType": 242
+    },
+    {
+      "Name": [
+        "Blue Pendant",
+        "Pendant of Power",
+        "Even worse pendant",
+        [ "Pendant of Power. I think. I get confused as they changed the colors later in this series", 0.05 ],
+        [ "Pendant of Wisdom. Wait. I meant Power. I get confused as they changed the colors later in this series", 0.05 ]
+      ],
+      "InternalItemType": 243
+    },
+    {
+      "Name": [ "Crystal", "Blue Crystal" ],
+      "InternalItemType": 244
+    },
+    {
+      "Name": [
+        "Red Crystal",
+        [ "Blood Red Crystal", 0.1 ],
+        [ "Bomb Purchasing Crystal", 0.1 ],
+        [ "Hyper realistic blood Red Crystal", 0.05 ],
+        [ "One of those crystals you hope you get late in the game so you don't have to check pyramid fairy", 0.05 ]
+      ],
+      "InternalItemType": 245
+    },
+    {
+      "Name": "Kraid",
+      "InternalItemType": 246
+    },
+    {
+      "Name": "Phantoon",
+      "InternalItemType": 247
+    },
+    {
+      "Name": "Draygon",
+      "InternalItemType": 248
+    },
+    {
+      "Name": "Ridley",
+      "InternalItemType": 249
     }
   ],
   "Pegs": [

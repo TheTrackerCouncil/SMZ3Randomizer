@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Master Sword Pedestal",
                 alsoKnownAs: new[] { "Ped" },
                 vanillaItem: ItemType.ProgressiveSword,
-                access: items => World.CanAquireAll(items, ItemType.PendantGreen, ItemType.PendantNonGreen),
+                access: items => World.CanAquireAll(items, ItemType.PendantGreen, ItemType.PendantRed, ItemType.PendantBlue),
                 memoryAddress: 0x80,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc);

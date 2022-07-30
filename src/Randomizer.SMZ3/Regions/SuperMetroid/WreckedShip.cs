@@ -73,7 +73,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
 
         public override string Area => "Wrecked Ship";
 
-        public ItemType RewardType { get; set; } = ItemType.Phantoon;
+        public ItemType Reward { get; set; } = ItemType.Phantoon;
 
         public Item RewardItem { get; set; }
 

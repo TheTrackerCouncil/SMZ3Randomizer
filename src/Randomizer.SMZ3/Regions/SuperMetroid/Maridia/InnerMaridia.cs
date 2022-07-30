@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public override string Area => "Maridia";
 
-        public ItemType RewardType { get; set; } = ItemType.Draygon;
+        public ItemType Reward { get; set; } = ItemType.Draygon;
 
         public Item RewardItem { get; set; }
 

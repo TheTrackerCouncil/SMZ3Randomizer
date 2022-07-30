@@ -6,13 +6,25 @@ namespace Randomizer.Shared
     public enum ItemType : byte
     {
         [Description("Nothing")]
-        [ItemCategory(ItemCategory.SelectableReward)]
+        [ItemCategory(ItemCategory.NonRandomized, ItemCategory.SelectableReward)]
         Nothing,
+
+        [ItemCategory(ItemCategory.NonRandomized)]
         Nothing1 = 0x01,
+
+        [ItemCategory(ItemCategory.NonRandomized)]
         Nothing2 = 0x02,
+
+        [ItemCategory(ItemCategory.NonRandomized)]
         Nothing3 = 0x03,
+
+        [ItemCategory(ItemCategory.NonRandomized)]
         Nothing4 = 0x04,
+
+        [ItemCategory(ItemCategory.NonRandomized)]
         Nothing5 = 0x05,
+
+        [ItemCategory(ItemCategory.NonRandomized)]
         Nothing6 = 0x06,
 
         [Description("Hyrule Castle Map")]
@@ -596,39 +608,43 @@ namespace Randomizer.Shared
         BeeContent = 0x0E,
 
         [Description("Agahnim")]
-        [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
+        [ItemCategory(ItemCategory.Reward)]
         Agahnim = 0xF0,
 
         [Description("Green Pendant")]
         [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
         PendantGreen = 0xF1,
 
-        [Description("Non green pendant")]
+        [Description("Red pendant")]
         [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
-        PendantNonGreen = 0xF2,
+        PendantRed = 0xF2,
+
+        [Description("Blue pendant")]
+        [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
+        PendantBlue = 0xF3,
 
         [Description("Crystal")]
         [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
-        CrystalBlue = 0xF3,
+        CrystalBlue = 0xF4,
 
         [Description("Red Crystal")]
         [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
-        CrystalRed = 0xF4,
+        CrystalRed = 0xF5,
 
         [Description("Kraid")]
         [ItemCategory(ItemCategory.Reward)]
-        Kraid = 0xF5,
+        Kraid = 0xF6,
 
         [Description("Phantoon")]
         [ItemCategory(ItemCategory.Reward)]
-        Phantoon = 0xF6,
+        Phantoon = 0xF7,
 
         [Description("Draygon")]
         [ItemCategory(ItemCategory.Reward)]
-        Draygon = 0xF7,
+        Draygon = 0xF8,
 
         [Description("Ridley")]
         [ItemCategory(ItemCategory.Reward)]
-        Ridley = 0xF8,
+        Ridley = 0xF9,
     }
 }

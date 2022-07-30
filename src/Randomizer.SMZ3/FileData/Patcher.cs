@@ -173,17 +173,17 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteRewards()
         {
-            var crystalsBlue = new[] { 1, 2, 3, 4, 7 }.Shuffle(_rnd);
-            var crystalsRed = new[] { 5, 6 }.Shuffle(_rnd);
+            var crystalsBlue = new[] { 1, 2, 3, 4, 5 }.Shuffle(_rnd);
+            var crystalsRed = new[] { 6, 7 }.Shuffle(_rnd);
             var crystalRewards = crystalsBlue.Concat(crystalsRed);
 
             var pendantsGreen = new[] { 1 };
-            var pendantsBlueRed = new[] { 2, 3 }.Shuffle(_rnd);
+            var pendantsBlueRed = new[] { 2, 3 };
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var crystalRegions = regions.Where(x => x.RewardType is ItemType.CrystalRed or ItemType.CrystalBlue);
-            var pendantRegions = regions.Where(x => x.RewardType is ItemType.PendantGreen or ItemType.PendantNonGreen);
+            var crystalRegions = regions.Where(x => x.Reward is ItemType.CrystalRed or ItemType.CrystalBlue).OrderBy(x => (int)x.Reward);
+            var pendantRegions = regions.Where(x => x.Reward is ItemType.PendantGreen or ItemType.PendantBlue or ItemType.PendantRed).OrderBy(x => (int)x.Reward);
 
             _patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
             _patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
@@ -191,10 +191,10 @@ namespace Randomizer.SMZ3.FileData
 
         private IEnumerable<(int, byte[])> RewardPatches(IEnumerable<IHasReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues)
         {
-            var addresses = regions.Select(RewardAddresses);
-            var values = rewards.Select(rewardValues);
-            var associations = addresses.Zip(values, (a, v) => (a, v));
-            return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (Snes(i), new byte[] { b })));
+            var regionAddressLocations = regions.Select(RewardAddresses);
+            var rewardAddressValues = rewards.Select(rewardValues);
+            var associations = regionAddressLocations.Zip(rewardAddressValues, (address, value) => (address, value));
+            return associations.SelectMany(x => x.address.Zip(x.value, (index, byteVal) => (Snes(index), new byte[] { byteVal })));
         }
 
         private int[] RewardAddresses(IHasReward region)
@@ -219,13 +219,16 @@ namespace Randomizer.SMZ3.FileData
         {
             return crystal switch
             {
+                // Blue Crystals
                 1 => new byte[] { 0x02, 0x34, 0x64, 0x40, 0x7F, 0x06 },
                 2 => new byte[] { 0x10, 0x34, 0x64, 0x40, 0x79, 0x06 },
                 3 => new byte[] { 0x40, 0x34, 0x64, 0x40, 0x6C, 0x06 },
                 4 => new byte[] { 0x20, 0x34, 0x64, 0x40, 0x6D, 0x06 },
-                5 => new byte[] { 0x04, 0x32, 0x64, 0x40, 0x6E, 0x06 },
-                6 => new byte[] { 0x01, 0x32, 0x64, 0x40, 0x6F, 0x06 },
-                7 => new byte[] { 0x08, 0x34, 0x64, 0x40, 0x7C, 0x06 },
+                5 => new byte[] { 0x08, 0x34, 0x64, 0x40, 0x7C, 0x06 },
+                // Red Crystals
+                6 => new byte[] { 0x04, 0x32, 0x64, 0x40, 0x6E, 0x06 },
+                7 => new byte[] { 0x01, 0x32, 0x64, 0x40, 0x6F, 0x06 },
+                
                 var x => throw new InvalidOperationException($"Tried using {x} as a crystal number")
             };
         }
@@ -438,10 +441,11 @@ namespace Randomizer.SMZ3.FileData
             }
             else if (region is IHasReward dungeonRegion)
             {
-                ALttPSoundtrack? soundtrack = dungeonRegion.RewardType switch
+                ALttPSoundtrack? soundtrack = dungeonRegion.Reward switch
                 {
                     ItemType.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
-                    ItemType.PendantNonGreen => ALttPSoundtrack.LightWorldDungeon,
+                    ItemType.PendantRed => ALttPSoundtrack.LightWorldDungeon,
+                    ItemType.PendantBlue => ALttPSoundtrack.LightWorldDungeon,
                     ItemType.CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
                     ItemType.CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
                     _ => null
@@ -661,8 +665,8 @@ namespace Randomizer.SMZ3.FileData
         private void WriteTexts(Config config)
         {
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var greenPendantDungeon = regions.Where(x => x.RewardType == ItemType.PendantGreen).Cast<Region>().First();
-            var redCrystalDungeons = regions.Where(x => x.RewardType == ItemType.CrystalRed).Cast<Region>();
+            var greenPendantDungeon = regions.Where(x => x.Reward == ItemType.PendantGreen).Cast<Region>().First();
+            var redCrystalDungeons = regions.Where(x => x.Reward == ItemType.CrystalRed).Cast<Region>();
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));

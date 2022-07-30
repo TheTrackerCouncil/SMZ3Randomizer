@@ -146,7 +146,7 @@ namespace Randomizer.SMZ3
 
         public bool CanAquire(Progression items, ItemType reward)
         {
-            var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.RewardType);
+            var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.Reward);
             if (dungeonWithReward == null)
                 return false;
             return dungeonWithReward.CanComplete(items);
@@ -154,7 +154,7 @@ namespace Randomizer.SMZ3
 
         public bool CanAquireAll(Progression items, params ItemType[] rewards)
         {
-            return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.RewardType)).All(x => x.CanComplete(items));
+            return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
         }
 
         public void Setup(Random rnd)
@@ -179,12 +179,12 @@ namespace Randomizer.SMZ3
         private void SetRewards(Random rnd)
         {
             var rewards = new[] {
-                ItemType.PendantGreen, ItemType.PendantNonGreen, ItemType.PendantNonGreen, ItemType.CrystalRed, ItemType.CrystalRed,
+                ItemType.PendantGreen, ItemType.PendantBlue, ItemType.PendantRed, ItemType.CrystalRed, ItemType.CrystalRed,
                 ItemType.CrystalBlue, ItemType.CrystalBlue, ItemType.CrystalBlue, ItemType.CrystalBlue, ItemType.CrystalBlue }.Shuffle(rnd);
-            foreach (var region in Regions.OfType<IHasReward>().Where(x => x.RewardType == ItemType.Nothing))
+            foreach (var region in Regions.OfType<IHasReward>().Where(x => x.Reward == ItemType.Nothing))
             {
-                region.RewardType = rewards.First();
-                rewards.Remove(region.RewardType);
+                region.Reward = rewards.First();
+                rewards.Remove(region.Reward);
             }
         }
     }

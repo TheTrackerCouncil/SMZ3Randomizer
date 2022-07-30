@@ -61,10 +61,16 @@ namespace Randomizer.Shared
         /// </summary>
         /// <param name="itemType">The item type to check</param>
         /// <returns>True if it's a progression item type, false otherwise</returns>
-        public static bool IsProgression(this ItemType itemType)
+        public static bool IsProgression(this ItemType itemType, bool isKeySanity)
         {
-            return !(itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized, ItemCategory.Nice  }) || (int)itemType <= (int)ItemType.Nothing6);
+            if (isKeySanity)
+            {
+                return !itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map,
+                    ItemCategory.Compass, ItemCategory.NonRandomized, ItemCategory.Nice, ItemCategory.Reward });
+            }
+            return !itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map,
+                ItemCategory.Compass, ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard,
+                ItemCategory.NonRandomized, ItemCategory.Nice, ItemCategory.Reward });
         }
     }
 }

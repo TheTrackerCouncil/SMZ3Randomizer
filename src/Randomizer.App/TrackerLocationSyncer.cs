@@ -211,22 +211,22 @@ namespace Randomizer.App
             // Don't show GT in logic unless all crystals are gathered
             else if (location.Region is GanonsTower)
             {
-                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.RewardType is ItemType.CrystalBlue or ItemType.CrystalRed) >= 7;
+                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is ItemType.CrystalBlue or ItemType.CrystalRed) >= 7;
             }
             // Make sure all 3 pendants have been grabbed for Master Sword Pedestal 
             else if (location == Tracker.World.LightWorldNorthWest.MasterSwordPedestal)
             {
-                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.RewardType is ItemType.PendantGreen or ItemType.PendantNonGreen) >= 3;
+                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is ItemType.PendantGreen or ItemType.PendantBlue or ItemType.PendantRed) >= 3;
             }
             // Make sure the red crystals are retrieved for pyramid fairy
             else if (location.Room == Tracker.World.DarkWorldNorthEast.PyramidFairy)
             {
-                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.RewardType is ItemType.CrystalRed) >= 2;
+                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is ItemType.CrystalRed) >= 2;
             }
             // Make sure that the green pendant was grabbed for Sahasrahla
             else if (location == Tracker.World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla)
             {
-                return Tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.RewardType is ItemType.PendantGreen);
+                return Tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is ItemType.PendantGreen);
             }
             else return true;
         }

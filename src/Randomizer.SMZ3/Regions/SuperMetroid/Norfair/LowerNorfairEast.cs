@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public override string Area => "Lower Norfair";
 
-        public ItemType RewardType { get; set; } = ItemType.Ridley;
+        public ItemType Reward { get; set; } = ItemType.Ridley;
 
         public Item RewardItem { get; set; }
 

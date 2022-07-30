@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             "Warehouse"
         };
 
-        public ItemType RewardType { get; set; } = ItemType.Kraid;
+        public ItemType Reward { get; set; } = ItemType.Kraid;
 
         public Item RewardItem { get; set; } = null;
 

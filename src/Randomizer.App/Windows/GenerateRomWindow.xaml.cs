@@ -79,7 +79,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (!itemType.IsProgression())
+                if (!itemType.IsProgression(false))
                 {
                     continue;
                 }
@@ -224,7 +224,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (!itemType.IsProgression())
+                if (!itemType.IsProgression(false))
                 {
                     continue;
                 }

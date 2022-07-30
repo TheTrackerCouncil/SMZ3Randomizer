@@ -341,10 +341,11 @@ namespace Randomizer.SMZ3
             var itemPool = new List<Item>
             {
                 new Item(ItemType.Agahnim),
-                new Item(ItemType.PendantGreen)
+                new Item(ItemType.PendantGreen),
+                new Item(ItemType.PendantBlue),
+                new Item(ItemType.PendantRed)
             };
 
-            itemPool.AddRange(Copies(2, () => new Item(ItemType.PendantNonGreen)));
             itemPool.AddRange(Copies(5, () => new Item(ItemType.CrystalBlue)));
             itemPool.AddRange(Copies(2, () => new Item(ItemType.CrystalRed)));
 

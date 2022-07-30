@@ -604,25 +604,25 @@ namespace Randomizer.SMZ3.Tracking
         /// possible rewards.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonReward(DungeonInfo dungeon, ItemType? reward = null, float? confidence = null)
+        public void SetDungeonReward(DungeonInfo dungeon, ItemData? reward = null, float? confidence = null)
         {
-            var originalReward = dungeon.RewardType;
+            var originalReward = dungeon.Reward;
             if (reward == null)
             {
                 var possibleRewards = Enum.GetValues<ItemType>().Where(x => x.IsInCategory(ItemCategory.SelectableReward)).ToList();
-                var index = (possibleRewards.IndexOf(dungeon.RewardType) + 1) % possibleRewards.Count;
-                dungeon.RewardType = possibleRewards[index];
+                var index = (possibleRewards.IndexOf(dungeon.Reward) + 1) % possibleRewards.Count;
+                dungeon.Reward = possibleRewards[index];
                 // Cycling through rewards is done via UI, so speaking the
                 // reward out loud for multiple clicks is kind of annoying
             }
             else
             {
-                dungeon.RewardType = reward.Value;
-                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, ItemService.GetName(dungeon.RewardType)));
+                dungeon.Reward = reward.InternalItemType;
+                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, dungeon.Reward == ItemType.Nothing ? "Unknown" : reward.Name));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
-            AddUndo(() => dungeon.RewardType = originalReward);
+            AddUndo(() => dungeon.Reward = originalReward);
         }
 
         /// <summary>
@@ -630,18 +630,18 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="reward">The reward to set.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetUnmarkedDungeonReward(ItemType reward, float? confidence = null)
+        public void SetUnmarkedDungeonReward(ItemData reward, float? confidence = null)
         {
             var unmarkedDungeons = WorldInfo.Dungeons
-                .Where(x => x.HasReward && x.RewardType == ItemType.Nothing)
+                .Where(x => x.HasReward && x.Reward == ItemType.Nothing)
                 .ToImmutableList();
 
             if (unmarkedDungeons.Count > 0)
             {
-                unmarkedDungeons.ForEach(dungeon => dungeon.RewardType = reward);
-                Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
+                unmarkedDungeons.ForEach(dungeon => dungeon.Reward = reward.InternalItemType);
+                Say(Responses.RemainingDungeonsMarked.Format(reward.Name));
 
-                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.RewardType = ItemType.Nothing));
+                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.Reward = ItemType.Nothing));
                 OnDungeonUpdated(new(confidence));
             }
             else
@@ -1338,7 +1338,7 @@ namespace Randomizer.SMZ3.Tracking
             
             var addedEvent = History.AddEvent(
                 HistoryEventType.TrackedItem,
-                item.InternalItemType.IsProgression(),
+                item.InternalItemType.IsProgression(World.Config.Keysanity),
                 item.NameWithArticle,
                 location
             );
@@ -2157,7 +2157,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var pedItem = ItemService.GetOrDefault(World.LightWorldNorthWest.MasterSwordPedestal);
-            if (pedItem != null && (reward == ItemType.PendantGreen || reward == ItemType.PendantNonGreen))
+            if (pedItem != null && (reward is ItemType.PendantGreen or ItemType.PendantBlue or ItemType.PendantRed))
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, pedItem);
                 if (IsWorth(pedItem))

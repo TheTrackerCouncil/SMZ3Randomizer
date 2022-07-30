@@ -73,7 +73,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Thieves' Town";
 
-        public ItemType RewardType { get; set; } = ItemType.Nothing;
+        public ItemType Reward { get; set; } = ItemType.Nothing;
 
         public Item RewardItem { get; set; }
 

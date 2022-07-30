@@ -79,12 +79,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 if (World.Config.Keysanity && !Items.IsTracked(map))
                     continue;
 
-                var reward = ((IHasReward)region).RewardType;
+                var reward = ((IHasReward)region).Reward;
                 var dungeonInfo = _tracker.WorldInfo.Dungeon(region);
-                if (dungeonInfo.RewardType == ItemType.Nothing)
+                if (dungeonInfo.Reward == ItemType.Nothing)
                 {
                     rewards.Add(reward);
-                    _tracker.SetDungeonReward(dungeonInfo, reward);
+                    _tracker.SetDungeonReward(dungeonInfo, Items.GetOrDefault(reward));
                 }
             }
 
@@ -122,12 +122,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 if (World.Config.Keysanity && !Items.IsTracked(map))
                     continue;
 
-                var reward = ((IHasReward)region).RewardType;
+                var reward = ((IHasReward)region).Reward;
                 var dungeonInfo = _tracker.WorldInfo.Dungeon(region);
-                if (dungeonInfo.RewardType == ItemType.Nothing)
+                if (dungeonInfo.Reward == ItemType.Nothing)
                 {
                     rewards.Add(reward);
-                    _tracker.SetDungeonReward(dungeonInfo, reward);
+                    _tracker.SetDungeonReward(dungeonInfo, Items.GetOrDefault(reward));
                 }
             }
 

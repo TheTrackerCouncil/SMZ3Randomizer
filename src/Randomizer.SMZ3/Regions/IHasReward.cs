@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Regions
         /// Gets or sets the reward for completing the region, e.g. pendant or
         /// crystal.
         /// </summary>
-        ItemType RewardType { get; set; }
+        ItemType Reward { get; set; }
 
         Item RewardItem { get; set; }
 

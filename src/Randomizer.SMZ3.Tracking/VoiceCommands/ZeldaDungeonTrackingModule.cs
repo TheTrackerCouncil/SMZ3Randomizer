@@ -33,13 +33,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
-                var reward = (ItemType)result.Semantics[RewardKey].Value;
-                tracker.SetDungeonReward(dungeon, reward, result.Confidence);
+                var item = GetItemFromResult(tracker, result, out var itemName);
+                tracker.SetDungeonReward(dungeon, item, result.Confidence);
             });
 
             AddCommand("Mark remaining dungeons", GetMarkRemainingDungeonRewardsRule(), (tracker, result) =>
             {
-                tracker.SetUnmarkedDungeonReward(ItemType.CrystalBlue, result.Confidence);
+                var item = GetItemFromResult(tracker, result, out var itemName);
+                tracker.SetUnmarkedDungeonReward(item, result.Confidence);
             });
 
             AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (tracker, result) =>
@@ -69,34 +70,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetMarkDungeonRewardRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
-            var rewardNames = new Choices();
-            foreach (var reward in Enum.GetValues<ItemType>().Where(x => x.IsInCategory(ItemCategory.SelectableReward)))
-            {
-                var itemData = ItemService.GetOrDefault(reward);
-                if (itemData != null)
-                {
-                    foreach (var name in itemData.Name)
-                        rewardNames.Add(new SemanticResultValue(name, (int)reward));
-                }
-                
-            }
+            var itemNames = GetItemNames(x => x.InternalItemType.IsInCategory(ItemCategory.SelectableReward));
 
             return new GrammarBuilder()
                 .Append("Hey tracker,")
                 .OneOf("mark", "set")
                 .Append(DungeonKey, dungeonNames)
                 .Append("as")
-                .Append(RewardKey, rewardNames);
+                .Append(ItemNameKey, itemNames);
         }
 
         private GrammarBuilder GetMarkRemainingDungeonRewardsRule()
         {
+            var itemNames = GetItemNames(x => x.InternalItemType == ItemType.CrystalBlue);
             return new GrammarBuilder()
                 .Append("Hey tracker,")
                 .OneOf("mark", "set")
                 .OneOf("remaining dungeons", "other dungeons", "unmarked dungeons")
                 .Append("as")
-                .OneOf("crystal", "blue crystal");
+                .Append(ItemNameKey, itemNames);
         }
 
         private GrammarBuilder GetClearDungeonRule()
