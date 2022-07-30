@@ -9,7 +9,7 @@ namespace Randomizer.Shared.Models {
         public long Id { get; set; }
         public TrackerState TrackerState { get; set; }
         public string TypeName { get; set; }
-        public Reward? Reward { get; set; }
+        public ItemType? Reward { get; set; }
         public ItemType? Medallion { get; set; }
     }
 

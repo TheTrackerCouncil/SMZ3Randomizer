@@ -68,13 +68,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x90,
                 memoryFlag: 0xB);
 
-            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
-                name: "Misery Mire Reward",
-                vanillaItem: ItemType.CrystalRed,
-                access: items => CanComplete(items),
-                memoryAddress: 0x90,
-                memoryFlag: 0xB);
-
             MemoryAddress = 0x90;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 152 };
@@ -82,7 +75,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Misery Mire";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public ItemType RewardType { get; set; } = ItemType.Nothing;
+
+        public Item RewardItem { get; set; }
 
         public ItemType Medallion { get; set; }
 
@@ -101,10 +96,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location BigChest { get; }
 
         public Location VitreousReward { get; }
-
-        public Location DungeonReward { get; }
-
-        public Location RewardLocation => DungeonReward;
 
         // Need "CanKillManyEnemies" if implementing swordless
         public override bool CanEnter(Progression items)

@@ -60,13 +60,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0xA4,
                 memoryFlag: 0xB);
 
-            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
-                name: "Turtle Rock Reward",
-                vanillaItem: ItemType.CrystalBlue,
-                access: items => CanComplete(items),
-                memoryAddress: 0xA4,
-                memoryFlag: 0xB);
-
             RollerRoom = new RollerRoomRoom(this);
             LaserBridge = new LaserBridgeRoom(this);
 
@@ -77,7 +70,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Turtle Rock";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public ItemType RewardType { get; set; } = ItemType.Nothing;
+
+        public Item RewardItem { get; set; }
 
         public ItemType Medallion { get; set; }
 
@@ -96,10 +91,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public RollerRoomRoom RollerRoom { get; }
 
         public LaserBridgeRoom LaserBridge { get; }
-
-        public Location DungeonReward { get; }
-
-        public Location RewardLocation => DungeonReward;
 
         public override bool CanEnter(Progression items)
         {

@@ -35,9 +35,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 // Get the dungeon info for the room
                 var dungeonInfo = tracker.WorldInfo.Dungeons.First(x => x.Is(region));
 
-                if (!_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant || dungeonInfo.Reward == RewardItem.NonGreenPendant))
+                if (!_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.RewardType == ItemType.PendantGreen || dungeonInfo.RewardType == ItemType.PendantNonGreen))
                 {
-                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, dungeonInfo.Reward.GetName());
+                    var rewardName = tracker.ItemService.GetName(dungeonInfo.RewardType);
+                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, rewardName);
                 }
                 else if (region is CastleTower)
                 {
@@ -48,7 +49,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                     var clearedCrystalDungeonCount = tracker.WorldInfo.Dungeons
                                                         .Where(x => x.Cleared)
                                                         .Select(x => x.GetRegion(tracker.World) as IHasReward)
-                                                        .Count(x => x != null && x.RewardItem.Type is ItemType.CrystalBlue or ItemType.CrystalRed);
+                                                        .Count(x => x != null && x.RewardType is ItemType.CrystalBlue or ItemType.CrystalRed);
                     if (clearedCrystalDungeonCount < 7)
                     {
                         tracker.SayOnce(x => x.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);

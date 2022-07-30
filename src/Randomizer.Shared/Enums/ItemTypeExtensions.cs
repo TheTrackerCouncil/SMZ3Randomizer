@@ -64,7 +64,7 @@ namespace Randomizer.Shared
         public static bool IsProgression(this ItemType itemType)
         {
             return !(itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized, ItemCategory.Nice  }) || itemType == ItemType.Nothing);
+                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized, ItemCategory.Nice  }) || (int)itemType <= (int)ItemType.Nothing6);
         }
     }
 }

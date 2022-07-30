@@ -212,7 +212,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GiveItemRule()
         {
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name[0] != "Content" && !x.InternalItemType.IsInCategory(ItemCategory.Reward));
 
             return new GrammarBuilder()
                 .Append("Hey tracker,")

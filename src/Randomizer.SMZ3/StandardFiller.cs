@@ -5,6 +5,7 @@ using System.Threading;
 
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3
 {
@@ -37,24 +38,29 @@ namespace Randomizer.SMZ3
             }
 
             var progressionItems = new List<Item>();
-            var baseItems = new List<Item>();
+            var itemsInInventory = new List<Item>();
 
+            // First go through all worlds and create a list of all of the items
+            // needed to progress 
             foreach (var world in worlds)
             {
                 /* The dungeon pool order is significant, don't shuffle */
                 var dungeon = Item.CreateDungeonPool(world);
                 var progression = Item.CreateProgressionPool(world);
 
+                // Fill in specific items that we want in particular locations or spheres
                 InitialFillInOwnWorld(dungeon, progression, world, config);
 
-                if (config.Keysanity == false)
+                // If not keysanity, assume the player as the SM keys and populate dungeon items
+                if (world.Config.Keysanity == false)
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
                     var keyCards = Item.CreateKeycards(world);
                     AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world }, cancellationToken);
-                    baseItems = baseItems.Concat(keyCards).ToList();
+                    itemsInInventory = itemsInInventory.Concat(keyCards).ToList();
                 }
+                // Otherwise add the SM keys to the progression 
                 else
                 {
                     progressionItems.AddRange(Item.CreateKeycards(world));
@@ -64,6 +70,7 @@ namespace Randomizer.SMZ3
                 progressionItems.AddRange(progression);
             }
 
+            // Create shuffled versions of all item pools
             progressionItems = progressionItems.Shuffle(Random);
             var niceItems = worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Random);
             var junkItems = worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Random);
@@ -88,7 +95,7 @@ namespace Randomizer.SMZ3
             GanonTowerFill(worlds, junkItems, 2);
 
             _logger.LogDebug("Distributing progression items according to logic");
-            AssumedFill(progressionItems, baseItems, locations, worlds, cancellationToken);
+            AssumedFill(progressionItems, itemsInInventory, locations, worlds, cancellationToken);
 
             _logger.LogDebug("Distributing nice-to-have items");
             FastFill(niceItems, locations);
@@ -188,7 +195,7 @@ namespace Randomizer.SMZ3
             {
                 var i = (int)(n * (1 - weight));
                 if (i >= itemPool.Count)
-                    throw new InvalidOperationException($"Too many items are being biased which makes the tail portion for {type} too big");
+                    throw new RandomizerGenerationException($"Too many items are being biased which makes the tail portion for {type} too big");
                 foreach (var item in items[type])
                 {
                     var k = Random.Next(i, itemPool.Count);
@@ -224,24 +231,26 @@ namespace Randomizer.SMZ3
             FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
         }
 
-        private void AssumedFill(List<Item> itemPool, List<Item> baseItems,
+        private void AssumedFill(List<Item> itemPool, List<Item> initialInventory,
             IEnumerable<Location> locations, IEnumerable<World> worlds,
             CancellationToken cancellationToken)
         {
-            var assumedItems = new List<Item>(itemPool);
+            var itemsToAdd = new List<Item>(itemPool);
             var failedAttempts = new Dictionary<Item, int>();
-            while (assumedItems.Count > 0)
+            while (itemsToAdd.Count > 0)
             {
                 /* Try placing next item */
-                var item = assumedItems.First();
-                assumedItems.Remove(item);
+                var item = itemsToAdd.First();
+                itemsToAdd.Remove(item);
 
-                var inventory = CollectItems(assumedItems.Concat(baseItems), worlds);
+                var inventory = CollectItems(itemsToAdd.Concat(initialInventory), worlds);
                 var location = locations.Empty().CanFillWithinWorld(item, inventory).FirstOrDefault();
+
+                // If we can't find a location, add it back to the list and try again
                 if (location == null)
                 {
                     _logger.LogDebug("Could not find anywhere to place {item}", item);
-                    assumedItems.Add(item);
+                    itemsToAdd.Add(item);
 
                     if (!failedAttempts.ContainsKey(item))
                     {
@@ -322,7 +331,7 @@ namespace Randomizer.SMZ3
         private void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location)
         {
             var itemToPlace = itemPool.Get(itemType);
-            location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
+            location.Item = itemToPlace ?? throw new RandomizerGenerationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);
 
             _logger.LogDebug("Manually placed {item} at {location}", itemToPlace, location);

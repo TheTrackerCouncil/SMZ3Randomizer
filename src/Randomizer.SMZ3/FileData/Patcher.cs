@@ -182,8 +182,8 @@ namespace Randomizer.SMZ3.FileData
             var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
 
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var crystalRegions = regions.Where(x => x.RewardItem.Type is ItemType.CrystalRed or ItemType.CrystalBlue);
-            var pendantRegions = regions.Where(x => x.RewardItem.Type is ItemType.PendantGreen or ItemType.PendantNonGreen);
+            var crystalRegions = regions.Where(x => x.RewardType is ItemType.CrystalRed or ItemType.CrystalBlue);
+            var pendantRegions = regions.Where(x => x.RewardType is ItemType.PendantGreen or ItemType.PendantNonGreen);
 
             _patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
             _patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
@@ -438,12 +438,12 @@ namespace Randomizer.SMZ3.FileData
             }
             else if (region is IHasReward dungeonRegion)
             {
-                ALttPSoundtrack? soundtrack = dungeonRegion.Reward switch
+                ALttPSoundtrack? soundtrack = dungeonRegion.RewardType switch
                 {
-                    Reward.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
-                    Reward.PendantNonGreen => ALttPSoundtrack.LightWorldDungeon,
-                    Reward.CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
-                    Reward.CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
+                    ItemType.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
+                    ItemType.PendantNonGreen => ALttPSoundtrack.LightWorldDungeon,
+                    ItemType.CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
+                    ItemType.CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
                     _ => null
                 };
                 return soundtrack != null
@@ -661,8 +661,8 @@ namespace Randomizer.SMZ3.FileData
         private void WriteTexts(Config config)
         {
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var greenPendantDungeon = regions.Where(x => x.Reward == Reward.PendantGreen).Cast<Region>().First();
-            var redCrystalDungeons = regions.Where(x => x.Reward == Reward.CrystalRed).Cast<Region>();
+            var greenPendantDungeon = regions.Where(x => x.RewardType == ItemType.PendantGreen).Cast<Region>().First();
+            var redCrystalDungeons = regions.Where(x => x.RewardType == ItemType.CrystalRed).Cast<Region>();
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));

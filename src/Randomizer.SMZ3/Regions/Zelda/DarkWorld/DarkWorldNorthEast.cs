@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
         public override bool CanEnter(Progression items)
         {
-            return World.CanAquire(items, Reward.Agahnim) || (items.MoonPearl && (
+            return World.CanAquire(items, ItemType.Agahnim) || (items.MoonPearl && (
                 (items.Hammer && Logic.CanLiftLight(items)) ||
                 (Logic.CanLiftHeavy(items) && items.Flippers) ||
                 (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
@@ -59,16 +59,16 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 Left = new Location(this, 256 + 80, 0x1E980, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.ProgressiveSword, 
-                    access: items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))),
+                    access: items => World.CanAquireAll(items, ItemType.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
+                             (items.Hammer || (items.Mirror && World.CanAquire(items, ItemType.Agahnim))),
                     memoryAddress: 0x116,
                     memoryFlag: 0x4);
 
                 Right = new Location(this, 256 + 81, 0x1E983, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.SilverArrows, 
-                    access: items => World.CanAquireAll(items, Reward.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && World.CanAquire(items, Reward.Agahnim))),
+                    access: items => World.CanAquireAll(items, ItemType.CrystalRed) && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
+                             (items.Hammer || (items.Mirror && World.CanAquire(items, ItemType.Agahnim))),
                     memoryAddress: 0x116,
                     memoryFlag: 0x5);
             }

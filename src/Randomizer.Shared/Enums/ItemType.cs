@@ -6,7 +6,14 @@ namespace Randomizer.Shared
     public enum ItemType : byte
     {
         [Description("Nothing")]
+        [ItemCategory(ItemCategory.SelectableReward)]
         Nothing,
+        Nothing1 = 0x01,
+        Nothing2 = 0x02,
+        Nothing3 = 0x03,
+        Nothing4 = 0x04,
+        Nothing5 = 0x05,
+        Nothing6 = 0x06,
 
         [Description("Hyrule Castle Map")]
         [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
@@ -589,27 +596,39 @@ namespace Randomizer.Shared
         BeeContent = 0x0E,
 
         [Description("Agahnim")]
-        [ItemCategory(ItemCategory.Reward)]
+        [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
         Agahnim = 0xF0,
 
         [Description("Green Pendant")]
-        [ItemCategory(ItemCategory.Reward)]
+        [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
         PendantGreen = 0xF1,
 
-        [Description("Blue/Red Pendant")]
-        [ItemCategory(ItemCategory.Reward)]
+        [Description("Non green pendant")]
+        [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
         PendantNonGreen = 0xF2,
 
-        [Description("Blue Crystal")]
-        [ItemCategory(ItemCategory.Reward)]
+        [Description("Crystal")]
+        [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
         CrystalBlue = 0xF3,
 
         [Description("Red Crystal")]
-        [ItemCategory(ItemCategory.Reward)]
+        [ItemCategory(ItemCategory.Reward, ItemCategory.SelectableReward)]
         CrystalRed = 0xF4,
 
-        [Description("Golden Four Boss")]
+        [Description("Kraid")]
         [ItemCategory(ItemCategory.Reward)]
-        GoldenFourBoss = 0xF5
+        Kraid = 0xF5,
+
+        [Description("Phantoon")]
+        [ItemCategory(ItemCategory.Reward)]
+        Phantoon = 0xF6,
+
+        [Description("Draygon")]
+        [ItemCategory(ItemCategory.Reward)]
+        Draygon = 0xF7,
+
+        [Description("Ridley")]
+        [ItemCategory(ItemCategory.Reward)]
+        Ridley = 0xF8,
     }
 }

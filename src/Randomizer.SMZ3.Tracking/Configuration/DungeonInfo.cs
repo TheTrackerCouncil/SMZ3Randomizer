@@ -81,10 +81,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets or sets the type of pendant or crystal you are rewarded with
         /// when you beat the dungeon boss.
         /// </summary>
-        public RewardItem Reward { get; set; }
-            = Randomizer.Shared.RewardItem.Unknown;
-
-        public ItemType RewardItem { get; set; } = ItemType.Nothing;
+        public ItemType RewardType { get; set; } = ItemType.Nothing;
 
         /// <summary>
         /// Gets a value indicating whether the dungeon has a reward when the

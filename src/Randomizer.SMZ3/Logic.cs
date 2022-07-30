@@ -110,7 +110,7 @@ namespace Randomizer.SMZ3
         {
             return items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
-                    (World.CanAquire(items, Reward.Agahnim) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items));
+                    (World.CanAquire(items, ItemType.Agahnim) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items));
         }
 
         public bool CanSafelyUseScrewAttack(Progression items)

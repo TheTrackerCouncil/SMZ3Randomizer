@@ -40,7 +40,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
         public override bool CanEnter(Progression items)
         {
             return items.MoonPearl && (((
-                    World.CanAquire(items, Reward.Agahnim) ||
+                    World.CanAquire(items, ItemType.Agahnim) ||
                     (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
                 ) && (items.Hammer || (items.Hookshot && (items.Flippers || Logic.CanLiftLight(items))))) ||
                 (items.Hammer && Logic.CanLiftLight(items)) ||

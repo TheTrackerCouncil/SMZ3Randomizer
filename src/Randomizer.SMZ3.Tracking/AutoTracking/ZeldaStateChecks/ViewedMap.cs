@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         {
             if (_tracker == null) return;
 
-            var rewards = new List<Reward>();
+            var rewards = new List<ItemType>();
             var dungeons = new (Region Region, ItemType Map)[] {
                 (World.EasternPalace, ItemType.MapEP),
                 (World.DesertPalace, ItemType.MapDP),
@@ -79,16 +79,16 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 if (World.Config.Keysanity && !Items.IsTracked(map))
                     continue;
 
-                var reward = ((IHasReward)region).Reward;
+                var reward = ((IHasReward)region).RewardType;
                 var dungeonInfo = _tracker.WorldInfo.Dungeon(region);
-                if (dungeonInfo.Reward == RewardItem.Unknown)
+                if (dungeonInfo.RewardType == ItemType.Nothing)
                 {
                     rewards.Add(reward);
-                    _tracker.SetDungeonReward(dungeonInfo, ConvertReward(reward));
+                    _tracker.SetDungeonReward(dungeonInfo, reward);
                 }
             }
 
-            if (rewards.Count(x => x == Reward.CrystalRed || x == Reward.CrystalBlue) == 3)
+            if (rewards.Count(x => x == ItemType.CrystalRed || x == ItemType.CrystalBlue) == 3)
             {
                 _tracker.SayOnce(x => x.AutoTracker.LightWorldAllCrystals);
             }
@@ -106,7 +106,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             if (_tracker == null) return;
 
             var stateMedallionMessage = true;
-            var rewards = new List<Reward>();
+            var rewards = new List<ItemType>();
             var dungeons = new (Region Region, ItemType Map)[] {
                 (World.PalaceOfDarkness, ItemType.MapPD),
                 (World.SwampPalace, ItemType.MapSP),
@@ -122,12 +122,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 if (World.Config.Keysanity && !Items.IsTracked(map))
                     continue;
 
-                var reward = ((IHasReward)region).Reward;
+                var reward = ((IHasReward)region).RewardType;
                 var dungeonInfo = _tracker.WorldInfo.Dungeon(region);
-                if (dungeonInfo.Reward == RewardItem.Unknown)
+                if (dungeonInfo.RewardType == ItemType.Nothing)
                 {
                     rewards.Add(reward);
-                    _tracker.SetDungeonReward(dungeonInfo, ConvertReward(reward));
+                    _tracker.SetDungeonReward(dungeonInfo, reward);
                 }
             }
 
@@ -141,20 +141,5 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             }
 
         }
-
-        /// <summary>
-        /// Converts Rewards to RewardItems
-        /// TODO: Try to figure out how to determine between blue and red pendants
-        /// </summary>
-        /// <param name="reward"></param>
-        /// <returns></returns>
-        private static RewardItem ConvertReward(Reward reward) => reward switch
-        {
-            Reward.CrystalRed => RewardItem.RedCrystal,
-            Reward.CrystalBlue => RewardItem.Crystal,
-            Reward.PendantGreen => RewardItem.GreenPendant,
-            Reward.PendantNonGreen => RewardItem.NonGreenPendant,
-            _ => RewardItem.Unknown,
-        };
     }
 }

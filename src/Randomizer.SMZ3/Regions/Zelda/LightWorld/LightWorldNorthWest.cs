@@ -13,7 +13,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Master Sword Pedestal",
                 alsoKnownAs: new[] { "Ped" },
                 vanillaItem: ItemType.ProgressiveSword,
-                access: items => World.CanAquireAll(items, Reward.PendantGreen, Reward.PendantNonGreen),
+                access: items => World.CanAquireAll(items, ItemType.PendantGreen, ItemType.PendantNonGreen),
                 memoryAddress: 0x80,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc);
@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             LumberjackTree = new Location(this, 256 + 17, 0x308001, LocationType.Regular,
                 name: "Lumberjack Tree",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => World.CanAquire(items, Reward.Agahnim) && items.Boots,
+                access: items => World.CanAquire(items, ItemType.Agahnim) && items.Boots,
                 memoryAddress: 0xE2,
                 memoryFlag: 0x9);
 

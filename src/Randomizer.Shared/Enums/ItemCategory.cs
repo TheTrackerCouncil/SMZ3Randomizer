@@ -76,6 +76,13 @@
         /// <summary>
         /// This is a reward for a dungeon or beating a boss
         /// </summary>
-        Reward
+        Reward,
+
+        /// <summary>
+        /// This is a reward that can be picked in the dropdown list
+        /// </summary>
+        SelectableReward
+
+
     }
 }

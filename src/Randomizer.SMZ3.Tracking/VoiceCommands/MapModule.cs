@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -91,7 +92,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetChangeMapRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name[0] != "Content" && !x.InternalItemType.IsInCategory(ItemCategory.Reward));
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();
 

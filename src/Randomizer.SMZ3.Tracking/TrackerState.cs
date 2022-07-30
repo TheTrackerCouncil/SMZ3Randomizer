@@ -123,11 +123,11 @@ namespace Randomizer.SMZ3.Tracking
                 .ToImmutableList();
             var regionStates = tracker.World.Regions
                 .Select(x => new RegionState(x.GetType().Name,
-                    x is IHasReward rewardRegion ? rewardRegion.Reward : null,
+                    x is IHasReward rewardRegion ? rewardRegion.RewardType : null,
                     x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null))
                 .ToImmutableList();
             var dungeonStates = tracker.WorldInfo.Dungeons
-                .Select(x => new DungeonState(x.Name[0], x.Cleared, x.TreasureRemaining, x.Reward, x.Requirement))
+                .Select(x => new DungeonState(x.Name[0], x.Cleared, x.TreasureRemaining, x.RewardType, x.Requirement))
                 .ToImmutableList();
             var markedLocations = tracker.MarkedLocations
                 .Select(x => new MarkedLocation(x.Key, x.Value.Name[0]))
@@ -207,11 +207,11 @@ namespace Randomizer.SMZ3.Tracking
                 .ToImmutableList();
 
             var regionStates = trackerState.RegionStates
-                .Select(x => new RegionState(x.TypeName, x.Reward, x.Medallion))
+                .Select(x => new RegionState(x.TypeName, ConvertRegionRewardToItemType(x.TypeName, x.Reward), x.Medallion))
                 .ToImmutableList();
 
             var dungeonStates = trackerState.DungeonStates
-                .Select(x => new DungeonState(x.Name, x.Cleared, x.RemainingTreasure, x.Reward, x.RequiredMedallion))
+                .Select(x => new DungeonState(x.Name, x.Cleared, x.RemainingTreasure, ConvertDungeonRewardToItemType(x.Reward), x.RequiredMedallion))
                 .ToImmutableList();
 
             var markedLocations = trackerState.MarkedLocations
@@ -285,7 +285,7 @@ namespace Randomizer.SMZ3.Tracking
                     ?? throw new ArgumentException($"Could not find region with type name '{regionState.TypeName}'.", nameof(tracker));
 
                 if (region is IHasReward rewardRegion && regionState.Reward != null)
-                    rewardRegion.Reward = regionState.Reward.Value;
+                    rewardRegion.RewardType = regionState.Reward.Value;
                 if (region is INeedsMedallion medallionRegion && regionState.Medallion != null)
                     medallionRegion.Medallion = regionState.Medallion.Value;
             }
@@ -297,7 +297,7 @@ namespace Randomizer.SMZ3.Tracking
 
                 dungeon.Cleared = dungeonState.Cleared;
                 dungeon.TreasureRemaining = dungeonState.RemainingTreasure;
-                dungeon.Reward = dungeonState.Reward;
+                dungeon.RewardType = dungeonState.Reward;
                 dungeon.Requirement = dungeonState.Requirement;
             }
 
@@ -501,7 +501,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="Medallion">
         /// The type of medallion required for the region.
         /// </param>
-        public record RegionState(string TypeName, Reward? Reward, ItemType? Medallion);
+        public record RegionState(string TypeName, ItemType? Reward, ItemType? Medallion);
 
         /// <summary>
         /// Copies the region state values to the db region state
@@ -527,7 +527,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="Reward">The type of pendant/crystal reward.</param>
         /// <param name="Requirement">The type of medallion required.</param>
-        public record DungeonState(string Name, bool Cleared, int RemainingTreasure, RewardItem Reward, Medallion Requirement);
+        public record DungeonState(string Name, bool Cleared, int RemainingTreasure, ItemType Reward, Medallion Requirement);
 
         /// <summary>
         /// Copies the dungeon state values to the db dungeon state
@@ -572,6 +572,55 @@ namespace Randomizer.SMZ3.Tracking
         {
             trackerbossState.BossName = bossState.Name;
             trackerbossState.Defeated = bossState.Defeated;
+        }
+
+        /// <summary>
+        /// Used to convert legacy Region Rewards to Item Types
+        /// </summary>
+        /// <param name="regionName">The name of the region</param>
+        /// <param name="reward">The ItemType of the reward</param>
+        /// <returns>The corrected item type</returns>
+        private static ItemType? ConvertRegionRewardToItemType(string regionName, ItemType? reward)
+        {
+            if (reward == null || (int)reward > 6) return reward;
+
+            switch (reward)
+            {
+                case ItemType.Nothing1: return ItemType.Agahnim;
+                case ItemType.Nothing2: return ItemType.PendantGreen;
+                case ItemType.Nothing3: return ItemType.PendantNonGreen;
+                case ItemType.Nothing4: return ItemType.CrystalBlue;
+                case ItemType.Nothing5: return ItemType.CrystalRed;
+            }
+
+            return regionName switch
+            {
+                "KraidsLair" => ItemType.Kraid,
+                "InnerMaridia" => ItemType.Draygon,
+                "LowerNorfairEast" => ItemType.Ridley,
+                "WreckedShip" => ItemType.Phantoon,
+                _ => null,
+            };
+        }
+
+        /// <summary>
+        /// Used to convert legacy Dungeon Rewards to Item Types
+        /// </summary>
+        /// <param name="reward">The ItemType of the reward</param>
+        /// <returns>The corrected item type</returns>
+        private static ItemType ConvertDungeonRewardToItemType(ItemType reward)
+        {
+            return reward switch
+            {
+                ItemType.Nothing1 => ItemType.CrystalBlue,
+                ItemType.Nothing2 => ItemType.CrystalRed,
+                ItemType.Nothing3 => ItemType.PendantGreen,
+                ItemType.Nothing4 => ItemType.PendantNonGreen,
+                ItemType.Nothing5 => ItemType.PendantNonGreen,
+                ItemType.Nothing6 => ItemType.Agahnim,
+                ItemType.Firerod => ItemType.PendantNonGreen,
+                _ => reward,
+            };
         }
     }
 }

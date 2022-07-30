@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
@@ -28,16 +29,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, ILogger<ZeldaDungeonTrackingModule> logger)
             : base(tracker, itemService, logger)
         {
+
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
-                var reward = (RewardItem)result.Semantics[RewardKey].Value;
+                var reward = (ItemType)result.Semantics[RewardKey].Value;
                 tracker.SetDungeonReward(dungeon, reward, result.Confidence);
             });
 
             AddCommand("Mark remaining dungeons", GetMarkRemainingDungeonRewardsRule(), (tracker, result) =>
             {
-                tracker.SetUnmarkedDungeonReward(RewardItem.Crystal, result.Confidence);
+                tracker.SetUnmarkedDungeonReward(ItemType.CrystalBlue, result.Confidence);
             });
 
             AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (tracker, result) =>
@@ -68,10 +70,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
             var rewardNames = new Choices();
-            foreach (var reward in Enum.GetValues<RewardItem>())
+            foreach (var reward in Enum.GetValues<ItemType>().Where(x => x.IsInCategory(ItemCategory.SelectableReward)))
             {
-                foreach (var name in reward.GetName())
-                    rewardNames.Add(new SemanticResultValue(name, (int)reward));
+                var itemData = ItemService.GetOrDefault(reward);
+                if (itemData != null)
+                {
+                    foreach (var name in itemData.Name)
+                        rewardNames.Add(new SemanticResultValue(name, (int)reward));
+                }
+                
             }
 
             return new GrammarBuilder()

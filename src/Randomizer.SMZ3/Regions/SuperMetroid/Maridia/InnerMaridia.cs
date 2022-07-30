@@ -83,13 +83,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryAddress: 0x13,
                 memoryFlag: 0x4);
 
-            BossReward = new Location(this, -1, -1, LocationType.MetroidBoss,
-                name: "Draygon Reward",
-                vanillaItem: ItemType.GoldenFourBoss,
-                access: items => CanComplete(items),
-                memoryAddress: null,
-                memoryFlag: null);
-
             WateringHole = new WateringHoleRoom(this);
             LeftSandPit = new LeftSandPitRoom(this);
             MemoryRegionId = 4;
@@ -99,7 +92,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public override string Area => "Maridia";
 
-        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
+        public ItemType RewardType { get; set; } = ItemType.Draygon;
+
+        public Item RewardItem { get; set; }
 
         public Location PseudoSparkRoom { get; }
 
@@ -124,10 +119,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         public WateringHoleRoom WateringHole { get; }
 
         public LeftSandPitRoom LeftSandPit { get; }
-
-        public Location BossReward { get; }
-
-        public Location RewardLocation => BossReward;
 
         public override bool CanEnter(Progression items)
             => items.Gravity && (

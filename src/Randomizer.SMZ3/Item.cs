@@ -336,6 +336,22 @@ namespace Randomizer.SMZ3
             };
         }
 
+        public static List<Item> CreateRewards(World world)
+        {
+            var itemPool = new List<Item>
+            {
+                new Item(ItemType.Agahnim),
+                new Item(ItemType.PendantGreen)
+            };
+
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.PendantNonGreen)));
+            itemPool.AddRange(Copies(5, () => new Item(ItemType.CrystalBlue)));
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.CrystalRed)));
+
+            return itemPool;
+
+        }
+
         /// <summary>
         /// Determines whether the item is of the specified type and belongs to
         /// the specified world.

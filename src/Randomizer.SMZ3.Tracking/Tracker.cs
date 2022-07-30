@@ -604,23 +604,25 @@ namespace Randomizer.SMZ3.Tracking
         /// possible rewards.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonReward(DungeonInfo dungeon, RewardItem? reward = null, float? confidence = null)
+        public void SetDungeonReward(DungeonInfo dungeon, ItemType? reward = null, float? confidence = null)
         {
-            var originalReward = dungeon.Reward;
+            var originalReward = dungeon.RewardType;
             if (reward == null)
             {
-                dungeon.Reward = Enum.IsDefined(dungeon.Reward + 1) ? dungeon.Reward + 1 : RewardItem.Unknown;
+                var possibleRewards = Enum.GetValues<ItemType>().Where(x => x.IsInCategory(ItemCategory.SelectableReward)).ToList();
+                var index = (possibleRewards.IndexOf(dungeon.RewardType) + 1) % possibleRewards.Count;
+                dungeon.RewardType = possibleRewards[index];
                 // Cycling through rewards is done via UI, so speaking the
                 // reward out loud for multiple clicks is kind of annoying
             }
             else
             {
-                dungeon.Reward = reward.Value;
-                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, dungeon.Reward.GetName()));
+                dungeon.RewardType = reward.Value;
+                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, ItemService.GetName(dungeon.RewardType)));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
-            AddUndo(() => dungeon.Reward = originalReward);
+            AddUndo(() => dungeon.RewardType = originalReward);
         }
 
         /// <summary>
@@ -628,18 +630,18 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="reward">The reward to set.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetUnmarkedDungeonReward(RewardItem reward, float? confidence = null)
+        public void SetUnmarkedDungeonReward(ItemType reward, float? confidence = null)
         {
             var unmarkedDungeons = WorldInfo.Dungeons
-                .Where(x => x.HasReward && x.Reward == RewardItem.Unknown)
+                .Where(x => x.HasReward && x.RewardType == ItemType.Nothing)
                 .ToImmutableList();
 
             if (unmarkedDungeons.Count > 0)
             {
-                unmarkedDungeons.ForEach(dungeon => dungeon.Reward = reward);
-                Say(Responses.RemainingDungeonsMarked.Format(reward.GetName()));
+                unmarkedDungeons.ForEach(dungeon => dungeon.RewardType = reward);
+                Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
 
-                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.Reward = RewardItem.Unknown));
+                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.RewardType = ItemType.Nothing));
                 OnDungeonUpdated(new(confidence));
             }
             else
@@ -2140,10 +2142,10 @@ namespace Randomizer.SMZ3.Tracking
         /// <see langword="true"/> if the reward leads to something good;
         /// otherwise, <see langword="false"/>.
         /// </returns>
-        protected internal bool IsWorth(Reward reward)
+        protected internal bool IsWorth(ItemType reward)
         {
             var sahasrahlaItem = ItemService.GetOrDefault(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla);
-            if (sahasrahlaItem != null && reward == Reward.PendantGreen)
+            if (sahasrahlaItem != null && reward == ItemType.PendantGreen)
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, sahasrahlaItem);
                 if (IsWorth(sahasrahlaItem))
@@ -2155,7 +2157,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var pedItem = ItemService.GetOrDefault(World.LightWorldNorthWest.MasterSwordPedestal);
-            if (pedItem != null && (reward == Reward.PendantGreen || reward == Reward.PendantNonGreen))
+            if (pedItem != null && (reward == ItemType.PendantGreen || reward == ItemType.PendantNonGreen))
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, pedItem);
                 if (IsWorth(pedItem))

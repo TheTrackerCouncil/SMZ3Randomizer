@@ -74,13 +74,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0xDE,
                 memoryFlag: 0xB);
 
-            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
-                name: "Ice Palace Reward",
-                vanillaItem: ItemType.CrystalRed,
-                access: items => CanComplete(items),
-                memoryAddress: 0xDE,
-                memoryFlag: 0xB);
-
             MemoryAddress = 0xDE;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 14 };
@@ -88,7 +81,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Ice Palace";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public ItemType RewardType { get; set; } = ItemType.Nothing;
+
+        public Item RewardItem { get; set; }
 
         public Location CompassChest { get; }
 
@@ -105,10 +100,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location BigChest { get; }
 
         public Location KholdstareReward { get; }
-
-        public Location DungeonReward { get; }
-
-        public Location RewardLocation => DungeonReward;
 
 
         public override bool CanEnter(Progression items)

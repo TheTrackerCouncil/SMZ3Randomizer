@@ -287,7 +287,7 @@ namespace Randomizer.App
                         "Sprites", "Dungeons", $"{dungeon.Name[0].Text.ToLowerInvariant()}.png");
 
                     var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", $"{(dungeon.HasReward ? dungeon.Reward.GetDescription().ToLowerInvariant() : "blank")}.png");
+                        "Sprites", "Dungeons", $"{(dungeon.HasReward ? dungeon.RewardType.GetDescription().ToLowerInvariant() : "blank")}.png");
                     var image = GetGridItemControl(rewardPath,
                         dungeon.Column.Value, dungeon.Row.Value,
                         dungeon.TreasureRemaining, overlayPath, minCounter: 1);
@@ -640,12 +640,13 @@ namespace Randomizer.App
 
             if (dungeon.HasReward)
             {
-                foreach (var reward in Enum.GetValues<RewardItem>())
+
+                foreach (var reward in Enum.GetValues<ItemType>().Where(x => x.IsInCategory(ItemCategory.Reward) && x.IsInCategory(ItemCategory.SelectableReward)))
                 {
                     var item = new MenuItem
                     {
                         Header = $"Mark as {reward.GetDescription()}",
-                        IsChecked = dungeon.Reward == reward,
+                        IsChecked = dungeon.RewardType == reward,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
@@ -654,7 +655,7 @@ namespace Randomizer.App
                     };
                     item.Click += (sender, e) =>
                     {
-                        dungeon.Reward = reward;
+                        dungeon.RewardType = reward;
                         RefreshGridItems();
                     };
                     menu.Items.Add(item);

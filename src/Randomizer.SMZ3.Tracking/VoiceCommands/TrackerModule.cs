@@ -375,7 +375,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (where == null)
             {
-                where = a => 1 == 1;
+                where = a => !a.InternalItemType.IsInCategory(ItemCategory.Reward);
             }
 
             var itemNames = new Choices();

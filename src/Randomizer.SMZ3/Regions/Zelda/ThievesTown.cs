@@ -66,13 +66,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0xAC,
                 memoryFlag: 0xB);
 
-            DungeonReward = new Location(this, -1, -1, LocationType.ZeldaReward,
-                name: "Thieves' Town Reward",
-                vanillaItem: ItemType.CrystalBlue,
-                access: items => CanComplete(items),
-                memoryAddress: 0xAC,
-                memoryFlag: 0xB);
-
             MemoryAddress = 0xAC;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 219 };
@@ -80,7 +73,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Thieves' Town";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public ItemType RewardType { get; set; } = ItemType.Nothing;
+
+        public Item RewardItem { get; set; }
 
         public Location MapChest { get; }
 
@@ -97,10 +92,6 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location BigChest { get; }
 
         public Location BlindReward { get; }
-
-        public Location DungeonReward { get; }
-
-        public Location RewardLocation => DungeonReward;
 
         public override bool CanEnter(Progression items)
         {

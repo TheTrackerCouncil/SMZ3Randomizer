@@ -66,12 +66,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
                         (items.Grapple || items.SpaceJump || (items.Varia && Logic.HasEnergyReserves(items, 2)) || Logic.HasEnergyReserves(items, 3)),
                 memoryAddress: 0x10,
                 memoryFlag: 0x80);
-            BossReward = new Location(this, -1, -1, LocationType.MetroidBoss,
-                name: "Phantoon Reward",
-                vanillaItem: ItemType.GoldenFourBoss,
-                access: items => CanComplete(items),
-                memoryAddress: null,
-                memoryFlag: null);
             MemoryRegionId = 3;
         }
 
@@ -79,7 +73,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
 
         public override string Area => "Wrecked Ship";
 
-        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
+        public ItemType RewardType { get; set; } = ItemType.Phantoon;
+
+        public Item RewardItem { get; set; }
 
         public Location MainShaftSideRoom { get; }
 
@@ -96,10 +92,6 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
         public Location RightSuperMissileChamber { get; }
 
         public Location PostChozoConcertGravitySuitChamber { get; }
-
-        public Location BossReward { get; }
-
-        public Location RewardLocation => BossReward;
 
         public override bool CanEnter(Progression items)
         {

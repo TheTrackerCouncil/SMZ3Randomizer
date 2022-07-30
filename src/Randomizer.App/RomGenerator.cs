@@ -273,10 +273,10 @@ namespace Randomizer.App
 
             log.AppendLine(Underline("Rewards"));
             log.AppendLine();
-            foreach (var region in seed.Worlds[0].World.Regions)
+            foreach (var region in seed.Worlds[0].World.Regions.OfType<Z3Region>())
             {
-                if (region is IHasReward rewardRegion && rewardRegion.RewardItem.Type is not ItemType.Agahnim or ItemType.GoldenFourBoss)
-                    log.AppendLine($"{region.Name}: {rewardRegion.RewardItem.Name}");
+                if (region is IHasReward rewardRegion && rewardRegion.RewardType is not ItemType.Agahnim)
+                    log.AppendLine($"{region.Name}: {rewardRegion.RewardType}");
             }
             log.AppendLine();
 
