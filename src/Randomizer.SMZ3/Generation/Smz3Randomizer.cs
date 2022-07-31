@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Generation
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
 
-        public static Version Version => new(1, 0);
+        public static Version Version => new(2, 0);
 
         public SeedData LastGeneratedSeed { get; private set; }
 

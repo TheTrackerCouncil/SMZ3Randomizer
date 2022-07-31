@@ -79,7 +79,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Space Jump",
                 alsoKnownAs: new[] { "Draygon's Reliquary" },
                 vanillaItem: ItemType.SpaceJump,
-                access: items => CanDefeatDraygon(items),
+                access: items => items.Draygon,
                 memoryAddress: 0x13,
                 memoryFlag: 0x4);
 
@@ -125,7 +125,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     Logic.CanAccessMaridiaPortal(items));
 
         public bool CanComplete(Progression items)
-            => DraygonTreasure.IsAvailable(items);
+            => CanDefeatDraygon(items);
 
         private static bool CanReachAqueduct(Progression items, ILogic logic)
             => (items.CardMaridiaL1 && (logic.CanFly(items) || items.SpeedBooster || items.Grapple))

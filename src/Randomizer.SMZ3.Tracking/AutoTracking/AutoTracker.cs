@@ -439,6 +439,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
                 }
+
+                // Check if the player cleared Aga
+                if (action.CurrentData?.ReadUInt8(0x145) >= 3 && action.PreviousData?.ReadUInt8(0x145) < 3)
+                {
+                    Tracker?.ClearDungeon(Tracker.WorldInfo.Dungeons.First(x => x.Is(Tracker.World.CastleTower)), null);
+                }
             }
         }
 

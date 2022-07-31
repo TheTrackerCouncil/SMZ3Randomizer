@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
     {
         // If this test breaks, update Smz3Randomizer.Version
         [Theory]
-        [InlineData("test", 2042629884)] // Smz3Randomizer v1.0
+        [InlineData("test", 62178842)] // Smz3Randomizer v2.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());

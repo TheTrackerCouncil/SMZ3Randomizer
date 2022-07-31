@@ -129,7 +129,8 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override bool CanEnter(Progression items)
         {
-            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items) && items.AllCrystals && items.AllMetroidBosses;
+            var smBosses = new[] { RewardType.Kraid, RewardType.Phantoon, RewardType.Draygon, RewardType.Ridley };
+            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items) && items.AllCrystals && World.CanAquireAll(items, smBosses);
         }
 
         public override bool CanFill(Item item, Progression items)

@@ -144,6 +144,19 @@ namespace Randomizer.SMZ3
                 ?? Locations.FirstOrDefault(x => x.AlternateNames.Contains(name, StringComparer.FromComparison(comparisonType)));
         }
 
+        public bool CanAquire(Progression items, RewardType reward)
+        {
+            var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.Reward);
+            if (dungeonWithReward == null)
+                return false;
+            return dungeonWithReward.CanComplete(items);
+        }
+
+        public bool CanAquireAll(Progression items, params RewardType[] rewards)
+        {
+            return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
+        }
+
         public void Setup(Random rnd)
         {
             SetMedallions(rnd);

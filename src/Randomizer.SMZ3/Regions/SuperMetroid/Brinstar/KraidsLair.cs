@@ -10,14 +10,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             ETank = new Location(this, 43, 0x8F899C, LocationType.Hidden,
                 name: "Energy Tank, Kraid",
                 vanillaItem: ItemType.ETank,
-                access: items => items.CardBrinstarBoss,
+                access: items => items.Kraid,
                 memoryAddress: 0x5,
                 memoryFlag: 0x8);
             KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
                 name: "Varia Suit",
                 alsoKnownAs: new[] { "Kraid's Reliquary" },
                 vanillaItem: ItemType.Varia,
-                access: items => items.CardBrinstarBoss,
+                access: items => items.Kraid,
                 memoryAddress: 0x6,
                 memoryFlag: 0x1);
             MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
@@ -56,7 +56,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public bool CanComplete(Progression items)
         {
-            return KraidsItem.IsAvailable(items);
+            return items.CardBrinstarBoss;
         }
 
     }

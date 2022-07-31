@@ -38,7 +38,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Energy Tank, Ridley",
                 alsoKnownAs: new[] { "Ridley's Reliquary" },
                 vanillaItem: ItemType.ETank,
-                access: items => CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super,
+                access: items => items.Ridley,
                 memoryAddress: 0x9,
                 memoryFlag: 0x40);
             FirefleaRoom = new Location(this, 80, 0x8F9184, LocationType.Visible,
@@ -82,7 +82,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public bool CanComplete(Progression items)
         {
-            return RidleyTreasure.IsAvailable(items);
+            return CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super;
         }
 
         private bool CanExit(Progression items)
