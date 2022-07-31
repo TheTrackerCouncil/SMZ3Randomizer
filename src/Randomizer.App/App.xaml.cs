@@ -97,7 +97,6 @@ namespace Randomizer.App
             // WPF
             services.AddSingleton<OptionsFactory>();
             services.AddSingleton<RomListWindow>();
-            services.AddSingleton<GenerateRomWindow>();
             services.AddWindows<App>();
         }
 
