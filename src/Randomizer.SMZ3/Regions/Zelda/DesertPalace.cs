@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Dessert Palace" };
 
-        public Reward Reward { get; set; } = Reward.None;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public Location BigChest { get; }
 

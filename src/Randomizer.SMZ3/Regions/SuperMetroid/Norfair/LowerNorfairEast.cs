@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public override string Area => "Lower Norfair";
 
-        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.Ridley;
 
         public Location SpringBallMaze { get; }
 

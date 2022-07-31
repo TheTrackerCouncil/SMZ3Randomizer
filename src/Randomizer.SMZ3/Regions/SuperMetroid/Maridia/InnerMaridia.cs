@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x40);
             PlasmaBeamRoom = new Location(this, 143, 0x8FC559, LocationType.Chozo,
                 name: "Plasma Beam",
-                access: items => CanDefeatDraygon(items)
+                access: items => items.Draygon
                               && (items.ScrewAttack || items.Plasma)
                               && ((items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium)) || Logic.CanFly(items)),
                 memoryAddress: 0x11,
@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public override string Area => "Maridia";
 
-        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.Draygon;
 
         public Location PseudoSparkRoom { get; }
 

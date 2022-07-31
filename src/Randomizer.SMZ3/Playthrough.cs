@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3
 {
@@ -27,6 +28,11 @@ namespace Randomizer.SMZ3
             var locations = new List<Location>();
             var items = new List<Item>();
 
+            var allRewards = worlds.SelectMany(w => Reward.CreatePool(w));
+            var rewardRegions = worlds.SelectMany(w => w.Regions).OfType<IHasReward>();
+            var regions = new List<Region>();
+            var rewards = new List<Reward>();
+
             foreach (var world in worlds)
             {
                 if (!world.Config.Keysanity)
@@ -40,9 +46,10 @@ namespace Randomizer.SMZ3
             {
                 var sphere = new Sphere();
 
-                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w)));
+                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w), rewards.Where(r => r.World == w)));
                 var newLocations = allLocations.Except(locations).ToList();
                 var newItems = newLocations.Select(l => l.Item).ToList();
+                rewards = allRewards.Where(x => x.Region.CanComplete(new Progression(items, new List<Reward>()))).ToList();
                 locations.AddRange(newLocations);
                 items.AddRange(newItems);
 

@@ -164,8 +164,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else if (area is IHasReward region)
                 {
-                    if (region.Reward == Reward.CrystalBlue
-                        || region.Reward == Reward.CrystalRed)
+                    if (region.Reward == RewardType.CrystalBlue
+                        || region.Reward == RewardType.CrystalRed)
                     {
                         Tracker.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
                     }
@@ -611,7 +611,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 case 2:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item, x => true);
-                        if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.Reward != Reward.Agahnim)
+                        if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.Reward != RewardType.Agahnim)
                         {
                             if (randomLocation.Region.Locations.Any(x => x.Cleared))
                                 return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);

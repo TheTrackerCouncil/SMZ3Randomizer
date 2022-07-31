@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 Sahasrahla = new Location(this, 256 + 44, 0x5F1FC, LocationType.Regular,
                     name: "Sahasrahla",
                     vanillaItem: ItemType.Boots,
-                    access: items => World.CanAquire(items, Reward.PendantGreen),
+                    access: items => items.GreenPendant,
                     memoryAddress: 0x190,
                     memoryFlag: 0x10,
                     memoryType: LocationMemoryType.ZeldaMisc);

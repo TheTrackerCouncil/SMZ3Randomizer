@@ -59,7 +59,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Eastern Palace";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public Location CannonballChest { get; }
 

@@ -5,6 +5,7 @@ using System.Threading;
 
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3
 {
@@ -37,7 +38,7 @@ namespace Randomizer.SMZ3
             }
 
             var progressionItems = new List<Item>();
-            var baseItems = new List<Item>();
+            var assumedInventory = new List<Item>();
 
             foreach (var world in worlds)
             {
@@ -53,7 +54,7 @@ namespace Randomizer.SMZ3
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
                     var keyCards = Item.CreateKeycards(world);
                     AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world }, cancellationToken);
-                    baseItems = baseItems.Concat(keyCards).ToList();
+                    assumedInventory = assumedInventory.Concat(keyCards).ToList();
                 }
                 else
                 {
@@ -88,7 +89,7 @@ namespace Randomizer.SMZ3
             GanonTowerFill(worlds, junkItems, 2);
 
             _logger.LogDebug("Distributing progression items according to logic");
-            AssumedFill(progressionItems, baseItems, locations, worlds, cancellationToken);
+            AssumedFill(progressionItems, assumedInventory, locations, worlds, cancellationToken);
 
             _logger.LogDebug("Distributing nice-to-have items");
             FastFill(niceItems, locations);
@@ -165,7 +166,7 @@ namespace Randomizer.SMZ3
             {
                 if (progressionItems.Any(x => x.Type == itemType))
                 {
-                    var accessibleLocations = worlds[0].Locations.Where(x => x.Item == null && x.IsAvailable(new Progression(addedItems))).Shuffle(Random);
+                    var accessibleLocations = worlds[0].Locations.Where(x => x.Item == null && x.IsAvailable(new Progression(addedItems, new List<RewardType>()))).Shuffle(Random);
                     var location = accessibleLocations.First();
                     FillItemAtLocation(progressionItems, itemType, location);
                     addedItems.Add(itemType);
@@ -224,24 +225,27 @@ namespace Randomizer.SMZ3
             FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
         }
 
-        private void AssumedFill(List<Item> itemPool, List<Item> baseItems,
+        private void AssumedFill(List<Item> itemPool, List<Item> initialInventory,
             IEnumerable<Location> locations, IEnumerable<World> worlds,
             CancellationToken cancellationToken)
         {
-            var assumedItems = new List<Item>(itemPool);
+            var allRewards = worlds.SelectMany(w => Reward.CreatePool(w));
+            var itemsToAdd = new List<Item>(itemPool);
             var failedAttempts = new Dictionary<Item, int>();
-            while (assumedItems.Count > 0)
+            while (itemsToAdd.Count > 0)
             {
                 /* Try placing next item */
-                var item = assumedItems.First();
-                assumedItems.Remove(item);
+                var item = itemsToAdd.First();
+                itemsToAdd.Remove(item);
 
-                var inventory = CollectItems(assumedItems.Concat(baseItems), worlds);
-                var location = locations.Empty().CanFillWithinWorld(item, inventory).FirstOrDefault();
+                var inventory = CollectItems(itemsToAdd.Concat(initialInventory), worlds);
+                var currentRewards = CollectRewards(inventory, allRewards, worlds);
+                _logger.LogDebug($"Inventory count: {inventory.Count()} | Reward count: {currentRewards.Count()}");
+                var location = locations.Empty().CanFillWithinWorld(item, inventory, currentRewards).FirstOrDefault();
                 if (location == null)
                 {
                     _logger.LogDebug("Could not find anywhere to place {item}", item);
-                    assumedItems.Add(item);
+                    itemsToAdd.Add(item);
 
                     if (!failedAttempts.ContainsKey(item))
                     {
@@ -271,7 +275,7 @@ namespace Randomizer.SMZ3
 
             while (true)
             {
-                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems).ToList();
+                var availableLocations = remainingLocations.AvailableWithinWorld(assumedItems, new List<Reward>()).ToList();
                 remainingLocations = remainingLocations.Except(availableLocations).ToList();
                 var foundItems = availableLocations.Select(x => x.Item).ToList();
                 if (foundItems.Count == 0)
@@ -283,11 +287,21 @@ namespace Randomizer.SMZ3
             return assumedItems;
         }
 
+        private IEnumerable<Reward> CollectRewards(IEnumerable<Item> items, IEnumerable<Reward> rewardPool, IEnumerable<World> worlds)
+        {
+            var progressions = worlds.ToDictionary(w => w, w => new Progression(items.Where(i => i.World == w), new List<Reward>()));
+
+            return worlds
+                .SelectMany(w => w.Regions)
+                .Where(r => r is IHasReward && ((IHasReward)r).CanComplete(progressions[r.World]))
+                .SelectMany(r => rewardPool.Where(p => p.Type == ((IHasReward)r).Reward && p.Region == r));
+        }
+
         private void FrontFillItemInOwnWorld(List<Item> itemPool, ItemType itemType, World world)
         {
             var item = itemPool.Get(itemType);
             var location = world.Locations.Empty()
-                .Available(world.Items)
+                .Available(world.Items, new List<Reward>())
                 .Where(x => world.Config.LocationItems == null || !world.Config.LocationItems.ContainsKey(x.Id))
                 .Random(Random);
             if (location == null)

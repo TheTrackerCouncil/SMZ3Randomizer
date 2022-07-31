@@ -501,7 +501,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="Medallion">
         /// The type of medallion required for the region.
         /// </param>
-        public record RegionState(string TypeName, Reward? Reward, ItemType? Medallion);
+        public record RegionState(string TypeName, RewardType? Reward, ItemType? Medallion);
 
         /// <summary>
         /// Copies the region state values to the db region state

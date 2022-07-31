@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {
@@ -58,6 +59,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets or sets a value indicating whether the boss has been defeated.
         /// </summary>
         public bool Defeated { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reward for when the boss is defeated
+        /// </summary>
+        public RewardType Reward { get; set; }
 
         /// <summary>
         /// Returns a string representation of the boss.

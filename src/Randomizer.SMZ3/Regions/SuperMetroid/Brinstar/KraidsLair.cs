@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
             "Warehouse"
         };
 
-        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.Kraid;
 
         public Location ETank { get; }
 
