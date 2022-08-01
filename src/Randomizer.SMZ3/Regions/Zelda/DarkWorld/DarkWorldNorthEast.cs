@@ -40,13 +40,15 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
         public PyramidFairyChamber PyramidFairy { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return items.Agahnim || (items.MoonPearl && (
-                (items.Hammer && Logic.CanLiftLight(items)) ||
-                (Logic.CanLiftHeavy(items) && items.Flippers) ||
-                (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
-            ));
+            return Logic.CheckAgahnim(items, World, requireRewards) ||
+                (items.MoonPearl && (
+                    (items.Hammer && Logic.CanLiftLight(items)) ||
+                    (Logic.CanLiftHeavy(items) && items.Flippers) ||
+                    (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
+                )
+            );
         }
 
         public class PyramidFairyChamber : Room
@@ -59,16 +61,16 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
                 Left = new Location(this, 256 + 80, 0x1E980, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.ProgressiveSword, 
-                    access: items => items.BothRedCrystals && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && items.Agahnim)),
+                    access: items => CanAccessPyramidFairy(items, requireRewards: true),
+                    relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
                     memoryAddress: 0x116,
                     memoryFlag: 0x4);
 
                 Right = new Location(this, 256 + 81, 0x1E983, LocationType.Regular,
                     name: "Right",
-                    vanillaItem: ItemType.SilverArrows, 
-                    access: items => items.BothRedCrystals && items.MoonPearl && World.DarkWorldSouth.CanEnter(items) &&
-                             (items.Hammer || (items.Mirror && items.Agahnim)),
+                    vanillaItem: ItemType.SilverArrows,
+                    access: items => CanAccessPyramidFairy(items, requireRewards: true),
+                    relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
                     memoryAddress: 0x116,
                     memoryFlag: 0x5);
             }
@@ -76,6 +78,11 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
             public Location Left { get; }
 
             public Location Right { get; }
+
+            private bool CanAccessPyramidFairy(Progression items, bool requireRewards) =>
+                (items.BothRedCrystals || (!requireRewards && World.CanAquireAll(items, RewardType.CrystalRed))) &&
+                items.MoonPearl && World.DarkWorldSouth.CanEnter(items, requireRewards) &&
+                (items.Hammer || (items.Mirror && Logic.CheckAgahnim(items, World, requireRewards)));
         }
     }
 }

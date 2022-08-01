@@ -194,7 +194,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public bool IsAccessible(World world, Progression progression)
         {
             var region = GetRegion(world);
-            return region.CanEnter(progression);
+            return region.CanEnter(progression, true);
         }
 
         /// <summary>

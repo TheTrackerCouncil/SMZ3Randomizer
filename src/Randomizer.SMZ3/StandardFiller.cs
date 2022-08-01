@@ -240,7 +240,6 @@ namespace Randomizer.SMZ3
 
                 var inventory = CollectItems(itemsToAdd.Concat(initialInventory), worlds);
                 var currentRewards = CollectRewards(inventory, allRewards, worlds);
-                _logger.LogDebug($"Inventory count: {inventory.Count()} | Reward count: {currentRewards.Count()}");
                 var location = locations.Empty().CanFillWithinWorld(item, inventory, currentRewards).FirstOrDefault();
                 if (location == null)
                 {

@@ -77,10 +77,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public Location MoldormReward { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return (items.Mirror || (items.Hookshot && items.Hammer))
-                   && World.LightWorldDeathMountainWest.CanEnter(items);
+                   && World.LightWorldDeathMountainWest.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

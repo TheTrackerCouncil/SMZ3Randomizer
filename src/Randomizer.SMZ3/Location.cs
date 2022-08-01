@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3
 {
@@ -16,6 +17,8 @@ namespace Randomizer.SMZ3
     {
         private readonly Requirement _canAccess;
 
+        private readonly Requirement _relevanceRequirement;
+
         private Verification _alwaysAllow;
 
         private Verification _allow;
@@ -24,8 +27,9 @@ namespace Randomizer.SMZ3
  
 #nullable enable
         public Location(Room room, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
-            Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default)
-                    : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType)
+            Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
+            Requirement? relevanceRequirement = null)
+                    : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement)
         {
             Room = room;
         }
@@ -54,7 +58,8 @@ namespace Randomizer.SMZ3
         /// <param name="memoryType">The type of location</param>
 
         public Location(Region region, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
-            Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default)
+            Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
+            Requirement? relevanceRequirement = null)
         {
             Region = region;
             Id = id;
@@ -69,6 +74,7 @@ namespace Randomizer.SMZ3
             MemoryAddress = memoryAddress;
             MemoryFlag = memoryFlag;
             MemoryType = memoryType;
+            _relevanceRequirement = relevanceRequirement ?? (items => _canAccess(items));
         }
 #nullable disable
 
@@ -205,7 +211,29 @@ namespace Randomizer.SMZ3
         /// </returns>
         public bool IsAvailable(Progression items)
         {
-            return Region.CanEnter(items) && _canAccess(items);
+            return Region.CanEnter(items, true) && _canAccess(items);
+        }
+
+        /// <summary>
+        /// Determines whether a location is relevant even though it may
+        /// not be accessible based on the specified items
+        /// </summary>
+        /// <param name="items">The available items.</param>
+        /// <see langword="true"/> if the location is available with <paramref
+        /// name="items"/>; otherwise, <see langword="false"/>.
+        public bool IsRevelant(Progression items) => Region.CanEnter(items, false) && _relevanceRequirement(items);
+
+        /// <summary>
+        /// Returns the status of a location based on the given items
+        /// </summary>
+        /// <param name="items">The available items</param>
+        /// <returns>The LocationStatus enum of the location</returns>
+        public LocationStatus GetStatus(Progression items)
+        {
+            if (Cleared) return LocationStatus.Cleared;
+            else if (IsAvailable(items)) return LocationStatus.Available;
+            else if (IsRevelant(items)) return LocationStatus.Relevant;
+            else return LocationStatus.OutOfLogic;
         }
 
         /// <summary>

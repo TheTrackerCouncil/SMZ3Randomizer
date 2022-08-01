@@ -84,7 +84,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public Location LanmolasReward { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return items.Book ||
                 items.Mirror && Logic.CanLiftHeavy(items) && items.Flute ||

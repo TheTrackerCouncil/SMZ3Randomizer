@@ -5,8 +5,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
 using Randomizer.SMZ3;
+using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App.ViewModels
@@ -38,29 +39,39 @@ namespace Randomizer.App.ViewModels
             X = (mapLocation.X * scaledRatio) - (Size / 2);
             Y = (mapLocation.Y * scaledRatio) - (Size / 2);
             Syncer = syncer ?? throw new ArgumentNullException(nameof(syncer));
-            Locations = Syncer.AllLocations.Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
-            Name = Syncer.GetName(mapLocation);
-            Region = Syncer.World.Regions.First(x => x.Name == mapLocation.Region);
+            Region = Syncer.World.Regions.First(x => x.GetType().FullName == mapLocation.RegionTypeName);
 
-            // To avoid multiple linq statements, let's loop through them all to
-            // calculate the results
-            var numClearable = 0;
-            var numOutOfLogic = 0;
-            var numUncleared = 0;
-            var numCleared = 0;
-
-            Locations.ForEach(x =>
+            // If no location was specified, it's a boss or dungeon
+            if (mapLocation.Name == null)
             {
-                numClearable += Syncer.IsLocationClearable(x, allowOutOfLogic: false, requireKeys: Region.Name == "Hyrule Castle" || syncer.Tracker.World.Config.Keysanity) ? 1 : 0;
-                numOutOfLogic += Syncer.IsLocationClearable(x, allowOutOfLogic: true) && !Syncer.IsLocationClearable(x, allowOutOfLogic: false, requireKeys: Region.Name == "Hyrule Castle" || syncer.Tracker.World.Config.Keysanity) ? 1 : 0;
-                numUncleared += !x.Cleared ? 1 : 0;
-                numCleared += x.Cleared ? 1 : 0;
-            });
+                if (Region is Z3Region)
+                {
+                    Dungeon = Syncer.Tracker.WorldInfo.Dungeons.First(x => x.TypeName == mapLocation.RegionTypeName);
+                    Name = Dungeon.Reward.GetDescription();
+                    Y -= 22;
+                }
+                else if (Region is SMRegion)
+                {
+                    Boss = Syncer.Tracker.WorldInfo.Bosses.First(x => x.Reward == ((IHasReward)Region).Reward);
+                    Name = Boss.ToString();
+                }
+            }
+            // Else figure out the current status of all of the locations
+            else
+            {
+                Name = Syncer.GetName(mapLocation);
+                Locations = Syncer.AllLocations.Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
 
-            ClearableLocationsCount = numClearable;
-            OutOfLogicLocationsCount = numOutOfLogic;
-            UnclearedLocationsCount = numUncleared;
-            ClearedLocationsCount = numCleared;
+                var progression = Region is HyruleCastle || Region.World.Config.Keysanity ? syncer.Progression : syncer.ProgressionWithKeys;
+                var statuses = Locations.Select(x => x.GetStatus(progression));
+
+                ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
+                RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
+                OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
+                UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
+                ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
+            }
+
         }
 
         /// <summary>
@@ -85,9 +96,9 @@ namespace Randomizer.App.ViewModels
         /// The list of locations underneath this one for the right click menu
         /// </summary>
         public List<TrackerMapLocationViewModel> SubLocationModels
-            => Locations.Where(x => Syncer.IsLocationClearable(x))
+            => Locations?.Where(x => Syncer.IsLocationClearable(x))
                         .Select(x => new TrackerMapLocationViewModel(x, Syncer))
-                        .ToList();
+                        .ToList() ?? new();
 
         /// <summary>
         /// The X value of where to display this location on the map
@@ -110,6 +121,14 @@ namespace Randomizer.App.ViewModels
         public string Name { get; set; }
 
         /// <summary>
+        /// The rewards for if this is not an actual location
+        /// </summary>
+        #nullable enable
+        private BossInfo? Boss { get; set; }
+        private DungeonInfo? Dungeon { get; set; }
+        #nullable disable
+
+        /// <summary>
         /// The number of available/accessible locations here that have not been
         /// cleared
         /// </summary>
@@ -124,14 +143,13 @@ namespace Randomizer.App.ViewModels
 
         public int ClearedLocationsCount { get; set; }
 
+        public int RelevantLocationsCount { get; set; }
+
         /// <summary>
         /// Display the icon if there are available uncleared locations that
         /// match the number of total uncleared locations
         /// </summary>
-        public Visibility IconVisibility
-            => (ClearableLocationsCount > 0 || OutOfLogicLocationsCount > 0)
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+        public Visibility IconVisibility { get; set; }
 
         /// <summary>
         /// Get the icon to display for the location
@@ -141,17 +159,52 @@ namespace Randomizer.App.ViewModels
             get
             {
                 var image = "blank.png";
-                if (ClearableLocationsCount > 0 && ClearableLocationsCount == UnclearedLocationsCount)
+
+                if (Locations == null)
                 {
-                    image = "accessible.png";
+                    var region = (IHasReward)Region;
+                    if (Boss != null && !Boss.Defeated && region.CanComplete(Syncer.ProgressionForRegion(Region)))
+                    {
+                        image = "boss.png";
+                        IconVisibility = Visibility.Visible;
+                    }
+                    else if (Dungeon != null && !Dungeon.Cleared && region.CanComplete(Syncer.ProgressionForRegion(Region)))
+                    {
+                        image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
+                        IconVisibility = Visibility.Visible;
+                    }
                 }
-                else if (ClearableLocationsCount > 0 && ClearableLocationsCount < UnclearedLocationsCount)
+                else
                 {
-                    image = "partial.png";
-                }
-                else if (ClearableLocationsCount == 0 && OutOfLogicLocationsCount > 0)
-                {
-                    image = "outoflogic.png";
+                    if (ClearableLocationsCount > 0 && ClearableLocationsCount == UnclearedLocationsCount)
+                    {
+                        image = "accessible.png";
+                        IconVisibility = Visibility.Visible;
+                    }
+                    else if (RelevantLocationsCount > 0 && RelevantLocationsCount + ClearableLocationsCount == UnclearedLocationsCount)
+                    {
+                        image = "relevant.png";
+                        IconVisibility = Visibility.Visible;
+                    }
+                    else if (RelevantLocationsCount > 0 && ClearableLocationsCount == 0)
+                    {
+                        image = "partial_relevance.png";
+                        IconVisibility = Visibility.Visible;
+                    }
+                    else if (ClearableLocationsCount > 0 && ClearableLocationsCount < UnclearedLocationsCount)
+                    {
+                        image = "partial.png";
+                        IconVisibility = Visibility.Visible;
+                    }
+                    else if (ClearableLocationsCount == 0 && OutOfLogicLocationsCount > 0)
+                    {
+                        image = "outoflogic.png";
+                        IconVisibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        IconVisibility = Visibility.Collapsed;
+                    }
                 }
 
                 return new BitmapImage(new Uri(System.IO.Path.Combine(
@@ -199,7 +252,24 @@ namespace Randomizer.App.ViewModels
         /// Get the tag to use for the location. Use the region for dungeons
         ///  and the list of locations for all other places
         /// </summary>
-        public object Tag => Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x, true, Syncer.Tracker.World.Config.Keysanity)).ToList();
+        public object Tag
+        {
+            get
+            {
+                if (Boss != null)
+                {
+                    return Boss;
+                }
+                else if (Dungeon != null)
+                {
+                    return Dungeon;
+                }
+                else
+                {
+                    return Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x, true, Syncer.Tracker.World.Config.Keysanity)).ToList();
+                }
+            }
+        }
 
         /// <summary>
         /// LocationSyncer to use for keeping locations in sync between the

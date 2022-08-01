@@ -53,7 +53,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
 
         public Location OldManReward { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return items.Flute
                 || (Logic.CanLiftLight(items) && Logic.CanPassSwordOnlyDarkRooms(items))

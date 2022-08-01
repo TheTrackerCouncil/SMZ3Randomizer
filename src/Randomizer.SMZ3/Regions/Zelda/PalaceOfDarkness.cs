@@ -125,9 +125,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public DarkBasementRoom DarkBasement { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return items.MoonPearl && World.DarkWorldNorthEast.CanEnter(items);
+            return items.MoonPearl && World.DarkWorldNorthEast.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

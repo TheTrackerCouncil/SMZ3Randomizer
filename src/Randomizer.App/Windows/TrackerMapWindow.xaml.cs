@@ -51,13 +51,22 @@ namespace Randomizer.App
                 {
                     foreach (var mapRegion in map.Regions)
                     {
-                        var mapLocations = regions.Where(region => mapRegion.Name == region.Name)
-                            .SelectMany(region => region.Rooms)
-                            .Select(room => new TrackerMapLocation(mapRegion.Name, room.Name,
+                        var region = regions.First(region => mapRegion.Name == region.Name);
+                        var mapLocations = region.Rooms
+                            .Select(room => new TrackerMapLocation(mapRegion.Name, region.TypeName, room.Name,
                                 x: (int)Math.Floor(room.X * mapRegion.Scale) + mapRegion.X,
                                 y: (int)Math.Floor(room.Y * mapRegion.Scale) + mapRegion.Y))
                             .ToList();
                         map.FullLocations.AddRange(mapLocations);
+
+                        // Add the boss for this region if one is specified
+                        if (region.BossX != null && region.BossY != null)
+                        {
+                            map.FullLocations.Add(new TrackerMapLocation(mapRegion.Name, region.TypeName, null,
+                                x: (int)Math.Floor((region.BossX ?? 0) * mapRegion.Scale) + mapRegion.X,
+                                y: (int)Math.Floor((region.BossY ?? 0) * mapRegion.Scale) + mapRegion.Y));
+                        }
+
                     }
                 }
             }
@@ -187,6 +196,14 @@ namespace Randomizer.App
             else if (shape.Tag is Region region)
             {
                 Syncer.ClearRegion(region, false, true);
+            }
+            else if (shape.Tag is BossInfo boss)
+            {
+                Syncer.Tracker.MarkBossAsDefeated(boss);
+            }
+            else if(shape.Tag is DungeonInfo dungeon)
+            {
+                Syncer.Tracker.MarkDungeonAsCleared(dungeon);
             }
             
         }

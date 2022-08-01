@@ -139,6 +139,9 @@ namespace Randomizer.SMZ3
         public bool Contains(ItemType itemType)
             => Items.Contains(itemType);
 
+        public bool Contains(RewardType reward)
+            => Rewards.Contains(reward);
+
         public bool Contains(ItemType itemType, int amount)
             => GetCount(itemType) >= amount;
 

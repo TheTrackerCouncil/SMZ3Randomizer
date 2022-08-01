@@ -68,6 +68,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                     name: "Sahasrahla",
                     vanillaItem: ItemType.Boots,
                     access: items => items.GreenPendant,
+                    relevanceRequirement: items => World.CanAquire(items, RewardType.PendantGreen),
                     memoryAddress: 0x190,
                     memoryFlag: 0x10,
                     memoryType: LocationMemoryType.ZeldaMisc);

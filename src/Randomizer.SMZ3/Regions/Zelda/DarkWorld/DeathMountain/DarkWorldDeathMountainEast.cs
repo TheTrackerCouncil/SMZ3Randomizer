@@ -22,9 +22,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
 
         public SuperbunnyCaveRoom SuperbunnyCave { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return Logic.CanLiftHeavy(items) && World.LightWorldDeathMountainEast.CanEnter(items);
+            return Logic.CanLiftHeavy(items) && World.LightWorldDeathMountainEast.CanEnter(items, requireRewards);
         }
 
         public class HookshotCaveRoom : Room

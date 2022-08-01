@@ -12,17 +12,17 @@
     <DockPanel LastChildFill="True">
         <ComboBox x:Name="MapComboBox" DockPanel.Dock="Top" Margin="0,5,0,5" SelectionChanged="MapComboBox_SelectionChanged" ItemsSource="{Binding MapNames}" Width="200"/>
         <Grid DockPanel.Dock="Bottom" SizeChanged="Grid_SizeChanged" >
-            
-        <ItemsControl ItemsSource="{Binding TrackerMapLocations}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
+
+      <ItemsControl ItemsSource="{Binding TrackerMapLocations}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
             <Canvas x:Name="MapCanvas" Height="{Binding MapSize.Height}" Width="{Binding MapSize.Width}">
               <Canvas.Background>
                 <ImageBrush ImageSource="{Binding CanvasImage}"/>
               </Canvas.Background>
             </Canvas>
           </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
+        </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <Grid Width="{Binding Size}" Height="{Binding Size}" >
@@ -61,9 +61,9 @@
           </Style>
         </ItemsControl.ItemContainerStyle>
       </ItemsControl>
-                
-            
-        </Grid>
-    </DockPanel>
+
+
+    </Grid>
+  </DockPanel>
 
 </Window>

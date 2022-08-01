@@ -127,10 +127,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public MiniHelmasaurRoomRoom MiniHelmasaurRoom { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             var smBosses = new[] { RewardType.Kraid, RewardType.Phantoon, RewardType.Draygon, RewardType.Ridley };
-            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items) && items.AllCrystals && World.CanAquireAll(items, smBosses);
+            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items, requireRewards) && items.AllCrystals && World.CanAquireAll(items, smBosses);
         }
 
         public override bool CanFill(Item item, Progression items)

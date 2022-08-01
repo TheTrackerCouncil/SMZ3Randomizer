@@ -38,7 +38,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "South of Grove",
                 alsoKnownAs: new[] { "Cave #45" },
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.Mirror && World.DarkWorldSouth.CanEnter(items),
+                access: items => items.Mirror && World.DarkWorldSouth.CanEnter(items, true),
+                relevanceRequirement: items => items.Mirror && World.DarkWorldSouth.CanEnter(items, false),
                 memoryAddress: 0x11B,
                 memoryFlag: 0xA);
 
@@ -60,7 +61,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             DesertLedge = new Location(this, 256 + 252, 0x308143, LocationType.Regular,
                 name: "Desert Ledge",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => World.DesertPalace.CanEnter(items),
+                access: items => World.DesertPalace.CanEnter(items, true),
                 memoryAddress: 0x30,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc);
@@ -77,7 +78,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             BombosTablet = new Location(this, 256 + 58, 0x308017, LocationType.Bombos,
                 name: "Bombos Tablet",
                 vanillaItem: ItemType.Bombos,
-                access: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items),
+                access: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items, true),
+                relevanceRequirement: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items, false),
                 memoryAddress: 0x191,
                 memoryFlag: 0x2,
                 memoryType: LocationMemoryType.ZeldaMisc);
@@ -86,8 +88,11 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Lake Hylia Island",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Flippers && items.MoonPearl && items.Mirror && (
-                    World.DarkWorldSouth.CanEnter(items) ||
-                    World.DarkWorldNorthEast.CanEnter(items)),
+                    World.DarkWorldSouth.CanEnter(items, true) ||
+                    World.DarkWorldNorthEast.CanEnter(items, true)),
+                relevanceRequirement: items => items.Flippers && items.MoonPearl && items.Mirror && (
+                    World.DarkWorldSouth.CanEnter(items, false) ||
+                    World.DarkWorldNorthEast.CanEnter(items, false)),
                 memoryAddress: 0x35,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc);

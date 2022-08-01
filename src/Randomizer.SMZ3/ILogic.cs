@@ -50,7 +50,7 @@ namespace Randomizer.SMZ3
 
         public bool CanAccessNorfairLowerPortal(Progression items);
 
-        public bool CanAccessMaridiaPortal(Progression items);
+        public bool CanAccessMaridiaPortal(Progression items, bool requireRewards);
 
         public bool CanSafelyUseScrewAttack(Progression items);
 
@@ -67,5 +67,7 @@ namespace Randomizer.SMZ3
         public bool CanNavigateMaridiaLeftSandPit(Progression items);
         
         public bool CanWallJump(WallJumpDifficulty difficulty);
+
+        public bool CheckAgahnim(Progression items, World world, bool requireRewards);
     }
 }

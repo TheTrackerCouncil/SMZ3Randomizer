@@ -112,11 +112,12 @@ namespace Randomizer.SMZ3
         /// items.
         /// </summary>
         /// <param name="items">The currently available items.</param>
+        /// <param name="requireRewards">If dungeon/boss rewards are required for the check</param>
         /// <returns>
         /// <see langword="true"/> if the region is available with <paramref
         /// name="items"/>; otherwise, <see langword="false"/>.
         /// </returns>
-        public virtual bool CanEnter(Progression items)
+        public virtual bool CanEnter(Progression items, bool requireRewards)
         {
             return true;
         }

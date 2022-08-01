@@ -101,9 +101,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public Location MothulaReward { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items);
+            return items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

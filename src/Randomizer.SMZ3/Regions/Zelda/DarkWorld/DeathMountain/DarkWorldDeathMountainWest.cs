@@ -27,7 +27,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain
                     name: "Spike Cave",
                     access: items => items.MoonPearl && items.Hammer && Logic.CanLiftLight(items) &&
                         ((Logic.CanExtendMagic(items, 2) && items.Cape) || items.Byrna) &&
-                        World.LightWorldDeathMountainWest.CanEnter(items),
+                        World.LightWorldDeathMountainWest.CanEnter(items, true),
                     memoryAddress: 0x117,
                     memoryFlag: 0x4);
             }

@@ -60,10 +60,10 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
         public Location MickeyMouseClubhouse { get; }
 
         // Todo: account for Croc Speedway once Norfair Upper East also do so, otherwise it would be inconsistent to do so here
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return items.Varia && (
-                        World.UpperNorfairEast.CanEnter(items) && Logic.CanUsePowerBombs(items) && Logic.CanFly(items) && items.Gravity && (
+                        World.UpperNorfairEast.CanEnter(items, requireRewards) && Logic.CanUsePowerBombs(items) && Logic.CanFly(items) && items.Gravity && (
                             /* Trivial case, Bubble Mountain access */
                             items.CardNorfairL2 ||
                             /* Frog Speedway -> UN Farming Room gate */

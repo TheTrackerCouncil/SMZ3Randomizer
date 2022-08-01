@@ -37,10 +37,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.DarkWorld
 
         public HypeCaveRoom HypeCave { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return items.MoonPearl && (((
-                    items.Agahnim ||
+                    Logic.CheckAgahnim(items, World, requireRewards) ||
                     (Logic.CanAccessDarkWorldPortal(items) && items.Flippers)
                 ) && (items.Hammer || (items.Hookshot && (items.Flippers || Logic.CanLiftLight(items))))) ||
                 (items.Hammer && Logic.CanLiftLight(items)) ||
