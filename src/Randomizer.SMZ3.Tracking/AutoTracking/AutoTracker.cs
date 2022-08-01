@@ -441,9 +441,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 }
 
                 // Check if the player cleared Aga
-                if (action.CurrentData?.ReadUInt8(0x145) >= 3 && action.PreviousData?.ReadUInt8(0x145) < 3)
+                if (action.CurrentData?.ReadUInt8(0x145) >= 3 && Tracker != null)
                 {
-                    Tracker?.ClearDungeon(Tracker.WorldInfo.Dungeons.First(x => x.Is(Tracker.World.CastleTower)), null);
+                    var dungeon = Tracker.WorldInfo.Dungeons.First(x => x.Is(Tracker.World.CastleTower));
+                    if (!dungeon.Cleared)
+                    {
+                        Tracker.MarkDungeonAsCleared(dungeon, null);
+                        _logger.LogInformation($"Auto tracked {dungeon.Name} as cleared");
+                    }
                 }
             }
         }
