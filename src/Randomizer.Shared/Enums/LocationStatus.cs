@@ -12,6 +12,11 @@ namespace Randomizer.Shared.Enums
     public enum LocationStatus
     {
         /// <summary>
+        /// The location's status is currently unknown
+        /// </summary>
+        Unknown,
+
+        /// <summary>
         /// Already cleared by the player
         /// </summary>
         Cleared,
