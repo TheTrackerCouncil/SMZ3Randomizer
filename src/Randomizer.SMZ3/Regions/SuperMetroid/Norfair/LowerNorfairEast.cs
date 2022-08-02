@@ -38,7 +38,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 name: "Energy Tank, Ridley",
                 alsoKnownAs: new[] { "Ridley's Reliquary" },
                 vanillaItem: ItemType.ETank,
-                access: items => CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super,
+                access: items => items.Ridley,
                 memoryAddress: 0x9,
                 memoryFlag: 0x40);
             FirefleaRoom = new Location(this, 80, 0x8F9184, LocationType.Visible,
@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public override string Area => "Lower Norfair";
 
-        public Reward Reward { get; set; } = Reward.GoldenFourBoss;
+        public RewardType Reward { get; set; } = RewardType.Ridley;
 
         public Location SpringBallMaze { get; }
 
@@ -69,9 +69,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public Location FirefleaRoom { get; }
 
-        public override bool CanEnter(Progression items) => items.Varia && items.CardLowerNorfairL1 && (
+        public override bool CanEnter(Progression items, bool requireRewards) => items.Varia && items.CardLowerNorfairL1 && (
                     // Access via elevator from upper norfair east past Ridley's mouth
-                    (World.UpperNorfairEast.CanEnter(items) && Logic.CanUsePowerBombs(items) && Logic.CanFly(items) && items.Gravity) ||
+                    (World.UpperNorfairEast.CanEnter(items, requireRewards) && Logic.CanUsePowerBombs(items) && Logic.CanFly(items) && items.Gravity) ||
                     // Access via Zelda portal and passing worst room in the game
                     (Logic.CanAccessNorfairLowerPortal(items) && Logic.CanDestroyBombWalls(items) && items.Super && Logic.CanUsePowerBombs(items) && (
                         Logic.CanWallJump(WallJumpDifficulty.Insane) ||
@@ -82,7 +82,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public bool CanComplete(Progression items)
         {
-            return RidleyTreasure.IsAvailable(items);
+            return CanEnter(items, true) && CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super;
         }
 
         private bool CanExit(Progression items)

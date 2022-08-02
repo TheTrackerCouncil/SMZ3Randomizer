@@ -10,21 +10,24 @@ namespace Randomizer.SMZ3
     /// <summary>
     /// Represents a player's inventory across both games.
     /// </summary>
-    public class Progression : ICollection<ItemType>
+    public class Progression
     {
         public Progression()
         {
             Items = new();
+            Rewards = new();
         }
 
-        public Progression(IEnumerable<ItemType> items)
+        public Progression(IEnumerable<ItemType> items, IEnumerable<RewardType> rewards)
         {
             Items = new(items);
+            Rewards = new(rewards);
         }
 
-        public Progression(IEnumerable<Item> items)
+        public Progression(IEnumerable<Item> items, IEnumerable<Reward> rewards)
         {
             Items = new(items.Select(x => x.Type));
+            Rewards = new(rewards.Select(x => x.Type));
         }
 
         public bool BigKeyEP => Contains(ItemType.BigKeyEP);
@@ -115,14 +118,29 @@ namespace Randomizer.SMZ3
         public int ETank => GetCount(ItemType.ETank);
         public int ReserveTank => GetCount(ItemType.ETank);
         public int Rupees => GetRupeeCount();
+        public bool Agahnim => Rewards.Contains(RewardType.Agahnim);
+        public bool GreenPendant => Rewards.Contains(RewardType.PendantGreen);
+        public bool AllPendants => Rewards.Count(r => r is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue) >= 3;
+        public bool BothRedCrystals => Rewards.Count(r => r == RewardType.CrystalRed) >= 2;
+        public bool AllCrystals => PendantCount >= 7;
+        public bool Kraid => Rewards.Contains(RewardType.Kraid);
+        public bool Phantoon => Rewards.Contains(RewardType.Phantoon);
+        public bool Draygon => Rewards.Contains(RewardType.Draygon);
+        public bool Ridley => Rewards.Contains(RewardType.Draygon);
+        public bool AllMetroidBosses => Rewards.Count(r => r is RewardType.Kraid or RewardType.Phantoon or RewardType.Draygon or RewardType.Ridley) >= 4;
+        public int PendantCount => Rewards.Count(r => r is RewardType.CrystalBlue or RewardType.CrystalRed);
         public int Count => Items.Count;
         public bool IsReadOnly => false;
 
         protected LogicConfig LogicConfig { get; }
         protected List<ItemType> Items { get; }
+        protected List<RewardType> Rewards { get; }
 
         public bool Contains(ItemType itemType)
             => Items.Contains(itemType);
+
+        public bool Contains(RewardType reward)
+            => Rewards.Contains(reward);
 
         public bool Contains(ItemType itemType, int amount)
             => GetCount(itemType) >= amount;
@@ -139,11 +157,17 @@ namespace Randomizer.SMZ3
         public void AddRange(IEnumerable<Item> items)
             => Items.AddRange(items.Select(x => x.Type));
 
+        public void AddRange(IEnumerable<RewardType> rewards)
+            => Rewards.AddRange(rewards);
+
+        public void AddRange(IEnumerable<Reward> rewards)
+            => Rewards.AddRange(rewards.Select(x => x.Type));
+
         public void Clear()
             => Items.Clear();
 
         public Progression Clone()
-            => new(Items);
+            => new(Items, Rewards);
 
         public void CopyTo(ItemType[] array, int arrayIndex)
             => Items.CopyTo(array, arrayIndex);
@@ -153,9 +177,6 @@ namespace Randomizer.SMZ3
 
         public IEnumerator<ItemType> GetEnumerator()
             => Items.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
 
         private int GetRupeeCount()
         {

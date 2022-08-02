@@ -60,11 +60,11 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public Location MamaTurtleWallItem { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return items.Gravity
-                && ((World.UpperNorfairWest.CanEnter(items) && Logic.CanUsePowerBombs(items))
-                    || (Logic.CanAccessMaridiaPortal(items)
+                && ((World.UpperNorfairWest.CanEnter(items, requireRewards) && Logic.CanUsePowerBombs(items))
+                    || (Logic.CanAccessMaridiaPortal(items, requireRewards)
                     && items.CardMaridiaL1
                     && items.CardMaridiaL2
                     && (Logic.CanPassBombPassages(items) || items.ScrewAttack)));

@@ -751,6 +751,8 @@ namespace Randomizer.SMZ3.Tracking
                 progression.AddRange(Enumerable.Repeat(item.InternalItemType, item.TrackingState));
             }
 
+            progression.AddRange(GetCurrentRewards());
+
             _progression[mapKey] = progression;
             return progression;
         }
@@ -1888,6 +1890,9 @@ namespace Randomizer.SMZ3.Tracking
                 boss.Name.ToString() ?? "boss"
             );
 
+            IsDirty = true;
+            UpdateTrackerProgression = true;
+
             OnBossUpdated(new(confidence));
             AddUndo(() =>
             {
@@ -1911,6 +1916,9 @@ namespace Randomizer.SMZ3.Tracking
 
             boss.Defeated = false;
             Say(Responses.BossUndefeated, boss.Name);
+
+            IsDirty = true;
+            UpdateTrackerProgression = true;
 
             OnBossUpdated(new(confidence));
             AddUndo(() => boss.Defeated = true);
@@ -2140,10 +2148,10 @@ namespace Randomizer.SMZ3.Tracking
         /// <see langword="true"/> if the reward leads to something good;
         /// otherwise, <see langword="false"/>.
         /// </returns>
-        protected internal bool IsWorth(Reward reward)
+        protected internal bool IsWorth(RewardType reward)
         {
             var sahasrahlaItem = ItemService.GetOrDefault(World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla);
-            if (sahasrahlaItem != null && reward == Reward.PendantGreen)
+            if (sahasrahlaItem != null && reward == RewardType.PendantGreen)
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, sahasrahlaItem);
                 if (IsWorth(sahasrahlaItem))
@@ -2155,7 +2163,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var pedItem = ItemService.GetOrDefault(World.LightWorldNorthWest.MasterSwordPedestal);
-            if (pedItem != null && (reward == Reward.PendantGreen || reward == Reward.PendantNonGreen))
+            if (pedItem != null && (reward is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue))
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, pedItem);
                 if (IsWorth(pedItem))
@@ -2530,8 +2538,19 @@ namespace Randomizer.SMZ3.Tracking
                     items.Add(new SMZ3.Item(item.InternalItemType));
             }
 
-            var progression = new Progression(items);
+            var progression = new Progression(items, GetCurrentRewards());
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
+        }
+
+        private IEnumerable<Reward> GetCurrentRewards()
+        {
+            var dungeonRewards = WorldInfo.Dungeons
+                .Where(d => d.Cleared && d.HasReward && d.Reward != RewardItem.Unknown)
+                .Select(d => new Reward(d.Reward.ToRewardType()));
+            var bossRewards = WorldInfo.Bosses
+                .Where(b => b.Defeated && b.Reward != RewardType.None)
+                .Select(b => new Reward(b.Reward));
+            return dungeonRewards.Concat(bossRewards);
         }
     }
 }

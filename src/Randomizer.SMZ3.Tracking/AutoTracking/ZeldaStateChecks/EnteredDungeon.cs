@@ -48,7 +48,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                     var clearedCrystalDungeonCount = tracker.WorldInfo.Dungeons
                                                         .Where(x => x.Cleared)
                                                         .Select(x => x.GetRegion(tracker.World) as IHasReward)
-                                                        .Count(x => x != null && x.Reward is Reward.CrystalBlue or Reward.CrystalRed);
+                                                        .Count(x => x != null && x.Reward is RewardType.CrystalBlue or RewardType.CrystalRed);
                     if (clearedCrystalDungeonCount < 7)
                     {
                         tracker.SayOnce(x => x.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);

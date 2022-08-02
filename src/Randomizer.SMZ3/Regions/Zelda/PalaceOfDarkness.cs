@@ -99,7 +99,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Area => "Dark Palace";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public Location ShooterRoom { get; }
 
@@ -125,9 +125,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public DarkBasementRoom DarkBasement { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return items.MoonPearl && World.DarkWorldNorthEast.CanEnter(items);
+            return items.MoonPearl && World.DarkWorldNorthEast.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

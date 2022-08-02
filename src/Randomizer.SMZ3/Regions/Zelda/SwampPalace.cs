@@ -79,7 +79,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Swamp Palace";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public Location Entrance { get; }
 
@@ -99,9 +99,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public FloodedRoomRoom FloodedRoom { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return items.MoonPearl && items.Mirror && items.Flippers && World.DarkWorldSouth.CanEnter(items);
+            return items.MoonPearl && items.Mirror && items.Flippers && World.DarkWorldSouth.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

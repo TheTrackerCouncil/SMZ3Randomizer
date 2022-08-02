@@ -78,7 +78,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public Location GrappleBeamRoom { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return (
                         ((Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||

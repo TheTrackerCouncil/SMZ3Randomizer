@@ -61,7 +61,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public Location SpazerRoom { get; }
 
-        public override bool CanEnter(Progression items) =>
+        public override bool CanEnter(Progression items, bool requireRewards) =>
                     ((Logic.CanDestroyBombWalls(items) || items.SpeedBooster)
                      && items.Super
                      && items.Morph) ||

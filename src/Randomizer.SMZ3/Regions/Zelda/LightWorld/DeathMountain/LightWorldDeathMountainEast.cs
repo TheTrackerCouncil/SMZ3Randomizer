@@ -24,7 +24,7 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
             MirrorCave = new Location(this, 256 + 13, 0x1E9C5, LocationType.Regular,
                 name: "Mimic Cave",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items),
+                access: items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items, true),
                 memoryAddress: 0x10C,
                 memoryFlag: 0x4);
 
@@ -47,9 +47,9 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain
         public ParadoxCaveRoom ParadoxCave { get; }
 
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return World.LightWorldDeathMountainWest.CanEnter(items) && (
+            return World.LightWorldDeathMountainWest.CanEnter(items, requireRewards) && (
                 (items.Hammer && items.Mirror) ||
                 items.Hookshot
             );

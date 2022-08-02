@@ -439,6 +439,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
                 }
+
+                // Check if the player cleared Aga
+                if (action.CurrentData?.ReadUInt8(0x145) >= 3 && Tracker != null)
+                {
+                    var dungeon = Tracker.WorldInfo.Dungeons.First(x => x.Is(Tracker.World.CastleTower));
+                    if (!dungeon.Cleared)
+                    {
+                        Tracker.MarkDungeonAsCleared(dungeon, null);
+                        _logger.LogInformation($"Auto tracked {dungeon.Name} as cleared");
+                    }
+                }
             }
         }
 

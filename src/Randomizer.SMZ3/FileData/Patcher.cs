@@ -177,13 +177,11 @@ namespace Randomizer.SMZ3.FileData
             var crystalsRed = new[] { 5, 6 }.Shuffle(_rnd);
             var crystalRewards = crystalsBlue.Concat(crystalsRed);
 
-            var pendantsGreen = new[] { 1 };
-            var pendantsBlueRed = new[] { 2, 3 }.Shuffle(_rnd);
-            var pendantRewards = pendantsGreen.Concat(pendantsBlueRed);
+            var pendantRewards = new[] { 1, 2, 3 };
 
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var crystalRegions = regions.Where(x => x.Reward == Reward.CrystalBlue).Concat(regions.Where(x => x.Reward == Reward.CrystalRed));
-            var pendantRegions = regions.Where(x => x.Reward == Reward.PendantGreen).Concat(regions.Where(x => x.Reward == Reward.PendantNonGreen));
+            var crystalRegions = regions.Where(x => x.Reward == RewardType.CrystalBlue).Concat(regions.Where(x => x.Reward == RewardType.CrystalRed));
+            var pendantRegions = regions.Where(x => x.Reward is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue).OrderBy(r => (int)r.Reward);
 
             _patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
             _patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
@@ -440,10 +438,11 @@ namespace Randomizer.SMZ3.FileData
             {
                 ALttPSoundtrack? soundtrack = dungeonRegion.Reward switch
                 {
-                    Reward.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
-                    Reward.PendantNonGreen => ALttPSoundtrack.LightWorldDungeon,
-                    Reward.CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
-                    Reward.CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
+                    RewardType.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
+                    RewardType.PendantRed => ALttPSoundtrack.LightWorldDungeon,
+                    RewardType.PendantBlue => ALttPSoundtrack.LightWorldDungeon,
+                    RewardType.CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
+                    RewardType.CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
                     _ => null
                 };
                 return soundtrack != null
@@ -661,8 +660,8 @@ namespace Randomizer.SMZ3.FileData
         private void WriteTexts(Config config)
         {
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var greenPendantDungeon = regions.Where(x => x.Reward == Reward.PendantGreen).Cast<Region>().First();
-            var redCrystalDungeons = regions.Where(x => x.Reward == Reward.CrystalRed).Cast<Region>();
+            var greenPendantDungeon = regions.Where(x => x.Reward == RewardType.PendantGreen).Cast<Region>().First();
+            var redCrystalDungeons = regions.Where(x => x.Reward == RewardType.CrystalRed).Cast<Region>();
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));

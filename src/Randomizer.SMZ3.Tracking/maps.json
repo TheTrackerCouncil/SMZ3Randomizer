@@ -896,7 +896,7 @@
         {
           "Name": "Lower Norfair, East",
           "X": 1838,
-          "Y": 1210,
+          "Y": 1214,
           "Scale": 1
         }
       ]
@@ -905,6 +905,7 @@
   "Regions": [
     {
       "Name": "Light World North West",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest",
       "Rooms": [
         {
           "Name": "Master Sword Pedestal",
@@ -1000,6 +1001,7 @@
     },
     {
       "Name": "Light World North East",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthEast",
       "Rooms": [
         {
           "Name": "Sahasrahla's Hut",
@@ -1029,6 +1031,7 @@
     },
     {
       "Name": "Light World South",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldSouth",
       "Rooms": [
         {
           "Name": "Swamp Ruins",
@@ -1118,6 +1121,7 @@
     },
     {
       "Name": "Light World Death Mountain West",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest",
       "Rooms": [
         {
           "Name": "Old Man",
@@ -1147,6 +1151,7 @@
     },
     {
       "Name": "Light World Death Mountain East",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast",
       "Rooms": [
         {
           "Name": "Spiral Cave",
@@ -1176,6 +1181,9 @@
     },
     {
       "Name": "Eastern Palace",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.EasternPalace",
+      "BossX": 1925,
+      "BossY": 791,
       "Rooms": [
         {
           "Name": "Eastern Palace",
@@ -1187,6 +1195,9 @@
     },
     {
       "Name": "Desert Palace",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DesertPalace",
+      "BossX": 146,
+      "BossY": 1584,
       "Rooms": [
         {
           "Name": "Desert Palace",
@@ -1198,17 +1209,21 @@
     },
     {
       "Name": "Tower of Hera",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TowerOfHera",
+      "BossX": 1126,
+      "BossY": 100,
       "Rooms": [
         {
           "Name": "Tower of Hera",
           "X": 1126,
-          "Y": 68,
+          "Y": 100,
           "Scale": 1
         }
       ]
     },
     {
       "Name": "Hyrule Castle",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.HyruleCastle",
       "Rooms": [
         {
           "Name": "Hyrule Castle",
@@ -1220,6 +1235,9 @@
     },
     {
       "Name": "Castle Tower",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.CastleTower",
+      "BossX": 1003,
+      "BossY": 807,
       "Rooms": [
         {
           "Name": "Castle Tower",
@@ -1231,6 +1249,7 @@
     },
     {
       "Name": "Dark World North East",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
       "Rooms": [
         {
           "Name": "Catfish",
@@ -1254,6 +1273,7 @@
     },
     {
       "Name": "Dark World North West",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
       "Rooms": [
         {
           "Name": "Brewery",
@@ -1295,6 +1315,7 @@
     },
     {
       "Name": "Dark World South",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldSouth",
       "Rooms": [
         {
           "Name": "Hype Cave",
@@ -1318,6 +1339,7 @@
     },
     {
       "Name": "Dark World Mire",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DarkWorldMire",
       "Rooms": [
         {
           "Name": "Mire Shed",
@@ -1329,6 +1351,7 @@
     },
     {
       "Name": "Dark World Death Mountain West",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
       "Rooms": [
         {
           "Name": "Spike Cave",
@@ -1340,6 +1363,7 @@
     },
     {
       "Name": "Dark World Death Mountain East",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast",
       "Rooms": [
         {
           "Name": "Superbunny Cave",
@@ -1357,6 +1381,9 @@
     },
     {
       "Name": "Palace of Darkness",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.PalaceOfDarkness",
+      "BossX": 1924,
+      "BossY": 800,
       "Rooms": [
         {
           "Name": "Palace of Darkness",
@@ -1368,6 +1395,9 @@
     },
     {
       "Name": "Swamp Palace",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.SwampPalace",
+      "BossX": 940,
+      "BossY": 1880,
       "Rooms": [
         {
           "Name": "Swamp Palace",
@@ -1379,17 +1409,23 @@
     },
     {
       "Name": "Skull Woods",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.SkullWoods",
+      "BossX": 79,
+      "BossY": 130,
       "Rooms": [
         {
           "Name": "Skull Woods",
           "X": 79,
-          "Y": 121,
+          "Y": 130,
           "Scale": 1
         }
       ]
     },
     {
       "Name": "Thieves' Town",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.ThievesTown",
+      "BossX": 251,
+      "BossY": 971,
       "Rooms": [
         {
           "Name": "Thieves' Town",
@@ -1401,6 +1437,9 @@
     },
     {
       "Name": "Ice Palace",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.IcePalace",
+      "BossX": 1600,
+      "BossY": 1735,
       "Rooms": [
         {
           "Name": "Ice Palace",
@@ -1412,6 +1451,9 @@
     },
     {
       "Name": "Misery Mire",
+      "BossX": 150,
+      "BossY": 1670,
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.MiseryMire",
       "Rooms": [
         {
           "Name": "Misery Mire",
@@ -1423,6 +1465,9 @@
     },
     {
       "Name": "Turtle Rock",
+      "BossX": 1890,
+      "BossY": 144,
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.TurtleRock",
       "Rooms": [
         {
           "Name": "Turtle Rock",
@@ -1434,6 +1479,7 @@
     },
     {
       "Name": "Ganon's Tower",
+      "TypeName": "Randomizer.SMZ3.Regions.Zelda.GanonsTower",
       "Rooms": [
         {
           "Name": "Ganon's Tower",
@@ -1445,6 +1491,7 @@
     },
     {
       "Name": "Blue Brinstar",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar",
       "Rooms": [
         {
           "Name": "Morphing Ball",
@@ -1486,6 +1533,7 @@
     },
     {
       "Name": "Green Brinstar",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.GreenBrinstar",
       "Rooms": [
         {
           "Name": "Reserve Tank, Brinstar",
@@ -1533,6 +1581,7 @@
     },
     {
       "Name": "Pink Brinstar",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.PinkBrinstar",
       "Rooms": [
         {
           "Name": "Charge Beam",
@@ -1586,6 +1635,7 @@
     },
     {
       "Name": "Red Brinstar",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.RedBrinstar",
       "Rooms": [
         {
           "Name": "X-Ray Scope",
@@ -1621,6 +1671,9 @@
     },
     {
       "Name": "Kraid's Lair",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.KraidsLair",
+      "BossX": 1720,
+      "BossY": 676,
       "Rooms": [
         {
           "Name": "Energy Tank, Kraid",
@@ -1644,6 +1697,7 @@
     },
     {
       "Name": "Central Crateria",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.CentralCrateria",
       "Rooms": [
         {
           "Name": "Bombs",
@@ -1679,6 +1733,7 @@
     },
     {
       "Name": "West Crateria",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.WestCrateria",
       "Rooms": [
         {
           "Name": "Energy Tank, Gauntlet",
@@ -1702,6 +1757,7 @@
     },
     {
       "Name": "East Crateria",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Crateria.EastCrateria",
       "Rooms": [
         {
           "Name": "Missile (outside Wrecked Ship bottom)",
@@ -1731,6 +1787,7 @@
     },
     {
       "Name": "Outer Maridia",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.OuterMaridia",
       "Rooms": [
         {
           "Name": "Missile (green Maridia shinespark)",
@@ -1760,6 +1817,9 @@
     },
     {
       "Name": "Inner Maridia",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Maridia.InnerMaridia",
+      "BossX": 1176,
+      "BossY": 388,
       "Rooms": [
         {
           "Name": "Watering Hole",
@@ -1837,6 +1897,9 @@
     },
     {
       "Name": "Wrecked Ship",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.WreckedShip",
+      "BossX": 632,
+      "BossY": 436,
       "Rooms": [
         {
           "Name": "Missile (Wrecked Ship middle)",
@@ -1890,6 +1953,7 @@
     },
     {
       "Name": "Upper Norfair, West",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairWest",
       "Rooms": [
         {
           "Name": "Ice Beam",
@@ -1931,6 +1995,7 @@
     },
     {
       "Name": "Upper Norfair, East",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairEast",
       "Rooms": [
         {
           "Name": "Bubble Mountain Hidden Hall",
@@ -1978,6 +2043,7 @@
     },
     {
       "Name": "Upper Norfair, Crocomire",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.UpperNorfairCrocomire",
       "Rooms": [
         {
           "Name": "Energy Tank, Crocomire",
@@ -2019,6 +2085,7 @@
     },
     {
       "Name": "Lower Norfair, West",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.LowerNorfairWest",
       "Rooms": [
         {
           "Name": "Screw Attack",
@@ -2048,6 +2115,9 @@
     },
     {
       "Name": "Lower Norfair, East",
+      "TypeName": "Randomizer.SMZ3.Regions.SuperMetroid.Norfair.LowerNorfairEast",
+      "BossX": 792,
+      "BossY": 628,
       "Rooms": [
         {
           "Name": "Missile (lower Norfair above fire flea room)",

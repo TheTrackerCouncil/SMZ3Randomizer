@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 vanillaItem: ItemType.Missile,
                 access: items => items.Varia && (
                             (Logic.CanOpenRedDoors(items) && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
-                            (World.UpperNorfairEast.CanEnter(items) && items.CardNorfairL2)
+                            (World.UpperNorfairEast.CanEnter(items, true) && items.CardNorfairL2)
                         ) && items.Morph,
                 memoryAddress: 0x6,
                 memoryFlag: 0x2);
@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         public Location HiJumpLobbyEntrance { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return (Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph ||
                 Logic.CanAccessNorfairUpperPortal(items);

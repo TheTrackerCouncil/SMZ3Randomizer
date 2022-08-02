@@ -75,7 +75,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Misery Mire";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public ItemType Medallion { get; set; }
 
@@ -96,10 +96,10 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public Location VitreousReward { get; }
 
         // Need "CanKillManyEnemies" if implementing swordless
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return items.Contains(Medallion) && items.Sword && items.MoonPearl &&
-                (items.Boots || items.Hookshot) && World.DarkWorldMire.CanEnter(items);
+                (items.Boots || items.Hookshot) && World.DarkWorldMire.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

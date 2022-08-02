@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         public GauntletShaftRoom GauntletShaft { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return Logic.CanDestroyBombWalls(items) || Logic.CanParlorSpeedBoost(items);
         }

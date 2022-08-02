@@ -569,7 +569,8 @@
         "Toggled Kraid on. Did you get the quick kill?",
         [ "Toggled Kraid's Awful Son's Father on.", 0.1 ],
         [ "Toggled Kraid on. Send his awful son my regards. With a super missile. In his face.", 0.1 ]
-      ]
+      ],
+      "Reward": 6
     },
     {
       "Name": [ "Crocomire" ],
@@ -595,7 +596,8 @@
         "Toggled Spooky Ghost on.",
         "Bustin makes me feel good.",
         [ "Toggled Phanturd on", 0.25 ]
-      ]
+      ],
+      "Reward": 7
     },
     {
       "Name": [ "Shaktool", "The Shaktool" ],
@@ -620,7 +622,8 @@
         "Toggled Draygon on.",
         [ "How could you? She has a family.", 0.25 ],
         [ "Toggled Draygon on. Did you microwave her?", 0.25 ]
-      ]
+      ],
+      "Reward": 8
     },
     {
       "Name": [ "Ridley" ],
@@ -630,7 +633,8 @@
         "Toggled Ridley on.",
         [ "It's a living", 0.25 ],
         [ "Toggled Ridley on. I'm sure they'll revive him in the next game.", 0.25 ]
-      ]
+      ],
+      "Reward": 9
     },
     {
       "Name": [ "Mother Brain" ],
@@ -2402,7 +2406,7 @@
       "X": 636,
       "Y": 1214,
       "WhenTrackingJunk": [ "I would sigh if I could.", "What a shame.", "Such a shame.", "I want a refund.", "At least the season pass was cheap", "At least the food is nice.", "My disappointment is immeasurable." ],
-      "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool." ]
+      "WhenTrackingProgression": [ "Peg World! Peg World! Peg World!", "I love pegging.", "I liked Peg World before it was cool.", "Can we get in line to ride it again?" ]
     },
     {
       "Id": 332,

@@ -73,7 +73,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Thieves' Town";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public Location MapChest { get; }
 
@@ -91,9 +91,9 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public Location BlindReward { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
-            return items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items);
+            return items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

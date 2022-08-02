@@ -5,7 +5,7 @@ namespace Randomizer.Shared
     /// <summary>
     /// Specifies the reward for completing a dungeon or boss.
     /// </summary>
-    public enum Reward
+    public enum RewardType
     {
         [Description("None")]
         None,
@@ -13,14 +13,22 @@ namespace Randomizer.Shared
         Agahnim,
         [Description("Green Pendant")]
         PendantGreen,
-        [Description("Blue/Red Pendant")]
-        PendantNonGreen,
+        [Description("Red Pendant")]
+        PendantRed,
         [Description("Blue Crystal")]
         CrystalBlue,
         [Description("Red Crystal")]
         CrystalRed,
-        [Description("Golden Four Boss")]
-        GoldenFourBoss
+        [Description("Kraid")]
+        Kraid,
+        [Description("Phantoon")]
+        Phantoon,
+        [Description("Draygon")]
+        Draygon,
+        [Description("Ridley")]
+        Ridley,
+        [Description("Blue Pendant")]
+        PendantBlue,
     }
 
 }

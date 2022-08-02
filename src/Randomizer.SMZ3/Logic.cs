@@ -106,11 +106,11 @@ namespace Randomizer.SMZ3
             return items.Flute && CanLiftHeavy(items);
         }
 
-        public bool CanAccessMaridiaPortal(Progression items)
+        public bool CanAccessMaridiaPortal(Progression items, bool requireRewards)
         {
             return items.MoonPearl && items.Flippers &&
                     items.Gravity && items.Morph &&
-                    (World.CanAquire(items, Reward.Agahnim) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items));
+                    (CheckAgahnim(items, World, requireRewards) || items.Hammer && CanLiftLight(items) || CanLiftHeavy(items));
         }
 
         public bool CanSafelyUseScrewAttack(Progression items)
@@ -158,6 +158,11 @@ namespace Randomizer.SMZ3
         public bool CanWallJump(WallJumpDifficulty difficulty)
         {
             return World.Config.LogicConfig.WallJumpDifficulty >= difficulty;
+        }
+
+        public bool CheckAgahnim(Progression items, World world, bool requireRewards)
+        {
+            return items.Agahnim || (!requireRewards && world.CanAquire(items, RewardType.Agahnim));
         }
 
         public World World { get; }

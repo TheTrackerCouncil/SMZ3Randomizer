@@ -13,7 +13,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 name: "Master Sword Pedestal",
                 alsoKnownAs: new[] { "Ped" },
                 vanillaItem: ItemType.ProgressiveSword,
-                access: items => World.CanAquireAll(items, Reward.PendantGreen, Reward.PendantNonGreen),
+                access: items => items.AllPendants,
+                relevanceRequirement: items => World.CanAquireAll(items, RewardType.PendantGreen, RewardType.PendantBlue, RewardType.PendantRed),
                 memoryAddress: 0x80,
                 memoryFlag: 0x40,
                 memoryType: LocationMemoryType.ZeldaMisc);
@@ -36,7 +37,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             LumberjackTree = new Location(this, 256 + 17, 0x308001, LocationType.Regular,
                 name: "Lumberjack Tree",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => World.CanAquire(items, Reward.Agahnim) && items.Boots,
+                access: items => Logic.CheckAgahnim(items, World, requireRewards: true) && items.Boots,
+                relevanceRequirement: items => Logic.CheckAgahnim(items, World, requireRewards: false) && items.Boots,
                 memoryAddress: 0xE2,
                 memoryFlag: 0x9);
 
@@ -51,7 +53,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             GraveyardLedge = new Location(this, 256 + 19, 0x308004, LocationType.Regular,
                 name: "Graveyard Ledge",
                 vanillaItem: ItemType.HeartPiece,
-                access: items => items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items),
+                access: items => items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, true),
+                relevanceRequirement: items => items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, false),
                 memoryAddress: 0x11B,
                 memoryFlag: 0x9);
 
@@ -60,7 +63,10 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
                 vanillaItem: ItemType.Cape,
                 access: items => items.Boots && (
                     Logic.CanLiftHeavy(items) ||
-                    (items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items))),
+                    (items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, true))),
+                relevanceRequirement: items => items.Boots && (
+                    Logic.CanLiftHeavy(items) ||
+                    (items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, false))),
                 memoryAddress: 0x113,
                 memoryFlag: 0x4);
 
@@ -100,7 +106,8 @@ namespace Randomizer.SMZ3.Regions.Zelda.LightWorld
             Blacksmith = new Location(this, 256 + 76, 0x30802A, LocationType.Regular,
                 name: "Blacksmith",
                 vanillaItem: ItemType.ProgressiveSword,
-                access: items => World.DarkWorldNorthWest.CanEnter(items) && Logic.CanLiftHeavy(items),
+                access: items => World.DarkWorldNorthWest.CanEnter(items, true) && Logic.CanLiftHeavy(items),
+                relevanceRequirement: items => World.DarkWorldNorthWest.CanEnter(items, false) && Logic.CanLiftHeavy(items),
                 memoryAddress: 0x191,
                 memoryFlag: 0x4,
                 memoryType: LocationMemoryType.ZeldaMisc);

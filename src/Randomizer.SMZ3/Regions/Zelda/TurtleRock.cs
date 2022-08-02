@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public override string Name => "Turtle Rock";
 
-        public Reward Reward { get; set; } = Reward.None;
+        public RewardType Reward { get; set; } = RewardType.None;
 
         public ItemType Medallion { get; set; }
 
@@ -90,11 +90,11 @@ namespace Randomizer.SMZ3.Regions.Zelda
 
         public LaserBridgeRoom LaserBridge { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return items.Contains(Medallion) && items.Sword && items.MoonPearl &&
                 Logic.CanLiftHeavy(items) && items.Hammer && items.Somaria &&
-                World.LightWorldDeathMountainEast.CanEnter(items);
+                World.LightWorldDeathMountainEast.CanEnter(items, requireRewards);
         }
 
         public bool CanComplete(Progression items)

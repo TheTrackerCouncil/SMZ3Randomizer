@@ -69,6 +69,11 @@ namespace Randomizer.App
                 TrackedLocationUpdated.Invoke(this, new(""));
                 MarkedLocationUpdated.Invoke(this, new(""));
             };
+            Tracker.BossUpdated += (_, _) =>
+            {
+                TrackedLocationUpdated.Invoke(this, new(""));
+                MarkedLocationUpdated.Invoke(this, new(""));
+            };
         }
 
         public event PropertyChangedEventHandler TrackedLocationUpdated;
@@ -192,41 +197,23 @@ namespace Randomizer.App
         /// <returns>True if the location should be shown. False otherwise</returns>
         private bool SpecialLocationLogic(Location location)
         {
-            // Don't show MM or TR unless we're sure we have the identified medallion
+            // Don't show MM or TR unless we're sure we have the identified medallion or have all medallions
             if (location.Region is MiseryMire or TurtleRock)
             {
                 var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.GetRegion(Tracker.World) == location.Region);
                 return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
                     (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
-                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake);
+                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake) ||
+                    (Progression.Bombos && Progression.Ether && Progression.Quake);
             }
-            // Don't show Mimic/Mirror cave unless TR is accessible
+            // Don't show Mimic/Mirror cave unless TR is accessible or have all medallions
             else if (location == Tracker.World.LightWorldDeathMountainEast.MirrorCave)
             {
                 var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.GetRegion(Tracker.World) == Tracker.World.TurtleRock);
                 return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
                     (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
-                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake);
-            }
-            // Don't show GT in logic unless all crystals are gathered
-            else if (location.Region is GanonsTower)
-            {
-                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.Crystal or RewardItem.RedCrystal) >= 7;
-            }
-            // Make sure all 3 pendants have been grabbed for Master Sword Pedestal 
-            else if (location == Tracker.World.LightWorldNorthWest.MasterSwordPedestal)
-            {
-                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.GreenPendant or RewardItem.BluePendant or RewardItem.RedPendant or RewardItem.NonGreenPendant) >= 3;
-            }
-            // Make sure the red crystals are retrieved for pyramid fairy
-            else if (location.Room == Tracker.World.DarkWorldNorthEast.PyramidFairy)
-            {
-                return Tracker.WorldInfo.Dungeons.Count(x => x.Cleared && x.Reward is RewardItem.RedCrystal) >= 2;
-            }
-            // Make sure that the green pendant was grabbed for Sahasrahla
-            else if (location == Tracker.World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla)
-            {
-                return Tracker.WorldInfo.Dungeons.Any(x => x.Cleared && x.Reward is RewardItem.GreenPendant);
+                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake) ||
+                    (Progression.Bombos && Progression.Ether && Progression.Quake);
             }
             else return true;
         }
@@ -273,6 +260,14 @@ namespace Randomizer.App
 
             Tracker.ClearArea(region, trackItems, false, null, assumeKeys);
         }
+
+        /// <summary>
+        /// Retrieve the appropriate progression object for the particular region
+        /// </summary>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        public Progression ProgressionForRegion(Region region) =>
+            region.World.Config.Keysanity ? Progression : ProgressionWithKeys;
 
         /// <summary>
         /// Gets the primary name for the specified location.

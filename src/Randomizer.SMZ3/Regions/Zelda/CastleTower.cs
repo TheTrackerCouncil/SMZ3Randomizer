@@ -21,20 +21,20 @@ namespace Randomizer.SMZ3.Regions.Zelda
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
 
-        public Reward Reward { get; set; } = Reward.Agahnim;
+        public RewardType Reward { get; set; } = RewardType.Agahnim;
 
         public FoyerRoom Foyer { get; }
 
         public DarkMazeRoom DarkMaze { get; }
 
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return Logic.CanKillManyEnemies(items) && (items.Cape || items.MasterSword);
         }
 
         public bool CanComplete(Progression items)
         {
-            return CanEnter(items) && items.Lamp && items.KeyCT >= 2 && items.Sword;
+            return CanEnter(items, true) && items.Lamp && items.KeyCT >= 2 && items.Sword;
         }
 
         public class FoyerRoom : Room

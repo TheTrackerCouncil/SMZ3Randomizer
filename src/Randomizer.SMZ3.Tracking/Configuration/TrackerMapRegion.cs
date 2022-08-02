@@ -16,10 +16,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The name of the region. Must match a <see cref="Region.Name"/>.
         /// </param>
         /// <param name="rooms">The rooms and locations in this region.</param>
-        public TrackerMapRegion(string name, IReadOnlyCollection<TrackerMapLocation> rooms)
+        public TrackerMapRegion(string name, IReadOnlyCollection<TrackerMapLocation> rooms, string typeName, int? bossX, int? bossY)
         {
             Name = name;
             Rooms = rooms;
+            TypeName = typeName;
+            BossX = bossX;
+            BossY = bossY;
         }
 
         /// <summary>
@@ -27,6 +30,21 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// cref="Region.Name"/>.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Full class type name of the region
+        /// </summary>
+        public string TypeName { get; }
+
+        /// <summary>
+        /// The location of the boss, if there is one
+        /// </summary>
+        public int? BossX { get; } = null;
+
+        /// <summary>
+        /// The location of the boss, if there is one
+        /// </summary>
+        public int? BossY { get; } = null;
 
         /// <summary>
         /// Gets a collection of map locations that belong to this region.

@@ -21,9 +21,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <param name="x">The x location to place this location on the map</param>
         /// <param name="y">The y location to place this location on the map</param>
         /// <param name="scale">The ratio at which this location has been scaled down (for combined maps)</param>
-        public TrackerMapLocation(string region, string name, int x, int y, double scale = 1)
+        public TrackerMapLocation(string region, string regionTypeName, string name, int x, int y, double scale = 1)
         {
             Region = region;
+            RegionTypeName = regionTypeName;
             Name = name;
             X = x;
             Y = y;
@@ -34,6 +35,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The region that this location belongs to
         /// </summary>
         public string Region { get; set; }
+
+        /// <summary>
+        /// Full class type name for the region
+        /// </summary>
+        public string RegionTypeName { get; set; }
+
 
         /// <summary>
         /// The name of this location
@@ -62,9 +69,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <returns>True if the location matches the randomizer location, false otherwise</returns>
         public bool MatchesSMZ3Location(Location loc)
         {
-            return (Region == loc.Region.Name && Name == loc.Name)
-                || (Region == loc.Region.Name && Name == loc.Room?.Name)
-                || (Region == Name && Name == loc.Region.Name);
+            return RegionTypeName == loc.Region.GetType().FullName &&
+                (Name == loc.Name || Name == loc.Room?.Name || Region == Name);
         }
     }
 }

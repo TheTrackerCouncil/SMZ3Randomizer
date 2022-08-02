@@ -91,7 +91,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
 
         public Location WaveBeamGlitchRoom { get; }
 
-        public override bool CanEnter(Progression items) =>
+        public override bool CanEnter(Progression items, bool requireRewards) =>
                 (Logic.CanOpenRedDoors(items) && (Logic.CanDestroyBombWalls(items) || Logic.CanParlorSpeedBoost(items))) ||
                 Logic.CanUsePowerBombs(items) ||
                 (Logic.CanAccessNorfairUpperPortal(items) && items.Morph && items.Wave &&

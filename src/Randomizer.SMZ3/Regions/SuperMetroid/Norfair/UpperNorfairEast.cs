@@ -81,7 +81,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
 
         // Todo: Super is not actually needed for Frog Speedway, but changing this will affect locations
         // Todo: Ice Beam -> Croc Speedway is not considered
-        public override bool CanEnter(Progression items)
+        public override bool CanEnter(Progression items, bool requireRewards)
         {
             return (
                         ((Logic.CanDestroyBombWalls(items) || items.SpeedBooster) && items.Super && items.Morph) ||
