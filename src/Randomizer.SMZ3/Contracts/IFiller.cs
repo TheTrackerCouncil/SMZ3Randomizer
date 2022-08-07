@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Randomizer.SMZ3.Generation
+namespace Randomizer.SMZ3.Contracts
 {
     /// <summary>
     /// Defines an algorithm for filling items into one or more SMZ3 worlds.

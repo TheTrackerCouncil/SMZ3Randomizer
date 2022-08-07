@@ -6,6 +6,7 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3.Generation

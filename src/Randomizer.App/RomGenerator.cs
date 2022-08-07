@@ -50,7 +50,8 @@ namespace Randomizer.App
         {
             try
             {
-                var bytes = GenerateRomBytes(options, out var seed);
+                var seed = GenerateSeed(options);
+                var bytes = GenerateRomBytes(options, seed);
 
                 var config = seed.Playthrough.Config;
                 if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
@@ -132,12 +133,10 @@ namespace Randomizer.App
         /// Uses the options to generate the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
-        /// <param name="seed">The generated seed data</param>
+        /// <param name="seed">The seed data to write to the ROM.</param>
         /// <returns>The bytes of the rom file</returns>
-        protected byte[] GenerateRomBytes(RandomizerOptions options, out SeedData seed)
+        protected byte[] GenerateRomBytes(RandomizerOptions options, SeedData seed)
         {
-            seed = GenerateSeed(options);
-
             var assembly = GetType().Assembly;
             var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)

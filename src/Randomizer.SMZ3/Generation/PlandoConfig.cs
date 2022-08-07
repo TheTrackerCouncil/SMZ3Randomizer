@@ -32,5 +32,10 @@ namespace Randomizer.SMZ3.Generation
         /// medallions they require.
         /// </summary>
         public Dictionary<string, Medallion> Medallions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the logic options that apply to the plando.
+        /// </summary>
+        public LogicConfig Logic { get; set; }
     }
 }
