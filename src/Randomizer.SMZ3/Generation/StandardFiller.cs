@@ -4,11 +4,16 @@ using System.Linq;
 using System.Threading;
 
 using Microsoft.Extensions.Logging;
+
 using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 
-namespace Randomizer.SMZ3
+namespace Randomizer.SMZ3.Generation
 {
+    /// <summary>
+    /// Fills items in one or more SMZ3 worlds according to the vanilla SMZ3
+    /// randomizer algorithm.
+    /// </summary>
     public class StandardFiller : IFiller
     {
         private readonly ILogger<StandardFiller> _logger;
@@ -19,10 +24,18 @@ namespace Randomizer.SMZ3
         }
 
         protected Random Random { get; set; }
-        
+
         public void SetRandom(Random random)
             => Random = random ?? throw new ArgumentNullException(nameof(random));
 
+        /// <summary>
+        /// Randomly distributes items across locations in the specified worlds.
+        /// </summary>
+        /// <param name="worlds">The world or worlds to initialize.</param>
+        /// <param name="config">The configuration to use.</param>
+        /// <param name="cancellationToken">
+        /// A token to monitor for cancellation requests.
+        /// </param>
         public void Fill(List<World> worlds, Config config, CancellationToken cancellationToken)
         {
             if (Random == null)
@@ -121,18 +134,16 @@ namespace Randomizer.SMZ3
                         // Some locations (AKA Shaktool) get pretty tough to tell if an item is needed there, so a workaround is to
                         // grab an item from the opposite game to minimize chances of situations where an item required to access a
                         // location is picked to go there
-                        var item = progressionItems.FirstOrDefault(x => (x.Type.IsInCategory(ItemCategory.Metroid) && location.Region is Z3Region) || (x.Type.IsInCategory(ItemCategory.Zelda) && location.Region is SMRegion));
+                        var item = progressionItems.FirstOrDefault(x => x.Type.IsInCategory(ItemCategory.Metroid) && location.Region is Z3Region || x.Type.IsInCategory(ItemCategory.Zelda) && location.Region is SMRegion);
 
                         if (item != null)
-                        {
                             FillItemAtLocation(progressionItems, item.Type, location);
-                        }
                         else
                         {
                             _logger.LogDebug($"Could not find item to place at {location.Name}");
                         }
                     }
-                    else if(itemPool == ItemPool.Junk && junkItems.Any())
+                    else if (itemPool == ItemPool.Junk && junkItems.Any())
                     {
                         FastFill(junkItems, worlds.SelectMany(x => x.Locations.Where(y => y.Id == locationId)));
                     }
@@ -148,9 +159,7 @@ namespace Randomizer.SMZ3
 
                         // If no items required or at least one combination of items required does not contain this item
                         if (!itemsRequired.Any() || itemsRequired.Any(x => !x.Contains(itemType)))
-                        {
                             FillItemAtLocation(progressionItems, itemType, location);
-                        }
                         else
                         {
                             throw new RandomizerGenerationException($"{itemType} was selected as the item for {location}, but it is required to get there.");
@@ -247,15 +256,11 @@ namespace Randomizer.SMZ3
                     itemsToAdd.Add(item);
 
                     if (!failedAttempts.ContainsKey(item))
-                    {
                         failedAttempts[item] = 0;
-                    }
                     failedAttempts[item]++;
 
                     if (failedAttempts[item] > 500)
-                    {
                         throw new RandomizerGenerationException("Infinite loop in generation found. Specified item location combinations may not be possible.");
-                    }
                     continue;
                 }
 
@@ -304,9 +309,7 @@ namespace Randomizer.SMZ3
                 .Where(x => world.Config.LocationItems == null || !world.Config.LocationItems.ContainsKey(x.Id))
                 .Random(Random);
             if (location == null)
-            {
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");
-            }
 
             location.Item = item;
             itemPool.Remove(item);

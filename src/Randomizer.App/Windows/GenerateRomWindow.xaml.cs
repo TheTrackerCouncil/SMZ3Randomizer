@@ -52,6 +52,24 @@ namespace Randomizer.App
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
         }
 
+#nullable enable
+        public PlandoFiller? PlandoFiller { get; set; }
+#nullable disable
+
+        public bool Plando => PlandoFiller != null;
+
+        /// <summary>
+        /// Gets a value specifying the visibility of a control, if it should be
+        /// hidden when plando mode is active.
+        /// </summary>
+        public Visibility InvisibleInPlando => Plando ? Visibility.Collapsed : Visibility.Visible;
+
+        /// <summary>
+        /// Gets a value indicating whether a control should be enabled, if it
+        /// should be disabled when plando mode is active.
+        /// </summary>
+        public bool DisabledInPlando => !Plando;
+
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
         public ObservableCollection<Sprite> LinkSprites { get; } = new();
@@ -184,6 +202,44 @@ namespace Randomizer.App
             }
         }
 
+        public void LoadSprites()
+        {
+            var spritesPath = Path.Combine(
+                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                "Sprites");
+            var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
+                .Select(x => Sprite.LoadSprite(x))
+                .OrderBy(x => x.Name);
+
+            var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
+            var shipSprites = Directory.EnumerateFiles(shipSpritesPath, "*.ips", SearchOption.AllDirectories)
+                .Select(x => new ShipSprite(Path.GetFileNameWithoutExtension(x), Path.GetRelativePath(shipSpritesPath, x)));
+
+            Dispatcher.Invoke(() =>
+            {
+                foreach (var sprite in sprites)
+                {
+                    switch (sprite.SpriteType)
+                    {
+                        case SpriteType.Samus:
+                            SamusSprites.Add(sprite);
+                            break;
+
+                        case SpriteType.Link:
+                            LinkSprites.Add(sprite);
+                            break;
+                    }
+                }
+
+                foreach (var ship in shipSprites)
+                {
+                    ShipSprites.Add(ship);
+                }
+            }, DispatcherPriority.Loaded);
+        }
+
+        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
+
         /// <summary>
         /// Creates a combo box for the item options for a location
         /// </summary>
@@ -245,45 +301,6 @@ namespace Randomizer.App
 
             return comboBox;
         }
-
-        public void LoadSprites()
-        {
-            var spritesPath = Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
-                "Sprites");
-            var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
-                .Select(x => Sprite.LoadSprite(x))
-                .OrderBy(x => x.Name);
-
-            var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
-            var shipSprites = Directory.EnumerateFiles(shipSpritesPath, "*.ips", SearchOption.AllDirectories)
-                .Select(x => new ShipSprite(Path.GetFileNameWithoutExtension(x), Path.GetRelativePath(shipSpritesPath, x)));
-
-            Dispatcher.Invoke(() =>
-            {
-                foreach (var sprite in sprites)
-                {
-                    switch (sprite.SpriteType)
-                    {
-                        case SpriteType.Samus:
-                            SamusSprites.Add(sprite);
-                            break;
-
-                        case SpriteType.Link:
-                            LinkSprites.Add(sprite);
-                            break;
-                    }
-                }
-
-                foreach (var ship in shipSprites)
-                {
-                    ShipSprites.Add(ship);
-                }
-            }, DispatcherPriority.Loaded);
-        }
-
-        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
-
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
             var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
@@ -572,16 +589,6 @@ namespace Randomizer.App
                 Options.SeedOptions.EarlyItems.Remove(itemType);
         }
 
-        /// <summary>
-        /// Internal class for the location item option combo box
-        /// </summary>
-        private class LocationItemOption
-        {
-            public int Value { get; set; }
-            public string Text { get; set; }
-            public override string ToString() => Text;
-        }
-
         private void RaceCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             UpdateRaceCheckBoxes();
@@ -598,6 +605,16 @@ namespace Randomizer.App
             DisableTrackerHintsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableTrackerSpoilersCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableCheatsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+        }
+
+        /// <summary>
+        /// Internal class for the location item option combo box
+        /// </summary>
+        private class LocationItemOption
+        {
+            public int Value { get; set; }
+            public string Text { get; set; }
+            public override string ToString() => Text;
         }
     }
 }
