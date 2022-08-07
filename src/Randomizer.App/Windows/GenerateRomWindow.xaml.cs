@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
@@ -59,14 +60,20 @@ namespace Randomizer.App
         public bool Plando => PlandoFiller != null;
 
         /// <summary>
-        /// Gets a value specifying the visibility of a control, if it should be
-        /// hidden when plando mode is active.
+        /// Gets the visibility of controls which should be hidden when plando
+        /// mode is active.
         /// </summary>
         public Visibility InvisibleInPlando => Plando ? Visibility.Collapsed : Visibility.Visible;
 
         /// <summary>
-        /// Gets a value indicating whether a control should be enabled, if it
-        /// should be disabled when plando mode is active.
+        /// Gets the visibility of controls which should be shown only when
+        /// plando mode is active.
+        /// </summary>
+        public Visibility VisibleInPlando => Plando ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Gets the IsEnabled value for controls which should be disabled when
+        /// plando mode is active.
         /// </summary>
         public bool DisabledInPlando => !Plando;
 
@@ -119,7 +126,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Populates the two grids with the logic option controls using reflection
+        /// Populates the two grids with the logic option controls using
+        /// reflection
         /// </summary>
         public void PopulateLogicOptions()
         {
@@ -165,7 +173,8 @@ namespace Randomizer.App
                 LocationsRegionFilter.Items.Add(name);
             }
 
-            // Create rows for each location to be able to specify the items at that location
+            // Create rows for each location to be able to specify the items at
+            // that location
             var row = 0;
             foreach (var location in world.Locations.OrderBy(x => x.Room == null ? "" : x.Room.Name).ThenBy(x => x.Name))
             {
@@ -243,7 +252,9 @@ namespace Randomizer.App
         /// <summary>
         /// Creates a combo box for the item options for a location
         /// </summary>
-        /// <param name="location">The location to generate the combo box for</param>
+        /// <param name="location">
+        /// The location to generate the combo box for
+        /// </param>
         /// <returns>The generated combo box</returns>
         private ComboBox CreateLocationComboBox(Location location)
         {
@@ -301,6 +312,7 @@ namespace Randomizer.App
 
             return comboBox;
         }
+
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
             var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
@@ -508,7 +520,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Updates the LogicOptions based on when a checkbox is checked/unchecked using reflection
+        /// Updates the LogicOptions based on when a checkbox is
+        /// checked/unchecked using reflection
         /// </summary>
         /// <param name="sender">The checkbox that was checked</param>
         /// <param name="e">The event object</param>
@@ -539,7 +552,7 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Handles updates 
+        /// Handles updates
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -575,7 +588,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Updates the EarlyItems based on when a checkbox is checked/unchecked using reflection
+        /// Updates the EarlyItems based on when a checkbox is checked/unchecked
+        /// using reflection
         /// </summary>
         /// <param name="sender">The checkbox that was checked</param>
         /// <param name="e">The event object</param>
@@ -614,6 +628,7 @@ namespace Randomizer.App
         {
             public int Value { get; set; }
             public string Text { get; set; }
+
             public override string ToString() => Text;
         }
     }

@@ -34,6 +34,24 @@
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled">
         <StackPanel Orientation="Vertical">
+          <Border Margin="11"
+                  Padding="8"
+                  Visibility="{Binding VisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                  Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}"
+                  BorderBrush="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}"
+                  BorderThickness="1"
+                  CornerRadius="2">
+            <TextBlock TextWrapping="Wrap"
+                       Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}">
+        You’re starting a plando seed. Items, rewards and other aspects of a
+        seed are manually placed according to the plando configuration file
+        you’ve selected.
+        <LineBreak /><LineBreak />
+        Plando games do not follow the usual logic of a randomized seed and may
+        or may not be completable.
+            </TextBlock>
+          </Border>
+          
           <Expander Header="Early Items"
                     x:Name="EarlyItemsExpander"
                     Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
@@ -73,6 +91,7 @@
 
           <Expander Header="Logic Options"
                     x:Name="LogicOptionsExpander"
+                    Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                     IsExpanded="{Binding LogicExpanded}">
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,11"
