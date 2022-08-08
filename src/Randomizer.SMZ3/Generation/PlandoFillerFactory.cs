@@ -17,20 +17,10 @@ namespace Randomizer.SMZ3.Generation
             _loggerFactory = loggerFactory;
         }
 
-        public async Task<PlandoFiller> CreateFromFileAsync(string path,
-            CancellationToken cancellationToken = default)
+        public PlandoFiller Create(PlandoConfig plandoConfig)
         {
-            var plandoConfig = await LoadPlandoConfigAsync(path, cancellationToken);
             var logger = _loggerFactory.CreateLogger<PlandoFiller>();
             return new PlandoFiller(plandoConfig, logger);
-        }
-
-        private static async Task<PlandoConfig> LoadPlandoConfigAsync(string path,
-            CancellationToken cancellationToken)
-        {
-            var serializer = new SharpYaml.Serialization.Serializer();
-            var yaml = await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken);
-            return serializer.Deserialize<PlandoConfig>(yaml);
         }
     }
 }

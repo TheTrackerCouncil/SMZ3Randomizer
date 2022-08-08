@@ -27,30 +27,52 @@ namespace Randomizer.App
     {
         private readonly RandomizerContext _dbContext;
         private readonly Smz3Randomizer _randomizer;
+        private readonly Smz3Plandomizer _plandomizer;
         private readonly ILogger<RomGenerator> _logger;
 
         public RomGenerator(Smz3Randomizer randomizer,
+            Smz3Plandomizer plandomizer,
             RandomizerContext dbContext,
             ILogger<RomGenerator> logger)
         {
             _randomizer = randomizer;
+            _plandomizer = plandomizer;
             _dbContext = dbContext;
             _logger = logger;
         }
 
         /// <summary>
-        /// Generates a rom and returns details about the rom
+        /// Generates a randomizer ROM and returns details about the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
         /// <param name="path">The path to the rom</param>
         /// <param name="error">Any error message from generating the rom</param>
         /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
+        public bool GenerateRandomRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
+        {
+            var seed = GenerateSeed(options);
+            return GenerateRomInternal(seed, options, out path, out error, out rom);
+        }
+
+        /// <summary>
+        /// Generates a plando ROM and returns details about the rom
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="path">The path to the rom</param>
+        /// <param name="error">Any error message from generating the rom</param>
+        /// <param name="rom">The db entry for the rom</param>
+        /// <returns>True if the rom was generated successfully, false otherwise</returns>
+        public bool GeneratePlandoRom(RandomizerOptions options, PlandoConfig plandoConfig, out string path, out string error, out GeneratedRom rom)
+        {
+            var seed = GeneratePlandoSeed(options, plandoConfig);
+            return GenerateRomInternal(seed, options, out path, out error, out rom);
+        }
+
+        private bool GenerateRomInternal(SeedData seed, RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
         {
             try
             {
-                var seed = GenerateSeed(options);
                 var bytes = GenerateRomBytes(options, seed);
 
                 var config = seed.Playthrough.Config;
@@ -127,6 +149,15 @@ namespace Randomizer.App
         {
             var config = options.ToConfig();
             return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
+        }
+
+        public SeedData GeneratePlandoSeed(RandomizerOptions options, PlandoConfig plandoConfig)
+        {
+            var config = options.ToConfig();
+            config.PlandoConfig = plandoConfig;
+            config.Keysanity = plandoConfig.Keysanity;
+            config.LogicConfig = plandoConfig.Logic;
+            return _plandomizer.GenerateSeed(config, CancellationToken.None);
         }
 
         /// <summary>

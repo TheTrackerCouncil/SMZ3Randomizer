@@ -75,11 +75,8 @@ namespace Randomizer.App
         protected static void ConfigureServices(IServiceCollection services)
         {
             // Randomizer + Tracker
-            services.AddSingleton<RandomizerContext>();
-            services.AddSingleton<IFiller, StandardFiller>();
-            services.AddSingleton<PlandoFillerFactory>();
-            services.AddSingleton<IWorldAccessor, WorldAccessor>();
-            services.AddSingleton<Smz3Randomizer>();
+            services.AddSmz3Randomizer();
+            services.AddPlandomizer();
             services.AddTracker()
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()

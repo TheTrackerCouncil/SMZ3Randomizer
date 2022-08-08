@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Randomizer.SMZ3.Contracts;
+
+namespace Randomizer.SMZ3.Generation
+{
+    public class PlandoConfigLoader : IPlandoConfigLoader
+    {
+        public async Task<PlandoConfig> LoadAsync(string path,
+            CancellationToken cancellationToken = default)
+        {
+            var serializer = new SharpYaml.Serialization.Serializer();
+            var yaml = await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken);
+            return serializer.Deserialize<PlandoConfig>(yaml);
+        }
+    }
+}

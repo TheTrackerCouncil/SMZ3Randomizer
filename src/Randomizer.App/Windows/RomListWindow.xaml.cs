@@ -15,6 +15,7 @@ using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -94,7 +95,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
+            var successful = _romGenerator.GenerateRandomRom(Options, out var romPath, out var error, out var rom);
 
             if (!successful)
             {
@@ -135,7 +136,6 @@ namespace Randomizer.App
         private async void StartPlandoButton_Click(object sender, RoutedEventArgs e)
         {
             using var scope = _serviceProvider.CreateScope();
-            var plandoFactory = scope.ServiceProvider.GetRequiredService<PlandoFillerFactory>();
 
             var plandoBrowser = new OpenFileDialog
             {
@@ -147,10 +147,11 @@ namespace Randomizer.App
 
             try
             {
-                var plandoFiller = await plandoFactory.CreateFromFileAsync(plandoBrowser.FileName);
+                var plandoConfigLoader = scope.ServiceProvider.GetRequiredService<IPlandoConfigLoader>();
+                var plandoConfig = await plandoConfigLoader.LoadAsync(plandoBrowser.FileName);
 
                 var generateWindow = scope.ServiceProvider.GetRequiredService<GenerateRomWindow>();
-                generateWindow.PlandoFiller = plandoFiller;
+                generateWindow.PlandoConfig = plandoConfig;
                 generateWindow.Owner = this;
                 generateWindow.Options = Options;
                 if (generateWindow.ShowDialog() == true)

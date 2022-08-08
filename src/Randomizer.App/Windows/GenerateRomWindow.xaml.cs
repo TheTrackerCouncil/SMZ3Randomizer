@@ -54,28 +54,28 @@ namespace Randomizer.App
         }
 
 #nullable enable
-        public PlandoFiller? PlandoFiller { get; set; }
+        public PlandoConfig? PlandoConfig { get; set; }
 #nullable disable
 
-        public bool Plando => PlandoFiller != null;
+        public bool PlandoMode => PlandoConfig != null;
 
         /// <summary>
         /// Gets the visibility of controls which should be hidden when plando
         /// mode is active.
         /// </summary>
-        public Visibility InvisibleInPlando => Plando ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility InvisibleInPlando => PlandoMode ? Visibility.Collapsed : Visibility.Visible;
 
         /// <summary>
         /// Gets the visibility of controls which should be shown only when
         /// plando mode is active.
         /// </summary>
-        public Visibility VisibleInPlando => Plando ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibleInPlando => PlandoMode ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
         /// Gets the IsEnabled value for controls which should be disabled when
         /// plando mode is active.
         /// </summary>
-        public bool DisabledInPlando => !Plando;
+        public bool DisabledInPlando => !PlandoMode;
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
@@ -315,7 +315,7 @@ namespace Randomizer.App
 
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
+            var successful = _romGenerator.GenerateRandomRom(Options, out var romPath, out var error, out var rom);
             if (!successful)
             {
                 if (!string.IsNullOrEmpty(error))
