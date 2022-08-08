@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents extra information about a room in SMZ3.
     /// </summary>
-    public class RoomInfo : IPointOfInterest, IMergeableConfig
+    public class RoomInfo : IPointOfInterest, IMergeableConfig<RoomInfo>
     {
         public RoomInfo() { }
 
@@ -108,10 +108,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         /// <returns>A string representation of this room.</returns>
         public override string? ToString() => Name[0];
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

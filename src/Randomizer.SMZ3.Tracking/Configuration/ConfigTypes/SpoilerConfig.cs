@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     /// <summary>
     /// Provides the phrases for spoilers.
     /// </summary>
-    public class SpoilerConfig : IMergeableConfig
+    public class SpoilerConfig : IMergeableConfig<SpoilerConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when spoilers are turned on.
@@ -199,9 +199,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString ItemsInArea { get; init; }
             = new("{0} has {1}");
 
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

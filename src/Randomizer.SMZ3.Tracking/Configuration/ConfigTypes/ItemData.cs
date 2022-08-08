@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents a trackable item.
     /// </summary>
-    public class ItemData : IMergeableConfig
+    public class ItemData : IMergeableConfig<ItemData>
     {
         public ItemData()
         {
@@ -341,56 +341,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 
             return InternalItemType == ItemType.Nothing
                 || InternalItemType.IsInAnyCategory(junkCategories);
-        }
-
-        /*public void Merge(IMergeableConfig other)
-        {
-            var otherObj = (ItemData)other;
-            Name = SchrodingersString.Merge(Name, otherObj.Name) ?? new("");
-            Plural = SchrodingersString.Merge(Plural, otherObj.Plural) ?? new("");
-
-            if (WhenTracked != null && otherObj.WhenTracked != null)
-            {
-                foreach (var (amount, text) in otherObj.WhenTracked)
-                {
-                    if (WhenTracked.ContainsKey(amount) && WhenTracked[amount] != null)
-                    {
-                        WhenTracked[amount].Merge(text);
-                    }
-                    else
-                    {
-                        WhenTracked[amount] = text;
-                    }
-                }
-            }
-            else if (WhenTracked == null)
-            {
-                WhenTracked = otherObj.WhenTracked;
-            }
-
-            if (Stages != null && otherObj.Stages != null)
-            {
-                foreach (var (amount, text) in otherObj.Stages)
-                {
-                    if (Stages.ContainsKey(amount) && Stages[amount] != null)
-                    {
-                        Stages[amount].Merge(text);
-                    }
-                    else
-                    {
-                        Stages[amount] = text;
-                    }
-                }
-            }
-            else if (Stages == null)
-            {
-                Stages = otherObj.Stages;
-            }
-        }*/
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
         }
     }
 }

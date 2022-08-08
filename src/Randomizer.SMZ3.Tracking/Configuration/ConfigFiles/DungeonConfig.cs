@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class DungeonConfig : List<DungeonInfo>, IMergeableConfig
+    public class DungeonConfig : List<DungeonInfo>, IMergeableConfig<DungeonInfo>
     {
         public DungeonConfig() : base()
         {
@@ -223,11 +223,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Row = 5,
                 },
             };
-        }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeLists(this, other as DungeonConfig);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// </summary>
     [JsonConverter(typeof(SchrodingersStringConverter))]
     [DebuggerDisplay("[{GetDebuggerDisplay()}]")]
-    public class SchrodingersString : Collection<SchrodingersString.Possibility>, IMergeableConfig
+    public class SchrodingersString : Collection<SchrodingersString.Possibility>, IMergeableConfig<SchrodingersString>
     {
         private static readonly Random s_random = new();
 
@@ -144,7 +144,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 
         private string GetDebuggerDisplay() => string.Join(", ", this.Select(x => x.ToString()));
 
-        public void Merge(IMergeableConfig other)
+        public void Merge(IMergeableConfig<SchrodingersString> other)
         {
             if (other is SchrodingersString otherObj)
             {

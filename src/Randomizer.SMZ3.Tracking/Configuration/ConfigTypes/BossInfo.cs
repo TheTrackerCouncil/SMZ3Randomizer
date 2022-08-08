@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// This class is typically only used for tracking bosses not already
     /// represented by <see cref="DungeonInfo"/>, e.g. Metroid bosses.
     /// </remarks>
-    public class BossInfo : IMergeableConfig
+    public class BossInfo : IMergeableConfig<BossInfo>
     {
 
         public BossInfo() { }
@@ -76,10 +76,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         /// <returns>A string representing this boss.</returns>
         public override string? ToString() => Name[0];
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Provides the phrases for chat integration.
     /// </summary>
-    public class AutoTrackerConfig : IMergeableConfig
+    public class AutoTrackerConfig : IMergeableConfig<AutoTrackerConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when connected to to emulator.
@@ -133,11 +133,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         public SchrodingersString DarkWorldNoMedallions { get; init; }
             = new("I hope you don't find any medallions soon.");
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
 
     }
 }

@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     /// <summary>
     /// Provides the phrases for map.
     /// </summary>
-    public class MapResponseConfig : IMergeableConfig
+    public class MapResponseConfig : IMergeableConfig<MapResponseConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when showing the player a dark room map
@@ -44,10 +44,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public SchrodingersString HasLamp { get; init; }
              = new SchrodingersString("But you have the lamp");
 
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

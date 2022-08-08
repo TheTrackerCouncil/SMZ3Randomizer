@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents extra information about a trackable location in SMZ3.
     /// </summary>
-    public class LocationInfo : IPointOfInterest, IMergeableConfig
+    public class LocationInfo : IPointOfInterest, IMergeableConfig<LocationInfo>
     {
         public LocationInfo() { }
 
@@ -130,10 +130,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         /// <returns>A string representation of this location.</returns>
         public override string? ToString() => Name[0];
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

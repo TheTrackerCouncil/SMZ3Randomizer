@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Provides the phrases for cheats
     /// </summary>
-    public class CheatsConfig : IMergeableConfig
+    public class CheatsConfig : IMergeableConfig<CheatsConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when cheats are turned on.
@@ -45,10 +45,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         public SchrodingersString CheatFailed { get; init; }
             = new("Sorry, I can't perform that cheat for you at this time");
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

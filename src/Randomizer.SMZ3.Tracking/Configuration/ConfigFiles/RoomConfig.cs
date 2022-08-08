@@ -6,7 +6,7 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class RoomConfig : List<RoomInfo>, IMergeableConfig
+    public class RoomConfig : List<RoomInfo>, IMergeableConfig<RoomInfo>
     {
         public RoomConfig() : base()
         {
@@ -265,11 +265,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Turtle Rock Roller Room"),
                 },
             };
-        }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeLists(this, other as RoomConfig);
         }
     }
 }

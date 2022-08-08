@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents extra information about a region in SMZ3.
     /// </summary>
-    public class RegionInfo : IMergeableConfig
+    public class RegionInfo : IMergeableConfig<RegionInfo>
     {
         
         public RegionInfo() { }
@@ -80,10 +80,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// Text for Tracker to say when dying in a room or screen in the region
         /// </summary>
         public Dictionary<string, SchrodingersString>? WhenDiedInRoom { get; init; }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class LocationConfig : List<LocationInfo>, IMergeableConfig
+    public class LocationConfig : List<LocationInfo>, IMergeableConfig<LocationInfo>
     {
         public LocationConfig() : base()
         {
@@ -1881,11 +1881,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Waterfall Fairy Left"),
                 },
             };
-        }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeLists(this, other as LocationConfig);
         }
     }
 

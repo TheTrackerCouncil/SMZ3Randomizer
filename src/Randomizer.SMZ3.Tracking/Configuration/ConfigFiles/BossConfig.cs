@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class BossConfig : List<BossInfo>, IMergeableConfig
+    public class BossConfig : List<BossInfo>, IMergeableConfig<BossInfo>
     {
         public BossConfig() : base()
         {
@@ -85,11 +85,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Row = 6,
                 },
             };
-        }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeLists(this, other as BossConfig);
         }
     }
 }

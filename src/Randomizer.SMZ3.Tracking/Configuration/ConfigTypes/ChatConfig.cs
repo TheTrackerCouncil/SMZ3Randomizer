@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Provides the phrases for chat integration.
     /// </summary>
-    public class ChatConfig: IMergeableConfig
+    public class ChatConfig: IMergeableConfig<ChatConfig>
     {
         /// <summary>
         /// Gets a collection of greetings that tracker recognizes and responds
@@ -151,10 +151,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         public SchrodingersString PollError { get; init; }
             = new("Sorry, I was unable to get the poll results.");
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

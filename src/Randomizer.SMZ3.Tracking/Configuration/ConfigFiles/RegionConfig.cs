@@ -6,7 +6,7 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class RegionConfig : List<RegionInfo>, IMergeableConfig
+    public class RegionConfig : List<RegionInfo>, IMergeableConfig<RegionInfo>
     {
         public RegionConfig() : base()
         {
@@ -272,11 +272,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Hints = new("You need a medallion to get in there."),
                 },
             };
-        }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeLists(this, other as RegionConfig);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// Represents a basic request that supports voice recognition with a simple
     /// response.
     /// </summary>
-    public class BasicVoiceRequest: IMergeableConfig
+    public class BasicVoiceRequest: IMergeableConfig<BasicVoiceRequest>
     {
         public BasicVoiceRequest() { }
 
@@ -36,10 +36,5 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// Gets the possible responses to the request.
         /// </summary>
         public SchrodingersString Response { get; set; }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeProperties(this, other);
-        }
     }
 }

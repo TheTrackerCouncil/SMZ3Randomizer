@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class ItemConfig : List<ItemData>, IMergeableConfig
+    public class ItemConfig : List<ItemData>, IMergeableConfig<ItemData>
     {
         public ItemConfig() : base()
         {
@@ -1085,11 +1085,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Hints = new("It opens doors."),
                 },
             };
-        }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeLists(this, other as ItemConfig);
         }
     }
 }

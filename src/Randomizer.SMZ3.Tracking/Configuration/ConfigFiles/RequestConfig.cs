@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class RequestConfig : List<BasicVoiceRequest>, IMergeableConfig
+    public class RequestConfig : List<BasicVoiceRequest>, IMergeableConfig<BasicVoiceRequest>
     {
         public RequestConfig() : base()
         {
@@ -42,11 +42,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Response = new("Ask me how to use special charge beam attacks.", "Ask me how to perform a crystal flash.", "You can drop five bombs if you enter Morph Ball form while charging a beam."),
                 },
             };
-        }
-
-        public void Merge(IMergeableConfig other)
-        {
-            ConfigMergeFunctions.MergeLists(this, other as RequestConfig);
         }
     }
 }
