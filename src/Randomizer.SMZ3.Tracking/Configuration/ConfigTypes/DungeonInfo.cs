@@ -5,13 +5,15 @@ using System.Linq;
 
 using Randomizer.Shared;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents a dungeon in A Link to the Past.
     /// </summary>
-    public class DungeonInfo : IPointOfInterest
+    public class DungeonInfo : IPointOfInterest, IMergeableConfig
     {
+        public DungeonInfo() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
         /// </summary>
@@ -37,26 +39,31 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             RegionTypeName = regionTypeName;
         }
 
+        [ConfigMergeKey]
+        public string Dungeon { get; init; }
+
         /// <summary>
         /// Gets the possible names of the dungeon.
         /// </summary>
-        public SchrodingersString Name { get; }
+        public SchrodingersString Name { get; set; }
 
         /// <summary>
         /// Gets the dungeon name abbreviation.
         /// </summary>
-        public string Abbreviation { get; }
+        public string Abbreviation { get; init; }
 
         /// <summary>
         /// Gets the possible names of the dungeon boss.
         /// </summary>
-        public SchrodingersString Boss { get; init; }
+        public SchrodingersString Boss { get; set; }
 
         /// <summary>
         /// Gets the fully qualified name of the type of region that represents
         /// this dungeon.
         /// </summary>
-        public string TypeName { get; }
+        public string TypeName { get; init; }
+
+        public Type Type { get; init; }
 
         /// <summary>
         /// Gets or sets the zero-based of the column in which the tracker
@@ -125,6 +132,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// located in.
         /// </summary>
         public string RegionTypeName { get; init; }
+
+        public Type WithinRegionType { get; init; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the user manually decreased
@@ -223,6 +232,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         {
             var region = GetRegion(world);
             return region.Locations.Where(x => x.Type != LocationType.NotInDungeon).ToImmutableList();
+        }
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
         }
     }
 }

@@ -1,34 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents a basic request that supports voice recognition with a simple
     /// response.
     /// </summary>
-    public class BasicVoiceRequest
+    public class BasicVoiceRequest: IMergeableConfig
     {
+        public BasicVoiceRequest() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicVoiceRequest"/>
         /// class.
         /// </summary>
         /// <param name="phrases">The phrases that should be recognized.</param>
         /// <param name="response">The possible responses to the requests</param>
-        public BasicVoiceRequest(IReadOnlyCollection<string> phrases, SchrodingersString response)
+        public BasicVoiceRequest(List<string> phrases, SchrodingersString response)
         {
             Phrases = phrases;
             Response = response;
         }
 
+        [ConfigMergeKey]
+        public string Key => Phrases[0];
+
         /// <summary>
         /// Gets a collection of phrases that should be recognized.
         /// </summary>
-        public IReadOnlyCollection<string> Phrases { get; }
+        public List<string> Phrases { get; set; }
 
         /// <summary>
         /// Gets the possible responses to the request.
         /// </summary>
-        public SchrodingersString Response { get; }
+        public SchrodingersString Response { get; set; }
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
     }
 }

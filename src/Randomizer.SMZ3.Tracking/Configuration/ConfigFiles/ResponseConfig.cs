@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
     /// <summary>
     /// Represents the various phrases that Tracker can respond with.
     /// </summary>
-    public class ResponseConfig
+    public class ResponseConfig : IMergeableConfig
     {
         /// <summary>
         /// Gets the phrases to respond with when tracker starts.
@@ -671,5 +672,15 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets the configured phrases for cheats
         /// </summary>
         public CheatsConfig Cheats { get; init; } = new();
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
+
+        public static ResponseConfig Default()
+        {
+            return new ResponseConfig();
+        }
     }
 }

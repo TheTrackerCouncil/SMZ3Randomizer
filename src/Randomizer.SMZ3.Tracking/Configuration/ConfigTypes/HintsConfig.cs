@@ -1,11 +1,12 @@
 ﻿using System;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {
     /// <summary>
     /// Provides the phrases for hints.
     /// </summary>
-    public class HintsConfig
+    public class HintsConfig : IMergeableConfig
     {
         /// <summary>
         /// Gets the phrases to respond with when hints are turned on.
@@ -335,5 +336,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </remarks>
         public SchrodingersString AreaWorthComplicated { get; init; }
             = new("It's complicated.");
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
     }
 }

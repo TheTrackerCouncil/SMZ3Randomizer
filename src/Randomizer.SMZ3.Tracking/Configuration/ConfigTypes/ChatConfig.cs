@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Provides the phrases for chat integration.
     /// </summary>
-    public class ChatConfig
+    public class ChatConfig: IMergeableConfig
     {
         /// <summary>
         /// Gets a collection of greetings that tracker recognizes and responds
         /// to.
         /// </summary>
-        public IReadOnlyCollection<string> RecognizedGreetings { get; init; }
+        public List<string> RecognizedGreetings { get; init; }
             = new List<string>();
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets a dictionary that contains usernames and their replacement for
         /// text-to-speech pronunciation purposes.
         /// </summary>
-        public IReadOnlyDictionary<string, string> UserNamePronunciation { get; init; }
+        public Dictionary<string, string> UserNamePronunciation { get; init; }
             = new Dictionary<string, string>();
 
         /// <summary>
@@ -151,5 +151,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         public SchrodingersString PollError { get; init; }
             = new("Sorry, I was unable to get the poll results.");
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
     }
 }

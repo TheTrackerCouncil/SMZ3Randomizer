@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Provides functionality for the <see cref="SchrodingersString"/> class.

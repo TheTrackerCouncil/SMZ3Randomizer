@@ -1,7 +1,7 @@
 ﻿using System;
 using Randomizer.Shared;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents a boss whose defeat can be tracked.
@@ -10,8 +10,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     /// This class is typically only used for tracking bosses not already
     /// represented by <see cref="DungeonInfo"/>, e.g. Metroid bosses.
     /// </remarks>
-    public class BossInfo
+    public class BossInfo : IMergeableConfig
     {
+
+        public BossInfo() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BossInfo"/> class.
         /// </summary>
@@ -21,21 +24,24 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             Name = name;
         }
 
+        [ConfigMergeKey]
+        public string Boss { get; set; }
+
         /// <summary>
         /// Gets the name of the boss.
         /// </summary>
-        public SchrodingersString Name { get; }
+        public SchrodingersString Name { get; set; }
 
         /// <summary>
         /// Gets the phrases to respond with when the boss has been tracked (but
         /// not necessarily killed).
         /// </summary>
-        public SchrodingersString? WhenTracked { get; init; }
+        public SchrodingersString? WhenTracked { get; set; }
 
         /// <summary>
         /// Gets the phrases to respond with when the boss has been defeated.
         /// </summary>
-        public SchrodingersString? WhenDefeated { get; init; }
+        public SchrodingersString? WhenDefeated { get; set; }
 
         /// <summary>
         /// Gets or sets the zero-based index of the column in which the boss
@@ -70,5 +76,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <returns>A string representing this boss.</returns>
         public override string? ToString() => Name[0];
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
     }
 }

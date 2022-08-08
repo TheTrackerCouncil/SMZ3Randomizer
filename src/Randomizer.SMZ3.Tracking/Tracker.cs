@@ -24,6 +24,8 @@ using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -196,7 +198,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets extra information about locations.
         /// </summary>
-        public LocationConfig WorldInfo { get; }
+        public Randomizer.SMZ3.Tracking.Configuration.LocationConfig WorldInfo { get; }
 
         /// <summary>
         /// Gets a reference to the <see cref="ItemService"/>.

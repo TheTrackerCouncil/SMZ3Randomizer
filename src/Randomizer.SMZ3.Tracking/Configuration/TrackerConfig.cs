@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {

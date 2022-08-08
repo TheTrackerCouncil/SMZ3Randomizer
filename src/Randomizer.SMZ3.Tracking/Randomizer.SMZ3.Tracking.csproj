@@ -34,6 +34,10 @@
     <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\Yaml\Sassy\" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

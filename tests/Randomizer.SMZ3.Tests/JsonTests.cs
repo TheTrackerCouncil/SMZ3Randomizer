@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 
 using Newtonsoft.Json.Linq;
-
-using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
-
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 using SharpYaml.Tokens;
 
 using Xunit;

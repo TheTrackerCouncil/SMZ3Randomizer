@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Randomizer.Shared;
-using static Randomizer.SMZ3.Tracking.SchrodingersString;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using static Randomizer.SMZ3.Tracking.Configuration.ConfigTypes.SchrodingersString;
 
 namespace Randomizer.SMZ3.Tracking
 {

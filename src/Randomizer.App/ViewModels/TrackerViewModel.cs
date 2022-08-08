@@ -86,12 +86,12 @@ namespace Randomizer.App.ViewModels
         {
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldSouth.Library,
-                new ItemData(new("X-Ray Scope"), ItemType.XRay),
+                new ItemData(new("X-Ray Scope"), ItemType.XRay, null),
                 _syncer);
 
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
-                new ItemData(new("Bullshit"), ItemType.Nothing),
+                new ItemData(new("Bullshit"), ItemType.Nothing, null),
                 _syncer);
         }
     }

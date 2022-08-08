@@ -32,7 +32,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         public TrackerConfigProvider(ILogger<TrackerConfigProvider>? logger)
         {
-            _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer"); ;
+            _basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Configs"); ;
             _logger = logger;
         }
 

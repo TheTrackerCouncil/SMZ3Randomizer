@@ -1,0 +1,98 @@
+﻿- LocationNumber: 6
+  Name:
+  - Text: Mother Brain's toilet
+  WhenTrackingJunk:
+  - Text: Of course this location would have a shitty item
+  - Text: What a poopy item. No wonder it got flushed.
+  WhenTrackingProgression:
+  - Text: That's not bad for being in the toilet
+  - Text: Who flushed this down the toilet?
+- LocationNumber: 44
+  Name:
+  - Text: the room before the corridor with Kraid's Awful Son
+- LocationNumber: 150
+  WhenTrackingJunk:
+  - Text: I'm sorry.
+  - Text: Shaktool hasn't been himself lately.
+  - Text: Don't be so hard on Shaktool. He's had a rough time lately.
+  WhenTrackingProgression:
+  - Text: I told you about Shaktool
+  - Text: I always had faith
+  - Text: I knew Shaktool wouldn't let you down.
+  - Text: Never doubt the Shak.
+- LocationNumber: 260
+  WhenTrackingJunk:
+  - Text: I hope you didn't blind grab that
+  - Text: I bet the view is better than what you got.
+  WhenTrackingProgression:
+  - Text: That took so much effort to get, amazing.
+  - Text: What's next?
+  WhenMarkingJunk:
+  - Text: This island makes no sense!
+  - Text: Sky floating crap is kind of rare to see.
+  WhenMarkingProgression:
+  - Text: Maybe the mitts are right around the corner.
+  - Text: At least this isnt that far out of the way.
+- LocationNumber: 270
+  WhenTrackingJunk:
+  - Text: If only you could read.
+  WhenTrackingProgression:
+  - Text: I'm so sorry.
+  - Text: Well, at least you found something.
+  WhenMarkingJunk:
+  - Text: Phew.
+  WhenMarkingProgression:
+  - Text: I'm so sorry.
+- LocationNumber: 273
+  WhenTrackingJunk:
+  - Text: Why did you bother?
+  WhenTrackingProgression:
+  - Text: Well, at least you got something.
+  - Text: Maybe things will happen now.
+  WhenMarkingJunk:
+  - Text: That's a relief, I'm sure.
+  - Text: Not an AhGah seed then?
+  - Text: That's a good sign? Right?
+  - Text: Oops, I sent you the wrong seed
+  WhenMarkingProgression:
+  - Text: Sucks to be you.
+  - Text: It's going to be one of those seeds.
+  - Text: Hold on, let me grab some popcorn
+- LocationNumber: 317
+  WhenTrackingJunk:
+  - Text: At least it's easy to get
+  - Text: That was pretty simple.
+  WhenTrackingProgression:
+  - Text: You stole that from the Buzz Blob!
+  - Text: You better escape before you get zapped.
+  WhenMarkingJunk:
+  - Text: That was an easy peek at least.
+  WhenMarkingProgression:
+  - Text: Hopefully you get the mirror soon.
+  - Text: At least this isnt that far out of the way.
+- LocationNumber: 331
+  WhenTrackingJunk:
+  - Text: I would sigh if I could.
+  - Text: What a shame.
+  - Text: Such a shame.
+  - Text: I want a refund.
+  - Text: At least the season pass was cheap
+  - Text: At least the food is nice.
+  - Text: My disappointment is immeasurable.
+  WhenTrackingProgression:
+  - Text: Peg World! Peg World! Peg World!
+  - Text: I love pegging.
+  - Text: I liked Peg World before it was cool.
+  - Text: Can we get in line to ride it again?
+- LocationNumber: 496
+  WhenTrackingJunk:
+  - Text: Did you get a nice book at least?
+  WhenTrackingProgression:
+  - Text: Toggled boots off. Kidding.
+  - Text: Did you grab the book I had on reserve?
+  WhenMarkingJunk:
+  - Text: Its never bullshit to visit your local Library
+  - Text: Don't you want to get something nice to read?
+  WhenMarkingProgression:
+  - Text: Hopefully the boots are not too hard to find.
+  - Text: At least this isnt that far out of the way.

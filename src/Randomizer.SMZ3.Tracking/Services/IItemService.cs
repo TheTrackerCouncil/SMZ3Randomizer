@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {

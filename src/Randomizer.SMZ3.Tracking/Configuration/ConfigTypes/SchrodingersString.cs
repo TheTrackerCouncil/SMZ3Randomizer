@@ -5,17 +5,17 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
-
+using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.Converters;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents multiple possibilities of a string.
     /// </summary>
     [JsonConverter(typeof(SchrodingersStringConverter))]
     [DebuggerDisplay("[{GetDebuggerDisplay()}]")]
-    public class SchrodingersString : Collection<SchrodingersString.Possibility>
+    public class SchrodingersString : Collection<SchrodingersString.Possibility>, IMergeableConfig
     {
         private static readonly Random s_random = new();
 
@@ -144,6 +144,17 @@ namespace Randomizer.SMZ3.Tracking
 
         private string GetDebuggerDisplay() => string.Join(", ", this.Select(x => x.ToString()));
 
+        public void Merge(IMergeableConfig other)
+        {
+            if (other is SchrodingersString otherObj)
+            {
+                foreach (var possibility in otherObj)
+                {
+                    base.Add(possibility);
+                }
+            }
+        }
+
         /// <summary>
         /// Represents one possibility of a <see cref="SchrodingersString"/>.
         /// </summary>
@@ -156,6 +167,11 @@ namespace Randomizer.SMZ3.Tracking
             /// to them.
             /// </summary>
             public const double DefaultWeight = 1.0d;
+
+            public Possibility()
+            {
+
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Possibility"/>
@@ -186,13 +202,13 @@ namespace Randomizer.SMZ3.Tracking
             /// <summary>
             /// Gets a string.
             /// </summary>
-            public string Text { get; }
+            public string Text { get; set; }
 
             /// <summary>
             /// Gets the weight associated with the item.
             /// </summary>
             [DefaultValue(DefaultWeight)]
-            public double Weight { get; }
+            public double Weight { get; set; } = DefaultWeight;
 
             /// <summary>
             /// Converts the possibility to a string.

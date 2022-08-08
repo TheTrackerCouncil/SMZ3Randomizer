@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-
+using System.Text.Json.Serialization;
 using Randomizer.Shared;
+using SharpYaml.Serialization;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents a trackable item.
     /// </summary>
-    public class ItemData
+    public class ItemData : IMergeableConfig
     {
+        public ItemData()
+        {
+
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ItemData"/> class with
         /// the specified item name and type.
@@ -20,26 +26,34 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <param name="internalItemType">
         /// The internal <see cref="ItemType"/> of the item.
         /// </param>
-        public ItemData(SchrodingersString name, ItemType internalItemType)
+        public ItemData(SchrodingersString name, ItemType internalItemType, SchrodingersString hints)
         {
+            Item = internalItemType.GetDescription();
             Name = name;
             InternalItemType = internalItemType;
+            Hints = hints;
         }
+
+        /// <summary>
+        /// Unique key to connect the ItemData with other configs
+        /// </summary>
+        [ConfigMergeKey]
+        public string Item { get; set; }
 
         /// <summary>
         /// Gets the possible names for the item.
         /// </summary>
-        public SchrodingersString Name { get; init; }
+        public SchrodingersString Name { get; set; }
 
         /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").
         /// </summary>
-        public string? Article { get; init; }
+        public string? Article { get; set; }
 
         /// <summary>
         /// Gets the possible plural names for the item.
         /// </summary>
-        public SchrodingersString? Plural { get; init; }
+        public SchrodingersString? Plural { get; set; }
 
         /// <summary>
         /// Gets the name of the article, prefixed with "a", "the" or none,
@@ -52,29 +66,30 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets the internal <see cref="ItemType"/> of the item.
         /// </summary>
-        public ItemType InternalItemType { get; init; }
+        public ItemType InternalItemType { get; set; }
 
         /// <summary>
         /// Indicates whether the item can be tracked more than once.
         /// </summary>
-        public bool Multiple { get; init; }
+        public bool Multiple { get; set; }
 
         /// <summary>
         /// Gets the number the item counter should be multiplied with, in the
         /// case of items that can be tracked more than once.
         /// </summary>
-        public int? CounterMultiplier { get; init; }
+        public int? CounterMultiplier { get; set; }
 
         /// <summary>
         /// Gets the number of actual items as displayed or mentioned by
         /// tracker, or <c>0</c> if the item does not have copies.
         /// </summary>
+        [JsonIgnore]
         public int Counter => Multiple && !HasStages ? TrackingState * (CounterMultiplier ?? 1) : 0;
 
         /// <summary>
         /// Gets the stages and their names of a progressive item.
         /// </summary>
-        public IReadOnlyDictionary<int, SchrodingersString>? Stages { get; init; }
+        public Dictionary<int, SchrodingersString>? Stages { get; set; }
 
         /// <summary>
         /// Gets the phrases to respond with when tracking this item, or
@@ -88,7 +103,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Use <c>null</c> to reset to the default item responses.
         /// </para>
         /// </remarks>
-        public IReadOnlyDictionary<int, SchrodingersString>? WhenTracked { get; init; }
+        public Dictionary<int, SchrodingersString>? WhenTracked { get; set; }
 
         /// <summary>
         /// Gets or sets the zero-based index of the column in which the item
@@ -105,23 +120,26 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets or sets the path to the image to be displayed on the tracker.
         /// </summary>
+        [YamlIgnore]
         public string? Image { get; set; }
 
         /// <summary>
         /// Gets the possible hints for the item, if any are defined.
         /// </summary>
-        public SchrodingersString? Hints { get; init; }
+        public SchrodingersString? Hints { get; set; }
 
         /// <summary>
         /// Gets the highest stage the item supports, or 1 if the item does not
         /// have stages, or 0 if the item has no limit.
         /// </summary>
-        public int MaxStage => HasStages ? Stages.Max(x => x.Key) : (Multiple ? 0 : 1);
+        [JsonIgnore]
+        public int MaxStage => HasStages ? Stages.Max(x => x.Key) : Multiple ? 0 : 1;
 
         /// <summary>
         /// Indicates whether the item has stages.
         /// </summary>
         [MemberNotNullWhen(true, nameof(Stages))]
+        [JsonIgnore]
         public bool HasStages => Stages != null && Stages.Count > 0;
 
         /// <summary>
@@ -132,6 +150,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// obtained item and higher values indicate items that have been
         /// obtained more than once.
         /// </remarks>
+        [JsonIgnore]
         public int TrackingState { get; set; }
 
         /// <summary>
@@ -164,8 +183,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public bool Track()
         {
             if (TrackingState == 0 // Item hasn't been tracked yet (any case)
-                || (!HasStages && Multiple) // Multiple items always track
-                || (HasStages && TrackingState < MaxStage)) // Hasn't reached max. stage yet
+                || !HasStages && Multiple // Multiple items always track
+                || HasStages && TrackingState < MaxStage) // Hasn't reached max. stage yet
             {
                 TrackingState++;
                 return true;
@@ -233,12 +252,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public bool Is(ItemType type)
         {
             return InternalItemType == type
-                || (InternalItemType == ItemType.Nothing
-                    && type.IsInCategory(ItemCategory.Scam))
-                || (InternalItemType == ItemType.HeartContainer
-                    && type == ItemType.HeartContainerRefill)
-                || (InternalItemType == ItemType.HeartContainerRefill
-                    && type == ItemType.HeartContainer);
+                || InternalItemType == ItemType.Nothing
+                    && type.IsInCategory(ItemCategory.Scam)
+                || InternalItemType == ItemType.HeartContainer
+                    && type == ItemType.HeartContainerRefill
+                || InternalItemType == ItemType.HeartContainerRefill
+                    && type == ItemType.HeartContainer;
         }
 
         /// <summary>
@@ -268,9 +287,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             }
 
             if (WhenTracked.TryGetValue(TrackingState, out response))
-            {
                 return response != null;
-            }
 
             var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < TrackingState);
             if (!smallerKeys.Any())
@@ -281,9 +298,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
 
             var closestSmallerKey = smallerKeys.Last();
             if (WhenTracked.TryGetValue(closestSmallerKey, out response))
-            {
                 return response != null;
-            }
 
             response = null;
             return false;
@@ -326,6 +341,56 @@ namespace Randomizer.SMZ3.Tracking.Configuration
 
             return InternalItemType == ItemType.Nothing
                 || InternalItemType.IsInAnyCategory(junkCategories);
+        }
+
+        /*public void Merge(IMergeableConfig other)
+        {
+            var otherObj = (ItemData)other;
+            Name = SchrodingersString.Merge(Name, otherObj.Name) ?? new("");
+            Plural = SchrodingersString.Merge(Plural, otherObj.Plural) ?? new("");
+
+            if (WhenTracked != null && otherObj.WhenTracked != null)
+            {
+                foreach (var (amount, text) in otherObj.WhenTracked)
+                {
+                    if (WhenTracked.ContainsKey(amount) && WhenTracked[amount] != null)
+                    {
+                        WhenTracked[amount].Merge(text);
+                    }
+                    else
+                    {
+                        WhenTracked[amount] = text;
+                    }
+                }
+            }
+            else if (WhenTracked == null)
+            {
+                WhenTracked = otherObj.WhenTracked;
+            }
+
+            if (Stages != null && otherObj.Stages != null)
+            {
+                foreach (var (amount, text) in otherObj.Stages)
+                {
+                    if (Stages.ContainsKey(amount) && Stages[amount] != null)
+                    {
+                        Stages[amount].Merge(text);
+                    }
+                    else
+                    {
+                        Stages[amount] = text;
+                    }
+                }
+            }
+            else if (Stages == null)
+            {
+                Stages = otherObj.Stages;
+            }
+        }*/
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
         }
     }
 }

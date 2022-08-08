@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Shared;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents extra information about a region in SMZ3.
     /// </summary>
-    public class RegionInfo
+    public class RegionInfo : IMergeableConfig
     {
+        
+        public RegionInfo() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RegionInfo"/> class
         /// with the specified info.
@@ -26,21 +29,26 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             MapName = mapName;
         }
 
+        [ConfigMergeKey]
+        public string Region { get; set; }
+
         /// <summary>
         /// Gets the fully qualified name of the region, e.g.
         /// <c>Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar</c>.
         /// </summary>
-        public string TypeName { get; }
+        public string TypeName { get; set; }
+
+        public Type Type { get; set; }
 
         /// <summary>
         /// Gets the possible names for the region.
         /// </summary>
-        public SchrodingersString Name { get; }
+        public SchrodingersString Name { get; set; }
 
         /// <summary>
         /// Gets the possible hints for the region, if any are defined.
         /// </summary>
-        public SchrodingersString? Hints { get; init; }
+        public SchrodingersString? Hints { get; set; }
 
         /// <summary>
         /// The name of the map to display for this region
@@ -72,5 +80,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Text for Tracker to say when dying in a room or screen in the region
         /// </summary>
         public Dictionary<string, SchrodingersString>? WhenDiedInRoom { get; init; }
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
     }
 }

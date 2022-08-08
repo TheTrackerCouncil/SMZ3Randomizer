@@ -4,13 +4,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Randomizer.Shared;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents extra information about a trackable location in SMZ3.
     /// </summary>
-    public class LocationInfo : IPointOfInterest
+    public class LocationInfo : IPointOfInterest, IMergeableConfig
     {
+        public LocationInfo() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationInfo"/> class
         /// with the specified info.
@@ -26,16 +28,19 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             Name = name;
         }
 
+        [ConfigMergeKey]
+        public int LocationNumber { get; init; }
+
         /// <summary>
         /// Gets the ID of the location. This value must match the <see
         /// cref="Location.Id"/> of a location in the game.
         /// </summary>
-        public int Id { get; }
+        public int Id { get; init; }
 
         /// <summary>
         /// Gets the possible names for the location.
         /// </summary>
-        public SchrodingersString Name { get; }
+        public SchrodingersString Name { get; set; }
 
         /// <summary>
         /// Gets the x-coordinate of the location on the map, if it should be
@@ -52,27 +57,27 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets the possible hints for the location, if any are defined.
         /// </summary>
-        public SchrodingersString? Hints { get; init; }
+        public SchrodingersString? Hints { get; set; }
 
         /// <summary>
         /// Gets the phrases to reply with when tracking a junk item at this location.
         /// </summary>
-        public IReadOnlyCollection<SchrodingersString>? WhenTrackingJunk { get; init; }
+        public SchrodingersString? WhenTrackingJunk { get; set; }
 
         /// <summary>
         /// Gets the phrases to reply with when tracking a progression item at this location.
         /// </summary>
-        public IReadOnlyCollection<SchrodingersString>? WhenTrackingProgression { get; init; }
+        public SchrodingersString? WhenTrackingProgression { get; set; }
 
         /// <summary>
         /// Gets the phrases to reply with when marking a junk item at this location.
         /// </summary>
-        public IReadOnlyCollection<SchrodingersString>? WhenMarkingJunk { get; init; }
+        public SchrodingersString? WhenMarkingJunk { get; set; }
 
         /// <summary>
         /// Gets the phrases to reply with when marking a progression item at this location.
         /// </summary>
-        public IReadOnlyCollection<SchrodingersString>? WhenMarkingProgression { get; init; }
+        public SchrodingersString? WhenMarkingProgression { get; set; }
 
         /// <summary>
         /// Returns the <see cref="Location"/> that matches the location info in
@@ -125,5 +130,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <returns>A string representation of this location.</returns>
         public override string? ToString() => Name[0];
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
     }
 }

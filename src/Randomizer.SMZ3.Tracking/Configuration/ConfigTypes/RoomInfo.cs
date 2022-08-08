@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents extra information about a room in SMZ3.
     /// </summary>
-    public class RoomInfo : IPointOfInterest
+    public class RoomInfo : IPointOfInterest, IMergeableConfig
     {
+        public RoomInfo() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RoomInfo"/> class with
         /// the specified info.
@@ -22,16 +24,20 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             Name = name;
         }
 
+        public string Room { get; init; }
+
         /// <summary>
         /// Gets the fully qualified name of the room, e.g.
         /// <c>Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest.LightWorldNorthWest</c>.
         /// </summary>
-        public string TypeName { get; }
+        public string TypeName { get; init; }
+
+        public Type Type { get; init; }
 
         /// <summary>
         /// Gets the possible names for the room.
         /// </summary>
-        public SchrodingersString Name { get; }
+        public SchrodingersString Name { get; set; }
 
         /// <summary>
         /// Gets the x-coordinate of the room on the map, if it should be
@@ -48,7 +54,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets the possible hints for the room, if any are defined.
         /// </summary>
-        public SchrodingersString? Hints { get; init; }
+        public SchrodingersString? Hints { get; set; }
 
         /// <summary>
         /// Returns the locations in the room.
@@ -102,5 +108,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         /// <returns>A string representation of this room.</returns>
         public override string? ToString() => Name[0];
+
+        public void Merge(IMergeableConfig other)
+        {
+            ConfigMergeFunctions.MergeProperties(this, other);
+        }
     }
 }
