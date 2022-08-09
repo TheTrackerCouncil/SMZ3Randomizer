@@ -6,7 +6,7 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class RegionConfig : List<RegionInfo>, IMergeableConfig<RegionInfo>
+    public class RegionConfig : List<RegionInfo>, IMergeable<RegionInfo>, IConfigFile<RegionConfig>
     {
         public RegionConfig() : base()
         {

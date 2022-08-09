@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents a trackable item.
     /// </summary>
-    public class ItemData : IMergeableConfig<ItemData>
+    public class ItemData : IMergeable<ItemData>
     {
         public ItemData()
         {
@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// <summary>
         /// Unique key to connect the ItemData with other configs
         /// </summary>
-        [ConfigMergeKey]
+        [MergeKey]
         public string Item { get; set; }
 
         /// <summary>

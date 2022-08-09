@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents extra information about a region in SMZ3.
     /// </summary>
-    public class RegionInfo : IMergeableConfig<RegionInfo>
+    public class RegionInfo : IMergeable<RegionInfo>
     {
         
         public RegionInfo() { }
@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             MapName = mapName;
         }
 
-        [ConfigMergeKey]
+        [MergeKey]
         public string Region { get; set; }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents a dungeon in A Link to the Past.
     /// </summary>
-    public class DungeonInfo : IPointOfInterest, IMergeableConfig<DungeonInfo>
+    public class DungeonInfo : IPointOfInterest, IMergeable<DungeonInfo>
     {
         public DungeonInfo() { }
 
@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             RegionTypeName = regionTypeName;
         }
 
-        [ConfigMergeKey]
+        [MergeKey]
         public string Dungeon { get; init; }
 
         /// <summary>

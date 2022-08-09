@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Represents extra information about a room in SMZ3.
     /// </summary>
-    public class RoomInfo : IPointOfInterest, IMergeableConfig<RoomInfo>
+    public class RoomInfo : IPointOfInterest, IMergeable<RoomInfo>
     {
         public RoomInfo() { }
 

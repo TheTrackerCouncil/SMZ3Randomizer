@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class DungeonConfig : List<DungeonInfo>, IMergeableConfig<DungeonInfo>
+    public class DungeonConfig : List<DungeonInfo>, IMergeable<DungeonInfo>, IConfigFile<DungeonConfig>
     {
         public DungeonConfig() : base()
         {

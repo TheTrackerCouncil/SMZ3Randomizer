@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Provides the phrases for chat integration.
     /// </summary>
-    public class AutoTrackerConfig : IMergeableConfig<AutoTrackerConfig>
+    public class AutoTrackerConfig : IMergeable<AutoTrackerConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when connected to to emulator.

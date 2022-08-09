@@ -84,7 +84,8 @@ namespace Randomizer.SMZ3.Tracking
             RandomizerContext dbContext,
             IItemService itemService,
             ICommunicator communicator,
-            IHistoryService historyService)
+            IHistoryService historyService,
+            TrackerConfigs configs)
         {
             if (trackerOptions.Options == null)
                 throw new InvalidOperationException("Tracker options have not yet been activated.");

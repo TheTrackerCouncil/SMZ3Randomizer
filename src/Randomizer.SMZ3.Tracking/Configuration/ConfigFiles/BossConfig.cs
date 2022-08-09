@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class BossConfig : List<BossInfo>, IMergeableConfig<BossInfo>
+    public class BossConfig : List<BossInfo>, IMergeable<BossInfo>
     {
         public BossConfig() : base()
         {

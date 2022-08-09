@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Provides the phrases for cheats
     /// </summary>
-    public class CheatsConfig : IMergeableConfig<CheatsConfig>
+    public class CheatsConfig : IMergeable<CheatsConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when cheats are turned on.

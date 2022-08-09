@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// <summary>
     /// Provides the phrases for chat integration.
     /// </summary>
-    public class ChatConfig: IMergeableConfig<ChatConfig>
+    public class ChatConfig: IMergeable<ChatConfig>
     {
         /// <summary>
         /// Gets a collection of greetings that tracker recognizes and responds

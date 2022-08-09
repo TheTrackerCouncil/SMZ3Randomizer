@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     /// <summary>
     /// Provides the phrases for map.
     /// </summary>
-    public class MapResponseConfig : IMergeableConfig<MapResponseConfig>
+    public class MapResponseConfig : IMergeable<MapResponseConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when showing the player a dark room map

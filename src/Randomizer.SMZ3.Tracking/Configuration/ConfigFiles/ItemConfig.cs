@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class ItemConfig : List<ItemData>, IMergeableConfig<ItemData>
+    public class ItemConfig : List<ItemData>, IMergeable<ItemData>, IConfigFile<ItemConfig>
     {
         public ItemConfig() : base()
         {

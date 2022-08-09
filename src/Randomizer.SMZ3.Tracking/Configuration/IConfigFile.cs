@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {
-    public enum ConfigMergeType
+    public interface IConfigFile<T>
     {
-        List,
-        Properties
     }
 }

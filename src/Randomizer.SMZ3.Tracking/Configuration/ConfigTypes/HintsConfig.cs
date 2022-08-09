@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
     /// <summary>
     /// Provides the phrases for hints.
     /// </summary>
-    public class HintsConfig : IMergeableConfig<HintsConfig>
+    public class HintsConfig : IMergeable<HintsConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when hints are turned on.

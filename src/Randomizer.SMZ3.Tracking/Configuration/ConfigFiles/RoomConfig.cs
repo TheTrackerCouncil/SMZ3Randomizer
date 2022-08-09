@@ -6,7 +6,7 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
-    public class RoomConfig : List<RoomInfo>, IMergeableConfig<RoomInfo>
+    public class RoomConfig : List<RoomInfo>, IMergeable<RoomInfo>, IConfigFile<RoomConfig>
     {
         public RoomConfig() : base()
         {

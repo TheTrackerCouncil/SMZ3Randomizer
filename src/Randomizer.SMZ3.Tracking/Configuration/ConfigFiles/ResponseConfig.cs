@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
     /// <summary>
     /// Represents the various phrases that Tracker can respond with.
     /// </summary>
-    public class ResponseConfig : IMergeableConfig<ResponseConfig>
+    public class ResponseConfig : IMergeable<ResponseConfig>, IConfigFile<ResponseConfig>
     {
         /// <summary>
         /// Gets the phrases to respond with when tracker starts.
