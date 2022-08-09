@@ -83,7 +83,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         protected virtual T LoadConfig<T>(string fileName)
         {
-            _logger.LogInformation("Loading config file " + fileName);
             var profiles = GetAvailableProfiles();
 #if DEBUG
             return GetBuiltInConfig<T>(fileName);
