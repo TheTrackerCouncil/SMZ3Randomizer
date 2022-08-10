@@ -93,7 +93,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 IsImportant = isImportant,
                 ObjectName = objectName,
                 LocationName = location?.Name.ToString(),
-                LocationId = location?.Id,
+                LocationId = location?.LocationNumber,
                 Time = _tracker?.TotalElapsedTime.TotalSeconds ?? 0
             };
             AddEvent(addedEvent);

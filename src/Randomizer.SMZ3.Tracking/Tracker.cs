@@ -85,7 +85,8 @@ namespace Randomizer.SMZ3.Tracking
             IItemService itemService,
             ICommunicator communicator,
             IHistoryService historyService,
-            TrackerConfigs configs)
+            TrackerConfigs configs,
+            IWorldService locationService)
         {
             if (trackerOptions.Options == null)
                 throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -100,11 +101,11 @@ namespace Randomizer.SMZ3.Tracking
             _communicator = communicator;
 
             // Initialize the tracker configuration
-            var config = configProvider.GetTrackerConfig();
-            Pegs = config.Pegs;
-            Responses = config.Responses;
-            Requests = config.Requests;
-            WorldInfo = configProvider.GetLocationConfig();
+            //var config = configProvider.GetTrackerConfig();
+            //Pegs = config.Pegs;
+            Responses = configs.Responses;
+            Requests = configs.Requests;
+            WorldInfo = locationService;
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
 
@@ -199,7 +200,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets extra information about locations.
         /// </summary>
-        public Randomizer.SMZ3.Tracking.Configuration.LocationConfig WorldInfo { get; }
+        public IWorldService WorldInfo { get; }
 
         /// <summary>
         /// Gets a reference to the <see cref="ItemService"/>.

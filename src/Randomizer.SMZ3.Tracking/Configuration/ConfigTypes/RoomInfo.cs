@@ -16,21 +16,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// Initializes a new instance of the <see cref="RoomInfo"/> class with
         /// the specified info.
         /// </summary>
-        /// <param name="typeName">The fully qualified name of the room.</param>
         /// <param name="name">The possible names for the room.</param>
-        public RoomInfo(string typeName, SchrodingersString name)
+        public RoomInfo(SchrodingersString name)
         {
-            TypeName = typeName;
             Name = name;
         }
 
+        [MergeKey]
         public string Room { get; init; }
 
         /// <summary>
-        /// Gets the fully qualified name of the room, e.g.
-        /// <c>Randomizer.SMZ3.Regions.Zelda.LightWorld.LightWorldNorthWest.LightWorldNorthWest</c>.
+        /// The Randomzier.SMZ3 type matching this region
         /// </summary>
-        public string TypeName { get; init; }
 
         public Type Type { get; init; }
 
@@ -84,7 +81,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// more than one matching room in <paramref name="world"/>.
         /// </exception>
         public Room GetRoom(World world)
-            => world.Rooms.Single(x => x.GetType().FullName == TypeName);
+            => world.Rooms.Single(x => x.GetType() == Type);
 
         /// <summary>
         /// Determines whether the room is accessible with the specified set of

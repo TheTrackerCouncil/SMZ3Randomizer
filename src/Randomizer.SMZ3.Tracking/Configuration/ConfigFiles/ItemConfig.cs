@@ -57,6 +57,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Fire Rod"),
                     InternalItemType = ItemType.Firerod,
                     Hints = new("You could use it to set things on fire.", "You can hurt people with it.", "It's something magical.", "You could use it to see things you usually can't.", "It's red."),
+                    Column = 0,
                     Row = 1,
                 },
                 new ItemData()
@@ -84,6 +85,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Hookshot,
                     Hints = new("You could use it to get around."),
                     Column = 3,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -91,6 +93,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new(new("Bow", 0), "Boh", "Boh and Arrow"),
                     InternalItemType = ItemType.Bow,
                     Hints = new("You can hurt people with it."),
+                    Column = 0,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -99,6 +103,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.BlueBoomerang,
                     Hints = new("You can hurt people with it.", "It's blue."),
                     Column = 1,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -107,6 +112,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Powder,
                     Hints = new("It's something magical."),
                     Column = 4,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -141,6 +147,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Lamp", "Lantern"),
                     InternalItemType = ItemType.Lamp,
                     Hints = new("You could use it to set things on fire.", "You could use it to see things you usually can't.", "It's red."),
+                    Column = 0,
                     Row = 2,
                 },
                 new ItemData()
@@ -178,6 +185,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Plural = new("Bottles"),
                     Multiple = true,
                     Hints = new("You could find it in real life."),
+                    Column = 0,
                     Row = 3,
                 },
                 new ItemData()
@@ -269,6 +277,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Mushroom,
                     Hints = new("You could find it in real life."),
                     Column = 5,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -277,6 +286,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.RedBoomerang,
                     Hints = new("You can hurt people with it.", "It's red."),
                     Column = 2,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -400,6 +410,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Silver Arrows", "Silvers"),
                     InternalItemType = ItemType.SilverArrows,
                     Hints = new("You can hurt people with it."),
+                    Row = 0,
+                    Column = 0,
                 },
                 new ItemData()
                 {
@@ -438,6 +450,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.ProgressiveGlove,
                     Multiple = true,
                     Hints = new("It's something magical.", "It's something you could wear."),
+                    Column = 0,
                     Row = 4,
                 },
                 new ItemData()
@@ -880,6 +893,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Charge,
                     Hints = new("You can hurt people with it."),
                     Column = 6,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -888,6 +902,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Ice,
                     Hints = new("You can hurt people with it.", "It's cold.", "It's blue."),
                     Column = 7,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -896,6 +911,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Wave,
                     Hints = new("You can hurt people with it."),
                     Column = 8,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -904,6 +920,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Spazer,
                     Hints = new("You can hurt people with it."),
                     Column = 9,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -912,6 +929,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Plasma,
                     Hints = new("You can hurt people with it."),
                     Column = 10,
+                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -941,7 +959,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Item = "Missile",
                     Name = new("Missile", new("Missiles", 0), new("Missile pack", 0.2)),
                     InternalItemType = ItemType.Missile,
-                    Plural = new("Missiles", new("Missile packs", 0)),
+                    Plural = new("Missile", new("Missile pack", 0), new("Missile", 0)),
                     Multiple = true,
                     CounterMultiplier = 5,
                     Hints = new("You probably already have a lot of it.", "It allows you to carry more of something"),

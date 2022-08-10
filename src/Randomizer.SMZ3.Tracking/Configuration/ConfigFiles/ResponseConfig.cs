@@ -13,23 +13,27 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         /// Gets the phrases to respond with when tracker starts.
         /// </summary>
         public SchrodingersString? StartedTracking { get; init; }
+            = new SchrodingersString("Tracker started");
 
         /// <summary>
         /// Gets the phrases to respond with when tracker starts in "alternate"
         /// mode.
         /// </summary>
         public SchrodingersString? StartingTrackingAlternate { get; init; }
+        = new SchrodingersString("Tracker started");
 
         /// <summary>
         /// Gets the phrases to respond with when tracker stops.
         /// </summary>
         public SchrodingersString? StoppedTracking { get; init; }
+            = new SchrodingersString("Tracker stopped");
 
         /// <summary>
         /// Gets the phrases to respond with when tracker stops after go mode
         /// has been turned on.
         /// </summary>
         public SchrodingersString? StoppedTrackingPostGoMode { get; init; }
+            = new SchrodingersString("Tracker stopped");
 
         /// <summary>
         /// Gets the phrases to respond with when speech recognition confidence
@@ -70,7 +74,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         /// a placeholder for the number of copies.
         /// </remarks>
         public SchrodingersString TrackedItemMultiple { get; init; }
-             = new SchrodingersString("Added {0}s.", "You now have {1} {0}s.");
+             = new SchrodingersString("Added more {0}.", "You now have {1} {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when tracking a progressive item.

@@ -4,6 +4,7 @@ using System.Linq;
 
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Services
@@ -19,13 +20,13 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// Initializes a new instance of the <see cref="ItemService"/> class
         /// with the specified dependencies.
         /// </summary>
-        /// <param name="trackerConfig">
+        /// <param name="items">
         /// Specifies the configuration that contains the item data to be
         /// managed.
         /// </param>
-        public ItemService(TrackerConfig trackerConfig)
+        public ItemService(ItemConfig items)
         {
-            Items = trackerConfig.Items;
+            Items = items;
         }
 
         /// <summary>

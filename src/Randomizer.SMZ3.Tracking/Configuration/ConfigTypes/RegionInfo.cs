@@ -17,14 +17,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// Initializes a new instance of the <see cref="RegionInfo"/> class
         /// with the specified info.
         /// </summary>
-        /// <param name="typeName">
-        /// The fully qualified name of the region type.
-        /// </param>
         /// <param name="name">The possible names for the region.</param>
         /// <param name="mapName">The map name to display for the region.</param>
-        public RegionInfo(string typeName, SchrodingersString name, string mapName)
+        public RegionInfo(SchrodingersString name, string mapName)
         {
-            TypeName = typeName;
             Name = name;
             MapName = mapName;
         }
@@ -33,11 +29,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public string Region { get; set; }
 
         /// <summary>
-        /// Gets the fully qualified name of the region, e.g.
-        /// <c>Randomizer.SMZ3.Regions.SuperMetroid.Brinstar.BlueBrinstar</c>.
+        /// Gets Randomizer.SMZ3 type for the region
         /// </summary>
-        public string TypeName { get; set; }
-
         public Type Type { get; set; }
 
         /// <summary>
@@ -68,7 +61,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// is more than one matching region in <paramref name="world"/>.
         /// </exception>
         public Region GetRegion(World world)
-            => world.Regions.Single(x => x.GetType().FullName == TypeName);
+            => world.Regions.Single(x => x.GetType() == Type);
 
         /// <summary>
         /// Returns a string representation of the region.

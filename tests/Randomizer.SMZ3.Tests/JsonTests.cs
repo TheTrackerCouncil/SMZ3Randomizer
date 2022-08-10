@@ -18,7 +18,8 @@ namespace Randomizer.SMZ3.Tests
 {
     public class JsonTests
     {
-        [Fact]
+        /*
+         * [Fact]
         public void TrackerConfigDoesNotContainDebugWeights()
         {
             var provider = new TrackerConfigProvider(null);
@@ -56,7 +57,7 @@ namespace Randomizer.SMZ3.Tests
                 value.Should().NotContain(x => x.Text.Contains('’'), because: "curly quotes can mess up text-to-speech on some systems");
             }
         }
-
+        */
         private IEnumerable<SchrodingersString> EnumerateSchrodingersStrings(object obj, int depth = 0)
         {
             if (obj is null)

@@ -34,6 +34,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.LightWorld.LightWorldNorthEast),
                     X = 1925,
                     Y = 791,
+                    Column = 0,
                     Row = 5,
                 },
                 new DungeonInfo()
@@ -113,6 +114,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DarkWorldNorthWest),
                     X = 79,
                     Y = 121,
+                    Column = 0,
                     Row = 6,
                 },
                 new DungeonInfo()

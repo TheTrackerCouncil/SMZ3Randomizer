@@ -51,20 +51,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         }
 
         /// <summary>
-        /// Loads the tracker configuration.
-        /// </summary>
-        /// <returns>A new <see cref="TrackerConfig"/> object.</returns>
-        public virtual TrackerConfig GetTrackerConfig()
-            => LoadConfig<TrackerConfig>("tracker.json");
-
-        /// <summary>
-        /// Loads the locations configuration.
-        /// </summary>
-        /// <returns>A new <see cref="LocationConfig"/> object.</returns>
-        public virtual LocationConfig GetLocationConfig()
-            => LoadConfig<LocationConfig>("locations.json");
-
-        /// <summary>
         /// Loads the maps configuration.
         /// </summary>
         /// <returns>A new <see cref="TrackerMapConfig"/> object.</returns>

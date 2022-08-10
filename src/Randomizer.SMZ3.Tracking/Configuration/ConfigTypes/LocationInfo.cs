@@ -22,20 +22,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// cref="Location.Id"/>.
         /// </param>
         /// <param name="name">The possible names for the location.</param>
-        public LocationInfo(int id, SchrodingersString name)
+        public LocationInfo(SchrodingersString name)
         {
-            Id = id;
             Name = name;
         }
 
         [MergeKey]
         public int LocationNumber { get; init; }
-
-        /// <summary>
-        /// Gets the ID of the location. This value must match the <see
-        /// cref="Location.Id"/> of a location in the game.
-        /// </summary>
-        public int Id { get; init; }
 
         /// <summary>
         /// Gets the possible names for the location.
@@ -93,7 +86,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// name="world"/>.
         /// </exception>
         public Location GetLocation(World world)
-            => world.Locations.Single(x => x.Id == Id);
+            => world.Locations.Single(x => x.Id == LocationNumber);
 
         /// <summary>
         /// Returns the location associated with the point of interest.

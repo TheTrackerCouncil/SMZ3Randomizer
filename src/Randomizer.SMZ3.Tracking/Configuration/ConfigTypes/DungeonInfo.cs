@@ -30,12 +30,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// The fully qualified type name of the region the dungeon is located
         /// in.
         /// </param>
-        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss, string typeName, string regionTypeName)
+        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss, string regionTypeName)
         {
             Name = name;
             Abbreviation = abbreviation;
             Boss = boss ?? new();
-            TypeName = typeName;
             RegionTypeName = regionTypeName;
         }
 
@@ -156,7 +155,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// otherwise, <c>false</c>.
         /// </returns>
         public bool Is(Region region)
-            => TypeName == region.GetType().FullName;
+            => Type == region.GetType();
 
         /// <summary>
         /// Determines whether the specified area either represents this dungeon
