@@ -174,16 +174,6 @@ namespace Randomizer.SMZ3
         };
 
         public GameMode GameMode { get; set; } = GameMode.Normal;
-        public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
-        public SMLogic SMLogic { get; set; } = SMLogic.Normal;
-
-        public IDictionary<ItemType, ItemPlacement> ItemLocations { get; }
-            = new Dictionary<ItemType, ItemPlacement>();
-
-        public ItemPool ShaktoolItemPool { get; set; } = ItemPool.Any;
-        public ItemPool PegWorldItemPool { get; set; } = ItemPool.Any;
-        public Goal Goal { get; set; } = Goal.DefeatBoth;
-        public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Race { get; set; } = false;
         public bool DisableSpoilerLog { get; set; } = false;
         public bool DisableTrackerSpoilers { get; set; } = false;
@@ -206,7 +196,7 @@ namespace Randomizer.SMZ3
 
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;
-        public bool Keysanity => KeyShuffle != KeyShuffle.None;
+        public bool Keysanity { get; set; }
         public string Seed { get; set; }
         public string SettingsString { get; set; }
         public bool CopySeedAndRaceSettings { get; set; }

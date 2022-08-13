@@ -101,7 +101,6 @@ namespace Randomizer.SMZ3.Generation
                 Seed = seed,
                 Game = Name,
                 Mode = config.GameMode.ToLowerString(),
-                Logic = $"{config.SMLogic.ToLowerString()}+{config.Z3Logic.ToLowerString()}",
                 Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
