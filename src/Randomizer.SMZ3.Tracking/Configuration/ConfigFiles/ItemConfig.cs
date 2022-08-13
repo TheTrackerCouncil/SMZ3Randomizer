@@ -7,16 +7,22 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config file for additional item information
+    /// </summary>
     public class ItemConfig : List<ItemData>, IMergeable<ItemData>, IConfigFile<ItemConfig>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public ItemConfig() : base()
         {
         }
 
-        public ItemConfig(IEnumerable<ItemData> list) : base(list)
-        {
-        }
-
+        /// <summary>
+        /// Returns default item information
+        /// </summary>
+        /// <returns></returns>
         public static ItemConfig Default()
         {
             return new ItemConfig
@@ -959,7 +965,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Item = "Missile",
                     Name = new("Missile", new("Missiles", 0), new("Missile pack", 0.2)),
                     InternalItemType = ItemType.Missile,
-                    Plural = new("Missile", new("Missile pack", 0), new("Missile", 0)),
+                    Plural = new("Missiles", new("Missile packs", 0)),
                     Multiple = true,
                     CounterMultiplier = 5,
                     Hints = new("You probably already have a lot of it.", "It allows you to carry more of something"),

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -86,34 +87,96 @@ namespace Randomizer.SMZ3.Tracking.Configuration
 #endif
         }
 
-        public virtual BossConfig GetBossConfig(ICollection<string>? profiles = null) =>
+        /// <summary>
+        /// Returns the configs with additional information for bosses
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual BossConfig GetBossConfig(params string[] profiles) =>
             LoadYamlConfigs<BossConfig, BossInfo>("bosses.yml", profiles);
 
-        public virtual DungeonConfig GetDungeonConfig(ICollection<string>? profiles = null) =>
+        /// <summary>
+        /// Returns the configs with additional information for dungeons
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual DungeonConfig GetDungeonConfig(params string[] profiles) =>
             LoadYamlConfigs<DungeonConfig, DungeonInfo>("dungeons.yml", profiles);
 
-        public virtual ItemConfig GetItemConfig(ICollection<string>? profiles = null) =>
+        /// <summary>
+        /// Returns the configs with additional information for items
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual ItemConfig GetItemConfig(params string[] profiles) =>
             LoadYamlConfigs<ItemConfig, ItemData>("items.yml", profiles);
 
-        public virtual ConfigFiles.LocationConfig GetLocationsConfig(ICollection<string>? profiles = null) =>
-            LoadYamlConfigs<ConfigFiles.LocationConfig, LocationInfo>("locations.yml", profiles);
+        /// <summary>
+        /// Returns the configs with additional information for locations
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual LocationConfig GetLocationConfig(params string[] profiles) =>
+            LoadYamlConfigs<LocationConfig, LocationInfo>("locations.yml", profiles);
 
-        public virtual RegionConfig GetRegionConfig(ICollection<string>? profiles = null) =>
+        /// <summary>
+        /// Returns the configs with additional information for regions
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual RegionConfig GetRegionConfig(params string[] profiles) =>
             LoadYamlConfigs<RegionConfig, RegionInfo>("regions.yml", profiles);
 
-        public virtual RequestConfig GetRequestConfig(ICollection<string>? profiles = null) =>
+        /// <summary>
+        /// Returns the configs with additional requests
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual RequestConfig GetRequestConfig(params string[] profiles) =>
             LoadYamlConfigs<RequestConfig, BasicVoiceRequest>("requests.yml", profiles);
 
-        public virtual ResponseConfig GetResponseConfig(ICollection<string>? profiles = null) =>
+        /// <summary>
+        /// Returns the configs with tracker responses
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual ResponseConfig GetResponseConfig(params string[] profiles) =>
             LoadYamlConfigs<ResponseConfig, ResponseConfig>("responses.yml", profiles);
 
-        public virtual RoomConfig GetRoomConfig(ICollection<string>? profiles = null) =>
+        /// <summary>
+        /// Returns the configs with additional information for rooms
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual RoomConfig GetRoomConfig(params string[] profiles) =>
             LoadYamlConfigs<RoomConfig, RoomInfo>("rooms.yml", profiles);
 
+        /// <summary>
+        /// Returns the configs with additional information for rewards
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual RewardConfig GetRewardConfig(params string[] profiles) =>
+            LoadYamlConfigs<RewardConfig, RewardInfo>("rewards.yml", profiles);
+
+        /// <summary>
+        /// Returns a collection of all possible config profiles to
+        /// select from
+        /// </summary>
+        /// <returns></returns>
         public virtual ICollection<string> GetAvailableProfiles()
         {
-            return Directory.GetDirectories(_basePath);
+            return Directory
+                .GetDirectories(_basePath)
+                .Select(x => (new DirectoryInfo(x)).Name)
+                .Where(x => x != "Templates")
+                .ToList();
         }
+
+        /// <summary>
+        /// Returns the path of the config files
+        /// </summary>
+        public virtual string ConfigDirectory => _basePath;
 
         private T LoadYamlConfigs<T, T2>(string fileName, ICollection<string>? profiles = null) where T : new()
         {
@@ -148,20 +211,39 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             return config;
         }
 
-        private T LoadYamlFile<T>(string fileName, string profile)
+        private T? LoadYamlFile<T>(string fileName, string profile)
         {
             var path = Path.Combine(_basePath, profile, fileName);
+            var yml = "";
             if (!File.Exists(path))
             {
-                return default;
+                yml = LoadBuiltInYamlFile(fileName, profile);
             }
-            var yml = File.ReadAllText(path);
-            var obj = s_deserializer.Deserialize<T>(yml);
-            if (obj == null)
+            else
             {
-                return default;
+                yml = File.ReadAllText(path);
+            }
+            T? obj = default;
+            try
+            {
+                obj = s_deserializer.Deserialize<T>(yml);
+            }
+            catch (YamlDotNet.Core.SemanticErrorException e)
+            {
+                _logger.LogError(e, "Unable to load config file " + path);
+                throw new YamlDotNet.Core.SemanticErrorException("Unable to load config file " + path, e);
             }
             return obj;
+        }
+
+        private static string LoadBuiltInYamlFile(string fileName, string profile)
+        {
+            var stream = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream($"Randomizer.SMZ3.Tracking.Configuration.Yaml.{profile}.{fileName}");
+            if (stream == null)
+                return "";
+            using var reader = new StreamReader(stream, detectEncodingFromByteOrderMarks: true);
+            return reader.ReadToEnd();
         }
 
         private static T GetBuiltInConfig<T>(string fileName)

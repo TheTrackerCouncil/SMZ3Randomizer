@@ -10,7 +10,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// </summary>
     public class RegionInfo : IMergeable<RegionInfo>
     {
-        
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public RegionInfo() { }
 
         /// <summary>
@@ -25,6 +27,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             MapName = mapName;
         }
 
+        /// <summary>
+        /// Unique key to connect the Region with other configs
+        /// </summary>
         [MergeKey]
         public string Region { get; set; }
 

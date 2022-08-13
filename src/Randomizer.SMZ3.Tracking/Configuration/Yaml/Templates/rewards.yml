@@ -1,0 +1,21 @@
+﻿# This config file is used for additional reward information
+#
+# Fields
+# ------
+# Reward: The identifier for the reward that is used to combine possibilities between configs.
+# Name: The list of possibilities for the name of the location
+
+- Reward: Unknown
+  Name: 
+- Reward: Crystal
+  Name: 
+- Reward: Red Crystal
+  Name: 
+- Reward: Green Pendant
+  Name: 
+- Reward: Red Pendant
+  Name: 
+- Reward: Blue Pendant
+  Name: 
+- Reward: Agahnim
+  Name: 

@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -7,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Tracking.Configuration;
 
 namespace Randomizer.App
 {
@@ -17,16 +22,21 @@ namespace Randomizer.App
     {
         private readonly IChatAuthenticationService _chatAuthenticationService;
         private readonly ILogger<OptionsWindow> _logger;
+        private readonly TrackerConfigProvider _trackerConfigProvider;
         private GeneralOptions _options;
         private bool _canLogIn = true;
+        private ICollection<string> _availableProfiles;
+
 
         public OptionsWindow(IChatAuthenticationService chatAuthenticationService,
+            TrackerConfigProvider configProvider,
             ILogger<OptionsWindow> logger)
         {
             InitializeComponent();
-
+            _trackerConfigProvider = configProvider;
             _chatAuthenticationService = chatAuthenticationService;
             _logger = logger;
+            AvailableProfiles = configProvider.GetAvailableProfiles();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -40,6 +50,9 @@ namespace Randomizer.App
                 {
                     _options = value;
                     DataContext = value;
+                    PropertyChanged?.Invoke(this, new(nameof(Options)));
+                    PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
+                    PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
                 }
             }
         }
@@ -56,6 +69,22 @@ namespace Randomizer.App
                 }
             }
         }
+
+        public ICollection<string> AvailableProfiles
+        {
+            get => _availableProfiles;
+            set
+            {
+                _availableProfiles = value;
+                PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
+            }
+        }
+
+        public ICollection<string> EnabledProfiles =>
+            Options?.SelectedProfiles.ToList();
+
+        public ICollection<string> DisabledProfiles =>
+            AvailableProfiles?.Where(x => Options?.SelectedProfiles?.Contains(x) == false)?.ToList();
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
@@ -95,6 +124,59 @@ namespace Randomizer.App
                 IsLoggingIn = true;
                 Cursor = null;
             }
+        }
+
+        private void EnableProfile_Click(object sender, RoutedEventArgs e)
+        {
+            Options.SelectedProfiles.Add(DisabledProfilesListBox.SelectedItem as string);
+            PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
+            PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
+        }
+
+        private void DisableProfile_Click(object sender, RoutedEventArgs e)
+        {
+            Options.SelectedProfiles.Remove(EnabledProfilesListBox.SelectedItem as string);
+            PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
+            PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
+        }
+
+        private void MoveProfileUp_Click(object sender, RoutedEventArgs e)
+        {
+            var index = EnabledProfilesListBox.SelectedIndex;
+            if (index <= 0) return;
+            var value = EnabledProfilesListBox.SelectedItem as string;
+            var profiles = Options.SelectedProfiles.ToList();
+            profiles.Remove(value);
+            profiles.Insert(index - 1, value);
+            Options.SelectedProfiles = profiles;
+            PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
+            PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
+        }
+
+        private void MoveProfileDown_Click(object sender, RoutedEventArgs e)
+        {
+            var index = EnabledProfilesListBox.SelectedIndex;
+            if (index >= Options.SelectedProfiles.Count - 1) return;
+            var value = EnabledProfilesListBox.SelectedItem as string;
+            var profiles = Options.SelectedProfiles.ToList();
+            profiles.Remove(value);
+            profiles.Insert(index + 1, value);
+            Options.SelectedProfiles = profiles;
+            PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
+            PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
+        }
+
+        private void OpenProfilesFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var path = Path.Combine(_trackerConfigProvider.ConfigDirectory, "Sassy");
+            Process.Start("explorer.exe", $"/select,\"{path}\"");
+        }
+
+        private void RefreshProfilesButton_Click(object sender, RoutedEventArgs e)
+        {
+            AvailableProfiles = _trackerConfigProvider.GetAvailableProfiles();
+            PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
+            PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
         }
     }
 }

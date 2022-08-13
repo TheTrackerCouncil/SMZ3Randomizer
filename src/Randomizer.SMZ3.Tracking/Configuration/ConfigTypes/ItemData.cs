@@ -13,6 +13,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// </summary>
     public class ItemData : IMergeable<ItemData>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public ItemData()
         {
 
@@ -83,7 +86,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// Gets the number of actual items as displayed or mentioned by
         /// tracker, or <c>0</c> if the item does not have copies.
         /// </summary>
-        [JsonIgnore]
         public int Counter => Multiple && !HasStages ? TrackingState * (CounterMultiplier ?? 1) : 0;
 
         /// <summary>
@@ -120,7 +122,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// <summary>
         /// Gets or sets the path to the image to be displayed on the tracker.
         /// </summary>
-        [YamlIgnore]
         public string? Image { get; set; }
 
         /// <summary>
@@ -132,14 +133,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// Gets the highest stage the item supports, or 1 if the item does not
         /// have stages, or 0 if the item has no limit.
         /// </summary>
-        [JsonIgnore]
         public int MaxStage => HasStages ? Stages.Max(x => x.Key) : Multiple ? 0 : 1;
 
         /// <summary>
         /// Indicates whether the item has stages.
         /// </summary>
         [MemberNotNullWhen(true, nameof(Stages))]
-        [JsonIgnore]
         public bool HasStages => Stages != null && Stages.Count > 0;
 
         /// <summary>
@@ -150,7 +149,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// obtained item and higher values indicate items that have been
         /// obtained more than once.
         /// </remarks>
-        [JsonIgnore]
         public int TrackingState { get; set; }
 
         /// <summary>

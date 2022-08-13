@@ -7,16 +7,22 @@ using System.Reflection;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config file for additional request information
+    /// </summary>
     public class RequestConfig : List<BasicVoiceRequest>, IMergeable<BasicVoiceRequest>, IConfigFile<RequestConfig>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public RequestConfig() : base()
         {
         }
 
-        public RequestConfig(IEnumerable<BasicVoiceRequest> list) : base(list)
-        {
-        }
-
+        /// <summary>
+        /// Returns default request information
+        /// </summary>
+        /// <returns></returns>
         public static RequestConfig Default()
         {
             return new RequestConfig

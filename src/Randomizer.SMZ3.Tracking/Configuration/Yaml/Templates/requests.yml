@@ -1,0 +1,15 @@
+﻿# This config file is used for custom requests and responses from tracker
+#
+# Fields
+# ------
+# Phrases: A list of different phrases that tracker will listen to without "Hey tracker"
+#     before it. For example, "what are you up to?" will prompt a tracker response when
+#     the user says "Hey tracker, what are you up to?". If there is more than one phrase
+#     any of them can be used. The first phrase is used for trying to connect different
+#     phrase/response combintations between config files.
+# Name: The list of possibilities for tracker to say when responding to the phrase
+
+- Phrases:
+  - Phrase that needs to be said by the user
+  Response:
+  - Text: 

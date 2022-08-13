@@ -6,16 +6,22 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config file for additional room information
+    /// </summary>
     public class RoomConfig : List<RoomInfo>, IMergeable<RoomInfo>, IConfigFile<RoomConfig>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public RoomConfig() : base()
         {
         }
 
-        public RoomConfig(IEnumerable<RoomInfo> list) : base(list)
-        {
-        }
-
+        /// <summary>
+        /// Returns default room information
+        /// </summary>
+        /// <returns></returns>
         public static RoomConfig Default()
         {
             return new RoomConfig

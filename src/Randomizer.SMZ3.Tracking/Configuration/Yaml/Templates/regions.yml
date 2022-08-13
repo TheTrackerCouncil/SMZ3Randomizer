@@ -1,0 +1,170 @@
+﻿# This config file is used for additional region information
+#
+# Fields
+# ------
+# Region: The identifier for the region that is used to combine possibilities between configs.
+# Name: The list of possibilities for the name of the location
+# WhenTrackingJunk: The list of possibilities for tracker responses when the player tracks a junky item
+#     at the location
+# Hints: The list of possibilities for vague descriptors of the room for the hint system
+
+- Region: Blue Brinstar
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Green Brinstar
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Kraid's Lair
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Pink Brinstar
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Red Brinstar
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Central Crateria
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: East Crateria
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: West Crateria
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Inner Maridia
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Outer Maridia
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Lower Norfair, East
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Lower Norfair, West
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Upper Norfair, Crocomire
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Upper Norfair, East
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Upper Norfair, West
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Wrecked Ship
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Castle Tower
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Dark World Mire
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Dark World North East
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Dark World North West
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Dark World South
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Dark World Death Mountain East
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Dark World Death Mountain West
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Desert Palace
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Eastern Palace
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Ganon's Tower
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Hyrule Castle
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Ice Palace
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Light World Death Mountain East
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Light World Death Mountain West
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Light World North East
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Light World North West
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Light World South
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Misery Mire
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Palace of Darkness
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Skull Woods
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Swamp Palace
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Thieves' Town
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Tower of Hera
+  Name: 
+  WhenDiedInRoom:
+  Hints: 
+- Region: Turtle Rock
+  Name: 
+  WhenDiedInRoom: 
+  Hints: 

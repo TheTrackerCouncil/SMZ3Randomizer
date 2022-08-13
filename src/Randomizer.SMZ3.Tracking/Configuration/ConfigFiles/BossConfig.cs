@@ -7,16 +7,22 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config file for additional boss information
+    /// </summary>
     public class BossConfig : List<BossInfo>, IMergeable<BossInfo>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public BossConfig() : base()
         {
         }
 
-        public BossConfig(IEnumerable<BossInfo> list) : base(list)
-        {
-        }
-
+        /// <summary>
+        /// Returns default boss information
+        /// </summary>
+        /// <returns></returns>
         public static BossConfig Default()
         {
             return new BossConfig

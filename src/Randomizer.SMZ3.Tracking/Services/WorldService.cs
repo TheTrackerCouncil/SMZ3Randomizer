@@ -8,6 +8,10 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
+    /// <summary>
+    /// Service for retrieving information about the current state of
+    /// the world
+    /// </summary>
     public class WorldService : IWorldService
     {
         protected IReadOnlyCollection<RegionInfo> _regions;
@@ -16,6 +20,14 @@ namespace Randomizer.SMZ3.Tracking.Services
         protected IReadOnlyCollection<LocationInfo> _locations;
         protected IReadOnlyCollection<BossInfo> _bosses;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="regions">Config with additional region information</param>
+        /// <param name="dungeons">Config with additional dungeon information</param>
+        /// <param name="rooms">Config with additional room information</param>
+        /// <param name="locations">Config with additional location information</param>
+        /// <param name="bosses">Config with additional boss information</param>
         public WorldService(RegionConfig regions, DungeonConfig dungeons, RoomConfig rooms, LocationConfig locations, BossConfig bosses)
         {
             _regions = regions;
@@ -25,14 +37,29 @@ namespace Randomizer.SMZ3.Tracking.Services
             _bosses = bosses;
         }
 
+        /// <summary>
+        /// Collection of all additional region information
+        /// </summary>
         public IReadOnlyCollection<RegionInfo> Regions => _regions;
 
+        /// <summary>
+        /// Collection of all additional dungeon information
+        /// </summary>
         public IReadOnlyCollection<DungeonInfo> Dungeons => _dungeons;
 
+        /// <summary>
+        /// Collection of all additional room information
+        /// </summary>
         public IReadOnlyCollection<RoomInfo> Rooms => _rooms;
 
+        /// <summary>
+        /// Collection of all additional location information
+        /// </summary>
         public IReadOnlyCollection<LocationInfo> Locations => _locations;
 
+        /// <summary>
+        /// Collection of all additional boss information
+        /// </summary>
         public IReadOnlyCollection<BossInfo> Bosses => _bosses;
 
         /// <summary>

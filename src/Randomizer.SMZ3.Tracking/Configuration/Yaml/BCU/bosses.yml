@@ -1,61 +1,26 @@
-﻿- Boss: Spore Spawn
-  WhenDefeated:
-  - Text: Hahahaha. You must be real desperate. Very well, toggled Spore Spawn on.
-- Boss: Kraid
+﻿- Boss: Kraid
   Name:
   - Text: Kraid's Awful Son's Father
     Weight: 0.01
   WhenDefeated:
   - Text: Toggled Kraid on. Watch out for his awful son on the way out.
-  - Text: Toggled Kraid on. Did you get the quick kill?
   - Text: Toggled Kraid's Awful Son's Father on.
     Weight: 0.1
   - Text: Toggled Kraid on. Send his awful son my regards. With a super missile. In his face.
     Weight: 0.1
 - Boss: Crocomire
   WhenDefeated:
-  - Text: Toggled Crocomire on.
-  - Text: Toggled Crocomire on. Did you actually have to kill him this time?
   - Text: Toggled Crocomire on. It looks like you brought more than three super missiles. Good job.
     Weight: 0.1
 - Boss: Phantoon
   Name:
-  - Text: Spooky Ghost
-    Weight: 0.25
   - Text: Phanturd
     Weight: 0.25
   WhenDefeated:
-  - Text: Toggled Phantoon on.
-  - Text: Toggled Spooky Ghost on.
-  - Text: Bustin makes me feel good.
   - Text: Toggled Phanturd on
-    Weight: 0.25
-- Boss: Shaktool
-  WhenTracked:
-  - Text: Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.
-  - Text: Toggled Shaktool on. Did you get something nice?
-  WhenDefeated:
-  - Text: How dare you?
-  - Text: You monster.
-  - Text: You'll pay for this.
-  - Text: My disappointment is immeasurable.
-- Boss: Draygon
-  WhenDefeated:
-  - Text: Toggled Draygon on.
-  - Text: How could you? She has a family.
-    Weight: 0.25
-  - Text: Toggled Draygon on. Did you microwave her?
     Weight: 0.25
 - Boss: Ridley
   WhenDefeated:
-  - Text: Toggled Ridley on.
   - Text: It's a living
     Weight: 0.25
-  - Text: Toggled Ridley on. I'm sure they'll revive him in the next game.
-    Weight: 0.25
-- Boss: Mother Brain
-  WhenDefeated:
-  - Text: GG
-  - Text: Is it finally over? Can I go home now?
-  - Text: Thank you for helping us help you help us make this a great seed
 

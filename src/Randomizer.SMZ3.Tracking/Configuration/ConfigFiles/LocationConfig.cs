@@ -7,16 +7,22 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config file for additional location information
+    /// </summary>
     public class LocationConfig : List<LocationInfo>, IMergeable<LocationInfo>, IConfigFile<LocationConfig>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public LocationConfig() : base()
         {
         }
 
-        public LocationConfig(IEnumerable<LocationInfo> list) : base(list)
-        {
-        }
-
+        /// <summary>
+        /// Returns default location information
+        /// </summary>
+        /// <returns></returns>
         public static LocationConfig Default()
         {
             return new LocationConfig

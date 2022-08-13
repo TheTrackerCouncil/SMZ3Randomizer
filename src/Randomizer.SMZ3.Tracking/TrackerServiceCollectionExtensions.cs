@@ -117,6 +117,12 @@ namespace Randomizer.SMZ3.Tracking
                 var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
                 return configs.Rooms;
             });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Rewards;
+            });
         }
 
         /// <summary>

@@ -1,31 +1,15 @@
-﻿- Region: Kraid's Lair
-  Name:
-  - Text: Warehouse
-- Region: Wrecked Ship
+﻿- Region: Wrecked Ship
   Name:
   - Text: Wrecked Shit
-  - Text: Haunted Ship
-- Region: Desert Palace
-  Name:
-  - Text: Dessert Palace
-  Hints:
-  - Text: I don't like sand. It's coarse, rough and irritating, and it gets everywhere.
-- Region: Misery Mire
-  Name:
-  - Text: Miserable Mire
-  Hints:
-  - Text: It's pretty miserable.
-- Region: Palace of Darkness
-  Name:
-  - Text: Palace of Dorkness
-- Region: Skull Woods
-  Name:
-  - Text: Skill Woods
-- Region: Turtle Rock
-  Name:
-  - Text: Tortoise Rock
-    Weight: 0.1
 - Region: Ice Palace
-  Hints:
-  - Text: You're not sending ME to cooler!
-  - Text: Are you going to break the ice?
+  WhenDiedInRoom:
+    "222":
+    - Text: Death just cold stared you in the face. Welcome back to S M Z 3 randomizer.
+- Region: Light World South
+  WhenDiedInRoom:
+    "55":
+    - Text: Oh no. Did you get crabs?
+- Region: Thieves' Town
+  WhenDiedInRoom:
+    "172":
+    - Text: Did that explain everything?

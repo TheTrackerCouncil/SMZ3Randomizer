@@ -1,0 +1,626 @@
+﻿- Item: Content
+  WhenTracked:
+    "1":
+    - Text: Tracked content. Don't let it get to your head.
+    - Text: Congratulations on your new first content.
+    - Text: Toggled content<break time='1s'/> on.
+      Weight: 0.1
+    - Text: Tracked content. Be good or I'll take it away.
+      Weight: 0.1
+    "2": 
+    "10":
+    - Text: Such a bountiful supply of content
+    - Text: Please help! I cannot hold all this content
+    "11": 
+    "15":
+    - Text: I'm beginning to think you're lying about all this content.
+    - Text: Is there really this much content?
+    "16": 
+- Item: Death
+  WhenTracked:
+    "1":
+    - Text: lawl, you died
+    - Text: Yeah, rip.
+    - Text: I hope this was intentional because things were going well
+    - Text: Good job
+    "2":
+    - Text: You've died {0} times.
+    - Text: Are we still following the script?
+    - Text: You've manipulated RNG {0} times.
+      Weight: 0.5
+    - Text: You've performed {0} tactical resets.
+      Weight: 0.5
+    "3":
+    - Text: Death is only the beginning.
+    - Text: Are we still following the script?
+    - Text: Death is not the end. Long live the new flesh
+    - Text: You've manipulated RNG {0} times.
+      Weight: 0.5
+    - Text: You've performed {0} tactical resets.
+      Weight: 0.5
+    "4":
+    - Text: You've died {0} times now.
+    - Text: You've manipulated RNG {0} times.
+      Weight: 0.5
+    - Text: You've performed {0} tactical resets.
+      Weight: 0.5
+    - Text: Maybe I should take over
+      Weight: 0.5
+    "8":
+    - Text: You've died {0} times now.
+    - Text: Such devastation... This was not my intention!
+    - Text: You've manipulated RNG {0} times.
+      Weight: 0.5
+    - Text: You've performed {0} tactical resets.
+      Weight: 0.5
+    - Text: Maybe I should take over
+      Weight: 0.5
+    - Text: How many times have you died now? Oh right, {0}
+      Weight: 0.5
+    - Text: Wow you're good at this aren't you?
+      Weight: 0.5
+- Item: Shaktool Go Mode
+  Name:
+  - Text: Shaktool Go Mode
+  WhenTracked:
+    "1":
+    - Text: Toggled Shaktool Go Mode <break time='1s'/> on.
+- Item: Ped Go Mode
+  Name:
+  - Text: Ped Go Mode
+  WhenTracked:
+    "1":
+    - Text: Toggled Pedestal Go Mode <break time='1s'/> on.
+- Item: Duck
+  Name:
+  - Text: Burb
+  WhenTracked:
+    "1":
+    - Text: Toggled duck on.
+    - Text: Toggled bird on.
+    - Text: Toggled burb on.
+    - Text: Such a beautiful song.
+- Item: Fire Rod
+  Name:
+  - Text: Spicy Rod
+- Item: Ice Rod
+  Name:
+  - Text: Nice Rod
+- Item: Hammer
+  Name:
+  - Text: Hammer Time
+    Weight: 0.1
+  WhenTracked:
+    "1":
+    - Text: Toggled Hammer on.
+    - Text: Stop. Hammer time.
+    - Text: You got an M comma C hammer! Pile softening Bang Bang Clap! Other also Bambang Clap Clap!
+      Weight: 0.1
+- Item: Hookshot
+  Name:
+  - Text: Hooking Shot
+- Item: Bow
+  Name:
+  - Text: Arrow launcher
+    Weight: 0.2
+  - Text: Stick thrower
+    Weight: 0.2
+- Item: Quake
+  Name:
+  - Text: Unreal Tournament
+    Weight: 0.1
+  - Text: Quack
+    Weight: 0.1
+- Item: Lamp
+  Name:
+  - Text: The thing that helps you see in the dark
+- Item: Shovel
+  Name:
+  - Text: Digging Tool
+  WhenTracked:
+    "1":
+    - Text: Toggled Shaktool Junior on
+      Weight: 0.2
+    - Text: I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.
+      Weight: 0.1
+- Item: Bottle
+  Name:
+  - Text: Glass container
+    Weight: 0.2
+  - Text: Fairy containment device
+    Weight: 0.2
+  Plural:
+  - Text: Glass containers
+    Weight: 0.2
+  - Text: Fairy containment device
+    Weight: 0.2
+  WhenTracked:
+    "1":
+    - Text: I hope you enjoy your first bottle
+    - Text: Was there a bee in this one?
+    - Text: Potion storage increased by one step
+    "2": 
+- Item: Heart piece
+  WhenTracked:
+    "1":
+    - Text: Three more and it will matter. Kind of. Maybe.
+    - Text: Neat. A whole quarter of a heart
+    - Text: Four more and it will matter. Wait, I'm thinking of Twilight Princess. Three more and it will matter.
+      Weight: 0.2
+    "2":
+    - Text: You now have two heart pieces
+    - Text: Half way to this actually being somewhat useful
+    - Text: Why do I track these again?
+    "3":
+    - Text: You now have three heart pieces
+    - Text: Three quarters of a heart is almost a working one, I think
+    "4":
+    - Text: Another full heart, neat
+    - Text: Increased survivablity by one step
+    - Text: Maybe now you won't die.
+    "5": 
+    "8":
+    - Text: Wow another full heart
+    - Text: Increased survivablity by one step
+    - Text: Enough pieces for three full hearts. Wow
+    "9": 
+    "12":
+    - Text: I'm running out of jokes to make about you finding so many heart pieces
+    - Text: Increased survivablity by one step
+    - Text: Death is now a little harder to achieve.
+    "13": 
+- Item: Cane of Byrna
+  Name:
+  - Text: Cane of lag
+    Weight: 0.2
+  - Text: Cane of slowdown
+    Weight: 0.2
+  - Text: Cane of Brian
+    Weight: 0.1
+- Item: Magic Cape
+  Name:
+  - Text: The cape of invisibility and invincibility
+    Weight: 0.1
+- Item: Magic Mirror
+  Name:
+  - Text: Vanity
+    Weight: 0.1
+  WhenTracked:
+    "1":
+    - Text: Toggled Mirror on.
+    - Text: Mirror mirror on the wall. Who's the sassiest of them all?
+      Weight: 0.1
+- Item: Book of Mudora
+  Name:
+  - Text: thesaurus
+    Weight: 0.5
+  - Text: Literature
+    Weight: 0.5
+- Item: Zora's Flippers
+  Name:
+  - Text: Floatys
+    Weight: 0.1
+  - Text: Swimming
+    Weight: 0.1
+- Item: Moon Pearl
+  Name:
+  - Text: Jawbreaker
+    Weight: 0.1
+  - Text: Orb
+    Weight: 0.1
+  - Text: Munpar
+    Weight: 0.1
+- Item: Bug Catching Net
+  Name:
+  - Text: Bug Catching Net
+  - Text: Bug net
+  - Text: Ahgah destroyer
+    Weight: 0.1
+  - Text: Swagnet
+    Weight: 0.1
+  - Text: Fairy capturing device
+    Weight: 0.1
+- Item: Bombs
+  Name:
+  - Text: Primitive Explosives
+  Plural:
+  - Text: Primitive Explosives
+  WhenTracked:
+    "1":
+    - Text: I'm sure you're happy if this is early in the seed
+    - Text: Be sure to use these wisely
+    "2":
+    - Text: Have you been using them?
+    - Text: Throw more of these please
+    - Text: I do enjoy seeing explosions
+      Weight: 0.5
+    "3": 
+- Item: One Rupee
+  WhenTracked:
+    "1":
+    - Text: Really?
+    - Text: I don't get paid enough for this.
+    - Text: Do you think I've got nothing better to do?
+    - Text: Why are you wasting my time?
+    - Text: You better have accidentally picked that up
+    - Text: Hopefully there's a wishing well for you to toss that in
+- Item: Five Rupees
+  WhenTracked:
+    "1":
+    - Text: Smash four of these together and you get a big 20
+    - Text: One hundred more and you can get scammed by Zora.
+    - Text: That's some nice couch cash
+    - Text: Picked up a nickel
+    "2":
+    - Text: Blue pee? Maybe you should see a doctor.
+    - Text: I hope your wallet is big enough
+    "3": 
+- Item: Twenty Rupees
+  Name:
+  - Text: Big 20
+  WhenTracked:
+    "1":
+    - Text: Seriously?
+    - Text: This is not the con-tent you are looking for.
+    - Text: Don't spend it all in one place.
+    - Text: It begins
+    - Text: The first big 20 is always special
+    "2":
+    - Text: Only your second? I'm surprised.
+    - Text: You now have 2 big twenties. Out of like five thousand.
+    "3": 
+- Item: Heart Container
+  WhenTracked:
+    "1":
+    - Text: Increased survivablity by one step
+    - Text: Maybe you will die less often now.
+    - Text: Thump thump
+    "2":
+    - Text: Get a few more and I can sleep early today
+    "3": 
+- Item: One Hundred Rupees
+  Name:
+  - Text: One Hundred Rupees
+  WhenTracked:
+    "1":
+    - Text: Don't spend it all in one place
+    - Text: At least this is some decent money
+    "2": 
+- Item: Fifty Rupees
+  WhenTracked:
+    "1":
+    - Text: Do you need bombs? Now you can afford them.
+    "2": 
+- Item: Single Arrow
+  Name:
+  - Text: Single Stick
+  - Text: One Stick
+  WhenTracked:
+    "1":
+    - Text: This is now my favorite stick
+    - Text: It's a single arrow, why are you having me track this?
+    "2": 
+- Item: Ten Arrows
+  Name:
+  - Text: Ten Sticks
+  - Text: Sticks
+  WhenTracked:
+    "1":
+    - Text: Ten whole arrows, wow.
+    - Text: This might be useful, if you didn't find sticks everywhere
+    "2": 
+- Item: Three Hundred Rupees
+  WhenTracked:
+    "1":
+    - Text: This is more than half needed to be scammed to Zora
+    - Text: This is like some serious potion money
+    "2":
+    - Text: Is it time to get scammed by Zora?
+    - Text: Money money money money money
+    "3":
+    - Text: Did you seriously need three of these?
+    - Text: Well aren't you rich now?
+    "4": 
+- Item: Pegasus Boots
+  Name:
+  - Text: Speedy boots
+  - Text: Sneakers
+  - Text: Sneaks
+    Weight: 0.1
+  - Text: Booties
+    Weight: 0.1
+- Item: +5 Bomb Capacity
+  Name:
+  - Text: Bomb Carrying Knowledge
+  WhenTracked:
+    "1":
+    - Text: Such a useful item
+    - Text: I'm sure you're excited to get that
+    - Text: Yay
+    "2":
+    - Text: Your mom signed the permission slip, now you can carry more bombs
+    - Text: You are now authorized to know more things
+    - Text: You can now carry more of an item you'll probably never run out of after the first 15 minutes.
+    "3": 
+- Item: +5 Arrow Capacity
+  Name:
+  - Text: +5 Stick Capacity
+  - Text: Stick Capacity
+  - Text: Arrow Carrying Knowledge
+  - Text: Stick Carrying Knowledge
+  WhenTracked:
+    "1":
+    - Text: Such a useful item
+    - Text: I'm sure you're excited to get that
+    - Text: Yay
+    - Text: Wow more sticks, cool
+    "2":
+    - Text: Your mom signed the permission slip, now you can carry more arrows
+    - Text: You had to be told how to carry more sticks? Twice?
+    "3": 
+- Item: Sword
+  Name:
+  - Text: Pointy thing
+    Weight: 0.2
+  WhenTracked:
+    "1":
+    - Text: Tracked sword
+    - Text: You can now poke things
+    - Text: Don't forget to use the pointy end
+    "2": 
+    "3":
+    - Text: Toggled Bacon on
+    - Text: Hmm... Bacon
+    "4": 
+  Stages:
+    "1":
+    - Text: Fighter's Sword
+    "2":
+    - Text: Master Sword
+    - Text: Blade of Evil's Bane
+    - Text: Sword of Legend
+    - Text: Sword that Seals the Darkness
+    "3":
+    - Text: Tempered Sword
+    - Text: Bacon
+    "4":
+    - Text: Gold Sword
+    - Text: Butter
+- Item: Shield
+  WhenTracked:
+    "1":
+    - Text: Tracked shield
+    - Text: Congratulations on your new Fighter's Shield
+    - Text: Do you really need this?
+      Weight: 0.5
+    "2": 
+    "3":
+    - Text: Can you still see the sprite?
+    - Text: Increased lag by one step
+    - Text: Tracked beam blocking device
+    - Text: Oops. Did you mean to get this?
+  Stages:
+    "1":
+    - Text: Fighter's Shield
+    "2":
+    - Text: Red Shield
+    - Text: Fire Shield
+    "3":
+    - Text: Mirror Shield
+- Item: Mail
+  WhenTracked:
+    "1":
+    - Text: You've got mail!
+    - Text: Upgraded shirt by one step
+    - Text: Are you one of those alphas I have heard about?
+    "2":
+    - Text: You've got all the mail!
+    - Text: Set status to sigma
+    - Text: Hopefully this will help things
+  Stages:
+    "0":
+    - Text: Green Mail
+    "1":
+    - Text: Blue Mail
+    "2":
+    - Text: Red Mail
+- Item: Gloves
+  WhenTracked:
+    "1":
+    - Text: I love the power glove, it's so bad
+    - Text: Upgraded hands by one step
+    - Text: Upgraded gloves by one step.
+  Stages:
+    "1":
+    - Text: Power Glove
+    - Text: It's so bad
+    "2":
+    - Text: Titan's Mitt
+- Item: X-Ray Scope
+  Name:
+  - Text: X-Ray Scope
+  - Text: X-Ray
+- Item: Varia Suit
+  Name:
+  - Text: Various Suits
+  - Text: Barrier Suit
+  - Text: Shoulder Orbs
+  - Text: Atom
+    Weight: 0.1
+- Item: Spring Ball
+  Name:
+  - Text: Bouncy Ball
+- Item: Morphing Ball
+  Name:
+  - Text: The Other Orb
+  WhenTracked:
+    "1":
+    - Text: Toggled Morph Ball on
+    - Text: It's morphin' time!
+    - Text: Time to becomne orb
+    - Text: I hope the morph ball works out better for you than it did space pirates
+      Weight: 0.1
+- Item: Screw Attack
+  Name:
+  - Text: Screwing
+  - Text: Danger Blender
+- Item: Gravity Suit
+  Name:
+  - Text: Pancakes
+    Weight: 0.05
+  - Text: Stack of Pancakes
+    Weight: 0.05
+- Item: Hi-Jump Boots
+  Name:
+  - Text: Air Jordans
+  - Text: Big up's
+- Item: Morph Bombs
+  Name:
+  - Text: Not so powerful bombs
+  - Text: IBJ device
+    Weight: 0.5
+  - Text: Infinite Bomb Jump device
+    Weight: 0.5
+- Item: Speed Booster
+  Name:
+  - Text: Super speedy boots
+  - Text: Light speed
+- Item: Charge Beam
+  Name:
+  - Text: Soft lock prevention beam
+    Weight: 0.05
+- Item: Ice Beam
+  Name:
+  - Text: Nice Beam
+  - Text: Ice ice baby
+    Weight: 0.1
+- Item: Spazer
+  Name:
+  - Text: Spaaaaaaaaaaazer
+    Weight: 0.5
+- Item: Plasma Beam
+  WhenTracked:
+    "1":
+    - Text: Toggled Plasma Beam On
+    - Text: Rip Spazer
+- Item: Energy Tank
+  Name:
+  - Text: Energetic Tank
+  Plural:
+  - Text: Energetic Tanks
+  WhenTracked:
+    "1":
+    - Text: At least now you can take a few more hits
+    - Text: If you got hit less you wouldn't need these
+    "2":
+    - Text: Two whole tanks of energy. Wow.
+    - Text: FYI You shouldn't drink these.
+    - Text: Upgraded caffeine by one step
+    "3": 
+    "14":
+    - Text: You actually did it, you got all the E-Tanks in the game.
+- Item: Reserve Tank
+  Name:
+  - Text: Energy tank but worse
+  Plural:
+  - Text: Energy tanks but worse
+  WhenTracked:
+    "1":
+    - Text: Aren't these like the E-Tanks in the Mega Man X series?
+    - Text: Hopefully you will not need these.
+    - Text: I reserve the right to not care.
+    "2":
+    - Text: <break time='3s'/> Oh I'm sorry. Was I supposed to care about Reserve Tanks?
+    - Text: Oh. Neat. Wow. Reserve Tanks.
+    "3": 
+- Item: Missile
+  Name:
+  - Text: Explosive arrow
+    Weight: 0.2
+  Plural:
+  - Text: Explosive arrows
+    Weight: 0.2
+  WhenTracked:
+    "1":
+    - Text: I have to count so manny of these
+    - Text: Missles. Good. Now you can get things done when I don't give you any beams
+    - Text: Time to blow some things up
+    "2":
+    - Text: Ten missles. Neat.
+    - Text: The second missle pack is always special
+    - Text: More Missiles
+    "3": 
+    "4":
+    - Text: You need some of these, right?
+    - Text: Sometimes it feels like you only find missles in the game
+    "5": 
+    "20":
+    - Text: Okay, you have enough missiles now
+    "21": 
+    "69":
+    - Text: Nice
+    "70": 
+- Item: Super Missile
+  Name:
+  - Text: Soups
+    Weight: 0
+  - Text: Superb Missiles
+    Weight: 0
+  Plural:
+  - Text: Super Missiles
+  - Text: Supers
+  - Text: Superb Missiles
+  - Text: Super explosive arrows
+    Weight: 0.1
+  - Text: Super Missile packs
+    Weight: 0
+  WhenTracked:
+    "1":
+    - Text: Go shoot one at Phantoon, he loves them
+    - Text: Superb soup collection begins
+    - Text: I hope you find a lot more of these
+    - Text: I can't wait to see you quick kill Kraid with these
+      Weight: 0.05
+    "2":
+    - Text: Stockpiled more soup
+    - Text: That is like a week's worth of soup
+    - Text: Wow that's super
+    "3": 
+    "10":
+    - Text: Don't you have enough super missiles now?
+    - Text: That's a lot of soup!
+    - Text: Who needs the charge beam now?
+    "13": 
+- Item: Power Bomb
+  Name:
+  - Text: Explosive Hamburger
+    Weight: 0.5
+  - Text: Hamburger
+    Weight: 0.5
+  - Text: Borger
+    Weight: 0.25
+  - Text: Powerful Bombs
+  Plural:
+  - Text: Power Bombs
+  - Text: Powerful Bombs
+  - Text: Borgers
+    Weight: 0.25
+  - Text: Explosive Hamburgers
+    Weight: 0.5
+  - Text: Hamburgers
+    Weight: 0.5
+  WhenTracked:
+    "1":
+    - Text: At least these are pretty useful
+    - Text: I thought that Adam had no plans to authorize the use of these?
+    - Text: A wild borger!
+    "2":
+    - Text: Now you won't run out in the wrecked ship
+    - Text: What are you going to destroy with these?
+    - Text: Time to get things done in Metroid?
+    "3": 
+    "4":
+    - Text: Can you even eat that many burgs?
+    - Text: You should have enough now, I think
+    "5": 
+

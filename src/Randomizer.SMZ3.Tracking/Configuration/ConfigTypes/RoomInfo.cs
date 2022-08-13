@@ -10,6 +10,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// </summary>
     public class RoomInfo : IPointOfInterest, IMergeable<RoomInfo>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public RoomInfo() { }
 
         /// <summary>
@@ -22,6 +25,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             Name = name;
         }
 
+        /// <summary>
+        /// Unique key to connect the RoomInfo with other configs
+        /// </summary>
         [MergeKey]
         public string Room { get; init; }
 

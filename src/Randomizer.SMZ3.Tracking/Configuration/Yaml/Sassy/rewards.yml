@@ -1,0 +1,52 @@
+﻿# This config file is used for additional reward information
+#
+# Fields
+# ------
+# Reward: The identifier for the reward that is used to combine possibilities between configs.
+# Name: The list of possibilities for the name of the location
+
+- Reward: Red Crystal
+  Name:
+  - Text: Bomb Purchasing Crystal
+    Weight: 0.1
+  - Text: One of those crystals you hope you get late in the game so you don't have to check pyramid fairy
+    Weight: 0.05
+- Reward: Green Pendant
+  Name:
+  - Text: Pendant of Courage
+  - Text: Slightly better pendant
+    Weight: 0.1
+  - Text: Less useless pendant
+    Weight: 0.1
+  - Text: That pendant that you turn into Sahasrahla as a last resort to hope you get something good
+    Weight: 0.05
+- Reward: Red Pendant
+  Name:
+  - Text: Pendant of Wisdom
+  - Text: Even worse pendant
+    Weight: 0.1
+  - Text: More useless pendant
+    Weight: 0.1
+  - Text: Time wasting pendant
+    Weight: 0.1
+  - Text: Pendant of pointlessness
+    Weight: 0.1
+  - Text: Pendant of Wisdom. I think. I get confused as they changed the colors later in this series
+    Weight: 0.05
+  - Text: Pendant of Power. Wait. I meant Wisdom. I get confused as they changed the colors later in this series
+    Weight: 0.05
+- Reward: Blue Pendant
+  Name:
+  - Text: Pendant of Power
+  - Text: Even worse pendant
+    Weight: 0.1
+  - Text: More useless pendant
+    Weight: 0.1
+  - Text: Time wasting pendant
+    Weight: 0.1
+  - Text: Pendant of pointlessness
+    Weight: 0.1
+  - Text: Pendant of Power. I think. I get confused as they changed the colors later in this series
+    Weight: 0.05
+  - Text: Pendant of Wisdom. Wait. I meant Power. I get confused as they changed the colors later in this series
+    Weight: 0.05

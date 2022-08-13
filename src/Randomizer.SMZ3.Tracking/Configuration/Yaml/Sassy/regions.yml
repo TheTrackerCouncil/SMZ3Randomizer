@@ -1,0 +1,49 @@
+﻿- Region: Kraid's Lair
+  Name:
+  - Text: Warehouse
+  WhenDiedInRoom:
+    "47":
+    - Text: I see Kraid got the quick kill on you.
+    - Text: Seriously? To Kraid?
+- Region: Wrecked Ship
+  Name:
+  - Text: Haunted Ship
+- Region: Desert Palace
+  Name:
+  - Text: Dessert Palace
+  Hints:
+  - Text: I don't like sand. It's coarse, rough and irritating, and it gets everywhere.
+- Region: Misery Mire
+  Name:
+  - Text: Miserable Mire
+  Hints:
+  - Text: It's pretty miserable.
+- Region: Palace of Darkness
+  Name:
+  - Text: Palace of Dorkness
+  WhenDiedInRoom:
+    "90":
+    - Text: Guess you weren't worthy of an audience with the king
+    - Text: This time the king had it his way.
+- Region: Skull Woods
+  Name:
+  - Text: Skill Woods
+- Region: Turtle Rock
+  Name:
+  - Text: Tortoise Rock
+    Weight: 0.1
+- Region: Ice Palace
+  Hints:
+  - Text: You're not sending ME to cooler!
+  - Text: Are you going to break the ice?
+  WhenDiedInRoom:
+    "222":
+    - Text: That was cold.
+- Region: Light World South
+  WhenDiedInRoom:
+    "55":
+    - Text: And you were so close too.
+- Region: Thieves' Town
+  WhenDiedInRoom:
+    "172":
+    - Text: Ha ha. You were killed by a blind woman.

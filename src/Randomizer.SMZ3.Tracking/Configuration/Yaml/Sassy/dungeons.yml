@@ -1,0 +1,22 @@
+﻿- Dungeon: Desert Palace
+  Name:
+  - Text: Dessert Palace
+- Dungeon: Palace of Darkness
+  Name:
+  - Text: Palace of Dorkness
+  - Text: Dork Palace
+  Boss:
+  - Text: The Mighty King Helmasaur
+- Dungeon: Skull Woods
+  Name:
+  - Text: Skill Woods
+- Dungeon: Misery Mire
+  Name:
+  - Text: Miserable Mire
+- Dungeon: Turtle Rock
+  Name:
+  - Text: Tortoise Rock
+- Dungeon: Ganon's Tower
+  Boss:
+  - Text: Gannondork
+

@@ -86,7 +86,7 @@ namespace Randomizer.SMZ3.Tracking
             ICommunicator communicator,
             IHistoryService historyService,
             TrackerConfigs configs,
-            IWorldService locationService)
+            IWorldService worldService)
         {
             if (trackerOptions.Options == null)
                 throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -101,11 +101,10 @@ namespace Randomizer.SMZ3.Tracking
             _communicator = communicator;
 
             // Initialize the tracker configuration
-            //var config = configProvider.GetTrackerConfig();
-            //Pegs = config.Pegs;
+            Pegs = configs.Pegs;
             Responses = configs.Responses;
             Requests = configs.Requests;
-            WorldInfo = locationService;
+            WorldInfo = worldService;
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
 
@@ -620,7 +619,8 @@ namespace Randomizer.SMZ3.Tracking
             else
             {
                 dungeon.Reward = reward.Value;
-                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, dungeon.Reward.GetName()));
+                
+                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, ItemService.GetName(dungeon.Reward)));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
@@ -641,7 +641,7 @@ namespace Randomizer.SMZ3.Tracking
             if (unmarkedDungeons.Count > 0)
             {
                 unmarkedDungeons.ForEach(dungeon => dungeon.Reward = reward);
-                Say(Responses.RemainingDungeonsMarked.Format(reward.GetName()));
+                Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
 
                 AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.Reward = RewardItem.Unknown));
                 OnDungeonUpdated(new(confidence));

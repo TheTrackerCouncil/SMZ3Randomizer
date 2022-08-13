@@ -7,16 +7,22 @@ using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config file for additional dungeon information
+    /// </summary>
     public class DungeonConfig : List<DungeonInfo>, IMergeable<DungeonInfo>, IConfigFile<DungeonConfig>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public DungeonConfig() : base()
         {
         }
 
-        public DungeonConfig(IEnumerable<DungeonInfo> list) : base(list)
-        {
-        }
-
+        /// <summary>
+        /// Returns default dungeon information
+        /// </summary>
+        /// <returns></returns>
         public static DungeonConfig Default()
         {
             return new DungeonConfig

@@ -11,6 +11,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// </summary>
     public class LocationInfo : IPointOfInterest, IMergeable<LocationInfo>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public LocationInfo() { }
 
         /// <summary>
@@ -27,6 +30,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             Name = name;
         }
 
+        /// <summary>
+        /// The internal SMZ3 location id for the location. Also used
+        /// for matching configs for merging
+        /// </summary>
         [MergeKey]
         public int LocationNumber { get; init; }
 

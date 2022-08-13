@@ -9,20 +9,28 @@ using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.Configuration
 {
+    /// <summary>
+    /// Class that contains a collection of all configs with the user selected tracker profiles
+    /// </summary>
     public class TrackerConfigs
     {
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="options">The tracker options for determining the selected tracker profiles</param>
+        /// <param name="provider">The config provider for loading configs</param>
         public TrackerConfigs(TrackerOptionsAccessor options, TrackerConfigProvider provider)
         {
-            var profiles = options.Options?.TrackerProfiles;
+            var profiles = options.Options?.TrackerProfiles.ToArray() ?? Array.Empty<string>();
             Bosses = provider.GetBossConfig(profiles);
             Dungeons = provider.GetDungeonConfig(profiles);
             Items = provider.GetItemConfig(profiles);
-            Locations = provider.GetLocationsConfig(profiles);
+            Locations = provider.GetLocationConfig(profiles);
             Regions = provider.GetRegionConfig(profiles);
             Requests = provider.GetRequestConfig(profiles);
             Responses = provider.GetResponseConfig(profiles);
             Rooms = provider.GetRoomConfig(profiles);
+            Rewards = provider.GetRewardConfig(profiles);
         }
 
         /// <summary>
@@ -31,9 +39,34 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         public ItemConfig Items { get; }
 
         /// <summary>
-        /// Gets the peg world peg configuration.
+        /// Gets the peg world peg configuration. This will be moved to UI
+        /// configs in a future release, but just storing it here for now
         /// </summary>
-        public IReadOnlyCollection<Peg> Pegs { get; }
+        public IReadOnlyCollection<Peg> Pegs { get; } = new List<Peg>
+        {
+            new Peg(1, 0),
+            new Peg(2, 0),
+            new Peg(3, 0),
+            new Peg(4, 0),
+            new Peg(5, 0),
+            new Peg(1, 1),
+            new Peg(2, 1),
+            new Peg(3, 1),
+            new Peg(4, 1),
+            new Peg(5, 1),
+            new Peg(0, 2),
+            new Peg(1, 2),
+            new Peg(2, 2),
+            new Peg(3, 2),
+            new Peg(4, 2),
+            new Peg(5, 2),
+            new Peg(0, 3),
+            new Peg(1, 3),
+            new Peg(2, 3),
+            new Peg(0, 4),
+            new Peg(1, 4),
+            new Peg(2, 4)
+        };
 
         /// <summary>
         /// Gets a collection of configured responses.
@@ -58,7 +91,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets a collection of bosses.
         /// </summary>
-        public BossConfig Bosses { get; init; }
+        public BossConfig Bosses { get; }
 
         /// <summary>
         /// Gets a collection of extra information about rooms.
@@ -68,6 +101,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <summary>
         /// Gets a collection of extra information about locations.
         /// </summary>
-        public ConfigFiles.LocationConfig Locations { get; }
+        public LocationConfig Locations { get; }
+
+        /// <summary>
+        /// Gets a collection of extra information about rewards
+        /// </summary>
+        public RewardConfig Rewards { get; }
     }
 }

@@ -6,16 +6,22 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config file for additional region information
+    /// </summary>
     public class RegionConfig : List<RegionInfo>, IMergeable<RegionInfo>, IConfigFile<RegionConfig>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public RegionConfig() : base()
         {
         }
 
-        public RegionConfig(IEnumerable<RegionInfo> list) : base(list)
-        {
-        }
-
+        /// <summary>
+        /// Returns default region information
+        /// </summary>
+        /// <returns></returns>
         public static RegionConfig Default()
         {
             return new RegionConfig

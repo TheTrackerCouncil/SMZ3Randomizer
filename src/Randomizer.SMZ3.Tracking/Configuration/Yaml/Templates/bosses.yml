@@ -1,0 +1,46 @@
+﻿# This config file is used for additional Metroid boss information
+#
+# Fields
+# ------
+# Boss: The identifier for the boss that is used to combine possibilities between configs.
+# Name: The list of possibilities for the name of the boss
+# WhenTracked: The list of possibilities for tracker to say when a boss is marked as tracked
+# WhenDefeated: The list of possibilities for tracker to say when the player says the boss is defeated
+
+- Boss: Spore Spawn
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Botwoon
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Kraid
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Crocomire
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Phantoon
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Shaktool
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Draygon
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Ridley
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+- Boss: Mother Brain
+  Name: 
+  WhenTracked: 
+  WhenDefeated: 
+

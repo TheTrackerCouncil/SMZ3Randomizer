@@ -7,12 +7,35 @@ using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
+    /// <summary>
+    /// Service for retrieving information about the current state of
+    /// the world
+    /// </summary>
     public interface IWorldService
     {
+        /// <summary>
+        /// Collection of all additional region information
+        /// </summary>
         public IReadOnlyCollection<RegionInfo> Regions { get; }
+
+        /// <summary>
+        /// Collection of all additional dungeon information
+        /// </summary>
         public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
+
+        /// <summary>
+        /// Collection of all additional room information
+        /// </summary>
         public IReadOnlyCollection<RoomInfo> Rooms { get; }
+
+        /// <summary>
+        /// Collection of all additional location information
+        /// </summary>
         public IReadOnlyCollection<LocationInfo> Locations { get; }
+
+        /// <summary>
+        /// Collection of all additional boss information
+        /// </summary>
         public IReadOnlyCollection<BossInfo> Bosses { get; }
 
         /// <summary>

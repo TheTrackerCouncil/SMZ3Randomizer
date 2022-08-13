@@ -4,6 +4,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {
@@ -14,6 +15,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     public class EnteredDungeon : IZeldaStateCheck
     {
         private readonly HashSet<DungeonInfo> _enteredDungeons = new();
+        private readonly IItemService _itemService;
+
+        public EnteredDungeon(IItemService itemService)
+        {
+            _itemService = itemService;
+        }
 
         /// <summary>
         /// Executes the check for the current state
@@ -37,7 +44,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 
                 if (!_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant || dungeonInfo.Reward == RewardItem.NonGreenPendant))
                 {
-                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, dungeonInfo.Reward.GetName());
+                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, _itemService.GetName(dungeonInfo.Reward));
                 }
                 else if (region is CastleTower)
                 {

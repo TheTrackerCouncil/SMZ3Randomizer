@@ -93,6 +93,6 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// The selected profiles for tracker responses
         /// </summary>
-        public ICollection<string> TrackerProfiles { get; set; } = new List<string>() { "BCU" };
+        public ICollection<string> TrackerProfiles { get; set; } = new List<string>() { "Sassy" };
     }
 }

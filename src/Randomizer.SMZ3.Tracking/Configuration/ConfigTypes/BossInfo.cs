@@ -12,7 +12,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// </remarks>
     public class BossInfo : IMergeable<BossInfo>
     {
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public BossInfo() { }
 
         /// <summary>
@@ -24,6 +26,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             Name = name;
         }
 
+        /// <summary>
+        /// The identifier for merging configs
+        /// </summary>
         [MergeKey]
         public string Boss { get; set; }
 

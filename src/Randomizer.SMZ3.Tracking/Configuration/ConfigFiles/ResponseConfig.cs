@@ -493,7 +493,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         /// <c>{0}</c> is a placeholder for the name of the location.
         /// </remarks>
         public SchrodingersString LocationMarkedAsBullshit { get; init; }
-            = new SchrodingersString("Marked {0} as bullshit.");
+            = new SchrodingersString("Cleared {0}.");
 
         /// <summary>
         /// Gets the phrases to respond with when marking or tracking an item at
@@ -677,6 +677,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         /// </summary>
         public CheatsConfig Cheats { get; init; } = new();
 
+        /// <summary>
+        /// Returns default response information
+        /// </summary>
+        /// <returns></returns>
         public static ResponseConfig Default()
         {
             return new ResponseConfig();

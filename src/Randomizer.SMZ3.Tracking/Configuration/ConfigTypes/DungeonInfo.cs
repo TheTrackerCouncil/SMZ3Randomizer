@@ -38,6 +38,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             RegionTypeName = regionTypeName;
         }
 
+        /// <summary>
+        /// The identifier for merging configs
+        /// </summary>
         [MergeKey]
         public string Dungeon { get; init; }
 
@@ -57,11 +60,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public SchrodingersString Boss { get; set; }
 
         /// <summary>
-        /// Gets the fully qualified name of the type of region that represents
-        /// this dungeon.
+        /// Gets the type of region that represents this dungeon.
         /// </summary>
-        public string TypeName { get; init; }
-
         public Type Type { get; init; }
 
         /// <summary>
@@ -132,6 +132,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         public string RegionTypeName { get; init; }
 
+        /// <summary>
+        /// The type of the overworld region you access this dungeon from
+        /// </summary>
         public Type WithinRegionType { get; init; }
 
         /// <summary>
