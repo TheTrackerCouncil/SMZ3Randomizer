@@ -1,14 +1,4 @@
-﻿# Mother Brain's reliquary / Pit Room / the spot underneath the place Mother Brain used to be / Missile (Crateria bottom)
-- LocationNumber: 6
-  Name:
-  - Text: Mother Brain's toilet
-  WhenTrackingJunk:
-  - Text: Of course this location would have a shitty item
-  - Text: What a poopy item. No wonder it got flushed.
-  WhenTrackingProgression:
-  - Text: That's not bad for being in the toilet
-  - Text: Who flushed this down the toilet?
-  # Warehouse Kihunter Room / Missile (Kraid) / the room before the corridor with Kraid's Awful Son
+﻿  # Warehouse Kihunter Room / Missile (Kraid) / the room before the corridor with Kraid's Awful Son
 - LocationNumber: 44
   Name:
   - Text: the room before the corridor with Kraid's Awful Son
@@ -27,7 +17,3 @@
   - Text: I love pegging.
   - Text: I liked Peg World before it was cool.
   - Text: Can we get in line to ride it again?
-# Library
-- LocationNumber: 496
-  WhenMarkingJunk:
-  - Text: Its never bullshit to visit your local Library

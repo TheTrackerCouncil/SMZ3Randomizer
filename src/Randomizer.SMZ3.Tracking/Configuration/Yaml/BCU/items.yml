@@ -1,9 +1,4 @@
-﻿- Item: Nothing
-  Name:
-  - Text: Bullshit
-  Plural:
-  - Text: Bullshit
-- Item: Content
+﻿- Item: Content
   WhenTracked:
     "10":
     - Text: Good job. Big Twitch is surely pleased
@@ -27,33 +22,13 @@
     "4":
     - Text: Are you ever going to get seewwious?
 - Item: Duck
-  Name:
-  - Text: Burb
   WhenTracked:
     "1":
     - Text: I hope you were quiet during the cutscene.
-- Item: Hammer
-  Name:
-  - Text: Hammer Time
-    Weight: 0.1
-  WhenTracked:
-    "1":
-    - Text: Tracked pegging device
-      Weight: 0.1
 - Item: Hookshot
   Name:
   - Text: Second best grappling armament
     Weight: 0.2
-- Item: Blue Boomerang
-  Name:
-  - Text: Blue Shit
-    Weight: 0.2
-  - Text: That Blue Shit
-    Weight: 0.2
-- Item: Magic Powder
-  Name:
-  - Text: Drugs
-  - Text: Prescription medicine
 - Item: Shovel
   Name:
   - Text: Shaktool Junior
@@ -67,54 +42,11 @@
   - Text: Cane of Technical Prowess
   - Text: Tech Cane
   - Text: The Tech
-- Item: Bottle
-  WhenTracked:
-    "1":
-    - Text: I won't tell if you want to sneak some booze in one
-    "2": 
 - Item: Magic Mirror
-  Name:
-  - Text: Vanity
-    Weight: 0.1
   WhenTracked:
     "1":
     - Text: '{{Link}} pulls out their magic mirror.'
     - Text: '{{Link}} feels a strange pulling sensation.'
-- Item: Book of Mudora
-  Name:
-  - Text: Sacred Texts
-  - Text: fanfiction
-    Weight: 0.5
-  - Text: Book of Smut
-    Weight: 0.5
-- Item: Mushroom
-  Name:
-  - Text: Shrooms
-    Weight: 0.2
-  - Text: Psilocybe cubensis
-    Weight: 0.1
-- Item: Red Boomerang
-  Name:
-  - Text: Red Shit
-    Weight: 0.2
-  - Text: That Red Shit
-    Weight: 0.2
-- Item: Five Rupees
-  WhenTracked:
-    "2":
-    - Text: Blue pee? Maybe you should see a doctor.
-- Item: Twenty Rupees
-  Name:
-  - Text: Big 20
-  WhenTracked:
-    "4":
-    - Text: You now have 4 20 rupee's. Nice.
-    - Text: You now have 4 20 rupee's. Ha. That's the funny number.
-    "5": 
-- Item: Heart Container
-  WhenTracked:
-    "2":
-    - Text: Was it still beating when you found it?
 - Item: +5 Arrow Capacity
   WhenTracked:
     "1":
@@ -122,26 +54,10 @@
       Weight: 0.1
 - Item: Gloves
   WhenTracked:
-    "1":
-    - Text: I love the power glove, it's so bad
-    - Text: Upgraded hands by one step
-    - Text: Upgraded gloves by one step.
     "2":
-    - Text: Toggled Tiddy Mitts on,
-    - Text: Congratulations with your new Tiddy Mitts.
-    - Text: Toggled Itty Bitty Titty Mitty on
-      Weight: 0.2
     - Text: Remember that time I called these boots? To be fair they are boots but for your hands. Toggled Mitts on.
       Weight: 0.2
     - Text: Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.
-      Weight: 0.2
-  Stages:
-    "1":
-    - Text: Power Glove
-    - Text: It's so bad
-    "2":
-    - Text: Tiddy Mitts
-    - Text: Itty Bitty Titty Mitty
       Weight: 0.2
 - Item: Grappling Beam
   Name:

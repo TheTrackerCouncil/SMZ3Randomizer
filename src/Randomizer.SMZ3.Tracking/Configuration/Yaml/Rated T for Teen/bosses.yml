@@ -1,0 +1,8 @@
+﻿- Boss: Phantoon
+  Name:
+  - Text: Phanturd
+    Weight: 0.25
+  WhenDefeated:
+  - Text: Toggled Phanturd on
+    Weight: 0.25
+

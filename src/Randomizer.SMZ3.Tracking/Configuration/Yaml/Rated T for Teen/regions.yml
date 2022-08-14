@@ -1,0 +1,7 @@
+﻿- Region: Wrecked Ship
+  Name:
+  - Text: Wrecked Shit
+- Region: Light World South
+  WhenDiedInRoom:
+    55:
+    - Text: Oh no. Did you get crabs?

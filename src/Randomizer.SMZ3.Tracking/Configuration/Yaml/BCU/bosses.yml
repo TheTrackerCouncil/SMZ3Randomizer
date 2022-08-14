@@ -12,13 +12,6 @@
   WhenDefeated:
   - Text: Toggled Crocomire on. It looks like you brought more than three super missiles. Good job.
     Weight: 0.1
-- Boss: Phantoon
-  Name:
-  - Text: Phanturd
-    Weight: 0.25
-  WhenDefeated:
-  - Text: Toggled Phanturd on
-    Weight: 0.25
 - Boss: Ridley
   WhenDefeated:
   - Text: It's a living

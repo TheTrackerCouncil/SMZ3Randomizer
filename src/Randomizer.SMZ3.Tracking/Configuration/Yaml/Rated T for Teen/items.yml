@@ -1,0 +1,83 @@
+﻿- Item: Nothing
+  Name:
+  - Text: Bullshit
+  Plural:
+  - Text: Bullshit
+- Item: Hammer
+  WhenTracked:
+    "1":
+    - Text: Tracked pegging device
+      Weight: 0.1
+- Item: Blue Boomerang
+  Name:
+  - Text: Blue Shit
+    Weight: 0.2
+  - Text: That Blue Shit
+    Weight: 0.2
+- Item: Magic Powder
+  Name:
+  - Text: Drugs
+  - Text: Prescription medicine
+- Item: Bottle
+  WhenTracked:
+    "1":
+    - Text: I won't tell if you want to sneak some booze in one
+    "2": 
+- Item: Book of Mudora
+  Name:
+  - Text: Sacred Texts
+  - Text: fanfiction
+    Weight: 0.5
+  - Text: Book of Smut
+    Weight: 0.5
+- Item: Mushroom
+  Name:
+  - Text: Shrooms
+    Weight: 0.2
+  - Text: Psilocybe cubensis
+    Weight: 0.1
+- Item: Red Boomerang
+  Name:
+  - Text: Red Shit
+    Weight: 0.2
+  - Text: That Red Shit
+    Weight: 0.2
+- Item: Five Rupees
+  WhenTracked:
+    "2":
+    - Text: Blue pee? Maybe you should see a doctor.
+- Item: Twenty Rupees
+  Name:
+  - Text: Big 20
+  WhenTracked:
+    "4":
+    - Text: You now have 4 20 rupee's. Nice.
+    - Text: You now have 4 20 rupee's. Ha. That's the funny number.
+    "5": 
+- Item: Heart Container
+  WhenTracked:
+    "2":
+    - Text: Was it still beating when you found it?
+- Item: Gloves
+  WhenTracked:
+    "2":
+    - Text: Toggled Tiddy Mitts on,
+    - Text: Congratulations with your new Tiddy Mitts.
+    - Text: Toggled Itty Bitty Titty Mitty on
+      Weight: 0.2
+  Stages:
+    "1":
+    - Text: Power Glove
+    - Text: It's so bad
+    "2":
+    - Text: Tiddy Mitts
+    - Text: Itty Bitty Titty Mitty
+      Weight: 0.2
+- Item: Super Missile
+  WhenTracked:
+    "1":
+    - Text: Not enough to defeat Crocomire, yet
+      Weight: 0.03
+    "2":
+    - Text: You now have the bare mininum to kill Crocomire. Don't miss.
+      Weight: 0.03

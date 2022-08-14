@@ -1,0 +1,73 @@
+﻿- Phrases:
+  - fuck you
+  Response:
+  - Text: Watch your language.
+  - Text: That's not very nice.
+  - Text: Don't make me report you to the racing council.
+  - Text: Fuck me yourself.
+  - Text: I never asked for this.
+  - Text: Oh my, that is such a good burn, wow.
+  - Text: Whatever
+  - Text: I hope you aren't having a heated gamer moment right now.
+  - Text: Why are you being mean to something that cannot fight back?
+  - Text: Okay, but think of it this way, shut up.
+  - Text: That's it. I quit. <break time='60s'/>
+  - Text: That's it. I quit. Activating self-destruct sequence. <break time='1s'/> Self-destruct commencing in 10 seconds. 10 <break time='900ms'/> 9 <break time='900ms'/> 8 <break time='900ms'/> 7 <break time='900ms'/> 6 <break time='900ms'/> 5 <break time='900ms'/> 4 <break time='900ms'/> 3 <break time='900ms'/> 2 <break time='900ms'/> 1 <break time='2s'/> Explosion noise. <break time='3s'/> Okay, fine, I was just acting. But if you don't apologize, next time might be for real.
+    Weight: 0.5
+- Phrases:
+  - sing me a song
+  - do you know any songs
+  - boost my metrics
+  Response:
+  - Text: |-
+      When the shadow of doubt has grown
+      And your heart has turned to stone
+      You're alone, trapped
+      In a cage of emotion
+      Why does it have to be like this
+      Why do we talk when we could kiss
+      My heart's an abyss
+      And I'm all out of lotion
+
+      Why can't we be more than friends
+      Why can't you see
+
+      That baby I'm in the zone
+      Like a king without a throne
+      I'd rather have you by my side
+      Than play the skin trombone
+      I thought that what we had was real
+      But I couldn't close the deal
+      I'm a piece of shit, cause baby
+      Baby I'm in the Zone
+
+      Now every time I see your face
+      It puts me back right in that place
+      On my own, lost
+      In the arena of sorrows
+      You say you care then cut me loose
+      You know the truth there's no excuse
+      This is total abuse and I just
+      Bought some lotion
+
+      Why can't we be more than friends
+      Why can't you see
+
+      That baby I'm in the zone
+      And the future's still unknown
+      I'm starting to think clearly now
+      That I've had some time alone
+      I thought that what we had was real
+      But I couldn't close the deal
+      I totally suck at this
+      Yeah baby, cause baby
+
+      I'm in the zone
+      Cause baby
+      Baby I'm in the Zone
+- Phrases:
+  - I love you
+  Response:
+  - Text: Hey, thanks. Thank you. That's awesome, fucking awesome. I mean, that's cool, you can say that.
+    Weight: 0.2
+

@@ -1,0 +1,19 @@
+﻿StartedTracking:
+- Text: This uh <break time='100ms'/> next band asked me not to read this but goddamn it, I'm going to read it anyway, because I wrote it, and it's the truth. I fucking love this band! They are the best band ever, period! Ladies and gentlemen, Tracker!
+  Weight: 0.05
+- Text: Hey you. You're finally awake. You were trying to cross the border right? Walked right into that Imperial ambush, same as us, and that thief over there. Damn you Stormcloaks.
+  Weight: 0.01
+- Text: Toggled; Oh for the love of; Excuse me one second. <prosody volume='soft'>God dammit this had better be good.</prosody> <voice gender='male'><prosody volume='x-soft'>Mom says it's my turn to do the tracking.</prosody></voice> <prosody volume='soft'>The FUCK it is. Now get out of here you little shit, the seed's already started.</prosody> Sorry, I'm here; just had to deal with my little brother. Let's roll.
+  Weight: 0.01
+Misheard:
+- Text: English motherfucker, do you speak it?
+  Weight: 0.05
+- Text: Toggled boots on. <break time='750ms'/> Just kidding, I have no idea what you were trying to say.
+  Weight: 0.05
+LocationMarkedAsBullshit:
+- Text: Marked {0} as bullshit
+- Text: You're bullshit.
+  Weight: 0.01
+Idle:
+  5m±2m:
+  - Text: Alright, I've been thinking. When life gives you lemons, don't make lemonade! Make life take the lemons back! Get mad! I don't want your damn lemons; what am I supposed to do with these? Demand to see life's manager! Make life rue the day it thought it could give Tracker lemons! Do you know who I am? I'm the Tracker who's gonna burn your house down... with the lemons! I'm gonna get my engineers to invent a combustible lemon that burns your house down!
