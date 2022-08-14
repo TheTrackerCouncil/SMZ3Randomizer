@@ -279,6 +279,57 @@
 
             </StackPanel>
           </Expander>
+
+          <Expander IsExpanded="True">
+            <Expander.Header>
+              <TextBlock FontWeight="SemiBold">Tracker Profiles</TextBlock>
+            </Expander.Header>
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,0">
+              <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">All selected profiles in the right column will be combined in the order from top to bottom. In case of overrides, the bottom most will be used.</TextBlock>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="auto"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <DockPanel Grid.Column="0">
+                  <TextBlock DockPanel.Dock="Top">Disabled</TextBlock>
+                  <ListBox ItemsSource="{Binding DisabledProfiles, ElementName=Self}" Name="DisabledProfilesListBox">
+                  </ListBox>
+                </DockPanel>
+                <DockPanel Grid.Column="2">
+                  <TextBlock DockPanel.Dock="Top">Enabled</TextBlock>
+                  <ListBox ItemsSource="{Binding EnabledProfiles, ElementName=Self}" Name="EnabledProfilesListBox">
+
+                  </ListBox>
+                </DockPanel>
+                <StackPanel Grid.Column="1">
+                  <Button Margin="7,20,7,0" MinWidth="25" Name="EnableProfile" Click="EnableProfile_Click">
+                    &#x3e;
+                  </Button>
+                  <Button Margin="7,5,7,0" MinWidth="25" Name="DisableProfile" Click="DisableProfile_Click">
+                    &#x3c;
+                  </Button>
+                  <Button Margin="7,5,7,0" MinWidth="25" Name="MoveProfileUp" Click="MoveProfileUp_Click">
+                    &#8743;
+                  </Button>
+                  <Button Margin="7,5,7,5" MinWidth="25" Name="MoveProfileDown" Click="MoveProfileDown_Click">
+                    &#8744;
+                  </Button>
+                </StackPanel>
+              </Grid>
+              <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Right">
+                <Button Name="RefreshProfilesButton" Click="RefreshProfilesButton_Click">
+                  <TextBlock>Refresh Profiles</TextBlock>
+                </Button>
+                <Button Name="OpenProfilesFolderButton" Click="OpenProfilesFolderButton_Click">
+                  <TextBlock>Open Profiles Folder</TextBlock>
+                </Button>
+              </StackPanel>
+            </StackPanel>
+          </Expander>
         </StackPanel>
       </ScrollViewer>
     </Grid>

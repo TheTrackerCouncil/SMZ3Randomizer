@@ -1,0 +1,2545 @@
+﻿# This config file is used for additional location information
+#
+# Fields
+# ------
+# LocationNumber: The identifier for the location that is used to combine possibilities between configs.
+# Name: The list of possibilities for the name of the location
+# WhenTrackingJunk: The list of possibilities for tracker responses when the player tracks a junky item
+#     at the location
+# WhenTrackingProgression: The list of possibilities for tracker responses when the player tracks a
+#     progression item at the location
+# WhenMarkingJunk: The list of possibilities for tracker responses when the player says that there is a
+#     junky item at the location
+# WhenMarkingProgression: The list of possibilities for tracker responses when the player says that
+#     there is a progression item at the location
+# Hints: The list of possibilities for vague descriptors of the room for the hint system
+
+# Chozo Ruins entrance / that room opposite the Gauntlet / Power Bomb (Crateria surface)
+- LocationNumber: 0
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Flooded Cavern - under water / West Ocean - under water / that room before Wrecked Ship that's underwater / Missile (outside Wrecked Ship bottom)
+- LocationNumber: 1
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sky Missile / that spot all the way up in the sky after Wrecked Ship / Missile (outside Wrecked Ship top)
+- LocationNumber: 2
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Morph Ball Maze / Missile (outside Wrecked Ship middle)
+- LocationNumber: 3
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# The Moat / Interior Lake / that room between Crateria and Wrecked Ship with the item on the water / Missile (Crateria moat)
+- LocationNumber: 4
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Gauntlet (Chozo) / the room in the middle of the Gauntlet / Energy Tank, Gauntlet
+- LocationNumber: 5
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mother Brain's reliquary / Pit Room / Mother Brain's toilet / the spot underneath the place Mother Brain used to be / Missile (Crateria bottom)
+- LocationNumber: 6
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bozo / Bomb Torizo room / Bombs
+- LocationNumber: 7
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Terminator Room / Fungal Slope / that room in Crateria with the mushrooms / Energy Tank, Terminator
+- LocationNumber: 8
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Gauntlet Shaft Right / that spot on the right side after the Gauntlet / Missile (Crateria gauntlet right)
+- LocationNumber: 9
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Gauntlet Shaft Left / that spot on the left side after the Gauntlet / Missile (Crateria gauntlet left)
+- LocationNumber: 10
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Old Tourian launchpad / Super Missile (Crateria)
+- LocationNumber: 11
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Final Missile Bombway / The Final Missile / Dental Plan Missiles / the room in Crateria on the other side of the entrance to Zelda / Missile (Crateria middle)
+- LocationNumber: 12
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hell / Etecoon shaft / that room where the animals are wall jumping / Power Bomb (green Brinstar bottom)
+- LocationNumber: 13
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spore Spawn's item / Super Missile (pink Brinstar)
+- LocationNumber: 14
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mockball Room - Fail item / that spot you get to when failing the mock ball in Green Brinstar / Missile (green Brinstar below super missile)
+- LocationNumber: 15
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mockball Room Attic / that spot on your way out of the mockball room / Super Missile (green Brinstar top)
+- LocationNumber: 16
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mockball Chozo / the room after you use the Speed Booster in Green Brinstar / the room after you use the mockball glitch in Green Brinstar / Reserve Tank, Brinstar
+- LocationNumber: 17
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mockball Back room hidden item / the room behind the room after you use the Speed Booster in Green Brinstar / the room behind the room after you use the mockball glitch in Green Brinstar / Missile (green Brinstar behind missile) / Ron Popeil missiles / Mockball Hall Hidden Room Hidden Item
+- LocationNumber: 18
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mockball Back room / that spot in the wall in the room behind the room after you use the Speed Booster in Green Brinstar / that spot in the wall in the room behind the room after you use the mockball glitch in Green Brinstar / Missile (green Brinstar behind reserve tank) / Mockball Hall Hidden Room Main Item
+- LocationNumber: 19
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pink Shaft (top) / Big Pink (top) / that spot in Pink Brinstar on the other side of the grapple ceiling / Missile (pink Brinstar top)
+- LocationNumber: 21
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pink Shaft (bottom) / Big Pink (bottom) / that spot on the bottom of Pink Brinstar / Missile (pink Brinstar bottom)
+- LocationNumber: 22
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pink Shaft - Chozo / the room underneath Pink Brinstar / Charge Beam
+- LocationNumber: 23
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mission: Impossible / Pink Brinstar Power Bomb Room / Power Bomb (pink Brinstar)
+- LocationNumber: 24
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Green Hill Zone / Jungle slope / Missile (green Brinstar pipe)
+- LocationNumber: 25
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Morph Ball (Corridor No. 1) / Morphing Ball / the only place you can get to in Super Metroid without any items
+- LocationNumber: 26
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Power Bomb wall (Corridor No. 1) / that spot behind the Morph Ball / Power Bomb (blue Brinstar)
+- LocationNumber: 27
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# that spot all the way to the right of Blue Brinstar / Missile (blue Brinstar middle)
+- LocationNumber: 28
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blue Brinstar Ceiling / that spot in the ceiling in Blue Brinstar / Energy Tank, Brinstar Ceiling
+- LocationNumber: 29
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# that spot right after the false floor in Green Brinstar / Highway to Hell / Energy Tank, Etecoons
+- LocationNumber: 30
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# that room after the false floor in Green Brinstar / Super Missile (green Brinstar bottom)
+- LocationNumber: 31
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Waterway / Energy Tank, Waterway
+- LocationNumber: 33
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# that Chozo room at the bottom of Blue Brinstar / Missile (blue Brinstar bottom)
+- LocationNumber: 34
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hoptank Room / Wave Beam Glitch room / the room where everyone does the Wave Beam Glitch / Energy Tank, Brinstar Gate
+- LocationNumber: 35
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Billy Mays Room Main Item / Missile (blue Brinstar top) / Blue Brinstar Top Main Item / the visible spot in the Billy Mays Room
+- LocationNumber: 36
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Billy Mays Room Hidden item / But wait, there's more! / Missile (blue Brinstar behind missile) / Blue Brinstar Top Hidden Item / the hidden spot in the Billy Mays Room
+- LocationNumber: 37
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# The Chozo room after the dark room with all the spikes / X-Ray Scope / X-Ray
+- LocationNumber: 38
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Beta Power Bomb Room / Power Bomb (red Brinstar sidehopper room) / the room underneath the flower in Red Brinstar / the room underneath the Samus Eater in Red Brinstar
+- LocationNumber: 39
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Alpha Power Bomb Room / Power Bomb (red Brinstar spike room) / the Chozo room in Red Brinstar with the jumping enemies you can freeze / the Chozo room in Red Brinstar with the Boyons
+- LocationNumber: 40
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Alpha Power Bomb Room - Behind the wall / Missile (red Brinstar spike room) / the room behind the wall in the Chozo room in Red Brinstar
+- LocationNumber: 41
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# ~ S p A z E r ~ / Spazer / the Chozo room above the entrance to Maridia in Red Brinstar
+- LocationNumber: 42
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Energy Tank, Kraid / the room that opens up on your way out after defeating Kraid
+- LocationNumber: 43
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Warehouse Kihunter Room / Missile (Kraid) / the room before the corridor with Kraid's Awful Son
+- LocationNumber: 44
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kraid's Reliquary / the room after Kraid / Varia Suit
+- LocationNumber: 48
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Lava Room - Submerged in wall / Cathedral / the room in Upper Norfair with the item in the lava / Missile (lava room)
+- LocationNumber: 49
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ice Beam Room / Ice Beam / the room in Upper Norfair after the Speed Booster gates
+- LocationNumber: 50
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Crumble Shaft / the room with all the crumbling platforms / Missile (below Ice Beam)
+- LocationNumber: 51
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Crocomire's Pit / Energy Tank, Crocomire / the room where you fight Crocomire
+- LocationNumber: 52
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hi-Jump Boots Room / Hi-Jump Boots / the Chozo room after the room in Upper Norfair where you have to wait a long time for an enemy before you can leave again
+- LocationNumber: 53
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Crocomire Escape / Missile (above Crocomire) / the room with the item beyond a Super Missile gate you can peak at in Upper Norfair
+- LocationNumber: 54
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hi-Jump Lobby - Back / the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again / Missile (Hi-Jump Boots)
+- LocationNumber: 55
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hi-Jump Lobby - Entrance / the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again / Energy Tank (Hi-Jump Boots)
+- LocationNumber: 56
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Post Crocomire Power Bomb Room / the room directly on the other side of Crocomire's room / Power Bomb (Crocomire)
+- LocationNumber: 57
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Cosine Room / Post Crocomire Missile Room / the wavy room below Crocomire / Missile (below Crocomire)
+- LocationNumber: 58
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Indiana Jones Room / Pantry / Post Crocomire Jump Room / the big empty room after Crocomire that use the Speed Booster to get / Missile (Grappling Beam)
+- LocationNumber: 59
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Grapple Beam Room / Grappling Beam / the Chozo room after the big empty room past Crocomire
+- LocationNumber: 60
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Reserve Tank, Norfair / Bubble Mountain Hidden Hall Main Item / the hidden room on the left side of Bubble Mountain
+- LocationNumber: 61
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Missile (Norfair Reserve Tank) / Bubble Mountain Hidden Hall Hidden Item / the hidden spot in the hidden room on the left side of Bubble Mountain
+- LocationNumber: 62
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bubble Mountain Missile Room / the room on the left side of Bubble Mountain / Missile (bubble Norfair green door)
+- LocationNumber: 63
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bubble Mountain / the spot near the spikes on the bottom of Bubble Mountain / Missile (bubble Norfair)
+- LocationNumber: 64
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Speed Booster Hall - Ceiling / the spot in the ceiling on the right side of Bubble Mountain / Missile (Speed Booster)
+- LocationNumber: 65
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Speed Booster Room / Speed Booster / the room to the right of Bubble Mountain / the Chozo room in Bubble Mountain
+- LocationNumber: 66
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Double Chamber / Grapple Crossing / Missile (Wave Beam)
+- LocationNumber: 67
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Wave Beam Room / Wave Beam
+- LocationNumber: 68
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Gold Torizo - Drop down / the spot before you drop down to fight Gold Torizo / Missile (Gold Torizo)
+- LocationNumber: 70
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Golden Torizo - Ceiling / the spot where Gold Torizo hides before the fight / Super Missile (Gold Torizo)
+- LocationNumber: 71
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mickey Mouse Clubhouse / Mickey Mouse room / the room that looks like Mickey Mouse / Missile (Mickey Mouse room)
+- LocationNumber: 73
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spring Ball Maze Room / the room right before the Spring Ball Maze / Missile (lower Norfair above fire flea room)
+- LocationNumber: 74
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Escape Power Bomb Room / the room in lower Norfair that you hope doesn't have anything because you need to go through a morph ball maze / Power Bomb (lower Norfair above fire flea room)
+- LocationNumber: 75
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Power Bomb of Shame / the room to the left before the spiky elevator to Ridley / Power Bomb (Power Bombs of shame)
+- LocationNumber: 76
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Three Musketeer's Room / FrankerZ Missiles / Missile (lower Norfair near Wave Beam)
+- LocationNumber: 77
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ridley's Reliquary / the room after Ridley / Energy Tank, Ridley
+- LocationNumber: 78
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Screw Attack / the Chozo below the portal to Misery Mire
+- LocationNumber: 79
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Fireflea Room / the dark room in lower Norfair with the fire flies / Energy Tank, Firefleas
+- LocationNumber: 80
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Main Shaft - Side room / the room behind the bombeable wall on the left side of Wrecked Ship / Missile (Wrecked Ship middle)
+- LocationNumber: 128
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Post Chozo Concert - Speed Booster Item / Bowling Alley - Speed Booster Item / the spot that requires the Speed Booster in Wrecked Ship / Reserve Tank, Wrecked Ship / Wrecked Ship, Reserve Tank
+- LocationNumber: 129
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Post Chozo Concert - Breakable Chozo / the breakable Chozo in Wrecked Ship / Missile (Gravity Suit)
+- LocationNumber: 130
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Attic - Assembly Line / the room with the conveyors and robots / Missile (Wrecked Ship top)
+- LocationNumber: 131
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Wrecked Pool / Ruined Pool / Wrecked Ship Bullshit Room / that room in Wrecked Ship with all the water where you always reset / Energy Tank, Wrecked Ship
+- LocationNumber: 132
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Left Super Missile Chamber / the room that opens up on the left side after defeating Phantoon / Super Missile (Wrecked Ship left)
+- LocationNumber: 133
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Right Super Missile Chamber / the room that opens up on the right side after defeating Phantoon / Right Super, Wrecked Ship
+- LocationNumber: 134
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Post Chozo Concert - Gravity Suit Chamber / the room after the Chozo concert / Gravity Suit
+- LocationNumber: 135
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Main Street - Ceiling (Shinespark) / Main Street Missiles / the spot in the ceiling in Maridia that requires Shinespark / Missile (green Maridia shinespark)
+- LocationNumber: 136
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Main Street - Crab Supers / the tiny room where you watch crabs walking into the wall / Super Missile (green Maridia)
+- LocationNumber: 137
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mama Turtle Room / the room with the turtles / Energy Tank, Mama turtle
+- LocationNumber: 138
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mama Turtle Room - Wall item / the spot in the wall in the turtle room / Missile (green Maridia tatori)
+- LocationNumber: 139
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Watering Hole Left / the left side of the pit with two items in the northeast of Maridia / Super Missile (yellow Maridia)
+- LocationNumber: 140
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Watering Hole Right / the right side of the pit with two items in the northeast of Maridia / Missile (yellow Maridia super missile)
+- LocationNumber: 141
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pseudo Plasma Spark Room / the room leading up to the pit with two items in the northeast of Maridia / Missile (yellow Maridia false wall)
+- LocationNumber: 142
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Plasma Beam / Plasma Chamber / Plasma Beam room / the room in Maridia near the forgotten highway to Wrecked Ship
+- LocationNumber: 143
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Left Sand Pit Left / the left side of the left sand pit / Missile (left Maridia sand pit room)
+- LocationNumber: 144
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Left Sand Pit Right / the right side of the left sand pit / Reserve Tank, Maridia
+- LocationNumber: 145
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Right Sand Pit Left / the left side of the right sand pit / Missile (right Maridia sand pit room)
+- LocationNumber: 146
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Right Sand Pit Right / the right side of the right sand pit / Power Bomb (right Maridia sand pit room)
+- LocationNumber: 147
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Aqueduct - Left item / Missile (pink Maridia)
+- LocationNumber: 148
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Aqueduct - Right item / Super Missile (pink Maridia)
+- LocationNumber: 149
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Shaktool / Shak's Stash / Shaktool's item / the room that everyone's favorite diggy boy helps you get to / the room after everyone's favorite diggy boy / Spring Ball
+- LocationNumber: 150
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# The Precious Room / Pre-Draygon Room / the wall in the room before Draygon / Missile (Draygon)
+- LocationNumber: 151
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sandy Path / the room after Botwoon / Energy Tank, Botwoon
+- LocationNumber: 152
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Draygon's Reliquary / the room after Draygon / Space Jump
+- LocationNumber: 154
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ether Tablet
+- LocationNumber: 256
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spectacle Rock
+- LocationNumber: 257
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spectacle Rock Cave
+- LocationNumber: 258
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Old Man
+- LocationNumber: 259
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Floating Island
+- LocationNumber: 260
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spiral Cave
+- LocationNumber: 261
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Paradox Cave Upper - Left
+- LocationNumber: 262
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Paradox Cave Upper - Right
+- LocationNumber: 263
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Paradox Cave Lower - Far Left
+- LocationNumber: 264
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Paradox Cave Lower - Left
+- LocationNumber: 265
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Paradox Cave Lower - Middle
+- LocationNumber: 266
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Paradox Cave Lower - Right
+- LocationNumber: 267
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Paradox Cave Lower - Far Right
+- LocationNumber: 268
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mimic Cave
+- LocationNumber: 269
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Master Sword Pedestal / Pedestal / Ped
+- LocationNumber: 270
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mushroom
+- LocationNumber: 271
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Lost Woods Hideout
+- LocationNumber: 272
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Lumberjack Tree / Lumberjack Ledge
+- LocationNumber: 273
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bonk Rocks / Pegasus Rocks
+- LocationNumber: 274
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Graveyard Ledge
+- LocationNumber: 275
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# King's Tomb
+- LocationNumber: 276
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kakariko Well Back cave / Kakariko Well Top
+- LocationNumber: 277
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kakariko Well Left
+- LocationNumber: 278
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kakariko Well Middle
+- LocationNumber: 279
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kakariko Well Right
+- LocationNumber: 280
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kakariko Well Bottom
+- LocationNumber: 281
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blind's Hideout Back Room / Blind's Hideout Top
+- LocationNumber: 282
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blind's Hideout Far Left
+- LocationNumber: 283
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blind's Hideout Left
+- LocationNumber: 284
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blind's Hideout Right
+- LocationNumber: 285
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blind's Hideout Far Right
+- LocationNumber: 286
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bottle Merchant
+- LocationNumber: 287
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sick Kid / Bug Catching Kid's House
+- LocationNumber: 289
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kakariko Tavern / Inn back room
+- LocationNumber: 290
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Magic Bat
+- LocationNumber: 291
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Zora / King Zora
+- LocationNumber: 292
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Zora's Ledge
+- LocationNumber: 293
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Waterfall Fairy Right
+- LocationNumber: 295
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Potion Shop / Mushroom Item
+- LocationNumber: 296
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sahasrahla's Hut Left
+- LocationNumber: 297
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sahasrahla's Hut Middle
+- LocationNumber: 298
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sahasrahla's Hut Right
+- LocationNumber: 299
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sahasrahla
+- LocationNumber: 300
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Maze Race / Racing Game
+- LocationNumber: 301
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mini Moldorm Cave Far Left
+- LocationNumber: 307
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mini Moldorm Cave Left
+- LocationNumber: 308
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mini Moldorm Cave NPC
+- LocationNumber: 309
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mini Moldorm Cave Right
+- LocationNumber: 310
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bombos Tablet
+- LocationNumber: 314
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Floodgate Chest
+- LocationNumber: 315
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sunken Treasure
+- LocationNumber: 316
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Lake Hylia Island
+- LocationNumber: 317
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Under the bridge / the guy under the bridge / Hobo
+- LocationNumber: 318
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ice Cave / Ice Rod Cave
+- LocationNumber: 319
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spike Cave
+- LocationNumber: 320
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hookshot Cave - Top Right
+- LocationNumber: 321
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hookshot Cave - Top Left
+- LocationNumber: 322
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hookshot Cave - Bottom Left
+- LocationNumber: 323
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hookshot Cave - Bottom Right
+- LocationNumber: 324
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Superbunny Cave - Top
+- LocationNumber: 325
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Superbunny Cave - Bottom
+- LocationNumber: 326
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bumper Cave Ledge / Bumper Cave / Bumper Ledge
+- LocationNumber: 327
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Chest Game
+- LocationNumber: 328
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# C-Shaped House
+- LocationNumber: 329
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Brewery
+- LocationNumber: 330
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Peg World / Hammer Pegs
+- LocationNumber: 331
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blacksmith
+- LocationNumber: 332
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Purple Chest turn-in / Purple Chest
+- LocationNumber: 333
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Catfish / Scatfish / Lake of Ill Omen
+- LocationNumber: 334
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pyramid of Power / Pyramid
+- LocationNumber: 335
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Cursed Fairy Left / Pyramid Fairy Left
+- LocationNumber: 336
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Cursed Fairy Right / Pyramid Fairy Right
+- LocationNumber: 337
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Digging Game
+- LocationNumber: 338
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Haunted Grove / Stumpy
+- LocationNumber: 339
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hype Cave Top
+- LocationNumber: 340
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hype Cave Middle Right
+- LocationNumber: 341
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hype Cave Middle Left
+- LocationNumber: 342
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hype Cave Bottom
+- LocationNumber: 343
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hype Cave NPC
+- LocationNumber: 344
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mire Shed - Left
+- LocationNumber: 345
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mire Shed - Right
+- LocationNumber: 346
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Sanctuary
+- LocationNumber: 347
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Secret Room - Left / Back of Escape - Left / Sewers Secret Room - Left
+- LocationNumber: 348
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Secret Room - Middle / Back of Escape - Middle / Sewers Secret Room - Middle
+- LocationNumber: 349
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Secret Room - Right / Back of Escape - Right / Sewers Secret Room - Right
+- LocationNumber: 350
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Dark Cross
+- LocationNumber: 351
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Hyrule Castle Map Chest
+- LocationNumber: 352
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Boomerang Chest / Hyrule Castle Boomerang Chest
+- LocationNumber: 353
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Zelda's Cell / Hyrule Castle Zelda's Cell
+- LocationNumber: 354
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Link's Uncle
+- LocationNumber: 355
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Secret Passage / Hyrule Castle Secret Passage
+- LocationNumber: 356
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Castle Tower Foyer
+- LocationNumber: 357
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Castle Tower - Dark Maze
+- LocationNumber: 358
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Cannonball Chest / Eastern Palace Cannonball Chest
+- LocationNumber: 359
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Eastern Palace Map Chest
+- LocationNumber: 360
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Eastern Palace Compass Chest
+- LocationNumber: 361
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Eastern Palace Big Chest
+- LocationNumber: 362
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Eastern Palace Big Key Chest
+- LocationNumber: 363
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Armos Knights
+- LocationNumber: 364
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Desert Palace Big Chest / Dessert Palace Big Chest
+- LocationNumber: 365
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Torch / Desert Palace Torch / Dessert Palace Torch
+- LocationNumber: 366
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Desert Palace Map Chest / Dessert Palace Map Chest
+- LocationNumber: 367
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Desert Palace Big Key Chest / Dessert Palace Big Key Chest
+- LocationNumber: 368
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Desert Palace Compass Chest / Dessert Palace Compass Chest
+- LocationNumber: 369
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Lanmolas
+- LocationNumber: 370
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Basement Cage / Tower of Hera Basement Cage
+- LocationNumber: 371
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Tower of Hera Map Chest
+- LocationNumber: 372
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Tower of Hera Big Key Chest
+- LocationNumber: 373
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Tower of Hera Compass Chest
+- LocationNumber: 374
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Tower of Hera Big Chest
+- LocationNumber: 375
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Moldorm
+- LocationNumber: 376
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Shooter Room / Palace of Darkness Shooter Room
+- LocationNumber: 377
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Palace of Darkness Big Key Chest
+- LocationNumber: 378
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Stalfos Basement / Palace of Darkness Stalfos Basement
+- LocationNumber: 379
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# The Arena - Bridge / Palace of Darkness The Arena - Bridge
+- LocationNumber: 380
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# The Arena - Ledge / Palace of Darkness The Arena - Ledge
+- LocationNumber: 381
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Palace of Darkness Map Chest
+- LocationNumber: 382
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Palace of Darkness Compass Chest
+- LocationNumber: 383
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Harmless Hellway / Palace of Darkness Harmless Hellway
+- LocationNumber: 384
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Dark Basement Left
+- LocationNumber: 385
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Dark Basement Right
+- LocationNumber: 386
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Dark Maze Top
+- LocationNumber: 387
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Dark Maze Bottom
+- LocationNumber: 388
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Palace of Darkness Big Chest
+- LocationNumber: 389
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Helmasaur King
+- LocationNumber: 390
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Swamp Palace Entrance
+- LocationNumber: 391
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Swamp Palace Map Chest
+- LocationNumber: 392
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Swamp Palace Big Chest
+- LocationNumber: 393
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Swamp Palace Compass Chest
+- LocationNumber: 394
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Swamp Palace West Chest
+- LocationNumber: 395
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Swamp Palace Big Key Chest
+- LocationNumber: 396
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Flooded Room Left
+- LocationNumber: 397
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Flooded Room Right
+- LocationNumber: 398
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Waterfall Room / Swamp Palace Waterfall Room
+- LocationNumber: 399
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Arrghus
+- LocationNumber: 400
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pot Prison / Skull Woods Pot Prison / Skill Woods Pot Prison
+- LocationNumber: 401
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Skull Woods Compass Chest / Skill Woods Compass Chest
+- LocationNumber: 402
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Skull Woods Big Chest / Skill Woods Big Chest
+- LocationNumber: 403
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Skull Woods Map Chest / Skill Woods Map Chest
+- LocationNumber: 404
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pinball Room / the room with all the bumpers and gib-does / Skull Woods Pinball Room / Skill Woods Pinball Room
+- LocationNumber: 405
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Skull Woods Big Key Chest / Skill Woods Big Key Chest
+- LocationNumber: 406
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bridge Room / Skull Woods Bridge Room / Skill Woods Bridge Room
+- LocationNumber: 407
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mothula
+- LocationNumber: 408
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Thieves' Town Map Chest
+- LocationNumber: 409
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ambush Chest / Thieves' Town Ambush Chest
+- LocationNumber: 410
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Thieves' Town Compass Chest
+- LocationNumber: 411
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Thieves' Town Big Key Chest
+- LocationNumber: 412
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Attic / Thieves' Town Attic
+- LocationNumber: 413
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blind's Cell / Thieves' Town Blind's Cell
+- LocationNumber: 414
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Thieves' Town Big Chest
+- LocationNumber: 415
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Blind
+- LocationNumber: 416
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ice Palace Compass Chest
+- LocationNumber: 417
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spike Room / Ice Palace Spike Room
+- LocationNumber: 418
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ice Palace Map Chest
+- LocationNumber: 419
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ice Palace Big Key Chest
+- LocationNumber: 420
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Iced T Room / Ice Palace Iced T Room
+- LocationNumber: 421
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Freezor Chest / Ice Palace Freezor Chest
+- LocationNumber: 422
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ice Palace Big Chest
+- LocationNumber: 423
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Kholdstare
+- LocationNumber: 424
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Misery Mire Main Lobby
+- LocationNumber: 425
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Misery Mire Map Chest
+- LocationNumber: 426
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bridge Chest / Misery Mire Bridge Chest
+- LocationNumber: 427
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Spike Chest / Misery Mire Spike Chest
+- LocationNumber: 428
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Misery Mire Compass Chest
+- LocationNumber: 429
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Misery Mire Big Key Chest
+- LocationNumber: 430
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Misery Mire Big Chest
+- LocationNumber: 431
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Vitreous
+- LocationNumber: 432
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Turtle Rock Compass Chest
+- LocationNumber: 433
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Roller Room Left
+- LocationNumber: 434
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Roller Room Right
+- LocationNumber: 435
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Chain Chomps / Turtle Rock Chain Chomps
+- LocationNumber: 436
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Turtle Rock Big Key Chest
+- LocationNumber: 437
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Turtle Rock Big Chest
+- LocationNumber: 438
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Crystaroller Room / Turtle Rock Crystaroller Room
+- LocationNumber: 439
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Laser Bridge Top Right / Eye Bridge Top Right
+- LocationNumber: 440
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Laser Bridge Top Left / Eye Bridge Top Left
+- LocationNumber: 441
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Laser Bridge Bottom Right / Eye Bridge Bottom Right
+- LocationNumber: 442
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Laser Bridge Bottom Left / Eye Bridge Bottom Left
+- LocationNumber: 443
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Trinexx
+- LocationNumber: 444
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bob's Torch
+- LocationNumber: 445
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# DMs Room Top Left
+- LocationNumber: 446
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# DMs Room Top Right
+- LocationNumber: 447
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# DMs Room Bottom Left
+- LocationNumber: 448
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# DMs Room Bottom Right
+- LocationNumber: 449
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ganon's Tower Map Chest
+- LocationNumber: 450
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Firesnake Room
+- LocationNumber: 451
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Randomizer Room Top Left
+- LocationNumber: 452
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Randomizer Room Top Right
+- LocationNumber: 453
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Randomizer Room Bottom Left
+- LocationNumber: 454
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Randomizer Room Bottom Right
+- LocationNumber: 455
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Right Side First Room Left / Hope Room Left
+- LocationNumber: 456
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Right Side First Room Right / Hope Room Right
+- LocationNumber: 457
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Tile Room / Ganon's Tower Tile Room
+- LocationNumber: 458
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Compass Room Top Left
+- LocationNumber: 459
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Compass Room Top Right
+- LocationNumber: 460
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Compass Room Bottom Left
+- LocationNumber: 461
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Compass Room Bottom Right
+- LocationNumber: 462
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bob's Chest / Ganon's Tower Bob's Chest
+- LocationNumber: 463
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Ganon's Tower Big Chest
+- LocationNumber: 464
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Bottom Big Key Chest / Big Key Room Bottom Big Key Chest
+- LocationNumber: 465
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Big Key Room Left
+- LocationNumber: 466
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Big Key Room Right
+- LocationNumber: 467
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mini Helmasaur Room Left
+- LocationNumber: 468
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mini Helmasaur Room Right
+- LocationNumber: 469
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Pre-Moldorm Chest / Ganon's Tower Pre-Moldorm Chest
+- LocationNumber: 470
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Moldorm Chest / Ganon's Tower Moldorm Chest
+- LocationNumber: 471
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Library
+- LocationNumber: 496
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Forest Clearing / Digging Spot / Flute Spot
+- LocationNumber: 497
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Cave #45 / Cave 45 / South of Grove
+- LocationNumber: 498
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Link's House
+- LocationNumber: 499
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Aginah's Cave / Aggina's Cave
+- LocationNumber: 500
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Chicken House / Chicken Lady's House
+- LocationNumber: 506
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Mini Moldorm Cave Far Right
+- LocationNumber: 507
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Desert Ledge
+- LocationNumber: 508
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Checkerboard Cave
+- LocationNumber: 509
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression: 
+  Hints: 
+# Waterfall Fairy Left
+- LocationNumber: 510
+  Name: 
+  WhenTrackingJunk: 
+  WhenTrackingProgression: 
+  WhenMarkingJunk: 
+  WhenMarkingProgression:
+  Hints:
+

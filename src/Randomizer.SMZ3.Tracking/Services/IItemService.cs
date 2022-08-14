@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -80,5 +80,51 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// tracked at least once; otherwise, <see langword="false"/>.
         /// </returns>
         bool IsTracked(ItemType itemType);
+
+        /// <summary>
+        /// Finds an reward with the specified item type.
+        /// </summary>
+        /// <param name="rewardType">The type of reward to find.</param>
+        /// <returns>
+        /// An <see cref="RewardInfo"/> representing the reward. If there are
+        /// multiple configured rewards with the same type, this method returns
+        /// one at random. If there no configured rewards with the specified type,
+        /// this method returns <see langword="null"/>.
+        /// </returns>
+        RewardInfo? GetOrDefault(RewardType rewardType);
+
+        /// <summary>
+        /// Finds an reward with the specified item type.
+        /// </summary>
+        /// <param name="rewardItem">The type of reward to find.</param>
+        /// <returns>
+        /// An <see cref="RewardInfo"/> representing the reward. If there are
+        /// multiple configured rewards with the same type, this method returns
+        /// one at random. If there no configured rewards with the specified type,
+        /// this method returns <see langword="null"/>.
+        /// </returns>
+        RewardInfo? GetOrDefault(RewardItem rewardItem);
+
+        /// <summary>
+        /// Returns a random name for the specified item including article, e.g.
+        /// "a blue crystal" or "the green pendant".
+        /// </summary>
+        /// <param name="rewardType">The reward of item whose name to get.</param>
+        /// <returns>
+        /// The name of the reward of item, including "a", "an" or "the" if
+        /// applicable.
+        /// </returns>
+        string GetName(RewardType rewardType);
+
+        /// <summary>
+        /// Returns a random name for the specified item including article, e.g.
+        /// "a blue crystal" or "the green pendant".
+        /// </summary>
+        /// <param name="rewardItem">The reward of item whose name to get.</param>
+        /// <returns>
+        /// The name of the reward of item, including "a", "an" or "the" if
+        /// applicable.
+        /// </returns>
+        string GetName(RewardItem rewardItem);
     }
 }

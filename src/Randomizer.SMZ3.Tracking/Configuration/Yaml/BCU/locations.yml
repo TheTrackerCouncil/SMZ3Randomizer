@@ -1,0 +1,19 @@
+﻿  # Warehouse Kihunter Room / Missile (Kraid) / the room before the corridor with Kraid's Awful Son
+- LocationNumber: 44
+  Name:
+  - Text: the room before the corridor with Kraid's Awful Son
+  # Peg World / Hammer Pegs
+- LocationNumber: 331
+  WhenTrackingJunk:
+  - Text: I would sigh if I could.
+  - Text: What a shame.
+  - Text: Such a shame.
+  - Text: I want a refund.
+  - Text: At least the season pass was cheap
+  - Text: At least the food is nice.
+  - Text: My disappointment is immeasurable.
+  WhenTrackingProgression:
+  - Text: Peg World! Peg World! Peg World!
+  - Text: I love pegging.
+  - Text: I liked Peg World before it was cool.
+  - Text: Can we get in line to ride it again?

@@ -1,0 +1,111 @@
+﻿# This config file is used for additional region information
+#
+# Fields
+# ------
+# Reward: The identifier for the reward that is used to combine possibilities between configs.
+# Name: The list of possibilities for the name of the location
+# Hints: The list of possibilities for vague descriptors of the room for the hint system
+
+- Room: Blue Brinstar Top
+  Name:
+  Hints: 
+- Room: Mockball Hall Hidden Room
+  Name:
+  Hints: 
+- Room: Gauntlet Shaft
+  Name:
+  Hints: 
+- Room: Left Sand Pit
+  Name:
+  Hints: 
+- Room: Watering Hole
+  Name:
+  Hints: 
+- Room: Bubble Mountain Hidden Hall
+  Name:
+  Hints: 
+- Room: Castle Tower Dark Maze
+  Name:
+  Hints: 
+- Room: Castle Tower Foyer
+  Name:
+  Hints: 
+- Room: Mire Shed
+  Name:
+  Hints: 
+- Room: Pyramid Fairy
+  Name:
+  Hints: 
+- Room: Hype Cave
+  Name:
+  Hints: 
+- Room: Hookshot Cave
+  Name:
+  Hints: 
+- Room: Superbunny Cave
+  Name:
+  Hints: 
+- Room: Spike Cave
+  Name:
+  Hints: 
+- Room: Ganon's Tower Big Key Room
+  Name:
+  Hints: 
+- Room: Ganon's Tower Compass Room
+  Name:
+  Hints: 
+- Room: DM's Room
+  Name:
+  Hints: 
+- Room: Ganon's Tower Hope Room
+  Name:
+  Hints: 
+- Room: Ganon's Tower Mini Helmasaur Room
+  Name:
+  Hints: 
+- Room: Ganon's Tower Randomizer Room
+  Name:
+  Hints: 
+- Room: Back of Escape
+  Name:
+  Hints: 
+- Room: Paradox Cave
+  Name:
+  Hints: 
+- Room: Sahasrahla's Hut
+  Name:
+  Hints: 
+- Room: Waterfall Fairy
+  Name:
+  Hints: 
+- Room: Zora's Domain
+  Name:
+  Hints: 
+- Room: Blind's Hideout
+  Name:
+  Hints: 
+- Room: Kakariko Well
+  Name:
+  Hints: 
+- Room: Mini Moldorm Cave
+  Name:
+  Hints: 
+- Room: Swamp Ruins
+  Name:
+  Hints: 
+- Room: Palace of Darkness Dark Basement
+  Name:
+  Hints: 
+- Room: Palace of Darkness Dark Maze
+  Name:
+  Hints: 
+- Room: Swamp Palace Flooded Room
+  Name:
+  Hints: 
+- Room: Eye Bridge
+  Name:
+  Hints: 
+- Room: Turtle Rock Roller Room
+  Name:
+  Hints: 
+

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -93,7 +93,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 IsImportant = isImportant,
                 ObjectName = objectName,
                 LocationName = location?.Name.ToString(),
-                LocationId = location?.Id,
+                LocationId = location?.LocationNumber,
                 Time = _tracker?.TotalElapsedTime.TotalSeconds ?? 0
             };
             AddEvent(addedEvent);

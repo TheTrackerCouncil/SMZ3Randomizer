@@ -30,27 +30,11 @@ namespace Randomizer.SMZ3.Tracking
         {
             services.AddBasicTrackerModules<TrackerModuleFactory>();
             services.AddScoped<TrackerModuleFactory>();
-
-            services.AddSingleton<TrackerConfigProvider>();
             services.AddSingleton<IHistoryService, HistoryService>();
-            services.AddTransient(serviceProvider =>
-            {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
-                return configProvider.GetMapConfig();
-            });
-            services.AddTransient(serviceProvider =>
-            {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
-                return configProvider.GetTrackerConfig();
-            });
-            services.AddTransient(serviceProvider =>
-            {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
-                return configProvider.GetLocationConfig();
-            });
-
             services.AddScoped<TrackerOptionsAccessor>();
+            services.AddTrackerConfigs();
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<Tracker>();
 
@@ -73,6 +57,72 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             return services;
+        }
+
+        private static void AddTrackerConfigs(this IServiceCollection services)
+        {
+            services.AddSingleton<TrackerConfigProvider>();
+            services.AddTransient(serviceProvider =>
+            {
+                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
+                return configProvider.GetMapConfig();
+            });
+
+            services.AddScoped<TrackerConfigs>();
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Bosses;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Dungeons;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Items;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Locations;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Regions;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Requests;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Responses;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Rooms;
+            });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.Rewards;
+            });
         }
 
         /// <summary>

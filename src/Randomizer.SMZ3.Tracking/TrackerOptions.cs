@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3.Tracking
@@ -88,5 +89,10 @@ namespace Randomizer.SMZ3.Tracking
         /// The frequency in which tracker will say things
         /// </summary>
         public TrackerVoiceFrequency VoiceFrequency { get; set; }
+
+        /// <summary>
+        /// The selected profiles for tracker responses
+        /// </summary>
+        public ICollection<string> TrackerProfiles { get; set; } = new List<string>() { "Sassy" };
     }
 }

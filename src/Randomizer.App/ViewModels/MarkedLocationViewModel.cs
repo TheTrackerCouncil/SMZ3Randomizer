@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using Accessibility;
 
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.App.ViewModels
 {

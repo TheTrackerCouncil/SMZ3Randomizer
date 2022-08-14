@@ -9,6 +9,7 @@ using Randomizer.SMZ3;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.App.ViewModels
 {
@@ -46,7 +47,7 @@ namespace Randomizer.App.ViewModels
             {
                 if (Region is Z3Region)
                 {
-                    Dungeon = Syncer.Tracker.WorldInfo.Dungeons.First(x => x.TypeName == mapLocation.RegionTypeName);
+                    Dungeon = Syncer.Tracker.WorldInfo.Dungeons.First(x => x.Type.FullName == mapLocation.RegionTypeName);
                     Name = Dungeon.Reward.GetDescription();
                     Y -= 22;
                 }

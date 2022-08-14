@@ -20,9 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Tracking", "src\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj", "{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.SMZ3.Twitch", "src\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj", "{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Twitch", "src\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj", "{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.SMZ3.ChatIntegration", "src\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj", "{81708EBE-6127-4CDB-B18D-5238B204BF47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.ChatIntegration", "src\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj", "{81708EBE-6127-4CDB-B18D-5238B204BF47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

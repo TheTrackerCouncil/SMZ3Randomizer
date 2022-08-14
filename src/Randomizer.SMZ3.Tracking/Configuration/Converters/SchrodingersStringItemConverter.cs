@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.Converters
 {
@@ -36,13 +37,20 @@ namespace Randomizer.SMZ3.Tracking.Configuration.Converters
         public override void Write(Utf8JsonWriter writer, SchrodingersString.Possibility value, JsonSerializerOptions options)
         {
             if (value.Weight == SchrodingersString.Possibility.DefaultWeight)
+            {
+                writer.WriteStartObject();
+                writer.WritePropertyName("Text");
                 writer.WriteStringValue(value.Text);
+                writer.WriteEndObject();
+            }
             else
             {
-                writer.WriteStartArray();
+                writer.WriteStartObject();
+                writer.WritePropertyName("Text");
                 writer.WriteStringValue(value.Text);
+                writer.WritePropertyName("Weight");
                 writer.WriteNumberValue(value.Weight);
-                writer.WriteEndArray();
+                writer.WriteEndObject();
             }
         }
     }

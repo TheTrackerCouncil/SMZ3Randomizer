@@ -4,6 +4,8 @@ using System.Linq;
 
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -18,19 +20,28 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// Initializes a new instance of the <see cref="ItemService"/> class
         /// with the specified dependencies.
         /// </summary>
-        /// <param name="trackerConfig">
+        /// <param name="items">
         /// Specifies the configuration that contains the item data to be
         /// managed.
         /// </param>
-        public ItemService(TrackerConfig trackerConfig)
+        /// <param name="rewards">
+        /// Specifies the configuration that contains the reward data
+        /// </param>
+        public ItemService(ItemConfig items, RewardConfig rewards)
         {
-            Items = trackerConfig.Items;
+            Items = items;
+            Rewards = rewards;
         }
 
         /// <summary>
         /// Gets a collection of trackable items.
         /// </summary>
         protected IReadOnlyCollection<ItemData> Items { get; }
+
+        /// <summary>
+        /// Gets a collection of rewards
+        /// </summary>
+        protected IReadOnlyCollection<RewardInfo> Rewards { get; }
 
         /// <summary>
         /// Finds the item with the specified name.
@@ -112,6 +123,63 @@ namespace Randomizer.SMZ3.Tracking.Services
         {
             var item = GetOrDefault(itemType);
             return item?.NameWithArticle ?? itemType.GetDescription();
+        }
+
+
+        /// <summary>
+        /// Finds an reward with the specified item type.
+        /// </summary>
+        /// <param name="rewardType">The type of reward to find.</param>
+        /// <returns>
+        /// An <see cref="RewardInfo"/> representing the reward. If there are
+        /// multiple configured rewards with the same type, this method returns
+        /// one at random. If there no configured rewards with the specified type,
+        /// this method returns <see langword="null"/>.
+        /// </returns>
+        public virtual RewardInfo? GetOrDefault(RewardType rewardType)
+            => Rewards.RandomOrDefault(x => x.RewardType == rewardType, s_random);
+
+        /// <summary>
+        /// Finds an reward with the specified item type.
+        /// </summary>
+        /// <param name="rewardItem">The type of reward to find.</param>
+        /// <returns>
+        /// An <see cref="RewardInfo"/> representing the reward. If there are
+        /// multiple configured rewards with the same type, this method returns
+        /// one at random. If there no configured rewards with the specified type,
+        /// this method returns <see langword="null"/>.
+        /// </returns>
+        public virtual RewardInfo? GetOrDefault(RewardItem rewardItem)
+            => Rewards.RandomOrDefault(x => x.RewardItem == rewardItem, s_random);
+
+        /// <summary>
+        /// Returns a random name for the specified item including article, e.g.
+        /// "a blue crystal" or "the green pendant".
+        /// </summary>
+        /// <param name="rewardType">The reward of item whose name to get.</param>
+        /// <returns>
+        /// The name of the reward of item, including "a", "an" or "the" if
+        /// applicable.
+        /// </returns>
+        public virtual string GetName(RewardType rewardType)
+        {
+            var reward = GetOrDefault(rewardType);
+            return reward?.NameWithArticle ?? rewardType.GetDescription();
+        }
+
+        /// <summary>
+        /// Returns a random name for the specified item including article, e.g.
+        /// "a blue crystal" or "the green pendant".
+        /// </summary>
+        /// <param name="rewardItem">The reward of item whose name to get.</param>
+        /// <returns>
+        /// The name of the reward of item, including "a", "an" or "the" if
+        /// applicable.
+        /// </returns>
+        public virtual string GetName(RewardItem rewardItem)
+        {
+            var reward = GetOrDefault(rewardItem);
+            return reward?.NameWithArticle ?? rewardItem.GetDescription();
         }
 
         // TODO: Tracking methods

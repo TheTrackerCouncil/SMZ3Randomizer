@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var rewardNames = new Choices();
             foreach (var reward in Enum.GetValues<RewardItem>())
             {
-                foreach (var name in reward.GetName())
+                foreach (var name in ItemService?.GetOrDefault(reward)?.Name ?? new Configuration.ConfigTypes.SchrodingersString())
                     rewardNames.Add(new SemanticResultValue(name, (int)reward));
             }
 

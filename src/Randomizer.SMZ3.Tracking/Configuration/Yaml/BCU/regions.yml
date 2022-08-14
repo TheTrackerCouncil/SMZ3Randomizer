@@ -1,0 +1,8 @@
+﻿- Region: Ice Palace
+  WhenDiedInRoom:
+    222:
+    - Text: Death just cold stared you in the face. Welcome back to S M Z 3 randomizer.
+- Region: Thieves' Town
+  WhenDiedInRoom:
+    172:
+    - Text: Did that explain everything?

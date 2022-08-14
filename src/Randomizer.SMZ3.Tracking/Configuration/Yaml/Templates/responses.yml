@@ -1,0 +1,725 @@
+# This config file is for responses to various actions done by the user
+# If a property is listed under a section (Spoilers, Hints, etc.), make sure you include
+# it under the section or it won't match up properly
+
+# The list of possibilities when tracker is opened
+StartedTracking:
+
+# The list of possibilities when tracker is opened in "Mr Smooth" mode
+StartingTrackingAlternate:
+
+# The list of possibilities when tracker is closed
+StoppedTracking:
+
+# The list of possibilities when tracker is closed after go mode has been activated
+StoppedTrackingPostGoMode:
+
+# The list of possibilities when tracker didn't understand the user
+Misheard:
+
+# The list of possibilities when an item is tracked
+# {0} is replaced with the item name (e.g. lamp)
+# {1} is replaced with the item name prefixed by an article (e.g. the lamp)
+TrackedItem:
+
+# The list of possibilities when a progressive item such as a sword is tracked as a particular stage
+# {0} is replaced with the item name (e.g. sword)
+# {1} is replaced with the stage name {e.g. Master Sword}
+TrackedItemByStage:
+
+# The list of possibilities when the player has tracked more than one of the item
+# {0} is replaced with plural version of the item name
+# {1} is replaced with the amount of the item the user has
+# {2} is replaced with the non plural version of the item name
+TrackedItemMultiple:
+
+# The list of possibilities when the player has tracked a progressive item such as a sword
+# {0} is replaced with the item name (e.g. sword)
+# {1} is replaced with the stage name (e.g. Master Sword)
+TrackedProgressiveItem:
+
+# The list of possibilities when the player attempted to track a progressive item they already have all of
+# {0} is replaced with the item name (e.g. sword)
+# {1} is replaced with the stage name (e.g. Master Sword)
+TrackedOlderProgressiveItem:
+
+# The list of possibilities when the player attempted to track an item with multiple copies they already have all of
+# {0} is replaced with the item name (e.g. bottle)
+TrackedTooManyOfAnItem:
+
+# The list of possibilities when the player attempted to track a single item they already have
+# {0} is replaced with the item name (e.g. lamp)
+TrackedAlreadyTrackedItem:
+
+# The list of possibilities when the player says they have a certain amount of an item and it matches
+# what tracker already has for the player
+# {0} is replaced with the item name (e.g. sword)
+TrackedExactAmountDuplicate:
+
+# The list of possibilities when the player says they have tracked all of the items from an area
+# {0} is replaced with a number of the items tracked
+# {1} is replaced with the area name
+# {2} is replaced with a list of the items tracked
+TrackedMultipleItems:
+
+# The list of possibilities when the player clears all items from an area but did not track them
+# {0} is replaced with a number of the items tracked
+# {1} is replaced with the area name
+ClearedMultipleItems:
+
+# The list of possibilities when a player attempted to clear an area, but no locations were found
+# {0} is replaced with the area name
+TrackedNothing:
+
+# The list of possibilities when a player attempted to clear an area, but out of logic locations were found
+# Add a list of possibilities to 1: for there is only one location out of logic
+# Add a list of possibilities to 2: for when there are multiple out of logic locations
+# {0} is replaced with the area name
+# {1} is replaced with the number of out of logic locations
+TrackedNothingOutOfLogic:
+  1:
+  2:
+
+# The list of possibilities when a player has untracked an item with only one version
+# {0} is replaced with the name of the item by itself (e.g. lamp)
+# {1} is replaced with the name of the item prefixed by an article (e.g. the lamp)
+UntrackedItem:
+
+# The list of possibilities when the player tracked an item that is not currently accessible per the logic
+# and we can figure out what item(s) the player needs
+# {0} is replaced with the name of the item tracked
+# {1} is replaced with the location name
+# {2} is replaced with the missing item name(s)
+TrackedOutOfLogicItem:
+
+# The list of possibilities when the player tracked an item that is not currently accessible, but there are
+# too many items missing to figure out what the player needs
+# {0} is replaced with the name of the item tracked
+# {1} is replaced with the location name
+TrackedOutOfLogicItemTooManyMissing:
+
+# The list of possibilities when the player attempted to untrack an item, but we are unable to
+# {0} is replaced with the item attempted to be untracked by itself (e.g. lamp)
+# {1} is replaced with the item attempted to be untracked with its article (e.g. the lamp)
+UntrackedNothing:
+
+# The list of possibilities when the player untracked a progressive item with steps, such as the sword
+# {0} is replaced with the item attempted to be untracked by itself (e.g. sword)
+# {1} is replaced with the item attempted to be untracked with its article (e.g. a sword)
+UntrackedProgressiveItem:
+
+# The list of possibilities when the player untracked an item with multiple copies, such as missiles
+# {0} is replaced with the item name if there is only one left after untracking (e.g. bottle)
+#     or the number of items the player now has plus the plural version of the item name
+#     (e.g. 2 bottles)
+# {1} is replaced with the item name with its article if there is only one left after
+#     untracking (e.g. a bottle) or the number of items the player now has plus the plural
+#     version of the item name (e.g. 2 bottles)
+UntrackedItemMultiple:
+
+# The list of possibilities when the player has untracked an item and no longer has any more of it
+# {0} is replaced with the item attempted to be untracked by itself (e.g. sword)
+# {1} is replaced with the item attempted to be untracked with its article (e.g. a sword)
+UntrackedItemMultipleLast:
+
+# The list of possibilities when the player has all items needed to access Shaktool
+ShaktoolAvailable:
+
+# The list of possibilities when the player has all items needed to access PegWorld
+PegWorldAvailable:
+
+# The list of possibilities when the player has turned on peg world mode
+PegWorldModeOn:
+
+# The list of possibilities when the player has told tracker to peg
+PegWorldModePegged:
+
+# The list of possibilities when peg world mode is turned
+PegWorldModeDone:
+
+# The list of possibilities when a dungeon's reward is set
+# {0} is replaced with the dungeon name
+# {1} is replaced with the reward name
+DungeonRewardMarked:
+
+# The list of possibilities when all unmarked dungeons are marked as blue crystal
+# {0} is replaced with the blue crystal name
+RemainingDungeonsMarked:
+
+# The list of possibilities when the player tries to mark all unmarked dungeon as blue crystal but all dungeons are marked
+NoRemainingDungeons:
+
+# The list of possibilities when all locations in a dungeon are cleared
+# {0} is replaced with the name of the dungeon
+DungeonCleared:
+
+# The list of possibilities when the player tries to clear a dungeon that has no locations left
+# {0} is replaced with the name of the dungeon
+DungeonAlreadyCleared:
+
+# The list of possibilities when the player clears a dungeon with out of logic locations and we can determine what is needed
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the name of one of the out of logic locations
+# {2} is replaced with the list of items needed
+DungeonClearedWithInaccessibleItems:
+
+# The list of possibilities when the player clears a dungeon with out of logic locations and we can't determine what is needed
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the name of one of the out of logic locations
+DungeonClearedWithTooManyInaccessibleItems:
+
+# The list of possibilities when the boss of a dungeon was defeated
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the name of the boss of the dungeon
+DungeonBossCleared:
+
+# The list of possibilities when the player tries to mark a dungeon boss as defeated but the dungeon is already cleared
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the name of the boss of the dungeon
+DungeonBossAlreadyCleared:
+
+# The list of possibilities when the player marks a dungeon boss as undefeated
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the name of the boss of the dungeon
+DungeonBossUncleared:
+
+# The list of possibilities when the player tries to mark a dungeon boss as undefeated, but the dungeon was never cleared
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the name of the boss of the dungeon
+DungeonBossNotYetCleared:
+
+# The list of possibilities when the player says that they defeated a boss without taking damage or in one cycle
+DungeonBossClearedAddContent:
+
+# The list of possibilities when Turtle Rock or Misery Mire is marked as needing a particular medallion
+# {0} is replaced with the medallion name
+# {1} is replaced with the dungeon name
+DungeonRequirementMarked:
+
+# The list of possibilities when a dungeon other than Turtle Rock or Misery Mire is marked as needing a particular medallion
+# {0} is replaced with the dungeon name
+DungeonRequirementInvalid:
+
+# The list of possibilities when the player says that a dungeon needs a medallion other than the one it actually needs
+# {0} is replaced with the medallion actually needed
+# {1} is replaced with the dungeon name
+# {2} is replaced with the medallion stated by the user
+DungeonRequirementMismatch:
+
+# The list of possibilities when the player has tracked treasure from a dungeon
+# The numbers represent the responses to be said when the player has that many items left after
+# tracking that treasure. 2 is for two or more treasures left, and -1 means that the dungeon was
+# already plundered.
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the number of treasures left
+DungeonTreasureTracked:
+  2:
+  1:
+  0:
+  -1:
+
+# The list of possibilities when the player attempted to clear more treasure from a dungeon than is left in it
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the number of treasures left
+# {2} is replaced with the amount stated by the user
+DungeonTooManyTreasuresTracked:
+
+# The list of possibilities when the player tracked an item from a location, but the item isn't there
+# {0} is replaced with the name of the dungeon
+# {1} is replaced with the name of the item with its article prefixed (e.g. the lamp)
+ItemTrackedInIncorrectDungeon:
+
+# The list of possibilities when the player marked a location as having an item
+# {0} is replaced with the name of the location
+# {1} is replaced with the name of the item
+LocationMarked:
+
+# The list of possibilities when the player marked a location as having an item different from what they previously said
+# {0} is replaced with the name of the location
+# {1} is replaced with the name of the item
+# {2} is replaced with the name of the item the user previous said
+LocationMarkedAgain:
+
+# The list of possibilities when the player says that a location has nothing/bullshit
+# {0} is replaced with the name of the location
+LocationMarkedAsBullshit:
+
+# The list of possibilities when the player says tracks or marks an item at a location, but the location has another item
+# {0} is replaced with the name of the item stated by the user with its article (e.g. the lamp)
+# {1} is replaced with the name of the item actually at the location
+LocationHasDifferentItem:
+
+# The list of possibilities when the player clears a specific location
+# {0} is replaced with the name of the location
+LocationCleared:
+
+# The list of possibilities when the player turns off go mode
+GoModeToggledOff:
+
+# The list of possibilities when the player tries to track an item from a room or region, but that item does not exist there
+# {0} is replaced with the name of the item by itself (e.g. lamp)
+# {1} is replaced with the name of the area
+# {2} is replaced with the name of the item with its article (e.g. the lamp)
+AreaDoesNotHaveItem:
+
+# The list of possibilities when the player tries to track an item from a room or region, but there are more than one there
+# {0} is replaced with the name of the item by itself (e.g. lamp)
+# {1} is replaced with the name of the area
+# {2} is replaced with the name of the item with its article (e.g. the lamp)
+AreaHasMoreThanOneItem:
+
+# The list of possibilities when the player tracks an item that doesn't open any locations
+TrackedUselessItem:
+
+# The list of possibilities when something went wrong
+Error:
+
+# The list of possibilities when the player undid their last tracked action
+ActionUndone:
+
+# The list of possibilities when the player attempted to undo their last tracked action, but there's nothing to undo
+NothingToUndo:
+
+# The list of possibilities when a tracker setting was changed
+# {0} is replaced with the setting name
+# {1} is replaced with the new value
+TrackerSettingChanged:
+
+# The list of possibilities when a Super Metroid boss was defeated / beaten
+# {0} is replaced with the name of the boss
+BossDefeated:
+
+# The list of possibilities when a Super Metroid boss was marked as defeated, but it was already defeated
+# {0} is replaced with the name of the boss
+BossAlreadyDefeated:
+
+# The list of possibilities when a Super Metroid boss was marked as still alive
+# {0} is replaced with the name of the boss
+BossUndefeated:
+
+# The list of possibilities when a Super Metroid boss was marked as still alive, but they were never defeated
+# {0} is replaced with the name of the boss
+BossNotYetDefeated:
+
+# The list of possibilities when the timer was resumed
+TimerResumed:
+
+# The list of possibilities when the timer was reset to 0
+TimerReset:
+
+# The list of possibilities when the timer was paused
+TimerPaused:
+
+# Tracker responses when nothing has happened in a certain amount of time
+# List the responses underneath different amounts of time elapsed since the last
+# action. This is a time range of <basetime>±<range of time more or less than base time>.
+# For example, 5m±2m means a time range of 3-7 minutes.
+Idle:
+  5m±2m:
+
+# A list of different moods tracker can be in and the responses that she will give
+# The list of possibilities when she is in that mood. At the start a random mood is picked
+Moods:
+  Sassy:
+  NonCommittal:
+  Jealous:
+
+# This section is for responses regarding the hint system
+Hints:
+
+  # The list of possibilities when hints are enabled
+  EnabledHints:
+
+  # The list of possibilities when hints are disabled
+  DisabledHints:
+
+  # The list of possibilities when the player asks for a hint about an item, but hints are currently disabled
+  PromptEnableItemHints:
+
+  # The list of possibilities when the player asks for a hint about a location, but hints are currently disabled
+  PromptEnableLocationHints:
+
+  # The list of possibilities when no hint can be given
+  # {0} is replaced with the item or location name being asked about
+  NoApplicableHints:
+
+  # The list of possibilities when a hint for an item is requested, but it's not currently in logic
+  # {0} is replaced with the item being asked about
+  ItemNotInLogic:
+
+  # The list of possibilities when a hint for an item is requested, and it's currently in Super Metroid
+  # {0} is replaced with the item being asked about
+  ItemInSuperMetroid:
+
+  # The list of possibilities when a hint for an item is requested, and it's currently in A Link to the Past
+  # {0} is replaced with the item being asked about
+  ItemInALttP:
+
+  # The list of possibilities when a hint for an item is requested, and it requires another item to get
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the item needed first
+  ItemRequiresOtherItem:
+
+  # The list of possibilities when a hint for an item is requested, and it requires multiple items to get
+  # {0} is replaced with the item being asked about
+  ItemRequiresManyOtherItems:
+
+  # The list of possibilities when a hint for an item is requested, and it is not in a particular region
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the region the item is not in
+  ItemNotInArea:
+
+  # The list of possibilities when a hint for an item is requested, and it's available at the start of the game
+  # {0} is replaced with the item being asked about
+  ItemInSphereZero:
+
+  # The list of possibilities when a hint for an item is requested, and it's available early on in the seed
+  # {0} is replaced with the item being asked about
+  ItemInEarlySphere:
+
+  # The list of possibilities when a hint for an item is requested, and it's available late in the seed
+  # {0} is replaced with the item being asked about
+  ItemInLateSphere:
+
+  # The list of possibilities when a hint for an item is requested, and it's in a dungeon previously visited
+  # {0} is replaced with the item being asked about
+  ItemInPreviouslyVisitedDungeon:
+
+  # The list of possibilities when a hint for an item is requested, and it's in a dungeon not yet visited
+  # {0} is replaced with the item being asked about
+  ItemInUnvisitedDungeon:
+
+  # The list of possibilities when a hint for an item is requested, and it's in a region previously visited
+  # {0} is replaced with the item being asked about
+  ItemInPreviouslyVisitedRegion:
+
+  # The list of possibilities when a hint for an item is requested, and it's in a region not yet visited
+  # {0} is replaced with the item being asked about
+  ItemInUnvisitedRegion:
+
+  # The list of possibilities when a hint for an item is requested, and we have a vague location name for it
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the vague location name
+  ItemHasBadVanillaLocationName:
+
+  # The list of possibilities when a hint for an item is requested, and it's at a location where the item there
+  # in the original game is something plentiful like missiles, 20 rupees, etc.
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the item there in the original game
+  ItemIsInVanillaJunkLocation:
+
+  # The list of possibilities when a hint for a location is requested, but the location is already cleared
+  # Stated when hints/spoilers are not enabled
+  # {0} is replaced with the location being asked about
+  LocationAlreadyCleared:
+
+  # The list of possibilities when a hint for a location is requested, but the location is already cleared
+  # Stated when hints/spoilers are enabled
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the item at the location
+  LocationAlreadyClearedSpoiler:
+
+  # The list of possibilities when a hint for a location is requested, and the location doesn't have anything good
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the sprite the player picked matching the game for the item
+  LocationHasJunkItem:
+
+  # The list of possibilities when a hint for a location is requested, and the location has something good
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the sprite the player picked matching the game for the item
+  LocationHasUsefulItem:
+
+  # The list of possibilities when a hint for where to go next is requested
+  # {0} is replaced with the name of the area to go to
+  AreaSuggestion:
+
+  # The list of possibilities when a hint for a location is requested, and we're giving one of the built in Book of Mudora hints
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the Book of Mudora hint text
+  # {2} is replaced with the name of the Book of Mudora
+  BookHint:
+
+  # The list of possibilities when a hint for an area is requested, and all locations in the area are already cleared
+  # {0} is replaced with the name of the area
+  AreaAlreadyCleared:
+
+  # The list of possibilities when a hint for an area is requested, and the area possibly has something good
+  # {0} is replaced with the name of the area
+  AreaHasSomethingGood:
+
+  # The list of possibilities when a hint for an area is requested, and the area only has junk
+  # {0} is replaced with the name of the area
+  AreaHasJunk:
+
+  # The list of possibilities when a hint for an area is requested, and the area only has junk and a blue/red crystal
+  # {0} is replaced with the name of the area
+  AreaHasJunkAndCrystal:
+
+  # The list of possibilities when a hint for an area is requested, and it has a reward that could lead to something
+  AreaWorthComplicated:
+
+# This section is for responses regarding spoilers
+Spoilers:
+
+  # Spoilers are enabled
+  EnabledSpoilers:
+
+  # Spoilers are disabled
+  DisabledSpoilers:
+
+  # The list of possibilities when a spoiler for an item is requested, but spoilers are disabled
+  PromptEnableItemSpoilers:
+
+  # The list of possibilities when a spoiler for a location is requested, but spoilers are disabled
+  PromptEnableLocationSpoilers:
+
+  # The list of possibilities when a spoiler for an item is requested, but the all of that item have been tracked
+  # {0} is replaced with the item being asked about
+  TrackedAllItemsAlready:
+
+  # The list of possibilities when a spoiler for an item is requested, but it has already been tracked
+  # {0} is replaced with the item being asked about
+  TrackedItemAlready:
+
+  # The list of possibilities when a spoiler for an item is requested, and the player marked it at a location already
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was marked
+  # {2} is replaced with the name of the region of the location it was marked at
+  MarkedItem:
+
+  # The list of possibilities when a spoiler for a location is requested, but the player marked an item at that location already
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the item marked at the location
+  MarkedLocation:
+
+  # The list of possibilities when a spoiler for a location is requested, but there's nothing at that location. (This shouldn't happen.)
+  # {0} is replaced with the location being asked about
+  EmptyLocation:
+
+  # The list of possibilities when a spoiler for an item is requested, but we couldn't find any locations with that item
+  # {0} is replaced with the item being asked about
+  ItemNotFound:
+
+  # The list of possibilities when a spoiler for an item is requested, but we couldn't find any locations with that item
+  # {0} is replaced with the item being asked about
+  ItemsNotFound:
+
+  # The list of possibilities when a spoiler for an item is requested, but all locations with that item have been cleared
+  # {0} is replaced with the item being asked about
+  LocationsCleared:
+
+  # The list of possibilities when a spoiler for a location is requested, and we found a valid item there
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the item at the location with its article (e.g. the lamp)
+  LocationHasItem:
+
+  # The list of possibilities when a spoiler for a location is requested, and we couldn't find additional information for that item
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the internal SMZ3 item name
+  LocationHasUnknownItem:
+
+  # The list of possibilities when a spoiler for an item is requested, and a location was found for the item
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  ItemIsAtLocation:
+
+  # The list of possibilities when a spoiler for an item is requested, and a location was found one copy of the item
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  ItemsAreAtLocation:
+
+  # The list of possibilities when a spoiler for an item is requested, and an out of logic location was found for the item
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  ItemIsAtOutOfLogicLocation:
+
+  # The list of possibilities when a spoiler for an item is requested, and an out of logic location was found one copy of the item
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  ItemsAreAtOutOfLogicLocation:
+
+  # The list of possibilities when a spoiler for an area is requested, list all items in that location
+  # {0} is replaced with the area name
+  # {1} is replaced with all items in the area
+  ItemsInArea:
+
+# This section is for chat configuations
+Chat:
+  # A list of all chat messages that can be recognized as greetings for tracker
+  # Can use regular expressions here, which can be helpful for not picking up false positives
+  RecognizedGreetings:
+
+  # The list of possibilities when connected to chat
+  WhenConnected:
+
+  # The list of possibilities when disconnected from chat. Currently this means the user has to restart tracker unfortunately due to
+  # the library used for the Twitch chat connection
+  WhenDisconnected:
+
+  # The list of possibilities when something with chat is requested, but tracker is not currently connected to Twitch
+  NoConnection:
+
+  # The list of possibilities for when a user has greeted tracker in chat
+  # {0} is replaced with the chat user's' name
+  GreetingResponses:
+
+  # The list of possibilities for when a user has greeted tracker in chat multiple times
+  # {0} is replaced with the chat user's' name
+  GreetedTwice:
+
+  # The list of possibilities when the streamer greets tracker in chat
+  # {0} is replaced with the chat user's name
+  GreetedChannel:
+
+  # The list of possibilities when the GT big key guessing game is started
+  StartedGuessingGame:
+
+  # The list of possibilities when the GT big key guessing game is closed by voice
+  ClosedGuessingGame:
+
+  # The list of possibilities when the GT big key guessing game is closed by a mod
+  # {0} is replaced with the mod's name
+  ModeratorClosedGuessingGame:
+  
+  # The list of possibilities when the winner names are requested and we have at least one winner
+  DeclareGuessingGameWinners:
+
+  # The list of possibitilites when the winner names are requested, but no one guessed correctly
+  NobodyWonGuessingGame:
+
+  # This is a map of Twitch user names and how Tracker should pronounce them
+  # e.g. thisismytwitchusername: I want to go by this instead
+  UserNamePronunciation:
+
+  # The list of possibilities when opening a Twitch poll about if content should be increased
+  AskChatAboutContent:
+
+  # The list of possibilities when the Twitch poll indicates that content should be increased
+  AskChatAboutContentYes:
+
+  # The list of possibilities when the Twitch poll indicates that content should not be increased
+  AskChatAboutContentNo:
+
+  # The list of possibilities when a poll was completed
+  PollComplete:
+
+  # The list of possibilities when a poll was opened 
+  PollOpened:
+
+  # The list of possibilities when a poll response could not be determined to be open or completed
+  PollError:
+
+# This section is for auto tracking functionality
+AutoTracker:
+
+  # The list of possibilities when the auto tracker is connected to the game
+  WhenConnected:
+
+  # The list of possibilities when the auto tracker detects the player is in the game
+  GameStarted:
+
+  # The list of possibilities when entering the room with Kraid's Awful Son
+  NearKraidsAwfulSon:
+
+  # The list of possibilities when entering the room leading to Shaktool
+  NearShaktool:
+
+  # The list of possibilities when above Crocomire
+  NearCrocomire:
+
+  # The list of possibilities when falling from Tower of Hera Moldorm
+  FallFromMoldorm:
+
+  # The list of possibilities when falling from Ganon's Tower Moldorm
+  FallFromGTMoldorm:
+
+  # The list of possibilities when falling from Ganon's room
+  FallFromGanon:
+
+  # The list of possibilities when performing the Hera Pot trick
+  HeraPot:
+
+  # The list of possibilities when performing the Ice Breaker trick
+  IceBreaker:
+
+  # The list of possibilities when performing the Diver Down trick
+  DiverDown:
+
+  # The list of possibilities when entering Castle Tower
+  EnterHyruleCastleTower:
+
+  # The list of possibilities when entering a pendant dungeon
+  EnterPendantDungeon:
+
+  # The list of possibilities when entering Ganon's Tower without all crystals
+  EnteredGTEarly:
+
+  # The list of possibilities when performing fake flipper
+  FakeFlippers:
+
+  # The list of possibilities when performing the mock ball trick
+  MockBall:
+
+  # The list of possibilities when skipping spore spawn
+  SkipSporeSpawn:
+
+  # The list of possibilities when near the Ridley face when approaching Lower Norfair
+  RidleyFace:
+
+  # The list of possibilities when tracker is told to look at something but the player does not have the map up
+  LookedAtNothing:
+
+  # The list of possibilities when tracker detected the light world dungeons are all crystals
+  LightWorldAllCrystals:
+
+  # The list of possibilities when Turtle Rock and Misery Mire are all medallions
+  DarkWorldNoMedallions:
+
+# This section is for map responses
+Map:
+
+  # The list of possibilities when the map was updated
+  # {0} is replaced with the name of the map
+  UpdateMap:
+
+  # The list of possibilities when displaying a dark room map
+  # {0} is replaced with the name of the map
+  ShowDarkRoomMap:
+
+  # The list of possibilities when asking for the dark room map but not in a dark room
+  NotInDarkRoom:
+
+  # The list of possibilities when hiding a dark room map
+  # {0} is replaced with the map being displayed
+  HideDarkRoomMap:
+
+  # The list of possibilities when hiding a dark room map, but no previous map could be determiend
+  NoPrevDarkRoomMap:
+
+  # The list of possibilities when requesting to show a dark room map, but the player has the lamp
+  HasLamp:
+
+# This seciton is for cheat responses
+Cheats:
+
+  # The list of possibilities when cheats are enabled
+  EnabledCheats:
+
+  # The list of possibilities when cheats are disabled
+  DisabledCheats:
+
+  # The list of possibilties when a cheat is requested, but cheats are disabled
+  PromptEnableCheats:
+
+  # The list of possibilities when a cheat is requested, but auto tracking isn't enabled
+  PromptEnableAutoTracker:
+
+  # The list of possibilities when a cheat is performed for the player
+  CheatPerformed:
+
+  # The list of possibitilies when a cheat could not be performed
+  CheatFailed:

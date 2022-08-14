@@ -1,0 +1,19 @@
+﻿- Boss: Kraid
+  Name:
+  - Text: Kraid's Awful Son's Father
+    Weight: 0.01
+  WhenDefeated:
+  - Text: Toggled Kraid on. Watch out for his awful son on the way out.
+  - Text: Toggled Kraid's Awful Son's Father on.
+    Weight: 0.1
+  - Text: Toggled Kraid on. Send his awful son my regards. With a super missile. In his face.
+    Weight: 0.1
+- Boss: Crocomire
+  WhenDefeated:
+  - Text: Toggled Crocomire on. It looks like you brought more than three super missiles. Good job.
+    Weight: 0.1
+- Boss: Ridley
+  WhenDefeated:
+  - Text: It's a living
+    Weight: 0.25
+

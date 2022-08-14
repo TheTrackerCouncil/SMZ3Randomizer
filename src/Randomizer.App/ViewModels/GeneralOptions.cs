@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using System.Windows.Media;
 
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -157,9 +158,12 @@ namespace Randomizer.App.ViewModels
         }
 
         public bool EnableChatGreeting { get; set; } = true;
+
         public bool EnablePollCreation { get; set; } = true;
 
         public int ChatGreetingTimeLimit { get; set; } = 0;
+
+        public ICollection<string> SelectedProfiles { get; set; } = new List<string> { "Sassy" };
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -182,7 +186,8 @@ namespace Randomizer.App.ViewModels
             ChatGreetingTimeLimit = ChatGreetingTimeLimit,
             PollCreationEnabled = EnablePollCreation,
             AutoTrackerChangeMap = AutoTrackerChangeMap,
-            VoiceFrequency = (TrackerVoiceFrequency)VoiceFrequency
+            VoiceFrequency = (TrackerVoiceFrequency)VoiceFrequency,
+            TrackerProfiles = SelectedProfiles,
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

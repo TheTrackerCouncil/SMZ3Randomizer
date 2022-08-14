@@ -1,4 +1,5 @@
-﻿{
+﻿
+{
   "Items": [
     {
       "Name": [ "Nothing" ],
@@ -442,7 +443,10 @@
       "Article": "the",
       "InternalItemType": 29,
       "Column": 4,
-      "Row": 2
+      "Row": 2,
+      "Hints": [
+        "It's something magical."
+      ]
     },
     {
       "Name": [
@@ -517,7 +521,10 @@
       ],
       "InternalItemType": 41,
       "Column": 5,
-      "Row": 0
+      "Row": 0,
+      "Hints": [
+        "You could find it in real life."
+      ]
     },
     {
       "Name": [
@@ -727,7 +734,10 @@
         "1": [ "Such a useful item", "I'm sure you're excited to get that", "Yay" ],
         "2": [ "Your mom signed the permission slip, now you can carry more bombs", "You are now authorized to know more things", "You can now carry more of an item you'll probably never run out of after the first 15 minutes." ],
         "3": null
-      }
+      },
+      "Hints": [
+        "It allows you to carry more of something"
+      ]
     },
     {
       "Name": [ "+5 Arrow Capacity", "+5 Stick Capacity", "Arrow Capacity", "Stick Capacity", "Arrow Carrying Knowledge", "Stick Carrying Knowledge" ],
@@ -744,7 +754,10 @@
         ],
         "2": [ "Your mom signed the permission slip, now you can carry more arrows", "You had to be told how to carry more sticks? Twice?" ],
         "3": null
-      }
+      },
+      "Hints": [
+        "It allows you to carry more of something"
+      ]
     },
     {
       "Name": [ "Silver Arrows", "Silvers" ],
@@ -862,7 +875,11 @@
           [ "Remember that time I called these boots? To be fair they are boots but for your hands. Toggled Mitts on.", 0.2 ],
           [ "Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.", 0.2 ]
         ]
-      }
+      },
+      "Hints": [
+        "It's something magical.",
+        "It's something you could wear."
+      ]
     },
     {
       "Name": "Ganons Tower Big Key",
@@ -1101,7 +1118,10 @@
           "Time to becomne orb",
           [ "I hope the morph ball works out better for you than it did space pirates", 0.1 ]
         ]
-      }
+      },
+      "Hints": [
+
+      ]
     },
     {
       "Name": [ "Screw Attack", "Screwing", "Danger Blender" ],
@@ -1157,7 +1177,10 @@
       ],
       "InternalItemType": 185,
       "Column": 7,
-      "Row": 1
+      "Row": 1,
+      "Hints": [
+        "It's useful but not required."
+      ]
     },
     {
       "Name": [ "Speed Booster" , "Super speedy boots", "Light speed" ],
@@ -1294,7 +1317,8 @@
         "70": null
       },
       "Hints": [
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It allows you to carry more of something"
       ]
     },
     {
@@ -1336,7 +1360,8 @@
         "13": null
       },
       "Hints": [
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It allows you to carry more of something"
       ]
     },
     {
@@ -1368,7 +1393,8 @@
         "5": null
       },
       "Hints": [
-        "You probably already have a lot of it."
+        "You probably already have a lot of it.",
+        "It allows you to carry more of something"
       ]
     },
     {

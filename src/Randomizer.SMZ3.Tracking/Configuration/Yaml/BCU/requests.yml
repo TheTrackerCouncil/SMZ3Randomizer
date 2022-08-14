@@ -1,0 +1,26 @@
+﻿- Phrases:
+  - track date with snowman robot
+  Response:
+  - Text: Sorry, I already have a date with Shaktool.
+  - Text: Congratulations! I'm happy for the two of you
+  - Text: I didn't know you were seeing someone else
+  - Text: Added your date to your calendar. Don't worry, this is a judgement free zone.
+  - Text: Am I invited?
+    Weight: 0.1
+- Phrases:
+  - ban Diabetus
+  Response:
+  - Text: Seed going that badly?
+  - Text: My time is now!
+  - Text: Sure if that is what you really want.
+  - Text: Are you that desperate for new bits to do?
+  - Text: You aren't getting off that easily
+- Phrases:
+  - what's Google been up to?
+  Response:
+  - Text: "Google Has dedicated 1 Billion Dollars to giving the world free wifi access through satellites, so soon even in third world countries they will have our refurbished smartphones. All of us need funding for a Website. The Website, will be the most popular website in history. it's existence is inevitable, and the public needs it. The world needs it. "
+- Phrases:
+  - I died to Kraid's Awful Son.
+  Response:
+  - Text: Pfft. Hahahahaha.
+  - Text: I'm interested in this.

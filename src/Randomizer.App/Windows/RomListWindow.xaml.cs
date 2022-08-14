@@ -271,6 +271,11 @@ namespace Randomizer.App
                 _trackerWindow.SavedState += _trackerWindow_SavedState;
                 _trackerWindow.Show();
             }
+            catch (YamlDotNet.Core.SemanticErrorException ex)
+            {
+                MessageBox.Show(this, ex.Message + "\n\n" + ex.InnerException.Message,
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
                 _logger.LogCritical(ex, "An unhandled exception occurred when starting the tracker.");

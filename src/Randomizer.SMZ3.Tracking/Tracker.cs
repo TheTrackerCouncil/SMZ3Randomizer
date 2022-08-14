@@ -24,6 +24,8 @@ using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -82,7 +84,9 @@ namespace Randomizer.SMZ3.Tracking
             RandomizerContext dbContext,
             IItemService itemService,
             ICommunicator communicator,
-            IHistoryService historyService)
+            IHistoryService historyService,
+            TrackerConfigs configs,
+            IWorldService worldService)
         {
             if (trackerOptions.Options == null)
                 throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -97,11 +101,10 @@ namespace Randomizer.SMZ3.Tracking
             _communicator = communicator;
 
             // Initialize the tracker configuration
-            var config = configProvider.GetTrackerConfig();
-            Pegs = config.Pegs;
-            Responses = config.Responses;
-            Requests = config.Requests;
-            WorldInfo = configProvider.GetLocationConfig();
+            Pegs = configs.Pegs;
+            Responses = configs.Responses;
+            Requests = configs.Requests;
+            WorldInfo = worldService;
             GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
 
@@ -196,7 +199,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets extra information about locations.
         /// </summary>
-        public LocationConfig WorldInfo { get; }
+        public IWorldService WorldInfo { get; }
 
         /// <summary>
         /// Gets a reference to the <see cref="ItemService"/>.
@@ -616,7 +619,8 @@ namespace Randomizer.SMZ3.Tracking
             else
             {
                 dungeon.Reward = reward.Value;
-                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, dungeon.Reward.GetName()));
+                
+                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, ItemService.GetName(dungeon.Reward)));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
@@ -637,7 +641,7 @@ namespace Randomizer.SMZ3.Tracking
             if (unmarkedDungeons.Count > 0)
             {
                 unmarkedDungeons.ForEach(dungeon => dungeon.Reward = reward);
-                Say(Responses.RemainingDungeonsMarked.Format(reward.GetName()));
+                Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
 
                 AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.Reward = RewardItem.Unknown));
                 OnDungeonUpdated(new(confidence));
