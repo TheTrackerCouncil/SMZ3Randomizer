@@ -2,7 +2,7 @@
   Name:
   - Text: Warehouse
   WhenDiedInRoom:
-    "47":
+    47:
     - Text: I see Kraid got the quick kill on you.
     - Text: Seriously? To Kraid?
 - Region: Wrecked Ship
@@ -22,7 +22,7 @@
   Name:
   - Text: Palace of Dorkness
   WhenDiedInRoom:
-    "90":
+    90:
     - Text: Guess you weren't worthy of an audience with the king
     - Text: This time the king had it his way.
 - Region: Skull Woods
@@ -37,13 +37,13 @@
   - Text: You're not sending ME to cooler!
   - Text: Are you going to break the ice?
   WhenDiedInRoom:
-    "222":
+    222:
     - Text: That was cold.
 - Region: Light World South
   WhenDiedInRoom:
-    "55":
+    55:
     - Text: And you were so close too.
 - Region: Thieves' Town
   WhenDiedInRoom:
-    "172":
+    172:
     - Text: Ha ha. You were killed by a blind woman.

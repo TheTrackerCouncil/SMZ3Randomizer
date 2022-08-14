@@ -35,13 +35,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 if (tracker.CurrentRegion != null && tracker.CurrentRegion.WhenDiedInRoom != null)
                 {
                     var region = tracker.CurrentRegion.GetRegion(tracker.World) as Z3Region;
-                    if (region != null && region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.OverworldScreen.ToString()))
+                    if (region != null && region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.OverworldScreen))
                     {
-                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.OverworldScreen.ToString()]);
+                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.OverworldScreen]);
                     }
-                    else if (region != null && !region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.CurrentRoom.ToString()))
+                    else if (region != null && !region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.CurrentRoom))
                     {
-                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.CurrentRoom.ToString()]);
+                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.CurrentRoom]);
                     }
                 }
 

@@ -33,10 +33,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
                 var region = tracker.World.Regions.Select(x => x as SMRegion)
                     .Where(x => x != null && x.MemoryRegionId == currentState.CurrentRegion)
                     .Select(x => tracker.WorldInfo.Regions.FirstOrDefault(y => y.GetRegion(tracker.World) == x && y.WhenDiedInRoom != null))
-                    .FirstOrDefault(x => x != null && x.WhenDiedInRoom != null && x.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion.ToString()));
+                    .FirstOrDefault(x => x != null && x.WhenDiedInRoom != null && x.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
                 if (region != null && region.WhenDiedInRoom != null)
                 {
-                    tracker.SayOnce(region.WhenDiedInRoom[currentState.CurrentRoomInRegion.ToString()]);
+                    tracker.SayOnce(region.WhenDiedInRoom[currentState.CurrentRoomInRegion]);
                 }
 
                 var death = Items.FindOrDefault("Death");

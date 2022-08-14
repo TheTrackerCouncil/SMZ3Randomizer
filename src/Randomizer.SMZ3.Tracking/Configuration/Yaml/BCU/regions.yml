@@ -3,13 +3,13 @@
   - Text: Wrecked Shit
 - Region: Ice Palace
   WhenDiedInRoom:
-    "222":
+    222:
     - Text: Death just cold stared you in the face. Welcome back to S M Z 3 randomizer.
 - Region: Light World South
   WhenDiedInRoom:
-    "55":
+    55:
     - Text: Oh no. Did you get crabs?
 - Region: Thieves' Town
   WhenDiedInRoom:
-    "172":
+    172:
     - Text: Did that explain everything?

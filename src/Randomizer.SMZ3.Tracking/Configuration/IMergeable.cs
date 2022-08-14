@@ -112,15 +112,39 @@ namespace Randomizer.SMZ3.Tracking.Configuration
 
                     if (thisValue != null && otherValue != null)
                     {
-                        foreach (var (amount, text) in otherValue)
+                        foreach (var (key, text) in otherValue)
                         {
-                            if (thisValue.ContainsKey(amount) && thisValue[amount] != null)
+                            if (thisValue.ContainsKey(key) && thisValue[key] != null)
                             {
-                                thisValue[amount].MergeFrom(text);
+                                thisValue[key].MergeFrom(text);
                             }
                             else if (text != null)
                             {
-                                thisValue[amount] = text;
+                                thisValue[key] = text;
+                            }
+                        }
+                    }
+                    else if (thisValue == null)
+                    {
+                        property.SetValue(primary, otherValue);
+                    }
+                }
+                else if (property.PropertyType == typeof(Dictionary<string, SchrodingersString>))
+                {
+                    var thisValue = (Dictionary<string, SchrodingersString>?)property.GetValue(primary);
+                    var otherValue = (Dictionary<string, SchrodingersString>?)property.GetValue(other);
+
+                    if (thisValue != null && otherValue != null)
+                    {
+                        foreach (var (key, text) in otherValue)
+                        {
+                            if (thisValue.ContainsKey(key) && thisValue[key] != null)
+                            {
+                                thisValue[key].MergeFrom(text);
+                            }
+                            else if (text != null)
+                            {
+                                thisValue[key] = text;
                             }
                         }
                     }
