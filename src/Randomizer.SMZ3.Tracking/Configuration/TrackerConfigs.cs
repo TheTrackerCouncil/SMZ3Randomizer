@@ -31,6 +31,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             Responses = provider.GetResponseConfig(profiles);
             Rooms = provider.GetRoomConfig(profiles);
             Rewards = provider.GetRewardConfig(profiles);
+            UILayouts = provider.GetUIConfig(profiles);
         }
 
         /// <summary>
@@ -107,5 +108,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets a collection of extra information about rewards
         /// </summary>
         public RewardConfig Rewards { get; }
+
+        /// <summary>
+        /// Gets a collection of available UI layouts
+        /// </summary>
+        public UIConfig UILayouts { get; }
     }
 }

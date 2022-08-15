@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
     /// <summary>
     /// Config file for additional boss information
     /// </summary>
-    public class BossConfig : List<BossInfo>, IMergeable<BossInfo>
+    public class BossConfig : List<BossInfo>, IMergeable<BossInfo>, IConfigFile<BossConfig>
     {
         /// <summary>
         /// Constructor

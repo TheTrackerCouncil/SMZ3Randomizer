@@ -47,11 +47,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             var keyProp = type.GetProperties()
                 .SingleOrDefault(x => x.GetCustomAttributes(false).OfType<MergeKeyAttribute>().SingleOrDefault() != null);
 
-            if (keyProp == null)
-            {
-                throw new ArgumentException("Type " + type.Name + " does not have a property with the ConfigMergeKeyAttribute");
-            }
-
             var listOne = (List<T>)first;
             var listTwo = (List<T>)second;
 
@@ -60,8 +55,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
                 throw new ArgumentException($"Type {classType.Name} has a generic type of {type.Name} specified but {classType.Name} is not a list of {type.Name}");
             }
 
-            // If the first is empty, simply add all the records from the second
-            if (listOne.Count == 0 && listTwo != null)
+            // If the first is empty or there is no merge key, simply add all the records from the second
+            if (keyProp == null || (listOne.Count == 0 && listTwo != null))
             {
                 listOne.AddRange(listTwo);
                 return;

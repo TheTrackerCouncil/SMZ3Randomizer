@@ -1,0 +1,123 @@
+- Name: Test1
+  GridLocations:
+  - Type: ItemStack
+    Row: 0
+    Column: 0
+  - Type: SMBoss
+    Row: 1
+    Column: 1
+  - Type: DungeonKeys
+    Row: 2
+    Column: 2
+- Name: Peg World
+  GridLocations:
+  - Type: Peg
+    Row: 0
+    Column: 1
+    Identifiers:
+    - 1
+  - Type: Peg
+    Row: 0
+    Column: 2
+    Identifiers:
+    - 2
+  - Type: Peg
+    Row: 0
+    Column: 3
+    Identifiers:
+    - 3
+  - Type: Peg
+    Row: 0
+    Column: 4
+    Identifiers:
+    - 4
+  - Type: Peg
+    Row: 0
+    Column: 5
+    Identifiers:
+    - 5
+  - Type: Peg
+    Row: 1
+    Column: 1
+    Identifiers:
+    - 6
+  - Type: Peg
+    Row: 1
+    Column: 2
+    Identifiers:
+    - 7
+  - Type: Peg
+    Row: 1
+    Column: 3
+    Identifiers:
+    - 8
+  - Type: Peg
+    Row: 1
+    Column: 4
+    Identifiers:
+    - 9
+  - Type: Peg
+    Row: 1
+    Column: 5
+    Identifiers:
+    - 10
+  - Type: Peg
+    Row: 2
+    Column: 0
+    Identifiers:
+    - 11
+  - Type: Peg
+    Row: 2
+    Column: 1
+    Identifiers:
+    - 12
+  - Type: Peg
+    Row: 2
+    Column: 2
+    Identifiers:
+    - 13
+  - Type: Peg
+    Row: 2
+    Column: 3
+    Identifiers:
+    - 14
+  - Type: Peg
+    Row: 2
+    Column: 4
+    Identifiers:
+    - 15
+  - Type: Peg
+    Row: 2
+    Column: 5
+    Identifiers:
+    - 16
+  - Type: Peg
+    Row: 3
+    Column: 0
+    Identifiers:
+    - 17
+  - Type: Peg
+    Row: 3
+    Column: 1
+    Identifiers:
+    - 18
+  - Type: Peg
+    Row: 3
+    Column: 2
+    Identifiers:
+    - 19
+  - Type: Peg
+    Row: 4
+    Column: 0
+    Identifiers:
+    - 20
+  - Type: Peg
+    Row: 4
+    Column: 1
+    Identifiers:
+    - 21
+  - Type: Peg
+    Row: 4
+    Column: 2
+    Identifiers:
+    - 22

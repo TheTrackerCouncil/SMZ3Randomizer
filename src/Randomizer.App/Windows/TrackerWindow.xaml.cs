@@ -28,8 +28,10 @@ using Randomizer.SMZ3;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.App
 {
@@ -44,7 +46,9 @@ namespace Randomizer.App
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IItemService _itemService;
+        private readonly IWorldService _worldService;
         private readonly List<object> _mouseDownSenders = new();
+        private readonly UIConfig _uiLayouts;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
@@ -55,19 +59,27 @@ namespace Randomizer.App
         private MenuItem _autoTrackerDisableMenuItem;
         private MenuItem _autoTrackerLuaMenuItem;
         private MenuItem _autoTrackerUSB2SNESMenuItem;
+        private UILayout _layout;
+        private UILayout _previousLayout;
+        
 
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
             ILogger<TrackerWindow> logger,
-            RomGenerator romGenerator
+            RomGenerator romGenerator,
+            IWorldService worldService,
+            UIConfig uiLayouts
         )
         {
             InitializeComponent();
 
             _serviceProvider = serviceProvider;
             _itemService = itemService;
+            _worldService = worldService;
             _logger = logger;
             _romGenerator = romGenerator;
+            _uiLayouts = uiLayouts;
+            _layout = _uiLayouts.First();
 
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
             {
@@ -239,8 +251,8 @@ namespace Randomizer.App
             }
 
             RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
-            Grid.SetColumn(image, column);
-            Grid.SetRow(image, row);
+            Grid.SetColumn(image, column - 1);
+            Grid.SetRow(image, row - 1);
             return image;
         }
 
@@ -248,73 +260,140 @@ namespace Randomizer.App
         {
             TrackerGrid.Children.Clear();
 
-            if (_pegWorldMode)
+            foreach (var gridLocation in _layout.GridLocations)
             {
-                foreach (var peg in Tracker.Pegs)
+                // Single item
+                if (gridLocation.Type == UIGridLocationType.Item)
                 {
-                    var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Items", peg.Pegged ? "pegged.png" : "peg.png");
+                    var item = _itemService.FindOrDefault(gridLocation.Identifiers.First());
+                    if (item == null)
+                    {
+                        _logger.LogError($"Item {gridLocation.Identifiers.First()} could not be found");
+                        continue;
+                    }
 
-                    var image = GetGridItemControl(fileName, peg.Column, peg.Row);
-                    image.Tag = peg;
-                    image.MouseLeftButtonDown += Image_MouseDown;
-                    image.MouseLeftButtonUp += Image_LeftClick;
-                    TrackerGrid.Children.Add(image);
-                }
-            }
-            else
-            {
-                foreach (var item in _itemService.AllItems().Where(x => x.Column != null && x.Row != null))
-                {
                     var fileName = GetItemSpriteFileName(item);
                     var overlay = GetOverlayImageFileName(item);
                     if (fileName == null)
+                    {
+                        _logger.LogError($"Image for {item.Item} could not be found");
                         continue;
+                    }
 
                     var image = GetGridItemControl(fileName,
-                        item.Column.Value, item.Row.Value,
+                        gridLocation.Column, gridLocation.Row,
                         item.Counter, overlay, minCounter: 2);
-                    image.Tag = item;
+                    image.Tag = gridLocation;
                     image.ContextMenu = CreateContextMenu(item);
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
                     image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
                     TrackerGrid.Children.Add(image);
                 }
-
-                foreach (var dungeon in Tracker.WorldInfo.Dungeons.Where(x => x.Column != null && x.Row != null))
+                // A group of items stacked on top of each other
+                else if (gridLocation.Type == UIGridLocationType.ItemStack)
                 {
-                    var overlayPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", $"{dungeon.Name[0].Text.ToLowerInvariant()}.png");
+                    var items = new List<ItemData>();
+                    Image latestImage = null;
+                    foreach (var itemName in gridLocation.Identifiers)
+                    {
+                        var item = _itemService.FindOrDefault(itemName);
+                        if (item == null)
+                        {
+                            _logger.LogError($"Item {itemName} could not be found");
+                            continue;
+                        }
 
+                        items.Add(item);
+                        var fileName = GetItemSpriteFileName(item);
+                        var overlay = GetOverlayImageFileName(item);
+                        if (fileName == null)
+                        {
+                            _logger.LogError($"Image for {item.Item} could not be found");
+                            continue;
+                        }
+
+                        latestImage = GetGridItemControl(fileName,
+                            gridLocation.Column, gridLocation.Row,
+                            item.Counter, overlay, minCounter: 2);
+                        latestImage.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
+                        TrackerGrid.Children.Add(latestImage);
+                    }
+
+                    latestImage.Tag = gridLocation;
+                    latestImage.ContextMenu = CreateContextMenu(items);
+                }
+                // If it's a Zelda dungeon
+                else if (gridLocation.Type == UIGridLocationType.Dungeon)
+                {
+                    var dungeon = _worldService.Dungeon(gridLocation.Identifiers.First());
+                    if (dungeon == null)
+                    {
+                        _logger.LogError($"Dungeon {gridLocation.Identifiers.First()} could not be found");
+                        continue;
+                    }
+
+                    var overlayPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Dungeons", $"{dungeon.Dungeon.ToLowerInvariant()}.png");
                     var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                         "Sprites", "Dungeons", $"{(dungeon.HasReward ? dungeon.Reward.GetDescription().ToLowerInvariant() : "blank")}.png");
                     var image = GetGridItemControl(rewardPath,
-                        dungeon.Column.Value, dungeon.Row.Value,
+                        gridLocation.Column, gridLocation.Row,
                         dungeon.TreasureRemaining, overlayPath, minCounter: 1);
-                    image.Tag = dungeon;
+                    image.Tag = gridLocation;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
-                    image.ContextMenu = CreateContextMenu(dungeon);
+
+                    if (dungeon.HasReward)
+                    {
+                        image.ContextMenu = CreateContextMenu(dungeon);
+                    }
+
                     image.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
 
                     TrackerGrid.Children.Add(image);
                 }
-
-                foreach (var boss in Tracker.WorldInfo.Bosses.Where(x => x.Column != null && x.Row != null))
+                // If it's a Super Metroid boss
+                else if (gridLocation.Type == UIGridLocationType.SMBoss)
                 {
+                    var boss = _worldService.Boss(gridLocation.Identifiers.First());
+                    if (boss == null)
+                        continue;
+
                     var fileName = GetItemSpriteFileName(boss);
                     var overlay = GetOverlayImageFileName(boss);
                     if (fileName == null)
+                    {
+                        _logger.LogError($"Image for {boss.Boss} could not be found");
                         continue;
+                    }
 
                     var image = GetGridItemControl(fileName,
-                        boss.Column.Value, boss.Row.Value);
-                    image.Tag = boss;
+                        gridLocation.Column, gridLocation.Row);
+                    image.Tag = gridLocation;
                     image.ContextMenu = CreateContextMenu(boss);
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
                     image.Opacity = boss.Defeated ? 1.0d : 0.2d;
+                    TrackerGrid.Children.Add(image);
+                }
+                // If it's a hammer peg
+                else if (gridLocation.Type == UIGridLocationType.Peg)
+                {
+                    int pegNumber = 0;
+                    if (!int.TryParse(gridLocation.Identifiers.First(), out pegNumber))
+                    {
+                        _logger.LogError("Could not determine peg number");
+                        continue;
+                    }
+                     
+                    var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        "Sprites", "Items", Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png");
+
+                    var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row);
+                    image.Tag = gridLocation;
+                    image.MouseLeftButtonDown += Image_MouseDown;
+                    image.MouseLeftButtonUp += Image_LeftClick;
                     TrackerGrid.Children.Add(image);
                 }
             }
@@ -368,21 +447,31 @@ namespace Randomizer.App
 
             if (sender is Image image)
             {
-                if (image.Tag is ItemData item)
+                if (image.Tag is UIGridLocation gridLocation)
                 {
-                    Tracker.TrackItem(item);
-                }
-                else if (image.Tag is DungeonInfo dungeon)
-                {
-                    Tracker.MarkDungeonAsCleared(dungeon);
-                }
-                else if (image.Tag is Peg peg)
-                {
-                    Tracker.Peg(peg);
-                }
-                else if (image.Tag is BossInfo boss)
-                {
-                    Tracker.MarkBossAsDefeated(boss);
+                    if (gridLocation.Type == UIGridLocationType.Item)
+                    {
+                        var item = _itemService.FindOrDefault(gridLocation.Identifiers.First());
+                        Tracker.TrackItem(item);
+                    }
+                    else if (gridLocation.Type == UIGridLocationType.Dungeon)
+                    {
+                        var dungeon = _worldService.Dungeon(gridLocation.Identifiers.First());
+                        Tracker.MarkDungeonAsCleared(dungeon);
+                    }
+                    else if (gridLocation.Type == UIGridLocationType.Peg)
+                    {
+                        Tracker.Peg();
+                    }
+                    else if (gridLocation.Type == UIGridLocationType.SMBoss)
+                    {
+                        var boss = _worldService.Boss(gridLocation.Identifiers.First());
+                        Tracker.MarkBossAsDefeated(boss);
+                    }
+                    else
+                    {
+                        _logger.LogError("Unrecognized UIGridLocationType tag type {TagType}", gridLocation.Type);
+                    }
                 }
                 else
                 {
@@ -501,96 +590,35 @@ namespace Randomizer.App
                 menu.Items.Add(requiredByBoth);
             }
 
-            if (item.InternalItemType is ItemType.Bow or ItemType.SilverArrows)
+            return menu.Items.Count > 0 ? menu : null;
+        }
+
+        private ContextMenu CreateContextMenu(ICollection<ItemData> items)
+        {
+            var menu = new ContextMenu
             {
-                var bow = _itemService.GetOrDefault(ItemType.Bow);
-                var toggleBow = new MenuItem
-                {
-                    Header = bow.TrackingState > 0 ? "Untrack Bow" : "Track Bow",
-                    Icon = new Image
-                    {
-                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Items", "bow.png")))
-                    }
-                };
-                toggleBow.Click += (sender, e) =>
-                {
-                    if (bow.TrackingState > 0)
-                        bow.Untrack();
-                    else
-                        bow.Track();
-                    Tracker.UpdateTrackerProgression = true;
-                    RefreshGridItems();
-                };
+                Style = Application.Current.FindResource("DarkContextMenu") as Style
+            };
 
-                var silverArrows = _itemService.GetOrDefault(ItemType.SilverArrows);
-                var toggleSilverArrows = new MenuItem
-                {
-                    Header = silverArrows.TrackingState > 0 ? "Untrack Silver Arrows" : "Track Silver Arrows",
-                    Icon = new Image
-                    {
-                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Items", "silver arrows.png")))
-                    }
-                };
-                toggleSilverArrows.Click += (sender, e) =>
-                {
-                    if (silverArrows.TrackingState > 0)
-                        silverArrows.Untrack();
-                    else
-                        silverArrows.Track();
-                    Tracker.UpdateTrackerProgression = true;
-                    RefreshGridItems();
-                };
-
-                menu.Items.Add(toggleBow);
-                menu.Items.Add(toggleSilverArrows);
-            }
-
-            if (item.InternalItemType == ItemType.Flute || "Duck".Equals(item.Name[0], StringComparison.OrdinalIgnoreCase))
+            foreach (var item in items)
             {
-                var flute = _itemService.GetOrDefault(ItemType.Flute);
-                var toggleFlute = new MenuItem
+                var menuItem = new MenuItem
                 {
-                    Header = flute.TrackingState > 0 ? "Untrack Flute" : "Track Flute",
+                    Header = (item.TrackingState > 0 ? "Untrack " : "Track ") + item.Name[0],
                     Icon = new Image
                     {
-                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Items", "flute.png")))
+                        Source = new BitmapImage(new Uri(GetItemSpriteFileName(item)))
                     }
                 };
-                toggleFlute.Click += (sender, e) =>
+                menuItem.Click += (sender, e) =>
                 {
-                    if (flute.TrackingState > 0)
-                        flute.Untrack();
+                    if (item.TrackingState > 0)
+                        Tracker.UntrackItem(item);
                     else
-                        flute.Track();
-                    Tracker.UpdateTrackerProgression = true;
+                        Tracker.TrackItem(item);
                     RefreshGridItems();
                 };
-
-                var duck = _itemService.FindOrDefault("Duck");
-                var toggleDuck = new MenuItem
-                {
-                    Header = duck.TrackingState > 0 ? "Untrack Duck" : "Track Duck",
-                    Icon = new Image
-                    {
-                        Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Items", "duck.png")))
-                    }
-                };
-                toggleDuck.Click += (sender, e) =>
-                {
-                    if (duck.TrackingState > 0)
-                        duck.Untrack();
-                    else
-                        duck.Track();
-                    Tracker.UpdateTrackerProgression = true;
-                    RefreshGridItems();
-                };
-
-                menu.Items.Add(toggleFlute);
-                menu.Items.Add(toggleDuck);
+                menu.Items.Add(menuItem);
             }
 
             return menu.Items.Count > 0 ? menu : null;
@@ -616,7 +644,7 @@ namespace Randomizer.App
                 menu.Items.Add(unclear);
             }
 
-            return menu;
+            return menu.Items.Count > 0 ? menu : null;
         }
 
         private ContextMenu CreateContextMenu(DungeonInfo dungeon)
@@ -661,7 +689,8 @@ namespace Randomizer.App
                     menu.Items.Add(item);
                 }
             }
-            return menu;
+
+            return menu.Items.Count > 0 ? menu : null;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -731,27 +760,27 @@ namespace Randomizer.App
             });
             Tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
-                _pegWorldMode = false;
+                TogglePegWorld(false);
                 RefreshGridItems();
             });
             Tracker.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
             {
-                _pegWorldMode = Tracker.PegWorldMode;
+                TogglePegWorld(Tracker.PegWorldMode);
                 RefreshGridItems();
             });
             Tracker.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
             {
-                _pegWorldMode = Tracker.Pegs.Any(x => !x.Pegged);
+                TogglePegWorld(Tracker.PegsPegged < PegWorldModeModule.TotalPegs);
                 RefreshGridItems();
             });
             Tracker.DungeonUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
-                _pegWorldMode = false;
+                TogglePegWorld(false);
                 RefreshGridItems();
             });
             Tracker.BossUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
-                _pegWorldMode = false;
+                TogglePegWorld(false);
                 RefreshGridItems();
             });
             Tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
@@ -780,6 +809,22 @@ namespace Randomizer.App
             {
                 _trackerMapWindow.UpdateMap(Tracker.CurrentMap);
             });
+        }
+
+        private void TogglePegWorld(bool enable)
+        {
+            if (_pegWorldMode == enable) return;
+            _pegWorldMode = enable;
+            if (_pegWorldMode)
+            {
+                _previousLayout = _layout;
+                _layout = _uiLayouts.FirstOrDefault(x => x.Name == "Peg World") ?? _layout;
+            }
+            else
+            {
+                _layout = _previousLayout;
+                _previousLayout = null;
+            }
         }
 
         private ContextMenu CreateAutoTrackerMenu(bool enableAutoTracker)

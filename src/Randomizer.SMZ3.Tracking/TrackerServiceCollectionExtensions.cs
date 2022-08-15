@@ -123,6 +123,12 @@ namespace Randomizer.SMZ3.Tracking
                 var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
                 return configs.Rewards;
             });
+
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
+                return configs.UILayouts;
+            });
         }
 
         /// <summary>

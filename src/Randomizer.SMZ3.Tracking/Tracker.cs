@@ -101,7 +101,6 @@ namespace Randomizer.SMZ3.Tracking
             _communicator = communicator;
 
             // Initialize the tracker configuration
-            Pegs = configs.Pegs;
             Responses = configs.Responses;
             Requests = configs.Requests;
             WorldInfo = worldService;
@@ -207,9 +206,9 @@ namespace Randomizer.SMZ3.Tracking
         public IItemService ItemService { get; }
 
         /// <summary>
-        /// Get a collection of pegs in Peg World mode.
+        /// The number of pegs that have been pegged for Peg World mode
         /// </summary>
-        public IReadOnlyCollection<Peg> Pegs { get; }
+        public int PegsPegged { get; set; }
 
         /// <summary>
         /// Gets the world for the currently tracked playthrough.
@@ -2029,21 +2028,20 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Pegs a Peg World peg.
         /// </summary>
-        /// <param name="peg">The peg to peg.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void Peg(Peg peg, float? confidence = null)
+        public void Peg(float? confidence = null)
         {
             if (!PegWorldMode)
                 return;
 
-            peg.Pegged = true;
+            PegsPegged++;
 
-            if (Pegs.Any(x => !x.Pegged))
+            if (PegsPegged < PegWorldModeModule.TotalPegs)
                 Say(Responses.PegWorldModePegged);
             else
                 Say(Responses.PegWorldModeDone);
             OnPegPegged(new TrackerEventArgs(confidence));
-            AddUndo(() => peg.Pegged = false);
+            AddUndo(() => PegsPegged--);
 
             RestartIdleTimers();
         }
