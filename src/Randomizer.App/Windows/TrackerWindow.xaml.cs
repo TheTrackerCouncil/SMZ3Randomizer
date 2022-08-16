@@ -48,7 +48,7 @@ namespace Randomizer.App
         private readonly IItemService _itemService;
         private readonly IWorldService _worldService;
         private readonly List<object> _mouseDownSenders = new();
-        private readonly UIConfig _uiLayouts;
+        private static UIConfig s_uiLayouts;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
@@ -78,8 +78,17 @@ namespace Randomizer.App
             _worldService = worldService;
             _logger = logger;
             _romGenerator = romGenerator;
-            _uiLayouts = uiLayouts;
-            _layout = _uiLayouts.First();
+            s_uiLayouts = uiLayouts;
+            _layout = s_uiLayouts.First();
+
+            foreach(var layout in s_uiLayouts.Where(x => x.Name != "Peg World"))
+            {
+                var layoutMenuItem = new MenuItem();
+                layoutMenuItem.Header = layout.Name;
+                layoutMenuItem.Tag = layout;
+                layoutMenuItem.Click += LayoutMenuItem_Click;
+                LayoutMenu.Items.Add(layoutMenuItem);
+            }
 
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
             {
@@ -108,24 +117,23 @@ namespace Randomizer.App
 
         public static string GetItemSpriteFileName(ItemData item)
         {
-            var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", "Items");
             var fileName = (string)null;
 
             if (item.Image != null)
             {
-                fileName = Path.Combine(folder, item.Image);
+                fileName = GetImagePath("Items", item.Image);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
             if (item.HasStages || item.Multiple)
             {
-                fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()} ({item.TrackingState}).png");
+                fileName = GetImagePath("Items", $"{item.Name[0].Text.ToLowerInvariant()} ({item.TrackingState}).png");
                 if (File.Exists(fileName))
                     return fileName;
             }
 
-            fileName = Path.Combine(folder, $"{item.Name[0].Text.ToLowerInvariant()}.png");
+            fileName = GetImagePath("Items", $"{item.Name[0].Text.ToLowerInvariant()}.png");
             if (File.Exists(fileName))
                 return fileName;
 
@@ -134,17 +142,16 @@ namespace Randomizer.App
 
         public static string GetItemSpriteFileName(BossInfo boss)
         {
-            var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", "Items");
             var fileName = (string)null;
 
             if (boss.Image != null)
             {
-                fileName = Path.Combine(folder, boss.Image);
+                fileName = GetImagePath("Items", boss.Image);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
-            fileName = Path.Combine(folder, $"{boss.Name[0].Text.ToLowerInvariant()}.png");
+            fileName = GetImagePath("Items", $"{boss.Name[0].Text.ToLowerInvariant()}.png");
             if (File.Exists(fileName))
                 return fileName;
 
@@ -165,7 +172,7 @@ namespace Randomizer.App
                 var offset = 0;
                 foreach (var digit in GetDigits(counter))
                 {
-                    overlays.Add(new(GetDigitMarkFileName(digit), offset, 0)
+                    overlays.Add(new(GetImagePath("Marks", $"{digit % 10}.png"), offset, 0)
                     {
                         OriginPoint = Origin.BottomLeft
                     });
@@ -174,9 +181,12 @@ namespace Randomizer.App
             }
 
             return GetGridItemControl(imageFileName, column, row, overlays.ToArray());
+        }
 
-            static string GetDigitMarkFileName(int digit) => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "Sprites", "Marks", $"{digit % 10}.png");
+        protected static string GetImagePath(string category, string imageFileName)
+        {
+            var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", category);
+            return Path.Combine(folder, imageFileName);
         }
 
         internal static IEnumerable<int> GetDigits(int value)
@@ -262,36 +272,14 @@ namespace Randomizer.App
 
             foreach (var gridLocation in _layout.GridLocations)
             {
-                // Single item
-                if (gridLocation.Type == UIGridLocationType.Item)
+                if (gridLocation.Image != null)
                 {
-                    var item = _itemService.FindOrDefault(gridLocation.Identifiers.First());
-                    if (item == null)
-                    {
-                        _logger.LogError($"Item {gridLocation.Identifiers.First()} could not be found");
-                        continue;
-                    }
-
-                    var fileName = GetItemSpriteFileName(item);
-                    var overlay = GetOverlayImageFileName(item);
-                    if (fileName == null)
-                    {
-                        _logger.LogError($"Image for {item.Item} could not be found");
-                        continue;
-                    }
-
-                    var image = GetGridItemControl(fileName,
-                        gridLocation.Column, gridLocation.Row,
-                        item.Counter, overlay, minCounter: 2);
-                    image.Tag = gridLocation;
-                    image.ContextMenu = CreateContextMenu(item);
-                    image.MouseLeftButtonDown += Image_MouseDown;
-                    image.MouseLeftButtonUp += Image_LeftClick;
-                    image.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
+                    var image = GetGridItemControl(GetImagePath("Items", gridLocation.Image), gridLocation.Column, gridLocation.Row);
                     TrackerGrid.Children.Add(image);
                 }
+
                 // A group of items stacked on top of each other
-                else if (gridLocation.Type == UIGridLocationType.ItemStack)
+                if (gridLocation.Type == UIGridLocationType.Items)
                 {
                     var items = new List<ItemData>();
                     Image latestImage = null;
@@ -320,6 +308,13 @@ namespace Randomizer.App
                         TrackerGrid.Children.Add(latestImage);
                     }
 
+                    // If only one item, left clicking should track it
+                    if (items.Count == 1)
+                    {
+                        latestImage.MouseLeftButtonDown += Image_MouseDown;
+                        latestImage.MouseLeftButtonUp += Image_LeftClick;
+                    }
+
                     latestImage.Tag = gridLocation;
                     latestImage.ContextMenu = CreateContextMenu(items);
                 }
@@ -333,10 +328,10 @@ namespace Randomizer.App
                         continue;
                     }
 
-                    var overlayPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", $"{dungeon.Dungeon.ToLowerInvariant()}.png");
-                    var rewardPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", $"{(dungeon.HasReward ? dungeon.Reward.GetDescription().ToLowerInvariant() : "blank")}.png");
+                    var overlayPath = GetImagePath("Dungeons",
+                        $"{dungeon.Dungeon.ToLowerInvariant()}.png");
+                    var rewardPath = GetImagePath("Dungeons",
+                        $"{(dungeon.HasReward ? dungeon.Reward.GetDescription().ToLowerInvariant() : "blank")}.png");
                     var image = GetGridItemControl(rewardPath,
                         gridLocation.Column, gridLocation.Row,
                         dungeon.TreasureRemaining, overlayPath, minCounter: 1);
@@ -387,8 +382,8 @@ namespace Randomizer.App
                         continue;
                     }
                      
-                    var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Items", Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png");
+                    var fileName = GetImagePath("Items",
+                        Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png");
 
                     var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row);
                     image.Tag = gridLocation;
@@ -422,13 +417,11 @@ namespace Randomizer.App
 
                 if (names.Count == 1)
                 {
-                    return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", $"{names[0]}.png");
+                    return GetImagePath("Dungeons", $"{names[0]}.png");
                 }
                 else if (names.Count > 1)
                 {
-                    return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        "Sprites", "Dungeons", "both.png");
+                    return GetImagePath("Dungeons", "both.png");
                 }
 
                 return null;
@@ -449,7 +442,7 @@ namespace Randomizer.App
             {
                 if (image.Tag is UIGridLocation gridLocation)
                 {
-                    if (gridLocation.Type == UIGridLocationType.Item)
+                    if (gridLocation.Type == UIGridLocationType.Items)
                     {
                         var item = _itemService.FindOrDefault(gridLocation.Identifiers.First());
                         Tracker.TrackItem(item);
@@ -602,23 +595,41 @@ namespace Randomizer.App
 
             foreach (var item in items)
             {
-                var menuItem = new MenuItem
+                if (item.TrackingState == 0 || item.Multiple)
                 {
-                    Header = (item.TrackingState > 0 ? "Untrack " : "Track ") + item.Name[0],
-                    Icon = new Image
+                    var menuItem = new MenuItem
                     {
-                        Source = new BitmapImage(new Uri(GetItemSpriteFileName(item)))
-                    }
-                };
-                menuItem.Click += (sender, e) =>
-                {
-                    if (item.TrackingState > 0)
-                        Tracker.UntrackItem(item);
-                    else
+                        Header = "Track " + item.Name[0],
+                        Icon = new Image
+                        {
+                            Source = new BitmapImage(new Uri(GetItemSpriteFileName(item)))
+                        }
+                    };
+                    menuItem.Click += (sender, e) =>
+                    {
                         Tracker.TrackItem(item);
-                    RefreshGridItems();
-                };
-                menu.Items.Add(menuItem);
+                        RefreshGridItems();
+                    };
+                    menu.Items.Add(menuItem);
+                }
+
+                if (item.TrackingState > 0)
+                {
+                    var menuItem = new MenuItem
+                    {
+                        Header = "Untrack " + item.Name[0],
+                        Icon = new Image
+                        {
+                            Source = new BitmapImage(new Uri(GetItemSpriteFileName(item)))
+                        }
+                    };
+                    menuItem.Click += (sender, e) =>
+                    {
+                        Tracker.UntrackItem(item);
+                        RefreshGridItems();
+                    };
+                    menu.Items.Add(menuItem);
+                }
             }
 
             return menu.Items.Count > 0 ? menu : null;
@@ -677,8 +688,8 @@ namespace Randomizer.App
                         IsChecked = dungeon.Reward == reward,
                         Icon = new Image
                         {
-                            Source = new BitmapImage(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                            "Sprites", "Dungeons", $"{reward.GetDescription().ToLowerInvariant()}.png")))
+                            Source = new BitmapImage(new Uri(GetImagePath("Dungeons",
+                                $"{reward.GetDescription().ToLowerInvariant()}.png")))
                         }
                     };
                     item.Click += (sender, e) =>
@@ -818,7 +829,7 @@ namespace Randomizer.App
             if (_pegWorldMode)
             {
                 _previousLayout = _layout;
-                _layout = _uiLayouts.FirstOrDefault(x => x.Name == "Peg World") ?? _layout;
+                _layout = s_uiLayouts.FirstOrDefault(x => x.Name == "Peg World") ?? _layout;
             }
             else
             {
@@ -937,15 +948,13 @@ namespace Randomizer.App
 
         private void ResetGridSize()
         {
-            var columns = Math.Max(_itemService.AllItems().Max(x => x.Column) ?? 0,
-                Tracker.WorldInfo.Dungeons.Max(x => x.Column) ?? 0);
+            var columns = _layout.GridLocations.Max(x => x.Column);
 
             TrackerGrid.ColumnDefinitions.Clear();
             for (var i = 0; i <= columns; i++)
                 TrackerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(GridItemPx + GridItemMargin) });
 
-            var rows = Math.Max(_itemService.AllItems().Max(x => x.Row) ?? 0,
-                Tracker.WorldInfo.Dungeons.Max(x => x.Row) ?? 0);
+            var rows = _layout.GridLocations.Max(x => x.Row);
 
             TrackerGrid.RowDefinitions.Clear();
             for (var i = 0; i <= rows; i++)
@@ -1209,6 +1218,16 @@ namespace Randomizer.App
                 _autoTrackerHelpWindow = new AutoTrackerWindow();
                 _autoTrackerHelpWindow.Show();
             }
+        }
+
+        private void LayoutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.Tag is UILayout layout)
+            {
+                 _layout = layout;
+                ResetGridSize();
+                RefreshGridItems();
+            };
         }
     }
 }

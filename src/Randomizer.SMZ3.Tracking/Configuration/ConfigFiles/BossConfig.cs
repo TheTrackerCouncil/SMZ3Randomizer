@@ -51,6 +51,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Crocomire"),
                     Column = 8,
                     Row = 5,
+                    Image = "stoke.png"
                 },
                 new BossInfo()
                 {

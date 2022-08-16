@@ -29,7 +29,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// <summary>
         /// The column in the UI where this spot is located
         /// </summary>
-        public int Column { get; init;  }
+        public int Column { get; init; }
+
+        /// <summary>
+        /// Image to display in this location
+        /// </summary>
+        public string? Image { get; init; }
 
         /// <summary>
         /// Collection of object identifiers to look up for this location

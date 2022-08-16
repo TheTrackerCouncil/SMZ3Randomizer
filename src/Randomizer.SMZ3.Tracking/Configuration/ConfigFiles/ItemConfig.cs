@@ -465,6 +465,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Ganons Tower Map"),
                     InternalItemType = ItemType.MapGT,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -472,6 +473,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Turtle Rock Map"),
                     InternalItemType = ItemType.MapTR,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -479,6 +481,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Thieves Town Map"),
                     InternalItemType = ItemType.MapTT,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -486,6 +489,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Tower of Hera Map"),
                     InternalItemType = ItemType.MapTH,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -493,6 +497,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Ice Palace Map"),
                     InternalItemType = ItemType.MapIP,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -500,6 +505,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Skull Woods Map"),
                     InternalItemType = ItemType.MapSW,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -507,6 +513,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Misery Mire Map"),
                     InternalItemType = ItemType.MapMM,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -514,6 +521,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Palace of Darkness Map"),
                     InternalItemType = ItemType.MapPD,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -521,6 +529,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Swamp Palace Map"),
                     InternalItemType = ItemType.MapSP,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -528,6 +537,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Desert Palace Map"),
                     InternalItemType = ItemType.MapDP,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -535,6 +545,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Eastern Palace Map"),
                     InternalItemType = ItemType.MapEP,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -542,6 +553,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Hyrule Castle Map"),
                     InternalItemType = ItemType.MapHC,
                     Hints = new("It helps you find a place."),
+                    Image = "map.png",
                 },
                 new ItemData()
                 {
@@ -626,6 +638,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Ganons Tower Big Key"),
                     InternalItemType = ItemType.BigKeyGT,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -633,6 +646,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Turtle Rock Big Key"),
                     InternalItemType = ItemType.BigKeyTR,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -640,6 +654,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Thieves Town Big Key"),
                     InternalItemType = ItemType.BigKeyTT,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -647,6 +662,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Tower of Hera Big Key"),
                     InternalItemType = ItemType.BigKeyTH,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -654,6 +670,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Ice Palace Big Key"),
                     InternalItemType = ItemType.BigKeyIP,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -661,6 +678,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Skull Woods Big Key"),
                     InternalItemType = ItemType.BigKeySW,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -668,6 +686,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Misery Mire Big Key"),
                     InternalItemType = ItemType.BigKeyMM,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -675,6 +694,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Palace of Darkness Big Key"),
                     InternalItemType = ItemType.BigKeyPD,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -682,6 +702,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Swamp Palace Big Key"),
                     InternalItemType = ItemType.BigKeySP,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -689,6 +710,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Desert Palace Big Key"),
                     InternalItemType = ItemType.BigKeyDP,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -696,6 +718,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Eastern Palace Big Key"),
                     InternalItemType = ItemType.BigKeyEP,
                     Hints = new("It opens doors."),
+                    Image = "bigkey.png",
                 },
                 new ItemData()
                 {
@@ -704,6 +727,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyHC,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -712,6 +736,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyDP,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -720,6 +745,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyCT,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -728,6 +754,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeySP,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -736,6 +763,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyPD,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -744,6 +772,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyMM,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -752,6 +781,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeySW,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -761,6 +791,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Article = "an",
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -769,6 +800,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyTH,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -777,6 +809,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyTT,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -785,6 +818,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyTR,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -793,6 +827,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.KeyGT,
                     Multiple = true,
                     Hints = new("It opens doors."),
+                    Image = "smallkey.png",
                 },
                 new ItemData()
                 {
@@ -1002,6 +1037,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Crateria Level 1 Keycard"),
                     InternalItemType = ItemType.CardCrateriaL1,
                     Hints = new("It opens doors."),
+                    Image = "smkey1.png",
                 },
                 new ItemData()
                 {
@@ -1009,6 +1045,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Crateria Level 2 Keycard"),
                     InternalItemType = ItemType.CardCrateriaL2,
                     Hints = new("It opens doors."),
+                    Image = "smkey2.png",
                 },
                 new ItemData()
                 {
@@ -1016,6 +1053,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Crateria Boss Keycard"),
                     InternalItemType = ItemType.CardCrateriaBoss,
                     Hints = new("It opens doors."),
+                    Image = "smkeyboss.png",
                 },
                 new ItemData()
                 {
@@ -1023,6 +1061,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Brinstar Level 1 Keycard"),
                     InternalItemType = ItemType.CardBrinstarL1,
                     Hints = new("It opens doors."),
+                    Image = "smkey1.png",
                 },
                 new ItemData()
                 {
@@ -1030,6 +1069,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Brinstar Level 2 Keycard"),
                     InternalItemType = ItemType.CardBrinstarL2,
                     Hints = new("It opens doors."),
+                    Image = "smkey2.png",
                 },
                 new ItemData()
                 {
@@ -1037,6 +1077,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Brinstar Boss Keycard"),
                     InternalItemType = ItemType.CardBrinstarBoss,
                     Hints = new("It opens doors."),
+                    Image = "smkeyboss.png",
                 },
                 new ItemData()
                 {
@@ -1044,6 +1085,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Norfair Level 1 Keycard"),
                     InternalItemType = ItemType.CardNorfairL1,
                     Hints = new("It opens doors."),
+                    Image = "smkey1.png",
                 },
                 new ItemData()
                 {
@@ -1051,6 +1093,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Norfair Level 2 Keycard"),
                     InternalItemType = ItemType.CardNorfairL2,
                     Hints = new("It opens doors."),
+                    Image = "smkey2.png",
                 },
                 new ItemData()
                 {
@@ -1058,6 +1101,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Norfair Boss Keycard"),
                     InternalItemType = ItemType.CardNorfairBoss,
                     Hints = new("It opens doors."),
+                    Image = "smkeyboss.png",
                 },
                 new ItemData()
                 {
@@ -1065,6 +1109,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Maridia Level 1 Keycard"),
                     InternalItemType = ItemType.CardMaridiaL1,
                     Hints = new("It opens doors."),
+                    Image = "smkey1.png",
                 },
                 new ItemData()
                 {
@@ -1072,6 +1117,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Maridia Level 2 Keycard"),
                     InternalItemType = ItemType.CardMaridiaL2,
                     Hints = new("It opens doors."),
+                    Image = "smkey2.png",
                 },
                 new ItemData()
                 {
@@ -1079,6 +1125,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Maridia Boss Keycard"),
                     InternalItemType = ItemType.CardMaridiaBoss,
                     Hints = new("It opens doors."),
+                    Image = "smkeyboss.png",
                 },
                 new ItemData()
                 {
@@ -1086,6 +1133,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Wrecked Ship Level 1 Keycard"),
                     InternalItemType = ItemType.CardWreckedShipL1,
                     Hints = new("It opens doors."),
+                    Image = "smkey1.png",
                 },
                 new ItemData()
                 {
@@ -1093,6 +1141,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Wrecked Ship Boss Keycard"),
                     InternalItemType = ItemType.CardWreckedShipBoss,
                     Hints = new("It opens doors."),
+                    Image = "smkeyboss.png",
                 },
                 new ItemData()
                 {
@@ -1100,6 +1149,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Lower Norfair Level 1 Keycard"),
                     InternalItemType = ItemType.CardLowerNorfairL1,
                     Hints = new("It opens doors."),
+                    Image = "smkey1.png",
                 },
                 new ItemData()
                 {
@@ -1107,6 +1157,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Lower Norfair Boss Keycard"),
                     InternalItemType = ItemType.CardLowerNorfairBoss,
                     Hints = new("It opens doors."),
+                    Image = "smkeyboss.png",
                 },
             };
         }

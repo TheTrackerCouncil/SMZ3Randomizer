@@ -1,14 +1,11 @@
 - Name: Test1
   GridLocations:
-  - Type: ItemStack
+  - Type: Items
     Row: 0
     Column: 0
   - Type: SMBoss
     Row: 1
     Column: 1
-  - Type: DungeonKeys
-    Row: 2
-    Column: 2
 - Name: Peg World
   GridLocations:
   - Type: Peg

@@ -45,6 +45,10 @@
                   x:Name="AutoTrackerMenuItem"
                   Click="AutoTrackerMenuItem_Click" />
       </MenuItem>
+      <MenuItem Style="{StaticResource DarkMenuItem}"
+                Header="_Layouts"
+                Name="LayoutMenu">
+      </MenuItem>
     </Menu>
 
     <Grid x:Name="TrackerGrid"

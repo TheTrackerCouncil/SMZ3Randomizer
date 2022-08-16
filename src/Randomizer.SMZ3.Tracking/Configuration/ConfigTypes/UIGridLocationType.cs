@@ -11,12 +11,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
     /// </summary>
     public enum UIGridLocationType
     {
-        Item,
-        ItemStack,
+        Items,
         SMBoss,
         Dungeon,
-        DungeonKeys,
-        SMKeys,
         Peg
     }
 }
