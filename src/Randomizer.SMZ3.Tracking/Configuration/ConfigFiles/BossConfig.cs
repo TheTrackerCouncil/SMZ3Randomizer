@@ -78,13 +78,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 },
                 new BossInfo()
                 {
-                    Boss = "Bozo",
-                    Name = new("Bozo", "Bomb Chozo", "Bomb Chorizo"),
+                    Boss = "Bomb Torizo",
+                    Name = new("Bomb Torizo", "Bozo", "Bomb Chozo"),
                 },
                 new BossInfo()
                 {
-                    Boss = "Golden Chozo",
-                    Name = new("Golden Chozo", "Golden Torizo", "Golden Chorizo"),
+                    Boss = "Golden Torizo",
+                    Name = new("Golden Torizo", "Golden Chozo"),
                 },
             };
         }

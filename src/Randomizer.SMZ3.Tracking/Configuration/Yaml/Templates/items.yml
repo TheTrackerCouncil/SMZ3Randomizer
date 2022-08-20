@@ -4,7 +4,8 @@
 # ------
 # Item: The identifier for the item that is used to combine possibilities between configs.
 # Name: The list of possibilities for the name of the item
-# Boss: The list of possibilities for the name of the item when there are more than one
+# Multiple: Set to true if this is a custom item where you can track it multiple times
+# Plural: The list of possibilities for the name of the item when there are more than one
 # WhenTracked: This is a list of amounts and the possibilities of tracker responses for
 #     if the player has that many of the item. For example, you can have a list of
 #     possibilities for when the player has picked up the first one, when they have picked

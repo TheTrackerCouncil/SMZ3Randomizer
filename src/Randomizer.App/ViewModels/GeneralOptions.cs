@@ -165,6 +165,8 @@ namespace Randomizer.App.ViewModels
 
         public ICollection<string> SelectedProfiles { get; set; } = new List<string> { "Sassy" };
 
+        public string SelectedLayout { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public bool Validate()

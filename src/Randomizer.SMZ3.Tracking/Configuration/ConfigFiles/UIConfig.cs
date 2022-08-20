@@ -1069,7 +1069,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                         Type = UIGridLocationType.SMBoss,
                         Row = 2,
                         Column = 11,
-                        Identifiers = new List<string>() { "Bozo" }
+                        Identifiers = new List<string>() { "Bomb Torizo" }
                     },
                     new UIGridLocation()
                     {

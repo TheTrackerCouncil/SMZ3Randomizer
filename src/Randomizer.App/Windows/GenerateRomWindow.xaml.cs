@@ -308,7 +308,7 @@ namespace Randomizer.App
         {
             try
             {
-                Options.Save(OptionsFactory.GetFilePath());
+                Options.Save();
             }
             catch
             {

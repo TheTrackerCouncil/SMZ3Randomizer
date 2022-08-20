@@ -10,6 +10,7 @@ namespace Randomizer.App
     public class OptionsFactory
     {
         private readonly ILogger<OptionsFactory> _logger;
+        private RandomizerOptions _options;
 
         public OptionsFactory(ILogger<OptionsFactory> logger)
         {
@@ -26,6 +27,8 @@ namespace Randomizer.App
 
         public RandomizerOptions Create()
         {
+            if (_options != null) return _options;
+
             var optionsPath = GetFilePath();
 
             try
@@ -33,15 +36,20 @@ namespace Randomizer.App
                 if (!File.Exists(optionsPath))
                 {
                     _logger.LogInformation("Options file '{path}' does not exist, using default options", optionsPath);
-                    return new RandomizerOptions();
+                    _options = new RandomizerOptions();
+                    _options.FilePath = optionsPath;
+                    return _options;
                 }
 
-                return RandomizerOptions.Load(optionsPath);
+                _options = RandomizerOptions.Load(optionsPath);
+                return _options;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unable to load '{path}', using default options", optionsPath);
-                return new RandomizerOptions();
+                _options = new RandomizerOptions();
+                _options.FilePath = optionsPath;
+                return _options;
             }
         }
     }

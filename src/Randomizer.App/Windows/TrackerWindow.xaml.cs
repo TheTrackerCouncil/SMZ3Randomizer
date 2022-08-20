@@ -47,9 +47,8 @@ namespace Randomizer.App
         private readonly IServiceProvider _serviceProvider;
         private readonly IItemService _itemService;
         private readonly IWorldService _worldService;
+        private readonly IUIService _uiService;
         private readonly List<object> _mouseDownSenders = new();
-        private static UIConfig s_uiLayouts;
-        private static List<string> s_profiles;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
@@ -62,16 +61,15 @@ namespace Randomizer.App
         private MenuItem _autoTrackerUSB2SNESMenuItem;
         private UILayout _layout;
         private UILayout _previousLayout;
-        
+        private RandomizerOptions _options;
 
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator,
             IWorldService worldService,
-            TrackerOptionsAccessor options,
-            TrackerConfigProvider configProvider,
-            UIConfig uiLayouts
+            IUIService uiService,
+            OptionsFactory optionsFactory
         )
         {
             InitializeComponent();
@@ -81,12 +79,11 @@ namespace Randomizer.App
             _worldService = worldService;
             _logger = logger;
             _romGenerator = romGenerator;
-            s_uiLayouts = uiLayouts;
-            _layout = s_uiLayouts.First();
-            s_profiles = options.Options.TrackerProfiles
-                .Select(x => Path.Combine(configProvider.ConfigDirectory, x)).Reverse().ToList();
+            _uiService = uiService;
+            _options = optionsFactory.Create();
+            _layout = uiService.GetLayout(_options.GeneralOptions.SelectedLayout);
 
-            foreach(var layout in s_uiLayouts.Where(x => x.Name != "Peg World"))
+            foreach(var layout in uiService.SelectableLayouts)
             {
                 var layoutMenuItem = new MenuItem();
                 layoutMenuItem.Header = layout.Name;
@@ -120,49 +117,6 @@ namespace Randomizer.App
 
         public GeneratedRom Rom { get; set; }
 
-        public static string GetItemSpriteFileName(ItemData item)
-        {
-            var fileName = (string)null;
-
-            if (item.Image != null)
-            {
-                fileName = GetImagePath("Items", item.Image);
-                if (File.Exists(fileName))
-                    return fileName;
-            }
-
-            if (item.HasStages || item.Multiple)
-            {
-                fileName = GetImagePath("Items", $"{item.Name[0].Text.ToLowerInvariant()} ({item.TrackingState}).png");
-                if (File.Exists(fileName))
-                    return fileName;
-            }
-
-            fileName = GetImagePath("Items", $"{item.Name[0].Text.ToLowerInvariant()}.png");
-            if (File.Exists(fileName))
-                return fileName;
-
-            return null;
-        }
-
-        public static string GetItemSpriteFileName(BossInfo boss)
-        {
-            var fileName = (string)null;
-
-            if (boss.Image != null)
-            {
-                fileName = GetImagePath("Items", boss.Image);
-                if (File.Exists(fileName))
-                    return fileName;
-            }
-
-            fileName = GetImagePath("Items", $"{boss.Name[0].Text.ToLowerInvariant()}.png");
-            if (File.Exists(fileName))
-                return fileName;
-
-            return null;
-        }
-
         protected Image GetGridItemControl(string imageFileName, int column, int row, string overlayFileName)
             => GetGridItemControl(imageFileName, column, row, new Overlay(overlayFileName, 0, 0));
 
@@ -177,7 +131,7 @@ namespace Randomizer.App
                 var offset = 0;
                 foreach (var digit in GetDigits(counter))
                 {
-                    overlays.Add(new(GetImagePath("Marks", $"{digit % 10}.png"), offset, 0)
+                    overlays.Add(new(_uiService.GetSpritePath(digit), offset, 0)
                     {
                         OriginPoint = Origin.BottomLeft
                     });
@@ -186,20 +140,6 @@ namespace Randomizer.App
             }
 
             return GetGridItemControl(imageFileName, column, row, overlays.ToArray());
-        }
-
-        protected static string GetImagePath(string category, string imageFileName)
-        {
-            foreach (var profile in s_profiles)
-            {
-                var path = Path.Combine(profile, "Sprites", category, imageFileName);
-                if (File.Exists(path))
-                {
-                    return path;
-                }
-            }
-            var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", category);
-            return Path.Combine(folder, imageFileName);
         }
 
         internal static IEnumerable<int> GetDigits(int value)
@@ -214,6 +154,11 @@ namespace Randomizer.App
         protected Image GetGridItemControl(string imageFileName, int column, int row,
             params Overlay[] overlays)
         {
+            if (imageFileName == null)
+            {
+                imageFileName = _uiService.GetSpritePath("Items", "blank.png");
+            }
+
             var bitmapImage = new BitmapImage(new Uri(imageFileName));
             if (overlays.Length == 0)
             {
@@ -288,7 +233,7 @@ namespace Randomizer.App
                 var labelImage = (Image)null;
                 if (gridLocation.Image != null)
                 {
-                    labelImage = GetGridItemControl(GetImagePath("Items", gridLocation.Image), gridLocation.Column, gridLocation.Row);
+                    labelImage = GetGridItemControl(_uiService.GetSpritePath("Items", gridLocation.Image), gridLocation.Column, gridLocation.Row);
                     TrackerGrid.Children.Add(labelImage);
                 }
 
@@ -307,7 +252,7 @@ namespace Randomizer.App
                         }
 
                         items.Add(item);
-                        var fileName = GetItemSpriteFileName(item);
+                        var fileName = _uiService.GetSpritePath(item);
                         var overlay = GetOverlayImageFileName(item);
                         if (fileName == null)
                         {
@@ -347,10 +292,8 @@ namespace Randomizer.App
                         continue;
                     }
 
-                    var overlayPath = GetImagePath("Dungeons",
-                        $"{dungeon.Dungeon.ToLowerInvariant()}.png");
-                    var rewardPath = GetImagePath("Dungeons",
-                        $"{(dungeon.HasReward ? dungeon.Reward.GetDescription().ToLowerInvariant() : "blank")}.png");
+                    var overlayPath = _uiService.GetSpritePath(dungeon);
+                    var rewardPath = dungeon.HasReward ? _uiService.GetSpritePath(dungeon.Reward) : null;
                     var image = GetGridItemControl(rewardPath,
                         gridLocation.Column, gridLocation.Row,
                         dungeon.TreasureRemaining, overlayPath, minCounter: 1);
@@ -374,7 +317,7 @@ namespace Randomizer.App
                     if (boss == null)
                         continue;
 
-                    var fileName = GetItemSpriteFileName(boss);
+                    var fileName = _uiService.GetSpritePath(boss);
                     var overlay = GetOverlayImageFileName(boss);
                     if (fileName == null)
                     {
@@ -401,7 +344,7 @@ namespace Randomizer.App
                         continue;
                     }
                      
-                    var fileName = GetImagePath("Items",
+                    var fileName = _uiService.GetSpritePath("Items",
                         Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png");
 
                     var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row);
@@ -436,11 +379,11 @@ namespace Randomizer.App
 
                 if (names.Count == 1)
                 {
-                    return GetImagePath("Dungeons", $"{names[0]}.png");
+                    return _uiService.GetSpritePath("Dungeons", $"{names[0]}.png");
                 }
                 else if (names.Count > 1)
                 {
-                    return GetImagePath("Dungeons", "both.png");
+                    return _uiService.GetSpritePath("Dungeons", "both.png");
                 }
 
                 return null;
@@ -621,7 +564,7 @@ namespace Randomizer.App
                         Header = "Track " + item.Name[0],
                         Icon = new Image
                         {
-                            Source = new BitmapImage(new Uri(GetItemSpriteFileName(item)))
+                            Source = new BitmapImage(new Uri(_uiService.GetSpritePath(item)))
                         }
                     };
                     menuItem.Click += (sender, e) =>
@@ -639,7 +582,7 @@ namespace Randomizer.App
                         Header = "Untrack " + item.Name[0],
                         Icon = new Image
                         {
-                            Source = new BitmapImage(new Uri(GetItemSpriteFileName(item)))
+                            Source = new BitmapImage(new Uri(_uiService.GetSpritePath(item)))
                         }
                     };
                     menuItem.Click += (sender, e) =>
@@ -707,8 +650,7 @@ namespace Randomizer.App
                         IsChecked = dungeon.Reward == reward,
                         Icon = new Image
                         {
-                            Source = new BitmapImage(new Uri(GetImagePath("Dungeons",
-                                $"{reward.GetDescription().ToLowerInvariant()}.png")))
+                            Source = new BitmapImage(new Uri(_uiService.GetSpritePath(reward)))
                         }
                     };
                     item.Click += (sender, e) =>
@@ -848,7 +790,7 @@ namespace Randomizer.App
             if (_pegWorldMode)
             {
                 _previousLayout = _layout;
-                _layout = s_uiLayouts.FirstOrDefault(x => x.Name == "Peg World") ?? _layout;
+                _layout = _uiService.GetLayout("Peg World");
             }
             else
             {
@@ -1012,7 +954,7 @@ namespace Randomizer.App
             }
             else
             {
-                _locationsWindow = new TrackerLocationsWindow(_locationSyncer);
+                _locationsWindow = new TrackerLocationsWindow(_locationSyncer, _uiService);
                 _locationsWindow.Show();
             }
         }
@@ -1244,6 +1186,8 @@ namespace Randomizer.App
             if (sender is MenuItem menuItem && menuItem.Tag is UILayout layout)
             {
                  _layout = layout;
+                _options.GeneralOptions.SelectedLayout = layout.Name;
+                _options.Save();
                 ResetGridSize();
                 RefreshGridItems();
             };
