@@ -12,6 +12,7 @@
     <Product>SMZ3 Cas' Randomizer</Product>
     <PackageId>Randomizer.App</PackageId>
     <NeutralLanguage>en</NeutralLanguage>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

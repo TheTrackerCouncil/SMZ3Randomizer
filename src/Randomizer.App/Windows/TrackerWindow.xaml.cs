@@ -49,6 +49,7 @@ namespace Randomizer.App
         private readonly IWorldService _worldService;
         private readonly List<object> _mouseDownSenders = new();
         private static UIConfig s_uiLayouts;
+        private static List<string> s_profiles;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
@@ -68,6 +69,8 @@ namespace Randomizer.App
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator,
             IWorldService worldService,
+            TrackerOptionsAccessor options,
+            TrackerConfigProvider configProvider,
             UIConfig uiLayouts
         )
         {
@@ -80,6 +83,8 @@ namespace Randomizer.App
             _romGenerator = romGenerator;
             s_uiLayouts = uiLayouts;
             _layout = s_uiLayouts.First();
+            s_profiles = options.Options.TrackerProfiles
+                .Select(x => Path.Combine(configProvider.ConfigDirectory, x)).Reverse().ToList();
 
             foreach(var layout in s_uiLayouts.Where(x => x.Name != "Peg World"))
             {
@@ -185,6 +190,14 @@ namespace Randomizer.App
 
         protected static string GetImagePath(string category, string imageFileName)
         {
+            foreach (var profile in s_profiles)
+            {
+                var path = Path.Combine(profile, "Sprites", category, imageFileName);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+            }
             var folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Sprites", category);
             return Path.Combine(folder, imageFileName);
         }
@@ -272,10 +285,11 @@ namespace Randomizer.App
 
             foreach (var gridLocation in _layout.GridLocations)
             {
+                var labelImage = (Image)null;
                 if (gridLocation.Image != null)
                 {
-                    var image = GetGridItemControl(GetImagePath("Items", gridLocation.Image), gridLocation.Column, gridLocation.Row);
-                    TrackerGrid.Children.Add(image);
+                    labelImage = GetGridItemControl(GetImagePath("Items", gridLocation.Image), gridLocation.Column, gridLocation.Row);
+                    TrackerGrid.Children.Add(labelImage);
                 }
 
                 // A group of items stacked on top of each other
@@ -313,6 +327,11 @@ namespace Randomizer.App
                     {
                         latestImage.MouseLeftButtonDown += Image_MouseDown;
                         latestImage.MouseLeftButtonUp += Image_LeftClick;
+                    }
+
+                    if (labelImage != null)
+                    {
+                        labelImage.Opacity = items.Any(x => x.TrackingState > 0) ? 1.0d : 0.2d;
                     }
 
                     latestImage.Tag = gridLocation;

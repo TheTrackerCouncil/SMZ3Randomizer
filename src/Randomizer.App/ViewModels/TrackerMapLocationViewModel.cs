@@ -5,11 +5,12 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
-using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using static Randomizer.SMZ3.Tracking.Configuration.ConfigTypes.TrackerMapLocation;
 
 namespace Randomizer.App.ViewModels
 {
@@ -41,9 +42,10 @@ namespace Randomizer.App.ViewModels
             Y = (mapLocation.Y * scaledRatio) - (Size / 2);
             Syncer = syncer ?? throw new ArgumentNullException(nameof(syncer));
             Region = Syncer.World.Regions.First(x => x.GetType().FullName == mapLocation.RegionTypeName);
+            Type = mapLocation.Type;
 
             // If no location was specified, it's a boss or dungeon
-            if (mapLocation.Name == null)
+            if (Type == MapLocationType.Boss)
             {
                 if (Region is Z3Region)
                 {
@@ -58,7 +60,7 @@ namespace Randomizer.App.ViewModels
                 }
             }
             // Else figure out the current status of all of the locations
-            else
+            else if (Type == MapLocationType.Item)
             {
                 Name = Syncer.GetName(mapLocation);
                 Locations = Syncer.AllLocations.Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
@@ -71,6 +73,11 @@ namespace Randomizer.App.ViewModels
                 OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
                 UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
                 ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
+            }
+            else if (Type == MapLocationType.SMDoor)
+            {
+                Item = Syncer.Tracker.ItemService.FindOrDefault(mapLocation.Name);
+                Name = "Need " + Item.Name;
             }
 
         }
@@ -127,6 +134,7 @@ namespace Randomizer.App.ViewModels
         #nullable enable
         private BossInfo? Boss { get; set; }
         private DungeonInfo? Dungeon { get; set; }
+        private ItemData? Item { get; set; }
         #nullable disable
 
         /// <summary>
@@ -152,6 +160,8 @@ namespace Randomizer.App.ViewModels
         /// </summary>
         public Visibility IconVisibility { get; set; }
 
+        private MapLocationType Type { get; set; }
+
         /// <summary>
         /// Get the icon to display for the location
         /// </summary>
@@ -161,52 +171,50 @@ namespace Randomizer.App.ViewModels
             {
                 var image = "blank.png";
 
-                if (Locations == null)
+                if (Type == MapLocationType.Boss)
                 {
                     var region = (IHasReward)Region;
                     if (Boss != null && !Boss.Defeated && region.CanComplete(Syncer.ProgressionForRegion(Region)))
                     {
                         image = "boss.png";
-                        IconVisibility = Visibility.Visible;
                     }
                     else if (Dungeon != null && !Dungeon.Cleared && region.CanComplete(Syncer.ProgressionForRegion(Region)))
                     {
                         image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
-                        IconVisibility = Visibility.Visible;
                     }
                 }
-                else
+                else if (Type == MapLocationType.Item)
                 {
                     if (ClearableLocationsCount > 0 && ClearableLocationsCount == UnclearedLocationsCount)
                     {
                         image = "accessible.png";
-                        IconVisibility = Visibility.Visible;
                     }
                     else if (RelevantLocationsCount > 0 && RelevantLocationsCount + ClearableLocationsCount == UnclearedLocationsCount)
                     {
                         image = "relevant.png";
-                        IconVisibility = Visibility.Visible;
                     }
                     else if (RelevantLocationsCount > 0 && ClearableLocationsCount == 0)
                     {
                         image = "partial_relevance.png";
-                        IconVisibility = Visibility.Visible;
                     }
                     else if (ClearableLocationsCount > 0 && ClearableLocationsCount < UnclearedLocationsCount)
                     {
                         image = "partial.png";
-                        IconVisibility = Visibility.Visible;
                     }
                     else if (ClearableLocationsCount == 0 && OutOfLogicLocationsCount > 0)
                     {
                         image = "outoflogic.png";
-                        IconVisibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        IconVisibility = Visibility.Collapsed;
                     }
                 }
+                else if (Type == MapLocationType.SMDoor)
+                {
+                    if (Item != null && Item.TrackingState == 0)
+                    {
+                        image = DoorImage;
+                    }
+                }
+
+                IconVisibility = image == "blank.png" ? Visibility.Collapsed : Visibility.Visible;
 
                 return new BitmapImage(new Uri(System.IO.Path.Combine(
                     System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
@@ -257,20 +265,42 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                if (Boss != null)
+                if (Type == MapLocationType.Boss)
                 {
-                    return Boss;
+                    return Boss == null ? Dungeon : Boss;
                 }
-                else if (Dungeon != null)
+                else if (Type == MapLocationType.SMDoor)
                 {
-                    return Dungeon;
+                    return Item;
                 }
-                else
+                else if (Type == MapLocationType.Item)
                 {
                     return Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x, true, Syncer.Tracker.World.Config.Keysanity)).ToList();
                 }
+                return null;
             }
         }
+
+        private string DoorImage => Item.InternalItemType switch
+        {
+            ItemType.CardCrateriaL1 => "door1.png",
+            ItemType.CardCrateriaL2 => "door2.png",
+            ItemType.CardCrateriaBoss => "doorb.png",
+            ItemType.CardBrinstarL1 => "door1.png",
+            ItemType.CardBrinstarL2 => "door2.png",
+            ItemType.CardBrinstarBoss => "doorb.png",
+            ItemType.CardWreckedShipL1 => "door1.png",
+            ItemType.CardWreckedShipBoss => "doorb.png",
+            ItemType.CardMaridiaL1 => "door1.png",
+            ItemType.CardMaridiaL2 => "door2.png",
+            ItemType.CardMaridiaBoss => "doorb.png",
+            ItemType.CardNorfairL1 => "door1.png",
+            ItemType.CardNorfairL2 => "door2.png",
+            ItemType.CardNorfairBoss => "doorb.png",
+            ItemType.CardLowerNorfairL1 => "door1.png",
+            ItemType.CardLowerNorfairBoss => "doorb.png",
+            _ => "blank.png"
+        };
 
         /// <summary>
         /// LocationSyncer to use for keeping locations in sync between the

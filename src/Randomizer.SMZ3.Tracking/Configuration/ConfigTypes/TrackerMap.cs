@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// A representation of a map that a user can select with multiple regions on it.

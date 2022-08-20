@@ -38,8 +38,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new(new("Content", 0), "Con-tent"),
                     Plural = new(new("Content", 0), "Con-tent"),
                     Multiple = true,
-                    Column = 10,
-                    Row = 5,
                 },
                 new ItemData()
                 {
@@ -47,15 +45,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Death", "Game Over", "Tactical reset"),
                     Plural = new("Deaths", "Game Overs", "Tactical resets"),
                     Multiple = true,
-                    Column = 10,
-                    Row = 6,
                 },
                 new ItemData()
                 {
                     Item = "Duck",
                     Name = new("Duck", "Bird"),
-                    Column = 2,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -63,8 +57,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Fire Rod"),
                     InternalItemType = ItemType.Firerod,
                     Hints = new("You could use it to set things on fire.", "You can hurt people with it.", "It's something magical.", "You could use it to see things you usually can't.", "It's red."),
-                    Column = 0,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -72,8 +64,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Ice Rod"),
                     InternalItemType = ItemType.Icerod,
                     Hints = new("You can hurt people with it.", "It's something magical.", "It's cold.", "It's blue."),
-                    Column = 1,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -81,8 +71,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Hammer"),
                     InternalItemType = ItemType.Hammer,
                     Hints = new("You can hurt people with it.", "It's one of the items required for Peg World.", "You could find it in real life."),
-                    Column = 1,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -90,8 +78,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Hookshot"),
                     InternalItemType = ItemType.Hookshot,
                     Hints = new("You could use it to get around."),
-                    Column = 3,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -99,8 +85,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new(new("Bow", 0), "Boh", "Boh and Arrow"),
                     InternalItemType = ItemType.Bow,
                     Hints = new("You can hurt people with it."),
-                    Column = 0,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -108,8 +92,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Blue Boomerang"),
                     InternalItemType = ItemType.BlueBoomerang,
                     Hints = new("You can hurt people with it.", "It's blue."),
-                    Column = 1,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -117,8 +99,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Magic Powder"),
                     InternalItemType = ItemType.Powder,
                     Hints = new("It's something magical."),
-                    Column = 4,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -126,8 +106,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Bombos"),
                     InternalItemType = ItemType.Bombos,
                     Hints = new("It's something magical.", "It's one of the medallions."),
-                    Column = 2,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -135,8 +113,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Ether"),
                     InternalItemType = ItemType.Ether,
                     Hints = new("It's something magical.", "It's one of the medallions."),
-                    Column = 3,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -144,8 +120,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Quake"),
                     InternalItemType = ItemType.Quake,
                     Hints = new("It's something magical.", "It's one of the medallions."),
-                    Column = 4,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -153,8 +127,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Lamp", "Lantern"),
                     InternalItemType = ItemType.Lamp,
                     Hints = new("You could use it to set things on fire.", "You could use it to see things you usually can't.", "It's red."),
-                    Column = 0,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -162,8 +134,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Shovel"),
                     InternalItemType = ItemType.Shovel,
                     Hints = new("You could find it in real life."),
-                    Column = 5,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -171,8 +141,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Flute", "Ocarina"),
                     InternalItemType = ItemType.Flute,
                     Hints = new("You could use it to get around.", "You could find it in real life.", "It's blue."),
-                    Column = 2,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -180,8 +148,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Cane of Somaria", new("Red Cane", 0)),
                     InternalItemType = ItemType.Somaria,
                     Hints = new("It's something magical.", "It's red."),
-                    Column = 1,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -191,8 +157,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Plural = new("Bottles"),
                     Multiple = true,
                     Hints = new("You could find it in real life."),
-                    Column = 0,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -209,8 +173,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Cane of Byrna", new("Blue Cane", 0)),
                     InternalItemType = ItemType.Byrna,
                     Hints = new("It's something magical.", "It's blue."),
-                    Column = 2,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -218,8 +180,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Magic Cape", "Cape"),
                     InternalItemType = ItemType.Cape,
                     Hints = new("It's something magical.", "It's something you could wear.", "It's red."),
-                    Column = 3,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -227,8 +187,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Magic Mirror", "Mirror"),
                     InternalItemType = ItemType.Mirror,
                     Hints = new("It's something magical."),
-                    Column = 4,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -237,8 +195,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.Book,
                     Article = "the",
                     Hints = new("It's something magical."),
-                    Column = 4,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -246,8 +202,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new(new("Zora's Flippers", 0), "Flippers"),
                     InternalItemType = ItemType.Flippers,
                     Hints = new("You could use it to get around.", "It's blue."),
-                    Column = 2,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -255,8 +209,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Moon Pearl"),
                     InternalItemType = ItemType.MoonPearl,
                     Hints = new("It's round.", "It's red."),
-                    Column = 5,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -264,8 +216,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Bug Catching Net", "Bug net"),
                     InternalItemType = ItemType.Bugnet,
                     Hints = new("You could find it in real life."),
-                    Column = 3,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -282,8 +232,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Mushroom"),
                     InternalItemType = ItemType.Mushroom,
                     Hints = new("You could find it in real life."),
-                    Column = 5,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -291,8 +239,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Red Boomerang"),
                     InternalItemType = ItemType.RedBoomerang,
                     Hints = new("You can hurt people with it.", "It's red."),
-                    Column = 2,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -326,8 +272,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Plural = new("Heart Containers"),
                     Multiple = true,
                     Hints = new("You probably already have a lot of it.", "It improves your survivability.", "It's red."),
-                    Column = 5,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -382,8 +326,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Pegasus Boots", "Boots"),
                     InternalItemType = ItemType.Boots,
                     Hints = new("You could use it to get around.", "It's red."),
-                    Column = 1,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -391,8 +333,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Half Magic"),
                     InternalItemType = ItemType.HalfMagic,
                     Hints = new("It's green."),
-                    Column = 3,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -416,8 +356,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Silver Arrows", "Silvers"),
                     InternalItemType = ItemType.SilverArrows,
                     Hints = new("You can hurt people with it."),
-                    Row = 0,
-                    Column = 0,
                 },
                 new ItemData()
                 {
@@ -426,8 +364,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.ProgressiveSword,
                     Multiple = true,
                     Hints = new("You can hurt people with it."),
-                    Column = 4,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -436,8 +372,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.ProgressiveShield,
                     Multiple = true,
                     Hints = new("It improves your survivability."),
-                    Column = 5,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -446,8 +380,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.ProgressiveTunic,
                     Multiple = true,
                     Hints = new("It improves your survivability."),
-                    Column = 6,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -456,8 +388,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     InternalItemType = ItemType.ProgressiveGlove,
                     Multiple = true,
                     Hints = new("It's something magical.", "It's something you could wear."),
-                    Column = 0,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -835,8 +765,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Grappling Beam", "Grapple Beam", "Grapple"),
                     InternalItemType = ItemType.Grapple,
                     Hints = new("You could use it to get around."),
-                    Column = 6,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -844,8 +772,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("X-Ray Scope", "X-Ray"),
                     InternalItemType = ItemType.XRay,
                     Hints = new("You could use it to see things you usually can't."),
-                    Column = 7,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -853,8 +779,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Varia Suit"),
                     InternalItemType = ItemType.Varia,
                     Hints = new("It's something you could wear.", "It improves your survivability."),
-                    Column = 6,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -862,16 +786,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Spring Ball"),
                     InternalItemType = ItemType.SpringBall,
                     Hints = new("You could use it to get around."),
-                    Column = 8,
-                    Row = 1,
                 },
                 new ItemData()
                 {
                     Item = "Morphing Ball",
                     Name = new("Morphing Ball", "Morph Ball", "Morph"),
                     InternalItemType = ItemType.Morph,
-                    Column = 6,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -879,8 +799,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Screw Attack"),
                     InternalItemType = ItemType.ScrewAttack,
                     Hints = new("You can hurt people with it."),
-                    Column = 10,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -888,8 +806,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Gravity Suit"),
                     InternalItemType = ItemType.Gravity,
                     Hints = new("It's something you could wear.", "It improves your survivability."),
-                    Column = 7,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -897,8 +813,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Hi-Jump Boots", "Hi-Jump"),
                     InternalItemType = ItemType.HiJump,
                     Hints = new("You could use it to get around.", "It's something you could wear."),
-                    Column = 8,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -906,8 +820,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Space Jump"),
                     InternalItemType = ItemType.SpaceJump,
                     Hints = new("You could use it to get around."),
-                    Column = 9,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -915,8 +827,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Morph Bombs", "Morph Bomb", "Morph Ball Bombs"),
                     InternalItemType = ItemType.Bombs,
                     Hints = new("It's useful but not required."),
-                    Column = 7,
-                    Row = 1,
                 },
                 new ItemData()
                 {
@@ -924,8 +834,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Speed Booster"),
                     InternalItemType = ItemType.SpeedBooster,
                     Hints = new("You could use it to get around."),
-                    Column = 9,
-                    Row = 2,
                 },
                 new ItemData()
                 {
@@ -933,8 +841,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Charge Beam"),
                     InternalItemType = ItemType.Charge,
                     Hints = new("You can hurt people with it."),
-                    Column = 6,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -942,8 +848,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Ice Beam"),
                     InternalItemType = ItemType.Ice,
                     Hints = new("You can hurt people with it.", "It's cold.", "It's blue."),
-                    Column = 7,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -951,8 +855,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Wave Beam"),
                     InternalItemType = ItemType.Wave,
                     Hints = new("You can hurt people with it."),
-                    Column = 8,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -960,8 +862,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new(new("Spazer", 0), "Spayzer"),
                     InternalItemType = ItemType.Spazer,
                     Hints = new("You can hurt people with it."),
-                    Column = 9,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -969,8 +869,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Name = new("Plasma Beam", "Plasma"),
                     InternalItemType = ItemType.Plasma,
                     Hints = new("You can hurt people with it."),
-                    Column = 10,
-                    Row = 0,
                 },
                 new ItemData()
                 {
@@ -981,8 +879,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Plural = new("Energy Tanks", "E-Tanks"),
                     Multiple = true,
                     Hints = new("You probably already have a lot of it.", "It improves your survivability."),
-                    Column = 8,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -992,8 +888,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Plural = new("Reserve Tanks"),
                     Multiple = true,
                     Hints = new("You probably already have a lot of it.", "It improves your survivability."),
-                    Column = 9,
-                    Row = 3,
                 },
                 new ItemData()
                 {
@@ -1004,8 +898,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Multiple = true,
                     CounterMultiplier = 5,
                     Hints = new("You probably already have a lot of it.", "It allows you to carry more of something"),
-                    Column = 7,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -1016,8 +908,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Multiple = true,
                     CounterMultiplier = 5,
                     Hints = new("You probably already have a lot of it.", "It allows you to carry more of something"),
-                    Column = 8,
-                    Row = 4,
                 },
                 new ItemData()
                 {
@@ -1028,8 +918,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Multiple = true,
                     CounterMultiplier = 5,
                     Hints = new("You probably already have a lot of it.", "It allows you to carry more of something"),
-                    Column = 9,
-                    Row = 4,
                 },
                 new ItemData()
                 {

@@ -70,7 +70,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         protected virtual T LoadConfig<T>(string fileName)
         {
-            var profiles = GetAvailableProfiles();
 #if DEBUG
             return GetBuiltInConfig<T>(fileName);
 #else
