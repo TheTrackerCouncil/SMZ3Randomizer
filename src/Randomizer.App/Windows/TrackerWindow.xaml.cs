@@ -89,6 +89,8 @@ namespace Randomizer.App
                 layoutMenuItem.Header = layout.Name;
                 layoutMenuItem.Tag = layout;
                 layoutMenuItem.Click += LayoutMenuItem_Click;
+                layoutMenuItem.IsCheckable = true;
+                layoutMenuItem.IsChecked = layout == _layout;
                 LayoutMenu.Items.Add(layoutMenuItem);
             }
 
@@ -435,119 +437,6 @@ namespace Randomizer.App
             };
         }
 
-        private ContextMenu CreateContextMenu(ItemData item)
-        {
-            var menu = new ContextMenu
-            {
-                Style = Application.Current.FindResource("DarkContextMenu") as Style
-            };
-
-            if (item.TrackingState > 0 && item.InternalItemType != ItemType.Bow && item.InternalItemType != ItemType.SilverArrows)
-            {
-                var untrackItem = new MenuItem
-                {
-                    Header = item.TrackingState > 1 ? "Remove one" : "Untrack"
-                };
-                untrackItem.Click += (sender, e) => Tracker.UntrackItem(item);
-                menu.Items.Add(untrackItem);
-            }
-
-            if (item.HasStages)
-            {
-                foreach ((var stage, var name) in item.Stages)
-                {
-                    var setStageItem = new MenuItem
-                    {
-                        Header = $"Set as {name[0]}",
-                        IsChecked = item.TrackingState == stage
-                    };
-
-                    setStageItem.Click += (sender, e) =>
-                    {
-                        item.TrackingState = stage;
-                        RefreshGridItems();
-                    };
-                    menu.Items.Add(setStageItem);
-                }
-            }
-
-            var medallion = item.InternalItemType switch
-            {
-                ItemType.Bombos => Medallion.Bombos,
-                ItemType.Ether => Medallion.Ether,
-                ItemType.Quake => Medallion.Quake,
-                _ => Medallion.None
-            };
-            if (medallion != Medallion.None)
-            {
-                var turtleRock = Tracker.WorldInfo.Dungeon<TurtleRock>();
-                var miseryMire = Tracker.WorldInfo.Dungeon<MiseryMire>();
-
-                var requiredByNone = new MenuItem
-                {
-                    Header = "Not required for any dungeon",
-                    IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement != medallion
-                };
-                requiredByNone.Click += (sender, e) =>
-                {
-                    if (turtleRock.Requirement == medallion)
-                        turtleRock.Requirement = Medallion.None;
-                    if (miseryMire.Requirement == medallion)
-                        miseryMire.Requirement = Medallion.None;
-                    _locationSyncer.OnLocationUpdated("");
-                    RefreshGridItems();
-                };
-
-                var requiredByTR = new MenuItem
-                {
-                    Header = "Required for Turtle Rock",
-                    IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement != medallion
-                };
-                requiredByTR.Click += (sender, e) =>
-                {
-                    turtleRock.Requirement = medallion;
-                    if (miseryMire.Requirement == medallion)
-                        miseryMire.Requirement = Medallion.None;
-                    _locationSyncer.OnLocationUpdated("");
-                    RefreshGridItems();
-                };
-
-                var requiredByMM = new MenuItem
-                {
-                    Header = "Required for Misery Mire",
-                    IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement == medallion
-                };
-                requiredByMM.Click += (sender, e) =>
-                {
-                    if (turtleRock.Requirement == medallion)
-                        turtleRock.Requirement = Medallion.None;
-                    miseryMire.Requirement = medallion;
-                    _locationSyncer.OnLocationUpdated("");
-                    RefreshGridItems();
-                };
-
-                var requiredByBoth = new MenuItem
-                {
-                    Header = "Required by both",
-                    IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement == medallion
-                };
-                requiredByBoth.Click += (sender, e) =>
-                {
-                    turtleRock.Requirement = medallion;
-                    miseryMire.Requirement = medallion;
-                    _locationSyncer.OnLocationUpdated("");
-                    RefreshGridItems();
-                };
-
-                menu.Items.Add(requiredByNone);
-                menu.Items.Add(requiredByTR);
-                menu.Items.Add(requiredByMM);
-                menu.Items.Add(requiredByBoth);
-            }
-
-            return menu.Items.Count > 0 ? menu : null;
-        }
-
         private ContextMenu CreateContextMenu(ICollection<ItemData> items)
         {
             var menu = new ContextMenu
@@ -591,6 +480,80 @@ namespace Randomizer.App
                         RefreshGridItems();
                     };
                     menu.Items.Add(menuItem);
+                }
+
+                var medallion = item.InternalItemType switch
+                {
+                    ItemType.Bombos => Medallion.Bombos,
+                    ItemType.Ether => Medallion.Ether,
+                    ItemType.Quake => Medallion.Quake,
+                    _ => Medallion.None
+                };
+                if (medallion != Medallion.None)
+                {
+                    var turtleRock = Tracker.WorldInfo.Dungeon<TurtleRock>();
+                    var miseryMire = Tracker.WorldInfo.Dungeon<MiseryMire>();
+
+                    var requiredByNone = new MenuItem
+                    {
+                        Header = "Not required for any dungeon",
+                        IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement != medallion
+                    };
+                    requiredByNone.Click += (sender, e) =>
+                    {
+                        if (turtleRock.Requirement == medallion)
+                            turtleRock.Requirement = Medallion.None;
+                        if (miseryMire.Requirement == medallion)
+                            miseryMire.Requirement = Medallion.None;
+                        _locationSyncer.OnLocationUpdated("");
+                        RefreshGridItems();
+                    };
+
+                    var requiredByTR = new MenuItem
+                    {
+                        Header = "Required for Turtle Rock",
+                        IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement != medallion
+                    };
+                    requiredByTR.Click += (sender, e) =>
+                    {
+                        turtleRock.Requirement = medallion;
+                        if (miseryMire.Requirement == medallion)
+                            miseryMire.Requirement = Medallion.None;
+                        _locationSyncer.OnLocationUpdated("");
+                        RefreshGridItems();
+                    };
+
+                    var requiredByMM = new MenuItem
+                    {
+                        Header = "Required for Misery Mire",
+                        IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement == medallion
+                    };
+                    requiredByMM.Click += (sender, e) =>
+                    {
+                        if (turtleRock.Requirement == medallion)
+                            turtleRock.Requirement = Medallion.None;
+                        miseryMire.Requirement = medallion;
+                        _locationSyncer.OnLocationUpdated("");
+                        RefreshGridItems();
+                    };
+
+                    var requiredByBoth = new MenuItem
+                    {
+                        Header = "Required by both",
+                        IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement == medallion
+                    };
+                    requiredByBoth.Click += (sender, e) =>
+                    {
+                        turtleRock.Requirement = medallion;
+                        miseryMire.Requirement = medallion;
+                        _locationSyncer.OnLocationUpdated("");
+                        RefreshGridItems();
+                    };
+
+                    menu.Items.Add(requiredByNone);
+                    menu.Items.Add(requiredByTR);
+                    menu.Items.Add(requiredByMM);
+                    menu.Items.Add(requiredByBoth);
                 }
             }
 
@@ -640,9 +603,9 @@ namespace Randomizer.App
                 menu.Items.Add(unclear);
             }
 
-            if (dungeon.HasReward)
+            if (dungeon.HasReward && dungeon.Type != typeof(CastleTower))
             {
-                foreach (var reward in Enum.GetValues<RewardItem>())
+                foreach (var reward in Enum.GetValues<RewardItem>().Where(x => x != RewardItem.Agahnim && x != RewardItem.NonGreenPendant))
                 {
                     var item = new MenuItem
                     {
@@ -1190,6 +1153,11 @@ namespace Randomizer.App
                 _options.Save();
                 ResetGridSize();
                 RefreshGridItems();
+                foreach (var item in LayoutMenu.Items)
+                {
+                    var layoutMenuItem = item as MenuItem;
+                    layoutMenuItem.IsChecked = layoutMenuItem.Tag == _layout;
+                }
             };
         }
     }
