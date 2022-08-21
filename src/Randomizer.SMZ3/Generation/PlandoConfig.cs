@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Enumeration;
 using System.Linq;
 
 using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
+
+using SharpYaml.Serialization;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -36,6 +39,13 @@ namespace Randomizer.SMZ3.Generation
                 .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
             Logic = world.Config.LogicConfig.Clone();
         }
+
+        /// <summary>
+        /// Gets or sets the name of the file from which the plando config was
+        /// deserialized.
+        /// </summary>
+        [YamlIgnore]
+        public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Keysanity should be enabled.
