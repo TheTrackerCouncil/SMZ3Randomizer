@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
+using Microsoft.Extensions.Logging;
+
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData;
 
@@ -13,22 +15,19 @@ namespace Randomizer.SMZ3.Generation
     {
         private readonly PlandoFillerFactory _fillerFactory;
         private readonly IWorldAccessor _worldAccessor;
+        private readonly ILogger<Smz3Plandomizer> _logger;
 
-        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor)
+        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor, ILogger<Smz3Plandomizer> logger)
         {
             _fillerFactory = fillerFactory;
             _worldAccessor = worldAccessor;
+            _logger = logger;
         }
 
         public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
         {
             var worlds = new List<World>
             {
-                // TODO: How to get keysanity in here?
-                // - Inject PlandoFillerFactory instead
-                // - Instead of passing around PlandoFiller, pass around
-                //   selected file (deserialized or just name) instead (through
-                //   config?)
                 new World(config, "Player", 0, Guid.NewGuid().ToString("N"))
             };
 
@@ -40,7 +39,11 @@ namespace Randomizer.SMZ3.Generation
             {
                 playthrough = Playthrough.Generate(worlds, config);
             }
-            catch (RandomizerGenerationException) { }
+            catch (RandomizerGenerationException ex)
+            {
+                _logger.LogWarning(ex, "Encountered playthrough simulation exception");
+                playthrough = new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>());
+            }
 
             var seedData = new SeedData
             {

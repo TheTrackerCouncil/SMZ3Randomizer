@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -127,11 +128,42 @@ namespace Randomizer.App
             var spoilerPath = Path.Combine(folderPath, spoilerFileName);
             File.WriteAllText(spoilerPath, spoilerLog);
 
+            var plandoConfigString = ExportPlandoConfig(seed);
+            if (!string.IsNullOrEmpty(plandoConfigString))
+            {
+                var plandoFileName = $"Spoiler_Plando_{fileSuffix}.yml";
+                var plandoPath = Path.Combine(folderPath, plandoFileName);
+                File.WriteAllText(plandoPath, plandoConfigString);
+            }
+
             PrepareAutoTrackerFiles(options);
 
             error = msuError;
             path = romPath;
             return SaveSeedToDatabase(options, seed, romPath, spoilerPath);
+        }
+
+        private string ExportPlandoConfig(SeedData seed)
+        {
+            try
+            {
+                if (seed.Worlds.Count > 1)
+                {
+                    _logger.LogWarning("Attempting to export plando config for multi-world seed. Skipping.");
+                    return null;
+                }
+
+                var world = seed.Worlds[0].World;
+                var plandoConfig = new PlandoConfig(world);
+
+                var serializer = new YamlDotNet.Serialization.Serializer();
+                return serializer.Serialize(plandoConfig);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while exporting the plando configuration for seed {Seed}. No plando config will be generated.", seed.Seed);
+                return null;
+            }
         }
 
         private void PrepareAutoTrackerFiles(RandomizerOptions options)
@@ -249,7 +281,7 @@ namespace Randomizer.App
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
-                Settings = config.SettingsString,
+                Settings = config.SettingsString ?? Config.ToConfigString(config, true),
                 GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);

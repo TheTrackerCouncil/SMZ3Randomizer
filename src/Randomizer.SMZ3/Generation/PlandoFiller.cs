@@ -110,9 +110,9 @@ namespace Randomizer.SMZ3.Generation
 
                 dungeon.Medallion = medallion switch
                 {
-                    Medallion.Bombos => ItemType.Bombos,
-                    Medallion.Ether => ItemType.Ether,
-                    Medallion.Quake => ItemType.Quake,
+                    ItemType.Bombos => ItemType.Bombos,
+                    ItemType.Ether => ItemType.Ether,
+                    ItemType.Quake => ItemType.Quake,
                     _ => throw new PlandoConfigurationException($"{medallion} is not a valid type of medallion.")
                 };
             }
@@ -143,7 +143,7 @@ namespace Randomizer.SMZ3.Generation
             foreach (var locationName in PlandoConfig.Items.Keys)
             {
                 var itemType = PlandoConfig.Items[locationName];
-                var location = world.FindLocation(locationName);
+                var location = world.FindLocation(locationName, StringComparison.OrdinalIgnoreCase);
                 if (location == null)
                     throw new PlandoConfigurationException($"Could not find a location with the specified name.\nName: '{locationName}'");
 

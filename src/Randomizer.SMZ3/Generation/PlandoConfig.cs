@@ -1,15 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3.Generation
 {
     /// <summary>
     /// Represents the configuration for a plandomizer world.
     /// </summary>
-    public class PlandoConfig
+    public class PlandoConfig // TODO: Consider using this instead of SeedData?
     {
+        /// <summary>
+        /// Initializes a new empty instance of the <see cref="PlandoConfig"/>
+        /// class.
+        /// </summary>
+        public PlandoConfig()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlandoConfig"/> based
+        /// on the specified world.
+        /// </summary>
+        /// <param name="world">The world instance to export to a config.</param>
+        public PlandoConfig(World world)
+        {
+            Keysanity = world.Config.Keysanity;
+            Items = world.Locations
+                .ToDictionary(x => x.ToString(), x => x.Item.Type);
+            Rewards = world.Regions.Where(x => x is IHasReward)
+                .ToDictionary(x => x.ToString(), x => ((IHasReward)x).Reward);
+            Medallions = world.Regions.Where(x => x is INeedsMedallion)
+                .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
+            Logic = world.Config.LogicConfig.Clone();
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether Keysanity should be enabled.
         /// </summary>
@@ -31,7 +58,7 @@ namespace Randomizer.SMZ3.Generation
         /// Gets or sets a dictionary that contains the names of regions and the
         /// medallions they require.
         /// </summary>
-        public Dictionary<string, Medallion> Medallions { get; set; }
+        public Dictionary<string, ItemType> Medallions { get; set; }
 
         /// <summary>
         /// Gets or sets the logic options that apply to the plando.
