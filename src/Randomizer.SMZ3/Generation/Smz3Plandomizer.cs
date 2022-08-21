@@ -48,7 +48,7 @@ namespace Randomizer.SMZ3.Generation
             var seedData = new SeedData
             {
                 Guid = Guid.NewGuid().ToString("N"),
-                Seed = null,
+                Seed = "Plando",
                 Game = "SMZ3 Cas’ Plando",
                 Mode = config.GameMode.ToLowerString(),
                 Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
