@@ -693,12 +693,21 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible)));
             // ---
 
-            var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(ItemType.SilverArrows, _myWorld)).First();
-            var silvers = config.MultiWorld ?
-                Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld) :
-                Texts.GanonThirdPhaseSingle(silversLocation.Region);
-            _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
-            _stringTable.SetGanonThirdPhaseText(silvers);
+            var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(ItemType.SilverArrows, _myWorld)).FirstOrDefault();
+            if (silversLocation != null)
+            {
+                var silvers = config.MultiWorld
+                    ? Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld)
+                    : Texts.GanonThirdPhaseSingle(silversLocation.Region);
+                _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
+                _stringTable.SetGanonThirdPhaseText(silvers);
+            }
+            else
+            {
+                var silvers = Texts.GanonThirdPhraseNone();
+                _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
+                _stringTable.SetGanonThirdPhaseText(silvers);
+            }
 
             var triforceRoom = Texts.TriforceRoom(_rnd);
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));

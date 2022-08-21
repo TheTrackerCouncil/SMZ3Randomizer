@@ -112,11 +112,12 @@ namespace Randomizer.App
         {
             var bytes = GenerateRomBytes(options, seed);
             var config = seed.Playthrough.Config;
+            var safeSeed = seed.Seed.ReplaceAny(Path.GetInvalidFileNameChars(), '_');
 
-            var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
+            var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}");
             Directory.CreateDirectory(folderPath);
 
-            var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}";
+            var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
             var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);
             EnableMsu1Support(options, bytes, romPath, out var msuError);
