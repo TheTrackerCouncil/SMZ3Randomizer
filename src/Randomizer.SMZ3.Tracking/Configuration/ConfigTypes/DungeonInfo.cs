@@ -65,18 +65,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public Type Type { get; init; }
 
         /// <summary>
-        /// Gets or sets the zero-based of the column in which the tracker
-        /// should display the dungeon.
-        /// </summary>
-        public int? Column { get; set; }
-
-        /// <summary>
-        /// Gets or sets the zero-based of the row in which the tracker should
-        /// display the dungeon.
-        /// </summary>
-        public int? Row { get; set; }
-
-        /// <summary>
         /// Gets the ID of the location that represents the item rewarded by
         /// defeating the boss, or <c>null</c> if the dungeon has item reward
         /// for beating the boss.

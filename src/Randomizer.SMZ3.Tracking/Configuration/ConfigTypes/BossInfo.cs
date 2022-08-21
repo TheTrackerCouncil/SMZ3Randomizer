@@ -49,18 +49,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public SchrodingersString? WhenDefeated { get; set; }
 
         /// <summary>
-        /// Gets or sets the zero-based index of the column in which the boss
-        /// should be displayed on the tracker.
-        /// </summary>
-        public int? Column { get; init; }
-
-        /// <summary>
-        /// Gets or sets the zero-based index of the column in which the boss
-        /// should be displayed on the tracker.
-        /// </summary>
-        public int? Row { get; init; }
-
-        /// <summary>
         /// Gets or sets the path to the image to be displayed on the tracker to
         /// represent the boss.
         /// </summary>

@@ -108,18 +108,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public Dictionary<int, SchrodingersString>? WhenTracked { get; set; }
 
         /// <summary>
-        /// Gets or sets the zero-based index of the column in which the item
-        /// should be displayed on the tracker.
-        /// </summary>
-        public int? Column { get; set; }
-
-        /// <summary>
-        /// Gets or sets the zero-based index of the column in which the item
-        /// should be displayed on the tracker.
-        /// </summary>
-        public int? Row { get; set; }
-
-        /// <summary>
         /// Gets or sets the path to the image to be displayed on the tracker.
         /// </summary>
         public string? Image { get; set; }
