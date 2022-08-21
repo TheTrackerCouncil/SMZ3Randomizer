@@ -170,7 +170,7 @@ namespace Randomizer.App
             catch (YamlException ex)
             {
                 _logger.LogWarning(ex, "Plando config '{FileName}' is malformed.", plandoBrowser.FileName);
-                MessageBox.Show(this, "The selected plando configuration is malformed:\n\n" + ex.Message,
+                MessageBox.Show(this, $"The selected plando configuration contains errors in line {ex.Start.Line}, col {ex.Start.Column}:\n\n{ex.InnerException?.Message ?? ex.Message}",
                     "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             catch (Exception ex)
