@@ -315,7 +315,10 @@ namespace Randomizer.App
 
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRandomRom(Options, out var romPath, out var error, out var rom);
+            string error;
+            var successful = PlandoMode
+                ? _romGenerator.GeneratePlandoRom(Options, PlandoConfig, out _, out error, out _)
+                : _romGenerator.GenerateRandomRom(Options, out _, out error, out _);
             if (!successful)
             {
                 if (!string.IsNullOrEmpty(error))

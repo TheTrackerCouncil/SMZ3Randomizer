@@ -95,7 +95,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRandomRom(Options, out var romPath, out var error, out var rom);
+            var successful = _romGenerator.GenerateRandomRom(Options, out _, out var error, out var rom);
 
             if (!successful)
             {
