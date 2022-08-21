@@ -1529,6 +1529,38 @@
           "Y": 340,
           "Scale": 1
         }
+      ],
+      "Doors": [
+        {
+          "Item": "Brinstar Level 1 Keycard",
+          "X": 887,
+          "Y": 403
+        },
+        {
+          "Item": "Brinstar Level 2 Keycard",
+          "X": 663,
+          "Y": 370
+        },
+        {
+          "Item": "Brinstar Level 2 Keycard",
+          "X": 599,
+          "Y": 338
+        },
+        {
+          "Item": "Brinstar Level 2 Keycard",
+          "X": 215,
+          "Y": 403
+        },
+        {
+          "Item": "Brinstar Boss Keycard",
+          "X": 646,
+          "Y": 195
+        },
+        {
+          "Item": "Brinstar Boss Keycard",
+          "X": 1687,
+          "Y": 691
+        }
       ]
     },
     {
@@ -1729,6 +1761,33 @@
           "Y": 116,
           "Scale": 1
         }
+      ],
+      "Doors": [
+        {
+          "Item": "Crateria Level 1 Keycard",
+          "X": 920,
+          "Y": 114
+        },
+        {
+          "Item": "Crateria Level 1 Keycard",
+          "X": 631,
+          "Y": 147
+        },
+        {
+          "Item": "Crateria Level 2 Keycard",
+          "X": 1047,
+          "Y": 211
+        },
+        {
+          "Item": "Crateria Boss Keycard",
+          "X": 695,
+          "Y": 276
+        },
+        {
+          "Item": "Crateria Boss Keycard",
+          "X": 279,
+          "Y": 339
+        }
       ]
     },
     {
@@ -1893,6 +1952,38 @@
           "Y": 596,
           "Scale": 1
         }
+      ],
+      "Doors": [
+        {
+          "Item": "Maridia Level 1 Keycard",
+          "X": 471,
+          "Y": 371
+        },
+        {
+          "Item": "Maridia Level 1 Keycard",
+          "X": 536,
+          "Y": 403
+        },
+        {
+          "Item": "Maridia Level 2 Keycard",
+          "X": 663,
+          "Y": 339
+        },
+        {
+          "Item": "Maridia Level 2 Keycard",
+          "X": 951,
+          "Y": 339
+        },
+        {
+          "Item": "Maridia Boss Keycard",
+          "X": 951,
+          "Y": 309
+        },
+        {
+          "Item": "Maridia Boss Keycard",
+          "X": 1207,
+          "Y": 371
+        }
       ]
     },
     {
@@ -1948,6 +2039,28 @@
           "X": 440,
           "Y": 244,
           "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Wrecked Ship Level 1 Keycard",
+          "X": 392,
+          "Y": 176
+        },
+        {
+          "Item": "Wrecked Ship Level 1 Keycard",
+          "X": 328,
+          "Y": 210
+        },
+        {
+          "Item": "Wrecked Ship Level 1 Keycard",
+          "X": 359,
+          "Y": 243
+        },
+        {
+          "Item": "Wrecked Ship Boss Keycard",
+          "X": 615,
+          "Y": 435
         }
       ]
     },
@@ -2081,6 +2194,43 @@
           "Y": 276,
           "Scale": 1
         }
+      ],
+      "Doors": [
+        {
+          "Item": "Norfair Level 1 Keycard",
+          "X": 358,
+          "Y": 178
+        },
+        {
+          "Item": "Norfair Level 1 Keycard",
+          "X": 135,
+          "Y": 307
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 583,
+          "Y": 210
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 743,
+          "Y": 243
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 758,
+          "Y": 260
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 807,
+          "Y": 182
+        },
+        {
+          "Item": "Norfair Boss Keycard",
+          "X": 533,
+          "Y": 388
+        }
       ]
     },
     {
@@ -2154,6 +2304,23 @@
           "X": 1240,
           "Y": 436,
           "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Lower Norfair Level 1 Keycard",
+          "X": 999,
+          "Y": 179
+        },
+        {
+          "Item": "Lower Norfair Level 1 Keycard",
+          "X": 1031,
+          "Y": 403
+        },
+        {
+          "Item": "Lower Norfair Boss Keycard",
+          "X": 807,
+          "Y": 596
         }
       ]
     }

@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3.Tracking;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App
 {
@@ -16,19 +17,15 @@ namespace Randomizer.App
     /// </summary>
     public partial class TrackerLocationsWindow : Window
     {
-        public TrackerLocationsWindow(TrackerLocationSyncer syncer)
+        public TrackerLocationsWindow(TrackerLocationSyncer syncer, IUIService uiService)
         {
-            DataContext = new TrackerViewModel(syncer);
+            DataContext = new TrackerViewModel(syncer, uiService);
 
             InitializeComponent();
 
-            ChestSprite = new BitmapImage(new Uri(Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "Sprites", "Items", "chest.png")));
+            ChestSprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "chest.png")));
 
-            KeySprite = new BitmapImage(new Uri(Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "Sprites", "Items", "key.png")));
+            KeySprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "key.png")));
 
             App.RestoreWindowPositionAndSize(this);
         }

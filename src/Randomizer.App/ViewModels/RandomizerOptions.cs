@@ -56,6 +56,9 @@ namespace Randomizer.App.ViewModels
         [JsonPropertyName("Logic")]
         public LogicConfig LogicConfig { get; set; }
 
+        [JsonIgnore]
+        public string FilePath { get; set; }
+
         public bool EarlyItemsExpanded { get; set; } = false;
 
         public bool CustomizationExpanded { get; set; } = false;
@@ -90,11 +93,17 @@ namespace Randomizer.App.ViewModels
         public static RandomizerOptions Load(string path)
         {
             var json = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<RandomizerOptions>(json, s_jsonOptions);
+            var options = JsonSerializer.Deserialize<RandomizerOptions>(json, s_jsonOptions);
+            options.FilePath = path;
+            return options;
         }
 
-        public void Save(string path)
+        public void Save(string path = null)
         {
+            if (path == null)
+            {
+                path = FilePath;
+            }
             var json = JsonSerializer.Serialize(this, s_jsonOptions);
             File.WriteAllText(path, json);
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Representation of a location to be displayed on the map at a certain position
@@ -21,8 +21,9 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// <param name="x">The x location to place this location on the map</param>
         /// <param name="y">The y location to place this location on the map</param>
         /// <param name="scale">The ratio at which this location has been scaled down (for combined maps)</param>
-        public TrackerMapLocation(string region, string regionTypeName, string name, int x, int y, double scale = 1)
+        public TrackerMapLocation(MapLocationType type, string region, string regionTypeName, string name, int x, int y, double scale = 1)
         {
+            Type = type;
             Region = region;
             RegionTypeName = regionTypeName;
             Name = name;
@@ -62,6 +63,8 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </summary>
         public double Scale { get; set; }
 
+        public MapLocationType Type { get; set; }
+
         /// <summary>
         /// Given a randomizer <see cref="Location"/>, see if this location matches it by name
         /// </summary>
@@ -71,6 +74,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         {
             return RegionTypeName == loc.Region.GetType().FullName &&
                 (Name == loc.Name || Name == loc.Room?.Name || Region == Name);
+        }
+
+        public enum MapLocationType
+        {
+            Item,
+            Boss,
+            SMDoor
         }
     }
 }

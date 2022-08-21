@@ -70,7 +70,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// </exception>
         protected virtual T LoadConfig<T>(string fileName)
         {
-            var profiles = GetAvailableProfiles();
 #if DEBUG
             return GetBuiltInConfig<T>(fileName);
 #else
@@ -160,6 +159,14 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             LoadYamlConfigs<RewardConfig, RewardInfo>("rewards.yml", profiles);
 
         /// <summary>
+        /// Returns the configs with UI layouts
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual UIConfig GetUIConfig(params string[] profiles) => 
+            LoadYamlConfigs<UIConfig, UILayout>("ui.yml", profiles);
+
+        /// <summary>
         /// Returns a collection of all possible config profiles to
         /// select from
         /// </summary>
@@ -183,7 +190,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             var defaultMethod = typeof(T).GetMethod("Default");
             if (defaultMethod == null)
             {
-                throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IConfigFile.");
+                throw new InvalidOperationException($"The class '{typeof(T).Name}' does not have a Default method.");
             }
             var config = (T)(defaultMethod.Invoke(null, null) ?? new T());
             if (config == null)
@@ -228,10 +235,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             {
                 obj = s_deserializer.Deserialize<T>(yml);
             }
-            catch (YamlDotNet.Core.SemanticErrorException e)
+            catch (Exception ex) when (ex is YamlDotNet.Core.SemanticErrorException or YamlDotNet.Core.YamlException)
             {
-                _logger.LogError(e, "Unable to load config file " + path);
-                throw new YamlDotNet.Core.SemanticErrorException("Unable to load config file " + path, e);
+                _logger.LogError(ex, "Unable to load config file " + path);
+                throw new YamlDotNet.Core.SemanticErrorException("Unable to load config file " + path, ex);
             }
             return obj;
         }

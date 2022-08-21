@@ -1,0 +1,391 @@
+- Name: Advanced
+  GridLocations:
+  - Type: Items
+    Row: 1
+    Column: 1
+    Identifiers:
+    - Bow
+    - Silver Arrows
+  - Type: Items
+    Row: 1
+    Column: 2
+    Identifiers:
+    - Blue Boomerang
+    - Red Boomerang
+  - Type: Items
+    Row: 1
+    Column: 3
+    Identifiers:
+    - Hookshot
+  - Type: Items
+    Row: 1
+    Column: 4
+    Identifiers:
+    - Magic Powder
+    - Mushroom
+  - Type: Items
+    Row: 1
+    Column: 5
+    Identifiers:
+    - Charge Beam
+  - Type: Items
+    Row: 1
+    Column: 6
+    Identifiers:
+    - Ice Beam
+  - Type: Items
+    Row: 1
+    Column: 7
+    Identifiers:
+    - Wave Beam
+  - Type: Items
+    Row: 1
+    Column: 8
+    Identifiers:
+    - Spazer
+  - Type: Items
+    Row: 1
+    Column: 9
+    Identifiers:
+    - Plasma Beam
+  - Type: Items
+    Row: 1
+    Column: 10
+    Identifiers:
+    - Screw Attack
+  - Type: Items
+    Row: 2
+    Column: 1
+    Identifiers:
+    - Fire Rod
+  - Type: Items
+    Row: 2
+    Column: 2
+    Identifiers:
+    - Ice Rod
+  - Type: Items
+    Row: 2
+    Column: 3
+    Identifiers:
+    - Bombos
+  - Type: Items
+    Row: 2
+    Column: 4
+    Identifiers:
+    - Ether
+  - Type: Items
+    Row: 2
+    Column: 5
+    Identifiers:
+    - Quake
+  - Type: Items
+    Row: 2
+    Column: 6
+    Identifiers:
+    - Shovel
+  - Type: Items
+    Row: 2
+    Column: 7
+    Identifiers:
+    - Morph Ball
+  - Type: Items
+    Row: 2
+    Column: 8
+    Identifiers:
+    - Morph Bombs
+  - Type: Items
+    Row: 2
+    Column: 9
+    Identifiers:
+    - Spring Ball
+  - Type: Items
+    Row: 2
+    Column: 10
+    Identifiers:
+    - Space Jump
+  - Type: Items
+    Row: 3
+    Column: 1
+    Identifiers:
+    - Lamp
+  - Type: Items
+    Row: 3
+    Column: 2
+    Identifiers:
+    - Hammer
+  - Type: Items
+    Row: 3
+    Column: 3
+    Identifiers:
+    - Flute
+    - Duck
+  - Type: Items
+    Row: 3
+    Column: 4
+    Identifiers:
+    - Bug Catching Net
+  - Type: Items
+    Row: 3
+    Column: 5
+    Identifiers:
+    - Book of Mudora
+  - Type: Items
+    Row: 3
+    Column: 6
+    Identifiers:
+    - Moon Pearl
+  - Type: Items
+    Row: 3
+    Column: 7
+    Identifiers:
+    - Varia Suit
+  - Type: Items
+    Row: 3
+    Column: 8
+    Identifiers:
+    - Gravity Suit
+  - Type: Items
+    Row: 3
+    Column: 9
+    Identifiers:
+    - Hi-Jump Boots
+  - Type: Items
+    Row: 3
+    Column: 10
+    Identifiers:
+    - Speed Booster
+  - Type: Items
+    Row: 4
+    Column: 1
+    Identifiers:
+    - Bottle
+  - Type: Items
+    Row: 4
+    Column: 2
+    Identifiers:
+    - Cane of Somaria
+  - Type: Items
+    Row: 4
+    Column: 3
+    Identifiers:
+    - Cane of Byrna
+  - Type: Items
+    Row: 4
+    Column: 4
+    Identifiers:
+    - Magic Cape
+  - Type: Items
+    Row: 4
+    Column: 5
+    Identifiers:
+    - Magic Mirror
+  - Type: Items
+    Row: 4
+    Column: 6
+    Identifiers:
+    - Heart Container
+  - Type: Items
+    Row: 4
+    Column: 7
+    Identifiers:
+    - Heart Piece
+  - Type: Items
+    Row: 4
+    Column: 8
+    Identifiers:
+    - Grapple Beam
+  - Type: Items
+    Row: 4
+    Column: 9
+    Identifiers:
+    - X-Ray Scope
+  - Type: Items
+    Row: 4
+    Column: 10
+    Identifiers:
+    - Energy Tank
+  - Type: Items
+    Row: 4
+    Column: 11
+    Identifiers:
+    - Reserve Tank
+  - Type: Items
+    Row: 5
+    Column: 1
+    Identifiers:
+    - Gloves
+  - Type: Items
+    Row: 5
+    Column: 2
+    Identifiers:
+    - Pegasus Boots
+  - Type: Items
+    Row: 5
+    Column: 3
+    Identifiers:
+    - Flippers
+  - Type: Items
+    Row: 5
+    Column: 4
+    Identifiers:
+    - Half Magic
+  - Type: Items
+    Row: 5
+    Column: 5
+    Identifiers:
+    - Sword
+  - Type: Items
+    Row: 5
+    Column: 6
+    Identifiers:
+    - Shield
+  - Type: Items
+    Row: 5
+    Column: 7
+    Identifiers:
+    - Mail
+  - Type: Items
+    Row: 5
+    Column: 8
+    Identifiers:
+    - Missile
+  - Type: Items
+    Row: 5
+    Column: 9
+    Identifiers:
+    - Super Missile
+  - Type: Items
+    Row: 5
+    Column: 10
+    Identifiers:
+    - Power Bomb
+  - Type: Dungeon
+    Row: 6
+    Column: 1
+    Identifiers:
+    - Eastern Palace
+  - Type: Dungeon
+    Row: 6
+    Column: 2
+    Identifiers:
+    - Desert Palace
+  - Type: Dungeon
+    Row: 6
+    Column: 3
+    Identifiers:
+    - Tower of Hera
+  - Type: Dungeon
+    Row: 6
+    Column: 4
+    Identifiers:
+    - Palace of Darkness
+  - Type: Dungeon
+    Row: 6
+    Column: 5
+    Identifiers:
+    - Swamp Palace
+  - Type: Dungeon
+    Row: 6
+    Column: 6
+    Identifiers:
+    - Hyrule Castle
+  - Type: Dungeon
+    Row: 6
+    Column: 7
+    Identifiers:
+    - Agahnim's Tower
+  - Type: SMBoss
+    Row: 5
+    Column: 11
+    Identifiers:
+    - Shaktool
+  - Type: SMBoss
+    Row: 6
+    Column: 8
+    Identifiers:
+    - Spore Spawn
+  - Type: SMBoss
+    Row: 7
+    Column: 8
+    Identifiers:
+    - Kraid
+  - Type: SMBoss
+    Row: 6
+    Column: 9
+    Identifiers:
+    - Phantoon
+  - Type: Items
+    Row: 2
+    Column: 11
+    Identifiers:
+    - Content
+  - Type: Dungeon
+    Row: 7
+    Column: 1
+    Identifiers:
+    - Skull Woods
+  - Type: Dungeon
+    Row: 7
+    Column: 2
+    Identifiers:
+    - Thieves' Town
+  - Type: Dungeon
+    Row: 7
+    Column: 3
+    Identifiers:
+    - Ice Palace
+  - Type: Dungeon
+    Row: 7
+    Column: 4
+    Identifiers:
+    - Misery Mire
+  - Type: Dungeon
+    Row: 7
+    Column: 5
+    Identifiers:
+    - Turtle Rock
+  - Type: Dungeon
+    Row: 7
+    Column: 6
+    Identifiers:
+    - Ganon's Tower
+  - Type: SMBoss
+    Row: 7
+    Column: 11
+    Identifiers:
+    - Mother Brain
+  - Type: SMBoss
+    Row: 6
+    Column: 11
+    Identifiers:
+    - Draygon
+  - Type: SMBoss
+    Row: 7
+    Column: 10
+    Identifiers:
+    - Ridley
+  - Type: SMBoss
+    Row: 6
+    Column: 10
+    Identifiers:
+    - Botwoon
+  - Type: SMBoss
+    Row: 7
+    Column: 9
+    Identifiers:
+    - Crocomire
+  - Type: Items
+    Row: 3
+    Column: 11
+    Identifiers:
+    - Death
+  - Type: Items
+    Row: 1
+    Column: 11
+    Identifiers:
+    - Twenty Rupees
+  - Type: SMBoss
+    Row: 7
+    Column: 7
+    Identifiers:
+    - Bomb Torizo

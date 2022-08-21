@@ -40,8 +40,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.LightWorld.LightWorldNorthEast),
                     X = 1925,
                     Y = 791,
-                    Column = 0,
-                    Row = 5,
                 },
                 new DungeonInfo()
                 {
@@ -56,8 +54,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.LightWorld.LightWorldSouth),
                     X = 146,
                     Y = 1584,
-                    Column = 1,
-                    Row = 5,
                 },
                 new DungeonInfo()
                 {
@@ -72,8 +68,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest),
                     X = 1126,
                     Y = 68,
-                    Column = 2,
-                    Row = 5,
                 },
                 new DungeonInfo()
                 {
@@ -88,8 +82,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DarkWorldNorthEast),
                     X = 1924,
                     Y = 800,
-                    Column = 3,
-                    Row = 5,
                 },
                 new DungeonInfo()
                 {
@@ -104,8 +96,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DarkWorldSouth),
                     X = 940,
                     Y = 1880,
-                    Column = 4,
-                    Row = 5,
                 },
                 new DungeonInfo()
                 {
@@ -120,8 +110,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DarkWorldNorthWest),
                     X = 79,
                     Y = 121,
-                    Column = 0,
-                    Row = 6,
                 },
                 new DungeonInfo()
                 {
@@ -136,8 +124,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DarkWorldNorthWest),
                     X = 251,
                     Y = 971,
-                    Column = 1,
-                    Row = 6,
                 },
                 new DungeonInfo()
                 {
@@ -152,8 +138,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DarkWorldSouth),
                     X = 1600,
                     Y = 1735,
-                    Column = 2,
-                    Row = 6,
                 },
                 new DungeonInfo()
                 {
@@ -168,8 +152,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DarkWorldMire),
                     X = 150,
                     Y = 1670,
-                    Column = 3,
-                    Row = 6,
                 },
                 new DungeonInfo()
                 {
@@ -184,8 +166,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast),
                     X = 1890,
                     Y = 144,
-                    Column = 4,
-                    Row = 6,
                 },
                 new DungeonInfo()
                 {
@@ -199,8 +179,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest),
                     X = 1126,
                     Y = 68,
-                    Column = 5,
-                    Row = 6,
                 },
                 new DungeonInfo()
                 {
@@ -214,8 +192,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     WithinRegionType = typeof(Regions.Zelda.LightWorld.LightWorldNorthEast),
                     X = 1003,
                     Y = 906,
-                    Column = 5,
-                    Row = 5,
                 },
                 new DungeonInfo()
                 {
@@ -227,8 +203,6 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Reward = RewardItem.Agahnim,
                     HasReward = true,
                     WithinRegionType = typeof(Regions.Zelda.LightWorld.LightWorldNorthEast),
-                    Column = 6,
-                    Row = 5,
                 },
             };
         }

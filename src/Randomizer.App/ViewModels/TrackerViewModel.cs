@@ -10,26 +10,30 @@ using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App.ViewModels
 {
     public class TrackerViewModel : INotifyPropertyChanged
     {
+        private readonly IUIService _uiService;
         private bool _isDesign;
         private LocationFilter _filter;
         private TrackerLocationSyncer _syncer;
 
-        public TrackerViewModel()
+        public TrackerViewModel(IUIService uiService)
         {
             _isDesign = DesignerProperties.GetIsInDesignMode(new DependencyObject());
             _syncer = new TrackerLocationSyncer();
+            _uiService = uiService;
         }
 
-        public TrackerViewModel(TrackerLocationSyncer syncer)
+        public TrackerViewModel(TrackerLocationSyncer syncer, IUIService uiService)
         {
             _syncer = syncer;
             _syncer.TrackedLocationUpdated += (_, _) => OnPropertyChanged(nameof(TopLocations));
             _syncer.MarkedLocationUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
+            _uiService = uiService;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -64,7 +68,7 @@ namespace Randomizer.App.ViewModels
                 return _syncer.MarkedLocations.Select(x =>
                 {
                     var location = _syncer.AllLocations.Single(location => location.Id == x.Key);
-                    return new MarkedLocationViewModel(location, x.Value, _syncer);
+                    return new MarkedLocationViewModel(location, x.Value, _uiService.GetSpritePath(x.Value), _syncer);
                 });
             }
         }
@@ -85,14 +89,18 @@ namespace Randomizer.App.ViewModels
 
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {
+            var item = new ItemData(new("X-Ray Scope"), ItemType.XRay, null);
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldSouth.Library,
-                new ItemData(new("X-Ray Scope"), ItemType.XRay, null),
+                item,
+                null,
                 _syncer);
 
+            item = new ItemData(new("Bullshit"), ItemType.Nothing, null);
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
-                new ItemData(new("Bullshit"), ItemType.Nothing, null),
+                item,
+                null,
                 _syncer);
         }
     }

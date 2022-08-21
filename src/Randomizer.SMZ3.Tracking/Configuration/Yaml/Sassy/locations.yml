@@ -73,7 +73,6 @@
   - Text: Toggled boots off. Kidding.
   - Text: Did you grab the book I had on reserve?
   WhenMarkingJunk:
-  - Text: Its never bullshit to visit your local Library
   - Text: Don't you want to get something nice to read?
   WhenMarkingProgression:
   - Text: Hopefully the boots are not too hard to find.

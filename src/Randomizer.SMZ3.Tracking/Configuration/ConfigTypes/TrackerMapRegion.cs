@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Randomizer.SMZ3.Tracking.Configuration
+namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {
     /// <summary>
     /// Represents a region on the map
@@ -16,10 +16,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// The name of the region. Must match a <see cref="Region.Name"/>.
         /// </param>
         /// <param name="rooms">The rooms and locations in this region.</param>
-        public TrackerMapRegion(string name, IReadOnlyCollection<TrackerMapLocation> rooms, string typeName, int? bossX, int? bossY)
+        public TrackerMapRegion(string name, IReadOnlyCollection<TrackerMapLocation> rooms, IReadOnlyCollection<TrackerMapSMDoor> doors, string typeName, int? bossX, int? bossY)
         {
             Name = name;
             Rooms = rooms;
+            Doors = doors;
             TypeName = typeName;
             BossX = bossX;
             BossY = bossY;
@@ -50,5 +51,10 @@ namespace Randomizer.SMZ3.Tracking.Configuration
         /// Gets a collection of map locations that belong to this region.
         /// </summary>
         public IReadOnlyCollection<TrackerMapLocation> Rooms { get; }
+
+        /// <summary>
+        /// List of Super Metroid doors for Keysanity
+        /// </summary>
+        public IReadOnlyCollection<TrackerMapSMDoor> Doors { get; }
     }
 }

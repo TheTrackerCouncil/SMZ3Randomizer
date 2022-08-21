@@ -12,6 +12,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class PegWorldModeModule : TrackerModule, IOptionalModule
     {
+        public static readonly int TotalPegs = 22;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PegWorldModeModule"/>
         /// class.
@@ -46,10 +48,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, peg."
             }, (tracker, result) =>
             {
-                var peg = tracker.Pegs.FirstOrDefault(x => !x.Pegged);
-                if (peg != null)
+                if (tracker.PegsPegged < TotalPegs)
                 {
-                    tracker.Peg(peg, result.Confidence);
+                    tracker.Peg(result.Confidence);
                 }
             });
         }

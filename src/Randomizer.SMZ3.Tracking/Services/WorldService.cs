@@ -65,14 +65,14 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <summary>
         /// Returns extra information for the specified region.
         /// </summary>
-        /// <param name="typeName">
-        /// The fully qualified type name of the region.
+        /// <param name="name">
+        /// The name or fully qualified type name of the region.
         /// </param>
         /// <returns>
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
-        public RegionInfo Region(string typeName)
-            => Regions.Single(x => x.Type.FullName == typeName);
+        public RegionInfo Region(string name)
+            => Regions.Single(x => x.Type.FullName == name || x.Region == name);
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -111,15 +111,15 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <summary>
         /// Returns extra information for the specified dungeon.
         /// </summary>
-        /// <param name="typeName">
-        /// The fully qualified type name of the dungeon region.
+        /// <param name="name">
+        /// The name or fully qualified type name of the dungeon region.
         /// </param>
         /// <returns>
         /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
         /// <c>null</c> if <paramref name="typeName"/> is not a valid dungeon.
         /// </returns>
-        public DungeonInfo? Dungeon(string typeName)
-            => Dungeons.SingleOrDefault(x => x.Type.FullName == typeName);
+        public DungeonInfo? Dungeon(string name)
+            => Dungeons.SingleOrDefault(x => x.Type.FullName == name || x.Dungeon == name);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -162,14 +162,14 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <summary>
         /// Returns extra information for the specified room.
         /// </summary>
-        /// <param name="typeName">
-        /// The fully qualified type name of the room.
+        /// <param name="name">
+        /// The name or fully qualified type name of the room.
         /// </param>
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room(string typeName)
-            => Rooms.Single(x => x.Type.FullName == typeName);
+        public RoomInfo Room(string name)
+            => Rooms.Single(x => x.Type.FullName == name || x.Room == name);
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -226,5 +226,13 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public LocationInfo Location(Location location)
             => Locations.Single(x => x.LocationNumber == location.Id);
+
+        /// <summary>
+        /// Returns information about a specified boss
+        /// </summary>
+        /// <param name="name">The name of the boss</param>
+        /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
+        public BossInfo Boss(string name)
+            => Bosses.Single(x => x.Boss == name);
     }
 }

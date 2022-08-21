@@ -13,6 +13,7 @@ using Randomizer.App.ViewModels;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using static Randomizer.SMZ3.Tracking.Configuration.ConfigTypes.TrackerMapLocation;
 
 namespace Randomizer.App
 {
@@ -54,7 +55,7 @@ namespace Randomizer.App
                     {
                         var region = regions.First(region => mapRegion.Name == region.Name);
                         var mapLocations = region.Rooms
-                            .Select(room => new TrackerMapLocation(mapRegion.Name, region.TypeName, room.Name,
+                            .Select(room => new TrackerMapLocation(MapLocationType.Item, mapRegion.Name, region.TypeName, room.Name,
                                 x: (int)Math.Floor(room.X * mapRegion.Scale) + mapRegion.X,
                                 y: (int)Math.Floor(room.Y * mapRegion.Scale) + mapRegion.Y))
                             .ToList();
@@ -63,11 +64,21 @@ namespace Randomizer.App
                         // Add the boss for this region if one is specified
                         if (region.BossX != null && region.BossY != null)
                         {
-                            map.FullLocations.Add(new TrackerMapLocation(mapRegion.Name, region.TypeName, null,
+                            map.FullLocations.Add(new TrackerMapLocation(MapLocationType.Boss, mapRegion.Name, region.TypeName, null,
                                 x: (int)Math.Floor((region.BossX ?? 0) * mapRegion.Scale) + mapRegion.X,
                                 y: (int)Math.Floor((region.BossY ?? 0) * mapRegion.Scale) + mapRegion.Y));
                         }
 
+                        // Add all SM keysanity doors
+                        if (region.Doors != null)
+                        {
+                            foreach (var door in region.Doors)
+                            {
+                                map.FullLocations.Add(new TrackerMapLocation(MapLocationType.SMDoor, mapRegion.Name, region.TypeName, door.Item,
+                                    x: (int)Math.Floor((door.X) * mapRegion.Scale) + mapRegion.X,
+                                    y: (int)Math.Floor((door.Y) * mapRegion.Scale) + mapRegion.Y));
+                            }
+                        }
                     }
                 }
             }

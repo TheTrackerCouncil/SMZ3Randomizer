@@ -56,3 +56,61 @@ The text line is required and is what will be said by tracker. The weight adjust
 ### Can I use some responses from one config, but not all?
 
 Unfortunately you can't pick and choose what comes from a config. You can either copy the profile and remove what you don't want. Or, if you have your own profile, you can increase the weight of your responses to make them way more likely than the original responses.
+
+### Can I create my own items to track?
+
+You can! You can create brand new items as well as bosses which can then be tracked. Simply add a new record such as the following:
+
+```
+- Item: Custom Item
+  Name:
+  - Text: Item name
+  - Text: Rare name of the item
+    Weight: 0.1
+  Multiple: true
+  WhenTracked:
+    "1":
+    - Text: Tracker will say this when you track your first and second ones
+    "3":
+    - Text: tracker will say this when you track your third one
+```
+
+```
+- Boss: Custom Boss
+  Name:
+  - Text: Boss name
+  - Text: Rare name of the boss
+    Weight: 0.1
+  WhenTracked:
+  - Text: This is what will be said when the player says "Hey tracker, track boss name"
+  WhenDefeated:
+  - Text: This is what will be said when the player says "Hey tracker, I defeated boss name"
+```
+
+You can then create your own UI Layout in a ui.yml file with them. In the Identifiers, you will need to make sure it matches exactly with what you have next to Item or Boss line, like in the following:
+
+```
+  - Type: Items
+    Row: 1
+    Column: 1
+    Identifiers:
+    - Custom Item
+```
+
+```
+  - Type: SMBoss
+    Row: 1
+    Column: 1
+    Identifiers:
+    - Custom Boss
+```
+
+For the images, create a Sprites/Items folder underneath your custom tracker profile and add the sprite(s) in .png format there using the same text you used next to Item or Boss, but in all lower case. For example, "custom item.png" and "custom boss.png".
+
+In the case of items where you want to be able to track it multiple times, you can include additional images with (1), (2), etc. at the end to indicate different images that will be displayed when you get more of that item. For example "custom item (1).png". When maxed out, it'll use the base image without any numbers.
+
+### How do I have my own content images?
+
+To have your own content images, simply create a tracker profile folder under whatever name you want and add a Sprites/Items folder underneath that profile folder. Add the images you want with the naming convention of content.png, content (1).png, content (2).png, etc.
+
+Once you have added all of that, open the settings window and make sure that your profile is enabled and is at the bottom of the list.

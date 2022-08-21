@@ -1,0 +1,71 @@
+﻿# This config file is used for additional Tracker UI layouts.
+# You can have multiple layouts specified per file.
+#
+# Fields
+# ------
+# Name: The name of the layout
+# GridLocations: A list of every spot in the UI
+#   Type: The type of object the spot is supposed to represent. This can be Items, Dungeon, or SMBoss
+#   Row: The row number for where the object should be located in the UI, starting at 1
+#   Column: The column number for where the object should be located in the UI, starting at 1
+#   Identifiers: This is the identifier(s) for what should be shown in this spot
+#       For items, you can include more than one to stack in the same spot in the UI
+#       For bosses, this can only be one
+
+- Name: Example 1
+  GridLocations:
+  # This is an example of a single item
+  # For a single item, left clicking on it will track it
+  - Type: Items
+    Row: 1
+    Column: 1
+    Identifiers:
+    - Hookshot
+  # This is an example of multiple items
+  # For multiple items, you have to right click on it to track it
+  - Type: Items
+    Row: 1
+    Column: 2
+    Identifiers:
+    - Bow
+    - Silver Arrows
+  # This is for a dungeon
+  # For dungeons, left clicking will mark it as complete. Right clicking lets you specify its reward.
+  - Type: Dungeon
+    Row: 2
+    Column: 1
+    Identifiers:
+    - Desert Palace
+  # This is for a Super Metroid boss
+  # For bosses, left clicking will mark it as defeated
+  - Type: SMBoss
+    Row: 2
+    Column: 2
+    Identifiers:
+    - Bomb Torizo
+  # This is an example of dungeon keys/maps for keysanity
+  - Type: Items
+    Row: 3
+    Column: 1
+    Identifiers:
+    - Desert Palace Key
+    - Desert Palace Big Key
+    - Desert Palace Map
+  # This is an example of Super Metroid keys for keysanity
+  # You can include an extra Image here as a label
+  - Type: Items
+    Row: 3
+    Column: 2
+    Image: "CR.png"
+    Identifiers:
+    - Crateria Level 1 Keycard
+    - Crateria Level 2 Keycard
+    - Crateria Boss Keycard
+# You can include multiple UIs in a single file
+- Name: Example 2
+  GridLocations:
+  - Type: Items
+    Row: 1
+    Column: 1
+    Identifiers:
+    - Hookshot

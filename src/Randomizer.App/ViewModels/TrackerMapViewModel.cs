@@ -7,8 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
 namespace Randomizer.App.ViewModels
 {
@@ -165,6 +164,7 @@ namespace Randomizer.App.ViewModels
                 }
 
                 return _currentMap.FullLocations
+                    .Where(x => x.Type != TrackerMapLocation.MapLocationType.SMDoor || Syncer.World.Config.Keysanity)
                     .Select(mapLoc => new TrackerMapLocationViewModel(mapLoc,
                         Syncer,
                         MapSize.Width / CurrentMap.Width))

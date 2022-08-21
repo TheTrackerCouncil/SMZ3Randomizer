@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
     /// <summary>
     /// Config file for additional boss information
     /// </summary>
-    public class BossConfig : List<BossInfo>, IMergeable<BossInfo>
+    public class BossConfig : List<BossInfo>, IMergeable<BossInfo>, IConfigFile<BossConfig>
     {
         /// <summary>
         /// Constructor
@@ -42,53 +42,49 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Boss = "Kraid",
                     Name = new("Kraid"),
                     Reward = RewardType.Kraid,
-                    Column = 7,
-                    Row = 5,
                 },
                 new BossInfo()
                 {
                     Boss = "Crocomire",
                     Name = new("Crocomire"),
-                    Column = 8,
-                    Row = 5,
                 },
                 new BossInfo()
                 {
                     Boss = "Phantoon",
                     Name = new("Phantoon"),
                     Reward = RewardType.Phantoon,
-                    Column = 9,
-                    Row = 5,
                 },
                 new BossInfo()
                 {
                     Boss = "Shaktool",
                     Name = new("Shaktool", "The Shaktool"),
-                    Column = 6,
-                    Row = 6,
                 },
                 new BossInfo()
                 {
                     Boss = "Draygon",
                     Name = new("Draygon"),
                     Reward = RewardType.Draygon,
-                    Column = 7,
-                    Row = 6,
                 },
                 new BossInfo()
                 {
                     Boss = "Ridley",
                     Name = new("Ridley"),
                     Reward = RewardType.Ridley,
-                    Column = 8,
-                    Row = 6,
                 },
                 new BossInfo()
                 {
                     Boss = "Mother Brain",
                     Name = new("Mother Brain"),
-                    Column = 9,
-                    Row = 6,
+                },
+                new BossInfo()
+                {
+                    Boss = "Bomb Torizo",
+                    Name = new("Bomb Torizo", "Bozo", "Bomb Chozo"),
+                },
+                new BossInfo()
+                {
+                    Boss = "Golden Torizo",
+                    Name = new("Golden Torizo", "Golden Chozo"),
                 },
             };
         }
