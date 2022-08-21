@@ -39,6 +39,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Norfair
                 alsoKnownAs: new[] { "Ridley's Reliquary" },
                 vanillaItem: ItemType.ETank,
                 access: items => items.Ridley,
+                relevanceRequirement: items => CanComplete(items),
                 memoryAddress: 0x9,
                 memoryFlag: 0x40);
             FirefleaRoom = new Location(this, 80, 0x8F9184, LocationType.Visible,

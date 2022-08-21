@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
@@ -16,10 +17,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     {
         private readonly HashSet<DungeonInfo> _enteredDungeons = new();
         private readonly IItemService _itemService;
+        private readonly IWorldAccessor _worldAccessor;
 
-        public EnteredDungeon(IItemService itemService)
+        public EnteredDungeon(IItemService itemService, IWorldAccessor worldAccessor)
         {
             _itemService = itemService;
+            _worldAccessor = worldAccessor;
         }
 
         /// <summary>
@@ -42,11 +45,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 // Get the dungeon info for the room
                 var dungeonInfo = tracker.WorldInfo.Dungeons.First(x => x.Is(region));
 
-                if (!_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant || dungeonInfo.Reward == RewardItem.NonGreenPendant))
+                if (!_worldAccessor.World.Config.Keysanity && !_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant || dungeonInfo.Reward == RewardItem.NonGreenPendant))
                 {
                     tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, _itemService.GetName(dungeonInfo.Reward));
                 }
-                else if (region is CastleTower)
+                else if (!_worldAccessor.World.Config.Keysanity && region is CastleTower)
                 {
                     tracker.Say(x => x.AutoTracker.EnterHyruleCastleTower);
                 }

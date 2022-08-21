@@ -195,7 +195,7 @@ namespace Randomizer.App
         /// </summary>
         /// <param name="location">The location to check</param>
         /// <returns>True if the location should be shown. False otherwise</returns>
-        private bool SpecialLocationLogic(Location location)
+        public bool SpecialLocationLogic(Location location)
         {
             // Don't show MM or TR unless we're sure we have the identified medallion or have all medallions
             if (location.Region is MiseryMire or TurtleRock)

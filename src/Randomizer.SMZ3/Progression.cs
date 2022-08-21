@@ -126,7 +126,7 @@ namespace Randomizer.SMZ3
         public bool Kraid => Rewards.Contains(RewardType.Kraid);
         public bool Phantoon => Rewards.Contains(RewardType.Phantoon);
         public bool Draygon => Rewards.Contains(RewardType.Draygon);
-        public bool Ridley => Rewards.Contains(RewardType.Draygon);
+        public bool Ridley => Rewards.Contains(RewardType.Ridley);
         public bool AllMetroidBosses => Rewards.Count(r => r is RewardType.Kraid or RewardType.Phantoon or RewardType.Draygon or RewardType.Ridley) >= 4;
         public int PendantCount => Rewards.Count(r => r is RewardType.CrystalBlue or RewardType.CrystalRed);
         public int Count => Items.Count;

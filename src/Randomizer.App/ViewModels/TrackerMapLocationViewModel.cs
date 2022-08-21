@@ -47,16 +47,19 @@ namespace Randomizer.App.ViewModels
             // If no location was specified, it's a boss or dungeon
             if (Type == MapLocationType.Boss)
             {
-                if (Region is Z3Region)
+                if (Syncer.SpecialLocationLogic(Region.Locations.First()))
                 {
-                    Dungeon = Syncer.Tracker.WorldInfo.Dungeons.First(x => x.Type.FullName == mapLocation.RegionTypeName);
-                    Name = Dungeon.Reward.GetDescription();
-                    Y -= 22;
-                }
-                else if (Region is SMRegion)
-                {
-                    Boss = Syncer.Tracker.WorldInfo.Bosses.First(x => x.Reward == ((IHasReward)Region).Reward);
-                    Name = Boss.ToString();
+                    if (Region is Z3Region)
+                    {
+                        Dungeon = Syncer.Tracker.WorldInfo.Dungeons.First(x => x.Type.FullName == mapLocation.RegionTypeName);
+                        Name = Dungeon.Reward.GetDescription();
+                        Y -= 22;
+                    }
+                    else if (Region is SMRegion)
+                    {
+                        Boss = Syncer.Tracker.WorldInfo.Bosses.First(x => x.Reward == ((IHasReward)Region).Reward);
+                        Name = Boss.ToString();
+                    }
                 }
             }
             // Else figure out the current status of all of the locations
@@ -65,14 +68,26 @@ namespace Randomizer.App.ViewModels
                 Name = Syncer.GetName(mapLocation);
                 Locations = Syncer.AllLocations.Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
 
-                var progression = Region is HyruleCastle || Region.World.Config.Keysanity ? syncer.Progression : syncer.ProgressionWithKeys;
-                var statuses = Locations.Select(x => x.GetStatus(progression));
+                if (Syncer.SpecialLocationLogic(Locations.First()))
+                {
+                    var progression = Region is HyruleCastle || Region.World.Config.Keysanity ? syncer.Progression : syncer.ProgressionWithKeys;
+                    var statuses = Locations.Select(x => x.GetStatus(progression));
 
-                ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
-                RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
-                OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
-                UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
-                ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
+                    ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
+                    RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
+                    OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
+                    UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
+                    ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
+                }
+                else
+                {
+                    ClearableLocationsCount = 0;
+                    RelevantLocationsCount = 0;
+                    OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? Locations.Count() : 0;
+                    UnclearedLocationsCount = Locations.Count();
+                    ClearedLocationsCount = 0;
+                }
+                
             }
             else if (Type == MapLocationType.SMDoor)
             {
