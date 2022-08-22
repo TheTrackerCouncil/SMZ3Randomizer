@@ -267,7 +267,7 @@ namespace Randomizer.App
         /// <param name="region"></param>
         /// <returns></returns>
         public Progression ProgressionForRegion(Region region) =>
-            region.World.Config.Keysanity ? Progression : ProgressionWithKeys;
+            region.World.Config.KeysanityForRegion(region) ? Progression : ProgressionWithKeys;
 
         /// <summary>
         /// Gets the primary name for the specified location.

@@ -200,9 +200,21 @@
               <GroupBox Header="Game Mode Settings"
                         Padding="0,5,0,0"
                         Margin="0,0,0,10">
-                <UniformGrid Columns="2">
-                  <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
-                </UniformGrid>
+                <StackPanel>
+                  <controls:LabeledControl Text="Keysanity:">
+                    <ComboBox SelectedItem="{Binding KeysanityMode}"
+                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:KeysanityMode}}}"
+                              HorizontalAlignment="Left"
+                              MinWidth="75" />
+                  </controls:LabeledControl>
+                  <controls:LabeledControl Text="Progression item placement:">
+                    <ComboBox SelectedItem="{Binding ItemPlacementRule}"
+                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:ItemPlacementRule}}}"
+                              HorizontalAlignment="Left"
+                              MinWidth="75" />
+                  </controls:LabeledControl>
+                </StackPanel>
+                
               </GroupBox>
 
               <GroupBox Header="Race Settings"

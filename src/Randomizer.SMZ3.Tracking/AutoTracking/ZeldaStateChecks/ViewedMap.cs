@@ -77,7 +77,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 
             foreach (var (region, map) in dungeons)
             {
-                if (World.Config.Keysanity && !Items.IsTracked(map))
+                if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
                     continue;
 
                 var reward = ((IHasReward)region).Reward;
@@ -90,7 +90,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 }
             }
 
-            if (!World.Config.Keysanity && rewards.Count(x => x == RewardType.CrystalRed || x == RewardType.CrystalBlue) == 3)
+            if (!World.Config.ZeldaKeysanity && rewards.Count(x => x == RewardType.CrystalRed || x == RewardType.CrystalBlue) == 3)
             {
                 _tracker.SayOnce(x => x.AutoTracker.LightWorldAllCrystals);
             }
@@ -121,7 +121,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 
             foreach (var (region, map) in dungeons)
             {
-                if (World.Config.Keysanity && !Items.IsTracked(map))
+                if (World.Config.ZeldaKeysanity && !Items.IsTracked(map))
                     continue;
 
                 var reward = ((IHasReward)region).Reward;
@@ -137,7 +137,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
             var isMiseryMirePendant = World.MiseryMire.Reward is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue;
             var isTurtleRockPendant = World.TurtleRock.Reward is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue;
 
-            if (!World.Config.Keysanity && isMiseryMirePendant && isTurtleRockPendant)
+            if (!World.Config.ZeldaKeysanity && isMiseryMirePendant && isTurtleRockPendant)
             {
                 _tracker.SayOnce(x => x.AutoTracker.DarkWorldNoMedallions);
             }

@@ -247,8 +247,21 @@ namespace Randomizer.App
             var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(seed.Playthrough.Config.LogicConfig)}"));
             log.AppendLine($"Logic Options: {logicOptions}");
 
-            log.AppendLine((options.SeedOptions.Keysanity ? "[Keysanity] " : "")
-                         + (options.SeedOptions.Race ? "[Race] " : ""));
+            if (options.SeedOptions.KeysanityMode != KeysanityMode.None)
+            {
+                log.AppendLine($"Keysanity: {options.SeedOptions.KeysanityMode}");
+            }
+
+            if (options.SeedOptions.ItemPlacementRule != ItemPlacementRule.Anywhere)
+            {
+                log.AppendLine($"Item Placement: {options.SeedOptions.ItemPlacementRule}");
+            }
+
+            if (options.SeedOptions.Race)
+            {
+                log.AppendLine("[Race]");
+            }
+            
             if (File.Exists(options.PatchOptions.Msu1Path))
                 log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.Msu1Path)}");
             log.AppendLine();

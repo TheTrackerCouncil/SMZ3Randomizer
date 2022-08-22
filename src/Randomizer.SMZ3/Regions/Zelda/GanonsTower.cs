@@ -4,7 +4,7 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-    public class GanonsTower : Z3Region
+    public class GanonsTower : Z3Dungeon
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5C9
@@ -142,7 +142,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                     return false;
                 }
 
-                if (Config.Keysanity
+                if (Config.ZeldaKeysanity
                     && !((item.Type == ItemType.BigKeyGT || item.Type == ItemType.KeyGT) && item.World == World)
                     && (item.IsKey || item.IsBigKey || item.IsKeycard))
                 {

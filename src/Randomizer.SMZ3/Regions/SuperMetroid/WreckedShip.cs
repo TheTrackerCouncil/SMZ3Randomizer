@@ -98,7 +98,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid
         {
             return items.Super && (
                         /* Over the Moat */
-                        ((Config.Keysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && (
+                        ((Config.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && (
                             items.SpeedBooster || items.Grapple || items.SpaceJump ||
                             (items.Gravity && (Logic.CanIbj(items) || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy))))
                             || Logic.CanWallJump(WallJumpDifficulty.Insane)

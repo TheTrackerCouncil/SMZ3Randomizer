@@ -114,20 +114,9 @@ namespace Randomizer.App.ViewModels
                 var config = new Config()
                 {
                     GameMode = GameMode.Normal,
-                    Z3Logic = Z3Logic.Normal,
-                    SMLogic = SMLogic.Normal,
-                    ItemLocations =
-                    {
-                        [ItemType.ProgressiveSword] = SeedOptions.SwordLocation,
-                        [ItemType.Morph] = SeedOptions.MorphLocation,
-                        [ItemType.Bombs] = SeedOptions.MorphBombsLocation,
-                        [ItemType.Boots] = SeedOptions.PegasusBootsLocation,
-                        [ItemType.SpaceJump] = SeedOptions.SpaceJumpLocation,
-                    },
-                    ShaktoolItemPool = SeedOptions.ShaktoolItem,
-                    PegWorldItemPool = SeedOptions.PegWorldItem,
-                    KeyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None,
+                    KeysanityMode = SeedOptions.KeysanityMode,
                     Race = SeedOptions.Race,
+                    ItemPlacementRule = SeedOptions.ItemPlacementRule,
                     DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
                     DisableTrackerHints = SeedOptions.DisableTrackerHints,
                     DisableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers,
@@ -154,7 +143,8 @@ namespace Randomizer.App.ViewModels
             {
                 var oldConfig = Config.FromConfigString(SeedOptions.ConfigString);
 
-                var keyShuffle = SeedOptions.Keysanity ? KeyShuffle.Keysanity : KeyShuffle.None;
+                var keysanity = SeedOptions.KeysanityMode;
+                var itemPlacement = SeedOptions.ItemPlacementRule;
                 var race = SeedOptions.Race;
                 var disableSpoilerLog = SeedOptions.DisableSpoilerLog;
                 var disableTrackerHints = SeedOptions.DisableTrackerHints;
@@ -164,7 +154,8 @@ namespace Randomizer.App.ViewModels
 
                 if (SeedOptions.CopySeedAndRaceSettings)
                 {
-                    keyShuffle = oldConfig.KeyShuffle;
+                    keysanity = oldConfig.KeysanityMode;
+                    itemPlacement = oldConfig.ItemPlacementRule;
                     race = oldConfig.Race;
                     disableSpoilerLog = oldConfig.DisableSpoilerLog;
                     disableTrackerHints = oldConfig.DisableTrackerHints;
@@ -177,19 +168,8 @@ namespace Randomizer.App.ViewModels
                 return new Config()
                 {
                     GameMode = GameMode.Normal,
-                    Z3Logic = Z3Logic.Normal,
-                    SMLogic = SMLogic.Normal,
-                    ItemLocations =
-                    {
-                        [ItemType.ProgressiveSword] = SeedOptions.SwordLocation,
-                        [ItemType.Morph] = SeedOptions.MorphLocation,
-                        [ItemType.Bombs] = SeedOptions.MorphBombsLocation,
-                        [ItemType.Boots] = SeedOptions.PegasusBootsLocation,
-                        [ItemType.SpaceJump] = SeedOptions.SpaceJumpLocation,
-                    },
-                    ShaktoolItemPool = SeedOptions.ShaktoolItem,
-                    PegWorldItemPool = SeedOptions.PegWorldItem,
-                    KeyShuffle = keyShuffle,
+                    KeysanityMode = keysanity,
+                    ItemPlacementRule = itemPlacement,
                     Race = race,
                     DisableSpoilerLog = disableSpoilerLog,
                     DisableTrackerHints = disableTrackerHints,

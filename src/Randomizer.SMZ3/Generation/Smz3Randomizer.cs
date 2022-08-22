@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Generation
                 rng = new Random(rng.Next());
             config.SettingsString = Config.ToConfigString(config, true);
 
-            _logger.LogDebug($"Seed: {seedNumber} | Race: {config.Race} | Keysanity: {config.Keysanity}");
+            _logger.LogDebug($"Seed: {seedNumber} | Race: {config.Race} | Keysanity: {config.KeysanityMode} | Item placement: {config.ItemPlacementRule}");
 
             var worlds = new List<World>();
             if (config.SingleWorld)

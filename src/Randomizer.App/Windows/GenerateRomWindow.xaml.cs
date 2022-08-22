@@ -22,6 +22,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App
 {
@@ -35,14 +36,17 @@ namespace Randomizer.App
         private readonly RomGenerator _romGenerator;
         private readonly SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig _locations;
         private RandomizerOptions _options;
+        private IItemService _itemService;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
-            SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig locations)
+            SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig locations,
+            IItemService itemService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
             _locations = locations;
+            _itemService = itemService;
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -79,7 +83,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (!itemType.IsProgression())
+                if (!_itemService.GetOrDefault(itemType).IsProgression(null))
                 {
                     continue;
                 }
@@ -224,7 +228,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (!itemType.IsProgression())
+                if (!_itemService.GetOrDefault(itemType).IsProgression(null))
                 {
                     continue;
                 }

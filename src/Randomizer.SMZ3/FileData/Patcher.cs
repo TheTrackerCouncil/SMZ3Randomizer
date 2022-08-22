@@ -779,7 +779,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteZ3KeysanityFlags()
         {
-            if (_myWorld.Config.Keysanity)
+            if (_myWorld.Config.ZeldaKeysanity)
             {
                 _patches.Add((Snes(0x40003B), new byte[] { 1 })); // MapMode #$00 = Always On (default) - #$01 = Require Map Item
                 _patches.Add((Snes(0x400045), new byte[] { 0x0f })); // display ----dcba a: Small Keys, b: Big Key, c: Map, d: Compass
@@ -789,7 +789,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteSMKeyCardDoors()
         {
-            if (!_myWorld.Config.Keysanity)
+            if (!_myWorld.Config.MetroidKeysanity)
                 return;
 
             ushort plaquePLm = 0xd410;

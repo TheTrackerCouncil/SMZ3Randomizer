@@ -221,7 +221,7 @@ namespace Randomizer.SMZ3
             itemPool.AddRange(Copies(4, () => new Item(ItemType.BombUpgrade5)));
             itemPool.AddRange(Copies(2, () => new Item(ItemType.OneRupee)));
             itemPool.AddRange(Copies(4, () => new Item(ItemType.FiveRupees)));
-            itemPool.AddRange(Copies(world.Config.Keysanity ? 25 : 28, () => new Item(ItemType.TwentyRupees)));
+            itemPool.AddRange(Copies(world.Config.MetroidKeysanity ? 25 : 28, () => new Item(ItemType.TwentyRupees)));
             itemPool.AddRange(Copies(7, () => new Item(ItemType.FiftyRupees)));
             itemPool.AddRange(Copies(3, () => new Item(ItemType.ThreeHundredRupees)));
 
@@ -284,7 +284,7 @@ namespace Randomizer.SMZ3
                 new Item(ItemType.MapMM),
                 new Item(ItemType.MapTR),
             });
-            if (!world.Config.Keysanity)
+            if (!world.Config.MetroidKeysanity)
             {
                 itemPool.AddRange(new[] {
                     new Item(ItemType.MapHC),

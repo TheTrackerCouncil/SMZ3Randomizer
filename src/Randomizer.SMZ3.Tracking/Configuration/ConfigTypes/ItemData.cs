@@ -292,7 +292,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 
         /// <summary>
         /// Determines whether the item is worth getting given the specified
-        /// configuration.
+        /// configuration, assuming one is provided.
         /// </summary>
         /// <param name="config">The randomizer configuration.</param>
         /// <returns>
@@ -303,11 +303,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
         /// might logically lead to.
         /// </remarks>
-        public bool IsGood(Config config) => !IsJunk(config);
+        public bool IsGood(Config? config) => !IsJunk(config);
 
         /// <summary>
         /// Determines whether the item is junk given the specified
-        /// configuration.
+        /// configuration, assuming one is provided.
         /// </summary>
         /// <param name="config">The randomizer configuration.</param>
         /// <returns>
@@ -318,15 +318,47 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
         /// might logically lead to.
         /// </remarks>
-        public bool IsJunk(Config config)
+        public bool IsJunk(Config? config)
         {
-            var junkCategories = config.Keysanity
-                ? new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass }
-                : new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard };
+            if (InternalItemType == ItemType.Nothing || InternalItemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Compass }))
+                return true;
 
-            return InternalItemType == ItemType.Nothing
-                || InternalItemType.IsInAnyCategory(junkCategories);
+            if (config?.ZeldaKeysanity == true && InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map }))
+                return true;
+
+            if (config?.MetroidKeysanity == true && InternalItemType.IsInCategory(ItemCategory.Keycard))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether the item is progression given the specified
+        /// configuration, assuming one is provided.
+        /// </summary>
+        /// <param name="config">The randomizer configuration.</param>
+        /// <returns>
+        /// <c>true</c> if the item is considered progression; otherwise, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// This method only considers the item's value on its own. Call <see
+        /// cref="Tracker.IsWorth(ItemData)"/> to include items that this item
+        /// might logically lead to.
+        /// </remarks>
+        public bool IsProgression(Config? config)
+        {
+            if (InternalItemType == ItemType.Nothing || InternalItemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Compass, ItemCategory.Nice }))
+                return false;
+
+            if (config?.ZeldaKeysanity == false && InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
+                return false;
+
+            if (config?.MetroidKeysanity == false && InternalItemType.IsInCategory(ItemCategory.Keycard))
+                return false;
+
+            // Todo: We can add special logic like checking if it's one of the first two swords
+
+            return true;
         }
     }
 }

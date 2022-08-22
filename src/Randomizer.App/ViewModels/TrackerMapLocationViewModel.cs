@@ -70,7 +70,7 @@ namespace Randomizer.App.ViewModels
 
                 if (Syncer.SpecialLocationLogic(Locations.First()))
                 {
-                    var progression = Region is HyruleCastle || Region.World.Config.Keysanity ? syncer.Progression : syncer.ProgressionWithKeys;
+                    var progression = Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region) ? syncer.Progression : syncer.ProgressionWithKeys;
                     var statuses = Locations.Select(x => x.GetStatus(progression));
 
                     ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
@@ -290,7 +290,7 @@ namespace Randomizer.App.ViewModels
                 }
                 else if (Type == MapLocationType.Item)
                 {
-                    return Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x, true, Syncer.Tracker.World.Config.Keysanity)).ToList();
+                    return Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x, true, Syncer.World.Config.KeysanityForRegion(Region))).ToList();
                 }
                 return null;
             }
