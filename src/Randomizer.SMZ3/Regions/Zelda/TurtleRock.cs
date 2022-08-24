@@ -3,7 +3,7 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-    public class TurtleRock : Z3Dungeon, IHasReward, INeedsMedallion
+    public class TurtleRock : Z3Region, IHasReward, INeedsMedallion
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5C7,

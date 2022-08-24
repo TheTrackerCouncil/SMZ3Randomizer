@@ -3,7 +3,7 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-    public class PalaceOfDarkness : Z3Dungeon, IHasReward
+    public class PalaceOfDarkness : Z3Region, IHasReward
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5B8

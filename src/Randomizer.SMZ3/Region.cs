@@ -110,7 +110,7 @@ namespace Randomizer.SMZ3
                 || (!Config.ZeldaKeysanity && (item.IsKey || item.IsBigKey))) return true;
             else if (rule == ItemPlacementRule.DungeonsAndMetroid)
             {
-                return this is Z3Dungeon or SMRegion;
+                return (this is Z3Region region && !region.IsOverworld) || this is SMRegion;
             }
             else if (rule == ItemPlacementRule.CrystalDungeonsAndMetroid)
             {

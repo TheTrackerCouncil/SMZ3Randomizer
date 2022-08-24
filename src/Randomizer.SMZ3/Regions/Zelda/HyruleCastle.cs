@@ -3,7 +3,7 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-    public class HyruleCastle : Z3Dungeon
+    public class HyruleCastle : Z3Region
     {
         public const int SphereOne = -10;
 

@@ -4,7 +4,7 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-    public class IcePalace : Z3Dungeon, IHasReward
+    public class IcePalace : Z3Region, IHasReward
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5BF

@@ -4,7 +4,7 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-    public class GanonsTower : Z3Dungeon
+    public class GanonsTower : Z3Region
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5C9

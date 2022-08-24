@@ -3,7 +3,7 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Regions.Zelda
 {
-    public class CastleTower : Z3Dungeon, IHasReward
+    public class CastleTower : Z3Region, IHasReward
     {
         public CastleTower(World world, Config config)
             : base(world, config)
