@@ -13,16 +13,18 @@ namespace Randomizer.Shared
         [Description("Anywhere")]
         Anywhere,
 
-        [Description("Dungeons and Metroid")]
+        [Description("Dungeons and anywhere in Metroid")]
         DungeonsAndMetroid,
 
-        [Description("Crystal dungeons and Metroid")]
+        [Description("Crystal dungeons and anywhere in Metroid")]
         CrystalDungeonsAndMetroid,
+
+        [Description("Vanilla game, but randomized location")]
+        SameGame,
 
         [Description("Opposite game")]
         OppositeGame,
 
-        [Description("Same game")]
-        SameGame,
+        
     }
 }

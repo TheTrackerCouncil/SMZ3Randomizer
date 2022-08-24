@@ -46,74 +46,90 @@ namespace Randomizer.App
         /// <param name="error">Any error message from generating the rom</param>
         /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
+        public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom, int attempts = 5)
         {
-            try
+            var latestError = "";
+            for (var i = 0; i < attempts; i++)
             {
-                var bytes = GenerateRomBytes(options, out var seed);
-
-                var config = seed.Playthrough.Config;
-                if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
-                {
-                    if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
-                        "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
-                        "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
-                    {
-                        path = null;
-                        error = "";
-                        rom = null;
-                        return false;
-                    }
-                }
-
-                var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
-                Directory.CreateDirectory(folderPath);
-
-                var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}";
-                var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
-                var romPath = Path.Combine(folderPath, romFileName);
-                EnableMsu1Support(options, bytes, romPath, out var msuError);
-                Rom.UpdateChecksum(bytes);
-                File.WriteAllBytes(romPath, bytes);
-
-                var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
-                var spoilerFileName = $"Spoiler_Log_{fileSuffix}.txt";
-                var spoilerPath = Path.Combine(folderPath, spoilerFileName);
-                File.WriteAllText(spoilerPath, spoilerLog);
-
                 try
                 {
+                    var validated = false;
+                    var bytes = Array.Empty<byte>();
+                    var config = (Config)null;
+                    var seed = (SeedData)null;
+
+                    for (var j = 0; j < attempts && !validated; j++)
+                    {
+                        bytes = GenerateRomBytes(options, out seed);
+                        config = seed.Playthrough.Config;
+                        validated = _randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config);
+                    }
+
+                    if (!validated)
+                    {
+                        if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
+                            "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
+                            "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
+                        {
+                            path = null;
+                            error = "";
+                            rom = null;
+                            return false;
+                        }
+                    }
+
+                    var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
+                    Directory.CreateDirectory(folderPath);
+
+                    var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}";
+                    var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
+                    var romPath = Path.Combine(folderPath, romFileName);
+                    EnableMsu1Support(options, bytes, romPath, out var msuError);
+                    Rom.UpdateChecksum(bytes);
+                    File.WriteAllBytes(romPath, bytes);
+
+                    var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
+                    var spoilerFileName = $"Spoiler_Log_{fileSuffix}.txt";
+                    var spoilerPath = Path.Combine(folderPath, spoilerFileName);
+                    File.WriteAllText(spoilerPath, spoilerLog);
+
+                    try
+                    {
 #if DEBUG
-                    var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutoTracking\\LuaScripts");
+                        var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutoTracking\\LuaScripts");
 #else
                     var autoTrackerSourcePath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\AutotrackerScripts");
 #endif
-                    var autoTrackerDestPath = options.AutoTrackerScriptsOutputPath;
+                        var autoTrackerDestPath = options.AutoTrackerScriptsOutputPath;
 
-                    if (!autoTrackerSourcePath.Equals(autoTrackerDestPath, StringComparison.OrdinalIgnoreCase))
-                    {
-                        CopyDirectory(autoTrackerSourcePath, autoTrackerDestPath, true, true);
+                        if (!autoTrackerSourcePath.Equals(autoTrackerDestPath, StringComparison.OrdinalIgnoreCase))
+                        {
+                            CopyDirectory(autoTrackerSourcePath, autoTrackerDestPath, true, true);
+                        }
                     }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Unable to copy Autotracker Scripts");
+                    }
+
+                    rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
+
+                    error = msuError;
+                    path = romPath;
+
+                    return true;
                 }
-                catch (Exception e)
+                catch (RandomizerGenerationException e)
                 {
-                    _logger.LogError(e, "Unable to copy Autotracker Scripts");
+                    latestError = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
                 }
-
-                rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
-
-                error = msuError;
-                path = romPath;
-
-                return true;
             }
-            catch (RandomizerGenerationException e)
-            {
-                path = null;
-                error = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
-                rom = null;
-                return false;
-            }
+
+            path = null;
+            error = latestError;
+            rom = null;
+            return false;
+            
         }
 
         /// <summary>

@@ -83,7 +83,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (!_itemService.GetOrDefault(itemType).IsProgression(null))
+                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) == false)
                 {
                     continue;
                 }
@@ -228,7 +228,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (!_itemService.GetOrDefault(itemType).IsProgression(null))
+                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) == false)
                 {
                     continue;
                 }
@@ -336,12 +336,18 @@ namespace Randomizer.App
                 var i = 0;
                 Parallel.For(0, numberOfSeeds, (iteration, state) =>
                 {
-                    ct.ThrowIfCancellationRequested();
-                    var seed = randomizer.GenerateSeed(config.SeedOnly(), null, ct);
+                    try
+                    {
+                        ct.ThrowIfCancellationRequested();
+                        var seed = randomizer.GenerateSeed(config.SeedOnly(), null, ct);
 
-                    ct.ThrowIfCancellationRequested();
-                    GatherStats(stats, seed);
-                    AddToMegaSpoilerLog(itemCounts, seed);
+                        ct.ThrowIfCancellationRequested();
+                        GatherStats(stats, seed);
+                        AddToMegaSpoilerLog(itemCounts, seed);
+                    }
+                    catch (Exception)
+                    {
+                    }
 
                     var seedsGenerated = Interlocked.Increment(ref i);
                     progressDialog.Report(seedsGenerated / (double)numberOfSeeds);
@@ -382,6 +388,7 @@ namespace Randomizer.App
         private ConcurrentDictionary<string, int> InitStats()
         {
             var stats = new ConcurrentDictionary<string, int>();
+            stats.TryAdd("Successfully generated", 0);
             stats.TryAdd("Shaktool betrays you", 0);
             stats.TryAdd("Zora is a scam", 0);
             stats.TryAdd("Catfish is a scamfish", 0);
@@ -394,6 +401,8 @@ namespace Randomizer.App
         private void GatherStats(ConcurrentDictionary<string, int> stats, SeedData seed)
         {
             var world = seed.Worlds.Single();
+
+            stats.Increment("Successfully generated");
 
             if (IsScam(world.World.InnerMaridia.ShaktoolItem.Item.Type))
                 stats.Increment("Shaktool betrays you");
