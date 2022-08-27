@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.Generation
         public async Task<PlandoConfig> LoadAsync(string path,
             CancellationToken cancellationToken = default)
         {
-            var serializer = new SharpYaml.Serialization.Serializer();
+            var serializer = new YamlDotNet.Serialization.Deserializer();
             var yaml = await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken);
             var config = serializer.Deserialize<PlandoConfig>(yaml);
             config.FileName = Path.GetFileNameWithoutExtension(path);

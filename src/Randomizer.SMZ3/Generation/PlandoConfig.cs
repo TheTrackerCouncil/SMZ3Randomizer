@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Enumeration;
 using System.Linq;
 
 using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 
-using SharpYaml.Serialization;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.SMZ3.Generation
 {
