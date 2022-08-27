@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Generation
             var serializer = new SharpYaml.Serialization.Serializer();
             var yaml = await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken);
             var config = serializer.Deserialize<PlandoConfig>(yaml);
-            config.FileName = Path.GetFileName(path);
+            config.FileName = Path.GetFileNameWithoutExtension(path);
             return config;
         }
     }
