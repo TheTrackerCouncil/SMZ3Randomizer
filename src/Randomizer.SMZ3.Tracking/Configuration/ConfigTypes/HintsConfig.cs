@@ -42,6 +42,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             = new("Reply hazy, try again.", "Ask again later.", "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.");
 
         /// <summary>
+        /// Gets the phrases to rspond with when asked about hints on a seed
+        /// where a complete playthrough is likely impossible.
+        /// </summary>
+        public SchrodingersString PlaythroughImpossible { get; init; }
+            = new("Sorry, you're on your own with this one.");
+
+        /// <summary>
         /// Gets the hints for items that are not in logic.
         /// </summary>
         /// <remarks>
