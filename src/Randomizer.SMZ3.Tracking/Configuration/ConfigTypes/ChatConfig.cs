@@ -145,6 +145,42 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             = new("Nobody guessed {0}.");
 
         /// <summary>
+        /// Gets the phrases to respond with when Tracker submits her own guess
+        /// for the guessing game.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the number that Tracker guessed.
+        /// </remarks>
+        public SchrodingersString TrackerGuess { get; init; }
+            = new("My guess is {0}.", "I'm joining with {0}.", "I have a feeling it'll be {0}");
+
+        /// <summary>
+        /// Gets the phrases to respond with when Tracker is among the list of
+        /// winners that were just announced.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the correct number.
+        /// </remarks>
+        public SchrodingersString TrackerGuessWon { get; init; }
+            = new("Hey, that's me.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when Tracker is the only winner of
+        /// the guessing game.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the correct number.
+        /// </remarks>
+        public SchrodingersString TrackerGuessOnlyWinner { get; init; }
+            = new("Am I the only one who guessed {0}? I swear I wasn't cheating.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when the chest that Tracker guessed
+        /// was opened and did not contain the big key.
+        /// </summary>
+        public SchrodingersString? TrackerGuessFailed { get; init; } // TODO: implement
+
+        /// <summary>
         /// Gets a dictionary that contains usernames and their replacement for
         /// text-to-speech pronunciation purposes.
         /// </summary>

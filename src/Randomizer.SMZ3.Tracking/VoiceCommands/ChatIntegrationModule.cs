@@ -32,6 +32,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private bool _hasAskedChatAboutContent = false;
         private DateTimeOffset? _guessingGameStart = null;
         private DateTimeOffset? _guessingGameClosed = null;
+        private int? _trackerGuess = null;
 
         /// <summary>
         /// Initializes a new instance of the <see
@@ -51,9 +52,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             ChatClient.Disconnected += ChatClient_Disconnected;
             ChatClient.SendMessageFailure += ChatClient_SendMessageFailure;
 
-            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), (tracker, result) =>
+            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (tracker, result) =>
             {
-                StartGanonsTowerGuessingGame();
+                await StartGanonsTowerGuessingGame();
             });
 
             AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (tracker, result) =>
@@ -102,7 +103,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// Starts tracking GT Big Key Guessing Game guesses in chat.
         /// </summary>
-        public void StartGanonsTowerGuessingGame()
+        public async Task StartGanonsTowerGuessingGame()
         {
             var lastCloseBackup = _guessingGameClosed;
             if (!ChatClient.IsConnected)
@@ -120,7 +121,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AllowGanonsTowerGuesses = true;
             _guessingGameStart = DateTimeOffset.Now;
             _guessingGameClosed = null;
+            _trackerGuess = s_random.Next(1, 23);
             Tracker.Say(x => x.Chat.StartedGuessingGame);
+
+            await Task.Delay(s_random.Next(100, 900));
+            Tracker.Say(x => x.Chat.TrackerGuess, _trackerGuess);
 
             Tracker.AddUndo(() =>
             {
@@ -130,6 +135,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     GanonsTowerGuesses.Clear();
                     _guessingGameStart = null;
                     _guessingGameClosed = lastCloseBackup;
+                    _trackerGuess = null;
                 }
             });
         }
@@ -214,7 +220,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (winners.Count == 0)
             {
-                Tracker.Say(x => x.Chat.NobodyWonGuessingGame, winningNumber);
+                if (winningNumber == _trackerGuess)
+                {
+                    Tracker.Say(x => x.Chat.TrackerGuessOnlyWinner, winningNumber);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Chat.NobodyWonGuessingGame, winningNumber);
+                }
 
                 var chatMessage = Tracker.Responses.Chat.NobodyWonGuessingGame.Format(winningNumber);
                 if (chatMessage != null)
@@ -224,6 +237,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
             else
             {
+                if (winningNumber == _trackerGuess)
+                    winners = winners.Add("Tracker");
+
                 var pronouncedNames = winners.Select(Tracker.CorrectUserNamePronunciation);
                 Tracker.Say(x => x.Chat.DeclareGuessingGameWinners, winningNumber, NaturalLanguage.Join(pronouncedNames));
 
@@ -232,7 +248,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 {
                     await ChatClient.SendMessageAsync(chatMessage, announce: true);
                 }
+
+                if (winningNumber == _trackerGuess)
+                {
+                    await Task.Delay(s_random.Next(100, 900));
+                    Tracker.Say(x => x.Chat.TrackerGuessWon, winningNumber);
+                }
             }
+
+            if (winningNumber != _trackerGuess)
+                Tracker.Say(x => x.Chat.TrackerGuessFailed, winningNumber);
         }
 
         /// <summary>

@@ -689,6 +689,13 @@ Chat:
   - Text: Nobody guessed number {0}.
   - Text: Nobody guessed {0}.
   - Text: And the winners are... nobody.
+  TrackerGuess:
+  TrackerGuessWon:
+  TrackerGuessOnlyWinner:
+  - Text: Really? I was the only one who guessed {0}?
+  - Text: Nobody else guessed {0}? Just me?
+  TrackerGuessFailed:
+  - Text: I guess I lost. Told you I wasn't cheating.
   AskChatAboutContent:
   - Text: Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.
   - Text: Do you really think that was high quality hashtag content? Let's get some unbiased opinions from chat to confirm.

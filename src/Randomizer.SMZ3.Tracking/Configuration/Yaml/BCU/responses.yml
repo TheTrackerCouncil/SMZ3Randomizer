@@ -54,6 +54,15 @@ Chat:
   - Text: '{1} must be pretty good.'
   NobodyWonGuessingGame:
   - Text: Hey chat, you're all pretty bad.
+  TrackerGuess:
+  TrackerGuessWon:
+  - Text: I guess I get to keep my soul. Not that you'd get it anyway.
+  - Text: I already knew I was pretty good.
+  TrackerGuessOnlyWinner:
+  - Text: I guess I'm the only one who guessed {0}. You're all pretty bad.
+  TrackerGuessFailed:
+  - Text: I might have lost, but you're still not getting my soul.
+  - Text: I guess I lost. I don't have a soul for you to steal though.
   UserNamePronunciation:
     pinkkittyrose: Pink Kitty Rose
     skennedysa: s kennedy
