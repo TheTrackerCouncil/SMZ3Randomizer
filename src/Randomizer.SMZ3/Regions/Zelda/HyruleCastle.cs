@@ -47,7 +47,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 memoryAddress: 0x146,
                 memoryFlag: 0x1,
                 memoryType: LocationMemoryType.ZeldaMisc)
-                .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem)
+                .Allow((item, items) => Config.ZeldaKeysanity || !item.IsDungeonItem)
                 .Weighted(SphereOne);
 
             SecretPassage = new Location(this, 256 + 100, 0x1E971, LocationType.NotInDungeon,
@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 vanillaItem: ItemType.FiveRupees,
                 memoryAddress: 0x55,
                 memoryFlag: 0x4)
-                .Allow((item, items) => Config.Keysanity || !item.IsDungeonItem)
+                .Allow((item, items) => Config.ZeldaKeysanity || !item.IsDungeonItem)
                 .Weighted(SphereOne);
 
             BackOfEscape = new BackOfEscapeRoom(this);

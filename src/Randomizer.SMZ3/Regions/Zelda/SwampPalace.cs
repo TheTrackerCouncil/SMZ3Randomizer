@@ -18,7 +18,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 vanillaItem: ItemType.KeySP,
                 memoryAddress: 0x28,
                 memoryFlag: 0x4)
-                .Allow((item, items) => Config.Keysanity || item.Is(ItemType.KeySP, World));
+                .Allow((item, items) => Config.ZeldaKeysanity || item.Is(ItemType.KeySP, World));
 
             MapChest = new Location(this, 256 + 136, 0x1E986, LocationType.Regular,
                 name: "Map Chest",

@@ -142,7 +142,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                     return false;
                 }
 
-                if (Config.Keysanity
+                if (Config.ZeldaKeysanity
                     && !((item.Type == ItemType.BigKeyGT || item.Type == ItemType.KeyGT) && item.World == World)
                     && (item.IsKey || item.IsBigKey || item.IsKeycard))
                 {

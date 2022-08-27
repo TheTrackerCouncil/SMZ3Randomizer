@@ -62,17 +62,22 @@ namespace Randomizer.SMZ3.Generation
 
                 InitialFillInOwnWorld(dungeon, progression, world, config);
 
-                if (config.Keysanity == false)
+                if (config.ZeldaKeysanity == false)
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
                     var keyCards = Item.CreateKeycards(world);
                     AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world }, cancellationToken);
-                    assumedInventory = assumedInventory.Concat(keyCards).ToList();
+                }
+
+                if (config.MetroidKeysanity)
+                {
+                    progressionItems.AddRange(Item.CreateKeycards(world));
                 }
                 else
                 {
-                    progressionItems.AddRange(Item.CreateKeycards(world));
+                    var keyCards = Item.CreateKeycards(world);
+                    assumedInventory = assumedInventory.Concat(keyCards).ToList();
                 }
 
                 progressionItems.AddRange(dungeon);

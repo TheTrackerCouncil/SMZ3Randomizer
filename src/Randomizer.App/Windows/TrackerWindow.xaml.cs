@@ -639,7 +639,8 @@ namespace Randomizer.App
                 Options = Options.Clone();
                 Options.LogicConfig = config.LogicConfig;
                 Options.SeedOptions.Race = config.Race;
-                Options.SeedOptions.Keysanity = config.Keysanity;
+                Options.SeedOptions.KeysanityMode = config.KeysanityMode;
+                Options.SeedOptions.ItemPlacementRule = config.ItemPlacementRule;
                 Options.SeedOptions.ConfigString = config.SettingsString;
                 Options.SeedOptions.CopySeedAndRaceSettings = config.CopySeedAndRaceSettings;
                 if (Rom.GeneratorVersion == 0) Options.LogicConfig.FireRodDarkRooms = true;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-
+using Randomizer.Shared;
 using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3
@@ -20,9 +20,10 @@ namespace Randomizer.SMZ3
 
         public IReadOnlyList<Sphere> Spheres { get; }
 
-        public static bool IsImportant(Location location, bool keysanity)
-            => (keysanity && (location.Item.Progression || location.Item.IsDungeonItem || location.Item.IsKeycard))
-            || (!keysanity && location.Item.Progression);
+        public static bool IsImportant(Location location, KeysanityMode keysanity)
+            => location.Item.Progression
+            || (location.Item.IsDungeonItem && keysanity is KeysanityMode.Both or KeysanityMode.Zelda)
+            || (location.Item.IsKeycard && keysanity is KeysanityMode.Both or KeysanityMode.SuperMetroid);
 
         /// <summary>
         /// Simulates a rough playthrough and returns a value indicating whether
@@ -74,7 +75,7 @@ namespace Randomizer.SMZ3
 
             foreach (var world in worlds)
             {
-                if (!world.Config.Keysanity)
+                if (!world.Config.MetroidKeysanity)
                 {
                     items.AddRange(Item.CreateKeycards(world));
                 }
@@ -128,7 +129,7 @@ namespace Randomizer.SMZ3
                         text.Add($"Inaccessible Item: {location}", $"{location.Item.Name}");
                 }
 
-                foreach (var location in x.Locations.Where(x => IsImportant(x, Config.Keysanity)))
+                foreach (var location in x.Locations.Where(x => IsImportant(x, Config.KeysanityMode)))
                 {
                     if (Config.MultiWorld)
                         text.Add($"{location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");

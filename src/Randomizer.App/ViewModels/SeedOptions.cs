@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3;
 
 namespace Randomizer.App.ViewModels
@@ -37,6 +38,10 @@ namespace Randomizer.App.ViewModels
         public ItemPool PegWorldItem { get; set; }
 
         public bool Keysanity { get; set; }
+
+        public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
+
+        public ItemPlacementRule ItemPlacementRule { get; set; } = ItemPlacementRule.Anywhere;
 
         public bool Race { get; set; }
 

@@ -164,7 +164,7 @@ namespace Randomizer.App.ViewModels
                 }
 
                 return _currentMap.FullLocations
-                    .Where(x => x.Type != TrackerMapLocation.MapLocationType.SMDoor || Syncer.World.Config.Keysanity)
+                    .Where(x => x.Type != TrackerMapLocation.MapLocationType.SMDoor || Syncer.World.Config.MetroidKeysanity)
                     .Select(mapLoc => new TrackerMapLocationViewModel(mapLoc,
                         Syncer,
                         MapSize.Width / CurrentMap.Width))

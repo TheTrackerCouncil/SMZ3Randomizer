@@ -55,16 +55,5 @@ namespace Randomizer.Shared
 
             return attrib.Categories;
         }
-
-        /// <summary>
-        /// Returns true if this item type is a progression item type
-        /// </summary>
-        /// <param name="itemType">The item type to check</param>
-        /// <returns>True if it's a progression item type, false otherwise</returns>
-        public static bool IsProgression(this ItemType itemType)
-        {
-            return !(itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard, ItemCategory.NonRandomized, ItemCategory.Nice  }) || itemType == ItemType.Nothing);
-        }
     }
 }

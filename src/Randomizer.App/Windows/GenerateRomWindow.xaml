@@ -233,9 +233,26 @@
                         IsEnabled="{Binding DisabledInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
                         Padding="0,5,0,0"
                         Margin="0,0,0,10">
-                <UniformGrid Columns="2">
-                  <CheckBox IsChecked="{Binding Keysanity}">Keysanity</CheckBox>
-                </UniformGrid>
+                <StackPanel>
+                  <controls:LabeledControl Text="Keysanity:">
+                    <ComboBox SelectedItem="{Binding KeysanityMode}"
+                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:KeysanityMode}}}"
+                              HorizontalAlignment="Left"
+                              MinWidth="75" />
+                  </controls:LabeledControl>
+                  <controls:LabeledControl Text="Progression item placement:" Margin="0,0,0,3">
+                    <ComboBox SelectedItem="{Binding ItemPlacementRule}"
+                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:ItemPlacementRule}}}"
+                              HorizontalAlignment="Left"
+                              MinWidth="75" />
+                  </controls:LabeledControl>
+                  <controls:LabeledControl Text="">
+                    <TextBlock TextWrapping="Wrap">
+                      Note: Accessible locations at the start of the run can have any item despite the selected progression item placement.
+                    </TextBlock>
+                  </controls:LabeledControl>
+                </StackPanel>
+                
               </GroupBox>
 
               <GroupBox Header="Race Settings"

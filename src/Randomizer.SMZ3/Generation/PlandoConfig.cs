@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Generation
         /// <param name="world">The world instance to export to a config.</param>
         public PlandoConfig(World world)
         {
-            Keysanity = world.Config.Keysanity;
+            KeysanityMode = world.Config.KeysanityMode;
             Items = world.Locations
                 .ToDictionary(x => x.ToString(), x => x.Item.Type);
             Rewards = world.Regions.Where(x => x is IHasReward)
@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Gets or sets a value indicating whether Keysanity should be enabled.
         /// </summary>
-        public bool Keysanity { get; set; }
+        public KeysanityMode KeysanityMode { get; set; }
 
         /// <summary>
         /// Gets or sets a dictionary that contains the names of locations and

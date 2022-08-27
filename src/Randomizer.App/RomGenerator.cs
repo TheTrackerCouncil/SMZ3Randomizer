@@ -53,34 +53,62 @@ namespace Randomizer.App
         /// <param name="error">Any error message from generating the rom</param>
         /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public bool GenerateRandomRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
+        public bool GenerateRandomRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom, int attempts = 5)
         {
-            try
+            var latestError = "";
+            var seed = (SeedData)null;
+            var validated = false;
+            
+            for (var i = 0; i < attempts; i++)
             {
-                var seed = GenerateSeed(options);
-                if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
+                try
                 {
-                    if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
-                        "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
-                        "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
+                    seed = GenerateSeed(options);
+                    if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
                     {
                         path = null;
-                        error = "";
-                        rom = null;
-                        return false;
+                        latestError = "";
+                        validated = false;
+                    }
+                    else
+                    {
+                        validated = true;
+                        break;
                     }
                 }
-
-                rom = GenerateRomInternal(seed, options, out path, out error);
-                return true;
+                catch (RandomizerGenerationException e)
+                {
+                    seed = null;
+                    latestError = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
+                }
             }
-            catch (RandomizerGenerationException e)
+
+            if (seed != null)
+            {
+                if (!validated && System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
+                        "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
+                        "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    path = null;
+                    error = "";
+                    rom = null;
+                    return false;
+                }
+                else
+                {
+                    error = "";
+                    rom = GenerateRomInternal(seed, options, out path, out error);
+                    return true;
+                }
+            }
+            else
             {
                 path = null;
-                error = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
+                error = latestError;
                 rom = null;
                 return false;
             }
+            
         }
 
         /// <summary>
@@ -205,7 +233,7 @@ namespace Randomizer.App
         {
             var config = options.ToConfig();
             config.PlandoConfig = plandoConfig;
-            config.Keysanity = plandoConfig.Keysanity;
+            config.KeysanityMode = plandoConfig.KeysanityMode;
             config.LogicConfig = plandoConfig.Logic.Clone();
             return _plandomizer.GenerateSeed(config, CancellationToken.None);
         }

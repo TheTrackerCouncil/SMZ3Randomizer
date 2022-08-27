@@ -32,7 +32,7 @@ namespace Randomizer.SMZ3.Regions.Zelda
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyTR,
                 access: items => items.KeyTR >=
-                    (!Config.Keysanity || BigKeyChest.ItemIs(ItemType.BigKeyTR, World) ? 2 :
+                    (!Config.ZeldaKeysanity || BigKeyChest.ItemIs(ItemType.BigKeyTR, World) ? 2 :
                         BigKeyChest.ItemIs(ItemType.KeyTR, World) ? 3 : 4),
                 memoryAddress: 0x14,
                 memoryFlag: 0x4)

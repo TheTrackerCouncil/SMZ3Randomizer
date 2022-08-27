@@ -17,7 +17,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Power Bomb (Crateria surface)",
                 alsoKnownAs: new[] { "Chozo Ruins entrance" }, // Referring to Metroid Zero Mission, I guess?
                 vanillaItem: ItemType.PowerBomb,
-                access: items => (Config.Keysanity ? items.CardCrateriaL1 : Logic.CanUsePowerBombs(items)) && (items.SpeedBooster || Logic.CanFly(items)),
+                access: items => (Config.MetroidKeysanity ? items.CardCrateriaL1 : Logic.CanUsePowerBombs(items)) && (items.SpeedBooster || Logic.CanFly(items)),
                 memoryAddress: 0x0,
                 memoryFlag: 0x1);
             FinalMissileBombWay = new Location(this, 12, 0x8F8486, LocationType.Visible,
@@ -45,7 +45,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Bombs",
                 alsoKnownAs: new[] { "Bomb Torizo room" },
                 vanillaItem: ItemType.Bombs,
-                access: items => (Config.Keysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
+                access: items => (Config.MetroidKeysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
                                  && (Logic.CanPassBombPassages(items) || Logic.CanWallJump(WallJumpDifficulty.Hard)),
                 memoryAddress: 0x0,
                 memoryFlag: 0x80);

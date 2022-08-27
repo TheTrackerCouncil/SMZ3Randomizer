@@ -428,18 +428,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         ? Tracker.CorrectPronunciation(Tracker.World.Config.SamusName)
                         : Tracker.CorrectPronunciation(Tracker.World.Config.LinkName);
 
-                    if (location.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass)
-                        || (location.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard)
-                            && !Tracker.World.Config.Keysanity))
+                    if (ItemService.GetOrDefault(location.Item.Type)?.IsJunk(Tracker.World.Config) == true)
                     {
                         return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
                     }
 
-                    var junkCategories = new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.Map, ItemCategory.Compass };
-                    if (!Tracker.World.Config.Keysanity)
-                        junkCategories = junkCategories.Concat(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard }).ToArray();
+                    // Todo: Add check for if it's progression
 
-                    if (!location.Item.Type.IsInAnyCategory(junkCategories))
+                    if (ItemService.GetOrDefault(location.Item.Type)?.IsGood(Tracker.World.Config) == true)
                     {
                         return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     }

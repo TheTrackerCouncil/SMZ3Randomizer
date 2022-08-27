@@ -710,7 +710,7 @@ namespace Randomizer.SMZ3.Tracking
         /// must be tracked manually.
         /// </remarks>
         public Progression GetProgression()
-            => GetProgression(assumeKeys: !World.Config.Keysanity);
+            => GetProgression(assumeKeys: World.Config.KeysanityMode == KeysanityMode.None);
 
         /// <summary>
         /// Gets the currently available items.
@@ -742,7 +742,7 @@ namespace Randomizer.SMZ3.Tracking
 
             var progression = new Progression();
 
-            if (!World.Config.Keysanity || assumeKeys)
+            if (!World.Config.MetroidKeysanity || assumeKeys)
             {
                 progression.AddRange(Item.CreateKeycards(World));
                 if (assumeKeys)
@@ -1176,7 +1176,7 @@ namespace Randomizer.SMZ3.Tracking
             var itemName = item.Name;
             var originalTrackingState = item.TrackingState;
             UpdateTrackerProgression = true;
-            var stateItem = !autoTracked || !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey) || World.Config.Keysanity;
+            var stateItem = !autoTracked || !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Map) || World.Config.ZeldaKeysanity;
 
             if (item.HasStages)
             {
@@ -1341,7 +1341,7 @@ namespace Randomizer.SMZ3.Tracking
             
             var addedEvent = History.AddEvent(
                 HistoryEventType.TrackedItem,
-                item.InternalItemType.IsProgression(),
+                item.IsProgression(World.Config),
                 item.NameWithArticle,
                 location
             );
@@ -1635,7 +1635,7 @@ namespace Randomizer.SMZ3.Tracking
                         itemsCleared++;
                         if (!trackItems)
                         {
-                            if (IsTreasure(location.Item) || World.Config.Keysanity)
+                            if (IsTreasure(location.Item) || World.Config.ZeldaKeysanity)
                                 treasureTracked++;
                             location.Cleared = true;
                             OnLocationCleared(new(location, confidence));
@@ -1648,7 +1648,7 @@ namespace Randomizer.SMZ3.Tracking
                             _logger.LogWarning("Failed to track {itemType} in {area}.", itemType, area.Name); // Probably the compass or something, who cares
                         else
                             itemsTracked.Add(item);
-                        if (IsTreasure(location.Item) || World.Config.Keysanity)
+                        if (IsTreasure(location.Item) || World.Config.ZeldaKeysanity)
                             treasureTracked++;
 
                         location.Cleared = true;
@@ -2363,7 +2363,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var dungeon = GetDungeonFromItem(item);
-            if (dungeon != null && (IsTreasure(item) || World.Config.Keysanity))
+            if (dungeon != null && (IsTreasure(item) || World.Config.ZeldaKeysanity))
             {
                 if (TrackDungeonTreasure(dungeon, confidence))
                     return _undoHistory.Pop();
@@ -2384,7 +2384,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var dungeon = GetDungeonFromLocation(location);
-            if (dungeon != null && (IsTreasure(location.Item) || World.Config.Keysanity))
+            if (dungeon != null && (IsTreasure(location.Item) || World.Config.ZeldaKeysanity))
             {
                 if (TrackDungeonTreasure(dungeon, confidence))
                     return _undoHistory.Pop();
@@ -2405,7 +2405,7 @@ namespace Randomizer.SMZ3.Tracking
                 var region = world.Regions.SingleOrDefault(x => dungeon.Is(x));
                 if (region != null)
                 {
-                    dungeon.TreasureRemaining = region.Locations.Count(x => (IsTreasure(x.Item) || World.Config.Keysanity) && x.Type != LocationType.NotInDungeon);
+                    dungeon.TreasureRemaining = region.Locations.Count(x => (IsTreasure(x.Item) || World.Config.ZeldaKeysanity) && x.Type != LocationType.NotInDungeon);
                     _logger.LogDebug("Found {TreasureRemaining} item(s) in {dungeon}", dungeon.TreasureRemaining, dungeon.Name);
                 }
                 else

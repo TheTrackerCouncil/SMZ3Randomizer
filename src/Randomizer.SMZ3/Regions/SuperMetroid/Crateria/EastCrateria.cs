@@ -67,9 +67,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
         {
             return
                     /* Ship -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && items.Super) ||
+                    ((Config.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && items.Super) ||
                     /* UN Portal -> Red Tower -> Moat */
-                    ((Config.Keysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && Logic.CanAccessNorfairUpperPortal(items) &&
+                    ((Config.MetroidKeysanity ? items.CardCrateriaL2 : Logic.CanUsePowerBombs(items)) && Logic.CanAccessNorfairUpperPortal(items) &&
                         (items.Ice || items.HiJump || items.SpaceJump)) ||
                     /*Through Maridia From Portal*/
                     (Logic.CanAccessMaridiaPortal(items, requireRewards) && items.Gravity && items.Super && (

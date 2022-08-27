@@ -8,6 +8,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.SMZ3
@@ -80,15 +81,6 @@ namespace Randomizer.SMZ3
         DefeatBoth,
     }
 
-    [DefaultValue(None)]
-    public enum KeyShuffle
-    {
-        [Description("None")]
-        None,
-
-        [Description("Keysanity")]
-        Keysanity
-    }
 
     public enum GanonInvincible
     {
@@ -174,6 +166,7 @@ namespace Randomizer.SMZ3
         };
 
         public GameMode GameMode { get; set; } = GameMode.Normal;
+        public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
         public bool Race { get; set; } = false;
         public bool DisableSpoilerLog { get; set; } = false;
         public bool DisableTrackerSpoilers { get; set; } = false;
@@ -196,7 +189,7 @@ namespace Randomizer.SMZ3
 
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;
-        public bool Keysanity { get; set; }
+        public bool Keysanity => KeysanityMode != KeysanityMode.None;
         public string Seed { get; set; }
         public string SettingsString { get; set; }
         public bool CopySeedAndRaceSettings { get; set; }
@@ -207,6 +200,11 @@ namespace Randomizer.SMZ3
         public PlandoConfig? PlandoConfig { get; set; }
 #nullable disable
         public bool ShaktoolWithoutGrapple { get; set; }
+        public ItemPlacementRule ItemPlacementRule { get; set; }
+
+        public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
+        public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
+        public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
 
         public Config SeedOnly()
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3
 {
@@ -98,7 +99,32 @@ namespace Randomizer.SMZ3
         /// </returns>
         public virtual bool CanFill(Item item, Progression items)
         {
-            return Config.Keysanity || !item.IsDungeonItem || IsRegionItem(item);
+            return (Config.ZeldaKeysanity || !item.IsDungeonItem || IsRegionItem(item)) && MatchesItemPlacementRule(item);
+        }
+
+        private bool MatchesItemPlacementRule(Item item)
+        {
+            var rule = Config.ItemPlacementRule;
+            if (rule == ItemPlacementRule.Anywhere
+                || (!item.Progression && !item.IsKey && !item.IsKeycard && !item.IsBigKey)
+                || (!Config.ZeldaKeysanity && (item.IsKey || item.IsBigKey))) return true;
+            else if (rule == ItemPlacementRule.DungeonsAndMetroid)
+            {
+                return (this is Z3Region region && !region.IsOverworld) || this is SMRegion;
+            }
+            else if (rule == ItemPlacementRule.CrystalDungeonsAndMetroid)
+            {
+                return (this is IHasReward rewardRegion && rewardRegion.Reward is RewardType.CrystalBlue or RewardType.CrystalRed) || this is SMRegion;
+            }
+            else if (rule == ItemPlacementRule.OppositeGame)
+            {
+                return (item.Type.IsInCategory(ItemCategory.Zelda) && this is SMRegion) || (item.Type.IsInCategory(ItemCategory.Metroid) && this is Z3Region);
+            }
+            else if (rule == ItemPlacementRule.SameGame)
+            {
+                return (item.Type.IsInCategory(ItemCategory.Zelda) && this is Z3Region) || (item.Type.IsInCategory(ItemCategory.Metroid) && this is SMRegion);
+            }
+            return true;
         }
 
         /// <summary>

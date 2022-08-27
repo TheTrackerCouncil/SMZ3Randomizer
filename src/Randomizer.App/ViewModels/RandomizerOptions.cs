@@ -114,8 +114,9 @@ namespace Randomizer.App.ViewModels
                 var config = new Config()
                 {
                     GameMode = GameMode.Normal,
-                    Keysanity = SeedOptions.Keysanity,
+                    KeysanityMode = SeedOptions.KeysanityMode,
                     Race = SeedOptions.Race,
+                    ItemPlacementRule = SeedOptions.ItemPlacementRule,
                     DisableSpoilerLog = SeedOptions.DisableSpoilerLog,
                     DisableTrackerHints = SeedOptions.DisableTrackerHints,
                     DisableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers,
@@ -142,7 +143,8 @@ namespace Randomizer.App.ViewModels
             {
                 var oldConfig = Config.FromConfigString(SeedOptions.ConfigString);
 
-                var keysanity = SeedOptions.Keysanity;
+                var keysanity = SeedOptions.KeysanityMode;
+                var itemPlacement = SeedOptions.ItemPlacementRule;
                 var race = SeedOptions.Race;
                 var disableSpoilerLog = SeedOptions.DisableSpoilerLog;
                 var disableTrackerHints = SeedOptions.DisableTrackerHints;
@@ -152,7 +154,8 @@ namespace Randomizer.App.ViewModels
 
                 if (SeedOptions.CopySeedAndRaceSettings)
                 {
-                    keysanity = oldConfig.Keysanity;
+                    keysanity = oldConfig.KeysanityMode;
+                    itemPlacement = oldConfig.ItemPlacementRule;
                     race = oldConfig.Race;
                     disableSpoilerLog = oldConfig.DisableSpoilerLog;
                     disableTrackerHints = oldConfig.DisableTrackerHints;
@@ -165,7 +168,8 @@ namespace Randomizer.App.ViewModels
                 return new Config()
                 {
                     GameMode = GameMode.Normal,
-                    Keysanity = keysanity,
+                    KeysanityMode = keysanity,
+                    ItemPlacementRule = itemPlacement,
                     Race = race,
                     DisableSpoilerLog = disableSpoilerLog,
                     DisableTrackerHints = disableTrackerHints,
