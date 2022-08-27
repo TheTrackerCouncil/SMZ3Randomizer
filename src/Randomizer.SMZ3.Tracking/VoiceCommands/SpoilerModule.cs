@@ -218,6 +218,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
+            // Now that we're ready to give hints, make sure they're turned on
+            if (!Tracker.HintsEnabled && !Tracker.SpoilersEnabled)
+            {
+                Tracker.Say(x => x.Hints.PromptEnableItemHints);
+                return;
+            }
+
             // Once we're done being a smartass, see if the item can be found at all
             var locations = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
@@ -234,13 +241,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 // The item exists, but all locations are cleared
                 Tracker.Say(x => x.Spoilers.LocationsCleared, item.NameWithArticle);
-                return;
-            }
-
-            // Now that we're ready to give hints, make sure they're turned on
-            if (!Tracker.HintsEnabled && !Tracker.SpoilersEnabled)
-            {
-                Tracker.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
