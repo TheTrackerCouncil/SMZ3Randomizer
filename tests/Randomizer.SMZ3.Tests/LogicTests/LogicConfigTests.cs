@@ -308,5 +308,30 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             missingItems.Should().BeEmpty();
             tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeTrue();
         }
+
+        [Fact]
+        public void TestWaterwayNeedsGravitySuit()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.WaterwayNeedsGravitySuit = false;
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile }, new List<RewardType>());
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.Waterway, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeTrue();
+
+            config.LogicConfig.WaterwayNeedsGravitySuit = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.Waterway, progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Gravity });
+            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeFalse();
+
+            progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile, ItemType.Gravity }, new List<RewardType>());
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeTrue();
+        }
     }
 }

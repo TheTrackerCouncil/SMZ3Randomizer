@@ -24,6 +24,11 @@ namespace Randomizer.Shared
         [Category("Logic")]
         public bool LaunchPadRequiresIceBeam { get; set; }
 
+        [DisplayName("Waterway Needs Gravity Suit")]
+        [Description("You're expected to have the gravity suit to be able to access the gravity suit")]
+        [Category("Logic")]
+        public bool WaterwayNeedsGravitySuit { get; set; }
+
         [DisplayName("Fire Rod for Dark Rooms")]
         [Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness")]
         [Category("Tricks")]

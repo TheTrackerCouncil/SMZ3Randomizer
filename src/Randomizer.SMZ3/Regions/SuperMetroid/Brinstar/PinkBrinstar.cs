@@ -56,7 +56,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Brinstar
                 alsoKnownAs: new[] { "Waterway" },
                 vanillaItem: ItemType.ETank,
                 access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && items.SpeedBooster &&
-                        (Logic.HasEnergyReserves(items, 1) || items.Gravity),
+                        ((Logic.HasEnergyReserves(items, 1) && !World.Config.LogicConfig.WaterwayNeedsGravitySuit) || items.Gravity),
                 memoryAddress: 0x4,
                 memoryFlag: 0x2);
             WaveBeamGlitchRoom = new Location(this, 35, 0x8F8824, LocationType.Visible,
