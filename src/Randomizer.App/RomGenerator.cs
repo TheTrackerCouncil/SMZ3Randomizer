@@ -275,6 +275,7 @@ namespace Randomizer.App
         protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
             var config = seed.Playthrough.Config;
+            var trackerState = seed.Worlds[0].World.CreateTrackerState();
 
             var rom = new GeneratedRom()
             {
@@ -283,7 +284,8 @@ namespace Randomizer.App
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
                 Settings = config.SettingsString ?? Config.ToConfigString(config, true),
-                GeneratorVersion = Smz3Randomizer.Version.Major
+                GeneratorVersion = Smz3Randomizer.Version.Major,
+                TrackerState = trackerState
             };
             _dbContext.GeneratedRoms.Add(rom);
             _dbContext.SaveChanges();
