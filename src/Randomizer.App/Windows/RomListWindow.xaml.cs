@@ -7,15 +7,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+
+using SharpYaml;
 
 namespace Randomizer.App
 {
@@ -90,7 +95,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
+            var successful = _romGenerator.GenerateRandomRom(Options, out _, out var error, out var rom);
 
             if (!successful)
             {
@@ -126,6 +131,54 @@ namespace Randomizer.App
             }
 
             RomsList.SelectedIndex = 0;
+        }
+
+        private async void StartPlandoButton_Click(object sender, RoutedEventArgs e)
+        {
+            using var scope = _serviceProvider.CreateScope();
+
+            var plandoBrowser = new OpenFileDialog
+            {
+                Title = "Open plando configuration - SMZ3 Cas’ Randomizer",
+                Filter = "YAML files (*.yml; *.yaml)|*.yml;*.yaml|All files (*.*)|*.*"
+            };
+            if (plandoBrowser.ShowDialog(this) != true)
+                return;
+
+            try
+            {
+                var plandoConfigLoader = scope.ServiceProvider.GetRequiredService<IPlandoConfigLoader>();
+                var plandoConfig = await plandoConfigLoader.LoadAsync(plandoBrowser.FileName);
+
+                var generateWindow = scope.ServiceProvider.GetRequiredService<GenerateRomWindow>();
+                generateWindow.PlandoConfig = plandoConfig;
+                generateWindow.Owner = this;
+                generateWindow.Options = Options;
+                if (generateWindow.ShowDialog() == true)
+                {
+                    UpdateRomList();
+                }
+
+                RomsList.SelectedIndex = 0;
+            }
+            catch (PlandoConfigurationException ex)
+            {
+                _logger.LogWarning(ex, "Plando config '{FileName}' contains errors.", plandoBrowser.FileName);
+                MessageBox.Show(this, "The selected plando configuration contains errors:\n\n" + ex.Message,
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (YamlException ex)
+            {
+                _logger.LogWarning(ex, "Plando config '{FileName}' is malformed.", plandoBrowser.FileName);
+                MessageBox.Show(this, $"The selected plando configuration contains errors in line {ex.Start.Line}, col {ex.Start.Column}:\n\n{ex.InnerException?.Message ?? ex.Message}",
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "An unknown exception occurred while trying to generate a plando.");
+                MessageBox.Show(this, "Oops. Something went wrong. Please try again.",
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -404,7 +457,7 @@ namespace Randomizer.App
 
             var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath);
             if (File.Exists(path))
-            { 
+            {
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = path,

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
@@ -56,6 +57,30 @@ namespace Randomizer.App
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
         }
 
+#nullable enable
+        public PlandoConfig? PlandoConfig { get; set; }
+#nullable disable
+
+        public bool PlandoMode => PlandoConfig != null;
+
+        /// <summary>
+        /// Gets the visibility of controls which should be hidden when plando
+        /// mode is active.
+        /// </summary>
+        public Visibility InvisibleInPlando => PlandoMode ? Visibility.Collapsed : Visibility.Visible;
+
+        /// <summary>
+        /// Gets the visibility of controls which should be shown only when
+        /// plando mode is active.
+        /// </summary>
+        public Visibility VisibleInPlando => PlandoMode ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Gets the IsEnabled value for controls which should be disabled when
+        /// plando mode is active.
+        /// </summary>
+        public bool DisabledInPlando => !PlandoMode;
+
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
         public ObservableCollection<Sprite> LinkSprites { get; } = new();
@@ -83,7 +108,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) == false)
+                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
                 {
                     continue;
                 }
@@ -105,7 +130,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Populates the two grids with the logic option controls using reflection
+        /// Populates the two grids with the logic option controls using
+        /// reflection
         /// </summary>
         public void PopulateLogicOptions()
         {
@@ -151,7 +177,8 @@ namespace Randomizer.App
                 LocationsRegionFilter.Items.Add(name);
             }
 
-            // Create rows for each location to be able to specify the items at that location
+            // Create rows for each location to be able to specify the items at
+            // that location
             var row = 0;
             foreach (var location in world.Locations.OrderBy(x => x.Room == null ? "" : x.Room.Name).ThenBy(x => x.Name))
             {
@@ -186,68 +213,6 @@ namespace Randomizer.App
 
                 row++;
             }
-        }
-
-        /// <summary>
-        /// Creates a combo box for the item options for a location
-        /// </summary>
-        /// <param name="location">The location to generate the combo box for</param>
-        /// <returns>The generated combo box</returns>
-        private ComboBox CreateLocationComboBox(Location location)
-        {
-            var comboBox = new ComboBox
-            {
-                Tag = location,
-                Visibility = Visibility.Collapsed,
-                Margin = new(0, 2, 5, 2),
-            };
-
-            var prevValue = 0;
-            if (Options.SeedOptions.LocationItems.ContainsKey(location.Id))
-            {
-                prevValue = Options.SeedOptions.LocationItems[location.Id];
-            }
-
-            var curIndex = 0;
-            var selectedIndex = 0;
-
-            // Add generic item placement options (Any, Progressive Items, Junk)
-            foreach (var itemPlacement in Enum.GetValues(typeof(ItemPool)))
-            {
-                if ((int)itemPlacement == prevValue)
-                {
-                    selectedIndex = curIndex;
-                }
-
-                var itemPlacementField = itemPlacement.GetType().GetField(itemPlacement.ToString());
-                var description = itemPlacementField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
-                comboBox.Items.Add(new LocationItemOption { Value = (int)itemPlacement, Text = description == null ? itemPlacementField.Name : description.Description });
-                curIndex++;
-            }
-
-            // Add specific progressive items
-            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
-            {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) == false)
-                {
-                    continue;
-                }
-
-                if ((int)itemType == prevValue)
-                {
-                    selectedIndex = curIndex;
-                }
-
-                var itemTypeField = itemType.GetType().GetField(itemType.ToString());
-                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
-                comboBox.Items.Add(new LocationItemOption { Value = (int)itemType, Text = description == null ? itemTypeField.Name : description.Description });
-                curIndex++;
-            }
-
-            comboBox.SelectedIndex = selectedIndex;
-            comboBox.SelectionChanged += LocationsItemDropdown_SelectionChanged;
-
-            return comboBox;
         }
 
         public void LoadSprites()
@@ -288,9 +253,76 @@ namespace Randomizer.App
 
         private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
 
+        /// <summary>
+        /// Creates a combo box for the item options for a location
+        /// </summary>
+        /// <param name="location">
+        /// The location to generate the combo box for
+        /// </param>
+        /// <returns>The generated combo box</returns>
+        private ComboBox CreateLocationComboBox(Location location)
+        {
+            var comboBox = new ComboBox
+            {
+                Tag = location,
+                Visibility = Visibility.Collapsed,
+                Margin = new(0, 2, 5, 2),
+            };
+
+            var prevValue = 0;
+            if (Options.SeedOptions.LocationItems.ContainsKey(location.Id))
+            {
+                prevValue = Options.SeedOptions.LocationItems[location.Id];
+            }
+
+            var curIndex = 0;
+            var selectedIndex = 0;
+
+            // Add generic item placement options (Any, Progressive Items, Junk)
+            foreach (var itemPlacement in Enum.GetValues(typeof(ItemPool)))
+            {
+                if ((int)itemPlacement == prevValue)
+                {
+                    selectedIndex = curIndex;
+                }
+
+                var itemPlacementField = itemPlacement.GetType().GetField(itemPlacement.ToString());
+                var description = itemPlacementField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemPlacement, Text = description == null ? itemPlacementField.Name : description.Description });
+                curIndex++;
+            }
+
+            // Add specific progressive items
+            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
+            {
+                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
+                {
+                    continue;
+                }
+
+                if ((int)itemType == prevValue)
+                {
+                    selectedIndex = curIndex;
+                }
+
+                var itemTypeField = itemType.GetType().GetField(itemType.ToString());
+                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemType, Text = description == null ? itemTypeField.Name : description.Description });
+                curIndex++;
+            }
+
+            comboBox.SelectedIndex = selectedIndex;
+            comboBox.SelectionChanged += LocationsItemDropdown_SelectionChanged;
+
+            return comboBox;
+        }
+
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
+            string error;
+            var successful = PlandoMode
+                ? _romGenerator.GeneratePlandoRom(Options, PlandoConfig, out _, out error, out _)
+                : _romGenerator.GenerateRandomRom(Options, out _, out error, out _);
             if (!successful)
             {
                 if (!string.IsNullOrEmpty(error))
@@ -504,7 +536,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Updates the LogicOptions based on when a checkbox is checked/unchecked using reflection
+        /// Updates the LogicOptions based on when a checkbox is
+        /// checked/unchecked using reflection
         /// </summary>
         /// <param name="sender">The checkbox that was checked</param>
         /// <param name="e">The event object</param>
@@ -535,7 +568,7 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Handles updates 
+        /// Handles updates
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -571,7 +604,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Updates the EarlyItems based on when a checkbox is checked/unchecked using reflection
+        /// Updates the EarlyItems based on when a checkbox is checked/unchecked
+        /// using reflection
         /// </summary>
         /// <param name="sender">The checkbox that was checked</param>
         /// <param name="e">The event object</param>
@@ -583,16 +617,6 @@ namespace Randomizer.App
                 Options.SeedOptions.EarlyItems.Add(itemType);
             else
                 Options.SeedOptions.EarlyItems.Remove(itemType);
-        }
-
-        /// <summary>
-        /// Internal class for the location item option combo box
-        /// </summary>
-        private class LocationItemOption
-        {
-            public int Value { get; set; }
-            public string Text { get; set; }
-            public override string ToString() => Text;
         }
 
         private void RaceCheckBox_Checked(object sender, RoutedEventArgs e)
@@ -611,6 +635,17 @@ namespace Randomizer.App
             DisableTrackerHintsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableTrackerSpoilersCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableCheatsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+        }
+
+        /// <summary>
+        /// Internal class for the location item option combo box
+        /// </summary>
+        private class LocationItemOption
+        {
+            public int Value { get; set; }
+            public string Text { get; set; }
+
+            public override string ToString() => Text;
         }
     }
 }

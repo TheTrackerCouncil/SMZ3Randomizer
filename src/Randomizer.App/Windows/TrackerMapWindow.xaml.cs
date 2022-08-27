@@ -125,6 +125,9 @@ namespace Randomizer.App
         /// <param name="mapName">The name of the map to display</param>
         public void UpdateMap(string mapName)
         {
+            if (mapName == null)
+                return;
+
             UpdateMap(Maps.First(x => x.ToString() == mapName));
         }
 
