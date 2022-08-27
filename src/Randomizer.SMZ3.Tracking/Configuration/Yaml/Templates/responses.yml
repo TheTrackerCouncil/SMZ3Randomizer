@@ -588,8 +588,37 @@ Chat:
   # The list of possibilities when the winner names are requested and we have at least one winner
   DeclareGuessingGameWinners:
 
-  # The list of possibitilites when the winner names are requested, but no one guessed correctly
+  # The list of possibilities when the winner names are requested, but no one guessed correctly
   NobodyWonGuessingGame:
+
+  # The list of possibilities when the GT big key guessing game is closed by voice for a second time.
+  ClosedGuessingGameWhileClosed:
+
+  # The list of possibilities when the GT big key guessing game is closed by voice before the game even started.
+  ClosedGuessingGameBeforeStarting:
+
+  # The list of possibilities when the GT big key guessing game is closed by a moderator for a second time.
+  # {0} is replaced with the mod's name
+  ModeratorClosedGuessingGameWhileClosed:
+
+  # The list of possibilities when the GT big key guessing game is closed by a moderator before the game even started
+  # {0} is replaced with the mod's name
+  ModeratorClosedGuessingGameBeforeStarting:
+
+  # The phrases that Tracker will use when announcing her own guess after the GT big key guessing game has started.
+  # {0} is replaced with Tracker's guess.
+  TrackerGuess:
+
+  # The phrases that Tracker will use after the GT big key guessing game winners were announced and she was among them.
+  # {0} is replaced with the winning number.
+  TrackerGuessWon:
+  
+  # The phrases that Tracker will use when she is the only one who won the GT guessing game.
+  # {0} is replaced with the winning number.
+  TrackerGuessOnlyWinner:
+
+  # The phrases that Tracker will use when her guess is not correct.
+  TrackerGuessFailed:
 
   # This is a map of Twitch user names and how Tracker should pronounce them
   # e.g. thisismytwitchusername: I want to go by this instead
