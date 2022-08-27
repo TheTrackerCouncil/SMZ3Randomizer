@@ -149,7 +149,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// text-to-speech pronunciation purposes.
         /// </summary>
         public Dictionary<string, string> UserNamePronunciation { get; init; }
-            = new Dictionary<string, string>();
+            = new Dictionary<string, string>()
+            {
+                ["Vivelin"] = "vihvelin",
+                ["MattEqualsCoder"] = "matt equals coder",
+                ["Axnollouse"] = "Fragger"
+            };
 
         /// <summary>
         /// Gets the phrases for when asking the chat if content should be

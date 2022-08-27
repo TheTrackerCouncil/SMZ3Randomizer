@@ -55,13 +55,10 @@ Chat:
   NobodyWonGuessingGame:
   - Text: Hey chat, you're all pretty bad.
   UserNamePronunciation:
-    Vivelin: vihvelin
-    PinkKittyRose: Pink Kitty Rose
-    Skennedysa: s kennedy
-    TheBetus: the underscore beetus
-    Axnollouse: Fragger
-    MattEqualsCoder: matt equals coder
-    Megaket: mega ket
+    pinkkittyrose: Pink Kitty Rose
+    skennedysa: s kennedy
+    the_betus: the underscore beetus
+    megaket: mega ket
 AutoTracker:
   WhenConnected:
   - Text: Connection established with the Council
