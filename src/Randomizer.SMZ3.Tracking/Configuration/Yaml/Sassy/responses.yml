@@ -853,3 +853,8 @@ Cheats:
     Weight: 0.05
   CheatFailed:
   - Text: Sorry, I can't perform that cheat for you at this time
+  CheatInvalidItem: 
+  - Text: If you want some of that, you'll need to make it yourself.
+  - Text: Do you have any idea what you're even asking for?
+  - Text: I'm sorry, I can't give you any of that.
+  - Text: Adam has not yet authorized the use of that.

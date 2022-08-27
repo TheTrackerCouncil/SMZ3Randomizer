@@ -159,7 +159,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (!PlayerCanCheat()) return;
 
-            if (item != null && Tracker.GameService?.TryGiveItem(item) == true)
+            if (item == null || item.InternalItemType == ItemType.Nothing)
+            {
+                Tracker.Say(x => x.Cheats.CheatInvalidItem);
+            }
+            else if (Tracker.GameService?.TryGiveItem(item) == true)
             {
                 Tracker.Say(x => x.Cheats.CheatPerformed);
             }

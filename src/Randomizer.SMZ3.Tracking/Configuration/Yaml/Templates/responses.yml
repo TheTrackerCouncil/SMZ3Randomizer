@@ -723,3 +723,6 @@ Cheats:
 
   # The list of possibitilies when a cheat could not be performed
   CheatFailed:
+
+  # The list of possibilities when an item is requested, but it is not a valid item
+  CheatInvalidItem: 

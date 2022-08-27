@@ -45,5 +45,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </summary>
         public SchrodingersString CheatFailed { get; init; }
             = new("Sorry, I can't perform that cheat for you at this time");
+
+        /// <summary>
+        /// Gets the phrases to respond with when the player tries to cheat
+        /// themselves an item that does not exist.
+        /// </summary>
+        public SchrodingersString CheatInvalidItem { get; init; }
+            = new("Invalid item requested");
     }
 }
