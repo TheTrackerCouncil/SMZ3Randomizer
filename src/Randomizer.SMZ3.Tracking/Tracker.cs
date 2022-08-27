@@ -1323,18 +1323,37 @@ namespace Randomizer.SMZ3.Tracking
                     if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
                         var locationInfo = WorldInfo.Location(location);
-                        var missingItems = Logic.GetMissingRequiredItems(location, items)
-                            .OrderBy(x => x.Length)
-                            .FirstOrDefault();
-                        if (missingItems == null)
+                        var roomInfo = location.Room != null ? WorldInfo.Room(location.Room) : null;
+                        var regionInfo = WorldInfo.Region(location.Region);
+
+                        if (locationInfo.OutOfLogic != null)
                         {
-                            Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                            Say(locationInfo.OutOfLogic);
+                        }
+                        else if (roomInfo?.OutOfLogic != null)
+                        {
+                            Say(roomInfo.OutOfLogic);
+                        }
+                        else if (regionInfo?.OutOfLogic != null)
+                        {
+                            Say(regionInfo.OutOfLogic);
                         }
                         else
                         {
-                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                            Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                            var missingItems = Logic.GetMissingRequiredItems(location, items)
+                                .OrderBy(x => x.Length)
+                                .FirstOrDefault();
+                            if (missingItems == null)
+                            {
+                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                            }
+                            else
+                            {
+                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
+                                Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                            }
                         }
+                        
                     }
                 }
             }
@@ -1661,21 +1680,35 @@ namespace Randomizer.SMZ3.Tracking
                             : $"{itemsCleared} items";
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
 
-                        var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
-                        if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
+                        var roomInfo = area is Room room ? WorldInfo.Room(room) : null;
+                        var regionInfo = area is Region region ?WorldInfo.Region(region) : null;
+
+                        if (roomInfo?.OutOfLogic != null)
                         {
-                            var someOutOfLogicItem = ItemService.GetOrDefault(someOutOfLogicLocation);
-                            var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
-                                .OrderBy(x => x.Length)
-                                .FirstOrDefault();
-                            if (missingItems != null)
+                            Say(roomInfo.OutOfLogic);
+                        }
+                        else if (regionInfo?.OutOfLogic != null)
+                        {
+                            Say(regionInfo.OutOfLogic);
+                        }
+                        else
+                        {
+                            var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
+                            if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                             {
-                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                                Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
-                            }
-                            else
-                            {
-                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation));
+                                var someOutOfLogicItem = ItemService.GetOrDefault(someOutOfLogicLocation);
+                                var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
+                                    .OrderBy(x => x.Length)
+                                    .FirstOrDefault();
+                                if (missingItems != null)
+                                {
+                                    var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
+                                    Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
+                                }
+                                else
+                                {
+                                    Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation));
+                                }
                             }
                         }
                     }

@@ -60,6 +60,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public SchrodingersString? Hints { get; set; }
 
         /// <summary>
+        /// Gets the phrases to reply with when the room is out of logic
+        /// </summary>
+        public SchrodingersString? OutOfLogic { get; set; }
+
+        /// <summary>
         /// Returns the locations in the room.
         /// </summary>
         /// <param name="world">

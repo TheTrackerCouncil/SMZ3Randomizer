@@ -5,107 +5,142 @@
 # Reward: The identifier for the reward that is used to combine possibilities between configs.
 # Name: The list of possibilities for the name of the location
 # Hints: The list of possibilities for vague descriptors of the room for the hint system
+# OutOfLogic: The list of possibilities for when a location in the room is accessed out of logic
 
 - Room: Blue Brinstar Top
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Mockball Hall Hidden Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Gauntlet Shaft
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Left Sand Pit
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Watering Hole
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Bubble Mountain Hidden Hall
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Castle Tower Dark Maze
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Castle Tower Foyer
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Mire Shed
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Pyramid Fairy
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Hype Cave
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Hookshot Cave
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Superbunny Cave
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Spike Cave
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Ganon's Tower Big Key Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Ganon's Tower Compass Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: DM's Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Ganon's Tower Hope Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Ganon's Tower Mini Helmasaur Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Ganon's Tower Randomizer Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Back of Escape
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Paradox Cave
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Sahasrahla's Hut
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Waterfall Fairy
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Zora's Domain
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Blind's Hideout
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Kakariko Well
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Mini Moldorm Cave
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Swamp Ruins
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Palace of Darkness Dark Basement
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Palace of Darkness Dark Maze
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Swamp Palace Flooded Room
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Eye Bridge
   Name:
   Hints: 
+  OutOfLogic: 
 - Room: Turtle Rock Roller Room
   Name:
   Hints: 
+  OutOfLogic: 
 

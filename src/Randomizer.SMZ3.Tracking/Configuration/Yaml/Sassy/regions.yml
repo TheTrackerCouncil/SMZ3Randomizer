@@ -47,3 +47,6 @@
   WhenDiedInRoom:
     172:
     - Text: Ha ha. You were killed by a blind woman.
+- Region: Ganon's Tower
+  OutOfLogic:
+  - ""
