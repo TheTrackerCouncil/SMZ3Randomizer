@@ -6,15 +6,19 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+
 using Microsoft.Extensions.Logging;
+
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
+using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Regions;
 
@@ -27,32 +31,33 @@ namespace Randomizer.App
     {
         private readonly RandomizerContext _dbContext;
         private readonly Smz3Randomizer _randomizer;
+        private readonly Smz3Plandomizer _plandomizer;
         private readonly ILogger<RomGenerator> _logger;
 
         public RomGenerator(Smz3Randomizer randomizer,
+            Smz3Plandomizer plandomizer,
             RandomizerContext dbContext,
             ILogger<RomGenerator> logger)
         {
             _randomizer = randomizer;
+            _plandomizer = plandomizer;
             _dbContext = dbContext;
             _logger = logger;
         }
 
         /// <summary>
-        /// Generates a rom and returns details about the rom
+        /// Generates a randomizer ROM and returns details about the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
         /// <param name="path">The path to the rom</param>
         /// <param name="error">Any error message from generating the rom</param>
         /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public bool GenerateRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
+        public bool GenerateRandomRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom)
         {
             try
             {
-                var bytes = GenerateRomBytes(options, out var seed);
-
-                var config = seed.Playthrough.Config;
+                var seed = GenerateSeed(options);
                 if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
                 {
                     if (System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
@@ -66,45 +71,7 @@ namespace Randomizer.App
                     }
                 }
 
-                var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}");
-                Directory.CreateDirectory(folderPath);
-
-                var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{seed.Seed}";
-                var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
-                var romPath = Path.Combine(folderPath, romFileName);
-                EnableMsu1Support(options, bytes, romPath, out var msuError);
-                Rom.UpdateChecksum(bytes);
-                File.WriteAllBytes(romPath, bytes);
-
-                var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
-                var spoilerFileName = $"Spoiler_Log_{fileSuffix}.txt";
-                var spoilerPath = Path.Combine(folderPath, spoilerFileName);
-                File.WriteAllText(spoilerPath, spoilerLog);
-
-                try
-                {
-#if DEBUG
-                    var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutoTracking\\LuaScripts");
-#else
-                    var autoTrackerSourcePath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\AutotrackerScripts");
-#endif
-                    var autoTrackerDestPath = options.AutoTrackerScriptsOutputPath;
-
-                    if (!autoTrackerSourcePath.Equals(autoTrackerDestPath, StringComparison.OrdinalIgnoreCase))
-                    {
-                        CopyDirectory(autoTrackerSourcePath, autoTrackerDestPath, true, true);
-                    }
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, "Unable to copy Autotracker Scripts");
-                }
-
-                rom = SaveSeedToDatabase(options, seed, romPath, spoilerPath);
-
-                error = msuError;
-                path = romPath;
-
+                rom = GenerateRomInternal(seed, options, out path, out error);
                 return true;
             }
             catch (RandomizerGenerationException e)
@@ -113,6 +80,112 @@ namespace Randomizer.App
                 error = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
                 rom = null;
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Generates a plando ROM and returns details about the rom
+        /// </summary>
+        /// <param name="options">The randomizer generation options</param>
+        /// <param name="path">The path to the rom</param>
+        /// <param name="error">Any error message from generating the rom</param>
+        /// <param name="rom">The db entry for the rom</param>
+        /// <returns>True if the rom was generated successfully, false otherwise</returns>
+        public bool GeneratePlandoRom(RandomizerOptions options, PlandoConfig plandoConfig, out string path, out string error, out GeneratedRom rom)
+        {
+            try
+            {
+                var seed = GeneratePlandoSeed(options, plandoConfig);
+                rom = GenerateRomInternal(seed, options, out path, out error);
+                return true;
+            }
+            catch (PlandoConfigurationException e)
+            {
+                path = null;
+                error = $"The plando configuration is invalid or incomplete.\n{e.Message}\nPlease check the plando configuration file you used and try again.";
+                rom = null;
+                return false;
+            }
+        }
+
+        private GeneratedRom GenerateRomInternal(SeedData seed, RandomizerOptions options, out string path, out string error)
+        {
+            var bytes = GenerateRomBytes(options, seed);
+            var config = seed.Playthrough.Config;
+            var safeSeed = seed.Seed.ReplaceAny(Path.GetInvalidFileNameChars(), '_');
+
+            var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}");
+            Directory.CreateDirectory(folderPath);
+
+            var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
+            var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
+            var romPath = Path.Combine(folderPath, romFileName);
+            EnableMsu1Support(options, bytes, romPath, out var msuError);
+            Rom.UpdateChecksum(bytes);
+            File.WriteAllBytes(romPath, bytes);
+
+            var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
+            var spoilerFileName = $"Spoiler_Log_{fileSuffix}.txt";
+            var spoilerPath = Path.Combine(folderPath, spoilerFileName);
+            File.WriteAllText(spoilerPath, spoilerLog);
+
+            var plandoConfigString = ExportPlandoConfig(seed);
+            if (!string.IsNullOrEmpty(plandoConfigString))
+            {
+                var plandoFileName = $"Spoiler_Plando_{fileSuffix}.yml";
+                var plandoPath = Path.Combine(folderPath, plandoFileName);
+                File.WriteAllText(plandoPath, plandoConfigString);
+            }
+
+            PrepareAutoTrackerFiles(options);
+
+            error = msuError;
+            path = romPath;
+            return SaveSeedToDatabase(options, seed, romPath, spoilerPath);
+        }
+
+        private string ExportPlandoConfig(SeedData seed)
+        {
+            try
+            {
+                if (seed.Worlds.Count > 1)
+                {
+                    _logger.LogWarning("Attempting to export plando config for multi-world seed. Skipping.");
+                    return null;
+                }
+
+                var world = seed.Worlds[0].World;
+                var plandoConfig = new PlandoConfig(world);
+
+                var serializer = new YamlDotNet.Serialization.Serializer();
+                return serializer.Serialize(plandoConfig);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while exporting the plando configuration for seed {Seed}. No plando config will be generated.", seed.Seed);
+                return null;
+            }
+        }
+
+        private void PrepareAutoTrackerFiles(RandomizerOptions options)
+        {
+            try
+            {
+#if DEBUG
+                var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutoTracking\\LuaScripts");
+#else
+                    var autoTrackerSourcePath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\AutotrackerScripts");
+#endif
+                var autoTrackerDestPath = options.AutoTrackerScriptsOutputPath;
+
+                if (!autoTrackerSourcePath.Equals(autoTrackerDestPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    CopyDirectory(autoTrackerSourcePath, autoTrackerDestPath, true, true);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unable to copy Autotracker Scripts");
             }
         }
 
@@ -128,16 +201,23 @@ namespace Randomizer.App
             return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
         }
 
+        public SeedData GeneratePlandoSeed(RandomizerOptions options, PlandoConfig plandoConfig)
+        {
+            var config = options.ToConfig();
+            config.PlandoConfig = plandoConfig;
+            config.Keysanity = plandoConfig.Keysanity;
+            config.LogicConfig = plandoConfig.Logic.Clone();
+            return _plandomizer.GenerateSeed(config, CancellationToken.None);
+        }
+
         /// <summary>
         /// Uses the options to generate the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
-        /// <param name="seed">The generated seed data</param>
+        /// <param name="seed">The seed data to write to the ROM.</param>
         /// <returns>The bytes of the rom file</returns>
-        protected byte[] GenerateRomBytes(RandomizerOptions options, out SeedData seed)
+        protected byte[] GenerateRomBytes(RandomizerOptions options, SeedData seed)
         {
-            seed = GenerateSeed(options);
-
             var assembly = GetType().Assembly;
             var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)
@@ -195,6 +275,7 @@ namespace Randomizer.App
         protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
             var config = seed.Playthrough.Config;
+            var trackerState = seed.Worlds[0].World.CreateTrackerState();
 
             var rom = new GeneratedRom()
             {
@@ -202,8 +283,9 @@ namespace Randomizer.App
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
-                Settings = config.SettingsString,
-                GeneratorVersion = Smz3Randomizer.Version.Major
+                Settings = config.SettingsString ?? Config.ToConfigString(config, true),
+                GeneratorVersion = Smz3Randomizer.Version.Major,
+                TrackerState = trackerState
             };
             _dbContext.GeneratedRoms.Add(rom);
             _dbContext.SaveChanges();
@@ -273,7 +355,7 @@ namespace Randomizer.App
 
             log.AppendLine(Underline("Rewards"));
             log.AppendLine();
-            var skipRewards = new []
+            var skipRewards = new[]
             {
                 RewardType.Agahnim,
                 RewardType.Kraid,
@@ -308,8 +390,9 @@ namespace Randomizer.App
 
             return log.ToString();
         }
+
         /// <summary>
-        /// Enabled MSU support for a rom
+        /// Enables MSU support for a rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
         /// <param name="rom">The bytes of the previously generated rom</param>

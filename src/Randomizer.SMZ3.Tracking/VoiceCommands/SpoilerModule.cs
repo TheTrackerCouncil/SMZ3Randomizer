@@ -30,22 +30,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
         private readonly Dictionary<int, int> _locationHintsGiven = new();
-        private readonly Playthrough _playthrough;
+        private readonly Playthrough? _playthrough;
         private readonly IItemService _itemService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Used to manage item information.</param>
         /// <param name="logger">Used to write logging information.</param>
         public SpoilerModule(Tracker tracker, IItemService itemService, ILogger<SpoilerModule> logger)
             : base(tracker, itemService, logger)
         {
             Tracker.HintsEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerHints && tracker.Options.HintsEnabled;
             Tracker.SpoilersEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerSpoilers && tracker.Options.SpoilersEnabled;
-            if (tracker.World.Config.Race) return;
-            _playthrough = Playthrough.Generate(new[] { tracker.World }, tracker.World.Config);
             _itemService = itemService;
+            if (tracker.World.Config.Race) return;
+
+            Playthrough.TryGenerate(new[] { tracker.World }, tracker.World.Config, out _playthrough);
 
             if (!tracker.World.Config.DisableTrackerHints)
             {
@@ -216,6 +218,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
+            // Now that we're ready to give hints, make sure they're turned on
+            if (!Tracker.HintsEnabled && !Tracker.SpoilersEnabled)
+            {
+                Tracker.Say(x => x.Hints.PromptEnableItemHints);
+                return;
+            }
+
             // Once we're done being a smartass, see if the item can be found at all
             var locations = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
@@ -232,13 +241,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 // The item exists, but all locations are cleared
                 Tracker.Say(x => x.Spoilers.LocationsCleared, item.NameWithArticle);
-                return;
-            }
-
-            // Now that we're ready to give hints, make sure they're turned on
-            if (!Tracker.HintsEnabled && !Tracker.SpoilersEnabled)
-            {
-                Tracker.Say(x => x.Hints.PromptEnableItemHints);
                 return;
             }
 
@@ -580,6 +582,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 if (randomMissingItem != null)
                                     return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.NameWithArticle);
                             }
+                        }
+
+                        if (_playthrough == null)
+                        {
+                            return GiveItemHint(x => x.PlaythroughImpossible, item);
                         }
 
                         var sphere = _playthrough.Spheres.IndexOf(x => x.Items.Any(i => i.Type == item.InternalItemType));

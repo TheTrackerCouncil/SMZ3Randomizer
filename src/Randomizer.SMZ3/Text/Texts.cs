@@ -56,6 +56,12 @@ namespace Randomizer.SMZ3.Text
             return text.Replace("<first>", first.Area).Replace("<second>", second.Area);
         }
 
+        public static string GanonThirdPhraseNone()
+        {
+            var text = ((scripts["GanonSilversReveal"] as YamlMapping)["none"] as YamlValue).Value;
+            return text;
+        }
+
         public static string GanonThirdPhaseSingle(Region silvers)
         {
             var node = (scripts["GanonSilversReveal"] as YamlMapping)["single"] as YamlMapping;

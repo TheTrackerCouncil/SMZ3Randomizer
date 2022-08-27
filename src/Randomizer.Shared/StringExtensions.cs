@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Randomizer.Shared
 {
@@ -44,6 +45,26 @@ namespace Randomizer.Shared
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Replaces all instances of all specified characters with the
+        /// specified character.
+        /// </summary>
+        /// <param name="text">The string to replace.</param>
+        /// <param name="oldChars">A collection of chars to find,</param>
+        /// <param name="newChar">The char to replace with.</param>
+        /// <returns>
+        /// A new string with all instances of all characters in <paramref
+        /// name="oldChars"/> replaced by <paramref name="newChar"/>.
+        /// </returns>
+        public static string ReplaceAny(this string text,
+            char[] oldChars, char newChar)
+        {
+            var value = new StringBuilder(text);
+            foreach (var oldChar in oldChars)
+                value.Replace(oldChar, newChar);
+            return value.ToString();
         }
     }
 }

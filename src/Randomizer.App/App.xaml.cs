@@ -3,12 +3,13 @@ using System.Windows;
 using System.Windows.Controls;
 
 using BunLabs.IO;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+
 using Randomizer.Shared.Models;
-using Randomizer.SMZ3;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
@@ -74,10 +75,8 @@ namespace Randomizer.App
         protected static void ConfigureServices(IServiceCollection services)
         {
             // Randomizer + Tracker
-            services.AddSingleton<RandomizerContext>();
-            services.AddSingleton<IFiller, StandardFiller>();
-            services.AddSingleton<IWorldAccessor, WorldAccessor>();
-            services.AddSingleton<Smz3Randomizer>();
+            services.AddSmz3Randomizer();
+            services.AddPlandomizer();
             services.AddTracker()
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()

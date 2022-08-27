@@ -6,7 +6,9 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+
 using Randomizer.Shared;
+using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.SMZ3
 {
@@ -172,16 +174,6 @@ namespace Randomizer.SMZ3
         };
 
         public GameMode GameMode { get; set; } = GameMode.Normal;
-        public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
-        public SMLogic SMLogic { get; set; } = SMLogic.Normal;
-
-        public IDictionary<ItemType, ItemPlacement> ItemLocations { get; }
-            = new Dictionary<ItemType, ItemPlacement>();
-
-        public ItemPool ShaktoolItemPool { get; set; } = ItemPool.Any;
-        public ItemPool PegWorldItemPool { get; set; } = ItemPool.Any;
-        public Goal Goal { get; set; } = Goal.DefeatBoth;
-        public KeyShuffle KeyShuffle { get; set; } = KeyShuffle.None;
         public bool Race { get; set; } = false;
         public bool DisableSpoilerLog { get; set; } = false;
         public bool DisableTrackerSpoilers { get; set; } = false;
@@ -204,13 +196,16 @@ namespace Randomizer.SMZ3
 
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;
-        public bool Keysanity => KeyShuffle != KeyShuffle.None;
+        public bool Keysanity { get; set; }
         public string Seed { get; set; }
         public string SettingsString { get; set; }
         public bool CopySeedAndRaceSettings { get; set; }
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
+#nullable enable
+        public PlandoConfig? PlandoConfig { get; set; }
+#nullable disable
         public bool ShaktoolWithoutGrapple { get; set; }
 
         public Config SeedOnly()

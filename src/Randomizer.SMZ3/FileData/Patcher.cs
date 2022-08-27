@@ -693,12 +693,21 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible)));
             // ---
 
-            var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(ItemType.SilverArrows, _myWorld)).First();
-            var silvers = config.MultiWorld ?
-                Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld) :
-                Texts.GanonThirdPhaseSingle(silversLocation.Region);
-            _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
-            _stringTable.SetGanonThirdPhaseText(silvers);
+            var silversLocation = _allWorlds.SelectMany(world => world.Locations).Where(l => l.ItemIs(ItemType.SilverArrows, _myWorld)).FirstOrDefault();
+            if (silversLocation != null)
+            {
+                var silvers = config.MultiWorld
+                    ? Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld)
+                    : Texts.GanonThirdPhaseSingle(silversLocation.Region);
+                _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
+                _stringTable.SetGanonThirdPhaseText(silvers);
+            }
+            else
+            {
+                var silvers = Texts.GanonThirdPhraseNone();
+                _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
+                _stringTable.SetGanonThirdPhaseText(silvers);
+            }
 
             var triforceRoom = Texts.TriforceRoom(_rnd);
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
@@ -735,8 +744,6 @@ namespace Randomizer.SMZ3.FileData
                 ((_myWorld.Config.Race ? 1 : 0) << 15) |
                 ((_myWorld.Config.Keysanity ? 1 : 0) << 13) |
                 ((_enableMultiworld ? 1 : 0) << 12) |
-                ((int)_myWorld.Config.Z3Logic << 10) |
-                ((int)_myWorld.Config.SMLogic << 8) |
                 (Generation.Smz3Randomizer.Version.Major << 4) |
                 (Generation.Smz3Randomizer.Version.Minor << 0);
 
@@ -760,18 +767,6 @@ namespace Randomizer.SMZ3.FileData
 
         private void WriteGameTitle()
         {
-            var z3Glitch = _myWorld.Config.Z3Logic switch
-            {
-                Z3Logic.Nmg => "N",
-                Z3Logic.Owg => "O",
-                _ => "C",
-            };
-            var smGlitch = _myWorld.Config.SMLogic switch
-            {
-                SMLogic.Normal => "N",
-                SMLogic.Hard => "H",
-                _ => "X",
-            };
             var title = AsAscii($"SMZ3 Cas' [{_seed:X8}]".PadRight(21)[..21]);
             _patches.Add((Snes(0x00FFC0), title));
             _patches.Add((Snes(0x80FFC0), title));

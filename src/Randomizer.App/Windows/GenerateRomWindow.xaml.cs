@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
@@ -51,6 +52,30 @@ namespace Randomizer.App
             _loadSpritesTask = Task.Run(() => LoadSprites())
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
         }
+
+#nullable enable
+        public PlandoConfig? PlandoConfig { get; set; }
+#nullable disable
+
+        public bool PlandoMode => PlandoConfig != null;
+
+        /// <summary>
+        /// Gets the visibility of controls which should be hidden when plando
+        /// mode is active.
+        /// </summary>
+        public Visibility InvisibleInPlando => PlandoMode ? Visibility.Collapsed : Visibility.Visible;
+
+        /// <summary>
+        /// Gets the visibility of controls which should be shown only when
+        /// plando mode is active.
+        /// </summary>
+        public Visibility VisibleInPlando => PlandoMode ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Gets the IsEnabled value for controls which should be disabled when
+        /// plando mode is active.
+        /// </summary>
+        public bool DisabledInPlando => !PlandoMode;
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
@@ -101,7 +126,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Populates the two grids with the logic option controls using reflection
+        /// Populates the two grids with the logic option controls using
+        /// reflection
         /// </summary>
         public void PopulateLogicOptions()
         {
@@ -147,7 +173,8 @@ namespace Randomizer.App
                 LocationsRegionFilter.Items.Add(name);
             }
 
-            // Create rows for each location to be able to specify the items at that location
+            // Create rows for each location to be able to specify the items at
+            // that location
             var row = 0;
             foreach (var location in world.Locations.OrderBy(x => x.Room == null ? "" : x.Room.Name).ThenBy(x => x.Name))
             {
@@ -184,10 +211,50 @@ namespace Randomizer.App
             }
         }
 
+        public void LoadSprites()
+        {
+            var spritesPath = Path.Combine(
+                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                "Sprites");
+            var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
+                .Select(x => Sprite.LoadSprite(x))
+                .OrderBy(x => x.Name);
+
+            var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
+            var shipSprites = Directory.EnumerateFiles(shipSpritesPath, "*.ips", SearchOption.AllDirectories)
+                .Select(x => new ShipSprite(Path.GetFileNameWithoutExtension(x), Path.GetRelativePath(shipSpritesPath, x)));
+
+            Dispatcher.Invoke(() =>
+            {
+                foreach (var sprite in sprites)
+                {
+                    switch (sprite.SpriteType)
+                    {
+                        case SpriteType.Samus:
+                            SamusSprites.Add(sprite);
+                            break;
+
+                        case SpriteType.Link:
+                            LinkSprites.Add(sprite);
+                            break;
+                    }
+                }
+
+                foreach (var ship in shipSprites)
+                {
+                    ShipSprites.Add(ship);
+                }
+            }, DispatcherPriority.Loaded);
+        }
+
+        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
+
         /// <summary>
         /// Creates a combo box for the item options for a location
         /// </summary>
-        /// <param name="location">The location to generate the combo box for</param>
+        /// <param name="location">
+        /// The location to generate the combo box for
+        /// </param>
         /// <returns>The generated combo box</returns>
         private ComboBox CreateLocationComboBox(Location location)
         {
@@ -246,47 +313,12 @@ namespace Randomizer.App
             return comboBox;
         }
 
-        public void LoadSprites()
-        {
-            var spritesPath = Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
-                "Sprites");
-            var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
-                .Select(x => Sprite.LoadSprite(x))
-                .OrderBy(x => x.Name);
-
-            var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
-            var shipSprites = Directory.EnumerateFiles(shipSpritesPath, "*.ips", SearchOption.AllDirectories)
-                .Select(x => new ShipSprite(Path.GetFileNameWithoutExtension(x), Path.GetRelativePath(shipSpritesPath, x)));
-
-            Dispatcher.Invoke(() =>
-            {
-                foreach (var sprite in sprites)
-                {
-                    switch (sprite.SpriteType)
-                    {
-                        case SpriteType.Samus:
-                            SamusSprites.Add(sprite);
-                            break;
-
-                        case SpriteType.Link:
-                            LinkSprites.Add(sprite);
-                            break;
-                    }
-                }
-
-                foreach (var ship in shipSprites)
-                {
-                    ShipSprites.Add(ship);
-                }
-            }, DispatcherPriority.Loaded);
-        }
-
-        private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
-
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRom(Options, out var romPath, out var error, out var rom);
+            string error;
+            var successful = PlandoMode
+                ? _romGenerator.GeneratePlandoRom(Options, PlandoConfig, out _, out error, out _)
+                : _romGenerator.GenerateRandomRom(Options, out _, out error, out _);
             if (!successful)
             {
                 if (!string.IsNullOrEmpty(error))
@@ -491,7 +523,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Updates the LogicOptions based on when a checkbox is checked/unchecked using reflection
+        /// Updates the LogicOptions based on when a checkbox is
+        /// checked/unchecked using reflection
         /// </summary>
         /// <param name="sender">The checkbox that was checked</param>
         /// <param name="e">The event object</param>
@@ -522,7 +555,7 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Handles updates 
+        /// Handles updates
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -558,7 +591,8 @@ namespace Randomizer.App
         }
 
         /// <summary>
-        /// Updates the EarlyItems based on when a checkbox is checked/unchecked using reflection
+        /// Updates the EarlyItems based on when a checkbox is checked/unchecked
+        /// using reflection
         /// </summary>
         /// <param name="sender">The checkbox that was checked</param>
         /// <param name="e">The event object</param>
@@ -570,16 +604,6 @@ namespace Randomizer.App
                 Options.SeedOptions.EarlyItems.Add(itemType);
             else
                 Options.SeedOptions.EarlyItems.Remove(itemType);
-        }
-
-        /// <summary>
-        /// Internal class for the location item option combo box
-        /// </summary>
-        private class LocationItemOption
-        {
-            public int Value { get; set; }
-            public string Text { get; set; }
-            public override string ToString() => Text;
         }
 
         private void RaceCheckBox_Checked(object sender, RoutedEventArgs e)
@@ -598,6 +622,17 @@ namespace Randomizer.App
             DisableTrackerHintsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableTrackerSpoilersCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
             DisableCheatsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+        }
+
+        /// <summary>
+        /// Internal class for the location item option combo box
+        /// </summary>
+        private class LocationItemOption
+        {
+            public int Value { get; set; }
+            public string Text { get; set; }
+
+            public override string ToString() => Text;
         }
     }
 }
