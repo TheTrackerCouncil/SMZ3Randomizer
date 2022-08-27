@@ -671,8 +671,18 @@ Chat:
   ModeratorClosedGuessingGame:
   - Text: '{0} closed the floor for guesses.'
   - Text: The floor is now closed for guesses, as decreed by {0}.
+  ClosedGuessingGameWhileClosed:
+  - Text: The guessing game is already over. Pay attention.
+  ClosedGuessingGameBeforeStarting:
+  - Text: We haven't even started yet.
+  - Text: Close what? You never started the guessing game.
+  ModeratorClosedGuessingGameWhileClosed:
+  - Text: Pay attention, {0}. The guessing game has been closed already.
+  ModeratorClosedGuessingGameBeforeStarting:
+  - Text: Pay attention, {0}. We haven't even started yet
+  - Text: Close what, {0}? The guessing game never started.
   DeclareGuessingGameWinners:
-  - Text: The winners are {1}.
+  - Text: 'The winners are {1}.'
   - Text: '{1} guessed number {0}.'
   - Text: '{1} performed the miraculous feat of having correctly guessed the number {0}.'
   NobodyWonGuessingGame:
