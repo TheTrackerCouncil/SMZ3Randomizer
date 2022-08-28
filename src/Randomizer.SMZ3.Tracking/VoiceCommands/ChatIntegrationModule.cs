@@ -267,8 +267,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="number">The item number</param>
         /// <param name="wasBigKey">If the the item was the big key or not</param>
-        public async void GTItemTracked(int number, bool wasBigKey)
+        public async Task GTItemTracked(int number, bool wasBigKey)
         {
+            if (!_guessingGameStart.HasValue) return;
+            if (!_guessingGameClosed.HasValue)
+                _ = CloseGanonsTowerGuessingGameGuesses();
+
             if (!wasBigKey && number == _trackerGuess)
             {
                 Tracker.Say(x => x.Chat.TrackerGuessFailed, number);

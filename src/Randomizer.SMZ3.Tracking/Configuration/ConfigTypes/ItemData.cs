@@ -275,7 +275,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             if (WhenTracked.TryGetValue(TrackingState, out response))
                 return response != null;
 
-            var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < TrackingState);
+            var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < TrackingState).OrderBy(x => x);
             if (!smallerKeys.Any())
             {
                 response = null;

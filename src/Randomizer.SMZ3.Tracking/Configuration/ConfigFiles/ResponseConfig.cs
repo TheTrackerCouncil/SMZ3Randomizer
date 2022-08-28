@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         /// mode.
         /// </summary>
         public SchrodingersString? StartingTrackingAlternate { get; init; }
-        = new SchrodingersString("Tracker started");
+        = new SchrodingersString("Hello. I'm your substitude tracker for today.");
 
         /// <summary>
         /// Gets the phrases to respond with when tracker stops.

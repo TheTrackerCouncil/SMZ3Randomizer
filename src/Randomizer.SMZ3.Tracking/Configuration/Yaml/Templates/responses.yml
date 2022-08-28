@@ -723,11 +723,11 @@ AutoTracker:
   # Additional numbers can be added for additional sets of responses
   # {0} is replaced with the item number
   GTKeyResponses:
-  1:
-  2:
-  8:
-  16:
-  22:
+    1:
+    2:
+    8:
+    16:
+    22:
 
 # This section is for map responses
 Map:

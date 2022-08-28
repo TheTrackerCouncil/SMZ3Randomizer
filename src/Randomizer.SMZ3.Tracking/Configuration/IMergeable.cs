@@ -116,7 +116,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
                             {
                                 thisValue[key].MergeFrom(text);
                             }
-                            else if (text != null)
+                            else
                             {
                                 thisValue[key] = text;
                             }
