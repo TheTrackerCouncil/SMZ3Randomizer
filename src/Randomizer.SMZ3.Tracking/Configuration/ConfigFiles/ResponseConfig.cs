@@ -115,6 +115,13 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         public SchrodingersString? TrackedAlreadyTrackedItem { get; init; }
 
         /// <summary>
+        /// Gets the phrases to respond with when tracking an item that is at
+        /// its correct location according to the original game.
+        /// </summary>
+        public SchrodingersString TrackedVanillaItem { get; init; }
+            = new("");
+
+        /// <summary>
         /// Gets the phrases to respond with when setting the exact amount of an
         /// item, but that exact amount is already tracked.
         /// </summary>

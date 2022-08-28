@@ -2431,6 +2431,12 @@ namespace Randomizer.SMZ3.Tracking
             }
             else
             {
+                if (item.InternalItemType == location.VanillaItem)
+                {
+                    Say(x => x.TrackedVanillaItem);
+                    return;
+                }
+
                 var locationInfo = WorldInfo.Location(location);
                 var isJunk = item.IsJunk(World.Config);
                 if (isJunk)
