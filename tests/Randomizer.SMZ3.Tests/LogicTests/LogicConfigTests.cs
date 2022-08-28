@@ -28,7 +28,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 displayName.Should().NotBeNullOrEmpty();
 
                 var category = property.GetCustomAttribute<CategoryAttribute>().Category;
-                category.Should().BeOneOf("Logic", "Tricks");
+                category.Should().BeOneOf("Logic", "Tricks", "Patches");
             }
         }
 
@@ -307,6 +307,78 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression);
             missingItems.Should().BeEmpty();
             tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeTrue();
+        }
+
+        [Fact]
+        public void TestWaterwayNeedsGravitySuit()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.WaterwayNeedsGravitySuit = false;
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile }, new List<RewardType>());
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.Waterway, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeTrue();
+
+            config.LogicConfig.WaterwayNeedsGravitySuit = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.Waterway, progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Gravity });
+            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeFalse();
+
+            progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile, ItemType.Gravity }, new List<RewardType>());
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeTrue();
+        }
+
+        [Fact]
+        public void TestShaktoolWithoutGrapple()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.ShaktoolWithoutGrapple = false;
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.SpaceJump }, new List<RewardType>());
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.ShaktoolItem, progression);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Grapple });
+            tempWorld.InnerMaridia.ShaktoolItem.IsAvailable(progression).Should().BeFalse();
+
+            config.LogicConfig.ShaktoolWithoutGrapple = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.ShaktoolItem, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.InnerMaridia.ShaktoolItem.IsAvailable(progression).Should().BeTrue();
+        }
+
+        [Fact]
+        public void TestEasyEastCrateriaSkyItem()
+        {
+            Config config = new Config();
+
+            config.LogicConfig.EasyEastCrateriaSkyItem = false;
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.Grapple }, new List<RewardType>() { RewardType.Phantoon });
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.SkyMissile, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.EastCrateria.SkyMissile.IsAvailable(progression).Should().BeTrue();
+
+            config.LogicConfig.EasyEastCrateriaSkyItem = true;
+            tempWorld = new World(config, "", 0, "");
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.SkyMissile, progression);
+            missingItems.Should().HaveCount(2)
+                .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
+                .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
+
+            tempWorld.EastCrateria.SkyMissile.IsAvailable(progression).Should().BeFalse();
+
+            progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.Grapple, ItemType.SpaceJump }, new List<RewardType>() { RewardType.Phantoon });
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.SkyMissile, progression);
+            missingItems.Should().BeEmpty();
+            tempWorld.EastCrateria.SkyMissile.IsAvailable(progression).Should().BeTrue();
         }
     }
 }

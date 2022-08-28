@@ -16,7 +16,7 @@
         public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
             // Back diver down
-            if (currentState.CurrentRoom == 118 && currentState.LinkX < 3474 && (currentState.LinkX < 3424 || currentState.LinkX > 3440) && currentState.LinkY <= 4000 && prevState.LinkY > 4000 && (currentState.LinkState is 0 or 6 or 3) && currentState.IsOnBottomHalfOfroom && currentState.IsOnRightHalfOfRoom)
+            if (currentState.CurrentRoom == 118 && currentState.LinkX < 3474 && (currentState.LinkX < 3424 || currentState.LinkX > 3440) && currentState.LinkY <= 4000 && prevState.LinkY > 4000 && (currentState.LinkState is 0 or 6 or 3) && currentState.IsOnBottomHalfOfRoom && currentState.IsOnRightHalfOfRoom)
             {
                 tracker.SayOnce(x => x.AutoTracker.DiverDown);
                 return true;

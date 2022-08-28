@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         /// mode.
         /// </summary>
         public SchrodingersString? StartingTrackingAlternate { get; init; }
-        = new SchrodingersString("Tracker started");
+        = new SchrodingersString("Hello. I'm your substitude tracker for today.");
 
         /// <summary>
         /// Gets the phrases to respond with when tracker stops.
@@ -638,6 +638,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
         /// </summary>
         public SchrodingersString TimerPaused { get; init; }
              = new SchrodingersString("Timer paused");
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracker is muted
+        /// </summary>
+        public SchrodingersString Muted { get; init; }
+            = new SchrodingersString("Muting, say \"Hey Tracker, Unmute Yourself\" when you want me to talk again.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracker is unmuted
+        /// </summary>
+        public SchrodingersString Unmuted { get; init; }
+            = new SchrodingersString("Unmuted");
 
         /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no

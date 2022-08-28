@@ -63,7 +63,7 @@
         /// <summary>
         /// True if Link is on the bottom half of the current room
         /// </summary>
-        public bool IsOnBottomHalfOfroom => ReadUInt8(0xAA) == 2;
+        public bool IsOnBottomHalfOfRoom => ReadUInt8(0xAA) == 2;
 
         /// <summary>
         /// True if Link is on the right half of the current room
@@ -95,7 +95,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            var vertical = IsOnBottomHalfOfroom ? "Bottom" : "Top";
+            var vertical = IsOnBottomHalfOfRoom ? "Bottom" : "Top";
             var horizontal = IsOnRightHalfOfRoom ? "Right" : "Left";
             return $"Room: {PreviousRoom}->{CurrentRoom} ({vertical}{horizontal}) | State: {State}/{Substate} | X,Y: {LinkX},{LinkY} | LinkState: {LinkState} | OW Screen: {OverworldScreen}";
         }

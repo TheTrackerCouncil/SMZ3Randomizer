@@ -98,15 +98,13 @@
                         DataContext="{Binding LogicConfig}">
 
               <GroupBox Header="Basic Logic"
-                        Padding="0,5,0,0">
-                <UniformGrid Columns="2"
-                             Name="LogicGrid" />
+                        Padding="0,5,0,0" Margin="0,0,0,3">
+                <UniformGrid Columns="2" Name="LogicGrid" />
               </GroupBox>
 
               <GroupBox Header="Tricks"
-                        Padding="0,5,0,0">
-                <StackPanel Orientation="Vertical"
-                            Grid.IsSharedSizeScope="True">
+                        Padding="0,5,0,0" Margin="0,0,0,1">
+                <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
                   <UniformGrid Columns="2"
                                Name="TricksGrid" />
                   <controls:LabeledControl Text="Wall jump difficulty:"
@@ -118,6 +116,11 @@
                               MinWidth="75" />
                   </controls:LabeledControl>
                 </StackPanel>
+              </GroupBox>
+
+              <GroupBox Header="Patches"
+                        Padding="0,5,0,0" Margin="0,0,0,5">
+                <UniformGrid Columns="1" Name="PatchesGrid" />
               </GroupBox>
 
             </StackPanel>
@@ -185,10 +188,6 @@
                   </TextBlock>
                 </CheckBox.ToolTip>
               </CheckBox>
-
-              <CheckBox IsChecked="{Binding ShaktoolWithoutGrapple}"
-                        Content="Shaktool does not require Grapple Beam"
-                        ToolTip="Shaktool's front door is always open :)" />
 
               <controls:LabeledControl Text="Custom music pack:">
                 <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"

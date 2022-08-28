@@ -22,6 +22,7 @@ using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
@@ -1064,11 +1065,6 @@ namespace Randomizer.SMZ3.Tracking
             if (text == null)
                 return false;
 
-            if (Options.VoiceFrequency == TrackerVoiceFrequency.Disabled)
-            {
-                return false;
-            }
-
             var formattedText = FormatPlaceholders(text);
             if (wait)
                 _communicator.SayWait(formattedText);
@@ -1176,7 +1172,14 @@ namespace Randomizer.SMZ3.Tracking
             var itemName = item.Name;
             var originalTrackingState = item.TrackingState;
             UpdateTrackerProgression = true;
-            var stateItem = !autoTracked || !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Map) || World.Config.ZeldaKeysanity;
+
+            var isGTPreBigKey = !World.Config.ZeldaKeysanity
+                                && autoTracked
+                                && location?.Region.GetType() == typeof(GanonsTower)
+                                && !GetProgression().BigKeyGT;
+            var stateItem = !isGTPreBigKey && (!autoTracked
+                                               || !item.IsDungeonItem()
+                                               || World.Config.ZeldaKeysanity);
 
             if (item.HasStages)
             {
@@ -1298,7 +1301,10 @@ namespace Randomizer.SMZ3.Tracking
 
                 if (location != null)
                 {
-                    GiveLocationComment(item, location, isTracking: true, confidence);
+                    if (stateItem)
+                    {
+                        GiveLocationComment(item, location, isTracking: true, confidence);
+                    }
 
                     if (tryClear)
                     {
@@ -1320,21 +1326,40 @@ namespace Randomizer.SMZ3.Tracking
                     }
 
                     var items = GetProgression();
-                    if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
+                    if (stateItem && !location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
                         var locationInfo = WorldInfo.Location(location);
-                        var missingItems = Logic.GetMissingRequiredItems(location, items)
-                            .OrderBy(x => x.Length)
-                            .FirstOrDefault();
-                        if (missingItems == null)
+                        var roomInfo = location.Room != null ? WorldInfo.Room(location.Room) : null;
+                        var regionInfo = WorldInfo.Region(location.Region);
+
+                        if (locationInfo.OutOfLogic != null)
                         {
-                            Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                            Say(locationInfo.OutOfLogic);
+                        }
+                        else if (roomInfo?.OutOfLogic != null)
+                        {
+                            Say(roomInfo.OutOfLogic);
+                        }
+                        else if (regionInfo?.OutOfLogic != null)
+                        {
+                            Say(regionInfo.OutOfLogic);
                         }
                         else
                         {
-                            var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                            Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                            var missingItems = Logic.GetMissingRequiredItems(location, items)
+                                .OrderBy(x => x.Length)
+                                .FirstOrDefault();
+                            if (missingItems == null)
+                            {
+                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
+                            }
+                            else
+                            {
+                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
+                                Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                            }
                         }
+                        
                     }
                 }
             }
@@ -1661,21 +1686,35 @@ namespace Randomizer.SMZ3.Tracking
                             : $"{itemsCleared} items";
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
 
-                        var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
-                        if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
+                        var roomInfo = area is Room room ? WorldInfo.Room(room) : null;
+                        var regionInfo = area is Region region ?WorldInfo.Region(region) : null;
+
+                        if (roomInfo?.OutOfLogic != null)
                         {
-                            var someOutOfLogicItem = ItemService.GetOrDefault(someOutOfLogicLocation);
-                            var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
-                                .OrderBy(x => x.Length)
-                                .FirstOrDefault();
-                            if (missingItems != null)
+                            Say(roomInfo.OutOfLogic);
+                        }
+                        else if (regionInfo?.OutOfLogic != null)
+                        {
+                            Say(regionInfo.OutOfLogic);
+                        }
+                        else
+                        {
+                            var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
+                            if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                             {
-                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                                Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
-                            }
-                            else
-                            {
-                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation));
+                                var someOutOfLogicItem = ItemService.GetOrDefault(someOutOfLogicLocation);
+                                var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
+                                    .OrderBy(x => x.Length)
+                                    .FirstOrDefault();
+                                if (missingItems != null)
+                                {
+                                    var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
+                                    Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation), missingItemNames);
+                                }
+                                else
+                                {
+                                    Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem?.Name, GetName(someOutOfLogicLocation));
+                                }
                             }
                         }
                     }

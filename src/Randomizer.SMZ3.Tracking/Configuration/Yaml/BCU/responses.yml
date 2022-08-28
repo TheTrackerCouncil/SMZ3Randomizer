@@ -33,6 +33,8 @@ PegWorldAvailable:
 - Text: I think it is time we use our season tickets to Peg World.
 BossDefeated:
 - Text: 'Congratulations on beating off {0}.'
+Muted:
+- Text: Fine. But watch your metrics plummet.
 Chat:
   StartedGuessingGame:
   - Text: The GT big key guessing game is now open for guesses. By the way, I'm taking a 50% cut of the souls this time.

@@ -78,3 +78,11 @@
   - Text: Hopefully the boots are not too hard to find.
   - Text: At least this isnt that far out of the way.
   - Text: Well at least that means you'll be getting the boots.
+# Old Man
+- LocationNumber: 259
+  OutOfLogic:
+  - "That was kind of you to help that old man when you couldn't see"
+# Zora / King Zora
+- LocationNumber: 292
+  OutOfLogic:
+  - ""

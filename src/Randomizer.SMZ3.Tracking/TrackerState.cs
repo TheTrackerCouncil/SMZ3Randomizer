@@ -357,62 +357,6 @@ namespace Randomizer.SMZ3.Tracking
                     PercentageCleared = percCleared
                 };
 
-                trackerState.ItemStates = ItemStates
-                    .Select(x => new TrackerItemState()
-                    {
-                        ItemName = x.Name,
-                        TrackingState = x.TrackingState
-                    })
-                    .ToList();
-
-                trackerState.LocationStates = LocationStates
-                    .Select(x => new TrackerLocationState()
-                    {
-                        LocationId = x.Id,
-                        Item = x.Item,
-                        Cleared = x.Cleared
-                    })
-                    .ToList();
-
-                trackerState.RegionStates = RegionStates
-                    .Select(x => new TrackerRegionState()
-                    {
-                        TypeName = x.TypeName,
-                        Reward = x.Reward,
-                        Medallion = x.Medallion
-                    })
-                    .ToList();
-
-                trackerState.DungeonStates = DungeonStates
-                    .Select(x => new TrackerDungeonState()
-                    {
-                        Name = x.Name,
-                        Cleared = x.Cleared,
-                        RemainingTreasure = x.RemainingTreasure,
-                        Reward = x.Reward,
-                        RequiredMedallion = x.Requirement
-                    })
-                    .ToList();
-
-                trackerState.MarkedLocations = MarkedLocations
-                    .Select(x => new TrackerMarkedLocation()
-                    {
-                        LocationId = x.LocationId,
-                        ItemName = x.ItemName
-                    })
-                    .ToList();
-
-                trackerState.BossStates = BossStates
-                    .Select(x => new TrackerBossState()
-                    {
-                        BossName = x.Name,
-                        Defeated = x.Defeated
-                    })
-                    .ToList();
-
-                trackerState.History = HistoryEvents
-                    .ToList();
-
                 if (rom != null && string.IsNullOrEmpty(rom.Settings))
                 {
                     rom.Settings = Config.ToConfigString(SeedConfig, true);
@@ -422,31 +366,24 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     rom.TrackerState = trackerState;
                 }
+
                 dbContext.TrackerStates.Add(trackerState);
             }
             else
             {
                 var trackerState = rom.TrackerState;
-
-                trackerState.ItemStates.ToList().ForEach(x => CopyItemState(x, ItemStates.First(y => y.Name == x.ItemName)));
-                trackerState.LocationStates.ToList().ForEach(x => CopyLocationState(x, LocationStates.First(y => y.Id == x.LocationId)));
-                trackerState.RegionStates.ToList().ForEach(x => CopyRegionState(x, RegionStates.First(y => y.TypeName == x.TypeName)));
-                trackerState.DungeonStates.ToList().ForEach(x => CopyDungeonState(x, DungeonStates.First(y => y.Name == x.Name)));
-                trackerState.BossStates.ToList().ForEach(x => CopyBossState(x, BossStates.First(y => y.Name == x.BossName)));
-                trackerState.History = HistoryEvents.ToList();
-
-                trackerState.MarkedLocations = MarkedLocations
-                    .Select(x => new TrackerMarkedLocation()
-                    {
-                        LocationId = x.LocationId,
-                        ItemName = x.ItemName
-                    })
-                    .ToList();
-
                 trackerState.UpdatedDateTime = DateTimeOffset.Now;
                 trackerState.SecondsElapsed = SecondsElapsed;
                 trackerState.PercentageCleared = percCleared;
             }
+
+            CopyItemStates(rom.TrackerState, ItemStates);
+            CopyLocationStates(rom.TrackerState, LocationStates);
+            CopyRegionStates(rom.TrackerState, RegionStates);
+            CopyDungeonStates(rom.TrackerState, DungeonStates);
+            CopyBossStates(rom.TrackerState, BossStates);
+            CopyHistoryEvents(rom.TrackerState, HistoryEvents);
+            CopyMarkedLocations(rom.TrackerState, MarkedLocations);
 
             return dbContext.SaveChangesAsync();
         }
@@ -458,14 +395,28 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="TrackingState">The tracking state of the item.</param>
         public record ItemState(string Name, int TrackingState);
 
-        /// <summary>
-        /// Copies the item state values to the db item state
-        /// </summary>
-        /// <param name="trackerItemState">The db item state</param>
-        /// <param name="itemState">The tracker item state</param>
-        private static void CopyItemState(TrackerItemState trackerItemState, ItemState itemState)
+        private static void CopyItemStates(Shared.Models.TrackerState trackerState, IReadOnlyCollection<ItemState> states)
         {
-            trackerItemState.TrackingState = itemState.TrackingState;
+            if (trackerState.ItemStates?.Count == 0)
+            {
+                trackerState.ItemStates = states
+                    .Select(x => new TrackerItemState()
+                    {
+                        ItemName = x.Name,
+                        TrackingState = x.TrackingState
+                    })
+                    .ToList();
+            }
+            else
+            {
+                trackerState.ItemStates
+                    .Select(x => new { dbEntry = x, trackerEntry = states.First(y => y.Name == x.ItemName) })
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        x.dbEntry.TrackingState = x.trackerEntry.TrackingState;
+                    });
+            }
         }
 
         /// <summary>
@@ -481,16 +432,29 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public record LocationState(int Id, ItemType? Item, bool Cleared);
 
-        /// <summary>
-        /// Copies the location state values to the db location state
-        /// </summary>
-        /// <param name="trackerLocationState">The db location state</param>
-        /// <param name="locationState">The tracker location state</param>
-        private static void CopyLocationState(TrackerLocationState trackerLocationState, LocationState locationState)
+        private static void CopyLocationStates(Shared.Models.TrackerState trackerState, IReadOnlyCollection<LocationState> states)
         {
-            trackerLocationState.LocationId = locationState.Id;
-            trackerLocationState.Item = locationState.Item;
-            trackerLocationState.Cleared = locationState.Cleared;
+            if (trackerState.LocationStates?.Count == 0)
+            {
+                trackerState.LocationStates = states
+                    .Select(x => new TrackerLocationState()
+                    {
+                        LocationId = x.Id,
+                        Item = x.Item,
+                        Cleared = x.Cleared
+                    })
+                    .ToList();
+            }
+            else
+            {
+                trackerState.LocationStates
+                    .Select(x => new { dbEntry = x, trackerEntry = states.First(y => y.Id == x.LocationId) })
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        x.dbEntry.Cleared = x.trackerEntry.Cleared;
+                    });
+            }
         }
 
         /// <summary>
@@ -503,16 +467,30 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public record RegionState(string TypeName, RewardType? Reward, ItemType? Medallion);
 
-        /// <summary>
-        /// Copies the region state values to the db region state
-        /// </summary>
-        /// <param name="trackerRegionState">The db region state</param>
-        /// <param name="regionState">The tracker region state</param>
-        private static void CopyRegionState(TrackerRegionState trackerRegionState, RegionState regionState)
+        private static void CopyRegionStates(Shared.Models.TrackerState trackerState, IReadOnlyCollection<RegionState> states)
         {
-            trackerRegionState.TypeName = regionState.TypeName;
-            trackerRegionState.Reward = regionState.Reward;
-            trackerRegionState.Medallion = regionState.Medallion;
+            if (trackerState.RegionStates?.Count == 0)
+            {
+                trackerState.RegionStates = states
+                    .Select(x => new TrackerRegionState()
+                    {
+                        TypeName = x.TypeName,
+                        Reward = x.Reward,
+                        Medallion = x.Medallion
+                    })
+                    .ToList();
+            }
+            else
+            {
+                trackerState.RegionStates
+                    .Select(x => new { dbEntry = x, trackerEntry = states.First(y => y.TypeName == x.TypeName) })
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        x.dbEntry.Reward = x.trackerEntry.Reward;
+                        x.dbEntry.Medallion = x.trackerEntry.Medallion;
+                    });
+            }
         }
 
         /// <summary>
@@ -529,18 +507,34 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="Requirement">The type of medallion required.</param>
         public record DungeonState(string Name, bool Cleared, int RemainingTreasure, RewardItem Reward, Medallion Requirement);
 
-        /// <summary>
-        /// Copies the dungeon state values to the db dungeon state
-        /// </summary>
-        /// <param name="trackerDungeonState">The db dungeon state</param>
-        /// <param name="dungeonState">The tracker dungeon state</param>
-        private static void CopyDungeonState(TrackerDungeonState trackerDungeonState, DungeonState dungeonState)
+        private static void CopyDungeonStates(Shared.Models.TrackerState trackerState, IReadOnlyCollection<DungeonState> states)
         {
-            trackerDungeonState.Name = dungeonState.Name;
-            trackerDungeonState.Cleared = dungeonState.Cleared;
-            trackerDungeonState.RemainingTreasure = dungeonState.RemainingTreasure;
-            trackerDungeonState.Reward = dungeonState.Reward;
-            trackerDungeonState.RequiredMedallion = dungeonState.Requirement;
+            if (trackerState.DungeonStates?.Count == 0)
+            {
+                trackerState.DungeonStates = states
+                    .Select(x => new TrackerDungeonState()
+                    {
+                        Name = x.Name,
+                        Cleared = x.Cleared,
+                        RemainingTreasure = x.RemainingTreasure,
+                        Reward = x.Reward,
+                        RequiredMedallion = x.Requirement
+                    })
+                    .ToList();
+            }
+            else
+            {
+                trackerState.DungeonStates
+                    .Select(x => new { dbEntry = x, trackerEntry = states.First(y => y.Name == x.Name) })
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        x.dbEntry.Cleared = x.trackerEntry.Cleared;
+                        x.dbEntry.RemainingTreasure = x.trackerEntry.RemainingTreasure;
+                        x.dbEntry.Reward = x.trackerEntry.Reward;
+                        x.dbEntry.RequiredMedallion = x.trackerEntry.Requirement;
+                    });
+            }
         }
 
         /// <summary>
@@ -552,6 +546,17 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public record MarkedLocation(int LocationId, string ItemName);
 
+        private static void CopyMarkedLocations(Shared.Models.TrackerState trackerState, IReadOnlyCollection<MarkedLocation> markedLocations)
+        {
+            trackerState.MarkedLocations = markedLocations
+                .Select(x => new TrackerMarkedLocation()
+                {
+                    LocationId = x.LocationId,
+                    ItemName = x.ItemName
+                })
+                .ToList();
+        }
+
         /// <summary>
         /// Represents the tracking state of a boss
         /// </summary>
@@ -561,15 +566,33 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         public record BossState(string Name, bool Defeated);
 
-        /// <summary>
-        /// Copies the boss state values to the db boss state
-        /// </summary>
-        /// <param name="trackerbossState">The db boss state</param>
-        /// <param name="bossState">The tracker boss state</param>
-        private static void CopyBossState(TrackerBossState trackerbossState, BossState bossState)
+        private static void CopyBossStates(Shared.Models.TrackerState trackerState, IReadOnlyCollection<BossState> states)
         {
-            trackerbossState.BossName = bossState.Name;
-            trackerbossState.Defeated = bossState.Defeated;
+            if (trackerState.BossStates?.Count == 0)
+            {
+                trackerState.BossStates = states
+                    .Select(x => new TrackerBossState()
+                    {
+                        BossName = x.Name,
+                        Defeated = x.Defeated
+                    })
+                    .ToList();
+            }
+            else
+            {
+                trackerState.BossStates
+                    .Select(x => new { dbEntry = x, trackerEntry = states.First(y => y.Name == x.BossName) })
+                    .ToList()
+                    .ForEach(x =>
+                    {
+                        x.dbEntry.Defeated = x.trackerEntry.Defeated;
+                    });
+            }
+        }
+
+        public static void CopyHistoryEvents(Shared.Models.TrackerState trackerState, IReadOnlyCollection<TrackerHistoryEvent> history)
+        {
+            trackerState.History = history.ToList();
         }
     }
 }

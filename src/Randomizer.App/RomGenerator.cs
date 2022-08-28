@@ -250,7 +250,7 @@ namespace Randomizer.App
             var smIpsFiles = new List<Stream>();
             if (options.PatchOptions.CasualSuperMetroidPatches)
                 smIpsFiles.Add(IpsPatch.Respin());
-            if (options.PatchOptions.ShaktoolWithoutGrapple)
+            if (options.LogicConfig.ShaktoolWithoutGrapple)
                 smIpsFiles.Add(IpsPatch.ShaktoolWithoutGrapple());
 
             byte[] rom;

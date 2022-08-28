@@ -10,15 +10,17 @@ namespace Randomizer.SMZ3.Tracking.Services
     public class TextToSpeechCommunicator : ICommunicator, IDisposable
     {
         private readonly SpeechSynthesizer _tts;
+        private bool _canSpeak;
 
         /// <summary>
         /// Initializes a new instance of the <see
         /// cref="TextToSpeechCommunicator"/> class.
         /// </summary>
-        public TextToSpeechCommunicator()
+        public TextToSpeechCommunicator(TrackerOptionsAccessor trackerOptionsAccessor)
         {
             _tts = new SpeechSynthesizer();
             _tts.SelectVoiceByHints(VoiceGender.Female);
+            _canSpeak = trackerOptionsAccessor.Options?.VoiceFrequency != Shared.Enums.TrackerVoiceFrequency.Disabled;
         }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </param>
         public void Say(string text)
         {
+            if (!_canSpeak) return;
             var prompt = GetPromptFromText(text);
             _tts.SpeakAsync(prompt);
         }
@@ -54,6 +57,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </param>
         public void SayWait(string text)
         {
+            if (!_canSpeak) return;
             var prompt = GetPromptFromText(text);
             _tts.Speak(prompt);
         }
@@ -108,6 +112,22 @@ namespace Randomizer.SMZ3.Tracking.Services
             {
                 _tts.Dispose();
             }
+        }
+
+        /// <summary>
+        /// Enables communicating
+        /// </summary>
+        public void Enable()
+        {
+            _canSpeak = true;
+        }
+
+        /// <summary>
+        /// Disables communicating
+        /// </summary>
+        public void Disable()
+        {
+            _canSpeak = false;
         }
     }
 }

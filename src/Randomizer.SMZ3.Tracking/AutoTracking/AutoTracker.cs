@@ -5,9 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
 using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.SMZ3.Tracking.VoiceCommands;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
@@ -25,29 +27,42 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly IItemService _itemService;
         private readonly IEnumerable<IZeldaStateCheck?> _zeldaStateChecks;
         private readonly IEnumerable<IMetroidStateCheck?> _metroidStateChecks;
+        private readonly TrackerModuleFactory _trackerModuleFactory;
+        private readonly IRandomizerConfigService _config;
         private int _currentIndex = 0;
         private Game _previousGame;
         private bool _hasStarted;
         private IEmulatorConnector? _connector;
         private readonly Queue<EmulatorAction> _sendActions = new();
         private CancellationTokenSource? _stopSendingMessages;
+        private int _numGTItems = 0;
+        private bool _seenGTTorch = false;
+        private bool _foundGTKey = false;
 
         /// <summary>
         /// Constructor for Auto Tracker
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="loggerFactory"></param>
+        /// <param name="itemService"></param>
         /// <param name="zeldaStateChecks"></param>
         /// <param name="metroidStateChecks"></param>
+        /// <param name="trackerModuleFactory"></param>
+        /// <param name="randomizerConfigService"></param>
         public AutoTracker(ILogger<AutoTracker> logger,
             ILoggerFactory loggerFactory,
             IItemService itemService,
             IEnumerable<IZeldaStateCheck> zeldaStateChecks,
-            IEnumerable<IMetroidStateCheck> metroidStateChecks)
+            IEnumerable<IMetroidStateCheck> metroidStateChecks,
+            TrackerModuleFactory trackerModuleFactory,
+            IRandomizerConfigService randomizerConfigService
+        )
         {
             _logger = logger;
             _loggerFactory = loggerFactory;
             _itemService = itemService;
+            _trackerModuleFactory = trackerModuleFactory;
+            _config = randomizerConfigService;
 
             // Check if the game has started or not
             AddReadAction(new()
@@ -507,6 +522,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
                     if (!location.Cleared && currentCleared && prevCleared)
                     {
+                        if (location.Region is GanonsTower gt && location != gt.BobsTorch)
+                        {
+                            IncrementGTItems(location);
+                        }
+
                         var item = _itemService.GetOrDefault(location);
                         if (item != null)
                         {
@@ -615,6 +635,16 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _logger.LogDebug(ZeldaState.ToString());
             if (prevState == null) return;
 
+            if (!_seenGTTorch
+                && ZeldaState.CurrentRoom == 140
+                && !ZeldaState.IsOnBottomHalfOfRoom
+                && !ZeldaState.IsOnRightHalfOfRoom
+                && ZeldaState.Substate != 14)
+            {
+                _seenGTTorch = true;
+                IncrementGTItems(Tracker.World.GanonsTower.BobsTorch);
+            }
+
             foreach (var check in _zeldaStateChecks)
             {
                 if (check != null && check.ExecuteCheck(Tracker, ZeldaState, prevState))
@@ -642,6 +672,33 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     _logger.LogInformation($"{check.GetType().Name} detected");
                 }
+            }
+        }
+
+        private void IncrementGTItems(Location location)
+        {
+            if (_foundGTKey || _config.Config.ZeldaKeysanity == true) return;
+
+            var chatIntegrationModule = _trackerModuleFactory.GetModule<ChatIntegrationModule>();
+            _numGTItems++;
+            Tracker?.Say(_numGTItems.ToString());
+            if (location.Item.Type == ItemType.BigKeyGT)
+            {
+                var responseIndex = 1;
+                for (var i = 1; i <= _numGTItems; i++)
+                {
+                    if (Tracker?.Responses.AutoTracker.GTKeyResponses.ContainsKey(i) == true)
+                    {
+                        responseIndex = i;
+                    }
+                }
+                Tracker?.Say(x => x.AutoTracker.GTKeyResponses[responseIndex], _numGTItems);
+                chatIntegrationModule?.GTItemTracked(_numGTItems, true);
+                _foundGTKey = true;
+            }
+            else
+            {
+                chatIntegrationModule?.GTItemTracked(_numGTItems, false);
             }
         }
     }

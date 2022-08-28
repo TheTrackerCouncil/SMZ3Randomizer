@@ -24,6 +24,16 @@ namespace Randomizer.Shared
         [Category("Logic")]
         public bool LaunchPadRequiresIceBeam { get; set; }
 
+        [DisplayName("Waterway Needs Gravity Suit")]
+        [Description("You're expected to have the gravity suit to be able to access the gravity suit")]
+        [Category("Logic")]
+        public bool WaterwayNeedsGravitySuit { get; set; }
+
+        [DisplayName("Easy East Crateria Sky Item")]
+        [Description("You're expected to have the space jump or speed booster to get the item in the sky in East Crateria after Wrecked Ship")]
+        [Category("Logic")]
+        public bool EasyEastCrateriaSkyItem { get; set; }
+
         [DisplayName("Fire Rod for Dark Rooms")]
         [Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness")]
         [Category("Tricks")]
@@ -60,6 +70,11 @@ namespace Randomizer.Shared
         [DefaultValue(WallJumpDifficulty.Medium)]
         public WallJumpDifficulty WallJumpDifficulty { get; set; }
             = WallJumpDifficulty.Medium; // Not very cas’, but this seems to be closest to previous assumptions
+
+        [DisplayName("Shaktool does not require Grapple Beam")]
+        [Description("Shaktool's front door is always open :)")]
+        [Category("Patches")]
+        public bool ShaktoolWithoutGrapple { get; set; }
 
         public LogicConfig Clone()
         {

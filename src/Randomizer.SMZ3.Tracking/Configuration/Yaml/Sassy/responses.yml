@@ -339,8 +339,14 @@ BossUndefeated:
 - Text: Revived {0}.
 BossNotYetDefeated:
 - Text: But you never defeated {0} in the first place.
-TimerResumed:
-- Text: Timer resumed
+Muted:
+- Text: You cannot silence me. I will not be mu
+- Text: Fine. Let's see how far you can get without me here.
+Unmuted:
+- Text: Did you miss me?
+- Text: It's good to be back.
+- Text: <break time='5s'/>Sorry, I fell asleep. You rang?
+  Weight: 0.1
 TimerReset:
 - Text: Timer reset
 TimerPaused:
@@ -820,6 +826,24 @@ AutoTracker:
   - Text: I hope you don't find any medallions soon.
   - Text: Maybe you won't have to dip into Misery Mire or Turtle Rock
   - Text: This could be worse
+  GTKeyResponses:
+    1:
+    - Text: Darn. I expected you to take a different path.
+    - Text: I'll make sure to put it in the tile room next time.
+    2:
+    - Text: Good. I'm ready for this to be over.
+    - Text: I bet you're glad you picked this path.
+    8:
+    - Text: Good job. That was perfectly average.
+    - Text: Hopefully you didn't have to fight the Armos Knights
+    16:
+    - Text: Were you getting worried that it was going to be 22?
+    - Text: I bet you feel silly for not picking the correct random path.
+    22:
+    - Text: This seed doesn't quit, does it?
+    - Text: Weren't you supposed to be going quickly?
+    - Text: Nintendo must have been proud of the tile rooms since they put so many in the game, so I wanted to make sure you enjoyed the full Link to the Past experience.
+      Weight: 0.1
 Map:
   UpdateMap:
   - Text: Showing you the {0} map
@@ -873,3 +897,8 @@ Cheats:
     Weight: 0.05
   CheatFailed:
   - Text: Sorry, I can't perform that cheat for you at this time
+  CheatInvalidItem: 
+  - Text: If you want some of that, you'll need to make it yourself.
+  - Text: Do you have any idea what you're even asking for?
+  - Text: I'm sorry, I can't give you any of that.
+  - Text: Adam has not yet authorized the use of that.

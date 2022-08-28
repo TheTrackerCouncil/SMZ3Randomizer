@@ -80,6 +80,11 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public SchrodingersString? WhenMarkingProgression { get; set; }
 
         /// <summary>
+        /// Gets the phrases to reply with when the location is out of logic
+        /// </summary>
+        public SchrodingersString? OutOfLogic { get; set; }
+
+        /// <summary>
         /// Returns the <see cref="Location"/> that matches the location info in
         /// the specified world.
         /// </summary>

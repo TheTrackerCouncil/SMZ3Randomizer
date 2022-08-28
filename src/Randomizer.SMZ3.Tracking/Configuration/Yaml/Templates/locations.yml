@@ -13,6 +13,7 @@
 # WhenMarkingProgression: The list of possibilities for tracker responses when the player says that
 #     there is a progression item at the location
 # Hints: The list of possibilities for vague descriptors of the room for the hint system
+# OutOfLogic: The list of possibilities for when the location is accessed out of logic
 
 # Chozo Ruins entrance / that room opposite the Gauntlet / Power Bomb (Crateria surface)
 - LocationNumber: 0
@@ -22,6 +23,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Flooded Cavern - under water / West Ocean - under water / that room before Wrecked Ship that's underwater / Missile (outside Wrecked Ship bottom)
 - LocationNumber: 1
   Name: 
@@ -30,6 +32,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sky Missile / that spot all the way up in the sky after Wrecked Ship / Missile (outside Wrecked Ship top)
 - LocationNumber: 2
   Name: 
@@ -38,6 +41,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Morph Ball Maze / Missile (outside Wrecked Ship middle)
 - LocationNumber: 3
   Name: 
@@ -46,6 +50,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # The Moat / Interior Lake / that room between Crateria and Wrecked Ship with the item on the water / Missile (Crateria moat)
 - LocationNumber: 4
   Name: 
@@ -54,6 +59,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Gauntlet (Chozo) / the room in the middle of the Gauntlet / Energy Tank, Gauntlet
 - LocationNumber: 5
   Name: 
@@ -62,6 +68,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mother Brain's reliquary / Pit Room / Mother Brain's toilet / the spot underneath the place Mother Brain used to be / Missile (Crateria bottom)
 - LocationNumber: 6
   Name: 
@@ -70,6 +77,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bozo / Bomb Torizo room / Bombs
 - LocationNumber: 7
   Name: 
@@ -78,6 +86,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Terminator Room / Fungal Slope / that room in Crateria with the mushrooms / Energy Tank, Terminator
 - LocationNumber: 8
   Name: 
@@ -86,6 +95,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Gauntlet Shaft Right / that spot on the right side after the Gauntlet / Missile (Crateria gauntlet right)
 - LocationNumber: 9
   Name: 
@@ -94,6 +104,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Gauntlet Shaft Left / that spot on the left side after the Gauntlet / Missile (Crateria gauntlet left)
 - LocationNumber: 10
   Name: 
@@ -102,6 +113,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Old Tourian launchpad / Super Missile (Crateria)
 - LocationNumber: 11
   Name: 
@@ -110,6 +122,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Final Missile Bombway / The Final Missile / Dental Plan Missiles / the room in Crateria on the other side of the entrance to Zelda / Missile (Crateria middle)
 - LocationNumber: 12
   Name: 
@@ -118,6 +131,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hell / Etecoon shaft / that room where the animals are wall jumping / Power Bomb (green Brinstar bottom)
 - LocationNumber: 13
   Name: 
@@ -126,6 +140,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spore Spawn's item / Super Missile (pink Brinstar)
 - LocationNumber: 14
   Name: 
@@ -134,6 +149,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mockball Room - Fail item / that spot you get to when failing the mock ball in Green Brinstar / Missile (green Brinstar below super missile)
 - LocationNumber: 15
   Name: 
@@ -142,6 +158,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mockball Room Attic / that spot on your way out of the mockball room / Super Missile (green Brinstar top)
 - LocationNumber: 16
   Name: 
@@ -150,6 +167,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mockball Chozo / the room after you use the Speed Booster in Green Brinstar / the room after you use the mockball glitch in Green Brinstar / Reserve Tank, Brinstar
 - LocationNumber: 17
   Name: 
@@ -158,6 +176,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mockball Back room hidden item / the room behind the room after you use the Speed Booster in Green Brinstar / the room behind the room after you use the mockball glitch in Green Brinstar / Missile (green Brinstar behind missile) / Ron Popeil missiles / Mockball Hall Hidden Room Hidden Item
 - LocationNumber: 18
   Name: 
@@ -166,6 +185,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mockball Back room / that spot in the wall in the room behind the room after you use the Speed Booster in Green Brinstar / that spot in the wall in the room behind the room after you use the mockball glitch in Green Brinstar / Missile (green Brinstar behind reserve tank) / Mockball Hall Hidden Room Main Item
 - LocationNumber: 19
   Name: 
@@ -174,6 +194,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pink Shaft (top) / Big Pink (top) / that spot in Pink Brinstar on the other side of the grapple ceiling / Missile (pink Brinstar top)
 - LocationNumber: 21
   Name: 
@@ -182,6 +203,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pink Shaft (bottom) / Big Pink (bottom) / that spot on the bottom of Pink Brinstar / Missile (pink Brinstar bottom)
 - LocationNumber: 22
   Name: 
@@ -190,6 +212,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pink Shaft - Chozo / the room underneath Pink Brinstar / Charge Beam
 - LocationNumber: 23
   Name: 
@@ -198,6 +221,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mission: Impossible / Pink Brinstar Power Bomb Room / Power Bomb (pink Brinstar)
 - LocationNumber: 24
   Name: 
@@ -206,6 +230,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Green Hill Zone / Jungle slope / Missile (green Brinstar pipe)
 - LocationNumber: 25
   Name: 
@@ -214,6 +239,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Morph Ball (Corridor No. 1) / Morphing Ball / the only place you can get to in Super Metroid without any items
 - LocationNumber: 26
   Name: 
@@ -222,6 +248,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Power Bomb wall (Corridor No. 1) / that spot behind the Morph Ball / Power Bomb (blue Brinstar)
 - LocationNumber: 27
   Name: 
@@ -230,6 +257,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # that spot all the way to the right of Blue Brinstar / Missile (blue Brinstar middle)
 - LocationNumber: 28
   Name: 
@@ -238,6 +266,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blue Brinstar Ceiling / that spot in the ceiling in Blue Brinstar / Energy Tank, Brinstar Ceiling
 - LocationNumber: 29
   Name: 
@@ -246,6 +275,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # that spot right after the false floor in Green Brinstar / Highway to Hell / Energy Tank, Etecoons
 - LocationNumber: 30
   Name: 
@@ -254,6 +284,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # that room after the false floor in Green Brinstar / Super Missile (green Brinstar bottom)
 - LocationNumber: 31
   Name: 
@@ -262,6 +293,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Waterway / Energy Tank, Waterway
 - LocationNumber: 33
   Name: 
@@ -270,6 +302,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # that Chozo room at the bottom of Blue Brinstar / Missile (blue Brinstar bottom)
 - LocationNumber: 34
   Name: 
@@ -278,6 +311,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hoptank Room / Wave Beam Glitch room / the room where everyone does the Wave Beam Glitch / Energy Tank, Brinstar Gate
 - LocationNumber: 35
   Name: 
@@ -286,6 +320,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Billy Mays Room Main Item / Missile (blue Brinstar top) / Blue Brinstar Top Main Item / the visible spot in the Billy Mays Room
 - LocationNumber: 36
   Name: 
@@ -294,6 +329,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Billy Mays Room Hidden item / But wait, there's more! / Missile (blue Brinstar behind missile) / Blue Brinstar Top Hidden Item / the hidden spot in the Billy Mays Room
 - LocationNumber: 37
   Name: 
@@ -302,6 +338,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # The Chozo room after the dark room with all the spikes / X-Ray Scope / X-Ray
 - LocationNumber: 38
   Name: 
@@ -310,6 +347,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Beta Power Bomb Room / Power Bomb (red Brinstar sidehopper room) / the room underneath the flower in Red Brinstar / the room underneath the Samus Eater in Red Brinstar
 - LocationNumber: 39
   Name: 
@@ -318,6 +356,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Alpha Power Bomb Room / Power Bomb (red Brinstar spike room) / the Chozo room in Red Brinstar with the jumping enemies you can freeze / the Chozo room in Red Brinstar with the Boyons
 - LocationNumber: 40
   Name: 
@@ -326,6 +365,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Alpha Power Bomb Room - Behind the wall / Missile (red Brinstar spike room) / the room behind the wall in the Chozo room in Red Brinstar
 - LocationNumber: 41
   Name: 
@@ -334,6 +374,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # ~ S p A z E r ~ / Spazer / the Chozo room above the entrance to Maridia in Red Brinstar
 - LocationNumber: 42
   Name: 
@@ -342,6 +383,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Energy Tank, Kraid / the room that opens up on your way out after defeating Kraid
 - LocationNumber: 43
   Name: 
@@ -350,6 +392,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Warehouse Kihunter Room / Missile (Kraid) / the room before the corridor with Kraid's Awful Son
 - LocationNumber: 44
   Name: 
@@ -358,6 +401,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kraid's Reliquary / the room after Kraid / Varia Suit
 - LocationNumber: 48
   Name: 
@@ -366,6 +410,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Lava Room - Submerged in wall / Cathedral / the room in Upper Norfair with the item in the lava / Missile (lava room)
 - LocationNumber: 49
   Name: 
@@ -374,6 +419,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ice Beam Room / Ice Beam / the room in Upper Norfair after the Speed Booster gates
 - LocationNumber: 50
   Name: 
@@ -382,6 +428,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Crumble Shaft / the room with all the crumbling platforms / Missile (below Ice Beam)
 - LocationNumber: 51
   Name: 
@@ -390,6 +437,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Crocomire's Pit / Energy Tank, Crocomire / the room where you fight Crocomire
 - LocationNumber: 52
   Name: 
@@ -398,6 +446,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hi-Jump Boots Room / Hi-Jump Boots / the Chozo room after the room in Upper Norfair where you have to wait a long time for an enemy before you can leave again
 - LocationNumber: 53
   Name: 
@@ -406,6 +455,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Crocomire Escape / Missile (above Crocomire) / the room with the item beyond a Super Missile gate you can peak at in Upper Norfair
 - LocationNumber: 54
   Name: 
@@ -414,6 +464,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hi-Jump Lobby - Back / the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again / Missile (Hi-Jump Boots)
 - LocationNumber: 55
   Name: 
@@ -422,6 +473,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hi-Jump Lobby - Entrance / the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again / Energy Tank (Hi-Jump Boots)
 - LocationNumber: 56
   Name: 
@@ -430,6 +482,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Post Crocomire Power Bomb Room / the room directly on the other side of Crocomire's room / Power Bomb (Crocomire)
 - LocationNumber: 57
   Name: 
@@ -438,6 +491,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Cosine Room / Post Crocomire Missile Room / the wavy room below Crocomire / Missile (below Crocomire)
 - LocationNumber: 58
   Name: 
@@ -446,6 +500,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Indiana Jones Room / Pantry / Post Crocomire Jump Room / the big empty room after Crocomire that use the Speed Booster to get / Missile (Grappling Beam)
 - LocationNumber: 59
   Name: 
@@ -454,6 +509,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Grapple Beam Room / Grappling Beam / the Chozo room after the big empty room past Crocomire
 - LocationNumber: 60
   Name: 
@@ -462,6 +518,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Reserve Tank, Norfair / Bubble Mountain Hidden Hall Main Item / the hidden room on the left side of Bubble Mountain
 - LocationNumber: 61
   Name: 
@@ -470,6 +527,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Missile (Norfair Reserve Tank) / Bubble Mountain Hidden Hall Hidden Item / the hidden spot in the hidden room on the left side of Bubble Mountain
 - LocationNumber: 62
   Name: 
@@ -478,6 +536,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bubble Mountain Missile Room / the room on the left side of Bubble Mountain / Missile (bubble Norfair green door)
 - LocationNumber: 63
   Name: 
@@ -486,6 +545,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bubble Mountain / the spot near the spikes on the bottom of Bubble Mountain / Missile (bubble Norfair)
 - LocationNumber: 64
   Name: 
@@ -494,6 +554,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Speed Booster Hall - Ceiling / the spot in the ceiling on the right side of Bubble Mountain / Missile (Speed Booster)
 - LocationNumber: 65
   Name: 
@@ -502,6 +563,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Speed Booster Room / Speed Booster / the room to the right of Bubble Mountain / the Chozo room in Bubble Mountain
 - LocationNumber: 66
   Name: 
@@ -510,6 +572,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Double Chamber / Grapple Crossing / Missile (Wave Beam)
 - LocationNumber: 67
   Name: 
@@ -518,6 +581,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Wave Beam Room / Wave Beam
 - LocationNumber: 68
   Name: 
@@ -526,6 +590,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Gold Torizo - Drop down / the spot before you drop down to fight Gold Torizo / Missile (Gold Torizo)
 - LocationNumber: 70
   Name: 
@@ -534,6 +599,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Golden Torizo - Ceiling / the spot where Gold Torizo hides before the fight / Super Missile (Gold Torizo)
 - LocationNumber: 71
   Name: 
@@ -542,6 +608,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mickey Mouse Clubhouse / Mickey Mouse room / the room that looks like Mickey Mouse / Missile (Mickey Mouse room)
 - LocationNumber: 73
   Name: 
@@ -550,6 +617,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spring Ball Maze Room / the room right before the Spring Ball Maze / Missile (lower Norfair above fire flea room)
 - LocationNumber: 74
   Name: 
@@ -558,6 +626,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Escape Power Bomb Room / the room in lower Norfair that you hope doesn't have anything because you need to go through a morph ball maze / Power Bomb (lower Norfair above fire flea room)
 - LocationNumber: 75
   Name: 
@@ -566,6 +635,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Power Bomb of Shame / the room to the left before the spiky elevator to Ridley / Power Bomb (Power Bombs of shame)
 - LocationNumber: 76
   Name: 
@@ -574,6 +644,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Three Musketeer's Room / FrankerZ Missiles / Missile (lower Norfair near Wave Beam)
 - LocationNumber: 77
   Name: 
@@ -582,6 +653,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ridley's Reliquary / the room after Ridley / Energy Tank, Ridley
 - LocationNumber: 78
   Name: 
@@ -590,6 +662,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Screw Attack / the Chozo below the portal to Misery Mire
 - LocationNumber: 79
   Name: 
@@ -598,6 +671,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Fireflea Room / the dark room in lower Norfair with the fire flies / Energy Tank, Firefleas
 - LocationNumber: 80
   Name: 
@@ -606,6 +680,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Main Shaft - Side room / the room behind the bombeable wall on the left side of Wrecked Ship / Missile (Wrecked Ship middle)
 - LocationNumber: 128
   Name: 
@@ -614,6 +689,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Post Chozo Concert - Speed Booster Item / Bowling Alley - Speed Booster Item / the spot that requires the Speed Booster in Wrecked Ship / Reserve Tank, Wrecked Ship / Wrecked Ship, Reserve Tank
 - LocationNumber: 129
   Name: 
@@ -622,6 +698,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Post Chozo Concert - Breakable Chozo / the breakable Chozo in Wrecked Ship / Missile (Gravity Suit)
 - LocationNumber: 130
   Name: 
@@ -630,6 +707,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Attic - Assembly Line / the room with the conveyors and robots / Missile (Wrecked Ship top)
 - LocationNumber: 131
   Name: 
@@ -638,6 +716,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Wrecked Pool / Ruined Pool / Wrecked Ship Bullshit Room / that room in Wrecked Ship with all the water where you always reset / Energy Tank, Wrecked Ship
 - LocationNumber: 132
   Name: 
@@ -646,6 +725,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Left Super Missile Chamber / the room that opens up on the left side after defeating Phantoon / Super Missile (Wrecked Ship left)
 - LocationNumber: 133
   Name: 
@@ -654,6 +734,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Right Super Missile Chamber / the room that opens up on the right side after defeating Phantoon / Right Super, Wrecked Ship
 - LocationNumber: 134
   Name: 
@@ -662,6 +743,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Post Chozo Concert - Gravity Suit Chamber / the room after the Chozo concert / Gravity Suit
 - LocationNumber: 135
   Name: 
@@ -670,6 +752,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Main Street - Ceiling (Shinespark) / Main Street Missiles / the spot in the ceiling in Maridia that requires Shinespark / Missile (green Maridia shinespark)
 - LocationNumber: 136
   Name: 
@@ -678,6 +761,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Main Street - Crab Supers / the tiny room where you watch crabs walking into the wall / Super Missile (green Maridia)
 - LocationNumber: 137
   Name: 
@@ -686,6 +770,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mama Turtle Room / the room with the turtles / Energy Tank, Mama turtle
 - LocationNumber: 138
   Name: 
@@ -694,6 +779,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mama Turtle Room - Wall item / the spot in the wall in the turtle room / Missile (green Maridia tatori)
 - LocationNumber: 139
   Name: 
@@ -702,6 +788,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Watering Hole Left / the left side of the pit with two items in the northeast of Maridia / Super Missile (yellow Maridia)
 - LocationNumber: 140
   Name: 
@@ -710,6 +797,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Watering Hole Right / the right side of the pit with two items in the northeast of Maridia / Missile (yellow Maridia super missile)
 - LocationNumber: 141
   Name: 
@@ -718,6 +806,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pseudo Plasma Spark Room / the room leading up to the pit with two items in the northeast of Maridia / Missile (yellow Maridia false wall)
 - LocationNumber: 142
   Name: 
@@ -726,6 +815,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Plasma Beam / Plasma Chamber / Plasma Beam room / the room in Maridia near the forgotten highway to Wrecked Ship
 - LocationNumber: 143
   Name: 
@@ -734,6 +824,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Left Sand Pit Left / the left side of the left sand pit / Missile (left Maridia sand pit room)
 - LocationNumber: 144
   Name: 
@@ -742,6 +833,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Left Sand Pit Right / the right side of the left sand pit / Reserve Tank, Maridia
 - LocationNumber: 145
   Name: 
@@ -750,6 +842,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Right Sand Pit Left / the left side of the right sand pit / Missile (right Maridia sand pit room)
 - LocationNumber: 146
   Name: 
@@ -758,6 +851,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Right Sand Pit Right / the right side of the right sand pit / Power Bomb (right Maridia sand pit room)
 - LocationNumber: 147
   Name: 
@@ -766,6 +860,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Aqueduct - Left item / Missile (pink Maridia)
 - LocationNumber: 148
   Name: 
@@ -774,6 +869,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Aqueduct - Right item / Super Missile (pink Maridia)
 - LocationNumber: 149
   Name: 
@@ -782,6 +878,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Shaktool / Shak's Stash / Shaktool's item / the room that everyone's favorite diggy boy helps you get to / the room after everyone's favorite diggy boy / Spring Ball
 - LocationNumber: 150
   Name: 
@@ -790,6 +887,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # The Precious Room / Pre-Draygon Room / the wall in the room before Draygon / Missile (Draygon)
 - LocationNumber: 151
   Name: 
@@ -798,6 +896,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sandy Path / the room after Botwoon / Energy Tank, Botwoon
 - LocationNumber: 152
   Name: 
@@ -806,6 +905,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Draygon's Reliquary / the room after Draygon / Space Jump
 - LocationNumber: 154
   Name: 
@@ -814,6 +914,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ether Tablet
 - LocationNumber: 256
   Name: 
@@ -822,6 +923,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spectacle Rock
 - LocationNumber: 257
   Name: 
@@ -830,6 +932,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spectacle Rock Cave
 - LocationNumber: 258
   Name: 
@@ -838,6 +941,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Old Man
 - LocationNumber: 259
   Name: 
@@ -846,6 +950,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Floating Island
 - LocationNumber: 260
   Name: 
@@ -854,6 +959,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spiral Cave
 - LocationNumber: 261
   Name: 
@@ -862,6 +968,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Paradox Cave Upper - Left
 - LocationNumber: 262
   Name: 
@@ -870,6 +977,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Paradox Cave Upper - Right
 - LocationNumber: 263
   Name: 
@@ -878,6 +986,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Paradox Cave Lower - Far Left
 - LocationNumber: 264
   Name: 
@@ -886,6 +995,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Paradox Cave Lower - Left
 - LocationNumber: 265
   Name: 
@@ -894,6 +1004,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Paradox Cave Lower - Middle
 - LocationNumber: 266
   Name: 
@@ -902,6 +1013,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Paradox Cave Lower - Right
 - LocationNumber: 267
   Name: 
@@ -910,6 +1022,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Paradox Cave Lower - Far Right
 - LocationNumber: 268
   Name: 
@@ -918,6 +1031,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mimic Cave
 - LocationNumber: 269
   Name: 
@@ -926,6 +1040,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Master Sword Pedestal / Pedestal / Ped
 - LocationNumber: 270
   Name: 
@@ -934,6 +1049,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mushroom
 - LocationNumber: 271
   Name: 
@@ -942,6 +1058,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Lost Woods Hideout
 - LocationNumber: 272
   Name: 
@@ -950,6 +1067,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Lumberjack Tree / Lumberjack Ledge
 - LocationNumber: 273
   Name: 
@@ -958,6 +1076,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bonk Rocks / Pegasus Rocks
 - LocationNumber: 274
   Name: 
@@ -966,6 +1085,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Graveyard Ledge
 - LocationNumber: 275
   Name: 
@@ -974,6 +1094,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # King's Tomb
 - LocationNumber: 276
   Name: 
@@ -982,6 +1103,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kakariko Well Back cave / Kakariko Well Top
 - LocationNumber: 277
   Name: 
@@ -990,6 +1112,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kakariko Well Left
 - LocationNumber: 278
   Name: 
@@ -998,6 +1121,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kakariko Well Middle
 - LocationNumber: 279
   Name: 
@@ -1006,6 +1130,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kakariko Well Right
 - LocationNumber: 280
   Name: 
@@ -1014,6 +1139,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kakariko Well Bottom
 - LocationNumber: 281
   Name: 
@@ -1022,6 +1148,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blind's Hideout Back Room / Blind's Hideout Top
 - LocationNumber: 282
   Name: 
@@ -1030,6 +1157,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blind's Hideout Far Left
 - LocationNumber: 283
   Name: 
@@ -1038,6 +1166,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blind's Hideout Left
 - LocationNumber: 284
   Name: 
@@ -1046,6 +1175,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blind's Hideout Right
 - LocationNumber: 285
   Name: 
@@ -1054,6 +1184,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blind's Hideout Far Right
 - LocationNumber: 286
   Name: 
@@ -1062,6 +1193,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bottle Merchant
 - LocationNumber: 287
   Name: 
@@ -1070,6 +1202,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sick Kid / Bug Catching Kid's House
 - LocationNumber: 289
   Name: 
@@ -1078,6 +1211,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kakariko Tavern / Inn back room
 - LocationNumber: 290
   Name: 
@@ -1086,6 +1220,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Magic Bat
 - LocationNumber: 291
   Name: 
@@ -1094,6 +1229,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Zora / King Zora
 - LocationNumber: 292
   Name: 
@@ -1102,6 +1238,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Zora's Ledge
 - LocationNumber: 293
   Name: 
@@ -1110,6 +1247,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Waterfall Fairy Right
 - LocationNumber: 295
   Name: 
@@ -1118,6 +1256,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Potion Shop / Mushroom Item
 - LocationNumber: 296
   Name: 
@@ -1126,6 +1265,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sahasrahla's Hut Left
 - LocationNumber: 297
   Name: 
@@ -1134,6 +1274,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sahasrahla's Hut Middle
 - LocationNumber: 298
   Name: 
@@ -1142,6 +1283,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sahasrahla's Hut Right
 - LocationNumber: 299
   Name: 
@@ -1150,6 +1292,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sahasrahla
 - LocationNumber: 300
   Name: 
@@ -1158,6 +1301,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Maze Race / Racing Game
 - LocationNumber: 301
   Name: 
@@ -1166,6 +1310,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mini Moldorm Cave Far Left
 - LocationNumber: 307
   Name: 
@@ -1174,6 +1319,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mini Moldorm Cave Left
 - LocationNumber: 308
   Name: 
@@ -1182,6 +1328,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mini Moldorm Cave NPC
 - LocationNumber: 309
   Name: 
@@ -1190,6 +1337,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mini Moldorm Cave Right
 - LocationNumber: 310
   Name: 
@@ -1198,6 +1346,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bombos Tablet
 - LocationNumber: 314
   Name: 
@@ -1206,6 +1355,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Floodgate Chest
 - LocationNumber: 315
   Name: 
@@ -1214,6 +1364,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sunken Treasure
 - LocationNumber: 316
   Name: 
@@ -1222,6 +1373,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Lake Hylia Island
 - LocationNumber: 317
   Name: 
@@ -1230,6 +1382,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Under the bridge / the guy under the bridge / Hobo
 - LocationNumber: 318
   Name: 
@@ -1238,6 +1391,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ice Cave / Ice Rod Cave
 - LocationNumber: 319
   Name: 
@@ -1246,6 +1400,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spike Cave
 - LocationNumber: 320
   Name: 
@@ -1254,6 +1409,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hookshot Cave - Top Right
 - LocationNumber: 321
   Name: 
@@ -1262,6 +1418,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hookshot Cave - Top Left
 - LocationNumber: 322
   Name: 
@@ -1270,6 +1427,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hookshot Cave - Bottom Left
 - LocationNumber: 323
   Name: 
@@ -1278,6 +1436,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hookshot Cave - Bottom Right
 - LocationNumber: 324
   Name: 
@@ -1286,6 +1445,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Superbunny Cave - Top
 - LocationNumber: 325
   Name: 
@@ -1294,6 +1454,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Superbunny Cave - Bottom
 - LocationNumber: 326
   Name: 
@@ -1302,6 +1463,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bumper Cave Ledge / Bumper Cave / Bumper Ledge
 - LocationNumber: 327
   Name: 
@@ -1310,6 +1472,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Chest Game
 - LocationNumber: 328
   Name: 
@@ -1318,6 +1481,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # C-Shaped House
 - LocationNumber: 329
   Name: 
@@ -1326,6 +1490,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Brewery
 - LocationNumber: 330
   Name: 
@@ -1334,6 +1499,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Peg World / Hammer Pegs
 - LocationNumber: 331
   Name: 
@@ -1342,6 +1508,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blacksmith
 - LocationNumber: 332
   Name: 
@@ -1350,6 +1517,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Purple Chest turn-in / Purple Chest
 - LocationNumber: 333
   Name: 
@@ -1358,6 +1526,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Catfish / Scatfish / Lake of Ill Omen
 - LocationNumber: 334
   Name: 
@@ -1366,6 +1535,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pyramid of Power / Pyramid
 - LocationNumber: 335
   Name: 
@@ -1374,6 +1544,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Cursed Fairy Left / Pyramid Fairy Left
 - LocationNumber: 336
   Name: 
@@ -1382,6 +1553,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Cursed Fairy Right / Pyramid Fairy Right
 - LocationNumber: 337
   Name: 
@@ -1390,6 +1562,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Digging Game
 - LocationNumber: 338
   Name: 
@@ -1398,6 +1571,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Haunted Grove / Stumpy
 - LocationNumber: 339
   Name: 
@@ -1406,6 +1580,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hype Cave Top
 - LocationNumber: 340
   Name: 
@@ -1414,6 +1589,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hype Cave Middle Right
 - LocationNumber: 341
   Name: 
@@ -1422,6 +1598,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hype Cave Middle Left
 - LocationNumber: 342
   Name: 
@@ -1430,6 +1607,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hype Cave Bottom
 - LocationNumber: 343
   Name: 
@@ -1438,6 +1616,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hype Cave NPC
 - LocationNumber: 344
   Name: 
@@ -1446,6 +1625,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mire Shed - Left
 - LocationNumber: 345
   Name: 
@@ -1454,6 +1634,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mire Shed - Right
 - LocationNumber: 346
   Name: 
@@ -1462,6 +1643,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Sanctuary
 - LocationNumber: 347
   Name: 
@@ -1470,6 +1652,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Secret Room - Left / Back of Escape - Left / Sewers Secret Room - Left
 - LocationNumber: 348
   Name: 
@@ -1478,6 +1661,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Secret Room - Middle / Back of Escape - Middle / Sewers Secret Room - Middle
 - LocationNumber: 349
   Name: 
@@ -1486,6 +1670,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Secret Room - Right / Back of Escape - Right / Sewers Secret Room - Right
 - LocationNumber: 350
   Name: 
@@ -1494,6 +1679,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Dark Cross
 - LocationNumber: 351
   Name: 
@@ -1502,6 +1688,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Hyrule Castle Map Chest
 - LocationNumber: 352
   Name: 
@@ -1510,6 +1697,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Boomerang Chest / Hyrule Castle Boomerang Chest
 - LocationNumber: 353
   Name: 
@@ -1518,6 +1706,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Zelda's Cell / Hyrule Castle Zelda's Cell
 - LocationNumber: 354
   Name: 
@@ -1526,6 +1715,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Link's Uncle
 - LocationNumber: 355
   Name: 
@@ -1534,6 +1724,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Secret Passage / Hyrule Castle Secret Passage
 - LocationNumber: 356
   Name: 
@@ -1542,6 +1733,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Castle Tower Foyer
 - LocationNumber: 357
   Name: 
@@ -1550,6 +1742,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Castle Tower - Dark Maze
 - LocationNumber: 358
   Name: 
@@ -1558,6 +1751,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Cannonball Chest / Eastern Palace Cannonball Chest
 - LocationNumber: 359
   Name: 
@@ -1566,6 +1760,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Eastern Palace Map Chest
 - LocationNumber: 360
   Name: 
@@ -1574,6 +1769,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Eastern Palace Compass Chest
 - LocationNumber: 361
   Name: 
@@ -1582,6 +1778,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Eastern Palace Big Chest
 - LocationNumber: 362
   Name: 
@@ -1590,6 +1787,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Eastern Palace Big Key Chest
 - LocationNumber: 363
   Name: 
@@ -1598,6 +1796,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Armos Knights
 - LocationNumber: 364
   Name: 
@@ -1606,6 +1805,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Desert Palace Big Chest / Dessert Palace Big Chest
 - LocationNumber: 365
   Name: 
@@ -1614,6 +1814,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Torch / Desert Palace Torch / Dessert Palace Torch
 - LocationNumber: 366
   Name: 
@@ -1622,6 +1823,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Desert Palace Map Chest / Dessert Palace Map Chest
 - LocationNumber: 367
   Name: 
@@ -1630,6 +1832,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Desert Palace Big Key Chest / Dessert Palace Big Key Chest
 - LocationNumber: 368
   Name: 
@@ -1638,6 +1841,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Desert Palace Compass Chest / Dessert Palace Compass Chest
 - LocationNumber: 369
   Name: 
@@ -1646,6 +1850,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Lanmolas
 - LocationNumber: 370
   Name: 
@@ -1654,6 +1859,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Basement Cage / Tower of Hera Basement Cage
 - LocationNumber: 371
   Name: 
@@ -1662,6 +1868,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Tower of Hera Map Chest
 - LocationNumber: 372
   Name: 
@@ -1670,6 +1877,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Tower of Hera Big Key Chest
 - LocationNumber: 373
   Name: 
@@ -1678,6 +1886,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Tower of Hera Compass Chest
 - LocationNumber: 374
   Name: 
@@ -1686,6 +1895,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Tower of Hera Big Chest
 - LocationNumber: 375
   Name: 
@@ -1694,6 +1904,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Moldorm
 - LocationNumber: 376
   Name: 
@@ -1702,6 +1913,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Shooter Room / Palace of Darkness Shooter Room
 - LocationNumber: 377
   Name: 
@@ -1710,6 +1922,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Palace of Darkness Big Key Chest
 - LocationNumber: 378
   Name: 
@@ -1718,6 +1931,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Stalfos Basement / Palace of Darkness Stalfos Basement
 - LocationNumber: 379
   Name: 
@@ -1726,6 +1940,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # The Arena - Bridge / Palace of Darkness The Arena - Bridge
 - LocationNumber: 380
   Name: 
@@ -1734,6 +1949,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # The Arena - Ledge / Palace of Darkness The Arena - Ledge
 - LocationNumber: 381
   Name: 
@@ -1742,6 +1958,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Palace of Darkness Map Chest
 - LocationNumber: 382
   Name: 
@@ -1750,6 +1967,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Palace of Darkness Compass Chest
 - LocationNumber: 383
   Name: 
@@ -1758,6 +1976,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Harmless Hellway / Palace of Darkness Harmless Hellway
 - LocationNumber: 384
   Name: 
@@ -1766,6 +1985,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Dark Basement Left
 - LocationNumber: 385
   Name: 
@@ -1774,6 +1994,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Dark Basement Right
 - LocationNumber: 386
   Name: 
@@ -1782,6 +2003,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Dark Maze Top
 - LocationNumber: 387
   Name: 
@@ -1790,6 +2012,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Dark Maze Bottom
 - LocationNumber: 388
   Name: 
@@ -1798,6 +2021,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Palace of Darkness Big Chest
 - LocationNumber: 389
   Name: 
@@ -1806,6 +2030,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Helmasaur King
 - LocationNumber: 390
   Name: 
@@ -1814,6 +2039,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Swamp Palace Entrance
 - LocationNumber: 391
   Name: 
@@ -1822,6 +2048,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Swamp Palace Map Chest
 - LocationNumber: 392
   Name: 
@@ -1830,6 +2057,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Swamp Palace Big Chest
 - LocationNumber: 393
   Name: 
@@ -1838,6 +2066,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Swamp Palace Compass Chest
 - LocationNumber: 394
   Name: 
@@ -1846,6 +2075,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Swamp Palace West Chest
 - LocationNumber: 395
   Name: 
@@ -1854,6 +2084,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Swamp Palace Big Key Chest
 - LocationNumber: 396
   Name: 
@@ -1862,6 +2093,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Flooded Room Left
 - LocationNumber: 397
   Name: 
@@ -1870,6 +2102,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Flooded Room Right
 - LocationNumber: 398
   Name: 
@@ -1878,6 +2111,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Waterfall Room / Swamp Palace Waterfall Room
 - LocationNumber: 399
   Name: 
@@ -1886,6 +2120,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Arrghus
 - LocationNumber: 400
   Name: 
@@ -1894,6 +2129,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pot Prison / Skull Woods Pot Prison / Skill Woods Pot Prison
 - LocationNumber: 401
   Name: 
@@ -1902,6 +2138,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Skull Woods Compass Chest / Skill Woods Compass Chest
 - LocationNumber: 402
   Name: 
@@ -1910,6 +2147,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Skull Woods Big Chest / Skill Woods Big Chest
 - LocationNumber: 403
   Name: 
@@ -1918,6 +2156,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Skull Woods Map Chest / Skill Woods Map Chest
 - LocationNumber: 404
   Name: 
@@ -1926,6 +2165,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pinball Room / the room with all the bumpers and gib-does / Skull Woods Pinball Room / Skill Woods Pinball Room
 - LocationNumber: 405
   Name: 
@@ -1934,6 +2174,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Skull Woods Big Key Chest / Skill Woods Big Key Chest
 - LocationNumber: 406
   Name: 
@@ -1942,6 +2183,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bridge Room / Skull Woods Bridge Room / Skill Woods Bridge Room
 - LocationNumber: 407
   Name: 
@@ -1950,6 +2192,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mothula
 - LocationNumber: 408
   Name: 
@@ -1958,6 +2201,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Thieves' Town Map Chest
 - LocationNumber: 409
   Name: 
@@ -1966,6 +2210,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ambush Chest / Thieves' Town Ambush Chest
 - LocationNumber: 410
   Name: 
@@ -1974,6 +2219,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Thieves' Town Compass Chest
 - LocationNumber: 411
   Name: 
@@ -1982,6 +2228,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Thieves' Town Big Key Chest
 - LocationNumber: 412
   Name: 
@@ -1990,6 +2237,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Attic / Thieves' Town Attic
 - LocationNumber: 413
   Name: 
@@ -1998,6 +2246,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blind's Cell / Thieves' Town Blind's Cell
 - LocationNumber: 414
   Name: 
@@ -2006,6 +2255,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Thieves' Town Big Chest
 - LocationNumber: 415
   Name: 
@@ -2014,6 +2264,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Blind
 - LocationNumber: 416
   Name: 
@@ -2022,6 +2273,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ice Palace Compass Chest
 - LocationNumber: 417
   Name: 
@@ -2030,6 +2282,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spike Room / Ice Palace Spike Room
 - LocationNumber: 418
   Name: 
@@ -2038,6 +2291,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ice Palace Map Chest
 - LocationNumber: 419
   Name: 
@@ -2046,6 +2300,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ice Palace Big Key Chest
 - LocationNumber: 420
   Name: 
@@ -2054,6 +2309,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Iced T Room / Ice Palace Iced T Room
 - LocationNumber: 421
   Name: 
@@ -2062,6 +2318,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Freezor Chest / Ice Palace Freezor Chest
 - LocationNumber: 422
   Name: 
@@ -2070,6 +2327,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ice Palace Big Chest
 - LocationNumber: 423
   Name: 
@@ -2078,6 +2336,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Kholdstare
 - LocationNumber: 424
   Name: 
@@ -2086,6 +2345,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Misery Mire Main Lobby
 - LocationNumber: 425
   Name: 
@@ -2094,6 +2354,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Misery Mire Map Chest
 - LocationNumber: 426
   Name: 
@@ -2102,6 +2363,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bridge Chest / Misery Mire Bridge Chest
 - LocationNumber: 427
   Name: 
@@ -2110,6 +2372,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Spike Chest / Misery Mire Spike Chest
 - LocationNumber: 428
   Name: 
@@ -2118,6 +2381,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Misery Mire Compass Chest
 - LocationNumber: 429
   Name: 
@@ -2126,6 +2390,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Misery Mire Big Key Chest
 - LocationNumber: 430
   Name: 
@@ -2134,6 +2399,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Misery Mire Big Chest
 - LocationNumber: 431
   Name: 
@@ -2142,6 +2408,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Vitreous
 - LocationNumber: 432
   Name: 
@@ -2150,6 +2417,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Turtle Rock Compass Chest
 - LocationNumber: 433
   Name: 
@@ -2158,6 +2426,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Roller Room Left
 - LocationNumber: 434
   Name: 
@@ -2166,6 +2435,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Roller Room Right
 - LocationNumber: 435
   Name: 
@@ -2174,6 +2444,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Chain Chomps / Turtle Rock Chain Chomps
 - LocationNumber: 436
   Name: 
@@ -2182,6 +2453,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Turtle Rock Big Key Chest
 - LocationNumber: 437
   Name: 
@@ -2190,6 +2462,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Turtle Rock Big Chest
 - LocationNumber: 438
   Name: 
@@ -2198,6 +2471,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Crystaroller Room / Turtle Rock Crystaroller Room
 - LocationNumber: 439
   Name: 
@@ -2206,6 +2480,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Laser Bridge Top Right / Eye Bridge Top Right
 - LocationNumber: 440
   Name: 
@@ -2214,6 +2489,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Laser Bridge Top Left / Eye Bridge Top Left
 - LocationNumber: 441
   Name: 
@@ -2222,6 +2498,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Laser Bridge Bottom Right / Eye Bridge Bottom Right
 - LocationNumber: 442
   Name: 
@@ -2230,6 +2507,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Laser Bridge Bottom Left / Eye Bridge Bottom Left
 - LocationNumber: 443
   Name: 
@@ -2238,6 +2516,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Trinexx
 - LocationNumber: 444
   Name: 
@@ -2246,6 +2525,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bob's Torch
 - LocationNumber: 445
   Name: 
@@ -2254,6 +2534,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # DMs Room Top Left
 - LocationNumber: 446
   Name: 
@@ -2262,6 +2543,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # DMs Room Top Right
 - LocationNumber: 447
   Name: 
@@ -2270,6 +2552,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # DMs Room Bottom Left
 - LocationNumber: 448
   Name: 
@@ -2278,6 +2561,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # DMs Room Bottom Right
 - LocationNumber: 449
   Name: 
@@ -2286,6 +2570,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ganon's Tower Map Chest
 - LocationNumber: 450
   Name: 
@@ -2294,6 +2579,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Firesnake Room
 - LocationNumber: 451
   Name: 
@@ -2302,6 +2588,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Randomizer Room Top Left
 - LocationNumber: 452
   Name: 
@@ -2310,6 +2597,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Randomizer Room Top Right
 - LocationNumber: 453
   Name: 
@@ -2318,6 +2606,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Randomizer Room Bottom Left
 - LocationNumber: 454
   Name: 
@@ -2326,6 +2615,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Randomizer Room Bottom Right
 - LocationNumber: 455
   Name: 
@@ -2334,6 +2624,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Right Side First Room Left / Hope Room Left
 - LocationNumber: 456
   Name: 
@@ -2342,6 +2633,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Right Side First Room Right / Hope Room Right
 - LocationNumber: 457
   Name: 
@@ -2350,6 +2642,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Tile Room / Ganon's Tower Tile Room
 - LocationNumber: 458
   Name: 
@@ -2358,6 +2651,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Compass Room Top Left
 - LocationNumber: 459
   Name: 
@@ -2366,6 +2660,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Compass Room Top Right
 - LocationNumber: 460
   Name: 
@@ -2374,6 +2669,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Compass Room Bottom Left
 - LocationNumber: 461
   Name: 
@@ -2382,6 +2678,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Compass Room Bottom Right
 - LocationNumber: 462
   Name: 
@@ -2390,6 +2687,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bob's Chest / Ganon's Tower Bob's Chest
 - LocationNumber: 463
   Name: 
@@ -2398,6 +2696,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Ganon's Tower Big Chest
 - LocationNumber: 464
   Name: 
@@ -2406,6 +2705,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Bottom Big Key Chest / Big Key Room Bottom Big Key Chest
 - LocationNumber: 465
   Name: 
@@ -2414,6 +2714,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Big Key Room Left
 - LocationNumber: 466
   Name: 
@@ -2422,6 +2723,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Big Key Room Right
 - LocationNumber: 467
   Name: 
@@ -2430,6 +2732,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mini Helmasaur Room Left
 - LocationNumber: 468
   Name: 
@@ -2438,6 +2741,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mini Helmasaur Room Right
 - LocationNumber: 469
   Name: 
@@ -2446,6 +2750,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Pre-Moldorm Chest / Ganon's Tower Pre-Moldorm Chest
 - LocationNumber: 470
   Name: 
@@ -2454,6 +2759,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Moldorm Chest / Ganon's Tower Moldorm Chest
 - LocationNumber: 471
   Name: 
@@ -2462,6 +2768,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Library
 - LocationNumber: 496
   Name: 
@@ -2470,6 +2777,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Forest Clearing / Digging Spot / Flute Spot
 - LocationNumber: 497
   Name: 
@@ -2478,6 +2786,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Cave #45 / Cave 45 / South of Grove
 - LocationNumber: 498
   Name: 
@@ -2486,6 +2795,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Link's House
 - LocationNumber: 499
   Name: 
@@ -2494,6 +2804,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Aginah's Cave / Aggina's Cave
 - LocationNumber: 500
   Name: 
@@ -2502,6 +2813,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Chicken House / Chicken Lady's House
 - LocationNumber: 506
   Name: 
@@ -2510,6 +2822,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Mini Moldorm Cave Far Right
 - LocationNumber: 507
   Name: 
@@ -2518,6 +2831,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Desert Ledge
 - LocationNumber: 508
   Name: 
@@ -2526,6 +2840,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Checkerboard Cave
 - LocationNumber: 509
   Name: 
@@ -2534,6 +2849,7 @@
   WhenMarkingJunk: 
   WhenMarkingProgression: 
   Hints: 
+  OutOfLogic: 
 # Waterfall Fairy Left
 - LocationNumber: 510
   Name: 

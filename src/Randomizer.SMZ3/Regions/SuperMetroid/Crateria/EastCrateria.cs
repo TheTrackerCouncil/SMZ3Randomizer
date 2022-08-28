@@ -19,8 +19,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
                 name: "Missile (outside Wrecked Ship top)",
                 alsoKnownAs: new[] { "Sky Missile" },
                 vanillaItem: ItemType.Missile,
-                access: items => CanPassThroughWreckedShip(items, true),
-                relevanceRequirement: items => CanPassThroughWreckedShip(items, false),
+                access: items => CanAccessSkyItem(items, true),
+                relevanceRequirement: items => CanAccessSkyItem(items, false),
                 memoryAddress: 0x0,
                 memoryFlag: 0x4);
             MorphBallMaze = new Location(this, 3, 0x8F81F4, LocationType.Visible,
@@ -62,6 +62,9 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Crateria
 
         private bool CanPassThroughWreckedShip(Progression items, bool requireRewards)
             => World.WreckedShip.CanEnter(items, requireRewards) && World.WreckedShip.CanAccessShutDownRooms(items, requireRewards);
+
+        private bool CanAccessSkyItem(Progression items, bool requireRewards)
+            => CanPassThroughWreckedShip(items, requireRewards) && (items.SpaceJump || items.SpeedBooster || !Config.LogicConfig.EasyEastCrateriaSkyItem);
 
         public override bool CanEnter(Progression items, bool requireRewards)
         {

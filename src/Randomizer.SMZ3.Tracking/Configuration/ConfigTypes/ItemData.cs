@@ -275,7 +275,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             if (WhenTracked.TryGetValue(TrackingState, out response))
                 return response != null;
 
-            var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < TrackingState);
+            var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < TrackingState).OrderBy(x => x);
             if (!smallerKeys.Any())
             {
                 response = null;
@@ -359,6 +359,15 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             // Todo: We can add special logic like checking if it's one of the first two swords
 
             return true;
+        }
+
+        /// <summary>
+        /// Determines whether the item is a dungeon item such as a key or map
+        /// </summary>
+        /// <returns>True if the item is a dungeon item</returns>
+        public bool IsDungeonItem()
+        {
+            return InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map, ItemCategory.Compass });
         }
     }
 }

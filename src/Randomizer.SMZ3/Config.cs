@@ -199,7 +199,6 @@ namespace Randomizer.SMZ3
 #nullable enable
         public PlandoConfig? PlandoConfig { get; set; }
 #nullable disable
-        public bool ShaktoolWithoutGrapple { get; set; }
         public ItemPlacementRule ItemPlacementRule { get; set; }
 
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;

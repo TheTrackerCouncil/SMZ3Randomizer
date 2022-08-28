@@ -144,7 +144,13 @@ namespace Randomizer.App
                 var description = property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? displayName;
                 var category = property.GetCustomAttribute<CategoryAttribute>()?.Category ?? "Logic";
 
-                var parent = category == "Logic" ? LogicGrid : TricksGrid;
+                var parent = category switch
+                {
+                    "Logic" => LogicGrid,
+                    "Tricks" => TricksGrid,
+                    "Patches" => PatchesGrid,
+                    _ => LogicGrid
+                };
 
                 if (property.PropertyType == typeof(bool))
                 {
