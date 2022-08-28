@@ -60,8 +60,6 @@ namespace Randomizer.App.ViewModels
 
         public bool CasualSuperMetroidPatches { get; set; }
 
-        public bool ShaktoolWithoutGrapple { get; set; }
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
