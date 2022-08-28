@@ -347,14 +347,14 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         /// </remarks>
         public bool IsProgression(Config? config)
         {
-            if (InternalItemType == ItemType.Nothing || InternalItemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Compass, ItemCategory.Nice }))
+            if (InternalItemType == ItemType.Nothing || InternalItemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
                 return false;
 
-            if (config?.ZeldaKeysanity == false && InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
-                return false;
+            if (InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
+                return config?.ZeldaKeysanity == true;
 
-            if (config?.MetroidKeysanity == false && InternalItemType.IsInCategory(ItemCategory.Keycard))
-                return false;
+            if (InternalItemType.IsInCategory(ItemCategory.Keycard))
+                return config?.MetroidKeysanity == true;
 
             // Todo: We can add special logic like checking if it's one of the first two swords
 

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Connections.Features;
+
 using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 
@@ -81,7 +84,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
                     var secondMergeable = (IMergeable<T>)secondObj;
                     firstMergeable.MergeFrom(secondMergeable);
                 }
-                else 
+                else
                 {
                     listOne.Add(secondObj);
                 }
@@ -146,6 +149,23 @@ namespace Randomizer.SMZ3.Tracking.Configuration
                     else if (thisValue == null)
                     {
                         property.SetValue(primary, otherValue);
+                    }
+                }
+                else if (property.PropertyType == typeof(Dictionary<string, string>))
+                {
+                    var thisValue = (Dictionary<string, string>?)property.GetValue(primary);
+                    var otherValue = (Dictionary<string, string>?)property.GetValue(other);
+
+                    if (thisValue == null)
+                    {
+                        property.SetValue(primary, otherValue);
+                    }
+                    else if (otherValue != null)
+                    {
+                        foreach (var (key, value) in otherValue)
+                        {
+                            thisValue[key] = value;
+                        }
                     }
                 }
                 else if (property.PropertyType == typeof(List<string>))

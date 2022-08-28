@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Randomizer.Shared.Models {
+using Randomizer.Shared.Migrations;
+
+namespace Randomizer.Shared.Models
+{
 
     public class TrackerState
     {

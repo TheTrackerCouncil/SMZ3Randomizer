@@ -14,7 +14,7 @@ using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation
 {
-    public class Smz3Randomizer
+    public class Smz3Randomizer : ISeededRandomizer
     {
         private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
         private static readonly Regex s_continousSpace = new(@" +");
@@ -58,6 +58,9 @@ namespace Randomizer.SMZ3.Generation
             return seed;
         }
 
+        public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
+            => GenerateSeed(config, "", cancellationToken);
+
         public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken = default)
         {
             var seedNumber = ParseSeed(ref seed);
@@ -98,7 +101,6 @@ namespace Randomizer.SMZ3.Generation
                 Seed = seed,
                 Game = Name,
                 Mode = config.GameMode.ToLowerString(),
-                Logic = $"{config.SMLogic.ToLowerString()}+{config.Z3Logic.ToLowerString()}",
                 Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
@@ -162,7 +164,7 @@ namespace Randomizer.SMZ3.Generation
             }
 
             // Through and make sure the early items are populated in early spheres
-            foreach ( var itemType in config.EarlyItems)
+            foreach (var itemType in config.EarlyItems)
             {
                 var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
                 if (sphereIndex > 2)

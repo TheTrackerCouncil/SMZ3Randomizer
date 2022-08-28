@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
+
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
@@ -348,7 +349,6 @@ namespace Randomizer.SMZ3.Tracking
 
             if (rom.TrackerState == null)
             {
-
                 var trackerState = new Shared.Models.TrackerState()
                 {
                     StartDateTime = DateTimeOffset.Now,
@@ -560,9 +560,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Represents the tracking state of a boss
         /// </summary>
-        /// <param name="Name">
-        /// The name of the boss
-        /// </param>
+        /// <param name="Name">The name of the boss</param>
         /// <param name="Defeated">
         /// Indicates whether the boss has been defeated or not.
         /// </param>

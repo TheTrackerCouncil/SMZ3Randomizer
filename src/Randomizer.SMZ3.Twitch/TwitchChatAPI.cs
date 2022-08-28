@@ -21,13 +21,13 @@ namespace Randomizer.SMZ3.Twitch
 
         private static readonly HttpClient s_httpClient = new();
 
-#if DEBUG
-        private const string ClientId = "";
-        private const string ApiEndpoint = "http://localhost:8080/mock/";
-#else
+//#if DEBUG
+//        private const string ClientId = "";
+//        private const string ApiEndpoint = "http://localhost:8080/mock/";
+//#else
         private const string ClientId = "i8sfdyflu72jddzpaho80fdt6vc3ax";
         private const string ApiEndpoint = "https://api.twitch.tv/helix/";
-#endif
+//#endif
 
         private string? OAuthToken { get; set; }
 

@@ -126,6 +126,8 @@
                     HorizontalAlignment="Right">
           <Button x:Name="QuickPlayButton"
                   Click="QuickPlayButton_Click">_Quick play</Button>
+          <Button x:Name="StartPlandoButton"
+                  Click="StartPlandoButton_Click">Start plando...</Button>
           <Button x:Name="GenerateRomButton"
                   Click="GenerateRomButton_Click">Generate custom game...</Button>
         </StackPanel>

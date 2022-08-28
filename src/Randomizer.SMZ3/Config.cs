@@ -6,8 +6,10 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.SMZ3
 {
@@ -164,15 +166,6 @@ namespace Randomizer.SMZ3
         };
 
         public GameMode GameMode { get; set; } = GameMode.Normal;
-        public Z3Logic Z3Logic { get; set; } = Z3Logic.Normal;
-        public SMLogic SMLogic { get; set; } = SMLogic.Normal;
-
-        public IDictionary<ItemType, ItemPlacement> ItemLocations { get; }
-            = new Dictionary<ItemType, ItemPlacement>();
-
-        public ItemPool ShaktoolItemPool { get; set; } = ItemPool.Any;
-        public ItemPool PegWorldItemPool { get; set; } = ItemPool.Any;
-        public Goal Goal { get; set; } = Goal.DefeatBoth;
         public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
         public bool Race { get; set; } = false;
         public bool DisableSpoilerLog { get; set; } = false;
@@ -203,6 +196,9 @@ namespace Randomizer.SMZ3
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
+#nullable enable
+        public PlandoConfig? PlandoConfig { get; set; }
+#nullable disable
         public ItemPlacementRule ItemPlacementRule { get; set; }
 
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
