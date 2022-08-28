@@ -205,6 +205,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Reveals the winner of the Ganon's Tower Big Key Guessing Game.
         /// </summary>
         /// <param name="winningNumber">The correct number.</param>
+        /// <param name="isAutoTracked">If declared via auto tracker</param>
         public async Task DeclareGanonsTowerGuessingGameWinner(int winningNumber, bool isAutoTracked = false)
         {
             if (!ChatClient.IsConnected)
@@ -257,8 +258,25 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             }
 
-            if (winningNumber != _trackerGuess)
+            if (winningNumber < _trackerGuess || (winningNumber != _trackerGuess && !isAutoTracked))
                 Tracker.Say(x => x.Chat.TrackerGuessFailed, winningNumber);
+        }
+
+        /// <summary>
+        /// Method to call when the player sees or picks up a GT item
+        /// </summary>
+        /// <param name="number">The item number</param>
+        /// <param name="wasBigKey">If the the item was the big key or not</param>
+        public async void GTItemTracked(int number, bool wasBigKey)
+        {
+            if (!wasBigKey && number == _trackerGuess)
+            {
+                Tracker.Say(x => x.Chat.TrackerGuessFailed, number);
+            }
+            else if (wasBigKey)
+            {
+                await DeclareGanonsTowerGuessingGameWinner(number, true);
+            }
         }
 
         /// <summary>

@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3.Tracking
             services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<IUIService, UIService>();
+            services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
             services.AddScoped<Tracker>();
 
             var assemblies = new[] { Assembly.GetExecutingAssembly() };

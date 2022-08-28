@@ -1173,10 +1173,13 @@ namespace Randomizer.SMZ3.Tracking
             var originalTrackingState = item.TrackingState;
             UpdateTrackerProgression = true;
 
-            var stateItem = !autoTracked ||
-                !item.IsDungeonItem() ||
-                World.Config.ZeldaKeysanity ||
-                (location?.Region.GetType() == typeof(GanonsTower) && autoTracked);
+            var isGTPreBigKey = !World.Config.ZeldaKeysanity
+                                && autoTracked
+                                && location?.Region.GetType() == typeof(GanonsTower)
+                                && !GetProgression().BigKeyGT;
+            var stateItem = !isGTPreBigKey && (!autoTracked
+                                               || !item.IsDungeonItem()
+                                               || World.Config.ZeldaKeysanity);
 
             if (item.HasStages)
             {

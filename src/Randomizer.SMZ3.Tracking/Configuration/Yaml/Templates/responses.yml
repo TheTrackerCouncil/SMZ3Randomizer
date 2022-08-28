@@ -714,6 +714,18 @@ AutoTracker:
   # The list of possibilities when Turtle Rock and Misery Mire are all medallions
   DarkWorldNoMedallions:
 
+  # Each number is a list of possibilities for when the GT Big Key is found
+  # It will use the largest number less than the item number of GT Big Key when it was found
+  # For example, if the Big Key was the 5th treasure found in GT, it'll use the 2: response.
+  # Additional numbers can be added for additional sets of responses
+  # {0} is replaced with the item number
+  GTKeyResponses:
+  1:
+  2:
+  8:
+  16:
+  22:
+
 # This section is for map responses
 Map:
 

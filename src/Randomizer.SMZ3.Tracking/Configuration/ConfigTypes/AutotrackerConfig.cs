@@ -134,5 +134,43 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public SchrodingersString DarkWorldNoMedallions { get; init; }
             = new("I hope you don't find any medallions soon.");
 
+        /// <summary>
+        /// Big Key is the first item found by the player in GT
+        /// </summary>
+        public SchrodingersString GTKeyIsItemOne { get; init; }
+            = new("You sure are lucky today.");
+
+        /// <summary>
+        /// Big key was the second to seventh item found by the player in GT
+        /// </summary>
+        public SchrodingersString GTKeyIsItemTwoToSeven { get; init; }
+            = new("That wasn't too bad.");
+
+        /// <summary>
+        /// Big key was the eighth to fifteenth item found by the player in GT
+        /// </summary>
+        public SchrodingersString GTKeyIsItemEightToFifteen { get; init; }
+            = new("That could have been worse.");
+
+        /// <summary>
+        /// Big key was the sixteenth to twenty first item found by the player in GT
+        /// </summary>
+        public SchrodingersString GTKeyIsItemSixteenToTwentyOne { get; init; }
+            = new("That was pretty rough.");
+
+        /// <summary>
+        /// Big key was the twenty second item found by the player in GT
+        /// </summary>
+        public SchrodingersString GTKeyIsItemTwentyTwo { get; init; }
+            = new("How unfortunate.");
+
+        public Dictionary<int, SchrodingersString> GTKeyResponses { get; init; } = new()
+        {
+            [1] = new SchrodingersString("You sure are lucky today."),
+            [2] = new SchrodingersString("That wasn't too bad."),
+            [8] = new SchrodingersString("That could have been worse."),
+            [16] = new SchrodingersString("That was pretty rough."),
+            [22] = new SchrodingersString("How unfortunate."),
+        };
     }
 }

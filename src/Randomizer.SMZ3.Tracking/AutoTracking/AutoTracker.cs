@@ -28,34 +28,41 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly IEnumerable<IZeldaStateCheck?> _zeldaStateChecks;
         private readonly IEnumerable<IMetroidStateCheck?> _metroidStateChecks;
         private readonly TrackerModuleFactory _trackerModuleFactory;
+        private readonly IRandomizerConfigService _config;
         private int _currentIndex = 0;
         private Game _previousGame;
         private bool _hasStarted;
         private IEmulatorConnector? _connector;
         private readonly Queue<EmulatorAction> _sendActions = new();
         private CancellationTokenSource? _stopSendingMessages;
-        private int numGTItems = 0;
-        private bool seenGTTorch = false;
+        private int _numGTItems = 0;
+        private bool _seenGTTorch = false;
+        private bool _foundGTKey = false;
 
         /// <summary>
         /// Constructor for Auto Tracker
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="loggerFactory"></param>
+        /// <param name="itemService"></param>
         /// <param name="zeldaStateChecks"></param>
         /// <param name="metroidStateChecks"></param>
+        /// <param name="trackerModuleFactory"></param>
+        /// <param name="randomizerConfigService"></param>
         public AutoTracker(ILogger<AutoTracker> logger,
             ILoggerFactory loggerFactory,
             IItemService itemService,
             IEnumerable<IZeldaStateCheck> zeldaStateChecks,
             IEnumerable<IMetroidStateCheck> metroidStateChecks,
-            TrackerModuleFactory trackerModuleFactory
+            TrackerModuleFactory trackerModuleFactory,
+            IRandomizerConfigService randomizerConfigService
         )
         {
             _logger = logger;
             _loggerFactory = loggerFactory;
             _itemService = itemService;
             _trackerModuleFactory = trackerModuleFactory;
+            _config = randomizerConfigService;
 
             // Check if the game has started or not
             AddReadAction(new()
@@ -517,7 +524,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     {
                         if (location.Region is GanonsTower gt && location != gt.BobsTorch)
                         {
-                            numGTItems++;
+                            IncrementGTItems(location);
                         }
 
                         var item = _itemService.GetOrDefault(location);
@@ -628,13 +635,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _logger.LogDebug(ZeldaState.ToString());
             if (prevState == null) return;
 
-            if (!seenGTTorch
+            if (!_seenGTTorch
                 && ZeldaState.CurrentRoom == 140
                 && !ZeldaState.IsOnBottomHalfOfRoom
                 && !ZeldaState.IsOnRightHalfOfRoom
                 && ZeldaState.Substate != 14)
             {
-                seenGTTorch = true;
+                _seenGTTorch = true;
                 IncrementGTItems(Tracker.World.GanonsTower.BobsTorch);
             }
 
@@ -668,17 +675,30 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
         }
 
-        protected void IncrementGTItems(Location location)
+        private void IncrementGTItems(Location location)
         {
-            numGTItems++;
+            if (_foundGTKey || _config.Config.ZeldaKeysanity == true) return;
+
+            var chatIntegrationModule = _trackerModuleFactory.GetModule<ChatIntegrationModule>();
+            _numGTItems++;
+            Tracker?.Say(_numGTItems.ToString());
             if (location.Item.Type == ItemType.BigKeyGT)
             {
-                var chatIntegrationModule = _trackerModuleFactory.GetModule<ChatIntegrationModule>();
-                chatIntegrationModule?.DeclareGanonsTowerGuessingGameWinner(numGTItems, true);
+                var responseIndex = 1;
+                for (var i = 1; i <= _numGTItems; i++)
+                {
+                    if (Tracker?.Responses.AutoTracker.GTKeyResponses.ContainsKey(i) == true)
+                    {
+                        responseIndex = i;
+                    }
+                }
+                Tracker?.Say(x => x.AutoTracker.GTKeyResponses[responseIndex], _numGTItems);
+                chatIntegrationModule?.GTItemTracked(_numGTItems, true);
+                _foundGTKey = true;
             }
             else
             {
-                Tracker.Say(numGTItems.ToString());
+                chatIntegrationModule?.GTItemTracked(_numGTItems, false);
             }
         }
     }
