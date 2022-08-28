@@ -62,6 +62,9 @@ TrackedExactAmountDuplicate:
 # {2} is replaced with a list of the items tracked
 TrackedMultipleItems:
 
+# The list of possibilities when the player tracks an item from its vanilla location.
+TrackedVanillaItem:
+
 # The list of possibilities when the player clears all items from an area but did not track them
 # {0} is replaced with a number of the items tracked
 # {1} is replaced with the area name

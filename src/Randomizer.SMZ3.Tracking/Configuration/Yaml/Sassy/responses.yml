@@ -137,6 +137,9 @@ TrackedExactAmountDuplicate:
 TrackedMultipleItems:
 - Text: Tracked {2} in {1}.
 - Text: Added {2} from {1}.
+TrackedVanillaItem:
+- Text: Is this even randomized?
+  Weight: 0.25
 ClearedMultipleItems:
 - Text: Cleared {0} items in {1}.
 TrackedNothing:
