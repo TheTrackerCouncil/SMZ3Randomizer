@@ -543,6 +543,8 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="dungeon">The dungeon.</param>
         /// <param name="amount">The number of treasures to track.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
+        /// <param name="autoTracked">If this was called by the auto tracker</param>
+        /// <param name="stateResponse">If tracker should state the treasure ammount</param>
         /// <returns>
         /// <c>true</c> if treasure was tracked; <c>false</c> if there is no
         /// treasure left to track.
@@ -554,7 +556,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <exception cref=" ArgumentOutOfRangeException">
         /// <paramref name="amount"/> is less than 1.
         /// </exception>
-        public bool TrackDungeonTreasure(DungeonInfo dungeon, float? confidence = null, int amount = 1)
+        public bool TrackDungeonTreasure(DungeonInfo dungeon, float? confidence = null, int amount = 1, bool autoTracked = false, bool stateResponse = true)
         {
             if (amount < 1)
                 throw new ArgumentOutOfRangeException(nameof(amount), "The amount of items must be greater than zero.");
@@ -572,7 +574,7 @@ namespace Randomizer.SMZ3.Tracking
                 // Always add a response if there's treasure left, even when
                 // clearing a dungeon (because that means it was out of logic
                 // and could be relevant)
-                if (confidence != null || dungeon.TreasureRemaining >= 1)
+                if (stateResponse && (confidence != null || dungeon.TreasureRemaining >= 1 || autoTracked))
                 {
                     // Try to get the response based on the amount of items left
                     if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
@@ -588,7 +590,7 @@ namespace Randomizer.SMZ3.Tracking
                 AddUndo(() => dungeon.TreasureRemaining += amount);
                 return true;
             }
-            else if (confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
+            else if (stateResponse && confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
             {
                 // Attempted to track treasure when all treasure items were
                 // already cleared out
@@ -1176,8 +1178,8 @@ namespace Randomizer.SMZ3.Tracking
             var isGTPreBigKey = !World.Config.ZeldaKeysanity
                                 && autoTracked
                                 && location?.Region.GetType() == typeof(GanonsTower)
-                                && !GetProgression().BigKeyGT;
-            var stateItem = !isGTPreBigKey && (!autoTracked
+                                && !GetProgression(false).BigKeyGT;
+            var stateResponse = !isGTPreBigKey && (!autoTracked
                                                || !item.IsDungeonItem()
                                                || World.Config.ZeldaKeysanity);
 
@@ -1192,7 +1194,7 @@ namespace Randomizer.SMZ3.Tracking
                     var stageName = item.Stages[stage.Value].ToString();
 
                     didTrack = item.Track(stage.Value);
-                    if (stateItem)
+                    if (stateResponse)
                     {
                         if (didTrack)
                         {
@@ -1215,7 +1217,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     // Tracked by regular name, upgrade by one step
                     didTrack = item.Track();
-                    if (stateItem)
+                    if (stateResponse)
                     {
                         if (didTrack)
                         {
@@ -1241,30 +1243,30 @@ namespace Randomizer.SMZ3.Tracking
                 didTrack = item.Track();
                 if (item.TryGetTrackingResponse(out var response))
                 {
-                    if (stateItem)
+                    if (stateResponse)
                         Say(response.Format(item.Counter));
                 }
                 else if (item.Counter == 1)
                 {
-                    if (stateItem)
+                    if (stateResponse)
                         Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 }
                 else if (item.Counter > 1)
                 {
-                    if (stateItem)
+                    if (stateResponse)
                         Say(Responses.TrackedItemMultiple.Format(item.Plural ?? $"{itemName}s", item.Counter, item.Name));
                 }
                 else
                 {
                     _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
-                    if (stateItem)
+                    if (stateResponse)
                         Say(Responses.TrackedItem.Format(itemName, item.NameWithArticle));
                 }
             }
             else
             {
                 didTrack = item.Track();
-                if (stateItem)
+                if (stateResponse)
                 {
                     if (didTrack)
                     {
@@ -1301,7 +1303,7 @@ namespace Randomizer.SMZ3.Tracking
 
                 if (location != null)
                 {
-                    if (stateItem)
+                    if (stateResponse)
                     {
                         GiveLocationComment(item, location, isTracking: true, confidence);
                     }
@@ -1309,7 +1311,7 @@ namespace Randomizer.SMZ3.Tracking
                     if (tryClear)
                     {
                         // If this item was in a dungeon, track treasure count
-                        undoTrackDungeonTreasure = TryTrackDungeonTreasure(location, confidence);
+                        undoTrackDungeonTreasure = TryTrackDungeonTreasure(location, confidence, autoTracked, stateResponse);
 
                         // Important: clear only after tracking dungeon treasure, as
                         // the "guess dungeon from location" algorithm excludes
@@ -1326,7 +1328,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
 
                     var items = GetProgression();
-                    if (stateItem && !location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
+                    if (stateResponse && !location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
                         var locationInfo = WorldInfo.Location(location);
                         var roomInfo = location.Room != null ? WorldInfo.Room(location.Room) : null;
@@ -2413,7 +2415,7 @@ namespace Randomizer.SMZ3.Tracking
             return null;
         }
 
-        private Action? TryTrackDungeonTreasure(Location location, float? confidence)
+        private Action? TryTrackDungeonTreasure(Location location, float? confidence, bool autoTracked = false, bool stateResponse = true)
         {
             if (confidence < Options.MinimumSassConfidence)
             {
@@ -2425,7 +2427,7 @@ namespace Randomizer.SMZ3.Tracking
             var dungeon = GetDungeonFromLocation(location);
             if (dungeon != null && (IsTreasure(location.Item) || World.Config.ZeldaKeysanity))
             {
-                if (TrackDungeonTreasure(dungeon, confidence))
+                if (TrackDungeonTreasure(dungeon, confidence, 1, autoTracked, stateResponse))
                     return _undoHistory.Pop();
             }
 
