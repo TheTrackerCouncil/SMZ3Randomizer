@@ -81,7 +81,7 @@ namespace Randomizer.App
         }
 
         public ICollection<string> EnabledProfiles =>
-            Options?.SelectedProfiles.ToList();
+            Options?.SelectedProfiles.Where(x => !string.IsNullOrEmpty(x)).ToList();
 
         public ICollection<string> DisabledProfiles =>
             AvailableProfiles?.Where(x => Options?.SelectedProfiles?.Contains(x) == false)?.ToList();
@@ -128,9 +128,14 @@ namespace Randomizer.App
 
         private void EnableProfile_Click(object sender, RoutedEventArgs e)
         {
-            Options.SelectedProfiles.Add(DisabledProfilesListBox.SelectedItem as string);
-            PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
-            PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
+            var newProfile = DisabledProfilesListBox.SelectedItem as string;
+            if (!string.IsNullOrEmpty(newProfile))
+            {
+                Options.SelectedProfiles.Add(newProfile);
+                Options.SelectedProfiles.Remove(null);
+                PropertyChanged?.Invoke(this, new(nameof(EnabledProfiles)));
+                PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
+            }
         }
 
         private void DisableProfile_Click(object sender, RoutedEventArgs e)
