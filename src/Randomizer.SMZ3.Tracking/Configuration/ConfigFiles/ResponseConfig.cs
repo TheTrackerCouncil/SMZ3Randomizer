@@ -633,6 +633,18 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
              = new SchrodingersString("Timer paused");
 
         /// <summary>
+        /// Gets the phrases to respond with when tracker is muted
+        /// </summary>
+        public SchrodingersString Muted { get; init; }
+            = new SchrodingersString("Muting, say \"Hey Tracker, Unmute Yourself\" when you want me to talk again.");
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracker is unmuted
+        /// </summary>
+        public SchrodingersString Unmuted { get; init; }
+            = new SchrodingersString("Unmuted");
+
+        /// <summary>
         /// Gets a dictionary that contains the phrases to respond with when no
         /// voice commands have been issued after a certain period of time, as
         /// expressed in the dictionary keys.

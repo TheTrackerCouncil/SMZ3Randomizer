@@ -310,6 +310,12 @@ TimerReset:
 # The list of possibilities when the timer was paused
 TimerPaused:
 
+# The list of possibilities when tracker is muted
+Muted:
+
+# The list of possibilities when tracker is unmuted
+Unmuted:
+
 # Tracker responses when nothing has happened in a certain amount of time
 # List the responses underneath different amounts of time elapsed since the last
 # action. This is a time range of <basetime>±<range of time more or less than base time>.

@@ -1065,11 +1065,6 @@ namespace Randomizer.SMZ3.Tracking
             if (text == null)
                 return false;
 
-            if (Options.VoiceFrequency == TrackerVoiceFrequency.Disabled)
-            {
-                return false;
-            }
-
             var formattedText = FormatPlaceholders(text);
             if (wait)
                 _communicator.SayWait(formattedText);

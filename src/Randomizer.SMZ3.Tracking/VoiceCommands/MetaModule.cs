@@ -12,6 +12,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class MetaModule : TrackerModule
     {
+        private readonly ICommunicator _communicator;
         private const string ModifierKey = "Increase/Decrease";
         private const string ThresholdSettingKey = "ThresholdSetting";
         private const string ValueKey = "Value";
@@ -24,9 +25,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public MetaModule(Tracker tracker, IItemService itemService, ILogger<MetaModule> logger)
+        public MetaModule(Tracker tracker, IItemService itemService, ILogger<MetaModule> logger, ICommunicator communicator)
             : base(tracker, itemService, logger)
         {
+            _communicator = communicator;
+
             AddCommand("Repeat that", GetRepeatThatRule(), (tracker, result) =>
             {
                 tracker.Repeat();
@@ -85,6 +88,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Reset timer", GetResetTimerRule(), (tracker, result) =>
             {
                 tracker.ResetTimer();
+            });
+
+            AddCommand("Mute", GetMuteRule(), (tracker, result) =>
+            {
+                tracker.Say(x => x.Muted);
+                _communicator.Disable();
+            });
+
+            AddCommand("Unmute", GetUnmuteRule(), (tracker, result) =>
+            {
+                _communicator.Enable();
+                tracker.Say(x => x.Unmuted);
             });
         }
 
@@ -177,6 +192,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker, ")
                 .Optional("please")
                 .OneOf("reset the timer");
+        }
+
+        private GrammarBuilder GetMuteRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Optional("please")
+                .OneOf("mute yourself", "silence yourself");
+        }
+
+        private GrammarBuilder GetUnmuteRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .Optional("please")
+                .OneOf("unmute yourself", "unsilence yourself");
         }
     }
 }

@@ -23,6 +23,16 @@
         void SayWait(string text);
 
         /// <summary>
+        /// When overriden in an implementing class, it will enable communicating
+        /// </summary>
+        void Enable();
+
+        /// <summary>
+        /// When overriden in an implementing class, it will disable communicating
+        /// </summary>
+        void Disable();
+
+        /// <summary>
         /// When overridden in an implementing class, aborts all ongoing
         /// communications.
         /// </summary>

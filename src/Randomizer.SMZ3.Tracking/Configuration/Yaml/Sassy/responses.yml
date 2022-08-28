@@ -336,8 +336,14 @@ BossUndefeated:
 - Text: Revived {0}.
 BossNotYetDefeated:
 - Text: But you never defeated {0} in the first place.
-TimerResumed:
-- Text: Timer resumed
+Muted:
+- Text: You cannot silence me. I will not be mu
+- Text: Fine. Let's see how far you can get without me here.
+Unmuted:
+- Text: Did you miss me?
+- Text: It's good to be back.
+- Text: <break time='5s'/>Sorry, I fell asleep. You rang?
+  Weight: 0.1
 TimerReset:
 - Text: Timer reset
 TimerPaused:
