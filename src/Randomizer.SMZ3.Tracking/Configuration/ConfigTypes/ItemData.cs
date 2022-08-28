@@ -360,5 +360,14 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 
             return true;
         }
+
+        /// <summary>
+        /// Determines whether the item is a dungeon item such as a key or map
+        /// </summary>
+        /// <returns>True if the item is a dungeon item</returns>
+        public bool IsDungeonItem()
+        {
+            return InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map, ItemCategory.Compass });
+        }
     }
 }

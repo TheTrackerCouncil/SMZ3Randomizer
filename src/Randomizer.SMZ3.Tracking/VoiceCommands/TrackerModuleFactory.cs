@@ -66,6 +66,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         }
 
         /// <summary>
+        /// Retrieves the created module of the particular type
+        /// </summary>
+        /// <typeparam name="T">The type of module to retrieve</typeparam>
+        /// <returns></returns>
+        public T? GetModule<T>() where T : TrackerModule
+        {
+            return (T?)_trackerModules?.FirstOrDefault(x => x.GetType() == typeof(T));
+        }
+
+        /// <summary>
         /// Frees up resources used by tracker modules.
         /// </summary>
         public void Dispose()

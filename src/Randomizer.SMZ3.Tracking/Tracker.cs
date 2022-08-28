@@ -22,6 +22,7 @@ using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Regions;
+using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
@@ -1176,7 +1177,11 @@ namespace Randomizer.SMZ3.Tracking
             var itemName = item.Name;
             var originalTrackingState = item.TrackingState;
             UpdateTrackerProgression = true;
-            var stateItem = !autoTracked || !item.InternalItemType.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Map) || World.Config.ZeldaKeysanity;
+
+            var stateItem = !autoTracked ||
+                !item.IsDungeonItem() ||
+                World.Config.ZeldaKeysanity ||
+                (location?.Region.GetType() == typeof(GanonsTower) && autoTracked);
 
             if (item.HasStages)
             {
@@ -1298,7 +1303,10 @@ namespace Randomizer.SMZ3.Tracking
 
                 if (location != null)
                 {
-                    GiveLocationComment(item, location, isTracking: true, confidence);
+                    if (stateItem)
+                    {
+                        GiveLocationComment(item, location, isTracking: true, confidence);
+                    }
 
                     if (tryClear)
                     {
@@ -1320,7 +1328,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
 
                     var items = GetProgression();
-                    if (!location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
+                    if (stateItem && !location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
                         var locationInfo = WorldInfo.Location(location);
                         var roomInfo = location.Room != null ? WorldInfo.Room(location.Room) : null;

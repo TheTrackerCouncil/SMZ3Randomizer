@@ -166,11 +166,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Reveals the winner of the Ganon's Tower Big Key Guessing Game.
         /// </summary>
         /// <param name="winningNumber">The correct number.</param>
-        public async Task DeclareGanonsTowerGuessingGameWinner(int winningNumber)
+        public async Task DeclareGanonsTowerGuessingGameWinner(int winningNumber, bool isAutoTracked = false)
         {
             if (!ChatClient.IsConnected)
             {
-                Tracker.Say(x => x.Chat.NoConnection);
+                if (!isAutoTracked)
+                    Tracker.Say(x => x.Chat.NoConnection);
                 return;
             }
 
