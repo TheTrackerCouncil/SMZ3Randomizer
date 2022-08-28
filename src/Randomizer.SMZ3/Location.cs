@@ -250,7 +250,9 @@ namespace Randomizer.SMZ3
         {
             var oldItem = Item;
             Item = item;
-            var isCustomPlacementAndSphereOne = Region.Config.ItemPlacementRule != ItemPlacementRule.Anywhere && _weight <= -10;
+            var isCustomPlacementAndSphereOne = (item.Progression || (item.IsDungeonItem && Region.Config.ZeldaKeysanity) || (item.IsKeycard && Region.Config.MetroidKeysanity))
+                                                && Region.Config.ItemPlacementRule != ItemPlacementRule.Anywhere
+                                                && _weight <= -10;
             var fillable = _alwaysAllow(item, items)
                 || ((Region.CanFill(item, items) || isCustomPlacementAndSphereOne) && _allow(item, items) && IsAvailable(items));
             Item = oldItem;

@@ -46,6 +46,8 @@ namespace Randomizer.Tools
                 PreventFivePowerBombSeed = true,
                 LeftSandPitRequiresSpringBall = true,
                 LaunchPadRequiresIceBeam = true,
+                EasyEastCrateriaSkyItem = true,
+                WaterwayNeedsGravitySuit = true,
             };
             var sb = new StringBuilder();
             foreach (KeysanityMode keysanityMode in Enum.GetValues(typeof(KeysanityMode)))
