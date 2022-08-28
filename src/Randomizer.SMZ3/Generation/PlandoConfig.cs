@@ -52,6 +52,11 @@ namespace Randomizer.SMZ3.Generation
         public KeysanityMode KeysanityMode { get; set; }
 
         /// <summary>
+        /// Gets or sets the logic options that apply to the plando.
+        /// </summary>
+        public LogicConfig Logic { get; set; }
+
+        /// <summary>
         /// Gets or sets a dictionary that contains the names of locations and
         /// the types of items they should be filled with.
         /// </summary>
@@ -68,10 +73,5 @@ namespace Randomizer.SMZ3.Generation
         /// medallions they require.
         /// </summary>
         public Dictionary<string, ItemType> Medallions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the logic options that apply to the plando.
-        /// </summary>
-        public LogicConfig Logic { get; set; }
     }
 }
