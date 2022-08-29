@@ -32,6 +32,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly Dictionary<int, int> _locationHintsGiven = new();
         private readonly Playthrough? _playthrough;
         private readonly IItemService _itemService;
+        private readonly IRandomizerConfigService _config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
@@ -39,13 +40,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="itemService">Used to manage item information.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public SpoilerModule(Tracker tracker, IItemService itemService, ILogger<SpoilerModule> logger)
+        public SpoilerModule(Tracker tracker, IItemService itemService, ILogger<SpoilerModule> logger, IRandomizerConfigService randomizerConfigService)
             : base(tracker, itemService, logger)
         {
             Tracker.HintsEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerHints && tracker.Options.HintsEnabled;
             Tracker.SpoilersEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerSpoilers && tracker.Options.SpoilersEnabled;
-            _itemService = itemService;
             if (tracker.World.Config.Race) return;
+            _config = randomizerConfigService;
 
             Playthrough.TryGenerate(new[] { tracker.World }, tracker.World.Config, out _playthrough);
 
@@ -98,7 +99,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     RevealLocationItem(location);
                 });
             }
-            _itemService = itemService;
         }
 
         
@@ -117,8 +117,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var progression = Tracker.GetProgression();
             var locationWithProgressionItem = Tracker.World.Locations
                 .Where(x => !x.Cleared && x.IsAvailable(progression))
-                .Where(x => x.Item.Progression)
-                .Where(x => !ItemService.IsTracked(x.Item.Type))
+                .Where(x => !ItemService.IsTracked(x.Item.Type) && ItemService?.GetOrDefault(x.Item.Type)?.IsProgression(_config.Config) == true)
                 .Random();
 
             if (locationWithProgressionItem != null)
