@@ -176,7 +176,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             return Directory
                 .GetDirectories(_basePath)
                 .Select(x => (new DirectoryInfo(x)).Name)
-                .Where(x => x != "Templates" && !string.IsNullOrEmpty(x))
+                .Where(x => x != "Templates")
                 .ToList();
         }
 
