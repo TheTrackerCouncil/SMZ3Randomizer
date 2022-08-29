@@ -38,6 +38,7 @@ namespace Randomizer.SMZ3.Tracking.Services
             _configProvider = configProvider;
 
             var iconPaths = _options.Options.TrackerProfiles
+                .Where(x => !string.IsNullOrEmpty(x))
                 .Select(x => Path.Combine(_configProvider.ConfigDirectory, x)).Reverse().ToList();
             iconPaths.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             IconPaths = iconPaths;

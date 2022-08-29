@@ -59,6 +59,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// with the specified tracker.
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
+        /// <param name="itemService">Service to get item information</param>
         /// <param name="logger">Used to log information.</param>
         protected TrackerModule(Tracker tracker, IItemService itemService, ILogger logger)
         {

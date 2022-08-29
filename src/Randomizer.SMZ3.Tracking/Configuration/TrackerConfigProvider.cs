@@ -208,11 +208,14 @@ namespace Randomizer.SMZ3.Tracking.Configuration
             
             foreach (var profile in profiles)
             {
-                var otherConfig = LoadYamlFile<T>(fileName, profile);
-                if (otherConfig == null) continue;
-                var otherMergeableConfig = (IMergeable<T2>)otherConfig;
-                if (otherConfig == null) throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
-                mergeableConfig.MergeFrom(otherMergeableConfig);
+                if (!string.IsNullOrEmpty(profile))
+                {
+                    var otherConfig = LoadYamlFile<T>(fileName, profile);
+                    if (otherConfig == null) continue;
+                    var otherMergeableConfig = (IMergeable<T2>)otherConfig;
+                    if (otherConfig == null) throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IMergeable.");
+                    mergeableConfig.MergeFrom(otherMergeableConfig);
+                }
             }
 
             return config;
