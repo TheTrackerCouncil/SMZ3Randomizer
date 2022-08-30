@@ -1180,155 +1180,155 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 0,
-                        Column = 1,
+                        Row = 1,
+                        Column = 2,
                         Identifiers = new List<string>() { "1" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 0,
-                        Column = 2,
+                        Row = 1,
+                        Column = 3,
                         Identifiers = new List<string>() { "2" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 0,
-                        Column = 3,
+                        Row = 1,
+                        Column = 4,
                         Identifiers = new List<string>() { "3" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 0,
-                        Column = 4,
+                        Row = 1,
+                        Column = 5,
                         Identifiers = new List<string>() { "4" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 0,
-                        Column = 5,
+                        Row = 1,
+                        Column = 6,
                         Identifiers = new List<string>() { "5" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 1,
-                        Column = 1,
+                        Row = 2,
+                        Column = 2,
                         Identifiers = new List<string>() { "6" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 1,
-                        Column = 2,
+                        Row = 2,
+                        Column = 3,
                         Identifiers = new List<string>() { "7" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 1,
-                        Column = 3,
+                        Row = 2,
+                        Column = 4,
                         Identifiers = new List<string>() { "8" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 1,
-                        Column = 4,
+                        Row = 2,
+                        Column = 5,
                         Identifiers = new List<string>() { "9" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 1,
-                        Column = 5,
+                        Row = 2,
+                        Column = 6,
                         Identifiers = new List<string>() { "10" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 2,
-                        Column = 0,
+                        Row = 3,
+                        Column = 1,
                         Identifiers = new List<string>() { "11" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 2,
-                        Column = 1,
+                        Row = 3,
+                        Column = 2,
                         Identifiers = new List<string>() { "12" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 2,
-                        Column = 2,
+                        Row = 3,
+                        Column = 3,
                         Identifiers = new List<string>() { "13" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 2,
-                        Column = 3,
+                        Row = 3,
+                        Column = 4,
                         Identifiers = new List<string>() { "14" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 2,
-                        Column = 4,
+                        Row = 3,
+                        Column = 5,
                         Identifiers = new List<string>() { "15" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 2,
-                        Column = 5,
+                        Row = 3,
+                        Column = 6,
                         Identifiers = new List<string>() { "16" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 3,
-                        Column = 0,
+                        Row = 4,
+                        Column = 1,
                         Identifiers = new List<string>() { "17" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 3,
-                        Column = 1,
+                        Row = 4,
+                        Column = 2,
                         Identifiers = new List<string>() { "18" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 3,
-                        Column = 2,
+                        Row = 4,
+                        Column = 3,
                         Identifiers = new List<string>() { "19" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 4,
-                        Column = 0,
+                        Row = 5,
+                        Column = 1,
                         Identifiers = new List<string>() { "20" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 4,
-                        Column = 1,
+                        Row = 5,
+                        Column = 2,
                         Identifiers = new List<string>() { "21" }
                     },
                     new UIGridLocation()
                     {
                         Type = UIGridLocationType.Peg,
-                        Row = 4,
-                        Column = 2,
+                        Row = 5,
+                        Column = 3,
                         Identifiers = new List<string>() { "22" }
                     }
                 })

@@ -32,7 +32,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly Dictionary<int, int> _locationHintsGiven = new();
         private readonly Playthrough? _playthrough;
         private readonly IItemService _itemService;
-        private readonly IRandomizerConfigService _config;
+        private readonly IRandomizerConfigService _randomizerConfigService;
+        private Config _config => _randomizerConfigService.Config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
@@ -40,13 +41,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance.</param>
         /// <param name="itemService">Used to manage item information.</param>
         /// <param name="logger">Used to write logging information.</param>
+        /// <param name="randomizerConfigService">Service for retrieving the randomizer config for the world</param>
         public SpoilerModule(Tracker tracker, IItemService itemService, ILogger<SpoilerModule> logger, IRandomizerConfigService randomizerConfigService)
             : base(tracker, itemService, logger)
         {
             Tracker.HintsEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerHints && tracker.Options.HintsEnabled;
             Tracker.SpoilersEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerSpoilers && tracker.Options.SpoilersEnabled;
             if (tracker.World.Config.Race) return;
-            _config = randomizerConfigService;
+            _randomizerConfigService = randomizerConfigService;
 
             Playthrough.TryGenerate(new[] { tracker.World }, tracker.World.Config, out _playthrough);
 
@@ -114,10 +116,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return;
             }
 
-            var progression = Tracker.GetProgression();
+            var zeldaProgression = Tracker.GetProgression(assumeKeys: !_config.ZeldaKeysanity);
+            var metroidProgression = Tracker.GetProgression(assumeKeys: !_config.MetroidKeysanity);
             var locationWithProgressionItem = Tracker.World.Locations
-                .Where(x => !x.Cleared && x.IsAvailable(progression))
-                .Where(x => !ItemService.IsTracked(x.Item.Type) && ItemService?.GetOrDefault(x.Item.Type)?.IsProgression(_config.Config) == true)
+                .Where(x => !x.Cleared && x.IsAvailable(x.Region is Z3Region ? zeldaProgression : metroidProgression))
+                .Where(x => !ItemService.IsTracked(x.Item.Type) && ItemService?.GetOrDefault(x.Item.Type)?.IsProgression(_config) == true)
                 .Random();
 
             if (locationWithProgressionItem != null)
@@ -483,11 +486,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private bool GiveItemLocationSpoiler(ItemData item)
         {
-            var progression = Tracker.GetProgression();
+            var zeldaProgression = Tracker.GetProgression(assumeKeys: !_config.ZeldaKeysanity);
+            var metroidProgression = Tracker.GetProgression(assumeKeys: !_config.MetroidKeysanity);
             var reachableLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .Where(x => !x.Cleared)
-                .Where(x => x.IsAvailable(progression))
+                .Where(x => x.IsAvailable(x.Region is Z3Region ? zeldaProgression : metroidProgression))
                 .Random();
             if (reachableLocation != null)
             {
@@ -520,7 +524,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private bool GiveItemLocationHint(ItemData item)
         {
-            var progression = Tracker.GetProgression();
+            var zeldaProgression = Tracker.GetProgression(assumeKeys: !_config.ZeldaKeysanity);
+            var metroidProgression = Tracker.GetProgression(assumeKeys: !_config.MetroidKeysanity);
             var itemLocations = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .Where(x => !x.Cleared);
@@ -539,7 +544,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // items)
                 case 0:
                     {
-                        var isInLogic = itemLocations.Any(x => x.IsAvailable(progression));
+                        var isInLogic = itemLocations.Any(x => x.IsAvailable(x.Region is Z3Region ? zeldaProgression : metroidProgression));
                         if (!isInLogic)
                             return GiveItemHint(x => x.ItemNotInLogic, item);
 
@@ -559,9 +564,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // - Where will you NOT find it?
                 case 1:
                     {
-                        if (itemLocations.All(x => !x.IsAvailable(progression)))
+                        if (itemLocations.All(x => !x.IsAvailable(x.Region is Z3Region ? zeldaProgression : metroidProgression)))
                         {
-                            var randomLocation = itemLocations.Where(x => !x.IsAvailable(progression)).Random();
+                            var randomLocation = itemLocations.Where(x => !x.IsAvailable(x.Region is Z3Region ? zeldaProgression : metroidProgression)).Random();
+
+                            if (randomLocation == null)
+                            {
+                                return GiveItemHint(x => x.NoApplicableHints, item);
+                            }
+
+                            var progression = randomLocation.Region is Z3Region ? zeldaProgression : metroidProgression;
                             var missingItemSets = Logic.GetMissingRequiredItems(randomLocation, progression);
                             if (!missingItemSets.Any())
                             {
@@ -705,11 +717,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private Location? GetRandomItemLocationWithFilter(ItemData item, Func<Location, bool> predicate)
         {
-            var progression = Tracker.GetProgression();
+            var zeldaProgression = Tracker.GetProgression(assumeKeys: !_config.ZeldaKeysanity);
+            var metroidProgression = Tracker.GetProgression(assumeKeys: !_config.MetroidKeysanity);
             var randomLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
                 .Where(x => !x.Cleared)
-                .Where(x => x.IsAvailable(progression))
+                .Where(x => x.IsAvailable(x.Region is Z3Region ? zeldaProgression : metroidProgression))
                 .Where(predicate)
                 .Random();
 

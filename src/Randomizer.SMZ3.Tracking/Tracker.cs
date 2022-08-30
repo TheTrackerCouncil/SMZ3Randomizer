@@ -701,19 +701,27 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Gets the currently available items.
+        /// Gets the currently available items for a particular region or room
         /// </summary>
+        /// <param name="area">The area to get progression for.</param>    
         /// <returns>
         /// A new <see cref="Progression"/> object representing the currently
         /// available items.
         /// </returns>
         /// <remarks>
         /// Keycards and dungeon items such as keys are assumed to be owned,
-        /// unless playing on a keysanity world, in which case keys and keycards
-        /// must be tracked manually.
+        /// unless playing on a keysanity world for that particular game, in
+        /// which case keys and keycards must be tracked manually
         /// </remarks>
-        public Progression GetProgression()
-            => GetProgression(assumeKeys: World.Config.KeysanityMode == KeysanityMode.None);
+        public Progression GetProgression(IHasLocations area)
+        {
+            if (area is Z3Region || (area is Room room1 && room1.Region is Z3Region))
+                return GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
+            else if (area is SMRegion || (area is Room room2 && room2.Region is SMRegion))
+                return GetProgression(assumeKeys: !World.Config.MetroidKeysanity);
+            else
+                return GetProgression(assumeKeys: World.Config.KeysanityMode == KeysanityMode.None);
+        }
 
         /// <summary>
         /// Gets the currently available items.
@@ -1327,7 +1335,8 @@ namespace Randomizer.SMZ3.Tracking
                         }
                     }
 
-                    var items = GetProgression();
+                    var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
+                    var items = GetProgression(!isKeysanityForLocation);
                     if (stateResponse && !location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
                         var locationInfo = WorldInfo.Location(location);
@@ -1607,7 +1616,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             var locations = area.Locations
                 .Where(x => !x.Cleared)
-                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression()))
+                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression(area)))
                 .ToImmutableList();
 
             UpdateTrackerProgression = true;
@@ -1701,11 +1710,12 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(GetProgression())).Random(s_random);
+                            var progression = GetProgression(area);
+                            var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(progression)).Random(s_random);
                             if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                             {
                                 var someOutOfLogicItem = ItemService.GetOrDefault(someOutOfLogicLocation);
-                                var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, GetProgression())
+                                var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, progression)
                                     .OrderBy(x => x.Length)
                                     .FirstOrDefault();
                                 if (missingItems != null)
@@ -1772,7 +1782,7 @@ namespace Randomizer.SMZ3.Tracking
             if (!dungeon.HasReward)
                 dungeon.Cleared = true;
 
-            var progress = GetProgression();
+            var progress = GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
             var locations = dungeon.GetLocations(World).Where(x => !x.Cleared).ToList();
             var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
             if (locations.Count > 0)
