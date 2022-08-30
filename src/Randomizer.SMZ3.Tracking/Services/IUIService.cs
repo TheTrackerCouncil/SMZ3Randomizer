@@ -65,7 +65,9 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="category">The category of sprite</param>
         /// <param name="imageFileName">The individual filename of the sprite</param>
+        /// <param name="profilePath">The path of the selected profile</param>
+        /// <param name="basePath">The base path of the desired sprite</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(string category, string imageFileName);
+        public string? GetSpritePath(string category, string imageFileName, out string profilePath, string basePath = null);
     }
 }

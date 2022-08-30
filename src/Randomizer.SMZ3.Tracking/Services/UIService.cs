@@ -61,7 +61,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="digit">The number requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(int digit) => GetSpritePath("Marks", $"{digit % 10}.png");
+        public string? GetSpritePath(int digit) => GetSpritePath("Marks", $"{digit % 10}.png", out _);
 
         /// <summary>
         /// Returns the path of the sprite for the item
@@ -74,19 +74,22 @@ namespace Randomizer.SMZ3.Tracking.Services
 
             if (item.Image != null)
             {
-                fileName = GetSpritePath("Items", item.Image);
+                fileName = GetSpritePath("Items", item.Image, out _);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
             if (item.HasStages || item.Multiple)
             {
-                fileName = GetSpritePath("Items", $"{item.Item.ToLowerInvariant()} ({item.TrackingState}).png");
+                var baseFileName = GetSpritePath("Items", $"{item.Item.ToLowerInvariant()}.png", out string profilePath);
+                fileName = GetSpritePath("Items", $"{item.Item.ToLowerInvariant()} ({item.TrackingState}).png", out _, profilePath);
                 if (File.Exists(fileName))
                     return fileName;
+                else
+                    return baseFileName;
             }
 
-            return GetSpritePath("Items", $"{item.Item.ToLowerInvariant()}.png");
+            return GetSpritePath("Items", $"{item.Item.ToLowerInvariant()}.png", out _);
         }
 
         /// <summary>
@@ -100,12 +103,12 @@ namespace Randomizer.SMZ3.Tracking.Services
 
             if (boss.Image != null)
             {
-                fileName = GetSpritePath("Items", boss.Image);
+                fileName = GetSpritePath("Items", boss.Image, out _);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
-            return GetSpritePath("Items", $"{boss.Boss.ToLowerInvariant()}.png");
+            return GetSpritePath("Items", $"{boss.Boss.ToLowerInvariant()}.png", out _);
         }
 
         /// <summary>
@@ -114,7 +117,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="dungeon">The dungeon requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
         public string? GetSpritePath(DungeonInfo dungeon) => GetSpritePath("Dungeons",
-            $"{dungeon.Dungeon.ToLowerInvariant()}.png");
+            $"{dungeon.Dungeon.ToLowerInvariant()}.png", out _);
 
         /// <summary>
         /// Returns the path of the sprite for the reward
@@ -122,24 +125,40 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="reward">The reward requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
         public string? GetSpritePath(RewardItem reward) => GetSpritePath("Dungeons",
-            $"{reward.GetDescription().ToLowerInvariant()}.png");
+            $"{reward.GetDescription().ToLowerInvariant()}.png", out _);
 
         /// <summary>
         /// Returns the path of the sprite
         /// </summary>
         /// <param name="category">The category of sprite</param>
         /// <param name="imageFileName">The individual filename of the sprite</param>
+        /// <param name="profilePath">The path of the selected profile</param>
+        /// <param name="basePath">The base path of the desired sprite</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(string category, string imageFileName)
+        public string? GetSpritePath(string category, string imageFileName, out string profilePath, string basePath = null)
         {
-            foreach (var profile in IconPaths)
+            if (!string.IsNullOrEmpty(basePath))
             {
-                var path = Path.Combine(profile, "Sprites", category, imageFileName);
+                var path = Path.Combine(basePath, "Sprites", category, imageFileName);
                 if (File.Exists(path))
                 {
+                    profilePath = basePath;
                     return path;
                 }
             }
+            else
+            {
+                foreach (var profile in IconPaths)
+                {
+                    var path = Path.Combine(profile, "Sprites", category, imageFileName);
+                    if (File.Exists(path))
+                    {
+                        profilePath = profile;
+                        return path;
+                    }
+                }
+            }
+            profilePath = null;
             return null;
         }
     }

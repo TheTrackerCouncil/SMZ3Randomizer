@@ -23,9 +23,9 @@ namespace Randomizer.App
 
             InitializeComponent();
 
-            ChestSprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "chest.png")));
+            ChestSprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "chest.png", out _)));
 
-            KeySprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "key.png")));
+            KeySprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "key.png", out _)));
 
             App.RestoreWindowPositionAndSize(this);
         }
