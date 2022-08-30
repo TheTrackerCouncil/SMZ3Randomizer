@@ -158,7 +158,7 @@ namespace Randomizer.App
         {
             if (imageFileName == null)
             {
-                imageFileName = _uiService.GetSpritePath("Items", "blank.png");
+                imageFileName = _uiService.GetSpritePath("Items", "blank.png", out _);
             }
 
             var bitmapImage = new BitmapImage(new Uri(imageFileName));
@@ -235,7 +235,7 @@ namespace Randomizer.App
                 var labelImage = (Image)null;
                 if (gridLocation.Image != null)
                 {
-                    labelImage = GetGridItemControl(_uiService.GetSpritePath("Items", gridLocation.Image), gridLocation.Column, gridLocation.Row);
+                    labelImage = GetGridItemControl(_uiService.GetSpritePath("Items", gridLocation.Image, out _), gridLocation.Column, gridLocation.Row);
                     TrackerGrid.Children.Add(labelImage);
                 }
 
@@ -347,7 +347,7 @@ namespace Randomizer.App
                     }
                      
                     var fileName = _uiService.GetSpritePath("Items",
-                        Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png");
+                        Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
 
                     var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row);
                     image.Tag = gridLocation;
@@ -381,11 +381,11 @@ namespace Randomizer.App
 
                 if (names.Count == 1)
                 {
-                    return _uiService.GetSpritePath("Dungeons", $"{names[0]}.png");
+                    return _uiService.GetSpritePath("Dungeons", $"{names[0]}.png", out _);
                 }
                 else if (names.Count > 1)
                 {
-                    return _uiService.GetSpritePath("Dungeons", "both.png");
+                    return _uiService.GetSpritePath("Dungeons", "both.png", out _);
                 }
 
                 return null;
