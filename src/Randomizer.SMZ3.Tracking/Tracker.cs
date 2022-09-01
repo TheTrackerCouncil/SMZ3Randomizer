@@ -60,6 +60,7 @@ namespace Randomizer.SMZ3.Tracking
         private Dictionary<string, Progression> _progression = new();
         private bool _alternateTracker;
         private HashSet<SchrodingersString> _saidLines = new();
+        private bool _beatenGame;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -864,7 +865,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Pauses the timer, saving the elapsed time
         /// </summary>
-        public virtual void PauseTimer()
+        public virtual Action? PauseTimer(bool addUndo = true)
         {
             _undoSavedTime = SavedElapsedTime;
             _undoStartTime = _startTime;
@@ -874,11 +875,24 @@ namespace Randomizer.SMZ3.Tracking
 
             Say(Responses.TimerPaused);
 
-            AddUndo(() =>
+            if (addUndo)
             {
-                SavedElapsedTime = _undoSavedTime;
-                _startTime = _undoStartTime;
-            });
+                AddUndo(() =>
+                {
+                    SavedElapsedTime = _undoSavedTime;
+                    _startTime = _undoStartTime;
+                });
+                return null;
+            }
+            else
+            {
+                return () =>
+                {
+                    SavedElapsedTime = _undoSavedTime;
+                    _startTime = _undoStartTime;
+                };
+            }
+            
         }
 
         /// <summary>
@@ -1302,7 +1316,7 @@ namespace Randomizer.SMZ3.Tracking
             Action? undoTrackDungeonTreasure = null;
 
             // If this was not gifted to the player, try to clear the location
-            if (!giftedItem)
+            if (!giftedItem && item.InternalItemType != ItemType.Nothing)
             {
                 if (location == null)
                 {
@@ -1885,7 +1899,8 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon that was cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkDungeonAsCleared(DungeonInfo dungeon, float? confidence = null)
+        /// <param name="autoTracked">If this was cleared by the auto tracker</param>
+        public void MarkDungeonAsCleared(DungeonInfo dungeon, float? confidence = null, bool autoTracked = false)
         {
             UpdateTrackerProgression = true;
 
@@ -1904,14 +1919,18 @@ namespace Randomizer.SMZ3.Tracking
             dungeon.Cleared = true;
             Say(Responses.DungeonBossCleared.Format(dungeon.Name, dungeon.Boss));
             IsDirty = true;
-
+            RestartIdleTimers();
             OnDungeonUpdated(new TrackerEventArgs(confidence));
-            AddUndo(() =>
+
+            if (!autoTracked)
             {
-                UpdateTrackerProgression = true;
-                dungeon.Cleared = false;
-                addedEvent.IsUndone = true;
-            });
+                AddUndo(() =>
+                {
+                    UpdateTrackerProgression = true;
+                    dungeon.Cleared = false;
+                    addedEvent.IsUndone = true;
+                });
+            }
         }
 
         /// <summary>
@@ -1923,7 +1942,8 @@ namespace Randomizer.SMZ3.Tracking
         /// <see langword="false"/> if the boss was simply "tracked".
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkBossAsDefeated(BossInfo boss, bool admittedGuilt = true, float? confidence = null)
+        /// <param name="autoTracked">If this was tracked by the auto tracker</param>
+        public void MarkBossAsDefeated(BossInfo boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
         {
             if (boss.Defeated)
             {
@@ -1947,12 +1967,17 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = true;
             UpdateTrackerProgression = true;
 
+            RestartIdleTimers();
             OnBossUpdated(new(confidence));
-            AddUndo(() =>
+
+            if (!autoTracked)
             {
-                boss.Defeated = false;
-                addedEvent.IsUndone = true;
-            });
+                AddUndo(() =>
+                {
+                    boss.Defeated = false;
+                    addedEvent.IsUndone = true;
+                });
+            }
         }
 
         /// <summary>
@@ -2169,6 +2194,32 @@ namespace Randomizer.SMZ3.Tracking
         {
             CurrentMap = map;
             MapUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Called when the game is beaten by entering triforce room
+        /// or entering the ship after beating both bosses
+        /// </summary>
+        /// <param name="autoTracked">If this was triggered by the auto tracker</param>
+        public void GameBeaten(bool autoTracked)
+        {
+            if (!_beatenGame)
+            {
+                _beatenGame = true;
+                var pauseUndo = PauseTimer(false);
+                Say(x => x.BeatGame);
+                if (!autoTracked)
+                {
+                    AddUndo(() =>
+                    {
+                        _beatenGame = false;
+                        if (pauseUndo != null)
+                        {
+                            pauseUndo();
+                        }
+                    });
+                }
+            }
         }
 
         internal void RestartIdleTimers()

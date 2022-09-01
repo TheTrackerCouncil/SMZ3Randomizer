@@ -65,6 +65,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         public RewardType Reward { get; set; }
 
         /// <summary>
+        /// Memory offset for detecting if this boss was defeated
+        /// </summary>
+        public int? MemoryAddress { get; set; }
+
+        /// <summary>
+        /// Bit to check to determine if this boss was defeated
+        /// </summary>
+        public int? MemoryFlag { get; set; }
+
+        /// <summary>
         /// Returns a string representation of the boss.
         /// </summary>
         /// <returns>A string representing this boss.</returns>

@@ -101,6 +101,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 _communicator.Enable();
                 tracker.Say(x => x.Unmuted);
             });
+
+            AddCommand("Beat game", GetBeatGameRule(), (tracker, result) =>
+            {
+                tracker.GameBeaten(false);
+            });
         }
 
         private static Choices GetIncreaseDecrease()
@@ -208,6 +213,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker, ")
                 .Optional("please")
                 .OneOf("unmute yourself", "unsilence yourself");
+        }
+
+        private GrammarBuilder GetBeatGameRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker, ")
+                .OneOf("I beat", "I finished")
+                .OneOf("the game", "the seed");
         }
     }
 }

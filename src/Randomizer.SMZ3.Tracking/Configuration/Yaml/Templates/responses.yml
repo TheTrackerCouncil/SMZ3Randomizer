@@ -319,6 +319,9 @@ Muted:
 # The list of possibilities when tracker is unmuted
 Unmuted:
 
+# The list of possibilities when the game is fully beaten and the timer paused.
+BeatGame:
+
 # Tracker responses when nothing has happened in a certain amount of time
 # List the responses underneath different amounts of time elapsed since the last
 # action. This is a time range of <basetime>±<range of time more or less than base time>.

@@ -38,6 +38,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private int _numGTItems = 0;
         private bool _seenGTTorch = false;
         private bool _foundGTKey = false;
+        private bool _beatBothBosses = false;
 
         /// <summary>
         /// Constructor for Auto Tracker
@@ -119,6 +120,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Action = CheckZeldaState
             });
 
+            // Check if Ganon is defeated
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.CartRAM,
+                Address = 0xA17400,
+                Length = 0x120,
+                Game = Game.Both,
+                Action = CheckBeatFinalBosses
+            });
+
             // Check Metroid locations
             AddReadAction(new()
             {
@@ -139,6 +151,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Length = 0x08,
                 Game = Game.SM,
                 Action = CheckMetroidBosses
+            });
+
+            // Check state of if the player has entered the ship
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7e0FB2,
+                Length = 0x2,
+                Game = Game.SM,
+                Action = CheckShip
             });
 
             // Check Metroid state
@@ -455,6 +478,16 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
                 }
 
+                // Switched from having the flute to having activated it
+                if (action.CurrentData?.ReadUInt8(0x10C) == 1 && action.PreviousData?.ReadUInt8(0x10C) == 2)
+                {
+                    var duckItem = _itemService.FindOrDefault("Duck");
+                    if (duckItem != null)
+                    {
+                        Tracker?.TrackItem(duckItem, null, null, false, true, null, false);
+                    }
+                }
+
                 // Check if the player cleared Aga
                 if (action.CurrentData?.ReadUInt8(0x145) >= 3 && Tracker != null)
                 {
@@ -594,32 +627,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         protected void CheckSMBosses(EmulatorMemoryData data)
         {
             if (Tracker == null) return;
-            var boss = Tracker.WorldInfo.Bosses.First(x => "Kraid".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
-            if (!boss.Defeated && data.CheckBinary8Bit(0x1, 0x1))
-            {
-                Tracker.MarkBossAsDefeated(boss);
-                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
-            }
 
-            boss = Tracker.WorldInfo.Bosses.First(x => "Ridley".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
-            if (!boss.Defeated && data.CheckBinary8Bit(0x2, 0x1))
+            foreach (var boss in Tracker.WorldInfo.Bosses.Where(x => x.MemoryAddress != null && x.MemoryFlag > 0 && !x.Defeated))
             {
-                Tracker.MarkBossAsDefeated(boss);
-                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
-            }
-
-            boss = Tracker.WorldInfo.Bosses.First(x => "Phantoon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
-            if (!boss.Defeated && data.CheckBinary8Bit(0x3, 0x1))
-            {
-                Tracker.MarkBossAsDefeated(boss);
-                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
-            }
-
-            boss = Tracker.WorldInfo.Bosses.First(x => "Draygon".Equals(x.Name[0], StringComparison.OrdinalIgnoreCase));
-            if (!boss.Defeated && data.CheckBinary8Bit(0x4, 0x1))
-            {
-                Tracker.MarkBossAsDefeated(boss);
-                _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
+                if (data.CheckBinary8Bit(boss.MemoryAddress ?? 0, boss.MemoryFlag ?? 100))
+                {
+                    Tracker.MarkBossAsDefeated(boss);
+                    _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
+                }
             }
         }
 
@@ -645,6 +660,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 IncrementGTItems(Tracker.World.GanonsTower.BobsTorch);
             }
 
+            // Entered the triforce room
+            if (ZeldaState.State == 0x19)
+            {
+                if (_beatBothBosses)
+                {
+                    Tracker?.GameBeaten(true);
+                }
+            }
+
             foreach (var check in _zeldaStateChecks)
             {
                 if (check != null && check.ExecuteCheck(Tracker, ZeldaState, prevState))
@@ -652,6 +676,63 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     _logger.LogInformation($"{check.GetType().Name} detected");
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks if the final bosses of both games are defeated
+        /// It appears as if 0x2 represents the first boss defeated and 0x106 is the second,
+        /// no matter what order the bosses were defeated in
+        /// </summary>
+        /// <param name="action">The message from the emulator with the memory state</param>
+        protected void CheckBeatFinalBosses(EmulatorAction action)
+        {
+            if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
+            
+            if (action.PreviousData?.ReadUInt8(0x2) == 0 && action.CurrentData.ReadUInt8(0x2) > 0)
+            {
+                if (CurrentGame == Game.Zelda)
+                {
+                    var dungeon = Tracker.WorldInfo.Dungeon(typeof(GanonsTower));
+                    if (!dungeon.Cleared)
+                    {
+                        Tracker.MarkDungeonAsCleared(dungeon);
+                    }
+                }
+                else if (CurrentGame == Game.SM)
+                {
+                    var motherBrain = Tracker.WorldInfo.Bosses.First(x => x.Boss == "Mother Brain");
+                    if (!motherBrain.Defeated)
+                    {
+                        Tracker.MarkBossAsDefeated(motherBrain);
+                    }
+                }
+            }
+
+            if (action.PreviousData?.ReadUInt8(0x106) == 0 && action.CurrentData.ReadUInt8(0x106) > 0)
+            {
+                if (CurrentGame == Game.Zelda)
+                {
+                    var dungeon = Tracker.WorldInfo.Dungeon(typeof(GanonsTower));
+                    if (!dungeon.Cleared)
+                    {
+                        Tracker.MarkDungeonAsCleared(dungeon);
+                    }
+                }
+                else if (CurrentGame == Game.SM)
+                {
+                    var motherBrain = Tracker.WorldInfo.Bosses.First(x => x.Boss == "Mother Brain");
+                    if (!motherBrain.Defeated)
+                    {
+                        Tracker.MarkBossAsDefeated(motherBrain);
+                    }
+                }
+            }
+
+            if (action.CurrentData.ReadUInt8(0x2) > 0 && action.CurrentData.ReadUInt8(0x106) > 0)
+            {
+                _beatBothBosses = true;
+            }
+
         }
 
         /// <summary>
@@ -672,6 +753,20 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     _logger.LogInformation($"{check.GetType().Name} detected");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the player has entered the ship
+        /// </summary>
+        /// <param name="action"></param>
+        protected void CheckShip(EmulatorAction action)
+        {
+            if (_previousGame != CurrentGame || action.CurrentData == null || action.PreviousData == null || Tracker == null) return;
+            var currentInShip = action.CurrentData.ReadUInt16(0) == 0xAA4F;
+            if (currentInShip && _beatBothBosses)
+            {
+                Tracker?.GameBeaten(true);
             }
         }
 
