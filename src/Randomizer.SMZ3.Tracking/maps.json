@@ -552,6 +552,242 @@
       ]
     },
     {
+      "Name": "Brinstar Alt",
+      "Image": "map_brinstar_alt.png",
+      "Width": 1872,
+      "Height": 828,
+      "Regions": [
+        {
+          "Name": "Blue Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Crateria Alt",
+      "Image": "map_crateria_alt.png",
+      "Width": 1632,
+      "Height": 796,
+      "Regions": [
+        {
+          "Name": "Central Crateria",
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "Name": "West Crateria",
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "Name": "East Crateria",
+          "X": 0,
+          "Y": 0
+        }
+      ]
+    },
+    {
+      "Name": "Wrecked Ship Alt",
+      "Image": "map_ws_alt.png",
+      "Width": 1008,
+      "Height": 636,
+      "Regions": [
+        {
+          "Name": "Wrecked Ship",
+          "X": 0,
+          "Y": 0
+        }
+      ]
+    },
+    {
+      "Name": "Maridia Alt",
+      "Image": "map_maridia_alt.png",
+      "Width": 1360,
+      "Height": 764,
+      "Regions": [
+        {
+          "Name": "Outer Maridia",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Norfair Alt",
+      "Image": "map_norfair_alt.png",
+      "Width": 1328,
+      "Height": 700,
+      "Regions": [
+        {
+          "Name": "Upper Norfair, West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": [
+        "Metroid Combined Alt",
+        "Zebes Alt",
+        "Zeebs Alt"
+      ],
+      "Image": "map_full_alt.png",
+      "Width": 2288,
+      "Height": 1916,
+      "Regions": [
+        {
+          "Name": "Blue Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Central Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "West Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "East Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "Outer Maridia",
+          "X": 928,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 928,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Wrecked Ship",
+          "X": 1104,
+          "Y": -68
+        },
+        {
+          "Name": "Upper Norfair, West",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 880,
+          "Y": 1210,
+          "Scale": 1
+        }
+      ]
+    },
+    {
       "Name": [
         "Eastern Palace Side",
         "Eastern Palace East",
@@ -653,6 +889,253 @@
       "Regions": [],
       "IsDarkRoomMap": true,
       "MemoryRoomNumbers": [ 181 ]
+    },
+    {
+      "Name": [
+        "SMZ3 Combined Alt",
+        "Everything Alt"
+      ],
+      "Image": "smz3_fullmap_alt.png",
+      "Width": 3246,
+      "Height": 1916,
+      "Regions": [
+        {
+          "Name": "Light World North West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World North East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World South",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World Death Mountain West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World Death Mountain East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Eastern Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Desert Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Tower of Hera",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Hyrule Castle",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Castle Tower",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World North East",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World North West",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World South",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Mire",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Death Mountain West",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Death Mountain East",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Palace of Darkness",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Swamp Palace",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Skull Woods",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Thieves' Town",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Ice Palace",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Misery Mire",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Turtle Rock",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Ganon's Tower",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Blue Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Central Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "West Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "East Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "Outer Maridia",
+          "X": 1886,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 1886,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Wrecked Ship",
+          "X": 2062,
+          "Y": -68
+        },
+        {
+          "Name": "Upper Norfair, West",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 1838,
+          "Y": 1214,
+          "Scale": 1
+        }
+      ]
     },
     {
       "Name": [
