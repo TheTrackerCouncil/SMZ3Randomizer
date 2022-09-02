@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
+using System.Runtime.InteropServices;
 using System.Speech.Synthesis;
 using System.Text;
 using System.Threading;
@@ -61,6 +62,9 @@ namespace Randomizer.SMZ3.Tracking
         private bool _alternateTracker;
         private HashSet<SchrodingersString> _saidLines = new();
         private bool _beatenGame;
+
+        [DllImport("winmm.dll")]
+        public static extern int waveInGetNumDevs();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -379,6 +383,11 @@ namespace Randomizer.SMZ3.Tracking
 
             try
             {
+                if (waveInGetNumDevs() == 0)
+                {
+                    _logger.LogWarning("No microphone device found.");
+                    return false;
+                }
                 _recognizer.SetInputToDefaultAudioDevice();
                 MicrophoneInitialized = true;
                 return true;
