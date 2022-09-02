@@ -31,28 +31,38 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 {
                     Boss = "Spore Spawn",
                     Name = new("Spore Spawn"),
+                    MemoryAddress = 1,
+                    MemoryFlag = 0x2,
                 },
                 new BossInfo()
                 {
                     Boss = "Botwoon",
                     Name = new("Botwoon"),
+                    MemoryAddress = 4,
+                    MemoryFlag = 0x2,
                 },
                 new BossInfo()
                 {
                     Boss = "Kraid",
                     Name = new("Kraid"),
                     Reward = RewardType.Kraid,
+                    MemoryAddress = 1,
+                    MemoryFlag = 0x1,
                 },
                 new BossInfo()
                 {
                     Boss = "Crocomire",
                     Name = new("Crocomire"),
+                    MemoryAddress = 2,
+                    MemoryFlag = 0x2,
                 },
                 new BossInfo()
                 {
                     Boss = "Phantoon",
                     Name = new("Phantoon"),
                     Reward = RewardType.Phantoon,
+                    MemoryAddress = 3,
+                    MemoryFlag = 0x1,
                 },
                 new BossInfo()
                 {
@@ -64,12 +74,16 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                     Boss = "Draygon",
                     Name = new("Draygon"),
                     Reward = RewardType.Draygon,
+                    MemoryAddress = 4,
+                    MemoryFlag = 0x1,
                 },
                 new BossInfo()
                 {
                     Boss = "Ridley",
                     Name = new("Ridley"),
                     Reward = RewardType.Ridley,
+                    MemoryAddress = 2,
+                    MemoryFlag = 0x1,
                 },
                 new BossInfo()
                 {
@@ -80,11 +94,15 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 {
                     Boss = "Bomb Torizo",
                     Name = new("Bomb Torizo", "Bozo", "Bomb Chozo"),
+                    MemoryAddress = 0,
+                    MemoryFlag = 0x4,
                 },
                 new BossInfo()
                 {
                     Boss = "Golden Torizo",
                     Name = new("Golden Torizo", "Golden Chozo"),
+                    MemoryAddress = 2,
+                    MemoryFlag = 0x4,
                 },
             };
         }

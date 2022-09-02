@@ -35,6 +35,9 @@ BossDefeated:
 - Text: 'Congratulations on beating off {0}.'
 Muted:
 - Text: Fine. But watch your metrics plummet.
+BeatGame:
+- Text: Congratulations on beating off the game.
+- Text: I will be submitting a log of this playthrough to The Racing Council for their review.
 Chat:
   StartedGuessingGame:
   - Text: The GT big key guessing game is now open for guesses. By the way, I'm taking a 50% cut of the souls this time.

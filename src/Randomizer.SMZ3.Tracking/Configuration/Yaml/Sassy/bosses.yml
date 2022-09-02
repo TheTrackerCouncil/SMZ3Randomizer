@@ -40,9 +40,12 @@
     Weight: 0.25
 - Boss: Mother Brain
   WhenDefeated:
-  - Text: GG
-  - Text: Is it finally over? Can I go home now?
-  - Text: Thank you for helping us help you help us make this a great seed
+  - Text: Toggled Mother Brain on.
+  - Text: Toggled Big Brain on.
+  - Text: Toggled Aurora Unit on. Wait. Wrong game.
+    Weight: 0.1
+  - Text: Good. That's what she deserves for killing the baby.
+    Weight: 0.1
 - Boss: Bomb Torizo
   Name:
   - Text: Bomb Chorizo

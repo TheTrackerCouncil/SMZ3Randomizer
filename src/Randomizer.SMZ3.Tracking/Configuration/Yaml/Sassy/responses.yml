@@ -371,6 +371,14 @@ Idle:
   - Text: Do you get to the Cloud District very often? Oh what am I saying, of course you don't.
   - Text: Commander, you've received a new message at your private terminal.
   - Text: Heard they're reforming the Dawnguard. Vampire hunters or something, in the old fort near Riften. Might consider joining up myself.
+BeatGame:
+- Text: GG
+- Text: Is it finally over? Can I go home now?
+- Text: Thank you for helping us help you help us make this a great seed
+- Text: Finally. Let's play something else next time.
+- Text: Finally. You beat it. This means you don't have to play this ever again, right?
+- Text: GG. I guess.
+  Weight: 0.1
 Moods:
   Sassy:
   - Text: Better than this seed but that doesn't say much.

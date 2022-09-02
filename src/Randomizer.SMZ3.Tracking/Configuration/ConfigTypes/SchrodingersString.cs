@@ -148,7 +148,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         {
             if (other is SchrodingersString otherObj)
             {
-                foreach (var possibility in otherObj)
+                foreach (var possibility in otherObj.Where(x => !Contains(x)))
                 {
                     base.Add(possibility);
                 }
@@ -233,6 +233,20 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
             /// </summary>
             /// <returns>A string representation of the possibility.</returns>
             public override string ToString() => Text;
+
+            /// <summary>
+            /// Checks if one possibility is the same as another
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+            public override bool Equals(object other)
+            {
+                if (other is Possibility otherPossibility)
+                {
+                    return Text.Equals(otherPossibility.Text) && Weight == otherPossibility.Weight;
+                }
+                return false;
+            }
         }
     }
 }
