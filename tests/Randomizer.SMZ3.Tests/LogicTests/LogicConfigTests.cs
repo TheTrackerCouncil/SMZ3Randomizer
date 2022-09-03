@@ -272,8 +272,8 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.CardMaridiaL1, ItemType.Morph, ItemType.Super, ItemType.PowerBomb, ItemType.Gravity, ItemType.SpaceJump }, new List<RewardType>());
             var missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.LeftSandPit.Left, progression);
-            missingItems.Should().HaveCount(2)
-                .And.ContainEquivalentOf(new[] { ItemType.SpringBall, ItemType.HiJump });
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.SpringBall });
             tempWorld.InnerMaridia.LeftSandPit.Left.IsAvailable(progression).Should().BeFalse();
             tempWorld.InnerMaridia.LeftSandPit.Right.IsAvailable(progression).Should().BeFalse();
 

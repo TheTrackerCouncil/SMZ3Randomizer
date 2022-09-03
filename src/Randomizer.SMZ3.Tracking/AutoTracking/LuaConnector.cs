@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             _isConnected = false;
             _isEnabled = false;
-            if (_tcpListener != null && _socket != null && _socket.Connected)
+            if (_tcpListener != null)
             {
                 _tcpListener.Stop();
             }
@@ -178,7 +178,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 }
                 catch (SocketException se)
                 {
-                    _logger.LogError(se, "Error in accepting socket");
+                    if (_isEnabled)
+                    {
+                        _logger.LogError(se, "Error in accepting socket");
+                    }
                 }
             }
         }

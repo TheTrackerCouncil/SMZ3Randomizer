@@ -71,7 +71,7 @@ namespace Randomizer.App.ViewModels
                 if (Syncer.SpecialLocationLogic(Locations.First()))
                 {
                     var progression = Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region) ? syncer.Progression : syncer.ProgressionWithKeys;
-                    var statuses = Locations.Select(x => x.GetStatus(progression));
+                    var statuses = Locations.Select(x => x.GetStatus(progression, Syncer.TrackerLogic.TrackerLocationLogic));
 
                     ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
                     RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
@@ -193,9 +193,14 @@ namespace Randomizer.App.ViewModels
                     {
                         image = "boss.png";
                     }
-                    else if (Dungeon != null && !Dungeon.Cleared && region.CanComplete(Syncer.ProgressionForRegion(Region)))
+                    else if (Dungeon != null && !Dungeon.Cleared)
                     {
-                        image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
+                        var regionLocations = (IHasLocations)Region;
+                        if (region.CanComplete(Syncer.Tracker.GetProgression(false))
+                            || regionLocations.Locations.All(x => x.IsAvailable(Syncer.ProgressionForRegion(Region))))
+                        {
+                            image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
+                        }
                     }
                 }
                 else if (Type == MapLocationType.Item)

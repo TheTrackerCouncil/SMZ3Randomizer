@@ -40,6 +40,7 @@ namespace Randomizer.App
         {
             Tracker = tracker;
             _logger = logger;
+            TrackerLogic = new TrackerLogic(tracker);
 
             // Set all events from the tracker to point to the two in this class
             Tracker.MarkedLocationsUpdated += (_, _) => MarkedLocationUpdated.Invoke(this, new(""));
@@ -94,6 +95,8 @@ namespace Randomizer.App
         }
 
         public Tracker Tracker { get; private set; }
+
+        public TrackerLogic TrackerLogic { get; private set; }
 
         public World World => Tracker?.World ?? new World(new Config(), "", 0, "");
 
@@ -197,25 +200,15 @@ namespace Randomizer.App
         /// <returns>True if the location should be shown. False otherwise</returns>
         public bool SpecialLocationLogic(Location location)
         {
-            // Don't show MM or TR unless we're sure we have the identified medallion or have all medallions
-            if (location.Region is MiseryMire or TurtleRock)
+            var trackerLogic = TrackerLogic.FindOrDefault(location);
+            if (trackerLogic == null)
             {
-                var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.GetRegion(Tracker.World) == location.Region);
-                return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
-                    (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
-                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake) ||
-                    (Progression.Bombos && Progression.Ether && Progression.Quake);
+                return true;
             }
-            // Don't show Mimic/Mirror cave unless TR is accessible or have all medallions
-            else if (location == Tracker.World.LightWorldDeathMountainEast.MirrorCave)
+            else
             {
-                var dungeonInfo = Tracker.WorldInfo.Dungeons.First(x => x.GetRegion(Tracker.World) == Tracker.World.TurtleRock);
-                return (dungeonInfo.Requirement == Medallion.Bombos && Progression.Bombos) ||
-                    (dungeonInfo.Requirement == Medallion.Ether && Progression.Ether) ||
-                    (dungeonInfo.Requirement == Medallion.Quake && Progression.Quake) ||
-                    (Progression.Bombos && Progression.Ether && Progression.Quake);
+                return trackerLogic(ProgressionForRegion(location.Region));
             }
-            else return true;
         }
 
         /// <summary>

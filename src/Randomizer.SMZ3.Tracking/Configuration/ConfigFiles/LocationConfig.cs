@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 1,
-                    Name = new("Flooded Cavern - under water", "West Ocean - under water", "that room before Wrecked Ship that's underwater", new("Missile (outside Wrecked Ship bottom)", 0)),
+                    Name = new("Flooded Cavern (under water)", "West Ocean (under water)", "that room before Wrecked Ship that's underwater", new("Missile (outside Wrecked Ship bottom)", 0)),
                     X = 1128,
                     Y = 244,
                 },
@@ -131,7 +131,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 15,
-                    Name = new("Mockball Room - Fail item", "that spot you get to when failing the mock ball in Green Brinstar", new("Missile (green Brinstar below super missile)", 0)),
+                    Name = new("Mockball Room (Fail item)", "that spot you get to when failing the mock ball in Green Brinstar", new("Missile (green Brinstar below super missile)", 0)),
                     X = 296,
                     Y = 212,
                 },
@@ -176,7 +176,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 23,
-                    Name = new("Pink Shaft - Chozo", "the room underneath Pink Brinstar", new("Charge Beam", 0)),
+                    Name = new("Pink Shaft (Chozo)", "the room underneath Pink Brinstar", new("Charge Beam", 0)),
                     X = 488,
                     Y = 436,
                 },
@@ -291,7 +291,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 41,
-                    Name = new("Alpha Power Bomb Room - Behind the wall", "Missile (red Brinstar spike room)", "the room behind the wall in the Chozo room in Red Brinstar"),
+                    Name = new("Alpha Power Bomb Room (Behind the wall)", "Missile (red Brinstar spike room)", "the room behind the wall in the Chozo room in Red Brinstar"),
                     X = 1032,
                     Y = 436,
                 },
@@ -326,7 +326,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 49,
-                    Name = new("Lava Room - Submerged in wall", "Cathedral", "the room in Upper Norfair with the item in the lava", new("Missile (lava room)", 0)),
+                    Name = new("Lava Room (Submerged in wall)", "Cathedral", "the room in Upper Norfair with the item in the lava", new("Missile (lava room)", 0)),
                     X = 568,
                     Y = 212,
                 },
@@ -368,14 +368,14 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 55,
-                    Name = new("Hi-Jump Lobby - Back", "the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Missile (Hi-Jump Boots)", 0)),
+                    Name = new("Hi-Jump Lobby (Back)", "the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Missile (Hi-Jump Boots)", 0)),
                     X = 312,
                     Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 56,
-                    Name = new("Hi-Jump Lobby - Entrance", "the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Energy Tank (Hi-Jump Boots)", 0)),
+                    Name = new("Hi-Jump Lobby (Entrance)", "the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Energy Tank (Hi-Jump Boots)", 0)),
                     X = 344,
                     Y = 244,
                 },
@@ -434,7 +434,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 65,
-                    Name = new("Speed Booster Hall - Ceiling", "the spot in the ceiling on the right side of Bubble Mountain", new("Missile (Speed Booster)", 0)),
+                    Name = new("Speed Booster Hall (Ceiling)", "the spot in the ceiling on the right side of Bubble Mountain", new("Missile (Speed Booster)", 0)),
                     X = 1208,
                     Y = 148,
                 },
@@ -462,14 +462,14 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 70,
-                    Name = new("Gold Torizo - Drop down", "the spot before you drop down to fight Gold Torizo", new("Missile (Gold Torizo)", 0)),
+                    Name = new("Gold Torizo (Drop down)", "the spot before you drop down to fight Gold Torizo", new("Missile (Gold Torizo)", 0)),
                     X = 632,
                     Y = 564,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 71,
-                    Name = new("Golden Torizo - Ceiling", "the spot where Gold Torizo hides before the fight", new("Super Missile (Gold Torizo)", 0)),
+                    Name = new("Golden Torizo (Ceiling)", "the spot where Gold Torizo hides before the fight", new("Super Missile (Gold Torizo)", 0)),
                     X = 664,
                     Y = 564,
                 },
@@ -533,28 +533,28 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 128,
-                    Name = new("Main Shaft - Side room", "the room behind the bombeable wall on the left side of Wrecked Ship", new("Missile (Wrecked Ship middle)", 0)),
+                    Name = new("Main Shaft (Side room)", "the room behind the bombeable wall on the left side of Wrecked Ship", new("Missile (Wrecked Ship middle)", 0)),
                     X = 408,
                     Y = 340,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 129,
-                    Name = new("Post Chozo Concert - Speed Booster Item", "Bowling Alley - Speed Booster Item", "the spot that requires the Speed Booster in Wrecked Ship", new("Reserve Tank, Wrecked Ship", 0), new("Wrecked Ship, Reserve Tank", 0)),
+                    Name = new("Post Chozo Concert (Speed Booster Item)", "Bowling Alley (Speed Booster Item)", "the spot that requires the Speed Booster in Wrecked Ship", new("Reserve Tank, Wrecked Ship", 0), new("Wrecked Ship, Reserve Tank", 0)),
                     X = 504,
                     Y = 180,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 130,
-                    Name = new("Post Chozo Concert - Breakable Chozo", "the breakable Chozo in Wrecked Ship", new("Missile (Gravity Suit)", 0)),
+                    Name = new("Post Chozo Concert (Breakable Chozo)", "the breakable Chozo in Wrecked Ship", new("Missile (Gravity Suit)", 0)),
                     X = 440,
                     Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 131,
-                    Name = new("Attic - Assembly Line", "the room with the conveyors and robots", new("Missile (Wrecked Ship top)", 0)),
+                    Name = new("Attic (Assembly Line)", "the room with the conveyors and robots", new("Missile (Wrecked Ship top)", 0)),
                     X = 696,
                     Y = 148,
                 },
@@ -582,21 +582,21 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 135,
-                    Name = new("Post Chozo Concert - Gravity Suit Chamber", "the room after the Chozo concert", new("Gravity Suit", 0)),
+                    Name = new("Post Chozo Concert (Gravity Suit Chamber)", "the room after the Chozo concert", new("Gravity Suit", 0)),
                     X = 344,
                     Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 136,
-                    Name = new("Main Street - Ceiling (Shinespark)", "Main Street Missiles", "the spot in the ceiling in Maridia that requires Shinespark", new("Missile (green Maridia shinespark)", 0)),
+                    Name = new("Main Street (Ceiling Shinespark)", "Main Street Missiles", "the spot in the ceiling in Maridia that requires Shinespark", new("Missile (green Maridia shinespark)", 0)),
                     X = 232,
                     Y = 468,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 137,
-                    Name = new("Main Street - Crab Supers", "the tiny room where you watch crabs walking into the wall", new("Super Missile (green Maridia)", 0)),
+                    Name = new("Main Street (Crab Supers)", "the tiny room where you watch crabs walking into the wall", new("Super Missile (green Maridia)", 0)),
                     X = 264,
                     Y = 436,
                 },
@@ -610,7 +610,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 139,
-                    Name = new("Mama Turtle Room - Wall item", "the spot in the wall in the turtle room", new("Missile (green Maridia tatori)", 0)),
+                    Name = new("Mama Turtle Room (Wall item)", "the spot in the wall in the turtle room", new("Missile (green Maridia tatori)", 0)),
                     X = 520,
                     Y = 500,
                 },
@@ -665,14 +665,14 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 148,
-                    Name = new("Aqueduct - Left item", new("Missile (pink Maridia)", 0)),
+                    Name = new("Aqueduct (Left item)", new("Missile (pink Maridia)", 0)),
                     X = 680,
                     Y = 372,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 149,
-                    Name = new("Aqueduct - Right item", new("Super Missile (pink Maridia)", 0)),
+                    Name = new("Aqueduct (Right item)", new("Super Missile (pink Maridia)", 0)),
                     X = 712,
                     Y = 372,
                 },
@@ -749,37 +749,37 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 262,
-                    Name = new("Paradox Cave Upper - Left"),
+                    Name = new("Paradox Cave Upper (Left)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 263,
-                    Name = new("Paradox Cave Upper - Right"),
+                    Name = new("Paradox Cave Upper (Right)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 264,
-                    Name = new("Paradox Cave Lower - Far Left"),
+                    Name = new("Paradox Cave Lower (Far Left)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 265,
-                    Name = new("Paradox Cave Lower - Left"),
+                    Name = new("Paradox Cave Lower (Left)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 266,
-                    Name = new("Paradox Cave Lower - Middle"),
+                    Name = new("Paradox Cave Lower (Middle)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 267,
-                    Name = new("Paradox Cave Lower - Right"),
+                    Name = new("Paradox Cave Lower (Right)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 268,
-                    Name = new("Paradox Cave Lower - Far Right"),
+                    Name = new("Paradox Cave Lower (Far Right)"),
                 },
                 new LocationInfo()
                 {
@@ -1035,32 +1035,32 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 321,
-                    Name = new("Hookshot Cave - Top Right"),
+                    Name = new("Hookshot Cave (Top Right)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 322,
-                    Name = new("Hookshot Cave - Top Left"),
+                    Name = new("Hookshot Cave (Top Left)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 323,
-                    Name = new("Hookshot Cave - Bottom Left"),
+                    Name = new("Hookshot Cave (Bottom Left)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 324,
-                    Name = new("Hookshot Cave - Bottom Right"),
+                    Name = new("Hookshot Cave (Bottom Right)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 325,
-                    Name = new("Superbunny Cave - Top"),
+                    Name = new("Superbunny Cave (Top)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 326,
-                    Name = new("Superbunny Cave - Bottom"),
+                    Name = new("Superbunny Cave (Bottom)"),
                 },
                 new LocationInfo()
                 {
@@ -1178,12 +1178,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 345,
-                    Name = new("Mire Shed - Left"),
+                    Name = new("Mire Shed (Left)"),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 346,
-                    Name = new("Mire Shed - Right"),
+                    Name = new("Mire Shed (Right)"),
                 },
                 new LocationInfo()
                 {
@@ -1193,17 +1193,17 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 348,
-                    Name = new("Secret Room - Left", "Back of Escape - Left", new("Sewers Secret Room - Left", 0)),
+                    Name = new("Secret Room (Left)", "Back of Escape (Left)", new("Sewers Secret Room (Left)", 0)),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 349,
-                    Name = new("Secret Room - Middle", "Back of Escape - Middle", new("Sewers Secret Room - Middle", 0)),
+                    Name = new("Secret Room (Middle)", "Back of Escape (Middle)", new("Sewers Secret Room (Middle)", 0)),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 350,
-                    Name = new("Secret Room - Right", "Back of Escape - Right", new("Sewers Secret Room - Right", 0)),
+                    Name = new("Secret Room (Right)", "Back of Escape (Right)", new("Sewers Secret Room (Right)", 0)),
                 },
                 new LocationInfo()
                 {
@@ -1243,7 +1243,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 358,
-                    Name = new("Castle Tower - Dark Maze"),
+                    Name = new("Castle Tower (Dark Maze)"),
                 },
                 new LocationInfo()
                 {
@@ -1356,12 +1356,12 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 380,
-                    Name = new("The Arena - Bridge", new("Palace of Darkness The Arena - Bridge", 0)),
+                    Name = new("The Arena (Bridge)", new("Palace of Darkness The Arena (Bridge)", 0)),
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 381,
-                    Name = new("The Arena - Ledge", new("Palace of Darkness The Arena - Ledge", 0)),
+                    Name = new("The Arena (Ledge)", new("Palace of Darkness The Arena (Ledge)", 0)),
                 },
                 new LocationInfo()
                 {

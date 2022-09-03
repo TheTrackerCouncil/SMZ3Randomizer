@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
         }
 
         [MergeKey]
-        public string Key => Phrases[0];
+        public string Key => Phrases[0].ToLower();
 
         /// <summary>
         /// Gets a collection of phrases that should be recognized.

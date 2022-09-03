@@ -142,8 +142,6 @@ namespace Randomizer.App.ViewModels
             {
                 var oldConfig = Config.FromConfigString(SeedOptions.ConfigString);
 
-                var keysanity = SeedOptions.KeysanityMode;
-                var itemPlacement = SeedOptions.ItemPlacementRule;
                 var race = SeedOptions.Race;
                 var disableSpoilerLog = SeedOptions.DisableSpoilerLog;
                 var disableTrackerHints = SeedOptions.DisableTrackerHints;
@@ -153,8 +151,6 @@ namespace Randomizer.App.ViewModels
 
                 if (SeedOptions.CopySeedAndRaceSettings)
                 {
-                    keysanity = oldConfig.KeysanityMode;
-                    itemPlacement = oldConfig.ItemPlacementRule;
                     race = oldConfig.Race;
                     disableSpoilerLog = oldConfig.DisableSpoilerLog;
                     disableTrackerHints = oldConfig.DisableTrackerHints;
@@ -163,12 +159,11 @@ namespace Randomizer.App.ViewModels
                     seed = oldConfig.Seed;
                 }
 
-
                 return new Config()
                 {
                     GameMode = GameMode.Normal,
-                    KeysanityMode = keysanity,
-                    ItemPlacementRule = itemPlacement,
+                    KeysanityMode = oldConfig.KeysanityMode,
+                    ItemPlacementRule = oldConfig.ItemPlacementRule,
                     Race = race,
                     DisableSpoilerLog = disableSpoilerLog,
                     DisableTrackerHints = disableTrackerHints,
