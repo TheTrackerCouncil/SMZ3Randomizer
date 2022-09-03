@@ -193,9 +193,14 @@ namespace Randomizer.App.ViewModels
                     {
                         image = "boss.png";
                     }
-                    else if (Dungeon != null && !Dungeon.Cleared && region.CanComplete(Syncer.ProgressionForRegion(Region)))
+                    else if (Dungeon != null && !Dungeon.Cleared)
                     {
-                        image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
+                        var regionLocations = (IHasLocations)Region;
+                        if (region.CanComplete(Syncer.Tracker.GetProgression(false))
+                            || regionLocations.Locations.All(x => x.IsAvailable(Syncer.ProgressionForRegion(Region))))
+                        {
+                            image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
+                        }
                     }
                 }
                 else if (Type == MapLocationType.Item)
