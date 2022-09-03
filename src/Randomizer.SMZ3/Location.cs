@@ -228,11 +228,12 @@ namespace Randomizer.SMZ3
         /// </summary>
         /// <param name="items">The available items</param>
         /// <returns>The LocationStatus enum of the location</returns>
-        public LocationStatus GetStatus(Progression items)
+        public LocationStatus GetStatus(Progression items, Dictionary<int, Requirement> trackerLogic)
         {
+            var logic = trackerLogic.ContainsKey(Id) ? trackerLogic[Id] : (items) => true;
             if (Cleared) return LocationStatus.Cleared;
-            else if (IsAvailable(items)) return LocationStatus.Available;
-            else if (IsRelevant(items)) return LocationStatus.Relevant;
+            else if (IsAvailable(items) && logic(items)) return LocationStatus.Available;
+            else if (IsRelevant(items) && logic(items)) return LocationStatus.Relevant;
             else return LocationStatus.OutOfLogic;
         }
 

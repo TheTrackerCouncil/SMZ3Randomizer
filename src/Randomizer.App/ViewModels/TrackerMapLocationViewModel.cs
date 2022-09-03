@@ -71,7 +71,7 @@ namespace Randomizer.App.ViewModels
                 if (Syncer.SpecialLocationLogic(Locations.First()))
                 {
                     var progression = Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region) ? syncer.Progression : syncer.ProgressionWithKeys;
-                    var statuses = Locations.Select(x => x.GetStatus(progression));
+                    var statuses = Locations.Select(x => x.GetStatus(progression, Syncer.TrackerLogic.TrackerLocationLogic));
 
                     ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
                     RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
