@@ -221,7 +221,7 @@ namespace Randomizer.SMZ3
         /// <param name="items">The available items.</param>
         /// <see langword="true"/> if the location is available with <paramref
         /// name="items"/>; otherwise, <see langword="false"/>.
-        public bool IsRevelant(Progression items) => Region.CanEnter(items, false) && _relevanceRequirement(items);
+        public bool IsRelevant(Progression items) => Region.CanEnter(items, false) && _relevanceRequirement(items);
 
         /// <summary>
         /// Returns the status of a location based on the given items
@@ -232,7 +232,7 @@ namespace Randomizer.SMZ3
         {
             if (Cleared) return LocationStatus.Cleared;
             else if (IsAvailable(items)) return LocationStatus.Available;
-            else if (IsRevelant(items)) return LocationStatus.Relevant;
+            else if (IsRelevant(items)) return LocationStatus.Relevant;
             else return LocationStatus.OutOfLogic;
         }
 
