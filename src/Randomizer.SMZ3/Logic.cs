@@ -147,7 +147,7 @@ namespace Randomizer.SMZ3
         {
             if (World.Config.LogicConfig.LeftSandPitRequiresSpringBall)
             {
-                return items.SpringBall && items.HiJump;
+                return items.SpringBall;
             }
 
             return CanWallJump(WallJumpDifficulty.Medium)

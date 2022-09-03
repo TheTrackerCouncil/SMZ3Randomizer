@@ -15,7 +15,7 @@ namespace Randomizer.Shared
         public bool PreventFivePowerBombSeed { get; set; }
 
         [DisplayName("Left Sand Pit Needs Spring Ball")]
-        [Description("You're expected to have the spring ball and hi-jump boots to navigate the left sand pit in Maridia.")]
+        [Description("You're expected to have the spring ball to navigate the left sand pit in Maridia.")]
         [Category("Logic")]
         public bool LeftSandPitRequiresSpringBall { get; set; }
 
