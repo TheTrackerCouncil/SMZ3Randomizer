@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             _isConnected = false;
             _isEnabled = false;
-            if (_tcpListener != null && _socket != null && _socket.Connected)
+            if (_tcpListener != null)
             {
                 _tcpListener.Stop();
             }
