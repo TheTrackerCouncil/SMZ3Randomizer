@@ -178,7 +178,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 }
                 catch (SocketException se)
                 {
-                    _logger.LogError(se, "Error in accepting socket");
+                    if (_isEnabled)
+                    {
+                        _logger.LogError(se, "Error in accepting socket");
+                    }
                 }
             }
         }
