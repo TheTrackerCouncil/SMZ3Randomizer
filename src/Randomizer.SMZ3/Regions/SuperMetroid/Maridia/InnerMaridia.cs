@@ -10,7 +10,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Missile (yellow Maridia false wall)",
                 alsoKnownAs: new[] { "Pseudo Plasma Spark Room" },
                 vanillaItem: ItemType.Missile,
-                access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && CanPassPipeCrossroads(items),
+                access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, true),
+                relevanceRequirement: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, false),
                 memoryAddress: 0x11,
                 memoryFlag: 0x40);
             PlasmaBeamRoom = new Location(this, 143, 0x8FC559, LocationType.Chozo,
@@ -125,15 +126,14 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
 
         public override bool CanEnter(Progression items, bool requireRewards)
             => items.Gravity && (
-                    (World.UpperNorfairWest.CanEnter(items, true) && items.Super && Logic.CanUsePowerBombs(items) &&
-                        (Logic.CanFly(items) || items.SpeedBooster || items.Grapple)) ||
+                    (World.UpperNorfairWest.CanEnter(items, true) && items.Super && Logic.CanUsePowerBombs(items) && CanPassMountDeath(items, Logic)) ||
                     Logic.CanAccessMaridiaPortal(items, requireRewards));
 
         public bool CanComplete(Progression items)
             => CanEnter(items, true) && CanDefeatDraygon(items, true);
 
         private static bool CanReachAqueduct(Progression items, ILogic logic, bool requireRewards)
-            => (items.CardMaridiaL1 && (logic.CanFly(items) || items.SpeedBooster || items.Grapple))
+            => (items.CardMaridiaL1 && CanPassMountDeath(items, logic))
                          || (items.CardMaridiaL2 && logic.CanAccessMaridiaPortal(items, requireRewards));
 
         private bool CanAccessPreciousRoom(Progression items, bool requireRewards)
@@ -165,6 +165,12 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
         private bool CanReachRightSandPit(Progression items, bool requireReweards)
             => CanReachAqueduct(items, Logic, requireReweards) && items.Super && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump || items.SpaceJump);
 
+        // Large room on the west side of Maridia where you are intended to grapple over
+        private static bool CanPassMountDeath(Progression items, ILogic logic)
+        {
+            return logic.CanFly(items) || items.SpeedBooster || items.Grapple || (items.HiJump && logic.CanWallJump(WallJumpDifficulty.Hard));
+        }
+
         public class WateringHoleRoom : Room
         {
             public WateringHoleRoom(InnerMaridia region)
@@ -174,7 +180,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     name: "Left",
                     alsoKnownAs: new[] { "Super Missile (yellow Maridia)", "Watering Hole - Left", },
                     vanillaItem: ItemType.Super,
-                    access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items),
+                    access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, true),
+                    relevanceRequirement: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, false),
                     memoryAddress: 0x11,
                     memoryFlag: 0x10);
 
@@ -182,7 +189,8 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                     name: "Right",
                     alsoKnownAs: new[] { "Missile (yellow Maridia super missile)", "Watering Hole - right" },
                     vanillaItem: ItemType.Missile,
-                    access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items),
+                    access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, true),
+                    relevanceRequirement: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, false),
                     memoryAddress: 0x11,
                     memoryFlag: 0x20);
             }
