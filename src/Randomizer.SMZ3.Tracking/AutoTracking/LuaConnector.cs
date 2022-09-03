@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -115,7 +115,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             _isConnected = false;
             _isEnabled = false;
-            if (_tcpListener != null)
+            if (_tcpListener != null && _socket != null && _socket.Connected)
             {
                 _tcpListener.Stop();
             }
