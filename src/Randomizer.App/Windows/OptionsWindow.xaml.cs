@@ -219,9 +219,16 @@ namespace Randomizer.App
             }
         }
 
-        private void TwitchLogoutButton_Click(object sender, RoutedEventArgs e)
+        private async void TwitchLogoutButton_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(Options.TwitchOAuthToken))
+                return;
 
+            var revoked = await _chatAuthenticationService.RevokeTokenAsync(Options.TwitchOAuthToken, default);
+            Options.TwitchOAuthToken = "";
+            TwitchLoginFeedback.Text = revoked ? "Logged out." : "Something went wrong.";
+            TwitchLoginButton.Visibility = Visibility.Visible;
+            TwitchLogoutButton.Visibility = Visibility.Collapsed;
         }
     }
 }

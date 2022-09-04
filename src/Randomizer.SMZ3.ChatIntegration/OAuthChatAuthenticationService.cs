@@ -73,5 +73,6 @@ namespace Randomizer.SMZ3.ChatIntegration
 
         public abstract Task<AuthenticatedUserData?> GetAuthenticatedUserDataAsync(string accessToken, CancellationToken cancellationToken);
         public abstract Task<bool> ValidateTokenAsync(string accessToken, CancellationToken cancellationToken);
+        public abstract Task<bool> RevokeTokenAsync(string accessToken, CancellationToken cancellationToken);
     }
 }

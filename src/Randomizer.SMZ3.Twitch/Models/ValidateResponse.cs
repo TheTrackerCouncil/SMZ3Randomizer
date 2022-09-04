@@ -22,14 +22,5 @@ namespace Randomizer.SMZ3.Twitch.Models
 
         [JsonPropertyName("expires_in")]
         public int? ExpiresIn { get; set; }
-
-        [JsonPropertyName("status")]
-        public int? Status { get; set; }
-
-        [JsonPropertyName("messages")]
-        public string? Message { get; set; }
-
-        [JsonIgnore]
-        public new bool IsSuccessful { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -16,6 +17,7 @@ namespace Randomizer.SMZ3.Twitch
     public class TwitchAuthenticationService : OAuthChatAuthenticationService
     {
         private const string ValidateTokenEndpoint = "https://id.twitch.tv/oauth2/validate";
+        private const string RevokeTokenEndpoint = "https://id.twitch.tv/oauth2/revoke";
 
         private static readonly HttpClient s_httpClient = new();
 
@@ -62,11 +64,34 @@ namespace Randomizer.SMZ3.Twitch
             return false;
         }
 
-        public async Task<bool> RevokeTokenAsync(string accessToken, CancellationToken cancellationToken)
+        public override async Task<bool> RevokeTokenAsync(string accessToken, CancellationToken cancellationToken)
         {
             try
             {
-                throw new NotImplementedException();
+                var request = new HttpRequestMessage(HttpMethod.Post, new Uri(RevokeTokenEndpoint));
+                request.Content = new FormUrlEncodedContent(new[]{
+                    new KeyValuePair<string?, string?>("client_id", _twitchChatAPI.GetClientId()),
+                    new KeyValuePair<string?, string?>("token", accessToken)
+                });
+
+                var response = await s_httpClient.SendAsync(request, cancellationToken);
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Revoked Twitch access token successfully.");
+                    return true;
+                }
+
+                using var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                var apiResponse = await JsonSerializer.DeserializeAsync<TwitchAPIResponse>(responseStream, cancellationToken: cancellationToken);
+                if (apiResponse == null)
+                {
+                    _logger.LogError("Unable to revoke Twitch token, and Twitch returned an invalid response.");
+                }
+                else
+                {
+                    _logger.LogError("Unable to revoke Twitch token: Twitch returned {Status} with message '{Message}'",
+                        apiResponse.Status, apiResponse.Message);
+                }
             }
             catch (Exception ex)
             {
