@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
+using Randomizer.SMZ3.Twitch.Models;
 
 namespace Randomizer.SMZ3.Twitch
 {

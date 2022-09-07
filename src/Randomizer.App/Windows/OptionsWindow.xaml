@@ -9,6 +9,7 @@
         ResizeMode="NoResize"
         mc:Ignorable="d"
         Title="Options - SMZ3 Cas' Randomizer"
+        Loaded="Self_Loaded"
         Height="480"
         Width="520">
   <Window.DataContext>
@@ -204,7 +205,8 @@
               </controls:LabeledControl>
 
               <StackPanel Orientation="Horizontal">
-                <CheckBox Content="Auto Tracker Updates Map Automatically" IsChecked="{Binding AutoTrackerChangeMap}" />
+                <CheckBox Content="Auto Tracker Updates Map Automatically"
+                          IsChecked="{Binding AutoTrackerChangeMap}" />
               </StackPanel>
 
               <StackPanel Orientation="Horizontal">
@@ -229,12 +231,6 @@
                          IsEnabled="{Binding IsLoggingIn, ElementName=Self}" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Twitch OAuth token:"
-                                       ToolTip="The OAuth access token used to access Twitch. Please keep this a secret.">
-                <TextBox Text="{Binding TwitchOAuthToken, Mode=TwoWay}"
-                         IsEnabled="{Binding IsLoggingIn, ElementName=Self}" />
-              </controls:LabeledControl>
-
               <controls:LabeledControl Text="Twitch channel:"
                                        ToolTip="The channel to join and monitor for messages. This should be your own channel, even if you use a bot account above.">
                 <TextBox Text="{Binding TwitchChannel, Mode=TwoWay}"
@@ -248,12 +244,25 @@
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="">
-                <Button x:Name="TwitchLoginButton"
-                        Click="TwitchLoginButton_Click"
-                        Content="Log in with Twitch"
-                        IsEnabled="{Binding IsLoggingIn, ElementName=Self}"
-                        Margin="0"
-                        HorizontalAlignment="Left" />
+                <StackPanel Orientation="Horizontal">
+                  <Button x:Name="TwitchLoginButton"
+                          Click="TwitchLoginButton_Click"
+                          Content="Log in with Twitch"
+                          IsEnabled="{Binding IsLoggingIn, ElementName=Self}"
+                          Margin="0"
+                          HorizontalAlignment="Left" />
+                  <Button x:Name="TwitchLogoutButton"
+                          Click="TwitchLogoutButton_Click"
+                          Content="Log out"
+                          IsEnabled="{Binding IsLoggingIn, ElementName=Self}"
+                          Visibility="Collapsed"
+                          Margin="0"
+                          HorizontalAlignment="Left" />
+                  <TextBlock x:Name="TwitchLoginFeedback"
+                             VerticalAlignment="Center"
+                             Margin="5"
+                             FontWeight="SemiBold"></TextBlock>
+                </StackPanel>
               </controls:LabeledControl>
 
               <CheckBox x:Name="EnableChatGreetingCheckBox"
@@ -286,45 +295,64 @@
             </Expander.Header>
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
-              <TextBlock TextWrapping="Wrap" Margin="0,0,0,5">All selected profiles in the right column will be combined in the order from top to bottom. In case of overrides, such as Tracker item images, the bottom most will be used.</TextBlock>
+              <TextBlock TextWrapping="Wrap"
+                         Margin="0,0,0,5">All selected profiles in the right column will be combined in the order from top to bottom. In case of overrides, such as Tracker item images, the bottom most will be used.</TextBlock>
               <Grid>
                 <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*"/>
-                  <ColumnDefinition Width="auto"/>
-                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="auto" />
+                  <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <DockPanel Grid.Column="0">
                   <TextBlock DockPanel.Dock="Top">Disabled</TextBlock>
-                  <ListBox ItemsSource="{Binding DisabledProfiles, ElementName=Self}" Name="DisabledProfilesListBox">
+                  <ListBox ItemsSource="{Binding DisabledProfiles, ElementName=Self}"
+                           Name="DisabledProfilesListBox">
                   </ListBox>
                 </DockPanel>
                 <DockPanel Grid.Column="2">
                   <TextBlock DockPanel.Dock="Top">Enabled</TextBlock>
-                  <ListBox ItemsSource="{Binding EnabledProfiles, ElementName=Self}" Name="EnabledProfilesListBox">
+                  <ListBox ItemsSource="{Binding EnabledProfiles, ElementName=Self}"
+                           Name="EnabledProfilesListBox">
 
                   </ListBox>
                 </DockPanel>
                 <StackPanel Grid.Column="1">
-                  <Button Margin="7,20,7,0" MinWidth="25" Name="EnableProfile" Click="EnableProfile_Click">
+                  <Button Margin="7,20,7,0"
+                          MinWidth="25"
+                          Name="EnableProfile"
+                          Click="EnableProfile_Click">
                     &#x3e;
                   </Button>
-                  <Button Margin="7,5,7,0" MinWidth="25" Name="DisableProfile" Click="DisableProfile_Click">
+                  <Button Margin="7,5,7,0"
+                          MinWidth="25"
+                          Name="DisableProfile"
+                          Click="DisableProfile_Click">
                     &#x3c;
                   </Button>
-                  <Button Margin="7,5,7,0" MinWidth="25" Name="MoveProfileUp" Click="MoveProfileUp_Click">
+                  <Button Margin="7,5,7,0"
+                          MinWidth="25"
+                          Name="MoveProfileUp"
+                          Click="MoveProfileUp_Click">
                     &#8743;
                   </Button>
-                  <Button Margin="7,5,7,5" MinWidth="25" Name="MoveProfileDown" Click="MoveProfileDown_Click">
+                  <Button Margin="7,5,7,5"
+                          MinWidth="25"
+                          Name="MoveProfileDown"
+                          Click="MoveProfileDown_Click">
                     &#8744;
                   </Button>
                 </StackPanel>
               </Grid>
-              <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Right">
-                <Button Name="RefreshProfilesButton" Click="RefreshProfilesButton_Click">
+              <StackPanel Orientation="Horizontal"
+                          Margin="0,10,0,0"
+                          HorizontalAlignment="Right">
+                <Button Name="RefreshProfilesButton"
+                        Click="RefreshProfilesButton_Click">
                   <TextBlock>Refresh Profiles</TextBlock>
                 </Button>
-                <Button Name="OpenProfilesFolderButton" Click="OpenProfilesFolderButton_Click">
+                <Button Name="OpenProfilesFolderButton"
+                        Click="OpenProfilesFolderButton_Click">
                   <TextBlock>Open Profiles Folder</TextBlock>
                 </Button>
               </StackPanel>
