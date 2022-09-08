@@ -31,7 +31,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
         private readonly Dictionary<int, int> _locationHintsGiven = new();
         private readonly Playthrough? _playthrough;
-        private readonly IItemService _itemService;
         private readonly IRandomizerConfigService _randomizerConfigService;
         private Config _config => _randomizerConfigService.Config;
 
@@ -276,7 +275,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (Tracker.HintsEnabled || Tracker.SpoilersEnabled)
                 {
-                    var itemName = _itemService.GetName(location.Item.Type);
+                    var itemName = ItemService.GetName(location.Item.Type);
                     Tracker.Say(x => x.Hints.LocationAlreadyClearedSpoiler, locationName, itemName);
                     return;
                 }

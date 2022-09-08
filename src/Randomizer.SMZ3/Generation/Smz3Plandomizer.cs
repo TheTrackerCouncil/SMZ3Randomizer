@@ -45,10 +45,20 @@ namespace Randomizer.SMZ3.Generation
                 playthrough = new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>());
             }
 
+            var plandoName = config.PlandoConfig?.FileName ?? "unknown";
+            if (plandoName.StartsWith("Spoiler_Plando_"))
+            {
+                plandoName = plandoName.Replace("Spoiler_Plando_", "");
+                if (plandoName.Contains("_") && int.TryParse(plandoName.Substring(plandoName.IndexOf("_")+1), out _))
+                {
+                    plandoName = plandoName.Substring(0, plandoName.IndexOf("_"));
+                }
+            }
+
             var seedData = new SeedData
             {
                 Guid = Guid.NewGuid().ToString("N"),
-                Seed = $"Plando: {config.PlandoConfig?.FileName ?? "unknown"}",
+                Seed = $"Plando: {plandoName}",
                 Game = "SMZ3 Cas’ Plando",
                 Mode = config.GameMode.ToLowerString(),
                 Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,

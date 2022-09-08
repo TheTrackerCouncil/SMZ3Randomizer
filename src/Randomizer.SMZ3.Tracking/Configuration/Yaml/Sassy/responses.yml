@@ -139,7 +139,11 @@ TrackedMultipleItems:
 - Text: Added {2} from {1}.
 TrackedVanillaItem:
 - Text: Is this even randomized?
-  Weight: 0.25
+  Weight: 0.15
+- Text: I prefer chocolate over vanilla.
+  Weight: 0.05
+- Text: How unoriginal.
+  Weight: 0.05
 ClearedMultipleItems:
 - Text: Cleared {0} items in {1}.
 TrackedNothing:

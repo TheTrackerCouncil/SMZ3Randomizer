@@ -92,14 +92,30 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Mute", GetMuteRule(), (tracker, result) =>
             {
-                tracker.Say(x => x.Muted);
-                _communicator.Disable();
+                if (_communicator.IsEnabled)
+                {
+                    tracker.Say(x => x.Muted);
+                    _communicator.Disable();
+                    tracker.AddUndo(() =>
+                    {
+                        _communicator.Enable();
+                        Tracker.Say(x => x.ActionUndone);
+                    });
+                }
+                
             });
 
             AddCommand("Unmute", GetUnmuteRule(), (tracker, result) =>
             {
-                _communicator.Enable();
-                tracker.Say(x => x.Unmuted);
+                if (!communicator.IsEnabled)
+                {
+                    _communicator.Enable();
+                    tracker.Say(x => x.Unmuted);
+                    tracker.AddUndo(() =>
+                    {
+                        _communicator.Disable();
+                    });
+                }
             });
 
             AddCommand("Beat game", GetBeatGameRule(), (tracker, result) =>

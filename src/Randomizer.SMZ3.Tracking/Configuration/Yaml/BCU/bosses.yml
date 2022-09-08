@@ -15,5 +15,7 @@
 - Boss: Ridley
   WhenDefeated:
   - Text: It's a living
-    Weight: 0.25
+    Weight: 0.2
+  - Text: It's a living. Or it was. Before your killed him.
+    Weight: 0.1
 

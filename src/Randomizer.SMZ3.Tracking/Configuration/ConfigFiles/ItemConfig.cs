@@ -653,7 +653,7 @@ namespace Randomizer.SMZ3.Tracking.Configuration.ConfigFiles
                 new ItemData()
                 {
                     Item = "Sewer Key",
-                    Name = new("Sewer Key"),
+                    Name = new("Sewer Key", "Hyrule Castle Key"),
                     InternalItemType = ItemType.KeyHC,
                     Multiple = true,
                     Hints = new("It opens doors."),
