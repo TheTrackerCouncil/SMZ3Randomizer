@@ -15,6 +15,7 @@ using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking.Services;
@@ -35,13 +36,15 @@ namespace Randomizer.App
         private readonly RomGenerator _romGenerator;
         private TrackerWindow _trackerWindow;
         private readonly IHistoryService _historyService;
+        private readonly IChatAuthenticationService _chatAuthenticationService;
 
         public RomListWindow(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListWindow> logger,
             RandomizerContext dbContext,
             RomGenerator romGenerator,
-            IHistoryService historyService)
+            IHistoryService historyService,
+            IChatAuthenticationService chatAuthenticationService)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -51,7 +54,7 @@ namespace Randomizer.App
             CheckSpeechRecognition();
             Options = optionsFactory.Create();
             _historyService = historyService;
-
+            _chatAuthenticationService = chatAuthenticationService;
             Model = new GeneratedRomsViewModel();
             DataContext = Model;
             UpdateRomList();
@@ -183,7 +186,7 @@ namespace Randomizer.App
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (!Options.GeneralOptions.Validate())
             {
@@ -192,6 +195,20 @@ namespace Randomizer.App
                     "can start playing randomized SMZ3 games. Please do so now.",
                     "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Information);
                 OptionsMenuItem_Click(this, new RoutedEventArgs());
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(Options.GeneralOptions.TwitchOAuthToken))
+            {
+                var isTokenValid = await _chatAuthenticationService.ValidateTokenAsync(Options.GeneralOptions.TwitchOAuthToken, default);
+                if (!isTokenValid)
+                {
+                    Options.GeneralOptions.TwitchOAuthToken = string.Empty;
+                    MessageBox.Show(this, "Your Twitch login has expired. Please" +
+                        " go to Options and log in with Twitch again to re-enable" +
+                        " chat integration features.", "SMZ3 Cas’ Randomizer",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
