@@ -63,6 +63,8 @@
   Name:
   - Text: Key to Shaktool's front door
     Weight: 0.1
+  - Text: Slowbeef's worst enemy
+    Weight: 0.1
 - Item: Morph Bombs
   Name:
   - Text: That thing you forget you have
@@ -75,3 +77,12 @@
     "2":
     - Text: You now have the bare mininum to kill Crocomire. Don't miss.
       Weight: 0.03
+- Item: Fire Rod
+  Name:
+  - Text: Spicy Rod
+  WhenTracked:
+    "1":
+    - Text: Toggling fire rod on
+    - Text: Toggling spicy rod on
+    - Text: Burn to the ground, Burn to the ground, Burn to the ground, <prosody rate='medium' pitch='x-high'>Burn! Woo!</prosody>
+      Weight: .2

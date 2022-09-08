@@ -58,6 +58,8 @@ namespace Randomizer.App
             Model = new GeneratedRomsViewModel();
             DataContext = Model;
             UpdateRomList();
+
+            App.RestoreWindowPositionAndSize(this);
         }
 
         public GeneratedRomsViewModel Model { get; }
@@ -225,6 +227,7 @@ namespace Randomizer.App
             try
             {
                 Options.Save(OptionsFactory.GetFilePath());
+                App.SaveWindowPositionAndSize(this);
             }
             catch
             {

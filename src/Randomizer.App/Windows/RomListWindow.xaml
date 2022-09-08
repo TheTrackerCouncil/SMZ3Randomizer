@@ -13,7 +13,6 @@
         Width="{Binding WindowWidth, Mode=TwoWay}"
         Height="{Binding WindowHeight, Mode=TwoWay}"
         MinWidth="400"
-        MaxWidth="400"
         MinHeight="240"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">

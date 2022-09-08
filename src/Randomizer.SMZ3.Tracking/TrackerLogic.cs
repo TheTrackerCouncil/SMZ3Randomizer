@@ -26,7 +26,7 @@ namespace Randomizer.SMZ3.Tracking
             TrackerLocationLogic = new()
             {
                 // Mimic Cave
-                { 265, (items) => CheckDungeonMedallion(items, _tracker.World.TurtleRock) },
+                { 269, (items) => CheckDungeonMedallion(items, _tracker.World.TurtleRock) },
                 // Sahasrahla
                 { 300, (items) => CountReward(items, RewardType.PendantGreen) == 1 },
                 // Pyramid Fairy

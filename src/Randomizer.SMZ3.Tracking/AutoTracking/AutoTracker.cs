@@ -478,8 +478,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
                 }
 
-                // Switched from having the flute to having activated it
-                if (action.CurrentData?.ReadUInt8(0x10C) == 1 && action.PreviousData?.ReadUInt8(0x10C) == 2)
+                // Activated flute
+                if (action.CurrentData?.CheckBinary8Bit(0x10C, 0x01) == true && action.PreviousData?.CheckBinary8Bit(0x10C, 0x01) != true)
                 {
                     var duckItem = _itemService.FindOrDefault("Duck");
                     if (duckItem != null)

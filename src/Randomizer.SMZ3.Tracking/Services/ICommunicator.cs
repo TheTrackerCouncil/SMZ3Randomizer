@@ -23,6 +23,12 @@
         void SayWait(string text);
 
         /// <summary>
+        /// If the communicator is currently enabled
+        /// </summary>
+        /// <returns>True if enabled, false otherwise</returns>
+        bool IsEnabled { get; }
+
+        /// <summary>
         /// When overriden in an implementing class, it will enable communicating
         /// </summary>
         void Enable();
