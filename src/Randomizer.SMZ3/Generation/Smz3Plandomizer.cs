@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 using Microsoft.Extensions.Logging;
@@ -46,13 +47,11 @@ namespace Randomizer.SMZ3.Generation
             }
 
             var plandoName = config.PlandoConfig?.FileName ?? "unknown";
-            if (plandoName.StartsWith("Spoiler_Plando_"))
+
+            // If matching base plando file name, just use the date for the seed name
+            if (Regex.IsMatch(plandoName, "^Spoiler_Plando_(.*)_[0-9]+$"))
             {
-                plandoName = plandoName.Replace("Spoiler_Plando_", "");
-                if (plandoName.Contains("_") && int.TryParse(plandoName.Substring(plandoName.IndexOf("_")+1), out _))
-                {
-                    plandoName = plandoName.Substring(0, plandoName.IndexOf("_"));
-                }
+                plandoName = Regex.Replace(plandoName, "(^Spoiler_Plando_|_[0-9]+$)", "");
             }
 
             var seedData = new SeedData
