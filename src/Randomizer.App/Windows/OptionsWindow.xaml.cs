@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3.ChatIntegration;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 
 namespace Randomizer.App
 {

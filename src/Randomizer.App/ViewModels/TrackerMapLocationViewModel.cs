@@ -10,8 +10,8 @@ using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
-using static Randomizer.SMZ3.Tracking.Configuration.ConfigTypes.TrackerMapLocation;
+using Randomizer.Data.Configuration.ConfigTypes;
+using static Randomizer.Data.Configuration.ConfigTypes.TrackerMapLocation;
 
 namespace Randomizer.App.ViewModels
 {

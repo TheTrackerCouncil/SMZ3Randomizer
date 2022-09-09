@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Randomizer.Data\Randomizer.Data.csproj" />
+    <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
     <ProjectReference Include="..\Randomizer.Shared\Randomizer.Shared.csproj" />
   </ItemGroup>
 

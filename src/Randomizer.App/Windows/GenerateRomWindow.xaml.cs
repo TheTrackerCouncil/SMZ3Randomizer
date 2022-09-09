@@ -25,8 +25,9 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Configuration.ConfigFiles;
 
 namespace Randomizer.App
 {
@@ -38,13 +39,13 @@ namespace Randomizer.App
         private readonly Task _loadSpritesTask;
         private readonly IServiceProvider _serviceProvider;
         private readonly RomGenerator _romGenerator;
-        private readonly SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig _locations;
+        private readonly LocationConfig _locations;
         private RandomizerOptions _options;
         private IItemService _itemService;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
-            SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig locations,
+            LocationConfig locations,
             IItemService itemService)
         {
             _serviceProvider = serviceProvider;

@@ -4,8 +4,9 @@ using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -70,7 +71,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var rewardNames = new Choices();
             foreach (var reward in Enum.GetValues<RewardItem>())
             {
-                foreach (var name in ItemService?.GetOrDefault(reward)?.Name ?? new Configuration.ConfigTypes.SchrodingersString())
+                foreach (var name in ItemService?.GetOrDefault(reward)?.Name ?? new SchrodingersString())
                     rewardNames.Add(new SemanticResultValue(name, (int)reward));
             }
 
