@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3.Generation
 {

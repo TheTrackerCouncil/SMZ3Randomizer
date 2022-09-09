@@ -7,7 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using Accessibility;
-
+using Randomizer.Data.WorldData;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 

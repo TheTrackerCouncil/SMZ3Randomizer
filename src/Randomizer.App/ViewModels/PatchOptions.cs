@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
+using Randomizer.Data;
 using Randomizer.SMZ3;
 
 namespace Randomizer.App.ViewModels

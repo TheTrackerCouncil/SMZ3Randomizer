@@ -4,12 +4,13 @@ using System.Linq;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Regions;
-using Randomizer.SMZ3.Regions.Zelda.DarkWorld;
-using Randomizer.SMZ3.Regions.Zelda.DarkWorld.DeathMountain;
-using Randomizer.SMZ3.Regions.Zelda.LightWorld;
-using Randomizer.SMZ3.Regions.Zelda.LightWorld.DeathMountain;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld;
+using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain;
+using Randomizer.Data.WorldData.Regions.Zelda.LightWorld;
+using Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {

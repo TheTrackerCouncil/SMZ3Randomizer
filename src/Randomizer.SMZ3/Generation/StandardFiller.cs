@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data;
+using Randomizer.Data.Logic;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -326,7 +328,7 @@ namespace Randomizer.SMZ3.Generation
         {
             var locations = worlds
                 .SelectMany(x => x.Locations)
-                .Where(x => x.Region is Regions.Zelda.GanonsTower)
+                .Where(x => x.Region is Data.WorldData.Regions.Zelda.GanonsTower)
                 .Empty().Shuffle(Random);
             FastFill(itemPool, locations.Take((int)(locations.Count / factor)));
         }

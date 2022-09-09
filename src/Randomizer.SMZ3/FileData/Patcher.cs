@@ -6,10 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Randomizer.Data;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.FileData.Patches;
-using Randomizer.SMZ3.Regions;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
 
 using static Randomizer.SMZ3.FileData.DropPrize;

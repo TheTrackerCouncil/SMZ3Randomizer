@@ -5,9 +5,11 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data;
+using Randomizer.Data.Logic;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Text;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;

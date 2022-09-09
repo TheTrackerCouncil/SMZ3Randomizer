@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Configuration.ConfigTypes
 {

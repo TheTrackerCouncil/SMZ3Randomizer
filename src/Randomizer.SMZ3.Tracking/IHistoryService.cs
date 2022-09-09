@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;

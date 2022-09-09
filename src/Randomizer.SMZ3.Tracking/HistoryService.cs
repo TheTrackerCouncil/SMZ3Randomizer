@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Speech.Recognition;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;

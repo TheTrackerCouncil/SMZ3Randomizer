@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Regions;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 using static Randomizer.SMZ3.Tracking.Configuration.ConfigTypes.TrackerMapLocation;
 

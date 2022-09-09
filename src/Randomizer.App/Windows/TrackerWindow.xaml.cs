@@ -22,10 +22,10 @@ using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
 using Randomizer.App.Windows;
+using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;

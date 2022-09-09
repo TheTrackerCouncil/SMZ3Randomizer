@@ -19,6 +19,9 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Data;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
@@ -464,7 +467,7 @@ namespace Randomizer.App
         private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts)
         {
             var items = Enum.GetValues<ItemType>().ToDictionary(x => (int)x);
-            var locations = new SMZ3.World(new Config(), "", 0, "").Locations;
+            var locations = new World(new Config(), "", 0, "").Locations;
 
             var itemLocations = items.Values
                 .Where(item => itemCounts.Keys.Any(x => x.itemId == (int)item))

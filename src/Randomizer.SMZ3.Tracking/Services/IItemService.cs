@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
 

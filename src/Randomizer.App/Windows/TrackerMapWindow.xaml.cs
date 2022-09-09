@@ -10,6 +10,8 @@ using System.Windows.Shapes;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;

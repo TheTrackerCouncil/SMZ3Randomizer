@@ -14,13 +14,14 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
+using Randomizer.Data;
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.App
 {
