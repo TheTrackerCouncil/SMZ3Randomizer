@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Randomizer.Data;
 using Randomizer.SMZ3;
 
-namespace Randomizer.App.ViewModels
+namespace Randomizer.Data.Options
 {
     /// <summary>
     /// Represents user-configurable options for patching and customizing the

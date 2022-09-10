@@ -13,6 +13,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {

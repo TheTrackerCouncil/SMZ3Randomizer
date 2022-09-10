@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 using Randomizer.SMZ3.FileData;
 
-namespace Randomizer.App
+namespace Randomizer.Data
 {
     public class Sprite : IEquatable<Sprite>
     {

@@ -9,6 +9,8 @@ using Randomizer.Shared;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {

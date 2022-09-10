@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Randomizer.SMZ3.Tracking.Services
+namespace Randomizer.Data.Options
 {
     /// <summary>
     /// Provides access to the currently active tracking preferences.

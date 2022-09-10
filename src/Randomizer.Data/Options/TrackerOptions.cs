@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Randomizer.Shared.Enums;
 
-namespace Randomizer.SMZ3.Tracking
+namespace Randomizer.Data
 {
     /// <summary>
     /// Provides Tracker preferences.

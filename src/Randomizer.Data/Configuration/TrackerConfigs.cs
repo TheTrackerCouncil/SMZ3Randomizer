@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Options;
 
 namespace Randomizer.Data.Configuration
 {

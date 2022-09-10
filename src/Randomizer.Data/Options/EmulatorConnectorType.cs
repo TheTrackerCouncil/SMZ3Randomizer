@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Randomizer.SMZ3.Tracking.AutoTracking
+namespace Randomizer.Data.Options
 {
     /// <summary>
     /// Enum for the type of connector to use

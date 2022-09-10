@@ -28,6 +28,7 @@ using Randomizer.SMZ3.Generation;
 using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Options;
 
 namespace Randomizer.App
 {

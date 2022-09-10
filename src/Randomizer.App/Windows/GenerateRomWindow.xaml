@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
         xmlns:data="clr-namespace:Randomizer.Data;assembly=Randomizer.Data"
         xmlns:shared="clr-namespace:Randomizer.Shared;assembly=Randomizer.Shared"
-        d:DataContext="{d:DesignInstance vm:RandomizerOptions, IsDesignTimeCreatable=True}"
+        xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="Data Cas' Randomizer"
@@ -20,7 +20,7 @@
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">
   <Window.DataContext>
-    <vm:RandomizerOptions></vm:RandomizerOptions>
+    <options:RandomizerOptions></options:RandomizerOptions>
   </Window.DataContext>
 
   <Grid>

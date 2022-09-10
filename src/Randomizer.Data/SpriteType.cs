@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Randomizer.App
+namespace Randomizer.Data
 {
     public enum SpriteType
     {

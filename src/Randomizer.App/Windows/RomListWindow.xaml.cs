@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Data;
+using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;

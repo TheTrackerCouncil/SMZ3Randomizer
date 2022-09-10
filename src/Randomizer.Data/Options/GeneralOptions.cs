@@ -6,14 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using System.Windows.Media;
-
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Randomizer.Shared.Enums;
-using Randomizer.SMZ3.Tracking;
-using Randomizer.SMZ3.Tracking.AutoTracking;
 
-namespace Randomizer.App.ViewModels
+namespace Randomizer.Data.Options
 {
     /// <summary>
     /// Represents user-configurable options for the general working of the
@@ -87,7 +83,7 @@ namespace Randomizer.App.ViewModels
         [Range(0.0, 1.0)]
         public float TrackerConfidenceSassThreshold { get; set; } = 0.92f;
 
-        public Color TrackerBackgroundColor { get; set; } = Color.FromRgb(0x21, 0x21, 0x21);
+        public List<byte> TrackerBGColor { get; set; } = new() { 0xFF, 0x21, 0x21, 0x21 };
 
         public bool TrackerShadows { get; set; } = true;
 

@@ -3,9 +3,7 @@ using System.IO;
 
 using Microsoft.Extensions.Logging;
 
-using Randomizer.App.ViewModels;
-
-namespace Randomizer.App
+namespace Randomizer.Data.Options
 {
     public class OptionsFactory
     {

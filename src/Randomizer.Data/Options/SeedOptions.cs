@@ -11,7 +11,7 @@ using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3;
 
-namespace Randomizer.App.ViewModels
+namespace Randomizer.Data.Options
 {
     /// <summary>
     /// Represents user-configurable options for influencing seed generation.

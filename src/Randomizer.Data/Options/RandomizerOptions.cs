@@ -6,11 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Randomizer.Data;
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking.AutoTracking;
 
-namespace Randomizer.App.ViewModels
+namespace Randomizer.Data.Options
 {
     public class RandomizerOptions : INotifyPropertyChanged
     {
