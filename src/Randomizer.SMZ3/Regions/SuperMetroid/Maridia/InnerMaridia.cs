@@ -56,8 +56,7 @@ namespace Randomizer.SMZ3.Regions.SuperMetroid.Maridia
                 name: "Spring Ball",
                 alsoKnownAs: new[] { "Shaktool's item" },
                 vanillaItem: ItemType.SpringBall,
-                access: items => items.Super && Logic.CanUsePowerBombs(items)
-                              && (items.Grapple || Config.LogicConfig.ShaktoolWithoutGrapple)
+                access: items => items.Super && Logic.CanUsePowerBombs(items) && items.Grapple
                               && (items.SpaceJump || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium)))
                               && (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.SpringBall || items.SpaceJump), // Leaving again
                 memoryAddress: 0x12,
