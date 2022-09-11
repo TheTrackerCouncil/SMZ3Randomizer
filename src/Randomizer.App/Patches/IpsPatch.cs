@@ -34,7 +34,5 @@ namespace Randomizer.App.Patches
         /// </summary>
         /// <returns>A new stream that contains the IPS patch.</returns>
         public static Stream Respin() => GetStream("spinjumprestart.ips");
-
-        public static Stream ShaktoolWithoutGrapple() => GetStream("Shaktool_without_grapple.ips");
     }
 }
