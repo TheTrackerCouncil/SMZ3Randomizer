@@ -1,4 +1,5 @@
-﻿using Randomizer.Data.WorldData;
+﻿using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.Data.WorldData.Regions
 {

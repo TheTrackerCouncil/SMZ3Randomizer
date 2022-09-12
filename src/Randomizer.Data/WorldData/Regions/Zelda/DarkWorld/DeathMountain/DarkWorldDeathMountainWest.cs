@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.Options;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
 {

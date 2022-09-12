@@ -6,8 +6,8 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Randomizer.Data;
 using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Generation;

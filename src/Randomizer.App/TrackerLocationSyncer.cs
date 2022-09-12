@@ -13,6 +13,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 
 namespace Randomizer.App
 {

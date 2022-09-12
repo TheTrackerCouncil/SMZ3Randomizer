@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
-using Randomizer.Data;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;

@@ -17,6 +17,7 @@ using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain;
 using Randomizer.Data.WorldData.Regions.Zelda.LightWorld;
 using Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
 using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
 
 namespace Randomizer.Data.WorldData
 {

@@ -11,7 +11,7 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 
-namespace Randomizer.Data
+namespace Randomizer.Data.Options
 {
     [DefaultValue(Normal)]
     public enum GameMode
@@ -203,7 +203,7 @@ namespace Randomizer.Data
 
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
         public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
-        public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
+        public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || region is Z3Region && ZeldaKeysanity || region is SMRegion && MetroidKeysanity;
 
         public Config SeedOnly()
         {
@@ -248,9 +248,7 @@ namespace Randomizer.Data
         public static Config FromConfigString(string configString)
         {
             if (configString.Contains("{"))
-            {
                 return JsonSerializer.Deserialize<Config>(configString, s_options);
-            }
 
             var gZipBuffer = Convert.FromBase64String(configString);
             using (var memoryStream = new MemoryStream())

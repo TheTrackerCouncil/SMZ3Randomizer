@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Randomizer.Data;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking
 {

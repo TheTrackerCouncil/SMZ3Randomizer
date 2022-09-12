@@ -2,7 +2,8 @@
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using static Randomizer.Data.SMLogic;
+using static Randomizer.Data.Options.SMLogic;
+using Randomizer.Data.Options;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 {

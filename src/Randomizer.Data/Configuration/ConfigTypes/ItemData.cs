@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
-using Randomizer.Data;
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 
 namespace Randomizer.Data.Configuration.ConfigTypes

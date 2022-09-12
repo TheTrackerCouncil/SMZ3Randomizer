@@ -7,9 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-using Randomizer.SMZ3.FileData;
-
-namespace Randomizer.Data
+namespace Randomizer.Data.Options
 {
     public class Sprite : IEquatable<Sprite>
     {
@@ -96,10 +94,10 @@ namespace Randomizer.Data
                 samusSprite.Apply(rom);
         }
 
-        public static bool operator ==(Sprite a, Sprite b) 
-            => (a is null && b is null) || a?.Equals(b) == true;
+        public static bool operator ==(Sprite a, Sprite b)
+            => a is null && b is null || a?.Equals(b) == true;
 
-        public static bool operator !=(Sprite a, Sprite b) 
+        public static bool operator !=(Sprite a, Sprite b)
             => !(a == b);
 
         public override bool Equals(object obj)
@@ -116,7 +114,7 @@ namespace Randomizer.Data
                 && SpriteType == other.SpriteType;
         }
 
-        public override int GetHashCode() 
+        public override int GetHashCode()
             => HashCode.Combine(FilePath, SpriteType);
     }
 }

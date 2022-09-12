@@ -6,10 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
-using Randomizer.Data;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
-using Randomizer.SMZ3;
 
 namespace Randomizer.Data.Options
 {

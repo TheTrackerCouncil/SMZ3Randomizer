@@ -8,7 +8,7 @@ using Randomizer.Shared;
 using YamlDotNet.Serialization;
 using Randomizer.Data.Logic;
 
-namespace Randomizer.Data
+namespace Randomizer.Data.Options
 {
     /// <summary>
     /// Represents the configuration for a plandomizer world.

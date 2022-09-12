@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using FluentAssertions;
-using Randomizer.Data;
 using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 

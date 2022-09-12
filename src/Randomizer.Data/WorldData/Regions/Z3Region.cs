@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 
 namespace Randomizer.Data.WorldData.Regions

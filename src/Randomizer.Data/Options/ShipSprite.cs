@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Randomizer.Data
+namespace Randomizer.Data.Options
 {
     public record ShipSprite(string DisplayName, string FileName)
     {

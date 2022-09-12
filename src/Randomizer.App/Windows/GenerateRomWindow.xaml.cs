@@ -19,7 +19,6 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
-using Randomizer.Data;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;

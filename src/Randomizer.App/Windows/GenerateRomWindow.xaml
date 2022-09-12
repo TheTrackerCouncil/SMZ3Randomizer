@@ -155,21 +155,21 @@
 
               <controls:LabeledControl Text="Heart color:">
                 <ComboBox SelectedItem="{Binding HeartColor}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type data:HeartColor}}}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:HeartColor}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="ALttP Menu speed:">
                 <ComboBox SelectedItem="{Binding MenuSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type data:MenuSpeed}}}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:MenuSpeed}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Low health beep speed:">
                 <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type data:LowHealthBeepSpeed}}}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:LowHealthBeepSpeed}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
@@ -207,15 +207,15 @@
                   <RadioButton GroupName="ShuffleMusic"
                                Content="Default"
                                ToolTip="Plays the light or dark world dungeon theme depending on whether the dungeon has a pendant or crystal. With the extended soundtrack, each dungeon plays its own theme."
-                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static data:MusicShuffleMode.Default}}" />
+                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static options:MusicShuffleMode.Default}}" />
                   <RadioButton GroupName="ShuffleMusic"
                                Content="Shuffle dungeon themes"
                                ToolTip="Randomly plays either the light or dark world dungeon theme. With the extended soundtrack, each dungeon plays a random dungeon theme."
-                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static data:MusicShuffleMode.ShuffleDungeons}}" />
+                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static options:MusicShuffleMode.ShuffleDungeons}}" />
                   <RadioButton GroupName="ShuffleMusic"
                                Content="Shuffle all music"
                                ToolTip="Randomly plays any available music in dungeons."
-                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static data:MusicShuffleMode.ShuffleAll}}" />
+                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static options:MusicShuffleMode.ShuffleAll}}" />
                 </StackPanel>
               </controls:LabeledControl>
             </StackPanel>

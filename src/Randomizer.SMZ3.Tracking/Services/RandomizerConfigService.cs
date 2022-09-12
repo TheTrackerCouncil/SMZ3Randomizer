@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Randomizer.Data;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {

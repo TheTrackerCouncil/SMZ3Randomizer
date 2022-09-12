@@ -6,9 +6,11 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Randomizer.SMZ3.FileData {
+namespace Randomizer.Data
+{
 
-    public class Rdc {
+    public class Rdc
+    {
 
         private readonly static char[] header = "RETRODATACONTAINER".ToCharArray();
         private const int Version = 1;
@@ -24,7 +26,8 @@ namespace Randomizer.SMZ3.FileData {
         /// <param name="stream">The stream that contains an RDC-formatted file.</param>
         /// <returns>A new <see cref="Rdc"/> for the specified stream.</returns>
         /// <exception cref="InvalidDataException"><paramref name="stream"/> does not contain a valid RDC header or is of an unsupported version.</exception>
-        public static Rdc Parse(Stream stream) {
+        public static Rdc Parse(Stream stream)
+        {
             using var data = new BinaryReader(stream, Encoding.UTF8, true);
             if (!data.ReadChars(18).SequenceEqual(header))
                 throw new InvalidDataException("Could not find the RDC format header");
@@ -40,8 +43,10 @@ namespace Randomizer.SMZ3.FileData {
             return new Rdc(author, offsets);
         }
 
-        private static IEnumerable<(uint type, uint offset)> ParseBlockOffsets(BinaryReader data, uint blocks) {
-            while (blocks > 0) {
+        private static IEnumerable<(uint type, uint offset)> ParseBlockOffsets(BinaryReader data, uint blocks)
+        {
+            while (blocks > 0)
+            {
                 var type = data.ReadUInt32();
                 var offset = data.ReadUInt32();
                 yield return (type, offset);
@@ -49,7 +54,8 @@ namespace Randomizer.SMZ3.FileData {
             }
         }
 
-        private static string ReadNullTerm(BinaryReader reader) {
+        private static string ReadNullTerm(BinaryReader reader)
+        {
             char c;
             var text = new StringBuilder();
             while ((c = reader.ReadChar()) > 0)
@@ -57,12 +63,14 @@ namespace Randomizer.SMZ3.FileData {
             return text.ToString();
         }
 
-        private Rdc(string author, IEnumerable<(uint type, uint offset)> offsets) {
+        private Rdc(string author, IEnumerable<(uint type, uint offset)> offsets)
+        {
             Author = author;
             this.offsets = offsets.ToDictionary(x => x.type, x => x.offset);
         }
 
-        public bool TryParse<TBlock>(Stream stream, out TBlock block) where TBlock : BlockType, new() {
+        public bool TryParse<TBlock>(Stream stream, out TBlock block) where TBlock : BlockType, new()
+        {
             block = default;
 
             var template = new TBlock();
@@ -70,7 +78,8 @@ namespace Randomizer.SMZ3.FileData {
                 return false;
 
             block = template;
-            if (blocks.TryGetValue(block.Type, out var cache)) {
+            if (blocks.TryGetValue(block.Type, out var cache))
+            {
                 block = (TBlock)cache;
                 return true;
             }
@@ -80,12 +89,14 @@ namespace Randomizer.SMZ3.FileData {
             return true;
         }
 
-        public bool Contains<TBlock>() where TBlock : BlockType, new() {
+        public bool Contains<TBlock>() where TBlock : BlockType, new()
+        {
             var template = new TBlock();
             return offsets.ContainsKey(template.Type);
         }
 
-        public static void Write(Stream stream, string author, params BlockType[] blocks) {
+        public static void Write(Stream stream, string author, params BlockType[] blocks)
+        {
             using var data = new BinaryWriter(stream, Encoding.UTF8, true);
             data.Write(header);
             data.Write((byte)Version);
@@ -94,7 +105,8 @@ namespace Randomizer.SMZ3.FileData {
 
             data.Write((uint)blocks.Length);
             var offset = stream.Position + blocks.Length * 2 * sizeof(uint) + authorData.Length;
-            foreach (var block in blocks) {
+            foreach (var block in blocks)
+            {
                 data.Write(block.Type);
                 data.Write((uint)offset);
                 offset += block.Length;
@@ -102,12 +114,14 @@ namespace Randomizer.SMZ3.FileData {
 
             stream.Write(authorData);
 
-            foreach (var block in blocks) {
+            foreach (var block in blocks)
+            {
                 block.Write(stream);
             }
         }
 
-        private static byte[] NullTermBytes(string author) {
+        private static byte[] NullTermBytes(string author)
+        {
             using var writer = new MemoryStream();
             writer.Write(Encoding.UTF8.GetBytes(author));
             writer.WriteByte(0);
@@ -116,30 +130,35 @@ namespace Randomizer.SMZ3.FileData {
 
     }
 
-    public interface BlockType {
+    public interface BlockType
+    {
         uint Type { get; }
         int Length { get; }
         void Parse(Stream rdc);
         void Write(Stream rdc);
     }
 
-    public class MetaDataBlock : BlockType {
+    public class MetaDataBlock : BlockType
+    {
 
         public uint Type { get; } = 0;
 
         public JToken Content { get; private set; }
 
-        public int Length {
+        public int Length
+        {
             get { return sizeof(uint) + Encoding.UTF8.GetByteCount(Content.ToString(Formatting.None)); }
         }
 
         public MetaDataBlock() { }
 
-        public MetaDataBlock(JToken content) {
+        public MetaDataBlock(JToken content)
+        {
             Content = content;
         }
 
-        public void Parse(Stream stream) {
+        public void Parse(Stream stream)
+        {
             using var data = new BinaryReader(stream, Encoding.UTF8, true);
             var length = data.ReadUInt32();
             var bytes = data.ReadBytes((int)length);
@@ -147,7 +166,8 @@ namespace Randomizer.SMZ3.FileData {
             Content = JToken.Parse(meta);
         }
 
-        public void Write(Stream stream) {
+        public void Write(Stream stream)
+        {
             using var data = new BinaryWriter(stream, Encoding.UTF8, true);
             var meta = Content.ToString(Formatting.None);
             var bytes = Encoding.UTF8.GetBytes(meta);
@@ -157,7 +177,8 @@ namespace Randomizer.SMZ3.FileData {
 
     }
 
-    public abstract class DataBlock : BlockType {
+    public abstract class DataBlock : BlockType
+    {
 
         public abstract uint Type { get; }
 
@@ -165,36 +186,47 @@ namespace Randomizer.SMZ3.FileData {
 
         protected readonly IList<byte[]> content = new List<byte[]>();
 
-        public int Length {
-            get {
-                return Manifest.Sum(field => {
+        public int Length
+        {
+            get
+            {
+                return Manifest.Sum(field =>
+                {
                     var (_, length, offsets) = field;
                     return length * offsets.Count();
                 });
             }
         }
 
-        public void Parse(Stream stream) {
+        public void Parse(Stream stream)
+        {
             byte[] slice;
-            foreach (var (_, length, offsets) in Manifest) {
+            foreach (var (_, length, offsets) in Manifest)
+            {
                 var count = offsets.Count();
                 stream.Read(slice = new byte[count * length]);
                 content.Add(slice);
             }
         }
 
-        public void Write(Stream stream) {
-            foreach (var data in content) {
+        public void Write(Stream stream)
+        {
+            foreach (var data in content)
+            {
                 stream.Write(data);
             }
         }
 
-        public void Apply(byte[] rom) {
-            foreach (var (field, data) in Manifest.Zip(content, (m, d) => (m, d))) {
+        public void Apply(byte[] rom)
+        {
+            foreach (var (field, data) in Manifest.Zip(content, (m, d) => (m, d)))
+            {
                 var (addrs, length, offsets) = field;
-                foreach (var addr in addrs) {
+                foreach (var addr in addrs)
+                {
                     var i = -1;
-                    foreach (var offset in offsets) {
+                    foreach (var offset in offsets)
+                    {
                         Array.Copy(data, (i += 1) * length, rom, addr + offset, length);
                     }
                 }
@@ -205,13 +237,15 @@ namespace Randomizer.SMZ3.FileData {
 
         protected static IEnumerable<int> Addr(params int[] addrs) => addrs;
 
-        protected static IEnumerable<int> Offsets(int n, int offset) {
+        protected static IEnumerable<int> Offsets(int n, int offset)
+        {
             return Enumerable.Range(0, n).Select(x => x * offset).ToList();
         }
 
     }
 
-    public class LinkSprite : DataBlock {
+    public class LinkSprite : DataBlock
+    {
 
         public override uint Type { get; } = 1;
 
@@ -219,7 +253,8 @@ namespace Randomizer.SMZ3.FileData {
 
         static readonly IList<(IEnumerable<int>, int, IEnumerable<int>)> manifest;
 
-        static LinkSprite() {
+        static LinkSprite()
+        {
             manifest = new[] {
                 (Addr(0x508000), 0x7000, Single), // sprite
                 (Addr(0x5BD308), 4 * 30, Single), // palette
@@ -227,13 +262,15 @@ namespace Randomizer.SMZ3.FileData {
             };
         }
 
-        public byte[] Fetch8x8(int tileIndex) {
+        public byte[] Fetch8x8(int tileIndex)
+        {
             byte[] bytes;
             content[0].AsSpan(tileIndex * 0x20, 0x20).CopyTo(bytes = new byte[0x20]);
             return bytes;
         }
 
-        public byte[] FetchPalette(int index) {
+        public byte[] FetchPalette(int index)
+        {
             byte[] bytes;
             content[1].AsSpan(index * 30, 30).CopyTo(bytes = new byte[30]);
             return bytes;
@@ -241,7 +278,8 @@ namespace Randomizer.SMZ3.FileData {
 
     }
 
-    public class SamusSprite : DataBlock {
+    public class SamusSprite : DataBlock
+    {
 
         public override uint Type { get; } = 4;
 
@@ -249,7 +287,8 @@ namespace Randomizer.SMZ3.FileData {
 
         private static readonly IList<(IEnumerable<int>, int, IEnumerable<int>)> manifest;
 
-        static SamusSprite() {
+        static SamusSprite()
+        {
             var loaderOffsets = new[] { 0x0, 0x24, 0x4F, 0x73, 0x9E, 0xC2, 0xED, 0x111, 0x139 };
             manifest = new[] {
                 // DMA banks
@@ -314,7 +353,8 @@ namespace Randomizer.SMZ3.FileData {
             };
         }
 
-        public byte[] FetchDma8x8(int tileIndex) {
+        public byte[] FetchDma8x8(int tileIndex)
+        {
             byte[] bytes;
             var addr = tileIndex * 0x20;
             var bank = content[addr / 0x8000];
@@ -322,7 +362,8 @@ namespace Randomizer.SMZ3.FileData {
             return bytes;
         }
 
-        public byte[] FetchPowerStandardPalette() {
+        public byte[] FetchPowerStandardPalette()
+        {
             return content[20];
         }
 
