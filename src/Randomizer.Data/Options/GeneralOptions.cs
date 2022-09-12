@@ -83,7 +83,7 @@ namespace Randomizer.Data.Options
         [Range(0.0, 1.0)]
         public float TrackerConfidenceSassThreshold { get; set; } = 0.92f;
 
-        public List<byte> TrackerBGColor { get; set; } = new() { 0xFF, 0x21, 0x21, 0x21 };
+        public byte[] TrackerBGColor { get; set; } = { 0xFF, 0x21, 0x21, 0x21 };
 
         public bool TrackerShadows { get; set; } = true;
 

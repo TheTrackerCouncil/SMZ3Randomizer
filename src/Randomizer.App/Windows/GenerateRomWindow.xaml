@@ -12,7 +12,7 @@
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="Data Cas' Randomizer"
+        Title="SMZ3 Cas' Randomizer"
         Width="{Binding WindowWidth, Mode=TwoWay}"
         Height="{Binding WindowHeight, Mode=TwoWay}"
         MinWidth="320"

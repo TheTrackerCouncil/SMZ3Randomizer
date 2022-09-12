@@ -108,23 +108,23 @@ namespace Randomizer.Data.WorldData.Regions
         {
             var rule = Config.ItemPlacementRule;
             if (rule == ItemPlacementRule.Anywhere
-                || !item.Progression && !item.IsKey && !item.IsKeycard && !item.IsBigKey
-                || !Config.ZeldaKeysanity && (item.IsKey || item.IsBigKey)) return true;
+                || (!item.Progression && !item.IsKey && !item.IsKeycard && !item.IsBigKey)
+                || (!Config.ZeldaKeysanity && (item.IsKey || item.IsBigKey))) return true;
             else if (rule == ItemPlacementRule.DungeonsAndMetroid)
             {
-                return this is Z3Region region && !region.IsOverworld || this is SMRegion;
+                return (this is Z3Region region && !region.IsOverworld) || this is SMRegion;
             }
             else if (rule == ItemPlacementRule.CrystalDungeonsAndMetroid)
             {
-                return this is IHasReward rewardRegion && rewardRegion.Reward is RewardType.CrystalBlue or RewardType.CrystalRed || this is SMRegion;
+                return (this is IHasReward rewardRegion && rewardRegion.Reward is RewardType.CrystalBlue or RewardType.CrystalRed) || this is SMRegion;
             }
             else if (rule == ItemPlacementRule.OppositeGame)
             {
-                return item.Type.IsInCategory(ItemCategory.Zelda) && this is SMRegion || item.Type.IsInCategory(ItemCategory.Metroid) && this is Z3Region;
+                return (item.Type.IsInCategory(ItemCategory.Zelda) && this is SMRegion) || (item.Type.IsInCategory(ItemCategory.Metroid) && this is Z3Region);
             }
             else if (rule == ItemPlacementRule.SameGame)
             {
-                return item.Type.IsInCategory(ItemCategory.Zelda) && this is Z3Region || item.Type.IsInCategory(ItemCategory.Metroid) && this is SMRegion;
+                return (item.Type.IsInCategory(ItemCategory.Zelda) && this is Z3Region) || (item.Type.IsInCategory(ItemCategory.Metroid) && this is SMRegion);
             }
             return true;
         }

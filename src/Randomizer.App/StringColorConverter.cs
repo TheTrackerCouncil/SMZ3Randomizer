@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace Randomizer.App
 {
-    [ValueConversion(typeof(List<byte>), typeof(string))]
+    [ValueConversion(typeof(byte[]), typeof(string))]
     internal class StringColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -15,13 +15,13 @@ namespace Randomizer.App
             if (targetType != typeof(string))
                 throw new ArgumentException($"Invalid target type '{targetType}', expected string.");
 
-            var color = (List<byte>)value;
+            var color = (byte[])value;
             return $"#{color[0]:X2}{color[1]:X2}{color[2]:X2}{color[3]:X2}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType != typeof(List<byte>))
+            if (targetType != typeof(byte[]))
                 throw new ArgumentException($"Invalid target type '{targetType}', expected Color.");
 
             var hex = ((string)value).AsSpan();
@@ -34,7 +34,7 @@ namespace Randomizer.App
             if (!TryParseColor(hex, out var a, out var r, out var g, out var b))
                 return new ValidationResult("Expected color in the format #RGB, #RRGGBB or #AARRGGBB");
 
-            return new List<byte>() { a, r, g, b };
+            return new byte[] { a, r, g, b };
         }
 
         private static bool TryParseColor(ReadOnlySpan<char> value,
