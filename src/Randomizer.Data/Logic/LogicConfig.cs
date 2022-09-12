@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using Randomizer.Shared;
 
-namespace Randomizer.Shared
+namespace Randomizer.Data.Logic
 {
     public class LogicConfig
     {

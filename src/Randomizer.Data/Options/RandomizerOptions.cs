@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Randomizer.Data;
+using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.SMZ3;

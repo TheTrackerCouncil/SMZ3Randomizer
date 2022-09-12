@@ -6,6 +6,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 
 using YamlDotNet.Serialization;
+using Randomizer.Data.Logic;
 
 namespace Randomizer.Data
 {

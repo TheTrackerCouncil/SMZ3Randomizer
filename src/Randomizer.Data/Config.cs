@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
