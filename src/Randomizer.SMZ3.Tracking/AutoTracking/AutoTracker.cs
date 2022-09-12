@@ -485,7 +485,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (action.CurrentData?.CheckBinary8Bit(0x10C, 0x01) == true && action.PreviousData?.CheckBinary8Bit(0x10C, 0x01) != true)
                 {
                     var duckItem = _itemService.FindOrDefault("Duck");
-                    if (duckItem != null)
+                    if (duckItem != null && duckItem.TrackingState == 0)
                     {
                         Tracker?.TrackItem(duckItem, null, null, false, true, null, false);
                     }

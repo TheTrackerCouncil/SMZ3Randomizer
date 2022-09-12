@@ -72,11 +72,6 @@ namespace Randomizer.Data.Logic
         public WallJumpDifficulty WallJumpDifficulty { get; set; }
             = WallJumpDifficulty.Medium; // Not very cas’, but this seems to be closest to previous assumptions
 
-        [DisplayName("Shaktool does not require Grapple Beam")]
-        [Description("Shaktool's front door is always open :)")]
-        [Category("Patches")]
-        public bool ShaktoolWithoutGrapple { get; set; }
-
         public LogicConfig Clone()
         {
             return (LogicConfig)MemberwiseClone();

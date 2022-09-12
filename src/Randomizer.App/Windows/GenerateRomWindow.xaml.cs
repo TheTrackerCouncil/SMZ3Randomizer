@@ -153,7 +153,7 @@ namespace Randomizer.App
                 {
                     "Logic" => LogicGrid,
                     "Tricks" => TricksGrid,
-                    "Patches" => PatchesGrid,
+                    //"Patches" => PatchesGrid,
                     _ => LogicGrid
                 };
 

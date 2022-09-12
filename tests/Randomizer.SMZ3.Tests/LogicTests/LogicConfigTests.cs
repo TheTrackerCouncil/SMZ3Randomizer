@@ -337,26 +337,6 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         }
 
         [Fact]
-        public void TestShaktoolWithoutGrapple()
-        {
-            Config config = new Config();
-
-            config.LogicConfig.ShaktoolWithoutGrapple = false;
-            var tempWorld = new World(config, "", 0, "");
-            var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.SpaceJump }, new List<RewardType>());
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.ShaktoolItem, progression);
-            missingItems.Should().HaveCount(1)
-                .And.ContainEquivalentOf(new[] { ItemType.Grapple });
-            tempWorld.InnerMaridia.ShaktoolItem.IsAvailable(progression).Should().BeFalse();
-
-            config.LogicConfig.ShaktoolWithoutGrapple = true;
-            tempWorld = new World(config, "", 0, "");
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.InnerMaridia.ShaktoolItem, progression);
-            missingItems.Should().BeEmpty();
-            tempWorld.InnerMaridia.ShaktoolItem.IsAvailable(progression).Should().BeTrue();
-        }
-
-        [Fact]
         public void TestEasyEastCrateriaSkyItem()
         {
             Config config = new Config();
