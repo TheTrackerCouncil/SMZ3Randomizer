@@ -203,7 +203,7 @@ namespace Randomizer.Data.Options
 
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
         public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
-        public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || region is Z3Region && ZeldaKeysanity || region is SMRegion && MetroidKeysanity;
+        public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
 
         public Config SeedOnly()
         {
