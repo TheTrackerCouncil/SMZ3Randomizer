@@ -8,9 +8,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
 using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Data;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking
 {

@@ -19,11 +19,15 @@ using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Options;
 
 namespace Randomizer.App
 {
@@ -35,13 +39,13 @@ namespace Randomizer.App
         private readonly Task _loadSpritesTask;
         private readonly IServiceProvider _serviceProvider;
         private readonly RomGenerator _romGenerator;
-        private readonly SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig _locations;
+        private readonly LocationConfig _locations;
         private RandomizerOptions _options;
         private IItemService _itemService;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
-            SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig locations,
+            LocationConfig locations,
             IItemService itemService)
         {
             _serviceProvider = serviceProvider;
@@ -464,7 +468,7 @@ namespace Randomizer.App
         private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts)
         {
             var items = Enum.GetValues<ItemType>().ToDictionary(x => (int)x);
-            var locations = new SMZ3.World(new Config(), "", 0, "").Locations;
+            var locations = new World(new Config(), "", 0, "").Locations;
 
             var itemLocations = items.Values
                 .Where(item => itemCounts.Keys.Any(x => x.itemId == (int)item))

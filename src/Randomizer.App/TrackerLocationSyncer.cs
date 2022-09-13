@@ -6,11 +6,14 @@ using System.Linq;
 using System.Windows;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Data;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 
 namespace Randomizer.App
 {

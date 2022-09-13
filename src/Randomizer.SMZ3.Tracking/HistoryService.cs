@@ -6,10 +6,11 @@ using System.Reflection;
 using System.Speech.Recognition;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {

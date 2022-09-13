@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Regions;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking
@@ -276,7 +277,7 @@ namespace Randomizer.SMZ3.Tracking
                 var location = world.Locations.SingleOrDefault(x => x.Id == locationState.Id)
                     ?? throw new ArgumentException($"Could not find location with ID {locationState.Id}.", nameof(tracker));
 
-                location.Item = locationState.Item != null ? new SMZ3.Item(locationState.Item.Value, world) : null;
+                location.Item = locationState.Item != null ? new Item(locationState.Item.Value, world) : null;
                 location.Cleared = locationState.Cleared;
             }
 

@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-
+using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;

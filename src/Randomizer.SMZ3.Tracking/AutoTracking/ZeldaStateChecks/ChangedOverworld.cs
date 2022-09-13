@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {

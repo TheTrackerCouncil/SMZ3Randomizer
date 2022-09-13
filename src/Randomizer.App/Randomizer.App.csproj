@@ -50,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj" />
@@ -81,6 +82,10 @@
     <Exec Command="xcopy $(ProjectDir)Sprites\ $(TargetDir)Sprites\ /S /I /Y" />
   </Target>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://json.schemastore.org/appsettings.json" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties appsettings_1development_1json__JsonSchema="https://json.schemastore.org/appsettings.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 
 </Project>

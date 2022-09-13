@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Randomizer.Data.WorldData;
 using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Infrastructure

@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
+using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData;
 

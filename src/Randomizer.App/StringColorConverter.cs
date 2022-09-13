@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Windows.Data;
@@ -6,7 +7,7 @@ using System.Windows.Media;
 
 namespace Randomizer.App
 {
-    [ValueConversion(typeof(Color), typeof(string))]
+    [ValueConversion(typeof(byte[]), typeof(string))]
     internal class StringColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -14,16 +15,13 @@ namespace Randomizer.App
             if (targetType != typeof(string))
                 throw new ArgumentException($"Invalid target type '{targetType}', expected string.");
 
-            var color = (Color)value;
-            if (color.A == 0xFF)
-                return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
-
-            return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+            var color = (byte[])value;
+            return $"#{color[0]:X2}{color[1]:X2}{color[2]:X2}{color[3]:X2}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType != typeof(Color))
+            if (targetType != typeof(byte[]))
                 throw new ArgumentException($"Invalid target type '{targetType}', expected Color.");
 
             var hex = ((string)value).AsSpan();
@@ -36,7 +34,7 @@ namespace Randomizer.App
             if (!TryParseColor(hex, out var a, out var r, out var g, out var b))
                 return new ValidationResult("Expected color in the format #RGB, #RRGGBB or #AARRGGBB");
 
-            return Color.FromArgb(a, r, g, b);
+            return new byte[] { a, r, g, b };
         }
 
         private static bool TryParseColor(ReadOnlySpan<char> value,
