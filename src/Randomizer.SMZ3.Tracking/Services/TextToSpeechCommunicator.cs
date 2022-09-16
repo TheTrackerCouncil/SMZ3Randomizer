@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Speech.Synthesis;
+using Randomizer.Data;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {

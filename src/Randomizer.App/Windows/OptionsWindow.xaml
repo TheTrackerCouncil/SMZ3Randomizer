@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Randomizer.App.Controls"
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
+        xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         x:Name="Self"
         ResizeMode="NoResize"
         mc:Ignorable="d"
@@ -13,7 +14,7 @@
         Height="480"
         Width="520">
   <Window.DataContext>
-    <vm:GeneralOptions></vm:GeneralOptions>
+    <options:GeneralOptions></options:GeneralOptions>
   </Window.DataContext>
   <Grid>
     <Grid.RowDefinitions>
@@ -68,10 +69,10 @@
                           Height="23"
                           Width="23"
                           Margin="0,0,3,0">
-                    <Rectangle Fill="{Binding TrackerBackgroundColor,
+                    <Rectangle Fill="{Binding TrackerBGColor,
                 Converter={StaticResource ColorBrushConverter}}" />
                   </Border>
-                  <TextBox Text="{Binding TrackerBackgroundColor,
+                  <TextBox Text="{Binding TrackerBGColor,
               Converter={StaticResource ColorConverter},
               Mode=TwoWay}"
                            MinWidth="80" />

@@ -22,16 +22,17 @@ using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
 using Randomizer.App.Windows;
+using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Data.Options;
 
 namespace Randomizer.App
 {
@@ -630,7 +631,7 @@ namespace Randomizer.App
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Background = new SolidColorBrush(Options.GeneralOptions.TrackerBackgroundColor);
+            Background = new SolidColorBrush(Color.FromArgb(Options.GeneralOptions.TrackerBGColor[0], Options.GeneralOptions.TrackerBGColor[1], Options.GeneralOptions.TrackerBGColor[2], Options.GeneralOptions.TrackerBGColor[3]));
 
             // If a rom was passed in, generate its seed to populate all locations and items
             if (GeneratedRom.IsValid(Rom))
@@ -777,7 +778,7 @@ namespace Randomizer.App
             };
             _autoTrackerDisableMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.None);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.None);
             };
             menu.Items.Add(_autoTrackerDisableMenuItem);
 
@@ -788,7 +789,7 @@ namespace Randomizer.App
             };
             _autoTrackerLuaMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.Lua);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.Lua);
             };
             menu.Items.Add(_autoTrackerLuaMenuItem);
 
@@ -799,7 +800,7 @@ namespace Randomizer.App
             };
             _autoTrackerUSB2SNESMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.USB2SNES);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.USB2SNES);
             };
             menu.Items.Add(_autoTrackerUSB2SNESMenuItem);
 
@@ -858,9 +859,9 @@ namespace Randomizer.App
             StatusBarAutoTrackerDisabled.Visibility = !Tracker.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
             StatusBarAutoTrackerEnabled.Visibility = Tracker.AutoTracker.IsEnabled && !Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
             StatusBarAutoTrackerConnected.Visibility = Tracker.AutoTracker.IsEnabled && Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
-            _autoTrackerDisableMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.None;
-            _autoTrackerLuaMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.Lua;
-            _autoTrackerUSB2SNESMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.USB2SNES;
+            _autoTrackerDisableMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.None;
+            _autoTrackerLuaMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.Lua;
+            _autoTrackerUSB2SNESMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.USB2SNES;
         }
 
         private void UpdateStats(TrackerEventArgs e)

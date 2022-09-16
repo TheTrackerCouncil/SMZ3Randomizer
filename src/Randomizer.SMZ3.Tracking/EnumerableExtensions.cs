@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using BunLabs;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking
 {

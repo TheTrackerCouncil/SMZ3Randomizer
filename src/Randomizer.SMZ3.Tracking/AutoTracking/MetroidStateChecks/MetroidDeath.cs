@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks

@@ -16,6 +16,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NHyphenator;
+using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;

@@ -22,14 +22,18 @@ using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Regions;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.AutoTracking;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda;
+using Randomizer.Data.Logic;
+using Randomizer.Data.WorldData;
+using Randomizer.Data;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -1546,12 +1550,12 @@ namespace Randomizer.SMZ3.Tracking
 
             if (locations.Count == 0)
             {
-                Say(Responses.AreaDoesNotHaveItem?.Format(item.Name, area.GetName(), item.NameWithArticle));
+                Say(Responses.AreaDoesNotHaveItem?.Format(item.Name, area.Name, item.NameWithArticle));
             }
             else if (locations.Count > 1)
             {
                 // Consider tracking/clearing everything?
-                Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, area.GetName(), item.NameWithArticle));
+                Say(Responses.AreaHasMoreThanOneItem?.Format(item.Name, area.Name, item.NameWithArticle));
             }
 
             IsDirty = true;
@@ -1718,7 +1722,7 @@ namespace Randomizer.SMZ3.Tracking
                         var itemNames = confidence >= Options.MinimumSassConfidence
                             ? NaturalLanguage.Join(itemsTracked, World.Config)
                             : $"{itemsCleared} items";
-                        Say(x => x.TrackedMultipleItems, itemsCleared, area.GetName(), itemNames);
+                        Say(x => x.TrackedMultipleItems, itemsCleared, area.Name, itemNames);
 
                         var roomInfo = area is Room room ? WorldInfo.Room(room) : null;
                         var regionInfo = area is Region region ?WorldInfo.Region(region) : null;
@@ -1755,7 +1759,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        Say(x => x.ClearedMultipleItems, itemsCleared, area.GetName());
+                        Say(x => x.ClearedMultipleItems, itemsCleared, area.Name);
                     }
 
                     if (treasureTracked > 0)
@@ -2650,11 +2654,11 @@ namespace Randomizer.SMZ3.Tracking
             if (World == null)
                 return Enumerable.Empty<Location>();
 
-            var items = new List<SMZ3.Item>();
+            var items = new List<Item>();
             foreach (var item in ItemService.TrackedItems())
             {
                 for (var i = 0; i < item.TrackingState; i++)
-                    items.Add(new SMZ3.Item(item.InternalItemType));
+                    items.Add(new Item(item.InternalItemType));
             }
 
             var progression = new Progression(items, GetCurrentRewards());

@@ -6,7 +6,9 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
@@ -55,7 +57,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var randomizer = new Smz3Randomizer(filler, new WorldAccessor(), GetLogger<Smz3Randomizer>());
 
             var config = new Config();
-            var region = new Regions.Zelda.LightWorld.LightWorldSouth(null, null);
+            var region = new Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth(null, null);
             var location1 = region.LinksHouse.Id;
             var location2 = region.MazeRace.Id;
             var location3 = region.IceCave.Id;

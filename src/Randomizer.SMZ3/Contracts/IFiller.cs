@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Contracts
 {

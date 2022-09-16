@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
+using Randomizer.Data.Configuration.ConfigTypes;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
