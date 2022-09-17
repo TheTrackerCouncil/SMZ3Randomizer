@@ -121,7 +121,7 @@ namespace Randomizer.SMZ3.Tracking
                 .Select(x => new ItemState(x.Name[0], x.TrackingState))
                 .ToImmutableList();
             var locationStates = tracker.World.Locations
-                .Select(x => new LocationState(x.Id, x.Item?.Type, x.Cleared))
+                .Select(x => new LocationState(x.Id, x.Item?.Type, x.State.Cleared))
                 .ToImmutableList();
             var regionStates = tracker.World.Regions
                 .Select(x => new RegionState(x.GetType().Name,
@@ -262,7 +262,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="worldAccessor">Used to set the loaded world.</param>
         public void Apply(Tracker tracker, IWorldAccessor worldAccessor, IItemService itemService)
         {
-            var world = new World(SeedConfig, "", 0, "");
+            var world = worldAccessor.World;
 
             foreach (var itemState in ItemStates)
             {
@@ -272,14 +272,6 @@ namespace Randomizer.SMZ3.Tracking
                 item.TrackingState = itemState.TrackingState;
             }
 
-            foreach (var locationState in LocationStates)
-            {
-                var location = world.Locations.SingleOrDefault(x => x.Id == locationState.Id)
-                    ?? throw new ArgumentException($"Could not find location with ID {locationState.Id}.", nameof(tracker));
-
-                location.Item = locationState.Item != null ? new Item(locationState.Item.Value, world) : null;
-                location.Cleared = locationState.Cleared;
-            }
 
             foreach (var regionState in RegionStates)
             {
@@ -321,7 +313,6 @@ namespace Randomizer.SMZ3.Tracking
             }
             tracker.History.LoadHistory(tracker, this);
             worldAccessor.World = world;
-            tracker.SavedElapsedTime = TimeSpan.FromSeconds(SecondsElapsed);
         }
 
         /// <summary>
@@ -342,44 +333,8 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns></returns>
         public Task SaveAsync(RandomizerContext dbContext, GeneratedRom rom)
         {
-            var totalLocations = LocationStates.Count;
-            var clearedLocations = LocationStates
-                .Where(x => x.Cleared)
-                .Count();
-            var percCleared = (int)Math.Floor((double)clearedLocations / totalLocations * 100);
-
-            if (rom.TrackerState == null)
-            {
-                var trackerState = new Shared.Models.TrackerState()
-                {
-                    StartDateTime = DateTimeOffset.Now,
-                    UpdatedDateTime = DateTimeOffset.Now,
-                    SecondsElapsed = SecondsElapsed,
-                    PercentageCleared = percCleared
-                };
-
-                if (rom != null && string.IsNullOrEmpty(rom.Settings))
-                {
-                    rom.Settings = Config.ToConfigString(SeedConfig, true);
-                }
-
-                if (rom != null)
-                {
-                    rom.TrackerState = trackerState;
-                }
-
-                dbContext.TrackerStates.Add(trackerState);
-            }
-            else
-            {
-                var trackerState = rom.TrackerState;
-                trackerState.UpdatedDateTime = DateTimeOffset.Now;
-                trackerState.SecondsElapsed = SecondsElapsed;
-                trackerState.PercentageCleared = percCleared;
-            }
 
             CopyItemStates(rom.TrackerState, ItemStates);
-            CopyLocationStates(rom.TrackerState, LocationStates);
             CopyRegionStates(rom.TrackerState, RegionStates);
             CopyDungeonStates(rom.TrackerState, DungeonStates);
             CopyBossStates(rom.TrackerState, BossStates);

@@ -60,7 +60,7 @@ namespace Randomizer.Data.Configuration
             this IPointOfInterest poi, World world)
         {
             return poi.GetLocations(world)
-                .Where(x => x.Cleared)
+                .Where(x => x.State.Cleared)
                 .ToImmutableList();
         }
 
@@ -82,7 +82,7 @@ namespace Randomizer.Data.Configuration
             this IPointOfInterest poi, World world, Progression progression)
         {
             return poi.GetLocations(world)
-                .Where(x => !x.Cleared && !x.IsAvailable(progression))
+                .Where(x => !x.State.Cleared && !x.IsAvailable(progression))
                 .ToImmutableList();
         }
     }

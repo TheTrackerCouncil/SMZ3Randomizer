@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Randomizer.Data.WorldData;
+using Randomizer.Shared.Models;
+
+namespace Randomizer.Data.Services
+{
+    public interface ITrackerStateService
+    {
+        public void CreateState(World world, GeneratedRom generatedRom);
+
+        public void SaveState(World world, GeneratedRom generatedRom, double secondsElapsed);
+
+        public TrackerState? LoadState(World world, GeneratedRom generatedRom);
+    }
+}

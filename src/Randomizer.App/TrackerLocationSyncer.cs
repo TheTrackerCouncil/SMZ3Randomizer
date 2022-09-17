@@ -146,7 +146,7 @@ namespace Randomizer.App
         {
             var regions = World.Regions
                 .Where(x => RegionMatchesFilter(filter, x))
-                .OrderByDescending(x => x.Locations.Count(x => !x.Cleared && x.IsAvailable(Progression)))
+                .OrderByDescending(x => x.Locations.Count(x => !x.State.Cleared && x.IsAvailable(Progression)))
                 .ToList();
 
             if (applyStickyRegion && _stickyRegion != null && regions.Contains(_stickyRegion))
@@ -189,7 +189,7 @@ namespace Randomizer.App
         /// </returns>
         public bool IsLocationClearable(Location location, bool allowOutOfLogic = true, bool requireKeys = false)
         {
-            return !location.Cleared
+            return !location.State.Cleared
                 && ((location.IsAvailable(requireKeys ? Progression : ProgressionWithKeys) && SpecialLocationLogic(location))
                 || (allowOutOfLogic && ShowOutOfLogicLocations));
         }
@@ -230,7 +230,7 @@ namespace Randomizer.App
         /// <param name="locations">A list of SMZ3 locations to update</param>
         public void ClearLocations(List<Location> locations)
         {
-            locations.Where(x => !x.Cleared)
+            locations.Where(x => !x.State.Cleared)
                 .ToList()
                 .ForEach(x => Tracker.Clear(x));
             if (locations.Select(x => x.Region).Count() == 1) _stickyRegion = locations.First().Region;

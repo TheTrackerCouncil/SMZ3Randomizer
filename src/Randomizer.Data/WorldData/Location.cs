@@ -5,6 +5,8 @@ using Randomizer.Data.Logic;
 using Randomizer.Shared.Enums;
 using System.Collections.Generic;
 using System;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData
 {
@@ -91,6 +93,16 @@ namespace Randomizer.Data.WorldData
         public string Name { get; }
 
         /// <summary>
+        /// Additional information about the location
+        /// </summary>
+        public LocationInfo Metadata { get; set; }
+
+        /// <summary>
+        /// Current state of the location
+        /// </summary>
+        public TrackerLocationState State { get; set; }
+
+        /// <summary>
         /// Gets the type of location.
         /// </summary>
         public LocationType Type { get; }
@@ -119,11 +131,6 @@ namespace Randomizer.Data.WorldData
         /// The Logic to be used to determine if certain actions can be done
         /// </summary>
         public ILogic Logic => Region.Logic;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the item has been found.
-        /// </summary>
-        public bool Cleared { get; set; }
 
         /// <summary>
         /// Gets any alternate names for the location.
@@ -233,7 +240,7 @@ namespace Randomizer.Data.WorldData
         public LocationStatus GetStatus(Progression items, Dictionary<int, Requirement> trackerLogic)
         {
             var logic = trackerLogic.ContainsKey(Id) ? trackerLogic[Id] : (items) => true;
-            if (Cleared) return LocationStatus.Cleared;
+            if (State.Cleared) return LocationStatus.Cleared;
             else if (IsAvailable(items) && logic(items)) return LocationStatus.Available;
             else if (IsRelevant(items) && logic(items)) return LocationStatus.Relevant;
             else return LocationStatus.OutOfLogic;

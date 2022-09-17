@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
@@ -87,6 +88,7 @@ namespace Randomizer.App
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();
+            services.AddSingleton<ITrackerStateService, TrackerStateService>();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();

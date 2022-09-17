@@ -35,6 +35,6 @@ namespace Randomizer.App.ViewModels
             {
                 _syncer.ClearLocation(_location);
             },
-            canExecute: () => _location.Cleared == false);
+            canExecute: () => _location.State.Cleared == false);
     }
 }

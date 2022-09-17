@@ -118,7 +118,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var locationWithProgressionItem = Tracker.World.Locations
-                .Where(x => !x.Cleared && x.IsAvailable(Tracker.GetProgression(x.Region)))
+                .Where(x => !x.State.Cleared && x.IsAvailable(Tracker.GetProgression(x.Region)))
                 .Where(x => !ItemService.IsTracked(x.Item.Type) && ItemService?.GetOrDefault(x.Item.Type)?.IsProgression(_config) == true)
                 .Random();
 
@@ -144,7 +144,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var locations = area.Locations
-                .Where(x => !x.Cleared)
+                .Where(x => !x.State.Cleared)
                 .ToImmutableList();
             if (locations.Count == 0)
             {
@@ -209,7 +209,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var markedLocation = Tracker.MarkedLocations
                 .Where(x => x.Value.InternalItemType == item.InternalItemType)
                 .Select(x => Tracker.World.Locations.Single(y => y.Id == x.Key))
-                .Where(x => !x.Cleared)
+                .Where(x => !x.State.Cleared)
                 .Random();
             if (markedLocation != null)
             {
@@ -238,7 +238,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     Tracker.Say(x => x.Spoilers.ItemNotFound, item.NameWithArticle);
                 return;
             }
-            else if (locations.Count > 0 && locations.All(x => x.Cleared))
+            else if (locations.Count > 0 && locations.All(x => x.State.Cleared))
             {
                 // The item exists, but all locations are cleared
                 Tracker.Say(x => x.Spoilers.LocationsCleared, item.NameWithArticle);
@@ -273,7 +273,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public void RevealLocationItem(Location location)
         {
             var locationName = Tracker.WorldInfo.Location(location).Name;
-            if (location.Cleared)
+            if (location.State.Cleared)
             {
                 if (Tracker.HintsEnabled || Tracker.SpoilersEnabled)
                 {
@@ -487,7 +487,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var reachableLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared)
+                .Where(x => !x.State.Cleared)
                 .Where(x => x.IsAvailable(Tracker.GetProgression(x.Region)))
                 .Random();
             if (reachableLocation != null)
@@ -503,7 +503,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var worldLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared)
+                .Where(x => !x.State.Cleared)
                 .Random();
             if (worldLocation != null)
             {
@@ -523,7 +523,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var itemLocations = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared);
+                .Where(x => !x.State.Cleared);
 
             if (!itemLocations.Any())
             {
@@ -605,7 +605,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         var areaWithoutItem = Tracker.World.Regions
                             .GroupBy(x => x.Area)
                             .Where(x => !x.SelectMany(x => x.Locations)
-                                          .Where(x => !x.Cleared)
+                                          .Where(x => !x.State.Cleared)
                                           .Any(l => l.Item.Type == item.InternalItemType))
                             .Select(x => x.Key)
                             .Random();
@@ -623,13 +623,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         var randomLocation = GetRandomItemLocationWithFilter(item, x => true);
                         if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.Reward != RewardType.Agahnim)
                         {
-                            if (randomLocation.Region.Locations.Any(x => x.Cleared))
+                            if (randomLocation.Region.Locations.Any(x => x.State.Cleared))
                                 return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);
                             else
                                 return GiveItemHint(x => x.ItemInUnvisitedDungeon, item);
                         }
 
-                        if (randomLocation?.Region.Locations.Any(x => x.Cleared) == true)
+                        if (randomLocation?.Region.Locations.Any(x => x.State.Cleared) == true)
                             return GiveItemHint(x => x.ItemInPreviouslyVisitedRegion, item);
                         else
                             return GiveItemHint(x => x.ItemInUnvisitedRegion, item);
@@ -714,7 +714,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var randomLocation = Tracker.World.Locations
                 .Where(x => x.Item.Type == item.InternalItemType)
-                .Where(x => !x.Cleared)
+                .Where(x => !x.State.Cleared)
                 .Where(x => x.IsAvailable(Tracker.GetProgression(x.Region)))
                 .Where(predicate)
                 .Random();
@@ -725,7 +725,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // out-of-logic places, too.
                 randomLocation = Tracker.World.Locations
                     .Where(x => x.Item.Type == item.InternalItemType)
-                    .Where(x => !x.Cleared)
+                    .Where(x => !x.State.Cleared)
                     .Where(predicate)
                     .Random();
             }

@@ -954,35 +954,9 @@ namespace Randomizer.App
                     _dispatcherTimer.Start();
                 }
             }
-            // Otherwise save it to a file
             else
             {
-                var dialog = new OpenFileDialog
-                {
-                    Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*"
-                };
-
-                while (dialog.ShowDialog(this) == true)
-                {
-                    try
-                    {
-                        using (var stream = new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-                        using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
-                        {
-                            await Tracker.LoadAsync(gzip);
-                        }
-
-                        break;
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        _logger.LogError(ex, "Failed to load Tracker state from '{fileName}'.", dialog.FileName);
-
-                        var result = MessageBox.Show(this, "Could not load Tracker using the selected saved state file. Please check you selected the right file and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                        if (result == MessageBoxResult.Cancel)
-                            break;
-                    }
-                }
+                MessageBox.Show(this, "Could not save tracker state.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -992,36 +966,6 @@ namespace Randomizer.App
             if (GeneratedRom.IsValid(Rom))
             {
                 await Tracker.SaveAsync(Rom);
-            }
-            // Otherwise open the save file dialog
-            else
-            {
-                var dialog = new SaveFileDialog
-                {
-                    Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*",
-                    OverwritePrompt = true
-                };
-
-                while (dialog.ShowDialog(this) == true)
-                {
-                    try
-                    {
-                        using (var stream = new FileStream(dialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
-                        using (var gzip = new GZipStream(stream, CompressionLevel.Fastest))
-                        {
-                            await Tracker.SaveAsync(gzip);
-                        }
-
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Failed to saved Tracker state to '{fileName}'.", dialog.FileName);
-                        var result = MessageBox.Show(this, "Could not save Tracker state to the selected file. Please check you have access and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                        if (result == MessageBoxResult.Cancel)
-                            break;
-                    }
-                }
             }
 
             SavedState.Invoke(this, null);

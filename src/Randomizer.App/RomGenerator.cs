@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
@@ -34,16 +35,20 @@ namespace Randomizer.App
         private readonly Smz3Randomizer _randomizer;
         private readonly Smz3Plandomizer _plandomizer;
         private readonly ILogger<RomGenerator> _logger;
+        private readonly ITrackerStateService _stateService;
 
         public RomGenerator(Smz3Randomizer randomizer,
             Smz3Plandomizer plandomizer,
             RandomizerContext dbContext,
-            ILogger<RomGenerator> logger)
+            ILogger<RomGenerator> logger,
+            ITrackerStateService stateService
+        )
         {
             _randomizer = randomizer;
             _plandomizer = plandomizer;
             _dbContext = dbContext;
             _logger = logger;
+            _stateService = stateService;
         }
 
         /// <summary>
@@ -302,7 +307,6 @@ namespace Randomizer.App
         protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
             var config = seed.Playthrough.Config;
-            var trackerState = seed.Worlds[0].World.CreateTrackerState();
 
             var rom = new GeneratedRom()
             {
@@ -311,11 +315,10 @@ namespace Randomizer.App
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
                 Settings = config.SettingsString ?? Config.ToConfigString(config, true),
-                GeneratorVersion = Smz3Randomizer.Version.Major,
-                TrackerState = trackerState
+                GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);
-            _dbContext.SaveChanges();
+            _stateService.CreateState(seed.Worlds[0].World, rom);
             return rom;
         }
 
