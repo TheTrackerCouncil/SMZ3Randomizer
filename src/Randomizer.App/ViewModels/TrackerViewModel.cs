@@ -11,6 +11,7 @@ using Randomizer.SMZ3.Tracking;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.App.ViewModels
 {
@@ -65,11 +66,12 @@ namespace Randomizer.App.ViewModels
                 if (_isDesign)
                     return GetDummyMarkedLocations();
 
-                return _syncer.MarkedLocations.Select(x =>
-                {
-                    var location = _syncer.AllLocations.Single(location => location.Id == x.Key);
-                    return new MarkedLocationViewModel(location, x.Value, _uiService.GetSpritePath(x.Value), _syncer);
-                });
+                return _syncer.AllLocations.Where(location => location.State?.MarkedItem != null)
+                    .Select(loc => (location: loc, item: _syncer.Tracker.ItemService.FirstOrDefault(loc.State.MarkedItem.Value)))
+                    .Select(loc =>
+                    {
+                        return new MarkedLocationViewModel(loc.location, loc.item, _uiService.GetSpritePath(loc.item), _syncer);
+                    });
             }
         }
 
@@ -89,14 +91,14 @@ namespace Randomizer.App.ViewModels
 
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {
-            var item = new ItemData(new("X-Ray Scope"), ItemType.XRay, null);
+            var item = new Item(ItemType.XRay, null, "X-Ray Scope");
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldSouth.Library,
                 item,
                 null,
                 _syncer);
 
-            item = new ItemData(new("Bullshit"), ItemType.Nothing, null);
+            item = new Item(ItemType.XRay, null, "Bow");
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
                 item,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared.Models;
@@ -12,10 +13,12 @@ namespace Randomizer.Data.Services
     public class TrackerStateService : ITrackerStateService
     {
         private readonly RandomizerContext _randomizerContext;
+        private readonly ILogger<TrackerStateService> _logger;
 
-        public TrackerStateService(RandomizerContext dbContext)
+        public TrackerStateService(RandomizerContext dbContext, ILogger<TrackerStateService> logger)
         {
             _randomizerContext = dbContext;
+            _logger = logger;
         }
 
         public void CreateState(World world, GeneratedRom generatedRom)
@@ -49,6 +52,7 @@ namespace Randomizer.Data.Services
             };
 
             generatedRom.TrackerState = state;
+            world.State = state;
             _randomizerContext.SaveChanges();
 
         }
@@ -62,14 +66,10 @@ namespace Randomizer.Data.Services
                 return null;
             }
 
-            _randomizerContext.Entry(trackerState).Collection(x => x.LocationStates).Load();
+            world.State = trackerState;
 
-            foreach (var locationState in trackerState.LocationStates)
-            {
-                var location = world.Locations.First(x => x.Id == locationState.LocationId);
-                location.State = locationState;
-                location.Item = locationState.Item != null ? new Item(locationState.Item.Value, world) : null;
-            }
+            LoadLocationStates(world, trackerState);
+            LoadItemStates(world, trackerState);
 
             var locationCount = world.Locations.Count();
             var emptyStateLocations = world.Locations.Where(x => x.State == null).ToList();
@@ -87,15 +87,92 @@ namespace Randomizer.Data.Services
                 return;
             }
 
-            var totalLocations = world.Locations.Count();
-            var clearedLocations = world.Locations.Where(x => x.State.Cleared).Count();
-            var percCleared = (int)Math.Floor((double)clearedLocations / totalLocations * 100);
+            world.State = trackerState;
+
+            SaveLocationStates(world, trackerState);
+            SaveItemStates(world, trackerState);
 
             trackerState.UpdatedDateTime = DateTimeOffset.Now;
             trackerState.SecondsElapsed = secondsElapsed;
-            trackerState.PercentageCleared = percCleared;
+            
 
             _randomizerContext.SaveChanges();
+        }
+
+        private void LoadLocationStates(World world, TrackerState trackerState)
+        {
+            _randomizerContext.Entry(trackerState).Collection(x => x.LocationStates).Load();
+
+            foreach (var locationState in trackerState.LocationStates)
+            {
+                var location = world.Locations.First(x => x.Id == locationState.LocationId);
+                location.State = locationState;
+                location.Item = locationState.Item != null ? new Item(locationState.Item.Value, world) : null;
+            }
+        }
+
+        private void SaveLocationStates(World world, TrackerState trackerState)
+        {
+            var totalLocations = world.Locations.Count();
+            var clearedLocations = world.Locations.Where(x => x.State.Cleared).Count();
+            var percCleared = (int)Math.Floor((double)clearedLocations / totalLocations * 100);
+            trackerState.PercentageCleared = percCleared;
+        }
+
+        private void LoadItemStates(World world, TrackerState trackerState)
+        {
+            _randomizerContext.Entry(trackerState).Collection(x => x.ItemStates).Load();
+
+            // Load previously saved items
+            foreach (var (state, worldItems) in trackerState.ItemStates.Select(x => (state: x, items: world.AllItems.Where(w => w.Is(x.Type ?? Shared.ItemType.Nothing, x.ItemName)))))
+            {
+                if (worldItems.Any())
+                {
+                    worldItems.ToList().ForEach(x => x.State = state);
+                }
+                else
+                {
+                    _logger.LogInformation($"{state.ItemName} not found in world");
+                    var item = new Item(state.Type ?? Shared.ItemType.Nothing, world, state.ItemName)
+                    {
+                        State = state
+                    };
+                    world.TrackerItems.Add(item);
+                }
+            }
+
+            // Create item states for items 
+            foreach (var item in world.AllItems.Where(x => x.State == null))
+            {
+                var otherItem = world.AllItems
+                    .FirstOrDefault(x => x != item && x.State != null && x.Name == item.Name);
+
+                if (otherItem != null)
+                {
+                    item.State = otherItem.State;
+                }
+                else
+                {
+                    var state = new TrackerItemState()
+                    {
+                        TrackerState = trackerState,
+                        ItemName = item.Name,
+                        Type = item.Type,
+                    };
+                    item.State = state;
+                    trackerState.ItemStates.Add(state);
+                }
+            }
+        }
+
+        private void SaveItemStates(World world, TrackerState trackerState)
+        {
+            // Add any new item states
+            var itemStates = world.AllItems
+                .Select(x => x.State).Distinct()
+                .Where(x => trackerState.ItemStates.Contains(x))
+                .ToList();
+            itemStates.ForEach(x => trackerState.ItemStates.Add(x));
         }
     }
 }

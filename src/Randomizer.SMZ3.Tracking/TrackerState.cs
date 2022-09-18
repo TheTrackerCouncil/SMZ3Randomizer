@@ -115,11 +115,9 @@ namespace Randomizer.SMZ3.Tracking
         /// A new <see cref="TrackerState"/> object representing the state of
         /// <paramref name="tracker"/>.
         /// </returns>
-        public static TrackerState TakeSnapshot(Tracker tracker, IItemService itemService)
+        /*public static TrackerState TakeSnapshot(Tracker tracker, IItemService itemService)
         {
-            var itemStates = itemService.AllItems()
-                .Select(x => new ItemState(x.Name[0], x.TrackingState))
-                .ToImmutableList();
+
             var locationStates = tracker.World.Locations
                 .Select(x => new LocationState(x.Id, x.Item?.Type, x.State.Cleared))
                 .ToImmutableList();
@@ -141,7 +139,6 @@ namespace Randomizer.SMZ3.Tracking
             var seedConfig = tracker.World.Config;
             var secondsElapsed = tracker.TotalElapsedTime.TotalSeconds;
             return new TrackerState(
-                itemStates,
                 locationStates,
                 regionStates,
                 dungeonStates,
@@ -150,7 +147,7 @@ namespace Randomizer.SMZ3.Tracking
                 historyEvents,
                 secondsElapsed,
                 seedConfig);
-        }
+        }*/
 
         /// <summary>
         /// Loads the tracker state from serialized data.
@@ -264,15 +261,6 @@ namespace Randomizer.SMZ3.Tracking
         {
             var world = worldAccessor.World;
 
-            foreach (var itemState in ItemStates)
-            {
-                var item = itemService.FindOrDefault(itemState.Name)
-                    ?? throw new ArgumentException($"Could not find loaded item data for '{itemState.Name}'.", nameof(tracker));
-
-                item.TrackingState = itemState.TrackingState;
-            }
-
-
             foreach (var regionState in RegionStates)
             {
                 var region = world.Regions.SingleOrDefault(x => x.GetType().Name == regionState.TypeName)
@@ -295,14 +283,16 @@ namespace Randomizer.SMZ3.Tracking
                 dungeon.Requirement = dungeonState.Requirement;
             }
 
-            tracker.MarkedLocations.Clear();
+            /*
+             * tracker.MarkedLocations.Clear();
             foreach (var markedLocation in MarkedLocations)
             {
-                var item = itemService.FindOrDefault(markedLocation.ItemName)
+                var item = itemService.FirstOrDefault(markedLocation.ItemName)
                     ?? throw new ArgumentException($"Could not find loaded item data for '{markedLocation.ItemName}'.", nameof(tracker));
 
                 tracker.MarkedLocations[markedLocation.LocationId] = item;
             }
+            */
 
             foreach (var bossState in BossStates)
             {
@@ -333,8 +323,6 @@ namespace Randomizer.SMZ3.Tracking
         /// <returns></returns>
         public Task SaveAsync(RandomizerContext dbContext, GeneratedRom rom)
         {
-
-            CopyItemStates(rom.TrackerState, ItemStates);
             CopyRegionStates(rom.TrackerState, RegionStates);
             CopyDungeonStates(rom.TrackerState, DungeonStates);
             CopyBossStates(rom.TrackerState, BossStates);

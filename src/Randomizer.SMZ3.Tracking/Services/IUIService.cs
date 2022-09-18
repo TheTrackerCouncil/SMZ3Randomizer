@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -37,7 +38,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="item">The item requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(ItemData item);
+        public string? GetSpritePath(Item item);
 
         /// <summary>
         /// Returns the path of the sprite for the boss

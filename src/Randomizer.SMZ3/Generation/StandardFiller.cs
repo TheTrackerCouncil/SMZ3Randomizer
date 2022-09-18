@@ -313,7 +313,7 @@ namespace Randomizer.SMZ3.Generation
         {
             var item = itemPool.Get(itemType);
             var location = world.Locations.Empty()
-                .Available(world.Items, new List<Reward>())
+                .Available(world.LocationItems, new List<Reward>())
                 .Where(x => world.Config.LocationItems == null || !world.Config.LocationItems.ContainsKey(x.Id))
                 .Random(Random);
             if (location == null)

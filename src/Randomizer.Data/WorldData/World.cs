@@ -98,7 +98,9 @@ namespace Randomizer.Data.WorldData
         public IEnumerable<Region> Regions { get; }
         public IEnumerable<Room> Rooms { get; }
         public IEnumerable<Location> Locations { get; }
-        public IEnumerable<Item> Items => Locations.Select(l => l.Item).Where(i => i != null);
+        public IEnumerable<Item> LocationItems => Locations.Select(l => l.Item).Where(i => i != null);
+        public List<Item> TrackerItems { get; } = new List<Item>();
+        public IEnumerable<Item> AllItems => TrackerItems.Concat(LocationItems);
         public ILogic Logic { get; }
 
         public CastleTower CastleTower { get; }
@@ -209,6 +211,8 @@ namespace Randomizer.Data.WorldData
                 UpdatedDateTime = DateTimeOffset.Now
             };
         }
+
+        public TrackerState State { get; set; }
 
         private void SetMedallions(Random rnd)
         {

@@ -16,10 +16,10 @@ namespace Randomizer.App.ViewModels
     public class MarkedLocationViewModel
     {
         private readonly Location _location;
-        private readonly ItemData _itemData;
+        private readonly Item _itemData;
         private readonly TrackerLocationSyncer _syncer;
 
-        public MarkedLocationViewModel(Location location, ItemData itemData, string itemSprite, TrackerLocationSyncer syncer)
+        public MarkedLocationViewModel(Location location, Item itemData, string itemSprite, TrackerLocationSyncer syncer)
         {
             _location = location;
             _itemData = itemData;

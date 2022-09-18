@@ -67,7 +67,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (tracker, result) =>
             {
-                var contentItemData = itemService.FindOrDefault("Content");
+                var contentItemData = itemService.FirstOrDefault("Content");
 
                 var dungeon = GetBossDungeonFromResult(tracker, result);
                 if (dungeon != null)

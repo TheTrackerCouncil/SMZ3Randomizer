@@ -14,7 +14,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// Enumerates all items that can be tracked.
         /// </summary>
         /// <returns>A collection of items.</returns>
-        IEnumerable<ItemData> AllItems();
+
+        IEnumerable<Item> AllItems();
 
         /// <summary>
         /// Enumarates all currently tracked items.
@@ -22,7 +23,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A collection of items that have been tracked at least once.
         /// </returns>
-        IEnumerable<ItemData> TrackedItems();
+        IEnumerable<Item> TrackedItems();
 
         /// <summary>
         /// Finds the item with the specified name.
@@ -34,8 +35,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// An <see cref="ItemData"/> representing the item with the specified
         /// name, or <see langword="null"/> if there is no item that has the
         /// specified name.
-        /// </returns>
-        ItemData? FindOrDefault(string name);
+        Item? FirstOrDefault(string name);
 
         /// <summary>
         /// Finds an item with the specified item type.
@@ -47,18 +47,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured items with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        ItemData? GetOrDefault(ItemType itemType);
-
-        /// <summary>
-        /// Returns the item data of the item at the specified location.
-        /// </summary>
-        /// <param name="location">The location whose item to check.</param>
-        /// <returns>
-        /// An <see cref="ItemData"/> representing the type of item found at the
-        /// specified location, or <see langword="null"/> if the location has no
-        /// item or if the item at the location is not configured.
-        /// </returns>
-        ItemData? GetOrDefault(Location location);
+        Item? FirstOrDefault(ItemType itemType);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.

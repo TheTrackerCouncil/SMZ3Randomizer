@@ -83,7 +83,7 @@ namespace Randomizer.SMZ3
                 }
             }
 
-            var totalItemCount = worlds.SelectMany(w => w.Items).Count();
+            var totalItemCount = worlds.SelectMany(w => w.LocationItems).Count();
             while (items.Count < totalItemCount)
             {
                 var sphere = new Sphere();

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData
 {
@@ -28,9 +31,13 @@ namespace Randomizer.Data.WorldData
         /// </summary>
         /// <param name="itemType">The type of item.</param>
         /// <param name="world">The world the item is in.</param>
-        public Item(ItemType itemType, World world) : this(itemType)
+        public Item(ItemType itemType, World world, string? name = null) : this(itemType)
         {
             World = world;
+            if (!string.IsNullOrEmpty(name))
+            {
+                Name = name;
+            }
         }
 
         /// <summary>
@@ -52,6 +59,16 @@ namespace Randomizer.Data.WorldData
         /// Gets the world the item is located in.
         /// </summary>
         public World World { get; protected set; }
+
+        /// <summary>
+        /// Additional information about the item
+        /// </summary>
+        public ItemData Metadata { get; set; }
+
+        /// <summary>
+        /// Current state of the item
+        /// </summary>
+        public TrackerItemState State { get; set; }
 
         /// <summary>
         /// Indicates whether the item is a dungeon-specific item.
@@ -86,6 +103,98 @@ namespace Randomizer.Data.WorldData
         /// Indicates whether the item is a keycard.
         /// </summary>
         public bool IsKeycard => Type.IsInCategory(ItemCategory.Keycard);
+
+        /// <summary>
+        /// Gets the number of actual items as displayed or mentioned by
+        /// tracker, or <c>0</c> if the item does not have copies.
+        /// </summary>
+        public int Counter => Metadata.Multiple && !Metadata.HasStages ? State.TrackingState * (Metadata.CounterMultiplier ?? 1) : 0;
+
+        /// <summary>
+        /// Tracks the item.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if the item was tracked; otherwise, <see
+        /// langword="false"/>.
+        /// </returns>
+        /// <remarks>
+        /// Tracking may fail if the item is already tracked, or if the item is
+        /// already at the highest stage.
+        /// </remarks>
+        public bool Track()
+        {
+            if (State.TrackingState == 0 // Item hasn't been tracked yet (any case)
+                || !Metadata.HasStages && Metadata.Multiple // State.Multiple items always track
+                || Metadata.HasStages && State.TrackingState < Metadata.MaxStage) // Hasn't reached max. stage yet
+            {
+                State.TrackingState++;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Untracks the item or decreases the item by one step.
+        /// </summary>
+        /// <returns>
+        /// <see langword="true"/> if the item was removed; otherwise, <see
+        /// langword="false"/>.
+        /// </returns>
+        public bool Untrack()
+        {
+            if (State.TrackingState == 0)
+                return false;
+
+            State.TrackingState--;
+            return true;
+        }
+
+        /// <summary>
+        /// Marks the item at the specified stage.
+        /// </summary>
+        /// <param name="stage">The stage to set the item to.</param>
+        /// <returns>
+        /// <see langword="true"/> if the item was tracked; otherwise, <see
+        /// langword="false"/>.
+        /// </returns>
+        /// <remarks>
+        /// Tracking may fail if the item is already at a higher stage.
+        /// </remarks>
+        public bool Track(int stage)
+        {
+            if (!Metadata.HasStages)
+                throw new ArgumentException($"The item '{Name}' does not have Multiple stages.");
+
+            if (stage > Metadata.MaxStage)
+                throw new ArgumentOutOfRangeException($"Cannot advance item '{Name}' to stage {stage} as the highest state is {Metadata.MaxStage}.");
+
+            if (State.TrackingState < stage)
+            {
+                State.TrackingState = stage;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Retrieves the item-specific phrases to respond with when tracking
+        /// the item.
+        /// </summary>
+        /// <param name="response">
+        /// When this method returns <c>true</c>, contains the possible phrases
+        /// to respond with when tracking the item.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if a response was configured for the item at the current
+        /// tracking state; otherwise, <c>false</c>.
+        /// </returns>
+        public bool TryGetTrackingResponse([NotNullWhen(true)] out SchrodingersString? response)
+        {
+            return Metadata.TryGetTrackingResponse(State.TrackingState, out response);
+        }
+
 
         /// <summary>
         /// Returns a list of the items required to progress through the game.
@@ -363,6 +472,17 @@ namespace Randomizer.Data.WorldData
         /// </returns>
         public bool IsNot(ItemType type, World world)
             => !Is(type, world);
+
+        /// <summary>
+        /// Determines if an item matches the type or name
+        /// </summary>
+        /// <param name="type">The type to compare against</param>
+        /// <param name="name">The name to compare against if the item type is set to Nothing</param>
+        /// <see langword="true"/> if the item matches the given type or name
+        /// name="type"/> or <paramref name="world"/>; otherwise, <see
+        /// langword="false"/>.
+        public bool Is(ItemType type, string name)
+            => (Type != ItemType.Nothing && Type == type) || (Type == ItemType.Nothing && Name == name);
 
         /// <summary>
         /// Returns a string that represents the item.

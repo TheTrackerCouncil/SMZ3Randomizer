@@ -33,6 +33,7 @@ using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.App
 {
@@ -243,11 +244,11 @@ namespace Randomizer.App
                 // A group of items stacked on top of each other
                 if (gridLocation.Type == UIGridLocationType.Items)
                 {
-                    var items = new List<ItemData>();
+                    var items = new List<Item>();
                     Image latestImage = null;
                     foreach (var itemName in gridLocation.Identifiers)
                     {
-                        var item = _itemService.FindOrDefault(itemName);
+                        var item = _itemService.FirstOrDefault(itemName);
                         if (item == null)
                         {
                             _logger.LogError($"Item {itemName} could not be found");
@@ -259,14 +260,14 @@ namespace Randomizer.App
                         var overlay = GetOverlayImageFileName(item);
                         if (fileName == null)
                         {
-                            _logger.LogError($"Image for {item.Item} could not be found");
+                            _logger.LogError($"Image for {item.Name} could not be found");
                             continue;
                         }
 
                         latestImage = GetGridItemControl(fileName,
                             gridLocation.Column, gridLocation.Row,
                             item.Counter, overlay, minCounter: 2);
-                        latestImage.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
+                        latestImage.Opacity = item.State.TrackingState > 0 ? 1.0d : 0.2d;
                         TrackerGrid.Children.Add(latestImage);
                     }
 
@@ -279,7 +280,7 @@ namespace Randomizer.App
 
                     if (labelImage != null)
                     {
-                        labelImage.Opacity = items.Any(x => x.TrackingState > 0) ? 1.0d : 0.2d;
+                        labelImage.Opacity = items.Any(x => x.State.TrackingState > 0) ? 1.0d : 0.2d;
                     }
 
                     latestImage.Tag = gridLocation;
@@ -364,13 +365,13 @@ namespace Randomizer.App
             return null;
         }
 
-        private string GetOverlayImageFileName(ItemData item)
+        private string GetOverlayImageFileName(Item item)
         {
             return item switch
             {
-                { InternalItemType: ItemType.Bombos } => GetMatchingDungeonNameImages(Medallion.Bombos),
-                { InternalItemType: ItemType.Ether } => GetMatchingDungeonNameImages(Medallion.Ether),
-                { InternalItemType: ItemType.Quake } => GetMatchingDungeonNameImages(Medallion.Quake),
+                { Type: ItemType.Bombos } => GetMatchingDungeonNameImages(Medallion.Bombos),
+                { Type: ItemType.Ether } => GetMatchingDungeonNameImages(Medallion.Ether),
+                { Type: ItemType.Quake } => GetMatchingDungeonNameImages(Medallion.Quake),
                 _ => null
             };
 
@@ -409,7 +410,7 @@ namespace Randomizer.App
                 {
                     if (gridLocation.Type == UIGridLocationType.Items)
                     {
-                        var item = _itemService.FindOrDefault(gridLocation.Identifiers.First());
+                        var item = _itemService.FirstOrDefault(gridLocation.Identifiers.First());
                         Tracker.TrackItem(item);
                     }
                     else if (gridLocation.Type == UIGridLocationType.Dungeon)
@@ -438,7 +439,7 @@ namespace Randomizer.App
             };
         }
 
-        private ContextMenu CreateContextMenu(ICollection<ItemData> items)
+        private ContextMenu CreateContextMenu(ICollection<Item> items)
         {
             var menu = new ContextMenu
             {
@@ -447,7 +448,7 @@ namespace Randomizer.App
 
             foreach (var item in items)
             {
-                if (item.TrackingState == 0 || item.Multiple)
+                if (item.State.TrackingState == 0 || item.Metadata.Multiple)
                 {
                     var menuItem = new MenuItem
                     {
@@ -465,7 +466,7 @@ namespace Randomizer.App
                     menu.Items.Add(menuItem);
                 }
 
-                if (item.TrackingState > 0)
+                if (item.State.TrackingState > 0)
                 {
                     var menuItem = new MenuItem
                     {
@@ -483,7 +484,7 @@ namespace Randomizer.App
                     menu.Items.Add(menuItem);
                 }
 
-                var medallion = item.InternalItemType switch
+                var medallion = item.Type switch
                 {
                     ItemType.Bombos => Medallion.Bombos,
                     ItemType.Ether => Medallion.Ether,
@@ -652,11 +653,7 @@ namespace Randomizer.App
             ResetGridSize();
             RefreshGridItems();
 
-            // If a rom was passed in with a valid tracker state, reload the state from the database
-            if (GeneratedRom.IsValid(Rom))
-            {
-                Tracker.Load(Rom);
-            }
+            
 
             if (!Tracker.TryStartTracking())
             {
@@ -691,6 +688,14 @@ namespace Randomizer.App
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
 
             Tracker = _serviceProvider.GetRequiredService<Tracker>();
+
+            // If a rom was passed in with a valid tracker state, reload the state from the database
+            if (GeneratedRom.IsValid(Rom))
+            {
+                Tracker.Load(Rom);
+            }
+            Tracker.WorldInfo.LoadWorldMetadata(Tracker.World);
+
             Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
             {
                 UpdateStats(e);
@@ -965,7 +970,7 @@ namespace Randomizer.App
             // If there is a rom, save it to the database
             if (GeneratedRom.IsValid(Rom))
             {
-                await Tracker.SaveAsync(Rom);
+                Tracker.Save(Rom);
             }
 
             SavedState.Invoke(this, null);

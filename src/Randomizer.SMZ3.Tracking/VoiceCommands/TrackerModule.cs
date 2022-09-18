@@ -172,12 +172,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// An <see cref="ItemData"/> from the recognition result.
         /// </returns>
-        protected ItemData GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
+        protected Item GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
-            var itemData = ItemService.FindOrDefault(itemName);
+            var item = ItemService.FirstOrDefault(itemName);
 
-            return itemData ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
+            return item ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
         }
 
         /// <summary>
@@ -352,16 +352,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
-            foreach (var itemData in ItemService.AllItems().Where(x => x.Multiple && !x.HasStages))
+            foreach (var item in ItemService.AllItems().Where(x => x.Metadata.Multiple && !x.Metadata.HasStages))
             {
-                if (itemData.Plural == null)
+                if (item.Metadata.Plural == null)
                 {
-                    Logger.LogWarning("{item} is marked as Multiple but does not have plural names", itemData.Name[0]);
+                    Logger.LogWarning("{item} is marked as Multiple but does not have plural names", item.Name);
                     continue;
                 }
 
-                foreach (var name in itemData.Plural)
-                    itemNames.Add(new SemanticResultValue(name.ToString(), itemData.Name[0].Text));
+                foreach (var name in item.Metadata.Plural)
+                    itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
             }
 
             return itemNames;
@@ -374,7 +374,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible item
         /// names.
         /// </returns>
-        protected virtual Choices GetItemNames(Func<ItemData, bool>? where = null)
+        protected virtual Choices GetItemNames(Func<Item, bool>? where = null)
         {
             if (where == null)
             {
@@ -382,16 +382,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var itemNames = new Choices();
-            foreach (var itemData in ItemService.AllItems().Where(where))
+            foreach (var item in ItemService.AllItems().Where(where))
             {
-                foreach (var name in itemData.Name)
-                    itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));
+                foreach (var name in item.Metadata.Name)
+                    itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
 
-                if (itemData.Stages != null)
+                if (item.Metadata.Stages != null)
                 {
-                    foreach (var stageName in itemData.Stages.SelectMany(x => x.Value))
+                    foreach (var stageName in item.Metadata.Stages.SelectMany(x => x.Value))
                     {
-                        itemNames.Add(new SemanticResultValue(stageName.ToString(), stageName.ToString()));
+                        itemNames.Add(new SemanticResultValue(stageName.ToString(), item.Name));
                     }
                 }
             }

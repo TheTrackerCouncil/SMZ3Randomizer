@@ -11,6 +11,7 @@ using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data;
 using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -70,28 +71,28 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="item">The item requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(ItemData item)
+        public string? GetSpritePath(Item item)
         {
             var fileName = (string?)null;
 
-            if (item.Image != null)
+            if (item.Metadata.Image != null)
             {
-                fileName = GetSpritePath("Items", item.Image, out _);
+                fileName = GetSpritePath("Items", item.Metadata.Image, out _);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
-            if (item.HasStages || item.Multiple)
+            if (item.Metadata.HasStages || item.Metadata.Multiple)
             {
-                var baseFileName = GetSpritePath("Items", $"{item.Item.ToLowerInvariant()}.png", out string profilePath);
-                fileName = GetSpritePath("Items", $"{item.Item.ToLowerInvariant()} ({item.TrackingState}).png", out _, profilePath);
+                var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out string profilePath);
+                fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.State.TrackingState}).png", out _, profilePath);
                 if (File.Exists(fileName))
                     return fileName;
                 else
                     return baseFileName;
             }
 
-            return GetSpritePath("Items", $"{item.Item.ToLowerInvariant()}.png", out _);
+            return GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out _);
         }
 
         /// <summary>

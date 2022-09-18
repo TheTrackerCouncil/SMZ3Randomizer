@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetChangeMapRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name != "Content");
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();
 

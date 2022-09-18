@@ -112,7 +112,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
+                if (_itemService.FirstOrDefault(itemType)?.Metadata?.IsProgression(null) != true)
                 {
                     continue;
                 }
@@ -305,7 +305,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
+                if (_itemService.FirstOrDefault(itemType)?.Metadata.IsProgression(null) != true)
                 {
                     continue;
                 }

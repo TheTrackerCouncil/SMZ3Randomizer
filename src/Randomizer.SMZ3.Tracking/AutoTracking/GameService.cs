@@ -8,6 +8,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
@@ -39,7 +40,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="item">The item to give</param>
         /// <param name="fromPlayerId">The id of the player giving the item to the player (0 for tracker)</param>
         /// <returns>False if it is currently unable to give an item to the player</returns>
-        public bool TryGiveItem(ItemData item, int fromPlayerId = 0)
+        public bool TryGiveItem(Item item, int fromPlayerId = 0)
         {
             if (_autoTracker == null || !_autoTracker.IsConnected)
             {
@@ -49,7 +50,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // First give the player the item by the requested 
             var bytes = new List<byte>();
             bytes.AddRange(Int16ToBytes(fromPlayerId + 1));
-            bytes.AddRange(Int16ToBytes((int)item.InternalItemType));
+            bytes.AddRange(Int16ToBytes((int)item.Type));
             var action = new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,

@@ -6,6 +6,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -15,6 +16,7 @@ namespace Randomizer.SMZ3.Tracking.Services
     public class ItemService : IItemService
     {
         private static readonly Random s_random = new Random();
+        private readonly IWorldAccessor _world;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ItemService"/> class
@@ -27,10 +29,11 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="rewards">
         /// Specifies the configuration that contains the reward data
         /// </param>
-        public ItemService(ItemConfig items, RewardConfig rewards)
+        public ItemService(ItemConfig items, RewardConfig rewards, IWorldAccessor world)
         {
             Items = items;
             Rewards = rewards;
+            _world = world;
         }
 
         /// <summary>
@@ -54,9 +57,10 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// name, or <see langword="null"/> if there is no item that has the
         /// specified name.
         /// </returns>
-        public virtual ItemData? FindOrDefault(string name)
-            => Items.SingleOrDefault(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-            ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
+        public Item? FirstOrDefault(string name)
+            => AllItems().FirstOrDefault(x => x.Name == name)
+            ?? AllItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            ?? AllItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.GetStage(name) != null);
 
         /// <summary>
         /// Finds an item with the specified item type.
@@ -68,20 +72,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured items with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        public virtual ItemData? GetOrDefault(ItemType itemType)
-            => Items.RandomOrDefault(x => x.InternalItemType == itemType, s_random);
-
-        /// <summary>
-        /// Returns the item data of the item at the specified location.
-        /// </summary>
-        /// <param name="location">The location whose item to check.</param>
-        /// <returns>
-        /// An <see cref="ItemData"/> representing the type of item found at the
-        /// specified location, or <see langword="null"/> if the location has no
-        /// item or if the item at the location is not configured.
-        /// </returns>
-        public virtual ItemData? GetOrDefault(Location location) // TODO: move this to IWorldService, whenever that becomes available
-            => GetOrDefault(location.Item.Type);
+        public Item? FirstOrDefault(ItemType itemType)
+            => AllItems().FirstOrDefault(x => x.Type == itemType);
 
         /// <summary>
         /// Indicates whether an item of the specified type has been tracked.
@@ -92,14 +84,14 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// tracked at least once; otherwise, <see langword="false"/>.
         /// </returns>
         public virtual bool IsTracked(ItemType itemType)
-            => Items.Any(x => x.InternalItemType == itemType && x.TrackingState > 0);
+            => AllItems().Any(x => x.Type == itemType && x.State.TrackingState > 0);
 
         /// <summary>
         /// Enumerates all items that can be tracked.
         /// </summary>
         /// <returns>A collection of items.</returns>
-        public virtual IEnumerable<ItemData> AllItems() // I really want to discourage this, but necessary for now
-            => Items;
+        public IEnumerable<Item> AllItems() // I really want to discourage this, but necessary for now
+            => _world.World.AllItems;
 
         /// <summary>
         /// Enumarates all currently tracked items.
@@ -107,8 +99,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A collection of items that have been tracked at least once.
         /// </returns>
-        public virtual IEnumerable<ItemData> TrackedItems()
-            => Items.Where(x => x.TrackingState > 0);
+        public IEnumerable<Item> TrackedItems()
+            => AllItems().Where(x => x.State.TrackingState > 0);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -121,8 +113,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public virtual string GetName(ItemType itemType)
         {
-            var item = GetOrDefault(itemType);
-            return item?.NameWithArticle ?? itemType.GetDescription();
+            var item = FirstOrDefault(itemType);
+            return item?.Metadata?.NameWithArticle ?? itemType.GetDescription();
         }
 
 

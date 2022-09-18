@@ -14,6 +14,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -154,11 +155,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
         }
 
-        private void GiveItem(ItemData? item)
+        private void GiveItem(Item? item)
         {
             if (!PlayerCanCheat()) return;
 
-            if (item == null || item.InternalItemType == ItemType.Nothing)
+            if (item == null || item.Type == ItemType.Nothing)
             {
                 Tracker.Say(x => x.Cheats.CheatInvalidItem);
             }
@@ -215,7 +216,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GiveItemRule()
         {
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name != "Content");
 
             return new GrammarBuilder()
                 .Append("Hey tracker,")

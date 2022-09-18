@@ -118,8 +118,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var locationWithProgressionItem = Tracker.World.Locations
-                .Where(x => !x.State.Cleared && x.IsAvailable(Tracker.GetProgression(x.Region)))
-                .Where(x => !ItemService.IsTracked(x.Item.Type) && ItemService?.GetOrDefault(x.Item.Type)?.IsProgression(_config) == true)
+                .Where(x => !x.State.Cleared && x.IsAvailable(Tracker.GetProgression(x.Region)) && x.Item.State.TrackingState == 0 && x.Item.Metadata.IsProgression(_config) == true)
                 .Random();
 
             if (locationWithProgressionItem != null)
@@ -153,7 +152,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             var items = locations
-                .Select(x => ItemService.GetOrDefault(x))
+                .Select(x => x.Item)
                 .NonNull();
             if (Tracker.SpoilersEnabled)
             {
@@ -162,7 +161,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
             else if (Tracker.HintsEnabled)
             {
-                if (items.Any(x => !x.IsJunk(Tracker.World.Config)))
+                if (items.Any(x => !x.Metadata.IsJunk(Tracker.World.Config)))
                 {
                     Tracker.Say(x => x.Hints.AreaHasSomethingGood, area.GetName());
                 }
@@ -193,21 +192,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Gives a hint or spoiler about the location of an item.
         /// </summary>
         /// <param name="item">The item to find.</param>
-        public void RevealItemLocation(ItemData item)
+        public void RevealItemLocation(Item item)
         {
-            if (item.HasStages && item.TrackingState >= item.MaxStage)
+            if (item.Metadata.HasStages && item.Metadata.TrackingState >= item.Metadata.MaxStage)
             {
                 Tracker.Say(x => x.Spoilers.TrackedAllItemsAlready, item.Name);
                 return;
             }
-            else if (!item.Multiple && item.TrackingState > 0)
+            else if (!item.Metadata.Multiple && item.Metadata.TrackingState > 0)
             {
-                Tracker.Say(x => x.Spoilers.TrackedItemAlready, item.NameWithArticle);
+                Tracker.Say(x => x.Spoilers.TrackedItemAlready, item.Metadata.NameWithArticle);
                 return;
             }
 
             var markedLocation = Tracker.MarkedLocations
-                .Where(x => x.Value.InternalItemType == item.InternalItemType)
+                .Where(x => x.Value.InternalItemType == item.Type)
                 .Select(x => Tracker.World.Locations.Single(y => y.Id == x.Key))
                 .Where(x => !x.State.Cleared)
                 .Random();
@@ -215,7 +214,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 var locationName = Tracker.GetName(markedLocation);
                 var regionName = Tracker.WorldInfo.Region(markedLocation.Region).Name;
-                Tracker.Say(x => x.Spoilers.MarkedItem, item.NameWithArticle, locationName, regionName);
+                Tracker.Say(x => x.Spoilers.MarkedItem, item.Metadata.NameWithArticle, locationName, regionName);
                 return;
             }
 
@@ -228,20 +227,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             // Once we're done being a smartass, see if the item can be found at all
             var locations = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => x.Item.Type == item.Type)
                 .ToImmutableList();
             if (locations.Count == 0)
             {
-                if (item.Multiple || item.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsNotFound, item.Plural);
+                if (item.Metadata.Multiple || item.Metadata.HasStages)
+                    Tracker.Say(x => x.Spoilers.ItemsNotFound, item.Metadata.Plural);
                 else
-                    Tracker.Say(x => x.Spoilers.ItemNotFound, item.NameWithArticle);
+                    Tracker.Say(x => x.Spoilers.ItemNotFound, item.Metadata.NameWithArticle);
                 return;
             }
             else if (locations.Count > 0 && locations.All(x => x.State.Cleared))
             {
                 // The item exists, but all locations are cleared
-                Tracker.Say(x => x.Spoilers.LocationsCleared, item.NameWithArticle);
+                Tracker.Say(x => x.Spoilers.LocationsCleared, item.Metadata.NameWithArticle);
                 return;
             }
 
@@ -288,9 +287,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             }
 
-            if (Tracker.MarkedLocations.TryGetValue(location.Id, out var markedItem))
+            if (location.State.MarkedItem != null)
             {
-                Tracker.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.NameWithArticle);
+                var markedItem = ItemService.FirstOrDefault(location.State.MarkedItem.Value);
+                Tracker.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.Metadata.NameWithArticle);
                 return;
             }
 
@@ -326,16 +326,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// was null, empty or returned a <c>null</c> hint.
         /// </returns>
         protected virtual bool GiveItemHint(Func<HintsConfig, SchrodingersString?> selectHint,
-            ItemData item, params object?[] additionalArgs)
+            Item item, params object?[] additionalArgs)
         {
-            var args = Args.Combine(item.NameWithArticle, additionalArgs);
+            var args = Args.Combine(item.Metadata.NameWithArticle, additionalArgs);
             if (!Tracker.Say(responses => selectHint(responses.Hints), args))
                 return false;
 
-            if (_itemHintsGiven.ContainsKey(item.InternalItemType))
-                _itemHintsGiven[item.InternalItemType]++;
+            if (_itemHintsGiven.ContainsKey(item.Type))
+                _itemHintsGiven[item.Type]++;
             else
-                _itemHintsGiven[item.InternalItemType] = 1;
+                _itemHintsGiven[item.Type] = 1;
             return true;
         }
 
@@ -352,16 +352,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// name="hint"/> was null, empty or returned a <c>null</c> hint.
         /// </returns>
         protected virtual bool GiveItemHint(SchrodingersString? hint,
-            ItemData item, params object?[] additionalArgs)
+            Item item, params object?[] additionalArgs)
         {
-            var args = Args.Combine(item.NameWithArticle, additionalArgs);
+            var args = Args.Combine(item.Metadata.NameWithArticle, additionalArgs);
             if (!Tracker.Say(hint, args))
                 return false;
 
-            if (_itemHintsGiven.ContainsKey(item.InternalItemType))
-                _itemHintsGiven[item.InternalItemType]++;
+            if (_itemHintsGiven.ContainsKey(item.Type))
+                _itemHintsGiven[item.Type]++;
             else
-                _itemHintsGiven[item.InternalItemType] = 1;
+                _itemHintsGiven[item.Type] = 1;
             return true;
         }
 
@@ -429,14 +429,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         ? Tracker.CorrectPronunciation(Tracker.World.Config.SamusName)
                         : Tracker.CorrectPronunciation(Tracker.World.Config.LinkName);
 
-                    if (ItemService.GetOrDefault(location.Item.Type)?.IsJunk(Tracker.World.Config) == true)
+                    if (location.Item.Metadata?.IsJunk(Tracker.World.Config) == true)
                     {
                         return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
                     }
 
                     // Todo: Add check for if it's progression
 
-                    if (ItemService.GetOrDefault(location.Item.Type)?.IsGood(Tracker.World.Config) == true)
+                    if (location.Item.Metadata?.IsGood(Tracker.World.Config) == true)
                     {
                         return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     }
@@ -445,7 +445,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Try to give a hint from the config
                 case 1:
-                    var hint = ItemService.GetOrDefault(location)?.Hints;
+                    var hint = location.Item.Metadata?.Hints;
                     if (hint != null && hint.Count > 0)
                         return GiveLocationHint(hint, location);
 
@@ -470,10 +470,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return true;
             }
 
-            var item = ItemService.GetOrDefault(location);
+            var item = location.Item;
             if (item != null)
             {
-                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.NameWithArticle);
+                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.Metadata.NameWithArticle);
                 return true;
             }
             else
@@ -483,51 +483,51 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
         }
 
-        private bool GiveItemLocationSpoiler(ItemData item)
+        private bool GiveItemLocationSpoiler(Item item)
         {
             var reachableLocation = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => x.Item.Type == item.Type)
                 .Where(x => !x.State.Cleared)
                 .Where(x => x.IsAvailable(Tracker.GetProgression(x.Region)))
                 .Random();
             if (reachableLocation != null)
             {
-                var locationName = Tracker.WorldInfo.Location(reachableLocation).Name;
+                var locationName = reachableLocation.Metadata.Name;
                 var regionName = Tracker.WorldInfo.Region(reachableLocation.Region).Name;
-                if (item.Multiple || item.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.NameWithArticle, locationName, regionName);
+                if (item.Metadata.Multiple || item.Metadata.HasStages)
+                    Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 else
-                    Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.NameWithArticle, locationName, regionName);
+                    Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 return true;
             }
 
             var worldLocation = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => x.Item.Type == item.Type)
                 .Where(x => !x.State.Cleared)
                 .Random();
             if (worldLocation != null)
             {
-                var locationName = Tracker.WorldInfo.Location(worldLocation).Name;
+                var locationName = worldLocation.Metadata.Name;
                 var regionName = Tracker.WorldInfo.Region(worldLocation.Region).Name;
-                if (item.Multiple || item.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
+                if (item.Metadata.Multiple || item.Metadata.HasStages)
+                    Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 else
-                    Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.NameWithArticle, locationName, regionName);
+                    Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 return true;
             }
 
             return false;
         }
 
-        private bool GiveItemLocationHint(ItemData item)
+        private bool GiveItemLocationHint(Item item)
         {
             var itemLocations = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => x.Item.Type == item.Type)
                 .Where(x => !x.State.Cleared);
 
             if (!itemLocations.Any())
             {
-                Logger.LogInformation("Can't find any uncleared locations with {Item}", item.InternalItemType.GetDescription());
+                Logger.LogInformation("Can't find any uncleared locations with {Item}", item.Type.GetDescription());
                 return false;
             }
 
@@ -578,11 +578,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             {
                                 var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression)
                                     .SelectMany(x => x)
-                                    .Where(x => x != item.InternalItemType)
-                                    .Select(x => ItemService.GetOrDefault(x))
+                                    .Where(x => x != item.Type)
+                                    .Select(x => ItemService.FirstOrDefault(x))
                                     .Random();
                                 if (randomMissingItem != null)
-                                    return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.NameWithArticle);
+                                    return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.Metadata.NameWithArticle);
                             }
                         }
 
@@ -591,7 +591,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             return GiveItemHint(x => x.PlaythroughImpossible, item);
                         }
 
-                        var sphere = _playthrough.Spheres.IndexOf(x => x.Items.Any(i => i.Type == item.InternalItemType));
+                        var sphere = _playthrough.Spheres.IndexOf(x => x.Items.Any(i => i.Type == item.Type));
                         var earlyThreshold = Math.Floor(_playthrough.Spheres.Count * 0.25);
                         var lateThreshold = Math.Ceiling(_playthrough.Spheres.Count * 0.75);
                         Logger.LogDebug("{Item} spoiler: sphere {Sphere}, early: {Early}, late: {Late}", item, sphere, earlyThreshold, lateThreshold);
@@ -606,7 +606,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             .GroupBy(x => x.Area)
                             .Where(x => !x.SelectMany(x => x.Locations)
                                           .Where(x => !x.State.Cleared)
-                                          .Any(l => l.Item.Type == item.InternalItemType))
+                                          .Any(l => l.Item.Type == item.Type))
                             .Select(x => x.Key)
                             .Random();
                         if (areaWithoutItem != null)
@@ -691,8 +691,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 return GiveItemHint(x => x.ItemHasBadVanillaLocationName, item, randomLocation.Name);
                             }
 
-                            var vanillaItem = ItemService.GetOrDefault(randomLocation.VanillaItem);
-                            return GiveItemHint(x => x.ItemIsInVanillaJunkLocation, item, vanillaItem?.Name ?? randomLocation.VanillaItem.GetDescription());
+                            var vanillaItem = ItemService.FirstOrDefault(randomLocation.VanillaItem);
+                            return GiveItemHint(x => x.ItemIsInVanillaJunkLocation, item, vanillaItem?.Metadata?.Name ?? randomLocation.VanillaItem.GetDescription());
                         }
 
                         // If there isn't any location with this item that has a
@@ -706,14 +706,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return false;
         }
 
-        private int HintsGiven(ItemData item) => _itemHintsGiven.GetValueOrDefault(item.InternalItemType, 0);
+        private int HintsGiven(Item item) => _itemHintsGiven.GetValueOrDefault(item.Type, 0);
 
         private int HintsGiven(Location location) => _locationHintsGiven.GetValueOrDefault(location.Id, 0);
 
-        private Location? GetRandomItemLocationWithFilter(ItemData item, Func<Location, bool> predicate)
+        private Location? GetRandomItemLocationWithFilter(Item item, Func<Location, bool> predicate)
         {
             var randomLocation = Tracker.World.Locations
-                .Where(x => x.Item.Type == item.InternalItemType)
+                .Where(x => x.Item.Type == item.Type)
                 .Where(x => !x.State.Cleared)
                 .Where(x => x.IsAvailable(Tracker.GetProgression(x.Region)))
                 .Where(predicate)
@@ -724,7 +724,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // If the item is not at any accessible location, try to look in
                 // out-of-logic places, too.
                 randomLocation = Tracker.World.Locations
-                    .Where(x => x.Item.Type == item.InternalItemType)
+                    .Where(x => x.Item.Type == item.Type)
                     .Where(x => !x.State.Cleared)
                     .Where(predicate)
                     .Random();

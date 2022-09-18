@@ -7,6 +7,7 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Microsoft.Extensions.Logging;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -21,6 +22,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         protected IReadOnlyCollection<RoomInfo> _rooms;
         protected IReadOnlyCollection<LocationInfo> _locations;
         protected IReadOnlyCollection<BossInfo> _bosses;
+        protected IReadOnlyCollection<ItemData> _items;
+        private readonly ILogger<WorldService> _logger;
 
         /// <summary>
         /// Constructor
@@ -30,13 +33,15 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="rooms">Config with additional room information</param>
         /// <param name="locations">Config with additional location information</param>
         /// <param name="bosses">Config with additional boss information</param>
-        public WorldService(RegionConfig regions, DungeonConfig dungeons, RoomConfig rooms, LocationConfig locations, BossConfig bosses)
+        public WorldService(RegionConfig regions, DungeonConfig dungeons, RoomConfig rooms, LocationConfig locations, BossConfig bosses, ItemConfig items, ILogger<WorldService> logger)
         {
             _regions = regions;
             _dungeons = dungeons;
             _rooms = rooms;
             _locations = locations;
             _bosses = bosses;
+            _items = items;
+            _logger = logger;
         }
 
         /// <summary>
@@ -236,5 +241,38 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
         public BossInfo Boss(string name)
             => Bosses.Single(x => x.Boss == name);
+
+        /// <summary>
+        /// Applies various metadata to the world, such as LocationData and ItemData
+        /// </summary>
+        /// <param name="world">The world to apply metadata to</param>
+        public void LoadWorldMetadata(World world)
+        {
+            world.Locations.ToList().ForEach(loc => loc.Metadata = Location(loc.Id));
+
+            foreach (var (metadata, worldItems) in _items.Select(x => (item: x, worldItems: world.AllItems.Where(w => w.Is(x.InternalItemType, x.Item)))))
+            {
+                if (worldItems.Any())
+                {
+                    worldItems.ToList().ForEach(x => x.Metadata = metadata);
+                }
+                else
+                {
+                    _logger.LogInformation($"No data found {metadata.Item}");
+                    var item = new Item(metadata.InternalItemType, world, metadata.Item)
+                    {
+                        State = new()
+                        {
+                            ItemName = metadata.Item,
+                            Type = metadata.InternalItemType,
+                            TrackerState = world.State
+                        },
+                        Metadata = metadata
+                    };
+                    world.State.ItemStates.Add(item.State);
+                    world.TrackerItems.Add(item);
+                }
+            }
+        }
     }
 }

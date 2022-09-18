@@ -63,7 +63,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Track death", GetTrackDeathRule(), (tracker, result) =>
             {
-                var death = itemService.FindOrDefault("Death");
+                var death = itemService.FirstOrDefault("Death");
                 if (death == null)
                 {
                     Logger.LogError("Tried to track death, but could not find an item named 'Death'.");
@@ -138,7 +138,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetTrackItemRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name != "Content");
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();
 

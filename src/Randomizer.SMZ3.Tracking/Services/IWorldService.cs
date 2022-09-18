@@ -197,5 +197,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="name">The name of the boss</param>
         /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
         public BossInfo Boss(string name);
+
+        public void LoadWorldMetadata(World world);
     }
 }

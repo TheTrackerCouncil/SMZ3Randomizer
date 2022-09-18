@@ -92,7 +92,7 @@ namespace Randomizer.App.ViewModels
             }
             else if (Type == MapLocationType.SMDoor)
             {
-                Item = Syncer.Tracker.ItemService.FindOrDefault(mapLocation.Name);
+                Item = Syncer.Tracker.ItemService.FirstOrDefault(mapLocation.Name);
                 Name = "Need " + Item.Name;
             }
 
@@ -150,7 +150,7 @@ namespace Randomizer.App.ViewModels
         #nullable enable
         private BossInfo? Boss { get; set; }
         private DungeonInfo? Dungeon { get; set; }
-        private ItemData? Item { get; set; }
+        private Item? Item { get; set; }
         #nullable disable
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace Randomizer.App.ViewModels
                 }
                 else if (Type == MapLocationType.SMDoor)
                 {
-                    if (Item != null && Item.TrackingState == 0)
+                    if (Item != null && Item.State.TrackingState == 0)
                     {
                         image = DoorImage;
                     }
@@ -302,7 +302,7 @@ namespace Randomizer.App.ViewModels
             }
         }
 
-        private string DoorImage => Item.InternalItemType switch
+        private string DoorImage => Item.Type switch
         {
             ItemType.CardCrateriaL1 => "door1.png",
             ItemType.CardCrateriaL2 => "door2.png",

@@ -289,7 +289,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns></returns>
         public async Task AskChatAboutContent()
         {
-            var contentItemData = _itemService.FindOrDefault("Content");
+            var contentItemData = _itemService.FirstOrDefault("Content");
             if (contentItemData == null)
             {
                 Logger.LogError("Unable to determine content item data");

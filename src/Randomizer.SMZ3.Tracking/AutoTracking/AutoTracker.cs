@@ -484,8 +484,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 // Activated flute
                 if (action.CurrentData?.CheckBinary8Bit(0x10C, 0x01) == true && action.PreviousData?.CheckBinary8Bit(0x10C, 0x01) != true)
                 {
-                    var duckItem = _itemService.FindOrDefault("Duck");
-                    if (duckItem != null && duckItem.TrackingState == 0)
+                    var duckItem = _itemService.FirstOrDefault("Duck");
+                    if (duckItem != null && duckItem.State.TrackingState == 0)
                     {
                         Tracker?.TrackItem(duckItem, null, null, false, true, null, false);
                     }
@@ -563,7 +563,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                             IncrementGTItems(location);
                         }
 
-                        var item = _itemService.GetOrDefault(location);
+                        var item = location.Item;
                         if (item != null)
                         {
                             Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
