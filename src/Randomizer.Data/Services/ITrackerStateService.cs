@@ -12,7 +12,7 @@ namespace Randomizer.Data.Services
     {
         public void CreateState(World world, GeneratedRom generatedRom);
 
-        public void SaveState(World world, GeneratedRom generatedRom, double secondsElapsed);
+        public Task SaveStateAsync(World world, GeneratedRom generatedRom, double secondsElapsed);
 
         public TrackerState? LoadState(World world, GeneratedRom generatedRom);
     }

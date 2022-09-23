@@ -899,7 +899,7 @@ namespace Randomizer.App
                 if (MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    await SaveState();
+                    await SaveStateAsync();
                 }
             }
             Tracker.StopTracking();
@@ -965,12 +965,12 @@ namespace Randomizer.App
             }
         }
 
-        private async Task SaveState()
+        private async Task SaveStateAsync()
         {
             // If there is a rom, save it to the database
             if (GeneratedRom.IsValid(Rom))
             {
-                Tracker.Save(Rom);
+                await Tracker.SaveAsync(Rom);
             }
 
             SavedState.Invoke(this, null);
@@ -978,7 +978,7 @@ namespace Randomizer.App
 
         private async void SaveStateMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            await SaveState();
+            await SaveStateAsync();
         }
 
         private void StatusBarTimer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

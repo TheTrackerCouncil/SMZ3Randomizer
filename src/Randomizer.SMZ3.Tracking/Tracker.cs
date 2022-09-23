@@ -442,11 +442,11 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="rom">The rom to save</param>
         /// <returns></returns>
-        public void Save(GeneratedRom rom)
+        public async Task SaveAsync(GeneratedRom rom)
         {
             IsDirty = false;
             //var state = TrackerState.TakeSnapshot(this, ItemService);
-            _stateService.SaveState(_worldAccessor.World, rom, TotalElapsedTime.TotalSeconds);
+            await _stateService.SaveStateAsync(_worldAccessor.World, rom, TotalElapsedTime.TotalSeconds);
         }
 
         /// <summary>

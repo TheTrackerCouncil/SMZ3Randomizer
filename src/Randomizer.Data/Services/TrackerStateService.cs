@@ -78,7 +78,7 @@ namespace Randomizer.Data.Services
         }
 
 
-        public void SaveState(World world, GeneratedRom generatedRom, double secondsElapsed)
+        public async Task SaveStateAsync(World world, GeneratedRom generatedRom, double secondsElapsed)
         {
             var trackerState = generatedRom.TrackerState;
 
@@ -96,7 +96,7 @@ namespace Randomizer.Data.Services
             trackerState.SecondsElapsed = secondsElapsed;
             
 
-            _randomizerContext.SaveChanges();
+            await _randomizerContext.SaveChangesAsync();
         }
 
         private void LoadLocationStates(World world, TrackerState trackerState)
