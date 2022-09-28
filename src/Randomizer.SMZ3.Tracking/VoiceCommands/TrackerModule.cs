@@ -123,11 +123,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static DungeonInfo GetDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static IDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
-            var dungeonTypeName = (string)result.Semantics[DungeonKey].Value;
-            var dungeon = tracker.WorldInfo.Dungeon(dungeonTypeName);
-            return dungeon ?? throw new Exception($"Could not find dungeon {dungeonTypeName} (\"{result.Text}\").");
+            var name = (string)result.Semantics[DungeonKey].Value;
+            var dungeon = tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
+            return dungeon ?? throw new Exception($"Could not find dungeon {name} (\"{result.Text}\").");
         }
 
         /// <summary>
@@ -139,10 +139,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static DungeonInfo? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static IDungeon? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
-            var dungeonTypeName = (string)result.Semantics[BossKey].Value;
-            return tracker.WorldInfo.Dungeon(dungeonTypeName);
+            var name = (string)result.Semantics[BossKey].Value;
+            var dungeon = tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
+            return dungeon ?? throw new Exception($"Could not find dungeon {name} (\"{result.Text}\").");
         }
 
         /// <summary>
@@ -154,10 +155,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="BossInfo"/> from the recognition result.
         /// </returns>
-        protected static BossInfo? GetBossFromResult(Tracker tracker, RecognitionResult result)
+        protected static Boss? GetBossFromResult(Tracker tracker, RecognitionResult result)
         {
             var bossName = (string)result.Semantics[BossKey].Value;
-            return tracker.WorldInfo.Bosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
+            return tracker.World.AllBosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -409,12 +410,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetDungeonNames(bool includeDungeonsWithoutReward = false)
         {
             var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.WorldInfo.Dungeons)
+            foreach (var dungeon in Tracker.World.Dungeons)
             {
-                if (dungeon.HasReward || includeDungeonsWithoutReward)
+                if (dungeon.DungeonState.HasReward || includeDungeonsWithoutReward)
                 {
-                    foreach (var name in dungeon.Name)
-                        dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.Type.FullName));
+                    foreach (var name in dungeon.DungeonMetadata.Name)
+                        dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
                 }
             }
 
@@ -431,15 +432,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetBossNames()
         {
             var bossNames = new Choices();
-            foreach (var dungeon in Tracker.WorldInfo.Dungeons)
+            foreach (var dungeon in Tracker.World.Dungeons)
             {
-                foreach (var name in dungeon.Boss)
-                    bossNames.Add(new SemanticResultValue(name.Text, dungeon.Type.FullName));
+                foreach (var name in dungeon.DungeonMetadata.Boss)
+                    bossNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
             }
-            foreach (var boss in Tracker.WorldInfo.Bosses)
+            foreach (var boss in Tracker.World.AllBosses)
             {
-                foreach (var name in boss.Name)
-                    bossNames.Add(new SemanticResultValue(name.Text, name.Text));
+                if (boss.Metadata?.Name != null)
+                {
+                    foreach (var name in boss.Metadata.Name)
+                        bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
+                }
+                
             }
             return bossNames;
         }
@@ -497,7 +502,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             foreach (var region in Tracker.WorldInfo.Regions)
             {
-                if (excludeDungeons && Tracker.WorldInfo.Dungeon(region.Type.FullName) != null)
+                if (excludeDungeons && region is IDungeon)
                     continue;
 
                 foreach (var name in region.Name)
@@ -505,6 +510,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             return regionNames;
+        }
+
+        protected virtual Choices GetMedallionNames()
+        {
+            var medallions = new Choices();
+
+            var medallionTypes = new List<ItemType>(Enum.GetValues<ItemType>());
+            foreach (var medallion in medallionTypes.Where(x => x == ItemType.Nothing || x.IsInCategory(ItemCategory.Medallion)))
+            {
+                var item = ItemService.FirstOrDefault(medallion);
+                foreach (var name in item.Metadata.Name)
+                    medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
+            }
+
+            return medallions;
         }
     }
 }

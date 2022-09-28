@@ -34,6 +34,8 @@ using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
+using Randomizer.SMZ3.Contracts;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.App
 {
@@ -48,9 +50,10 @@ namespace Randomizer.App
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IItemService _itemService;
-        private readonly IWorldService _worldService;
+        private readonly IMetadataService _worldService;
         private readonly IUIService _uiService;
         private readonly List<object> _mouseDownSenders = new();
+        private readonly IWorldAccessor _world;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
@@ -64,14 +67,16 @@ namespace Randomizer.App
         private UILayout _layout;
         private UILayout _previousLayout;
         private RandomizerOptions _options;
+        
 
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator,
-            IWorldService worldService,
+            IMetadataService worldService,
             IUIService uiService,
-            OptionsFactory optionsFactory
+            OptionsFactory optionsFactory,
+            IWorldAccessor world
         )
         {
             InitializeComponent();
@@ -84,6 +89,7 @@ namespace Randomizer.App
             _uiService = uiService;
             _options = optionsFactory.Create();
             _layout = uiService.GetLayout(_options.GeneralOptions.SelectedLayout);
+            _world = world;
 
             foreach(var layout in uiService.SelectableLayouts)
             {
@@ -232,6 +238,11 @@ namespace Randomizer.App
         {
             TrackerGrid.Children.Clear();
 
+            if (_world is null)
+            {
+                return;
+            }
+
             foreach (var gridLocation in _layout.GridLocations)
             {
                 var labelImage = (Image)null;
@@ -289,18 +300,18 @@ namespace Randomizer.App
                 // If it's a Zelda dungeon
                 else if (gridLocation.Type == UIGridLocationType.Dungeon)
                 {
-                    var dungeon = _worldService.Dungeon(gridLocation.Identifiers.First());
+                    var dungeon = _world.World.Dungeons.FirstOrDefault(x => x.DungeonName == gridLocation.Identifiers.First());
                     if (dungeon == null)
                     {
                         _logger.LogError($"Dungeon {gridLocation.Identifiers.First()} could not be found");
                         continue;
                     }
-
+                    
                     var overlayPath = _uiService.GetSpritePath(dungeon);
-                    var rewardPath = dungeon.HasReward ? _uiService.GetSpritePath(dungeon.Reward) : null;
+                    var rewardPath = dungeon.MarkedReward != RewardType.None ? _uiService.GetSpritePath(dungeon.MarkedReward) : null;
                     var image = GetGridItemControl(rewardPath,
                         gridLocation.Column, gridLocation.Row,
-                        dungeon.TreasureRemaining, overlayPath, minCounter: 1);
+                        dungeon.DungeonState.RemainingTreasure, overlayPath, minCounter: 1);
                     image.Tag = gridLocation;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
@@ -310,22 +321,22 @@ namespace Randomizer.App
                         image.ContextMenu = CreateContextMenu(dungeon);
                     }
 
-                    image.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
+                    image.Opacity = dungeon.DungeonState.Cleared ? 1.0d : 0.2d;
 
                     TrackerGrid.Children.Add(image);
                 }
                 // If it's a Super Metroid boss
                 else if (gridLocation.Type == UIGridLocationType.SMBoss)
                 {
-                    var boss = _worldService.Boss(gridLocation.Identifiers.First());
+                    var boss = _world.World.AllBosses.FirstOrDefault(x => x.Name == gridLocation.Identifiers.First());
                     if (boss == null)
                         continue;
 
-                    var fileName = _uiService.GetSpritePath(boss);
-                    var overlay = GetOverlayImageFileName(boss);
+                    var fileName = _uiService.GetSpritePath(boss.Metadata);
+                    var overlay = GetOverlayImageFileName(boss.Metadata);
                     if (fileName == null)
                     {
-                        _logger.LogError($"Image for {boss.Boss} could not be found");
+                        _logger.LogError($"Image for {boss.Name} could not be found");
                         continue;
                     }
 
@@ -335,7 +346,7 @@ namespace Randomizer.App
                     image.ContextMenu = CreateContextMenu(boss);
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
-                    image.Opacity = boss.Defeated ? 1.0d : 0.2d;
+                    image.Opacity = boss.State.Defeated ? 1.0d : 0.2d;
                     TrackerGrid.Children.Add(image);
                 }
                 // If it's a hammer peg
@@ -369,16 +380,16 @@ namespace Randomizer.App
         {
             return item switch
             {
-                { Type: ItemType.Bombos } => GetMatchingDungeonNameImages(Medallion.Bombos),
-                { Type: ItemType.Ether } => GetMatchingDungeonNameImages(Medallion.Ether),
-                { Type: ItemType.Quake } => GetMatchingDungeonNameImages(Medallion.Quake),
+                { Type: ItemType.Bombos } => GetMatchingDungeonNameImages(item.Type),
+                { Type: ItemType.Ether } => GetMatchingDungeonNameImages(item.Type),
+                { Type: ItemType.Quake } => GetMatchingDungeonNameImages(item.Type),
                 _ => null
             };
 
-            string GetMatchingDungeonNameImages(Medallion requirement)
+            string GetMatchingDungeonNameImages(ItemType requirement)
             {
-                var names = Tracker.WorldInfo.Dungeons.Where(x => x.Requirement == requirement)
-                    .Select(x => x.Name[0])
+                var names = Tracker.World.Dungeons.Where(x => x.DungeonState.MarkedMedallion == requirement)
+                    .Select(x => x.DungeonName)
                     .ToList();
 
                 if (names.Count == 1)
@@ -415,7 +426,7 @@ namespace Randomizer.App
                     }
                     else if (gridLocation.Type == UIGridLocationType.Dungeon)
                     {
-                        var dungeon = _worldService.Dungeon(gridLocation.Identifiers.First());
+                        var dungeon = _world.World.Dungeons.First(x => x.DungeonName == gridLocation.Identifiers.First());
                         Tracker.MarkDungeonAsCleared(dungeon);
                     }
                     else if (gridLocation.Type == UIGridLocationType.Peg)
@@ -424,7 +435,7 @@ namespace Randomizer.App
                     }
                     else if (gridLocation.Type == UIGridLocationType.SMBoss)
                     {
-                        var boss = _worldService.Boss(gridLocation.Identifiers.First());
+                        var boss = _world.World.AllBosses.First(x => x.Name == gridLocation.Identifiers.First());
                         Tracker.MarkBossAsDefeated(boss);
                     }
                     else
@@ -452,7 +463,7 @@ namespace Randomizer.App
                 {
                     var menuItem = new MenuItem
                     {
-                        Header = "Track " + item.Name[0],
+                        Header = "Track " + item.Name,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(_uiService.GetSpritePath(item)))
@@ -470,7 +481,7 @@ namespace Randomizer.App
                 {
                     var menuItem = new MenuItem
                     {
-                        Header = "Untrack " + item.Name[0],
+                        Header = "Untrack " + item.Name,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(_uiService.GetSpritePath(item)))
@@ -484,29 +495,23 @@ namespace Randomizer.App
                     menu.Items.Add(menuItem);
                 }
 
-                var medallion = item.Type switch
+                if (item.Type is ItemType.Bombos or ItemType.Ether or ItemType.Quake)
                 {
-                    ItemType.Bombos => Medallion.Bombos,
-                    ItemType.Ether => Medallion.Ether,
-                    ItemType.Quake => Medallion.Quake,
-                    _ => Medallion.None
-                };
-                if (medallion != Medallion.None)
-                {
-                    var turtleRock = Tracker.WorldInfo.Dungeon<TurtleRock>();
-                    var miseryMire = Tracker.WorldInfo.Dungeon<MiseryMire>();
+                    var medallion = item.Type;
+                    var turtleRock = Tracker.World.TurtleRock as IDungeon;
+                    var miseryMire = Tracker.World.MiseryMire as IDungeon;
 
                     var requiredByNone = new MenuItem
                     {
                         Header = "Not required for any dungeon",
-                        IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement != medallion
+                        IsChecked = turtleRock.MarkedMedallion != medallion && miseryMire.MarkedMedallion != medallion
                     };
                     requiredByNone.Click += (sender, e) =>
                     {
-                        if (turtleRock.Requirement == medallion)
-                            turtleRock.Requirement = Medallion.None;
-                        if (miseryMire.Requirement == medallion)
-                            miseryMire.Requirement = Medallion.None;
+                        if (turtleRock.MarkedMedallion == medallion)
+                            turtleRock.MarkedMedallion = ItemType.Nothing;
+                        if (miseryMire.MarkedMedallion == medallion)
+                            miseryMire.MarkedMedallion = ItemType.Nothing;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -514,13 +519,13 @@ namespace Randomizer.App
                     var requiredByTR = new MenuItem
                     {
                         Header = "Required for Turtle Rock",
-                        IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement != medallion
+                        IsChecked = turtleRock.Medallion == medallion && miseryMire.Medallion != medallion
                     };
                     requiredByTR.Click += (sender, e) =>
                     {
-                        turtleRock.Requirement = medallion;
-                        if (miseryMire.Requirement == medallion)
-                            miseryMire.Requirement = Medallion.None;
+                        turtleRock.MarkedMedallion = medallion;
+                        if (miseryMire.MarkedMedallion == medallion)
+                            miseryMire.MarkedMedallion = ItemType.Nothing;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -528,13 +533,13 @@ namespace Randomizer.App
                     var requiredByMM = new MenuItem
                     {
                         Header = "Required for Misery Mire",
-                        IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement == medallion
+                        IsChecked = turtleRock.MarkedMedallion != medallion && miseryMire.MarkedMedallion == medallion
                     };
                     requiredByMM.Click += (sender, e) =>
                     {
-                        if (turtleRock.Requirement == medallion)
-                            turtleRock.Requirement = Medallion.None;
-                        miseryMire.Requirement = medallion;
+                        if (turtleRock.MarkedMedallion == medallion)
+                            turtleRock.MarkedMedallion = ItemType.Nothing;
+                        miseryMire.MarkedMedallion = medallion;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -542,12 +547,12 @@ namespace Randomizer.App
                     var requiredByBoth = new MenuItem
                     {
                         Header = "Required by both",
-                        IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement == medallion
+                        IsChecked = turtleRock.MarkedMedallion == medallion && miseryMire.MarkedMedallion == medallion
                     };
                     requiredByBoth.Click += (sender, e) =>
                     {
-                        turtleRock.Requirement = medallion;
-                        miseryMire.Requirement = medallion;
+                        turtleRock.MarkedMedallion = medallion;
+                        miseryMire.MarkedMedallion = medallion;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -562,18 +567,18 @@ namespace Randomizer.App
             return menu.Items.Count > 0 ? menu : null;
         }
 
-        private ContextMenu CreateContextMenu(BossInfo boss)
+        private ContextMenu CreateContextMenu(Boss boss)
         {
             var menu = new ContextMenu
             {
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (boss.Defeated)
+            if (boss.State.Defeated == true)
             {
                 var unclear = new MenuItem
                 {
-                    Header = $"Revive {boss.Name[0]}",
+                    Header = $"Revive {boss.Name}",
                 };
                 unclear.Click += (sender, e) =>
                 {
@@ -585,14 +590,14 @@ namespace Randomizer.App
             return menu.Items.Count > 0 ? menu : null;
         }
 
-        private ContextMenu CreateContextMenu(DungeonInfo dungeon)
+        private ContextMenu CreateContextMenu(IDungeon dungeon)
         {
             var menu = new ContextMenu
             {
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (dungeon.Cleared)
+            if (dungeon.DungeonState.Cleared)
             {
                 var unclear = new MenuItem
                 {
@@ -605,14 +610,14 @@ namespace Randomizer.App
                 menu.Items.Add(unclear);
             }
 
-            if (dungeon.HasReward && dungeon.Type != typeof(CastleTower))
+            if (dungeon.HasReward && dungeon.GetType() != typeof(CastleTower))
             {
-                foreach (var reward in Enum.GetValues<RewardItem>().Where(x => x != RewardItem.Agahnim && x != RewardItem.NonGreenPendant))
+                foreach (var reward in Enum.GetValues<RewardType>().Where(x => x != RewardType.Agahnim))
                 {
                     var item = new MenuItem
                     {
                         Header = $"Mark as {reward.GetDescription()}",
-                        IsChecked = dungeon.Reward == reward,
+                        IsChecked = dungeon.DungeonState.MarkedReward == reward,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(_uiService.GetSpritePath(reward)))
@@ -620,7 +625,7 @@ namespace Randomizer.App
                     };
                     item.Click += (sender, e) =>
                     {
-                        dungeon.Reward = reward;
+                        dungeon.DungeonState.MarkedReward = reward;
                         RefreshGridItems();
                     };
                     menu.Items.Add(item);
@@ -637,7 +642,7 @@ namespace Randomizer.App
             // If a rom was passed in, generate its seed to populate all locations and items
             if (GeneratedRom.IsValid(Rom))
             {
-                var config = SMZ3.Tracking.TrackerState.LoadConfig(Rom);
+                var config = Config.FromConfigString(Rom.Settings);
                 Options = Options.Clone();
                 Options.LogicConfig = config.LogicConfig;
                 Options.SeedOptions.Race = config.Race;

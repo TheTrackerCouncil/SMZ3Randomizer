@@ -98,7 +98,7 @@ namespace Randomizer.SMZ3.Tracking
             ICommunicator communicator,
             IHistoryService historyService,
             TrackerConfigs configs,
-            IWorldService worldService,
+            IMetadataService worldService,
             ITrackerStateService stateService)
         {
             if (trackerOptions.Options == null)
@@ -118,7 +118,6 @@ namespace Randomizer.SMZ3.Tracking
             Responses = configs.Responses;
             Requests = configs.Requests;
             WorldInfo = worldService;
-            GetTreasureCounts(WorldInfo.Dungeons, World);
             UpdateTrackerProgression = true;
 
             History = historyService;
@@ -212,12 +211,17 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets extra information about locations.
         /// </summary>
-        public IWorldService WorldInfo { get; }
+        public IMetadataService WorldInfo { get; }
 
         /// <summary>
         /// Gets a reference to the <see cref="ItemService"/>.
         /// </summary>
         public IItemService ItemService { get; }
+
+        /// <summary>
+        /// Gets the main state for the tracker
+        /// </summary>
+        public Shared.Models.TrackerState State => World.State;
 
         /// <summary>
         /// The number of pegs that have been pegged for Peg World mode
@@ -553,45 +557,45 @@ namespace Randomizer.SMZ3.Tracking
         /// <exception cref=" ArgumentOutOfRangeException">
         /// <paramref name="amount"/> is less than 1.
         /// </exception>
-        public bool TrackDungeonTreasure(DungeonInfo dungeon, float? confidence = null, int amount = 1, bool autoTracked = false, bool stateResponse = true)
+        public bool TrackDungeonTreasure(IDungeon dungeon, float? confidence = null, int amount = 1, bool autoTracked = false, bool stateResponse = true)
         {
             if (amount < 1)
                 throw new ArgumentOutOfRangeException(nameof(amount), "The amount of items must be greater than zero.");
-            if (amount > dungeon.TreasureRemaining && !dungeon.HasManuallyClearedTreasure)
+            if (amount > dungeon.DungeonState.RemainingTreasure && !dungeon.DungeonState.HasManuallyClearedTreasure)
             {
-                _logger.LogWarning("Trying to track {amount} treasures in a dungeon with only {left} treasures left.", amount, dungeon.TreasureRemaining);
-                Say(Responses.DungeonTooManyTreasuresTracked?.Format(dungeon.Name, dungeon.TreasureRemaining, amount));
+                _logger.LogWarning("Trying to track {amount} treasures in a dungeon with only {left} treasures left.", amount, dungeon.DungeonState.RemainingTreasure);
+                Say(Responses.DungeonTooManyTreasuresTracked?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure, amount));
                 return false;
             }
 
-            if (dungeon.TreasureRemaining > 0)
+            if (dungeon.DungeonState.RemainingTreasure > 0)
             {
-                dungeon.TreasureRemaining -= amount;
+                dungeon.DungeonState.RemainingTreasure -= amount;
 
                 // Always add a response if there's treasure left, even when
                 // clearing a dungeon (because that means it was out of logic
                 // and could be relevant)
-                if (stateResponse && (confidence != null || dungeon.TreasureRemaining >= 1 || autoTracked))
+                if (stateResponse && (confidence != null || dungeon.DungeonState.RemainingTreasure >= 1 || autoTracked))
                 {
                     // Try to get the response based on the amount of items left
-                    if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.TreasureRemaining, out var response))
-                        Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                    if (Responses.DungeonTreasureTracked.TryGetValue(dungeon.DungeonState.RemainingTreasure, out var response))
+                        Say(response.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure));
                     // If we don't have a response for the exact amount and we
                     // have multiple left, get the one for 2 (considered
                     // generic)
-                    else if (dungeon.TreasureRemaining >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
-                        Say(response.Format(dungeon.Name, dungeon.TreasureRemaining));
+                    else if (dungeon.DungeonState.RemainingTreasure >= 2 && Responses.DungeonTreasureTracked.TryGetValue(2, out response))
+                        Say(response.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure));
                 }
 
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
-                AddUndo(() => dungeon.TreasureRemaining += amount);
+                AddUndo(() => dungeon.DungeonState.RemainingTreasure += amount);
                 return true;
             }
             else if (stateResponse && confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
             {
                 // Attempted to track treasure when all treasure items were
                 // already cleared out
-                Say(response.Format(dungeon.Name));
+                Say(response.Format(dungeon.DungeonMetadata.Name));
             }
 
             return false;
@@ -606,24 +610,24 @@ namespace Randomizer.SMZ3.Tracking
         /// possible rewards.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonReward(DungeonInfo dungeon, RewardItem? reward = null, float? confidence = null)
+        public void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null)
         {
-            var originalReward = dungeon.Reward;
+            var originalReward = dungeon.DungeonState.MarkedReward;
             if (reward == null)
             {
-                dungeon.Reward = Enum.IsDefined(dungeon.Reward + 1) ? dungeon.Reward + 1 : RewardItem.Unknown;
+                var currentValue = dungeon.DungeonState.MarkedReward ?? RewardType.None;
+                dungeon.DungeonState.MarkedReward = Enum.IsDefined(currentValue + 1) ? currentValue + 1 : RewardType.None;
                 // Cycling through rewards is done via UI, so speaking the
                 // reward out loud for multiple clicks is kind of annoying
             }
             else
             {
-                dungeon.Reward = reward.Value;
-                
-                Say(Responses.DungeonRewardMarked.Format(dungeon.Name, ItemService.GetName(dungeon.Reward)));
+                dungeon.DungeonState.MarkedReward = reward.Value;
+                Say(Responses.DungeonRewardMarked.Format(dungeon.DungeonMetadata.Name, dungeon.Reward.Metadata.Name));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
-            AddUndo(() => dungeon.Reward = originalReward);
+            AddUndo(() => dungeon.DungeonState.MarkedReward = originalReward);
         }
 
         /// <summary>
@@ -631,18 +635,18 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="reward">The reward to set.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetUnmarkedDungeonReward(RewardItem reward, float? confidence = null)
+        public void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null)
         {
-            var unmarkedDungeons = WorldInfo.Dungeons
-                .Where(x => x.HasReward && x.Reward == RewardItem.Unknown)
+            var unmarkedDungeons = World.Dungeons
+                .Where(x => x.DungeonState.HasReward && !x.DungeonState.HasMarkedReward)
                 .ToImmutableList();
 
             if (unmarkedDungeons.Count > 0)
             {
-                unmarkedDungeons.ForEach(dungeon => dungeon.Reward = reward);
+                unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.Reward = reward);
                 Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
 
-                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.Reward = RewardItem.Unknown));
+                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.Reward = RewardType.None));
                 OnDungeonUpdated(new(confidence));
             }
             else
@@ -657,44 +661,47 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="dungeon">The dungeon to mark.</param>
         /// <param name="medallion">The medallion that is required.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonRequirement(DungeonInfo dungeon, Medallion? medallion = null, float? confidence = null)
+        public void SetDungeonRequirement(IDungeon dungeon, ItemType? medallion = null, float? confidence = null)
         {
-            var region = World?.Regions.SingleOrDefault(x => dungeon.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
+            var region = World?.Regions.SingleOrDefault(x => dungeon.DungeonMetadata.Name.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
             if (region == null)
             {
                 Say("Strange, I can't find that dungeon in this seed.");
             }
             else if (region is not INeedsMedallion medallionRegion)
             {
-                Say(Responses.DungeonRequirementInvalid.Format(dungeon.Name));
+                Say(Responses.DungeonRequirementInvalid.Format(dungeon.DungeonMetadata.Name));
                 return;
             }
 
-            var originalRequirement = dungeon.Requirement;
+            var originalRequirement = dungeon.DungeonState.MarkedMedallion ?? ItemType.Nothing;
             if (medallion == null)
             {
-                dungeon.Requirement = Enum.IsDefined(dungeon.Requirement + 1) ? dungeon.Requirement + 1 : Medallion.None;
+                var medallionItems = new List<ItemType>(Enum.GetValues<ItemType>());
+                medallionItems.Insert(0, ItemType.Nothing);
+                var index = (medallionItems.IndexOf(originalRequirement) + 1) % medallionItems.Count;
+                dungeon.DungeonState.MarkedMedallion = medallionItems[index];
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
             }
             else
             {
                 if (region is INeedsMedallion medallionRegion
                     && medallionRegion.Medallion != ItemType.Nothing
-                    && medallionRegion.Medallion != medallion.Value.ToItemType()
+                    && medallionRegion.Medallion != medallion.Value
                     && confidence >= Options.MinimumSassConfidence)
                 {
                     Say(Responses.DungeonRequirementMismatch?.Format(
                         HintsEnabled ? "a different medallion" : medallionRegion.Medallion.ToString(),
-                        dungeon.Name,
+                        dungeon.DungeonMetadata.Name,
                         medallion.Value.ToString()));
                 }
 
-                dungeon.Requirement = medallion.Value;
-                Say(Responses.DungeonRequirementMarked.Format(medallion.ToString(), dungeon.Name));
+                dungeon.DungeonState.MarkedMedallion = medallion.Value;
+                Say(Responses.DungeonRequirementMarked.Format(medallion.ToString(), dungeon.DungeonMetadata.Name));
                 OnDungeonUpdated(new TrackerEventArgs(confidence));
             }
 
-            AddUndo(() => dungeon.Requirement = originalRequirement);
+            AddUndo(() => dungeon.DungeonState.MarkedMedallion = originalRequirement);
         }
 
         /// <summary>
@@ -1463,7 +1470,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="dungeon">The dungeon the item was tracked in.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void TrackItem(Item item, DungeonInfo dungeon, string? trackedAs = null, float? confidence = null)
+        public void TrackItem(Item item, IDungeon dungeon, string? trackedAs = null, float? confidence = null)
         {
             var tracked = TrackItem(item, trackedAs, confidence, tryClear: false);
             var undoTrack = _undoHistory.Pop();
@@ -1483,7 +1490,7 @@ namespace Randomizer.SMZ3.Tracking
 
             // Check if we can remove something from the marked location
             var location = World.Locations
-                .Where(x => dungeon.Is(x.Region))
+                .Where(x => dungeon == x.Region)
                 .TrySingle(x => x.ItemIs(item.Type, World));
             if (location != null)
             {
@@ -1779,20 +1786,21 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon to clear.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void ClearDungeon(DungeonInfo dungeon, float? confidence = null)
+        public void ClearDungeon(IDungeon dungeon, float? confidence = null)
         {
-            var remaining = dungeon.TreasureRemaining;
+            var remaining = dungeon.DungeonState.RemainingTreasure;
             if (remaining > 0)
             {
-                dungeon.TreasureRemaining = 0;
+                dungeon.DungeonState.RemainingTreasure = 0;
             }
 
             // Clear the dungeon only if there's no bosses to defeat
-            if (!dungeon.HasReward)
-                dungeon.Cleared = true;
+            if (!dungeon.DungeonState.HasReward)
+                dungeon.DungeonState.Cleared = true;
 
+            var region = dungeon as Region;
             var progress = GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
-            var locations = dungeon.GetLocations(World).Where(x => !x.State.Cleared).ToList();
+            var locations = region.Locations.Where(x => !x.State.Cleared).ToList();
             var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
             if (locations.Count > 0)
             {
@@ -1802,11 +1810,11 @@ namespace Randomizer.SMZ3.Tracking
             if (remaining <= 0 && locations.Count <= 0)
             {
                 // We didn't do anything
-                Say(x => x.DungeonAlreadyCleared, dungeon.Name);
+                Say(x => x.DungeonAlreadyCleared, dungeon.DungeonMetadata.Name);
                 return;
             }
 
-            Say(x => x.DungeonCleared, dungeon.Name);
+            Say(x => x.DungeonCleared, dungeon.DungeonMetadata.Name);
             if (inaccessibleLocations.Count > 0 && confidence >= Options.MinimumSassConfidence)
             {
                 var anyMissedLocation = inaccessibleLocations.Random(s_random);
@@ -1818,20 +1826,20 @@ namespace Randomizer.SMZ3.Tracking
                             .Select(ItemService.FirstOrDefault)
                             .NonNull();
                     var missingItemsText = NaturalLanguage.Join(missingItems, World.Config);
-                    Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.Name, locationInfo.Name, missingItemsText);
+                    Say(x => x.DungeonClearedWithInaccessibleItems, dungeon.DungeonMetadata.Name, locationInfo.Name, missingItemsText);
                 }
                 else
                 {
-                    Say(x => x.DungeonClearedWithTooManyInaccessibleItems, dungeon.Name, locationInfo.Name);
+                    Say(x => x.DungeonClearedWithTooManyInaccessibleItems, dungeon.DungeonMetadata.Name, locationInfo.Name);
                 }
             }
 
             OnDungeonUpdated(new(confidence));
             AddUndo(() =>
             {
-                dungeon.TreasureRemaining = remaining;
-                if (remaining > 0 && !dungeon.HasReward)
-                    dungeon.Cleared = false;
+                dungeon.DungeonState.RemainingTreasure = remaining;
+                if (remaining > 0 && !dungeon.DungeonState.HasReward)
+                    dungeon.DungeonState.Cleared = false;
                 locations.ForEach(x => x.State.Cleared = false);
             });
         }
@@ -1895,24 +1903,24 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="dungeon">The dungeon that was cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="autoTracked">If this was cleared by the auto tracker</param>
-        public void MarkDungeonAsCleared(DungeonInfo dungeon, float? confidence = null, bool autoTracked = false)
+        public void MarkDungeonAsCleared(IDungeon dungeon, float? confidence = null, bool autoTracked = false)
         {
             UpdateTrackerProgression = true;
 
-            if (dungeon.Cleared)
+            if (dungeon.DungeonState.Cleared)
             {
-                Say(Responses.DungeonBossAlreadyCleared.Format(dungeon.Name, dungeon.Boss));
+                Say(Responses.DungeonBossAlreadyCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
                 return;
             }
 
             var addedEvent = History.AddEvent(
                 HistoryEventType.BeatBoss,
                 true,
-                dungeon.Boss.ToString() ?? $"boss of {dungeon.Name}"
+                dungeon.DungeonMetadata.Boss.ToString() ?? $"boss of {dungeon.DungeonMetadata.Name}"
             );
 
-            dungeon.Cleared = true;
-            Say(Responses.DungeonBossCleared.Format(dungeon.Name, dungeon.Boss));
+            dungeon.DungeonState.Cleared = true;
+            Say(Responses.DungeonBossCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
             IsDirty = true;
             RestartIdleTimers();
             OnDungeonUpdated(new TrackerEventArgs(confidence));
@@ -1922,7 +1930,7 @@ namespace Randomizer.SMZ3.Tracking
                 AddUndo(() =>
                 {
                     UpdateTrackerProgression = true;
-                    dungeon.Cleared = false;
+                    dungeon.DungeonState.Cleared = false;
                     addedEvent.IsUndone = true;
                 });
             }
@@ -1938,20 +1946,20 @@ namespace Randomizer.SMZ3.Tracking
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="autoTracked">If this was tracked by the auto tracker</param>
-        public void MarkBossAsDefeated(BossInfo boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
+        public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
         {
-            if (boss.Defeated)
+            if (boss.State.Defeated)
             {
                 Say(x => x.BossAlreadyDefeated, boss.Name);
                 return;
             }
 
-            boss.Defeated = true;
+            boss.State.Defeated = true;
 
-            if (!admittedGuilt && boss.WhenTracked != null)
-                Say(boss.WhenTracked, boss.Name);
+            if (!admittedGuilt && boss.Metadata.WhenTracked != null)
+                Say(boss.Metadata.WhenTracked, boss.Name);
             else
-                Say(boss.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+                Say(boss.Metadata.WhenDefeated ?? Responses.BossDefeated, boss.Name);
 
             var addedEvent = History.AddEvent(
                 HistoryEventType.BeatBoss,
@@ -1969,7 +1977,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 AddUndo(() =>
                 {
-                    boss.Defeated = false;
+                    boss.State.Defeated = false;
                     addedEvent.IsUndone = true;
                 });
             }
@@ -1980,22 +1988,22 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="boss">The boss that should be 'revived'.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkBossAsNotDefeated(BossInfo boss, float? confidence = null)
+        public void MarkBossAsNotDefeated(Boss boss, float? confidence = null)
         {
-            if (!boss.Defeated)
+            if (boss.State?.Defeated != true)
             {
                 Say(x => x.BossNotYetDefeated, boss.Name);
                 return;
             }
 
-            boss.Defeated = false;
+            boss.State.Defeated = false;
             Say(Responses.BossUndefeated, boss.Name);
 
             IsDirty = true;
             UpdateTrackerProgression = true;
 
             OnBossUpdated(new(confidence));
-            AddUndo(() => boss.Defeated = true);
+            AddUndo(() => boss.State.Defeated = true);
         }
 
         /// <summary>
@@ -2004,25 +2012,25 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="dungeon">The dungeon that should be un-cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void MarkDungeonAsIncomplete(DungeonInfo dungeon, float? confidence = null)
+        public void MarkDungeonAsIncomplete(IDungeon dungeon, float? confidence = null)
         {
-            if (!dungeon.Cleared)
+            if (!dungeon.DungeonState.Cleared)
             {
-                Say(Responses.DungeonBossNotYetCleared.Format(dungeon.Name, dungeon.Boss));
+                Say(Responses.DungeonBossNotYetCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
                 return;
             }
 
             UpdateTrackerProgression = true;
-            dungeon.Cleared = false;
-            Say(Responses.DungeonBossUncleared.Format(dungeon.Name, dungeon.Boss));
+            dungeon.DungeonState.Cleared = false;
+            Say(Responses.DungeonBossUncleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
 
             // Try to untrack the associated boss reward item
             Action? undoUnclear = null;
             Action? undoUntrackTreasure = null;
             Action? undoUntrack = null;
-            if (dungeon.LocationId != null)
+            if (dungeon.DungeonMetadata.LocationId != null)
             {
-                var rewardLocation = World.Locations.Single(x => x.Id == dungeon.LocationId);
+                var rewardLocation = World.Locations.Single(x => x.Id == dungeon.DungeonMetadata.LocationId);
                 if (rewardLocation.Item != null)
                 {
                     var item = rewardLocation.Item;
@@ -2034,8 +2042,8 @@ namespace Randomizer.SMZ3.Tracking
 
                     if (!rewardLocation.Item.IsDungeonItem)
                     {
-                        dungeon.TreasureRemaining++;
-                        undoUntrackTreasure = () => dungeon.TreasureRemaining--;
+                        dungeon.DungeonState.RemainingTreasure++;
+                        undoUntrackTreasure = () => dungeon.DungeonState.RemainingTreasure--;
                     }
                 }
 
@@ -2052,7 +2060,7 @@ namespace Randomizer.SMZ3.Tracking
             OnDungeonUpdated(new TrackerEventArgs(confidence));
             AddUndo(() =>
             {
-                dungeon.Cleared = false;
+                dungeon.DungeonState.Cleared = false;
                 undoUntrack?.Invoke();
                 undoUntrackTreasure?.Invoke();
                 undoUnclear?.Invoke();
@@ -2429,20 +2437,20 @@ namespace Randomizer.SMZ3.Tracking
         private static bool IsTreasure(Item? item)
             => item != null && !item.IsDungeonItem;
 
-        private DungeonInfo? GetDungeonFromLocation(Location location)
+        private IDungeon? GetDungeonFromLocation(Location location)
         {
             if (location.Type == LocationType.NotInDungeon)
                 return null;
 
-            return WorldInfo.Dungeons.SingleOrDefault(x => x.Is(location.Region));
+            return location.Region as IDungeon;
         }
 
-        private DungeonInfo? GetDungeonFromArea(IHasLocations area)
+        private IDungeon? GetDungeonFromArea(IHasLocations area)
         {
             return area switch
             {
-                Room room => WorldInfo.Dungeons.SingleOrDefault(x => x.Is(room.Region)),
-                Region region => WorldInfo.Dungeons.SingleOrDefault(x => x.Is(region)),
+                Room room => room.Region as IDungeon,
+                Region region => region as IDungeon,
                 _ => null
             };
         }
@@ -2487,26 +2495,6 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = true;
 
             return null;
-        }
-
-        private void GetTreasureCounts(IReadOnlyCollection<DungeonInfo> dungeons, World world)
-        {
-            if (!world.LocationItems.Any())
-                return;
-
-            foreach (var dungeon in dungeons)
-            {
-                var region = world.Regions.SingleOrDefault(x => dungeon.Is(x));
-                if (region != null)
-                {
-                    dungeon.TreasureRemaining = region.Locations.Count(x => (IsTreasure(x.Item) || World.Config.ZeldaKeysanity) && x.Type != LocationType.NotInDungeon);
-                    _logger.LogDebug("Found {TreasureRemaining} item(s) in {dungeon}", dungeon.TreasureRemaining, dungeon.Name);
-                }
-                else
-                {
-                    _logger.LogWarning("Could not find region for dungeon {dungeon}.", dungeon.Name);
-                }
-            }
         }
 
         private void GiveLocationComment(Item item, Location location, bool isTracking, float? confidence)
@@ -2558,7 +2546,7 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
-        private DungeonInfo? GetDungeonFromItem(Item item, DungeonInfo? dungeon = null)
+        private IDungeon? GetDungeonFromItem(Item item, IDungeon? dungeon = null)
         {
             var locations = World.Locations
                 .Where(x => !x.State.Cleared && x.Type != LocationType.NotInDungeon && x.ItemIs(item.Type, World))
@@ -2574,10 +2562,10 @@ namespace Randomizer.SMZ3.Tracking
             if (locations.Count > 0 && dungeon != null)
             {
                 // Does the dungeon even have that item?
-                if (!locations.Any(x => dungeon.Is(x.Region)))
+                if (!locations.Any(x => dungeon == x.Region))
                 {
                     // Be a smart-ass about it
-                    Say(Responses.ItemTrackedInIncorrectDungeon?.Format(dungeon.Name, item.Metadata.NameWithArticle));
+                    Say(Responses.ItemTrackedInIncorrectDungeon?.Format(dungeon.DungeonMetadata.Name, item.Metadata.NameWithArticle));
                 }
             }
 
@@ -2640,19 +2628,18 @@ namespace Randomizer.SMZ3.Tracking
                     items.Add(new Item(item.Type));
             }
 
-            var progression = new Progression(items, GetCurrentRewards());
+            var progression = new Progression(items, GetCurrentRewards(), GetDefeatedBosses());
             return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
         }
 
         private IEnumerable<Reward> GetCurrentRewards()
         {
-            var dungeonRewards = WorldInfo.Dungeons
-                .Where(d => d.Cleared && d.HasReward && d.Reward != RewardItem.Unknown)
-                .Select(d => new Reward(d.Reward.ToRewardType()));
-            var bossRewards = WorldInfo.Bosses
-                .Where(b => b.Defeated && b.Reward != RewardType.None)
-                .Select(b => new Reward(b.Reward));
-            return dungeonRewards.Concat(bossRewards);
+            return World.Rewards.Where(x => x.State?.Cleared == true);
+        }
+
+        private IEnumerable<Boss> GetDefeatedBosses()
+        {
+            return World.GoldenBosses.Where(x => x.State?.Defeated == true);
         }
     }
 }

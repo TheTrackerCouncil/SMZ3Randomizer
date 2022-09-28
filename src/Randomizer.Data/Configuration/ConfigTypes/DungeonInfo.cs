@@ -73,37 +73,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public int? LocationId { get; init; }
 
         /// <summary>
-        /// Gets or sets the type of pendant or crystal you are rewarded with
-        /// when you beat the dungeon boss.
-        /// </summary>
-        public RewardItem Reward { get; set; }
-            = RewardItem.Unknown;
-
-        /// <summary>
-        /// Gets a value indicating whether the dungeon has a reward when the
-        /// boss is defeated.
-        /// </summary>
-        public bool HasReward { get; init; } = true;
-
-        /// <summary>
-        /// Gets or sets the medallion that is required to enter the dungeon.
-        /// </summary>
-        public Medallion Requirement { get; set; }
-            = Medallion.None;
-
-        /// <summary>
-        /// Gets or sets the amount of treasure items (excluding keys, compasses
-        /// and maps) that remain in the dungeon.
-        /// </summary>
-        public int TreasureRemaining { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the dungeon has been
-        /// cleared.
-        /// </summary>
-        public bool Cleared { get; set; }
-
-        /// <summary>
         /// Gets the x-coordinate of the dungeon on the map, if it should be
         /// displayed.
         /// </summary>
@@ -125,12 +94,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The type of the overworld region you access this dungeon from
         /// </summary>
         public Type WithinRegionType { get; init; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the user manually decreased
-        /// the treasure count in this dungeon before.
-        /// </summary>
-        public bool HasManuallyClearedTreasure { get; set; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.

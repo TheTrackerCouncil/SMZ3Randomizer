@@ -4,6 +4,7 @@ using Randomizer.Shared;
 using static Randomizer.Data.Configuration.ConfigTypes.SchrodingersString;
 using Randomizer.Data.Configuration.ConfigTypes;
 using System.Linq;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
 {
@@ -45,7 +46,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     Boss = "Kraid",
                     Name = new("Kraid"),
-                    Reward = RewardType.Kraid,
+                    Type = BossType.Kraid,
                     MemoryAddress = 1,
                     MemoryFlag = 0x1,
                 },
@@ -60,7 +61,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     Boss = "Phantoon",
                     Name = new("Phantoon"),
-                    Reward = RewardType.Phantoon,
+                    Type = BossType.Phantoon,
                     MemoryAddress = 3,
                     MemoryFlag = 0x1,
                 },
@@ -73,7 +74,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     Boss = "Draygon",
                     Name = new("Draygon"),
-                    Reward = RewardType.Draygon,
+                    Type = BossType.Draygon,
                     MemoryAddress = 4,
                     MemoryFlag = 0x1,
                 },
@@ -81,7 +82,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     Boss = "Ridley",
                     Name = new("Ridley"),
-                    Reward = RewardType.Ridley,
+                    Type = BossType.Ridley,
                     MemoryAddress = 2,
                     MemoryFlag = 0x1,
                 },

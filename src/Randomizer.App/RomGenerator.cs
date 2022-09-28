@@ -385,18 +385,10 @@ namespace Randomizer.App
 
             log.AppendLine(Underline("Rewards"));
             log.AppendLine();
-            var skipRewards = new[]
-            {
-                RewardType.Agahnim,
-                RewardType.Kraid,
-                RewardType.Phantoon,
-                RewardType.Draygon,
-                RewardType.Ridley
-            };
             foreach (var region in seed.Worlds[0].World.Regions)
             {
-                if (region is IHasReward rewardRegion && !skipRewards.Contains(rewardRegion.Reward))
-                    log.AppendLine($"{region.Name}: {rewardRegion.Reward}");
+                if (region is IHasReward rewardRegion)
+                    log.AppendLine($"{region.Name}: {rewardRegion.RewardType}");
             }
             log.AppendLine();
 

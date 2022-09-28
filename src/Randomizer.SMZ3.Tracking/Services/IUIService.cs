@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -52,14 +53,21 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="dungeon">The dungeon requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(DungeonInfo dungeon);
+        public string? GetSpritePath(IDungeon dungeon);
 
         /// <summary>
         /// Returns the path of the sprite for the reward
         /// </summary>
         /// <param name="reward">The reward requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(RewardItem reward);
+        public string? GetSpritePath(Reward reward);
+
+        /// <summary>
+        /// Returns the path of the sprite for the reward
+        /// </summary>
+        /// <param name="reward">The reward requested</param>
+        /// <returns>The full path of the sprite or null if it's not found</returns>
+        public string? GetSpritePath(RewardType reward);
 
         /// <summary>
         /// Returns the path of the sprite

@@ -116,7 +116,7 @@ namespace Randomizer.Data.WorldData.Regions
             }
             else if (rule == ItemPlacementRule.CrystalDungeonsAndMetroid)
             {
-                return (this is IHasReward rewardRegion && rewardRegion.Reward is RewardType.CrystalBlue or RewardType.CrystalRed) || this is SMRegion;
+                return (this is IHasReward rewardRegion && rewardRegion.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed) || this is SMRegion;
             }
             else if (rule == ItemPlacementRule.OppositeGame)
             {

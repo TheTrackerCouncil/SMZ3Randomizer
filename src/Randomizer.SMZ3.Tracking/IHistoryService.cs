@@ -15,17 +15,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     public interface IHistoryService
     {
         /// <summary>
-        /// Starts a new history list for a tracker instance
+        /// Sets the tracker to be used for getting the elapsed time
         /// </summary>
-        /// <param name="tracker">The tracker instance</param>
-        public void StartHistory(Tracker tracker);
-
-        /// <summary>
-        /// Loads the history from the tracker state
-        /// </summary>
-        /// <param name="tracker">The tracker instance</param>
-        /// <param name="state">The tracker state with the history</param>
-        public void LoadHistory(Tracker tracker, TrackerState state);
+        /// <param name="tracker"></param>
+        public void SetTracker(Tracker tracker);
 
         /// <summary>
         /// Adds an event to the history log

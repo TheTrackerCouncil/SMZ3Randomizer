@@ -34,7 +34,7 @@ namespace Randomizer.Data.Options
             Items = world.Locations
                 .ToDictionary(x => x.ToString(), x => x.Item.Type);
             Rewards = world.Regions.Where(x => x is IHasReward)
-                .ToDictionary(x => x.ToString(), x => ((IHasReward)x).Reward);
+                .ToDictionary(x => x.ToString(), x => ((IHasReward)x).Reward.Type);
             Medallions = world.Regions.Where(x => x is INeedsMedallion)
                 .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
             Logic = world.Config.LogicConfig.Clone();

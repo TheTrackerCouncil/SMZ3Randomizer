@@ -3,10 +3,12 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
 {
-    public class CastleTower : Z3Region, IHasReward
+    public class CastleTower : Z3Region, IHasReward, IDungeon
     {
         public CastleTower(World world, Config config)
             : base(world, config)
@@ -17,6 +19,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             DarkMaze = new DarkMazeRoom(this);
 
             StartingRooms = new List<int>() { 224 };
+
+            Reward = new Reward(RewardType.Agahnim, world, this);
         }
 
         public override string Name => "Castle Tower";
@@ -24,11 +28,17 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
 
-        public RewardType Reward { get; set; } = RewardType.Agahnim;
+        public Reward Reward { get; set; }
+
+        public RewardType RewardType { get; set; } = RewardType.Agahnim;
 
         public FoyerRoom Foyer { get; }
 
         public DarkMazeRoom DarkMaze { get; }
+
+        public DungeonInfo DungeonMetadata { get; set; }
+
+        public TrackerDungeonState DungeonState { get; set; }
 
         public override bool CanEnter(Progression items, bool requireRewards)
         {

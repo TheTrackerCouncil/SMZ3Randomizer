@@ -12,6 +12,7 @@ using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -119,15 +120,22 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="dungeon">The dungeon requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(DungeonInfo dungeon) => GetSpritePath("Dungeons",
-            $"{dungeon.Dungeon.ToLowerInvariant()}.png", out _);
+        public string? GetSpritePath(IDungeon dungeon) => GetSpritePath("Dungeons",
+            $"{dungeon.DungeonName.ToLowerInvariant()}.png", out _);
 
         /// <summary>
         /// Returns the path of the sprite for the reward
         /// </summary>
         /// <param name="reward">The reward requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(RewardItem reward) => GetSpritePath("Dungeons",
+        public string? GetSpritePath(Reward reward) => GetSpritePath(reward.Type);
+
+        /// <summary>
+        /// Returns the path of the sprite for the reward
+        /// </summary>
+        /// <param name="reward">The reward requested</param>
+        /// <returns>The full path of the sprite or null if it's not found</returns>
+        public string? GetSpritePath(RewardType reward) => GetSpritePath("Dungeons",
             $"{reward.GetDescription().ToLowerInvariant()}.png", out _);
 
         /// <summary>

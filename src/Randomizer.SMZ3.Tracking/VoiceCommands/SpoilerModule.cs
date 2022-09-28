@@ -167,12 +167,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
                 else if (area is IHasReward region)
                 {
-                    if (region.Reward == RewardType.CrystalBlue
-                        || region.Reward == RewardType.CrystalRed)
+                    if (region.RewardType == RewardType.CrystalBlue
+                        || region.RewardType == RewardType.CrystalRed)
                     {
                         Tracker.Say(x => x.Hints.AreaHasJunkAndCrystal, area.GetName());
                     }
-                    else if (Tracker.IsWorth(region.Reward))
+                    else if (Tracker.IsWorth(region.RewardType))
                     {
                         Tracker.Say(x => x.Hints.AreaWorthComplicated, area.GetName());
                     }
@@ -194,12 +194,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="item">The item to find.</param>
         public void RevealItemLocation(Item item)
         {
-            if (item.Metadata.HasStages && item.Metadata.TrackingState >= item.Metadata.MaxStage)
+            if (item.Metadata.HasStages && item.State.TrackingState >= item.Metadata.MaxStage)
             {
                 Tracker.Say(x => x.Spoilers.TrackedAllItemsAlready, item.Name);
                 return;
             }
-            else if (!item.Metadata.Multiple && item.Metadata.TrackingState > 0)
+            else if (!item.Metadata.Multiple && item.State.TrackingState > 0)
             {
                 Tracker.Say(x => x.Spoilers.TrackedItemAlready, item.Metadata.NameWithArticle);
                 return;
@@ -621,7 +621,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 case 2:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item, x => true);
-                        if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.Reward != RewardType.Agahnim)
+                        if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.RewardType != RewardType.Agahnim)
                         {
                             if (randomLocation.Region.Locations.Any(x => x.State.Cleared))
                                 return GiveItemHint(x => x.ItemInPreviouslyVisitedDungeon, item);

@@ -214,11 +214,11 @@ namespace Randomizer.App
             {
                 Syncer.ClearRegion(region, false, true);
             }
-            else if (shape.Tag is BossInfo boss)
+            else if (shape.Tag is Boss boss)
             {
                 Syncer.Tracker.MarkBossAsDefeated(boss);
             }
-            else if(shape.Tag is DungeonInfo dungeon)
+            else if(shape.Tag is IDungeon dungeon)
             {
                 Syncer.Tracker.MarkDungeonAsCleared(dungeon);
             }

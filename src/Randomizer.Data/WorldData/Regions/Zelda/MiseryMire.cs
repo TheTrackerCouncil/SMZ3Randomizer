@@ -3,10 +3,12 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
 {
-    public class MiseryMire : Z3Region, IHasReward, INeedsMedallion
+    public class MiseryMire : Z3Region, IHasReward, INeedsMedallion, IDungeon
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5B9
@@ -78,7 +80,12 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Misery Mire";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; }
+        public RewardType RewardType { get; set; } = RewardType.None;
+
+        public DungeonInfo DungeonMetadata { get; set; }
+
+        public TrackerDungeonState DungeonState { get; set; }
 
         public ItemType Medallion { get; set; }
 

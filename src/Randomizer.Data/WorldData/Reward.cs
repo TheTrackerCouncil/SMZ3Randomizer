@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData
 {
@@ -31,6 +33,10 @@ namespace Randomizer.Data.WorldData
 
         public IHasReward Region { get; set; }
 
+        public RewardInfo Metadata { get; set; }
+
+        public TrackerDungeonState State { get; set; }
+
         public static ICollection<Reward> CreatePool(World world)
         {
             var regions = world.Regions.OfType<IHasReward>().ToList();
@@ -47,16 +53,12 @@ namespace Randomizer.Data.WorldData
                 CreatePlayerReward(RewardType.CrystalBlue, world, regions),
                 CreatePlayerReward(RewardType.CrystalRed, world, regions),
                 CreatePlayerReward(RewardType.CrystalRed, world, regions),
-                CreatePlayerReward(RewardType.Kraid, world, regions),
-                CreatePlayerReward(RewardType.Phantoon, world, regions),
-                CreatePlayerReward(RewardType.Draygon, world, regions),
-                CreatePlayerReward(RewardType.Ridley, world, regions),
             };
         }
 
         private static Reward CreatePlayerReward(RewardType reward, World world, ICollection<IHasReward> regions)
         {
-            var region = regions.First(x => x.Reward == reward);
+            var region = regions.First(x => x.RewardType == reward);
             regions.Remove(region);
             return new(reward, world, region);
         }

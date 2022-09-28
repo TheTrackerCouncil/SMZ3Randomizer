@@ -1,5 +1,6 @@
 ﻿using System;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -54,15 +55,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         public string? Image { get; init; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the boss has been defeated.
-        /// </summary>
-        public bool Defeated { get; set; }
-
-        /// <summary>
-        /// Gets or sets the reward for when the boss is defeated
-        /// </summary>
-        public RewardType Reward { get; set; }
+        public BossType Type { get; set; }
 
         /// <summary>
         /// Memory offset for detecting if this boss was defeated

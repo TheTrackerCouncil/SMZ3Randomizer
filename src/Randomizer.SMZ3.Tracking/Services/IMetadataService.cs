@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
-using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
-using Microsoft.Extensions.Logging;
+using Randomizer.Shared.Enums;
+using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -15,59 +15,32 @@ namespace Randomizer.SMZ3.Tracking.Services
     /// Service for retrieving information about the current state of
     /// the world
     /// </summary>
-    public class WorldService : IWorldService
+    public interface IMetadataService
     {
-        protected IReadOnlyCollection<RegionInfo> _regions;
-        protected IReadOnlyCollection<DungeonInfo> _dungeons;
-        protected IReadOnlyCollection<RoomInfo> _rooms;
-        protected IReadOnlyCollection<LocationInfo> _locations;
-        protected IReadOnlyCollection<BossInfo> _bosses;
-        protected IReadOnlyCollection<ItemData> _items;
-        private readonly ILogger<WorldService> _logger;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="regions">Config with additional region information</param>
-        /// <param name="dungeons">Config with additional dungeon information</param>
-        /// <param name="rooms">Config with additional room information</param>
-        /// <param name="locations">Config with additional location information</param>
-        /// <param name="bosses">Config with additional boss information</param>
-        public WorldService(RegionConfig regions, DungeonConfig dungeons, RoomConfig rooms, LocationConfig locations, BossConfig bosses, ItemConfig items, ILogger<WorldService> logger)
-        {
-            _regions = regions;
-            _dungeons = dungeons;
-            _rooms = rooms;
-            _locations = locations;
-            _bosses = bosses;
-            _items = items;
-            _logger = logger;
-        }
-
         /// <summary>
         /// Collection of all additional region information
         /// </summary>
-        public IReadOnlyCollection<RegionInfo> Regions => _regions;
+        public IReadOnlyCollection<RegionInfo> Regions { get; }
 
         /// <summary>
         /// Collection of all additional dungeon information
         /// </summary>
-        public IReadOnlyCollection<DungeonInfo> Dungeons => _dungeons;
+        public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
 
         /// <summary>
         /// Collection of all additional room information
         /// </summary>
-        public IReadOnlyCollection<RoomInfo> Rooms => _rooms;
+        public IReadOnlyCollection<RoomInfo> Rooms { get; }
 
         /// <summary>
         /// Collection of all additional location information
         /// </summary>
-        public IReadOnlyCollection<LocationInfo> Locations => _locations;
+        public IReadOnlyCollection<LocationInfo> Locations { get; }
 
         /// <summary>
         /// Collection of all additional boss information
         /// </summary>
-        public IReadOnlyCollection<BossInfo> Bosses => _bosses;
+        public IReadOnlyCollection<BossInfo> Bosses { get; }
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -78,20 +51,18 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
-        public RegionInfo Region(string name)
-            => Regions.Single(x => x.Type.FullName == name || x.Region == name);
+        public RegionInfo Region(string name);
 
         /// <summary>
         /// Returns extra information for the specified region.
         /// </summary>
         /// <param name="type">
-        /// The Randomizer.SMZ3 type matching the region.
+        /// The type of the region.
         /// </param>
         /// <returns>
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
-        public RegionInfo Region(Type type)
-            => Regions.Single(x => x.Type == type);
+        public RegionInfo Region(Type type);
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -100,8 +71,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
-        public RegionInfo Region(Region region)
-            => Region(region.GetType());
+        public RegionInfo Region(Region region);
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -112,8 +82,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
-        public RegionInfo Region<TRegion>() where TRegion : Region
-            => Region(typeof(TRegion));
+        public RegionInfo Region<TRegion>() where TRegion : Region;
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -125,8 +94,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
         /// <c>null</c> if <paramref name="typeName"/> is not a valid dungeon.
         /// </returns>
-        public DungeonInfo? Dungeon(string name)
-            => Dungeons.SingleOrDefault(x => x.Type.FullName == name || x.Dungeon == name);
+        public DungeonInfo? Dungeon(string name);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -138,8 +106,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
         /// <c>null</c> if <paramref name="type"/> is not a valid dungeon.
         /// </returns>
-        public DungeonInfo Dungeon(Type type)
-            => Dungeons.Single(x => type == x.Type);
+        public DungeonInfo Dungeon(Type type);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -150,8 +117,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
         /// </returns>
-        public DungeonInfo Dungeon(Region region)
-            => Dungeon(region.GetType());
+        public DungeonInfo Dungeon(Region region);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -163,8 +129,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
         /// </returns>
-        public DungeonInfo Dungeon<TRegion>() where TRegion : Region
-            => Dungeon(typeof(TRegion));
+        public DungeonInfo Dungeon<TRegion>() where TRegion : Region;
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -175,8 +140,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room(string name)
-            => Rooms.Single(x => x.Type.FullName == name || x.Room == name);
+        public RoomInfo Room(string name);
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -187,8 +151,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room(Type type)
-            => Rooms.Single(x => x.Type == type);
+        public RoomInfo Room(Type type);
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -197,8 +160,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room(Room room)
-            => Room(room.GetType());
+        public RoomInfo Room(Room room);
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -209,8 +171,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room<TRoom>() where TRoom : Room
-            => Room(typeof(TRoom));
+        public RoomInfo Room<TRoom>() where TRoom : Room;
 
         /// <summary>
         /// Returns extra information for the specified location.
@@ -219,8 +180,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="LocationInfo"/> for the specified room.
         /// </returns>
-        public LocationInfo Location(int id)
-            => Locations.Single(x => x.LocationNumber == id);
+        public LocationInfo Location(int id);
 
         /// <summary>
         /// Returns extra information for the specified location.
@@ -231,48 +191,29 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A new <see cref="LocationInfo"/> for the specified room.
         /// </returns>
-        public LocationInfo Location(Location location)
-            => Locations.Single(x => x.LocationNumber == location.Id);
+        public LocationInfo Location(Location location);
 
         /// <summary>
         /// Returns information about a specified boss
         /// </summary>
         /// <param name="name">The name of the boss</param>
         /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
-        public BossInfo Boss(string name)
-            => Bosses.Single(x => x.Boss == name);
+        public BossInfo Boss(string name);
 
         /// <summary>
-        /// Applies various metadata to the world, such as LocationData and ItemData
+        /// Returns information about a specified boss
         /// </summary>
-        /// <param name="world">The world to apply metadata to</param>
-        public void LoadWorldMetadata(World world)
-        {
-            world.Locations.ToList().ForEach(loc => loc.Metadata = Location(loc.Id));
+        /// <param name="boss">The type of the boss</param>
+        /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
+        public BossInfo Boss(BossType boss);
 
-            foreach (var (metadata, worldItems) in _items.Select(x => (item: x, worldItems: world.AllItems.Where(w => w.Is(x.InternalItemType, x.Item)))))
-            {
-                if (worldItems.Any())
-                {
-                    worldItems.ToList().ForEach(x => x.Metadata = metadata);
-                }
-                else
-                {
-                    _logger.LogInformation($"No data found {metadata.Item}");
-                    var item = new Item(metadata.InternalItemType, world, metadata.Item)
-                    {
-                        State = new()
-                        {
-                            ItemName = metadata.Item,
-                            Type = metadata.InternalItemType,
-                            TrackerState = world.State
-                        },
-                        Metadata = metadata
-                    };
-                    world.State.ItemStates.Add(item.State);
-                    world.TrackerItems.Add(item);
-                }
-            }
-        }
+        /// <summary>
+        /// Returns information about a specified item
+        /// </summary>
+        /// <param name="type">The type of the item</param>
+        /// <returns></returns>
+        public ItemData Item(ItemType type);
+
+        public void LoadWorldMetadata(World world);
     }
 }

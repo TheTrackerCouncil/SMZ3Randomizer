@@ -11,6 +11,7 @@ using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -20,37 +21,27 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     public class HistoryService : IHistoryService
     {
         private ILogger<HistoryService> _logger;
+        private IWorldAccessor _world;
+        private ICollection<TrackerHistoryEvent> _historyEvents => _world.World.State.History;
         private Tracker? _tracker;
-        private List<TrackerHistoryEvent>? _events;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
-        public HistoryService(ILogger<HistoryService> logger)
+        public HistoryService(IWorldAccessor world, ILogger<HistoryService> logger)
         {
+            _world = world;
             _logger = logger;
         }
 
         /// <summary>
-        /// Starts a new history list for a tracker instance
+        /// Sets the tracker to be used for getting the elapsed time
         /// </summary>
-        /// <param name="tracker">The tracker instance</param>
-        public void StartHistory(Tracker tracker)
+        /// <param name="tracker"></param>
+        public void SetTracker(Tracker tracker)
         {
             _tracker = tracker;
-            _events = new List<TrackerHistoryEvent>();
-        }
-
-        /// <summary>
-        /// Loads the history from the tracker state
-        /// </summary>
-        /// <param name="tracker">The tracker instance</param>
-        /// <param name="state">The tracker state with the history</param>
-        public void LoadHistory(Tracker tracker, TrackerState state)
-        {
-            _tracker = tracker;
-            _events = state.HistoryEvents.OrderBy(x => x.Time).ToList();
         }
 
         /// <summary>
@@ -67,6 +58,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var locationName = location?.Room != null ? $"{location.Room.Name} - {location.Name}" : location?.Name;
             var addedEvent = new TrackerHistoryEvent()
             {
+                TrackerState = _world.World.State,
                 Type = type,
                 IsImportant = isImportant,
                 ObjectName = objectName,
@@ -90,6 +82,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var addedEvent = new TrackerHistoryEvent()
             {
+                TrackerState = _tracker.State,
                 Type = type,
                 IsImportant = isImportant,
                 ObjectName = objectName,
@@ -107,7 +100,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="histEvent">The event to add</param>
         public void AddEvent(TrackerHistoryEvent histEvent)
         {
-            _events?.Add(histEvent);
+            _historyEvents.Add(histEvent);
         }
 
         /// <summary>
@@ -115,9 +108,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public void RemoveLastEvent()
         {
-            if (_events?.Count > 0)
+            if (_historyEvents.Count > 0)
             {
-                Remove(_events[_events.Count-1]);
+                Remove(_historyEvents.OrderByDescending(x => x.Id).First());
             }
         }
 
@@ -127,14 +120,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="histEvent">The event to log</param>
         public void Remove(TrackerHistoryEvent histEvent)
         {
-            _events?.Remove(histEvent);
+            _historyEvents.Remove(histEvent);
         }
 
         /// <summary>
         /// Retrieves the current history log
         /// </summary>
         /// <returns>The collection of events</returns>
-        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _events;
+        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _historyEvents.ToList();
 
         /// <summary>
         /// Creates the progression log based off of the history

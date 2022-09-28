@@ -124,16 +124,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public bool HasStages => Stages != null && Stages.Count > 0;
 
         /// <summary>
-        /// Gets or sets the tracking state of the item.
-        /// </summary>
-        /// <remarks>
-        /// For example, 0 represents an untracked item, 1 represents an
-        /// obtained item and higher values indicate items that have been
-        /// obtained more than once.
-        /// </remarks>
-        public int TrackingState { get; set; }
-
-        /// <summary>
         /// Returns the stage of the item with the specifies name.
         /// </summary>
         /// <param name="name">The name of the stage.</param>

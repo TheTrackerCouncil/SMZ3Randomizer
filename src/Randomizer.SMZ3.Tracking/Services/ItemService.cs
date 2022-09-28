@@ -132,19 +132,6 @@ namespace Randomizer.SMZ3.Tracking.Services
             => Rewards.RandomOrDefault(x => x.RewardType == rewardType, s_random);
 
         /// <summary>
-        /// Finds an reward with the specified item type.
-        /// </summary>
-        /// <param name="rewardItem">The type of reward to find.</param>
-        /// <returns>
-        /// An <see cref="RewardInfo"/> representing the reward. If there are
-        /// multiple configured rewards with the same type, this method returns
-        /// one at random. If there no configured rewards with the specified type,
-        /// this method returns <see langword="null"/>.
-        /// </returns>
-        public virtual RewardInfo? GetOrDefault(RewardItem rewardItem)
-            => Rewards.RandomOrDefault(x => x.RewardItem == rewardItem, s_random);
-
-        /// <summary>
         /// Returns a random name for the specified item including article, e.g.
         /// "a blue crystal" or "the green pendant".
         /// </summary>
@@ -159,20 +146,6 @@ namespace Randomizer.SMZ3.Tracking.Services
             return reward?.NameWithArticle ?? rewardType.GetDescription();
         }
 
-        /// <summary>
-        /// Returns a random name for the specified item including article, e.g.
-        /// "a blue crystal" or "the green pendant".
-        /// </summary>
-        /// <param name="rewardItem">The reward of item whose name to get.</param>
-        /// <returns>
-        /// The name of the reward of item, including "a", "an" or "the" if
-        /// applicable.
-        /// </returns>
-        public virtual string GetName(RewardItem rewardItem)
-        {
-            var reward = GetOrDefault(rewardItem);
-            return reward?.NameWithArticle ?? rewardItem.GetDescription();
-        }
 
         // TODO: Tracking methods
     }

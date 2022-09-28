@@ -3,10 +3,12 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
 {
-    public class EasternPalace : Z3Region, IHasReward
+    public class EasternPalace : Z3Region, IHasReward, IDungeon
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D59A
@@ -62,7 +64,13 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Eastern Palace";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; }
+
+        public RewardType RewardType { get; set; } = RewardType.None;
+
+        public DungeonInfo DungeonMetadata { get; set; }
+
+        public TrackerDungeonState DungeonState { get; set; }
 
         public Location CannonballChest { get; }
 

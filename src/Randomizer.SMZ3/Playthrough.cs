@@ -75,6 +75,10 @@ namespace Randomizer.SMZ3
             var regions = new List<Region>();
             var rewards = new List<Reward>();
 
+            var allBosses = worlds.SelectMany(w => w.GoldenBosses);
+            var bossRegions = worlds.SelectMany(w => w.GoldenBosses).Select(x => x.Region);
+            var bosses = new List<Boss>();
+
             foreach (var world in worlds)
             {
                 if (!world.Config.MetroidKeysanity)
@@ -88,10 +92,12 @@ namespace Randomizer.SMZ3
             {
                 var sphere = new Sphere();
 
-                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w), rewards.Where(r => r.World == w)));
+                var allLocations = worlds.SelectMany(w => w.Locations.Available(items.Where(i => i.World == w), rewards.Where(r => r.World == w), bosses.Where(b => b.World == w)));
                 var newLocations = allLocations.Except(locations).ToList();
                 var newItems = newLocations.Select(l => l.Item).ToList();
-                rewards = allRewards.Where(x => x.Region.CanComplete(new Progression(items, new List<Reward>()))).ToList();
+                var tempProgression = new Progression(items, new List<Reward>(), new List<Boss>());
+                rewards = allRewards.Where(x => x.Region.CanComplete(tempProgression)).ToList();
+                bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression)).Select(x => x.Boss).ToList();
                 locations.AddRange(newLocations);
                 items.AddRange(newItems);
 

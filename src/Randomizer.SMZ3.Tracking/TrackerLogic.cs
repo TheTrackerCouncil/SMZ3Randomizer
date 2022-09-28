@@ -78,24 +78,19 @@ namespace Randomizer.SMZ3.Tracking
             return (items) => true;
         }
 
-        private bool CheckDungeonMedallion(Progression items, Region dungeon)
+        private bool CheckDungeonMedallion(Progression items, IDungeon dungeon)
         {
-            if (dungeon is not INeedsMedallion) return true;
-            var dungeonInfo = _tracker.WorldInfo.Dungeons.First(x => x.GetRegion(_tracker.World) == dungeon);
-            return (dungeonInfo.Requirement == Medallion.Bombos && items.Bombos) ||
-                (dungeonInfo.Requirement == Medallion.Ether && items.Ether) ||
-                (dungeonInfo.Requirement == Medallion.Quake && items.Quake) ||
+            if (!dungeon.NeedsMedallion) return true;
+            var medallionItem = dungeon.DungeonState.MarkedMedallion ?? ItemType.Nothing;
+            return (medallionItem != ItemType.Nothing && items.Contains(medallionItem)) ||
                 (items.Bombos && items.Ether && items.Quake);
         }
 
         private int CountReward(Progression items, RewardType reward)
         {
-            var dungeons = _tracker.World.Regions
-                .Where(x => x is IHasReward rewardRegion && rewardRegion.Reward == reward && rewardRegion.CanComplete(items) && CheckDungeonMedallion(items, x));
-
-            return _tracker.WorldInfo.Dungeons
-                .Where(x => dungeons.Contains(x.GetRegion(_tracker.World)))
-                .Count(x => x.Reward.ToRewardType() == reward);
+            return _tracker.World.Dungeons
+                .Where(x => x is IHasReward rewardRegion && x.DungeonState.MarkedReward == reward && rewardRegion.CanComplete(items) && CheckDungeonMedallion(items, x))
+                .Count(x => x.DungeonState.Cleared);
         }
     }
 }

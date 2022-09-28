@@ -34,11 +34,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public string? Article { get; set; }
 
         /// <summary>
-        /// The selectable reward item
-        /// </summary>
-        public RewardItem RewardItem { get; set; }
-
-        /// <summary>
         /// The SMZ3 reward type
         /// </summary>
         public RewardType RewardType { get; set; }

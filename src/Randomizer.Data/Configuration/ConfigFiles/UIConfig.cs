@@ -425,7 +425,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                         Type = UIGridLocationType.Dungeon,
                         Row = 6,
                         Column = 7,
-                        Identifiers = new List<string>() { "Agahnim's Tower" }
+                        Identifiers = new List<string>() { "Castle Tower" }
                     },
                     new UIGridLocation()
                     {
@@ -1033,7 +1033,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                         Type = UIGridLocationType.Dungeon,
                         Row = 6,
                         Column = 12,
-                        Identifiers = new List<string>() { "Agahnim's Tower" }
+                        Identifiers = new List<string>() { "Castle Tower" }
                     },
                     new UIGridLocation()
                     {

@@ -18,6 +18,7 @@ using Randomizer.Data.WorldData.Regions.Zelda.LightWorld;
 using Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.WorldData
 {
@@ -102,7 +103,11 @@ namespace Randomizer.Data.WorldData
         public List<Item> TrackerItems { get; } = new List<Item>();
         public IEnumerable<Item> AllItems => TrackerItems.Concat(LocationItems);
         public ILogic Logic { get; }
-
+        public IEnumerable<Reward> Rewards => Regions.OfType<IHasReward>().Select(x => x.Reward);
+        public List<Boss> TrackerBosses { get; } = new List<Boss>();
+        public IEnumerable<Boss> GoldenBosses => Regions.OfType<IHasBoss>().Select(x => x.Boss);
+        public IEnumerable<Boss> AllBosses => GoldenBosses.Concat(TrackerBosses);
+        public IEnumerable<IDungeon> Dungeons => Regions.OfType<IDungeon>();
         public CastleTower CastleTower { get; }
         public EasternPalace EasternPalace { get; }
         public DesertPalace DesertPalace { get; }
@@ -153,7 +158,7 @@ namespace Randomizer.Data.WorldData
 
         public bool CanAquire(Progression items, RewardType reward)
         {
-            var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.Reward);
+            var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.RewardType);
             if (dungeonWithReward == null)
                 return false;
             return dungeonWithReward.CanComplete(items);
@@ -161,7 +166,12 @@ namespace Randomizer.Data.WorldData
 
         public bool CanAquireAll(Progression items, params RewardType[] rewards)
         {
-            return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.Reward)).All(x => x.CanComplete(items));
+            return Regions.OfType<IHasReward>().Where(x => rewards.Contains(x.RewardType)).All(x => x.CanComplete(items));
+        }
+
+        public bool CanDefeatAll(Progression items, params BossType[] bosses)
+        {
+            return Regions.OfType<IHasBoss>().Where(x => bosses.Contains(x.BossType)).All(x => x.CanBeatBoss(items));
         }
 
         public void Setup(Random rnd)
@@ -193,7 +203,7 @@ namespace Randomizer.Data.WorldData
                 .Select(x => new TrackerRegionState
                 {
                     TypeName = x.GetType().Name,
-                    Reward = x is IHasReward rewardRegion ? rewardRegion.Reward : null,
+                    Reward = x is IHasReward rewardRegion ? rewardRegion.RewardType : null,
                     Medallion = x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null
                 })
                 .ToList();
@@ -232,10 +242,15 @@ namespace Randomizer.Data.WorldData
             var rewards = new[] {
                 RewardType.PendantGreen, RewardType.PendantRed, RewardType.PendantBlue, RewardType.CrystalRed, RewardType.CrystalRed,
                 RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue }.Shuffle(rnd);
-            foreach (var region in Regions.OfType<IHasReward>().Where(x => x.Reward == RewardType.None))
+            foreach (var region in Regions.OfType<IHasReward>().Where(x => x.RewardType == RewardType.None))
             {
-                region.Reward = rewards.First();
-                rewards.Remove(region.Reward);
+                region.RewardType = rewards.First();
+                rewards.Remove(region.RewardType);
+            }
+
+            foreach (var region in Regions.OfType<IHasReward>())
+            {
+                region.Reward = new Reward(region.RewardType, this, region);
             }
         }
     }

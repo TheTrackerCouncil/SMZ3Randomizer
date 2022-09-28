@@ -50,16 +50,16 @@ namespace Randomizer.App.ViewModels
             {
                 if (Syncer.SpecialLocationLogic(Region.Locations.First()))
                 {
-                    if (Region is Z3Region)
+                    if (Region is IHasReward rewardRegion)
                     {
-                        Dungeon = Syncer.Tracker.WorldInfo.Dungeons.First(x => x.Type.FullName == mapLocation.RegionTypeName);
-                        Name = Dungeon.Reward.GetDescription();
+                        RewardRegion = rewardRegion;
+                        Name = RewardRegion.Reward.Type.GetDescription();
                         Y -= 22;
                     }
-                    else if (Region is SMRegion)
+                    else if (Region is IHasBoss bossRegion)
                     {
-                        Boss = Syncer.Tracker.WorldInfo.Bosses.First(x => x.Reward == ((IHasReward)Region).Reward);
-                        Name = Boss.ToString();
+                        BossRegion = bossRegion;
+                        Name = bossRegion.Boss.Metadata.ToString();
                     }
                 }
             }
@@ -148,8 +148,8 @@ namespace Randomizer.App.ViewModels
         /// The rewards for if this is not an actual location
         /// </summary>
         #nullable enable
-        private BossInfo? Boss { get; set; }
-        private DungeonInfo? Dungeon { get; set; }
+        private IHasBoss? BossRegion { get; set; }
+        private IHasReward? RewardRegion { get; set; }
         private Item? Item { get; set; }
         #nullable disable
 
@@ -189,18 +189,17 @@ namespace Randomizer.App.ViewModels
 
                 if (Type == MapLocationType.Boss)
                 {
-                    var region = (IHasReward)Region;
-                    if (Boss != null && !Boss.Defeated && region.CanComplete(Syncer.ProgressionForRegion(Region)))
+                    if (BossRegion != null && BossRegion.Boss.State?.Defeated != true && BossRegion.CanBeatBoss(Syncer.ProgressionForRegion(Region)))
                     {
                         image = "boss.png";
                     }
-                    else if (Dungeon != null && !Dungeon.Cleared)
+                    else if (RewardRegion != null && RewardRegion.Reward.State?.Cleared != true)
                     {
                         var regionLocations = (IHasLocations)Region;
-                        if (region.CanComplete(Syncer.Tracker.GetProgression(false))
+                        if (RewardRegion.CanComplete(Syncer.Tracker.GetProgression(false))
                             || regionLocations.Locations.All(x => x.IsAvailable(Syncer.ProgressionForRegion(Region))))
                         {
-                            image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
+                            image = RewardRegion.Reward.Type.GetDescription().ToLowerInvariant() + ".png";
                         }
                     }
                 }
@@ -288,7 +287,7 @@ namespace Randomizer.App.ViewModels
             {
                 if (Type == MapLocationType.Boss)
                 {
-                    return Boss == null ? Dungeon : Boss;
+                    return BossRegion == null ? RewardRegion : BossRegion;
                 }
                 else if (Type == MapLocationType.SMDoor)
                 {
