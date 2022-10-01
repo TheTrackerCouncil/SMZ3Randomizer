@@ -27,9 +27,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// cref="ZeldaDungeonTrackingModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, ILogger<ZeldaDungeonTrackingModule> logger)
-            : base(tracker, itemService, logger)
+        public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ZeldaDungeonTrackingModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>
             {
@@ -73,7 +75,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var rewardNames = new Choices();
             foreach (var reward in Enum.GetValues<RewardType>())
             {
-                foreach (var name in ItemService?.GetOrDefault(reward)?.Name ?? new SchrodingersString())
+                foreach (var name in ItemService?.FirstOrDefault(reward)?.Metadata.Name ?? new SchrodingersString())
                     rewardNames.Add(new SemanticResultValue(name, (int)reward));
             }
 

@@ -88,6 +88,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public BackOfEscapeRoom BackOfEscape { get; }
 
+        public Region ParentRegion => World.LightWorldNorthEast;
+
         public class BackOfEscapeRoom : Room
         {
             public BackOfEscapeRoom(Region region)

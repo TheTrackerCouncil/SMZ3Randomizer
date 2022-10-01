@@ -40,6 +40,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public TrackerDungeonState DungeonState { get; set; }
 
+        public Region ParentRegion => World.LightWorldNorthEast;
+
         public override bool CanEnter(Progression items, bool requireRewards)
         {
             return Logic.CanKillManyEnemies(items) && (items.Cape || items.MasterSword);

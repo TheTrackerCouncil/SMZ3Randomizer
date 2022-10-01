@@ -67,7 +67,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     access: items => CanAccessPyramidFairy(items, requireRewards: true),
                     relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
                     memoryAddress: 0x116,
-                    memoryFlag: 0x4);
+                    memoryFlag: 0x4,
+                    trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2);
 
                 Right = new Location(this, 256 + 81, 0x1E983, LocationType.Regular,
                     name: "Right",
@@ -75,7 +76,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     access: items => CanAccessPyramidFairy(items, requireRewards: true),
                     relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
                     memoryAddress: 0x116,
-                    memoryFlag: 0x5);
+                    memoryFlag: 0x5,
+                    trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2);
             }
 
             public Location Left { get; }

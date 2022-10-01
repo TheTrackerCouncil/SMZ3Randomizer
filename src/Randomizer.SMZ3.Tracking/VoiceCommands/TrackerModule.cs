@@ -62,11 +62,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        protected TrackerModule(Tracker tracker, IItemService itemService, ILogger logger)
+        protected TrackerModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger logger)
         {
             Tracker = tracker;
             ItemService = itemService;
+            WorldService = worldService;
             Logger = logger;
         }
 
@@ -89,6 +91,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected Tracker Tracker { get; }
 
         protected IItemService ItemService { get; }
+
+        protected IWorldService WorldService { get; }
 
         /// <summary>
         /// Gets a list of speech recognition grammars provided by the module.
@@ -193,7 +197,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
         {
             var id = (int)result.Semantics[LocationKey].Value;
-            var location = tracker.WorldInfo.Location(id).GetLocation(tracker.World);
+            var location = tracker.World.Locations.First(x => x.Id == id);
             return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
         }
 
@@ -207,7 +211,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static Room GetRoomFromResult(Tracker tracker, RecognitionResult result)
         {
             var roomTypeName = (string)result.Semantics[RoomKey].Value;
-            var room = tracker.WorldInfo.Room(roomTypeName).GetRoom(tracker.World);
+            var room = tracker.World.Rooms.First(x => x.GetType().FullName == roomTypeName);
             return room ?? throw new Exception($"Could not find room {roomTypeName} (\"{result.Text}\").");
         }
 
@@ -223,7 +227,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static Region GetRegionFromResult(Tracker tracker, RecognitionResult result)
         {
             var regionTypeName = (string)result.Semantics[RegionKey].Value;
-            var region = tracker.WorldInfo.Region(regionTypeName).GetRegion(tracker.World);
+            var region = tracker.World.Regions.First(x => x.GetType().FullName == regionTypeName);
             return region ?? throw new Exception($"Could not find region {regionTypeName} (\"{result.Text}\").");
         }
 
@@ -460,10 +464,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var locationNames = new Choices();
 
-            foreach (var location in Tracker.WorldInfo.Locations)
+            foreach (var location in Tracker.World.Locations)
             {
-                foreach (var name in location.Name)
-                    locationNames.Add(new SemanticResultValue(name.Text, location.LocationNumber));
+                foreach (var name in location.Metadata.Name)
+                    locationNames.Add(new SemanticResultValue(name.Text, location.Id));
             }
 
             return locationNames;
@@ -480,10 +484,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var roomNames = new Choices();
 
-            foreach (var room in Tracker.WorldInfo.Rooms)
+            foreach (var room in Tracker.World.Rooms)
             {
-                foreach (var name in room.Name)
-                    roomNames.Add(new SemanticResultValue(name.Text, room.Type.FullName));
+                foreach (var name in room.Metadata.Name)
+                    roomNames.Add(new SemanticResultValue(name.Text, room.GetType().FullName));
             }
 
             return roomNames;
@@ -500,13 +504,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var regionNames = new Choices();
 
-            foreach (var region in Tracker.WorldInfo.Regions)
+            foreach (var region in Tracker.World.Regions)
             {
                 if (excludeDungeons && region is IDungeon)
                     continue;
 
-                foreach (var name in region.Name)
-                    regionNames.Add(new SemanticResultValue(name.Text, region.Type.FullName));
+                foreach (var name in region.Metadata.Name)
+                    regionNames.Add(new SemanticResultValue(name.Text, region.GetType().FullName));
             }
 
             return regionNames;

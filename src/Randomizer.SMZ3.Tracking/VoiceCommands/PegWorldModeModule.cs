@@ -19,9 +19,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public PegWorldModeModule(Tracker tracker, IItemService itemService, ILogger<PegWorldModeModule> logger)
-            : base(tracker, itemService, logger)
+        public PegWorldModeModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<PegWorldModeModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Toggle Peg World mode on", new[] {
                 "Hey tracker, toggle Peg World Mode on",

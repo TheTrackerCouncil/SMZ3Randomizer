@@ -132,6 +132,17 @@ namespace Randomizer.SMZ3.Tracking.Services
         public DungeonInfo Dungeon<TRegion>() where TRegion : Region;
 
         /// <summary>
+        /// Returns extra information for the specified dungeon.
+        /// </summary>
+        /// <param name="dungeon">
+        /// The dungeon to get extra information for.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
+        /// </returns>
+        public DungeonInfo Dungeon(IDungeon dungeon);
+
+        /// <summary>
         /// Returns extra information for the specified room.
         /// </summary>
         /// <param name="name">

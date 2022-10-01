@@ -23,6 +23,8 @@ namespace Randomizer.Data.WorldData
 
         private readonly Requirement _relevanceRequirement;
 
+        private readonly Requirement _trackerLogic;
+
         private Verification _alwaysAllow;
 
         private Verification _allow;
@@ -32,8 +34,8 @@ namespace Randomizer.Data.WorldData
 #nullable enable
         public Location(Room room, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
-            Requirement? relevanceRequirement = null)
-                    : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement)
+            Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
+                    : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
         {
             Room = room;
         }
@@ -63,7 +65,7 @@ namespace Randomizer.Data.WorldData
 
         public Location(Region region, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
-            Requirement? relevanceRequirement = null)
+            Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
         {
             Region = region;
             Id = id;
@@ -79,6 +81,7 @@ namespace Randomizer.Data.WorldData
             MemoryFlag = memoryFlag;
             MemoryType = memoryType;
             _relevanceRequirement = relevanceRequirement ?? (items => _canAccess(items));
+            _trackerLogic = trackerLogic ?? (_ => true);
         }
 #nullable disable
 
@@ -218,9 +221,9 @@ namespace Randomizer.Data.WorldData
         /// <see langword="true"/> if the item is available with <paramref
         /// name="items"/>; otherwise, <see langword="false"/>.
         /// </returns>
-        public bool IsAvailable(Progression items)
+        public bool IsAvailable(Progression items, bool applyTrackerLogic = false)
         {
-            return Region.CanEnter(items, true) && _canAccess(items);
+            return Region.CanEnter(items, true) && _canAccess(items) && (!applyTrackerLogic || _trackerLogic(items));
         }
 
         /// <summary>
@@ -230,19 +233,18 @@ namespace Randomizer.Data.WorldData
         /// <param name="items">The available items.</param>
         /// <see langword="true"/> if the location is available with <paramref
         /// name="items"/>; otherwise, <see langword="false"/>.
-        public bool IsRelevant(Progression items) => Region.CanEnter(items, false) && _relevanceRequirement(items);
+        public bool IsRelevant(Progression items) => Region.CanEnter(items, false) && _relevanceRequirement(items) && _trackerLogic(items);
 
         /// <summary>
         /// Returns the status of a location based on the given items
         /// </summary>
         /// <param name="items">The available items</param>
         /// <returns>The LocationStatus enum of the location</returns>
-        public LocationStatus GetStatus(Progression items, Dictionary<int, Requirement> trackerLogic)
+        public LocationStatus GetStatus(Progression items)
         {
-            var logic = trackerLogic.ContainsKey(Id) ? trackerLogic[Id] : (items) => true;
             if (State.Cleared) return LocationStatus.Cleared;
-            else if (IsAvailable(items) && logic(items)) return LocationStatus.Available;
-            else if (IsRelevant(items) && logic(items)) return LocationStatus.Relevant;
+            else if (IsAvailable(items) && _trackerLogic(items)) return LocationStatus.Available;
+            else if (IsRelevant(items) && _trackerLogic(items)) return LocationStatus.Relevant;
             else return LocationStatus.OutOfLogic;
         }
 

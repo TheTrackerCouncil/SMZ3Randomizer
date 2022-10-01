@@ -22,10 +22,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Constructor
         /// </summary>
         /// <param name="tracker"></param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger"></param>
         /// <param name="config"></param>
-        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, TrackerMapConfig config)
-            : base(tracker, itemService, logger)
+        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
+            : base(tracker, itemService, worldService, logger)
         {
             _logger = logger;
             _config = config;

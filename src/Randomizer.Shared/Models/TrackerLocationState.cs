@@ -13,6 +13,7 @@ namespace Randomizer.Shared.Models
         public ItemType? Item { get; set; }
         public ItemType? MarkedItem { get; set; }
         public bool Cleared { get; set; }
+        public bool HasMarkedItem => MarkedItem != null && MarkedItem != ItemType.Nothing;
     }
 
 }

@@ -32,6 +32,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly IEnumerable<IMetroidStateCheck?> _metroidStateChecks;
         private readonly TrackerModuleFactory _trackerModuleFactory;
         private readonly IRandomizerConfigService _config;
+        private readonly IWorldService _worldService;
         private int _currentIndex = 0;
         private Game _previousGame;
         private bool _hasStarted;
@@ -53,13 +54,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="metroidStateChecks"></param>
         /// <param name="trackerModuleFactory"></param>
         /// <param name="randomizerConfigService"></param>
+        /// <param name="worldService"></param>
         public AutoTracker(ILogger<AutoTracker> logger,
             ILoggerFactory loggerFactory,
             IItemService itemService,
             IEnumerable<IZeldaStateCheck> zeldaStateChecks,
             IEnumerable<IMetroidStateCheck> metroidStateChecks,
             TrackerModuleFactory trackerModuleFactory,
-            IRandomizerConfigService randomizerConfigService
+            IRandomizerConfigService randomizerConfigService,
+            IWorldService worldService
         )
         {
             _logger = logger;
@@ -67,6 +70,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _itemService = itemService;
             _trackerModuleFactory = trackerModuleFactory;
             _config = randomizerConfigService;
+            _worldService = worldService;
 
             // Check if the game has started or not
             AddReadAction(new()
@@ -545,7 +549,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // Store the locations for this action so that we don't need to grab them each time every half a second or so
             if (action.Locations == null)
             {
-                action.Locations = Tracker.World.Locations.Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))).ToList();
+                action.Locations = _worldService.AllLocations().Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))).ToList();
             }
 
             foreach (var location in action.Locations)

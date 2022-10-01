@@ -75,6 +75,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public TrackerDungeonState DungeonState { get; set; }
 
+        public Region ParentRegion => World.LightWorldNorthWest;
+
         public Location BasementCage { get; }
 
         public Location MapChest { get; }

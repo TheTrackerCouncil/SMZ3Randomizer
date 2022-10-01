@@ -658,8 +658,6 @@ namespace Randomizer.App
             ResetGridSize();
             RefreshGridItems();
 
-            
-
             if (!Tracker.TryStartTracking())
             {
                 ShowModuleWarning();
@@ -699,8 +697,7 @@ namespace Randomizer.App
             {
                 Tracker.Load(Rom);
             }
-            Tracker.WorldInfo.LoadWorldMetadata(Tracker.World);
-
+            
             Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
             {
                 UpdateStats(e);

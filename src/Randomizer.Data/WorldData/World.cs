@@ -149,6 +149,8 @@ namespace Randomizer.Data.WorldData
         public LowerNorfairEast LowerNorfairEast { get; }
         public WreckedShip WreckedShip { get; }
 
+        public Location? LastClearedLocation { get; set; }
+
         public Location FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             return Locations.FirstOrDefault(x => x.Name.Equals(name, comparisonType))
@@ -178,48 +180,6 @@ namespace Randomizer.Data.WorldData
         {
             SetMedallions(rnd);
             SetRewards(rnd);
-        }
-
-        /// <summary>
-        /// Creates a new empty <see cref="TrackerState"/> for this world
-        /// instance.
-        /// </summary>
-        /// <returns>
-        /// A new <see cref="TrackerState"/> with the items, rewards and
-        /// medallions from this world.
-        /// </returns>
-        public TrackerState CreateTrackerState()
-        {
-            var locationStates = Locations
-                .Select(x => new TrackerLocationState
-                {
-                    LocationId = x.Id,
-                    Item = x.Item?.Type,
-                    Cleared = false
-                })
-                .ToList();
-
-            var regionStates = Regions
-                .Select(x => new TrackerRegionState
-                {
-                    TypeName = x.GetType().Name,
-                    Reward = x is IHasReward rewardRegion ? rewardRegion.RewardType : null,
-                    Medallion = x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null
-                })
-                .ToList();
-
-            return new TrackerState
-            {
-                //ItemStates = new List<TrackerItemState>(),
-                LocationStates = locationStates,
-                RegionStates = regionStates,
-                //DungeonStates = new List<TrackerDungeonState>(),
-                //MarkedLocations = new List<TrackerMarkedLocation>(),
-                //BossStates = new List<TrackerBossState>(),
-                //History = new List<TrackerHistoryEvent>(),
-                StartDateTime = DateTimeOffset.Now,
-                UpdatedDateTime = DateTimeOffset.Now
-            };
         }
 
         public TrackerState State { get; set; }

@@ -12,6 +12,7 @@ using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.WorldData;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.App.ViewModels
 {
@@ -19,7 +20,7 @@ namespace Randomizer.App.ViewModels
     {
         private readonly IUIService _uiService;
         private bool _isDesign;
-        private LocationFilter _filter;
+        private RegionFilter _filter;
         private TrackerLocationSyncer _syncer;
 
         public TrackerViewModel(IUIService uiService)
@@ -39,7 +40,7 @@ namespace Randomizer.App.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LocationFilter Filter
+        public RegionFilter Filter
         {
             get => _filter;
             set
@@ -66,7 +67,7 @@ namespace Randomizer.App.ViewModels
                 if (_isDesign)
                     return GetDummyMarkedLocations();
 
-                return _syncer.AllLocations.Where(location => location.State?.MarkedItem != null)
+                return _syncer.WorldService.MarkedLocations()
                     .Select(loc => (location: loc, item: _syncer.Tracker.ItemService.FirstOrDefault(loc.State.MarkedItem.Value)))
                     .Select(loc =>
                     {
@@ -79,7 +80,7 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                return _syncer.GetTopLocations(Filter)
+                return _syncer.WorldService.Locations(unclearedOnly: true, outOfLogic: ShowOutOfLogicLocations, assumeKeys: true, sortByTopRegion: true, regionFilter: Filter)
                     .Select(x => new LocationViewModel(x, _syncer))
                     .ToImmutableList();
             }

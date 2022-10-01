@@ -134,6 +134,7 @@ namespace Randomizer.SMZ3.Generation
                     throw new PlandoConfigurationException($"{region.Name} is configured with a reward but that region cannot be configured with rewards.");
 
                 dungeon.RewardType = rewardType;
+                dungeon.Reward = new Reward(rewardType);
             }
 
             EnsureDungeonsHaveRewards(world);

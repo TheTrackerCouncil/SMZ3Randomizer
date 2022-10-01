@@ -58,6 +58,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly RandomizerContext _dbContext;
         private readonly ICommunicator _communicator;
         private readonly ITrackerStateService _stateService;
+        private readonly IWorldService _worldService;
         private DateTime _startTime = DateTime.MinValue;
         private DateTime _undoStartTime = DateTime.MinValue;
         private TimeSpan _undoSavedTime;
@@ -86,7 +87,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="trackerOptions">Provides Tracker preferences.</param>
         /// <param name="dbContext">The database context</param>
+        /// <param name="itemService"></param>
+        /// <param name="communicator"></param>
         /// <param name="historyService">Service for</param>
+        /// <param name="configs"></param>
+        /// <param name="metadataService"></param>
+        /// <param name="stateService"></param>
+        /// <param name="worldService"></param>
         public Tracker(TrackerConfigProvider configProvider,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
@@ -98,8 +105,9 @@ namespace Randomizer.SMZ3.Tracking
             ICommunicator communicator,
             IHistoryService historyService,
             TrackerConfigs configs,
-            IMetadataService worldService,
-            ITrackerStateService stateService)
+            IMetadataService metadataService,
+            ITrackerStateService stateService,
+            IWorldService worldService)
         {
             if (trackerOptions.Options == null)
                 throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -113,12 +121,13 @@ namespace Randomizer.SMZ3.Tracking
             ItemService = itemService;
             _communicator = communicator;
             _stateService = stateService;
+            _worldService = worldService;
 
             // Initialize the tracker configuration
             Responses = configs.Responses;
             Requests = configs.Requests;
-            WorldInfo = worldService;
-            UpdateTrackerProgression = true;
+            Metadata = metadataService;
+            ItemService.ResetProgression();
 
             History = historyService;
 
@@ -177,8 +186,7 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? BossUpdated;
 
         /// <summary>
-        /// Occurs when the <see cref="MarkedLocations"/> collection has
-        /// changed.
+        /// Occurs when the marked locations have changed
         /// </summary>
         public event EventHandler<TrackerEventArgs>? MarkedLocationsUpdated;
 
@@ -211,7 +219,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Gets extra information about locations.
         /// </summary>
-        public IMetadataService WorldInfo { get; }
+        public IMetadataService Metadata { get; }
 
         /// <summary>
         /// Gets a reference to the <see cref="ItemService"/>.
@@ -254,12 +262,6 @@ namespace Randomizer.SMZ3.Tracking
         public bool VoiceRecognitionEnabled { get; private set; }
 
         /// <summary>
-        /// Gets a dictionary that contains the locations that are marked with
-        /// items.
-        /// </summary>
-        public Dictionary<int, ItemData> MarkedLocations { get; } = new();
-
-        /// <summary>
         /// Gets the configured responses.
         /// </summary>
         public ResponseConfig Responses { get; }
@@ -287,7 +289,7 @@ namespace Randomizer.SMZ3.Tracking
         public GeneratedRom? Rom { get; private set; }
 
         /// <summary>
-        /// The region the player is currently in
+        /// The region the player is currently in according to the Auto Tracker
         /// </summary>
         public RegionInfo? CurrentRegion { get; private set; }
 
@@ -421,6 +423,7 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = false;
             Rom = rom;
             var trackerState = _stateService.LoadState(_worldAccessor.World, rom);
+            Metadata.LoadWorldMetadata(_worldAccessor.World);
             if (trackerState != null)
             {
                 SavedElapsedTime = TimeSpan.FromSeconds(trackerState.SecondsElapsed);
@@ -428,17 +431,6 @@ namespace Randomizer.SMZ3.Tracking
                 return true;
             }
             return false;
-
-            /*
-            if (state != null)
-            {
-                History.LoadHistory(this, state);
-                
-                
-                return true;
-            }
-            History.StartHistory(this);
-            return false;*/
         }
 
         /// <summary>
@@ -449,7 +441,6 @@ namespace Randomizer.SMZ3.Tracking
         public async Task SaveAsync(GeneratedRom rom)
         {
             IsDirty = false;
-            //var state = TrackerState.TakeSnapshot(this, ItemService);
             await _stateService.SaveStateAsync(_worldAccessor.World, rom, TotalElapsedTime.TotalSeconds);
         }
 
@@ -469,53 +460,6 @@ namespace Randomizer.SMZ3.Tracking
             {
                 Say(Responses.NothingToUndo);
             }
-        }
-
-        /// <summary>
-        /// Returns a collection of the points of interest in the specified
-        /// region.
-        /// </summary>
-        /// <param name="region">
-        /// The region whose points of interest to enumerate.
-        /// </param>
-        /// <returns>
-        /// A collection of the points of interest in <paramref name="region"/>.
-        /// </returns>
-        public IEnumerable<IPointOfInterest> EnumeratePointsOfInterest(Region region)
-        {
-            foreach (var room in region.Rooms)
-            {
-                yield return WorldInfo.Room(room);
-            }
-
-            foreach (var location in region.GetStandaloneLocations())
-            {
-                yield return WorldInfo.Location(location);
-            }
-
-            foreach (var dungeon in WorldInfo.Dungeons)
-            {
-                if (dungeon.IsInRegion(region))
-                    yield return dungeon;
-            }
-        }
-
-        /// <summary>
-        /// Returns info about locations associated with the specified point of
-        /// interest.
-        /// </summary>
-        /// <param name="poi">
-        /// The point of interest whose locations to get information about.
-        /// </param>
-        /// <returns>
-        /// A collection of <see cref="LocationInfo"/> associated with <paramref
-        /// name="poi"/>.
-        /// </returns>
-        public IReadOnlyCollection<LocationInfo> GetLocations(IPointOfInterest poi)
-        {
-            return poi.GetLocations(World)
-                .Select(x => WorldInfo.Location(x))
-                .ToImmutableList();
         }
 
         /// <summary>
@@ -623,7 +567,8 @@ namespace Randomizer.SMZ3.Tracking
             else
             {
                 dungeon.DungeonState.MarkedReward = reward.Value;
-                Say(Responses.DungeonRewardMarked.Format(dungeon.DungeonMetadata.Name, dungeon.Reward.Metadata.Name));
+                var rewardObj = ItemService.FirstOrDefault(reward.Value);
+                Say(Responses.DungeonRewardMarked.Format(dungeon.DungeonMetadata.Name, rewardObj?.Metadata.Name ?? reward.GetDescription()));
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
@@ -702,77 +647,6 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             AddUndo(() => dungeon.DungeonState.MarkedMedallion = originalRequirement);
-        }
-
-        /// <summary>
-        /// Gets the currently available items for a particular region or room
-        /// </summary>
-        /// <param name="area">The area to get progression for.</param>    
-        /// <returns>
-        /// A new <see cref="Progression"/> object representing the currently
-        /// available items.
-        /// </returns>
-        /// <remarks>
-        /// Keycards and dungeon items such as keys are assumed to be owned,
-        /// unless playing on a keysanity world for that particular game, in
-        /// which case keys and keycards must be tracked manually
-        /// </remarks>
-        public Progression GetProgression(IHasLocations area)
-        {
-            if (area is Z3Region || (area is Room room1 && room1.Region is Z3Region))
-                return GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
-            else if (area is SMRegion || (area is Room room2 && room2.Region is SMRegion))
-                return GetProgression(assumeKeys: !World.Config.MetroidKeysanity);
-            else
-                return GetProgression(assumeKeys: World.Config.KeysanityMode == KeysanityMode.None);
-        }
-
-        /// <summary>
-        /// Gets the currently available items.
-        /// </summary>
-        /// <param name="assumeKeys">
-        /// Indicates whether to add small and big dungeon keys to the
-        /// progression pool. If keysanity is enabled for the current <see
-        /// cref="World"/>, this setting also adds keycards, which are otherwise
-        /// always added.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="Progression"/> object representing the currently
-        /// available items.
-        /// </returns>
-        public Progression GetProgression(bool assumeKeys)
-        {
-            if (UpdateTrackerProgression)
-            {
-                _progression.Clear();
-                UpdateTrackerProgression = false;
-            }
-
-            var mapKey = $"{assumeKeys}{!World.Config.Keysanity}";
-
-            if (_progression.ContainsKey(mapKey))
-            {
-                return _progression[mapKey];
-            }
-
-            var progression = new Progression();
-
-            if (!World.Config.MetroidKeysanity || assumeKeys)
-            {
-                progression.AddRange(Item.CreateKeycards(World));
-                if (assumeKeys)
-                    progression.AddRange(Item.CreateDungeonPool(World));
-            }
-
-            foreach (var item in ItemService.TrackedItems())
-            {
-                progression.AddRange(Enumerable.Repeat(item.Type, item.State.TrackingState));
-            }
-
-            progression.AddRange(GetCurrentRewards());
-
-            _progression[mapKey] = progression;
-            return progression;
         }
 
         /// <summary>
@@ -1195,15 +1069,16 @@ namespace Randomizer.SMZ3.Tracking
         public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false)
         {
             var didTrack = false;
-            var accessibleBefore = GetAccessibleLocations();
+            var accessibleBefore = _worldService.AccessibleLocations(false);
             var itemName = item.Name;
             var originalTrackingState = item.State.TrackingState;
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
+            ItemService.ResetProgression();
 
             var isGTPreBigKey = !World.Config.ZeldaKeysanity
                                 && autoTracked
                                 && location?.Region.GetType() == typeof(GanonsTower)
-                                && !GetProgression(false).BigKeyGT;
+                                && !ItemService.GetProgression(false).BigKeyGT;
             var stateResponse = !isGTPreBigKey && (!autoTracked
                                                || !item.Metadata.IsDungeonItem()
                                                || World.Config.ZeldaKeysanity);
@@ -1311,7 +1186,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
-            Action undoTrack = () => { item.State.TrackingState = originalTrackingState; UpdateTrackerProgression = true; };
+            Action undoTrack = () => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); };
             OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
 
             // Check if we can clear a location
@@ -1323,7 +1198,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 if (location == null)
                 {
-                    location = World.Locations.TrySingle(x => x.State.Cleared == false && x.Item.Type == item.Type);
+                    location = _worldService.Locations(itemFilter: item.Type).TrySingle();
                 }
 
                 if (location != null)
@@ -1342,23 +1217,24 @@ namespace Randomizer.SMZ3.Tracking
                         // the "guess dungeon from location" algorithm excludes
                         // cleared items
                         location.State.Cleared = true;
+                        World.LastClearedLocation = location;
                         OnLocationCleared(new(location, confidence));
 
                         undoClear = () => location.State.Cleared = false;
-                        if (MarkedLocations.ContainsKey(location.Id))
+                        if ((location.State.MarkedItem ?? ItemType.Nothing) != ItemType.Nothing)
                         {
-                            MarkedLocations.Remove(location.Id);
+                            location.State.MarkedItem = null;
                             OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
                         }
                     }
 
                     var isKeysanityForLocation = (location.Region is Z3Region && World.Config.ZeldaKeysanity) || (location.Region is SMRegion && World.Config.MetroidKeysanity);
-                    var items = GetProgression(!isKeysanityForLocation);
+                    var items = ItemService.GetProgression(!isKeysanityForLocation);
                     if (stateResponse && !location.IsAvailable(items) && (confidence >= Options.MinimumSassConfidence || autoTracked))
                     {
-                        var locationInfo = WorldInfo.Location(location);
-                        var roomInfo = location.Room != null ? WorldInfo.Room(location.Room) : null;
-                        var regionInfo = WorldInfo.Region(location.Region);
+                        var locationInfo = location.Metadata;
+                        var roomInfo = location.Room != null ? location.Room.Metadata : null;
+                        var regionInfo = location.Region.Metadata;
 
                         if (locationInfo.OutOfLogic != null)
                         {
@@ -1408,7 +1284,7 @@ namespace Randomizer.SMZ3.Tracking
                     undoTrack();
                     undoClear?.Invoke();
                     undoTrackDungeonTreasure?.Invoke();
-                    UpdateTrackerProgression = true;
+                    ItemService.ResetProgression();
                     addedEvent.IsUndone = true;
                 });
             }
@@ -1427,7 +1303,7 @@ namespace Randomizer.SMZ3.Tracking
         public void UntrackItem(Item item, float? confidence = null)
         {
             var originalTrackingState = item.State.TrackingState;
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             if (!item.Untrack())
             {
@@ -1458,7 +1334,7 @@ namespace Randomizer.SMZ3.Tracking
 
             IsDirty = true;
             OnItemTracked(new(null, confidence));
-            AddUndo(() => { item.State.TrackingState = originalTrackingState; UpdateTrackerProgression = true; });
+            AddUndo(() => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); });
         }
 
         /// <summary>
@@ -1474,7 +1350,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             var tracked = TrackItem(item, trackedAs, confidence, tryClear: false);
             var undoTrack = _undoHistory.Pop();
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             // Check if we can remove something from the remaining treasures in
             // a dungeon
@@ -1489,17 +1365,16 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = true;
 
             // Check if we can remove something from the marked location
-            var location = World.Locations
-                .Where(x => dungeon == x.Region)
-                .TrySingle(x => x.ItemIs(item.Type, World));
+            var location = _worldService.Locations(itemFilter: item.Type, inRegion: dungeon as Region).TrySingle();
             if (location != null)
             {
                 location.State.Cleared = true;
+                World.LastClearedLocation = location;
                 OnLocationCleared(new(location, confidence));
 
-                if (MarkedLocations.ContainsKey(location.Id))
+                if (location.State.HasMarkedItem)
                 {
-                    MarkedLocations.Remove(location.Id);
+                    location.State.MarkedItem = null;
                     OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
                 }
 
@@ -1508,7 +1383,7 @@ namespace Randomizer.SMZ3.Tracking
                     undoTrack();
                     undoTrackTreasure?.Invoke();
                     location.State.Cleared = false;
-                    UpdateTrackerProgression = true;
+                    ItemService.ResetProgression();
                 });
             }
             else
@@ -1517,7 +1392,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     undoTrack();
                     undoTrackTreasure?.Invoke();
-                    UpdateTrackerProgression = true;
+                    ItemService.ResetProgression();
                 });
             }
         }
@@ -1536,7 +1411,7 @@ namespace Randomizer.SMZ3.Tracking
             var locations = area.Locations
                 .Where(x => x.Item.Type == item.Type)
                 .ToImmutableList();
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             if (locations.Count == 0)
             {
@@ -1560,7 +1435,7 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     undoClear();
                     undoTrack();
-                    UpdateTrackerProgression = true;
+                    ItemService.ResetProgression();
                 });
             }
         }
@@ -1575,7 +1450,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void TrackItemAmount(Item item, int count, float confidence)
         {
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             var newItemCount = count;
             if (item.Metadata.CounterMultiplier > 1
@@ -1607,7 +1482,7 @@ namespace Randomizer.SMZ3.Tracking
 
             IsDirty = true;
 
-            AddUndo(() => { item.State.TrackingState = oldItemCount; UpdateTrackerProgression = true; });
+            AddUndo(() => { item.State.TrackingState = oldItemCount; ItemService.ResetProgression(); });
             OnItemTracked(new(null, confidence));
         }
 
@@ -1633,10 +1508,10 @@ namespace Randomizer.SMZ3.Tracking
         {
             var locations = area.Locations
                 .Where(x => !x.State.Cleared)
-                .WhereUnless(includeUnavailable, x => x.IsAvailable(GetProgression(area)))
+                .WhereUnless(includeUnavailable, x => x.IsAvailable(ItemService.GetProgression(area)))
                 .ToImmutableList();
 
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             if (locations.Count == 0)
             {
@@ -1691,6 +1566,7 @@ namespace Randomizer.SMZ3.Tracking
                             if (IsTreasure(location.Item) || World.Config.ZeldaKeysanity)
                                 treasureTracked++;
                             location.State.Cleared = true;
+                            World.LastClearedLocation = location;
                             OnLocationCleared(new(location, confidence));
                             continue;
                         }
@@ -1713,8 +1589,8 @@ namespace Randomizer.SMZ3.Tracking
                             : $"{itemsCleared} items";
                         Say(x => x.TrackedMultipleItems, itemsCleared, area.Name, itemNames);
 
-                        var roomInfo = area is Room room ? WorldInfo.Room(room) : null;
-                        var regionInfo = area is Region region ?WorldInfo.Region(region) : null;
+                        var roomInfo = area is Room room ? room.Metadata : null;
+                        var regionInfo = area is Region region ? region.Metadata : null;
 
                         if (roomInfo?.OutOfLogic != null)
                         {
@@ -1726,7 +1602,7 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            var progression = GetProgression(area);
+                            var progression = ItemService.GetProgression(area);
                             var someOutOfLogicLocation = locations.Where(x => !x.IsAvailable(progression)).Random(s_random);
                             if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                             {
@@ -1737,11 +1613,11 @@ namespace Randomizer.SMZ3.Tracking
                                 if (missingItems != null)
                                 {
                                     var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                                    Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Metadata?.Name, GetName(someOutOfLogicLocation), missingItemNames);
+                                    Say(x => x.TrackedOutOfLogicItem, someOutOfLogicItem?.Metadata?.Name, someOutOfLogicLocation.Metadata.Name, missingItemNames);
                                 }
                                 else
                                 {
-                                    Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem?.Metadata?.Name, GetName(someOutOfLogicLocation));
+                                    Say(x => x.TrackedOutOfLogicItemTooManyMissing, someOutOfLogicItem?.Metadata?.Name, someOutOfLogicLocation.Metadata.Name);
                                 }
                             }
                         }
@@ -1777,7 +1653,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     location.State.Cleared = false;
                 }
-                UpdateTrackerProgression = true;
+                ItemService.ResetProgression();
             });
         }
 
@@ -1799,7 +1675,7 @@ namespace Randomizer.SMZ3.Tracking
                 dungeon.DungeonState.Cleared = true;
 
             var region = dungeon as Region;
-            var progress = GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
+            var progress = ItemService.GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
             var locations = region.Locations.Where(x => !x.State.Cleared).ToList();
             var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
             if (locations.Count > 0)
@@ -1818,7 +1694,7 @@ namespace Randomizer.SMZ3.Tracking
             if (inaccessibleLocations.Count > 0 && confidence >= Options.MinimumSassConfidence)
             {
                 var anyMissedLocation = inaccessibleLocations.Random(s_random);
-                var locationInfo = WorldInfo.Location(anyMissedLocation);
+                var locationInfo = anyMissedLocation.Metadata;
                 var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress);
                 if (missingItemCombinations.Any())
                 {
@@ -1833,6 +1709,7 @@ namespace Randomizer.SMZ3.Tracking
                     Say(x => x.DungeonClearedWithTooManyInaccessibleItems, dungeon.DungeonMetadata.Name, locationInfo.Name);
                 }
             }
+            ItemService.ResetProgression();
 
             OnDungeonUpdated(new(confidence));
             AddUndo(() =>
@@ -1841,6 +1718,7 @@ namespace Randomizer.SMZ3.Tracking
                 if (remaining > 0 && !dungeon.DungeonState.HasReward)
                     dungeon.DungeonState.Cleared = false;
                 locations.ForEach(x => x.State.Cleared = false);
+                ItemService.ResetProgression();
             });
         }
 
@@ -1852,19 +1730,19 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="autoTracked">If this was tracked by the auto tracker</param>
         public void Clear(Location location, float? confidence = null, bool autoTracked = false)
         {
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
             location.State.Cleared = true;
 
             if (confidence != null)
             {
                 // Only use TTS if called from a voice command
-                var locationName = GetName(location);
+                var locationName = location.Metadata.Name;
                 Say(Responses.LocationCleared.Format(locationName));
             }
 
-            if (MarkedLocations.ContainsKey(location.Id))
+            if (location.State.HasMarkedItem)
             {
-                MarkedLocations.Remove(location.Id);
+                location.State.MarkedItem = null;
                 OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
             }
 
@@ -1890,10 +1768,11 @@ namespace Randomizer.SMZ3.Tracking
                     location.State.Cleared = false;
                     undoTrackTreasure?.Invoke();
                     undoStopPegWorldMode?.Invoke();
-                    UpdateTrackerProgression = true;
+                    ItemService.ResetProgression();
                 });
             }
-            
+
+            World.LastClearedLocation = location;
             OnLocationCleared(new(location, confidence));
         }
 
@@ -1905,7 +1784,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="autoTracked">If this was cleared by the auto tracker</param>
         public void MarkDungeonAsCleared(IDungeon dungeon, float? confidence = null, bool autoTracked = false)
         {
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             if (dungeon.DungeonState.Cleared)
             {
@@ -1929,7 +1808,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 AddUndo(() =>
                 {
-                    UpdateTrackerProgression = true;
+                    ItemService.ResetProgression();
                     dungeon.DungeonState.Cleared = false;
                     addedEvent.IsUndone = true;
                 });
@@ -1968,7 +1847,7 @@ namespace Randomizer.SMZ3.Tracking
             );
 
             IsDirty = true;
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             RestartIdleTimers();
             OnBossUpdated(new(confidence));
@@ -2000,7 +1879,7 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.BossUndefeated, boss.Name);
 
             IsDirty = true;
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
 
             OnBossUpdated(new(confidence));
             AddUndo(() => boss.State.Defeated = true);
@@ -2020,7 +1899,7 @@ namespace Randomizer.SMZ3.Tracking
                 return;
             }
 
-            UpdateTrackerProgression = true;
+            ItemService.ResetProgression();
             dungeon.DungeonState.Cleared = false;
             Say(Responses.DungeonBossUncleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
 
@@ -2030,7 +1909,7 @@ namespace Randomizer.SMZ3.Tracking
             Action? undoUntrack = null;
             if (dungeon.DungeonMetadata.LocationId != null)
             {
-                var rewardLocation = World.Locations.Single(x => x.Id == dungeon.DungeonMetadata.LocationId);
+                var rewardLocation = _worldService.Location(dungeon.DungeonMetadata.LocationId.Value);
                 if (rewardLocation.Item != null)
                 {
                     var item = rewardLocation.Item;
@@ -2064,7 +1943,7 @@ namespace Randomizer.SMZ3.Tracking
                 undoUntrack?.Invoke();
                 undoUntrackTreasure?.Invoke();
                 undoUnclear?.Invoke();
-                UpdateTrackerProgression = true;
+                ItemService.ResetProgression();
             });
         }
 
@@ -2078,7 +1957,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void MarkLocation(Location location, Item item, float? confidence = null)
         {
-            var locationName = GetName(location);
+            var locationName = location.Metadata.Name;
             GiveLocationComment(item, location, isTracking: false, confidence);
 
             if (item.Type == ItemType.Nothing)
@@ -2086,17 +1965,18 @@ namespace Randomizer.SMZ3.Tracking
                 Clear(location);
                 Say(Responses.LocationMarkedAsBullshit.Format(locationName));
             }
-            else if (MarkedLocations.TryGetValue(location.Id, out var oldItem))
+            else if (location.State.HasMarkedItem)
             {
+                var oldType = location.State.MarkedItem;
                 location.State.MarkedItem = item.Type;
-                Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldItem.Name));
-                AddUndo(() => MarkedLocations[location.Id] = oldItem);
+                Say(Responses.LocationMarkedAgain.Format(locationName, item.Name, oldType.GetDescription()));
+                AddUndo(() => location.State.MarkedItem = oldType);
             }
             else
             {
                 location.State.MarkedItem = item.Type;
                 Say(Responses.LocationMarked.Format(locationName, item.Name));
-                AddUndo(() => MarkedLocations.Remove(location.Id));
+                AddUndo(() => location.State.MarkedItem = null);
             }
 
             IsDirty = true;
@@ -2157,7 +2037,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="resetTime">If the time should be reset if this is the first region update</param>
         public void UpdateRegion(Region region, bool updateMap = false, bool resetTime = false)
         {
-            UpdateRegion(WorldInfo.Regions.First(x => x.GetRegion(World) == region), updateMap, resetTime);
+            UpdateRegion(region.Metadata, updateMap, resetTime);
         }
 
         /// <summary>
@@ -2235,17 +2115,6 @@ namespace Randomizer.SMZ3.Tracking
                 timer.Change(timeout, Timeout.InfiniteTimeSpan);
             }
         }
-
-        /// <summary>
-        /// Returns the possible names of the specified location.
-        /// </summary>
-        /// <param name="location">The location whose names to get.</param>
-        /// <returns>
-        /// A new <see cref="SchrodingersString"/> object representing the
-        /// possible names of <paramref name="location"/>.
-        /// </returns>
-        protected internal virtual SchrodingersString GetName(Location location)
-            => WorldInfo.Location(location).Name;
 
         /// <summary>
         /// Determines whether or not the specified reward is worth getting.
@@ -2519,7 +2388,7 @@ namespace Randomizer.SMZ3.Tracking
                     return;
                 }
 
-                var locationInfo = WorldInfo.Location(location);
+                var locationInfo = location.Metadata;
                 var isJunk = item.Metadata.IsJunk(World.Config);
                 if (isJunk)
                 {
@@ -2548,8 +2417,8 @@ namespace Randomizer.SMZ3.Tracking
 
         private IDungeon? GetDungeonFromItem(Item item, IDungeon? dungeon = null)
         {
-            var locations = World.Locations
-                .Where(x => !x.State.Cleared && x.Type != LocationType.NotInDungeon && x.ItemIs(item.Type, World))
+            var locations = _worldService.Locations(itemFilter: item.Type)
+                .Where(x => x.Type != LocationType.NotInDungeon)
                 .ToImmutableList();
 
             if (locations.Count == 1 && dungeon == null)
@@ -2596,7 +2465,7 @@ namespace Randomizer.SMZ3.Tracking
             if (World == null)
                 return;
 
-            var accessibleAfter = GetAccessibleLocations();
+            var accessibleAfter = _worldService.AccessibleLocations(false);
             var newlyAccessible = accessibleAfter.Except(accessibleBefore);
             if (newlyAccessible.Any())
             {
@@ -2616,30 +2485,5 @@ namespace Randomizer.SMZ3.Tracking
             }
         }
 
-        private IEnumerable<Location> GetAccessibleLocations()
-        {
-            if (World == null)
-                return Enumerable.Empty<Location>();
-
-            var items = new List<Item>();
-            foreach (var item in ItemService.TrackedItems())
-            {
-                for (var i = 0; i < item.State.TrackingState; i++)
-                    items.Add(new Item(item.Type));
-            }
-
-            var progression = new Progression(items, GetCurrentRewards(), GetDefeatedBosses());
-            return World.Locations.Where(x => x.IsAvailable(progression)).ToList();
-        }
-
-        private IEnumerable<Reward> GetCurrentRewards()
-        {
-            return World.Rewards.Where(x => x.State?.Cleared == true);
-        }
-
-        private IEnumerable<Boss> GetDefeatedBosses()
-        {
-            return World.GoldenBosses.Where(x => x.State?.Defeated == true);
-        }
     }
 }

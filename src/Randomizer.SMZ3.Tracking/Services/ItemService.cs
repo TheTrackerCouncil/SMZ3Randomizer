@@ -7,6 +7,7 @@ using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -17,6 +18,7 @@ namespace Randomizer.SMZ3.Tracking.Services
     {
         private static readonly Random s_random = new Random();
         private readonly IWorldAccessor _world;
+        private Dictionary<string, Progression> _progression = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ItemService"/> class
@@ -128,8 +130,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured rewards with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        public virtual RewardInfo? GetOrDefault(RewardType rewardType)
-            => Rewards.RandomOrDefault(x => x.RewardType == rewardType, s_random);
+        public virtual Reward? FirstOrDefault(RewardType rewardType)
+            => AllRewards().FirstOrDefault(x => x.Type == rewardType);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -142,8 +144,96 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public virtual string GetName(RewardType rewardType)
         {
-            var reward = GetOrDefault(rewardType);
-            return reward?.NameWithArticle ?? rewardType.GetDescription();
+            var reward = FirstOrDefault(rewardType);
+            return reward?.Metadata.NameWithArticle ?? rewardType.GetDescription();
+        }
+
+        /// <summary>
+        /// Enumerates all rewards that can be tracked.
+        /// </summary>
+        /// <returns>A collection of rewards.</returns>
+
+        public virtual IEnumerable<Reward> AllRewards()
+            => _world.World.Rewards;
+
+        /// <summary>
+        /// Enumarates all currently tracked rewards.
+        /// This uses what the player marked as the reward for dungeons,
+        /// not the actual dungeon reward.
+        /// </summary>
+        /// <returns>
+        /// A collection of reward that have been tracked.
+        /// </returns>
+        public virtual IEnumerable<Reward> TrackedRewards()
+            => _world.World.Dungeons.Where(x => x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward));
+
+        /// <summary>
+        /// Enumerates all bosses that can be tracked.
+        /// </summary>
+        /// <returns>A collection of bosses.</returns>
+
+        public virtual IEnumerable<Boss> AllBosses()
+            => _world.World.AllBosses;
+
+        /// <summary>
+        /// Enumarates all currently tracked bosses.
+        /// </summary>
+        /// <returns>
+        /// A collection of bosses that have been tracked.
+        /// </returns>
+        public virtual IEnumerable<Boss> TrackedBosses()
+            => AllBosses().Where(x => x.State.Defeated);
+
+        public Progression GetProgression(bool assumeKeys)
+        {
+            var key = $"{assumeKeys}";
+
+            if (_progression.ContainsKey(key))
+            {
+                return _progression[key];
+            }
+
+            var progression = new Progression();
+
+            if (!_world.World.Config.MetroidKeysanity || assumeKeys)
+            {
+                progression.AddRange(Item.CreateKeycards(_world.World));
+                if (assumeKeys)
+                    progression.AddRange(Item.CreateDungeonPool(_world.World));
+            }
+
+            foreach (var item in TrackedItems())
+            {
+                progression.AddRange(Enumerable.Repeat(item.Type, item.State.TrackingState));
+            }
+
+            foreach (var reward in TrackedRewards())
+            {
+                progression.Add(reward);
+            }
+
+            foreach (var boss in TrackedBosses())
+            {
+                progression.Add(boss);
+            }
+
+            _progression[key] = progression;
+            return progression;
+        }
+
+        public Progression GetProgression(IHasLocations area)
+        {
+            if (area is Z3Region || (area is Room room1 && room1.Region is Z3Region))
+                return GetProgression(assumeKeys: !_world.World.Config.ZeldaKeysanity);
+            else if (area is SMRegion || (area is Room room2 && room2.Region is SMRegion))
+                return GetProgression(assumeKeys: !_world.World.Config.MetroidKeysanity);
+            else
+                return GetProgression(assumeKeys: _world.World.Config.KeysanityMode == KeysanityMode.None);
+        }
+
+        public void ResetProgression()
+        {
+            _progression.Clear();
         }
 
 

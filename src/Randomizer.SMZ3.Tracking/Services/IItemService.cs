@@ -2,6 +2,7 @@
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -80,7 +81,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured rewards with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        RewardInfo? GetOrDefault(RewardType rewardType);
+        Reward? FirstOrDefault(RewardType rewardType);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -92,5 +93,56 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// applicable.
         /// </returns>
         string GetName(RewardType rewardType);
+
+        /// <summary>
+        /// Enumerates all rewards that can be tracked.
+        /// </summary>
+        /// <returns>A collection of rewards.</returns>
+
+        IEnumerable<Reward> AllRewards();
+
+        /// <summary>
+        /// Enumarates all currently tracked rewards.
+        /// </summary>
+        /// <returns>
+        /// A collection of reward that have been tracked.
+        /// </returns>
+        IEnumerable<Reward> TrackedRewards();
+
+        /// <summary>
+        /// Enumerates all bosses that can be tracked.
+        /// </summary>
+        /// <returns>A collection of bosses.</returns>
+
+        IEnumerable<Boss> AllBosses();
+
+        /// <summary>
+        /// Enumarates all currently tracked bosses.
+        /// </summary>
+        /// <returns>
+        /// A collection of bosses that have been tracked.
+        /// </returns>
+        IEnumerable<Boss> TrackedBosses();
+
+        /// <summary>
+        /// Retrieves the progression containing all of the tracked items, rewards, and bosses
+        /// for determining in logic locations
+        /// </summary>
+        /// <param name="assumeKeys">If it should be assumed that the player has all keys and keycards</param>
+        /// <returns></returns>
+        Progression GetProgression(bool assumeKeys);
+
+        /// <summary>
+        /// Retrieves the progression containing all of the tracked items, rewards, and bosses
+        /// for determining in logic locations
+        /// </summary>
+        /// <param name="area">The area being looked at to see if keys/keycards should be assumed or not</param>
+        /// <returns></returns>
+        Progression GetProgression(IHasLocations area);
+
+        /// <summary>
+        /// Clears cached progression
+        /// </summary>
+        void ResetProgression();
     }
 }

@@ -43,7 +43,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         public string RegionTypeName { get; set; }
 
-
         /// <summary>
         /// The name of this location
         /// </summary>
@@ -82,6 +81,23 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             Item,
             Boss,
             SMDoor
+        }
+
+        public string GetName(World world)
+        {
+            var room = world.Rooms.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
+            if (room != null)
+                return room.Metadata.Name[0];
+
+            var dungeon = world.Dungeons.SingleOrDefault(x => x.DungeonName.Equals(Name, StringComparison.OrdinalIgnoreCase));
+            if (dungeon != null)
+                return dungeon.DungeonMetadata.Name[0];
+
+            var location = world.Locations.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
+            if (location != null)
+                return location.Metadata.Name[0];
+
+            return Name;
         }
     }
 }

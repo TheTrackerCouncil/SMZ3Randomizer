@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
@@ -64,6 +65,11 @@ namespace Randomizer.Data.WorldData.Regions
         /// Gets the randomizer configuration options.
         /// </summary>
         public Config Config { get; }
+
+        /// <summary>
+        /// The Region's metadata
+        /// </summary>
+        public RegionInfo Metadata { get; set; }
 
         /// <summary>
         /// The Logic to be used to determine if certain actions can be done
@@ -163,5 +169,20 @@ namespace Randomizer.Data.WorldData.Regions
 
         protected IEnumerable<Room> GetRooms()
             => GetType().GetPropertyValues<Room>(this);
+
+        public bool CheckDungeonMedallion(Progression items, IDungeon dungeon)
+        {
+            if (!dungeon.NeedsMedallion) return true;
+            var medallionItem = dungeon.MarkedMedallion;
+            return (medallionItem != ItemType.Nothing && items.Contains(medallionItem)) ||
+                (items.Bombos && items.Ether && items.Quake);
+        }
+
+        public int CountReward(Progression items, RewardType reward)
+        {
+            return World.Dungeons
+                .Where(x => x is IHasReward rewardRegion && x.MarkedReward == reward)
+                .Count(x => x.DungeonState.Cleared);
+        }
     }
 }

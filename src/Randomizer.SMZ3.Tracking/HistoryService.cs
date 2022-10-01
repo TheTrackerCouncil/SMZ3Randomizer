@@ -73,30 +73,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// Adds an event to the history log
         /// </summary>
-        /// <param name="type">The type of event</param>
-        /// <param name="isImportant">If this is an important event or not</param>
-        /// <param name="objectName">The name of the event being logged</param>
-        /// <param name="location">The optional location of where this event happened</param>
-        /// <returns>The created event</returns>
-        public TrackerHistoryEvent AddEvent(HistoryEventType type, bool isImportant, string objectName, LocationInfo? location)
-        {
-            var addedEvent = new TrackerHistoryEvent()
-            {
-                TrackerState = _tracker.State,
-                Type = type,
-                IsImportant = isImportant,
-                ObjectName = objectName,
-                LocationName = location?.Name.ToString(),
-                LocationId = location?.LocationNumber,
-                Time = _tracker?.TotalElapsedTime.TotalSeconds ?? 0
-            };
-            AddEvent(addedEvent);
-            return addedEvent;
-        }
-
-        /// <summary>
-        /// Adds an event to the history log
-        /// </summary>
         /// <param name="histEvent">The event to add</param>
         public void AddEvent(TrackerHistoryEvent histEvent)
         {

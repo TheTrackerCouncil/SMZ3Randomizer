@@ -11,7 +11,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
     /// <summary>
     /// Represents a dungeon in A Link to the Past.
     /// </summary>
-    public class DungeonInfo : IPointOfInterest, IMergeable<DungeonInfo>
+    public class DungeonInfo : IMergeable<DungeonInfo>
     {
         public DungeonInfo() { }
 
@@ -27,16 +27,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The fully qualified type name of the region that represents the
         /// dungeon.
         /// </param>
-        /// <param name="regionTypeName">
-        /// The fully qualified type name of the region the dungeon is located
-        /// in.
-        /// </param>
-        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss, string regionTypeName)
+        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss)
         {
             Name = name;
             Abbreviation = abbreviation;
             Boss = boss ?? new();
-            RegionTypeName = regionTypeName;
         }
 
         /// <summary>
@@ -71,29 +66,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// for beating the boss.
         /// </summary>
         public int? LocationId { get; init; }
-
-        /// <summary>
-        /// Gets the x-coordinate of the dungeon on the map, if it should be
-        /// displayed.
-        /// </summary>
-        public int? X { get; init; }
-
-        /// <summary>
-        /// Gets the y-coordinate of the dungeon on the map, if it should be
-        /// displayed.
-        /// </summary>
-        public int? Y { get; init; }
-
-        /// <summary>
-        /// Gets the fully qualified name of the region that the dungeon is
-        /// located in.
-        /// </summary>
-        public string RegionTypeName { get; init; }
-
-        /// <summary>
-        /// The type of the overworld region you access this dungeon from
-        /// </summary>
-        public Type WithinRegionType { get; init; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.
@@ -158,19 +130,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         {
             var region = GetRegion(world);
             return region.CanEnter(progression, true);
-        }
-
-        /// <summary>
-        /// Determines whether the dungeon is located in the specified region.
-        /// </summary>
-        /// <param name="region">The region to check.</param>
-        /// <returns>
-        /// <c>true</c> if this dungeon is located in the specified region;
-        /// otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsInRegion(Region region)
-        {
-            return region.GetType().FullName == RegionTypeName;
         }
 
         /// <summary>

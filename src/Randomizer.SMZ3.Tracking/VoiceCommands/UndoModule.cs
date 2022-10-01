@@ -15,9 +15,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Initializes a new instance of the <see cref="UndoModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public UndoModule(Tracker tracker, IItemService itemService, ILogger<UndoModule> logger)
-            : base(tracker, itemService, logger)
+        public UndoModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<UndoModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Undo last operation", GetUndoRule(), (tracker, result) =>
             {

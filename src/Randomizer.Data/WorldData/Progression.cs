@@ -165,11 +165,23 @@ namespace Randomizer.Data.WorldData
         public void AddRange(IEnumerable<Item> items)
             => Items.AddRange(items.Select(x => x.Type));
 
+        public void Add(Reward reward)
+            => Rewards.Add(reward.Type);
+
         public void AddRange(IEnumerable<RewardType> rewards)
             => Rewards.AddRange(rewards);
 
         public void AddRange(IEnumerable<Reward> rewards)
             => Rewards.AddRange(rewards.Select(x => x.Type));
+
+        public void Add(Boss boss)
+            => Bosses.Add(boss.Type);
+
+        public void AddRange(IEnumerable<BossType> boss)
+            => Bosses.AddRange(boss);
+
+        public void AddRange(IEnumerable<Boss> bosses)
+            => Bosses.AddRange(bosses.Select(x => x.Type));
 
         public void Clear()
             => Items.Clear();
@@ -185,6 +197,9 @@ namespace Randomizer.Data.WorldData
 
         public IEnumerator<ItemType> GetEnumerator()
             => Items.GetEnumerator();
+
+        public bool HasMarkedMedallion(ItemType? medallion)
+            =>  (medallion != null && medallion != ItemType.Nothing && Contains(medallion.Value)) || (Bombos && Ether && Quake);
 
         private int GetRupeeCount()
         {

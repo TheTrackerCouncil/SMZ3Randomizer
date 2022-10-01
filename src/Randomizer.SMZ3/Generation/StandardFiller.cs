@@ -259,7 +259,7 @@ namespace Randomizer.SMZ3.Generation
 
                 var inventory = CollectItems(itemsToAdd.Concat(initialInventory), worlds);
                 var currentRewards = CollectRewards(inventory, allRewards, worlds);
-                var currentBosses = CollectBosses(inventory, allBosses, worlds);
+                var currentBosses = CollectBosses(inventory, currentRewards, allBosses, worlds);
                 var location = locations.Empty().CanFillWithinWorld(item, inventory, currentRewards, currentBosses).FirstOrDefault();
                 if (location == null)
                 {
@@ -312,9 +312,9 @@ namespace Randomizer.SMZ3.Generation
                 .SelectMany(r => rewardPool.Where(p => p.Type == ((IHasReward)r).RewardType && p.Region == r));
         }
 
-        private IEnumerable<Boss> CollectBosses(IEnumerable<Item> items, IEnumerable<Boss> bossPool, IEnumerable<World> worlds)
+        private IEnumerable<Boss> CollectBosses(IEnumerable<Item> items, IEnumerable<Reward> rewards, IEnumerable<Boss> bossPool, IEnumerable<World> worlds)
         {
-            var progressions = worlds.ToDictionary(w => w, w => new Progression(items.Where(i => i.World == w), new List<Reward>(), new List<Boss>()));
+            var progressions = worlds.ToDictionary(w => w, w => new Progression(items.Where(i => i.World == w), rewards.Where(r => r.World == w), new List<Boss>()));
 
             return worlds
                 .SelectMany(w => w.Regions)

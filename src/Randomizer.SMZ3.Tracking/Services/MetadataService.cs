@@ -132,7 +132,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </param>
         /// <returns>
         /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-        /// <c>null</c> if <paramref name="typeName"/> is not a valid dungeon.
+        /// <c>null</c> if <paramref name="name"/> is not a valid dungeon.
         /// </returns>
         public DungeonInfo? Dungeon(string name)
             => Dungeons.SingleOrDefault(x => x.Type.FullName == name || x.Dungeon == name);
@@ -175,6 +175,15 @@ namespace Randomizer.SMZ3.Tracking.Services
         public DungeonInfo Dungeon<TRegion>() where TRegion : Region
             => Dungeon(typeof(TRegion));
 
+        /// <summary>
+        /// Returns extra information for the specified dungeon.
+        /// </summary>
+        /// <param name="dungeon">
+        /// The dungeon to get extra information for.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
+        /// </returns>
         public DungeonInfo Dungeon(IDungeon dungeon)
             => Dungeon(dungeon.GetType());
 
@@ -279,6 +288,8 @@ namespace Randomizer.SMZ3.Tracking.Services
             world.Locations.ToList().ForEach(loc => loc.Metadata = Location(loc.Id));
             world.Dungeons.ToList().ForEach(d => d.DungeonMetadata = Dungeon(d));
             world.Rewards.ToList().ForEach(r => r.Metadata = _rewards.First(md => md.RewardType == r.Type));
+            world.Regions.ToList().ForEach(r => r.Metadata = _regions.First(md => md.Type == r.GetType()));
+            world.Rooms.ToList().ForEach(r => r.Metadata = _rooms.First(md => md.Type == r.GetType()));
 
             foreach (var (metadata, worldItems) in _items.Select(x => (item: x, worldItems: world.AllItems.Where(w => w.Is(x.InternalItemType, x.Item)))))
             {

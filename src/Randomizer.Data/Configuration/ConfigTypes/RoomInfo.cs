@@ -9,7 +9,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
     /// <summary>
     /// Represents extra information about a room in SMZ3.
     /// </summary>
-    public class RoomInfo : IPointOfInterest, IMergeable<RoomInfo>
+    public class RoomInfo : IMergeable<RoomInfo>
     {
         /// <summary>
         /// Constructor
@@ -42,18 +42,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the possible names for the room.
         /// </summary>
         public SchrodingersString Name { get; set; }
-
-        /// <summary>
-        /// Gets the x-coordinate of the room on the map, if it should be
-        /// displayed.
-        /// </summary>
-        public int? X { get; init; }
-
-        /// <summary>
-        /// Gets the y-coordinate of the room on the map, if it should be
-        /// displayed.
-        /// </summary>
-        public int? Y { get; init; }
 
         /// <summary>
         /// Gets the possible hints for the room, if any are defined.

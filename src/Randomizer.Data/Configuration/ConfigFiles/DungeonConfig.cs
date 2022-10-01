@@ -36,9 +36,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Armos Knights"),
                     Type = typeof(Data.WorldData.Regions.Zelda.EasternPalace),
                     LocationId = 364,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast),
-                    X = 1925,
-                    Y = 791,
                 },
                 new DungeonInfo()
                 {
@@ -48,9 +45,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Lanmolas"),
                     Type = typeof(Data.WorldData.Regions.Zelda.DesertPalace),
                     LocationId = 370,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth),
-                    X = 146,
-                    Y = 1584,
                 },
                 new DungeonInfo()
                 {
@@ -60,9 +54,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Moldorm"),
                     Type = typeof(Data.WorldData.Regions.Zelda.TowerOfHera),
                     LocationId = 376,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest),
-                    X = 1126,
-                    Y = 68,
                 },
                 new DungeonInfo()
                 {
@@ -72,9 +63,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Helmasaur King", "Helmasaur"),
                     Type = typeof(Data.WorldData.Regions.Zelda.PalaceOfDarkness),
                     LocationId = 390,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthEast),
-                    X = 1924,
-                    Y = 800,
                 },
                 new DungeonInfo()
                 {
@@ -84,9 +72,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Arrghus"),
                     Type = typeof(Data.WorldData.Regions.Zelda.SwampPalace),
                     LocationId = 400,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldSouth),
-                    X = 940,
-                    Y = 1880,
                 },
                 new DungeonInfo()
                 {
@@ -96,9 +81,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new(new("Mothula", 0), "MOTHyula"),
                     Type = typeof(Data.WorldData.Regions.Zelda.SkullWoods),
                     LocationId = 408,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthWest),
-                    X = 79,
-                    Y = 121,
                 },
                 new DungeonInfo()
                 {
@@ -108,9 +90,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Blind"),
                     Type = typeof(Data.WorldData.Regions.Zelda.ThievesTown),
                     LocationId = 416,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthWest),
-                    X = 251,
-                    Y = 971,
                 },
                 new DungeonInfo()
                 {
@@ -120,9 +99,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Kholdstare"),
                     Type = typeof(Data.WorldData.Regions.Zelda.IcePalace),
                     LocationId = 424,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldSouth),
-                    X = 1600,
-                    Y = 1735,
                 },
                 new DungeonInfo()
                 {
@@ -132,9 +108,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Vitreous"),
                     Type = typeof(Data.WorldData.Regions.Zelda.MiseryMire),
                     LocationId = 432,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldMire),
-                    X = 150,
-                    Y = 1670,
                 },
                 new DungeonInfo()
                 {
@@ -144,9 +117,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Boss = new("Trinexx"),
                     Type = typeof(Data.WorldData.Regions.Zelda.TurtleRock),
                     LocationId = 444,
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast),
-                    X = 1890,
-                    Y = 144,
                 },
                 new DungeonInfo()
                 {
@@ -155,9 +125,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "GT",
                     Boss = new("Ganon", "Gannon", "Gannondorf", new("Gaynon", 0)),
                     Type = typeof(Data.WorldData.Regions.Zelda.GanonsTower),
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest),
-                    X = 1126,
-                    Y = 68,
                 },
                 new DungeonInfo()
                 {
@@ -166,9 +133,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "HC",
                     Boss = new("Ball and Chain Soldier"),
                     Type = typeof(Data.WorldData.Regions.Zelda.HyruleCastle),
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast),
-                    X = 1003,
-                    Y = 906,
                 },
                 new DungeonInfo()
                 {
@@ -177,7 +141,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "AT",
                     Boss = new(new("Agahnim", 0), "Aganihm"),
                     Type = typeof(Data.WorldData.Regions.Zelda.CastleTower),
-                    WithinRegionType = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast),
                 },
             };
         }

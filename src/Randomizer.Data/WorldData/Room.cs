@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData.Regions;
@@ -67,6 +68,11 @@ namespace Randomizer.Data.WorldData
         /// Gets the randomizer configuration options.
         /// </summary>
         public Config Config => Region.Config;
+
+        /// <summary>
+        /// Additional information about the room
+        /// </summary>
+        public RoomInfo Metadata { get; set; }
 
         /// <summary>
         /// Gets all locations in the room.

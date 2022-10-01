@@ -21,9 +21,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Initializes a new instance of the <see cref="PersonalityModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public PersonalityModule(Tracker tracker, IItemService itemService, ILogger<PersonalityModule> logger)
-            : base(tracker, itemService, logger)
+        public PersonalityModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Ask about tracker's mood", GetMoodRule(), (tracker, result) =>
             {

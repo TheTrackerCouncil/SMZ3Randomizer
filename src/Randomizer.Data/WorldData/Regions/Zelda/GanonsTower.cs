@@ -137,6 +137,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public MiniHelmasaurRoomRoom MiniHelmasaurRoom { get; }
 
+        public Region ParentRegion => World.DarkWorldDeathMountainWest;
+
         public override bool CanEnter(Progression items, bool requireRewards)
         {
             var smBosses = new[] { BossType.Kraid, BossType.Phantoon, BossType.Draygon, BossType.Ridley };

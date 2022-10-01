@@ -31,48 +31,36 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Room = "Blue Brinstar Top",
                     Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.BlueBrinstar.BlueBrinstarTopRoom),
                     Name = new("Blue Brinstar Top", "Billy Mays Room"),
-                    X = 872,
-                    Y = 340,
                 },
                 new RoomInfo()
                 {
                     Room = "Mockball Hall Hidden Room",
                     Type = typeof(Data.WorldData.Regions.SuperMetroid.Brinstar.GreenBrinstar.MockballHallHiddenRoom),
                     Name = new("Mockball Hall Hidden Room"),
-                    X = 392,
-                    Y = 212,
                 },
                 new RoomInfo()
                 {
                     Room = "Gauntlet Shaft",
                     Type = typeof(Data.WorldData.Regions.SuperMetroid.Crateria.WestCrateria.GauntletShaftRoom),
                     Name = new("Gauntlet Shaft"),
-                    X = 264,
-                    Y = 180,
                 },
                 new RoomInfo()
                 {
                     Room = "Left Sand Pit",
                     Type = typeof(Data.WorldData.Regions.SuperMetroid.Maridia.InnerMaridia.LeftSandPitRoom),
                     Name = new("Left Sand Pit"),
-                    X = 552,
-                    Y = 532,
                 },
                 new RoomInfo()
                 {
                     Room = "Watering Hole",
                     Type = typeof(Data.WorldData.Regions.SuperMetroid.Maridia.InnerMaridia.WateringHoleRoom),
                     Name = new("Watering Hole"),
-                    X = 296,
-                    Y = 276,
                 },
                 new RoomInfo()
                 {
                     Room = "Bubble Mountain Hidden Hall",
                     Type = typeof(Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairEast.BubbleMountainHiddenHallRoom),
                     Name = new("Bubble Mountain Hidden Hall"),
-                    X = 632,
-                    Y = 148,
                 },
                 new RoomInfo()
                 {
@@ -91,48 +79,36 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Room = "Mire Shed",
                     Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldMire.MireShedRoom),
                     Name = new("Mire Shed"),
-                    X = 77,
-                    Y = 1600,
                 },
                 new RoomInfo()
                 {
                     Room = "Pyramid Fairy",
                     Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthEast.PyramidFairyChamber),
                     Name = new("Pyramid Fairy", "Cursed Fairy"),
-                    X = 940,
-                    Y = 976,
                 },
                 new RoomInfo()
                 {
                     Room = "Hype Cave",
                     Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldSouth.HypeCaveRoom),
                     Name = new("Hype Cave"),
-                    X = 1200,
-                    Y = 1560,
                 },
                 new RoomInfo()
                 {
                     Room = "Hookshot Cave",
                     Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast.HookshotCaveRoom),
                     Name = new("Hookshot Cave"),
-                    X = 1670,
-                    Y = 126,
                 },
                 new RoomInfo()
                 {
                     Room = "Superbunny Cave",
                     Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast.SuperbunnyCaveRoom),
                     Name = new("Superbunny Cave"),
-                    X = 1695,
-                    Y = 290,
                 },
                 new RoomInfo()
                 {
                     Room = "Spike Cave",
                     Type = typeof(Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest.SpikeCaveRoom),
                     Name = new("Spike Cave"),
-                    X = 1151,
-                    Y = 294,
                 },
                 new RoomInfo()
                 {
@@ -181,64 +157,48 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Room = "Paradox Cave",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast.ParadoxCaveRoom),
                     Name = new("Paradox Cave"),
-                    X = 1731,
-                    Y = 434,
                 },
                 new RoomInfo()
                 {
                     Room = "Sahasrahla's Hut",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast.SahasrahlasHideoutRoom),
                     Name = new("Sahasrahla's Hut"),
-                    X = 1630,
-                    Y = 900,
                 },
                 new RoomInfo()
                 {
                     Room = "Waterfall Fairy",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast.WaterfallFairyChamber),
                     Name = new("Waterfall Fairy"),
-                    X = 1806,
-                    Y = 286,
                 },
                 new RoomInfo()
                 {
                     Room = "Zora's Domain",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast.ZorasDomainArea),
                     Name = new("Zora's Domain"),
-                    X = 1920,
-                    Y = 273,
                 },
                 new RoomInfo()
                 {
                     Room = "Blind's Hideout",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthWest.BlindsHideoutRoom),
                     Name = new("Blind's Hideout"),
-                    X = 307,
-                    Y = 840,
                 },
                 new RoomInfo()
                 {
                     Room = "Kakariko Well",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthWest.KakarikoWellArea),
                     Name = new("Kakariko Well"),
-                    X = 47,
-                    Y = 833,
                 },
                 new RoomInfo()
                 {
                     Room = "Mini Moldorm Cave",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth.MiniMoldormCaveRoom),
                     Name = new("Mini Moldorm Cave"),
-                    X = 1309,
-                    Y = 1887,
                 },
                 new RoomInfo()
                 {
                     Room = "Swamp Ruins",
                     Type = typeof(Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth.SwampRuinsRoom),
                     Name = new("Swamp Ruins"),
-                    X = 944,
-                    Y = 1880,
                 },
                 new RoomInfo()
                 {

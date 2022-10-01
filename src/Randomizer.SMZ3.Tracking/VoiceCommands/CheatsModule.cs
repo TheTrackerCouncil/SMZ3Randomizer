@@ -35,15 +35,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private readonly ILogger<AutoTrackerModule> _logger;
         private bool _cheatsEnabled = false;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public CheatsModule(Tracker tracker, IItemService itemService, ILogger<AutoTrackerModule> logger)
-            : base(tracker, itemService, logger)
+        public CheatsModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
 

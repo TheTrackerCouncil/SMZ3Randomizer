@@ -192,6 +192,7 @@ namespace Randomizer.Data.Services
                 if (dungeon is IHasReward rewardRegion && dungeonState.Reward != null)
                 {
                     rewardRegion.Reward = new Reward(dungeonState.Reward.Value, world, rewardRegion);
+                    rewardRegion.Reward.State = dungeonState;
                 }
             }
         }

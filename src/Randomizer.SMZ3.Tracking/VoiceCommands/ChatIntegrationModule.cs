@@ -40,10 +40,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// dependencies.
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="chatClient">The chat client to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, ILogger<ChatIntegrationModule> logger)
-            : base(tracker, itemService, logger)
+        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ILogger<ChatIntegrationModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             ChatClient = chatClient;
             _itemService = itemService;

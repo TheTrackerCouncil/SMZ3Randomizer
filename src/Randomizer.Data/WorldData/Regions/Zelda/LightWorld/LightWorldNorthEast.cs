@@ -74,7 +74,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     relevanceRequirement: items => World.CanAquire(items, RewardType.PendantGreen),
                     memoryAddress: 0x190,
                     memoryFlag: 0x10,
-                    memoryType: LocationMemoryType.ZeldaMisc);
+                    memoryType: LocationMemoryType.ZeldaMisc,
+                    trackerLogic: items => region.CountReward(items, RewardType.PendantGreen) == 1);
             }
 
             public Location LeftChest { get; }

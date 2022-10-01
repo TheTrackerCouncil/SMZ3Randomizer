@@ -30,10 +30,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="autoTracker">The auto tracker to associate with this module</param>
-        public AutoTrackerModule(Tracker tracker, IItemService itemService, ILogger<AutoTrackerModule> logger, AutoTracker autoTracker)
-            : base(tracker, itemService, logger)
+        public AutoTrackerModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger, AutoTracker autoTracker)
+            : base(tracker, itemService, worldService, logger)
         {
             _logger = logger;
             autoTracker.Tracker = tracker;

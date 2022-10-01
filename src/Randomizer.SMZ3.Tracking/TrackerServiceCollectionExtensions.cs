@@ -39,6 +39,7 @@ namespace Randomizer.SMZ3.Tracking
             services.AddScoped<IMetadataService, MetadataService>();
             services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<IUIService, UIService>();
+            services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
             services.AddScoped<Tracker>();
 
