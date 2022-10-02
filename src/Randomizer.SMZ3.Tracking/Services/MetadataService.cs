@@ -36,6 +36,9 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="rooms">Config with additional room information</param>
         /// <param name="locations">Config with additional location information</param>
         /// <param name="bosses">Config with additional boss information</param>
+        /// <param name="items">Config with additional item information</param>
+        /// <param name="rewards">Config with additional rewards information</param>
+        /// <param name="logger"></param>
         public MetadataService(RegionConfig regions, DungeonConfig dungeons, RoomConfig rooms, LocationConfig locations, BossConfig bosses, ItemConfig items, RewardConfig rewards, ILogger<MetadataService> logger)
         {
             _regions = regions;
@@ -88,7 +91,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A new <see cref="RegionInfo"/> for the specified region.
         /// </returns>
         public RegionInfo Region(string name)
-            => Regions.Single(x => x.Type.FullName == name || x.Region == name);
+            => Regions.Single(x => x.Type?.FullName == name || x.Region == name);
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -135,7 +138,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <c>null</c> if <paramref name="name"/> is not a valid dungeon.
         /// </returns>
         public DungeonInfo? Dungeon(string name)
-            => Dungeons.SingleOrDefault(x => x.Type.FullName == name || x.Dungeon == name);
+            => Dungeons.SingleOrDefault(x => x.Type?.FullName == name || x.Dungeon == name);
 
         /// <summary>
         /// Returns extra information for the specified dungeon.
@@ -197,7 +200,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
         public RoomInfo Room(string name)
-            => Rooms.Single(x => x.Type.FullName == name || x.Room == name);
+            => Rooms.Single(x => x.Type?.FullName == name || x.Room == name);
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -276,7 +279,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="type">The type of the item</param>
         /// <returns></returns>
-        public ItemData Item(ItemType type)
+        public ItemData? Item(ItemType type)
             => Items.FirstOrDefault(x => x.InternalItemType == type);
 
         /// <summary>

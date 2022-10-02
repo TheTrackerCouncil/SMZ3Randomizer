@@ -16,12 +16,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     public class EnteredDungeon : IZeldaStateCheck
     {
         private readonly HashSet<Region> _enteredDungeons = new();
-        private readonly IItemService _itemService;
         private readonly IWorldAccessor _worldAccessor;
 
-        public EnteredDungeon(IItemService itemService, IWorldAccessor worldAccessor)
+        public EnteredDungeon(IWorldAccessor worldAccessor)
         {
-            _itemService = itemService;
             _worldAccessor = worldAccessor;
         }
 

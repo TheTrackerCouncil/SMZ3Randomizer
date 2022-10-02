@@ -41,10 +41,14 @@ namespace Randomizer.SMZ3.Tracking.Services
             _options = options;
             _configProvider = configProvider;
 
-            var iconPaths = _options.Options.TrackerProfiles
+            var iconPaths = _options.Options?.TrackerProfiles
                 .Where(x => !string.IsNullOrEmpty(x))
-                .Select(x => Path.Combine(_configProvider.ConfigDirectory, x)).Reverse().ToList();
-            iconPaths.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                .Select(x => Path.Combine(_configProvider.ConfigDirectory, x)).Reverse().ToList() ?? new();
+            var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (basePath != null)
+            {
+                iconPaths.Add(basePath);
+            }
             IconPaths = iconPaths;
         }
 
@@ -85,7 +89,7 @@ namespace Randomizer.SMZ3.Tracking.Services
 
             if (item.Metadata.HasStages || item.Metadata.Multiple)
             {
-                var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out string profilePath);
+                var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out string? profilePath);
                 fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.State.TrackingState}).png", out _, profilePath);
                 if (File.Exists(fileName))
                     return fileName;
@@ -146,7 +150,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="profilePath">The path of the selected profile</param>
         /// <param name="basePath">The base path of the desired sprite</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(string category, string imageFileName, out string profilePath, string basePath = null)
+        public string? GetSpritePath(string category, string imageFileName, out string? profilePath, string? basePath = null)
         {
             if (!string.IsNullOrEmpty(basePath))
             {

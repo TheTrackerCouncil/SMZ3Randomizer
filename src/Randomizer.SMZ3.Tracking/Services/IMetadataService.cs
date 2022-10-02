@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </param>
         /// <returns>
         /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-        /// <c>null</c> if <paramref name="typeName"/> is not a valid dungeon.
+        /// <c>null</c> if <paramref name="name"/> is not a valid dungeon.
         /// </returns>
         public DungeonInfo? Dungeon(string name);
 
@@ -223,8 +223,12 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="type">The type of the item</param>
         /// <returns></returns>
-        public ItemData Item(ItemType type);
+        public ItemData? Item(ItemType type);
 
+        /// <summary>
+        /// Applies various metadata to the world, such as LocationData and ItemData
+        /// </summary>
+        /// <param name="world">The world to apply metadata to</param>
         public void LoadWorldMetadata(World world);
     }
 }

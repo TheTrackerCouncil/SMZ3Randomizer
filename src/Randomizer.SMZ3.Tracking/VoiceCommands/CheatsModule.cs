@@ -33,7 +33,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private static readonly List<string> s_fillSuperMissileChoices = new() { "super missiles", "soup" };
         private static readonly List<string> s_fillPowerBombsChoices = new() { "power bombs", "hamburgers" };
 
-        private readonly ILogger<AutoTrackerModule> _logger;
         private bool _cheatsEnabled = false;
 
         /// <summary>
@@ -48,8 +47,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             : base(tracker, itemService, worldService, logger)
         {
             if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
-
-            _logger = logger;
 
             AddCommand("Enable cheats", GetEnableCheatsRule(), (tracker, result) =>
             {

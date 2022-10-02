@@ -393,7 +393,7 @@ namespace Randomizer.Data.WorldData
                 new Item(ItemType.MapMM),
                 new Item(ItemType.MapTR),
             });
-            if (!world.Config.MetroidKeysanity)
+            if (world != null && !world.Config.MetroidKeysanity)
             {
                 itemPool.AddRange(new[] {
                     new Item(ItemType.MapHC),

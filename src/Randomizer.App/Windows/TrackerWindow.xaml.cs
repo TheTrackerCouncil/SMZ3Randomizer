@@ -50,30 +50,27 @@ namespace Randomizer.App
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IItemService _itemService;
-        private readonly IMetadataService _worldService;
         private readonly IUIService _uiService;
         private readonly List<object> _mouseDownSenders = new();
         private readonly IWorldAccessor _world;
+        private readonly RandomizerOptions _options;
+        private readonly RomGenerator _romGenerator;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
         private AutoTrackerWindow _autoTrackerHelpWindow;
         private TrackerLocationSyncer _locationSyncer;
-        private RomGenerator _romGenerator;
         private MenuItem _autoTrackerDisableMenuItem;
         private MenuItem _autoTrackerLuaMenuItem;
         private MenuItem _autoTrackerUSB2SNESMenuItem;
         private UILayout _layout;
         private UILayout _previousLayout;
-        private RandomizerOptions _options;
         
-
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator,
-            IMetadataService worldService,
             IUIService uiService,
             OptionsFactory optionsFactory,
             IWorldAccessor world
@@ -83,7 +80,6 @@ namespace Randomizer.App
 
             _serviceProvider = serviceProvider;
             _itemService = itemService;
-            _worldService = worldService;
             _logger = logger;
             _romGenerator = romGenerator;
             _uiService = uiService;
@@ -93,9 +89,11 @@ namespace Randomizer.App
 
             foreach(var layout in uiService.SelectableLayouts)
             {
-                var layoutMenuItem = new MenuItem();
-                layoutMenuItem.Header = layout.Name;
-                layoutMenuItem.Tag = layout;
+                var layoutMenuItem = new MenuItem
+                {
+                    Header = layout.Name,
+                    Tag = layout
+                };
                 layoutMenuItem.Click += LayoutMenuItem_Click;
                 layoutMenuItem.IsCheckable = true;
                 layoutMenuItem.IsChecked = layout == _layout;
@@ -352,13 +350,12 @@ namespace Randomizer.App
                 // If it's a hammer peg
                 else if (gridLocation.Type == UIGridLocationType.Peg)
                 {
-                    int pegNumber = 0;
-                    if (!int.TryParse(gridLocation.Identifiers.First(), out pegNumber))
+                    if (!int.TryParse(gridLocation.Identifiers.First(), out var pegNumber))
                     {
                         _logger.LogError("Could not determine peg number");
                         continue;
                     }
-                     
+
                     var fileName = _uiService.GetSpritePath("Items",
                         Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
 
@@ -954,7 +951,8 @@ namespace Randomizer.App
             // If there is a valid rom, then load the state from the db
             if (GeneratedRom.IsValid(Rom))
             {
-                Tracker.Load(Rom);
+                await Task.Run(() => Tracker.Load(Rom));
+                
                 Tracker.StartTimer(true);
                 if (_dispatcherTimer.IsEnabled)
                 {

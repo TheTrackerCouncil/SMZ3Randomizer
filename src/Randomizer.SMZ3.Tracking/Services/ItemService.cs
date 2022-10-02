@@ -16,7 +16,6 @@ namespace Randomizer.SMZ3.Tracking.Services
     /// </summary>
     public class ItemService : IItemService
     {
-        private static readonly Random s_random = new Random();
         private readonly IWorldAccessor _world;
         private Dictionary<string, Progression> _progression = new();
 
@@ -31,6 +30,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="rewards">
         /// Specifies the configuration that contains the reward data
         /// </param>
+        /// <param name="world">Accessor to get data of the world</param>
         public ItemService(ItemConfig items, RewardConfig rewards, IWorldAccessor world)
         {
             Items = items;
@@ -182,7 +182,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of bosses that have been tracked.
         /// </returns>
         public virtual IEnumerable<Boss> TrackedBosses()
-            => AllBosses().Where(x => x.State.Defeated);
+            => AllBosses().Where(x => x.State?.Defeated == true);
 
         public Progression GetProgression(bool assumeKeys)
         {

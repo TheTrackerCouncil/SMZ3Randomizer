@@ -20,14 +20,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class HistoryService : IHistoryService
     {
-        private ILogger<HistoryService> _logger;
-        private IWorldAccessor _world;
+        private readonly ILogger<HistoryService> _logger;
+        private readonly IWorldAccessor _world;
         private ICollection<TrackerHistoryEvent> _historyEvents => _world.World.State.History;
         private Tracker? _tracker;
 
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="world"></param>
         /// <param name="logger"></param>
         public HistoryService(IWorldAccessor world, ILogger<HistoryService> logger)
         {

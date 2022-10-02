@@ -55,6 +55,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="trackerModuleFactory"></param>
         /// <param name="randomizerConfigService"></param>
         /// <param name="worldService"></param>
+        /// <param name="tracker"></param>
         public AutoTracker(ILogger<AutoTracker> logger,
             ILoggerFactory loggerFactory,
             IItemService itemService,
@@ -62,7 +63,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             IEnumerable<IMetroidStateCheck> metroidStateChecks,
             TrackerModuleFactory trackerModuleFactory,
             IRandomizerConfigService randomizerConfigService,
-            IWorldService worldService
+            IWorldService worldService,
+            Tracker tracker
         )
         {
             _logger = logger;
@@ -71,6 +73,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _trackerModuleFactory = trackerModuleFactory;
             _config = randomizerConfigService;
             _worldService = worldService;
+            Tracker = tracker;
 
             // Check if the game has started or not
             AddReadAction(new()
@@ -208,7 +211,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// The tracker associated with this auto tracker
         /// </summary>
-        public Tracker? Tracker { get; set; }
+        public Tracker Tracker { get; set; }
 
         /// <summary>
         /// The type of connector that the auto tracker is currently using
@@ -327,6 +330,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
         }
 
+        /// <summary>
+        /// Writes a particular action to the emulator memory
+        /// </summary>
+        /// <param name="action">The action to write to memory</param>
         public void WriteToMemory(EmulatorAction action)
         {
             _sendActions.Enqueue(action);
@@ -392,7 +399,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(0.1f));
+                await Task.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken);
             }
             IsSendingMessages = false;
             _logger.LogInformation("Stop sending messages " + Thread.CurrentThread.Name);
@@ -672,7 +679,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 if (_beatBothBosses)
                 {
-                    Tracker?.GameBeaten(true);
+                    Tracker.GameBeaten(true);
                 }
             }
 

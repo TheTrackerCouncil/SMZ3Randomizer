@@ -10,7 +10,7 @@ namespace Randomizer.Data.Services
 {
     public interface ITrackerStateService
     {
-        public void CreateState(World world, GeneratedRom generatedRom);
+        public Task CreateStateAsync(World world, GeneratedRom generatedRom);
 
         public Task SaveStateAsync(World world, GeneratedRom generatedRom, double secondsElapsed);
 

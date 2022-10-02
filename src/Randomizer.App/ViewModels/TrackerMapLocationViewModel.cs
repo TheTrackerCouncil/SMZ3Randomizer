@@ -203,7 +203,8 @@ namespace Randomizer.App.ViewModels
                         if (RewardRegion.CanComplete(progression)
                             || regionLocations.Locations.All(x => x.IsAvailable(progression)))
                         {
-                            image = RewardRegion.Reward.Type.GetDescription().ToLowerInvariant() + ".png";
+                            var dungeon = RewardRegion as IDungeon;
+                            image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
                         }
                     }
                 }
@@ -289,7 +290,7 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                /*if (Type == MapLocationType.Boss)
+                if (Type == MapLocationType.Boss)
                 {
                     return BossRegion == null ? RewardRegion : BossRegion;
                 }
@@ -299,8 +300,8 @@ namespace Randomizer.App.ViewModels
                 }
                 else if (Type == MapLocationType.Item)
                 {
-                    return Region.Name == Name ? Region : Locations.Where(x => Syncer.WorldService.IsAvailble(x)).ToList();
-                }*/
+                    return Region.Name == Name ? Region : Locations.Where(x => Syncer.WorldService.IsAvailable(x)).ToList();
+                }
                 return null;
             }
         }

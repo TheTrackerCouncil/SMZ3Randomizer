@@ -17,10 +17,10 @@ namespace Randomizer.Data.Options
     /// </summary>
     public class GeneralOptions : INotifyPropertyChanged
     {
-        private string _twitchUserName;
-        private string _twitchOAuthToken;
-        private string _twitchChannel;
-        private string _twitchId;
+        private string? _twitchUserName;
+        private string? _twitchOAuthToken;
+        private string? _twitchChannel;
+        private string? _twitchId;
 
         /// <summary>
         /// Converts the enum descriptions into a string array for displaying in a dropdown
@@ -64,9 +64,9 @@ namespace Randomizer.Data.Options
             }
         }
 
-        public string Z3RomPath { get; set; }
+        public string? Z3RomPath { get; set; }
 
-        public string SMRomPath { get; set; }
+        public string? SMRomPath { get; set; }
 
         public string RomOutputPath { get; set; }
             = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
@@ -99,7 +99,7 @@ namespace Randomizer.Data.Options
 
         public bool AutoTrackerChangeMap { get; set; } = true;
 
-        public string TwitchUserName
+        public string? TwitchUserName
         {
             get => _twitchUserName;
             set
@@ -112,7 +112,7 @@ namespace Randomizer.Data.Options
             }
         }
 
-        public string TwitchOAuthToken
+        public string? TwitchOAuthToken
         {
             get => _twitchOAuthToken;
             set
@@ -125,7 +125,7 @@ namespace Randomizer.Data.Options
             }
         }
 
-        public string TwitchChannel
+        public string? TwitchChannel
         {
             get => _twitchChannel;
             set
@@ -139,7 +139,7 @@ namespace Randomizer.Data.Options
             }
         }
 
-        public string TwitchId
+        public string? TwitchId
         {
             get => _twitchId;
             set
@@ -161,9 +161,9 @@ namespace Randomizer.Data.Options
 
         public ICollection<string> SelectedProfiles { get; set; } = new List<string> { "Sassy" };
 
-        public string SelectedLayout { get; set; }
+        public string? SelectedLayout { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()
         {
@@ -188,12 +188,12 @@ namespace Randomizer.Data.Options
             TrackerProfiles = SelectedProfiles,
         };
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new(propertyName));
         }
 
-        private static string NormalizeTwitchChannel(string value)
+        private static string? NormalizeTwitchChannel(string? value)
         {
             try
             {

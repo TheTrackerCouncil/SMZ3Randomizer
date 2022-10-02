@@ -21,7 +21,7 @@ namespace Randomizer.Data.Services
             _logger = logger;
         }
 
-        public void CreateState(World world, GeneratedRom generatedRom)
+        public async Task CreateStateAsync(World world, GeneratedRom generatedRom)
         {
             var locationStates = world
                 .Locations
@@ -54,7 +54,7 @@ namespace Randomizer.Data.Services
 
             generatedRom.TrackerState = state;
             world.State = state;
-            _randomizerContext.SaveChanges();
+            await _randomizerContext.SaveChangesAsync();
 
         }
 
@@ -191,8 +191,10 @@ namespace Randomizer.Data.Services
 
                 if (dungeon is IHasReward rewardRegion && dungeonState.Reward != null)
                 {
-                    rewardRegion.Reward = new Reward(dungeonState.Reward.Value, world, rewardRegion);
-                    rewardRegion.Reward.State = dungeonState;
+                    rewardRegion.Reward = new Reward(dungeonState.Reward.Value, world, rewardRegion)
+                    {
+                        State = dungeonState
+                    };
                 }
             }
         }

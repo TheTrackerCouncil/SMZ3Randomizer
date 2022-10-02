@@ -30,12 +30,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The name of the layout
         /// </summary>
-        public string Name { get; init; }
+        public string Name { get; init; } = "";
 
         /// <summary>
         /// A collection of all objects to be shown in the tracker UI
         /// </summary>
-        public ICollection<UIGridLocation> GridLocations { get; set; }
+        public ICollection<UIGridLocation> GridLocations { get; set; } = new List<UIGridLocation>();
 
     }
 }

@@ -40,7 +40,7 @@ namespace Randomizer.Data.Options
             LogicConfig = logicConfig ?? new();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         [JsonPropertyName("General")]
         public GeneralOptions GeneralOptions { get; }
@@ -55,7 +55,7 @@ namespace Randomizer.Data.Options
         public LogicConfig LogicConfig { get; set; }
 
         [JsonIgnore]
-        public string FilePath { get; set; }
+        public string? FilePath { get; set; }
 
         public bool EarlyItemsExpanded { get; set; } = false;
 
@@ -91,17 +91,23 @@ namespace Randomizer.Data.Options
         public static RandomizerOptions Load(string path)
         {
             var json = File.ReadAllText(path);
-            var options = JsonSerializer.Deserialize<RandomizerOptions>(json, s_jsonOptions);
+            var options = JsonSerializer.Deserialize<RandomizerOptions>(json, s_jsonOptions) ?? new();
             options.FilePath = path;
             return options;
         }
 
-        public void Save(string path = null)
+        public void Save(string? path = null)
         {
             if (path == null)
             {
                 path = FilePath;
             }
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
             var json = JsonSerializer.Serialize(this, s_jsonOptions);
             File.WriteAllText(path, json);
         }
@@ -191,7 +197,7 @@ namespace Randomizer.Data.Options
             return (RandomizerOptions)MemberwiseClone();
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             var e = new PropertyChangedEventArgs(propertyName);
             PropertyChanged?.Invoke(this, e);

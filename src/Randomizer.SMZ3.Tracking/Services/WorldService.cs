@@ -80,7 +80,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="unclearedOnly">Set to false to show locations that have already been cleared by the player</param>
         /// <param name="outOfLogic">Set to true to show locations that are not currently accessible to the player</param>
-        /// <param name="assumeKeys">Set to true if keys should be ignored when it comes to determining logic/param>
+        /// <param name="assumeKeys">Set to true if keys should be ignored when it comes to determining logic</param>
         /// <param name="sortByTopRegion">Set to true to sort locations by the most recent region and region with the most locations</param>
         /// <param name="regionFilter">Filter for the type of region (SM or LttP)</param>
         /// <param name="itemFilter">Set to return locations that have the matching item</param>

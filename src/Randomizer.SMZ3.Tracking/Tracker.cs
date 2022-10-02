@@ -341,7 +341,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Service that handles modifying the game via auto tracker
         /// </summary>
-        public GameService GameService { get; set; }
+        public GameService? GameService { get; set; }
 
         /// <summary>
         /// Module that houses the history
@@ -1073,7 +1073,6 @@ namespace Randomizer.SMZ3.Tracking
             var itemName = item.Name;
             var originalTrackingState = item.State.TrackingState;
             ItemService.ResetProgression();
-            ItemService.ResetProgression();
 
             var isGTPreBigKey = !World.Config.ZeldaKeysanity
                                 && autoTracked
@@ -1198,7 +1197,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 if (location == null)
                 {
-                    location = _worldService.Locations(itemFilter: item.Type).TrySingle();
+                    location = _worldService.Locations(outOfLogic: true, itemFilter: item.Type).TrySingle();
                 }
 
                 if (location != null)
@@ -1257,7 +1256,8 @@ namespace Randomizer.SMZ3.Tracking
                             {
                                 Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
                             }
-                            else
+                            // Do not say anything if the only thing missing are keys
+                            else if (!missingItems.All(x => x.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Keycard)))
                             {
                                 var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
                                 Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
@@ -1573,7 +1573,7 @@ namespace Randomizer.SMZ3.Tracking
 
                         var item = location.Item;
                         if (item == null || !item.Track())
-                            _logger.LogWarning("Failed to track {itemType} in {area}.", item.Name, area.Name); // Probably the compass or something, who cares
+                            _logger.LogWarning("Failed to track {itemType} in {area}.", item?.Name ?? "item", area.Name); // Probably the compass or something, who cares
                         else
                             itemsTracked.Add(item);
                         if (IsTreasure(location.Item) || World.Config.ZeldaKeysanity)
@@ -1674,7 +1674,7 @@ namespace Randomizer.SMZ3.Tracking
             if (!dungeon.DungeonState.HasReward)
                 dungeon.DungeonState.Cleared = true;
 
-            var region = dungeon as Region;
+            var region = (Region)dungeon;
             var progress = ItemService.GetProgression(assumeKeys: !World.Config.ZeldaKeysanity);
             var locations = region.Locations.Where(x => !x.State.Cleared).ToList();
             var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
@@ -1827,7 +1827,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="autoTracked">If this was tracked by the auto tracker</param>
         public void MarkBossAsDefeated(Boss boss, bool admittedGuilt = true, float? confidence = null, bool autoTracked = false)
         {
-            if (boss.State.Defeated)
+            if (boss.State == null)
+            {
+                _logger.LogError($"Boss {boss.Name} does not have a state");
+                return;
+            }
+
+            if (boss.State.Defeated == true)
             {
                 Say(x => x.BossAlreadyDefeated, boss.Name);
                 return;
@@ -1835,10 +1841,10 @@ namespace Randomizer.SMZ3.Tracking
 
             boss.State.Defeated = true;
 
-            if (!admittedGuilt && boss.Metadata.WhenTracked != null)
-                Say(boss.Metadata.WhenTracked, boss.Name);
+            if (!admittedGuilt && boss.Metadata?.WhenTracked != null)
+                Say(boss.Metadata?.WhenTracked, boss.Name);
             else
-                Say(boss.Metadata.WhenDefeated ?? Responses.BossDefeated, boss.Name);
+                Say(boss.Metadata?.WhenDefeated ?? Responses.BossDefeated, boss.Name);
 
             var addedEvent = History.AddEvent(
                 HistoryEventType.BeatBoss,

@@ -11,9 +11,9 @@ namespace Randomizer.Data.Options
     /// </summary>
     public class PatchOptions : INotifyPropertyChanged
     {
-        private string _msu1Path;
+        private string _msu1Path = "";
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public Sprite LinkSprite { get; set; }
             = Sprite.DefaultLink;
@@ -58,7 +58,7 @@ namespace Randomizer.Data.Options
 
         public bool CasualSuperMetroidPatches { get; set; }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

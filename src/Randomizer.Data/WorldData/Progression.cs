@@ -136,7 +136,6 @@ namespace Randomizer.Data.WorldData
         public int Count => Items.Count;
         public bool IsReadOnly => false;
 
-        protected LogicConfig LogicConfig { get; }
         protected List<ItemType> Items { get; }
         protected List<RewardType> Rewards { get; }
         protected List<BossType> Bosses { get; }

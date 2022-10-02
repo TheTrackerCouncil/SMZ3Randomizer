@@ -41,7 +41,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the possible names for the location.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the possible hints for the location, if any are defined.

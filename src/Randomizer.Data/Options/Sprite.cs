@@ -45,11 +45,11 @@ namespace Randomizer.Data.Options
             }
         }
 
-        public string Name { get; }
+        public string Name { get; } = "";
 
-        public string Author { get; }
+        public string Author { get; } = "";
 
-        public string FilePath { get; }
+        public string FilePath { get; } = "";
 
         public SpriteType SpriteType { get; }
 
@@ -100,7 +100,7 @@ namespace Randomizer.Data.Options
         public static bool operator !=(Sprite a, Sprite b)
             => !(a == b);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is not Sprite other)
                 return false;
@@ -108,10 +108,10 @@ namespace Randomizer.Data.Options
             return Equals(other);
         }
 
-        public bool Equals(Sprite other)
+        public bool Equals(Sprite? other)
         {
-            return FilePath == other.FilePath
-                && SpriteType == other.SpriteType;
+            return FilePath == other?.FilePath
+                && SpriteType == other?.SpriteType;
         }
 
         public override int GetHashCode()

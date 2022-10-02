@@ -288,8 +288,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (location.State.MarkedItem != null)
             {
                 var markedItem = ItemService.FirstOrDefault(location.State.MarkedItem.Value);
-                Tracker.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.Metadata.NameWithArticle);
-                return;
+                if (markedItem != null)
+                {
+                    Tracker.Say(x => x.Spoilers.MarkedLocation, locationName, markedItem.Metadata.NameWithArticle);
+                    return;
+                }
             }
 
             if (Tracker.HintsEnabled && GiveLocationHints(location))

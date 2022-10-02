@@ -38,27 +38,27 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The identifier for merging configs
         /// </summary>
         [MergeKey]
-        public string Dungeon { get; init; }
+        public string Dungeon { get; init; } = "";
 
         /// <summary>
         /// Gets the possible names of the dungeon.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the dungeon name abbreviation.
         /// </summary>
-        public string Abbreviation { get; init; }
+        public string Abbreviation { get; init; } = "";
 
         /// <summary>
         /// Gets the possible names of the dungeon boss.
         /// </summary>
-        public SchrodingersString Boss { get; set; }
+        public SchrodingersString Boss { get; set; } = new();
 
         /// <summary>
         /// Gets the type of region that represents this dungeon.
         /// </summary>
-        public Type Type { get; init; }
+        public Type? Type { get; init; }
 
         /// <summary>
         /// Gets the ID of the location that represents the item rewarded by

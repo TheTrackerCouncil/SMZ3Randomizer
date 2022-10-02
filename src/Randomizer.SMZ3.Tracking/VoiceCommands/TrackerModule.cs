@@ -524,8 +524,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             foreach (var medallion in medallionTypes.Where(x => x == ItemType.Nothing || x.IsInCategory(ItemCategory.Medallion)))
             {
                 var item = ItemService.FirstOrDefault(medallion);
-                foreach (var name in item.Metadata.Name)
-                    medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
+                if (item != null)
+                {
+                    foreach (var name in item.Metadata.Name)
+                        medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
+                }
             }
 
             return medallions;

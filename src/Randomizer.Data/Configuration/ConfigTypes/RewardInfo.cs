@@ -21,12 +21,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Unique key to connect the RewardInfo with other configs
         /// </summary>
         [MergeKey]
-        public string Reward { get; set; }
+        public string Reward { get; set; } = "";
 
         /// <summary>
         /// Gets the possible names for the reward.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").

@@ -30,18 +30,18 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Unique key to connect the RoomInfo with other configs
         /// </summary>
         [MergeKey]
-        public string Room { get; init; }
+        public string Room { get; init; } = "";
 
         /// <summary>
         /// The Randomzier.SMZ3 type matching this region
         /// </summary>
 
-        public Type Type { get; init; }
+        public Type? Type { get; init; }
 
         /// <summary>
         /// Gets the possible names for the room.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the possible hints for the room, if any are defined.

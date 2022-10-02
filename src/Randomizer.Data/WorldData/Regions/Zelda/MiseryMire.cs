@@ -88,10 +88,11 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Misery Mire";
 
-        public Reward Reward { get; set; }
+        public Reward Reward { get; set; } = new Reward(RewardType.None);
+
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo DungeonMetadata { get; set; } = new();
 
         public TrackerDungeonState DungeonState { get; set; }
 

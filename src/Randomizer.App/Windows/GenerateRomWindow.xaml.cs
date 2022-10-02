@@ -327,22 +327,17 @@ namespace Randomizer.App
             return comboBox;
         }
 
-        private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
+        private async void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            string error;
-            var successful = PlandoMode
-                ? _romGenerator.GeneratePlandoRom(Options, PlandoConfig, out _, out error, out _)
-                : _romGenerator.GenerateRandomRom(Options, out _, out error, out _);
-            if (!successful)
+            var rom = PlandoMode
+                ? await _romGenerator.GeneratePlandoRom(Options, PlandoConfig)
+                : await _romGenerator.GenerateRandomRomAsync(Options);
+            if (rom != null)
             {
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                return;
+                DialogResult = true;
+                Close();
             }
-            DialogResult = true;
-            Close();
+            
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

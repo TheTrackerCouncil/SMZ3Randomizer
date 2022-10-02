@@ -177,7 +177,11 @@ namespace Randomizer.Data.Logic
 
             // Build an item pool of all missing progression items
             var combinations = new List<ItemType[]>();
-            var itemPool = Item.CreateProgressionPool(null).Select(x => x.Type).ToList();
+            var itemPool = Item.CreateProgressionPool(null)
+                .Concat(Item.CreateDungeonPool(null))
+                .Concat(Item.CreateKeycards(null))
+                .Select(x => x.Type)
+                .ToList();
             foreach (var ownedItem in items)
                 itemPool.Remove(ownedItem);
 

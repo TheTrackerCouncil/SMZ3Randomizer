@@ -41,12 +41,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Unique key to connect the ItemData with other configs
         /// </summary>
         [MergeKey]
-        public string Item { get; set; }
+        public string Item { get; set; } = "";
 
         /// <summary>
         /// Gets the possible names for the item.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").

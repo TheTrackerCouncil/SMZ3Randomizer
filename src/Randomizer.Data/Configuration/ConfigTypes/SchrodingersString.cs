@@ -202,7 +202,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             /// <summary>
             /// Gets a string.
             /// </summary>
-            public string Text { get; set; }
+            public string Text { get; set; } = "";
 
             /// <summary>
             /// Gets the weight associated with the item.
@@ -239,7 +239,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             /// </summary>
             /// <param name="other"></param>
             /// <returns></returns>
-            public override bool Equals(object other)
+            public override bool Equals(object? other)
             {
                 if (other is Possibility otherPossibility)
                 {

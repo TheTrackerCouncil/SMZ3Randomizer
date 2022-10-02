@@ -100,18 +100,10 @@ namespace Randomizer.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void QuickPlayButton_Click(object sender, RoutedEventArgs e)
+        private async void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var successful = _romGenerator.GenerateRandomRom(Options, out _, out var error, out var rom);
-
-            if (!successful)
-            {
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            else
+            var rom = await _romGenerator.GenerateRandomRomAsync(Options);
+            if (rom != null)
             {
                 UpdateRomList();
                 QuickLaunchRom(rom);

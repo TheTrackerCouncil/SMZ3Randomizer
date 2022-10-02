@@ -36,6 +36,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// An <see cref="ItemData"/> representing the item with the specified
         /// name, or <see langword="null"/> if there is no item that has the
         /// specified name.
+        /// </returns>
         Item? FirstOrDefault(string name);
 
         /// <summary>

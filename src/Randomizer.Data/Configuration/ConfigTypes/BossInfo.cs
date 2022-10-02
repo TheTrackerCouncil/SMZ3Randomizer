@@ -31,12 +31,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The identifier for merging configs
         /// </summary>
         [MergeKey]
-        public string Boss { get; set; }
+        public string Boss { get; set; } = "";
 
         /// <summary>
         /// Gets the name of the boss.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the phrases to respond with when the boss has been tracked (but

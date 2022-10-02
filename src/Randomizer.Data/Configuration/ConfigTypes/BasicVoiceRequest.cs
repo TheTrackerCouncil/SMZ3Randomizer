@@ -30,11 +30,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets a collection of phrases that should be recognized.
         /// </summary>
-        public List<string> Phrases { get; set; }
+        public List<string> Phrases { get; set; } = new();
 
         /// <summary>
         /// Gets the possible responses to the request.
         /// </summary>
-        public SchrodingersString Response { get; set; }
+        public SchrodingersString Response { get; set; } = new();
     }
 }
