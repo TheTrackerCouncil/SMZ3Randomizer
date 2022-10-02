@@ -72,7 +72,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 world.Locations.First(x => x.Id == location1).Item.Progression.Should().BeTrue();
                 world.Locations.First(x => x.Id == location2).Item.Progression.Should().BeFalse();
                 var fireRodAtLocation = world.Locations.First(x => x.Id == location3).Item.Type == ItemType.Firerod;
-                var fireRodAccessible = !Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), new Progression()).Any();
+                var fireRodAccessible = !Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), new Progression(), out _).Any();
                 Assert.True(fireRodAtLocation || fireRodAccessible);
             }
         }
@@ -93,9 +93,9 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 var seedData = randomizer.GenerateSeed(config, null, default);
                 var world = seedData.Worlds.First().World;
                 var progression = new Progression();
-                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression).Should().BeEmpty();
-                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression).Should().BeEmpty();
-                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.MoonPearl), progression).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression, out _).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression, out _).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.MoonPearl), progression, out _).Should().BeEmpty();
             }
         }
 

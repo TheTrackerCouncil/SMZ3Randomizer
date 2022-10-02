@@ -69,6 +69,7 @@ namespace Randomizer.SMZ3.Tracking
         private bool _alternateTracker;
         private HashSet<SchrodingersString> _saidLines = new();
         private bool _beatenGame;
+        private IEnumerable<ItemType>? _previousMissingItems;
 
         [DllImport("winmm.dll")]
         public static extern int waveInGetNumDevs();
@@ -1249,7 +1250,10 @@ namespace Randomizer.SMZ3.Tracking
                         }
                         else
                         {
-                            var missingItems = Logic.GetMissingRequiredItems(location, items)
+                            var allMissingCombinations = Logic.GetMissingRequiredItems(location, items, out var allMissingItems);
+                            allMissingItems = allMissingItems.OrderBy(x => x);
+
+                            var missingItems = allMissingCombinations
                                 .OrderBy(x => x.Length)
                                 .FirstOrDefault();
                             if (missingItems == null)
@@ -1257,11 +1261,20 @@ namespace Randomizer.SMZ3.Tracking
                                 Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name ?? location.Name);
                             }
                             // Do not say anything if the only thing missing are keys
-                            else if (!missingItems.All(x => x.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Keycard)))
+                            else
                             {
-                                var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                                Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                                var itemsChanged = _previousMissingItems == null || !allMissingItems.SequenceEqual(_previousMissingItems);
+                                var onlyKeys = allMissingItems.All(x => x.IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Keycard));
+                                _previousMissingItems = allMissingItems;
+
+                                if (itemsChanged && !onlyKeys)
+                                {
+                                    var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
+                                    Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo?.Name ?? location.Name, missingItemNames);
+                                }
                             }
+
+                            _previousMissingItems = allMissingItems;
                         }
                         
                     }
@@ -1607,7 +1620,7 @@ namespace Randomizer.SMZ3.Tracking
                             if (someOutOfLogicLocation != null && confidence >= Options.MinimumSassConfidence)
                             {
                                 var someOutOfLogicItem = someOutOfLogicLocation.Item;
-                                var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, progression)
+                                var missingItems = Logic.GetMissingRequiredItems(someOutOfLogicLocation, progression, out _)
                                     .OrderBy(x => x.Length)
                                     .FirstOrDefault();
                                 if (missingItems != null)
@@ -1695,7 +1708,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 var anyMissedLocation = inaccessibleLocations.Random(s_random);
                 var locationInfo = anyMissedLocation.Metadata;
-                var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress);
+                var missingItemCombinations = Logic.GetMissingRequiredItems(anyMissedLocation, progress, out _);
                 if (missingItemCombinations.Any())
                 {
                     var missingItems = missingItemCombinations.Random(s_random)
@@ -2375,8 +2388,8 @@ namespace Randomizer.SMZ3.Tracking
         private void GiveLocationComment(Item item, Location location, bool isTracking, float? confidence)
         {
             // Give some sass if the user tracks or marks the wrong item at a
-            // location
-            if (location.Item != null && item.Type != location.Item.Type)
+            // location unless the user is clearing a useless item like missiles
+            if (location.Item != null && item.Type != location.Item.Type && (item.Type != ItemType.Nothing || location.Item.Metadata.IsProgression(World.Config)))
             {
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;

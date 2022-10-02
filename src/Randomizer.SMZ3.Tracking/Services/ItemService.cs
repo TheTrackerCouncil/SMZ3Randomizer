@@ -202,9 +202,10 @@ namespace Randomizer.SMZ3.Tracking.Services
                     progression.AddRange(Item.CreateDungeonPool(_world.World));
             }
 
-            foreach (var item in TrackedItems())
+            foreach (var item in TrackedItems().Select(x => x.State).Distinct())
             {
-                progression.AddRange(Enumerable.Repeat(item.Type, item.State.TrackingState));
+                if (item.Type == null || item.Type == ItemType.Nothing) continue;
+                progression.AddRange(Enumerable.Repeat(item.Type.Value, item.TrackingState));
             }
 
             foreach (var reward in TrackedRewards())

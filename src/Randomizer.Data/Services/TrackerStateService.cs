@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.Services
@@ -40,7 +41,8 @@ namespace Randomizer.Data.Services
                     Name = x.GetType().Name,
                     RemainingTreasure = x.GetTreasureCount(),
                     Reward = x is IHasReward rewardRegion ? rewardRegion.RewardType : null,
-                    RequiredMedallion = x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null
+                    RequiredMedallion = x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null,
+                    MarkedReward = x is CastleTower ? Shared.RewardType.Agahnim : null,
                 })
                 .ToList();
 

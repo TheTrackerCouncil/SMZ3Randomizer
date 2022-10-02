@@ -563,14 +563,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             }
 
                             var progression = ItemService.GetProgression(randomLocation.Region);
-                            var missingItemSets = Logic.GetMissingRequiredItems(randomLocation, progression);
+                            var missingItemSets = Logic.GetMissingRequiredItems(randomLocation, progression, out _);
                             if (!missingItemSets.Any())
                             {
                                 return GiveItemHint(x => x.ItemRequiresManyOtherItems, item);
                             }
                             else
                             {
-                                var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression)
+                                var randomMissingItem = Logic.GetMissingRequiredItems(randomLocation, progression, out _)
                                     .SelectMany(x => x)
                                     .Where(x => x != item.Type)
                                     .Select(x => ItemService.FirstOrDefault(x))

@@ -50,7 +50,7 @@ namespace Randomizer.App.ViewModels
             // If no location was specified, it's a boss or dungeon
             if (Type == MapLocationType.Boss)
             {
-                if (_worldService.IsAvailable(Region.Locations.First(), true))
+                if (Region.CanEnter(Syncer.ItemService.GetProgression(Region), true))
                 {
                     if (Region is IHasReward rewardRegion)
                     {
@@ -71,27 +71,15 @@ namespace Randomizer.App.ViewModels
                 Name = mapLocation.GetName(syncer.WorldService.World);
 
                 Locations = Syncer.WorldService.AllLocations().Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
+                var progression = Syncer.ItemService.GetProgression(!(Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region)));
+                var statuses = Locations.Select(x => x.GetStatus(progression));
 
-                if (syncer.WorldService.IsAvailable(Locations.First(), true))
-                {
-                    var progression = Syncer.ItemService.GetProgression(!(Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region)));
-                    var statuses = Locations.Select(x => x.GetStatus(progression));
-
-                    ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
-                    RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
-                    OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
-                    UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
-                    ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
-                }
-                else
-                {
-                    ClearableLocationsCount = 0;
-                    RelevantLocationsCount = 0;
-                    OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? Locations.Count() : 0;
-                    UnclearedLocationsCount = Locations.Count();
-                    ClearedLocationsCount = 0;
-                }
-                
+                ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
+                RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
+                OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
+                UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
+                ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
+                                
             }
             else if (Type == MapLocationType.SMDoor)
             {

@@ -164,7 +164,7 @@ namespace Randomizer.SMZ3.Generation
                     if (progressionItems.Any(x => x.Type == itemType))
                     {
                         //var location = worlds[0].Locations.First(x => x.Id == locationId);
-                        var itemsRequired = Logic.GetMissingRequiredItems(location, new Progression());
+                        var itemsRequired = Logic.GetMissingRequiredItems(location, new Progression(), out _);
 
                         // If no items required or at least one combination of items required does not contain this item
                         if (!itemsRequired.Any() || itemsRequired.Any(x => !x.Contains(itemType)))

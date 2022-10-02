@@ -30,7 +30,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithoutLogicNeverHasMissingItems()
         {
             var emptyProgression = new Progression();
-            var missingItems = Logic.GetMissingRequiredItems(World.HyruleCastle.LinksUncle, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.HyruleCastle.LinksUncle, emptyProgression, out _);
             missingItems.Should().BeEmpty();
         }
 
@@ -38,7 +38,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithSatisfiedLogicHasNoMissingItems()
         {
             var progression = new Progression(new[] { new Item(ItemType.Boots) }, new List<Reward>(), new List<Boss>());
-            var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, progression);
+            var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, progression, out _);
             missingItems.Should().BeEmpty();
         }
 
@@ -46,7 +46,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithSimpleLogicOnlyHasOneSetOfItems()
         {
             var emptyProgression = new Progression();
-            var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, emptyProgression, out _);
             missingItems.Should().HaveCount(1);
         }
 
@@ -54,7 +54,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithSimpleLogicReturnsSingleMissingItem()
         {
             var emptyProgression = new Progression();
-            var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Boots });
         }
 
@@ -62,7 +62,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithTwoMissingItemsReturnsTwoMissingItems()
         {
             var emptyProgression = new Progression(Item.CreateKeycards(null), new List<Reward>(), new List<Boss>());
-            var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.PowerBomb, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.PowerBomb, emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.PowerBomb });
         }
 
@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithMultipleOptionsReturnsAllOptions()
         {
             var emptyProgression = new Progression(Item.CreateKeycards(null), new List<Reward>(), new List<Boss>());
-            var missingItems = Logic.GetMissingRequiredItems(World.BlueBrinstar.Ceiling, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.BlueBrinstar.Ceiling, emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.SpaceJump })
                 .And.ContainEquivalentOf(new[] { ItemType.HiJump })
                 .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster })
@@ -81,7 +81,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithThreeMissingItemsReturnsThreeMissingItems()
         {
             var emptyProgression = new Progression(Item.CreateKeycards(null), new List<Reward>(), new List<Boss>());
-            var missingItems = Logic.GetMissingRequiredItems(World.CentralCrateria.BombTorizo, emptyProgression);
+            var missingItems = Logic.GetMissingRequiredItems(World.CentralCrateria.BombTorizo, emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
         }
     }
