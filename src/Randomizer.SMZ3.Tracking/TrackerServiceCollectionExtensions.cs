@@ -34,9 +34,7 @@ namespace Randomizer.SMZ3.Tracking
             services.AddScoped<TrackerModuleFactory>();
             services.AddSingleton<IHistoryService, HistoryService>();
             services.AddScoped<TrackerOptionsAccessor>();
-            services.AddTrackerConfigs();
             services.AddScoped<IItemService, ItemService>();
-            services.AddScoped<IMetadataService, MetadataService>();
             services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<IUIService, UIService>();
             services.AddScoped<IWorldService, WorldService>();
@@ -64,77 +62,7 @@ namespace Randomizer.SMZ3.Tracking
             return services;
         }
 
-        private static void AddTrackerConfigs(this IServiceCollection services)
-        {
-            services.AddSingleton<TrackerConfigProvider>();
-            services.AddTransient(serviceProvider =>
-            {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
-                return configProvider.GetMapConfig();
-            });
-
-            services.AddScoped<TrackerConfigs>();
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Bosses;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Dungeons;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Items;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Locations;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Regions;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Requests;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Responses;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Rooms;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Rewards;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.UILayouts;
-            });
-        }
+        
 
         /// <summary>
         /// Enables the specified tracker module.

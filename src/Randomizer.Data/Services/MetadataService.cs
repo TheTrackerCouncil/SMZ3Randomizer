@@ -10,8 +10,9 @@ using Randomizer.Data.Configuration.ConfigTypes;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared;
+using Randomizer.Data.Configuration;
 
-namespace Randomizer.SMZ3.Tracking.Services
+namespace Randomizer.Data.Services
 {
     /// <summary>
     /// Service for retrieving information about the current state of
@@ -31,23 +32,17 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="regions">Config with additional region information</param>
-        /// <param name="dungeons">Config with additional dungeon information</param>
-        /// <param name="rooms">Config with additional room information</param>
-        /// <param name="locations">Config with additional location information</param>
-        /// <param name="bosses">Config with additional boss information</param>
-        /// <param name="items">Config with additional item information</param>
-        /// <param name="rewards">Config with additional rewards information</param>
+        /// <param name="configs">All configs</param>
         /// <param name="logger"></param>
-        public MetadataService(RegionConfig regions, DungeonConfig dungeons, RoomConfig rooms, LocationConfig locations, BossConfig bosses, ItemConfig items, RewardConfig rewards, ILogger<MetadataService> logger)
+        public MetadataService(Configs configs, ILogger<MetadataService> logger)
         {
-            _regions = regions;
-            _dungeons = dungeons;
-            _rooms = rooms;
-            _locations = locations;
-            _bosses = bosses;
-            _items = items;
-            _rewards = rewards;
+            _regions = configs.Regions;
+            _dungeons = configs.Dungeons;
+            _rooms = configs.Rooms;
+            _locations = configs.Locations;
+            _bosses = configs.Bosses;
+            _items = configs.Items;
+            _rewards = configs.Rewards;
             _logger = logger;
         }
 
@@ -297,9 +292,7 @@ namespace Randomizer.SMZ3.Tracking.Services
             foreach (var (metadata, worldItems) in _items.Select(x => (item: x, worldItems: world.AllItems.Where(w => w.Is(x.InternalItemType, x.Item)))))
             {
                 if (worldItems.Any())
-                {
                     worldItems.ToList().ForEach(x => x.Metadata = metadata);
-                }
                 else
                 {
                     _logger.LogInformation($"No data found {metadata.Item}");
@@ -321,9 +314,7 @@ namespace Randomizer.SMZ3.Tracking.Services
             foreach (var (metadata, worldBoss) in _bosses.Select(md => (boss: md, worldBoss: world.AllBosses.FirstOrDefault(w => w.Is(md.Type, md.Boss)))))
             {
                 if (worldBoss != null)
-                {
                     worldBoss.Metadata = metadata;
-                }
                 else
                 {
                     _logger.LogInformation($"No data found {metadata.Boss}");

@@ -5,9 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
@@ -21,12 +24,19 @@ namespace Randomizer.SMZ3.Generation
         private static readonly Regex s_continousSpace = new(@" +");
         private readonly IWorldAccessor _worldAccessor;
         private readonly ILogger<Smz3Randomizer> _logger;
+        private readonly IMetadataService _metadataService;
+        private readonly GameLinesConfig _gameLines;
 
-        public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, ILogger<Smz3Randomizer> logger)
+        public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, ILogger<Smz3Randomizer> logger, IServiceProvider serviceProvider)
         {
             Filler = filler;
             _worldAccessor = worldAccessor;
             _logger = logger;
+
+            var scope = serviceProvider.CreateScope();
+            _metadataService = scope.ServiceProvider.GetService<IMetadataService>();
+            var configs = scope.ServiceProvider.GetService<Configs>();
+            _gameLines = configs.GameLines;
         }
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
@@ -117,7 +127,7 @@ namespace Randomizer.SMZ3.Generation
             foreach (var world in worlds)
             {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : seedNumber, patchRnd);
+                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
                 seedData.Worlds.Add((world, patch.CreatePatch(config)));
             }
 

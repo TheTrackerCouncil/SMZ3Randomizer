@@ -18,16 +18,13 @@ using System.Windows.Threading;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Randomizer.App.ViewModels;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
-using Randomizer.Data.Configuration;
-using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 
 namespace Randomizer.App
 {

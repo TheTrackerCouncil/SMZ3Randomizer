@@ -4,9 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
@@ -19,12 +22,19 @@ namespace Randomizer.SMZ3.Generation
         private readonly PlandoFillerFactory _fillerFactory;
         private readonly IWorldAccessor _worldAccessor;
         private readonly ILogger<Smz3Plandomizer> _logger;
+        private readonly IMetadataService _metadataService;
+        private readonly GameLinesConfig _gameLines;
 
-        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor, ILogger<Smz3Plandomizer> logger)
+        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor, ILogger<Smz3Plandomizer> logger, IServiceProvider serviceProvider)
         {
             _fillerFactory = fillerFactory;
             _worldAccessor = worldAccessor;
             _logger = logger;
+
+            var scope = serviceProvider.CreateScope();
+            _metadataService = scope.ServiceProvider.GetService<IMetadataService>();
+            var configs = scope.ServiceProvider.GetService<Configs>();
+            _gameLines = configs.GameLines;
         }
 
         public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
@@ -69,7 +79,7 @@ namespace Randomizer.SMZ3.Generation
             foreach (var world in worlds)
             {
                 var patchRnd = new Random();
-                var patch = new Patcher(world, worlds, seedData.Guid, 0, patchRnd);
+                var patch = new Patcher(world, worlds, seedData.Guid, 0, patchRnd, _metadataService, _gameLines);
                 seedData.Worlds.Add((world, patch.CreatePatch(config)));
             }
 

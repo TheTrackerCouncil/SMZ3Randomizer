@@ -15,6 +15,9 @@ using Randomizer.SMZ3.Text;
 
 using static Randomizer.SMZ3.FileData.DropPrize;
 using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Services;
+using System.Text.RegularExpressions;
 
 namespace Randomizer.SMZ3.FileData
 {
@@ -26,12 +29,14 @@ namespace Randomizer.SMZ3.FileData
         private readonly int _seed;
         private readonly Random _rnd;
         private readonly RomPatchFactory _romPatchFactory;
+        private readonly GameLinesConfig _gameLines;
+        private readonly IMetadataService _metadataService;
         private StringTable _stringTable;
         private List<(int offset, byte[] bytes)> _patches;
         private Queue<byte> _shuffledSoundtrack;
         private bool _enableMultiworld;
 
-        public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd)
+        public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd, IMetadataService metadataService, GameLinesConfig gameLines)
         {
             _myWorld = myWorld;
             _allWorlds = allWorlds;
@@ -40,6 +45,8 @@ namespace Randomizer.SMZ3.FileData
             _rnd = rnd;
             _romPatchFactory = new RomPatchFactory();
             _enableMultiworld = true;
+            _gameLines = gameLines;
+            _metadataService = metadataService;
         }
 
         /// <summary>
@@ -100,17 +107,16 @@ namespace Randomizer.SMZ3.FileData
 
             WriteMedallions();
             WriteRewards();
-            WriteDungeonMusic(config);
-
+            WriteRngBlock();
             WriteDiggingGameRng();
-
             WritePrizeShuffle();
+
+            WriteDungeonMusic(config);
 
             WriteRemoveEquipmentFromUncle(_myWorld.HyruleCastle.LinksUncle.Item);
 
             WriteGanonInvicible(config.GanonInvincible);
-            WriteRngBlock();
-
+            
             // WritePreopenCurtains();
             WriteQuickSwap();
 
@@ -662,8 +668,17 @@ namespace Randomizer.SMZ3.FileData
         private void WriteTexts(Config config)
         {
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var greenPendantDungeon = regions.Where(x => x.RewardType == RewardType.PendantGreen).Cast<Region>().First();
-            var redCrystalDungeons = regions.Where(x => x.RewardType == RewardType.CrystalRed).Cast<Region>();
+
+            var greenPendantDungeon = regions
+                .Where(x => x.RewardType == RewardType.PendantGreen)
+                .Cast<Region>()
+                .Select(x => GetRegionName(x))
+                .First();
+
+            var redCrystalDungeons = regions
+                .Where(x => x.RewardType == RewardType.CrystalRed)
+                .Cast<Region>()
+                .Select(x => GetRegionName(x));
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
@@ -673,7 +688,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
             _stringTable.SetBombShopRevealText(bombShop);
 
-            var blind = Texts.Blind(_rnd);
+            var blind = ValidateText(_gameLines.BlindIntro.ToString());
             _patches.Add((Snes(0x308800), Dialog.Simple(blind)));
             _stringTable.SetBlindText(blind);
 
@@ -681,7 +696,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
             _stringTable.SetTavernManText(tavernMan);
 
-            var ganon = Texts.GanonFirstPhase(_rnd);
+            var ganon = ValidateText(_gameLines.GanonIntro.ToString());
             _patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
             _stringTable.SetGanonFirstPhaseText(ganon);
 
@@ -711,7 +726,7 @@ namespace Randomizer.SMZ3.FileData
                 _stringTable.SetGanonThirdPhaseText(silvers);
             }
 
-            var triforceRoom = Texts.TriforceRoom(_rnd);
+            var triforceRoom = ValidateText(_gameLines.TriforceRoom.ToString());
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             _stringTable.SetTriforceRoomText(triforceRoom);
         }
@@ -971,6 +986,28 @@ namespace Randomizer.SMZ3.FileData
             /* Defaults to $01 at [asm]/z3/randomizer/tables.asm */
             // Todo: Z3r major glitches disables this, reconsider extending or dropping with glitched logic later.
             //patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
+        }
+
+        private string ValidateText(string text)
+        {
+            if (text.ToCharArray().Any(x => x >= 128))
+                throw new RandomizerGenerationException($"The in game text \"{text.Trim()}\" has invalid characters");
+            if (text.Split("\n").Any(x => x.Length > 19))
+                throw new RandomizerGenerationException($"The in game text \"{text.Trim()}\" has a line that is longer than 19 characters");
+            return text;
+        }
+
+        private string GetRegionName(Region region)
+        {
+            var name = _metadataService.Region(region).Name.ToString();
+            try
+            {
+                return ValidateText(name);
+            }
+            catch
+            {
+                return region.Area;
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared;
 
-namespace Randomizer.SMZ3.Tracking.Services
+namespace Randomizer.Data.Services
 {
     /// <summary>
     /// Service for retrieving information about the current state of

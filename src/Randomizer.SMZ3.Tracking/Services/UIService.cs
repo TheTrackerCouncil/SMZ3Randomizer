@@ -23,7 +23,7 @@ namespace Randomizer.SMZ3.Tracking.Services
     {
         private readonly UIConfig _layouts;
         private readonly TrackerOptionsAccessor _options;
-        private readonly TrackerConfigProvider _configProvider;
+        private readonly ConfigProvider _configProvider;
         private readonly List<string> IconPaths;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="configProvider">The tracker configs</param>
         /// <param name="uiConfig">The UI configs</param>
         public UIService(TrackerOptionsAccessor options,
-            TrackerConfigProvider configProvider,
+            ConfigProvider configProvider,
             UIConfig uiConfig
         )
         {
