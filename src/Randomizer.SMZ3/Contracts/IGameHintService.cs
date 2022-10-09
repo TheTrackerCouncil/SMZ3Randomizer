@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.Contracts
     /// <summary>
     /// Service for generating hints for the player
     /// </summary>
-    public interface IGameHintGenerator
+    public interface IGameHintService
     {
         /// <summary>
         /// Retrieves the hints to display in game for the player

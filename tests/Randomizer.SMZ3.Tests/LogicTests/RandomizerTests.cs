@@ -13,6 +13,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
 
@@ -28,7 +29,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            var randomizer = new Smz3Randomizer(filler, new WorldAccessor(), GetLogger<Smz3Randomizer>(), GetRandomizerServicesProvider());
+            var randomizer = GetRandomizer();
             var config = new Config();
 
             var seedData = randomizer.GenerateSeed(config, seed, default);
@@ -57,7 +58,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationItemConfig()
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            var randomizer = new Smz3Randomizer(filler, new WorldAccessor(), GetLogger<Smz3Randomizer>(), GetRandomizerServicesProvider());
+            var randomizer = GetRandomizer();
 
             var config = new Config();
             var region = new Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth(null, null);
@@ -84,7 +85,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void EarlyItemConfig()
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            var randomizer = new Smz3Randomizer(filler, new WorldAccessor(), GetLogger<Smz3Randomizer>(), GetRandomizerServicesProvider());
+            var randomizer = GetRandomizer();
 
             var config = new Config();
             config.EarlyItems.Add(ItemType.Firerod);
@@ -113,13 +114,22 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             return serviceProvider.GetRequiredService<ILogger<T>>();
         }
 
-        public static IServiceProvider GetRandomizerServicesProvider()
+        private static Smz3Randomizer GetRandomizer()
         {
-            return new ServiceCollection()
+            var serviceProvider = new ServiceCollection()
                 .AddLogging(options => { })
                 .AddSingleton<OptionsFactory>()
+                .AddSingleton<Configs>()
+                .AddSingleton<IMetadataService, MetadataService>()
+                .AddSingleton<IGameHintService, GameHintService>()
                 .AddConfigs()
                 .BuildServiceProvider();
+
+            var filler = new StandardFiller(GetLogger<StandardFiller>());
+            return new Smz3Randomizer(filler, new WorldAccessor(), serviceProvider.GetRequiredService<Configs>(),
+                serviceProvider.GetRequiredService<IMetadataService>(),
+                serviceProvider.GetRequiredService<IGameHintService>(),
+                GetLogger<Smz3Randomizer>());
         }
     }
 }

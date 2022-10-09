@@ -23,6 +23,7 @@ namespace Randomizer.SMZ3.FileData
 {
     public class Patcher
     {
+        private static readonly Regex s_spaces = new(@"[\s\r\n]+");
         private readonly List<World> _allWorlds;
         private readonly World _myWorld;
         private readonly string _seedGuid;
@@ -671,14 +672,12 @@ namespace Randomizer.SMZ3.FileData
 
             var greenPendantDungeon = regions
                 .Where(x => x.RewardType == RewardType.PendantGreen)
-                .Cast<Region>()
-                .Select(x => GetRegionName(x))
+                .Select(x => GetRegionName(x as Region))
                 .First();
 
             var redCrystalDungeons = regions
                 .Where(x => x.RewardType == RewardType.CrystalRed)
-                .Cast<Region>()
-                .Select(x => GetRegionName(x));
+                .Select(x => GetRegionName(x as Region));
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
@@ -688,7 +687,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
             _stringTable.SetBombShopRevealText(bombShop);
 
-            var blind = ValidateText(_gameLines.BlindIntro.ToString());
+            var blind = GetGameSafeString(_gameLines.BlindIntro.ToString());
             _patches.Add((Snes(0x308800), Dialog.Simple(blind)));
             _stringTable.SetBlindText(blind);
 
@@ -696,7 +695,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
             _stringTable.SetTavernManText(tavernMan);
 
-            var ganon = ValidateText(_gameLines.GanonIntro.ToString());
+            var ganon = GetGameSafeString(_gameLines.GanonIntro.ToString());
             _patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
             _stringTable.SetGanonFirstPhaseText(ganon);
 
@@ -726,11 +725,11 @@ namespace Randomizer.SMZ3.FileData
                 _stringTable.SetGanonThirdPhaseText(silvers);
             }
 
-            var triforceRoom = ValidateText(_gameLines.TriforceRoom.ToString());
+            var triforceRoom = GetGameSafeString(_gameLines.TriforceRoom.ToString());
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             _stringTable.SetTriforceRoomText(triforceRoom);
 
-            _stringTable.SetHints(hints);
+            _stringTable.SetHints(hints.Select(x => GetGameSafeString(x)));
         }
 
         private void WriteStringTable()
@@ -990,26 +989,44 @@ namespace Randomizer.SMZ3.FileData
             //patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
         }
 
-        private string ValidateText(string text)
+        /// <summary>
+        /// Converts the hint into max 19 character lines
+        /// for adding to the game unless the text is
+        /// already split into multiple lines
+        /// </summary>
+        private string GetGameSafeString(string text)
         {
-            if (text.ToCharArray().Any(x => x >= 128))
-                throw new RandomizerGenerationException($"The in game text \"{text.Trim()}\" has invalid characters");
-            if (text.Split("\n").Any(x => x.Length > 19))
-                throw new RandomizerGenerationException($"The in game text \"{text.Trim()}\" has a line that is longer than 19 characters");
-            return text;
+            // If it's already multiple lines that are are within the
+            // width limit, just return it as is
+            if (!text.Split("\n").Any(x => x.Length > 19))
+            {
+                return text;
+            }
+
+            text = s_spaces.Replace(text, " ");
+            var words = text.Split(" ");
+            var output = new List<string>();
+            var currentLine = "";
+            foreach (var word in words)
+            {
+                if (word.Length + currentLine.Length > 18)
+                {
+                    output.Add(currentLine);
+                    currentLine = word;
+                }
+                else
+                {
+                    currentLine += " " + word;
+                }
+            }
+            output.Add(currentLine);
+            return string.Join("\n", output).Trim();
         }
 
         private string GetRegionName(Region region)
         {
-            var name = _metadataService.Region(region).Name.ToString();
-            try
-            {
-                return ValidateText(name);
-            }
-            catch
-            {
-                return region.Area;
-            }
+            return GetGameSafeString(_metadataService.Region(region).Name);
+
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.Generation
     /// <summary>
     /// Service for generating hints for the player
     /// </summary>
-    public class GameHintGenerator : IGameHintGenerator
+    public class GameHintService : IGameHintService
     {
         public static readonly List<string> HintLocations = new List<string>()
         {
@@ -40,13 +40,12 @@ namespace Randomizer.SMZ3.Generation
             "telepathic_tile_south_east_darkworld_cave"
         };
 
-        private static readonly Regex _spaces = new(@"[\s\r\n]+");
-        private readonly ILogger<GameHintGenerator> _logger;
+        private readonly ILogger<GameHintService> _logger;
         private readonly IMetadataService _metadataService;
         private GameLinesConfig _gameLines;
         private Random _random;
 
-        public GameHintGenerator(Configs configs, IMetadataService metadataService, ILogger<GameHintGenerator> logger)
+        public GameHintService(Configs configs, IMetadataService metadataService, ILogger<GameHintService> logger)
         {
             _gameLines = configs.GameLines;
             _logger = logger;
@@ -86,7 +85,7 @@ namespace Randomizer.SMZ3.Generation
                 _logger.LogDebug(hint);
             }
 
-            var hints = allHints.Distinct().Shuffle(_random).Take(hintCount).Select(x => GameSafeString(x));
+            var hints = allHints.Distinct().Shuffle(_random).Take(hintCount);
             while (hints.Count() < HintLocations.Count)
             {
                 hints = hints.Concat(hints.Take(Math.Min(HintLocations.Count() - hints.Count(), hints.Count())));
@@ -96,7 +95,7 @@ namespace Randomizer.SMZ3.Generation
             _logger.LogDebug("Selected in game hints");
             foreach (var hint in hints)
             {
-                _logger.LogDebug(hint.Replace("\n", " "));
+                _logger.LogDebug(hint);
             }
 
             return hints;
@@ -329,32 +328,6 @@ namespace Randomizer.SMZ3.Generation
                     ? " in your world"
                     : " in another player's world"; // Will need to update to player name when multiworld is working
             }
-        }
-
-        /// <summary>
-        /// Converts the hint into max 19 character lines
-        /// for adding to the game
-        /// </summary>
-        private string GameSafeString(string hint)
-        {
-            hint = _spaces.Replace(hint, " ");
-            var words = hint.Split(" ");
-            var output = new List<string>();
-            var currentLine = "";
-            foreach (var word in words)
-            {
-                if (word.Length + currentLine.Length > 18)
-                {
-                    output.Add(currentLine);
-                    currentLine = word;
-                }
-                else
-                {
-                    currentLine += " " + word;
-                }
-            }
-            output.Add(currentLine);
-            return string.Join("\n", output).Trim();
         }
 
         private enum LocationUsefulness

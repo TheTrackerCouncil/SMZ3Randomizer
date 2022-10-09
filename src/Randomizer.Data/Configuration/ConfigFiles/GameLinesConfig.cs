@@ -7,6 +7,9 @@ using Randomizer.Data.Configuration.ConfigTypes;
 
 namespace Randomizer.Data.Configuration.ConfigFiles
 {
+    /// <summary>
+    /// Config for lines that will be injected into the game
+    /// </summary>
     public class GameLinesConfig : IMergeable<GameLinesConfig>, IConfigFile<GameLinesConfig>
     {
         public static GameLinesConfig Default()

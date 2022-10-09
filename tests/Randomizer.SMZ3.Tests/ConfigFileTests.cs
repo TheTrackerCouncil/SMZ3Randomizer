@@ -142,22 +142,10 @@ namespace Randomizer.SMZ3.Tests
         {
             var provider = new ConfigProvider(null);
             var config = provider.GetGameConfig("BCU", "Sassy");
-
-            var properties = typeof(GameLinesConfig).GetProperties();
-
-            foreach (var property in properties)
+            var strings = EnumerateSchrodingersStrings(config);
+            foreach (var value in strings)
             {
-                if (property.PropertyType == typeof(SchrodingersString))
-                {
-                    var schrodingersString = property.GetValue(config) as SchrodingersString;
-                    var strings = EnumerateSchrodingersStrings(schrodingersString);
-                    foreach (var value in strings)
-                    {
-                        value.Should().NotContain(x => x.Weight >= 90);
-                        value.Should().NotContain(x => x.ToString().ToCharArray().Any(x => x >= 128));
-                        value.Should().NotContain(x => HasLongLine(x));
-                    }
-                }
+                value.Should().NotContain(x => x.Weight >= 90);
             }
         }
 
