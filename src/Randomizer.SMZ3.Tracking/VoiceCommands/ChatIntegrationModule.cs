@@ -26,6 +26,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private const string WinningGuessKey = "WinningGuess";
         private readonly Dictionary<string, int> _usersGreetedTimes = new();
         private readonly IItemService _itemService;
+        private readonly ITrackerTimerService _timerService;
         private bool _askChatAboutContentCheckPollResults = true;
         private string? _askChatAboutContentPollId;
         private int _askChatAboutContentPollTime = 60;
@@ -42,13 +43,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
+        /// <param name="timerService"></param>
         /// <param name="chatClient">The chat client to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ILogger<ChatIntegrationModule> logger)
+        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
             ChatClient = chatClient;
             _itemService = itemService;
+            _timerService = timerService;
             ChatClient.Connected += ChatClient_Connected;
             ChatClient.MessageReceived += ChatClient_MessageReceived;
             ChatClient.Disconnected += ChatClient_Disconnected;
@@ -407,7 +410,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private bool ShouldRespondToGreetings => Tracker.Options.ChatGreetingEnabled
             && (Tracker.Options.ChatGreetingTimeLimit == 0
-                || Tracker.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
+                || _timerService.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
 
         private bool ShouldCreatePolls => Tracker.Options.PollCreationEnabled;
 

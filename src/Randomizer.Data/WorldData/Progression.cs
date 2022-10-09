@@ -17,21 +17,21 @@ namespace Randomizer.Data.WorldData
         {
             Items = new();
             Rewards = new();
-            Bosses = new();
+            DefeatedBosses = new();
         }
 
         public Progression(IEnumerable<ItemType> items, IEnumerable<RewardType> rewards, IEnumerable<BossType> bosses)
         {
             Items = new(items);
             Rewards = new(rewards);
-            Bosses = new(bosses);
+            DefeatedBosses = new(bosses);
         }
 
         public Progression(IEnumerable<Item> items, IEnumerable<Reward> rewards, IEnumerable<Boss> bosses)
         {
             Items = new(items.Select(x => x.Type));
             Rewards = new(rewards.Select(x => x.Type));
-            Bosses = new(bosses.Select(x => x.Type));
+            DefeatedBosses = new(bosses.Select(x => x.Type));
         }
 
         public bool BigKeyEP => Contains(ItemType.BigKeyEP);
@@ -127,18 +127,18 @@ namespace Randomizer.Data.WorldData
         public bool AllPendants => Rewards.Count(r => r is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue) >= 3;
         public bool BothRedCrystals => Rewards.Count(r => r == RewardType.CrystalRed) >= 2;
         public bool AllCrystals => PendantCount >= 7;
-        public bool Kraid => Bosses.Contains(BossType.Kraid);
-        public bool Phantoon => Bosses.Contains(BossType.Phantoon);
-        public bool Draygon => Bosses.Contains(BossType.Draygon);
-        public bool Ridley => Bosses.Contains(BossType.Ridley);
-        public bool AllMetroidBosses => Bosses.Count(r => r is BossType.Kraid or BossType.Phantoon or BossType.Draygon or BossType.Ridley) >= 4;
+        public bool Kraid => DefeatedBosses.Contains(BossType.Kraid);
+        public bool Phantoon => DefeatedBosses.Contains(BossType.Phantoon);
+        public bool Draygon => DefeatedBosses.Contains(BossType.Draygon);
+        public bool Ridley => DefeatedBosses.Contains(BossType.Ridley);
+        public bool AllMetroidBosses => DefeatedBosses.Count(r => r is BossType.Kraid or BossType.Phantoon or BossType.Draygon or BossType.Ridley) >= 4;
         public int PendantCount => Rewards.Count(r => r is RewardType.CrystalBlue or RewardType.CrystalRed);
         public int Count => Items.Count;
         public bool IsReadOnly => false;
 
         protected List<ItemType> Items { get; }
         protected List<RewardType> Rewards { get; }
-        protected List<BossType> Bosses { get; }
+        protected List<BossType> DefeatedBosses { get; }
 
         public bool Contains(ItemType itemType)
             => Items.Contains(itemType);
@@ -147,7 +147,7 @@ namespace Randomizer.Data.WorldData
             => Rewards.Contains(reward);
 
         public bool Contains(BossType boss)
-            => Bosses.Contains(boss);
+            => DefeatedBosses.Contains(boss);
 
         public bool Contains(ItemType itemType, int amount)
             => GetCount(itemType) >= amount;
@@ -174,19 +174,19 @@ namespace Randomizer.Data.WorldData
             => Rewards.AddRange(rewards.Select(x => x.Type));
 
         public void Add(Boss boss)
-            => Bosses.Add(boss.Type);
+            => DefeatedBosses.Add(boss.Type);
 
         public void AddRange(IEnumerable<BossType> boss)
-            => Bosses.AddRange(boss);
+            => DefeatedBosses.AddRange(boss);
 
         public void AddRange(IEnumerable<Boss> bosses)
-            => Bosses.AddRange(bosses.Select(x => x.Type));
+            => DefeatedBosses.AddRange(bosses.Select(x => x.Type));
 
         public void Clear()
             => Items.Clear();
 
         public Progression Clone()
-            => new(Items, Rewards, Bosses);
+            => new(Items, Rewards, DefeatedBosses);
 
         public void CopyTo(ItemType[] array, int arrayIndex)
             => Items.CopyTo(array, arrayIndex);

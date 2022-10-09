@@ -55,6 +55,7 @@ namespace Randomizer.App
         private readonly IWorldAccessor _world;
         private readonly RandomizerOptions _options;
         private readonly RomGenerator _romGenerator;
+        private readonly ITrackerTimerService _timerService;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
@@ -73,7 +74,8 @@ namespace Randomizer.App
             RomGenerator romGenerator,
             IUIService uiService,
             OptionsFactory optionsFactory,
-            IWorldAccessor world
+            IWorldAccessor world,
+            ITrackerTimerService timerService
         )
         {
             InitializeComponent();
@@ -86,8 +88,9 @@ namespace Randomizer.App
             _options = optionsFactory.Create();
             _layout = uiService.GetLayout(_options.GeneralOptions.SelectedLayout);
             _world = world;
+            _timerService = timerService;
 
-            foreach(var layout in uiService.SelectableLayouts)
+            foreach (var layout in uiService.SelectableLayouts)
             {
                 var layoutMenuItem = new MenuItem
                 {
@@ -102,10 +105,7 @@ namespace Randomizer.App
 
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
             {
-                var elapsed = Tracker.TotalElapsedTime;
-                StatusBarTimer.Content = elapsed.Hours > 0
-                    ? elapsed.ToString("h':'mm':'ss")
-                    : elapsed.ToString("mm':'ss");
+                StatusBarTimer.Content = _timerService.TimeString;
             }, Dispatcher);
 
             App.RestoreWindowPositionAndSize(this);
@@ -961,7 +961,7 @@ namespace Randomizer.App
             }
             else
             {
-                MessageBox.Show(this, "Could not save tracker state.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorWindow("Could not save tracker state.");
             }
         }
 
@@ -990,14 +990,7 @@ namespace Randomizer.App
         private void StatusBarTimer_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             // Pause/resume timer on right click
-            if (!Tracker.IsTimerPaused)
-            {
-                Tracker.PauseTimer();
-            }
-            else
-            {
-                Tracker.StartTimer();
-            }
+            Tracker.ToggleTimer();
         }
 
         /// <summary>
@@ -1055,6 +1048,14 @@ namespace Randomizer.App
         {
             MessageBox.Show(this, "There was a problem with loading one or more of the tracker modules.\n" +
                     "Some tracking functionality may be limited.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void ShowErrorWindow(string baseErrorMessage)
+        {
+            var logFileLocation = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer");
+            MessageBox.Show($"{baseErrorMessage}\n\n" +
+                $"Please try again. If the problem persists, please see the log files in '{logFileLocation}' and " +
+                "post them in Discord or on GitHub at https://github.com/Vivelin/SMZ3Randomizer/issues.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void MapMenuItem_Click(object sender, RoutedEventArgs e)
