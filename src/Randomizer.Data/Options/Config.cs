@@ -200,7 +200,7 @@ namespace Randomizer.Data.Options
         public PlandoConfig? PlandoConfig { get; set; }
 #nullable disable
         public ItemPlacementRule ItemPlacementRule { get; set; }
-
+        public int UniqueHintCount { get; set; } = 8;
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
         public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
         public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);

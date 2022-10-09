@@ -37,20 +37,20 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// the game
         /// </summary>
         public SchrodingersString? HintLocationIsMandatory { get; init; }
-            = new SchrodingersString("{0} is on the way of the hero.");
+            = new SchrodingersString("{0} is on the way of the hero.", "{0} is mandatory.");
 
         /// <summary>
         /// Hints for stating that a location has an item that is useful, but not
         /// mandatory for completing the game
         /// </summary>
         public SchrodingersString? HintLocationHasUsefulItem { get; init; }
-            = new SchrodingersString("{0} has something nice, but it's not vital.");
+            = new SchrodingersString("{0} has something nice, but it's not vital.", "{0} may be useful, but it's not required.");
 
         /// <summary>
         /// Hints for stating that a location has no useful items
         /// </summary>
         public SchrodingersString? HintLocationEmpty { get; init; }
-            = new SchrodingersString("{0} is barren.");
+            = new SchrodingersString("{0} is barren.", "{0} has nothing useful.");
 
         /// <summary>
         /// Hints for stating that a location has a specific item

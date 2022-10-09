@@ -647,6 +647,7 @@ namespace Randomizer.App
                 Options.SeedOptions.ItemPlacementRule = config.ItemPlacementRule;
                 Options.SeedOptions.ConfigString = config.SettingsString;
                 Options.SeedOptions.CopySeedAndRaceSettings = config.CopySeedAndRaceSettings;
+                Options.SeedOptions.UniqueHintCount = config.UniqueHintCount;
                 if (Rom.GeneratorVersion == 0) Options.LogicConfig.FireRodDarkRooms = true;
                 _romGenerator.GenerateSeed(Options, Rom.Seed);
             }

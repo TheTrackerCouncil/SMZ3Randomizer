@@ -26,17 +26,14 @@ namespace Randomizer.SMZ3.Generation
         private readonly GameLinesConfig _gameLines;
         private readonly IGameHintGenerator _gameHintGenerator;
 
-        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor, ILogger<Smz3Plandomizer> logger, IServiceProvider serviceProvider)
+        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor, Configs configs, IMetadataService metadataService, IGameHintGenerator gameHintGenerator, ILogger<Smz3Plandomizer> logger)
         {
             _fillerFactory = fillerFactory;
             _worldAccessor = worldAccessor;
             _logger = logger;
-
-            var scope = serviceProvider.CreateScope();
-            _metadataService = scope.ServiceProvider.GetService<IMetadataService>();
-            var configs = scope.ServiceProvider.GetService<Configs>();
             _gameLines = configs.GameLines;
-            _gameHintGenerator = scope.ServiceProvider.GetService<IGameHintGenerator>();
+            _metadataService = metadataService;
+            _gameHintGenerator = gameHintGenerator;
         }
 
         public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
@@ -78,7 +75,7 @@ namespace Randomizer.SMZ3.Generation
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
 
-            var hints = _gameHintGenerator.GetHints(worlds[0], worlds, playthrough, 8, 0);
+            var hints = _gameHintGenerator.GetInGameHints(worlds[0], worlds, playthrough, config.UniqueHintCount, 0);
 
             foreach (var world in worlds)
             {

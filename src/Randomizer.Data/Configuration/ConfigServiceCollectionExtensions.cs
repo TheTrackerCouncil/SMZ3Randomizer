@@ -19,7 +19,8 @@ namespace Randomizer.Data.Configuration
                 return configProvider.GetMapConfig();
             });
 
-            services.AddScoped<Configs>();
+            services.AddTransient<Configs>();
+            services.AddTransient<IMetadataService, MetadataService>();
 
             services.AddScoped(serviceProvider =>
             {
@@ -86,8 +87,6 @@ namespace Randomizer.Data.Configuration
                 var configs = serviceProvider.GetRequiredService<Configs>();
                 return configs.GameLines;
             });
-
-            services.AddScoped<IMetadataService, MetadataService>();
 
             return services;
         }

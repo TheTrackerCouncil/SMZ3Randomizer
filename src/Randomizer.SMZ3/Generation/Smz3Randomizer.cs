@@ -28,17 +28,14 @@ namespace Randomizer.SMZ3.Generation
         private readonly GameLinesConfig _gameLines;
         private readonly IGameHintGenerator _gameHintGenerator;
 
-        public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, ILogger<Smz3Randomizer> logger, IServiceProvider serviceProvider)
+        public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, Configs configs, IMetadataService metadataService, IGameHintGenerator gameHintGenerator, ILogger<Smz3Randomizer> logger)
         {
             Filler = filler;
             _worldAccessor = worldAccessor;
             _logger = logger;
-
-            var scope = serviceProvider.CreateScope();
-            _metadataService = scope.ServiceProvider.GetService<IMetadataService>();
-            var configs = scope.ServiceProvider.GetService<Configs>();
             _gameLines = configs.GameLines;
-            _gameHintGenerator = scope.ServiceProvider.GetService<IGameHintGenerator>();
+            _metadataService = metadataService;
+            _gameHintGenerator = gameHintGenerator;
         }
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
@@ -124,7 +121,7 @@ namespace Randomizer.SMZ3.Generation
                 return seedData;
             }
 
-            var hints = _gameHintGenerator.GetHints(worlds[0], worlds, playthrough, 8, rng.Next());
+            var hints = _gameHintGenerator.GetInGameHints(worlds[0], worlds, playthrough, config.UniqueHintCount, rng.Next());
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
             var patchSeed = rng.Next();
