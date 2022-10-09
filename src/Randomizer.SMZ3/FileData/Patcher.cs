@@ -100,7 +100,7 @@ namespace Randomizer.SMZ3.FileData
         /// </returns>
         public static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
-        public Dictionary<int, byte[]> CreatePatch(Config config)
+        public Dictionary<int, byte[]> CreatePatch(Config config, IEnumerable<string> hints)
         {
             _stringTable = new StringTable();
             _patches = new List<(int, byte[])>();
@@ -123,7 +123,7 @@ namespace Randomizer.SMZ3.FileData
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
-            WriteTexts(config);
+            WriteTexts(config, hints);
 
             WriteSMLocations(_myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
             WriteZ3Locations(_myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
@@ -665,7 +665,7 @@ namespace Randomizer.SMZ3.FileData
             return (patches, duplicates);
         }
 
-        private void WriteTexts(Config config)
+        private void WriteTexts(Config config, IEnumerable<string> hints)
         {
             var regions = _myWorld.Regions.OfType<IHasReward>();
 
@@ -729,6 +729,8 @@ namespace Randomizer.SMZ3.FileData
             var triforceRoom = ValidateText(_gameLines.TriforceRoom.ToString());
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             _stringTable.SetTriforceRoomText(triforceRoom);
+
+            _stringTable.SetHints(hints);
         }
 
         private void WriteStringTable()

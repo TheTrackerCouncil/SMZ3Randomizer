@@ -13,6 +13,25 @@ namespace Randomizer.SMZ3.Text {
 
         readonly IList<(string name, byte[] bytes)> entries;
 
+        private static readonly List<string> s_hintLocations = new List<string>()
+        {
+            "telepathic_tile_eastern_palace",
+            "telepathic_tile_tower_of_hera_floor_4",
+            "telepathic_tile_spectacle_rock",
+            "telepathic_tile_swamp_entrance",
+            "telepathic_tile_thieves_town_upstairs",
+            "telepathic_tile_misery_mire",
+            "telepathic_tile_palace_of_darkness",
+            "telepathic_tile_desert_bonk_torch_room",
+            "telepathic_tile_castle_tower",
+            "telepathic_tile_ice_large_room",
+            "telepathic_tile_turtle_rock",
+            "telepathic_tile_ice_entrance",
+            "telepathic_tile_ice_stalfos_knights_room",
+            "telepathic_tile_tower_of_hera_entrance",
+            "telepathic_tile_south_east_darkworld_cave"
+        };
+
         public StringTable() {
             entries = new List<(string, byte[])>(template);
         }
@@ -59,6 +78,16 @@ namespace Randomizer.SMZ3.Text {
 
         public void SetBombosText(string text) {
             SetText("tablet_bombos_book", text);
+        }
+
+        public void SetHints(IEnumerable<string> hints)
+        {
+            var index = 0;
+            foreach (var hint in hints)
+            {
+                SetText(s_hintLocations[index], "{NOBORDER}\n" + hint);
+                index++;
+            }
         }
 
         void SetText(string name, string text) {

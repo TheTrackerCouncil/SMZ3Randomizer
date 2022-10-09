@@ -31,5 +31,31 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// </summary>
         public SchrodingersString? TriforceRoom { get; init; }
             = new SchrodingersString("\n     G G");
+
+        /// <summary>
+        /// Hints for stating that a location is mandatory for completing
+        /// the game
+        /// </summary>
+        public SchrodingersString? HintLocationIsMandatory { get; init; }
+            = new SchrodingersString("{0} is on the way of the hero.");
+
+        /// <summary>
+        /// Hints for stating that a location has an item that is useful, but not
+        /// mandatory for completing the game
+        /// </summary>
+        public SchrodingersString? HintLocationHasUsefulItem { get; init; }
+            = new SchrodingersString("{0} has something nice, but it's not vital.");
+
+        /// <summary>
+        /// Hints for stating that a location has no useful items
+        /// </summary>
+        public SchrodingersString? HintLocationEmpty { get; init; }
+            = new SchrodingersString("{0} is barren.");
+
+        /// <summary>
+        /// Hints for stating that a location has a specific item
+        /// </summary>
+        public SchrodingersString? HintLocationHasItem { get; init; }
+            = new SchrodingersString("{0} has {1}.");
     }
 }

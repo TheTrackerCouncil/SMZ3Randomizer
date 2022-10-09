@@ -26,6 +26,7 @@ namespace Randomizer.SMZ3.Generation
         private readonly ILogger<Smz3Randomizer> _logger;
         private readonly IMetadataService _metadataService;
         private readonly GameLinesConfig _gameLines;
+        private readonly IGameHintGenerator _gameHintGenerator;
 
         public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, ILogger<Smz3Randomizer> logger, IServiceProvider serviceProvider)
         {
@@ -37,6 +38,7 @@ namespace Randomizer.SMZ3.Generation
             _metadataService = scope.ServiceProvider.GetService<IMetadataService>();
             var configs = scope.ServiceProvider.GetService<Configs>();
             _gameLines = configs.GameLines;
+            _gameHintGenerator = scope.ServiceProvider.GetService<IGameHintGenerator>();
         }
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
@@ -122,13 +124,15 @@ namespace Randomizer.SMZ3.Generation
                 return seedData;
             }
 
+            var hints = _gameHintGenerator.GetHints(worlds[0], worlds, playthrough, 8, rng.Next());
+
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
             var patchSeed = rng.Next();
             foreach (var world in worlds)
             {
                 var patchRnd = new Random(patchSeed);
                 var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
-                seedData.Worlds.Add((world, patch.CreatePatch(config)));
+                seedData.Worlds.Add((world, patch.CreatePatch(config, hints)));
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());

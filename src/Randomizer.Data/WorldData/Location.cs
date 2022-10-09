@@ -131,6 +131,11 @@ namespace Randomizer.Data.WorldData
         public Room Room { get; }
 
         /// <summary>
+        /// Gets the world that the location is a part of
+        /// </summary>
+        public World World => Region.World;
+
+        /// <summary>
         /// The Logic to be used to determine if certain actions can be done
         /// </summary>
         public ILogic Logic => Region.Logic;
