@@ -3,10 +3,12 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
 {
-    public class TurtleRock : Z3Region, IHasReward, INeedsMedallion
+    public class TurtleRock : Z3Region, IHasReward, INeedsMedallion, IDungeon
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5C7,
@@ -22,14 +24,16 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassTR,
                 memoryAddress: 0xD6,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                trackerLogic: items => items.HasMarkedMedallion(DungeonState?.MarkedMedallion));
 
             ChainChomps = new Location(this, 256 + 180, 0x1EA16, LocationType.Regular,
                 name: "Chain Chomps",
                 vanillaItem: ItemType.KeyTR,
                 access: items => items.KeyTR >= 1,
                 memoryAddress: 0xB6,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                trackerLogic: items => items.HasMarkedMedallion(DungeonState?.MarkedMedallion));
 
             BigKeyChest = new Location(this, 256 + 181, 0x1EA25, LocationType.Regular,
                 name: "Big Key Chest",
@@ -38,7 +42,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     (!Config.ZeldaKeysanity || BigKeyChest.ItemIs(ItemType.BigKeyTR, World) ? 2 :
                         BigKeyChest.ItemIs(ItemType.KeyTR, World) ? 3 : 4),
                 memoryAddress: 0x14,
-                memoryFlag: 0x4)
+                memoryFlag: 0x4,
+                trackerLogic: items => items.HasMarkedMedallion(DungeonState?.MarkedMedallion))
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyTR, World) && items.KeyTR >= 3);
 
             BigChest = new Location(this, 256 + 182, 0x1EA19, LocationType.Regular,
@@ -46,7 +51,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 vanillaItem: ItemType.ProgressiveShield,
                 access: items => items.BigKeyTR && items.KeyTR >= 2,
                 memoryAddress: 0x24,
-                memoryFlag: 0x4)
+                memoryFlag: 0x4,
+                trackerLogic: items => items.HasMarkedMedallion(DungeonState?.MarkedMedallion))
                 .Allow((item, items) => item.IsNot(ItemType.BigKeyTR, World));
 
             CrystarollerRoom = new Location(this, 256 + 183, 0x1EA34, LocationType.Regular,
@@ -54,14 +60,16 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 vanillaItem: ItemType.KeyTR,
                 access: items => items.BigKeyTR && items.KeyTR >= 2,
                 memoryAddress: 0x4,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                trackerLogic: items => items.HasMarkedMedallion(DungeonState?.MarkedMedallion));
 
             TrinexxReward = new Location(this, 256 + 188, 0x308159, LocationType.Regular,
                 name: "Trinexx",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyTR && items.KeyTR >= 4 && Logic.CanPassSwordOnlyDarkRooms(items) && CanBeatBoss(items),
                 memoryAddress: 0xA4,
-                memoryFlag: 0xB);
+                memoryFlag: 0xB,
+                trackerLogic: items => items.HasMarkedMedallion(DungeonState?.MarkedMedallion));
 
             RollerRoom = new RollerRoomRoom(this);
             LaserBridge = new LaserBridgeRoom(this);
@@ -73,7 +81,15 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Turtle Rock";
 
-        public RewardType Reward { get; set; } = RewardType.None;
+        public Reward Reward { get; set; } = new Reward(RewardType.None);
+
+        public RewardType RewardType { get; set; } = RewardType.None;
+
+        public DungeonInfo DungeonMetadata { get; set; } = new();
+
+        public TrackerDungeonState DungeonState { get; set; }
+
+        public Region ParentRegion => World.DarkWorldDeathMountainEast;
 
         public ItemType Medallion { get; set; }
 
@@ -120,13 +136,15 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     vanillaItem: ItemType.MapTR,
                     access: items => items.FireRod,
                     memoryAddress: 0xB7,
-                    memoryFlag: 0x4);
+                    memoryFlag: 0x4,
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState?.MarkedMedallion));
                 Right = new Location(this, 256 + 179, 0x1EA1F, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.KeyTR,
                     access: items => items.FireRod,
                     memoryAddress: 0xB7,
-                    memoryFlag: 0x5);
+                    memoryFlag: 0x5,
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState?.MarkedMedallion));
             }
 
             public Location Left { get; }
@@ -144,28 +162,32 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     vanillaItem: ItemType.FiveRupees,
                     access: CanAccess,
                     memoryAddress: 0xD5,
-                    memoryFlag: 0x4);
+                    memoryFlag: 0x4,
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState?.MarkedMedallion));
 
                 TopLeft = new Location(this, 256 + 185, 0x1EA2B, LocationType.Regular,
                     name: "Top Left",
                     vanillaItem: ItemType.FiveRupees,
                     access: CanAccess,
                     memoryAddress: 0xD5,
-                    memoryFlag: 0x5);
+                    memoryFlag: 0x5,
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState?.MarkedMedallion));
 
                 BottomRight = new Location(this, 256 + 186, 0x1EA2E, LocationType.Regular,
                     name: "Bottom Right",
                     vanillaItem: ItemType.TwentyRupees,
                     access: CanAccess,
                     memoryAddress: 0xD5,
-                    memoryFlag: 0x6);
+                    memoryFlag: 0x6,
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState?.MarkedMedallion));
 
                 BottomLeft = new Location(this, 256 + 187, 0x1EA31, LocationType.Regular,
                     name: "Bottom Left",
                     vanillaItem: ItemType.KeyTR,
                     access: CanAccess,
                     memoryAddress: 0xD5,
-                    memoryFlag: 0x7);
+                    memoryFlag: 0x7,
+                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState?.MarkedMedallion));
             }
 
             public Location TopRight { get; }

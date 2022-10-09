@@ -40,18 +40,18 @@ namespace Randomizer.App
         private readonly IServiceProvider _serviceProvider;
         private readonly RomGenerator _romGenerator;
         private readonly LocationConfig _locations;
+        private readonly IMetadataService _metadataService;
         private RandomizerOptions _options;
-        private IItemService _itemService;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
             LocationConfig locations,
-            IItemService itemService)
+            IMetadataService metadataService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
             _locations = locations;
-            _itemService = itemService;
+            _metadataService = metadataService;
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -112,7 +112,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
+                if (_metadataService.Item(itemType)?.IsProgression(null) != true)
                 {
                     continue;
                 }
@@ -305,7 +305,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
+                if (_metadataService.Item(itemType)?.IsProgression(null) != true)
                 {
                     continue;
                 }
@@ -327,22 +327,17 @@ namespace Randomizer.App
             return comboBox;
         }
 
-        private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
+        private async void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            string error;
-            var successful = PlandoMode
-                ? _romGenerator.GeneratePlandoRom(Options, PlandoConfig, out _, out error, out _)
-                : _romGenerator.GenerateRandomRom(Options, out _, out error, out _);
-            if (!successful)
+            var rom = PlandoMode
+                ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig)
+                : await _romGenerator.GenerateRandomRomAsync(Options);
+            if (rom != null)
             {
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                return;
+                DialogResult = true;
+                Close();
             }
-            DialogResult = true;
-            Close();
+            
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

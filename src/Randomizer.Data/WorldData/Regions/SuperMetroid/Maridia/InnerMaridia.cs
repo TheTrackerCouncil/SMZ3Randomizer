@@ -6,7 +6,7 @@ using Randomizer.Data.Options;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
 {
-    public class InnerMaridia : SMRegion, IHasReward
+    public class InnerMaridia : SMRegion, IHasBoss
     {
         public InnerMaridia(World world, Config config) : base(world, config)
         {
@@ -95,13 +95,14 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             WateringHole = new WateringHoleRoom(this);
             LeftSandPit = new LeftSandPitRoom(this);
             MemoryRegionId = 4;
+            Boss = new Boss(Shared.Enums.BossType.Draygon, world, this);
         }
 
         public override string Name => "Inner Maridia";
 
         public override string Area => "Maridia";
 
-        public RewardType Reward { get; set; } = RewardType.Draygon;
+        public Boss Boss{ get; set; }
 
         public Location PseudoSparkRoom { get; }
 
@@ -132,7 +133,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                     (World.UpperNorfairWest.CanEnter(items, true) && items.Super && Logic.CanUsePowerBombs(items) && CanPassMountDeath(items, Logic)) ||
                     Logic.CanAccessMaridiaPortal(items, requireRewards));
 
-        public bool CanComplete(Progression items)
+        public bool CanBeatBoss(Progression items)
             => CanEnter(items, true) && CanDefeatDraygon(items, true);
 
         private static bool CanReachAqueduct(Progression items, ILogic logic, bool requireRewards)

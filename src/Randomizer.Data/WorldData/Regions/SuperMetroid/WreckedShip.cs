@@ -5,7 +5,7 @@ using Randomizer.Data.Options;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid
 {
-    public class WreckedShip : SMRegion, IHasReward
+    public class WreckedShip : SMRegion, IHasBoss
     {
         public WreckedShip(World world, Config config) : base(world, config)
         {
@@ -73,13 +73,14 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 memoryAddress: 0x10,
                 memoryFlag: 0x80);
             MemoryRegionId = 3;
+            Boss = new Boss(Shared.Enums.BossType.Phantoon, world, this);
         }
 
         public override string Name => "Wrecked Ship";
 
         public override string Area => "Wrecked Ship";
 
-        public RewardType Reward { get; set; } = RewardType.Phantoon;
+        public Boss Boss { get; set; }
 
         public Location MainShaftSideRoom { get; }
 
@@ -136,7 +137,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             );
         }
 
-        public bool CanComplete(Progression items) => CanEnter(items, true) && CanUnlockShip(items);
+        public bool CanBeatBoss(Progression items) => CanEnter(items, true) && CanUnlockShip(items);
 
         public bool CanUnlockShip(Progression items)
         {

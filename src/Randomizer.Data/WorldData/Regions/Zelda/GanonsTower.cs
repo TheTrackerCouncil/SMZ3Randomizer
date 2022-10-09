@@ -4,10 +4,13 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Models;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
 {
-    public class GanonsTower : Z3Region
+    public class GanonsTower : Z3Region, IDungeon
     {
         public static readonly int[] MusicAddresses = new[] {
             0x02D5C9
@@ -102,6 +105,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Ganon's Tower";
 
+        public DungeonInfo DungeonMetadata { get; set; }
+
+        public TrackerDungeonState DungeonState { get; set; }
+
         public Location BobsTorch { get; }
 
         public Location MapChest { get; }
@@ -130,10 +137,12 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public MiniHelmasaurRoomRoom MiniHelmasaurRoom { get; }
 
+        public Region ParentRegion => World.DarkWorldDeathMountainWest;
+
         public override bool CanEnter(Progression items, bool requireRewards)
         {
-            var smBosses = new[] { RewardType.Kraid, RewardType.Phantoon, RewardType.Draygon, RewardType.Ridley };
-            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items, requireRewards) && items.AllCrystals && World.CanAquireAll(items, smBosses);
+            var smBosses = new[] { BossType.Kraid, BossType.Phantoon, BossType.Draygon, BossType.Ridley };
+            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items, requireRewards) && items.AllCrystals && World.CanDefeatAll(items, smBosses);
         }
 
         public override bool CanFill(Item item, Progression items)

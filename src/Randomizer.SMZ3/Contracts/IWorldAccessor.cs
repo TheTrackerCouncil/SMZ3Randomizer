@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Contracts
@@ -13,5 +14,10 @@ namespace Randomizer.SMZ3.Contracts
         /// available.
         /// </summary>
         World World { get; set; }
+
+        /// <summary>
+        /// List of all of the worlds
+        /// </summary>
+        List<World> Worlds { get; set; }
     }
 }

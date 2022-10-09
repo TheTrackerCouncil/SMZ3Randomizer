@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
+        xmlns:enum="clr-namespace:Randomizer.Shared.Enums;assembly=Randomizer.Shared"
         xmlns:local="clr-namespace:Randomizer.App"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TrackerViewModel, IsDesignTimeCreatable=True}"
@@ -95,15 +96,15 @@
         <RadioButton GroupName="GameFilter"
                      Content="Both"
                      ToolTip="Show available locations from both games"
-                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.None}}" />
+                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static enum:RegionFilter.None}}" />
         <RadioButton GroupName="GameFilter"
                      Content="ALttP"
                      ToolTip="Only show available locations in A Link to the Past"
-                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.ZeldaOnly}}" />
+                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static enum:RegionFilter.ZeldaOnly}}" />
         <RadioButton GroupName="GameFilter"
                      Content="SM"
                      ToolTip="Only show available locations in Super Metroid"
-                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static local:LocationFilter.MetroidOnly}}" />
+                     IsChecked="{Binding Filter, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static enum:RegionFilter.MetroidOnly}}" />
       </StackPanel>
     </StackPanel>
 

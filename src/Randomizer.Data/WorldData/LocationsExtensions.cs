@@ -45,14 +45,14 @@ namespace Randomizer.Data.WorldData
         /// <paramref name="items"/> from the same world as the locations
         /// themselves.
         /// </returns>
-        public static IEnumerable<Location> AvailableWithinWorld(this IEnumerable<Location> locations, IEnumerable<Item> items, IEnumerable<Reward> rewards)
+        public static IEnumerable<Location> AvailableWithinWorld(this IEnumerable<Location> locations, IEnumerable<Item> items, IEnumerable<Reward> rewards, IEnumerable<Boss> bosses)
         {
             return locations
                 .Select(x => x.Region.World)
                 .Distinct()
                 .SelectMany(world => locations
                     .Where(l => l.Region.World == world)
-                    .Available(items.Where(i => i.World == world), rewards.Where(r => r.World == world)));
+                    .Available(items.Where(i => i.World == world), rewards.Where(r => r.World == world), bosses.Where(b => b.World == world)));
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace Randomizer.Data.WorldData
         /// <returns>
         /// A collection of locations that can be accessed with <paramref name="items"/>.
         /// </returns>
-        public static IEnumerable<Location> Available(this IEnumerable<Location> locations, IEnumerable<Item> items, IEnumerable<Reward> rewards)
+        public static IEnumerable<Location> Available(this IEnumerable<Location> locations, IEnumerable<Item> items, IEnumerable<Reward> rewards, IEnumerable<Boss> bosses)
         {
-            var progression = new Progression(items, rewards);
+            var progression = new Progression(items, rewards, bosses);
             return locations.Where(l => l.IsAvailable(progression));
         }
 
@@ -80,13 +80,13 @@ namespace Randomizer.Data.WorldData
         /// A collection of locations that <paramref name="item"/> can be
         /// assigned to based on the available items.
         /// </returns>
-        public static IEnumerable<Location> CanFillWithinWorld(this IEnumerable<Location> locations, Item item, IEnumerable<Item> items, IEnumerable<Reward> rewards)
+        public static IEnumerable<Location> CanFillWithinWorld(this IEnumerable<Location> locations, Item item, IEnumerable<Item> items, IEnumerable<Reward> rewards, IEnumerable<Boss> bosses)
         {
-            var itemWorldProgression = new Progression(items.Where(i => i.World == item.World).Append(item), rewards.Where(r => r.World == item.World));
+            var itemWorldProgression = new Progression(items.Where(i => i.World == item.World).Append(item), rewards.Where(r => r.World == item.World), bosses.Where(b => b.World == item.World));
             var worldProgression = locations
                 .Select(x => x.Region.World)
                 .Distinct()
-                .ToDictionary(world => world.Id, world => new Progression(items.Where(i => i.World == world), rewards.Where(r => r.World == world)));
+                .ToDictionary(world => world.Id, world => new Progression(items.Where(i => i.World == world), rewards.Where(r => r.World == world), bosses.Where(b => b.World == world)));
 
             return locations.Where(l =>
                 l.CanFill(item, worldProgression[l.Region.World.Id])

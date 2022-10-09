@@ -25,6 +25,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="serviceProvider">
         /// Used to load available tracker modules.
         /// </param>
+        /// <param name="logger"></param>
         public TrackerModuleFactory(IServiceProvider serviceProvider, ILogger<TrackerModuleFactory> logger)
         {
             _serviceProvider = serviceProvider;

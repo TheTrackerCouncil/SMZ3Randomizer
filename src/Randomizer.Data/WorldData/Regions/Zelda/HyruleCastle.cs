@@ -3,10 +3,12 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
 {
-    public class HyruleCastle : Z3Region
+    public class HyruleCastle : Z3Region, IDungeon
     {
         public const int SphereOne = -10;
 
@@ -68,6 +70,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Hyrule Castle";
 
+        public DungeonInfo DungeonMetadata { get; set; }
+
+        public TrackerDungeonState DungeonState { get; set; }
+
         public Location Sanctuary { get; }
 
         public Location MapChest { get; }
@@ -81,6 +87,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public Location SecretPassage { get; }
 
         public BackOfEscapeRoom BackOfEscape { get; }
+
+        public Region ParentRegion => World.LightWorldNorthEast;
 
         public class BackOfEscapeRoom : Room
         {

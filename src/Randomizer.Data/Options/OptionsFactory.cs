@@ -8,7 +8,7 @@ namespace Randomizer.Data.Options
     public class OptionsFactory
     {
         private readonly ILogger<OptionsFactory> _logger;
-        private RandomizerOptions _options;
+        private RandomizerOptions? _options;
 
         public OptionsFactory(ILogger<OptionsFactory> logger)
         {

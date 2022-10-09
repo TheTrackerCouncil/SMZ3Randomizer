@@ -13,7 +13,9 @@ namespace Randomizer.Data.WorldData.Regions
         /// Gets or sets the reward for completing the region, e.g. pendant or
         /// crystal.
         /// </summary>
-        RewardType Reward { get; set; }
+        RewardType RewardType { get; set; }
+
+        Reward Reward { get; set; }
 
         /// <summary>
         /// Determines whether the reward for the region can be obtained.

@@ -168,16 +168,22 @@ namespace Randomizer.Data.Logic
 
         public World World { get; }
 
-        public static IEnumerable<ItemType[]> GetMissingRequiredItems(Location location, Progression items)
+        public static IEnumerable<ItemType[]> GetMissingRequiredItems(Location location, Progression items, out IEnumerable<ItemType> allPossibleMissingItems)
         {
             if (location.IsAvailable(items))
             {
+                allPossibleMissingItems = Enumerable.Empty<ItemType>();
                 return Enumerable.Empty<ItemType[]>();
             }
 
             // Build an item pool of all missing progression items
             var combinations = new List<ItemType[]>();
-            var itemPool = Item.CreateProgressionPool(null).Select(x => x.Type).ToList();
+            var totalMissing = new List<ItemType>();
+            var itemPool = Item.CreateProgressionPool(null)
+                .Concat(Item.CreateDungeonPool(null))
+                .Concat(Item.CreateKeycards(null))
+                .Select(x => x.Type)
+                .ToList();
             foreach (var ownedItem in items)
                 itemPool.Remove(ownedItem);
 
@@ -188,7 +194,10 @@ namespace Randomizer.Data.Logic
                 progression.Add(missingItem);
 
                 if (location.IsAvailable(progression))
+                {
                     combinations.Add(new[] { missingItem });
+                    totalMissing.Add(missingItem);
+                }
             }
 
             // Remove all successfull combinations from the pool to prevent redundant combinations
@@ -203,7 +212,10 @@ namespace Randomizer.Data.Logic
                     progression.Add(missingItem);
                     progression.Add(missingItem2);
                     if (location.IsAvailable(progression))
+                    {
                         combinations.Add(new[] { missingItem, missingItem2 });
+                        totalMissing.AddRange(new[] { missingItem, missingItem2 });
+                    }
                 }
 
             // Once again, remove successfull combinations
@@ -220,9 +232,13 @@ namespace Randomizer.Data.Logic
                         progression.Add(missingItem2);
                         progression.Add(missingItem3);
                         if (location.IsAvailable(progression))
+                        {
                             combinations.Add(new[] { missingItem, missingItem2, missingItem3 });
+                            totalMissing.AddRange(new[] { missingItem, missingItem2, missingItem3 });
+                        }
                     }
 
+            allPossibleMissingItems = totalMissing.Distinct();
             return combinations;
         }
     }

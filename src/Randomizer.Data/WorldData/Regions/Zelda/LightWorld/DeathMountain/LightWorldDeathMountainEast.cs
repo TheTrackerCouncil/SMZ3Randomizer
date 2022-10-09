@@ -29,7 +29,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items, true),
                 memoryAddress: 0x10C,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState?.MarkedMedallion));
 
             ParadoxCave = new ParadoxCaveRoom(this);
 

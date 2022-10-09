@@ -5,7 +5,7 @@ using Randomizer.Data.Options;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 {
-    public class LowerNorfairEast : SMRegion, IHasReward
+    public class LowerNorfairEast : SMRegion, IHasBoss
     {
         public LowerNorfairEast(World world, Config config) : base(world, config)
         {
@@ -42,7 +42,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 alsoKnownAs: new[] { "Ridley's Reliquary" },
                 vanillaItem: ItemType.ETank,
                 access: items => items.Ridley,
-                relevanceRequirement: items => CanComplete(items),
+                relevanceRequirement: items => CanBeatBoss(items),
                 memoryAddress: 0x9,
                 memoryFlag: 0x40);
             FirefleaRoom = new Location(this, 80, 0x8F9184, LocationType.Visible,
@@ -53,13 +53,14 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 memoryAddress: 0xA,
                 memoryFlag: 0x1);
             MemoryRegionId = 2;
+            Boss = new Boss(Shared.Enums.BossType.Ridley, world, this);
         }
 
         public override string Name => "Lower Norfair, East";
 
         public override string Area => "Lower Norfair";
 
-        public RewardType Reward { get; set; } = RewardType.Ridley;
+        public Boss Boss { get; set; }
 
         public Location SpringBallMaze { get; }
 
@@ -84,7 +85,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                     ))
                 );
 
-        public bool CanComplete(Progression items)
+        public bool CanBeatBoss(Progression items)
         {
             return CanEnter(items, true) && CanExit(items) && items.CardLowerNorfairBoss && Logic.CanUsePowerBombs(items) && items.Super;
         }

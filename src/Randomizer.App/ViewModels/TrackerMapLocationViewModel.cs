@@ -12,6 +12,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.Data.Configuration.ConfigTypes;
 using static Randomizer.Data.Configuration.ConfigTypes.TrackerMapLocation;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App.ViewModels
 {
@@ -21,6 +22,7 @@ namespace Randomizer.App.ViewModels
     public class TrackerMapLocationViewModel
     {
         private static readonly Style s_contextMenuStyle = Application.Current.FindResource("DarkContextMenu") as Style;
+        private IWorldService _worldService => Syncer.WorldService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerMap"/> class
@@ -42,57 +44,46 @@ namespace Randomizer.App.ViewModels
             X = (mapLocation.X * scaledRatio) - (Size / 2);
             Y = (mapLocation.Y * scaledRatio) - (Size / 2);
             Syncer = syncer ?? throw new ArgumentNullException(nameof(syncer));
-            Region = Syncer.World.Regions.First(x => x.GetType().FullName == mapLocation.RegionTypeName);
+            Region = _worldService.Region(mapLocation.RegionTypeName);
             Type = mapLocation.Type;
 
             // If no location was specified, it's a boss or dungeon
             if (Type == MapLocationType.Boss)
             {
-                if (Syncer.SpecialLocationLogic(Region.Locations.First()))
+                if (Region.CanEnter(Syncer.ItemService.GetProgression(Region), true))
                 {
-                    if (Region is Z3Region)
+                    if (Region is IHasReward rewardRegion)
                     {
-                        Dungeon = Syncer.Tracker.WorldInfo.Dungeons.First(x => x.Type.FullName == mapLocation.RegionTypeName);
-                        Name = Dungeon.Reward.GetDescription();
+                        RewardRegion = rewardRegion;
+                        Name = RewardRegion.Reward.Type.GetDescription();
                         Y -= 22;
                     }
-                    else if (Region is SMRegion)
+                    else if (Region is IHasBoss bossRegion)
                     {
-                        Boss = Syncer.Tracker.WorldInfo.Bosses.First(x => x.Reward == ((IHasReward)Region).Reward);
-                        Name = Boss.ToString();
+                        BossRegion = bossRegion;
+                        Name = bossRegion.Boss.Metadata.ToString();
                     }
                 }
             }
             // Else figure out the current status of all of the locations
             else if (Type == MapLocationType.Item)
             {
-                Name = Syncer.GetName(mapLocation);
-                Locations = Syncer.AllLocations.Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
+                Name = mapLocation.GetName(syncer.WorldService.World);
 
-                if (Syncer.SpecialLocationLogic(Locations.First()))
-                {
-                    var progression = Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region) ? syncer.Progression : syncer.ProgressionWithKeys;
-                    var statuses = Locations.Select(x => x.GetStatus(progression, Syncer.TrackerLogic.TrackerLocationLogic));
+                Locations = Syncer.WorldService.AllLocations().Where(loc => mapLocation.MatchesSMZ3Location(loc)).ToList();
+                var progression = Syncer.ItemService.GetProgression(!(Region is HyruleCastle || Region.World.Config.KeysanityForRegion(Region)));
+                var statuses = Locations.Select(x => x.GetStatus(progression));
 
-                    ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
-                    RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
-                    OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
-                    UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
-                    ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
-                }
-                else
-                {
-                    ClearableLocationsCount = 0;
-                    RelevantLocationsCount = 0;
-                    OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? Locations.Count() : 0;
-                    UnclearedLocationsCount = Locations.Count();
-                    ClearedLocationsCount = 0;
-                }
-                
+                ClearableLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Available);
+                RelevantLocationsCount = statuses.Count(x => x == Shared.Enums.LocationStatus.Relevant);
+                OutOfLogicLocationsCount = Syncer.ShowOutOfLogicLocations ? statuses.Count(x => x == Shared.Enums.LocationStatus.OutOfLogic) : 0;
+                UnclearedLocationsCount = statuses.Count(x => x != Shared.Enums.LocationStatus.Cleared);
+                ClearedLocationsCount = statuses.Count() - UnclearedLocationsCount;
+                                
             }
             else if (Type == MapLocationType.SMDoor)
             {
-                Item = Syncer.Tracker.ItemService.FindOrDefault(mapLocation.Name);
+                Item = Syncer.Tracker.ItemService.FirstOrDefault(mapLocation.Name);
                 Name = "Need " + Item.Name;
             }
 
@@ -107,7 +98,7 @@ namespace Randomizer.App.ViewModels
         {
             Locations = new List<Location>() { location };
             Syncer = syncer;
-            Name = $"Clear {Syncer.GetName(location)}";
+            Name = $"Clear {location.Metadata.Name[0]}";
         }
 
         /// <summary>
@@ -120,7 +111,7 @@ namespace Randomizer.App.ViewModels
         /// The list of locations underneath this one for the right click menu
         /// </summary>
         public List<TrackerMapLocationViewModel> SubLocationModels
-            => Locations?.Where(x => Syncer.IsLocationClearable(x))
+            => Locations?.Where(x => Syncer.WorldService.IsAvailable(x))
                         .Select(x => new TrackerMapLocationViewModel(x, Syncer))
                         .ToList() ?? new();
 
@@ -148,9 +139,9 @@ namespace Randomizer.App.ViewModels
         /// The rewards for if this is not an actual location
         /// </summary>
         #nullable enable
-        private BossInfo? Boss { get; set; }
-        private DungeonInfo? Dungeon { get; set; }
-        private ItemData? Item { get; set; }
+        private IHasBoss? BossRegion { get; set; }
+        private IHasReward? RewardRegion { get; set; }
+        private Item? Item { get; set; }
         #nullable disable
 
         /// <summary>
@@ -189,18 +180,19 @@ namespace Randomizer.App.ViewModels
 
                 if (Type == MapLocationType.Boss)
                 {
-                    var region = (IHasReward)Region;
-                    if (Boss != null && !Boss.Defeated && region.CanComplete(Syncer.ProgressionForRegion(Region)))
+                    var progression = Syncer.ItemService.GetProgression(Region);
+                    if (BossRegion != null && BossRegion.Boss.State?.Defeated != true && BossRegion.CanBeatBoss(progression))
                     {
                         image = "boss.png";
                     }
-                    else if (Dungeon != null && !Dungeon.Cleared)
+                    else if (RewardRegion != null && RewardRegion.Reward.State?.Cleared != true)
                     {
                         var regionLocations = (IHasLocations)Region;
-                        if (region.CanComplete(Syncer.Tracker.GetProgression(false))
-                            || regionLocations.Locations.All(x => x.IsAvailable(Syncer.ProgressionForRegion(Region))))
+                        if (RewardRegion.CanComplete(progression)
+                            || regionLocations.Locations.All(x => x.IsAvailable(progression)))
                         {
-                            image = Dungeon.Reward.GetDescription().ToLowerInvariant() + ".png";
+                            var dungeon = RewardRegion as IDungeon;
+                            image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
                         }
                     }
                 }
@@ -229,7 +221,7 @@ namespace Randomizer.App.ViewModels
                 }
                 else if (Type == MapLocationType.SMDoor)
                 {
-                    if (Item != null && Item.TrackingState == 0)
+                    if (Item != null && Item.State.TrackingState == 0)
                     {
                         image = DoorImage;
                     }
@@ -280,7 +272,7 @@ namespace Randomizer.App.ViewModels
 
         /// <summary>
         /// Get the tag to use for the location. Use the region for dungeons
-        ///  and the list of locations for all other places
+        /// and the list of locations for all other places
         /// </summary>
         public object Tag
         {
@@ -288,7 +280,7 @@ namespace Randomizer.App.ViewModels
             {
                 if (Type == MapLocationType.Boss)
                 {
-                    return Boss == null ? Dungeon : Boss;
+                    return BossRegion == null ? RewardRegion : BossRegion;
                 }
                 else if (Type == MapLocationType.SMDoor)
                 {
@@ -296,13 +288,13 @@ namespace Randomizer.App.ViewModels
                 }
                 else if (Type == MapLocationType.Item)
                 {
-                    return Region.Name == Name ? Region : Locations.Where(x => Syncer.IsLocationClearable(x, true, Syncer.World.Config.KeysanityForRegion(Region))).ToList();
+                    return Region.Name == Name ? Region : Locations.Where(x => Syncer.WorldService.IsAvailable(x)).ToList();
                 }
                 return null;
             }
         }
 
-        private string DoorImage => Item.InternalItemType switch
+        private string DoorImage => Item.Type switch
         {
             ItemType.CardCrateriaL1 => "door1.png",
             ItemType.CardCrateriaL2 => "door2.png",

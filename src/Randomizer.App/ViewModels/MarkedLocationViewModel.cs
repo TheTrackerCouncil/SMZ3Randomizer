@@ -16,10 +16,10 @@ namespace Randomizer.App.ViewModels
     public class MarkedLocationViewModel
     {
         private readonly Location _location;
-        private readonly ItemData _itemData;
+        private readonly Item _itemData;
         private readonly TrackerLocationSyncer _syncer;
 
-        public MarkedLocationViewModel(Location location, ItemData itemData, string itemSprite, TrackerLocationSyncer syncer)
+        public MarkedLocationViewModel(Location location, Item itemData, string itemSprite, TrackerLocationSyncer syncer)
         {
             _location = location;
             _itemData = itemData;
@@ -29,12 +29,12 @@ namespace Randomizer.App.ViewModels
 
         public ImageSource ItemSprite { get; }
 
-        public double Opacity => _syncer.IsLocationClearable(_location) ? 1.0 : 0.33;
+        public double Opacity => _syncer.ShowOutOfLogicLocations || _syncer.WorldService.IsAvailable(_location) ? 1.0 : 0.33;
 
         public string Item => _itemData.Name;
 
-        public string Location => _syncer.GetName(_location);
+        public string Location => _location.Metadata.Name[0];
 
-        public string Area => _syncer.GetName(_location.Region);
+        public string Area => _location.Region.Metadata.Name[0];
     }
 }

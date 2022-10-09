@@ -31,64 +31,46 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 0,
                     Name = new("Chozo Ruins entrance", "that room opposite the Gauntlet", new("Power Bomb (Crateria surface)", 0)),
-                    X = 968,
-                    Y = 116,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 1,
                     Name = new("Flooded Cavern (under water)", "West Ocean (under water)", "that room before Wrecked Ship that's underwater", new("Missile (outside Wrecked Ship bottom)", 0)),
-                    X = 1128,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 2,
                     Name = new("Sky Missile", "that spot all the way up in the sky after Wrecked Ship", new("Missile (outside Wrecked Ship top)", 0)),
-                    X = 1160,
-                    Y = 84,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 3,
                     Name = new("Morph Ball Maze", new("Missile (outside Wrecked Ship middle)", 0)),
-                    X = 1128,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 4,
                     Name = new("The Moat", "Interior Lake", "that room between Crateria and Wrecked Ship with the item on the water", new("Missile (Crateria moat)", 0)),
-                    X = 1064,
-                    Y = 212,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 5,
                     Name = new("Gauntlet (Chozo)", "the room in the middle of the Gauntlet", new("Energy Tank, Gauntlet", 0)),
-                    X = 456,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 6,
                     Name = new("Mother Brain's reliquary", "Pit Room", "the spot underneath the place Mother Brain used to be", new("Missile (Crateria bottom)", 0)),
-                    X = 552,
-                    Y = 660,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 7,
                     Name = new("Bozo", "Bomb Torizo room", new("Bombs", 0)),
-                    X = 712,
-                    Y = 276,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 8,
                     Name = new("Terminator Room", "Fungal Slope", "that room in Crateria with the mushrooms", new("Energy Tank, Terminator", 0)),
-                    X = 296,
-                    Y = 276,
                 },
                 new LocationInfo()
                 {
@@ -104,50 +86,36 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 11,
                     Name = new("Old Tourian launchpad", new("Super Missile (Crateria)", 0)),
-                    X = 680,
-                    Y = 372,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 12,
                     Name = new("Final Missile Bombway", "The Final Missile", "Dental Plan Missiles", "the room in Crateria on the other side of the entrance to Zelda", new("Missile (Crateria middle)", 0)),
-                    X = 424,
-                    Y = 308,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 13,
                     Name = new("Hell", "Etecoon shaft", "that room where the animals are wall jumping", new("Power Bomb (green Brinstar bottom)", 0)),
-                    X = 328,
-                    Y = 308,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 14,
                     Name = new("Spore Spawn's item", new("Super Missile (pink Brinstar)", 0)),
-                    X = 712,
-                    Y = 372,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 15,
                     Name = new("Mockball Room (Fail item)", "that spot you get to when failing the mock ball in Green Brinstar", new("Missile (green Brinstar below super missile)", 0)),
-                    X = 296,
-                    Y = 212,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 16,
                     Name = new("Mockball Room Attic", "that spot on your way out of the mockball room", new("Super Missile (green Brinstar top)", 0)),
-                    X = 264,
-                    Y = 180,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 17,
                     Name = new("Mockball Chozo", "the room after you use the Speed Booster in Green Brinstar", "the room after you use the mockball glitch in Green Brinstar", new("Reserve Tank, Brinstar", 0)),
-                    X = 360,
-                    Y = 212,
                 },
                 new LocationInfo()
                 {
@@ -163,99 +131,71 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 21,
                     Name = new("Pink Shaft (top)", "Big Pink (top)", "that spot in Pink Brinstar on the other side of the grapple ceiling", new("Missile (pink Brinstar top)", 0)),
-                    X = 488,
-                    Y = 308,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 22,
                     Name = new("Pink Shaft (bottom)", "Big Pink (bottom)", "that spot on the bottom of Pink Brinstar", new("Missile (pink Brinstar bottom)", 0)),
-                    X = 488,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 23,
                     Name = new("Pink Shaft (Chozo)", "the room underneath Pink Brinstar", new("Charge Beam", 0)),
-                    X = 488,
-                    Y = 436,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 24,
                     Name = new("Mission: Impossible", "Pink Brinstar Power Bomb Room", new("Power Bomb (pink Brinstar)", 0)),
-                    X = 424,
-                    Y = 340,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 25,
                     Name = new("Green Hill Zone", "Jungle slope", new("Missile (green Brinstar pipe)", 0)),
-                    X = 648,
-                    Y = 436,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 26,
                     Name = new("Morph Ball (Corridor No. 1)", "Morphing Ball", "the only place you can get to in Super Metroid without any items"),
-                    X = 744,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 27,
                     Name = new("Power Bomb wall (Corridor No. 1)", "that spot behind the Morph Ball", new("Power Bomb (blue Brinstar)", 0)),
-                    X = 680,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 28,
                     Name = new("that spot all the way to the right of Blue Brinstar", new("Missile (blue Brinstar middle)", 0)),
-                    X = 968,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 29,
                     Name = new("Blue Brinstar Ceiling", "that spot in the ceiling in Blue Brinstar", new("Energy Tank, Brinstar Ceiling", 0)),
-                    X = 936,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 30,
                     Name = new("that spot next to the false floor in Green Brinstar", "Highway to Hell", new("Energy Tank, Etecoons", 0)),
-                    X = 136,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 31,
                     Name = new("that room after the false floor in Green Brinstar", new("Super Missile (green Brinstar bottom)", 0)),
-                    X = 104,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 33,
                     Name = new("Waterway", new("Energy Tank, Waterway", 0)),
-                    X = 200,
-                    Y = 500,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 34,
                     Name = new("that Chozo room at the bottom of Blue Brinstar", new("Missile (blue Brinstar bottom)", 0)),
-                    X = 840,
-                    Y = 436,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 35,
                     Name = new("Hoptank Room", "Wave Beam Glitch room", "the room where everyone does the Wave Beam Glitch", new("Energy Tank, Brinstar Gate", 0)),
-                    X = 616,
-                    Y = 340,
                 },
                 new LocationInfo()
                 {
@@ -271,141 +211,101 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 38,
                     Name = new("The Chozo room after the dark room with all the spikes", "X-Ray Scope", new("X-Ray", 0)),
-                    X = 680,
-                    Y = 564,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 39,
                     Name = new("Beta Power Bomb Room", "Power Bomb (red Brinstar sidehopper room)", "the room underneath the flower in Red Brinstar", "the room underneath the Samus Eater in Red Brinstar"),
-                    X = 1064,
-                    Y = 340,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 40,
                     Name = new("Alpha Power Bomb Room", "Power Bomb (red Brinstar spike room)", "the Chozo room in Red Brinstar with the jumping enemies you can freeze", "the Chozo room in Red Brinstar with the Boyons"),
-                    X = 1064,
-                    Y = 436,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 41,
                     Name = new("Alpha Power Bomb Room (Behind the wall)", "Missile (red Brinstar spike room)", "the room behind the wall in the Chozo room in Red Brinstar"),
-                    X = 1032,
-                    Y = 436,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 42,
                     Name = new("~ S p A z E r ~", "Spazer", "the Chozo room above the entrance to Maridia in Red Brinstar"),
-                    X = 1160,
-                    Y = 628,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 43,
                     Name = new("Energy Tank, Kraid", "the room that opens up on your way out after defeating Kraid"),
-                    X = 1320,
-                    Y = 692,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 44,
                     Name = new("Warehouse Kihunter Room", "Missile (Kraid)", "the room before the long corridor leading to Kraid with the hidden item in the wall"),
-                    X = 1448,
-                    Y = 660,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 48,
                     Name = new("Kraid's Reliquary", "the room after Kraid", new("Varia Suit", 0)),
-                    X = 1768,
-                    Y = 692,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 49,
                     Name = new("Lava Room (Submerged in wall)", "Cathedral", "the room in Upper Norfair with the item in the lava", new("Missile (lava room)", 0)),
-                    X = 568,
-                    Y = 212,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 50,
                     Name = new("Ice Beam Room", "Ice Beam", "the room in Upper Norfair after the Speed Booster gates"),
-                    X = 216,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 51,
                     Name = new("Crumble Shaft", "the room with all the crumbling platforms", new("Missile (below Ice Beam)", 0)),
-                    X = 120,
-                    Y = 212,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 52,
                     Name = new("Crocomire's Pit", new("Energy Tank, Crocomire", 0), "the room where you fight Crocomire"),
-                    X = 664,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 53,
                     Name = new("Hi-Jump Boots Room", "Hi-Jump Boots", "the Chozo room after the room in Upper Norfair where you have to wait a long time for an enemy before you can leave again"),
-                    X = 280,
-                    Y = 276,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 54,
                     Name = new("Crocomire Escape", new("Missile (above Crocomire)", 0), "the room with the item beyond a Super Missile gate you can peak at in Upper Norfair"),
-                    X = 408,
-                    Y = 276,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 55,
                     Name = new("Hi-Jump Lobby (Back)", "the spot on your way out of the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Missile (Hi-Jump Boots)", 0)),
-                    X = 312,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 56,
                     Name = new("Hi-Jump Lobby (Entrance)", "the room in the Upper Norfair where you have to wait a long time for an enemy before you can leave again", new("Energy Tank (Hi-Jump Boots)", 0)),
-                    X = 344,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 57,
                     Name = new("Post Crocomire Power Bomb Room", "the room directly on the other side of Crocomire's room", new("Power Bomb (Crocomire)", 0)),
-                    X = 344,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 58,
                     Name = new("Cosine Room", "Post Crocomire Missile Room", "the wavy room below Crocomire", new("Missile (below Crocomire)", 0)),
-                    X = 504,
-                    Y = 564,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 59,
                     Name = new("Indiana Jones Room", "Pantry", "Post Crocomire Jump Room", "the big empty room after Crocomire that use the Speed Booster to get", new("Missile (Grappling Beam)", 0)),
-                    X = 312,
-                    Y = 564,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 60,
                     Name = new("Grapple Beam Room", "Grappling Beam", "the Chozo room after the big empty room past Crocomire"),
-                    X = 152,
-                    Y = 596,
                 },
                 new LocationInfo()
                 {
@@ -421,198 +321,142 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 63,
                     Name = new("Bubble Mountain Missile Room", "the room on the left side of Bubble Mountain", new("Missile (bubble Norfair green door)", 0)),
-                    X = 728,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 64,
                     Name = new("Bubble Mountain", "the spot near the spikes on the bottom of Bubble Mountain", new("Missile (bubble Norfair)", 0)),
-                    X = 792,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 65,
                     Name = new("Speed Booster Hall (Ceiling)", "the spot in the ceiling on the right side of Bubble Mountain", new("Missile (Speed Booster)", 0)),
-                    X = 1208,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 66,
                     Name = new("Speed Booster Room", "Speed Booster", "the room to the right of Bubble Mountain", "the Chozo room in Bubble Mountain"),
-                    X = 1240,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 67,
                     Name = new("Double Chamber", "Grapple Crossing", new("Missile (Wave Beam)", 0)),
-                    X = 888,
-                    Y = 212,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 68,
                     Name = new("Wave Beam Room", "Wave Beam"),
-                    X = 984,
-                    Y = 212,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 70,
                     Name = new("Gold Torizo (Drop down)", "the spot before you drop down to fight Gold Torizo", new("Missile (Gold Torizo)", 0)),
-                    X = 632,
-                    Y = 564,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 71,
                     Name = new("Golden Torizo (Ceiling)", "the spot where Gold Torizo hides before the fight", new("Super Missile (Gold Torizo)", 0)),
-                    X = 664,
-                    Y = 564,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 73,
                     Name = new("Mickey Mouse Clubhouse", "Mickey Mouse room", "the room that looks like Mickey Mouse", new("Missile (Mickey Mouse room)", 0)),
-                    X = 952,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 74,
                     Name = new("Spring Ball Maze Room", "the room right before the Spring Ball Maze", new("Missile (lower Norfair above fire flea room)", 0)),
-                    X = 1176,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 75,
                     Name = new("Escape Power Bomb Room", "the room in lower Norfair that you hope doesn't have anything because you need to go through a morph ball maze", new("Power Bomb (lower Norfair above fire flea room)", 0)),
-                    X = 1240,
-                    Y = 276,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 76,
                     Name = new("Power Bomb of Shame", "the room to the left before the spiky elevator to Ridley", new("Power Bomb (Power Bombs of shame)", 0)),
-                    X = 1080,
-                    Y = 532,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 77,
                     Name = new("Three Musketeer's Room", "FrankerZ Missiles", new("Missile (lower Norfair near Wave Beam)", 0)),
-                    X = 984,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 78,
                     Name = new("Ridley's Reliquary", "the room after Ridley", new("Energy Tank, Ridley", 0)),
                     Hints = new("I hear Ridley is about to open one of Kraid's Christmas presents again."),
-                    X = 760,
-                    Y = 628,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 79,
                     Name = new("Screw Attack", "the Chozo below the portal to Misery Mire"),
-                    X = 696,
-                    Y = 596,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 80,
                     Name = new("Fireflea Room", "the dark room in lower Norfair with the fire flies", new("Energy Tank, Firefleas", 0)),
-                    X = 1240,
-                    Y = 436,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 128,
                     Name = new("Main Shaft (Side room)", "the room behind the bombeable wall on the left side of Wrecked Ship", new("Missile (Wrecked Ship middle)", 0)),
-                    X = 408,
-                    Y = 340,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 129,
                     Name = new("Post Chozo Concert (Speed Booster Item)", "Bowling Alley (Speed Booster Item)", "the spot that requires the Speed Booster in Wrecked Ship", new("Reserve Tank, Wrecked Ship", 0), new("Wrecked Ship, Reserve Tank", 0)),
-                    X = 504,
-                    Y = 180,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 130,
                     Name = new("Post Chozo Concert (Breakable Chozo)", "the breakable Chozo in Wrecked Ship", new("Missile (Gravity Suit)", 0)),
-                    X = 440,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 131,
                     Name = new("Attic (Assembly Line)", "the room with the conveyors and robots", new("Missile (Wrecked Ship top)", 0)),
-                    X = 696,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 132,
                     Name = new("Wrecked Pool", "Ruined Pool", "Wrecked Ship Bullshit Room", "that room in Wrecked Ship with all the water where you always reset", new("Energy Tank, Wrecked Ship", 0)),
-                    X = 600,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 133,
                     Name = new("Left Super Missile Chamber", "the room that opens up on the left side after defeating Phantoon", new("Super Missile (Wrecked Ship left)", 0)),
-                    X = 504,
-                    Y = 372,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 134,
                     Name = new("Right Super Missile Chamber", "the room that opens up on the right side after defeating Phantoon", new("Right Super, Wrecked Ship", 0)),
-                    X = 696,
-                    Y = 372,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 135,
                     Name = new("Post Chozo Concert (Gravity Suit Chamber)", "the room after the Chozo concert", new("Gravity Suit", 0)),
-                    X = 344,
-                    Y = 244,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 136,
                     Name = new("Main Street (Ceiling Shinespark)", "Main Street Missiles", "the spot in the ceiling in Maridia that requires Shinespark", new("Missile (green Maridia shinespark)", 0)),
-                    X = 232,
-                    Y = 468,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 137,
                     Name = new("Main Street (Crab Supers)", "the tiny room where you watch crabs walking into the wall", new("Super Missile (green Maridia)", 0)),
-                    X = 264,
-                    Y = 436,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 138,
                     Name = new("Mama Turtle Room", "the room with the turtles", new("Energy Tank, Mama turtle", 0)),
-                    X = 488,
-                    Y = 468,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 139,
                     Name = new("Mama Turtle Room (Wall item)", "the spot in the wall in the turtle room", new("Missile (green Maridia tatori)", 0)),
-                    X = 520,
-                    Y = 500,
                 },
                 new LocationInfo()
                 {
@@ -628,15 +472,11 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 142,
                     Name = new("Pseudo Plasma Spark Room", "the room leading up to the pit with two items in the northeast of Maridia", new("Missile (yellow Maridia false wall)", 0)),
-                    X = 552,
-                    Y = 276,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 143,
                     Name = new("Plasma Beam", "Plasma Chamber", "Plasma Beam room", "the room in Maridia near the forgotten highway to Wrecked Ship"),
-                    X = 808,
-                    Y = 148,
                 },
                 new LocationInfo()
                 {
@@ -652,99 +492,71 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 146,
                     Name = new("Right Sand Pit Left", "the left side of the right sand pit", new("Missile (right Maridia sand pit room)", 0)),
-                    X = 648,
-                    Y = 532,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 147,
                     Name = new("Right Sand Pit Right", "the right side of the right sand pit", new("Power Bomb (right Maridia sand pit room)", 0)),
-                    X = 680,
-                    Y = 564,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 148,
                     Name = new("Aqueduct (Left item)", new("Missile (pink Maridia)", 0)),
-                    X = 680,
-                    Y = 372,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 149,
                     Name = new("Aqueduct (Right item)", new("Super Missile (pink Maridia)", 0)),
-                    X = 712,
-                    Y = 372,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 150,
                     Name = new("Shaktool", "Shak's Stash", "Shaktool's item", "the room that everyone's favorite diggy boy helps you get to", "the room after everyone's favorite diggy boy", new("Spring Ball", 0)),
-                    X = 968,
-                    Y = 596,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 151,
                     Name = new("The Precious Room", "Pre-Draygon Room", "the wall in the room before Draygon", new("Missile (Draygon)", 0)),
-                    X = 1256,
-                    Y = 308,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 152,
                     Name = new("Sandy Path", "the room after Botwoon", new("Energy Tank, Botwoon", 0)),
-                    X = 840,
-                    Y = 340,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 154,
                     Name = new("Draygon's Reliquary", "the room after Draygon", new("Space Jump", 0)),
-                    X = 1128,
-                    Y = 404,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 256,
                     Name = new("Ether Tablet"),
-                    X = 844,
-                    Y = 38,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 257,
                     Name = new("Spectacle Rock"),
-                    X = 980,
-                    Y = 178,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 258,
                     Name = new("Spectacle Rock Cave"),
-                    X = 980,
-                    Y = 290,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 259,
                     Name = new("Old Man"),
-                    X = 816,
-                    Y = 378,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 260,
                     Name = new("Floating Island"),
-                    X = 1627,
-                    Y = 40,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 261,
                     Name = new("Spiral Cave"),
-                    X = 1598,
-                    Y = 180,
                 },
                 new LocationInfo()
                 {
@@ -785,58 +597,42 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 269,
                     Name = new("Mimic Cave"),
-                    X = 1731,
-                    Y = 180,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 270,
                     Name = new("Master Sword Pedestal", "Pedestal", "Ped"),
                     Hints = new("I hope you don't need it."),
-                    X = 83,
-                    Y = 101,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 271,
                     Name = new("Mushroom"),
-                    X = 240,
-                    Y = 180,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 272,
                     Name = new("Lost Woods Hideout"),
-                    X = 320,
-                    Y = 260,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 273,
                     Name = new("Lumberjack Tree", "Lumberjack Ledge"),
-                    X = 633,
-                    Y = 117,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 274,
                     Name = new("Bonk Rocks", "Pegasus Rocks"),
-                    X = 777,
-                    Y = 590,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 275,
                     Name = new("Graveyard Ledge"),
-                    X = 1132,
-                    Y = 549,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 276,
                     Name = new("King's Tomb"),
-                    X = 1207,
-                    Y = 598,
                 },
                 new LocationInfo()
                 {
@@ -893,29 +689,21 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     LocationNumber = 287,
                     Name = new("Bottle Merchant"),
                     Hints = new("You know it's a scam, right?"),
-                    X = 190,
-                    Y = 933,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 289,
                     Name = new("Sick Kid", "Bug Catching Kid's House"),
-                    X = 314,
-                    Y = 1060,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 290,
                     Name = new("Kakariko Tavern", "Inn back room"),
-                    X = 320,
-                    Y = 1145,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 291,
                     Name = new("Magic Bat"),
-                    X = 650,
-                    Y = 1127,
                 },
                 new LocationInfo()
                 {
@@ -937,8 +725,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 296,
                     Name = new("Potion Shop", "Mushroom Item"),
-                    X = 1607,
-                    Y = 670,
                 },
                 new LocationInfo()
                 {
@@ -964,8 +750,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 301,
                     Name = new("Maze Race", "Racing Game"),
-                    X = 111,
-                    Y = 1354,
                 },
                 new LocationInfo()
                 {
@@ -991,8 +775,6 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 314,
                     Name = new("Bombos Tablet"),
-                    X = 440,
-                    Y = 1845,
                 },
                 new LocationInfo()
                 {
@@ -1008,29 +790,21 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 317,
                     Name = new("Lake Hylia Island"),
-                    X = 1450,
-                    Y = 1666,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 318,
                     Name = new("Under the bridge", "the guy under the bridge", "Hobo"),
-                    X = 1390,
-                    Y = 1390,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 319,
                     Name = new("Ice Cave", "Ice Rod Cave"),
-                    X = 1795,
-                    Y = 1547,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 320,
                     Name = new("Spike Cave"),
-                    X = 1151,
-                    Y = 294,
                 },
                 new LocationInfo()
                 {
@@ -1066,65 +840,47 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 327,
                     Name = new("Bumper Cave Ledge", "Bumper Cave", "Bumper Ledge"),
-                    X = 687,
-                    Y = 340,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 328,
                     Name = new("Chest Game"),
-                    X = 100,
-                    Y = 936,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 329,
                     Name = new("C-Shaped House"),
-                    X = 414,
-                    Y = 969,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 330,
                     Name = new("Brewery"),
-                    X = 219,
-                    Y = 1171,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 331,
                     Name = new("Peg World", "Hammer Pegs"),
-                    X = 636,
-                    Y = 1214,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 332,
                     Name = new("Blacksmith"),
-                    X = 616,
-                    Y = 1054,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 333,
                     Name = new("Purple Chest turn-in", "Purple Chest"),
-                    X = 616,
-                    Y = 1054,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 334,
                     Name = new("Catfish", "Scatfish", "Lake of Ill Omen"),
                     Hints = new("You know it's a scam, right?"),
-                    X = 1813,
-                    Y = 347,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 335,
                     Name = new("Pyramid of Power", "Pyramid"),
-                    X = 1164,
-                    Y = 922,
                 },
                 new LocationInfo()
                 {
@@ -1140,15 +896,11 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 338,
                     Name = new("Digging Game"),
-                    X = 100,
-                    Y = 1385,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 339,
                     Name = new("Haunted Grove", "Stumpy"),
-                    X = 620,
-                    Y = 1371,
                 },
                 new LocationInfo()
                 {
@@ -1824,43 +1576,31 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 496,
                     Name = new("Library"),
-                    X = 313,
-                    Y = 1310,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 497,
                     Name = new("Forest Clearing", "Digging Spot", "Flute Spot"),
-                    X = 600,
-                    Y = 1350,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 498,
                     Name = new("Cave #45", "Cave 45", "South of Grove"),
-                    X = 552,
-                    Y = 1693,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 499,
                     Name = new("Link's House"),
-                    X = 1097,
-                    Y = 1366,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 500,
                     Name = new(new("Aginah's Cave", 0), "Aggina's Cave"),
-                    X = 400,
-                    Y = 1655,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 506,
                     Name = new("Chicken House", "Chicken Lady's House"),
-                    X = 197,
-                    Y = 1066,
                 },
                 new LocationInfo()
                 {
@@ -1871,15 +1611,11 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 {
                     LocationNumber = 508,
                     Name = new("Desert Ledge"),
-                    X = 40,
-                    Y = 1835,
                 },
                 new LocationInfo()
                 {
                     LocationNumber = 509,
                     Name = new("Checkerboard Cave"),
-                    X = 354,
-                    Y = 1560,
                 },
                 new LocationInfo()
                 {

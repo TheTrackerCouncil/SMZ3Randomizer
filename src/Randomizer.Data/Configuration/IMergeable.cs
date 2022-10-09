@@ -91,7 +91,7 @@ namespace Randomizer.Data.Configuration
 
         }
 
-        private static void MergeProperties<T>(IMergeable<T> primary, IMergeable<T> other)
+        private static void MergeProperties(IMergeable<T> primary, IMergeable<T> other)
         {
             if (primary.GetType() != other.GetType())
             {

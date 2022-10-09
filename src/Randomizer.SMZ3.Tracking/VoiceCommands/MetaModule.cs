@@ -24,9 +24,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Initializes a new instance of the <see cref="MetaModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public MetaModule(Tracker tracker, IItemService itemService, ILogger<MetaModule> logger, ICommunicator communicator)
-            : base(tracker, itemService, logger)
+        /// <param name="communicator">Used to communicate information to the user</param>
+        public MetaModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
+            : base(tracker, itemService, worldService, logger)
         {
             _communicator = communicator;
 

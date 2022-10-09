@@ -30,16 +30,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
             if (currentState.Energy == 0 && currentState.ReserveTanks == 0 && prevState.Energy != 0 && !(currentState.CurrentRoom == 0 && currentState.CurrentRegion == 0 && currentState.SamusY == 0))
             {
                 // Check if there is a special message for dying in this room
-                var region = tracker.World.Regions.Select(x => x as SMRegion)
-                    .Where(x => x != null && x.MemoryRegionId == currentState.CurrentRegion)
-                    .Select(x => tracker.WorldInfo.Regions.FirstOrDefault(y => y.GetRegion(tracker.World) == x && y.WhenDiedInRoom != null))
-                    .FirstOrDefault(x => x != null && x.WhenDiedInRoom != null && x.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
-                if (region != null && region.WhenDiedInRoom != null)
+                var region = tracker.World.Regions.OfType<SMRegion>()
+                    .FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion && x.Metadata.WhenDiedInRoom != null && x.Metadata.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
+
+                if (region != null && region.Metadata?.WhenDiedInRoom != null)
                 {
-                    tracker.SayOnce(region.WhenDiedInRoom[currentState.CurrentRoomInRegion]);
+                    tracker.SayOnce(region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion]);
                 }
 
-                var death = Items.FindOrDefault("Death");
+                var death = Items.FirstOrDefault("Death");
                 if (death is not null)
                 {
                     tracker.TrackItem(death);

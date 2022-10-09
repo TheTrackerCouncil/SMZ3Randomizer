@@ -14,6 +14,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -32,21 +33,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private static readonly List<string> s_fillSuperMissileChoices = new() { "super missiles", "soup" };
         private static readonly List<string> s_fillPowerBombsChoices = new() { "power bombs", "hamburgers" };
 
-        private readonly ILogger<AutoTrackerModule> _logger;
         private bool _cheatsEnabled = false;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public CheatsModule(Tracker tracker, IItemService itemService, ILogger<AutoTrackerModule> logger)
-            : base(tracker, itemService, logger)
+        public CheatsModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
-
-            _logger = logger;
 
             AddCommand("Enable cheats", GetEnableCheatsRule(), (tracker, result) =>
             {
@@ -154,11 +154,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
         }
 
-        private void GiveItem(ItemData? item)
+        private void GiveItem(Item? item)
         {
             if (!PlayerCanCheat()) return;
 
-            if (item == null || item.InternalItemType == ItemType.Nothing)
+            if (item == null || item.Type == ItemType.Nothing)
             {
                 Tracker.Say(x => x.Cheats.CheatInvalidItem);
             }
@@ -215,7 +215,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private GrammarBuilder GiveItemRule()
         {
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name != "Content");
 
             return new GrammarBuilder()
                 .Append("Hey tracker,")

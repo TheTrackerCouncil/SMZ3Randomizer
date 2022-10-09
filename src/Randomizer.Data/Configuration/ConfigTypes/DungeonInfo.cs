@@ -11,7 +11,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
     /// <summary>
     /// Represents a dungeon in A Link to the Past.
     /// </summary>
-    public class DungeonInfo : IPointOfInterest, IMergeable<DungeonInfo>
+    public class DungeonInfo : IMergeable<DungeonInfo>
     {
         public DungeonInfo() { }
 
@@ -27,43 +27,38 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The fully qualified type name of the region that represents the
         /// dungeon.
         /// </param>
-        /// <param name="regionTypeName">
-        /// The fully qualified type name of the region the dungeon is located
-        /// in.
-        /// </param>
-        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss, string regionTypeName)
+        public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss)
         {
             Name = name;
             Abbreviation = abbreviation;
             Boss = boss ?? new();
-            RegionTypeName = regionTypeName;
         }
 
         /// <summary>
         /// The identifier for merging configs
         /// </summary>
         [MergeKey]
-        public string Dungeon { get; init; }
+        public string Dungeon { get; init; } = "";
 
         /// <summary>
         /// Gets the possible names of the dungeon.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the dungeon name abbreviation.
         /// </summary>
-        public string Abbreviation { get; init; }
+        public string Abbreviation { get; init; } = "";
 
         /// <summary>
         /// Gets the possible names of the dungeon boss.
         /// </summary>
-        public SchrodingersString Boss { get; set; }
+        public SchrodingersString Boss { get; set; } = new();
 
         /// <summary>
         /// Gets the type of region that represents this dungeon.
         /// </summary>
-        public Type Type { get; init; }
+        public Type? Type { get; init; }
 
         /// <summary>
         /// Gets the ID of the location that represents the item rewarded by
@@ -71,66 +66,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// for beating the boss.
         /// </summary>
         public int? LocationId { get; init; }
-
-        /// <summary>
-        /// Gets or sets the type of pendant or crystal you are rewarded with
-        /// when you beat the dungeon boss.
-        /// </summary>
-        public RewardItem Reward { get; set; }
-            = RewardItem.Unknown;
-
-        /// <summary>
-        /// Gets a value indicating whether the dungeon has a reward when the
-        /// boss is defeated.
-        /// </summary>
-        public bool HasReward { get; init; } = true;
-
-        /// <summary>
-        /// Gets or sets the medallion that is required to enter the dungeon.
-        /// </summary>
-        public Medallion Requirement { get; set; }
-            = Medallion.None;
-
-        /// <summary>
-        /// Gets or sets the amount of treasure items (excluding keys, compasses
-        /// and maps) that remain in the dungeon.
-        /// </summary>
-        public int TreasureRemaining { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the dungeon has been
-        /// cleared.
-        /// </summary>
-        public bool Cleared { get; set; }
-
-        /// <summary>
-        /// Gets the x-coordinate of the dungeon on the map, if it should be
-        /// displayed.
-        /// </summary>
-        public int? X { get; init; }
-
-        /// <summary>
-        /// Gets the y-coordinate of the dungeon on the map, if it should be
-        /// displayed.
-        /// </summary>
-        public int? Y { get; init; }
-
-        /// <summary>
-        /// Gets the fully qualified name of the region that the dungeon is
-        /// located in.
-        /// </summary>
-        public string RegionTypeName { get; init; }
-
-        /// <summary>
-        /// The type of the overworld region you access this dungeon from
-        /// </summary>
-        public Type WithinRegionType { get; init; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the user manually decreased
-        /// the treasure count in this dungeon before.
-        /// </summary>
-        public bool HasManuallyClearedTreasure { get; set; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.
@@ -195,19 +130,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         {
             var region = GetRegion(world);
             return region.CanEnter(progression, true);
-        }
-
-        /// <summary>
-        /// Determines whether the dungeon is located in the specified region.
-        /// </summary>
-        /// <param name="region">The region to check.</param>
-        /// <returns>
-        /// <c>true</c> if this dungeon is located in the specified region;
-        /// otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsInRegion(Region region)
-        {
-            return region.GetType().FullName == RegionTypeName;
         }
 
         /// <summary>

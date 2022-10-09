@@ -39,6 +39,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Collection of object identifiers to look up for this location
         /// </summary>
-        public ICollection<string> Identifiers { get; set; }
+        public ICollection<string> Identifiers { get; set; } = new List<string>();
     }
 }

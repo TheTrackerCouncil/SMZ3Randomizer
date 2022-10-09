@@ -6,7 +6,7 @@ using Randomizer.Data.Options;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 {
-    public class KraidsLair : SMRegion, IHasReward
+    public class KraidsLair : SMRegion, IHasBoss
     {
         public KraidsLair(World world, Config config) : base(world, config)
         {
@@ -14,7 +14,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 name: "Energy Tank, Kraid",
                 vanillaItem: ItemType.ETank,
                 access: items => items.Kraid,
-                relevanceRequirement: items => CanComplete(items),
+                relevanceRequirement: items => CanBeatBoss(items),
                 memoryAddress: 0x5,
                 memoryFlag: 0x8);
             KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
@@ -22,7 +22,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 alsoKnownAs: new[] { "Kraid's Reliquary" },
                 vanillaItem: ItemType.Varia,
                 access: items => items.Kraid,
-                relevanceRequirement: items => CanComplete(items),
+                relevanceRequirement: items => CanBeatBoss(items),
                 memoryAddress: 0x6,
                 memoryFlag: 0x1);
             MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
@@ -33,6 +33,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 memoryAddress: 0x5,
                 memoryFlag: 0x10);
             MemoryRegionId = 1;
+            Boss = new Boss(Shared.Enums.BossType.Kraid, World, this);
         }
 
         public override string Name => "Kraid's Lair";
@@ -44,7 +45,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             "Warehouse"
         };
 
-        public RewardType Reward { get; set; } = RewardType.Kraid;
+        public Boss Boss{ get; set; }
 
         public Location ETank { get; }
 
@@ -59,7 +60,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Medium) || Logic.CanFly(items));
         }
 
-        public bool CanComplete(Progression items)
+        public bool CanBeatBoss(Progression items)
         {
             return CanEnter(items, true) && items.CardBrinstarBoss;
         }

@@ -75,6 +75,7 @@ namespace Randomizer.SMZ3.Generation
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
             _worldAccessor.World = worlds[0];
+            _worldAccessor.Worlds = worlds;
             return seedData;
         }
     }

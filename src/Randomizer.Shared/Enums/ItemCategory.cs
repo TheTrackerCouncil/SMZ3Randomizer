@@ -71,6 +71,11 @@
         /// <summary>
         ///This is an item that is useful, but not progression
         /// </summary>
-        Nice
+        Nice,
+
+        /// <summary>
+        /// This is a medallion that can be used to enter a dungeon
+        /// </summary>
+        Medallion
     }
 }

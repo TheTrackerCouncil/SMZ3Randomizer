@@ -33,17 +33,17 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Unique key to connect the Region with other configs
         /// </summary>
         [MergeKey]
-        public string Region { get; set; }
+        public string Region { get; set; } = "";
 
         /// <summary>
         /// Gets Randomizer.SMZ3 type for the region
         /// </summary>
-        public Type Type { get; set; }
+        public Type? Type { get; set; }
 
         /// <summary>
         /// Gets the possible names for the region.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the possible hints for the region, if any are defined.
@@ -53,7 +53,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// The name of the map to display for this region
         /// </summary>
-        public string MapName { get; init; }
+        public string MapName { get; init; } = "";
 
         /// <summary>
         /// Returns the <see cref="Region"/> that matches the region info in the

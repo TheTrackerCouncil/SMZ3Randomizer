@@ -41,12 +41,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Unique key to connect the ItemData with other configs
         /// </summary>
         [MergeKey]
-        public string Item { get; set; }
+        public string Item { get; set; } = "";
 
         /// <summary>
         /// Gets the possible names for the item.
         /// </summary>
-        public SchrodingersString Name { get; set; }
+        public SchrodingersString Name { get; set; } = new();
 
         /// <summary>
         /// Gets the grammatical article for the item (e.g. "a" or "the").
@@ -81,12 +81,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// case of items that can be tracked more than once.
         /// </summary>
         public int? CounterMultiplier { get; set; }
-
-        /// <summary>
-        /// Gets the number of actual items as displayed or mentioned by
-        /// tracker, or <c>0</c> if the item does not have copies.
-        /// </summary>
-        public int Counter => Multiple && !HasStages ? TrackingState * (CounterMultiplier ?? 1) : 0;
 
         /// <summary>
         /// Gets the stages and their names of a progressive item.
@@ -130,16 +124,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public bool HasStages => Stages != null && Stages.Count > 0;
 
         /// <summary>
-        /// Gets or sets the tracking state of the item.
-        /// </summary>
-        /// <remarks>
-        /// For example, 0 represents an untracked item, 1 represents an
-        /// obtained item and higher values indicate items that have been
-        /// obtained more than once.
-        /// </remarks>
-        public int TrackingState { get; set; }
-
-        /// <summary>
         /// Returns the stage of the item with the specifies name.
         /// </summary>
         /// <param name="name">The name of the stage.</param>
@@ -153,74 +137,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
                 return Stages.Single(x => x.Value.Contains(name, StringComparison.OrdinalIgnoreCase)).Key;
 
             return null;
-        }
-
-        /// <summary>
-        /// Tracks the item.
-        /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the item was tracked; otherwise, <see
-        /// langword="false"/>.
-        /// </returns>
-        /// <remarks>
-        /// Tracking may fail if the item is already tracked, or if the item is
-        /// already at the highest stage.
-        /// </remarks>
-        public bool Track()
-        {
-            if (TrackingState == 0 // Item hasn't been tracked yet (any case)
-                || !HasStages && Multiple // Multiple items always track
-                || HasStages && TrackingState < MaxStage) // Hasn't reached max. stage yet
-            {
-                TrackingState++;
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Untracks the item or decreases the item by one step.
-        /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if the item was removed; otherwise, <see
-        /// langword="false"/>.
-        /// </returns>
-        public bool Untrack()
-        {
-            if (TrackingState == 0)
-                return false;
-
-            TrackingState--;
-            return true;
-        }
-
-        /// <summary>
-        /// Marks the item at the specified stage.
-        /// </summary>
-        /// <param name="stage">The stage to set the item to.</param>
-        /// <returns>
-        /// <see langword="true"/> if the item was tracked; otherwise, <see
-        /// langword="false"/>.
-        /// </returns>
-        /// <remarks>
-        /// Tracking may fail if the item is already at a higher stage.
-        /// </remarks>
-        public bool Track(int stage)
-        {
-            if (!HasStages)
-                throw new ArgumentException($"The item '{Name}' does not have multiple stages.");
-
-            if (stage > MaxStage)
-                throw new ArgumentOutOfRangeException($"Cannot advance item '{Name}' to stage {stage} as the highest state is {MaxStage}.");
-
-            if (TrackingState < stage)
-            {
-                TrackingState = stage;
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -264,7 +180,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <c>true</c> if a response was configured for the item at the current
         /// tracking state; otherwise, <c>false</c>.
         /// </returns>
-        public bool TryGetTrackingResponse([NotNullWhen(true)] out SchrodingersString? response)
+        public bool TryGetTrackingResponse(int trackingState, [NotNullWhen(true)] out SchrodingersString? response)
         {
             if (WhenTracked == null)
             {
@@ -272,10 +188,10 @@ namespace Randomizer.Data.Configuration.ConfigTypes
                 return false;
             }
 
-            if (WhenTracked.TryGetValue(TrackingState, out response))
+            if (WhenTracked.TryGetValue(trackingState, out response))
                 return response != null;
 
-            var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < TrackingState).OrderBy(x => x);
+            var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < trackingState).OrderBy(x => x);
             if (!smallerKeys.Any())
             {
                 response = null;

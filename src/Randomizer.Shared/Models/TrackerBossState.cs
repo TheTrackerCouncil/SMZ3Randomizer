@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Shared.Models
 {
@@ -11,6 +12,7 @@ namespace Randomizer.Shared.Models
         public TrackerState TrackerState { get; set; }
         public string BossName { get; set; }
         public bool Defeated { get; set; }
+        public BossType Type { get; set; }
     }
 
 }
