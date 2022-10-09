@@ -14,8 +14,8 @@ using Randomizer.Shared;
 namespace Randomizer.SMZ3.Tracking.Services
 {
     /// <summary>
-    /// Service for retrieving information about the current state of
-    /// the world
+    /// Service for retrieving additional metadata information
+    /// about objects and locations within the world
     /// </summary>
     public class MetadataService : IMetadataService
     {

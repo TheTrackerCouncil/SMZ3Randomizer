@@ -15,12 +15,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     public interface IHistoryService
     {
         /// <summary>
-        /// Sets the tracker to be used for getting the elapsed time
-        /// </summary>
-        /// <param name="tracker"></param>
-        public void SetTracker(Tracker tracker);
-
-        /// <summary>
         /// Adds an event to the history log
         /// </summary>
         /// <param name="type">The type of event</param>
@@ -52,14 +46,5 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <returns>The collection of events</returns>
         public IReadOnlyCollection<TrackerHistoryEvent> GetHistory();
-
-        /// <summary>
-        /// Creates the progression log based off of the history
-        /// </summary>
-        /// <param name="rom">The rom that the history is for</param>
-        /// <param name="history">All of the events to log</param>
-        /// <param name="importantOnly">If only important events should be logged or not</param>
-        /// <returns>The generated log text</returns>
-        public string GenerateHistoryText(GeneratedRom rom, IReadOnlyCollection<TrackerHistoryEvent> history, bool importantOnly = true);
     }
 }

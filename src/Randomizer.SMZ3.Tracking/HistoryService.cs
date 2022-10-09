@@ -12,6 +12,7 @@ using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -22,6 +23,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         private readonly ILogger<HistoryService> _logger;
         private readonly IWorldAccessor _world;
+        private readonly ITrackerTimerService _timerService;
         private ICollection<TrackerHistoryEvent> _historyEvents => _world.World.State.History;
         private Tracker? _tracker;
 
@@ -30,19 +32,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="world"></param>
         /// <param name="logger"></param>
-        public HistoryService(IWorldAccessor world, ILogger<HistoryService> logger)
+        /// <param name="timerService"></param>
+        public HistoryService(IWorldAccessor world, ILogger<HistoryService> logger, ITrackerTimerService timerService)
         {
             _world = world;
             _logger = logger;
-        }
-
-        /// <summary>
-        /// Sets the tracker to be used for getting the elapsed time
-        /// </summary>
-        /// <param name="tracker"></param>
-        public void SetTracker(Tracker tracker)
-        {
-            _tracker = tracker;
+            _timerService = timerService;
         }
 
         /// <summary>
@@ -65,7 +60,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 ObjectName = objectName,
                 LocationName = location != null ? $"{regionName} - {locationName}" : null,
                 LocationId = location?.Id,
-                Time = _tracker?.TotalElapsedTime.TotalSeconds ?? 0
+                Time = _timerService.SecondsElapsed
             };
             AddEvent(addedEvent);
             return addedEvent;
@@ -113,7 +108,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="history">All of the events to log</param>
         /// <param name="importantOnly">If only important events should be logged or not</param>
         /// <returns>The generated log text</returns>
-        public string GenerateHistoryText(GeneratedRom rom, IReadOnlyCollection<TrackerHistoryEvent> history, bool importantOnly = true)
+        public static string GenerateHistoryText(GeneratedRom rom, IReadOnlyCollection<TrackerHistoryEvent> history, bool importantOnly = true)
         {
             var log = new StringBuilder();
             log.AppendLine(Underline($"SMZ3 Cas’ run progression log", '='));

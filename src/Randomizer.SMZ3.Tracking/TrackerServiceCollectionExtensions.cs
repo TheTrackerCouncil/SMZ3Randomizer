@@ -32,9 +32,10 @@ namespace Randomizer.SMZ3.Tracking
         {
             services.AddBasicTrackerModules<TrackerModuleFactory>();
             services.AddScoped<TrackerModuleFactory>();
-            services.AddSingleton<IHistoryService, HistoryService>();
             services.AddScoped<TrackerOptionsAccessor>();
             services.AddTrackerConfigs();
+            services.AddScoped<ITrackerTimerService, TrackerTimerService>();
+            services.AddScoped<IHistoryService, HistoryService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IMetadataService, MetadataService>();
             services.AddScoped<ICommunicator, TextToSpeechCommunicator>();

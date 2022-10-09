@@ -101,7 +101,7 @@ namespace Randomizer.App
                     var results = await GenerateRomInternalAsync(seed, options);
                     if (!string.IsNullOrEmpty(results.MsuError))
                     {
-                        System.Windows.Forms.MessageBox.Show("There was an error assigning the MSU.\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        System.Windows.Forms.MessageBox.Show(results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     return results.Rom;
                 }
@@ -129,7 +129,7 @@ namespace Randomizer.App
         /// <param name="error">Any error message from generating the rom</param>
         /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public async Task<GeneratedRom> GeneratePlandoRom(RandomizerOptions options, PlandoConfig plandoConfig)
+        public async Task<GeneratedRom> GeneratePlandoRomAsync(RandomizerOptions options, PlandoConfig plandoConfig)
         {
             try
             {

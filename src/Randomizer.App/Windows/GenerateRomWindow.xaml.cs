@@ -330,7 +330,7 @@ namespace Randomizer.App
         private async void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
             var rom = PlandoMode
-                ? await _romGenerator.GeneratePlandoRom(Options, PlandoConfig)
+                ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig)
                 : await _romGenerator.GenerateRandomRomAsync(Options);
             if (rom != null)
             {

@@ -37,7 +37,6 @@ namespace Randomizer.App
         private readonly RandomizerContext _dbContext;
         private readonly RomGenerator _romGenerator;
         private TrackerWindow _trackerWindow;
-        private readonly IHistoryService _historyService;
         private readonly IChatAuthenticationService _chatAuthenticationService;
 
         public RomListWindow(IServiceProvider serviceProvider,
@@ -45,7 +44,6 @@ namespace Randomizer.App
             ILogger<RomListWindow> logger,
             RandomizerContext dbContext,
             RomGenerator romGenerator,
-            IHistoryService historyService,
             IChatAuthenticationService chatAuthenticationService)
         {
             _serviceProvider = serviceProvider;
@@ -55,7 +53,6 @@ namespace Randomizer.App
             InitializeComponent();
             CheckSpeechRecognition();
             Options = optionsFactory.Create();
-            _historyService = historyService;
             _chatAuthenticationService = chatAuthenticationService;
             Model = new GeneratedRomsViewModel();
             DataContext = Model;
@@ -710,7 +707,7 @@ namespace Randomizer.App
             }
 
             var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath).Replace("Spoiler_Log", "Progression_Log");
-            var historyText = _historyService.GenerateHistoryText(rom, rom.TrackerState.History.ToList(), true);
+            var historyText = HistoryService.GenerateHistoryText(rom, rom.TrackerState.History.ToList(), true);
             File.WriteAllText(path, historyText);
             Process.Start(new ProcessStartInfo
             {

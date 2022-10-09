@@ -59,6 +59,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly ICommunicator _communicator;
         private readonly ITrackerStateService _stateService;
         private readonly IWorldService _worldService;
+        private readonly ITrackerTimerService _timerService;
         private DateTime _startTime = DateTime.MinValue;
         private DateTime _undoStartTime = DateTime.MinValue;
         private TimeSpan _undoSavedTime;
@@ -95,6 +96,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="metadataService"></param>
         /// <param name="stateService"></param>
         /// <param name="worldService"></param>
+        /// <param name="timerService"></param>
         public Tracker(TrackerConfigProvider configProvider,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
@@ -108,7 +110,8 @@ namespace Randomizer.SMZ3.Tracking
             TrackerConfigs configs,
             IMetadataService metadataService,
             ITrackerStateService stateService,
-            IWorldService worldService)
+            IWorldService worldService,
+            ITrackerTimerService timerService)
         {
             if (trackerOptions.Options == null)
                 throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -123,6 +126,7 @@ namespace Randomizer.SMZ3.Tracking
             _communicator = communicator;
             _stateService = stateService;
             _worldService = worldService;
+            _timerService = timerService;
 
             // Initialize the tracker configuration
             Responses = configs.Responses;
@@ -315,21 +319,6 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// The previous saved elapsed time
-        /// </summary>
-        public TimeSpan UndoSavedElapsedTime { get; set; }
-
-        /// <summary>
-        /// The previous saved elapsed time
-        /// </summary>
-        public TimeSpan SavedElapsedTime { get; set; }
-
-        /// <summary>
-        /// The total elapsed time including the previously saved time
-        /// </summary>
-        public TimeSpan TotalElapsedTime => SavedElapsedTime + (DateTime.Now - (_startTime == DateTime.MinValue ? DateTime.Now : _startTime));
-
-        /// <summary>
         /// Get if the Tracker has been updated since it was last saved
         /// </summary>
         public bool IsDirty { get; set; }
@@ -427,7 +416,7 @@ namespace Randomizer.SMZ3.Tracking
             Metadata.LoadWorldMetadata(_worldAccessor.World);
             if (trackerState != null)
             {
-                SavedElapsedTime = TimeSpan.FromSeconds(trackerState.SecondsElapsed);
+                _timerService.SetSavedTime(TimeSpan.FromSeconds(trackerState.SecondsElapsed));
                 OnStateLoaded();
                 return true;
             }
@@ -442,7 +431,7 @@ namespace Randomizer.SMZ3.Tracking
         public async Task SaveAsync(GeneratedRom rom)
         {
             IsDirty = false;
-            await _stateService.SaveStateAsync(_worldAccessor.World, rom, TotalElapsedTime.TotalSeconds);
+            await _stateService.SaveStateAsync(_worldAccessor.World, rom, _timerService.SecondsElapsed);
         }
 
         /// <summary>
@@ -708,13 +697,12 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void StartTimer(bool isInitial = false)
         {
-            _undoStartTime = _startTime;
-            _startTime = DateTime.Now;
+            _timerService.StartTimer();
 
             if (!isInitial)
             {
                 Say(Responses.TimerResumed);
-                AddUndo(() => _startTime = _undoStartTime);
+                AddUndo(() => _timerService.Undo());
             }
         }
 
@@ -723,20 +711,12 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual void ResetTimer(bool isInitial = false)
         {
-            _undoSavedTime = SavedElapsedTime;
-            _undoStartTime = _startTime;
-
-            SavedElapsedTime = TimeSpan.Zero;
-            _startTime = DateTime.Now;
+            _timerService.ResetTimer();
 
             if (!isInitial)
             {
                 Say(Responses.TimerReset);
-                AddUndo(() =>
-                {
-                    SavedElapsedTime = _undoSavedTime;
-                    _startTime = _undoStartTime;
-                });
+                AddUndo(() => _timerService.Undo());
             }
         }
 
@@ -745,38 +725,36 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public virtual Action? PauseTimer(bool addUndo = true)
         {
-            _undoSavedTime = SavedElapsedTime;
-            _undoStartTime = _startTime;
-
-            SavedElapsedTime = TotalElapsedTime;
-            _startTime = DateTime.MinValue;
+            _timerService.StopTimer();
 
             Say(Responses.TimerPaused);
 
             if (addUndo)
             {
-                AddUndo(() =>
-                {
-                    SavedElapsedTime = _undoSavedTime;
-                    _startTime = _undoStartTime;
-                });
+                AddUndo(() => _timerService.Undo());
                 return null;
             }
             else
             {
-                return () =>
-                {
-                    SavedElapsedTime = _undoSavedTime;
-                    _startTime = _undoStartTime;
-                };
+                return () => _timerService.Undo();
             }
-            
         }
 
         /// <summary>
-        /// If the timer is currently paused
+        /// Pauses or resumes the timer based on if it is
+        /// currently paused or not
         /// </summary>
-        public virtual bool IsTimerPaused => _startTime == DateTime.MinValue;
+        public virtual void ToggleTimer()
+        {
+            if (_timerService.IsTimerPaused)
+            {
+                StartTimer();
+            }
+            else
+            {
+                PauseTimer();
+            }
+        }
 
         /// <summary>
         /// Stops voice recognition.
