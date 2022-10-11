@@ -1,9 +1,5 @@
 GanonIntro:
 - Text: |+
-    This seed was
-    brought to you by
-    Raid Shadow Legends
-- Text: |+
     So how many red
     rupees did you find
     this time?
@@ -54,6 +50,11 @@ GanonIntro:
     rupee battle pass!
 BlindIntro:
 - Text: |+
+    This seed is
+    brought to you by
+    Kraid Shadow
+    Legends.
+- Text: |+
     Did you hear what
     Shaktool said about
     Metroid Dread?
@@ -64,8 +65,19 @@ BlindIntro:
     Did you know that
     your ISP can see
     everything you do?
-    Make them Blind to
-    it with NordVPN!
+    Protect your
+    privacy with
+    BlindVPN!
+- Text: |+
+    Before we start
+    this battle, I'd
+    like to thank the
+    sponsor of this
+    seed, RidleyCons!
+    I actually bought
+    a pair and love
+    them! Now on to
+    the boss fight!
 - Text: |+
     I heard that Ridley
     tried to setup a 
