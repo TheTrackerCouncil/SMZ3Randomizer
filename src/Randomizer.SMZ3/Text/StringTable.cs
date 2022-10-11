@@ -3,37 +3,35 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Randomizer.SMZ3.Generation;
 using SharpYaml.Model;
 
 namespace Randomizer.SMZ3.Text {
 
     class StringTable {
 
+        private static readonly List<string> s_unwantedText = new()
+        {
+            "bottle_vendor_choice",
+            "bottle_vendor_get",
+            "bottle_vendor_no",
+            "zora_meeting",
+            "zora_tells_cost",
+            "zora_get_flippers",
+            "zora_no_cash",
+            "zora_no_buy_item"
+        };
+
         internal static readonly IList<(string name, byte[] bytes)> template;
 
         readonly IList<(string name, byte[] bytes)> entries;
 
-        private static readonly List<string> s_hintLocations = new List<string>()
-        {
-            "telepathic_tile_eastern_palace",
-            "telepathic_tile_tower_of_hera_floor_4",
-            "telepathic_tile_spectacle_rock",
-            "telepathic_tile_swamp_entrance",
-            "telepathic_tile_thieves_town_upstairs",
-            "telepathic_tile_misery_mire",
-            "telepathic_tile_palace_of_darkness",
-            "telepathic_tile_desert_bonk_torch_room",
-            "telepathic_tile_castle_tower",
-            "telepathic_tile_ice_large_room",
-            "telepathic_tile_turtle_rock",
-            "telepathic_tile_ice_entrance",
-            "telepathic_tile_ice_stalfos_knights_room",
-            "telepathic_tile_tower_of_hera_entrance",
-            "telepathic_tile_south_east_darkworld_cave"
-        };
-
         public StringTable() {
             entries = new List<(string, byte[])>(template);
+            foreach (var toRemove in s_unwantedText)
+            {
+                SetText(toRemove, "{NOTEXT}");
+            }
         }
 
         static StringTable() {
@@ -85,9 +83,19 @@ namespace Randomizer.SMZ3.Text {
             var index = 0;
             foreach (var hint in hints)
             {
-                SetText(s_hintLocations[index], "{NOBORDER}\n" + hint);
+                SetText(GameHintService.HintLocations[index], "{NOBORDER}\n" + hint);
                 index++;
             }
+        }
+
+        public void SetBottleVendorText(string text)
+        {
+            SetText("bottle_vendor_choice", text);
+        }
+
+        public void SetZoraText(string text)
+        {
+            SetText("zora_tells_cost", text);
         }
 
         void SetText(string name, string text) {

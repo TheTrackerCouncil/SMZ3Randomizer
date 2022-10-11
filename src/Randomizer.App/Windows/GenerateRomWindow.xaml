@@ -177,17 +177,11 @@
               <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
                         Content="Disable low energy beep in Super Metroid" />
 
-              <CheckBox IsChecked="{Binding CasualSuperMetroidPatches}"
-                        Content="Super Cas'troid">
-                <CheckBox.ToolTip>
-                  <TextBlock>
-                    Enables the following patches:
-                    <LineBreak />
-                    • Infinite Space Jump: space jump is easier to use <LineBreak />
-                    • Respin: space jump can be restarted in mid-air
-                  </TextBlock>
-                </CheckBox.ToolTip>
-              </CheckBox>
+              <GroupBox Header="Cas' Patches"
+                        Padding="0,5,0,0" Margin="0,0,0,3">
+                <UniformGrid Columns="2" Name="CasPatchGrid" />
+              </GroupBox>
+
 
               <controls:LabeledControl Text="Custom music pack:">
                 <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"

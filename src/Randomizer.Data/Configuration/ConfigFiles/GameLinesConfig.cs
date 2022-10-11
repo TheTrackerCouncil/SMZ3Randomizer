@@ -60,5 +60,29 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// </summary>
         public SchrodingersString? HintLocationHasItem { get; init; }
             = new SchrodingersString("{0} has {1}.");
+
+        /// <summary>
+        /// Line for King Zora saying what he has
+        /// </summary>
+        public SchrodingersString? KingZora { get; init; }
+            = new SchrodingersString("You got 500 rupees to buy {0}?");
+
+        /// <summary>
+        /// Line for the bottle merchant saying what he has
+        /// </summary>
+        public SchrodingersString? BottleMerchant { get; init; }
+            = new SchrodingersString("I'll take 100 rupees if you want {0}.");
+
+        /// <summary>
+        /// Options for replying with yes to a dialog choice
+        /// </summary>
+        public SchrodingersString? ChoiceYes { get; init; }
+            = new SchrodingersString("Yeah!", "Duh!", "Sure", "Okay.", "Of course!");
+
+        /// <summary>
+        /// Options for replying with no to a dialog choice
+        /// </summary>
+        public SchrodingersString? ChoiceNo { get; init; }
+            = new SchrodingersString("Nah.", "Nope.", "No way!");
     }
 }

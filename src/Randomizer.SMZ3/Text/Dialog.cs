@@ -10,6 +10,7 @@ namespace Randomizer.SMZ3.Text
         private static readonly Regex command = new(@"^\{[^}]*\}");
         private static readonly Regex invalid = new(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
         private static readonly Regex character = new(@"(?<digit>[0-9])|(?<upper>[A-Z])|(?<lower>[a-z])");
+        private static readonly Regex s_spaces = new(@"[\s\r\n]+");
 
         public static byte[] Simple(string text)
         {
@@ -147,6 +148,55 @@ namespace Randomizer.SMZ3.Text
                 "{IBOX}" => new byte[] { 0xFE, 0x6B, 0x02, 0xFE, 0x77, 0x07, 0xFC, 0x03, 0xF7 },
                 var command => throw new ArgumentException($"Dialog text contained unknown command {command}", nameof(text)),
             };
+        }
+
+        /// <summary>
+        /// Converts the hint into max 19 character lines
+        /// for adding to the game unless the text is
+        /// already split into multiple lines
+        /// </summary>
+        public static string GetGameSafeString(string text)
+        {
+            // If it's already multiple lines that are are within the
+            // width limit, just return it as is
+            if (!text.Split("\n").Any(x => x.Length > 19))
+            {
+                return text;
+            }
+
+            text = s_spaces.Replace(text, " ");
+            var words = text.Split(" ");
+            var output = new List<string>();
+            var currentLine = "";
+            foreach (var word in words)
+            {
+                if (word.Length + currentLine.Length > 18)
+                {
+                    output.Add(currentLine);
+                    currentLine = word;
+                }
+                else
+                {
+                    currentLine += " " + word;
+                }
+            }
+            output.Add(currentLine);
+            return string.Join("\n", output).Trim();
+        }
+
+        /// <summary>
+        /// Adds choices to the end of a text string
+        /// </summary>
+        /// <param name="text">The text to display</param>
+        /// <param name="choiceOne">The first choice</param>
+        /// <param name="choiceTwo">The second choice</param>
+        /// <returns>The updated text with the choices</returns>
+        public static string GetChoiceText(string text, string choiceOne, string choiceTwo)
+        {
+            text = GetGameSafeString(text).TrimEnd();
+            choiceOne = choiceOne.Length > 12 ? "Yeah" : choiceOne;
+            choiceTwo = choiceOne.Length > 12 ? "No" : choiceTwo;
+            return $"{text}\n  ≥ {choiceOne}\n    {choiceTwo}\n{{CHOICE}}";
         }
 
         private static IEnumerable<string> Wordwrap(string text, int width)

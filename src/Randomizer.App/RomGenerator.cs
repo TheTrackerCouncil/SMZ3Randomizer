@@ -265,23 +265,11 @@ namespace Randomizer.App
         /// <returns>The bytes of the rom file</returns>
         protected byte[] GenerateRomBytes(RandomizerOptions options, SeedData seed)
         {
-            var assembly = GetType().Assembly;
-            var smIpsFiles = new List<Stream>();
-            if (options.PatchOptions.CasualSuperMetroidPatches)
-                smIpsFiles.Add(IpsPatch.Respin());
-
             byte[] rom;
-            try
+            using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
+            using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
             {
-                using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
-                using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
-                {
-                    rom = Rom.CombineSMZ3Rom(smRom, z3Rom, smIpsFiles);
-                }
-            }
-            finally
-            {
-                smIpsFiles.ForEach(x => x.Close());
+                rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
             }
 
             using (var ips = IpsPatch.Smz3())
@@ -292,6 +280,54 @@ namespace Randomizer.App
 
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
+
+            if (options.PatchOptions.CasPatches.Respin)
+            {
+                using var patch = IpsPatch.Respin();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.NerfedCharge)
+            {
+                using var patch = IpsPatch.NerfedCharge();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.RefillAtSaveStation)
+            {
+                using var patch = IpsPatch.RefillAtSaveStation();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.FastDoors)
+            {
+                using var patch = IpsPatch.FastDoors();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.FastElevators)
+            {
+                using var patch = IpsPatch.FastElevators();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.AimAnyButton)
+            {
+                using var patch = IpsPatch.AimAnyButton();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.AimAnyButton)
+            {
+                using var patch = IpsPatch.AimAnyButton();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.Speedkeep)
+            {
+                using var patch = IpsPatch.SpeedKeep();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
 
             if (options.PatchOptions.ShipPatch?.FileName != null)
             {

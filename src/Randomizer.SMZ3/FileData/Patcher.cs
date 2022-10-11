@@ -17,13 +17,11 @@ using static Randomizer.SMZ3.FileData.DropPrize;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Services;
-using System.Text.RegularExpressions;
 
 namespace Randomizer.SMZ3.FileData
 {
     public class Patcher
     {
-        private static readonly Regex s_spaces = new(@"[\s\r\n]+");
         private readonly List<World> _allWorlds;
         private readonly World _myWorld;
         private readonly string _seedGuid;
@@ -117,7 +115,7 @@ namespace Randomizer.SMZ3.FileData
             WriteRemoveEquipmentFromUncle(_myWorld.HyruleCastle.LinksUncle.Item);
 
             WriteGanonInvicible(config.GanonInvincible);
-            
+
             // WritePreopenCurtains();
             WriteQuickSwap();
 
@@ -687,7 +685,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
             _stringTable.SetBombShopRevealText(bombShop);
 
-            var blind = GetGameSafeString(_gameLines.BlindIntro.ToString());
+            var blind = Dialog.GetGameSafeString(_gameLines.BlindIntro);
             _patches.Add((Snes(0x308800), Dialog.Simple(blind)));
             _stringTable.SetBlindText(blind);
 
@@ -695,9 +693,19 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
             _stringTable.SetTavernManText(tavernMan);
 
-            var ganon = GetGameSafeString(_gameLines.GanonIntro.ToString());
+            var ganon = Dialog.GetGameSafeString(_gameLines.GanonIntro);
             _patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
             _stringTable.SetGanonFirstPhaseText(ganon);
+
+            // Have bottle merchant and zora say what they have if requested
+            if (config.CasPatches.PreventScams)
+            {
+                var item = GetItemName(_myWorld.LightWorldNorthWest.BottleMerchant.Item.Type);
+                _stringTable.SetBottleVendorText(Dialog.GetChoiceText(_gameLines.BottleMerchant.Format(item), _gameLines.ChoiceYes, _gameLines.ChoiceNo));
+
+                item = GetItemName(_myWorld.LightWorldNorthEast.ZorasDomain.Zora.Item.Type);
+                _stringTable.SetZoraText(Dialog.GetChoiceText(_gameLines.KingZora.Format(item), _gameLines.ChoiceYes, _gameLines.ChoiceNo));
+            }
 
             // Todo: Verify these two are correct if ganon invincible patch is
             // ever added ganon_fall_in_alt in v30
@@ -725,11 +733,11 @@ namespace Randomizer.SMZ3.FileData
                 _stringTable.SetGanonThirdPhaseText(silvers);
             }
 
-            var triforceRoom = GetGameSafeString(_gameLines.TriforceRoom.ToString());
+            var triforceRoom = Dialog.GetGameSafeString(_gameLines.TriforceRoom);
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             _stringTable.SetTriforceRoomText(triforceRoom);
 
-            _stringTable.SetHints(hints.Select(x => GetGameSafeString(x)));
+            _stringTable.SetHints(hints.Select(x => Dialog.GetGameSafeString(x)));
         }
 
         private void WriteStringTable()
@@ -798,7 +806,7 @@ namespace Randomizer.SMZ3.FileData
                 _patches.Add((Snes(0x400045), new byte[] { 0x0f })); // display ----dcba a: Small Keys, b: Big Key, c: Map, d: Compass
             }
             if (_myWorld.Config.Keysanity)
-            { 
+            {
                 _patches.Add((Snes(0x40016A), new byte[] { 1 })); // FreeItemText: db #$01 ; #00 = Off (default) - #$01 = On
             }
         }
@@ -989,44 +997,14 @@ namespace Randomizer.SMZ3.FileData
             //patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
         }
 
-        /// <summary>
-        /// Converts the hint into max 19 character lines
-        /// for adding to the game unless the text is
-        /// already split into multiple lines
-        /// </summary>
-        private string GetGameSafeString(string text)
-        {
-            // If it's already multiple lines that are are within the
-            // width limit, just return it as is
-            if (!text.Split("\n").Any(x => x.Length > 19))
-            {
-                return text;
-            }
-
-            text = s_spaces.Replace(text, " ");
-            var words = text.Split(" ");
-            var output = new List<string>();
-            var currentLine = "";
-            foreach (var word in words)
-            {
-                if (word.Length + currentLine.Length > 18)
-                {
-                    output.Add(currentLine);
-                    currentLine = word;
-                }
-                else
-                {
-                    currentLine += " " + word;
-                }
-            }
-            output.Add(currentLine);
-            return string.Join("\n", output).Trim();
-        }
-
         private string GetRegionName(Region region)
         {
-            return GetGameSafeString(_metadataService.Region(region).Name);
+            return Dialog.GetGameSafeString(_metadataService.Region(region).Name);
+        }
 
+        private string GetItemName(ItemType type)
+        {
+            return _metadataService.Item(type).NameWithArticle;
         }
     }
 }

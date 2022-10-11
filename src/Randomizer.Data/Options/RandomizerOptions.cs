@@ -137,6 +137,7 @@ namespace Randomizer.Data.Options
                     LocationItems = SeedOptions.LocationItems,
                     EarlyItems = SeedOptions.EarlyItems,
                     LogicConfig = LogicConfig.Clone(),
+                    CasPatches = PatchOptions.CasPatches.Clone(),
                     CopySeedAndRaceSettings = true,
                     Seed = SeedOptions.Seed,
                     UniqueHintCount = SeedOptions.UniqueHintCount,
@@ -189,6 +190,7 @@ namespace Randomizer.Data.Options
                     LocationItems = oldConfig.LocationItems,
                     EarlyItems = oldConfig.EarlyItems,
                     LogicConfig = oldConfig.LogicConfig,
+                    CasPatches = oldConfig.CasPatches,
                     SettingsString = SeedOptions.ConfigString,
                     UniqueHintCount = uniqueHintcount,
                     CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings

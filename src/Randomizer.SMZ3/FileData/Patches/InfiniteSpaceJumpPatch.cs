@@ -5,9 +5,9 @@ using Randomizer.Data.Options;
 namespace Randomizer.SMZ3.FileData.Patches
 {
     /// <summary>
-    /// Represents an SMZ3 ROM patch that makes Super Metroid more casual.
+    /// Represents an SMZ3 ROM patch that makes jumping in Super Metroid more casual.
     /// </summary>
-    public class CasualSMPatch : RomPatch
+    public class InfiniteSpaceJumpPatch : RomPatch
     {
         /// <summary>
         /// Returns the changes to be applied to an SMZ3 ROM file.
@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// </returns>
         public override IEnumerable<(int offset, byte[] data)> GetChanges(Config config)
         {
-            if (!config.CasualSMPatches)
+            if (!config.CasPatches.InfiniteSpaceJump)
                 yield break;
 
             // Infinite Space Jump

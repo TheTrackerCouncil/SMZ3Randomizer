@@ -58,6 +58,8 @@ namespace Randomizer.Data.Options
 
         public bool CasualSuperMetroidPatches { get; set; }
 
+        public CasPatches CasPatches { get; set; } = new();
+
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

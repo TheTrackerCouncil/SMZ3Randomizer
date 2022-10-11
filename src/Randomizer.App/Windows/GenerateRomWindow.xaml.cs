@@ -98,6 +98,7 @@ namespace Randomizer.App
                 PopulateItemOptions();
                 PopulateLogicOptions();
                 PopulateLocationOptions();
+                PopulateCasPatchOptions();
                 UpdateRaceCheckBoxes();
             }
         }
@@ -219,6 +220,36 @@ namespace Randomizer.App
                 Grid.SetRow(comboBox, row);
 
                 row++;
+            }
+        }
+
+        /// <summary>
+        /// Populates the grid with cas' patches patches
+        /// reflection
+        /// </summary>
+        public void PopulateCasPatchOptions()
+        {
+            var type = Options.PatchOptions.CasPatches.GetType();
+
+            foreach (var property in type.GetProperties())
+            {
+                var name = property.Name;
+                var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? name;
+                var description = property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? displayName;
+
+                if (property.PropertyType == typeof(bool))
+                {
+                    var checkBox = new CheckBox
+                    {
+                        Name = name,
+                        Content = displayName,
+                        IsChecked = (bool)property.GetValue(Options.PatchOptions.CasPatches),
+                        ToolTip = description
+                    };
+                    checkBox.Checked += CasPatchCheckBox_Checked;
+                    checkBox.Unchecked += CasPatchCheckBox_Checked;
+                    CasPatchGrid.Children.Add(checkBox);
+                }
             }
         }
 
@@ -549,6 +580,20 @@ namespace Randomizer.App
             var type = Options.LogicConfig.GetType();
             var property = type.GetProperty(checkBox.Name);
             property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
+        }
+
+        /// <summary>
+        /// Updates the PatchOptions based on when a checkbox is
+        /// checked/unchecked using reflection
+        /// </summary>
+        /// <param name="sender">The checkbox that was checked</param>
+        /// <param name="e">The event object</param>
+        private void CasPatchCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            var type = Options.PatchOptions.CasPatches.GetType();
+            var property = type.GetProperty(checkBox.Name);
+            property.SetValue(Options.PatchOptions.CasPatches, checkBox.IsChecked ?? false);
         }
 
         /// <summary>
