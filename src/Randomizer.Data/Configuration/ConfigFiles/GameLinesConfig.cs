@@ -59,19 +59,19 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// Hints for stating that a location has a specific item
         /// </summary>
         public SchrodingersString? HintLocationHasItem { get; init; }
-            = new SchrodingersString("{0} has {1}.");
+            = new SchrodingersString("{0} has {1}.", "You can find {1} at {0}.");
 
         /// <summary>
         /// Line for King Zora saying what he has
         /// </summary>
         public SchrodingersString? KingZora { get; init; }
-            = new SchrodingersString("You got 500 rupees to buy {0}?");
+            = new SchrodingersString("You got 500 rupees to buy {0}?", "Carrying around 500 rupees in pocket change? I'll give you {0} for it!");
 
         /// <summary>
         /// Line for the bottle merchant saying what he has
         /// </summary>
         public SchrodingersString? BottleMerchant { get; init; }
-            = new SchrodingersString("I'll take 100 rupees if you want {0}.");
+            = new SchrodingersString("I'll take 100 rupees if you want {0}.", "Gimme 100 rupees, and I'll give you {0}.");
 
         /// <summary>
         /// Options for replying with yes to a dialog choice

@@ -1,0 +1,62 @@
+﻿# This config file is for messages that appear in the game itself
+# game rather than as respnses from Tracker.
+
+# Note that lines of text in ALttP have a maximum of 19 characters.
+# If you include text as one long line, it'll automatically wrap the
+# text for you, but you can also do something like the following if
+# you would like it to manage it yourself for effect. However, the
+# first line cannot be blank.
+
+#- Text: |+
+#    Line one
+#    line two
+
+# The list of possibilities for what Ganon will say when you first drop down
+GanonIntro:
+
+# The list of possibilities for what Blind will say upon transformation
+BlindIntro:
+
+# The list of possibilities for text when beating Zelda second
+TriforceRoom:
+
+# The list of possibilities for hint messages for a given room, dungeon,
+# or region that is required to complete the game.
+# {0} is replaced with the room, dungeon, or region name
+HintLocationIsMandatory:
+
+# The list of possibilities for hint messages for a given room, dungeon,
+# or region that has something useful that isn't required.
+# {0} is replaced with the room, dungeon, or region name
+HintLocationHasUsefulItem:
+
+# The list of possibilities for hint messages for a given room, dungeon,
+# or region that has nothing required or useful in it.
+# {0} is replaced with the room, dungeon, or region name
+HintLocationEmpty:
+
+# The list of possibilities for hint messages for a given location
+# that has a specific item in it.
+# {0} is replaced with the room, dungeon, or region name
+# {1} is replaced with the item name.
+HintLocationHasItem:
+
+# The list of possibilities for King Zora to say when asking the player
+# if the want to buy an item.
+# {0} is replaced with the item name.
+KingZora:
+
+# The list of possibilities for the bottle merchant to say when asking 
+# the player if the want to buy an item.
+# {0} is replaced with the item name.
+BottleMerchant:
+
+# The list of possibilities for the Yes response when the player is
+# presented with a yes or no choice.
+# Limited to a max of 12 characters.
+ChoiceYes: 
+
+# The list of possibilities for the No response when the player is
+# presented with a yes or no choice.
+# Limited to a max of 12 characters.
+ChoiceNo: 

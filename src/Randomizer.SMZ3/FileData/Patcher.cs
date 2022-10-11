@@ -700,10 +700,10 @@ namespace Randomizer.SMZ3.FileData
             // Have bottle merchant and zora say what they have if requested
             if (config.CasPatches.PreventScams)
             {
-                var item = GetItemName(_myWorld.LightWorldNorthWest.BottleMerchant.Item.Type);
+                var item = GetItemName(config, _myWorld.LightWorldNorthWest.BottleMerchant.Item);
                 _stringTable.SetBottleVendorText(Dialog.GetChoiceText(_gameLines.BottleMerchant.Format(item), _gameLines.ChoiceYes, _gameLines.ChoiceNo));
 
-                item = GetItemName(_myWorld.LightWorldNorthEast.ZorasDomain.Zora.Item.Type);
+                item = GetItemName(config, _myWorld.LightWorldNorthEast.ZorasDomain.Zora.Item);
                 _stringTable.SetZoraText(Dialog.GetChoiceText(_gameLines.KingZora.Format(item), _gameLines.ChoiceYes, _gameLines.ChoiceNo));
             }
 
@@ -1002,9 +1002,19 @@ namespace Randomizer.SMZ3.FileData
             return Dialog.GetGameSafeString(_metadataService.Region(region).Name);
         }
 
-        private string GetItemName(ItemType type)
+        private string GetItemName(Config config, Item item)
         {
-            return _metadataService.Item(type).NameWithArticle;
+            var itemName = _metadataService.Item(item.Type).NameWithArticle;
+            if (!config.MultiWorld)
+            {
+                return itemName;
+            }
+            else
+            {
+                return _myWorld == item.World
+                    ? $"{itemName} belonging to you"
+                    : $"{itemName} belonging to another player"; // Will need to update to player name when multiworld is working
+            }
         }
     }
 }
