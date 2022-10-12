@@ -5,9 +5,9 @@ using Randomizer.Data.Options;
 namespace Randomizer.SMZ3.FileData.Patches
 {
     /// <summary>
-    /// Represents an SMZ3 ROM patch that makes Super Metroid more casual.
+    /// Represents an SMZ3 ROM patch that updates the Bozo Door Time
     /// </summary>
-    public class CasualSMPatch : RomPatch
+    public class NoBozoSoftlock : RomPatch
     {
         /// <summary>
         /// Returns the changes to be applied to an SMZ3 ROM file.
@@ -19,12 +19,11 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// </returns>
         public override IEnumerable<(int offset, byte[] data)> GetChanges(Config config)
         {
-            if (!config.CasualSMPatches)
-                yield break;
-
-            // Infinite Space Jump
-            // See: https://github.com/theonlydude/RandomMetroidSolver/blob/master/patches/common/patches.py#L97
-            yield return (Rom.TranslateSuperMetroidOffset(0x82493), new byte[] { 0x80, 0x0D });
+            // Updates the value set by bomb_torizo.asm
+            if (config.CasPatches.NoBozoSoftlock)
+                yield return (Snes(0x84BA54), new byte[] { 0x28 });
+            else
+                yield return (Snes(0x84BA54), new byte[] { 0x28 * 2 });
         }
     }
 }

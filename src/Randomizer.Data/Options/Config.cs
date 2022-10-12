@@ -196,11 +196,12 @@ namespace Randomizer.Data.Options
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
+        public CasPatches CasPatches { get; set; } = new();
 #nullable enable
         public PlandoConfig? PlandoConfig { get; set; }
 #nullable disable
         public ItemPlacementRule ItemPlacementRule { get; set; }
-
+        public int UniqueHintCount { get; set; } = 8;
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
         public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
         public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);

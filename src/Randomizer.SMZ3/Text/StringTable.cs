@@ -3,11 +3,24 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Randomizer.SMZ3.Generation;
 using SharpYaml.Model;
 
 namespace Randomizer.SMZ3.Text {
 
     class StringTable {
+
+        private static readonly List<string> s_unwantedText = new()
+        {
+            "bottle_vendor_choice",
+            "bottle_vendor_get",
+            "bottle_vendor_no",
+            "zora_meeting",
+            "zora_tells_cost",
+            "zora_get_flippers",
+            "zora_no_cash",
+            "zora_no_buy_item"
+        };
 
         internal static readonly IList<(string name, byte[] bytes)> template;
 
@@ -15,6 +28,10 @@ namespace Randomizer.SMZ3.Text {
 
         public StringTable() {
             entries = new List<(string, byte[])>(template);
+            foreach (var toRemove in s_unwantedText)
+            {
+                SetText(toRemove, "{NOTEXT}");
+            }
         }
 
         static StringTable() {
@@ -59,6 +76,26 @@ namespace Randomizer.SMZ3.Text {
 
         public void SetBombosText(string text) {
             SetText("tablet_bombos_book", text);
+        }
+
+        public void SetHints(IEnumerable<string> hints)
+        {
+            var index = 0;
+            foreach (var hint in hints)
+            {
+                SetText(GameHintService.HintLocations[index], "{NOBORDER}\n" + hint);
+                index++;
+            }
+        }
+
+        public void SetBottleVendorText(string text)
+        {
+            SetText("bottle_vendor_choice", text);
+        }
+
+        public void SetZoraText(string text)
+        {
+            SetText("zora_tells_cost", text);
         }
 
         void SetText(string name, string text) {

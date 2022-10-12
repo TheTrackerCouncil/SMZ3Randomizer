@@ -20,7 +20,7 @@ namespace Randomizer.Data.Configuration
     /// <summary>
     /// Provides tracker configuration data.
     /// </summary>
-    public class TrackerConfigProvider
+    public class ConfigProvider
     {
         private static readonly JsonSerializerOptions s_options = new()
         {
@@ -34,13 +34,13 @@ namespace Randomizer.Data.Configuration
             .Build();
 
         private readonly string _basePath;
-        private readonly ILogger<TrackerConfigProvider>? _logger;
+        private readonly ILogger<ConfigProvider>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="TrackerConfigProvider"/> class.
+        /// cref="ConfigProvider"/> class.
         /// </summary>
-        public TrackerConfigProvider(ILogger<TrackerConfigProvider>? logger)
+        public ConfigProvider(ILogger<ConfigProvider>? logger)
         {
 #if DEBUG
             _basePath = Path.Combine(GetSourceDirectory(), "Randomizer.Data", "Configuration", "Yaml");
@@ -164,6 +164,14 @@ namespace Randomizer.Data.Configuration
         /// <returns></returns>
         public virtual UIConfig GetUIConfig(params string[] profiles) => 
             LoadYamlConfigs<UIConfig, UILayout>("ui.yml", profiles);
+
+        /// <summary>
+        /// Returns the configs with in game text
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual GameLinesConfig GetGameConfig(params string[] profiles) =>
+            LoadYamlConfigs<GameLinesConfig, GameLinesConfig>("game.yml", profiles);
 
         /// <summary>
         /// Returns a collection of all possible config profiles to

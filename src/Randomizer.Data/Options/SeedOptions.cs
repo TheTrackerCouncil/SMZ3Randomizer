@@ -52,6 +52,11 @@ namespace Randomizer.Data.Options
 
         public bool DisableCheats { get; set; }
 
+        public int UniqueHintCount { get; set; } = 8;
+
+        [JsonIgnore]
+        public int MaxHints => 15;
+
         [JsonIgnore]
         public bool CopySeedAndRaceSettings { get; set; }
 

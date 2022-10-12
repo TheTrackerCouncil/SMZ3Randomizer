@@ -137,8 +137,10 @@ namespace Randomizer.Data.Options
                     LocationItems = SeedOptions.LocationItems,
                     EarlyItems = SeedOptions.EarlyItems,
                     LogicConfig = LogicConfig.Clone(),
+                    CasPatches = PatchOptions.CasPatches.Clone(),
                     CopySeedAndRaceSettings = true,
                     Seed = SeedOptions.Seed,
+                    UniqueHintCount = SeedOptions.UniqueHintCount,
                 };
                 return config;
             }
@@ -151,6 +153,7 @@ namespace Randomizer.Data.Options
                 var disableTrackerHints = SeedOptions.DisableTrackerHints;
                 var disableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers;
                 var disableCheats = SeedOptions.DisableCheats;
+                var uniqueHintcount = SeedOptions.UniqueHintCount;
                 var seed = SeedOptions.Seed;
 
                 if (SeedOptions.CopySeedAndRaceSettings)
@@ -160,6 +163,7 @@ namespace Randomizer.Data.Options
                     disableTrackerHints = oldConfig.DisableTrackerHints;
                     disableTrackerSpoilers = oldConfig.DisableTrackerSpoilers;
                     disableCheats = oldConfig.DisableCheats;
+                    uniqueHintcount = oldConfig.UniqueHintCount;
                     seed = oldConfig.Seed;
                 }
 
@@ -186,7 +190,9 @@ namespace Randomizer.Data.Options
                     LocationItems = oldConfig.LocationItems,
                     EarlyItems = oldConfig.EarlyItems,
                     LogicConfig = oldConfig.LogicConfig,
+                    CasPatches = oldConfig.CasPatches,
                     SettingsString = SeedOptions.ConfigString,
+                    UniqueHintCount = uniqueHintcount,
                     CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings
                 };
             }

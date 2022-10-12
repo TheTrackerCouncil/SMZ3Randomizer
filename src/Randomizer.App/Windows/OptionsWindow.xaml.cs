@@ -24,14 +24,14 @@ namespace Randomizer.App
     {
         private readonly IChatAuthenticationService _chatAuthenticationService;
         private readonly ILogger<OptionsWindow> _logger;
-        private readonly TrackerConfigProvider _trackerConfigProvider;
+        private readonly ConfigProvider _trackerConfigProvider;
         private GeneralOptions _options;
         private bool _canLogIn = true;
         private ICollection<string> _availableProfiles;
 
 
         public OptionsWindow(IChatAuthenticationService chatAuthenticationService,
-            TrackerConfigProvider configProvider,
+            ConfigProvider configProvider,
             ILogger<OptionsWindow> logger)
         {
             InitializeComponent();

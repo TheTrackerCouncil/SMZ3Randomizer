@@ -96,8 +96,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="metadataService"></param>
         /// <param name="stateService"></param>
         /// <param name="worldService"></param>
-        /// <param name="timerService"></param>
-        public Tracker(TrackerConfigProvider configProvider,
+        public Tracker(ConfigProvider configProvider,
             IWorldAccessor worldAccessor,
             TrackerModuleFactory moduleFactory,
             IChatClient chatClient,
@@ -107,7 +106,7 @@ namespace Randomizer.SMZ3.Tracking
             IItemService itemService,
             ICommunicator communicator,
             IHistoryService historyService,
-            TrackerConfigs configs,
+            Configs configs,
             IMetadataService metadataService,
             ITrackerStateService stateService,
             IWorldService worldService,

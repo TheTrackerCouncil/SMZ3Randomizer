@@ -15,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddSmz3Randomizer(this IServiceCollection services)
         {
+            services.AddTransient<IGameHintService, GameHintService>();
             services.AddSingleton<RandomizerContext>();
             services.AddSingleton<IFiller, StandardFiller>();
             services.AddSingleton<IWorldAccessor, WorldAccessor>();

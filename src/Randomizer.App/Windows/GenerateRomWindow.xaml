@@ -177,17 +177,11 @@
               <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
                         Content="Disable low energy beep in Super Metroid" />
 
-              <CheckBox IsChecked="{Binding CasualSuperMetroidPatches}"
-                        Content="Super Cas'troid">
-                <CheckBox.ToolTip>
-                  <TextBlock>
-                    Enables the following patches:
-                    <LineBreak />
-                    • Infinite Space Jump: space jump is easier to use <LineBreak />
-                    • Respin: space jump can be restarted in mid-air
-                  </TextBlock>
-                </CheckBox.ToolTip>
-              </CheckBox>
+              <GroupBox Header="Cas' Patches"
+                        Padding="0,5,0,0" Margin="0,0,0,3">
+                <UniformGrid Columns="2" Name="CasPatchGrid" />
+              </GroupBox>
+
 
               <controls:LabeledControl Text="Custom music pack:">
                 <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
@@ -250,6 +244,23 @@
                       Note: Accessible locations at the start of the run can have any item despite the selected progression item placement.
                     </TextBlock>
                   </controls:LabeledControl>
+                  <controls:LabeledControl Text="Unique in game hints:"
+                                           Margin="0,0,0,3"
+                                           ToolTip="The number of unique hints to generate for the Zelda telepathic tiles. Having fewer than the max will result in duplicated hints. Setting to 0 will use the default hints.">
+                    <StackPanel Orientation="Horizontal" >
+                      <TextBox Text="{Binding UniqueHintCount, Mode=TwoWay }"
+                               MinWidth="30"
+                               Margin="0,0,10,0"
+                               IsReadOnly="True">
+                      </TextBox>
+                      <Slider Width="200"
+                            Value="{Binding UniqueHintCount, Mode=TwoWay }"
+                            Minimum="0"
+                            Maximum="{Binding MaxHints}"/>
+                    </StackPanel>
+                    
+                  </controls:LabeledControl>
+                  
                 </StackPanel>
                 
               </GroupBox>

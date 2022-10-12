@@ -49,6 +49,16 @@ namespace Randomizer.Data.WorldData.Regions
         public RewardType RewardType => Reward?.Type ?? RewardType.None;
 
         /// <summary>
+        /// If the dungeon has a pendant in it or not
+        /// </summary>
+        public bool IsPendantDungeon => RewardType is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue;
+
+        /// <summary>
+        /// If the dungeon has a crystal in it or not
+        /// </summary>
+        public bool IsCrystalDungeon => RewardType is RewardType.CrystalBlue or RewardType.CrystalRed;
+
+        /// <summary>
         /// The reward marked by the player
         /// </summary>
         public RewardType MarkedReward

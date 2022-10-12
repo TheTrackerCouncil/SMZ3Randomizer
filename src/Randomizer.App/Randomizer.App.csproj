@@ -5,7 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>6.0.1</Version>
+    <Version>7.0.0-beta.1</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -25,6 +25,12 @@
     <None Remove="kirbyship.ips" />
     <None Remove="metroid.ips" />
     <None Remove="msu1-v6.ips" />
+    <None Remove="Patches\AimAnyButton.ips" />
+    <None Remove="Patches\elevators_speed.ips" />
+    <None Remove="Patches\fast_doors.ips" />
+    <None Remove="Patches\nerfed_charge.ips" />
+    <None Remove="Patches\rando_speed.ips" />
+    <None Remove="Patches\refill_before_save.ips" />
     <None Remove="Resources\Font Awesome 5 Free-Regular-400.otf" />
     <None Remove="Resources\Font Awesome 5 Free-Solid-900.otf" />
     <None Remove="Resources\LICENSE.txt" />
@@ -35,8 +41,14 @@
 
   <ItemGroup>
     <Resource Include="chozo20.ico" />
+    <EmbeddedResource Include="Patches\AimAnyButton.ips" />
     <EmbeddedResource Include="Patches\custom_ship.ips" />
+    <EmbeddedResource Include="Patches\elevators_speed.ips" />
+    <EmbeddedResource Include="Patches\fast_doors.ips" />
     <EmbeddedResource Include="Patches\msu1-v6.ips" />
+    <EmbeddedResource Include="Patches\nerfed_charge.ips" />
+    <EmbeddedResource Include="Patches\rando_speed.ips" />
+    <EmbeddedResource Include="Patches\refill_before_save.ips" />
     <EmbeddedResource Include="Patches\spinjumprestart.ips" />
     <EmbeddedResource Include="Patches\zsm.ips" />
   </ItemGroup>

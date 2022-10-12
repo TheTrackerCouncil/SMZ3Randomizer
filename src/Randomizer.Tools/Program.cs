@@ -222,7 +222,7 @@ namespace Randomizer.Tools
 
         public static string GenerateStats(Config config, int count = 50)
         {
-            var start = DateTime.Now;
+            /*var start = DateTime.Now;
             var loggerFactory = new LoggerFactory();
             var worldAccessor = new WorldAccessor();
             var filler = new StandardFiller(new Logger<StandardFiller>(loggerFactory));
@@ -301,7 +301,8 @@ namespace Randomizer.Tools
             sb.AppendLine("Item with least unique locations: " + leastCommon + " with " + leastCount + " unique locations");
             sb.AppendLine("Run time: " + ts.TotalSeconds + "s");
             sb.AppendLine();
-            return sb.ToString();
+            return sb.ToString();*/
+            return "";
         }
 
         private class StatsDetails

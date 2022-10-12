@@ -12,16 +12,17 @@ namespace Randomizer.Data.Configuration
     /// <summary>
     /// Class that contains a collection of all configs with the user selected tracker profiles
     /// </summary>
-    public class TrackerConfigs
+    public class Configs
     {
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="options">The tracker options for determining the selected tracker profiles</param>
         /// <param name="provider">The config provider for loading configs</param>
-        public TrackerConfigs(TrackerOptionsAccessor options, TrackerConfigProvider provider)
+        public Configs(OptionsFactory optionsFactory, ConfigProvider provider)
         {
-            var profiles = options.Options?.TrackerProfiles.ToArray() ?? Array.Empty<string>();
+            var options = optionsFactory.Create();
+            var profiles = options.GeneralOptions.SelectedProfiles.ToArray() ?? Array.Empty<string>();
             Bosses = provider.GetBossConfig(profiles);
             Dungeons = provider.GetDungeonConfig(profiles);
             Items = provider.GetItemConfig(profiles);
@@ -32,6 +33,7 @@ namespace Randomizer.Data.Configuration
             Rooms = provider.GetRoomConfig(profiles);
             Rewards = provider.GetRewardConfig(profiles);
             UILayouts = provider.GetUIConfig(profiles);
+            GameLines = provider.GetGameConfig(profiles);
         }
 
         /// <summary>
@@ -113,5 +115,10 @@ namespace Randomizer.Data.Configuration
         /// Gets a collection of available UI layouts
         /// </summary>
         public UIConfig UILayouts { get; }
+
+        /// <summary>
+        /// Gets the in game lines
+        /// </summary>
+        public GameLinesConfig GameLines { get; }
     }
 }
