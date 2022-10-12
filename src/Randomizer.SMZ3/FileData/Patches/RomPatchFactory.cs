@@ -16,6 +16,7 @@ namespace Randomizer.SMZ3.FileData.Patches
             yield return new InfiniteSpaceJumpPatch();
             yield return new MenuSpeedPatch();
             yield return new FlashRemovalPatch();
+            yield return new NoBozoSoftlock();
         }
     }
 }

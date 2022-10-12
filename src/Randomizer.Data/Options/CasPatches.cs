@@ -37,6 +37,10 @@ namespace Randomizer.Data.Options
         [Description("You will always start with a weak charge beam to prevent soft locks against bosses when running out of missiles.\nPatch developed by Smiley and Flo.")]
         public bool NerfedCharge { get; set; } = true;
 
+        [DisplayName("No Bomb Torizo Softlocks")]
+        [Description("Closes the door to Bomb Torizo faster after picking up the item to prevent softlocks by getting stuck in the door.")]
+        public bool NoBozoSoftlock { get; set; } = true;
+
         [DisplayName("Fast Metroid Doors")]
         [Description("Save stations will refill your ammo.\nPatch developed by Rakki.")]
         public bool FastDoors { get; set; } = true;
