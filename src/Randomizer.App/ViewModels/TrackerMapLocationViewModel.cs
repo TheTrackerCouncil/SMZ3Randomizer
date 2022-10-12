@@ -181,6 +181,7 @@ namespace Randomizer.App.ViewModels
                 if (Type == MapLocationType.Boss)
                 {
                     var progression = Syncer.ItemService.GetProgression(Region);
+                    var actualProgression = Syncer.ItemService.GetProgression(false);
                     if (BossRegion != null && BossRegion.Boss.State?.Defeated != true && BossRegion.CanBeatBoss(progression))
                     {
                         image = "boss.png";
@@ -188,7 +189,7 @@ namespace Randomizer.App.ViewModels
                     else if (RewardRegion != null && RewardRegion.Reward.State?.Cleared != true)
                     {
                         var regionLocations = (IHasLocations)Region;
-                        if (RewardRegion.CanComplete(progression)
+                        if (RewardRegion.CanComplete(actualProgression)
                             || regionLocations.Locations.All(x => x.IsAvailable(progression)))
                         {
                             var dungeon = RewardRegion as IDungeon;
