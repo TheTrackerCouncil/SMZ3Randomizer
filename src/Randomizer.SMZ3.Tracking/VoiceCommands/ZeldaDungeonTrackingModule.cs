@@ -19,7 +19,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     public class ZeldaDungeonTrackingModule : TrackerModule
     {
         private const string RewardKey = "RewardName";
-        private const string MedallionKey = "MedallionName";
         private const string TreasureCountKey = "NumberOfTreasures";
 
         /// <summary>
@@ -54,8 +53,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Mark dungeon medallion", GetMarkDungeonRequirementRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
-                var medallion = (ItemType)result.Semantics[MedallionKey].Value;
-                tracker.SetDungeonRequirement(dungeon, medallion, result.Confidence);
+                var medallion = GetItemFromResult(tracker, result, out string itemName);
+                tracker.SetDungeonRequirement(dungeon, medallion.Type, result.Confidence);
             });
 
             AddCommand("Clear dungeon treasure", GetTreasureTrackingRule(), (tracker, result) =>
@@ -120,11 +119,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .Append(DungeonKey, dungeonNames)
                 .OneOf("requires", "needs")
-                .Append(MedallionKey, medallions);
+                .Append(ItemNameKey, medallions);
 
             var itemFirst = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .Append(MedallionKey, medallions)
+                .Append(ItemNameKey, medallions)
                 .OneOf("is required for", "is needed for")
                 .Append(DungeonKey, dungeonNames);
 
@@ -133,12 +132,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("mark")
                 .Append(DungeonKey, dungeonNames)
                 .OneOf("as", "as requiring", "as needing")
-                .Append(MedallionKey, medallions);
+                .Append(ItemNameKey, medallions);
 
             var markItem = new GrammarBuilder()
                 .Append("Hey tracker,")
                 .Append("mark")
-                .Append(MedallionKey, medallions)
+                .Append(ItemNameKey, medallions)
                 .OneOf("as", "as required for", "as needed for")
                 .Append(DungeonKey, dungeonNames);
 

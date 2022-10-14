@@ -190,7 +190,7 @@ namespace Randomizer.App.ViewModels
                     {
                         var regionLocations = (IHasLocations)Region;
                         if (RewardRegion.CanComplete(actualProgression)
-                            || regionLocations.Locations.All(x => x.IsAvailable(progression)))
+                            || regionLocations.Locations.All(x => x.IsAvailable(progression, true)))
                         {
                             var dungeon = RewardRegion as IDungeon;
                             image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";
