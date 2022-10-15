@@ -40,6 +40,25 @@ namespace Randomizer.SMZ3.Generation
             "telepathic_tile_south_east_darkworld_cave"
         };
 
+        private static List<int> ImportantLocations = new List<int>()
+        {
+            48, // Kraid
+            134, // Phantoon
+            154, // Dragon
+            78, // Ridley
+            256 + 108, // Armos Knights
+            256 + 114, // Lanmolas
+            256 + 120, // Moldorm
+            256 + 134, // Helmasaur King
+            256 + 144, // Arrghus
+            256 + 152, // Mothula
+            256 + 160, // Blind
+            256 + 168, // Kholdstare
+            256 + 176, // Vitreous
+            256 + 188, // Trinexx
+            256 + 215, // GT Validation Chest
+        };
+
         private readonly ILogger<GameHintService> _logger;
         private readonly IMetadataService _metadataService;
         private GameLinesConfig _gameLines;
@@ -58,26 +77,22 @@ namespace Randomizer.SMZ3.Generation
         /// <param name="hintPlayerWorld">The player that will be receiving the hints</param>
         /// <param name="allWorlds">All worlds that are a part of the seed</param>
         /// <param name="playthrough">The initial playthrough with all of the spheres</param>
-        /// <param name="hintCount">The number of hints to generate</param>
         /// <param name="seed">Seed number for shuffling and randomization</param>
         /// <returns>A collection of strings to use for the in game hints</returns>
-        public IEnumerable<string> GetInGameHints(World hintPlayerWorld, ICollection<World> allWorlds, Playthrough playthrough, int hintCount, int seed)
+        public IEnumerable<string> GetInGameHints(World hintPlayerWorld, ICollection<World> allWorlds, Playthrough playthrough, int seed)
         {
-            if (hintCount <= 0)
-            {
-                return Enumerable.Empty<string>();
-            }
-
-            hintCount = hintCount > HintLocations.Count ? HintLocations.Count : hintCount;
-
             _random = new Random(seed);
             var lateSpheres = playthrough.Spheres.TakeLast((int)(playthrough.Spheres.Count * .5));
 
             var allHints = new List<string>();
 
+            var importantLocations = allWorlds.SelectMany(w => w.Locations)
+                .Where(l => ImportantLocations.Contains(l.Id) || l.Item.Progression || l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard))
+                .ToList();
+
             allHints.AddRange(GetProgressionItemHints(hintPlayerWorld, lateSpheres, 8));
-            allHints.AddRange(GetDungeonHints(hintPlayerWorld, allWorlds));
-            allHints.AddRange(GetLocationHints(hintPlayerWorld, allWorlds));
+            allHints.AddRange(GetDungeonHints(hintPlayerWorld, allWorlds, importantLocations));
+            allHints.AddRange(GetLocationHints(hintPlayerWorld, allWorlds, importantLocations));
 
             _logger.LogDebug("Possible in game hints");
             foreach (var hint in allHints.Distinct())
@@ -85,20 +100,16 @@ namespace Randomizer.SMZ3.Generation
                 _logger.LogDebug(hint);
             }
 
-            var hints = allHints.Distinct().Shuffle(_random).Take(hintCount);
+            return allHints.Distinct().Shuffle(_random);
+
+            /*.Take(hintCount);
             while (hints.Count() < HintLocations.Count)
             {
                 hints = hints.Concat(hints.Take(Math.Min(HintLocations.Count() - hints.Count(), hints.Count())));
             }
             hints = hints.Shuffle(_random);
 
-            _logger.LogDebug("Selected in game hints");
-            foreach (var hint in hints)
-            {
-                _logger.LogDebug(hint);
-            }
-
-            return hints;
+            return hints;*/
         }
 
         /// <summary>
@@ -110,7 +121,7 @@ namespace Randomizer.SMZ3.Generation
             // Grab items for the player marked as progression that are not junk or scam items
             var locations = spheres
                 .SelectMany(x => x.Locations)
-                .Where(x => x.World == hintPlayerWorld && x.Item.Progression && !x.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam))
+                .Where(x => x.Item.World == hintPlayerWorld && x.Item.Progression && !x.Item.Type.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam))
                 .Shuffle(_random)
                 .Take(count);
 
@@ -124,7 +135,7 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Retrives hints stating how important dungeons are to beating the game
         /// </summary>
-        private IEnumerable<string> GetDungeonHints(World hintPlayerWorld, ICollection<World> allWorlds)
+        private IEnumerable<string> GetDungeonHints(World hintPlayerWorld, ICollection<World> allWorlds, IEnumerable<Location> importantLocations)
         {
             // For keysanity/multiworld check all dungeons, otherwise check non-crystal dungeons
             var dungeons = hintPlayerWorld.Dungeons
@@ -134,7 +145,7 @@ namespace Randomizer.SMZ3.Generation
             foreach (var dungeon in dungeons)
             {
                 var dungeonRegion = dungeon as Region;
-                var usefulNess = CheckIfLocationsAreImportant(allWorlds, dungeonRegion.Locations);
+                var usefulNess = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
                 var dungeonName = _metadataService.Dungeon(dungeon).Name.ToString();
 
                 if (usefulNess == LocationUsefulness.Mandatory)
@@ -157,26 +168,26 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Retrieves hints for out of the way locations and rooms to the pool of hints
         /// </summary>
-        private IEnumerable<string> GetLocationHints(World hintPlayerWorld, ICollection<World> allWorlds)
+        private IEnumerable<string> GetLocationHints(World hintPlayerWorld, ICollection<World> allWorlds, IEnumerable<Location> importantLocations)
         {
             var hints = new List<string>();
 
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 33)); // Waterway
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 132)); // Wrecked pool
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 129)); // Wrecked ship post chozo speed booster item
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 150)); // Shaktool
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 143)); // Plasma beam
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 44)); // Sahasrahla
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 14)); // Ped
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 36)); // Zora
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 78)); // Catfish
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 117)); // Tower of Hera big key chest
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 139 or 256 + 140), "The left side of swamp palace");
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.DarkWorldNorthEast.PyramidFairy.Locations);
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.DarkWorldSouth.HypeCave.Locations);
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.DarkWorldDeathMountainEast.HookshotCave.Locations);
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.LightWorldDeathMountainEast.ParadoxCave.Locations);
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, hintPlayerWorld.UpperNorfairCrocomire.Locations);
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 33)); // Waterway
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 132)); // Wrecked pool
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 129)); // Wrecked ship post chozo speed booster item
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 150)); // Shaktool
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 143)); // Plasma beam
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 44)); // Sahasrahla
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 14)); // Ped
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 36)); // Zora
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 78)); // Catfish
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 117)); // Tower of Hera big key chest
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 139 or 256 + 140), "The left side of swamp palace");
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldNorthEast.PyramidFairy.Locations);
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldSouth.HypeCave.Locations);
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldDeathMountainEast.HookshotCave.Locations);
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.LightWorldDeathMountainEast.ParadoxCave.Locations);
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.UpperNorfairCrocomire.Locations);
 
             return hints;
         }
@@ -184,7 +195,7 @@ namespace Randomizer.SMZ3.Generation
         /// <summary>
         /// Adds a hint for a given set of location(s) to the list of hints
         /// </summary>
-        private void AddLocationHint(List<string> hints, World hintPlayerWorld, ICollection<World> allWorlds, IEnumerable<Location> locations, string? areaName = null)
+        private void AddLocationHint(List<string> hints, World hintPlayerWorld, ICollection<World> allWorlds, IEnumerable<Location> importantLocations, IEnumerable<Location> locations, string? areaName = null)
         {
             // If we only have a single location, just say what item is there
             if (locations.Count() == 1)
@@ -197,7 +208,7 @@ namespace Randomizer.SMZ3.Generation
                 return;
             }
 
-            var usefulness = CheckIfLocationsAreImportant(allWorlds, locations);
+            var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, locations);
 
             areaName = areaName == null
                 ? GetLocationsName(hintPlayerWorld, locations)
@@ -221,9 +232,9 @@ namespace Randomizer.SMZ3.Generation
         /// Checks how useful a location is based on if the seed can be completed if we remove those
         /// locations from the playthrough and if the items there are at least slightly useful
         /// </summary>
-        private LocationUsefulness CheckIfLocationsAreImportant(IEnumerable<World> allWorlds, IEnumerable<Location> locations)
+        private LocationUsefulness CheckIfLocationsAreImportant(IEnumerable<World> allWorlds, IEnumerable<Location> importantLocations, IEnumerable<Location> locations)
         {
-            var worldLocations = allWorlds.SelectMany(x => x.Locations).Except(locations).ToList();
+            var worldLocations = importantLocations.Except(locations).ToList();
             var locationItems = locations.Select(x => x.Item.Type).ToList();
             var region = locations.First().Region;
             try

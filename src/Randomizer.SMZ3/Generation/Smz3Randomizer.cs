@@ -86,17 +86,26 @@ namespace Randomizer.SMZ3.Generation
 
             _logger.LogDebug($"Seed: {seedNumber} | Race: {primaryConfig.Race} | Keysanity: {primaryConfig.KeysanityMode} | Item placement: {primaryConfig.ItemPlacementRule} | World count : {configs.Count()}");
 
-            //primaryConfig.GameMode = GameMode.Multiworld;
+            /*primaryConfig.GameMode = GameMode.Multiworld;
+
+            // Testing code. TODO: Remove
+            if (primaryConfig.MultiWorld)
+            {
+                for (var i = 0; i < 4; i++)
+                {
+                    configs.Add(primaryConfig);
+                }
+            }*/
+
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
                 worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N")));
             else
             {
-                var playerId = 0;
-                foreach (var config in configs)
+                for (var playerId = 0; playerId < configs.Count; playerId++)
                 {
                     var player = "test" + playerId;
-                    worlds.Add(new World(config, player, playerId, Guid.NewGuid().ToString("N")));
+                    worlds.Add(new World(configs[playerId], player, playerId, Guid.NewGuid().ToString("N")));
                 }
                 //var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
                 //for (var p = 0; p < players; p++)
@@ -122,7 +131,8 @@ namespace Randomizer.SMZ3.Generation
                 Game = Name,
                 Mode = primaryConfig.GameMode.ToLowerString(),
                 Playthrough = primaryConfig.Race ? new Playthrough(primaryConfig, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
-                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
+                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>(),
+                Hints = new()
             };
 
             if (primaryConfig.GenerateSeedOnly)
@@ -136,7 +146,8 @@ namespace Randomizer.SMZ3.Generation
             foreach (var world in worlds)
             {
                 var patchRnd = new Random(patchSeed);
-                var hints = _hintService.GetInGameHints(world, worlds, playthrough, primaryConfig.UniqueHintCount, rng.Next());
+                var hints = _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
+                seedData.Hints.Add((world, hints.ToList()));
                 var patch = new Patcher(world, worlds, seedData.Guid, primaryConfig.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
                 seedData.Worlds.Add((world, patch.CreatePatch(world.Config, hints)));
             }

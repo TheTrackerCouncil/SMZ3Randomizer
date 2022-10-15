@@ -444,6 +444,25 @@ namespace Randomizer.App
             }
 
             log.AppendLine();
+            log.AppendLine(Underline("Hints", '='));
+            log.AppendLine();
+
+            foreach (var (world, hints) in seed.Hints)
+            {
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine();
+                }
+
+                foreach (var hint in hints)
+                {
+                    log.AppendLine(hint);
+                }
+                log.AppendLine();
+            }
+
+            log.AppendLine();
             log.AppendLine(Underline("Spheres", '='));
             log.AppendLine();
 
