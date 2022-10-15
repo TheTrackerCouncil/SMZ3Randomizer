@@ -189,8 +189,13 @@ namespace Randomizer.App.ViewModels
                     else if (RewardRegion != null && RewardRegion.Reward.State?.Cleared != true)
                     {
                         var regionLocations = (IHasLocations)Region;
+
+                        // If the player can complete the region with the current actual progression
+                        // or if they can access all locations in the dungeon (unless this is Castle Tower
+                        // in Keysanity because it doesn't have a location for Aga himself)
                         if (RewardRegion.CanComplete(actualProgression)
-                            || regionLocations.Locations.All(x => x.IsAvailable(progression, true)))
+                            || (regionLocations.Locations.All(x => x.IsAvailable(progression, true))
+                                && !(Region.Config.ZeldaKeysanity && RewardRegion is CastleTower)))
                         {
                             var dungeon = RewardRegion as IDungeon;
                             image = dungeon.MarkedReward.GetDescription().ToLowerInvariant() + ".png";

@@ -19,7 +19,11 @@ namespace Randomizer.SMZ3.Text {
             "zora_tells_cost",
             "zora_get_flippers",
             "zora_no_cash",
-            "zora_no_buy_item"
+            "zora_no_buy_item",
+            "fairy_fountain_refill",
+            "pond_will_upgrade",
+            "pond_item_test",
+            "pond_item_bottle_filled"
         };
 
         internal static readonly IList<(string name, byte[] bytes)> template;
