@@ -16,6 +16,7 @@ using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
+using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
@@ -70,7 +71,7 @@ namespace Randomizer.App
                 try
                 {
                     seed = GenerateSeed(options);
-                    if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
+                    if (!_randomizer.ValidateSeedSettings(seed))
                     {
                         latestError = "";
                         validated = false;
@@ -367,7 +368,7 @@ namespace Randomizer.App
                 GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);
-            await _stateService.CreateStateAsync(seed.Worlds[0].World, rom);
+            await _stateService.CreateStateAsync(seed.Worlds.Select(x => x.World), rom);
             return rom;
         }
 
@@ -393,23 +394,46 @@ namespace Randomizer.App
             log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
             log.AppendLine($"Generated on {DateTime.Now:F}");
             log.AppendLine($"Seed: {options.SeedOptions.Seed} (actual: {seed.Seed})");
-            log.AppendLine($"Settings String: {seed.Playthrough.Config.SettingsString}");
-            log.AppendLine($"Early Items: {string.Join(',', seed.Playthrough.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
 
-            var locationPrefs = new List<string>();
-            foreach (var (locationId, value) in seed.Playthrough.Config.LocationItems)
+            if (options.SeedOptions.Race)
             {
-                var itemPref = value < Enum.GetValues(typeof(ItemPool)).Length ? ((ItemPool)value).ToString() : ((ItemType)value).ToString();
-                locationPrefs.Add($"{seed.Worlds[0].World.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
+                log.AppendLine("[Race]");
             }
-            log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
 
-            var type = options.LogicConfig.GetType();
-            var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(seed.Playthrough.Config.LogicConfig)}"));
-            log.AppendLine($"Logic Options: {logicOptions}");
+            log.AppendLine();
+            log.AppendLine(Underline("Settings", '='));
+            log.AppendLine();
 
-            log.AppendLine((options.SeedOptions.Keysanity ? "[Keysanity] " : "")
-                         + (options.SeedOptions.Race ? "[Race] " : ""));
+            foreach (var world in seed.Worlds.Select(x => x.World))
+            {
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine();
+                }
+
+                log.AppendLine($"Settings String: {world.Config.SettingsString}");
+                log.AppendLine($"Early Items: {string.Join(',', world.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
+
+                var locationPrefs = new List<string>();
+                foreach (var (locationId, value) in world.Config.LocationItems)
+                {
+                    var itemPref = value < Enum.GetValues(typeof(ItemPool)).Length ? ((ItemPool)value).ToString() : ((ItemType)value).ToString();
+                    locationPrefs.Add($"{world.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
+                }
+                log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
+
+                var type = options.LogicConfig.GetType();
+                var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(world.Config.LogicConfig)}"));
+                log.AppendLine($"Logic Options: {logicOptions}");
+
+                if (world.Config.Keysanity)
+                {
+                    log.AppendLine("Keysanity: " + world.Config.KeysanityMode.ToString());
+                }
+                log.AppendLine();
+            }
+
             if (File.Exists(options.PatchOptions.Msu1Path))
                 log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.Msu1Path)}");
             log.AppendLine();
@@ -418,6 +442,29 @@ namespace Randomizer.App
             {
                 return log.ToString();
             }
+
+            log.AppendLine();
+            log.AppendLine(Underline("Hints", '='));
+            log.AppendLine();
+
+            foreach (var (world, hints) in seed.Hints)
+            {
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine();
+                }
+
+                foreach (var hint in hints)
+                {
+                    log.AppendLine(hint);
+                }
+                log.AppendLine();
+            }
+
+            log.AppendLine();
+            log.AppendLine(Underline("Spheres", '='));
+            log.AppendLine();
 
             var spheres = seed.Playthrough.GetPlaythroughText();
             for (var i = 0; i < spheres.Count; i++)
@@ -432,31 +479,64 @@ namespace Randomizer.App
                 log.AppendLine();
             }
 
-            log.AppendLine(Underline("Rewards"));
             log.AppendLine();
-            foreach (var region in seed.Worlds[0].World.Regions)
+            log.AppendLine(Underline("Dungeons", '='));
+            log.AppendLine();
+
+            foreach (var world in seed.Worlds.Select(x => x.World))
             {
-                if (region is IHasReward rewardRegion)
-                    log.AppendLine($"{region.Name}: {rewardRegion.RewardType}");
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player " + world.Player + " Rewards"));
+                }
+                else
+                {
+                    log.AppendLine(Underline("Rewards"));
+                }
+                log.AppendLine();
+
+                foreach (var region in world.Regions)
+                {
+                    if (region is IHasReward rewardRegion)
+                        log.AppendLine($"{region.Name}: {rewardRegion.RewardType}");
+                }
+                log.AppendLine();
+
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player " + world.Player + " Medallions"));
+                }
+                else
+                {
+                    log.AppendLine(Underline("Medallions"));
+                }
+                log.AppendLine();
+
+                foreach (var region in world.Regions)
+                {
+                    if (region is INeedsMedallion medallionReegion)
+                        log.AppendLine($"{region.Name}: {medallionReegion.Medallion}");
+                }
+                log.AppendLine();
             }
+
+            log.AppendLine();
+            log.AppendLine(Underline("All Items", '='));
             log.AppendLine();
 
-            log.AppendLine(Underline("Medallions"));
-            log.AppendLine();
-            foreach (var region in seed.Worlds[0].World.Regions)
+            foreach (var world in seed.Worlds.Select(x => x.World))
             {
-                if (region is INeedsMedallion medallionReegion)
-                    log.AppendLine($"{region.Name}: {medallionReegion.Medallion}");
-            }
-            log.AppendLine();
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine();
+                }
 
-            log.AppendLine(Underline("All items"));
-            log.AppendLine();
-
-            var world = seed.Worlds.Single();
-            foreach (var location in world.World.Locations)
-            {
-                log.AppendLine($"{location}: {location.Item}");
+                foreach (var location in world.Locations)
+                {
+                    log.AppendLine($"{location}: {location.Item}");
+                }
+                log.AppendLine();
             }
 
             return log.ToString();

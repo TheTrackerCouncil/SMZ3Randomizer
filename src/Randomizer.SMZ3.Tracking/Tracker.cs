@@ -411,8 +411,12 @@ namespace Randomizer.SMZ3.Tracking
         {
             IsDirty = false;
             Rom = rom;
-            var trackerState = _stateService.LoadState(_worldAccessor.World, rom);
-            Metadata.LoadWorldMetadata(_worldAccessor.World);
+            var trackerState = _stateService.LoadState(_worldAccessor.Worlds, rom);
+            foreach (var world in _worldAccessor.Worlds)
+            {
+                Metadata.LoadWorldMetadata(world, world.IsLocalWorld);
+            }
+            
             if (trackerState != null)
             {
                 _timerService.SetSavedTime(TimeSpan.FromSeconds(trackerState.SecondsElapsed));
@@ -430,7 +434,7 @@ namespace Randomizer.SMZ3.Tracking
         public async Task SaveAsync(GeneratedRom rom)
         {
             IsDirty = false;
-            await _stateService.SaveStateAsync(_worldAccessor.World, rom, _timerService.SecondsElapsed);
+            await _stateService.SaveStateAsync(_worldAccessor.Worlds, rom, _timerService.SecondsElapsed);
         }
 
         /// <summary>

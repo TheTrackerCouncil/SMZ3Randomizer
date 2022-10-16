@@ -17,6 +17,7 @@ using static Randomizer.SMZ3.FileData.DropPrize;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Services;
+using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.SMZ3.FileData
 {
@@ -737,7 +738,16 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             _stringTable.SetTriforceRoomText(triforceRoom);
 
-            _stringTable.SetHints(hints.Select(x => Dialog.GetGameSafeString(x)));
+            if (hints.Any())
+            {
+                hints = hints.Take(config.UniqueHintCount);
+                while (hints.Count() < GameHintService.HintLocations.Count)
+                {
+                    hints = hints.Concat(hints.Take(Math.Min(GameHintService.HintLocations.Count() - hints.Count(), hints.Count())));
+                }
+                _stringTable.SetHints(hints.Shuffle(_rnd).Select(x => Dialog.GetGameSafeString(x)));
+            }
+            
         }
 
         private void WriteStringTable()

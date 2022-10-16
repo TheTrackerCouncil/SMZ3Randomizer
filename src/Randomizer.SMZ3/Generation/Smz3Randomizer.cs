@@ -68,71 +68,99 @@ namespace Randomizer.SMZ3.Generation
         }
 
         public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
-            => GenerateSeed(config, "", cancellationToken);
+            => GenerateSeed(new List<Config> { config }, "", cancellationToken);
 
         public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken = default)
+            => GenerateSeed(new List<Config>() { config }, seed, cancellationToken);
+
+        public SeedData GenerateSeed(List<Config> configs, string seed, CancellationToken cancellationToken = default)
         {
+            var primaryConfig = configs.First();
+
             var seedNumber = ParseSeed(ref seed);
             var rng = new Random(seedNumber);
-            config.Seed = seedNumber.ToString();
-            if (config.Race)
+            primaryConfig.Seed = seedNumber.ToString();
+            if (primaryConfig.Race)
                 rng = new Random(rng.Next());
-            config.SettingsString = Config.ToConfigString(config, true);
+            primaryConfig.SettingsString = Config.ToConfigString(primaryConfig, true);
 
-            _logger.LogDebug($"Seed: {seedNumber} | Race: {config.Race} | Keysanity: {config.KeysanityMode} | Item placement: {config.ItemPlacementRule}");
+            _logger.LogDebug($"Seed: {seedNumber} | Race: {primaryConfig.Race} | Keysanity: {primaryConfig.KeysanityMode} | Item placement: {primaryConfig.ItemPlacementRule} | World count : {configs.Count()}");
+
+            // Testing code. Tests should fail if this code is present.
+            // This code will be remove once multiworld is properly implemented.
+            /*
+            primaryConfig.GameMode = GameMode.Multiworld;
+            if (primaryConfig.MultiWorld)
+            {
+                primaryConfig.Id = 0;
+                primaryConfig.PlayerName = "test0";
+                primaryConfig.PlayerGuid = Guid.NewGuid().ToString("N");
+                var configString = Config.ToConfigString(primaryConfig, false);
+                for (var i = 0; i < 4; i++)
+                {
+                    var newConfig = Config.FromConfigString(configString);
+                    newConfig.Id = i + 1;
+                    newConfig.PlayerName = "test" + newConfig.Id;
+                    newConfig.PlayerGuid = Guid.NewGuid().ToString("N");
+
+                    if (i == 0)
+                    {
+                        newConfig.KeysanityMode = KeysanityMode.Both;
+                    }
+
+                    newConfig.LogicConfig.PreventFivePowerBombSeed = false;
+                    newConfig.LogicConfig.PreventScrewAttackSoftLock = false;
+                    newConfig.EarlyItems.Add(ItemType.ScrewAttack);
+
+                    configs.Add(newConfig);
+                }
+            }*/
 
             var worlds = new List<World>();
-            if (config.SingleWorld)
-                worlds.Add(new World(config, "Player", 0, Guid.NewGuid().ToString("N")));
+            if (primaryConfig.SingleWorld)
+                worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N"), true));
             else
             {
-                throw new NotSupportedException("Multiworld seeds are currently not supported.");
-                //var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
-                //for (var p = 0; p < players; p++)
-                //{
-                //    var found = options.TryGetValue($"player-{p}", out var player);
-                //    if (!found)
-                //        throw new ArgumentException($"No name provided for player {p + 1}");
-                //    if (!legalCharacters.IsMatch(player))
-                //        throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
-                //    player = CleanPlayerName(player);
-                //    worlds.Add(new World(config, player, p, Guid.NewGuid().ToString("N")));
-                //}
+                foreach (var config in configs)
+                {
+                    worlds.Add(new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == 0));
+                }
             }
 
             Filler.SetRandom(rng);
-            Filler.Fill(worlds, config, cancellationToken);
+            Filler.Fill(worlds, primaryConfig, cancellationToken);
 
-            var playthrough = Playthrough.Generate(worlds, config);
+            var playthrough = Playthrough.Generate(worlds, primaryConfig);
             var seedData = new SeedData
             {
                 Guid = Guid.NewGuid().ToString("N"),
                 Seed = seed,
                 Game = Name,
-                Mode = config.GameMode.ToLowerString(),
-                Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
-                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
+                Mode = primaryConfig.GameMode.ToLowerString(),
+                Playthrough = primaryConfig.Race ? new Playthrough(primaryConfig, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
+                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>(),
+                Hints = new()
             };
 
-            if (config.GenerateSeedOnly)
+            if (primaryConfig.GenerateSeedOnly)
             {
                 seedData.Worlds = worlds.Select(x => (x, (Dictionary<int, byte[]>)null)).ToList();
                 return seedData;
             }
-
-            var hints = _hintService.GetInGameHints(worlds[0], worlds, playthrough, config.UniqueHintCount, rng.Next());
 
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
             var patchSeed = rng.Next();
             foreach (var world in worlds)
             {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
-                seedData.Worlds.Add((world, patch.CreatePatch(config, hints)));
+                var hints = _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
+                seedData.Hints.Add((world, hints.ToList()));
+                var patch = new Patcher(world, worlds, seedData.Guid, primaryConfig.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
+                seedData.Worlds.Add((world, patch.CreatePatch(world.Config, hints)));
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
-            _worldAccessor.World = worlds[0];
+            _worldAccessor.World = worlds.First(x => x.IsLocalWorld);
             _worldAccessor.Worlds = worlds;
             LastGeneratedSeed = seedData;
             return seedData;
@@ -142,13 +170,13 @@ namespace Randomizer.SMZ3.Generation
         /// Ensures that a generated seed matches the requested preferences
         /// </summary>
         /// <param name="seedData">The seed data that contains the generated spheres to guarantee early items</param>
-        /// <param name="config">The confirm with the seed generation settings</param>
         /// <returns>True if the seed matches all config settings, false otherwise</returns>
-        public bool ValidateSeedSettings(SeedData seedData, Config config)
+        public bool ValidateSeedSettings(SeedData seedData)
         {
             // Go through and make sure specified locations are populated correctly
             foreach (var world in seedData.Worlds.Select(x => x.World))
             {
+                var config = world.Config;
                 var configLocations = config.LocationItems;
 
                 foreach ((var locationId, var value) in configLocations)
@@ -173,16 +201,16 @@ namespace Randomizer.SMZ3.Generation
                         }
                     }
                 }
-            }
 
-            // Through and make sure the early items are populated in early spheres
-            foreach (var itemType in config.EarlyItems)
-            {
-                var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
-                if (sphereIndex > 2)
+                // Through and make sure the early items are populated in early spheres
+                foreach (var itemType in config.EarlyItems)
                 {
-                    _logger.LogInformation($"Item {itemType} did not show up early as expected. Sphere: {sphereIndex}");
-                    return false;
+                    var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
+                    if (sphereIndex > 2)
+                    {
+                        _logger.LogInformation($"Item {itemType} did not show up early as expected. Sphere: {sphereIndex}");
+                        return false;
+                    }
                 }
             }
 

@@ -13,6 +13,7 @@ namespace Randomizer.Shared.Models
         public string BossName { get; set; }
         public bool Defeated { get; set; }
         public BossType Type { get; set; }
+        public int WorldId { get; set; }
     }
 
 }

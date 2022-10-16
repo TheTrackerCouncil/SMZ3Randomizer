@@ -10,6 +10,7 @@ namespace Randomizer.SMZ3.Generation
         public string Game { get; set; }
         public string Mode { get; set; }
         public List<(World World, Dictionary<int, byte[]> Patches)> Worlds { get; set; }
+        public List<(World World, List<string>)> Hints { get; set; }
 
         public Playthrough Playthrough { get; set; }
     }

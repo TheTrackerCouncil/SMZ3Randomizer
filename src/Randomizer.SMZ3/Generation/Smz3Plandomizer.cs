@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Generation
         {
             var worlds = new List<World>
             {
-                new World(config, "Player", 0, Guid.NewGuid().ToString("N"))
+                new World(config, "Player", 0, Guid.NewGuid().ToString("N"), true)
             };
 
             var filler = _fillerFactory.Create(config.PlandoConfig);
@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Generation
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
 
-            var hints = _hintService.GetInGameHints(worlds[0], worlds, playthrough, config.UniqueHintCount, 0);
+            var hints = _hintService.GetInGameHints(worlds[0], worlds, playthrough, 0);
 
             foreach (var world in worlds)
             {

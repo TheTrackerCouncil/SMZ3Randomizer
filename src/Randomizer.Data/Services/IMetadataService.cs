@@ -229,6 +229,7 @@ namespace Randomizer.Data.Services
         /// Applies various metadata to the world, such as LocationData and ItemData
         /// </summary>
         /// <param name="world">The world to apply metadata to</param>
-        public void LoadWorldMetadata(World world);
+        /// <param name="createNewStates">If new states should be created for items not already in the world</param>
+        public void LoadWorldMetadata(World world, bool createNewStates);
     }
 }
