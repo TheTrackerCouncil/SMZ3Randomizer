@@ -190,6 +190,9 @@ namespace Randomizer.Data.Options
         public bool SingleWorld => GameMode == GameMode.Normal;
         public bool MultiWorld => GameMode == GameMode.Multiworld;
         public bool Keysanity => KeysanityMode != KeysanityMode.None;
+        public int Id { get; set; }
+        public string PlayerName { get; set; }
+        public string PlayerGuid { get; set; }
         public string Seed { get; set; }
         public string SettingsString { get; set; }
         public bool CopySeedAndRaceSettings { get; set; }

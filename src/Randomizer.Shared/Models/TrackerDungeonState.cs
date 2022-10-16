@@ -16,6 +16,7 @@ namespace Randomizer.Shared.Models {
         public RewardType? MarkedReward { get; set; }
         public ItemType? MarkedMedallion { get; set; }
         public bool HasManuallyClearedTreasure { get; set; }
+        public int WorldId { get; set; }
         public bool HasReward => Reward != null && Reward != RewardType.None;
         public bool HasMarkedReward => MarkedReward != null && MarkedReward != RewardType.None;
         public bool RequiresMedallion => RequiredMedallion != null && RequiredMedallion.Value.IsInCategory(ItemCategory.Medallion);

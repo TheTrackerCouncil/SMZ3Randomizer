@@ -281,7 +281,8 @@ namespace Randomizer.Data.Services
         /// Applies various metadata to the world, such as LocationData and ItemData
         /// </summary>
         /// <param name="world">The world to apply metadata to</param>
-        public void LoadWorldMetadata(World world)
+        /// <param name="createNewStates">If new states should be created for items not already in the world</param>
+        public void LoadWorldMetadata(World world, bool createNewStates)
         {
             world.Locations.ToList().ForEach(loc => loc.Metadata = Location(loc.Id));
             world.Dungeons.ToList().ForEach(d => d.DungeonMetadata = Dungeon(d));
@@ -293,7 +294,7 @@ namespace Randomizer.Data.Services
             {
                 if (worldItems.Any())
                     worldItems.ToList().ForEach(x => x.Metadata = metadata);
-                else
+                else if (createNewStates)
                 {
                     _logger.LogInformation($"No data found {metadata.Item}");
                     var item = new Item(metadata.InternalItemType, world, metadata.Item)
@@ -302,7 +303,8 @@ namespace Randomizer.Data.Services
                         {
                             ItemName = metadata.Item,
                             Type = metadata.InternalItemType,
-                            TrackerState = world.State
+                            TrackerState = world.State,
+                            WorldId = world.Id
                         },
                         Metadata = metadata
                     };
@@ -315,7 +317,7 @@ namespace Randomizer.Data.Services
             {
                 if (worldBoss != null)
                     worldBoss.Metadata = metadata;
-                else
+                else if (createNewStates)
                 {
                     _logger.LogInformation($"No data found {metadata.Boss}");
                     var boss = new Boss(metadata.Type, world, metadata.Boss)
@@ -324,7 +326,8 @@ namespace Randomizer.Data.Services
                         {
                             BossName = metadata.Boss,
                             Type = metadata.Type,
-                            TrackerState = world.State
+                            TrackerState = world.State,
+                            WorldId = world.Id
                         },
                         Metadata = metadata
                     };

@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Generation
         {
             var worlds = new List<World>
             {
-                new World(config, "Player", 0, Guid.NewGuid().ToString("N"))
+                new World(config, "Player", 0, Guid.NewGuid().ToString("N"), true)
             };
 
             var filler = _fillerFactory.Create(config.PlandoConfig);

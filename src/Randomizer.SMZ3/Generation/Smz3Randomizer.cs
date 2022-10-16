@@ -86,38 +86,36 @@ namespace Randomizer.SMZ3.Generation
 
             _logger.LogDebug($"Seed: {seedNumber} | Race: {primaryConfig.Race} | Keysanity: {primaryConfig.KeysanityMode} | Item placement: {primaryConfig.ItemPlacementRule} | World count : {configs.Count()}");
 
-            /*primaryConfig.GameMode = GameMode.Multiworld;
-
-            // Testing code. TODO: Remove
+            // Testing code. Tests should fail if this code is present.
+            // This code will be remove once multiworld is properly implemented.
+            /*
+            primaryConfig.GameMode = GameMode.Multiworld;
             if (primaryConfig.MultiWorld)
             {
+                primaryConfig.Id = 0;
+                primaryConfig.PlayerName = "test0";
+                primaryConfig.PlayerGuid = Guid.NewGuid().ToString("N");
+                var configString = Config.ToConfigString(primaryConfig, false);
                 for (var i = 0; i < 4; i++)
                 {
-                    configs.Add(primaryConfig);
+                    var newConfig = Config.FromConfigString(configString);
+                    newConfig.Id = i + 1;
+                    newConfig.PlayerName = "test" + newConfig.Id;
+                    newConfig.PlayerGuid = Guid.NewGuid().ToString("N");
+                    configs.Add(newConfig);
                 }
-            }*/
+            }
+            */
 
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
-                worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N")));
+                worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N"), true));
             else
             {
-                for (var playerId = 0; playerId < configs.Count; playerId++)
+                foreach (var config in configs)
                 {
-                    var player = "test" + playerId;
-                    worlds.Add(new World(configs[playerId], player, playerId, Guid.NewGuid().ToString("N")));
+                    worlds.Add(new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == 0));
                 }
-                //var players = options.ContainsKey("players") ? int.Parse(options["players"]) : 1;
-                //for (var p = 0; p < players; p++)
-                //{
-                //    var found = options.TryGetValue($"player-{p}", out var player);
-                //    if (!found)
-                //        throw new ArgumentException($"No name provided for player {p + 1}");
-                //    if (!legalCharacters.IsMatch(player))
-                //        throw new ArgumentException($"No alphanumeric characters found in name for player {p + 1}");
-                //    player = CleanPlayerName(player);
-                //    worlds.Add(new World(config, player, p, Guid.NewGuid().ToString("N")));
-                //}
             }
 
             Filler.SetRandom(rng);
@@ -153,7 +151,7 @@ namespace Randomizer.SMZ3.Generation
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
-            _worldAccessor.World = worlds[0];
+            _worldAccessor.World = worlds.First(x => x.IsLocalWorld);
             _worldAccessor.Worlds = worlds;
             LastGeneratedSeed = seedData;
             return seedData;

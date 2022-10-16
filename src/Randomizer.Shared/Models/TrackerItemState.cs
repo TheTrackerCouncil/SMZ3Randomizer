@@ -12,6 +12,7 @@ namespace Randomizer.Shared.Models
         public ItemType? Type { get; set; }
         public string ItemName { get; set; }
         public int TrackingState { get; set; }
+        public int WorldId { get; set; }
     }
 
 }

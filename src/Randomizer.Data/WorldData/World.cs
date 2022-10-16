@@ -24,12 +24,13 @@ namespace Randomizer.Data.WorldData
 {
     public class World
     {
-        public World(Config config, string player, int id, string guid)
+        public World(Config config, string player, int id, string guid, bool isLocalWorld = true)
         {
             Config = config;
             Player = player;
             Id = id;
             Guid = guid;
+            IsLocalWorld = isLocalWorld;
 
             Logic = new Logic.Logic(this);
 
@@ -96,6 +97,7 @@ namespace Randomizer.Data.WorldData
         public string Player { get; }
         public string Guid { get; }
         public int Id { get; }
+        public bool IsLocalWorld { get; set; }
         public IEnumerable<Region> Regions { get; }
         public IEnumerable<Room> Rooms { get; }
         public IEnumerable<Location> Locations { get; }

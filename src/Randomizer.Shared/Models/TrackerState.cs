@@ -16,6 +16,7 @@ namespace Randomizer.Shared.Models
         public DateTimeOffset UpdatedDateTime { get; set; }
         public double SecondsElapsed { get; set; }
         public int PercentageCleared { get; set; }
+        public int LocalWorldId { get; set; }
         public ICollection<TrackerItemState> ItemStates { get; set; }
         public ICollection<TrackerLocationState> LocationStates { get; set; }
         public ICollection<TrackerRegionState> RegionStates { get; set; }

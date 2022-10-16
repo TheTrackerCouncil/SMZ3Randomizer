@@ -146,7 +146,7 @@ namespace Randomizer.SMZ3.Generation
             {
                 var dungeonRegion = dungeon as Region;
                 var usefulNess = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
-                var dungeonName = _metadataService.Dungeon(dungeon).Name.ToString();
+                var dungeonName = GetDungeonName(hintPlayerWorld, dungeon, dungeonRegion);
 
                 if (usefulNess == LocationUsefulness.Mandatory)
                 {
@@ -301,6 +301,12 @@ namespace Randomizer.SMZ3.Generation
             }
         }
 
+        private string GetDungeonName(World hintPlayerWorld, IDungeon dungeon, Region region)
+        {
+            var dungeonName = _metadataService.Dungeon(dungeon).Name.ToString();
+            return $"{dungeonName}{GetMultiworldSuffix(hintPlayerWorld, region.World)}";
+        }
+
         private string GetLocationName(World hintPlayerWorld, Location location)
         {
             var name = $"{_metadataService.Region(location.Region).Name} - {_metadataService.Location(location.Id).Name}";
@@ -323,7 +329,7 @@ namespace Randomizer.SMZ3.Generation
             {
                 return hintPlayerWorld == item.World
                     ? " belonging to you"
-                    : " belonging to another player"; // Will need to update to player name when multiworld is working
+                    : $" belonging to {item.World.Player}";
             }
         }
 
@@ -337,7 +343,7 @@ namespace Randomizer.SMZ3.Generation
             {
                 return hintPlayerWorld == locationWorld
                     ? " in your world"
-                    : " in another player's world"; // Will need to update to player name when multiworld is working
+                    : $" in {locationWorld.Player}'s world";
             }
         }
 

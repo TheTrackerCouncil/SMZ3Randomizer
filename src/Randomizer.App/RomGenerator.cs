@@ -368,7 +368,7 @@ namespace Randomizer.App
                 GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);
-            await _stateService.CreateStateAsync(seed.Worlds[0].World, rom);
+            await _stateService.CreateStateAsync(seed.Worlds.Select(x => x.World), rom);
             return rom;
         }
 
