@@ -102,10 +102,19 @@ namespace Randomizer.SMZ3.Generation
                     newConfig.Id = i + 1;
                     newConfig.PlayerName = "test" + newConfig.Id;
                     newConfig.PlayerGuid = Guid.NewGuid().ToString("N");
+
+                    if (i == 0)
+                    {
+                        newConfig.KeysanityMode = KeysanityMode.Both;
+                    }
+
+                    newConfig.LogicConfig.PreventFivePowerBombSeed = false;
+                    newConfig.LogicConfig.PreventScrewAttackSoftLock = false;
+                    newConfig.EarlyItems.Add(ItemType.ScrewAttack);
+
                     configs.Add(newConfig);
                 }
-            }
-            */
+            }*/
 
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
