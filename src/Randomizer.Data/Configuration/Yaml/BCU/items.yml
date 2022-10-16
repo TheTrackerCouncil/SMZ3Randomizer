@@ -94,3 +94,7 @@
       Weight: .2
     - Text: Holy moly! Charge!
       Weight: .2
+- Item: Bottle
+  WhenTracked:
+    "1":
+    - Text: Are you going to fill that with hot Diet Dr. Pepper or Pilk?

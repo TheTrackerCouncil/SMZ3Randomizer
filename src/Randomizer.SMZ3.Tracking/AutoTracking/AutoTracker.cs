@@ -642,7 +642,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             if (Tracker == null) return;
 
-            foreach (var boss in Tracker.World.GoldenBosses.Where(x => x.Metadata?.MemoryAddress != null && x.Metadata?.MemoryFlag > 0 && x.State?.Defeated != true))
+            foreach (var boss in Tracker.World.AllBosses.Where(x => x.Metadata?.MemoryAddress != null && x.Metadata?.MemoryFlag > 0 && x.State?.Defeated != true))
             {
                 if (data.CheckBinary8Bit(boss.Metadata?.MemoryAddress ?? 0, boss.Metadata?.MemoryFlag ?? 100))
                 {
