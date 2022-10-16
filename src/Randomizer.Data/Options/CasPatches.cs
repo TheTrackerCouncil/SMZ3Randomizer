@@ -18,7 +18,7 @@ namespace Randomizer.Data.Options
         public bool PreventScams { get; set; } = true;
 
         [DisplayName("Aim with Any Button")]
-        [Description("Save stations will refill your ammo.\nPatch developed by Kejardon.")]
+        [Description("Allows you to map the aiming button to any button.\nPatch developed by Kejardon.")]
         public bool AimAnyButton { get; set; } = true;
 
         [DisplayName("Infinite Space Jump")]
@@ -42,11 +42,11 @@ namespace Randomizer.Data.Options
         public bool NoBozoSoftlock { get; set; } = true;
 
         [DisplayName("Fast Metroid Doors")]
-        [Description("Save stations will refill your ammo.\nPatch developed by Rakki.")]
+        [Description("Speeds up the transition between Metroid rooms via doors.\nPatch developed by Rakki.")]
         public bool FastDoors { get; set; } = true;
 
         [DisplayName("Fast Metroid Elevators")]
-        [Description("Save stations will refill your ammo.\nPatch developed by Lioran.")]
+        [Description("Speeds up the transition between Metroid areas via elevators.\nPatch developed by Lioran.")]
         public bool FastElevators { get; set; } = true;
 
         [DisplayName("Refill at Save Stations")]

@@ -146,8 +146,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static IDungeon? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
             var name = (string)result.Semantics[BossKey].Value;
-            var dungeon = tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
-            return dungeon ?? throw new Exception($"Could not find dungeon {name} (\"{result.Text}\").");
+            return tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
         }
 
         /// <summary>
@@ -527,7 +526,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (item != null)
                 {
                     foreach (var name in item.Metadata.Name)
-                        medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
+                        medallions.Add(new SemanticResultValue(medallion.ToString(), item.Name));
                 }
             }
 
