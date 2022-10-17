@@ -356,7 +356,9 @@ namespace Randomizer.App
         /// <returns>The db entry for the generated rom</returns>
         protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
-            var config = seed.Playthrough.Config;
+            var settingsString = string.IsNullOrEmpty(seed.PrimaryConfig.SettingsString)
+                ? (seed.Configs.Count() > 1 ? Config.ToConfigString(seed.Configs) : Config.ToConfigString(seed.PrimaryConfig, true))
+                : seed.PrimaryConfig.SettingsString;
 
             var rom = new GeneratedRom()
             {
@@ -364,7 +366,7 @@ namespace Randomizer.App
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
-                Settings = config.SettingsString ?? Config.ToConfigString(config, true),
+                Settings = settingsString,
                 GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);
@@ -412,7 +414,7 @@ namespace Randomizer.App
                     log.AppendLine();
                 }
 
-                log.AppendLine($"Settings String: {world.Config.SettingsString}");
+                log.AppendLine($"Settings String: {Config.ToConfigString(world.Config, true)}");
                 log.AppendLine($"Early Items: {string.Join(',', world.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
 
                 var locationPrefs = new List<string>();

@@ -82,13 +82,12 @@ namespace Randomizer.SMZ3.Generation
             primaryConfig.Seed = seedNumber.ToString();
             if (primaryConfig.Race)
                 rng = new Random(rng.Next());
-            primaryConfig.SettingsString = Config.ToConfigString(primaryConfig, true);
 
             _logger.LogDebug($"Seed: {seedNumber} | Race: {primaryConfig.Race} | Keysanity: {primaryConfig.KeysanityMode} | Item placement: {primaryConfig.ItemPlacementRule} | World count : {configs.Count()}");
 
             // Testing code. Tests should fail if this code is present.
             // This code will be remove once multiworld is properly implemented.
-            /*
+            
             primaryConfig.GameMode = GameMode.Multiworld;
             if (primaryConfig.MultiWorld)
             {
@@ -98,7 +97,7 @@ namespace Randomizer.SMZ3.Generation
                 var configString = Config.ToConfigString(primaryConfig, false);
                 for (var i = 0; i < 4; i++)
                 {
-                    var newConfig = Config.FromConfigString(configString);
+                    var newConfig = Config.FromConfigString(configString).First();
                     newConfig.Id = i + 1;
                     newConfig.PlayerName = "test" + newConfig.Id;
                     newConfig.PlayerGuid = Guid.NewGuid().ToString("N");
@@ -114,7 +113,7 @@ namespace Randomizer.SMZ3.Generation
 
                     configs.Add(newConfig);
                 }
-            }*/
+            }
 
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
@@ -139,7 +138,9 @@ namespace Randomizer.SMZ3.Generation
                 Mode = primaryConfig.GameMode.ToLowerString(),
                 Playthrough = primaryConfig.Race ? new Playthrough(primaryConfig, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>(),
-                Hints = new()
+                Hints = new(),
+                Configs = configs,
+                PrimaryConfig = primaryConfig,
             };
 
             if (primaryConfig.GenerateSeedOnly)

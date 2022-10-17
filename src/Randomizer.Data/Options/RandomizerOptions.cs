@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -146,7 +147,7 @@ namespace Randomizer.Data.Options
             }
             else
             {
-                var oldConfig = Config.FromConfigString(SeedOptions.ConfigString);
+                var oldConfig = Config.FromConfigString(SeedOptions.ConfigString).First();
 
                 var race = SeedOptions.Race;
                 var disableSpoilerLog = SeedOptions.DisableSpoilerLog;

@@ -71,7 +71,9 @@ namespace Randomizer.SMZ3.Generation
                 Game = "SMZ3 Cas’ Plando",
                 Mode = config.GameMode.ToLowerString(),
                 Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
-                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
+                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>(),
+                Configs = new List<Config>() { config },
+                PrimaryConfig = config
             };
 
             var hints = _hintService.GetInGameHints(worlds[0], worlds, playthrough, 0);
