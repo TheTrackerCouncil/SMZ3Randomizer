@@ -1064,39 +1064,91 @@ namespace Randomizer.SMZ3.Tracking
                                                || !item.Metadata.IsDungeonItem()
                                                || World.Config.ZeldaKeysanity);
 
-            if (item.Metadata.HasStages)
+            // Actually track the item if it's for the local player's world
+            if (item.World == World)
             {
-                if (trackedAs != null && item.Metadata.GetStage(trackedAs) != null)
+                if (item.Metadata.HasStages)
                 {
-                    var stage = item.Metadata.GetStage(trackedAs)!;
-
-                    // Tracked by specific stage name (e.g. Tempered Sword), set
-                    // to that stage specifically
-                    var stageName = item.Metadata.Stages[stage.Value].ToString();
-
-                    didTrack = item.Track(stage.Value);
-                    if (stateResponse)
+                    if (trackedAs != null && item.Metadata.GetStage(trackedAs) != null)
                     {
-                        if (didTrack)
+                        var stage = item.Metadata.GetStage(trackedAs)!;
+
+                        // Tracked by specific stage name (e.g. Tempered Sword), set
+                        // to that stage specifically
+                        var stageName = item.Metadata.Stages[stage.Value].ToString();
+
+                        didTrack = item.Track(stage.Value);
+                        if (stateResponse)
                         {
-                            if (item.TryGetTrackingResponse(out var response))
+                            if (didTrack)
                             {
-                                Say(response.Format(item.Counter));
+                                if (item.TryGetTrackingResponse(out var response))
+                                {
+                                    Say(response.Format(item.Counter));
+                                }
+                                else
+                                {
+                                    Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                                }
                             }
                             else
                             {
-                                Say(Responses.TrackedItemByStage.Format(itemName, stageName));
+                                Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Metadata.Stages[item.State.TrackingState].ToString()));
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        // Tracked by regular name, upgrade by one step
+                        didTrack = item.Track();
+                        if (stateResponse)
                         {
-                            Say(Responses.TrackedOlderProgressiveItem?.Format(itemName, item.Metadata.Stages[item.State.TrackingState].ToString()));
+                            if (didTrack)
+                            {
+                                if (item.TryGetTrackingResponse(out var response))
+                                {
+                                    Say(response.Format(item.Counter));
+                                }
+                                else
+                                {
+                                    var stageName = item.Metadata.Stages[item.State.TrackingState].ToString();
+                                    Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                                }
+                            }
+                            else
+                            {
+                                Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
+                            }
                         }
+                    }
+                }
+                else if (item.Metadata.Multiple)
+                {
+                    didTrack = item.Track();
+                    if (item.TryGetTrackingResponse(out var response))
+                    {
+                        if (stateResponse)
+                            Say(response.Format(item.Counter));
+                    }
+                    else if (item.Counter == 1)
+                    {
+                        if (stateResponse)
+                            Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
+                    }
+                    else if (item.Counter > 1)
+                    {
+                        if (stateResponse)
+                            Say(Responses.TrackedItemMultiple.Format(item.Metadata.Plural ?? $"{itemName}s", item.Counter, item.Name));
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
+                        if (stateResponse)
+                            Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
                     }
                 }
                 else
                 {
-                    // Tracked by regular name, upgrade by one step
                     didTrack = item.Track();
                     if (stateResponse)
                     {
@@ -1108,65 +1160,17 @@ namespace Randomizer.SMZ3.Tracking
                             }
                             else
                             {
-                                var stageName = item.Metadata.Stages[item.State.TrackingState].ToString();
-                                Say(Responses.TrackedProgressiveItem.Format(itemName, stageName));
+                                Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
                             }
                         }
                         else
                         {
-                            Say(Responses.TrackedTooManyOfAnItem?.Format(itemName));
+                            Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
                         }
                     }
                 }
             }
-            else if (item.Metadata.Multiple)
-            {
-                didTrack = item.Track();
-                if (item.TryGetTrackingResponse(out var response))
-                {
-                    if (stateResponse)
-                        Say(response.Format(item.Counter));
-                }
-                else if (item.Counter == 1)
-                {
-                    if (stateResponse)
-                        Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
-                }
-                else if (item.Counter > 1)
-                {
-                    if (stateResponse)
-                        Say(Responses.TrackedItemMultiple.Format(item.Metadata.Plural ?? $"{itemName}s", item.Counter, item.Name));
-                }
-                else
-                {
-                    _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
-                    if (stateResponse)
-                        Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
-                }
-            }
-            else
-            {
-                didTrack = item.Track();
-                if (stateResponse)
-                {
-                    if (didTrack)
-                    {
-                        if (item.TryGetTrackingResponse(out var response))
-                        {
-                            Say(response.Format(item.Counter));
-                        }
-                        else
-                        {
-                            Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
-                        }
-                    }
-                    else
-                    {
-                        Say(Responses.TrackedAlreadyTrackedItem?.Format(itemName));
-                    }
-                }
-            }
-
+            
             Action undoTrack = () => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); };
             OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
 
@@ -1182,7 +1186,8 @@ namespace Randomizer.SMZ3.Tracking
                     location = _worldService.Locations(outOfLogic: true, itemFilter: item.Type).TrySingle();
                 }
 
-                if (location != null)
+                // Clear the location if it's for the local player's world
+                if (location != null && location.World == World && !location.State.Cleared)
                 {
                     if (stateResponse)
                     {

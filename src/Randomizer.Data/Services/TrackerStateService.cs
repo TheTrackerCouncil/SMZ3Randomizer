@@ -32,7 +32,7 @@ namespace Randomizer.Data.Services
                     LocationId = x.Id,
                     Item = x.Item.Type,
                     Cleared = false,
-                    Ignored = false,
+                    Autotracked = false,
                     WorldId = x.World.Id,
                     ItemWorldId = x.Item.World.Id
                 })

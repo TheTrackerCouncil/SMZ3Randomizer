@@ -536,7 +536,14 @@ namespace Randomizer.App
 
                 foreach (var location in world.Locations)
                 {
-                    log.AppendLine($"{location}: {location.Item}");
+                    if (world.Config.MultiWorld)
+                    {
+                        log.AppendLine($"{location}: {location.Item} ({location.Item.World.Player})");
+                    }
+                    else
+                    {
+                        log.AppendLine($"{location}: {location.Item}");
+                    }
                 }
                 log.AppendLine();
             }
