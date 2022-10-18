@@ -87,7 +87,7 @@ namespace Randomizer.SMZ3.Generation
 
             // Testing code. Tests should fail if this code is present.
             // This code will be remove once multiworld is properly implemented.
-            
+            /*
             primaryConfig.GameMode = GameMode.Multiworld;
             if (primaryConfig.MultiWorld)
             {
@@ -113,7 +113,7 @@ namespace Randomizer.SMZ3.Generation
 
                     configs.Add(newConfig);
                 }
-            }
+            }*/
 
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)

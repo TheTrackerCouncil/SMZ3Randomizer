@@ -225,7 +225,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             }
 
             // Once we're done being a smartass, see if the item can be found at all
-            var locations = WorldService.Locations(unclearedOnly: false, outOfLogic: true, itemFilter: item.Type)
+            var locations = WorldService.Locations(unclearedOnly: false, outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true)
                 .ToImmutableList();
             if (locations.Count == 0)
             {
@@ -427,17 +427,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Who's it for and is it any good?
                 case 0:
                     var characterName = location.Item.Type.IsInCategory(ItemCategory.Metroid)
-                        ? Tracker.CorrectPronunciation(Tracker.World.Config.SamusName)
-                        : Tracker.CorrectPronunciation(Tracker.World.Config.LinkName);
+                        ? Tracker.CorrectPronunciation(location.World.Config.SamusName)
+                        : Tracker.CorrectPronunciation(location.World.Config.LinkName);
 
-                    if (location.Item.Metadata?.IsJunk(Tracker.World.Config) == true)
+                    if (location.Item.Metadata?.IsJunk(location.Item.World.Config) == true)
                     {
                         return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
                     }
 
                     // Todo: Add check for if it's progression
 
-                    if (location.Item.Metadata?.IsGood(Tracker.World.Config) == true)
+                    if (location.Item.Metadata?.IsGood(location.Item.World.Config) == true)
                     {
                         return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     }
@@ -474,24 +474,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var item = location.Item;
             if (item != null)
             {
-                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.Metadata.NameWithArticle);
+                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, $"{item.Metadata.NameWithArticle}{GetMultiworldSuffix(item)}");
                 return true;
             }
             else
             {
-                Tracker.Say(x => x.Spoilers.LocationHasUnknownItem, locationName, location.Item);
+                Tracker.Say(x => x.Spoilers.LocationHasUnknownItem, locationName);
                 return true;
             }
         }
 
         private bool GiveItemLocationSpoiler(Item item)
         {
-            var reachableLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true)
+            var reachableLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
                 .Random();
             if (reachableLocation != null)
             {
                 var locationName = reachableLocation.Metadata.Name;
-                var regionName = reachableLocation.Region.Metadata.Name;
+                var regionName = $"{reachableLocation.Region.Metadata.Name}{GetMultiworldSuffix(reachableLocation.World)}";
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
                     Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 else
@@ -499,12 +499,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 return true;
             }
 
-            var worldLocation = WorldService.Locations(outOfLogic: true, itemFilter: item.Type)
+            var worldLocation = WorldService.Locations(outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true)
                 .Random();
             if (worldLocation != null)
             {
                 var locationName = worldLocation.Metadata.Name;
-                var regionName = worldLocation.Region.Metadata.Name;
+                var regionName = $"{worldLocation.Region.Metadata.Name}{GetMultiworldSuffix(worldLocation.World)}";
                 if (item.Metadata.Multiple || item.Metadata.HasStages)
                     Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
                 else
@@ -517,7 +517,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private bool GiveItemLocationHint(Item item)
         {
-            var itemLocations = WorldService.Locations(outOfLogic: true, itemFilter: item.Type);
+            var itemLocations = WorldService.Locations(outOfLogic: true, itemFilter: item.Type, checkAllWorlds: true);
 
             if (!itemLocations.Any())
             {
@@ -828,6 +828,34 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(RoomKey, roomNames);
 
             return GrammarBuilder.Combine(regionGrammar, roomGrammar);
+        }
+
+        private string GetMultiworldSuffix(World locationWorld)
+        {
+            if (!WorldService.World.Config.MultiWorld)
+            {
+                return "";
+            }
+            else
+            {
+                return WorldService.World == locationWorld
+                    ? " in your world"
+                    : $" in {locationWorld.Player}'s world";
+            }
+        }
+
+        private string GetMultiworldSuffix(Item item)
+        {
+            if (!WorldService.World.Config.MultiWorld)
+            {
+                return "";
+            }
+            else
+            {
+                return WorldService.World == item.World
+                    ? " belonging to you"
+                    : $" belonging to {item.World.Player}";
+            }
         }
     }
 }

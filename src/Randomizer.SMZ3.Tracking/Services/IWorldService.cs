@@ -62,8 +62,9 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="itemFilter">Set to return locations that have the matching item</param>
         /// <param name="inRegion">Set to return locations that match a specific region</param>
         /// <param name="keysanityByRegion">Set to true if keys should be assumed or not based on if keysanity is enabled for that region</param>
+        /// <param name="checkAllWorlds">If all locations in all of the worlds in the multiworld should be checked</param>
         /// <returns></returns>
-        public IEnumerable<Location> Locations(bool unclearedOnly = true, bool outOfLogic = false, bool assumeKeys = false, bool sortByTopRegion = false, RegionFilter regionFilter = RegionFilter.None, ItemType itemFilter = ItemType.Nothing, Region? inRegion = null, bool keysanityByRegion = false);
+        public IEnumerable<Location> Locations(bool unclearedOnly = true, bool outOfLogic = false, bool assumeKeys = false, bool sortByTopRegion = false, RegionFilter regionFilter = RegionFilter.None, ItemType itemFilter = ItemType.Nothing, Region? inRegion = null, bool keysanityByRegion = false, bool checkAllWorlds = false);
 
         /// <summary>
         /// Returns the specific location matching the given id

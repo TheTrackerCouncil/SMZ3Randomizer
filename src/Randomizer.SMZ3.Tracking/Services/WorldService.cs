@@ -44,6 +44,12 @@ namespace Randomizer.SMZ3.Tracking.Services
         public IEnumerable<Location> AllLocations() => World.Locations;
 
         /// <summary>
+        /// Retrives all locations for all worlds
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Location> AllMultiworldLocations() => _worldAccessor.Worlds.SelectMany(x => x.Locations);
+
+        /// <summary>
         /// Retrieves all accessible uncleared locations for the current player's world
         /// </summary>
         /// <param name="progression">The progression object with all of the player's inventory and rewards</param>
@@ -86,8 +92,9 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="itemFilter">Set to return locations that have the matching item</param>
         /// <param name="inRegion">Set to return locations that match a specific region</param>
         /// <param name="keysanityByRegion">Set to true if keys should be assumed or not based on if keysanity is enabled for that region</param>
+        /// <param name="checkAllWorlds">If all locations in all of the worlds in the multiworld should be checked</param>
         /// <returns></returns>
-        public IEnumerable<Location> Locations(bool unclearedOnly = true, bool outOfLogic = false, bool assumeKeys = false, bool sortByTopRegion = false, RegionFilter regionFilter = RegionFilter.None, ItemType itemFilter = ItemType.Nothing, Region? inRegion = null, bool keysanityByRegion = false)
+        public IEnumerable<Location> Locations(bool unclearedOnly = true, bool outOfLogic = false, bool assumeKeys = false, bool sortByTopRegion = false, RegionFilter regionFilter = RegionFilter.None, ItemType itemFilter = ItemType.Nothing, Region? inRegion = null, bool keysanityByRegion = false, bool checkAllWorlds = false)
         {
             var progression = keysanityByRegion ? null : Progression(assumeKeys);
 
@@ -106,7 +113,8 @@ namespace Randomizer.SMZ3.Tracking.Services
             }
             else
             {
-                return AllLocations()
+                var locations = checkAllWorlds ? AllMultiworldLocations() : AllLocations();
+                return locations
                     .Where(x => IsValidLocation(x, unclearedOnly, outOfLogic, progression, itemFilter, inRegion))
                     .ToImmutableList();
             }
