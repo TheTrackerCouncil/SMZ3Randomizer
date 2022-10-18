@@ -2378,7 +2378,7 @@ namespace Randomizer.SMZ3.Tracking
             }
             else
             {
-                if (item.Type == location.VanillaItem)
+                if (item.Type == location.VanillaItem && item.Type != ItemType.Nothing)
                 {
                     Say(x => x.TrackedVanillaItem);
                     return;

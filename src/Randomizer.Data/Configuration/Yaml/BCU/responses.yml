@@ -9,15 +9,15 @@ Misheard:
 TrackedOutOfLogicItem:
 - Text: The racing council will hear about this!
 - Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?
-  Weight: 0.05
+  Weight: 0.08
 - Text: I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without {2}. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.
-  Weight: 0.05
+  Weight: 0.08
 TrackedOutOfLogicItemTooManyMissing:
 - Text: The racing council will hear about this!
 - Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without all of the required items. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?
-  Weight: 0.05
+  Weight: 0.08
 - Text: I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without having all of the required items. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.
-  Weight: 0.05
+  Weight: 0.08
 - Text: But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.
 ShaktoolAvailable:
 - Text: Hey tracker, track Shaktool Go Mode

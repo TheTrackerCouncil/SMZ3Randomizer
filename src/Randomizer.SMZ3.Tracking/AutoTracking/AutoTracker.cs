@@ -709,7 +709,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var gt = Tracker.World.GanonsTower;
                     if (!gt.DungeonState.Cleared)
                     {
-                        Tracker.MarkDungeonAsCleared(gt);
+                        Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
                     }
                 }
                 else if (CurrentGame == Game.SM)
@@ -717,7 +717,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
                     if (motherBrain.State?.Defeated != true)
                     {
-                        Tracker.MarkBossAsDefeated(motherBrain);
+                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: false);
                     }
                 }
             }
@@ -729,7 +729,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var gt = Tracker.World.GanonsTower;
                     if (!gt.DungeonState.Cleared)
                     {
-                        Tracker.MarkDungeonAsCleared(gt);
+                        Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
                     }
                 }
                 else if (CurrentGame == Game.SM)
@@ -737,7 +737,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
                     if (motherBrain.State?.Defeated != true)
                     {
-                        Tracker.MarkBossAsDefeated(motherBrain);
+                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: false);
                     }
                 }
             }
