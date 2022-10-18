@@ -60,9 +60,9 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// specified name.
         /// </returns>
         public Item? FirstOrDefault(string name)
-            => AllItems().FirstOrDefault(x => x.Name == name)
-            ?? AllItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-            ?? AllItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.GetStage(name) != null);
+            => LocalPlayersItems().FirstOrDefault(x => x.Name == name)
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.GetStage(name) != null);
 
         /// <summary>
         /// Finds an item with the specified item type.
@@ -75,7 +75,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// this method returns <see langword="null"/>.
         /// </returns>
         public Item? FirstOrDefault(ItemType itemType)
-            => AllItems().FirstOrDefault(x => x.Type == itemType);
+            => LocalPlayersItems().FirstOrDefault(x => x.Type == itemType);
 
         /// <summary>
         /// Indicates whether an item of the specified type has been tracked.
@@ -86,14 +86,21 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// tracked at least once; otherwise, <see langword="false"/>.
         /// </returns>
         public virtual bool IsTracked(ItemType itemType)
-            => AllItems().Any(x => x.Type == itemType && x.State.TrackingState > 0);
+            => LocalPlayersItems().Any(x => x.Type == itemType && x.State.TrackingState > 0);
 
         /// <summary>
         /// Enumerates all items that can be tracked.
         /// </summary>
         /// <returns>A collection of items.</returns>
         public IEnumerable<Item> AllItems() // I really want to discourage this, but necessary for now
-            => _world.World.AllItems;
+            => _world.Worlds.SelectMany(x => x.AllItems);
+
+        /// <summary>
+        /// Enumerates all items that can be tracked.
+        /// </summary>
+        /// <returns>A collection of items.</returns>
+        public IEnumerable<Item> LocalPlayersItems()
+            => _world.Worlds.SelectMany(x => x.AllItems).Where(x => x.World == _world.World);
 
         /// <summary>
         /// Enumarates all currently tracked items.
@@ -102,7 +109,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of items that have been tracked at least once.
         /// </returns>
         public IEnumerable<Item> TrackedItems()
-            => AllItems().Where(x => x.State.TrackingState > 0);
+            => LocalPlayersItems().Where(x => x.State.TrackingState > 0);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.

@@ -1181,7 +1181,7 @@ namespace Randomizer.SMZ3.Tracking
             // If this was not gifted to the player, try to clear the location
             if (!giftedItem && item.Type != ItemType.Nothing)
             {
-                if (location == null)
+                if (location == null && !World.Config.MultiWorld)
                 {
                     location = _worldService.Locations(outOfLogic: true, itemFilter: item.Type).TrySingle();
                 }
