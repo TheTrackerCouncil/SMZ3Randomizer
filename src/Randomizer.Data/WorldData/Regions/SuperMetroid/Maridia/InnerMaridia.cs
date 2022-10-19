@@ -20,6 +20,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                 memoryFlag: 0x40);
             PlasmaBeamRoom = new Location(this, 143, 0x8FC559, LocationType.Chozo,
                 name: "Plasma Beam",
+                vanillaItem: ItemType.Plasma,
                 access: items => CanAccessPlasmaBeamRoom(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessPlasmaBeamRoom(items, requireRewards: false),
                 memoryAddress: 0x11,
