@@ -12,14 +12,19 @@ namespace Randomizer.SMZ3.Tracking.Services
     public interface IItemService
     {
         /// <summary>
-        /// Enumerates all items that can be tracked.
+        /// Enumerates all items that can be tracked for all players.
         /// </summary>
         /// <returns>A collection of items.</returns>
-
         IEnumerable<Item> AllItems();
 
         /// <summary>
-        /// Enumarates all currently tracked items.
+        /// Enumerates all items that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of items.</returns>
+        IEnumerable<Item> LocalPlayersItems();
+
+        /// <summary>
+        /// Enumarates all currently tracked items for the local player.
         /// </summary>
         /// <returns>
         /// A collection of items that have been tracked at least once.
@@ -27,7 +32,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         IEnumerable<Item> TrackedItems();
 
         /// <summary>
-        /// Finds the item with the specified name.
+        /// Finds the item with the specified name for the local player.
         /// </summary>
         /// <param name="name">
         /// The name of the item or item stage to find.
@@ -40,7 +45,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         Item? FirstOrDefault(string name);
 
         /// <summary>
-        /// Finds an item with the specified item type.
+        /// Finds an item with the specified item type for the local player.
         /// </summary>
         /// <param name="itemType">The type of item to find.</param>
         /// <returns>
@@ -63,7 +68,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         string GetName(ItemType itemType);
 
         /// <summary>
-        /// Indicates whether an item of the specified type has been tracked.
+        /// Indicates whether an item of the specified type has been tracked
+        /// for the local player.
         /// </summary>
         /// <param name="itemType">The type of item to check.</param>
         /// <returns>
@@ -96,14 +102,21 @@ namespace Randomizer.SMZ3.Tracking.Services
         string GetName(RewardType rewardType);
 
         /// <summary>
-        /// Enumerates all rewards that can be tracked.
+        /// Enumerates all rewards that can be tracked for the local player.
         /// </summary>
         /// <returns>A collection of rewards.</returns>
 
         IEnumerable<Reward> AllRewards();
 
         /// <summary>
-        /// Enumarates all currently tracked rewards.
+        /// Enumerates all rewards that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of rewards.</returns>
+
+        IEnumerable<Reward> LocalPlayersRewards();
+
+        /// <summary>
+        /// Enumarates all currently tracked rewards for the local player.
         /// </summary>
         /// <returns>
         /// A collection of reward that have been tracked.
@@ -111,14 +124,21 @@ namespace Randomizer.SMZ3.Tracking.Services
         IEnumerable<Reward> TrackedRewards();
 
         /// <summary>
-        /// Enumerates all bosses that can be tracked.
+        /// Enumerates all bosses that can be tracked for all players.
         /// </summary>
         /// <returns>A collection of bosses.</returns>
 
         IEnumerable<Boss> AllBosses();
 
         /// <summary>
-        /// Enumarates all currently tracked bosses.
+        /// Enumerates all bosses that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of bosses.</returns>
+
+        IEnumerable<Boss> LocalPlayersBosses();
+
+        /// <summary>
+        /// Enumarates all currently tracked bosses for the local player.
         /// </summary>
         /// <returns>
         /// A collection of bosses that have been tracked.

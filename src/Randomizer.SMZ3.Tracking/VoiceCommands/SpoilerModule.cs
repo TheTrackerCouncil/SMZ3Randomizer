@@ -34,6 +34,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly Dictionary<int, int> _locationHintsGiven = new();
         private readonly Playthrough? _playthrough;
         private readonly IRandomizerConfigService _randomizerConfigService;
+        private readonly bool _isMultiworld;
         private Config _config => _randomizerConfigService.Config;
 
         /// <summary>
@@ -51,6 +52,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Tracker.SpoilersEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerSpoilers && tracker.Options.SpoilersEnabled;
             if (tracker.World.Config.Race) return;
             _randomizerConfigService = randomizerConfigService;
+            _isMultiworld = tracker.World.Config.MultiWorld;
 
             Playthrough.TryGenerate(new[] { tracker.World }, tracker.World.Config, out _playthrough);
 
@@ -474,7 +476,18 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var item = location.Item;
             if (item != null)
             {
-                Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, $"{item.Metadata.NameWithArticle}{GetMultiworldSuffix(item)}");
+                if (_isMultiworld)
+                {
+                    Tracker.Say(x => location.Item.World == WorldService.World ? x.Spoilers.LocationHasItemOwnWorld : x.Spoilers.LocationHasItemOtherWorld,
+                                locationName,
+                                item.Metadata.NameWithArticle,
+                                location.Item.World.Player);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Spoilers.LocationHasItem, locationName, item.Metadata.NameWithArticle);
+                }
+                
                 return true;
             }
             else
@@ -491,11 +504,35 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (reachableLocation != null)
             {
                 var locationName = reachableLocation.Metadata.Name;
-                var regionName = $"{reachableLocation.Region.Metadata.Name}{GetMultiworldSuffix(reachableLocation.World)}";
-                if (item.Metadata.Multiple || item.Metadata.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                var regionName = reachableLocation.Region.Metadata.Name;
+
+                if (_isMultiworld)
+                {
+                    if (item.Metadata.Multiple || item.Metadata.HasStages)
+                    {
+                        Tracker.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtLocationOwnWorld : x.Spoilers.ItemsAreAtLocationOtherWorld,
+                                    item.Metadata.NameWithArticle,
+                                    locationName,
+                                    regionName,
+                                    reachableLocation.World.Player);
+                    }
+                    else
+                    {
+                        Tracker.Say(x => reachableLocation.World == WorldService.World ? x.Spoilers.ItemIsAtLocationOwnWorld : x.Spoilers.ItemIsAtLocationOtherWorld,
+                                    item.Metadata.NameWithArticle,
+                                    locationName,
+                                    regionName,
+                                    reachableLocation.World.Player);
+                    }
+                }
                 else
-                    Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                {
+                    if (item.Metadata.Multiple || item.Metadata.HasStages)
+                        Tracker.Say(x => x.Spoilers.ItemsAreAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                    else
+                        Tracker.Say(x => x.Spoilers.ItemIsAtLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                }
+                
                 return true;
             }
 
@@ -504,11 +541,35 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             if (worldLocation != null)
             {
                 var locationName = worldLocation.Metadata.Name;
-                var regionName = $"{worldLocation.Region.Metadata.Name}{GetMultiworldSuffix(worldLocation.World)}";
-                if (item.Metadata.Multiple || item.Metadata.HasStages)
-                    Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                var regionName = worldLocation.Region.Metadata.Name;
+
+                if (_isMultiworld)
+                {
+                    if (item.Metadata.Multiple || item.Metadata.HasStages)
+                    {
+                        Tracker.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemsAreAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemsAreAtOutOfLogicLocationOtherWorld,
+                                    item.Metadata.NameWithArticle,
+                                    locationName,
+                                    regionName,
+                                    worldLocation.World.Player);
+                    }
+                    else
+                    {
+                        Tracker.Say(x => worldLocation.World == WorldService.World ? x.Spoilers.ItemIsAtOutOfLogicLocationOwnWorld : x.Spoilers.ItemIsAtOutOfLogicLocationOtherWorld,
+                                    item.Metadata.NameWithArticle,
+                                    locationName,
+                                    regionName,
+                                    worldLocation.World.Player);
+                    }
+                }
                 else
-                    Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                {
+                    if (item.Metadata.Multiple || item.Metadata.HasStages)
+                        Tracker.Say(x => x.Spoilers.ItemsAreAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                    else
+                        Tracker.Say(x => x.Spoilers.ItemIsAtOutOfLogicLocation, item.Metadata.NameWithArticle, locationName, regionName);
+                }
+                
                 return true;
             }
 
@@ -828,34 +889,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append(RoomKey, roomNames);
 
             return GrammarBuilder.Combine(regionGrammar, roomGrammar);
-        }
-
-        private string GetMultiworldSuffix(World locationWorld)
-        {
-            if (!WorldService.World.Config.MultiWorld)
-            {
-                return "";
-            }
-            else
-            {
-                return WorldService.World == locationWorld
-                    ? " in your world"
-                    : $" in {locationWorld.Player}'s world";
-            }
-        }
-
-        private string GetMultiworldSuffix(Item item)
-        {
-            if (!WorldService.World.Config.MultiWorld)
-            {
-                return "";
-            }
-            else
-            {
-                return WorldService.World == item.World
-                    ? " belonging to you"
-                    : $" belonging to {item.World.Player}";
-            }
         }
     }
 }

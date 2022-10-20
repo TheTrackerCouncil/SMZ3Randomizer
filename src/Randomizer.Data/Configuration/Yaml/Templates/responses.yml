@@ -525,6 +525,20 @@ Spoilers:
   # {1} is replaced with the item at the location with its article (e.g. the lamp)
   LocationHasItem:
 
+  # The list of possibilities when a spoiler for a location is requested in a multiworld game, and we found a valid item there
+  # and it belongs to another player
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the item at the location with its article (e.g. the lamp)
+  # {2} is the owner of the item at that location
+  LocationHasItemOtherWorld:
+
+  # The list of possibilities when a spoiler for a location is requested in a multiworld game, and we found a valid item there
+  # and it belongs to the local player
+  # {0} is replaced with the location being asked about
+  # {1} is replaced with the item at the location with its article (e.g. the lamp)
+  # {2} is the owner of the item at that location
+  LocationHasItemOwnWorld:
+
   # The list of possibilities when a spoiler for a location is requested, and we couldn't find additional information for that item
   # {0} is replaced with the location being asked about
   # {1} is replaced with the internal SMZ3 item name
@@ -536,11 +550,43 @@ Spoilers:
   # {2} is replaced with the name of the region of the location it was found in
   ItemIsAtLocation:
 
-  # The list of possibilities when a spoiler for an item is requested, and a location was found one copy of the item
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and a location was found
+  # for the item in another player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemIsAtLocationOtherWorld:
+
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and a location was found
+  # for the item in the local player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemIsAtLocationOwnWorld:
+
+  # The list of possibilities when a spoiler for an item is requested, and a location was found with one copy of the item
   # {0} is replaced with the item being asked about
   # {1} is replaced with the name of the location it was found in
   # {2} is replaced with the name of the region of the location it was found in
   ItemsAreAtLocation:
+
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and a location was found with
+  # one copy of the item in another player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemsAreAtLocationOtherWorld:
+
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and a location was found with
+  # one copy of the item in the local player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemsAreAtLocationOwnWorld:
 
   # The list of possibilities when a spoiler for an item is requested, and an out of logic location was found for the item
   # {0} is replaced with the item being asked about
@@ -548,11 +594,43 @@ Spoilers:
   # {2} is replaced with the name of the region of the location it was found in
   ItemIsAtOutOfLogicLocation:
 
-  # The list of possibilities when a spoiler for an item is requested, and an out of logic location was found one copy of the item
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and an out of logic location
+  # was found for the item in another player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemIsAtOutOfLogicLocationOtherWorld:
+
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and an out of logic location
+  # was found for the item in the local player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemIsAtOutOfLogicLocationOwnWorld:
+
+  # The list of possibilities when a spoiler for an item is requested, and an out of logic location was found with one copy of the item
   # {0} is replaced with the item being asked about
   # {1} is replaced with the name of the location it was found in
   # {2} is replaced with the name of the region of the location it was found in
   ItemsAreAtOutOfLogicLocation:
+
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and an out of logic location with one copy
+  # of the item was found in another player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemsAreAtOutOfLogicLocationOtherWorld:
+
+  # The list of possibilities when a spoiler for an item is requested in a multiworld game, and an out of logic location with one copy
+  # of the item was found in the local player's world
+  # {0} is replaced with the item being asked about
+  # {1} is replaced with the name of the location it was found in
+  # {2} is replaced with the name of the region of the location it was found in
+  # {3} is replaced with the name of the player whose world contains that location
+  ItemsAreAtOutOfLogicLocationOwnWorld:
 
   # The list of possibilities when a spoiler for an area is requested, list all items in that location
   # {0} is replaced with the area name

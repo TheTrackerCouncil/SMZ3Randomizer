@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         protected IReadOnlyCollection<RewardInfo> Rewards { get; }
 
         /// <summary>
-        /// Finds the item with the specified name.
+        /// Finds the item with the specified name for the local player.
         /// </summary>
         /// <param name="name">
         /// The name of the item or item stage to find.
@@ -65,7 +65,7 @@ namespace Randomizer.SMZ3.Tracking.Services
             ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.GetStage(name) != null);
 
         /// <summary>
-        /// Finds an item with the specified item type.
+        /// Finds an item with the specified item type for the local player.
         /// </summary>
         /// <param name="itemType">The type of item to find.</param>
         /// <returns>
@@ -78,7 +78,8 @@ namespace Randomizer.SMZ3.Tracking.Services
             => LocalPlayersItems().FirstOrDefault(x => x.Type == itemType);
 
         /// <summary>
-        /// Indicates whether an item of the specified type has been tracked.
+        /// Indicates whether an item of the specified type has been tracked
+        /// for the local player.
         /// </summary>
         /// <param name="itemType">The type of item to check.</param>
         /// <returns>
@@ -89,21 +90,21 @@ namespace Randomizer.SMZ3.Tracking.Services
             => LocalPlayersItems().Any(x => x.Type == itemType && x.State.TrackingState > 0);
 
         /// <summary>
-        /// Enumerates all items that can be tracked.
+        /// Enumerates all items that can be tracked for all players.
         /// </summary>
         /// <returns>A collection of items.</returns>
         public IEnumerable<Item> AllItems() // I really want to discourage this, but necessary for now
             => _world.Worlds.SelectMany(x => x.AllItems);
 
         /// <summary>
-        /// Enumerates all items that can be tracked.
+        /// Enumerates all items that can be tracked for the local player.
         /// </summary>
         /// <returns>A collection of items.</returns>
         public IEnumerable<Item> LocalPlayersItems()
             => _world.Worlds.SelectMany(x => x.AllItems).Where(x => x.World == _world.World);
 
         /// <summary>
-        /// Enumarates all currently tracked items.
+        /// Enumarates all currently tracked items for the local player.
         /// </summary>
         /// <returns>
         /// A collection of items that have been tracked at least once.
@@ -138,7 +139,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// this method returns <see langword="null"/>.
         /// </returns>
         public virtual Reward? FirstOrDefault(RewardType rewardType)
-            => AllRewards().FirstOrDefault(x => x.Type == rewardType);
+            => LocalPlayersRewards().FirstOrDefault(x => x.Type == rewardType);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -156,15 +157,23 @@ namespace Randomizer.SMZ3.Tracking.Services
         }
 
         /// <summary>
-        /// Enumerates all rewards that can be tracked.
+        /// Enumerates all rewards that can be tracked for all players.
         /// </summary>
         /// <returns>A collection of rewards.</returns>
 
         public virtual IEnumerable<Reward> AllRewards()
+            => _world.Worlds.SelectMany(x => x.Rewards);
+
+        /// <summary>
+        /// Enumerates all rewards that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of rewards.</returns>
+
+        public virtual IEnumerable<Reward> LocalPlayersRewards()
             => _world.World.Rewards;
 
         /// <summary>
-        /// Enumarates all currently tracked rewards.
+        /// Enumarates all currently tracked rewards for the local player.
         /// This uses what the player marked as the reward for dungeons,
         /// not the actual dungeon reward.
         /// </summary>
@@ -175,21 +184,29 @@ namespace Randomizer.SMZ3.Tracking.Services
             => _world.World.Dungeons.Where(x => x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward));
 
         /// <summary>
-        /// Enumerates all bosses that can be tracked.
+        /// Enumerates all bosses that can be tracked for all players.
         /// </summary>
         /// <returns>A collection of bosses.</returns>
 
         public virtual IEnumerable<Boss> AllBosses()
+            => _world.Worlds.SelectMany(x => x.AllBosses);
+
+        /// <summary>
+        /// Enumerates all bosses that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of bosses.</returns>
+
+        public virtual IEnumerable<Boss> LocalPlayersBosses()
             => _world.World.AllBosses;
 
         /// <summary>
-        /// Enumarates all currently tracked bosses.
+        /// Enumarates all currently tracked bosses for the local player.
         /// </summary>
         /// <returns>
         /// A collection of bosses that have been tracked.
         /// </returns>
         public virtual IEnumerable<Boss> TrackedBosses()
-            => AllBosses().Where(x => x.State?.Defeated == true);
+            => LocalPlayersBosses().Where(x => x.State?.Defeated == true);
 
         public Progression GetProgression(bool assumeKeys)
         {
