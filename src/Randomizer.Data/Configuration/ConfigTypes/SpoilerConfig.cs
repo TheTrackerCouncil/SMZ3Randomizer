@@ -132,6 +132,31 @@ namespace Randomizer.Data.Configuration
 
         /// <summary>
         /// Gets the phrases that spoil the item that is at the requested
+        /// when in a multiworld game and the item belongs to another player
+        /// location.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the name of the item, with "a", "an" or "the".
+        /// <c>2 is a placeholder for the name of the player the item belongs to</c>
+        /// </remarks>
+        public SchrodingersString LocationHasItemOtherWorld { get; init; }
+            = new("{0} has {1} belonging to {2}");
+
+        /// <summary>
+        /// Gets the phrases that spoil the item that is at the requested
+        /// when in a multiworld game and the item belongs to the local player
+        /// location.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the location. <c>{1}</c>
+        /// is a placeholder for the name of the item, with "a", "an" or "the".
+        /// </remarks>
+        public SchrodingersString LocationHasItemOwnWorld { get; init; }
+            = new("{0} has {1} belonging to you");
+
+        /// <summary>
+        /// Gets the phrases that spoil the item that is at the requested
         /// location, when the item does not exist in the item data.
         /// </summary>
         /// <remarks>
@@ -154,6 +179,31 @@ namespace Randomizer.Data.Configuration
             = new("{0} is at {1} <break strength='weak'/> in {2}.");
 
         /// <summary>
+        /// Gets the phrases that spoil the location that has the requested
+        /// item and that location is in another world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region. <c>3</c> is
+        /// a placeholder for the name of the player for that location's world.
+        /// </remarks>
+        public SchrodingersString ItemIsAtLocationOtherWorld { get; init; }
+            = new("{0} is at {1} <break strength='weak'/> in {2} in {3}'s world.");
+
+        /// <summary>
+        /// Gets the phrases that spoil the location that has the requested
+        /// item and that location is in the local world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region.
+        /// </remarks>
+        public SchrodingersString ItemIsAtLocationOwnWorld { get; init; }
+            = new("{0} is at {1} <break strength='weak'/> in {2} in your world.");
+
+        /// <summary>
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item.
         /// </summary>
@@ -164,6 +214,31 @@ namespace Randomizer.Data.Configuration
         /// </remarks>
         public SchrodingersString ItemsAreAtLocation { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2}");
+
+        /// <summary>
+        /// Gets the phrases that spoil one of the locations that has the
+        /// requested item and that location is in another world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region. <c>3</c> is
+        /// a placeholder for the name of the player for that location's world.
+        /// </remarks>
+        public SchrodingersString ItemsAreAtLocationOtherWorld { get; init; }
+            = new("There is {0} at {1} <break strength='weak'/> in {2} in {3}'s world.");
+
+        /// <summary>
+        /// Gets the phrases that spoil one of the locations that has the
+        /// requested item and that location is in the local world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region.
+        /// </remarks>
+        public SchrodingersString ItemsAreAtLocationOwnWorld { get; init; }
+            = new("There is {0} at {1} <break strength='weak'/> in {2} in your world.");
 
         /// <summary>
         /// Gets the phrases that spoil the location that has the requested
@@ -178,6 +253,30 @@ namespace Randomizer.Data.Configuration
             = new("{0} is at {1} <break strength='weak'/> in {2}, but it is out of logic.");
 
         /// <summary>
+        /// Gets the phrases that spoil the location that has the requested
+        /// item, but the location is out of logic and in another player's world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region.
+        /// </remarks>
+        public SchrodingersString ItemIsAtOutOfLogicLocationOtherWorld { get; init; }
+            = new("{0} is at {1} <break strength='weak'/> in {2} in {3}'s world, but it is out of logic.");
+
+        /// <summary>
+        /// Gets the phrases that spoil the location that has the requested
+        /// item, but the location is out of logic and is in the local world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region.
+        /// </remarks>
+        public SchrodingersString ItemIsAtOutOfLogicLocationOwnWorld { get; init; }
+            = new("{0} is at {1} <break strength='weak'/> in {2} in your world, but it is out of logic.");
+
+        /// <summary>
         /// Gets the phrases that spoil one of the locations that has the
         /// requested item, but the location is out of logic.
         /// </summary>
@@ -188,6 +287,33 @@ namespace Randomizer.Data.Configuration
         /// </remarks>
         public SchrodingersString ItemsAreAtOutOfLogicLocation { get; init; }
             = new("There is {0} at {1} <break strength='weak'/> in {2}, but you cannot get it yet.");
+
+        
+        /// <summary>
+        /// Gets the phrases that spoil one of the locations that has the
+        /// requested item, but the location is out of logic and in another
+        /// player's world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region.
+        /// </remarks>
+        public SchrodingersString ItemsAreAtOutOfLogicLocationOtherWorld { get; init; }
+            = new("There is {0} at {1} <break strength='weak'/> in {2} in {3}'s, but you cannot get it yet.");
+
+        /// <summary>
+        /// Gets the phrases that spoil one of the locations that has the
+        /// requested item, but the location is out of logic and is in the
+        /// local world.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item, with "a", "an"
+        /// or "the". <c>{1}</c> is a placeholder for the name of the location.
+        /// <c>{2}</c> is a placeholder for the name of the region.
+        /// </remarks>
+        public SchrodingersString ItemsAreAtOutOfLogicLocationOwnWorld { get; init; }
+            = new("There is {0} at {1} <break strength='weak'/> in {2} in your world, but you cannot get it yet.");
 
         /// <summary>
         /// Gets the phrases that mention all the items in an area.

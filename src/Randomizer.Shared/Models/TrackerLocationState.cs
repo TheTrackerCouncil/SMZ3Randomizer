@@ -13,7 +13,7 @@ namespace Randomizer.Shared.Models
         public ItemType Item { get; set; }
         public ItemType? MarkedItem { get; set; }
         public bool Cleared { get; set; }
-        public bool Ignored { get; set; }
+        public bool Autotracked { get; set; }
         public int WorldId { get; set; }
         public int ItemWorldId { get; set; }
         public bool HasMarkedItem => MarkedItem != null && MarkedItem != ItemType.Nothing;

@@ -36,6 +36,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.Data.WorldData.Regions;
+using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.App
 {
@@ -54,7 +55,7 @@ namespace Randomizer.App
         private readonly List<object> _mouseDownSenders = new();
         private readonly IWorldAccessor _world;
         private readonly RandomizerOptions _options;
-        private readonly RomGenerator _romGenerator;
+        private readonly Smz3GeneratedRomLoader _romLoader;
         private readonly ITrackerTimerService _timerService;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
@@ -71,7 +72,7 @@ namespace Randomizer.App
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
             ILogger<TrackerWindow> logger,
-            RomGenerator romGenerator,
+            Smz3GeneratedRomLoader romLoader,
             IUIService uiService,
             OptionsFactory optionsFactory,
             IWorldAccessor world,
@@ -83,7 +84,7 @@ namespace Randomizer.App
             _serviceProvider = serviceProvider;
             _itemService = itemService;
             _logger = logger;
-            _romGenerator = romGenerator;
+            _romLoader = romLoader;
             _uiService = uiService;
             _options = optionsFactory.Create();
             _layout = uiService.GetLayout(_options.GeneralOptions.SelectedLayout);
@@ -639,17 +640,7 @@ namespace Randomizer.App
             // If a rom was passed in, generate its seed to populate all locations and items
             if (GeneratedRom.IsValid(Rom))
             {
-                var config = Config.FromConfigString(Rom.Settings);
-                Options = Options.Clone();
-                Options.LogicConfig = config.LogicConfig;
-                Options.SeedOptions.Race = config.Race;
-                Options.SeedOptions.KeysanityMode = config.KeysanityMode;
-                Options.SeedOptions.ItemPlacementRule = config.ItemPlacementRule;
-                Options.SeedOptions.ConfigString = config.SettingsString;
-                Options.SeedOptions.CopySeedAndRaceSettings = config.CopySeedAndRaceSettings;
-                Options.SeedOptions.UniqueHintCount = config.UniqueHintCount;
-                if (Rom.GeneratorVersion == 0) Options.LogicConfig.FireRodDarkRooms = true;
-                _romGenerator.GenerateSeed(Options, Rom.Seed);
+                _romLoader.LoadGeneratedRom(Rom);
             }
 
             InitializeTracker();

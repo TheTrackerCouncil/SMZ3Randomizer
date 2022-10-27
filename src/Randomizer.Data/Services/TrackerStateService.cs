@@ -32,6 +32,7 @@ namespace Randomizer.Data.Services
                     LocationId = x.Id,
                     Item = x.Item.Type,
                     Cleared = false,
+                    Autotracked = false,
                     WorldId = x.World.Id,
                     ItemWorldId = x.Item.World.Id
                 })
@@ -240,6 +241,7 @@ namespace Randomizer.Data.Services
 
                 if (dungeon is IHasReward rewardRegion && dungeonState.Reward != null)
                 {
+                    rewardRegion.RewardType = dungeonState.Reward.Value;
                     rewardRegion.Reward = new Reward(dungeonState.Reward.Value, world, rewardRegion)
                     {
                         State = dungeonState

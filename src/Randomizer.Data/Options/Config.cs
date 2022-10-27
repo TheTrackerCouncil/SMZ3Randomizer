@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -249,10 +250,17 @@ namespace Randomizer.Data.Options
         /// </summary>
         /// <param name="configString"></param>
         /// <returns>The converted json data</returns>
-        public static Config FromConfigString(string configString)
+        public static IEnumerable<Config> FromConfigString(string configString)
         {
             if (configString.Contains("{"))
-                return JsonSerializer.Deserialize<Config>(configString, s_options);
+                return new List<Config>() { JsonSerializer.Deserialize<Config>(configString, s_options) };
+
+            if (configString.StartsWith("["))
+            {
+                var configs = new List<Config>();
+                var configStrings = JsonSerializer.Deserialize<List<string>>(configString, s_options);
+                return configStrings.SelectMany(x => FromConfigString(x));
+            }
 
             var gZipBuffer = Convert.FromBase64String(configString);
             using (var memoryStream = new MemoryStream())
@@ -269,8 +277,24 @@ namespace Randomizer.Data.Options
                 }
 
                 var json = Encoding.UTF8.GetString(buffer);
-                return JsonSerializer.Deserialize<Config>(json, s_options);
+                return new List<Config>() { JsonSerializer.Deserialize<Config>(json, s_options) };
             }
+        }
+
+        /// <summary>
+        /// Takes a series of config files and generates them into a combined json array of
+        /// their compressed config strings
+        /// </summary>
+        /// <param name="configs"></param>
+        /// <returns></returns>
+        public static string ToConfigString(IEnumerable<Config> configs)
+        {
+            var configStrings = new List<string>();
+            foreach (var config in configs)
+            {
+                configStrings.Add(ToConfigString(config, true));
+            }
+            return JsonSerializer.Serialize(configStrings, s_options);
         }
     }
 }

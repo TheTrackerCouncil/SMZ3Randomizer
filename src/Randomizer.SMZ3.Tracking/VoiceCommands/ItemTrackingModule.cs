@@ -27,7 +27,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public ItemTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Track item", GetTrackItemRule(), (tracker, result) =>
+            var isMultiworld = worldService.World.Config.MultiWorld;
+
+            AddCommand("Track item", GetTrackItemRule(isMultiworld), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
 
@@ -76,46 +78,49 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 tracker.TrackItem(death, confidence: result.Confidence, tryClear: false);
             });
 
-            AddCommand("Track available items in an area", GetTrackEverythingRule(), (tracker, result) =>
+            if (!isMultiworld)
             {
-                if (result.Semantics.ContainsKey(RoomKey))
+                AddCommand("Track available items in an area", GetTrackEverythingRule(), (tracker, result) =>
                 {
-                    var room = GetRoomFromResult(tracker, result);
-                    tracker.ClearArea(room,
-                        trackItems: true,
-                        includeUnavailable: false,
-                        confidence: result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(RegionKey))
-                {
-                    var region = GetRegionFromResult(tracker, result);
-                    tracker.ClearArea(region,
-                        trackItems: true,
-                        includeUnavailable: false,
-                        confidence: result.Confidence);
-                }
-            });
+                    if (result.Semantics.ContainsKey(RoomKey))
+                    {
+                        var room = GetRoomFromResult(tracker, result);
+                        tracker.ClearArea(room,
+                            trackItems: true,
+                            includeUnavailable: false,
+                            confidence: result.Confidence);
+                    }
+                    else if (result.Semantics.ContainsKey(RegionKey))
+                    {
+                        var region = GetRegionFromResult(tracker, result);
+                        tracker.ClearArea(region,
+                            trackItems: true,
+                            includeUnavailable: false,
+                            confidence: result.Confidence);
+                    }
+                });
 
-            AddCommand("Track all items in an area (including out-of-logic)", GetTrackEverythingIncludingOutOfLogicRule(), (tracker, result) =>
-            {
-                if (result.Semantics.ContainsKey(RoomKey))
+                AddCommand("Track all items in an area (including out-of-logic)", GetTrackEverythingIncludingOutOfLogicRule(), (tracker, result) =>
                 {
-                    var room = GetRoomFromResult(tracker, result);
-                    tracker.ClearArea(room,
-                        trackItems: true,
-                        includeUnavailable: true,
-                        confidence: result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(RegionKey))
-                {
-                    var region = GetRegionFromResult(tracker, result);
-                    tracker.ClearArea(region,
-                        trackItems: true,
-                        includeUnavailable: true,
-                        confidence: result.Confidence);
-                }
-            });
-
+                    if (result.Semantics.ContainsKey(RoomKey))
+                    {
+                        var room = GetRoomFromResult(tracker, result);
+                        tracker.ClearArea(room,
+                            trackItems: true,
+                            includeUnavailable: true,
+                            confidence: result.Confidence);
+                    }
+                    else if (result.Semantics.ContainsKey(RegionKey))
+                    {
+                        var region = GetRegionFromResult(tracker, result);
+                        tracker.ClearArea(region,
+                            trackItems: true,
+                            includeUnavailable: true,
+                            confidence: result.Confidence);
+                    }
+                });
+            }
+            
             AddCommand("Untrack an item", GetUntrackItemRule(), (tracker, result) =>
             {
                 var item = GetItemFromResult(tracker, result, out _);
@@ -137,7 +142,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("I died");
         }
 
-        private GrammarBuilder GetTrackItemRule()
+        private GrammarBuilder GetTrackItemRule(bool isMultiworld)
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
             var itemNames = GetItemNames(x => x.Name != "Content");
@@ -150,7 +155,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("track", "add")
                 .Append(ItemNameKey, itemNames);
 
-            var trackItemDungeon = new GrammarBuilder()
+            if (!isMultiworld)
+            {
+                var trackItemDungeon = new GrammarBuilder()
                 .Append("Hey tracker,")
                 .Optional("please", "would you kindly")
                 .OneOf("track", "add")
@@ -158,24 +165,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("in", "from")
                 .Append(DungeonKey, dungeonNames);
 
-            var trackItemLocation = new GrammarBuilder()
-                .Append("Hey tracker,")
-                .Optional("please", "would you kindly")
-                .OneOf("track", "add")
-                .Append(ItemNameKey, itemNames)
-                .OneOf("in", "from", "in the", "from the")
-                .Append(LocationKey, locationNames);
+                var trackItemLocation = new GrammarBuilder()
+                    .Append("Hey tracker,")
+                    .Optional("please", "would you kindly")
+                    .OneOf("track", "add")
+                    .Append(ItemNameKey, itemNames)
+                    .OneOf("in", "from", "in the", "from the")
+                    .Append(LocationKey, locationNames);
 
-            var trackItemRoom = new GrammarBuilder()
-                .Append("Hey tracker,")
-                .Optional("please", "would you kindly")
-                .OneOf("track", "add")
-                .Append(ItemNameKey, itemNames)
-                .OneOf("in", "from", "in the", "from the")
-                .Append(RoomKey, roomNames);
+                var trackItemRoom = new GrammarBuilder()
+                    .Append("Hey tracker,")
+                    .Optional("please", "would you kindly")
+                    .OneOf("track", "add")
+                    .Append(ItemNameKey, itemNames)
+                    .OneOf("in", "from", "in the", "from the")
+                    .Append(RoomKey, roomNames);
 
-            return GrammarBuilder.Combine(
-                trackItemNormal, trackItemDungeon, trackItemLocation, trackItemRoom);
+                return GrammarBuilder.Combine(
+                    trackItemNormal, trackItemDungeon, trackItemLocation, trackItemRoom);
+
+            }
+            else
+            {
+                return trackItemNormal;
+            }
+
         }
 
         private GrammarBuilder GetTrackEverythingRule()
