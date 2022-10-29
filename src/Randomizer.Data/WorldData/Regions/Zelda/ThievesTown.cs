@@ -58,8 +58,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             BigChest = new Location(this, 256 + 159, 0x1EA10, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveGlove,
-                access: items => items.BigKeyTT && items.Hammer &&
-                    (BigChest.ItemIs(ItemType.KeyTT, World) || items.KeyTT),
+                access: items => BigChest != null && items.BigKeyTT && items.Hammer &&
+                                 (BigChest.ItemIs(ItemType.KeyTT, World) || items.KeyTT),
                 memoryAddress: 0x44,
                 memoryFlag: 0x4)
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyTT, World) && items.Hammer);
@@ -74,16 +74,18 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryAddress = 0xAC;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 219 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Thieves' Town";
 
         public Reward Reward { get; set; }
+
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.DarkWorldNorthWest;
 

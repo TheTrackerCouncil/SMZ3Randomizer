@@ -26,7 +26,7 @@ namespace Randomizer.Data.WorldData.Regions
 
         public int? MemoryFlag { get; init; }
 
-        public ICollection<int> StartingRooms { get; init; }
+        public ICollection<int> StartingRooms { get; init; } = new List<int>();
     }
 
 }

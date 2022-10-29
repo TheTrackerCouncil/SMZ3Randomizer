@@ -159,7 +159,7 @@ namespace Randomizer.Data.Options
 
         public int ChatGreetingTimeLimit { get; set; } = 0;
 
-        public ICollection<string> SelectedProfiles { get; set; } = new List<string> { "Sassy" };
+        public ICollection<string?> SelectedProfiles { get; set; } = new List<string?> { "Sassy" };
 
         public string? SelectedLayout { get; set; }
 
@@ -169,7 +169,7 @@ namespace Randomizer.Data.Options
         {
             return File.Exists(Z3RomPath)
                 && File.Exists(SMRomPath)
-                && (Directory.Exists(RomOutputPath) || RomOutputPath == null);
+                && Directory.Exists(RomOutputPath);
         }
 
         public TrackerOptions GetTrackerOptions() => new()
@@ -190,7 +190,7 @@ namespace Randomizer.Data.Options
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private static string? NormalizeTwitchChannel(string? value)

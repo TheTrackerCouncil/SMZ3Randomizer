@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text.Json.Serialization;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData
@@ -16,28 +16,16 @@ namespace Randomizer.Data.WorldData
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Item"/> class with the
-        /// specified item type.
-        /// </summary>
-        /// <param name="itemType">The type of item.</param>
-        public Item(ItemType itemType)
-        {
-            Name = itemType.GetDescription();
-            Type = itemType;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Item"/> class with the
         /// specified item type and world.
         /// </summary>
         /// <param name="itemType">The type of item.</param>
         /// <param name="world">The world the item is in.</param>
-        public Item(ItemType itemType, World world, string? name = null) : this(itemType)
+        /// <param name="name">The override name for the item</param>
+        public Item(ItemType itemType, World world, string? name = null)
         {
+            Type = itemType;
             World = world;
-            if (!string.IsNullOrEmpty(name))
-            {
-                Name = name;
-            }
+            Name = string.IsNullOrEmpty(name) ? itemType.GetDescription() : name ;
         }
 
         /// <summary>
@@ -63,12 +51,12 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Additional information about the item
         /// </summary>
-        public ItemData Metadata { get; set; }
+        public ItemData? Metadata { get; set; }
 
         /// <summary>
         /// Current state of the item
         /// </summary>
-        public TrackerItemState State { get; set; }
+        public TrackerItemState? State { get; set; }
 
         /// <summary>
         /// Indicates whether the item is a dungeon-specific item.
@@ -108,7 +96,11 @@ namespace Randomizer.Data.WorldData
         /// Gets the number of actual items as displayed or mentioned by
         /// tracker, or <c>0</c> if the item does not have copies.
         /// </summary>
-        public int Counter => Metadata.Multiple && !Metadata.HasStages ? State.TrackingState * (Metadata.CounterMultiplier ?? 1) : 0;
+        public int Counter => State == null || Metadata == null
+            ? 0
+            : Metadata.Multiple && !Metadata.HasStages
+                ? State.TrackingState * (Metadata.CounterMultiplier ?? 1)
+                : 0;
 
         /// <summary>
         /// Tracks the item.
@@ -123,9 +115,12 @@ namespace Randomizer.Data.WorldData
         /// </remarks>
         public bool Track()
         {
+            if (State == null)
+                throw new InvalidOperationException($"State not loaded for item '{Name}'");
+
             if (State.TrackingState == 0 // Item hasn't been tracked yet (any case)
-                || !Metadata.HasStages && Metadata.Multiple // State.Multiple items always track
-                || Metadata.HasStages && State.TrackingState < Metadata.MaxStage) // Hasn't reached max. stage yet
+                || (Metadata?.HasStages == false && Metadata?.Multiple == true) // State.Multiple items always track
+                || (Metadata?.HasStages == true && State.TrackingState < Metadata?.MaxStage)) // Hasn't reached max. stage yet
             {
                 State.TrackingState++;
                 return true;
@@ -143,6 +138,9 @@ namespace Randomizer.Data.WorldData
         /// </returns>
         public bool Untrack()
         {
+            if (State == null)
+                throw new InvalidOperationException($"State not loaded for item '{Name}'");
+
             if (State.TrackingState == 0)
                 return false;
 
@@ -163,13 +161,16 @@ namespace Randomizer.Data.WorldData
         /// </remarks>
         public bool Track(int stage)
         {
-            if (!Metadata.HasStages)
+            if (State == null)
+                throw new InvalidOperationException($"State not loaded for item '{Name}'");
+
+            if (Metadata?.HasStages == false)
                 throw new ArgumentException($"The item '{Name}' does not have Multiple stages.");
 
-            if (stage > Metadata.MaxStage)
+            if (stage > Metadata?.MaxStage)
                 throw new ArgumentOutOfRangeException($"Cannot advance item '{Name}' to stage {stage} as the highest state is {Metadata.MaxStage}.");
 
-            if (State.TrackingState < stage)
+            if (State?.TrackingState < stage)
             {
                 State.TrackingState = stage;
                 return true;
@@ -192,6 +193,8 @@ namespace Randomizer.Data.WorldData
         /// </returns>
         public bool TryGetTrackingResponse([NotNullWhen(true)] out SchrodingersString? response)
         {
+            if (Metadata == null || State == null)
+                throw new InvalidOperationException($"State or metadata not loaded item '{Name}'");
             return Metadata.TryGetTrackingResponse(State.TrackingState, out response);
         }
 
@@ -204,75 +207,74 @@ namespace Randomizer.Data.WorldData
         public static List<Item> CreateProgressionPool(World world)
         {
             var itemPool = new List<Item> {
-                new Item(ItemType.ProgressiveShield),
-                new Item(ItemType.ProgressiveShield),
-                new Item(ItemType.ProgressiveShield),
-                new Item(ItemType.ProgressiveSword),
-                new Item(ItemType.ProgressiveSword),
-                new Item(ItemType.Bow),
-                new Item(ItemType.Hookshot),
-                new Item(ItemType.Mushroom),
-                new Item(ItemType.Powder),
-                new Item(ItemType.Firerod),
-                new Item(ItemType.Icerod),
-                new Item(ItemType.Bombos),
-                new Item(ItemType.Ether),
-                new Item(ItemType.Quake),
-                new Item(ItemType.Lamp),
-                new Item(ItemType.Hammer),
-                new Item(ItemType.Shovel),
-                new Item(ItemType.Flute),
-                new Item(ItemType.Book),
-                new Item(ItemType.Bottle),
-                new Item(ItemType.Somaria),
-                new Item(ItemType.Byrna),
-                new Item(ItemType.Cape),
-                new Item(ItemType.Mirror),
-                new Item(ItemType.Boots),
-                new Item(ItemType.ProgressiveGlove),
-                new Item(ItemType.ProgressiveGlove),
-                new Item(ItemType.Flippers),
-                new Item(ItemType.MoonPearl),
-                new Item(ItemType.HalfMagic),
+                new Item(ItemType.ProgressiveShield, world),
+                new Item(ItemType.ProgressiveShield, world),
+                new Item(ItemType.ProgressiveShield, world),
+                new Item(ItemType.ProgressiveSword, world),
+                new Item(ItemType.ProgressiveSword, world),
+                new Item(ItemType.Bow, world),
+                new Item(ItemType.Hookshot, world),
+                new Item(ItemType.Mushroom, world),
+                new Item(ItemType.Powder, world),
+                new Item(ItemType.Firerod, world),
+                new Item(ItemType.Icerod, world),
+                new Item(ItemType.Bombos, world),
+                new Item(ItemType.Ether, world),
+                new Item(ItemType.Quake, world),
+                new Item(ItemType.Lamp, world),
+                new Item(ItemType.Hammer, world),
+                new Item(ItemType.Shovel, world),
+                new Item(ItemType.Flute, world),
+                new Item(ItemType.Book, world),
+                new Item(ItemType.Bottle, world),
+                new Item(ItemType.Somaria, world),
+                new Item(ItemType.Byrna, world),
+                new Item(ItemType.Cape, world),
+                new Item(ItemType.Mirror, world),
+                new Item(ItemType.Boots, world),
+                new Item(ItemType.ProgressiveGlove, world),
+                new Item(ItemType.ProgressiveGlove, world),
+                new Item(ItemType.Flippers, world),
+                new Item(ItemType.MoonPearl, world),
+                new Item(ItemType.HalfMagic, world),
 
-                new Item(ItemType.Grapple),
-                new Item(ItemType.Charge),
-                new Item(ItemType.Ice),
-                new Item(ItemType.Wave),
-                new Item(ItemType.Plasma),
-                new Item(ItemType.Varia),
-                new Item(ItemType.Gravity),
-                new Item(ItemType.Morph),
-                new Item(ItemType.Bombs),
-                new Item(ItemType.SpringBall),
-                new Item(ItemType.ScrewAttack),
-                new Item(ItemType.HiJump),
-                new Item(ItemType.SpaceJump),
-                new Item(ItemType.SpeedBooster),
+                new Item(ItemType.Grapple, world),
+                new Item(ItemType.Charge, world),
+                new Item(ItemType.Ice, world),
+                new Item(ItemType.Wave, world),
+                new Item(ItemType.Plasma, world),
+                new Item(ItemType.Varia, world),
+                new Item(ItemType.Gravity, world),
+                new Item(ItemType.Morph, world),
+                new Item(ItemType.Bombs, world),
+                new Item(ItemType.SpringBall, world),
+                new Item(ItemType.ScrewAttack, world),
+                new Item(ItemType.HiJump, world),
+                new Item(ItemType.SpaceJump, world),
+                new Item(ItemType.SpeedBooster, world),
 
-                new Item(ItemType.Missile),
-                new Item(ItemType.Super),
-                new Item(ItemType.PowerBomb),
-                new Item(ItemType.PowerBomb),
-                new Item(ItemType.ETank),
-                new Item(ItemType.ETank),
-                new Item(ItemType.ETank),
-                new Item(ItemType.ETank),
-                new Item(ItemType.ETank),
+                new Item(ItemType.Missile, world),
+                new Item(ItemType.Super, world),
+                new Item(ItemType.PowerBomb, world),
+                new Item(ItemType.PowerBomb, world),
+                new Item(ItemType.ETank, world),
+                new Item(ItemType.ETank, world),
+                new Item(ItemType.ETank, world),
+                new Item(ItemType.ETank, world),
+                new Item(ItemType.ETank, world),
 
-                new Item(ItemType.ReserveTank),
-                new Item(ItemType.ReserveTank),
-                new Item(ItemType.ReserveTank),
-                new Item(ItemType.ReserveTank),
+                new Item(ItemType.ReserveTank, world),
+                new Item(ItemType.ReserveTank, world),
+                new Item(ItemType.ReserveTank, world),
+                new Item(ItemType.ReserveTank, world),
 
-                new Item(ItemType.ThreeHundredRupees),
-                new Item(ItemType.ThreeHundredRupees),
+                new Item(ItemType.ThreeHundredRupees, world),
+                new Item(ItemType.ThreeHundredRupees, world),
             };
 
             foreach (var item in itemPool)
             {
                 item.Progression = true;
-                item.World = world;
             }
 
             return itemPool;
@@ -287,26 +289,24 @@ namespace Randomizer.Data.WorldData
         public static List<Item> CreateNicePool(World world)
         {
             var itemPool = new List<Item> {
-                new Item(ItemType.ProgressiveTunic),
-                new Item(ItemType.ProgressiveTunic),
-                new Item(ItemType.ProgressiveSword),
-                new Item(ItemType.ProgressiveSword),
-                new Item(ItemType.SilverArrows),
-                new Item(ItemType.BlueBoomerang),
-                new Item(ItemType.RedBoomerang),
-                new Item(ItemType.Bottle),
-                new Item(ItemType.Bottle),
-                new Item(ItemType.Bottle),
-                new Item(ItemType.Bugnet),
-                new Item(ItemType.HeartContainerRefill),
+                new Item(ItemType.ProgressiveTunic, world),
+                new Item(ItemType.ProgressiveTunic, world),
+                new Item(ItemType.ProgressiveSword, world),
+                new Item(ItemType.ProgressiveSword, world),
+                new Item(ItemType.SilverArrows, world),
+                new Item(ItemType.BlueBoomerang, world),
+                new Item(ItemType.RedBoomerang, world),
+                new Item(ItemType.Bottle, world),
+                new Item(ItemType.Bottle, world),
+                new Item(ItemType.Bottle, world),
+                new Item(ItemType.Bugnet, world),
+                new Item(ItemType.HeartContainerRefill, world),
 
-                new Item(ItemType.Spazer),
-                new Item(ItemType.XRay),
+                new Item(ItemType.Spazer, world),
+                new Item(ItemType.XRay, world),
             };
 
             itemPool.AddRange(Copies(10, () => new Item(ItemType.HeartContainer, world)));
-
-            foreach (var item in itemPool) item.World = world;
 
             return itemPool;
         }
@@ -319,27 +319,25 @@ namespace Randomizer.Data.WorldData
         public static List<Item> CreateJunkPool(World world)
         {
             var itemPool = new List<Item> {
-                new Item(ItemType.Arrow),
-                new Item(ItemType.OneHundredRupees)
+                new Item(ItemType.Arrow, world),
+                new Item(ItemType.OneHundredRupees, world)
             };
 
-            itemPool.AddRange(Copies(24, () => new Item(ItemType.HeartPiece)));
-            itemPool.AddRange(Copies(8, () => new Item(ItemType.TenArrows)));
-            itemPool.AddRange(Copies(13, () => new Item(ItemType.ThreeBombs)));
-            itemPool.AddRange(Copies(4, () => new Item(ItemType.ArrowUpgrade5)));
-            itemPool.AddRange(Copies(4, () => new Item(ItemType.BombUpgrade5)));
-            itemPool.AddRange(Copies(2, () => new Item(ItemType.OneRupee)));
-            itemPool.AddRange(Copies(4, () => new Item(ItemType.FiveRupees)));
-            itemPool.AddRange(Copies(world.Config.MetroidKeysanity ? 25 : 28, () => new Item(ItemType.TwentyRupees)));
-            itemPool.AddRange(Copies(7, () => new Item(ItemType.FiftyRupees)));
-            itemPool.AddRange(Copies(3, () => new Item(ItemType.ThreeHundredRupees)));
+            itemPool.AddRange(Copies(24, () => new Item(ItemType.HeartPiece, world)));
+            itemPool.AddRange(Copies(8, () => new Item(ItemType.TenArrows, world)));
+            itemPool.AddRange(Copies(13, () => new Item(ItemType.ThreeBombs, world)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.ArrowUpgrade5, world)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.BombUpgrade5, world)));
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.OneRupee, world)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.FiveRupees, world)));
+            itemPool.AddRange(Copies(world.Config.MetroidKeysanity ? 25 : 28, () => new Item(ItemType.TwentyRupees, world)));
+            itemPool.AddRange(Copies(7, () => new Item(ItemType.FiftyRupees, world)));
+            itemPool.AddRange(Copies(3, () => new Item(ItemType.ThreeHundredRupees, world)));
 
-            itemPool.AddRange(Copies(9, () => new Item(ItemType.ETank)));
-            itemPool.AddRange(Copies(39, () => new Item(ItemType.Missile)));
-            itemPool.AddRange(Copies(15, () => new Item(ItemType.Super)));
-            itemPool.AddRange(Copies(8, () => new Item(ItemType.PowerBomb)));
-
-            foreach (var item in itemPool) item.World = world;
+            itemPool.AddRange(Copies(9, () => new Item(ItemType.ETank, world)));
+            itemPool.AddRange(Copies(39, () => new Item(ItemType.Missile, world)));
+            itemPool.AddRange(Copies(15, () => new Item(ItemType.Super, world)));
+            itemPool.AddRange(Copies(8, () => new Item(ItemType.PowerBomb, world)));
 
             return itemPool;
         }
@@ -355,64 +353,62 @@ namespace Randomizer.Data.WorldData
             var itemPool = new List<Item>();
 
             itemPool.AddRange(new[] {
-                new Item(ItemType.BigKeyEP),
-                new Item(ItemType.BigKeyDP),
-                new Item(ItemType.BigKeyTH),
-                new Item(ItemType.BigKeyPD),
-                new Item(ItemType.BigKeySP),
-                new Item(ItemType.BigKeySW),
-                new Item(ItemType.BigKeyTT),
-                new Item(ItemType.BigKeyIP),
-                new Item(ItemType.BigKeyMM),
-                new Item(ItemType.BigKeyTR),
-                new Item(ItemType.BigKeyGT),
+                new Item(ItemType.BigKeyEP, world),
+                new Item(ItemType.BigKeyDP, world),
+                new Item(ItemType.BigKeyTH, world),
+                new Item(ItemType.BigKeyPD, world),
+                new Item(ItemType.BigKeySP, world),
+                new Item(ItemType.BigKeySW, world),
+                new Item(ItemType.BigKeyTT, world),
+                new Item(ItemType.BigKeyIP, world),
+                new Item(ItemType.BigKeyMM, world),
+                new Item(ItemType.BigKeyTR, world),
+                new Item(ItemType.BigKeyGT, world),
             });
 
-            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyHC)));
-            itemPool.AddRange(Copies(2, () => new Item(ItemType.KeyCT)));
-            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyDP)));
-            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyTH)));
-            itemPool.AddRange(Copies(6, () => new Item(ItemType.KeyPD)));
-            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeySP)));
-            itemPool.AddRange(Copies(3, () => new Item(ItemType.KeySW)));
-            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyTT)));
-            itemPool.AddRange(Copies(2, () => new Item(ItemType.KeyIP)));
-            itemPool.AddRange(Copies(3, () => new Item(ItemType.KeyMM)));
-            itemPool.AddRange(Copies(4, () => new Item(ItemType.KeyTR)));
-            itemPool.AddRange(Copies(4, () => new Item(ItemType.KeyGT)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyHC, world)));
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.KeyCT, world)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyDP, world)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyTH, world)));
+            itemPool.AddRange(Copies(6, () => new Item(ItemType.KeyPD, world)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeySP, world)));
+            itemPool.AddRange(Copies(3, () => new Item(ItemType.KeySW, world)));
+            itemPool.AddRange(Copies(1, () => new Item(ItemType.KeyTT, world)));
+            itemPool.AddRange(Copies(2, () => new Item(ItemType.KeyIP, world)));
+            itemPool.AddRange(Copies(3, () => new Item(ItemType.KeyMM, world)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.KeyTR, world)));
+            itemPool.AddRange(Copies(4, () => new Item(ItemType.KeyGT, world)));
 
             itemPool.AddRange(new[] {
-                new Item(ItemType.MapEP),
-                new Item(ItemType.MapDP),
-                new Item(ItemType.MapTH),
-                new Item(ItemType.MapPD),
-                new Item(ItemType.MapSP),
-                new Item(ItemType.MapSW),
-                new Item(ItemType.MapTT),
-                new Item(ItemType.MapIP),
-                new Item(ItemType.MapMM),
-                new Item(ItemType.MapTR),
+                new Item(ItemType.MapEP, world),
+                new Item(ItemType.MapDP, world),
+                new Item(ItemType.MapTH, world),
+                new Item(ItemType.MapPD, world),
+                new Item(ItemType.MapSP, world),
+                new Item(ItemType.MapSW, world),
+                new Item(ItemType.MapTT, world),
+                new Item(ItemType.MapIP, world),
+                new Item(ItemType.MapMM, world),
+                new Item(ItemType.MapTR, world),
             });
-            if (world != null && !world.Config.MetroidKeysanity)
+            if (!world.Config.MetroidKeysanity)
             {
                 itemPool.AddRange(new[] {
-                    new Item(ItemType.MapHC),
-                    new Item(ItemType.MapGT),
-                    new Item(ItemType.CompassEP),
-                    new Item(ItemType.CompassDP),
-                    new Item(ItemType.CompassTH),
-                    new Item(ItemType.CompassPD),
-                    new Item(ItemType.CompassSP),
-                    new Item(ItemType.CompassSW),
-                    new Item(ItemType.CompassTT),
-                    new Item(ItemType.CompassIP),
-                    new Item(ItemType.CompassMM),
-                    new Item(ItemType.CompassTR),
-                    new Item(ItemType.CompassGT),
+                    new Item(ItemType.MapHC, world),
+                    new Item(ItemType.MapGT, world),
+                    new Item(ItemType.CompassEP, world),
+                    new Item(ItemType.CompassDP, world),
+                    new Item(ItemType.CompassTH, world),
+                    new Item(ItemType.CompassPD, world),
+                    new Item(ItemType.CompassSP, world),
+                    new Item(ItemType.CompassSW, world),
+                    new Item(ItemType.CompassTT, world),
+                    new Item(ItemType.CompassIP, world),
+                    new Item(ItemType.CompassMM, world),
+                    new Item(ItemType.CompassTR, world),
+                    new Item(ItemType.CompassGT, world),
                 });
             }
-
-            foreach (var item in itemPool) item.World = world;
 
             return itemPool;
         }
@@ -479,8 +475,7 @@ namespace Randomizer.Data.WorldData
         /// <param name="type">The type to compare against</param>
         /// <param name="name">The name to compare against if the item type is set to Nothing</param>
         /// <see langword="true"/> if the item matches the given type or name
-        /// name="type"/> or <paramref name="world"/>; otherwise, <see
-        /// langword="false"/>.
+        /// name="type"/> otherwise, <see langword="false"/>.
         public bool Is(ItemType type, string name)
             => (Type != ItemType.Nothing && Type == type) || (Type == ItemType.Nothing && Name == name);
 

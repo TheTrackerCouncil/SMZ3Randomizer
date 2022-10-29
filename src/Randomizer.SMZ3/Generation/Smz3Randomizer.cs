@@ -12,6 +12,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData;
 
@@ -41,11 +42,9 @@ namespace Randomizer.SMZ3.Generation
 
         public static Version Version => new(2, 0);
 
-        public SeedData LastGeneratedSeed { get; private set; }
-
         protected IFiller Filler { get; }
 
-        public static int ParseSeed(ref string input)
+        public static int ParseSeed(ref string? input)
         {
             int seed;
             if (string.IsNullOrEmpty(input))
@@ -70,10 +69,10 @@ namespace Randomizer.SMZ3.Generation
         public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
             => GenerateSeed(new List<Config> { config }, "", cancellationToken);
 
-        public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken = default)
+        public SeedData GenerateSeed(Config config, string? seed, CancellationToken cancellationToken = default)
             => GenerateSeed(new List<Config>() { config }, seed, cancellationToken);
 
-        public SeedData GenerateSeed(List<Config> configs, string seed, CancellationToken cancellationToken = default)
+        public SeedData GenerateSeed(List<Config> configs, string? seed, CancellationToken cancellationToken = default)
         {
             var primaryConfig = configs.First();
 
@@ -117,7 +116,7 @@ namespace Randomizer.SMZ3.Generation
 
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
-                worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N"), true));
+                worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N")));
             else
             {
                 foreach (var config in configs)
@@ -131,21 +130,21 @@ namespace Randomizer.SMZ3.Generation
 
             var playthrough = Playthrough.Generate(worlds, primaryConfig);
             var seedData = new SeedData
-            {
-                Guid = Guid.NewGuid().ToString("N"),
-                Seed = seed,
-                Game = Name,
-                Mode = primaryConfig.GameMode.ToLowerString(),
-                Playthrough = primaryConfig.Race ? new Playthrough(primaryConfig, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
-                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>(),
-                Hints = new(),
-                Configs = configs,
-                PrimaryConfig = primaryConfig,
-            };
+            (
+                guid: Guid.NewGuid().ToString("N"),
+                seed: seed ?? primaryConfig.Seed,
+                game: Name,
+                mode: primaryConfig.GameMode.ToLowerString(),
+                hints: new List<(World World, List<string>)>(),
+                worlds: new List<(World World, Dictionary<int, byte[]> Patches)>(),
+                playthrough: primaryConfig.Race ? new Playthrough(primaryConfig, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
+                configs: configs,
+                primaryConfig: primaryConfig
+            );
 
             if (primaryConfig.GenerateSeedOnly)
             {
-                seedData.Worlds = worlds.Select(x => (x, (Dictionary<int, byte[]>)null)).ToList();
+                seedData.Worlds = worlds.Select(x => (x, new Dictionary<int, byte[]>())).ToList();
                 return seedData;
             }
 
@@ -163,7 +162,6 @@ namespace Randomizer.SMZ3.Generation
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
             _worldAccessor.World = worlds.First(x => x.IsLocalWorld);
             _worldAccessor.Worlds = worlds;
-            LastGeneratedSeed = seedData;
             return seedData;
         }
 

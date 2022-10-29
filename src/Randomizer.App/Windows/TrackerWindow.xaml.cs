@@ -58,16 +58,16 @@ namespace Randomizer.App
         private readonly Smz3GeneratedRomLoader _romLoader;
         private readonly ITrackerTimerService _timerService;
         private bool _pegWorldMode;
-        private TrackerLocationsWindow _locationsWindow;
+        private TrackerLocationsWindow? _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
-        private TrackerMapWindow _trackerMapWindow;
+        private TrackerMapWindow? _trackerMapWindow;
         private AutoTrackerWindow _autoTrackerHelpWindow;
         private TrackerLocationSyncer _locationSyncer;
         private MenuItem _autoTrackerDisableMenuItem;
         private MenuItem _autoTrackerLuaMenuItem;
         private MenuItem _autoTrackerUSB2SNESMenuItem;
         private UILayout _layout;
-        private UILayout _previousLayout;
+        private UILayout? _previousLayout;
         
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
@@ -160,7 +160,7 @@ namespace Randomizer.App
             }
         }
 
-        protected Image GetGridItemControl(string imageFileName, int column, int row,
+        protected Image GetGridItemControl(string? imageFileName, int column, int row,
             params Overlay[] overlays)
         {
             if (imageFileName == null)
@@ -168,7 +168,7 @@ namespace Randomizer.App
                 imageFileName = _uiService.GetSpritePath("Items", "blank.png", out _);
             }
 
-            var bitmapImage = new BitmapImage(new Uri(imageFileName));
+            var bitmapImage = new BitmapImage(new Uri(imageFileName ?? ""));
             if (overlays.Length == 0)
             {
                 return GetGridItemControl(bitmapImage, column, row);
@@ -244,7 +244,7 @@ namespace Randomizer.App
 
             foreach (var gridLocation in _layout.GridLocations)
             {
-                var labelImage = (Image)null;
+                var labelImage = (Image?)null;
                 if (gridLocation.Image != null)
                 {
                     labelImage = GetGridItemControl(_uiService.GetSpritePath("Items", gridLocation.Image, out _), gridLocation.Column, gridLocation.Row);
@@ -255,7 +255,7 @@ namespace Randomizer.App
                 if (gridLocation.Type == UIGridLocationType.Items)
                 {
                     var items = new List<Item>();
-                    Image latestImage = null;
+                    var latestImage = (Image?)null;
                     foreach (var itemName in gridLocation.Identifiers)
                     {
                         var item = _itemService.FirstOrDefault(itemName);
@@ -900,16 +900,16 @@ namespace Randomizer.App
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            _locationsWindow.Close();
+            _locationsWindow?.Close();
             _locationsWindow = null;
-            _trackerMapWindow.Close();
+            _trackerMapWindow?.Close();
             _trackerMapWindow = null;
             Tracker?.Dispose();
         }
 
         private void LocationsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.Windows.OfType<TrackerLocationsWindow>().Any())
+            if (_locationsWindow != null && Application.Current.Windows.OfType<TrackerLocationsWindow>().Any())
             {
                 _locationsWindow.Activate();
             }
@@ -965,7 +965,7 @@ namespace Randomizer.App
                 await Tracker.SaveAsync(Rom);
             }
 
-            SavedState.Invoke(this, null);
+            SavedState.Invoke(this, new());
         }
 
         private async void SaveStateMenuItem_Click(object sender, RoutedEventArgs e)

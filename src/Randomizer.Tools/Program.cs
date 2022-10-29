@@ -243,7 +243,7 @@ namespace Randomizer.Tools
                     });
                 }
                 catch (Exception)
-                { 
+                {
                 }
             });
 
@@ -308,14 +308,13 @@ namespace Randomizer.Tools
         private class StatsDetails
         {
             public int NumSpheres { get; set; }
-            public List<(int, ItemType)> ItemLocations { get; set; }
+            public List<(int, ItemType)> ItemLocations { get; set; } = new List<(int, ItemType)>();
         }
 
         private static int UniqueLocations(List<(int, ItemType, int)> itemLocationCountsList, ItemType item)
         {
             return itemLocationCountsList
-               .Where(x => x.Item2 == item)
-               .Count();
+                .Count(x => x.Item2 == item);
         }
 
     }

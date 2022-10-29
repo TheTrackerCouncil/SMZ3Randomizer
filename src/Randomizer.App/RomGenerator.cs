@@ -63,7 +63,7 @@ namespace Randomizer.App
         public async Task<GeneratedRom> GenerateRandomRomAsync(RandomizerOptions options, int attempts = 5)
         {
             var latestError = "";
-            var seed = (SeedData)null;
+            var seed = (SeedData?)null;
             var validated = false;
             
             for (var i = 0; i < attempts; i++)
@@ -243,7 +243,7 @@ namespace Randomizer.App
         /// <param name="options">The randomizer generation options</param>
         /// <param name="seed">The string seed to use for generating the rom</param>
         /// <returns>The seed data</returns>
-        public SeedData GenerateSeed(RandomizerOptions options, string seed = null)
+        public SeedData GenerateSeed(RandomizerOptions options, string? seed = null)
         {
             var config = options.ToConfig();
             return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);

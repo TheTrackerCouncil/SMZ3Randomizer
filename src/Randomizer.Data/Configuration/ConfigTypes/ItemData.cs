@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {

@@ -4,11 +4,8 @@ using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 
-using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Configuration.ConfigTypes;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -64,7 +61,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     : 1;
                 var dungeon = GetDungeonFromResult(tracker, result);
                 tracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
-                dungeon.DungeonState.HasManuallyClearedTreasure = true;
+
+                if (dungeon.DungeonState != null) dungeon.DungeonState.HasManuallyClearedTreasure = true;
             });
         }
 
@@ -74,7 +72,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var rewardNames = new Choices();
             foreach (var reward in Enum.GetValues<RewardType>())
             {
-                foreach (var name in ItemService?.FirstOrDefault(reward)?.Metadata.Name ?? new SchrodingersString())
+                foreach (var name in ItemService?.FirstOrDefault(reward)?.Metadata?.Name ?? new SchrodingersString())
                     rewardNames.Add(new SemanticResultValue(name, (int)reward));
             }
 

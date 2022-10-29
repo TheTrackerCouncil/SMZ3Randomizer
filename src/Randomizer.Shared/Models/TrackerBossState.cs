@@ -9,10 +9,10 @@ namespace Randomizer.Shared.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        public TrackerState TrackerState { get; set; }
-        public string BossName { get; set; }
+        public TrackerState TrackerState { get; init; } = new();
+        public string BossName { get; init; } = string.Empty;
         public bool Defeated { get; set; }
-        public BossType Type { get; set; }
+        public BossType Type { get; init; }
         public int WorldId { get; set; }
     }
 

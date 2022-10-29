@@ -36,9 +36,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public DarkMazeRoom DarkMaze { get; }
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.LightWorldNorthEast;
 
@@ -57,9 +57,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public FoyerRoom(Region region)
                 : base(region, "Foyer")
             {
-                Chest = new Location(region, 256 + 101, 0x1EAB5, LocationType.Regular, 
+                Chest = new Location(region, 256 + 101, 0x1EAB5, LocationType.Regular,
                     name: "Castle Tower - Foyer",
-                    memoryAddress: 0xE0, 
+                    memoryAddress: 0xE0,
                     memoryFlag: 0x4);
             }
 
@@ -71,10 +71,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public DarkMazeRoom(Region region)
                 : base(region, "Dark Maze")
             {
-                Chest = new Location(region, 256 + 102, 0x1EAB2, LocationType.Regular, 
+                Chest = new Location(region, 256 + 102, 0x1EAB2, LocationType.Regular,
                     name: "Castle Tower - Dark Maze",
-                    access: items => items.Lamp && items.KeyCT >= 1, 
-                    memoryAddress: 0xD0, 
+                    access: items => items.Lamp && items.KeyCT >= 1,
+                    memoryAddress: 0xD0,
                     memoryFlag: 0x4);
             }
 

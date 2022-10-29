@@ -7,9 +7,9 @@ namespace Randomizer.SMZ3.Text
 {
     internal static class Dialog
     {
-        private static readonly Regex command = new(@"^\{[^}]*\}");
-        private static readonly Regex invalid = new(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
-        private static readonly Regex character = new(@"(?<digit>[0-9])|(?<upper>[A-Z])|(?<lower>[a-z])");
+        private static readonly Regex s_command = new(@"^\{[^}]*\}");
+        private static readonly Regex s_invalid = new(@"(?<!^)\{[^}]*\}(?!$)", RegexOptions.Multiline);
+        private static readonly Regex s_character = new(@"(?<digit>[0-9])|(?<upper>[A-Z])|(?<lower>[a-z])");
         private static readonly Regex s_spaces = new(@"[\s\r\n]+");
 
         public static byte[] Simple(string text)
@@ -62,19 +62,19 @@ namespace Randomizer.SMZ3.Text
             const int maxBytes = 2046;
             const int wrap = 19;
 
-            if (invalid.IsMatch(text))
+            if (s_invalid.IsMatch(text))
                 throw new ArgumentException("Dialog commands must be placed on separate lines", nameof(text));
 
-            bool padOut = false;
-            bool pause = true;
+            var padOut = false;
+            var pause = true;
 
             var bytes = new List<byte> { 0xFB };
             var lines = Wordwrap(text, wrap);
-            var lineCount = lines.Count(l => !command.IsMatch(l));
+            var lineCount = lines.Count(l => !s_command.IsMatch(l));
             var lineIndex = 0;
             foreach (var line in lines)
             {
-                var match = command.Match(line);
+                var match = s_command.Match(line);
                 if (match.Success)
                 {
                     if (match.Value == "{NOTEXT}")
@@ -146,7 +146,7 @@ namespace Randomizer.SMZ3.Text
                 "{CHANGEMUSIC}" => new byte[] { 0xFE, 0x67 },
                 "{INTRO}" => new byte[] { 0xFE, 0x6E, 0x00, 0xFE, 0x77, 0x07, 0xFC, 0x03, 0xFE, 0x6B, 0x02, 0xFE, 0x67 },
                 "{IBOX}" => new byte[] { 0xFE, 0x6B, 0x02, 0xFE, 0x77, 0x07, 0xFC, 0x03, 0xF7 },
-                var command => throw new ArgumentException($"Dialog text contained unknown command {command}", nameof(text)),
+                var unknownCommand => throw new ArgumentException($"Dialog text contained unknown command {unknownCommand}", nameof(text)),
             };
         }
 
@@ -208,27 +208,27 @@ namespace Randomizer.SMZ3.Text
                     return new[] { line };
                 var words = line.Split(' ');
                 IEnumerable<string> lines = new[] { "" };
-                lines = words.Aggregate(new Stack<string>(lines), (lines, word) =>
+                lines = words.Aggregate(new Stack<string>(lines), (innerLines, word) =>
                 {
-                    var line = lines.Pop();
-                    if (line.Length + word.Length <= width)
+                    var innerLine = innerLines.Pop();
+                    if (innerLine.Length + word.Length <= width)
                     {
-                        line = $"{line}{word} ";
+                        innerLine = $"{innerLine}{word} ";
                     }
                     else
                     {
-                        if (line.Length > 0)
-                            lines.Push(line);
-                        line = word;
-                        while (line.Length > width)
+                        if (innerLine.Length > 0)
+                            innerLines.Push(innerLine);
+                        innerLine = word;
+                        while (innerLine.Length > width)
                         {
-                            lines.Push(line[..width]);
-                            line = line[width..];
+                            innerLines.Push(innerLine[..width]);
+                            innerLine = innerLine[width..];
                         }
-                        line = $"{line} ";
+                        innerLine = $"{innerLine} ";
                     }
-                    lines.Push(line);
-                    return lines;
+                    innerLines.Push(innerLine);
+                    return innerLines;
                 });
                 return lines.Reverse().Select(l => l.TrimEnd());
             });
@@ -236,19 +236,19 @@ namespace Randomizer.SMZ3.Text
 
         private static byte[] LetterToBytes(char c)
         {
-            var match = character.Match(c.ToString());
+            var match = s_character.Match(c.ToString());
             return c switch
             {
                 _ when match.Groups["digit"].Success => new byte[] { (byte)(c - '0' + 0xA0) },
                 _ when match.Groups["upper"].Success => new byte[] { (byte)(c - 'A' + 0xAA) },
                 _ when match.Groups["lower"].Success => new byte[] { (byte)(c - 'a' + 0x30) },
-                _ => letters.TryGetValue(c, out byte[] bytes) ? bytes : new byte[] { 0xFF },
+                _ => s_letters.TryGetValue(c, out var bytes) ? bytes : new byte[] { 0xFF },
             };
         }
 
         #region letter bytes lookup
 
-        private static readonly IDictionary<char, byte[]> letters = new Dictionary<char, byte[]> {
+        private static readonly IDictionary<char, byte[]> s_letters = new Dictionary<char, byte[]> {
             { ' ', new byte[] { 0x4F } },
             { '?', new byte[] { 0xC6 } },
             { '!', new byte[] { 0xC7 } },

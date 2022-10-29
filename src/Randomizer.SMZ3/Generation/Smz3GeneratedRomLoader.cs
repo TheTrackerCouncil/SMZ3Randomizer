@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Randomizer.Data.Options;
-using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
@@ -31,6 +28,11 @@ namespace Randomizer.SMZ3.Generation
         public void LoadGeneratedRom(GeneratedRom rom)
         {
             var trackerState = rom.TrackerState;
+
+            if (trackerState == null)
+            {
+                throw new InvalidOperationException("No tracker state to load");
+            }
 
             var configs = Config.FromConfigString(rom.Settings);
             var worlds = new List<World>();

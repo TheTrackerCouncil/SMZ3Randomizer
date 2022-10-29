@@ -8,11 +8,11 @@ namespace Randomizer.Shared.Models {
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        public TrackerState TrackerState { get; set; }
+        public TrackerState TrackerState { get; set; } = new();
         public HistoryEventType Type { get; set; }
         public int? LocationId { get; set; }
-        public string LocationName { get; set; }
-        public string ObjectName { get; set; }
+        public string? LocationName { get; set; }
+        public string ObjectName { get; set; } = string.Empty;
         public bool IsImportant { get; set; }
         public bool IsUndone { get; set; }
         public double Time { get; set; }

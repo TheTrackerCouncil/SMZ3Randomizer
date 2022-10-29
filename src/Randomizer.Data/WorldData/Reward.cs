@@ -15,11 +15,6 @@ namespace Randomizer.Data.WorldData
     /// </summary>
     public class Reward
     {
-        public Reward(RewardType type)
-        {
-            Type = type;
-        }
-
         public Reward(RewardType type, World world, IHasReward region)
         {
             Type = type;
@@ -33,9 +28,9 @@ namespace Randomizer.Data.WorldData
 
         public IHasReward Region { get; set; }
 
-        public RewardInfo Metadata { get; set; }
+        public RewardInfo? Metadata { get; set; }
 
-        public TrackerDungeonState State { get; set; }
+        public TrackerDungeonState? State { get; set; }
 
         public static ICollection<Reward> CreatePool(World world)
         {

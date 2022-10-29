@@ -72,7 +72,7 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Additional information about the room
         /// </summary>
-        public RoomInfo Metadata { get; set; }
+        public RoomInfo? Metadata { get; set; }
 
         /// <summary>
         /// Gets all locations in the room.

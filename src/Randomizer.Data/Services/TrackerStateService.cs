@@ -140,7 +140,7 @@ namespace Randomizer.Data.Services
 
             trackerState.UpdatedDateTime = DateTimeOffset.Now;
             trackerState.SecondsElapsed = secondsElapsed;
-            
+
 
             await _randomizerContext.SaveChangesAsync();
         }
@@ -163,7 +163,7 @@ namespace Randomizer.Data.Services
         private void SaveLocationStates(IEnumerable<World> worlds, TrackerState trackerState)
         {
             var totalLocations = worlds.SelectMany(x => x.Locations).Count();
-            var clearedLocations = worlds.SelectMany(x => x.Locations).Where(x => x.State.Cleared).Count();
+            var clearedLocations = worlds.SelectMany(x => x.Locations).Count(x => x.State?.Cleared == true);
             var percCleared = (int)Math.Floor((double)clearedLocations / totalLocations * 100);
             trackerState.PercentageCleared = percCleared;
         }
@@ -193,7 +193,7 @@ namespace Randomizer.Data.Services
                 }
             }
 
-            // Create item states for items 
+            // Create item states for items
             foreach (var item in worlds.SelectMany(x => x.AllItems).Where(x => x.State == null))
             {
                 var otherItem = item.World.AllItems
@@ -224,9 +224,10 @@ namespace Randomizer.Data.Services
             var itemStates = worlds
                 .SelectMany(x => x.AllItems)
                 .Select(x => x.State).Distinct()
-                .Where(x => !trackerState.ItemStates.Contains(x))
+                .Where(x => x != null && !trackerState.ItemStates.Contains(x))
+                .Cast<TrackerItemState>()
                 .ToList();
-            itemStates.ForEach(x => trackerState.ItemStates.Add(x));
+            itemStates.ForEach(x => trackerState.ItemStates.Add(x) );
         }
 
         private void LoadDungeonStates(IEnumerable<World> worlds, TrackerState trackerState)
@@ -296,7 +297,8 @@ namespace Randomizer.Data.Services
             var bossStates = worlds
                 .SelectMany(x => x.AllBosses)
                 .Select(x => x.State).Distinct()
-                .Where(x => !trackerState.BossStates.Contains(x))
+                .Where(x => x != null && !trackerState.BossStates.Contains(x))
+                .Cast<TrackerBossState>()
                 .ToList();
             bossStates.ForEach(x => trackerState.BossStates.Add(x));
         }

@@ -70,7 +70,7 @@ namespace Randomizer.App
                         // Add the boss for this region if one is specified
                         if (region.BossX != null && region.BossY != null)
                         {
-                            map.FullLocations.Add(new TrackerMapLocation(MapLocationType.Boss, mapRegion.Name, region.TypeName, null,
+                            map.FullLocations.Add(new TrackerMapLocation(MapLocationType.Boss, mapRegion.Name, region.TypeName, "",
                                 x: (int)Math.Floor((region.BossX ?? 0) * mapRegion.Scale) + mapRegion.X,
                                 y: (int)Math.Floor((region.BossY ?? 0) * mapRegion.Scale) + mapRegion.Y));
                         }
@@ -90,7 +90,7 @@ namespace Randomizer.App
             }
 
             TrackerMapViewModel = new TrackerMapViewModel();
-            TrackerMapViewModel.MapNames = Maps.Select(x => x.ToString()).ToList();
+            TrackerMapViewModel.MapNames = Maps.Select(x => x.ToString() ?? "").ToList();
             DataContext = TrackerMapViewModel;
 
             App.RestoreWindowPositionAndSize(this);
@@ -181,7 +181,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void MapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
+            _tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString() ?? "");
         }
 
         private void PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -212,7 +212,7 @@ namespace Randomizer.App
             // Determine what type of location this is
             if (shape.Tag is List<Location> locations)
             {
-                locations.Where(x => !x.State.Cleared)
+                locations.Where(x => x.State?.Cleared == false)
                     .ToList()
                     .ForEach(x => _tracker.Clear(x));
             }

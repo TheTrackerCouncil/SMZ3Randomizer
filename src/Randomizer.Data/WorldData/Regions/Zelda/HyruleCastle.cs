@@ -70,9 +70,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Hyrule Castle";
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Location Sanctuary { get; }
 

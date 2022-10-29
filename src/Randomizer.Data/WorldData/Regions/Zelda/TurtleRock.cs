@@ -38,7 +38,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             BigKeyChest = new Location(this, 256 + 181, 0x1EA25, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyTR,
-                access: items => items.KeyTR >=
+                access: items => BigKeyChest != null && items.KeyTR >=
                     (!Config.ZeldaKeysanity || BigKeyChest.ItemIs(ItemType.BigKeyTR, World) ? 2 :
                         BigKeyChest.ItemIs(ItemType.KeyTR, World) ? 3 : 4),
                 memoryAddress: 0x14,
@@ -77,17 +77,18 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryAddress = 0xA4;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 35, 36, 213, 214 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Turtle Rock";
 
-        public Reward Reward { get; set; } = new Reward(RewardType.None);
+        public Reward Reward { get; set; }
 
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; } = new();
+        public DungeonInfo? DungeonMetadata { get; set; } = new();
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.DarkWorldDeathMountainEast;
 

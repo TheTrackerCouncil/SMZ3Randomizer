@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -11,11 +10,18 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
     /// </summary>
     public class MetroidDeath : IMetroidStateCheck
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="itemService"></param>
         public MetroidDeath(IItemService itemService)
         {
             Items = itemService;
         }
 
+        /// <summary>
+        /// Service for retrieving item data
+        /// </summary>
         protected IItemService Items { get; }
 
         /// <summary>
@@ -31,7 +37,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
             {
                 // Check if there is a special message for dying in this room
                 var region = tracker.World.Regions.OfType<SMRegion>()
-                    .FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion && x.Metadata.WhenDiedInRoom != null && x.Metadata.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
+                    .FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion && x.Metadata?.WhenDiedInRoom != null && x.Metadata.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
 
                 if (region != null && region.Metadata?.WhenDiedInRoom != null)
                 {

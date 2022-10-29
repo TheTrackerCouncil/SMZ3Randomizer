@@ -22,9 +22,7 @@ namespace Randomizer.SMZ3.Tracking.Services
     public class UIService: IUIService
     {
         private readonly UIConfig _layouts;
-        private readonly TrackerOptionsAccessor _options;
-        private readonly ConfigProvider _configProvider;
-        private readonly List<string> IconPaths;
+        private readonly List<string> _iconPaths;
 
         /// <summary>
         /// Constructor
@@ -38,18 +36,17 @@ namespace Randomizer.SMZ3.Tracking.Services
         )
         {
             _layouts = uiConfig;
-            _options = options;
-            _configProvider = configProvider;
 
-            var iconPaths = _options.Options?.TrackerProfiles
+            var iconPaths = options.Options?.TrackerProfiles
                 .Where(x => !string.IsNullOrEmpty(x))
-                .Select(x => Path.Combine(_configProvider.ConfigDirectory, x)).Reverse().ToList() ?? new();
+                .Cast<string>()
+                .Select(x => Path.Combine(configProvider.ConfigDirectory, x)).Reverse().ToList() ?? new();
             var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (basePath != null)
             {
                 iconPaths.Add(basePath);
             }
-            IconPaths = iconPaths;
+            _iconPaths = iconPaths;
         }
 
         /// <summary>
@@ -62,7 +59,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="name">The name of the requested</param>
         /// <returns>The matching layout or the first one if it is not found</returns>
-        public UILayout GetLayout(string name) => _layouts.FirstOrDefault(x => x.Name == name) ?? _layouts[0];
+        public UILayout GetLayout(string? name) => _layouts.FirstOrDefault(x => x.Name == name) ?? _layouts[0];
 
         /// <summary>
         /// Returns the path of the sprite for the number
@@ -78,18 +75,23 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>The full path of the sprite or null if it's not found</returns>
         public string? GetSpritePath(Item item)
         {
-            var fileName = (string?)null;
+            string? fileName;
 
-            if (item.Metadata.Image != null)
+            if (item.Metadata == null)
+                throw new InvalidOperationException("Metadata not loaded for item " + item.Metadata);
+            if (item.State == null)
+                throw new InvalidOperationException("State not loaded for item " + item.Metadata);
+
+            if (item.Metadata?.Image != null)
             {
                 fileName = GetSpritePath("Items", item.Metadata.Image, out _);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
-            if (item.Metadata.HasStages || item.Metadata.Multiple)
+            if (item.Metadata!.HasStages || item.Metadata.Multiple)
             {
-                var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out string? profilePath);
+                var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out var profilePath);
                 fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.State.TrackingState}).png", out _, profilePath);
                 if (File.Exists(fileName))
                     return fileName;
@@ -107,7 +109,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>The full path of the sprite or null if it's not found</returns>
         public string? GetSpritePath(BossInfo boss)
         {
-            var fileName = (string?)null;
+            string? fileName;
 
             if (boss.Image != null)
             {
@@ -163,7 +165,7 @@ namespace Randomizer.SMZ3.Tracking.Services
             }
             else
             {
-                foreach (var profile in IconPaths)
+                foreach (var profile in _iconPaths)
                 {
                     var path = Path.Combine(profile, "Sprites", category, imageFileName);
                     if (File.Exists(path))

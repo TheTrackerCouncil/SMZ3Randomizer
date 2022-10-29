@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Randomizer.Shared
+namespace Randomizer.Shared.Enums
 {
     public static class ItemTypeExtensions
     {
@@ -35,7 +32,7 @@ namespace Randomizer.Shared
         /// </returns>
         public static bool IsInAnyCategory(this ItemType itemType, params ItemCategory[] categories)
         {
-            return GetCategories(itemType).Any(x => categories.Contains(x));
+            return GetCategories(itemType).Any(categories.Contains);
         }
 
         /// <summary>
@@ -49,11 +46,13 @@ namespace Randomizer.Shared
         public static ItemCategory[] GetCategories(this ItemType itemType)
         {
             var valueType = itemType.GetType().GetField(itemType.ToString());
-            var attrib = valueType.GetCustomAttribute<ItemCategoryAttribute>(inherit: false);
-            if (attrib == null)
-                return Array.Empty<ItemCategory>();
+            if (valueType != null)
+            {
+                var attrib = valueType.GetCustomAttribute<ItemCategoryAttribute>(inherit: false);
+                if (attrib != null) return attrib.Categories;
+            }
 
-            return attrib.Categories;
+            return Array.Empty<ItemCategory>();
         }
     }
 }

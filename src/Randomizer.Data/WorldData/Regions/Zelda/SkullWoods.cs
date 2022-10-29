@@ -81,6 +81,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryAddress = 0x29;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 86, 87, 88, 89, 103, 104 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Skull Woods";
@@ -89,11 +90,12 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             = new List<string>() { "Skill Woods" };
 
         public Reward Reward { get; set; }
+
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.DarkWorldNorthWest;
 

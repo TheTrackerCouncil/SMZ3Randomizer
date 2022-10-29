@@ -8,14 +8,14 @@ namespace Randomizer.Shared.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        public TrackerState TrackerState { get; set; }
-        public int LocationId { get; set; }
-        public ItemType Item { get; set; }
+        public TrackerState TrackerState { get; set; } = new();
+        public int LocationId { get; init; }
+        public ItemType Item { get; init; }
         public ItemType? MarkedItem { get; set; }
         public bool Cleared { get; set; }
         public bool Autotracked { get; set; }
-        public int WorldId { get; set; }
-        public int ItemWorldId { get; set; }
+        public int WorldId { get; init; }
+        public int ItemWorldId { get; init; }
         public bool HasMarkedItem => MarkedItem != null && MarkedItem != ItemType.Nothing;
     }
 

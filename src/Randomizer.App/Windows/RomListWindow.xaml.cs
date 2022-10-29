@@ -20,6 +20,7 @@ using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
+using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 
@@ -337,7 +338,7 @@ namespace Randomizer.App
             }
             catch (YamlDotNet.Core.SemanticErrorException ex)
             {
-                MessageBox.Show(this, ex.Message + "\n\n" + ex.InnerException.Message,
+                MessageBox.Show(this, ex.Message + "\n\n" + ex.InnerException?.Message,
                     "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)

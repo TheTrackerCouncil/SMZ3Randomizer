@@ -185,7 +185,7 @@
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Auto Tracker Scripts folder:">
-                <controls:FileSystemInput Path="{Binding AutotrackerScriptsOutputPath, Mode=TwoWay}"
+                <controls:FileSystemInput Path="{Binding AutoTrackerScriptsOutputPath, Mode=TwoWay}"
                                           IsFolderPicker="True"
                                           DialogTitle="Select Auto Tracker scripts folder" />
               </controls:LabeledControl>

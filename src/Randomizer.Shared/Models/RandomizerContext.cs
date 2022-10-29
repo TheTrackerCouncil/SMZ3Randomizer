@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Randomizer.Shared.Models;
+#pragma warning disable CS8618
 
 namespace Randomizer.Shared.Models {
 

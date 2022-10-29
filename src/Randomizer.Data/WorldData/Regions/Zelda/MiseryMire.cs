@@ -50,8 +50,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             CompassChest = new Location(this, 256 + 173, 0x1EA64, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassMM,
-                access: items => Logic.CanLightTorches(items)
-                         && items.KeyMM >= (BigKeyChest.ItemIs(ItemType.BigKeyMM, World) ? 2 : 3),
+                access: items => BigKeyChest != null
+                                 && Logic.CanLightTorches(items)
+                                 && items.KeyMM >= (BigKeyChest.ItemIs(ItemType.BigKeyMM, World) ? 2 : 3),
                 memoryAddress: 0xC1,
                 memoryFlag: 0x4,
                 trackerLogic: items => items.HasMarkedMedallion(DungeonState?.MarkedMedallion));
@@ -84,17 +85,18 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryAddress = 0x90;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 152 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Misery Mire";
 
-        public Reward Reward { get; set; } = new Reward(RewardType.None);
+        public Reward Reward { get; set; }
 
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; } = new();
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.DarkWorldMire;
 

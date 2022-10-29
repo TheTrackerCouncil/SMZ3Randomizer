@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -27,7 +25,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             BigKeyChest = new Location(this, 256 + 122, 0x1EA37, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyPD,
-                access: items => items.KeyPD >= (BigKeyChest.ItemIs(ItemType.KeyPD, World) ? 1 :
+                access: items => BigKeyChest != null && items.KeyPD >= (BigKeyChest.ItemIs(ItemType.KeyPD, World) ? 1 :
                     (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRooms(items)) || config.ZeldaKeysanity ? 6 : 5),
                 memoryAddress: 0x3A,
                 memoryFlag: 0x4)
@@ -71,7 +69,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             HarmlessHellway = new Location(this, 256 + 128, 0x1EA46, LocationType.Regular,
                 name: "Harmless Hellway",
                 vanillaItem: ItemType.FiveRupees,
-                access: items => items.KeyPD >= (HarmlessHellway.ItemIs(ItemType.KeyPD, World) ?
+                access: items => HarmlessHellway != null && items.KeyPD >= (HarmlessHellway.ItemIs(ItemType.KeyPD, World) ?
                     (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRooms(items)) || config.ZeldaKeysanity ? 4 : 3 :
                     (items.Hammer && items.Bow && Logic.CanPassSwordOnlyDarkRooms(items)) || config.ZeldaKeysanity ? 6 : 5),
                 memoryAddress: 0x1A,
@@ -98,6 +96,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryAddress = 0x5A;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 74 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Palace of Darkness";
@@ -105,11 +104,12 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public override string Area => "Dark Palace";
 
         public Reward Reward { get; set; }
+
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.DarkWorldNorthEast;
 

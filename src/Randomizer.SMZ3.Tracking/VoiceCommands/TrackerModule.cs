@@ -9,6 +9,7 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -90,8 +91,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         protected Tracker Tracker { get; }
 
+        /// <summary>
+        /// Service for getting item data
+        /// </summary>
         protected IItemService ItemService { get; }
 
+        /// <summary>
+        /// Service for getting world data
+        /// </summary>
         protected IWorldService WorldService { get; }
 
         /// <summary>
@@ -356,9 +363,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
-            foreach (var item in ItemService.AllItems().Where(x => x.Metadata.Multiple && !x.Metadata.HasStages))
+            foreach (var item in ItemService.AllItems().Where(x => x.Metadata is { Multiple: true, HasStages: false }))
             {
-                if (item.Metadata.Plural == null)
+                if (item.Metadata?.Plural == null)
                 {
                     Logger.LogWarning("{item} is marked as Multiple but does not have plural names", item.Name);
                     continue;
@@ -380,18 +387,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </returns>
         protected virtual Choices GetItemNames(Func<Item, bool>? where = null)
         {
-            if (where == null)
-            {
-                where = a => 1 == 1;
-            }
+            where ??= a => true;
 
             var itemNames = new Choices();
             foreach (var item in ItemService.AllItems().Where(where))
             {
-                foreach (var name in item.Metadata.Name)
-                    itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
+                if (item.Metadata?.Name != null)
+                {
+                    foreach (var name in item.Metadata.Name)
+                    {
+                        itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
+                    }
+                }
 
-                if (item.Metadata.Stages != null)
+                if (item.Metadata?.Stages != null)
                 {
                     foreach (var stageName in item.Metadata.Stages.SelectMany(x => x.Value))
                     {
@@ -415,7 +424,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var dungeonNames = new Choices();
             foreach (var dungeon in Tracker.World.Dungeons)
             {
-                if (dungeon.DungeonState.HasReward || includeDungeonsWithoutReward)
+                if ((dungeon.DungeonState?.HasReward == true || includeDungeonsWithoutReward) && dungeon.DungeonMetadata != null)
                 {
                     foreach (var name in dungeon.DungeonMetadata.Name)
                         dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
@@ -437,8 +446,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var bossNames = new Choices();
             foreach (var dungeon in Tracker.World.Dungeons)
             {
-                foreach (var name in dungeon.DungeonMetadata.Boss)
-                    bossNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
+                if (dungeon.DungeonMetadata != null)
+                {
+                    foreach (var name in dungeon.DungeonMetadata.Boss)
+                        bossNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
+                }
             }
             foreach (var boss in Tracker.World.AllBosses)
             {
@@ -447,7 +459,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     foreach (var name in boss.Metadata.Name)
                         bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
                 }
-                
+
             }
             return bossNames;
         }
@@ -465,8 +477,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             foreach (var location in Tracker.World.Locations)
             {
-                foreach (var name in location.Metadata.Name)
-                    locationNames.Add(new SemanticResultValue(name.Text, location.Id));
+                if (location.Metadata != null)
+                {
+                    foreach (var name in location.Metadata.Name)
+                        locationNames.Add(new SemanticResultValue(name.Text, location.Id));
+                }
             }
 
             return locationNames;
@@ -485,8 +500,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             foreach (var room in Tracker.World.Rooms)
             {
+                var roomName = room.GetType().FullName;
+                if (roomName == null || room.Metadata == null) continue;
                 foreach (var name in room.Metadata.Name)
-                    roomNames.Add(new SemanticResultValue(name.Text, room.GetType().FullName));
+                    roomNames.Add(new SemanticResultValue(name.Text, roomName));
             }
 
             return roomNames;
@@ -505,16 +522,24 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             foreach (var region in Tracker.World.Regions)
             {
-                if (excludeDungeons && region is IDungeon)
+                var regionName = region.GetType().FullName;
+                if (excludeDungeons && region is IDungeon || region.Metadata == null || regionName == null)
                     continue;
 
                 foreach (var name in region.Metadata.Name)
-                    regionNames.Add(new SemanticResultValue(name.Text, region.GetType().FullName));
+                    regionNames.Add(new SemanticResultValue(name.Text, regionName));
             }
 
             return regionNames;
         }
 
+        /// <summary>
+        /// Get the medallion names for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible medallion
+        /// names mapped to the primary item name.
+        /// </returns>
         protected virtual Choices GetMedallionNames()
         {
             var medallions = new Choices();
@@ -523,7 +548,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             foreach (var medallion in medallionTypes.Where(x => x == ItemType.Nothing || x.IsInCategory(ItemCategory.Medallion)))
             {
                 var item = ItemService.FirstOrDefault(medallion);
-                if (item != null)
+                if (item?.Metadata != null)
                 {
                     foreach (var name in item.Metadata.Name)
                         medallions.Add(new SemanticResultValue(medallion.ToString(), item.Name));

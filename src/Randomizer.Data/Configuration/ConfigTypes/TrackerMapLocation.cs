@@ -86,15 +86,15 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public string GetName(World world)
         {
             var room = world.Rooms.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
-            if (room != null)
+            if (room?.Metadata != null)
                 return room.Metadata.Name[0];
 
             var dungeon = world.Dungeons.SingleOrDefault(x => x.DungeonName.Equals(Name, StringComparison.OrdinalIgnoreCase));
-            if (dungeon != null)
-                return dungeon.DungeonMetadata.Name[0];
+            if (dungeon?.DungeonMetadata != null)
+                return dungeon?.DungeonMetadata?.Name[0] ?? Name;
 
             var location = world.Locations.SingleOrDefault(x => x.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
-            if (location != null)
+            if (location?.Metadata != null)
                 return location.Metadata.Name[0];
 
             return Name;

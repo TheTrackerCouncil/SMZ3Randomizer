@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
@@ -12,6 +9,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Generation
@@ -69,6 +67,7 @@ namespace Randomizer.SMZ3.Generation
             _gameLines = configs.GameLines;
             _logger = logger;
             _metadataService = metadataService;
+            _random = new Random();
         }
 
         /// <summary>
@@ -125,7 +124,11 @@ namespace Randomizer.SMZ3.Generation
                 .Shuffle(_random)
                 .Take(count);
 
-            var hints = locations.Select(x => _gameLines.HintLocationHasItem.Format(GetLocationName(hintPlayerWorld, x), GetItemName(hintPlayerWorld, x.Item)));
+            var hints = locations
+                .Select(x => _gameLines.HintLocationHasItem?.Format(GetLocationName(hintPlayerWorld, x), GetItemName(hintPlayerWorld, x.Item)))
+                .Where(x => x != null)
+                .Cast<string>();
+
             foreach (var hint in hints)
                 _logger.LogInformation(hint);
 
@@ -144,21 +147,24 @@ namespace Randomizer.SMZ3.Generation
 
             foreach (var dungeon in dungeons)
             {
-                var dungeonRegion = dungeon as Region;
+                var dungeonRegion = (Region)dungeon;
                 var usefulNess = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
                 var dungeonName = GetDungeonName(hintPlayerWorld, dungeon, dungeonRegion);
 
                 if (usefulNess == LocationUsefulness.Mandatory)
                 {
-                    hints.Add(_gameLines.HintLocationIsMandatory.Format(dungeonName));
+                    var hint = _gameLines.HintLocationIsMandatory?.Format(dungeonName);
+                    if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
                 }
                 else if (usefulNess == LocationUsefulness.NiceToHave)
                 {
-                    hints.Add(_gameLines.HintLocationHasUsefulItem.Format(dungeonName));
+                    var hint = _gameLines.HintLocationHasUsefulItem?.Format(dungeonName);
+                    if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
                 }
                 else
                 {
-                    hints.Add(_gameLines.HintLocationEmpty.Format(dungeonName));
+                    var hint = _gameLines.HintLocationEmpty?.Format(dungeonName);
+                    if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
                 }
             }
 
@@ -204,7 +210,9 @@ namespace Randomizer.SMZ3.Generation
                     ? GetLocationName(hintPlayerWorld, locations.First())
                     : $"{areaName}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
 
-                hints.Add(_gameLines.HintLocationHasItem.Format(areaName, GetItemName(hintPlayerWorld, locations.First().Item)));
+                var hint = _gameLines.HintLocationHasItem?.Format(areaName,
+                    GetItemName(hintPlayerWorld, locations.First().Item));
+                if (hint != null) hints.Add(hint);
                 return;
             }
 
@@ -216,15 +224,18 @@ namespace Randomizer.SMZ3.Generation
 
             if (usefulness == LocationUsefulness.Mandatory)
             {
-                hints.Add( _gameLines.HintLocationIsMandatory.Format(areaName));
+                var hint = _gameLines.HintLocationIsMandatory?.Format(areaName);
+                if (hint != null) hints.Add(hint);
             }
             else if (usefulness == LocationUsefulness.NiceToHave)
             {
-                hints.Add( _gameLines.HintLocationHasUsefulItem.Format(areaName));
+                var hint = _gameLines.HintLocationHasUsefulItem?.Format(areaName);
+                if (hint != null) hints.Add(hint);
             }
             else
             {
-                hints.Add(_gameLines.HintLocationEmpty.Format(areaName));
+                var hint = _gameLines.HintLocationEmpty?.Format(areaName);
+                if (hint != null) hints.Add(hint);
             }
         }
 
@@ -291,7 +302,7 @@ namespace Randomizer.SMZ3.Generation
             }
             else if (locations.All(x => x.Room != null))
             {
-                var name = _metadataService.Room(locations.First().Room).Name;
+                var name = _metadataService.Room(locations.First().Room!).Name;
                 return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
             }
             else
@@ -315,7 +326,7 @@ namespace Randomizer.SMZ3.Generation
 
         private string GetItemName(World hintPlayerWorld, Item item)
         {
-            var itemName = _metadataService.Item(item.Type).NameWithArticle;
+            var itemName = _metadataService.Item(item.Type)?.NameWithArticle ?? item.Name;
             return $"{itemName}{GetMultiworldSuffix(hintPlayerWorld, item)}";
         }
 

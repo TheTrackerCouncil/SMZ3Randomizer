@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -27,15 +25,15 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             SpikeRoom = new Location(this, 256 + 162, 0x1E9E0, LocationType.Regular,
                 name: "Spike Room",
                 vanillaItem: ItemType.KeyIP,
-                access: items => items.Hookshot || (items.KeyIP >= 1
-                                            && CanNotWasteKeysBeforeAccessible(items, MapChest, BigKeyChest)),
+                access: items => BigKeyChest != null && MapChest != null && (items.Hookshot || (items.KeyIP >= 1
+                    && CanNotWasteKeysBeforeAccessible(items, MapChest, BigKeyChest))),
                 memoryAddress: 0x5F,
                 memoryFlag: 0x4);
 
             MapChest = new Location(this, 256 + 163, 0x1E9DD, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapIP,
-                access: items => items.Hammer && Logic.CanLiftLight(items) && (
+                access: items => BigKeyChest != null && items.Hammer && Logic.CanLiftLight(items) && (
                     items.Hookshot || (items.KeyIP >= 1
                                        && CanNotWasteKeysBeforeAccessible(items, SpikeRoom, BigKeyChest))
                 ),
@@ -82,16 +80,18 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryAddress = 0xDE;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 14 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Ice Palace";
 
         public Reward Reward { get; set; }
+
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.DarkWorldSouth;
 

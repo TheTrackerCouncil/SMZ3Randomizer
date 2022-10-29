@@ -11,21 +11,15 @@ namespace Randomizer.Shared
         {
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        public override object? ConvertTo(ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object? value, Type destinationType)
         {
             if (destinationType == typeof(string))
             {
-                if (value != null)
-                {
-                    var fi = value.GetType().GetField(value.ToString());
-                    if (fi != null)
-                    {
-                        var attribute = fi.GetCustomAttribute<DescriptionAttribute>(inherit: false);
-                        return attribute?.Description ?? value.ToString();
-                    }
-                }
-
-                return string.Empty;
+                if (value == null) return string.Empty;
+                var fi = value.GetType().GetField(value?.ToString() ?? string.Empty);
+                if (fi == null) return string.Empty;
+                var attribute = fi.GetCustomAttribute<DescriptionAttribute>(inherit: false);
+                return attribute?.Description ?? value?.ToString() ?? string.Empty;
             }
 
             return base.ConvertTo(context, culture, value, destinationType);

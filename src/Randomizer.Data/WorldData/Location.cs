@@ -62,7 +62,8 @@ namespace Randomizer.Data.WorldData
         /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
         /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
         /// <param name="memoryType">The type of location</param>
-
+        /// <param name="relevanceRequirement">Logic for if the location is accessible following defeating a boss or collecting a reward</param>
+        /// <param name="trackerLogic">Special logic for if the location should be displayed in tracker</param>
         public Location(Region region, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
@@ -82,8 +83,8 @@ namespace Randomizer.Data.WorldData
             MemoryType = memoryType;
             _relevanceRequirement = relevanceRequirement ?? (items => _canAccess(items));
             _trackerLogic = trackerLogic ?? (_ => true);
+            Item = new Item(ItemType.Nothing, region.World);
         }
-#nullable disable
 
         /// <summary>
         /// Gets the internal identifier of the location.
@@ -98,12 +99,12 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Additional information about the location
         /// </summary>
-        public LocationInfo Metadata { get; set; }
+        public LocationInfo? Metadata { get; set; }
 
         /// <summary>
         /// Current state of the location
         /// </summary>
-        public TrackerLocationState State { get; set; }
+        public TrackerLocationState? State { get; set; }
 
         /// <summary>
         /// Gets the type of location.
@@ -128,7 +129,7 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Gets the room the location is in, if any.
         /// </summary>
-        public Room Room { get; }
+        public Room? Room { get; }
 
         /// <summary>
         /// Gets the world that the location is a part of
@@ -173,7 +174,7 @@ namespace Randomizer.Data.WorldData
         /// </summary>
         public int Weight => _weight ?? Region.Weight;
 
-        public bool ItemIs(ItemType type, World world) => Item?.Is(type, world) ?? false;
+        public bool ItemIs(ItemType type, World world) => Item.Is(type, world);
 
         public bool ItemIsNot(ItemType type, World world) => !ItemIs(type, world);
 
@@ -222,6 +223,7 @@ namespace Randomizer.Data.WorldData
         /// Determines whether the item is accessible with the specified items.
         /// </summary>
         /// <param name="items">The available items.</param>
+        /// <param name="applyTrackerLogic">If tracker logic should be applied to the available logic</param>
         /// <returns>
         /// <see langword="true"/> if the item is available with <paramref
         /// name="items"/>; otherwise, <see langword="false"/>.
@@ -247,7 +249,7 @@ namespace Randomizer.Data.WorldData
         /// <returns>The LocationStatus enum of the location</returns>
         public LocationStatus GetStatus(Progression items)
         {
-            if (State.Cleared) return LocationStatus.Cleared;
+            if (State?.Cleared == true) return LocationStatus.Cleared;
             else if (IsAvailable(items) && _trackerLogic(items)) return LocationStatus.Available;
             else if (IsRelevant(items) && _trackerLogic(items)) return LocationStatus.Relevant;
             else return LocationStatus.OutOfLogic;

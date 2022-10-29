@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
@@ -71,7 +68,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Location> UnclearedLocations()
-            => AllLocations().Where(x => !x.State.Cleared).ToImmutableList();
+            => AllLocations().Where(x => x.State?.Cleared == false).ToImmutableList();
 
         /// <summary>
         /// Retrieves all locations for the current player's world that has been marked as
@@ -79,7 +76,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Location> MarkedLocations()
-            => AllLocations().Where(x => !x.State.Cleared && x.State.MarkedItem != null && x.State.MarkedItem != Shared.ItemType.Nothing).ToImmutableList();
+            => AllLocations().Where(x => x.State?.Cleared == false && x.State.MarkedItem != null && x.State.MarkedItem != ItemType.Nothing).ToImmutableList();
 
         /// <summary>
         /// Retrieves a collection of locations for the current player's world that match the given filter criteria
@@ -105,7 +102,7 @@ namespace Randomizer.SMZ3.Tracking.Services
                 // Order by last cleared region, then by location count per region
                 return Regions
                     .Where(x => RegionMatchesFilter(regionFilter, x))
-                    .Select(x => (Region: x, Locations: x.Locations.Where(x => IsValidLocation(x, unclearedOnly, outOfLogic, progression, itemFilter, inRegion))))
+                    .Select(x => (Region: x, Locations: x.Locations.Where(l => IsValidLocation(l, unclearedOnly, outOfLogic, progression, itemFilter, inRegion))))
                     .OrderBy(x => x.Region != World.LastClearedLocation?.Region)
                     .ThenByDescending(x => x.Locations.Count())
                     .SelectMany(x => x.Locations)
@@ -118,11 +115,11 @@ namespace Randomizer.SMZ3.Tracking.Services
                     .Where(x => IsValidLocation(x, unclearedOnly, outOfLogic, progression, itemFilter, inRegion))
                     .ToImmutableList();
             }
+        }
 
-            bool IsValidLocation(Location location, bool unclearedOnly, bool outOfLogic, Progression? progression, ItemType itemFilter, Region? inRegion)
-            {
-                return (!unclearedOnly || !location.State.Cleared) && (outOfLogic || IsAvailable(location, progression ?? Progression(location.Region))) && (itemFilter == ItemType.Nothing || location.Item.Is(itemFilter, World)) && (inRegion == null || location.Region == inRegion);
-            }
+        private bool IsValidLocation(Location location, bool unclearedOnly, bool outOfLogic, Progression? progression, ItemType itemFilter, Region? inRegion)
+        {
+            return (!unclearedOnly || location.State?.Cleared == false) && (outOfLogic || IsAvailable(location, progression ?? Progression(location.Region))) && (itemFilter == ItemType.Nothing || location.Item.Is(itemFilter, World)) && (inRegion == null || location.Region == inRegion);
         }
 
         /// <summary>
@@ -198,6 +195,6 @@ namespace Randomizer.SMZ3.Tracking.Services
         private Progression Progression(Region region)
             => _itemService.GetProgression(region);
 
-        
+
     }
 }

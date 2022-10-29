@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
     <Version>7.0.0</Version>
@@ -13,6 +13,7 @@
     <PackageId>Randomizer.App</PackageId>
     <NeutralLanguage>en</NeutralLanguage>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -25,6 +25,7 @@ using Randomizer.SMZ3.Generation;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.App
 {

@@ -62,12 +62,13 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     Logic.CanLiftLight(items) ||
                     (Logic.CanAccessMiseryMirePortal(items) && items.Mirror)
                 ) && items.BigKeyDP && items.KeyDP && Logic.CanLightTorches(items) && CanBeatBoss(items),
-                memoryAddress: 0x33, 
+                memoryAddress: 0x33,
                 memoryFlag: 0xB);
 
             MemoryAddress = 0x33;
             MemoryFlag = 0xB;
             StartingRooms = new List<int>() { 99, 131, 132, 133 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Desert Palace";
@@ -79,9 +80,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.LightWorldSouth;
 

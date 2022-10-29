@@ -284,6 +284,11 @@ namespace Randomizer.Data.Services
         /// <param name="createNewStates">If new states should be created for items not already in the world</param>
         public void LoadWorldMetadata(World world, bool createNewStates)
         {
+            if (world.State == null)
+            {
+                throw new InvalidOperationException("No world state loaded");
+            }
+
             world.Locations.ToList().ForEach(loc => loc.Metadata = Location(loc.Id));
             world.Dungeons.ToList().ForEach(d => d.DungeonMetadata = Dungeon(d));
             world.Rewards.ToList().ForEach(r => r.Metadata = _rewards.First(md => md.RewardType == r.Type));

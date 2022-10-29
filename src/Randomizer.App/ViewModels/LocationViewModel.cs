@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Randomizer.Data.WorldData;
-using Randomizer.SMZ3;
 
 namespace Randomizer.App.ViewModels
 {
@@ -20,9 +14,9 @@ namespace Randomizer.App.ViewModels
             _syncer = syncer;
         }
 
-        public string Name => _location.Metadata.Name[0];
+        public string Name => _location.Metadata?.Name[0] ?? _location.Name;
 
-        public string Area => _location.Region.Metadata.Name[0];
+        public string Area => _location.Region.Metadata?.Name[0] ?? _location.Name;
 
         public bool InLogic => _location.IsAvailable(_syncer.ItemService.GetProgression(false));
 
@@ -35,6 +29,6 @@ namespace Randomizer.App.ViewModels
             {
                 _syncer.Tracker.Clear(_location);
             },
-            canExecute: () => _location.State.Cleared == false);
+            canExecute: () => _location.State?.Cleared == false);
     }
 }

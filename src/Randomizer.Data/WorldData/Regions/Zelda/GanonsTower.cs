@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -31,7 +29,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 name: "Map Chest",
                 vanillaItem: ItemType.MapGT,
                 access: items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
-                    (new[] { ItemType.BigKeyGT, ItemType.KeyGT }.Any(type => MapChest.ItemIs(type, World)) ? 3 : 4),
+                    (new[] { ItemType.BigKeyGT, ItemType.KeyGT }.Any(type => MapChest != null && MapChest.ItemIs(type, World)) ? 3 : 4),
                 memoryAddress: 0x8B,
                 memoryFlag: 0x4)
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyGT, World) && items.KeyGT >= 3);
@@ -39,11 +37,11 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             FiresnakeRoom = new Location(this, 256 + 195, 0x1EAD0, LocationType.Regular,
                 name: "Firesnake Room",
                 vanillaItem: ItemType.KeyGT,
-                access: items => items.Hammer && items.Hookshot && items.KeyGT >= (new[] {
-                            RandomizerRoom.TopRight,
-                            RandomizerRoom.TopLeft,
-                            RandomizerRoom.BottomLeft,
-                            RandomizerRoom.BottomRight
+                access: items => FiresnakeRoom != null && RandomizerRoom != null && items.Hammer && items.Hookshot && items.KeyGT >= (new[] {
+                        RandomizerRoom.TopRight,
+                        RandomizerRoom.TopLeft,
+                        RandomizerRoom.BottomLeft,
+                        RandomizerRoom.BottomRight
                     }.Any(l => l.ItemIs(ItemType.BigKeyGT, World))
                     || FiresnakeRoom.ItemIs(ItemType.KeyGT, World) ? 2 : 3),
                 memoryAddress: 0x7D,
@@ -105,9 +103,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Ganon's Tower";
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Location BobsTorch { get; }
 
@@ -247,9 +245,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
             public Location BottomRight { get; }
 
-            private bool LeftSide(Progression items, IList<Location> locations)
+            private bool LeftSide(Progression items, IList<Location?> locations)
             {
-                return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
+                return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l != null && l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
             }
         }
 
@@ -315,9 +313,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
             public Location BottomRight { get; }
 
-            private bool RightSide(Progression items, IList<Location> locations)
+            private bool RightSide(Progression items, IList<Location?> locations)
             {
-                return items.Somaria && items.FireRod && items.KeyGT >= (locations.Any(l => l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
+                return items.Somaria && items.FireRod && items.KeyGT >= (locations.Any(l => l != null && l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
             }
         }
 
@@ -363,7 +361,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             private bool CanBeatArmos(Progression items)
             {
                 return items.Sword || items.Hammer || items.Bow ||
-                    (Logic.CanExtendMagic(items, 2) && (items.Somaria || items.Byrna)) ||
+                    (Logic.CanExtendMagic(items) && (items.Somaria || items.Byrna)) ||
                     (Logic.CanExtendMagic(items, 4) && (items.FireRod || items.IceRod));
             }
         }
@@ -373,7 +371,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public MiniHelmasaurRoomRoom(Region region)
                 : base(region, "Mini Helmasaur Room")
             {
-                var tower = region as GanonsTower;
+                var tower = (GanonsTower)region;
                 Left = new Location(this, 256 + 212, 0x1EAFD, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.ThreeBombs,

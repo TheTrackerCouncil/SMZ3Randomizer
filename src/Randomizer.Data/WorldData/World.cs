@@ -101,7 +101,7 @@ namespace Randomizer.Data.WorldData
         public IEnumerable<Region> Regions { get; }
         public IEnumerable<Room> Rooms { get; }
         public IEnumerable<Location> Locations { get; }
-        public IEnumerable<Item> LocationItems => Locations.Select(l => l.Item).Where(i => i != null);
+        public IEnumerable<Item> LocationItems => Locations.Select(l => l.Item);
         public List<Item> TrackerItems { get; } = new List<Item>();
         public IEnumerable<Item> AllItems => TrackerItems.Concat(LocationItems);
         public ILogic Logic { get; }
@@ -153,7 +153,7 @@ namespace Randomizer.Data.WorldData
 
         public Location? LastClearedLocation { get; set; }
 
-        public Location FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
+        public Location? FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             return Locations.FirstOrDefault(x => x.Name.Equals(name, comparisonType))
                 ?? Locations.FirstOrDefault(x => x.AlternateNames.Contains(name, StringComparer.FromComparison(comparisonType)))
@@ -163,9 +163,7 @@ namespace Randomizer.Data.WorldData
         public bool CanAquire(Progression items, RewardType reward)
         {
             var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.RewardType);
-            if (dungeonWithReward == null)
-                return false;
-            return dungeonWithReward.CanComplete(items);
+            return dungeonWithReward != null && dungeonWithReward.CanComplete(items);
         }
 
         public bool CanAquireAll(Progression items, params RewardType[] rewards)
@@ -184,7 +182,7 @@ namespace Randomizer.Data.WorldData
             SetRewards(rnd);
         }
 
-        public TrackerState State { get; set; }
+        public TrackerState? State { get; set; }
 
         private void SetMedallions(Random rnd)
         {

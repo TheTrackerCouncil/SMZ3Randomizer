@@ -18,15 +18,20 @@ namespace Randomizer.SMZ3.Text
 
         static Texts()
         {
-            scripts = ParseYamlScripts("Text.Scripts.General.yaml") as YamlMapping;
+            scripts = ParseYamlScripts("Text.Scripts.General.yaml");
             tavernMan = ParseTextScript("Text.Scripts.TavernMan.txt");
         }
 
-        private static YamlElement ParseYamlScripts(string resource)
+        private static YamlMapping ParseYamlScripts(string resource)
         {
             using var stream = EmbeddedStream.For(resource);
             using var reader = new StreamReader(stream);
-            return YamlStream.Load(reader).First().Contents;
+            var contents = YamlStream.Load(reader).First().Contents;
+            if (contents == null || !(contents is YamlMapping))
+            {
+                throw new InvalidOperationException("Could not retrieve contents from Text.Scripts.General.yaml file");
+            }
+            return (YamlMapping)contents;
         }
 
         private static IList<string> ParseTextScript(string resource)
@@ -41,51 +46,51 @@ namespace Randomizer.SMZ3.Text
 
         public static string SahasrahlaReveal(Region dungeon)
         {
-            var text = (scripts["SahasrahlaReveal"] as YamlValue).Value;
+            var text = (scripts["SahasrahlaReveal"] as YamlValue)?.Value ?? "";
             return text.Replace("<dungeon>", dungeon.Area);
         }
 
         public static string SahasrahlaReveal(string dungeonName)
         {
-            var text = (scripts["SahasrahlaReveal"] as YamlValue).Value;
+            var text = (scripts["SahasrahlaReveal"] as YamlValue)?.Value ?? "";
             return text.Replace("<dungeon>", dungeonName);
         }
 
         public static string BombShopReveal(IEnumerable<Region> dungeons)
         {
             var (first, second, _) = dungeons;
-            var text = (scripts["BombShopReveal"] as YamlValue).Value;
+            var text = (scripts["BombShopReveal"] as YamlValue)?.Value ?? "";
             return text.Replace("<first>", first.Area).Replace("<second>", second.Area);
         }
 
         public static string BombShopReveal(IEnumerable<string> dungeonNames)
         {
             var (first, second, _) = dungeonNames;
-            var text = (scripts["BombShopReveal"] as YamlValue).Value;
+            var text = (scripts["BombShopReveal"] as YamlValue)?.Value ?? "";
             return text.Replace("<first>", first).Replace("<second>", second);
         }
 
         public static string GanonThirdPhraseNone()
         {
-            var text = ((scripts["GanonSilversReveal"] as YamlMapping)["none"] as YamlValue).Value;
+            var text = ((scripts["GanonSilversReveal"] as YamlMapping)?["none"] as YamlValue)?.Value ?? "";
             return text;
         }
 
         public static string GanonThirdPhaseSingle(Region silvers)
         {
-            var node = (scripts["GanonSilversReveal"] as YamlMapping)["single"] as YamlMapping;
-            var text = (node[silvers is GanonsTower ? "local" : "remote"] as YamlValue).Value;
+            var node = (scripts["GanonSilversReveal"] as YamlMapping)?["single"] as YamlMapping;
+            var text = (node?[silvers is GanonsTower ? "local" : "remote"] as YamlValue)?.Value ?? "";
             return text.Replace("<region>", silvers.Area);
         }
 
         public static string GanonThirdPhaseMulti(Region silvers, World myWorld)
         {
-            var node = (scripts["GanonSilversReveal"] as YamlMapping)["multi"] as YamlMapping;
+            var node = (scripts["GanonSilversReveal"] as YamlMapping)?["multi"] as YamlMapping;
             if (silvers.World == myWorld)
-                return (node["local"] as YamlValue).Value;
+                return (node?["local"] as YamlValue)?.Value ?? "";
             var player = silvers.World.Player;
             player = player.PadLeft(7 + player.Length / 2);
-            var text = (node["remote"] as YamlValue).Value;
+            var text = (node?["remote"] as YamlValue)?.Value ?? "";
             return text.Replace("<player>", player);
         }
 
@@ -111,7 +116,7 @@ namespace Randomizer.SMZ3.Text
             };
 
             var items = scripts["Items"] as YamlMapping;
-            return (items[name] as YamlValue)?.Value ?? (items["default"] as YamlValue).Value;
+            return (items?[name] as YamlValue)?.Value ?? (items?["default"] as YamlValue)?.Value ?? "";
         }
 
         public static string TavernMan(Random rnd) => RandomLine(rnd, tavernMan);

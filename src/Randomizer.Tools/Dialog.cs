@@ -195,7 +195,7 @@ namespace Randomizer.Tools
                 _ when match.Groups["digit"].Success => new byte[] { (byte)(c - '0' + 0xA0) },
                 _ when match.Groups["upper"].Success => new byte[] { (byte)(c - 'A' + 0xAA) },
                 _ when match.Groups["lower"].Success => new byte[] { (byte)(c - 'a' + 0x30) },
-                _ => letters.TryGetValue(c, out byte[] bytes) ? bytes : new byte[] { 0xFF },
+                _ => letters.TryGetValue(c, out var bytes) ? bytes : new byte[] { 0xFF },
             };
         }
 

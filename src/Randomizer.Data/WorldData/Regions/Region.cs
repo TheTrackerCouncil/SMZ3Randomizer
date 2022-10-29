@@ -5,6 +5,7 @@ using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.WorldData.Regions
 {
@@ -69,7 +70,7 @@ namespace Randomizer.Data.WorldData.Regions
         /// <summary>
         /// The Region's metadata
         /// </summary>
-        public RegionInfo Metadata { get; set; }
+        public RegionInfo? Metadata { get; set; }
 
         /// <summary>
         /// The Logic to be used to determine if certain actions can be done
@@ -182,7 +183,7 @@ namespace Randomizer.Data.WorldData.Regions
         {
             return World.Dungeons
                 .Where(x => x is IHasReward rewardRegion && x.MarkedReward == reward)
-                .Count(x => x.DungeonState.Cleared);
+                .Count(x => x.DungeonState?.Cleared == true);
         }
     }
 }

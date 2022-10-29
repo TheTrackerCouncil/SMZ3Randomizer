@@ -138,11 +138,9 @@ namespace Randomizer.App.ViewModels
         /// <summary>
         /// The rewards for if this is not an actual location
         /// </summary>
-        #nullable enable
         private IHasBoss? BossRegion { get; set; }
         private IHasReward? RewardRegion { get; set; }
         private Item? Item { get; set; }
-        #nullable disable
 
         /// <summary>
         /// The number of available/accessible locations here that have not been

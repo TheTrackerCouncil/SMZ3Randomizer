@@ -60,6 +60,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             MemoryAddress = 0xC8;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 201 };
+            Reward = new Reward(RewardType.None, world, this);
         }
 
         public override string Name => "Eastern Palace";
@@ -68,9 +69,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public RewardType RewardType { get; set; } = RewardType.None;
 
-        public DungeonInfo DungeonMetadata { get; set; }
+        public DungeonInfo? DungeonMetadata { get; set; }
 
-        public TrackerDungeonState DungeonState { get; set; }
+        public TrackerDungeonState? DungeonState { get; set; }
 
         public Region ParentRegion => World.LightWorldNorthEast;
 

@@ -2,7 +2,6 @@
 using System.Linq;
 
 using Randomizer.Shared;
-using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda.DarkWorld;
@@ -83,7 +82,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 
                 var dungeon = (IDungeon)region;
                 var rewardRegion = (IHasReward)region;
-                if (dungeon.DungeonState.MarkedReward != dungeon.DungeonState.Reward)
+                if (dungeon.DungeonState?.MarkedReward != dungeon.DungeonState?.Reward)
                 {
                     rewards.Add(rewardRegion.Reward.Type);
                     _tracker.SetDungeonReward(dungeon, rewardRegion.Reward.Type);
@@ -125,7 +124,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 
                 var dungeon = (IDungeon)region;
                 var rewardRegion = (IHasReward)region;
-                if (dungeon.DungeonState.MarkedReward != dungeon.DungeonState.Reward)
+                if (dungeon.DungeonState?.MarkedReward != dungeon.DungeonState?.Reward)
                 {
                     rewards.Add(rewardRegion.Reward.Type);
                     _tracker.SetDungeonReward(dungeon, rewardRegion.Reward.Type);

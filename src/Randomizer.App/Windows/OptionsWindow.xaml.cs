@@ -25,7 +25,7 @@ namespace Randomizer.App
         private readonly IChatAuthenticationService _chatAuthenticationService;
         private readonly ILogger<OptionsWindow> _logger;
         private readonly ConfigProvider _trackerConfigProvider;
-        private GeneralOptions _options;
+        private GeneralOptions _options = new();
         private bool _canLogIn = true;
         private ICollection<string> _availableProfiles;
 
@@ -38,10 +38,11 @@ namespace Randomizer.App
             _trackerConfigProvider = configProvider;
             _chatAuthenticationService = chatAuthenticationService;
             _logger = logger;
-            AvailableProfiles = configProvider.GetAvailableProfiles();
+            _availableProfiles = configProvider.GetAvailableProfiles();
+            PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public GeneralOptions Options
         {
@@ -85,10 +86,10 @@ namespace Randomizer.App
         }
 
         public ICollection<string> EnabledProfiles =>
-            Options?.SelectedProfiles.Where(x => !string.IsNullOrEmpty(x)).ToList();
+            Options?.SelectedProfiles?.Where(x => !string.IsNullOrEmpty(x))?.Cast<string>()?.ToList() ?? new List<string>();
 
         public ICollection<string> DisabledProfiles =>
-            AvailableProfiles?.Where(x => Options?.SelectedProfiles?.Contains(x) == false)?.ToList();
+            AvailableProfiles?.Where(x => Options?.SelectedProfiles?.Contains(x) == false && !string.IsNullOrEmpty(x))?.Cast<string>()?.ToList() ?? new List<string>();
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
@@ -106,7 +107,26 @@ namespace Randomizer.App
                     try
                     {
                         var token = await _chatAuthenticationService.GetTokenInteractivelyAsync(default);
+
+                        if(token == null)
+                        {
+                            _logger.LogError("Token returned by chat authentication service null");
+                            MessageBox.Show(this, "An unexpected error occurred while trying to log you in with Twitch. " +
+                                "Please try again or report this issue with the log file.", "SMZ3 Cas’ Randomizer",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
                         var userData = await _chatAuthenticationService.GetAuthenticatedUserDataAsync(token, default);
+
+                        if (userData == null)
+                        {
+                            _logger.LogError("User Data returned by chat authentication service null");
+                            MessageBox.Show(this, "An unexpected error occurred while trying to log you in with Twitch. " +
+                                "Please try again or report this issue with the log file.", "SMZ3 Cas’ Randomizer",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
 
                         Options.TwitchUserName = userData.Name;
                         Options.TwitchOAuthToken = token;

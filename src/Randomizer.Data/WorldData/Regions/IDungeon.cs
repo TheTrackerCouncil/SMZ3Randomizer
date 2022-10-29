@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 
@@ -16,12 +15,12 @@ namespace Randomizer.Data.WorldData.Regions
         /// Gets or sets the reward for completing the region, e.g. pendant or
         /// crystal.
         /// </summary>
-        DungeonInfo DungeonMetadata { get; set; }
+        DungeonInfo? DungeonMetadata { get; set; }
 
         /// <summary>
         /// The current tracking state of the dungeon
         /// </summary>
-        TrackerDungeonState DungeonState { get; set; }
+        TrackerDungeonState? DungeonState { get; set; }
 
         /// <summary>
         /// Calculates the number of treasures in the dungeon
@@ -30,7 +29,7 @@ namespace Randomizer.Data.WorldData.Regions
         public int GetTreasureCount()
         {
             var region = (Region)this;
-            return region.Locations.Count(x => x.Item != null && (!x.Item.IsDungeonItem || region.World.Config.ZeldaKeysanity) && x.Type != LocationType.NotInDungeon);
+            return region.Locations.Count(x => x.Item.Type != ItemType.Nothing && (!x.Item.IsDungeonItem || region.World.Config.ZeldaKeysanity) && x.Type != LocationType.NotInDungeon);
         }
 
         /// <summary>
@@ -41,22 +40,22 @@ namespace Randomizer.Data.WorldData.Regions
         /// <summary>
         /// The reward object for the dungeon, if any
         /// </summary>
-        public Reward? Reward => HasReward ? ((IHasReward)this).Reward : null;
+        public Reward? DungeonReward => HasReward ? ((IHasReward)this).Reward : null;
 
         /// <summary>
         /// The type of reward in the dungeon, if any
         /// </summary>
-        public RewardType RewardType => Reward?.Type ?? RewardType.None;
+        public RewardType? DungeonRewardType => DungeonReward?.Type;
 
         /// <summary>
         /// If the dungeon has a pendant in it or not
         /// </summary>
-        public bool IsPendantDungeon => RewardType is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue;
+        public bool IsPendantDungeon => DungeonRewardType is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue;
 
         /// <summary>
         /// If the dungeon has a crystal in it or not
         /// </summary>
-        public bool IsCrystalDungeon => RewardType is RewardType.CrystalBlue or RewardType.CrystalRed;
+        public bool IsCrystalDungeon => DungeonRewardType is RewardType.CrystalBlue or RewardType.CrystalRed;
 
         /// <summary>
         /// The reward marked by the player
@@ -69,7 +68,10 @@ namespace Randomizer.Data.WorldData.Regions
             }
             set
             {
-                DungeonState.MarkedReward = value;
+                if (DungeonState != null)
+                {
+                    DungeonState.MarkedReward = value;
+                }
             }
         }
 
@@ -99,7 +101,10 @@ namespace Randomizer.Data.WorldData.Regions
             }
             set
             {
-                DungeonState.MarkedMedallion = value;
+                if (DungeonState != null)
+                {
+                    DungeonState.MarkedMedallion = value;
+                }
             }
         }
 
