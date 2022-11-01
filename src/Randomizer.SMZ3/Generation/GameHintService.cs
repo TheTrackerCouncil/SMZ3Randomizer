@@ -38,7 +38,7 @@ namespace Randomizer.SMZ3.Generation
             "telepathic_tile_south_east_darkworld_cave"
         };
 
-        private static List<int> ImportantLocations = new List<int>()
+        private static readonly List<int> s_importantLocations = new List<int>()
         {
             48, // Kraid
             134, // Phantoon
@@ -59,7 +59,7 @@ namespace Randomizer.SMZ3.Generation
 
         private readonly ILogger<GameHintService> _logger;
         private readonly IMetadataService _metadataService;
-        private GameLinesConfig _gameLines;
+        private readonly GameLinesConfig _gameLines;
         private Random _random;
 
         public GameHintService(Configs configs, IMetadataService metadataService, ILogger<GameHintService> logger)
@@ -86,7 +86,7 @@ namespace Randomizer.SMZ3.Generation
             var allHints = new List<string>();
 
             var importantLocations = allWorlds.SelectMany(w => w.Locations)
-                .Where(l => ImportantLocations.Contains(l.Id) || l.Item.Progression || l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard))
+                .Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression || l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard))
                 .ToList();
 
             allHints.AddRange(GetProgressionItemHints(hintPlayerWorld, lateSpheres, 8));
@@ -125,9 +125,9 @@ namespace Randomizer.SMZ3.Generation
                 .Take(count);
 
             var hints = locations
-                .Select(x => _gameLines.HintLocationHasItem?.Format(GetLocationName(hintPlayerWorld, x), GetItemName(hintPlayerWorld, x.Item)))
-                .Where(x => x != null)
-                .Cast<string>();
+                .Select(x => _gameLines.HintLocationHasItem?.Format(GetLocationName(hintPlayerWorld, x),
+                    GetItemName(hintPlayerWorld, x.Item)))
+                .NonNull();
 
             foreach (var hint in hints)
                 _logger.LogInformation(hint);
@@ -289,7 +289,7 @@ namespace Randomizer.SMZ3.Generation
         /// </summary>
         private bool CheckSphereCrateriaBossKeys(IEnumerable<Location> sphereLocations)
         {
-            var numKeysanity = sphereLocations.Select(x => x.World).Distinct().Where(x => x.Config.MetroidKeysanity).Count();
+            var numKeysanity = sphereLocations.Select(x => x.World).Distinct().Count(x => x.Config.MetroidKeysanity);
             var numCratieriaBossKeys = sphereLocations.Select(x => x.Item.Type).Count(x => x == ItemType.CardMaridiaBoss);
             return numKeysanity == numCratieriaBossKeys;
         }

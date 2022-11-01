@@ -1693,7 +1693,7 @@ namespace Randomizer.SMZ3.Tracking
             var inaccessibleLocations = locations.Where(x => !x.IsAvailable(progress)).ToList();
             if (locations.Count > 0)
             {
-                foreach (var state in locations.Select(x => x.State).OfType<TrackerLocationState>())
+                foreach (var state in locations.Select(x => x.State).NonNull())
                 {
                     state.Cleared = true;
                 }
@@ -1733,7 +1733,7 @@ namespace Randomizer.SMZ3.Tracking
                 dungeon.DungeonState.RemainingTreasure = remaining;
                 if (remaining > 0 && !dungeon.DungeonState.HasReward)
                     dungeon.DungeonState.Cleared = false;
-                foreach (var state in locations.Select(x => x.State).OfType<TrackerLocationState>())
+                foreach (var state in locations.Select(x => x.State).NonNull())
                 {
                     state.Cleared = false;
                 }

@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.Data;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
@@ -39,7 +36,7 @@ namespace Randomizer.SMZ3.Tracking.Services
 
             var iconPaths = options.Options?.TrackerProfiles
                 .Where(x => !string.IsNullOrEmpty(x))
-                .Cast<string>()
+                .NonNull()
                 .Select(x => Path.Combine(configProvider.ConfigDirectory, x)).Reverse().ToList() ?? new();
             var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (basePath != null)

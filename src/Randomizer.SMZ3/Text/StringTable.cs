@@ -143,7 +143,7 @@ namespace Randomizer.SMZ3.Text {
                         .OfType<byte>()
                         .ToArray(),
                     YamlValue text => Dialog.Compiled(text.Value),
-                    var o => throw new InvalidOperationException($"Did not expect an object of type {o.GetType()}"),
+                    var o => throw new InvalidOperationException($"Did not expect an object of type {o?.GetType()}"),
                 }))
                 .ToList();
         }

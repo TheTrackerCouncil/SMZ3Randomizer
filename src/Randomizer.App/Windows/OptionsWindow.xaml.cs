@@ -7,15 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-
 using Microsoft.Extensions.Logging;
-
-using Randomizer.App.ViewModels;
-using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
+using Randomizer.Shared;
+using Randomizer.SMZ3.ChatIntegration;
 
-namespace Randomizer.App
+namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for OptionsWindow.xaml
@@ -86,10 +84,10 @@ namespace Randomizer.App
         }
 
         public ICollection<string> EnabledProfiles =>
-            Options?.SelectedProfiles?.Where(x => !string.IsNullOrEmpty(x))?.Cast<string>()?.ToList() ?? new List<string>();
+            Options.SelectedProfiles.Where(x => !string.IsNullOrEmpty(x)).NonNull().ToList();
 
         public ICollection<string> DisabledProfiles =>
-            AvailableProfiles?.Where(x => Options?.SelectedProfiles?.Contains(x) == false && !string.IsNullOrEmpty(x))?.Cast<string>()?.ToList() ?? new List<string>();
+            AvailableProfiles.Where(x => Options.SelectedProfiles.Contains(x) == false && !string.IsNullOrEmpty(x)).NonNull().ToList();
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {

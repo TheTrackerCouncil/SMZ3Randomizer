@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.WorldData;
@@ -60,7 +59,7 @@ namespace Randomizer.Data.Services
                     RemainingTreasure = x.GetTreasureCount(),
                     Reward = x is IHasReward rewardRegion ? rewardRegion.RewardType : null,
                     RequiredMedallion = x is INeedsMedallion medallionRegion ? medallionRegion.Medallion : null,
-                    MarkedReward = x is CastleTower ? Shared.RewardType.Agahnim : null,
+                    MarkedReward = x is CastleTower ? RewardType.Agahnim : null,
                     WorldId = ((Region)x).World.Id
                 })
                 .ToList();
@@ -175,7 +174,7 @@ namespace Randomizer.Data.Services
             // Load previously saved items
             foreach (var world in worlds)
             {
-                foreach (var (state, worldItems) in trackerState.ItemStates.Select(x => (state: x, items: world.AllItems.Where(w => w.Is(x.Type ?? Shared.ItemType.Nothing, x.ItemName)))))
+                foreach (var (state, worldItems) in trackerState.ItemStates.Select(x => (state: x, items: world.AllItems.Where(w => w.Is(x.Type ?? ItemType.Nothing, x.ItemName)))))
                 {
                     if (worldItems.Any())
                     {
@@ -184,7 +183,7 @@ namespace Randomizer.Data.Services
                     else
                     {
                         _logger.LogInformation($"{state.ItemName} not found in world");
-                        var item = new Item(state.Type ?? Shared.ItemType.Nothing, world, state.ItemName)
+                        var item = new Item(state.Type ?? ItemType.Nothing, world, state.ItemName)
                         {
                             State = state
                         };
@@ -225,7 +224,7 @@ namespace Randomizer.Data.Services
                 .SelectMany(x => x.AllItems)
                 .Select(x => x.State).Distinct()
                 .Where(x => x != null && !trackerState.ItemStates.Contains(x))
-                .Cast<TrackerItemState>()
+                .NonNull()
                 .ToList();
             itemStates.ForEach(x => trackerState.ItemStates.Add(x) );
         }
@@ -298,7 +297,7 @@ namespace Randomizer.Data.Services
                 .SelectMany(x => x.AllBosses)
                 .Select(x => x.State).Distinct()
                 .Where(x => x != null && !trackerState.BossStates.Contains(x))
-                .Cast<TrackerBossState>()
+                .NonNull()
                 .ToList();
             bossStates.ForEach(x => trackerState.BossStates.Add(x));
         }
