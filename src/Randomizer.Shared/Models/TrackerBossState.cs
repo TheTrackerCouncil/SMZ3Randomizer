@@ -11,7 +11,7 @@ namespace Randomizer.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public long Id { get; set; }
-        public TrackerState TrackerState { get; init; } = new();
+        public TrackerState? TrackerState { get; init; }
         public string BossName { get; init; } = string.Empty;
         public bool Defeated { get; set; }
         public BossType Type { get; init; }

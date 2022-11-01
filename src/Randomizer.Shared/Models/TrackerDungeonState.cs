@@ -12,7 +12,7 @@ namespace Randomizer.Shared.Models {
         [Key]
         public long Id { get; set; }
 
-        public TrackerState TrackerState { get; set; } = new();
+        public TrackerState? TrackerState { get; set; }
         public string Name { get; set; } = string.Empty;
         public bool Cleared { get; set; }
         public int RemainingTreasure { get; set; }

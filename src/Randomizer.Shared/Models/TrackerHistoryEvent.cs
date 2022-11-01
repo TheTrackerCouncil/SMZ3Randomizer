@@ -10,7 +10,7 @@ namespace Randomizer.Shared.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public long Id { get; set; }
-        public TrackerState TrackerState { get; set; } = new();
+        public TrackerState? TrackerState { get; set; }
         public HistoryEventType Type { get; set; }
         public int? LocationId { get; set; }
         public string? LocationName { get; set; }
