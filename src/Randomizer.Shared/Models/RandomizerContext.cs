@@ -32,6 +32,7 @@ namespace Randomizer.Shared.Models {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GeneratedRom>().HasOne(x => x.TrackerState);
+            modelBuilder.Entity<GeneratedRom>().HasKey(x => x.Id);
             modelBuilder.Entity<TrackerState>().HasMany(x => x.ItemStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TrackerState>().HasMany(x => x.LocationStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TrackerState>().HasMany(x => x.RegionStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);

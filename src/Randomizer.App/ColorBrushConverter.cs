@@ -11,13 +11,13 @@ namespace Randomizer.App
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var rgb = value as byte[];
+            var rgb = (byte[])value;
             return new SolidColorBrush(Color.FromArgb(rgb[0], rgb[1], rgb[2], rgb[3]));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var color = (value as SolidColorBrush).Color;
+            var color = ((SolidColorBrush)value).Color;
             return new byte[] { color.A, color.R, color.G, color.B };
         }
     }

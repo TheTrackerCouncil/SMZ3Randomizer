@@ -10,7 +10,7 @@ namespace Randomizer.App
 {
     public static class EmbeddedResource
     {
-        public static Stream GetStream<T>(string resourceName)
+        public static Stream? GetStream<T>(string resourceName)
         {
             var assembly = typeof(T).Assembly;
             return assembly.GetManifestResourceStream(typeof(T), resourceName);

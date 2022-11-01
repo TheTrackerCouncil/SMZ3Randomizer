@@ -61,7 +61,8 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var randomizer = GetRandomizer();
 
             var config = new Config();
-            var region = new Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth(null, null);
+            var world = new World(config, "", 0, "");
+            var region = world.LightWorldSouth;
             var location1 = region.LinksHouse.Id;
             var location2 = region.MazeRace.Id;
             var location3 = region.IceCave.Id;
@@ -72,7 +73,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             for (var i = 0; i < 3; i++)
             {
                 var seedData = randomizer.GenerateSeed(config, null, default);
-                var world = seedData.Worlds.First().World;
+                world = seedData.Worlds.First().World;
                 world.Locations.First(x => x.Id == location1).Item.Progression.Should().BeTrue();
                 world.Locations.First(x => x.Id == location2).Item.Progression.Should().BeFalse();
                 var fireRodAtLocation = world.Locations.First(x => x.Id == location3).Item.Type == ItemType.Firerod;

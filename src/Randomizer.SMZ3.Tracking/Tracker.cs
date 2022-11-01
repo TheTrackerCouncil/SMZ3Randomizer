@@ -1733,7 +1733,10 @@ namespace Randomizer.SMZ3.Tracking
                 dungeon.DungeonState.RemainingTreasure = remaining;
                 if (remaining > 0 && !dungeon.DungeonState.HasReward)
                     dungeon.DungeonState.Cleared = false;
-                locations.ForEach(x => x.State.Cleared = false);
+                foreach (var state in locations.Select(x => x.State).OfType<TrackerLocationState>())
+                {
+                    state.Cleared = false;
+                }
                 ItemService.ResetProgression();
             });
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Randomizer.Shared.Enums;
 
@@ -7,6 +8,7 @@ namespace Randomizer.Shared.Models {
     public class TrackerHistoryEvent
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public long Id { get; set; }
         public TrackerState TrackerState { get; set; } = new();
         public HistoryEventType Type { get; set; }

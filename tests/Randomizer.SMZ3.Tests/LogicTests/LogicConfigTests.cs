@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 displayName.Should().NotBeNullOrEmpty();
 
-                var category = property.GetCustomAttribute<CategoryAttribute>().Category;
+                var category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
                 category.Should().BeOneOf("Logic", "Tricks", "Patches");
             }
         }

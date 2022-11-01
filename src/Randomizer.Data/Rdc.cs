@@ -69,7 +69,7 @@ namespace Randomizer.Data
             this._offsets = offsets.ToDictionary(x => x.type, x => x.offset);
         }
 
-        public bool TryParse<TBlock>(Stream stream, out TBlock block) where TBlock : IBlockType, new()
+        public bool TryParse<TBlock>(Stream stream, out TBlock? block) where TBlock : IBlockType, new()
         {
             block = default;
 
@@ -148,11 +148,11 @@ namespace Randomizer.Data
 
         public uint Type { get; } = 0;
 
-        public JToken Content { get; private set; }
+        public JToken? Content { get; private set; }
 
         public int Length
         {
-            get { return sizeof(uint) + Encoding.UTF8.GetByteCount(Content.ToString(Formatting.None)); }
+            get { return sizeof(uint) + Encoding.UTF8.GetByteCount(Content?.ToString(Formatting.None) ?? ""); }
         }
 
         public MetaDataBlock(JToken content)
@@ -172,7 +172,7 @@ namespace Randomizer.Data
         public void Write(Stream stream)
         {
             using var data = new BinaryWriter(stream, Encoding.UTF8, true);
-            var meta = Content.ToString(Formatting.None);
+            var meta = Content?.ToString(Formatting.None) ?? "";
             var bytes = Encoding.UTF8.GetBytes(meta);
             data.Write((uint)bytes.Length);
             data.Write(bytes);

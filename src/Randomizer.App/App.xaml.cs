@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+using Randomizer.App.Windows;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;

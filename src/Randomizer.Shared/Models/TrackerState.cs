@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 using Randomizer.Shared.Migrations;
@@ -11,6 +12,7 @@ namespace Randomizer.Shared.Models
     public class TrackerState
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public long Id { get; set; }
         public DateTimeOffset StartDateTime { get; set; }
         public DateTimeOffset UpdatedDateTime { get; set; }

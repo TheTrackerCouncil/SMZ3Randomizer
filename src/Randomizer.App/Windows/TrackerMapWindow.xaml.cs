@@ -104,7 +104,7 @@ namespace Randomizer.App
         /// <summary>
         /// The current selected map
         /// </summary>
-        public TrackerMap CurrentMap { get; private set; }
+        public TrackerMap? CurrentMap { get; private set; }
 
         /// <summary>
         /// The view model for the tracker map window
@@ -184,7 +184,7 @@ namespace Randomizer.App
             _tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString() ?? "");
         }
 
-        private void PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void PropertyChanged(object?sender, PropertyChangedEventArgs e)
         {
             TrackerMapViewModel.OnPropertyChanged();
         }

@@ -20,12 +20,13 @@ namespace Randomizer.App.ViewModels
     public class TrackerViewModel : INotifyPropertyChanged
     {
         private readonly IUIService _uiService;
-        private bool _isDesign;
+        private readonly bool _isDesign;
+        private readonly TrackerLocationSyncer _syncer;
         private RegionFilter _filter;
-        private TrackerLocationSyncer _syncer;
 
         public TrackerViewModel(TrackerLocationSyncer syncer, IUIService uiService)
         {
+            _isDesign = DesignerProperties.GetIsInDesignMode(new DependencyObject());
             _syncer = syncer;
             _syncer.TrackedLocationUpdated += (_, _) => OnPropertyChanged(nameof(TopLocations));
             _syncer.MarkedLocationUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));

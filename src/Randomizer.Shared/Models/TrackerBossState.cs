@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Randomizer.Shared.Enums;
 
@@ -8,6 +9,7 @@ namespace Randomizer.Shared.Models
     public class TrackerBossState
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public long Id { get; set; }
         public TrackerState TrackerState { get; init; } = new();
         public string BossName { get; init; } = string.Empty;

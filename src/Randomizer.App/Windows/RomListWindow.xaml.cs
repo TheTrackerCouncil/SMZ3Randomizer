@@ -3,30 +3,23 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-
 using Randomizer.App.ViewModels;
-using Randomizer.Data;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
-using Randomizer.SMZ3.Tracking.Services;
-using Randomizer.SMZ3.Tracking.VoiceCommands;
-
 using SharpYaml;
 
-namespace Randomizer.App
+namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for RomListWindow.xaml
@@ -37,7 +30,7 @@ namespace Randomizer.App
         private readonly ILogger<RomListWindow> _logger;
         private readonly RandomizerContext _dbContext;
         private readonly RomGenerator _romGenerator;
-        private TrackerWindow _trackerWindow;
+        private TrackerWindow? _trackerWindow;
         private readonly IChatAuthenticationService _chatAuthenticationService;
 
         public RomListWindow(IServiceProvider serviceProvider,
@@ -77,14 +70,7 @@ namespace Randomizer.App
                 var installedRecognizers = System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers();
                 _logger.LogInformation("{count} installed recognizer(s): {recognizers}",
                     installedRecognizers.Count, string.Join(", ", installedRecognizers.Select(x => x.Description)));
-                if (installedRecognizers.Count == 0)
-                {
-                    CanStartTracker = false;
-                }
-                else
-                {
-                    CanStartTracker = true;
-                }
+                CanStartTracker = installedRecognizers.Count != 0;
             }
             catch (Exception ex)
             {
@@ -101,7 +87,7 @@ namespace Randomizer.App
         private async void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
             var rom = await _romGenerator.GenerateRandomRomAsync(Options);
-            if (rom != null)
+            if (GeneratedRom.IsValid(rom))
             {
                 UpdateRomList();
                 QuickLaunchRom(rom);
@@ -208,13 +194,13 @@ namespace Randomizer.App
         {
             var models = _dbContext.GeneratedRoms
                     .Include(x => x.TrackerState)
-                    .Include(x => x.TrackerState.History)
+                    .ThenInclude(x => x!.History)
                     .OrderByDescending(x => x.Id)
                     .ToList();
             Model.UpdateList(models);
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             try
             {
@@ -318,6 +304,13 @@ namespace Randomizer.App
                 return;
             }
 
+            if (!GeneratedRom.IsValid(rom))
+            {
+                MessageBox.Show(this, $"Selected rom is invalid. Please try generating a new rom.",
+                    "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
                 var scope = _serviceProvider.CreateScope();
@@ -325,14 +318,8 @@ namespace Randomizer.App
                 trackerOptionsAccessor.Options = Options.GeneralOptions.GetTrackerOptions();
 
                 _trackerWindow = scope.ServiceProvider.GetRequiredService<TrackerWindow>();
-                _trackerWindow.Options = Options;
                 _trackerWindow.Closed += (_, _) => scope.Dispose();
-
-                if (rom != null)
-                {
-                    _trackerWindow.Rom = rom;
-                }
-
+                _trackerWindow.Rom = rom;
                 _trackerWindow.SavedState += _trackerWindow_SavedState;
                 _trackerWindow.Show();
             }
@@ -352,7 +339,7 @@ namespace Randomizer.App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _trackerWindow_SavedState(object sender, EventArgs e)
+        private void _trackerWindow_SavedState(object? sender, EventArgs e)
         {
             UpdateRomList();
         }
@@ -621,8 +608,12 @@ namespace Randomizer.App
             try
             {
                 var path = Path.GetDirectoryName(Path.Combine(Options.RomOutputPath, rom.RomPath));
-                var directory = new DirectoryInfo(path);
-                directory.Delete(true);
+
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var directory = new DirectoryInfo(path);
+                    directory.Delete(true);
+                }
             }
             catch (Exception ex)
             {
@@ -700,7 +691,7 @@ namespace Randomizer.App
 
             _dbContext.Entry(rom.TrackerState).Collection(x => x.History).Load();
 
-            if (rom.TrackerState.History == null || rom.TrackerState.History.Count == 0)
+            if (rom.TrackerState?.History == null || rom.TrackerState.History.Count == 0)
             {
                 MessageBox.Show(this, "There is no history for the selected rom.",
                         "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -708,7 +699,7 @@ namespace Randomizer.App
             }
 
             var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath).Replace("Spoiler_Log", "Progression_Log");
-            var historyText = HistoryService.GenerateHistoryText(rom, rom.TrackerState.History.ToList(), true);
+            var historyText = HistoryService.GenerateHistoryText(rom, rom.TrackerState.History.ToList());
             File.WriteAllText(path, historyText);
             Process.Start(new ProcessStartInfo
             {
