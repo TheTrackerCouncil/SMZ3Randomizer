@@ -574,6 +574,13 @@ namespace Randomizer.Data.Configuration.ConfigFiles
             = new SchrodingersString("There's nothing to undo.");
 
         /// <summary>
+        /// Gets the phrases to respond with when the latest undo action
+        /// has expired
+        /// </summary>
+        public SchrodingersString UndoExpired { get; init; }
+            = new ("There's nothing recent to undo.");
+
+        /// <summary>
         /// Gets the phrases to respond with when changing a Tracker setting.
         /// </summary>
         /// <remarks>

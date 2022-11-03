@@ -268,22 +268,22 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         }
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is enabled 
+        /// Occurs when the tracker's auto tracker is enabled
         /// </summary>
         public event EventHandler? AutoTrackerEnabled;
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is disabled 
+        /// Occurs when the tracker's auto tracker is disabled
         /// </summary>
         public event EventHandler? AutoTrackerDisabled;
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is connected 
+        /// Occurs when the tracker's auto tracker is connected
         /// </summary>
         public event EventHandler? AutoTrackerConnected;
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is disconnected 
+        /// Occurs when the tracker's auto tracker is disconnected
         /// </summary>
         public event EventHandler? AutoTrackerDisconnected;
 
@@ -646,7 +646,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 if (data.CheckBinary8Bit(boss.Metadata?.MemoryAddress ?? 0, boss.Metadata?.MemoryFlag ?? 100))
                 {
-                    Tracker.MarkBossAsDefeated(boss);
+                    Tracker.MarkBossAsDefeated(boss, true, null, true);
                     _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
                 }
             }
@@ -701,7 +701,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         protected void CheckBeatFinalBosses(EmulatorAction action)
         {
             if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
-            
+
             if (action.PreviousData?.ReadUInt8(0x2) == 0 && action.CurrentData.ReadUInt8(0x2) > 0)
             {
                 if (CurrentGame == Game.Zelda)
@@ -717,7 +717,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
                     if (motherBrain.State?.Defeated != true)
                     {
-                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: false);
+                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
                     }
                 }
             }
@@ -737,7 +737,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
                     if (motherBrain.State?.Defeated != true)
                     {
-                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: false);
+                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
                     }
                 }
             }

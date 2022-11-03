@@ -91,6 +91,11 @@ namespace Randomizer.Data
         public TrackerVoiceFrequency VoiceFrequency { get; set; }
 
         /// <summary>
+        /// Amount of time in minutes to be able to undo an action
+        /// </summary>
+        public int UndoExpirationTime { get; set; } = 3;
+
+        /// <summary>
         /// The selected profiles for tracker responses
         /// </summary>
         public ICollection<string> TrackerProfiles { get; set; } = new List<string>() { "Sassy" };

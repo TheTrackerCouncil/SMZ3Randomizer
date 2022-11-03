@@ -75,7 +75,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 name: "Kholdstare",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyIP && items.Hammer && Logic.CanLiftLight(items) &&
-                    items.KeyIP >= (items.Somaria ? 1 : 2),
+                    items.KeyIP >= (items.Somaria ? 1 : 2) && (!Config.LogicConfig.KholdstareNeedsCaneOfSomaria || items.Somaria),
                 memoryAddress: 0xDE,
                 memoryFlag: 0xB);
 

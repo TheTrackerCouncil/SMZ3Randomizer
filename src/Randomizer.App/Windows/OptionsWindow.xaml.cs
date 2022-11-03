@@ -231,5 +231,10 @@ namespace Randomizer.App
             TwitchLoginButton.Visibility = Visibility.Visible;
             TwitchLogoutButton.Visibility = Visibility.Collapsed;
         }
+
+        private void UndoExpirationTimeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            TextBlockUndoExpirationTime.Text = Options?.UndoExpirationTime.ToString() ?? "";
+        }
     }
 }
