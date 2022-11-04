@@ -186,29 +186,7 @@
 
               <controls:LabeledControl Text="Undo expiration time:"
                                        ToolTip="Specifies how many minutes you have to undo a tracker action to limit accidentally undoing actions.">
-                <Grid>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                  </Grid.ColumnDefinitions>
-
-                  <TextBlock Grid.Column="0"
-                             Text="{Binding UndoExpirationTime, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                             Name="TextBlockUndoExpirationTime"
-                             Margin="0,3,7,3" />
-                  <Slider Grid.Column="1"
-                          Value="{Binding UndoExpirationTime, Mode=TwoWay}"
-                          Minimum="1"
-                          Maximum="30"
-                          SmallChange="1"
-                          LargeChange="5"
-                          TickFrequency="5"
-                          TickPlacement="BottomRight"
-                          Orientation="Horizontal"
-                          Name="SliderUndoExpirationTime"
-                          ValueChanged="UndoExpirationTimeChanged"
-                          HorizontalAlignment="Stretch" />
-                </Grid>
+                <TextBox Name="UndoExpirationTimeTextBox" Text="{Binding UndoExpirationTime, Mode=TwoWay}" LostFocus="UndoExpirationTimeTextBox_OnLostFocus" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Auto Tracker Scripts folder:">

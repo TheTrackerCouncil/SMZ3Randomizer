@@ -14,6 +14,7 @@ using Randomizer.App.ViewModels;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
+using static System.Int32;
 
 namespace Randomizer.App
 {
@@ -232,9 +233,10 @@ namespace Randomizer.App
             TwitchLogoutButton.Visibility = Visibility.Collapsed;
         }
 
-        private void UndoExpirationTimeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void UndoExpirationTimeTextBox_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            TextBlockUndoExpirationTime.Text = Options?.UndoExpirationTime.ToString() ?? "";
+            _ = TryParse(new string(UndoExpirationTimeTextBox.Text.Where(char.IsDigit).ToArray()), out var number);
+            UndoExpirationTimeTextBox.Text = Math.Max(1, number).ToString();
         }
     }
 }
