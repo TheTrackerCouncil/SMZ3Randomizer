@@ -20,8 +20,7 @@ namespace Randomizer.App.ViewModels
     /// </summary>
     public class TrackerMapLocationViewModel
     {
-        private static readonly Style s_contextMenuStyle =  Application.Current.FindResource("DarkContextMenu") as Style ?? throw new InvalidOperationException();
-        private IWorldService WorldService => Syncer.WorldService;
+        private static readonly Style? s_contextMenuStyle =  Application.Current.FindResource("DarkContextMenu") as Style;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerMap"/> class
@@ -83,10 +82,12 @@ namespace Randomizer.App.ViewModels
             else if (Type == MapLocationType.SMDoor)
             {
                 Item = Syncer.Tracker.ItemService.FirstOrDefault(mapLocation.Name);
-                Name = "Need " + Item?.Name;
+                Name = "Need " + (Item?.Name ?? "Keycard");
             }
 
         }
+
+        private IWorldService WorldService => Syncer.WorldService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerMap"/> class
@@ -107,6 +108,7 @@ namespace Randomizer.App.ViewModels
         /// progress
         /// </summary>
         public List<Location> Locations { get; set; } = new();
+
 
         /// <summary>
         /// The list of locations underneath this one for the right click menu
@@ -268,7 +270,7 @@ namespace Randomizer.App.ViewModels
         /// <summary>
         /// The visual style for the right click menu
         /// </summary>
-        public Style ContextMenuStyle => s_contextMenuStyle;
+        public Style? ContextMenuStyle => s_contextMenuStyle;
 
         /// <summary>
         /// The region for this location on the map

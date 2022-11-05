@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
-using Accessibility;
 using Randomizer.Data.WorldData;
-using Randomizer.SMZ3;
-using Randomizer.Data.Configuration.ConfigTypes;
 
 namespace Randomizer.App.ViewModels
 {
@@ -33,8 +25,8 @@ namespace Randomizer.App.ViewModels
 
         public string Item => _itemData.Name;
 
-        public string? Location => _location?.Metadata?.Name[0] ?? "";
+        public string Location => _location.Metadata?.Name[0] ?? "";
 
-        public string? Area => _location?.Region?.Metadata?.Name[0] ?? "";
+        public string Area => _location.Region.Metadata?.Name[0] ?? "";
     }
 }

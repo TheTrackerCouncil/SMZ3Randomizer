@@ -59,13 +59,17 @@ namespace Randomizer.SMZ3.Tracking
         private string? _mood;
         private string? _lastSpokenText;
         private Dictionary<string, Progression> _progression = new();
-        private bool _alternateTracker;
-        private HashSet<SchrodingersString> _saidLines = new();
+        private readonly bool _alternateTracker;
+        private readonly HashSet<SchrodingersString> _saidLines = new();
         private bool _beatenGame;
         private IEnumerable<ItemType>? _previousMissingItems;
 
+        /// <summary>
+        /// Dll to get the number of microphones
+        /// </summary>
+        /// <returns></returns>
         [DllImport("winmm.dll")]
-        public static extern int waveInGetNumDevs();
+        private static extern int waveInGetNumDevs();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -295,14 +299,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public string Mood
         {
-            get
-            {
-                if (_mood == null)
-                {
-                    _mood = Responses.Moods.Keys.Random(Rng.Current) ?? Responses.Moods.Keys.First();
-                }
-                return _mood;
-            }
+            get => _mood ??= Responses.Moods.Keys.Random(Rng.Current) ?? Responses.Moods.Keys.First();
         }
 
         /// <summary>
@@ -574,7 +571,7 @@ namespace Randomizer.SMZ3.Tracking
         public void SetUnmarkedDungeonReward(RewardType reward, float? confidence = null)
         {
             var unmarkedDungeons = World.Dungeons
-                .Where(x => x.DungeonState != null && x.DungeonState.HasReward && !x.DungeonState.HasMarkedReward)
+                .Where(x => x.DungeonState is { HasReward: true, HasMarkedReward: false })
                 .ToImmutableList();
 
             if (unmarkedDungeons.Count > 0)
@@ -905,7 +902,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <c>true</c> if a sentence was spoken, <c>false</c> if <paramref
         /// name="text"/> was <c>null</c>.
         /// </returns>
-        public virtual bool SayOnce(SchrodingersString? text, params object?[] args)
+        protected virtual bool SayOnce(SchrodingersString? text, params object?[] args)
         {
             if (text == null)
                 return false;
@@ -965,7 +962,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="text">The text with placeholders to format.</param>
         /// <returns>The formatted text with placeholders replaced.</returns>
         [return: NotNullIfNotNull("text")]
-        public virtual string? FormatPlaceholders(string? text)
+        protected virtual string? FormatPlaceholders(string? text)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
@@ -1178,7 +1175,7 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
-            Action undoTrack = () => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); };
+            var undoTrack = () => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); };
             OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
 
             // Check if we can clear a location
@@ -1768,7 +1765,7 @@ namespace Randomizer.SMZ3.Tracking
                 OnMarkedLocationsUpdated(new TrackerEventArgs(confidence));
             }
 
-            Action? undoTrackTreasure = TryTrackDungeonTreasure(location, confidence);
+            var undoTrackTreasure = TryTrackDungeonTreasure(location, confidence);
 
             Action? undoStopPegWorldMode = null;
             if (location == World.DarkWorldNorthWest.PegWorld)
@@ -2350,7 +2347,7 @@ namespace Randomizer.SMZ3.Tracking
             => SpeechRecognized?.Invoke(this, e);
 
         private static bool IsTreasure(Item? item)
-            => item != null && !item.IsDungeonItem;
+            => item is { IsDungeonItem: false };
 
         private IDungeon? GetDungeonFromLocation(Location location)
         {
