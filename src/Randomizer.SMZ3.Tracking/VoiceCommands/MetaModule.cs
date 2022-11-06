@@ -30,8 +30,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public MetaModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
             : base(tracker, itemService, worldService, logger)
         {
-            var communicator1 = communicator;
-
             AddCommand("Repeat that", GetRepeatThatRule(), (result) =>
             {
                 tracker.Repeat();
@@ -94,13 +92,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Mute", GetMuteRule(), (result) =>
             {
-                if (communicator1.IsEnabled)
+                if (communicator.IsEnabled)
                 {
                     tracker.Say(x => x.Muted);
-                    communicator1.Disable();
+                    communicator.Disable();
                     tracker.AddUndo(() =>
                     {
-                        communicator1.Enable();
+                        communicator.Enable();
                         Tracker.Say(x => x.ActionUndone);
                     });
                 }
@@ -111,11 +109,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 if (!communicator.IsEnabled)
                 {
-                    communicator1.Enable();
+                    communicator.Enable();
                     tracker.Say(x => x.Unmuted);
                     tracker.AddUndo(() =>
                     {
-                        communicator1.Disable();
+                        communicator.Disable();
                     });
                 }
             });
