@@ -426,7 +426,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (_undoHistory.TryPop(out var undoLast))
             {
-                if ((DateTime.Now - undoLast.UndoTime).TotalMinutes <= (_trackerOptions?.Options?.UndoExpirationTime ?? 3))
+                if ((DateTime.Now - undoLast.UndoTime).TotalMinutes <= (_trackerOptions.Options?.UndoExpirationTime ?? 3))
                 {
                     Say(Responses.ActionUndone);
                     undoLast.Action();
