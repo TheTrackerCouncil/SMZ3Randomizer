@@ -508,7 +508,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var castleTower = Tracker.World.CastleTower;
                     if (!castleTower.DungeonState.Cleared)
                     {
-                        Tracker.MarkDungeonAsCleared(castleTower, null);
+                        Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
                         _logger.LogInformation($"Auto tracked {castleTower.DungeonMetadata.Name} as cleared");
                     }
                 }
@@ -621,7 +621,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var currentValue = currentData.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0);
                     if (!dungeon.DungeonState.Cleared && prevValue && currentValue)
                     {
-                        Tracker.MarkDungeonAsCleared(dungeon);
+                        Tracker.MarkDungeonAsCleared(dungeon, autoTracked: true);
                         _logger.LogInformation($"Auto tracked {dungeon.DungeonName} as cleared");
                     }
 

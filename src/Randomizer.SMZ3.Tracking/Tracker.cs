@@ -551,7 +551,8 @@ namespace Randomizer.SMZ3.Tracking
         /// possible rewards.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null)
+        /// <param name="autoTracked">If this was called by the auto tracker</param>
+        public void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
         {
             var originalReward = dungeon.DungeonState.MarkedReward;
             if (reward == null)
@@ -569,7 +570,8 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
-            AddUndo(() => dungeon.DungeonState.MarkedReward = originalReward);
+
+            if (!autoTracked) AddUndo(() => dungeon.DungeonState.MarkedReward = originalReward);
         }
 
         /// <summary>
