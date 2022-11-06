@@ -51,4 +51,12 @@ function emulator.write_uint16(address, value, domain)
 	memory.write_u16_le(translate_address(address, domain), value, domain)
 end
 
+function emulator.get_rom_name()
+    return gameinfo.getromname()
+end
+
+function emulator.get_rom_hash()
+    return gameinfo.getromhash()
+end
+
 return emulator;

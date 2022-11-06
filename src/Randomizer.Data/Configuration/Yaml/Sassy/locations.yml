@@ -86,3 +86,8 @@
 - LocationNumber: 292
   OutOfLogic:
   - ""
+# Pyramid of Power / Pyramid
+- LocationNumber: 335
+  Name:
+  - Text: "Pyramid of Sour"
+    Weight: 0.2

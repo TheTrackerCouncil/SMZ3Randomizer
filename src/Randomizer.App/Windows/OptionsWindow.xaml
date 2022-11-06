@@ -184,6 +184,11 @@
                 </Grid>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Undo expiration time:"
+                                       ToolTip="Specifies how many minutes you have to undo a tracker action to limit accidentally undoing actions.">
+                <TextBox Name="UndoExpirationTimeTextBox" Text="{Binding UndoExpirationTime, Mode=TwoWay}" LostFocus="UndoExpirationTimeTextBox_OnLostFocus" />
+              </controls:LabeledControl>
+
               <controls:LabeledControl Text="Auto Tracker Scripts folder:">
                 <controls:FileSystemInput Path="{Binding AutotrackerScriptsOutputPath, Mode=TwoWay}"
                                           IsFolderPicker="True"

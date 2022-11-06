@@ -283,6 +283,9 @@ ActionUndone:
 # The list of possibilities when the player attempted to undo their last tracked action, but there's nothing to undo
 NothingToUndo:
 
+# The list of possibilities when the player attempted to undo their last tracked action, but the latest one has expired
+UndoExpired:
+
 # The list of possibilities when a tracker setting was changed
 # {0} is replaced with the setting name
 # {1} is replaced with the new value
@@ -596,7 +599,7 @@ Chat:
   # The list of possibilities when the GT big key guessing game is closed by a mod
   # {0} is replaced with the mod's name
   ModeratorClosedGuessingGame:
-  
+
   # The list of possibilities when the winner names are requested and we have at least one winner
   DeclareGuessingGameWinners:
 
@@ -624,7 +627,7 @@ Chat:
   # The phrases that Tracker will use after the GT big key guessing game winners were announced and she was among them.
   # {0} is replaced with the winning number.
   TrackerGuessWon:
-  
+
   # The phrases that Tracker will use when she is the only one who won the GT guessing game.
   # {0} is replaced with the winning number.
   TrackerGuessOnlyWinner:
@@ -648,7 +651,7 @@ Chat:
   # The list of possibilities when a poll was completed
   PollComplete:
 
-  # The list of possibilities when a poll was opened 
+  # The list of possibilities when a poll was opened
   PollOpened:
 
   # The list of possibilities when a poll response could not be determined to be open or completed
@@ -659,6 +662,9 @@ AutoTracker:
 
   # The list of possibilities when the auto tracker is connected to the game
   WhenConnected:
+
+  # The list of possibilities when the auto tracker is disconnected from the game
+  WhenDisconnected:
 
   # The list of possibilities when the auto tracker detects the player is in the game
   GameStarted:
@@ -732,6 +738,22 @@ AutoTracker:
     16:
     22:
 
+  # The list of possibilities when auto tracker detects switching to an SMZ3 rom from a previous rom
+  # Note: This functionality only works for BizHawk connected via Lua
+  SwitchedToSMZ3Rom:
+
+  # The list of possibilities when auto tracker detects switching to a non-SMZ3 rom
+  # You can include a series of different rom hashes and different possibilities for
+  # each one like the following. If a rom hash is not found, then it'll use the
+  # responses for Unknown.
+  # Note: This functionality only works for BizHawk connected via Lua
+  SwitchedToOtherRom:
+    Other:
+      - Text: Response1
+    Hash1:
+      - Text: Response1
+      - Text: Response2
+
 # This section is for map responses
 Map:
 
@@ -778,4 +800,4 @@ Cheats:
   CheatFailed:
 
   # The list of possibilities when an item is requested, but it is not a valid item
-  CheatInvalidItem: 
+  CheatInvalidItem:

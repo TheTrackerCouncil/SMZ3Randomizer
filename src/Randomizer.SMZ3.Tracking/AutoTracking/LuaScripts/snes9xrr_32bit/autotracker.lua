@@ -49,7 +49,7 @@ local function process_message(message)
     local values = data['WriteValues']
 
 	local bytes = nil
-	
+
 	if (action == 'read_block') then
 		bytes = emulator.read_bytes(address, length, domain)
     elseif (action == 'write_bytes') then
@@ -61,6 +61,8 @@ local function process_message(message)
 
     if (bytes ~= nil) then
 	    local result = {
+	        RomName = emulator.get_rom_name(),
+	        RomHash = emulator.get_rom_hash(),
 		    Action = action,
 		    Address = address,
 		    Length = length,
@@ -79,7 +81,7 @@ local function connect()
 	tcp = socket.tcp()
 	lastConnectionAttempt = os.time()
 	print('Attempting to connect')
-	
+
 	local ret, err = tcp:connect(HOST_ADDRESS, HOST_PORT)
 	if ret == 1 then
 		emulator.print('Connection established')

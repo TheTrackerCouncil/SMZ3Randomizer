@@ -41,7 +41,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
                 var death = Items.FirstOrDefault("Death");
                 if (death is not null)
                 {
-                    tracker.TrackItem(death);
+                    tracker.TrackItem(death, autoTracked: true);
                     return true;
                 }
             }
