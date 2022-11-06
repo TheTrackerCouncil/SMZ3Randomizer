@@ -7,6 +7,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
     /// </summary>
     public class LuaMessage
     {
+        public string? RomName { get; set; }
+
+        public string? RomHash { get; set; }
+
         /// <summary>
         /// The action to be done by the emulator (read/write/etc)
         /// </summary>

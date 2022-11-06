@@ -43,6 +43,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private bool _seenGTTorch = false;
         private bool _foundGTKey = false;
         private bool _beatBothBosses = false;
+        private string? _previousRom;
 
         /// <summary>
         /// Constructor for Auto Tracker
@@ -313,6 +314,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public bool PlayerHasFairy { get; protected set; }
 
         /// <summary>
+        /// If the user is activately in an SMZ3 rom
+        /// </summary>
+        public bool IsInSMZ3 => string.IsNullOrEmpty(_previousRom) || _previousRom.StartsWith("SMZ3 Cas");
+
+        /// <summary>
         /// Called when the connector successfully established a connection with the emulator
         /// </summary>
         /// <param name="sender"></param>
@@ -346,7 +352,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected void Connector_Disconnected(object? sender, EventArgs e)
         {
-            Tracker?.Say("Auto tracker disconnected");
+            Tracker?.Say(x => x.AutoTracker.WhenDisconnected);
             _logger.LogInformation("Disconnected");
             AutoTrackerDisconnected?.Invoke(this, new());
             _stopSendingMessages?.Cancel();
@@ -360,11 +366,36 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected void Connector_MessageReceived(object? sender, EmulatorDataReceivedEventArgs e)
         {
-            // Verify that message we received is still valid
-            if (_readActionMap[e.Address].ShouldProcess(CurrentGame, _hasStarted))
+            // If the user is playing SMZ3 (if we don't have the name, assume that they are)
+            if (string.IsNullOrEmpty(e.RomName) || e.RomName.StartsWith("SMZ3 Cas"))
             {
-                _readActionMap[e.Address].Invoke(e.Data);
+                if (!string.IsNullOrEmpty(_previousRom) && e.RomName != _previousRom)
+                {
+                    _logger.LogInformation($"Changed to SMZ3 Rom {e.RomName} ({e.RomHash})");
+                    Tracker.Say(x => x.AutoTracker.SwitchedToSMZ3Rom);
+                }
+
+                // Verify that message we received is still valid, then execute
+                if (_readActionMap[e.Address].ShouldProcess(CurrentGame, _hasStarted))
+                {
+                    _readActionMap[e.Address].Invoke(e.Data);
+                }
             }
+            // If the user is switching to a non-SMZ3 rom
+            else if (!string.IsNullOrEmpty(e.RomName) && e.RomName != _previousRom)
+            {
+                _logger.LogInformation($"Ignoring rom {e.RomName} ({e.RomHash})");
+
+                var key = "Unknown";
+                if (Tracker.Responses.AutoTracker.SwitchedToOtherRom.ContainsKey(e.RomHash!))
+                {
+                    key = e.RomHash!;
+                }
+
+                Tracker.Say(x => x.AutoTracker.SwitchedToOtherRom[key]);
+            }
+
+            _previousRom = e.RomName;
         }
 
         /// <summary>

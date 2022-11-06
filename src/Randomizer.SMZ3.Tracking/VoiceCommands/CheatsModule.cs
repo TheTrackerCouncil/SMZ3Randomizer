@@ -94,7 +94,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Tracker.Say(x => x.Cheats.PromptEnableCheats);
                 return false;
             }
-            else if (Tracker.AutoTracker == null || !Tracker.AutoTracker.IsConnected)
+            else if (Tracker.AutoTracker == null || !Tracker.AutoTracker.IsConnected || !Tracker.AutoTracker.IsInSMZ3)
             {
                 Tracker.Say(x => x.Cheats.PromptEnableAutoTracker);
                 return false;

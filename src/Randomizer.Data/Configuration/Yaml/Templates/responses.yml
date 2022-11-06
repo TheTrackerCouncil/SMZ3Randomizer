@@ -663,6 +663,9 @@ AutoTracker:
   # The list of possibilities when the auto tracker is connected to the game
   WhenConnected:
 
+  # The list of possibilities when the auto tracker is disconnected from the game
+  WhenDisconnected:
+
   # The list of possibilities when the auto tracker detects the player is in the game
   GameStarted:
 
@@ -734,6 +737,22 @@ AutoTracker:
     8:
     16:
     22:
+
+  # The list of possibilities when auto tracker detects switching to an SMZ3 rom from a previous rom
+  # Note: This functionality only works for BizHawk connected via Lua
+  SwitchedToSMZ3Rom:
+
+  # The list of possibilities when auto tracker detects switching to a non-SMZ3 rom
+  # You can include a series of different rom hashes and different possibilities for
+  # each one like the following. If a rom hash is not found, then it'll use the
+  # responses for Unknown.
+  # Note: This functionality only works for BizHawk connected via Lua
+  SwitchedToOtherRom:
+    Other:
+      - Text: Response1
+    Hash1:
+      - Text: Response1
+      - Text: Response2
 
 # This section is for map responses
 Map:
