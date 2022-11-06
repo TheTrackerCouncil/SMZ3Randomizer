@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Speech.Recognition;
+﻿using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +26,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var isMultiworld = worldService.World.Config.MultiWorld;
 
-            AddCommand("Track item", GetTrackItemRule(isMultiworld), (tracker, result) =>
+            AddCommand("Track item", GetTrackItemRule(isMultiworld), (result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
 
@@ -65,7 +62,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             });
 
-            AddCommand("Track death", GetTrackDeathRule(), (tracker, result) =>
+            AddCommand("Track death", GetTrackDeathRule(), (result) =>
             {
                 var death = itemService.FirstOrDefault("Death");
                 if (death == null)
@@ -80,7 +77,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             if (!isMultiworld)
             {
-                AddCommand("Track available items in an area", GetTrackEverythingRule(), (tracker, result) =>
+                AddCommand("Track available items in an area", GetTrackEverythingRule(), (result) =>
                 {
                     if (result.Semantics.ContainsKey(RoomKey))
                     {
@@ -100,7 +97,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                 });
 
-                AddCommand("Track all items in an area (including out-of-logic)", GetTrackEverythingIncludingOutOfLogicRule(), (tracker, result) =>
+                AddCommand("Track all items in an area (including out-of-logic)", GetTrackEverythingIncludingOutOfLogicRule(), (result) =>
                 {
                     if (result.Semantics.ContainsKey(RoomKey))
                     {
@@ -120,14 +117,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     }
                 });
             }
-            
-            AddCommand("Untrack an item", GetUntrackItemRule(), (tracker, result) =>
+
+            AddCommand("Untrack an item", GetUntrackItemRule(), (result) =>
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 tracker.UntrackItem(item, result.Confidence);
             });
 
-            AddCommand("Set item count", GetSetItemCountRule(), (tracker, result) =>
+            AddCommand("Set item count", GetSetItemCountRule(), (result) =>
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 var count = (int)result.Semantics[ItemCountKey].Value;

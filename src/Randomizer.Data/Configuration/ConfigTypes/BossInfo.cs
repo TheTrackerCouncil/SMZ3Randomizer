@@ -28,6 +28,15 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BossInfo"/> class.
+        /// </summary>
+        /// <param name="name">The name of the boss.</param>
+        public BossInfo(string name)
+        {
+            Name = new SchrodingersString(name);
+        }
+
+        /// <summary>
         /// The identifier for merging configs
         /// </summary>
         [MergeKey]

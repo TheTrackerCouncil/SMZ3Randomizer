@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
 
@@ -33,7 +32,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             _grammar.Append(new Choices(choices.Select(x => (System.Speech.Recognition.GrammarBuilder)x).ToArray()));
             foreach (var choice in choices)
-                _elements.Add(choice.ToString() + "\n");
+                _elements.Add(choice + "\n");
         }
 
         /// <summary>

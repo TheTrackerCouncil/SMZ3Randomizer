@@ -109,12 +109,6 @@ namespace Randomizer.Data.Services
                 world.State = trackerState;
             }
 
-            LoadLocationStates(worlds, trackerState);
-            LoadItemStates(worlds, trackerState);
-            LoadDungeonStates(worlds, trackerState);
-            LoadBossStates(worlds, trackerState);
-            LoadHistory(trackerState);
-
             return trackerState;
         }
 
@@ -144,77 +138,12 @@ namespace Randomizer.Data.Services
             await _randomizerContext.SaveChangesAsync();
         }
 
-        private void LoadLocationStates(IEnumerable<World> worlds, TrackerState trackerState)
-        {
-            _randomizerContext.Entry(trackerState).Collection(x => x.LocationStates).Load();
-
-            foreach (var locationState in trackerState.LocationStates)
-            {
-                var location = worlds
-                    .First(x => x.Id == locationState.WorldId)
-                    .Locations
-                    .First(x => x.Id == locationState.LocationId);
-                location.State = locationState;
-                location.Item = new Item(locationState.Item, worlds.First(x => x.Id == locationState.ItemWorldId));
-            }
-        }
-
         private void SaveLocationStates(IEnumerable<World> worlds, TrackerState trackerState)
         {
             var totalLocations = worlds.SelectMany(x => x.Locations).Count();
-            var clearedLocations = worlds.SelectMany(x => x.Locations).Count(x => x.State?.Cleared == true);
+            var clearedLocations = worlds.SelectMany(x => x.Locations).Count(x => x.State.Cleared == true);
             var percCleared = (int)Math.Floor((double)clearedLocations / totalLocations * 100);
             trackerState.PercentageCleared = percCleared;
-        }
-
-        private void LoadItemStates(IEnumerable<World> worlds, TrackerState trackerState)
-        {
-            _randomizerContext.Entry(trackerState).Collection(x => x.ItemStates).Load();
-
-            // Load previously saved items
-            foreach (var world in worlds)
-            {
-                foreach (var (state, worldItems) in trackerState.ItemStates.Select(x => (state: x, items: world.AllItems.Where(w => w.Is(x.Type ?? ItemType.Nothing, x.ItemName)))))
-                {
-                    if (worldItems.Any())
-                    {
-                        worldItems.ToList().ForEach(x => x.State = state);
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"{state.ItemName} not found in world");
-                        var item = new Item(state.Type ?? ItemType.Nothing, world, state.ItemName)
-                        {
-                            State = state
-                        };
-                        world.TrackerItems.Add(item);
-                    }
-                }
-            }
-
-            // Create item states for items
-            foreach (var item in worlds.SelectMany(x => x.AllItems).Where(x => x.State == null))
-            {
-                var otherItem = item.World.AllItems
-                    .FirstOrDefault(x => x != item && x.State != null && x.Name == item.Name);
-
-                if (otherItem != null)
-                {
-                    item.State = otherItem.State;
-                }
-                else
-                {
-                    var state = new TrackerItemState()
-                    {
-                        TrackerState = trackerState,
-                        ItemName = item.Name,
-                        Type = item.Type,
-                        WorldId = item.World.Id
-                    };
-                    item.State = state;
-                    trackerState.ItemStates.Add(state);
-                }
-            }
         }
 
         private void SaveItemStates(IEnumerable<World> worlds, TrackerState trackerState)
@@ -229,82 +158,16 @@ namespace Randomizer.Data.Services
             itemStates.ForEach(x => trackerState.ItemStates.Add(x) );
         }
 
-        private void LoadDungeonStates(IEnumerable<World> worlds, TrackerState trackerState)
-        {
-            _randomizerContext.Entry(trackerState).Collection(x => x.DungeonStates).Load();
-
-            foreach (var dungeonState in trackerState.DungeonStates)
-            {
-                var world = worlds.First(x => x.Id == dungeonState.WorldId);
-                var dungeon = world.Dungeons.First(x => x.GetType().Name == dungeonState.Name);
-                dungeon.DungeonState = dungeonState;
-
-                if (dungeon is IHasReward rewardRegion && dungeonState.Reward != null)
-                {
-                    rewardRegion.RewardType = dungeonState.Reward.Value;
-                    rewardRegion.Reward = new Reward(dungeonState.Reward.Value, world, rewardRegion)
-                    {
-                        State = dungeonState
-                    };
-                }
-            }
-        }
-
-        private void LoadBossStates(IEnumerable<World> worlds, TrackerState trackerState)
-        {
-            _randomizerContext.Entry(trackerState).Collection(x => x.BossStates).Load();
-
-            // Load previously saved bosses
-            foreach (var world in worlds)
-            {
-                foreach (var (state, worldBoss) in trackerState.BossStates.Select(x => (state: x, worldBoss: world.AllBosses.FirstOrDefault(w => w.Is(x.Type, x.BossName)))))
-                {
-                    if (worldBoss != null)
-                    {
-                        worldBoss.State = state;
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"{state.BossName} not found in world");
-                        var boss = new Boss(state.Type, world, state.BossName)
-                        {
-                            State = state
-                        };
-                        world.TrackerBosses.Add(boss);
-                    }
-                }
-            }
-
-            // Create boss states for bosses not already set
-            foreach (var boss in worlds.SelectMany(x => x.AllBosses).Where(x => x.State == null))
-            {
-                var state = new TrackerBossState()
-                {
-                    TrackerState = trackerState,
-                    BossName = boss.Name,
-                    Type = boss.Type,
-                    WorldId = boss.World.Id,
-                };
-                boss.State = state;
-                trackerState.BossStates.Add(state);
-            }
-        }
-
         private void SaveBossStates(IEnumerable<World> worlds, TrackerState trackerState)
         {
             // Add any new item states
             var bossStates = worlds
                 .SelectMany(x => x.AllBosses)
                 .Select(x => x.State).Distinct()
-                .Where(x => x != null && !trackerState.BossStates.Contains(x))
+                .Where(x => !trackerState.BossStates.Contains(x))
                 .NonNull()
                 .ToList();
             bossStates.ForEach(x => trackerState.BossStates.Add(x));
-        }
-
-        private void LoadHistory(TrackerState trackerState)
-        {
-            _randomizerContext.Entry(trackerState).Collection(x => x.History).Load();
         }
     }
 }

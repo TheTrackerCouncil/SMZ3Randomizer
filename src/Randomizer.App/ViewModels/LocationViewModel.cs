@@ -14,9 +14,9 @@ namespace Randomizer.App.ViewModels
             _syncer = syncer;
         }
 
-        public string Name => _location.Metadata?.Name[0] ?? _location.Name;
+        public string Name => _location.Metadata.Name[0];
 
-        public string Area => _location.Region.Metadata?.Name[0] ?? _location.Name;
+        public string Area => _location.Region.Metadata.Name[0];
 
         public bool InLogic => _location.IsAvailable(_syncer.ItemService.GetProgression(false));
 
@@ -29,6 +29,6 @@ namespace Randomizer.App.ViewModels
             {
                 _syncer.Tracker.Clear(_location);
             },
-            canExecute: () => _location.State?.Cleared == false);
+            canExecute: () => !_location.State.Cleared);
     }
 }

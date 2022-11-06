@@ -497,7 +497,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (action.CurrentData?.CheckBinary8Bit(0x10C, 0x01) == true && action.PreviousData?.CheckBinary8Bit(0x10C, 0x01) != true)
                 {
                     var duckItem = _itemService.FirstOrDefault("Duck");
-                    if (duckItem?.State?.TrackingState == 0)
+                    if (duckItem?.State.TrackingState == 0)
                     {
                         Tracker.TrackItem(duckItem, null, null, false, true, null, false);
                     }
@@ -507,7 +507,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (action.CurrentData?.ReadUInt8(0x145) >= 3)
                 {
                     var castleTower = Tracker.World.CastleTower;
-                    if (castleTower.DungeonState?.Cleared ==false)
+                    if (castleTower.DungeonState.Cleared ==false)
                     {
                         Tracker.MarkDungeonAsCleared(castleTower, null);
                         _logger.LogInformation($"Auto tracked {castleTower.Name} as cleared");
@@ -566,7 +566,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var flag = location.MemoryFlag ?? 0;
                     var currentCleared = (is16Bit && currentData.CheckUInt16(loc * 2, flag)) || (!is16Bit && currentData.CheckBinary8Bit(loc, flag));
                     var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
-                    if (location.State?.Autotracked == false&& currentCleared && prevCleared)
+                    if (location.State.Autotracked == false&& currentCleared && prevCleared)
                     {
                         if (location.Region is GanonsTower gt && location != gt.BobsTorch)
                         {
@@ -608,7 +608,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     var prevValue = prevData.CheckUInt16((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
                     var currentValue = currentData.CheckUInt16((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
-                    if (dungeon.DungeonState?.Cleared == false && prevValue && currentValue)
+                    if (dungeon.DungeonState.Cleared == false && prevValue && currentValue)
                     {
                         Tracker.MarkDungeonAsCleared(dungeon);
                         _logger.LogInformation($"Auto tracked {dungeon.DungeonName} as cleared");
@@ -629,9 +629,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="data">The response from the lua script</param>
         protected void CheckSMBosses(EmulatorMemoryData data)
         {
-            foreach (var boss in Tracker.World.AllBosses.Where(x => x.Metadata?.MemoryAddress != null && x.Metadata?.MemoryFlag > 0 && x.State?.Defeated != true))
+            foreach (var boss in Tracker.World.AllBosses.Where(x => x.Metadata.MemoryAddress != null && x.Metadata.MemoryFlag > 0 && !x.State.Defeated))
             {
-                if (data.CheckBinary8Bit(boss.Metadata?.MemoryAddress ?? 0, boss.Metadata?.MemoryFlag ?? 100))
+                if (data.CheckBinary8Bit(boss.Metadata.MemoryAddress ?? 0, boss.Metadata.MemoryFlag ?? 100))
                 {
                     Tracker.MarkBossAsDefeated(boss);
                     _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
@@ -694,7 +694,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (CurrentGame == Game.Zelda)
                 {
                     var gt = Tracker.World.GanonsTower;
-                    if (gt.DungeonState?.Cleared == false)
+                    if (gt.DungeonState.Cleared == false)
                     {
                         Tracker.MarkDungeonAsCleared(gt);
                     }
@@ -702,7 +702,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 else if (CurrentGame == Game.SM)
                 {
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
-                    if (motherBrain.State?.Defeated != true)
+                    if (motherBrain.State.Defeated != true)
                     {
                         Tracker.MarkBossAsDefeated(motherBrain);
                     }
@@ -714,7 +714,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (CurrentGame == Game.Zelda)
                 {
                     var gt = Tracker.World.GanonsTower;
-                    if (gt.DungeonState?.Cleared == false)
+                    if (gt.DungeonState.Cleared == false)
                     {
                         Tracker.MarkDungeonAsCleared(gt);
                     }
@@ -722,7 +722,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 else if (CurrentGame == Game.SM)
                 {
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
-                    if (motherBrain.State?.Defeated != true)
+                    if (motherBrain.State.Defeated != true)
                     {
                         Tracker.MarkBossAsDefeated(motherBrain);
                     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Randomizer.Data.Configuration.ConfigTypes;
 
-namespace Randomizer.Data.Configuration
+namespace Randomizer.Data.Configuration.ConfigFiles
 {
     /// <summary>
     /// This class represents a config for displaying a map of the tracker state

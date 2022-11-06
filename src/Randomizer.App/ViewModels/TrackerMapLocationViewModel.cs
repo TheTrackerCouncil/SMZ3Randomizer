@@ -59,7 +59,7 @@ namespace Randomizer.App.ViewModels
                     else if (Region is IHasBoss bossRegion)
                     {
                         BossRegion = bossRegion;
-                        Name = bossRegion.Boss.Metadata?.ToString() ?? bossRegion.Boss.Name;
+                        Name = bossRegion.Boss.Metadata.ToString() ?? bossRegion.Boss.Name;
                     }
                 }
             }
@@ -100,7 +100,7 @@ namespace Randomizer.App.ViewModels
             Locations = new List<Location>() { location };
             Region = location.Region;
             Syncer = syncer;
-            Name = $"Clear {location.Metadata?.Name[0] ?? location.Name}";
+            Name = $"Clear {location.Metadata.Name[0]}";
         }
 
         /// <summary>
@@ -183,11 +183,11 @@ namespace Randomizer.App.ViewModels
                 {
                     var progression = Syncer.ItemService.GetProgression(Region);
                     var actualProgression = Syncer.ItemService.GetProgression(false);
-                    if (BossRegion != null && BossRegion.Boss.State?.Defeated != true && BossRegion.CanBeatBoss(progression))
+                    if (BossRegion != null && BossRegion.Boss.State.Defeated != true && BossRegion.CanBeatBoss(progression))
                     {
                         image = "boss.png";
                     }
-                    else if (RewardRegion != null && RewardRegion.Reward.State?.Cleared != true)
+                    else if (RewardRegion != null && RewardRegion.Reward.State.Cleared != true)
                     {
                         var regionLocations = (IHasLocations)Region;
 

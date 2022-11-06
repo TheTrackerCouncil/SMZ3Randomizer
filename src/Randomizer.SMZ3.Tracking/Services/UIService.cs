@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -74,19 +73,14 @@ namespace Randomizer.SMZ3.Tracking.Services
         {
             string? fileName;
 
-            if (item.Metadata == null)
-                throw new InvalidOperationException("Metadata not loaded for item " + item.Metadata);
-            if (item.State == null)
-                throw new InvalidOperationException("State not loaded for item " + item.Metadata);
-
-            if (item.Metadata?.Image != null)
+            if (item.Metadata.Image != null)
             {
                 fileName = GetSpritePath("Items", item.Metadata.Image, out _);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
-            if (item.Metadata!.HasStages || item.Metadata.Multiple)
+            if (item.Metadata.HasStages || item.Metadata.Multiple)
             {
                 var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out var profilePath);
                 fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.State.TrackingState}).png", out _, profilePath);

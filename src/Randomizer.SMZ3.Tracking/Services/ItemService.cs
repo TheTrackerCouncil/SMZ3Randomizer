@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Contracts;
@@ -61,8 +60,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public Item? FirstOrDefault(string name)
             => LocalPlayersItems().FirstOrDefault(x => x.Name == name)
-            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.GetStage(name) != null);
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.GetStage(name) != null);
 
         /// <summary>
         /// Finds an item with the specified item type for the local player.
@@ -87,7 +86,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// tracked at least once; otherwise, <see langword="false"/>.
         /// </returns>
         public virtual bool IsTracked(ItemType itemType)
-            => LocalPlayersItems().Any(x => x.Type == itemType && x.State?.TrackingState > 0);
+            => LocalPlayersItems().Any(x => x.Type == itemType && x.State.TrackingState > 0);
 
         /// <summary>
         /// Enumerates all items that can be tracked for all players.
@@ -110,7 +109,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of items that have been tracked at least once.
         /// </returns>
         public IEnumerable<Item> TrackedItems()
-            => LocalPlayersItems().Where(x => x.State?.TrackingState > 0);
+            => LocalPlayersItems().Where(x => x.State.TrackingState > 0);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -124,7 +123,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         public virtual string GetName(ItemType itemType)
         {
             var item = FirstOrDefault(itemType);
-            return item?.Metadata?.NameWithArticle ?? itemType.GetDescription();
+            return item?.Metadata.NameWithArticle ?? itemType.GetDescription();
         }
 
 
@@ -153,7 +152,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         public virtual string GetName(RewardType rewardType)
         {
             var reward = FirstOrDefault(rewardType);
-            return reward?.Metadata?.NameWithArticle ?? rewardType.GetDescription();
+            return reward?.Metadata.NameWithArticle ?? rewardType.GetDescription();
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of reward that have been tracked.
         /// </returns>
         public virtual IEnumerable<Reward> TrackedRewards()
-            => _world.World.Dungeons.Where(x => x.DungeonState?.Cleared == true).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
+            => _world.World.Dungeons.Where(x => x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
 
         /// <summary>
         /// Enumerates all bosses that can be tracked for all players.
@@ -206,7 +205,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of bosses that have been tracked.
         /// </returns>
         public virtual IEnumerable<Boss> TrackedBosses()
-            => LocalPlayersBosses().Where(x => x.State?.Defeated == true);
+            => LocalPlayersBosses().Where(x => x.State.Defeated);
 
         /// <summary>
         /// Gets the current progression based on the items the user has collected,
@@ -234,7 +233,7 @@ namespace Randomizer.SMZ3.Tracking.Services
 
             foreach (var item in TrackedItems().Select(x => x.State).Distinct())
             {
-                if (item?.Type == null || item.Type == ItemType.Nothing) continue;
+                if (item.Type == null || item.Type == ItemType.Nothing) continue;
                 progression.AddRange(Enumerable.Repeat(item.Type.Value, item.TrackingState));
             }
 

@@ -68,7 +68,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Location> UnclearedLocations()
-            => AllLocations().Where(x => x.State?.Cleared == false).ToImmutableList();
+            => AllLocations().Where(x => !x.State.Cleared).ToImmutableList();
 
         /// <summary>
         /// Retrieves all locations for the current player's world that has been marked as
@@ -76,7 +76,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Location> MarkedLocations()
-            => AllLocations().Where(x => x.State?.Cleared == false && x.State.MarkedItem != null && x.State.MarkedItem != ItemType.Nothing).ToImmutableList();
+            => AllLocations().Where(x => !x.State.Cleared && x.State.MarkedItem != null && x.State.MarkedItem != ItemType.Nothing).ToImmutableList();
 
         /// <summary>
         /// Retrieves a collection of locations for the current player's world that match the given filter criteria
@@ -119,7 +119,7 @@ namespace Randomizer.SMZ3.Tracking.Services
 
         private bool IsValidLocation(Location location, bool unclearedOnly, bool outOfLogic, Progression? progression, ItemType itemFilter, Region? inRegion)
         {
-            return (!unclearedOnly || location.State?.Cleared == false) && (outOfLogic || IsAvailable(location, progression ?? Progression(location.Region))) && (itemFilter == ItemType.Nothing || location.Item.Is(itemFilter, World)) && (inRegion == null || location.Region == inRegion);
+            return (!unclearedOnly || location.State.Cleared == false) && (outOfLogic || IsAvailable(location, progression ?? Progression(location.Region))) && (itemFilter == ItemType.Nothing || location.Item.Is(itemFilter, World)) && (inRegion == null || location.Region == inRegion);
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -21,7 +19,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public UndoModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<UndoModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Undo last operation", GetUndoRule(), (tracker, result) =>
+            AddCommand("Undo last operation", GetUndoRule(), (result) =>
             {
                 tracker.Undo(result.Confidence);
             });

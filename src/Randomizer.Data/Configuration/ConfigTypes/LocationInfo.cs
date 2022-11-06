@@ -32,6 +32,21 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="LocationInfo"/> class
+        /// with the specified info.
+        /// </summary>
+        /// <param name="id">
+        /// The ID of the location. Must match an existing <see
+        /// cref="Location.Id"/>.
+        /// </param>
+        /// <param name="name">The names for the location.</param>
+        public LocationInfo(int id, string name)
+        {
+            LocationNumber = id;
+            Name = new SchrodingersString(name);
+        }
+
+        /// <summary>
         /// The internal SMZ3 location id for the location. Also used
         /// for matching configs for merging
         /// </summary>

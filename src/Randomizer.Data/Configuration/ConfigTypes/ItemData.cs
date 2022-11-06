@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text.Json.Serialization;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
@@ -30,12 +29,27 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <param name="internalItemType">
         /// The internal <see cref="ItemType"/> of the item.
         /// </param>
+        /// <param name="hints">List of hints to provide for this item</param>
         public ItemData(SchrodingersString name, ItemType internalItemType, SchrodingersString hints)
         {
             Item = internalItemType.GetDescription();
             Name = name;
             InternalItemType = internalItemType;
             Hints = hints;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ItemData"/> class with
+        /// the specified item name and type.
+        /// </summary>
+        /// <param name="internalItemType">
+        /// The internal <see cref="ItemType"/> of the item.
+        /// </param>
+        public ItemData(ItemType internalItemType)
+        {
+            Item = internalItemType.GetDescription();
+            Name = new SchrodingersString(Item);
+            InternalItemType = internalItemType;
         }
 
         /// <summary>
@@ -91,7 +105,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the phrases to respond with when tracking this item, or
         /// <c>null</c> to use the generic item responses. The dictionary key
-        /// represents the current <see cref="TrackingState"/>.
+        /// represents the current TrackingState
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the item counter.
@@ -173,6 +187,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Retrieves the item-specific phrases to respond with when tracking
         /// the item.
         /// </summary>
+        /// <param name="trackingState">The new tracking state for the item</param>
         /// <param name="response">
         /// When this method returns <c>true</c>, contains the possible phrases
         /// to respond with when tracking the item.
@@ -190,7 +205,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             }
 
             if (WhenTracked.TryGetValue(trackingState, out response))
-                return response != null;
+                return true;
 
             var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < trackingState).OrderBy(x => x);
             if (!smallerKeys.Any())
@@ -201,7 +216,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
 
             var closestSmallerKey = smallerKeys.Last();
             if (WhenTracked.TryGetValue(closestSmallerKey, out response))
-                return response != null;
+                return true;
 
             response = null;
             return false;

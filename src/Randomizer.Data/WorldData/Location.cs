@@ -5,7 +5,9 @@ using Randomizer.Data.Logic;
 using Randomizer.Shared.Enums;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData
@@ -31,11 +33,10 @@ namespace Randomizer.Data.WorldData
 
         private int? _weight;
 
-#nullable enable
-        public Location(Room room, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Room room, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
-                    : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
+                    : this(room.Region, id, romAddress, type, name, metadata, trackerState, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
         {
             Room = room;
         }
@@ -50,6 +51,8 @@ namespace Randomizer.Data.WorldData
         /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
+        /// <param name="metadata">Metadata service.</param>
+        /// <param name="trackerState">Tracker state.</param>
         /// <param name="alsoKnownAs">
         /// A collection of alternate names for the item or location.
         /// </param>
@@ -64,7 +67,7 @@ namespace Randomizer.Data.WorldData
         /// <param name="memoryType">The type of location</param>
         /// <param name="relevanceRequirement">Logic for if the location is accessible following defeating a boss or collecting a reward</param>
         /// <param name="trackerLogic">Special logic for if the location should be displayed in tracker</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Region region, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
         {
@@ -83,7 +86,9 @@ namespace Randomizer.Data.WorldData
             MemoryType = memoryType;
             _relevanceRequirement = relevanceRequirement ?? (items => _canAccess(items));
             _trackerLogic = trackerLogic ?? (_ => true);
-            Item = new Item(ItemType.Nothing, region.World);
+            Metadata = metadata?.Location(id) ?? new LocationInfo(id, name);
+            State = trackerState?.LocationStates.First(x => x.LocationId == id && x.WorldId == World.Id) ?? new TrackerLocationState();
+            Item = new Item(ItemType.Nothing, region.World, "");
         }
 
         /// <summary>
@@ -99,12 +104,12 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Additional information about the location
         /// </summary>
-        public LocationInfo? Metadata { get; set; }
+        public LocationInfo Metadata { get; set; }
 
         /// <summary>
         /// Current state of the location
         /// </summary>
-        public TrackerLocationState? State { get; set; }
+        public TrackerLocationState State { get; set; }
 
         /// <summary>
         /// Gets the type of location.
@@ -249,7 +254,7 @@ namespace Randomizer.Data.WorldData
         /// <returns>The LocationStatus enum of the location</returns>
         public LocationStatus GetStatus(Progression items)
         {
-            if (State?.Cleared == true) return LocationStatus.Cleared;
+            if (State.Cleared) return LocationStatus.Cleared;
             else if (IsAvailable(items) && _trackerLogic(items)) return LocationStatus.Available;
             else if (IsRelevant(items) && _trackerLogic(items)) return LocationStatus.Relevant;
             else return LocationStatus.OutOfLogic;

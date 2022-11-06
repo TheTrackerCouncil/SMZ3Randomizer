@@ -267,7 +267,7 @@ namespace Randomizer.App.Windows
                         latestImage = GetGridItemControl(fileName,
                             gridLocation.Column, gridLocation.Row,
                             item.Counter, overlay, minCounter: 2);
-                        latestImage.Opacity = item.State?.TrackingState > 0 ? 1.0d : 0.2d;
+                        latestImage.Opacity = item.State.TrackingState > 0 ? 1.0d : 0.2d;
                         TrackerGrid.Children.Add(latestImage);
                     }
 
@@ -282,7 +282,7 @@ namespace Randomizer.App.Windows
 
                     if (labelImage != null)
                     {
-                        labelImage.Opacity = items.Any(x => x.State?.TrackingState > 0) ? 1.0d : 0.2d;
+                        labelImage.Opacity = items.Any(x => x.State.TrackingState > 0) ? 1.0d : 0.2d;
                     }
 
                     latestImage.Tag = gridLocation;
@@ -302,7 +302,7 @@ namespace Randomizer.App.Windows
                     var rewardPath = dungeon.MarkedReward != RewardType.None ? _uiService.GetSpritePath(dungeon.MarkedReward) : null;
                     var image = GetGridItemControl(rewardPath,
                         gridLocation.Column, gridLocation.Row,
-                        dungeon.DungeonState?.RemainingTreasure ?? 0, overlayPath, minCounter: 1);
+                        dungeon.DungeonState.RemainingTreasure, overlayPath, minCounter: 1);
                     image.Tag = gridLocation;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
@@ -312,7 +312,7 @@ namespace Randomizer.App.Windows
                         image.ContextMenu = CreateContextMenu(dungeon);
                     }
 
-                    image.Opacity = dungeon.DungeonState?.Cleared == true ? 1.0d : 0.2d;
+                    image.Opacity = dungeon.DungeonState.Cleared ? 1.0d : 0.2d;
 
                     TrackerGrid.Children.Add(image);
                 }
@@ -320,7 +320,7 @@ namespace Randomizer.App.Windows
                 else if (gridLocation.Type == UIGridLocationType.SMBoss)
                 {
                     var boss = _world.World.AllBosses.FirstOrDefault(x => x.Name == gridLocation.Identifiers.First());
-                    if (boss == null || boss.Metadata == null)
+                    if (boss == null)
                         continue;
 
                     var fileName = _uiService.GetSpritePath(boss.Metadata);
@@ -337,7 +337,7 @@ namespace Randomizer.App.Windows
                     image.ContextMenu = CreateContextMenu(boss);
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
-                    image.Opacity = boss.State?.Defeated == true ? 1.0d : 0.2d;
+                    image.Opacity = boss.State.Defeated ? 1.0d : 0.2d;
                     TrackerGrid.Children.Add(image);
                 }
                 // If it's a hammer peg
@@ -378,7 +378,7 @@ namespace Randomizer.App.Windows
 
             string? GetMatchingDungeonNameImages(ItemType requirement)
             {
-                var names = Tracker.World.Dungeons.Where(x => x.DungeonState?.MarkedMedallion == requirement)
+                var names = Tracker.World.Dungeons.Where(x => x.DungeonState.MarkedMedallion == requirement)
                     .Select(x => x.DungeonName)
                     .ToList();
 
@@ -450,7 +450,7 @@ namespace Randomizer.App.Windows
             foreach (var item in items)
             {
                 var sprite = _uiService.GetSpritePath(item);
-                if (item.State == null || item.Metadata == null || sprite == null) continue;
+                if (sprite == null) continue;
 
                 if (item.State.TrackingState == 0 || item.Metadata.Multiple)
                 {
@@ -567,7 +567,7 @@ namespace Randomizer.App.Windows
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (boss.State?.Defeated == true)
+            if (boss.State.Defeated == true)
             {
                 var unclear = new MenuItem
                 {
@@ -590,7 +590,7 @@ namespace Randomizer.App.Windows
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (dungeon.DungeonState?.Cleared == true)
+            if (dungeon.DungeonState.Cleared)
             {
                 var unclear = new MenuItem
                 {
@@ -613,7 +613,7 @@ namespace Randomizer.App.Windows
                     var item = new MenuItem
                     {
                         Header = $"Mark as {reward.GetDescription()}",
-                        IsChecked = dungeon.DungeonState?.MarkedReward == reward,
+                        IsChecked = dungeon.DungeonState.MarkedReward == reward,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(sprite))
@@ -622,7 +622,7 @@ namespace Randomizer.App.Windows
 
                     item.Click += (sender, e) =>
                     {
-                        dungeon.DungeonState!.MarkedReward = reward;
+                        dungeon.DungeonState.MarkedReward = reward;
                         RefreshGridItems();
                     };
                     menu.Items.Add(item);

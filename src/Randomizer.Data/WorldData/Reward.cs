@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
@@ -15,11 +16,13 @@ namespace Randomizer.Data.WorldData
     /// </summary>
     public class Reward
     {
-        public Reward(RewardType type, World world, IHasReward region)
+        public Reward(RewardType type, World world, IHasReward region, IMetadataService? metadata = null, TrackerDungeonState? dungeonState = null)
         {
             Type = type;
             World = world;
             Region = region;
+            Metadata = metadata?.Reward(type) ?? new RewardInfo(type);
+            State = dungeonState ?? new TrackerDungeonState();
         }
 
         public RewardType Type { get; set; }
@@ -28,9 +31,9 @@ namespace Randomizer.Data.WorldData
 
         public IHasReward Region { get; set; }
 
-        public RewardInfo? Metadata { get; set; }
+        public RewardInfo Metadata { get; set; }
 
-        public TrackerDungeonState? State { get; set; }
+        public TrackerDungeonState State { get; set; }
 
         public static ICollection<Reward> CreatePool(World world)
         {

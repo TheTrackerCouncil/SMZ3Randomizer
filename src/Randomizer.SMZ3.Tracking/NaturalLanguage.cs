@@ -59,8 +59,8 @@ namespace Randomizer.SMZ3.Tracking
                 return (item, count);
             });
 
-            var interestingItems = groupedItems.Where(x => x.item.Metadata?.IsJunk(config) == false).ToList();
-            var junkItems = groupedItems.Where(x => x.item.Metadata?.IsJunk(config) == true).ToList();
+            var interestingItems = groupedItems.Where(x => x.item.Metadata.IsJunk(config) == false).ToList();
+            var junkItems = groupedItems.Where(x => x.item.Metadata.IsJunk(config)).ToList();
 
             if (junkItems.Count == 0)
                 return Join(interestingItems.Select(GetPhrase));
@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Tracking
             return Join(groupedItems.Select(GetPhrase));
 
             static string GetPhrase((Item item, int count) x)
-                => x.count > 1 ? $"{x.count} {x.item.Metadata?.Plural ?? $"{x.item.Name}s"}": $"{x.item.Name}"; ;
+                => x.count > 1 ? $"{x.count} {x.item.Metadata.Plural ?? $"{x.item.Name}s"}": $"{x.item.Name}";
         }
     }
 }

@@ -17,12 +17,12 @@ namespace Randomizer.Data.Configuration
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="options">The tracker options for determining the selected tracker profiles</param>
+        /// <param name="optionsFactory">The tracker options for determining the selected tracker profiles</param>
         /// <param name="provider">The config provider for loading configs</param>
         public Configs(OptionsFactory optionsFactory, ConfigProvider provider)
         {
             var options = optionsFactory.Create();
-            var profiles = options.GeneralOptions.SelectedProfiles.ToArray() ?? Array.Empty<string>();
+            var profiles = options.GeneralOptions.SelectedProfiles.ToArray();
             Bosses = provider.GetBossConfig(profiles);
             Dungeons = provider.GetDungeonConfig(profiles);
             Items = provider.GetItemConfig(profiles);

@@ -79,6 +79,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representation of the map.
         /// </summary>
         /// <returns>A string representation of this map.</returns>
-        public override string? ToString() => Name[0];
+        public override string ToString() => Name[0];
     }
 }

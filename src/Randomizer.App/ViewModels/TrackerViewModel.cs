@@ -66,7 +66,7 @@ namespace Randomizer.App.ViewModels
 
                 foreach (var markedLocation in _syncer.WorldService.MarkedLocations())
                 {
-                    var markedItemType = markedLocation.State?.MarkedItem ?? ItemType.Nothing;
+                    var markedItemType = markedLocation.State.MarkedItem ?? ItemType.Nothing;
                     if (markedItemType == ItemType.Nothing) continue;
                     var item = _syncer.Tracker.ItemService.FirstOrDefault(markedItemType);
                     if (item == null) continue;

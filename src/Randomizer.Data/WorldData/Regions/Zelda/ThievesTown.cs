@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
+using System.Linq;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
@@ -14,7 +14,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             0x02D5C6
         };
 
-        public ThievesTown(World world, Config config) : base(world, config)
+        public ThievesTown(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
             RegionItems = new[] { ItemType.KeyTT, ItemType.BigKeyTT, ItemType.MapTT, ItemType.CompassTT };
 
@@ -22,38 +22,50 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 name: "Map Chest",
                 vanillaItem: ItemType.MapTT,
                 memoryAddress: 0xDB,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
 
             AmbushChest = new Location(this, 256 + 154, 0x1EA0A, LocationType.Regular,
                 name: "Ambush Chest",
                 vanillaItem: ItemType.TwentyRupees,
                 memoryAddress: 0xCB,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
 
             CompassChest = new Location(this, 256 + 155, 0x1EA07, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassTT,
                 memoryAddress: 0xDC,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
 
             BigKeyChest = new Location(this, 256 + 156, 0x1EA04, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyTT,
                 memoryAddress: 0xDB,
-                memoryFlag: 0x5);
+                memoryFlag: 0x5,
+                metadata: metadata,
+                trackerState: trackerState);
 
             Attic = new Location(this, 256 + 157, 0x1EA0D, LocationType.Regular,
                 name: "Attic", // ??? Vanilla item ???
                 access: items => items.BigKeyTT && items.KeyTT,
                 memoryAddress: 0x65,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
 
             BlindsCell = new Location(this, 256 + 158, 0x1EA13, LocationType.Regular,
                 name: "Blind's Cell",
                 vanillaItem: ItemType.KeyTT,
                 access: items => items.BigKeyTT,
                 memoryAddress: 0x45,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
 
             BigChest = new Location(this, 256 + 159, 0x1EA10, LocationType.Regular,
                 name: "Big Chest",
@@ -61,7 +73,9 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 access: items => BigChest != null && items.BigKeyTT && items.Hammer &&
                                  (BigChest.ItemIs(ItemType.KeyTT, World) || items.KeyTT),
                 memoryAddress: 0x44,
-                memoryFlag: 0x4)
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState)
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyTT, World) && items.Hammer);
 
             BlindReward = new Location(this, 256 + 160, 0x308156, LocationType.Regular,
@@ -69,23 +83,26 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyTT && items.KeyTT && CanBeatBoss(items),
                 memoryAddress: 0xAC,
-                memoryFlag: 0xB);
+                memoryFlag: 0xB,
+                metadata: metadata,
+                trackerState: trackerState);
 
             MemoryAddress = 0xAC;
             MemoryFlag = 0xB;
             StartingRooms = new List<int> { 219 };
-            Reward = new Reward(RewardType.None, world, this);
+            Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Thieves' Town");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Thieves' Town", "TT", "Blind");
+            DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
+            Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
         }
 
         public override string Name => "Thieves' Town";
 
         public Reward Reward { get; set; }
 
-        public RewardType RewardType { get; set; } = RewardType.None;
+        public DungeonInfo DungeonMetadata { get; set; }
 
-        public DungeonInfo? DungeonMetadata { get; set; }
-
-        public TrackerDungeonState? DungeonState { get; set; }
+        public TrackerDungeonState DungeonState { get; set; }
 
         public Region ParentRegion => World.DarkWorldNorthWest;
 

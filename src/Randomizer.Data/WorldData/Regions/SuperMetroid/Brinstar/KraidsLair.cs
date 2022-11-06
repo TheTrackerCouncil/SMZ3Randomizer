@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 {
     public class KraidsLair : SMRegion, IHasBoss
     {
-        public KraidsLair(World world, Config config) : base(world, config)
+        public KraidsLair(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
             ETank = new Location(this, 43, 0x8F899C, LocationType.Hidden,
                 name: "Energy Tank, Kraid",
@@ -16,7 +17,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 access: items => items.Kraid,
                 relevanceRequirement: items => CanBeatBoss(items),
                 memoryAddress: 0x5,
-                memoryFlag: 0x8);
+                memoryFlag: 0x8,
+                metadata: metadata,
+                trackerState: trackerState);
             KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
                 name: "Varia Suit",
                 alsoKnownAs: new[] { "Kraid's Reliquary" },
@@ -24,16 +27,21 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 access: items => items.Kraid,
                 relevanceRequirement: items => CanBeatBoss(items),
                 memoryAddress: 0x6,
-                memoryFlag: 0x1);
+                memoryFlag: 0x1,
+                metadata: metadata,
+                trackerState: trackerState);
             MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
                 name: "Missile (Kraid)",
                 alsoKnownAs: new[] { "Warehouse Kihunter Room" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x5,
-                memoryFlag: 0x10);
+                memoryFlag: 0x10,
+                metadata: metadata,
+                trackerState: trackerState);
             MemoryRegionId = 1;
-            Boss = new Boss(Shared.Enums.BossType.Kraid, World, this);
+            Boss = new Boss(Shared.Enums.BossType.Kraid, World, this, metadata, trackerState);
+            Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Kraid's Lair");
         }
 
         public override string Name => "Kraid's Lair";

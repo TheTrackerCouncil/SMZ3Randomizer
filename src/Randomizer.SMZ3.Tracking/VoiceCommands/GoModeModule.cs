@@ -21,7 +21,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public GoModeModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<GoModeModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Toggle Go Mode", "Hey tracker, track Go Mode.", (tracker, result) =>
+            AddCommand("Toggle Go Mode", "Hey tracker, track Go Mode.", (result) =>
             {
                 tracker.ToggleGoMode(result.Confidence);
             });

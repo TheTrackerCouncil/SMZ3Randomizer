@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Speech.Synthesis;
-using System.Text;
-using System.Threading.Tasks;
-
 using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Tracking.Services;
@@ -13,7 +9,7 @@ using Randomizer.SMZ3.Tracking.Services;
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
     /// <summary>
-    /// Provides voice commands relating to Tracker's personality. 
+    /// Provides voice commands relating to Tracker's personality.
     /// </summary>
     public class PersonalityModule : TrackerModule
     {
@@ -27,12 +23,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public PersonalityModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<PersonalityModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Ask about tracker's mood", GetMoodRule(), (tracker, result) =>
+            AddCommand("Ask about tracker's mood", GetMoodRule(), (result) =>
             {
                 tracker.Say(tracker.Responses.Moods[tracker.Mood]);
             });
 
-            AddCommand("Hey, ya missed pal", GetYaMissedRule(), (tracker, result) =>
+            AddCommand("Hey, ya missed pal", GetYaMissedRule(), (result) =>
             {
                 tracker.Say("Here Mike. This will explain everything.", wait: true);
                 OpenInBrowser(new Uri("https://www.youtube.com/watch?v=5P6UirFDdxM"));
@@ -43,7 +39,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (request.Phrases.Count == 0)
                     continue;
 
-                AddCommand(request.Phrases.First(), GetRequestRule(request.Phrases), (tracker, result) =>
+                AddCommand(request.Phrases.First(), GetRequestRule(request.Phrases), (result) =>
                 {
                     tracker.Say(request.Response);
                 });

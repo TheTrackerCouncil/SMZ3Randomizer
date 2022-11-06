@@ -15,12 +15,12 @@ namespace Randomizer.Data.WorldData.Regions
         /// Gets or sets the reward for completing the region, e.g. pendant or
         /// crystal.
         /// </summary>
-        DungeonInfo? DungeonMetadata { get; set; }
+        DungeonInfo DungeonMetadata { get; set; }
 
         /// <summary>
         /// The current tracking state of the dungeon
         /// </summary>
-        TrackerDungeonState? DungeonState { get; set; }
+        TrackerDungeonState DungeonState { get; set; }
 
         /// <summary>
         /// Calculates the number of treasures in the dungeon
@@ -64,7 +64,7 @@ namespace Randomizer.Data.WorldData.Regions
         {
             get
             {
-                return DungeonState?.MarkedReward ?? RewardType.None;
+                return DungeonState.MarkedReward ?? RewardType.None;
             }
             set
             {
@@ -97,7 +97,7 @@ namespace Randomizer.Data.WorldData.Regions
         {
             get
             {
-                return DungeonState?.MarkedMedallion ?? ItemType.Nothing;
+                return DungeonState.MarkedMedallion ?? ItemType.Nothing;
             }
             set
             {

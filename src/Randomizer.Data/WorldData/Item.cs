@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Services;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
@@ -21,11 +22,33 @@ namespace Randomizer.Data.WorldData
         /// <param name="itemType">The type of item.</param>
         /// <param name="world">The world the item is in.</param>
         /// <param name="name">The override name for the item</param>
-        public Item(ItemType itemType, World world, string? name = null)
+        /// <param name="metadata">The metadata service to look up additional info about the item</param>
+        /// <param name="trackerState">The tracking state of the run</param>
+        public Item(ItemType itemType, World world, string? name = null, IMetadataService? metadata = null, TrackerState? trackerState = null)
         {
             Type = itemType;
             World = world;
             Name = string.IsNullOrEmpty(name) ? itemType.GetDescription() : name ;
+            Metadata = metadata?.Item(itemType) ?? new ItemData(itemType);
+            State = trackerState?.ItemStates.First(x => x.ItemName == Name && x.WorldId == world.Id) ?? new TrackerItemState();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Item"/> class with the
+        /// specified item type and world.
+        /// </summary>
+        /// <param name="itemType">The type of item.</param>
+        /// <param name="world">The world the item is in.</param>
+        /// <param name="name">The override name for the item</param>
+        /// <param name="metadata">The metadata object with additional info about the item</param>
+        /// <param name="state">The tracking state of the item</param>
+        public Item(ItemType itemType, World world, string name, ItemData metadata, TrackerItemState state)
+        {
+            Type = itemType;
+            World = world;
+            Name = name;
+            Metadata = metadata;
+            State = state;
         }
 
         /// <summary>
@@ -51,12 +74,12 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Additional information about the item
         /// </summary>
-        public ItemData? Metadata { get; set; }
+        public ItemData Metadata { get; set; }
 
         /// <summary>
         /// Current state of the item
         /// </summary>
-        public TrackerItemState? State { get; set; }
+        public TrackerItemState State { get; set; }
 
         /// <summary>
         /// Indicates whether the item is a dungeon-specific item.

@@ -25,8 +25,8 @@ namespace Randomizer.App.ViewModels
 
         public string Item => _itemData.Name;
 
-        public string Location => _location.Metadata?.Name[0] ?? "";
+        public string Location => _location.Metadata.Name[0];
 
-        public string Area => _location.Region.Metadata?.Name[0] ?? "";
+        public string Area => _location.Region.Metadata.Name[0];
     }
 }

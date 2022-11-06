@@ -15,6 +15,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         private readonly HashSet<Region> _enteredDungeons = new();
         private readonly IWorldAccessor _worldAccessor;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="worldAccessor"></param>
         public EnteredDungeon(IWorldAccessor worldAccessor)
         {
             _worldAccessor = worldAccessor;
@@ -43,7 +47,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 
                 if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
                 {
-                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata?.Name ?? dungeon.DungeonName, dungeon.DungeonReward?.Metadata?.Name);
+                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name);
                 }
                 else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
                 {
@@ -52,7 +56,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 else if (region is GanonsTower)
                 {
                     var clearedCrystalDungeonCount = tracker.World.Dungeons
-                                                        .Count(x => x.DungeonState?.Cleared == true && x.IsCrystalDungeon);
+                                                        .Count(x => x.DungeonState.Cleared && x.IsCrystalDungeon);
 
                     if (clearedCrystalDungeonCount < 7)
                     {
