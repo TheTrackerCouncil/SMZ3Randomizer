@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.Data.Configuration;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Contracts;
@@ -17,7 +16,7 @@ namespace Randomizer.SMZ3.Tracking.Services
     public class ItemService : IItemService
     {
         private readonly IWorldAccessor _world;
-        private Dictionary<string, Progression> _progression = new();
+        private readonly Dictionary<string, Progression> _progression = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ItemService"/> class
@@ -61,8 +60,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public Item? FirstOrDefault(string name)
             => LocalPlayersItems().FirstOrDefault(x => x.Name == name)
-            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata != null && x.Metadata.GetStage(name) != null);
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.GetStage(name) != null);
 
         /// <summary>
         /// Finds an item with the specified item type for the local player.
@@ -124,7 +123,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         public virtual string GetName(ItemType itemType)
         {
             var item = FirstOrDefault(itemType);
-            return item?.Metadata?.NameWithArticle ?? itemType.GetDescription();
+            return item?.Metadata.NameWithArticle ?? itemType.GetDescription();
         }
 
 
@@ -181,7 +180,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of reward that have been tracked.
         /// </returns>
         public virtual IEnumerable<Reward> TrackedRewards()
-            => _world.World.Dungeons.Where(x => x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward));
+            => _world.World.Dungeons.Where(x => x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
 
         /// <summary>
         /// Enumerates all bosses that can be tracked for all players.
@@ -206,8 +205,14 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of bosses that have been tracked.
         /// </returns>
         public virtual IEnumerable<Boss> TrackedBosses()
-            => LocalPlayersBosses().Where(x => x.State?.Defeated == true);
+            => LocalPlayersBosses().Where(x => x.State.Defeated);
 
+        /// <summary>
+        /// Gets the current progression based on the items the user has collected,
+        /// bosses that the user has beaten, and rewards that the user has received
+        /// </summary>
+        /// <param name="assumeKeys">If it should be assumed that the player has all keys</param>
+        /// <returns>The progression object</returns>
         public Progression GetProgression(bool assumeKeys)
         {
             var key = $"{assumeKeys}";
@@ -246,16 +251,31 @@ namespace Randomizer.SMZ3.Tracking.Services
             return progression;
         }
 
+        /// <summary>
+        /// Gets the current progression based on the items the user has collected,
+        /// bosses that the user has beaten, and rewards that the user has received
+        /// </summary>
+        /// <param name="area">The area to check to see if keys should be assumed
+        /// or not</param>
+        /// <returns>The progression object</returns>
         public Progression GetProgression(IHasLocations area)
         {
-            if (area is Z3Region || (area is Room room1 && room1.Region is Z3Region))
-                return GetProgression(assumeKeys: !_world.World.Config.ZeldaKeysanity);
-            else if (area is SMRegion || (area is Room room2 && room2.Region is SMRegion))
-                return GetProgression(assumeKeys: !_world.World.Config.MetroidKeysanity);
-            else
-                return GetProgression(assumeKeys: _world.World.Config.KeysanityMode == KeysanityMode.None);
+            switch (area)
+            {
+                case Z3Region:
+                case Room { Region: Z3Region }:
+                    return GetProgression(assumeKeys: !_world.World.Config.ZeldaKeysanity);
+                case SMRegion:
+                case Room { Region: SMRegion }:
+                    return GetProgression(assumeKeys: !_world.World.Config.MetroidKeysanity);
+                default:
+                    return GetProgression(assumeKeys: _world.World.Config.KeysanityMode == KeysanityMode.None);
+            }
         }
 
+        /// <summary>
+        /// Clears the progression cache after collecting new items, rewards, or bosses
+        /// </summary>
         public void ResetProgression()
         {
             _progression.Clear();

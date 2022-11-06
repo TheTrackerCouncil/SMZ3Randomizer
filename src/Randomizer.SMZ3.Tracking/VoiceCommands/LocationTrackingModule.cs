@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -22,20 +20,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public LocationTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<LocationTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (tracker, result) =>
+            AddCommand("Mark item at specific location", GetMarkItemAtLocationRule(), (result) =>
             {
                 var item = GetItemFromResult(tracker, result, out _);
                 var location = GetLocationFromResult(tracker, result);
                 tracker.MarkLocation(location, item, result.Confidence);
             });
 
-            AddCommand("Clear specific item location", GetClearLocationRule(), (tracker, result) =>
+            AddCommand("Clear specific item location", GetClearLocationRule(), (result) =>
             {
                 var location = GetLocationFromResult(tracker, result);
                 tracker.Clear(location, result.Confidence);
             });
 
-            AddCommand("Clear available items in an area", GetClearAreaRule(), (tracker, result) =>
+            AddCommand("Clear available items in an area", GetClearAreaRule(), (result) =>
             {
                 if (result.Semantics.ContainsKey(RoomKey))
                 {

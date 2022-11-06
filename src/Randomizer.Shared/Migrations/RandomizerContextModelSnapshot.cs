@@ -29,18 +29,23 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Label")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RomPath")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Seed")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Settings")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SpoilerPath")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<long?>("TrackerStateId")
@@ -60,6 +65,7 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BossName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Defeated")
@@ -100,6 +106,7 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RemainingTreasure")
@@ -143,6 +150,7 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ObjectName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Time")
@@ -168,6 +176,7 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ItemName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<long?>("TrackerStateId")
@@ -233,6 +242,7 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ItemName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("LocationId")
@@ -264,6 +274,7 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("TypeName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

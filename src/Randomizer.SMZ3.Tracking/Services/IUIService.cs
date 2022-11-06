@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="name">The name of the requested</param>
         /// <returns>The matching layout or the first one if it is not found</returns>
-        public UILayout GetLayout(string name);
+        public UILayout GetLayout(string? name);
 
         /// <summary>
         /// Returns the path of the sprite for the number

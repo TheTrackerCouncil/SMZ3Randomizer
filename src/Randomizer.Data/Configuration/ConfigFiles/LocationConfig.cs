@@ -880,7 +880,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 335,
-                    Name = new("Pyramid of Power", "Pyramid"),
+                    Name = new("Pyramid of Power", "Pyramid", "Pyramid Ledge"),
                 },
                 new LocationInfo()
                 {

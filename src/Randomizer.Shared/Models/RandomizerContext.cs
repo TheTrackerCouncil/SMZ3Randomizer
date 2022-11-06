@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Randomizer.Shared.Models;
+#pragma warning disable CS8618
 
 namespace Randomizer.Shared.Models {
 
-    public class RandomizerContext : DbContext {
+    public sealed class RandomizerContext : DbContext {
 
         public RandomizerContext() : base()
         {
@@ -31,13 +31,14 @@ namespace Randomizer.Shared.Models {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GeneratedRom>().HasOne(x => x.TrackerState);
-            modelBuilder.Entity<TrackerState>().HasMany(x => x.ItemStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TrackerState>().HasMany(x => x.LocationStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TrackerState>().HasMany(x => x.RegionStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TrackerState>().HasMany(x => x.DungeonStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TrackerState>().HasMany(x => x.MarkedLocations).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TrackerState>().HasMany(x => x.BossStates).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TrackerState>().HasMany(x => x.History).WithOne(x => x.TrackerState).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<GeneratedRom>().HasKey(x => x.Id);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.ItemStates).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.LocationStates).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.RegionStates).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.DungeonStates).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.MarkedLocations).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.BossStates).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TrackerState>().HasMany(x => x.History).WithOne(x => x.TrackerState!).OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
 

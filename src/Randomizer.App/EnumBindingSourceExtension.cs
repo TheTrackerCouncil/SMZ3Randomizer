@@ -5,7 +5,7 @@ namespace Randomizer.App
 {
     public class EnumBindingSourceExtension : MarkupExtension
     {
-        private Type _enumType;
+        private Type? _enumType;
 
         public EnumBindingSourceExtension()
         {
@@ -16,7 +16,7 @@ namespace Randomizer.App
             EnumType = enumType;
         }
 
-        public Type EnumType
+        public Type? EnumType
         {
             get => _enumType;
             set

@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
                 displayName.Should().NotBeNullOrEmpty();
 
-                var category = property.GetCustomAttribute<CategoryAttribute>().Category;
+                var category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
                 category.Should().BeOneOf("Logic", "Tricks", "Patches");
             }
         }
@@ -361,6 +361,54 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.SkyMissile, progression, out _);
             missingItems.Should().BeEmpty();
             tempWorld.EastCrateria.SkyMissile.IsAvailable(progression).Should().BeTrue();
+        }
+
+        [Fact]
+        public void TestKholdstareNeedsCaneOfSomaria()
+        {
+            var config = new Config();
+
+            var items = new List<ItemType>()
+            {
+                ItemType.MoonPearl,
+                ItemType.Firerod,
+                ItemType.Hookshot,
+                ItemType.ProgressiveGlove,
+                ItemType.ProgressiveGlove,
+                ItemType.ProgressiveSword,
+                ItemType.Flippers,
+                ItemType.BigKeyIP,
+                ItemType.Hammer,
+                ItemType.KeyIP,
+            };
+
+            config.LogicConfig.KholdstareNeedsCaneOfSomaria = false;
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(items, Array.Empty<RewardType>(), Array.Empty<BossType>());
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
+            missingItems.Should().HaveCount(2)
+                .And.ContainEquivalentOf(new[] { ItemType.KeyIP })
+                .And.ContainEquivalentOf(new[] { ItemType.Somaria });
+
+            progression = new Progression(items.Append(ItemType.KeyIP), Array.Empty<RewardType>(), Array.Empty<BossType>());
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
+            missingItems.Should().BeEmpty();
+
+            config.LogicConfig.KholdstareNeedsCaneOfSomaria = true;
+            tempWorld = new World(config, "", 0, "");
+            progression = new Progression(items, Array.Empty<RewardType>(), Array.Empty<BossType>());
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Somaria });
+
+            progression = new Progression(items.Append(ItemType.KeyIP), Array.Empty<RewardType>(), Array.Empty<BossType>());
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
+            missingItems.Should().HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.Somaria });
+
+            progression = new Progression(items.Append(ItemType.Somaria), Array.Empty<RewardType>(), Array.Empty<BossType>());
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
+            missingItems.Should().BeEmpty();
         }
     }
 }

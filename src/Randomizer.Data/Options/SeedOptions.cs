@@ -17,10 +17,10 @@ namespace Randomizer.Data.Options
     public class SeedOptions
     {
         [JsonIgnore]
-        public string Seed { get; set; }
+        public string Seed { get; set; } = "";
 
         [JsonIgnore]
-        public string ConfigString { get; set; }
+        public string ConfigString { get; set; } = "";
 
         public ItemPlacement SwordLocation { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace Randomizer.SMZ3
@@ -9,7 +10,7 @@ namespace Randomizer.SMZ3
         {
             var type = typeof(EmbeddedStream);
             var assembly = Assembly.GetAssembly(type);
-            return assembly.GetManifestResourceStream($"{type.Namespace}.{name}");
+            return assembly?.GetManifestResourceStream($"{type.Namespace}.{name}") ?? throw new InvalidOperationException("Unable to open strema for " + name);
         }
     }
 }

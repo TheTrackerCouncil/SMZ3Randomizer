@@ -10,10 +10,10 @@ namespace Randomizer.Shared
         {
             var enumType = anEnum.GetType();
             var members = enumType.GetMember(anEnum.ToString());
-            if ((members?.Length ?? 0) > 0)
+            if (members?.Length > 0)
             {
                 var attrs = members[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-                if ((attrs?.Length ?? 0) > 0)
+                if (attrs?.Length > 0)
                     return ((DescriptionAttribute)attrs[0]).Description;
             }
             return anEnum.ToString();

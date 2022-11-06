@@ -11,7 +11,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
     /// <summary>
     /// Connector for Lua scripts that opens a socket server that the
-    /// Lua scripts will connect to. 
+    /// Lua scripts will connect to.
     /// </summary>
     public class LuaConnector : IEmulatorConnector
     {
@@ -22,6 +22,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private Socket? _socket = null;
         private ILogger<LuaConnector> _logger;
         private EmulatorAction? _lastReadMessage;
+        private DateTime? _lastMessageTime;
 
         /// <summary>
         /// Constructor
@@ -33,6 +34,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _isEnabled = true;
             _lastReadMessage = null;
             _ = Task.Factory.StartNew(() => StartSocketServer());
+            _ = Task.Factory.StartNew(MonitorSocket);
         }
 
         /// <summary>
@@ -126,6 +128,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             GC.SuppressFinalize(this);
         }
 
+
+
         private void StartSocketServer()
         {
             _tcpListener = new TcpListener(IPAddress.Loopback, 6969);
@@ -136,7 +140,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     _socket = _tcpListener.AcceptSocket();
                     _logger.LogInformation("Socket accepted");
-                    if (_socket.Connected)
+                    if (_socket?.Connected == true)
                     {
                         using (var stream = new NetworkStream(_socket))
                         using (var writer = new StreamWriter(stream))
@@ -146,17 +150,19 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                             {
                                 _lastReadMessage = null;
                                 _isConnected = true;
+                                _lastMessageTime = DateTime.Now;
                                 _logger.LogInformation("Socket connected");
                                 OnConnected?.Invoke(this, new());
                                 var line = reader.ReadLine();
                                 while (line != null && _socket.Connected)
                                 {
+                                    _lastMessageTime = DateTime.Now;
                                     var message = JsonSerializer.Deserialize<LuaMessage>(line);
                                     if (message != null && message.Bytes != null)
                                     {
                                         _logger.LogTrace("Received " + message.Action);
                                         var data = new EmulatorMemoryData(Convert.FromBase64String(message.Bytes));
-                                        MessageReceived?.Invoke(this, new(message.Address, data));
+                                        MessageReceived?.Invoke(this, new(message.Address, data, message.RomName, message.RomHash));
                                         _lastReadMessage = null;
                                     }
                                     line = reader.ReadLine();
@@ -169,6 +175,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                                 {
                                     _lastReadMessage = null;
                                     _isConnected = false;
+                                    _lastMessageTime = null;
                                     OnDisconnected?.Invoke(this, new());
                                 }
                             }
@@ -206,5 +213,26 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         /// <returns>True if the connector is ready for another message, false otherwise</returns>
         public bool CanSendMessage() => _lastReadMessage == null;
+
+        /// <summary>
+        /// Monitor task tp force disconnect the socket if we haven't received a message within the last 5 seconds
+        /// </summary>
+        private async Task MonitorSocket()
+        {
+            while (_isEnabled)
+            {
+                if (_socket != null && _lastMessageTime != null && (DateTime.Now - _lastMessageTime.Value).TotalSeconds > 5)
+                {
+                    _socket.Close();
+                    _isConnected = false;
+                    _lastReadMessage = null;
+                    _lastMessageTime = null;
+                    OnDisconnected?.Invoke(this, new());
+                    _socket = null;
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace Randomizer.App
             };
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object? sender, EventArgs e)
         {
             var elapsed = DateTimeOffset.Now - _shown;
             TimeElapsedText.Text = $"{elapsed:m\\:ss}";

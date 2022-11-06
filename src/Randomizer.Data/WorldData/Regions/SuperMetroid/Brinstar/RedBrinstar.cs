@@ -1,13 +1,14 @@
-﻿using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
+﻿using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 {
     public class RedBrinstar : SMRegion
     {
-        public RedBrinstar(World world, Config config) : base(world, config)
+        public RedBrinstar(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
             // TODO: some of these might expect you to have wall jump, but I'm not sure which or how
 
@@ -17,28 +18,36 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.XRay,
                 access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && (items.Grapple || items.SpaceJump),
                 memoryAddress: 0x4,
-                memoryFlag: 0x40);
+                memoryFlag: 0x40,
+                metadata: metadata,
+                trackerState: trackerState);
             BetaPowerBombRoom = new Location(this, 39, 0x8F88CA, LocationType.Visible,
                 name: "Power Bomb (red Brinstar sidehopper room)",
                 alsoKnownAs: new[] { "Beta Power Bomb Room" },
                 vanillaItem: ItemType.PowerBomb,
                 access: items => Logic.CanUsePowerBombs(items) && items.Super,
                 memoryAddress: 0x4,
-                memoryFlag: 0x80);
+                memoryFlag: 0x80,
+                metadata: metadata,
+                trackerState: trackerState);
             AlphaPowerBombRoom = new Location(this, 40, 0x8F890E, LocationType.Chozo,
                 name: "Power Bomb (red Brinstar spike room)",
                 alsoKnownAs: new[] { "Alpha Power Bomb Room" },
                 vanillaItem: ItemType.PowerBomb,
                 access: items => (Logic.CanUsePowerBombs(items) || items.Ice) && items.Super,
                 memoryAddress: 0x5,
-                memoryFlag: 0x1);
+                memoryFlag: 0x1,
+                metadata: metadata,
+                trackerState: trackerState);
             AlphaPowerBombRoomWall = new Location(this, 41, 0x8F8914, LocationType.Visible,
                 name: "Missile (red Brinstar spike room)",
                 alsoKnownAs: new[] { "Alpha Power Bomb Room - Behind the wall" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanUsePowerBombs(items) && items.Super,
                 memoryAddress: 0x5,
-                memoryFlag: 0x2);
+                memoryFlag: 0x2,
+                metadata: metadata,
+                trackerState: trackerState);
             SpazerRoom = new Location(this, 42, 0x8F896E, LocationType.Chozo,
                 name: "Spazer",
                 alsoKnownAs: new[] { "~ S p A z E r ~" },
@@ -46,8 +55,11 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 access: items => Logic.CanPassBombPassages(items) && items.Super
                               && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x5,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
             MemoryRegionId = 1;
+            Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Red Brinstar");
         }
 
         public override string Name => "Red Brinstar";

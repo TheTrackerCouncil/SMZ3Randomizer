@@ -1,20 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-
+﻿using System.ComponentModel;
 using Microsoft.Extensions.Logging;
-using Randomizer.Data;
-using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
-using Randomizer.Shared;
-using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
-using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.Data.Options;
-using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App
@@ -26,20 +13,17 @@ namespace Randomizer.App
     /// </summary>
     public class TrackerLocationSyncer
     {
-        private bool _isDesign;
         private readonly ILogger<TrackerLocationSyncer> _logger;
         private bool _showOutOfLogicLocations;
-
-        public TrackerLocationSyncer()
-        {
-            _isDesign = DesignerProperties.GetIsInDesignMode(new DependencyObject());
-        }
 
         /// <summary>
         /// Creates a new instance of the TrackerLocationSyncer that will be
         /// synced with a given tracker
         /// </summary>
         /// <param name="tracker">The tracker to keep things in sync with</param>
+        /// <param name="itemService">Service for retrieving the item data</param>
+        /// <param name="worldService">Service for retrieving world data</param>
+        /// <param name="logger">Logger</param>
         public TrackerLocationSyncer(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<TrackerLocationSyncer> logger)
         {
             Tracker = tracker;
@@ -48,42 +32,42 @@ namespace Randomizer.App
             _logger = logger;
 
             // Set all events from the tracker to point to the two in this class
-            Tracker.MarkedLocationsUpdated += (_, _) => MarkedLocationUpdated.Invoke(this, new(""));
+            Tracker.MarkedLocationsUpdated += (_, _) => MarkedLocationUpdated?.Invoke(this, new(""));
             Tracker.LocationCleared += (_, e) =>
             {
-                TrackedLocationUpdated.Invoke(this, new(e.Location.Name));
-                MarkedLocationUpdated.Invoke(this, new(e.Location.Name));
+                TrackedLocationUpdated?.Invoke(this, new(e.Location.Name));
+                MarkedLocationUpdated?.Invoke(this, new(e.Location.Name));
             };
             Tracker.DungeonUpdated += (_, _) =>
             {
-                TrackedLocationUpdated.Invoke(this, new(""));
-                MarkedLocationUpdated.Invoke(this, new(""));
+                TrackedLocationUpdated?.Invoke(this, new(""));
+                MarkedLocationUpdated?.Invoke(this, new(""));
             };
             Tracker.ItemTracked += (_, _) =>
             {
-                TrackedLocationUpdated.Invoke(this, new(""));
-                MarkedLocationUpdated.Invoke(this, new(""));
+                TrackedLocationUpdated?.Invoke(this, new(""));
+                MarkedLocationUpdated?.Invoke(this, new(""));
             };
             Tracker.ActionUndone += (_, _) =>
             {
-                TrackedLocationUpdated.Invoke(this, new(""));
-                MarkedLocationUpdated.Invoke(this, new(""));
+                TrackedLocationUpdated?.Invoke(this, new(""));
+                MarkedLocationUpdated?.Invoke(this, new(""));
             };
             Tracker.StateLoaded += (_, _) =>
             {
-                TrackedLocationUpdated.Invoke(this, new(""));
-                MarkedLocationUpdated.Invoke(this, new(""));
+                TrackedLocationUpdated?.Invoke(this, new(""));
+                MarkedLocationUpdated?.Invoke(this, new(""));
             };
             Tracker.BossUpdated += (_, _) =>
             {
-                TrackedLocationUpdated.Invoke(this, new(""));
-                MarkedLocationUpdated.Invoke(this, new(""));
+                TrackedLocationUpdated?.Invoke(this, new(""));
+                MarkedLocationUpdated?.Invoke(this, new(""));
             };
         }
 
-        public event PropertyChangedEventHandler TrackedLocationUpdated;
+        public event PropertyChangedEventHandler? TrackedLocationUpdated;
 
-        public event PropertyChangedEventHandler MarkedLocationUpdated;
+        public event PropertyChangedEventHandler? MarkedLocationUpdated;
 
         /// <summary>
         /// If out of logic locations should be displayed on the tracker
@@ -104,7 +88,7 @@ namespace Randomizer.App
 
         public IWorldService WorldService { get; private set; }
 
-        public World World => Tracker?.World ?? new World(new Config(), "", 0, "");
+        public World World => Tracker.World;
 
         /// <summary>
         /// Calls the event handlers when a location has been updated somehow
@@ -118,10 +102,10 @@ namespace Randomizer.App
         /// <param name="updateToMarkedLocation">
         /// Whether a marked location has been potentially updated
         /// </param>
-        public void OnLocationUpdated(string location = null, bool updateToTrackedLocation = true, bool updateToMarkedLocation = true)
+        public void OnLocationUpdated(string? location = null, bool updateToTrackedLocation = true, bool updateToMarkedLocation = true)
         {
-            if (updateToTrackedLocation) TrackedLocationUpdated.Invoke(this, new(location));
-            if (updateToMarkedLocation) MarkedLocationUpdated.Invoke(this, new(location));
+            if (updateToTrackedLocation) TrackedLocationUpdated?.Invoke(this, new(location));
+            if (updateToMarkedLocation) MarkedLocationUpdated?.Invoke(this, new(location));
         }
     }
 }

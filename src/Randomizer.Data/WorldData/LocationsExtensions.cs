@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Shared;
 
 namespace Randomizer.Data.WorldData
 {
@@ -21,7 +22,7 @@ namespace Randomizer.Data.WorldData
         /// <returns>A collection of locations without items.</returns>
         public static IEnumerable<Location> Empty(this IEnumerable<Location> locations)
         {
-            return locations.Where(l => l.Item == null);
+            return locations.Where(l => l.Item.Type == ItemType.Nothing);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace Randomizer.Data.WorldData
         /// <returns>A collection of locations with items.</returns>
         public static IEnumerable<Location> Filled(this IEnumerable<Location> locations)
         {
-            return locations.Where(l => l.Item != null);
+            return locations.Where(l => l.Item.Type != ItemType.Nothing);
         }
 
         /// <summary>

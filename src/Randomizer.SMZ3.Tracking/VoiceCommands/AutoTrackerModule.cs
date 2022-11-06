@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.AutoTracking;
-using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.Options;
 
@@ -39,7 +28,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Tracker.AutoTracker = autoTracker;
             _autoTracker = autoTracker;
 
-            AddCommand("Look at this", GetLookAtGameRule(), (tracker, result) =>
+            AddCommand("Look at this", GetLookAtGameRule(), (result) =>
             {
                 LookAtGame();
             });

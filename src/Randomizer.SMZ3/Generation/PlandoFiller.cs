@@ -32,6 +32,7 @@ namespace Randomizer.SMZ3.Generation
         {
             PlandoConfig = plandoConfig;
             _logger = logger;
+            _random = new Random();
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace Randomizer.SMZ3.Generation
 
         private static void EnsureDungeonsHaveMedallions(World world)
         {
-            var emptyMedallions = world.Regions.Where(x => x is INeedsMedallion dungeon && dungeon.Medallion == ItemType.Nothing);
+            var emptyMedallions = world.Regions.Where(x => x is INeedsMedallion { Medallion: ItemType.Nothing });
             if (emptyMedallions.Any())
             {
                 throw new PlandoConfigurationException($"Not all dungeons have had their medallions set. Missing:\n"
@@ -79,7 +80,7 @@ namespace Randomizer.SMZ3.Generation
 
         private static void EnsureDungeonsHaveRewards(World world)
         {
-            var emptyDungeons = world.Regions.Where(x => x is IHasReward dungeon && dungeon.RewardType == Shared.RewardType.None);
+            var emptyDungeons = world.Regions.Where(x => x is IHasReward { RewardType: RewardType.None });
             if (emptyDungeons.Any())
             {
                 throw new PlandoConfigurationException($"Not all dungeons have had their rewards set. Missing:\n"
@@ -89,7 +90,7 @@ namespace Randomizer.SMZ3.Generation
 
         private static void EnsureLocationsHaveItems(World world)
         {
-            var emptyLocations = world.Locations.Where(x => x.Item == null);
+            var emptyLocations = world.Locations.Where(x => x.Item.Type == ItemType.Nothing);
             if (emptyLocations.Any())
             {
                 throw new PlandoConfigurationException($"Not all locations have been filled. Missing:\n"
@@ -133,7 +134,6 @@ namespace Randomizer.SMZ3.Generation
                 if (region is not IHasReward dungeon)
                     throw new PlandoConfigurationException($"{region.Name} is configured with a reward but that region cannot be configured with rewards.");
 
-                dungeon.RewardType = rewardType;
                 dungeon.Reward = new Reward(rewardType, world, dungeon);
             }
 

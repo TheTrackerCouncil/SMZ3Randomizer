@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Randomizer.Data.WorldData;
-using Randomizer.SMZ3;
 
 namespace Randomizer.App.ViewModels
 {
@@ -35,6 +29,6 @@ namespace Randomizer.App.ViewModels
             {
                 _syncer.Tracker.Clear(_location);
             },
-            canExecute: () => _location.State.Cleared == false);
+            canExecute: () => !_location.State.Cleared);
     }
 }

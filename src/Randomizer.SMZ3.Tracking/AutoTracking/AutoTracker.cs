@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,16 +34,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private readonly TrackerModuleFactory _trackerModuleFactory;
         private readonly IRandomizerConfigService _config;
         private readonly IWorldService _worldService;
-        private int _currentIndex = 0;
+        private int _currentIndex;
         private Game _previousGame;
         private bool _hasStarted;
         private IEmulatorConnector? _connector;
         private readonly Queue<EmulatorAction> _sendActions = new();
         private CancellationTokenSource? _stopSendingMessages;
-        private int _numGTItems = 0;
-        private bool _seenGTTorch = false;
-        private bool _foundGTKey = false;
-        private bool _beatBothBosses = false;
+        private int _numGTItems;
+        private bool _seenGTTorch;
+        private bool _foundGTKey;
+        private bool _beatBothBosses;
+        private string? _previousRom;
 
         /// <summary>
         /// Constructor for Auto Tracker
@@ -193,9 +195,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0xA26602,
                 Length = 0x2,
                 Game = Game.Both,
-                Action = (EmulatorAction test) =>
+                Action = test =>
                 {
-                    if (Tracker?.GameService != null)
+                    if (Tracker.GameService != null)
                     {
                         Tracker.GameService.ItemCounter = test.CurrentData?.ReadUInt16(0) ?? 0;
                     }
@@ -258,32 +260,32 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 _connector.OnConnected += Connector_Connected;
                 _connector.OnDisconnected += Connector_Disconnected;
                 _connector.MessageReceived += Connector_MessageReceived;
-                AutoTrackerEnabled?.Invoke(this, new());
+                AutoTrackerEnabled?.Invoke(this, EventArgs.Empty);
             }
             else
             {
                 ConnectorType = EmulatorConnectorType.None;
-                AutoTrackerDisabled?.Invoke(this, new());
+                AutoTrackerDisabled?.Invoke(this, EventArgs.Empty);
             }
         }
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is enabled 
+        /// Occurs when the tracker's auto tracker is enabled
         /// </summary>
         public event EventHandler? AutoTrackerEnabled;
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is disabled 
+        /// Occurs when the tracker's auto tracker is disabled
         /// </summary>
         public event EventHandler? AutoTrackerDisabled;
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is connected 
+        /// Occurs when the tracker's auto tracker is connected
         /// </summary>
         public event EventHandler? AutoTrackerConnected;
 
         /// <summary>
-        /// Occurs when the tracker's auto tracker is disconnected 
+        /// Occurs when the tracker's auto tracker is disconnected
         /// </summary>
         public event EventHandler? AutoTrackerDisconnected;
 
@@ -313,6 +315,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public bool PlayerHasFairy { get; protected set; }
 
         /// <summary>
+        /// If the user is activately in an SMZ3 rom
+        /// </summary>
+        public bool IsInSMZ3 => string.IsNullOrEmpty(_previousRom) || _previousRom.StartsWith("SMZ3 Cas");
+
+        /// <summary>
         /// Called when the connector successfully established a connection with the emulator
         /// </summary>
         /// <param name="sender"></param>
@@ -322,8 +329,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             await Task.Delay(TimeSpan.FromSeconds(0.1f));
             if (!IsSendingMessages)
             {
-                Tracker?.Say(x => x.AutoTracker.WhenConnected);
-                AutoTrackerConnected?.Invoke(this, new());
+                Tracker.Say(x => x.AutoTracker.WhenConnected);
+                AutoTrackerConnected?.Invoke(this, EventArgs.Empty);
                 _stopSendingMessages = new CancellationTokenSource();
                 _ = SendMessagesAsync(_stopSendingMessages.Token);
                 _currentIndex = 0;
@@ -346,9 +353,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected void Connector_Disconnected(object? sender, EventArgs e)
         {
-            Tracker?.Say("Auto tracker disconnected");
+            Tracker.Say(x => x.AutoTracker.WhenDisconnected);
             _logger.LogInformation("Disconnected");
-            AutoTrackerDisconnected?.Invoke(this, new());
+            AutoTrackerDisconnected?.Invoke(this, EventArgs.Empty);
             _stopSendingMessages?.Cancel();
             IsSendingMessages = false;
         }
@@ -360,11 +367,36 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected void Connector_MessageReceived(object? sender, EmulatorDataReceivedEventArgs e)
         {
-            // Verify that message we received is still valid
-            if (_readActionMap[e.Address].ShouldProcess(CurrentGame, _hasStarted))
+            // If the user is playing SMZ3 (if we don't have the name, assume that they are)
+            if (string.IsNullOrEmpty(e.RomName) || e.RomName.StartsWith("SMZ3 Cas"))
             {
-                _readActionMap[e.Address].Invoke(e.Data);
+                if (!string.IsNullOrEmpty(_previousRom) && e.RomName != _previousRom)
+                {
+                    _logger.LogInformation($"Changed to SMZ3 Rom {e.RomName} ({e.RomHash})");
+                    Tracker.Say(x => x.AutoTracker.SwitchedToSMZ3Rom);
+                }
+
+                // Verify that message we received is still valid, then execute
+                if (_readActionMap[e.Address].ShouldProcess(CurrentGame, _hasStarted))
+                {
+                    _readActionMap[e.Address].Invoke(e.Data);
+                }
             }
+            // If the user is switching to a non-SMZ3 rom
+            else if (!string.IsNullOrEmpty(e.RomName) && e.RomName != _previousRom)
+            {
+                _logger.LogInformation($"Ignoring rom {e.RomName} ({e.RomHash})");
+
+                var key = "Unknown";
+                if (Tracker.Responses.AutoTracker.SwitchedToOtherRom.ContainsKey(e.RomHash!))
+                {
+                    key = e.RomHash!;
+                }
+
+                Tracker.Say(x => x.AutoTracker.SwitchedToOtherRom[key]);
+            }
+
+            _previousRom = e.RomName;
         }
 
         /// <summary>
@@ -372,7 +404,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         protected async Task SendMessagesAsync(CancellationToken cancellationToken)
         {
-            Thread.CurrentThread.Name = DateTime.Now.ToString();
+            Thread.CurrentThread.Name = DateTime.Now.ToString(CultureInfo.InvariantCulture);
             _logger.LogInformation("Start sending messages " + Thread.CurrentThread.Name);
             IsSendingMessages = true;
             while (_connector != null && _connector.IsConnected() && !cancellationToken.IsCancellationRequested)
@@ -383,7 +415,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     {
                         var nextAction = _sendActions.Dequeue();
 
-                        if (nextAction != null && nextAction.ShouldProcess(CurrentGame, _hasStarted))
+                        if (nextAction.ShouldProcess(CurrentGame, _hasStarted))
                         {
                             _connector.SendMessage(nextAction);
                         }
@@ -427,7 +459,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 _logger.LogInformation("Game started");
                 _hasStarted = true;
-                Tracker?.Say(x => x.AutoTracker.GameStarted, Tracker.Rom?.Seed);
+                Tracker.Say(x => x.AutoTracker.GameStarted, Tracker.Rom?.Seed);
             }
         }
 
@@ -496,20 +528,20 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (action.CurrentData?.CheckBinary8Bit(0x10C, 0x01) == true && action.PreviousData?.CheckBinary8Bit(0x10C, 0x01) != true)
                 {
                     var duckItem = _itemService.FirstOrDefault("Duck");
-                    if (duckItem != null && duckItem.State.TrackingState == 0)
+                    if (duckItem?.State.TrackingState == 0)
                     {
-                        Tracker?.TrackItem(duckItem, null, null, false, true, null, false);
+                        Tracker.TrackItem(duckItem, null, null, false, true, null, false);
                     }
                 }
 
                 // Check if the player cleared Aga
-                if (action.CurrentData?.ReadUInt8(0x145) >= 3 && Tracker != null)
+                if (action.CurrentData?.ReadUInt8(0x145) >= 3)
                 {
                     var castleTower = Tracker.World.CastleTower;
-                    if (!castleTower.DungeonState.Cleared)
+                    if (castleTower.DungeonState.Cleared ==false)
                     {
-                        Tracker.MarkDungeonAsCleared(castleTower, null);
-                        _logger.LogInformation($"Auto tracked {castleTower.DungeonMetadata.Name} as cleared");
+                        Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
+                        _logger.LogInformation($"Auto tracked {castleTower.Name} as cleared");
                     }
                 }
             }
@@ -551,13 +583,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             var currentData = action.CurrentData;
             var prevData = action.PreviousData;
 
-            if (Tracker == null || currentData == null || prevData == null) return;
+            if (currentData == null || prevData == null) return;
 
             // Store the locations for this action so that we don't need to grab them each time every half a second or so
-            if (action.Locations == null)
-            {
-                action.Locations = _worldService.AllLocations().Where(x => x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))).ToList();
-            }
+            action.Locations ??= _worldService.AllLocations().Where(x =>
+                x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))).ToList();
 
             foreach (var location in action.Locations)
             {
@@ -567,7 +597,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var flag = location.MemoryFlag ?? 0;
                     var currentCleared = (is16Bit && currentData.CheckUInt16(loc * 2, flag)) || (!is16Bit && currentData.CheckBinary8Bit(loc, flag));
                     var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
-                    if (!location.State.Autotracked && currentCleared && prevCleared)
+                    if (location.State.Autotracked == false&& currentCleared && prevCleared)
                     {
                         if (location.Region is GanonsTower gt && location != gt.BobsTorch)
                         {
@@ -575,16 +605,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         }
 
                         var item = location.Item;
-                        if (item != null)
-                        {
-                            Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
-                            _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
-                        }
-                        else
-                        {
-                            Tracker.Clear(location, null, true);
-                            _logger.LogInformation($"Auto tracked {location.Name} as cleared");
-                        }
+                        Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
+                        _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
                     }
 
                 }
@@ -603,8 +625,6 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="prevData">The previous memory data returned from the emulator</param>
         protected void CheckDungeons(EmulatorMemoryData currentData, EmulatorMemoryData prevData)
         {
-            if (Tracker == null) return;
-
             foreach (var dungeon in Tracker.World.Dungeons)
             {
                 var region = (Z3Region)dungeon;
@@ -617,11 +637,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 try
                 {
-                    var prevValue = prevData.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0);
-                    var currentValue = currentData.CheckUInt16(region.MemoryAddress * 2 ?? 0, region.MemoryFlag ?? 0);
-                    if (!dungeon.DungeonState.Cleared && prevValue && currentValue)
+                    var prevValue = prevData.CheckUInt16((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
+                    var currentValue = currentData.CheckUInt16((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
+                    if (dungeon.DungeonState.Cleared == false && prevValue && currentValue)
                     {
-                        Tracker.MarkDungeonAsCleared(dungeon);
+                        Tracker.MarkDungeonAsCleared(dungeon, autoTracked: true);
                         _logger.LogInformation($"Auto tracked {dungeon.DungeonName} as cleared");
                     }
 
@@ -640,13 +660,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="data">The response from the lua script</param>
         protected void CheckSMBosses(EmulatorMemoryData data)
         {
-            if (Tracker == null) return;
-
-            foreach (var boss in Tracker.World.AllBosses.Where(x => x.Metadata?.MemoryAddress != null && x.Metadata?.MemoryFlag > 0 && x.State?.Defeated != true))
+            foreach (var boss in Tracker.World.AllBosses.Where(x => x.Metadata.MemoryAddress != null && x.Metadata.MemoryFlag > 0 && !x.State.Defeated))
             {
-                if (data.CheckBinary8Bit(boss.Metadata?.MemoryAddress ?? 0, boss.Metadata?.MemoryFlag ?? 100))
+                if (data.CheckBinary8Bit(boss.Metadata.MemoryAddress ?? 0, boss.Metadata.MemoryFlag ?? 100))
                 {
-                    Tracker.MarkBossAsDefeated(boss);
+                    Tracker.MarkBossAsDefeated(boss, true, null, true);
                     _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
                 }
             }
@@ -658,7 +676,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action">The message from the emulator with the memory state</param>
         protected void CheckZeldaState(EmulatorAction action)
         {
-            if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
+            if (_previousGame != CurrentGame || action.CurrentData == null) return;
             var prevState = ZeldaState;
             ZeldaState = new(action.CurrentData);
             _logger.LogDebug(ZeldaState.ToString());
@@ -700,24 +718,24 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action">The message from the emulator with the memory state</param>
         protected void CheckBeatFinalBosses(EmulatorAction action)
         {
-            if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
-            
+            if (_previousGame != CurrentGame || action.CurrentData == null) return;
+
             if (action.PreviousData?.ReadUInt8(0x2) == 0 && action.CurrentData.ReadUInt8(0x2) > 0)
             {
                 if (CurrentGame == Game.Zelda)
                 {
                     var gt = Tracker.World.GanonsTower;
-                    if (!gt.DungeonState.Cleared)
+                    if (gt.DungeonState.Cleared == false)
                     {
-                        Tracker.MarkDungeonAsCleared(gt);
+                        Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
                     }
                 }
                 else if (CurrentGame == Game.SM)
                 {
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
-                    if (motherBrain.State?.Defeated != true)
+                    if (motherBrain.State.Defeated != true)
                     {
-                        Tracker.MarkBossAsDefeated(motherBrain);
+                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
                     }
                 }
             }
@@ -727,17 +745,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 if (CurrentGame == Game.Zelda)
                 {
                     var gt = Tracker.World.GanonsTower;
-                    if (!gt.DungeonState.Cleared)
+                    if (gt.DungeonState.Cleared == false)
                     {
-                        Tracker.MarkDungeonAsCleared(gt);
+                        Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
                     }
                 }
                 else if (CurrentGame == Game.SM)
                 {
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
-                    if (motherBrain.State?.Defeated != true)
+                    if (motherBrain.State.Defeated != true)
                     {
-                        Tracker.MarkBossAsDefeated(motherBrain);
+                        Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
                     }
                 }
             }
@@ -755,7 +773,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action">The message from the emulator with the memory state</param>
         protected void CheckMetroidState(EmulatorAction action)
         {
-            if (_previousGame != CurrentGame || action.CurrentData == null || Tracker == null) return;
+            if (_previousGame != CurrentGame || action.CurrentData == null) return;
             var prevState = MetroidState;
             MetroidState = new(action.CurrentData);
             _logger.LogDebug(MetroidState.ToString());
@@ -776,32 +794,32 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckShip(EmulatorAction action)
         {
-            if (_previousGame != CurrentGame || action.CurrentData == null || action.PreviousData == null || Tracker == null) return;
+            if (_previousGame != CurrentGame || action.CurrentData == null || action.PreviousData == null) return;
             var currentInShip = action.CurrentData.ReadUInt16(0) == 0xAA4F;
             if (currentInShip && _beatBothBosses)
             {
-                Tracker?.GameBeaten(true);
+                Tracker.GameBeaten(true);
             }
         }
 
         private void IncrementGTItems(Location location)
         {
-            if (_foundGTKey || _config.Config.ZeldaKeysanity == true) return;
+            if (_foundGTKey || _config.Config.ZeldaKeysanity) return;
 
             var chatIntegrationModule = _trackerModuleFactory.GetModule<ChatIntegrationModule>();
             _numGTItems++;
-            Tracker?.Say(_numGTItems.ToString());
+            Tracker.Say(_numGTItems.ToString());
             if (location.Item.Type == ItemType.BigKeyGT)
             {
                 var responseIndex = 1;
                 for (var i = 1; i <= _numGTItems; i++)
                 {
-                    if (Tracker?.Responses.AutoTracker.GTKeyResponses.ContainsKey(i) == true)
+                    if (Tracker.Responses.AutoTracker.GTKeyResponses.ContainsKey(i))
                     {
                         responseIndex = i;
                     }
                 }
-                Tracker?.Say(x => x.AutoTracker.GTKeyResponses[responseIndex], _numGTItems);
+                Tracker.Say(x => x.AutoTracker.GTKeyResponses[responseIndex], _numGTItems);
                 chatIntegrationModule?.GTItemTracked(_numGTItems, true);
                 _foundGTKey = true;
             }

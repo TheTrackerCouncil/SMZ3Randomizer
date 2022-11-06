@@ -25,6 +25,7 @@ namespace Randomizer.SMZ3.Generation
         public StandardFiller(ILogger<StandardFiller> logger)
         {
             _logger = logger;
+            Random = new Random();
         }
 
         protected Random Random { get; set; }
@@ -90,8 +91,8 @@ namespace Randomizer.SMZ3.Generation
             }
 
             progressionItems = progressionItems.Shuffle(Random);
-            var niceItems = worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Random);
-            var junkItems = worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Random);
+            var niceItems = worlds.SelectMany(Item.CreateNicePool).Shuffle(Random);
+            var junkItems = worlds.SelectMany(Item.CreateJunkPool).Shuffle(Random);
 
             var locations = worlds.SelectMany(x => x.Locations).Empty().Shuffle(Random);
             if (config.SingleWorld)
@@ -132,7 +133,7 @@ namespace Randomizer.SMZ3.Generation
                 var configLocations = config.LocationItems.Shuffle(Random);
                 foreach (var (locationId, value) in configLocations)
                 {
-                    var location = world.Locations.FirstOrDefault(x => x.Id == locationId && x.Item == null);
+                    var location = world.Locations.FirstOrDefault(x => x.Id == locationId && x.Item.Type == ItemType.Nothing);
 
                     if (location == null)
                     {
@@ -190,14 +191,14 @@ namespace Randomizer.SMZ3.Generation
                 {
                     if (progressionItems.Any(x => x.Type == itemType))
                     {
-                        var accessibleLocations = world.Locations.Where(x => x.Item == null && x.IsAvailable(new Progression(addedItems, new List<RewardType>(), new List<BossType>()))).Shuffle(Random);
+                        var accessibleLocations = world.Locations.Where(x => x.Item.Type == ItemType.Nothing && x.IsAvailable(new Progression(addedItems, new List<RewardType>(), new List<BossType>()))).Shuffle(Random);
                         var location = accessibleLocations.First();
                         FillItemAtLocation(progressionItems, itemType, location);
                         addedItems.Add(itemType);
                     }
                 }
             }
-            
+
         }
 
         private void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder)
@@ -231,15 +232,6 @@ namespace Randomizer.SMZ3.Generation
                    select location.x;
         }
 
-        private static Location GetVanillaLocation(ItemType itemType, World world)
-        {
-            return itemType switch
-            {
-                ItemType.ProgressiveSword => world.HyruleCastle.LinksUncle,
-                _ => world.Locations.TrySingle(x => x.VanillaItem == itemType),
-            };
-        }
-
         private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world, Config config)
         {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
@@ -255,7 +247,7 @@ namespace Randomizer.SMZ3.Generation
             IEnumerable<Location> locations, IEnumerable<World> worlds,
             CancellationToken cancellationToken)
         {
-            var allRewards = worlds.SelectMany(w => Reward.CreatePool(w));
+            var allRewards = worlds.SelectMany(Reward.CreatePool);
             var allBosses = worlds.SelectMany(w => w.GoldenBosses);
             var itemsToAdd = new List<Item>(itemPool);
             var failedAttempts = new Dictionary<Item, int>();
@@ -316,7 +308,7 @@ namespace Randomizer.SMZ3.Generation
 
             return worlds
                 .SelectMany(w => w.Regions)
-                .Where(r => r is IHasReward && ((IHasReward)r).CanComplete(progressions[r.World]))
+                .Where(r => r is IHasReward reward && reward.CanComplete(progressions[r.World]))
                 .SelectMany(r => rewardPool.Where(p => p.Type == ((IHasReward)r).RewardType && p.Region == r));
         }
 
@@ -326,7 +318,7 @@ namespace Randomizer.SMZ3.Generation
 
             return worlds
                 .SelectMany(w => w.Regions)
-                .Where(r => r is IHasBoss && ((IHasBoss)r).CanBeatBoss(progressions[r.World]))
+                .Where(r => r is IHasBoss boss && boss.CanBeatBoss(progressions[r.World]))
                 .SelectMany(r => bossPool.Where(p => p.Type == ((IHasBoss)r).BossType && p.Region == r));
         }
 
@@ -335,7 +327,7 @@ namespace Randomizer.SMZ3.Generation
             var item = itemPool.Get(itemType);
             var location = world.Locations.Empty()
                 .Available(world.LocationItems, new List<Reward>(), new List<Boss>())
-                .Where(x => world.Config.LocationItems == null || !world.Config.LocationItems.ContainsKey(x.Id))
+                .Where(x => !world.Config.LocationItems.ContainsKey(x.Id))
                 .Random(Random);
             if (location == null)
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");

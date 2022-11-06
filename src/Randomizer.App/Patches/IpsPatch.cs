@@ -8,7 +8,7 @@ namespace Randomizer.App.Patches
         public static Stream GetStream(string name)
         {
             var type = typeof(IpsPatch);
-            return type.Assembly.GetManifestResourceStream(type, name);
+            return type.Assembly.GetManifestResourceStream(type, name) ?? throw new FileNotFoundException($"Not able to load IPS patch {name}");
         }
 
         /// <summary>

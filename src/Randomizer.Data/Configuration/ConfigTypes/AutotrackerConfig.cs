@@ -15,6 +15,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             = new("Auto tracker connected");
 
         /// <summary>
+        /// Gets the phrases to respond with when disconnected from the emulator.
+        /// </summary>
+        public SchrodingersString WhenDisconnected { get; init; }
+            = new("Auto tracker disconnected");
+
+        /// <summary>
         /// Gets the phrases to respond with when the game is started.
         /// </summary>
         public SchrodingersString GameStarted { get; init; }
@@ -171,6 +177,22 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             [8] = new SchrodingersString("That could have been worse."),
             [16] = new SchrodingersString("That was pretty rough."),
             [22] = new SchrodingersString("How unfortunate."),
+        };
+
+        /// <summary>
+        /// Auto tracker detected switching to SMZ3
+        /// </summary>
+        public SchrodingersString SwitchedToSMZ3Rom { get; init; }
+            = new("Oh, I have to do work again?");
+
+        /// <summary>
+        /// Responses for changing to a game other than SMZ3. The key represents the hash of the
+        /// rom that is being switched to. For any hashes that aren't found, the responses for
+        /// SwitchedToOtherRom["Unknown"] is used.
+        /// </summary>
+        public Dictionary<string, SchrodingersString> SwitchedToOtherRom { get; init; } = new()
+        {
+            ["Unknown"] = new SchrodingersString("I can't help you with this game.")
         };
     }
 }

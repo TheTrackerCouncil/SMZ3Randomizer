@@ -12,7 +12,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class MetaModule : TrackerModule
     {
-        private readonly ICommunicator _communicator;
         private const string ModifierKey = "Increase/Decrease";
         private const string ThresholdSettingKey = "ThresholdSetting";
         private const string ValueKey = "Value";
@@ -31,19 +30,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public MetaModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<MetaModule> logger, ICommunicator communicator)
             : base(tracker, itemService, worldService, logger)
         {
-            _communicator = communicator;
-
-            AddCommand("Repeat that", GetRepeatThatRule(), (tracker, result) =>
+            AddCommand("Repeat that", GetRepeatThatRule(), (result) =>
             {
                 tracker.Repeat();
             });
 
-            AddCommand("Shut up", GetShutUpRule(), (tracker, result) =>
+            AddCommand("Shut up", GetShutUpRule(), (result) =>
             {
                 tracker.ShutUp();
             });
 
-            AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (tracker, result) =>
+            AddCommand("Temporarily change threshold setting", GetIncreaseThresholdGrammar(), (result) =>
             {
                 var modifier = (int)result.Semantics[ModifierKey].Value;
                 var thresholdSetting = (int)result.Semantics[ThresholdSettingKey].Value;
@@ -78,50 +75,50 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             });
 
-            AddCommand("Pause timer", GetPauseTimerRule(), (tracker, result) =>
+            AddCommand("Pause timer", GetPauseTimerRule(), (result) =>
             {
                 tracker.PauseTimer();
             });
 
-            AddCommand("Start timer", GetResumeTimerRule(), (tracker, result) =>
+            AddCommand("Start timer", GetResumeTimerRule(), (result) =>
             {
                 tracker.StartTimer();
             });
 
-            AddCommand("Reset timer", GetResetTimerRule(), (tracker, result) =>
+            AddCommand("Reset timer", GetResetTimerRule(), (result) =>
             {
                 tracker.ResetTimer();
             });
 
-            AddCommand("Mute", GetMuteRule(), (tracker, result) =>
+            AddCommand("Mute", GetMuteRule(), (result) =>
             {
-                if (_communicator.IsEnabled)
+                if (communicator.IsEnabled)
                 {
                     tracker.Say(x => x.Muted);
-                    _communicator.Disable();
+                    communicator.Disable();
                     tracker.AddUndo(() =>
                     {
-                        _communicator.Enable();
+                        communicator.Enable();
                         Tracker.Say(x => x.ActionUndone);
                     });
                 }
-                
+
             });
 
-            AddCommand("Unmute", GetUnmuteRule(), (tracker, result) =>
+            AddCommand("Unmute", GetUnmuteRule(), (result) =>
             {
                 if (!communicator.IsEnabled)
                 {
-                    _communicator.Enable();
+                    communicator.Enable();
                     tracker.Say(x => x.Unmuted);
                     tracker.AddUndo(() =>
                     {
-                        _communicator.Disable();
+                        communicator.Disable();
                     });
                 }
             });
 
-            AddCommand("Beat game", GetBeatGameRule(), (tracker, result) =>
+            AddCommand("Beat game", GetBeatGameRule(), (result) =>
             {
                 tracker.GameBeaten(false);
             });

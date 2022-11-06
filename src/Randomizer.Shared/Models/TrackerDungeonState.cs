@@ -1,14 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Shared.Models {
 
     public class TrackerDungeonState
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public long Id { get; set; }
-        public TrackerState TrackerState { get; set; }
-        public string Name { get; set; }
+
+        public TrackerState? TrackerState { get; set; }
+        public string Name { get; set; } = string.Empty;
         public bool Cleared { get; set; }
         public int RemainingTreasure { get; set; }
         public RewardType? Reward { get; set; }

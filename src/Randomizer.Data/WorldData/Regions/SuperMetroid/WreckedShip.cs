@@ -1,13 +1,14 @@
-﻿using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
+﻿using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid
 {
     public class WreckedShip : SMRegion, IHasBoss
     {
-        public WreckedShip(World world, Config config) : base(world, config)
+        public WreckedShip(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
             MainShaftSideRoom = new Location(this, 128, 0x8FC265, LocationType.Visible,
                 name: "Missile (Wrecked Ship middle)",
@@ -15,7 +16,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanPassBombPassages(items),
                 memoryAddress: 0x10,
-                memoryFlag: 0x1);
+                memoryFlag: 0x1,
+                metadata: metadata,
+                trackerState: trackerState);
             PostChozoConcertSpeedBoosterItem = new Location(this, 129, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
                 name: "Reserve Tank, Wrecked Ship",
                 alsoKnownAs: new[] { "Post Chozo Concert - Speed Booster Item", "Bowling Alley - Speed Booster Item" },
@@ -23,7 +26,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 access: items => CanViewConcert(items, requireRewards: true) && items.SpeedBooster && Logic.CanUsePowerBombs(items),
                 relevanceRequirement: items => CanViewConcert(items, requireRewards: false) && items.SpeedBooster && Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x10,
-                memoryFlag: 0x2);
+                memoryFlag: 0x2,
+                metadata: metadata,
+                trackerState: trackerState);
             PostChozoConcertBreakableChozo = new Location(this, 130, 0x8FC2EF, LocationType.Visible,
                 name: "Missile (Gravity Suit)",
                 alsoKnownAs: new[] { "Post Chozo Concert - Breakable Chozo" },
@@ -31,7 +36,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 access: items => CanViewConcert(items, requireRewards: true),
                 relevanceRequirement: items => CanViewConcert(items, requireRewards: false),
                 memoryAddress: 0x10,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
             AtticAssemblyLine = new Location(this, 131, 0x8FC319, LocationType.Visible,
                 name: "Missile (Wrecked Ship top)",
                 alsoKnownAs: new[] { "Attic - Assembly Line" },
@@ -39,7 +46,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 access: items => CanAccessShutDownRooms(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessShutDownRooms(items, requireRewards: false),
                 memoryAddress: 0x10,
-                memoryFlag: 0x8);
+                memoryFlag: 0x8,
+                metadata: metadata,
+                trackerState: trackerState);
             WreckedPool = new Location(this, 132, 0x8FC337, LocationType.Visible,
                 name: "Energy Tank, Wrecked Ship",
                 alsoKnownAs: new[] { "Wrecked Pool" },
@@ -47,7 +56,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 access: items => CanAccessWreckedPool(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessWreckedPool(items, requireRewards: false),
                 memoryAddress: 0x10,
-                memoryFlag: 0x10);
+                memoryFlag: 0x10,
+                metadata: metadata,
+                trackerState: trackerState);
             LeftSuperMissileChamber = new Location(this, 133, 0x8FC357, LocationType.Visible,
                 name: "Super Missile (Wrecked Ship left)",
                 alsoKnownAs: new[] { "Left Super Missile Chamber" },
@@ -55,7 +66,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 access: items => CanAccessShutDownRooms(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessShutDownRooms(items, requireRewards: false),
                 memoryAddress: 0x10,
-                memoryFlag: 0x20);
+                memoryFlag: 0x20,
+                metadata: metadata,
+                trackerState: trackerState);
             RightSuperMissileChamber = new Location(this, 134, 0x8FC365, LocationType.Visible,
                 name: "Right Super, Wrecked Ship",
                 alsoKnownAs: new[] { "Right Super Missile Chamber" },
@@ -63,7 +76,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 access: items => CanAccessShutDownRooms(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessShutDownRooms(items, requireRewards: false),
                 memoryAddress: 0x10,
-                memoryFlag: 0x40);
+                memoryFlag: 0x40,
+                metadata: metadata,
+                trackerState: trackerState);
             PostChozoConcertGravitySuitChamber = new Location(this, 135, 0x8FC36D, LocationType.Chozo,
                 name: "Gravity Suit",
                 alsoKnownAs: new[] { "Post Chozo Concert - Gravity Suit Chamber" },
@@ -71,9 +86,12 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 access: items => CanViewConcert(items, requireRewards: true),
                 relevanceRequirement: items => CanViewConcert(items, requireRewards: false),
                 memoryAddress: 0x10,
-                memoryFlag: 0x80);
+                memoryFlag: 0x80,
+                metadata: metadata,
+                trackerState: trackerState);
             MemoryRegionId = 3;
-            Boss = new Boss(Shared.Enums.BossType.Phantoon, world, this);
+            Boss = new Boss(Shared.Enums.BossType.Phantoon, world, this, metadata, trackerState);
+            Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Wrecked Ship");
         }
 
         public override string Name => "Wrecked Ship";

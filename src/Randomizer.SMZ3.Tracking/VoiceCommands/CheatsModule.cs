@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Speech.Recognition;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.AutoTracking;
-using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.Data.WorldData;
 
@@ -33,7 +23,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private static readonly List<string> s_fillSuperMissileChoices = new() { "super missiles", "soup" };
         private static readonly List<string> s_fillPowerBombsChoices = new() { "power bombs", "hamburgers" };
 
-        private bool _cheatsEnabled = false;
+        private bool _cheatsEnabled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
@@ -48,31 +38,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
 
-            AddCommand("Enable cheats", GetEnableCheatsRule(), (tracker, result) =>
+            AddCommand("Enable cheats", GetEnableCheatsRule(), (result) =>
             {
                 _cheatsEnabled = true;
                 Tracker.Say(x => x.Cheats.EnabledCheats);
             });
 
-            AddCommand("Disable cheats", GetDisableHintsRule(), (tracker, result) =>
+            AddCommand("Disable cheats", GetDisableHintsRule(), (result) =>
             {
                 _cheatsEnabled = false;
                 Tracker.Say(x => x.Cheats.DisabledCheats);
             });
 
-            AddCommand("Fill rule", FillRule(), (tracker, result) =>
+            AddCommand("Fill rule", FillRule(), (result) =>
             {
                 var fillType = result.Semantics.ContainsKey(s_fillCheatKey) ? (string)result.Semantics[s_fillCheatKey].Value : s_fillHealthChoices.First();
                 Fill(fillType);
             });
 
-            AddCommand("Give item", GiveItemRule(), (tracker, result) =>
+            AddCommand("Give item", GiveItemRule(), (result) =>
             {
                 var item = GetItemFromResult(tracker, result, out var itemName);
                 GiveItem(item);
             });
 
-            AddCommand("Kill player", KillPlayerRule(), (tracker, result) =>
+            AddCommand("Kill player", KillPlayerRule(), (result) =>
             {
                 if (!PlayerCanCheat()) return;
 
@@ -94,7 +84,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Tracker.Say(x => x.Cheats.PromptEnableCheats);
                 return false;
             }
-            else if (Tracker.AutoTracker == null || !Tracker.AutoTracker.IsConnected)
+            else if (Tracker.AutoTracker == null || !Tracker.AutoTracker.IsConnected || !Tracker.AutoTracker.IsInSMZ3)
             {
                 Tracker.Say(x => x.Cheats.PromptEnableAutoTracker);
                 return false;

@@ -12,7 +12,7 @@ namespace Randomizer.SMZ3.Tests
         [InlineData("0", 0)]
         [InlineData("600233615", 600233615)]
         [InlineData("69217125", 69217125)]
-        public void ParseSeedAcceptsRegularIntegers(string input, int expected)
+        public void ParseSeedAcceptsRegularIntegers(string? input, int expected)
         {
             var result = Generation.Smz3Randomizer.ParseSeed(ref input);
 
@@ -22,7 +22,7 @@ namespace Randomizer.SMZ3.Tests
         [Theory]
         [InlineData("23C6D68F", 600233615)]
         [InlineData("0x69217125", 1763799333)]
-        public void ParseSeedAcceptsHexadecimalSeeds(string input, int expected)
+        public void ParseSeedAcceptsHexadecimalSeeds(string? input, int expected)
         {
             var result = Generation.Smz3Randomizer.ParseSeed(ref input);
 
@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Tests
 
         [Theory]
         [InlineData("Cas'", 1498539627)]
-        public void ParseSeedAcceptsAnyString(string input, int expected)
+        public void ParseSeedAcceptsAnyString(string? input, int expected)
         {
             var result = Generation.Smz3Randomizer.ParseSeed(ref input);
 

@@ -1,4 +1,4 @@
-﻿<Window x:Class="Randomizer.App.OptionsWindow"
+﻿<Window x:Class="Randomizer.App.Windows.OptionsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -184,8 +184,13 @@
                 </Grid>
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Undo expiration time:"
+                                       ToolTip="Specifies how many minutes you have to undo a tracker action to limit accidentally undoing actions.">
+                <TextBox Name="UndoExpirationTimeTextBox" Text="{Binding UndoExpirationTime, Mode=TwoWay}" LostFocus="UndoExpirationTimeTextBox_OnLostFocus" />
+              </controls:LabeledControl>
+
               <controls:LabeledControl Text="Auto Tracker Scripts folder:">
-                <controls:FileSystemInput Path="{Binding AutotrackerScriptsOutputPath, Mode=TwoWay}"
+                <controls:FileSystemInput Path="{Binding AutoTrackerScriptsOutputPath, Mode=TwoWay}"
                                           IsFolderPicker="True"
                                           DialogTitle="Select Auto Tracker scripts folder" />
               </controls:LabeledControl>

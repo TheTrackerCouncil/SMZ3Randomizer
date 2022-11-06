@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 
@@ -20,8 +21,9 @@ namespace Randomizer.Data.WorldData
         /// </summary>
         /// <param name="region">The region the room is located in.</param>
         /// <param name="name">The name of the room.</param>
-        public Room(Region region, string name)
-            : this(region, name, Array.Empty<string>())
+        /// <param name="metadata"></param>
+        public Room(Region region, string name, IMetadataService? metadata)
+            : this(region, name, metadata, Array.Empty<string>())
         {
         }
 
@@ -31,12 +33,14 @@ namespace Randomizer.Data.WorldData
         /// </summary>
         /// <param name="region">The region the room is located in.</param>
         /// <param name="name">The name of the room.</param>
+        /// <param name="metadata"></param>
         /// <param name="alsoKnownAs">A collection of alternate names.</param>
-        public Room(Region region, string name, params string[] alsoKnownAs)
+        public Room(Region region, string name, IMetadataService? metadata, params string[] alsoKnownAs)
         {
             Region = region;
             Name = name;
             AlsoKnownAs = new ReadOnlyCollection<string>(alsoKnownAs);
+            Metadata = metadata?.Room(this) ?? new RoomInfo(name);
         }
 
         /// <summary>

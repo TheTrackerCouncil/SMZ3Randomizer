@@ -27,6 +27,17 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RoomInfo"/> class with
+        /// the specified info.
+        /// </summary>
+        /// <param name="name">The possible names for the room.</param>
+        public RoomInfo(string name)
+        {
+            Room = name;
+            Name = new SchrodingersString(name);
+        }
+
+        /// <summary>
         /// Unique key to connect the RoomInfo with other configs
         /// </summary>
         [MergeKey]
@@ -104,6 +115,6 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representation of the room.
         /// </summary>
         /// <returns>A string representation of this room.</returns>
-        public override string? ToString() => Name[0];
+        public override string ToString() => Name[0];
     }
 }

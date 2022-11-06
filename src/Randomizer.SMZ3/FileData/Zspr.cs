@@ -13,11 +13,11 @@ namespace Randomizer.SMZ3.FileData {
 
         private const int SpriteType = 1;
 
-        public string Title { get; private set; }
-        public string Author { get; private set; }
-        public string AuthorAscii { get; private set; }
+        public string Title { get; private set; } = string.Empty;
+        public string Author { get; private set; } = string.Empty;
+        public string AuthorAscii { get; private set; } = string.Empty;
 
-        public byte[] Content { get; private set; }
+        public byte[] Content { get; private set; } = Array.Empty<byte>();
 
         private static readonly IList<int> fields = new[] {
             0x7000, // sprite

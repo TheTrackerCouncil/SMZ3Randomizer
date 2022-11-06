@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App.ViewModels
 {
@@ -22,13 +21,15 @@ namespace Randomizer.App.ViewModels
         /// <summary>
         /// The current map the user has selected
         /// </summary>
-        private TrackerMap _currentMap;
+        private TrackerMap? _currentMap;
 
         /// <summary>
         /// The size of the parent grid of the canvas to use for resizing the
         /// canvas
         /// </summary>
         private Size _gridSize;
+
+        private TrackerLocationSyncer? _syncer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerMap"/> class
@@ -43,23 +44,17 @@ namespace Randomizer.App.ViewModels
         /// Event for when one of the values has been updated to notify the
         /// window to refresh
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// List of all map names for displaying in the dropdown
         /// </summary>
-        public List<string> MapNames { get; set; }
-
-        /// <summary>
-        /// A reference to the original <see cref="TrackerViewModel"/> object to
-        /// keep synced up
-        /// </summary>
-        public TrackerViewModel TrackerViewModel { get; set; }
+        public List<string> MapNames { get; set; } = new();
 
         /// <summary>
         /// The current map the user has selected
         /// </summary>
-        public TrackerMap CurrentMap
+        public TrackerMap? CurrentMap
         {
             get => _currentMap;
             set
@@ -124,12 +119,12 @@ namespace Randomizer.App.ViewModels
                 if (_isDesign || CurrentMap == null)
                 {
                     return new BitmapImage(new Uri(System.IO.Path.Combine(
-                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
                     "Sprites", "Maps", "lttp_lightworld.png")));
                 }
 
                 return new BitmapImage(new Uri(System.IO.Path.Combine(
-                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
                     "Sprites", "Maps", CurrentMap.Image)));
             }
         }
@@ -138,7 +133,14 @@ namespace Randomizer.App.ViewModels
         /// TrackerLocationSyncer used to keep items synced between both
         /// locations and map windows
         /// </summary>
-        public TrackerLocationSyncer Syncer { get; set; }
+        public TrackerLocationSyncer Syncer
+        {
+            get => _syncer ?? throw new InvalidOperationException("Syncer not set for TrackerLocationSyncer");
+            set
+            {
+                _syncer = value;
+            }
+        }
 
         /// <summary>
         /// A list of all tracker map location view models to display on the map
@@ -147,7 +149,7 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                if (CurrentMap == null) return new List<TrackerMapLocationViewModel>();
+                if (_currentMap == null) return new List<TrackerMapLocationViewModel>();
 
                 // This is used to determine if there are invalid locations on
                 // the map
@@ -168,7 +170,7 @@ namespace Randomizer.App.ViewModels
                     .Where(x => x.Type != TrackerMapLocation.MapLocationType.SMDoor || Syncer.World.Config.MetroidKeysanity)
                     .Select(mapLoc => new TrackerMapLocationViewModel(mapLoc,
                         Syncer,
-                        MapSize.Width / CurrentMap.Width))
+                        MapSize.Width / _currentMap.Width))
                     .ToList();
             }
         }

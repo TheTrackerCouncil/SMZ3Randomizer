@@ -25,6 +25,7 @@ using Randomizer.SMZ3.Generation;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.App
 {
@@ -38,7 +39,7 @@ namespace Randomizer.App
         private readonly RomGenerator _romGenerator;
         private readonly LocationConfig _locations;
         private readonly IMetadataService _metadataService;
-        private RandomizerOptions _options;
+        private RandomizerOptions? _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
@@ -90,7 +91,7 @@ namespace Randomizer.App
 
         public RandomizerOptions Options
         {
-            get => _options;
+            get => _options ?? throw new InvalidOperationException("Options not loaded in GeneratedRomWindow");
             set
             {
                 DataContext = value;

@@ -41,7 +41,7 @@ namespace Randomizer.SMZ3
         /// <see langword="true"/> if the playthrough is possible; otherwise,
         /// <see langword="false"/>.
         /// </returns>
-        public static bool TryGenerate(IReadOnlyCollection<World> worlds, Config config, [MaybeNullWhen(true)] out Playthrough playthrough)
+        public static bool TryGenerate(IReadOnlyCollection<World> worlds, Config config, [MaybeNullWhen(true)] out Playthrough? playthrough)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Randomizer.SMZ3
             var rewards = new List<Reward>();
 
             var allBosses = worlds.SelectMany(w => w.GoldenBosses);
-            var bossRegions = worlds.SelectMany(w => w.GoldenBosses).Select(x => x.Region);
+            var bossRegions = worlds.SelectMany(w => w.GoldenBosses).Select(x => x.Region).Cast<IHasBoss>();
             var bosses = new List<Boss>();
 
             var keycardCount = 0;
@@ -123,7 +123,7 @@ namespace Randomizer.SMZ3
                     var inaccessibleLocations = allLocations.Where(l => !locations.Contains(l)).ToList();
 
                     // If there are a large number of inaccessible locations, throw an error if we can't beat the game
-                    // We determine this on if all players can beat all 4 golden bosses, access the 
+                    // We determine this on if all players can beat all 4 golden bosses, access the
                     if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count()))
                     {
                         var vitalLocations = allLocations.Where(x => x.Id is 256 + 215 or 48 or 134 or 154 or 78).ToList();
@@ -163,7 +163,7 @@ namespace Randomizer.SMZ3
                         text.Add($"Inaccessible Item: {location}", $"{location.Item.Name}");
                 }
 
-                foreach (var location in x.Locations.Where(x => IsImportant(x, Config.KeysanityMode)))
+                foreach (var location in x.Locations.Where(l => IsImportant(l, Config.KeysanityMode)))
                 {
                     if (Config.MultiWorld)
                         text.Add($"{location} ({location.Region.World.Player})", $"{location.Item.Name} ({location.Item.World.Player})");
@@ -177,10 +177,6 @@ namespace Randomizer.SMZ3
 
         public class Sphere
         {
-            public Sphere()
-            {
-            }
-
             public List<Location> Locations { get; } = new();
 
             public List<Item> Items { get; } = new();

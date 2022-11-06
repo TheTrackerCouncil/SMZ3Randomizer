@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Randomizer.Shared;
+﻿using Randomizer.Shared;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -16,6 +11,16 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Constructor
         /// </summary>
         public RewardInfo() { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RewardInfo(RewardType type)
+        {
+            Reward = type.GetDescription();
+            Name = new SchrodingersString(Reward);
+            RewardType = type;
+        }
 
         /// <summary>
         /// Unique key to connect the RewardInfo with other configs

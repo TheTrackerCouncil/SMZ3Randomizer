@@ -1,16 +1,11 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
 using Randomizer.App.ViewModels;
-using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
 
-namespace Randomizer.App
+namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for TrackerLocationsWindow.xaml
@@ -23,9 +18,13 @@ namespace Randomizer.App
 
             InitializeComponent();
 
-            ChestSprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "chest.png", out _)));
+            var sprite = uiService.GetSpritePath("Items", "chest.png", out _);
+            if (string.IsNullOrEmpty(sprite)) throw new InvalidOperationException("Could not load chest sprite");
+            ChestSprite = new BitmapImage(new Uri(sprite));
 
-            KeySprite = new BitmapImage(new Uri(uiService.GetSpritePath("Items", "key.png", out _)));
+            sprite = uiService.GetSpritePath("Items", "key.png", out _);
+            if (string.IsNullOrEmpty(sprite)) throw new InvalidOperationException("Could not load key sprite");
+            KeySprite = new BitmapImage(new Uri(sprite));
 
             App.RestoreWindowPositionAndSize(this);
         }

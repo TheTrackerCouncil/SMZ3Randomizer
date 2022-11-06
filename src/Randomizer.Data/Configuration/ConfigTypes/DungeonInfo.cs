@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
-using Randomizer.Shared;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -23,15 +22,27 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// The abbreviation of the dungeon name.
         /// </param>
         /// <param name="boss">The name of the boss.</param>
-        /// <param name="typeName">
-        /// The fully qualified type name of the region that represents the
-        /// dungeon.
-        /// </param>
         public DungeonInfo(SchrodingersString name, string abbreviation, SchrodingersString boss)
         {
             Name = name;
             Abbreviation = abbreviation;
-            Boss = boss ?? new();
+            Boss = boss;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DungeonInfo"/> class.
+        /// </summary>
+        /// <param name="name">The name of the dungeon.</param>
+        /// <param name="abbreviation">
+        /// The abbreviation of the dungeon name.
+        /// </param>
+        /// <param name="boss">The name of the boss.</param>
+        public DungeonInfo(string name, string abbreviation, string boss)
+        {
+            Dungeon = name;
+            Name = new (name);
+            Abbreviation = abbreviation;
+            Boss = new (boss);
         }
 
         /// <summary>

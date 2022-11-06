@@ -50,11 +50,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets a collection of map locations that belong to this region.
         /// </summary>
-        public IReadOnlyCollection<TrackerMapLocation> Rooms { get; }
+        public IReadOnlyCollection<TrackerMapLocation>? Rooms { get; }
 
         /// <summary>
         /// List of Super Metroid doors for Keysanity
         /// </summary>
-        public IReadOnlyCollection<TrackerMapSMDoor> Doors { get; }
+        public IReadOnlyCollection<TrackerMapSMDoor>? Doors { get; }
     }
 }

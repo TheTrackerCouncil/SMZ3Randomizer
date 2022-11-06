@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
-using Accessibility;
 using Randomizer.Data.WorldData;
-using Randomizer.SMZ3;
-using Randomizer.Data.Configuration.ConfigTypes;
 
 namespace Randomizer.App.ViewModels
 {
@@ -19,7 +11,7 @@ namespace Randomizer.App.ViewModels
         private readonly Item _itemData;
         private readonly TrackerLocationSyncer _syncer;
 
-        public MarkedLocationViewModel(Location location, Item itemData, string itemSprite, TrackerLocationSyncer syncer)
+        public MarkedLocationViewModel(Location location, Item itemData, string? itemSprite, TrackerLocationSyncer syncer)
         {
             _location = location;
             _itemData = itemData;
@@ -27,7 +19,7 @@ namespace Randomizer.App.ViewModels
             ItemSprite = itemSprite != null ? new BitmapImage(new Uri(itemSprite)) : null;
         }
 
-        public ImageSource ItemSprite { get; }
+        public ImageSource? ItemSprite { get; }
 
         public double Opacity => _syncer.ShowOutOfLogicLocations || _syncer.WorldService.IsAvailable(_location) ? 1.0 : 0.33;
 

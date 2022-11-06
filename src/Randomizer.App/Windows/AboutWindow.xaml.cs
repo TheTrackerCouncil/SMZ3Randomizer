@@ -24,7 +24,7 @@ namespace Randomizer.App
         public AboutWindow()
         {
             var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            Version = version.ProductVersion;
+            Version = version?.ProductVersion ?? "";
 
             InitializeComponent();
         }

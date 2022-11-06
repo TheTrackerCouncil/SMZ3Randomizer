@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Speech.Recognition;
-using System.Speech.Synthesis.TtsEngine;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
-using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -30,10 +28,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private bool _askChatAboutContentCheckPollResults = true;
         private string? _askChatAboutContentPollId;
         private int _askChatAboutContentPollTime = 60;
-        private bool _hasAskedChatAboutContent = false;
-        private DateTimeOffset? _guessingGameStart = null;
-        private DateTimeOffset? _guessingGameClosed = null;
-        private int? _trackerGuess = null;
+        private bool _hasAskedChatAboutContent;
+        private DateTimeOffset? _guessingGameStart;
+        private DateTimeOffset? _guessingGameClosed ;
+        private int? _trackerGuess;
 
         /// <summary>
         /// Initializes a new instance of the <see
@@ -57,23 +55,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             ChatClient.Disconnected += ChatClient_Disconnected;
             ChatClient.SendMessageFailure += ChatClient_SendMessageFailure;
 
-            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (tracker, result) =>
+            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (result) =>
             {
                 await StartGanonsTowerGuessingGame();
             });
 
-            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (tracker, result) =>
+            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (result) =>
             {
                 await CloseGanonsTowerGuessingGameGuesses();
             });
 
-            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (tracker, result) =>
+            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (result) =>
             {
                 var winningNumber = (int)result.Semantics[WinningGuessKey].Value;
                 await DeclareGanonsTowerGuessingGameWinner(winningNumber);
             });
 
-            AddCommand("Track Content", GetTrackContent(), async (tracker, result) =>
+            AddCommand("Track Content", GetTrackContent(), async (result) =>
             {
                 await AskChatAboutContent();
             });

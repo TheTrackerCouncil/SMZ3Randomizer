@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithSatisfiedLogicHasNoMissingItems()
         {
-            var progression = new Progression(new[] { new Item(ItemType.Boots) }, new List<Reward>(), new List<Boss>());
+            var progression = new Progression(new[] { new Item(ItemType.Boots, World) }, new List<Reward>(), new List<Boss>());
             var missingItems = Logic.GetMissingRequiredItems(World.LightWorldSouth.Library, progression, out _);
             missingItems.Should().BeEmpty();
         }
@@ -61,7 +61,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithTwoMissingItemsReturnsTwoMissingItems()
         {
-            var emptyProgression = new Progression(Item.CreateKeycards(null), new List<Reward>(), new List<Boss>());
+            var emptyProgression = new Progression(Item.CreateKeycards(World), new List<Reward>(), new List<Boss>());
             var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.PowerBomb, emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.PowerBomb });
         }
@@ -69,7 +69,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithMultipleOptionsReturnsAllOptions()
         {
-            var emptyProgression = new Progression(Item.CreateKeycards(null), new List<Reward>(), new List<Boss>());
+            var emptyProgression = new Progression(Item.CreateKeycards(World), new List<Reward>(), new List<Boss>());
             var missingItems = Logic.GetMissingRequiredItems(World.BlueBrinstar.Ceiling, emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.SpaceJump })
                 .And.ContainEquivalentOf(new[] { ItemType.HiJump })
@@ -80,7 +80,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         [Fact]
         public void LocationWithThreeMissingItemsReturnsThreeMissingItems()
         {
-            var emptyProgression = new Progression(Item.CreateKeycards(null), new List<Reward>(), new List<Boss>());
+            var emptyProgression = new Progression(Item.CreateKeycards(World), new List<Reward>(), new List<Boss>());
             var missingItems = Logic.GetMissingRequiredItems(World.CentralCrateria.BombTorizo, emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
         }
