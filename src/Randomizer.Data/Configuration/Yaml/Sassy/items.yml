@@ -7,15 +7,15 @@
       Weight: 0.1
     - Text: Tracked content. Be good or I'll take it away.
       Weight: 0.1
-    "2": 
+    "2":
     "10":
     - Text: Such a bountiful supply of content
     - Text: Please help! I cannot hold all this content
-    "11": 
+    "11":
     "15":
     - Text: I'm beginning to think you're lying about all this content.
     - Text: Is there really this much content?
-    "16": 
+    "16":
 - Item: Death
   WhenTracked:
     "1":
@@ -139,7 +139,7 @@
     - Text: I hope you enjoy your first bottle
     - Text: Was there a bee in this one?
     - Text: Potion storage increased by one step
-    "2": 
+    "2":
 - Item: Heart piece
   WhenTracked:
     "1":
@@ -158,17 +158,17 @@
     - Text: Another full heart, neat
     - Text: Increased survivablity by one step
     - Text: Maybe now you won't die.
-    "5": 
+    "5":
     "8":
     - Text: Wow another full heart
     - Text: Increased survivablity by one step
     - Text: Enough pieces for three full hearts. Wow
-    "9": 
+    "9":
     "12":
     - Text: I'm running out of jokes to make about you finding so many heart pieces
     - Text: Increased survivablity by one step
     - Text: Death is now a little harder to achieve.
-    "13": 
+    "13":
 - Item: Cane of Byrna
   Name:
   - Text: Cane of lag
@@ -234,7 +234,7 @@
     - Text: Throw more of these please
     - Text: I do enjoy seeing explosions
       Weight: 0.5
-    "3": 
+    "3":
 - Item: One Rupee
   WhenTracked:
     "1":
@@ -254,7 +254,7 @@
     "2":
     - Text: Blue pee? Maybe you should see a doctor.
     - Text: I hope your wallet is big enough
-    "3": 
+    "3":
 - Item: Twenty Rupees
   Name:
   - Text: Big 20
@@ -268,7 +268,7 @@
     "2":
     - Text: Only your second? I'm surprised.
     - Text: You now have 2 big twenties. Out of like five thousand.
-    "3": 
+    "3":
 - Item: Heart Container
   WhenTracked:
     "1":
@@ -277,7 +277,7 @@
     - Text: Thump thump
     "2":
     - Text: Get a few more and I can sleep early today
-    "3": 
+    "3":
 - Item: One Hundred Rupees
   Name:
   - Text: One Hundred Rupees
@@ -285,12 +285,12 @@
     "1":
     - Text: Don't spend it all in one place
     - Text: At least this is some decent money
-    "2": 
+    "2":
 - Item: Fifty Rupees
   WhenTracked:
     "1":
     - Text: Do you need bombs? Now you can afford them.
-    "2": 
+    "2":
 - Item: Single Arrow
   Name:
   - Text: Single Stick
@@ -299,7 +299,7 @@
     "1":
     - Text: This is now my favorite stick
     - Text: It's a single arrow, why are you having me track this?
-    "2": 
+    "2":
 - Item: Ten Arrows
   Name:
   - Text: Ten Sticks
@@ -308,7 +308,7 @@
     "1":
     - Text: Ten whole arrows, wow.
     - Text: This might be useful, if you didn't find sticks everywhere
-    "2": 
+    "2":
 - Item: Three Hundred Rupees
   WhenTracked:
     "1":
@@ -320,7 +320,7 @@
     "3":
     - Text: Did you seriously need three of these?
     - Text: Well aren't you rich now?
-    "4": 
+    "4":
 - Item: Pegasus Boots
   Name:
   - Text: Speedy boots
@@ -341,7 +341,7 @@
     - Text: Your mom signed the permission slip, now you can carry more bombs
     - Text: You are now authorized to know more things
     - Text: You can now carry more of an item you'll probably never run out of after the first 15 minutes.
-    "3": 
+    "3":
 - Item: +5 Arrow Capacity
   Name:
   - Text: +5 Stick Capacity
@@ -357,7 +357,7 @@
     "2":
     - Text: Your mom signed the permission slip, now you can carry more arrows
     - Text: You had to be told how to carry more sticks? Twice?
-    "3": 
+    "3":
 - Item: Sword
   Name:
   - Text: Pointy thing
@@ -367,11 +367,11 @@
     - Text: Tracked sword
     - Text: You can now poke things
     - Text: Don't forget to use the pointy end
-    "2": 
+    "2":
     "3":
     - Text: Toggled Bacon on
     - Text: Hmm... Bacon
-    "4": 
+    "4":
   Stages:
     "1":
     - Text: Fighter's Sword
@@ -393,7 +393,7 @@
     - Text: Congratulations on your new Fighter's Shield
     - Text: Do you really need this?
       Weight: 0.5
-    "2": 
+    "2":
     "3":
     - Text: Can you still see the sprite?
     - Text: Increased lag by one step
@@ -516,7 +516,7 @@
     - Text: Two whole tanks of energy. Wow.
     - Text: FYI You shouldn't drink these.
     - Text: Upgraded caffeine by one step
-    "3": 
+    "3":
     "14":
     - Text: You actually did it, you got all the E-Tanks in the game.
 - Item: Reserve Tank
@@ -532,7 +532,7 @@
     "2":
     - Text: <break time='3s'/> Oh I'm sorry. Was I supposed to care about Reserve Tanks?
     - Text: Oh. Neat. Wow. Reserve Tanks.
-    "3": 
+    "3":
 - Item: Missile
   Name:
   - Text: Explosive arrow
@@ -549,17 +549,17 @@
     - Text: Ten missles. Neat.
     - Text: The second missle pack is always special
     - Text: More Missiles
-    "3": 
+    "3":
     "4":
     - Text: You need some of these, right?
     - Text: Sometimes it feels like you only find missles in the game
-    "5": 
+    "5":
     "20":
     - Text: Okay, you have enough missiles now
-    "21": 
+    "21":
     "69":
     - Text: Nice
-    "70": 
+    "70":
 - Item: Super Missile
   Name:
   - Text: Soups
@@ -585,12 +585,12 @@
     - Text: Stockpiled more soup
     - Text: That is like a week's worth of soup
     - Text: Wow that's super
-    "3": 
+    "3":
     "10":
     - Text: Don't you have enough super missiles now?
     - Text: That's a lot of soup!
     - Text: Who needs the charge beam now?
-    "13": 
+    "13":
 - Item: Power Bomb
   Name:
   - Text: Explosive Hamburger
@@ -618,9 +618,9 @@
     - Text: Now you won't run out in the wrecked ship
     - Text: What are you going to destroy with these?
     - Text: Time to get things done in Metroid?
-    "3": 
+    "3":
     "4":
     - Text: Can you even eat that many burgs?
     - Text: You should have enough now, I think
-    "5": 
+    "5":
 

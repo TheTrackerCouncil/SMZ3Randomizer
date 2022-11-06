@@ -49,7 +49,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly ILogger<Tracker> _logger;
         private readonly TrackerOptionsAccessor _trackerOptions;
         private readonly Dictionary<string, Timer> _idleTimers;
-        private readonly Stack<Action> _undoHistory = new();
+        private readonly Stack<(Action Action, DateTime UndoTime)> _undoHistory = new();
         private readonly RandomizerContext _dbContext;
         private readonly ICommunicator _communicator;
         private readonly ITrackerStateService _stateService;
@@ -426,9 +426,17 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (_undoHistory.TryPop(out var undoLast))
             {
-                Say(Responses.ActionUndone);
-                undoLast();
-                OnActionUndone(new TrackerEventArgs(confidence));
+                if ((DateTime.Now - undoLast.UndoTime).TotalMinutes <= (_trackerOptions?.Options?.UndoExpirationTime ?? 3))
+                {
+                    Say(Responses.ActionUndone);
+                    undoLast.Action();
+                    OnActionUndone(new TrackerEventArgs(confidence));
+                }
+                else
+                {
+                    Say(Responses.UndoExpired);
+                    _undoHistory.Push(undoLast);
+                }
             }
             else
             {
@@ -529,7 +537,8 @@ namespace Randomizer.SMZ3.Tracking
         /// possible rewards.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null)
+        /// <param name="autoTracked">If this was called by the auto tracker</param>
+        public void SetDungeonReward(IDungeon dungeon, RewardType? reward = null, float? confidence = null, bool autoTracked = false)
         {
             var originalReward = dungeon.DungeonState.MarkedReward;
             if (reward == null)
@@ -547,7 +556,8 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             OnDungeonUpdated(new TrackerEventArgs(confidence));
-            AddUndo(() => dungeon.DungeonState.MarkedReward = originalReward);
+
+            if (!autoTracked) AddUndo(() => dungeon.DungeonState.MarkedReward = originalReward);
         }
 
         /// <summary>
@@ -1337,7 +1347,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 dungeon = GetDungeonFromItem(item, dungeon)!;
                 if (TrackDungeonTreasure(dungeon, confidence))
-                    undoTrackTreasure = _undoHistory.Pop();
+                    undoTrackTreasure = _undoHistory.Pop().Action;
             }
 
             IsDirty = true;
@@ -1358,7 +1368,7 @@ namespace Randomizer.SMZ3.Tracking
 
                 AddUndo(() =>
                 {
-                    undoTrack();
+                    undoTrack.Action();
                     undoTrackTreasure?.Invoke();
                     location.State.Cleared = false;
                     ItemService.ResetProgression();
@@ -1368,7 +1378,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 AddUndo(() =>
                 {
-                    undoTrack();
+                    undoTrack.Action();
                     undoTrackTreasure?.Invoke();
                     ItemService.ResetProgression();
                 });
@@ -1411,8 +1421,8 @@ namespace Randomizer.SMZ3.Tracking
                 var undoTrack = _undoHistory.Pop();
                 AddUndo(() =>
                 {
-                    undoClear();
-                    undoTrack();
+                    undoClear.Action();
+                    undoTrack.Action();
                     ItemService.ResetProgression();
                 });
             }
@@ -1728,7 +1738,7 @@ namespace Randomizer.SMZ3.Tracking
 
                 if (!autoTracked)
                 {
-                    undoStopPegWorldMode = _undoHistory.Pop();
+                    undoStopPegWorldMode = _undoHistory.Pop().Action;
                 }
             }
 
@@ -1889,7 +1899,7 @@ namespace Randomizer.SMZ3.Tracking
                     if (item.Type != ItemType.Nothing && item.State.TrackingState > 0)
                     {
                         UntrackItem(item);
-                        undoUntrack = _undoHistory.Pop();
+                        undoUntrack = _undoHistory.Pop().Action;
                     }
 
                     if (!rewardLocation.Item.IsDungeonItem)
@@ -2175,7 +2185,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="undo">
         /// The action to invoke to undo the last operation.
         /// </param>
-        protected internal virtual void AddUndo(Action undo) => _undoHistory.Push(undo);
+        protected internal virtual void AddUndo(Action undo) => _undoHistory.Push((undo, DateTime.Now));
 
         /// <summary>
         /// Cleans up resources used by this class.
@@ -2310,7 +2320,7 @@ namespace Randomizer.SMZ3.Tracking
             if (dungeon != null && (IsTreasure(item) || World.Config.ZeldaKeysanity))
             {
                 if (TrackDungeonTreasure(dungeon, confidence))
-                    return _undoHistory.Pop();
+                    return _undoHistory.Pop().Action;
             }
 
             IsDirty = true;
@@ -2331,7 +2341,7 @@ namespace Randomizer.SMZ3.Tracking
             if (dungeon != null && (IsTreasure(location.Item) || World.Config.ZeldaKeysanity))
             {
                 if (TrackDungeonTreasure(dungeon, confidence, 1, autoTracked, stateResponse))
-                    return _undoHistory.Pop();
+                    return _undoHistory.Pop().Action;
             }
 
             IsDirty = true;
@@ -2355,7 +2365,7 @@ namespace Randomizer.SMZ3.Tracking
             }
             else
             {
-                if (item.Type == location.VanillaItem)
+                if (item.Type == location.VanillaItem && item.Type != ItemType.Nothing)
                 {
                     Say(x => x.TrackedVanillaItem);
                     return;

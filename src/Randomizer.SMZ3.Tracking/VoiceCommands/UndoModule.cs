@@ -29,7 +29,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             return new GrammarBuilder()
                 .Append("Hey tracker,")
-                .OneOf("undo", "undo that", "control Z", "that's not what I said");
+                .OneOf("undo that", "control Z", "that's not what I said", "take backsies");
         }
     }
 }

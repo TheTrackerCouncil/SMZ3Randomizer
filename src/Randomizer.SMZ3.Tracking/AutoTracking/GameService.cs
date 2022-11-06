@@ -17,7 +17,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
     /// auto tracker
     /// </summary>
     public class GameService : TrackerModule
-    { 
+    {
         private AutoTracker? _autoTracker => Tracker.AutoTracker;
         private readonly ILogger<GameService> _logger;
 
@@ -44,12 +44,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryGiveItem(Item item, int fromPlayerId = 0)
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected)
+            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
 
-            // First give the player the item by the requested 
+            // First give the player the item by the requested
             var bytes = new List<byte>();
             bytes.AddRange(Int16ToBytes(fromPlayerId + 1));
             bytes.AddRange(Int16ToBytes((int)item.Type));
@@ -92,7 +92,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryHealPlayer()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected)
+            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -141,7 +141,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give magic to the player</returns>
         public bool TryFillMagic()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -163,7 +163,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give bombs to the player</returns>
         public bool TryFillZeldaBombs()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -185,7 +185,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give arrows to the player</returns>
         public bool TryFillArrows()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -207,7 +207,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give rupees to the player</returns>
         public bool TryFillRupees()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -229,7 +229,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give missiles to the player</returns>
         public bool TryFillMissiles()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -252,7 +252,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give super missiles to the player</returns>
         public bool TryFillSuperMissiles()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -275,7 +275,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give power bombs to the player</returns>
         public bool TryFillPowerBombs()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -298,7 +298,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if successful</returns>
         public bool TryKillPlayer()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected)
+            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }

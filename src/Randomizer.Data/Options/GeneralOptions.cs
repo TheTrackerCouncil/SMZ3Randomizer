@@ -99,6 +99,8 @@ namespace Randomizer.Data.Options
 
         public bool AutoTrackerChangeMap { get; set; } = true;
 
+        public int UndoExpirationTime { get; set; } = 3;
+
         public string? TwitchUserName
         {
             get => _twitchUserName;
@@ -186,6 +188,7 @@ namespace Randomizer.Data.Options
             AutoTrackerChangeMap = AutoTrackerChangeMap,
             VoiceFrequency = (TrackerVoiceFrequency)VoiceFrequency,
             TrackerProfiles = SelectedProfiles,
+            UndoExpirationTime = UndoExpirationTime,
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

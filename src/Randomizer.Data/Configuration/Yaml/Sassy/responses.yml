@@ -328,6 +328,10 @@ NothingToUndo:
 - Text: There's nothing to undo.
 - Text: I haven't done anything.
 - Text: It's no use!
+UndoExpired:
+- Text: I'm afraid I can no longer undo that.
+- Text: You waited too long for me to undo that.
+- Text: You'll need to ask me sooner next time you want to undo something.
 TrackerSettingChanged:
 - Text: Changed {0} to {1}.
 BossDefeated:
@@ -909,7 +913,7 @@ Cheats:
     Weight: 0.05
   CheatFailed:
   - Text: Sorry, I can't perform that cheat for you at this time
-  CheatInvalidItem: 
+  CheatInvalidItem:
   - Text: If you want some of that, you'll need to make it yourself.
   - Text: Do you have any idea what you're even asking for?
   - Text: I'm sorry, I can't give you any of that.

@@ -35,6 +35,11 @@ namespace Randomizer.Data.Logic
         [Category("Logic")]
         public bool EasyEastCrateriaSkyItem { get; set; }
 
+        [DisplayName("Kholdstare Needs Somaria")]
+        [Description("You're expected to have the Cane of Somaria to get to Kholdstare to prevent from having to clear Ice Palace the vanilla way.")]
+        [Category("Logic")]
+        public bool KholdstareNeedsCaneOfSomaria { get; set; }
+
         [DisplayName("Fire Rod for Dark Rooms")]
         [Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness.")]
         [Category("Tricks")]
