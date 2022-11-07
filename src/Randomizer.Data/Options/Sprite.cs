@@ -22,7 +22,7 @@ namespace Randomizer.Data.Options
             Author = author;
             FilePath = filePath;
             SpriteType = spriteType;
-            if (FilePath == null)
+            if (string.IsNullOrEmpty(filePath))
                 _isDefault = true;
         }
 
