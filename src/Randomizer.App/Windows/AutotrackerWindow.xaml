@@ -170,6 +170,10 @@
       </TextBlock>
 
       <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        • If you're using BizHawk, make sure you are set to use luainterface instead nlua.
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
         • Try copying the socket.dll file within the appropriate folder for your emulator and place it within the base directory of your emulator.
       </TextBlock>
 

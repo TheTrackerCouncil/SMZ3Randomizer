@@ -4,6 +4,8 @@ if not status then
     print('')
     print('Make sure you are using the correct auto tracking script folder for your emulator.')
     print('')
+    print('For BizHawk, make sure you are set to using luainterface instead of nlua')
+    print('')
     print('If you continue to have an error, copy the socket.dll file from the correct auto tracking script folder to the base directory of your emulator')
     return
 end
