@@ -82,7 +82,10 @@ namespace Randomizer.SMZ3.Generation
             if (primaryConfig.Race)
                 rng = new Random(rng.Next());
 
-            _logger.LogDebug($"Seed: {seedNumber} | Race: {primaryConfig.Race} | Keysanity: {primaryConfig.KeysanityMode} | Item placement: {primaryConfig.ItemPlacementRule} | World count : {configs.Count()}");
+            _logger.LogDebug(
+                "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule} | World count : {Count}",
+                seedNumber, primaryConfig.Race, primaryConfig.KeysanityMode, primaryConfig.ItemPlacementRule,
+                configs.Count);
 
             // Testing code. Tests should fail if this code is present.
             // This code will be remove once multiworld is properly implemented.
@@ -178,7 +181,7 @@ namespace Randomizer.SMZ3.Generation
                 var config = world.Config;
                 var configLocations = config.LocationItems;
 
-                foreach ((var locationId, var value) in configLocations)
+                foreach (var (locationId, value) in configLocations)
                 {
                     var location = world.Locations.First(x => x.Id == locationId);
                     if (value < Enum.GetValues(typeof(ItemPool)).Length)
@@ -186,7 +189,9 @@ namespace Randomizer.SMZ3.Generation
                         var itemPool = (ItemPool)value;
                         if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && !location.Item.Type.IsInCategory(ItemCategory.Junk)))
                         {
-                            _logger.LogInformation($"Location {location.Name} did not have the correct ItemType of {itemPool}. Actual item: {location.Item.Name}");
+                            _logger.LogInformation(
+                                "Location {LocationName} did not have the correct ItemType of {ItemPool}. Actual item: {ItemName}",
+                                location.Name, itemPool, location.Item.Name);
                             return false;
                         }
                     }
@@ -195,7 +200,9 @@ namespace Randomizer.SMZ3.Generation
                         var itemType = (ItemType)value;
                         if (location.Item.Type != itemType)
                         {
-                            _logger.LogInformation($"Location {location.Name} did not have the correct Item of {itemType}. Actual item: {location.Item.Name}");
+                            _logger.LogInformation(
+                                "Location {LocationName} did not have the correct Item of {ItemType}. Actual item: {ItemName}",
+                                location.Name, itemType, location.Item.Name);
                             return false;
                         }
                     }
@@ -207,7 +214,7 @@ namespace Randomizer.SMZ3.Generation
                     var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
                     if (sphereIndex > 2)
                     {
-                        _logger.LogInformation($"Item {itemType} did not show up early as expected. Sphere: {sphereIndex}");
+                        _logger.LogInformation("Item {ItemType} did not show up early as expected. Sphere: {SphereIndex}", itemType, sphereIndex);
                         return false;
                     }
                 }

@@ -26,6 +26,7 @@ using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Enums;
+using Randomizer.Multiworld.Client;
 
 namespace Randomizer.App
 {
@@ -39,17 +40,40 @@ namespace Randomizer.App
         private readonly RomGenerator _romGenerator;
         private readonly LocationConfig _locations;
         private readonly IMetadataService _metadataService;
+        private readonly MultiworldClientService _multiworldClientService;
         private RandomizerOptions? _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
             LocationConfig locations,
-            IMetadataService metadataService)
+            IMetadataService metadataService,
+            MultiworldClientService multiworldClientService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
             _locations = locations;
             _metadataService = metadataService;
+            _multiworldClientService = multiworldClientService;
+            _multiworldClientService.OnConnected += async () =>
+            {
+                if (ServerUrlTextBox.Text.Contains("?game="))
+                {
+                    var gameId =
+                        ServerUrlTextBox.Text[(ServerUrlTextBox.Text.IndexOf("=", StringComparison.Ordinal) + 1)..];
+                    var playerName = PlayerNameTextBox.Text;
+                    await _multiworldClientService.JoinGame(gameId, playerName);
+                }
+                else
+                {
+                    var playerName = PlayerNameTextBox.Text;
+                    await _multiworldClientService.CreateGame(playerName);
+                }
+
+            };
+            _multiworldClientService.OnGameCreated += (guid) =>
+            {
+                ServerUrlTextBox.Text += "?game=" + guid;
+            };
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -78,10 +102,28 @@ namespace Randomizer.App
         public Visibility VisibleInPlando => PlandoMode ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
+        /// Gets the visibility of controls which should be hidden when plando
+        /// mode is active.
+        /// </summary>
+        public Visibility InvisibleInMultiworld => true ? Visibility.Collapsed : Visibility.Visible;
+
+        /// <summary>
+        /// Gets the visibility of controls which should be shown only when
+        /// plando mode is active.
+        /// </summary>
+        public Visibility VisibleInMultiworld => true ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
         /// Gets the IsEnabled value for controls which should be disabled when
         /// plando mode is active.
         /// </summary>
         public bool DisabledInPlando => !PlandoMode;
+
+        /// <summary>
+        /// Gets the IsEnabled value for controls which should be disabled when
+        /// plando mode is active.
+        /// </summary>
+        public bool DisabledInMultiworld => !true;
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
@@ -366,7 +408,7 @@ namespace Randomizer.App
                 DialogResult = true;
                 Close();
             }
-            
+
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -694,6 +736,14 @@ namespace Randomizer.App
             public string Text { get; set; }
 
             public override string ToString() => Text;
+        }
+
+        private async void CreateNewMultiworldGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            var url = ServerUrlTextBox.Text;
+            if (url.Contains("?"))
+                url = url[..url.IndexOf("?", StringComparison.Ordinal)];
+            await _multiworldClientService.Connect(ServerUrlTextBox.Text);
         }
     }
 }

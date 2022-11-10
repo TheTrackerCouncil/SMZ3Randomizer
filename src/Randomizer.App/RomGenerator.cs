@@ -245,6 +245,11 @@ namespace Randomizer.App
             return _plandomizer.GenerateSeed(config, CancellationToken.None);
         }
 
+        public SeedData GenerateMultiworldSeed(List<Config> configs)
+        {
+            return _randomizer.GenerateSeed(configs, seed: null);
+        }
+
         /// <summary>
         /// Uses the options to generate the rom
         /// </summary>

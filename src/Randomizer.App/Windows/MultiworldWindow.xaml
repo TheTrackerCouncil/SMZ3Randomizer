@@ -1,0 +1,39 @@
+﻿<Window x:Class="Randomizer.App.Windows.MultiworldWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Randomizer.App.Windows"
+        mc:Ignorable="d"
+        Title="MultiworldWindow" Height="200" Width="400">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
+      <TextBlock>Server Url:
+      </TextBlock>
+      <TextBox></TextBox>
+    </StackPanel>
+
+    <Border Grid.Row="1"
+            Style="{StaticResource BottomPanel}">
+      <Grid>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+          <Button x:Name="NewGameButton"
+                  Click="NewGameButton_Click">_New Game
+          </Button>
+          <Button x:Name="CancelButton"
+                  Click="CancelButton_Click">_Cancel
+          </Button>
+          
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+
+  
+</Window>

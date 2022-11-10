@@ -22,6 +22,7 @@ using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
+using Randomizer.Multiworld.Client;
 
 namespace Randomizer.Tools
 {
@@ -42,27 +43,10 @@ namespace Randomizer.Tools
 
         public static void Main(string[] args)
         {
-            var logicConfig = new LogicConfig()
-            {
-                PreventScrewAttackSoftLock = true,
-                PreventFivePowerBombSeed = true,
-                LeftSandPitRequiresSpringBall = true,
-                LaunchPadRequiresIceBeam = true,
-                EasyEastCrateriaSkyItem = true,
-                WaterwayNeedsGravitySuit = true,
-            };
-            var sb = new StringBuilder();
-            foreach (KeysanityMode keysanityMode in Enum.GetValues(typeof(KeysanityMode)))
-            {
-                foreach (ItemPlacementRule itemPlacementRule in Enum.GetValues(typeof(ItemPlacementRule)))
-                {
-                    var output = GenerateStats(new Config() { KeysanityMode = keysanityMode, ItemPlacementRule = itemPlacementRule , LogicConfig = logicConfig }, 1000);
-                    sb.AppendLine(output);
-                    Console.WriteLine(output);
-                }
-            }
-
-            Console.WriteLine("Complete!");
+            /*var client = new MultiworldClientService();
+            await client.Connect("http://localhost:63624/multiworld");
+            await client.CreateGame();
+            await Task.Delay(TimeSpan.FromSeconds(30));
             //var rootCommand = new RootCommand("SMZ3 Randomizer command-line tools");
 
             /*
@@ -218,6 +202,31 @@ namespace Randomizer.Tools
                 ? span.Slice(start)
                 : span.Slice(start, maxLength + softHyphens);
             return start + slice.LastIndexOfAny(' ', SoftHyphen);
+        }
+
+        public static void GeneralAllState()
+        {
+            var logicConfig = new LogicConfig()
+            {
+                PreventScrewAttackSoftLock = true,
+                PreventFivePowerBombSeed = true,
+                LeftSandPitRequiresSpringBall = true,
+                LaunchPadRequiresIceBeam = true,
+                EasyEastCrateriaSkyItem = true,
+                WaterwayNeedsGravitySuit = true,
+            };
+            var sb = new StringBuilder();
+            foreach (KeysanityMode keysanityMode in Enum.GetValues(typeof(KeysanityMode)))
+            {
+                foreach (ItemPlacementRule itemPlacementRule in Enum.GetValues(typeof(ItemPlacementRule)))
+                {
+                    var output = GenerateStats(new Config() { KeysanityMode = keysanityMode, ItemPlacementRule = itemPlacementRule, LogicConfig = logicConfig }, 1000);
+                    sb.AppendLine(output);
+                    Console.WriteLine(output);
+                }
+            }
+
+            Console.WriteLine("Complete!");
         }
 
         public static string GenerateStats(Config config, int count = 50)

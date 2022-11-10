@@ -51,7 +51,23 @@
         or may not be completable.
             </TextBlock>
           </Border>
-          
+
+          <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,11"
+                      Visibility="Visible">
+            <controls:LabeledControl Text="Server Url:">
+              <TextBox Name="ServerUrlTextBox" Text="http://localhost:63624/multiworld"></TextBox>
+            </controls:LabeledControl>
+
+            <controls:LabeledControl Text="Player Name:">
+              <TextBox Name="PlayerNameTextBox"></TextBox>
+            </controls:LabeledControl>
+
+            <Button x:Name="CreateNewMultiworldGamebutton"
+                  Click="CreateNewMultiworldGameButton_Click"
+                  Margin="0">_Multiworld</Button>
+          </StackPanel>
+
           <Expander Header="Early Items"
                     x:Name="EarlyItemsExpander"
                     Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
@@ -258,11 +274,11 @@
                             Minimum="0"
                             Maximum="{Binding MaxHints}"/>
                     </StackPanel>
-                    
+
                   </controls:LabeledControl>
-                  
+
                 </StackPanel>
-                
+
               </GroupBox>
 
               <GroupBox Header="Race Settings"
