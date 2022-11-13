@@ -35,7 +35,7 @@ public class MultiworldGame
 
         var playerGuid = System.Guid.NewGuid().ToString();
         var playerKey = System.Guid.NewGuid().ToString();
-        var player = new MultiworldPlayer() { Guid = playerGuid, Key = playerKey, PlayerName = playerName};
+        var player = new MultiworldPlayer(playerGuid, playerKey, playerName);
 
         if (game.AddPlayer(player))
         {
@@ -63,7 +63,7 @@ public class MultiworldGame
     {
         error = null;
 
-        if (_players.Values.Any(prevPlayer => prevPlayer.PlayerName == playerName))
+        if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
         {
             error = "Player name in use";
             return null;
@@ -77,7 +77,7 @@ public class MultiworldGame
 
         var key = System.Guid.NewGuid().ToString();
 
-        var player = new MultiworldPlayer() { Guid = guid, Key = key, PlayerName = playerName};
+        var player = new MultiworldPlayer(guid, key, playerName);
 
         if (_players.TryAdd(guid, player))
         {
@@ -110,9 +110,32 @@ public class MultiworldGame
         return playerStates;
     }
 
-    public Dictionary<string, Config> Players => _players.ToDictionary(x => x.Key, x => x.Value.Config);
+    public MultiworldPlayer? GetPlayer(string guid, string? key, bool verifyKey)
+    {
+        if (!_players.TryGetValue(guid, out var player)) return null;
+        if (verifyKey && key != player.Key) return null;
+        return player;
+    }
 
-    public Dictionary<string, string> PlayerNames => _players.Values.ToDictionary(x => x.Guid, x => x.PlayerName);
+    public Dictionary<string, Config?> UpdatePlayerConfigs(MultiworldPlayer player, Config config)
+    {
+        player.State.Config = config;
+        var worldId = 0;
+        foreach (var currentPlayer in _players.Values.Where(x => x.State.Config != null).OrderBy(x => x != AdminPlayer))
+        {
+            currentPlayer.State.WorldId = worldId;
+            currentPlayer.State.Config!.Id = worldId;
+            currentPlayer.State.Config!.PlayerGuid = currentPlayer.Guid;
+            worldId++;
+        }
+        return PlayerConfigs;
+    }
+
+    public Dictionary<string, Config?> PlayerConfigs => _players.Values.ToDictionary(x => x.Guid, x => x.State.Config);
+
+    public Dictionary<string, string> PlayerNames => _players.Values.ToDictionary(x => x.Guid, x => x.State.PlayerName);
+
+    public List<MultiworldPlayerState> PlayerStates => _players.Values.Select(x => x.State).ToList();
 
     private bool AddPlayer(MultiworldPlayer player)
     {

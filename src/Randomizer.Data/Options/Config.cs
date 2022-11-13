@@ -201,9 +201,7 @@ namespace Randomizer.Data.Options
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
         public CasPatches CasPatches { get; set; } = new();
-#nullable enable
         public PlandoConfig? PlandoConfig { get; set; }
-#nullable disable
         public ItemPlacementRule ItemPlacementRule { get; set; }
         public int UniqueHintCount { get; set; } = 8;
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;

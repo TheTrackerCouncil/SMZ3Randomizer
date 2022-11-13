@@ -5,7 +5,9 @@ namespace Randomizer.Data.Multiworld;
 
 public class JoinGameResponse : MultiworldResponse
 {
-    public string PlayerGuid { get; set; } = "";
-    public string PlayerKey { get; set; } = "";
-    public Dictionary<string, string> AllPlayers { get; set; } = new();
+    public string? PlayerGuid { get; init; }
+    public string? PlayerKey { get; init; }
+    public List<MultiworldPlayerState>? AllPlayers { get; init; }
+
+    public bool IsValid => IsSuccessful && !string.IsNullOrEmpty(PlayerGuid) && !string.IsNullOrEmpty(PlayerKey) && AllPlayers != null;
 }

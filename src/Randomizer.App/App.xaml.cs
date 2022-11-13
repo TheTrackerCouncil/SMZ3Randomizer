@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+using Randomizer.App.Controls;
 using Randomizer.App.Windows;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
@@ -100,7 +101,10 @@ namespace Randomizer.App
             // WPF
             services.AddSingleton<OptionsFactory>();
             services.AddSingleton<RomListWindow>();
+            services.AddTransient<SoloRomListPanel>();
+            services.AddTransient<MultiRomListPanel>();
             services.AddWindows<App>();
+
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)

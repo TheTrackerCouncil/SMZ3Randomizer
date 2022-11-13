@@ -54,7 +54,7 @@ namespace Randomizer.App
             _locations = locations;
             _metadataService = metadataService;
             _multiworldClientService = multiworldClientService;
-            _multiworldClientService.OnConnected += async () =>
+            _multiworldClientService.Connected += async () =>
             {
                 if (ServerUrlTextBox.Text.Contains("?game="))
                 {
@@ -70,10 +70,6 @@ namespace Randomizer.App
                 }
 
             };
-            _multiworldClientService.OnGameCreated += (guid) =>
-            {
-                ServerUrlTextBox.Text += "?game=" + guid;
-            };
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -83,9 +79,7 @@ namespace Randomizer.App
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
         }
 
-#nullable enable
         public PlandoConfig? PlandoConfig { get; set; }
-#nullable disable
 
         public bool PlandoMode => PlandoConfig != null;
 
@@ -744,6 +738,11 @@ namespace Randomizer.App
             if (url.Contains("?"))
                 url = url[..url.IndexOf("?", StringComparison.Ordinal)];
             await _multiworldClientService.Connect(ServerUrlTextBox.Text);
+        }
+
+        private async void SubmitConfigsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await _multiworldClientService.SubmitConfig(Options.ToConfig());
         }
     }
 }

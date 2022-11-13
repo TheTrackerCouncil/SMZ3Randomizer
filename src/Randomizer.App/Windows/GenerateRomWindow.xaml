@@ -331,7 +331,7 @@
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="265*" />
-          <ColumnDefinition Width="213*" />
+          <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Left">
@@ -339,9 +339,14 @@
                   Click="GenerateStatsButton_Click">Generate _Stats</Button>
         </StackPanel>
         <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Left"
+                    HorizontalAlignment="Right"
                     Grid.Column="1"
                     Margin="49,0,0,0">
+
+          <Button x:Name="SubmitConfigsButton"
+                  Click="SubmitConfigsButton_OnClick"
+                  Margin="0 0 8 0">_Submit Settings
+          </Button>
 
           <Button x:Name="GenerateRomButton"
                   Click="GenerateRomButton_Click"

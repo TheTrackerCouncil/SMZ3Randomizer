@@ -3,37 +3,73 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Randomizer.App.Windows"
+        xmlns:controls="clr-namespace:Randomizer.App.Controls"
         mc:Ignorable="d"
-        Title="MultiworldWindow" Height="200" Width="400">
+        Title="MultiworldWindow"
+        ResizeMode="NoResize"
+        Height="200"
+        Width="400">
+
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
-      <TextBlock>Server Url:
-      </TextBlock>
-      <TextBox></TextBox>
-    </StackPanel>
+    <Grid Grid.Row="0"
+        Grid.IsSharedSizeScope="True">
+
+      <StackPanel Grid.Row="0" Orientation="Vertical"
+                   Margin="11,11,11,11"
+                   Visibility="Visible">
+        <controls:LabeledControl Text="{Binding UrlLabelText}">
+          <TextBox
+            Name="ServerUrlTextBox"
+            Text="http://192.168.50.100:3000/multiworld"
+            IsEnabled="{Binding CanEnterInput}"
+            Margin="5 0 0 0" />
+        </controls:LabeledControl>
+        <controls:LabeledControl Text="Name:">
+          <TextBox Name="PlayerNameTextBox"
+                   TextChanged="PlayerNameTextBox_OnTextChanged"
+                   Text=""
+                   IsEnabled="{Binding CanEnterInput}"
+                   Margin="5 0 0 0 " />
+        </controls:LabeledControl>
+        <controls:LabeledControl Text="Mode:">
+          <TextBox
+            Name="GameMode"
+            Text=""
+            Margin="5 0 0 0 "
+            IsEnabled="{Binding CanEnterGameMode}"
+          ></TextBox>
+        </controls:LabeledControl>
+      </StackPanel>
+    </Grid>
 
     <Border Grid.Row="1"
             Style="{StaticResource BottomPanel}">
       <Grid>
-        <StackPanel Orientation="Horizontal"
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Margin="0 3 0 0 " Text="{Binding StatusText}" />
+        <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
                     HorizontalAlignment="Right">
           <Button x:Name="NewGameButton"
-                  Click="NewGameButton_Click">_New Game
+                  Click="NewGameButton_Click"
+                  IsEnabled="{Binding CanPressButton}">
+            <TextBlock Text="{Binding  GameButtonText}"></TextBlock>
           </Button>
           <Button x:Name="CancelButton"
                   Click="CancelButton_Click">_Cancel
           </Button>
-          
+
         </StackPanel>
       </Grid>
     </Border>
   </Grid>
 
-  
 </Window>

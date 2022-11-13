@@ -88,7 +88,7 @@ namespace Randomizer.App.Windows
             Options.SelectedProfiles.Where(x => !string.IsNullOrEmpty(x)).NonNull().ToList();
 
         public ICollection<string> DisabledProfiles =>
-            AvailableProfiles.Where(x => Options.SelectedProfiles.Contains(x) == false && !string.IsNullOrEmpty(x)).NonNull().ToList();
+            AvailableProfiles?.Where(x => Options.SelectedProfiles.Contains(x) == false && !string.IsNullOrEmpty(x)).NonNull().ToList() ?? new List<string>();
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
