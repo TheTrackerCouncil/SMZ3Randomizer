@@ -89,7 +89,7 @@ namespace Randomizer.Multiworld.Server
                 return;
             }
 
-            var configs = game.UpdatePlayerConfigs(player, request.Config);
+            var configs = game.UpdatePlayerConfig(player, request.Config);
 
             await Clients.Caller.SendAsync("SubmitConfig", new SubmitConfigResponse() { IsSuccessful = true });
 

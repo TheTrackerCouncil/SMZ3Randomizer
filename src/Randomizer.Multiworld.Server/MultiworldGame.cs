@@ -36,6 +36,7 @@ public class MultiworldGame
         var playerGuid = System.Guid.NewGuid().ToString();
         var playerKey = System.Guid.NewGuid().ToString();
         var player = new MultiworldPlayer(playerGuid, playerKey, playerName);
+        player.State.IsAdmin = true;
 
         if (game.AddPlayer(player))
         {
@@ -117,7 +118,7 @@ public class MultiworldGame
         return player;
     }
 
-    public Dictionary<string, Config?> UpdatePlayerConfigs(MultiworldPlayer player, Config config)
+    public Dictionary<string, Config?> UpdatePlayerConfig(MultiworldPlayer player, Config config)
     {
         player.State.Config = config;
         var worldId = 0;

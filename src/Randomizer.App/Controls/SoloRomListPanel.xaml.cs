@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using Microsoft.Win32;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
-using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using SharpYaml;
@@ -34,7 +24,7 @@ namespace Randomizer.App.Controls
 
         public SoloRomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
-            ILogger<RomListPanel> logger,
+            ILogger<SoloRomListPanel> logger,
             RandomizerContext dbContext,
             RomGenerator romGenerator) : base (serviceProvider, optionsFactory, logger, dbContext, romGenerator)
         {
@@ -46,7 +36,7 @@ namespace Randomizer.App.Controls
 
         public GeneratedRomsViewModel Model { get; }
 
-        protected override void UpdateList()
+        protected sealed override void UpdateList()
         {
             var models = DbContext.GeneratedRoms
                     .Include(x => x.TrackerState)
@@ -64,7 +54,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowGenerateRomWindow();
+            if (ShowGenerateRomWindow(null, false)) UpdateList();
         }
 
         private async void StartPlandoButton_Click(object sender, RoutedEventArgs e)
@@ -84,7 +74,7 @@ namespace Randomizer.App.Controls
             {
                 var plandoConfigLoader = scope.ServiceProvider.GetRequiredService<IPlandoConfigLoader>();
                 var plandoConfig = await plandoConfigLoader.LoadAsync(plandoBrowser.FileName);
-                ShowGenerateRomWindow();
+                if (ShowGenerateRomWindow(plandoConfig, false)) UpdateList();
             }
             catch (PlandoConfigurationException ex)
             {
@@ -110,10 +100,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button launchButton)
-                return;
-
-            if (launchButton.Tag is not GeneratedRom rom)
+            if (sender is not Button { Tag: GeneratedRom rom })
                 return;
 
             QuickLaunchRom(rom);
@@ -126,10 +113,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void PlayMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             LaunchRom(rom);
@@ -142,10 +126,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void OpenFolderMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             OpenFolder(rom);
@@ -158,10 +139,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void OpenTrackerMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             LaunchTracker(rom);
@@ -174,10 +152,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void ViewSpoilerMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             OpenSpoilerLog(rom);
@@ -190,13 +165,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void EditLabelMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Parent is not ContextMenu contextMenu)
-                return;
-
-            if (contextMenu.PlacementTarget is not Grid grid)
+            if (sender is not MenuItem { Parent: ContextMenu { PlacementTarget: Grid grid } })
                 return;
 
             ShowEditTextBox(grid);
@@ -254,10 +223,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void CopySeedMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             CopyTextToClipboard(rom.Seed);
@@ -270,10 +236,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void CopyConfigMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             CopyTextToClipboard(rom.Settings);
@@ -287,10 +250,7 @@ namespace Randomizer.App.Controls
         /// <returns></returns>
         private void DeleteRomMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             DeleteGeneratedRom(rom);
@@ -303,10 +263,7 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private void EditLabelTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (sender is not TextBox textBox)
-                return;
-
-            if (textBox.Parent is not Grid grid)
+            if (sender is not TextBox { Parent: Grid grid })
                 return;
 
             UpdateName(grid);
@@ -322,10 +279,7 @@ namespace Randomizer.App.Controls
             if (e.Key != Key.Return)
                 return;
 
-            if (sender is not TextBox textBox)
-                return;
-
-            if (textBox.Parent is not Grid grid)
+            if (sender is not TextBox { Parent: Grid grid })
                 return;
 
             UpdateName(grid);
@@ -333,10 +287,7 @@ namespace Randomizer.App.Controls
 
         private void ProgressionLogMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
-                return;
-
-            if (menuItem.Tag is not GeneratedRom rom)
+            if (sender is not MenuItem { Tag: GeneratedRom rom })
                 return;
 
             OpenProgressionLog(rom);
@@ -350,11 +301,9 @@ namespace Randomizer.App.Controls
         private async void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
             var rom = await RomGenerator.GenerateRandomRomAsync(Options);
-            if (GeneratedRom.IsValid(rom))
-            {
-                UpdateList();
-                QuickLaunchRom(rom);
-            }
+            if (!GeneratedRom.IsValid(rom)) return;
+            UpdateList();
+            QuickLaunchRom(rom);
         }
     }
 }

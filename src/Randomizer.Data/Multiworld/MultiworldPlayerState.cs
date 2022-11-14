@@ -9,7 +9,8 @@ public class MultiworldPlayerState
     public string Guid { get; init; } = null!;
     public string PlayerName { get; init; } = null!;
     public int? WorldId { get; set; }
-    public Config? Config { get; set; } = new() { PlayerGuid = "test" };
+    public Config? Config { get; set; }
+    public bool IsAdmin { get; set; }
     public IEnumerable<TrackerLocationState>? Locations { get; set; }
     public IEnumerable<TrackerItemState>? Items { get; set; }
     public IEnumerable<TrackerBossState>? Bosses { get; set; }

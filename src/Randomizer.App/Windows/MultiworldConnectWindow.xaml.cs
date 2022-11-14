@@ -2,23 +2,27 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.Logging;
 using Randomizer.Multiworld.Client;
 
 namespace Randomizer.App.Windows
 {
     /// <summary>
-    /// Interaction logic for MultiworldWindow.xaml
+    /// Interaction logic for MultiworldConnectWindow.xaml
     /// </summary>
-    public partial class MultiworldWindow : Window, INotifyPropertyChanged
+    public partial class MultiworldConnectWindow : Window, INotifyPropertyChanged
     {
         private readonly MultiworldClientService _multiworldClientService;
+        private readonly ILogger _logger;
 
-        public MultiworldWindow(MultiworldClientService multiworldClientService)
+        public MultiworldConnectWindow(MultiworldClientService multiworldClientService, ILogger<MultiworldConnectWindow> logger)
         {
+            _logger = logger;
+            _multiworldClientService = multiworldClientService;
             InitializeComponent();
             DataContext = this;
-            _multiworldClientService = multiworldClientService;
 
+            _logger.LogInformation("Opening window");
             _multiworldClientService.Connected += MultiworldClientServiceConnected;
             _multiworldClientService.Error += MultiworldClientServiceError;
             _multiworldClientService.GameCreated += MultiworldClientServiceGameCreated;
@@ -39,10 +43,12 @@ namespace Randomizer.App.Windows
         {
             if (IsCreatingGame)
             {
+                _logger.LogInformation("Connecting");
                 await _multiworldClientService.CreateGame(PlayerNameTextBox.Text);
             }
             else
             {
+                _logger.LogInformation("Joining");
                 await _multiworldClientService.JoinGame(GameGuid, PlayerNameTextBox.Text);
             }
         }

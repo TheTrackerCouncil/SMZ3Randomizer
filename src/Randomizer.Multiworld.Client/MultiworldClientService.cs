@@ -8,14 +8,26 @@ namespace Randomizer.Multiworld.Client
 {
     public class MultiworldClientService
     {
-
+        private readonly ILogger<MultiworldClientService> _logger;
         private HubConnection? _connection;
-        private ILogger<MultiworldClientService> _logger;
 
         public MultiworldClientService(ILogger<MultiworldClientService> logger)
         {
             _logger = logger;
         }
+
+        public event ConnectedEventHandler? Connected;
+        public event GameCreatedEventHandler? GameCreated;
+        public event GameJoinedEventHandler? GameJoined;
+        public event ErrorEventHandler? Error;
+        public event PlayerJoinedEventHandler? PlayerJoined;
+        public event PlayerSyncEventHandler? PlayerSync;
+
+        public string? CurrentGameGuid { get; private set; }
+        public string? CurrentPlayerGuid { get; private set; }
+        public string? CurrentPlayerKey { get; private set; }
+        public List<MultiworldPlayerState>? Players { get; set; }
+        public MultiworldPlayerState? LocalPlayer { get; set; }
 
         public async Task Connect(string url)
         {
@@ -32,70 +44,15 @@ namespace Randomizer.Multiworld.Client
                 .WithUrl(url)
                 .Build();
 
-            _connection.On<CreateGameResponse>("CreateGame", (response) =>
-            {
-                if (response.IsValid)
-                {
-                    _logger.LogInformation("Game Created | Game Id: {GameGuid} | Player Guid: {PlayergGuid} | Player Key: {PlayerKey}",
-                        response.GameGuid, response.PlayerGuid, response.PlayerKey);
-                    _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                    GameCreated?.Invoke(response.GameGuid!, response.PlayerGuid!, response.PlayerKey!);
-                    CurrentGameGuid = response.GameGuid;
-                    CurrentPlayerGuid = response.PlayerGuid;
-                    CurrentPlayerKey = response.PlayerKey;
-                    Players = response.AllPlayers;
-                }
-                else
-                {
-                    _logger.LogError("Unable to join game: {Error}", response.Error);
-                    Error?.Invoke($"Unable to join game: {response.Error}");
-                }
-            });
+            _connection.On<CreateGameResponse>("CreateGame", OnCreateGame);
 
-            _connection.On<JoinGameResponse>("JoinGame", (response) =>
-            {
-                if (response.IsValid)
-                {
-                    _logger.LogInformation("Game joined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
-                    _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                    GameJoined?.Invoke(response.PlayerGuid!, response.PlayerKey!);
-                    CurrentPlayerGuid = response.PlayerGuid;
-                    CurrentPlayerKey = response.PlayerKey;
-                    Players = response.AllPlayers;
-                }
-                else
-                {
-                    _logger.LogError("Unable to join game: {Error}", response.Error);
-                    Error?.Invoke($"Unable to join game: {response.Error}");
-                }
-            });
+            _connection.On<JoinGameResponse>("JoinGame", OnJoinGame);
 
-            _connection.On<PlayerJoinedResponse>("PlayerJoined", (response) =>
-            {
-                if (response.IsValid)
-                {
-                    _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
-                    _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                    Players = response.AllPlayers;
-                }
-                else
-                {
-                    _logger.LogError("Received invalid player joined response");
-                }
-            });
+            _connection.On<PlayerJoinedResponse>("PlayerJoined", OnPlayerJoined);
 
-            _connection.On<SubmitConfigResponse>("SubmitConfig", (response) =>
-            {
-                if (response.IsValid)
-                {
-                    _logger.LogInformation("Player submitted config");
-                }
-                else
-                {
-                    _logger.LogError("Unable to submit config game: {Error}", response.Error);
-                    Error?.Invoke($"Unable to submit game: {response.Error}");
-                }
-            });
+            _connection.On<SubmitConfigResponse>("SubmitConfig", OnSubmitConfig);
+
+            _connection.On<PlayerSyncResponse>("PlayerSync", OnPlayerSync);
 
             try
             {
@@ -115,21 +72,10 @@ namespace Randomizer.Multiworld.Client
             }
             else
             {
-                _logger.LogInformation("Unable to connect to {Url} - Connection state: {State}", url, _connection.State);
+                _logger.LogError("Unable to connect to {Url} - Connection state: {State}", url, _connection.State);
                 Error?.Invoke($"Unable to connect to {url}");
             }
         }
-
-        public event MultiworldConnectedEventHandler? Connected;
-        public event MultiworldGameCreatedEventHandler? GameCreated;
-        public event MultiworldGameJoinedEventHandler? GameJoined;
-        public event MultiworldErrorEventHandler? Error;
-
-        public string? CurrentGameGuid { get; private set; }
-        public string? CurrentPlayerGuid { get; private set; }
-        public string? CurrentPlayerKey { get; private set; }
-        public List<MultiworldPlayerState>? Players { get; set; }
-        public MultiworldPlayerState? LocalPlayer { get; set; }
 
         public async Task Disconnect()
         {
@@ -138,29 +84,26 @@ namespace Randomizer.Multiworld.Client
             CurrentPlayerKey = null;
             Players = null;
 
-            if (IsConnected()) return;
+            if (!IsConnected) return;
             await _connection!.DisposeAsync();
         }
 
         public async Task CreateGame(string playerName)
         {
-            if (!IsConnected()) return;
-
+            if (!VerifyConnection()) return;
             await _connection!.InvokeAsync("CreateGame", new CreateGameRequest(playerName));
         }
 
         public async Task JoinGame(string gameGuid, string playerName)
         {
-            if (!IsConnected()) return;
-
+            if (!VerifyConnection()) return;
             CurrentGameGuid = gameGuid;
             await _connection!.InvokeAsync("JoinGame", new JoinGameRequest(gameGuid, playerName));
         }
 
         public async Task SubmitConfig(Config config)
         {
-            if (!IsConnected() || !HasJoinedGame()) return;
-
+            if (!VerifyJoinedGame()) return;
             await _connection!.InvokeAsync("SubmitConfig", new SubmitConfigRequest(CurrentGameGuid!, CurrentPlayerGuid!, CurrentPlayerKey!, config));
         }
 
@@ -171,7 +114,6 @@ namespace Randomizer.Multiworld.Client
                 Console.WriteLine("Not connected");
                 return;
             }
-
             await _connection.InvokeAsync("JoinGame", new JoinGameRequest(gameGuid, playerGuid));
         }
 
@@ -186,43 +128,7 @@ namespace Randomizer.Multiworld.Client
             await _connection.InvokeAsync("StartGame", new StartGameRequest(playerGuids, trackerState));
         }
 
-        public async Task Test()
-        {
-            var connection = new HubConnectionBuilder()
-                //.WithUrl("http://www.celestialrealm.net:12000/chat")
-                //.WithUrl("http://127.0.0.1:5291/multiworld")
-                .WithUrl("https://localhost:7050/multiworld")
-                .Build();
-
-            connection.On<string, string>("CreateGame", (user, message) =>
-            {
-                Console.WriteLine("Test");
-            });
-
-            await connection.StartAsync();
-
-            Console.WriteLine("Started");
-
-
-
-            await connection.InvokeAsync("CreateGame");
-
-            Console.ReadLine();
-
-            //connection.
-        }
-
-
-        public bool IsConnected()
-        {
-            if (_connection is not { State: HubConnectionState.Connected })
-            {
-                _logger.LogWarning("Not connected");
-                return false;
-            }
-
-            return true;
-        }
+        public bool IsConnected => _connection?.State == HubConnectionState.Connected;
 
         public bool HasJoinedGame()
         {
@@ -234,6 +140,101 @@ namespace Randomizer.Multiworld.Client
             }
 
             return true;
+        }
+
+        private bool VerifyConnection()
+        {
+            if (IsConnected) return true;
+            Error?.Invoke($"You are not currently connected to a server.");
+            return false;
+        }
+
+        private bool VerifyJoinedGame()
+        {
+            if (!VerifyConnection()) return false;
+            if (HasJoinedGame()) return true;
+            Error?.Invoke($"You are not currently connected to a game.");
+            return false;
+        }
+
+        private void OnCreateGame(CreateGameResponse response)
+        {
+            if (response.IsValid)
+            {
+                _logger.LogInformation("Game Created | Game Id: {GameGuid} | Player Guid: {PlayergGuid} | Player Key: {PlayerKey}", response.GameGuid, response.PlayerGuid, response.PlayerKey);
+                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
+                GameCreated?.Invoke(response.GameGuid!, response.PlayerGuid!, response.PlayerKey!);
+                CurrentGameGuid = response.GameGuid;
+                CurrentPlayerGuid = response.PlayerGuid;
+                CurrentPlayerKey = response.PlayerKey;
+                Players = response.AllPlayers;
+                LocalPlayer = Players!.First(x => x.Guid == CurrentPlayerGuid);
+            }
+            else
+            {
+                _logger.LogError("Unable to join game: {Error}", response.Error);
+                Error?.Invoke($"Unable to join game: {response.Error}");
+            }
+        }
+
+        private void OnJoinGame(JoinGameResponse response)
+        {
+            if (response.IsValid)
+            {
+                _logger.LogInformation("Game joined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
+                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
+                GameJoined?.Invoke(response.PlayerGuid!, response.PlayerKey!);
+                CurrentPlayerGuid = response.PlayerGuid;
+                CurrentPlayerKey = response.PlayerKey;
+                Players = response.AllPlayers;
+                LocalPlayer = Players!.First(x => x.Guid == CurrentPlayerGuid);
+            }
+            else
+            {
+                _logger.LogError("Unable to join game: {Error}", response.Error);
+                Error?.Invoke($"Unable to join game: {response.Error}");
+            }
+        }
+
+        private void OnPlayerJoined(PlayerJoinedResponse response)
+        {
+            if (response.IsValid)
+            {
+                _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
+                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
+                Players = response.AllPlayers;
+                PlayerJoined?.Invoke();
+            }
+            else
+            {
+                _logger.LogError("Received invalid player joined response");
+            }
+        }
+
+        private void OnSubmitConfig(SubmitConfigResponse response)
+        {
+            if (response.IsValid)
+            {
+                _logger.LogInformation("Player submitted config");
+            }
+            else
+            {
+                _logger.LogError("Unable to submit config game: {Error}", response.Error);
+                Error?.Invoke($"Unable to submit game: {response.Error}");
+            }
+        }
+
+        private void OnPlayerSync(PlayerSyncResponse response)
+        {
+            if (response.IsValid)
+            {
+                _logger.LogInformation("Received state for {PlayerName}", response.PlayerState!.PlayerName);
+                PlayerSync?.Invoke(response.PlayerState!);
+            }
+            else
+            {
+                _logger.LogError("Error getting player sync value: {Error}", response.Error);
+            }
         }
     }
 }

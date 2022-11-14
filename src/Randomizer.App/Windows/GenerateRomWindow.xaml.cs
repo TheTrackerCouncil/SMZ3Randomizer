@@ -15,20 +15,18 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-
 using Microsoft.Extensions.DependencyInjection;
-
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
-using Randomizer.Shared;
-using Randomizer.SMZ3.Generation;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
-using Randomizer.Shared.Enums;
+using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.Multiworld.Client;
+using Randomizer.Shared;
+using Randomizer.Shared.Enums;
+using Randomizer.SMZ3.Generation;
 
-namespace Randomizer.App
+namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for GenerateRomWindow.xaml
@@ -40,7 +38,6 @@ namespace Randomizer.App
         private readonly RomGenerator _romGenerator;
         private readonly LocationConfig _locations;
         private readonly IMetadataService _metadataService;
-        private readonly MultiworldClientService _multiworldClientService;
         private RandomizerOptions? _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
@@ -53,23 +50,6 @@ namespace Randomizer.App
             _romGenerator = romGenerator;
             _locations = locations;
             _metadataService = metadataService;
-            _multiworldClientService = multiworldClientService;
-            _multiworldClientService.Connected += async () =>
-            {
-                if (ServerUrlTextBox.Text.Contains("?game="))
-                {
-                    var gameId =
-                        ServerUrlTextBox.Text[(ServerUrlTextBox.Text.IndexOf("=", StringComparison.Ordinal) + 1)..];
-                    var playerName = PlayerNameTextBox.Text;
-                    await _multiworldClientService.JoinGame(gameId, playerName);
-                }
-                else
-                {
-                    var playerName = PlayerNameTextBox.Text;
-                    await _multiworldClientService.CreateGame(playerName);
-                }
-
-            };
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -82,6 +62,8 @@ namespace Randomizer.App
         public PlandoConfig? PlandoConfig { get; set; }
 
         public bool PlandoMode => PlandoConfig != null;
+
+        public bool MultiMode { get; set; }
 
         /// <summary>
         /// Gets the visibility of controls which should be hidden when plando
@@ -99,13 +81,13 @@ namespace Randomizer.App
         /// Gets the visibility of controls which should be hidden when plando
         /// mode is active.
         /// </summary>
-        public Visibility InvisibleInMultiworld => true ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility InvisibleInMultiworld => MultiMode ? Visibility.Collapsed : Visibility.Visible;
 
         /// <summary>
         /// Gets the visibility of controls which should be shown only when
         /// plando mode is active.
         /// </summary>
-        public Visibility VisibleInMultiworld => true ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibleInMultiworld => MultiMode ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
         /// Gets the IsEnabled value for controls which should be disabled when
@@ -153,7 +135,8 @@ namespace Randomizer.App
                 }
 
                 var itemTypeField = itemType.GetType().GetField(itemType.ToString());
-                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault().Description;
+                if (itemTypeField == null) continue;
+                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description;
                 var checkBox = new CheckBox
                 {
                     Name = itemTypeField.Name,
@@ -197,7 +180,7 @@ namespace Randomizer.App
                     {
                         Name = name,
                         Content = displayName,
-                        IsChecked = (bool)property.GetValue(Options.LogicConfig),
+                        IsChecked = (bool)property.GetValue(Options.LogicConfig)!,
                         ToolTip = description
                     };
                     checkBox.Checked += LogicCheckBox_Checked;
@@ -280,7 +263,7 @@ namespace Randomizer.App
                     {
                         Name = name,
                         Content = displayName,
-                        IsChecked = (bool)property.GetValue(Options.PatchOptions.CasPatches),
+                        IsChecked = (bool)property.GetValue(Options.PatchOptions.CasPatches)!,
                         ToolTip = description
                     };
                     checkBox.Checked += CasPatchCheckBox_Checked;
@@ -293,7 +276,7 @@ namespace Randomizer.App
         public void LoadSprites()
         {
             var spritesPath = Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                Path.GetDirectoryName(Process.GetCurrentProcess()?.MainModule?.FileName ?? "")!,
                 "Sprites");
             var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
                 .Select(x => Sprite.LoadSprite(x))
@@ -732,17 +715,10 @@ namespace Randomizer.App
             public override string ToString() => Text;
         }
 
-        private async void CreateNewMultiworldGameButton_Click(object sender, RoutedEventArgs e)
-        {
-            var url = ServerUrlTextBox.Text;
-            if (url.Contains("?"))
-                url = url[..url.IndexOf("?", StringComparison.Ordinal)];
-            await _multiworldClientService.Connect(ServerUrlTextBox.Text);
-        }
-
         private async void SubmitConfigsButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await _multiworldClientService.SubmitConfig(Options.ToConfig());
+            DialogResult = true;
+            Close();
         }
     }
 }

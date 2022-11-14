@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.Windows;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
-using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App.Controls
@@ -44,7 +40,7 @@ namespace Randomizer.App.Controls
             try
             {
                 var installedRecognizers = System.Speech.Recognition.SpeechRecognitionEngine.InstalledRecognizers();
-                Logger.LogInformation("{count} installed recognizer(s): {recognizers}",
+                Logger.LogInformation("{Count} installed recognizer(s): {Recognizers}",
                     installedRecognizers.Count, string.Join(", ", installedRecognizers.Select(x => x.Description)));
                 CanStartTracker = installedRecognizers.Count != 0;
             }
@@ -108,7 +104,7 @@ namespace Randomizer.App.Controls
                 return;
             }
 
-            if (_trackerWindow != null && _trackerWindow.IsVisible)
+            if (_trackerWindow is { IsVisible: true })
             {
                 ShowWarningMessageBox($"An instance of tracker is already open.");
                 return;
@@ -291,29 +287,26 @@ namespace Randomizer.App.Controls
 
         protected abstract void UpdateList();
 
-        protected void ShowGenerateRomWindow()
+        protected bool ShowGenerateRomWindow(PlandoConfig? plandoConfig, bool isMulti)
         {
             using var scope = ServiceProvider.CreateScope();
-
             var generateWindow = scope.ServiceProvider.GetRequiredService<GenerateRomWindow>();
             generateWindow.Owner = Window.GetWindow(this);
             generateWindow.Options = Options;
+            generateWindow.PlandoConfig = plandoConfig;
+            generateWindow.MultiMode = isMulti;
             var successful = generateWindow.ShowDialog();
-
-            if (successful.HasValue && successful.Value)
-            {
-                UpdateList();
-            }
+            return successful.HasValue && successful.Value;
         }
 
         protected MessageBoxResult ShowWarningMessageBox(string message)
         {
-            return MessageBox.Show(Window.GetWindow(this), message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return MessageBox.Show(Window.GetWindow(this)!, message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         protected MessageBoxResult ShowErrorMessageBox(string message)
         {
-            return MessageBox.Show(Window.GetWindow(this), message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            return MessageBox.Show(Window.GetWindow(this)!, message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
