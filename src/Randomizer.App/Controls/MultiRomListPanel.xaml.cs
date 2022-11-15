@@ -58,10 +58,13 @@ namespace Randomizer.App.Controls
 
         private void OpenStatusWindow()
         {
-            var scope = ServiceProvider.CreateScope();
+            using var scope = ServiceProvider.CreateScope();
             var statusWindow = scope.ServiceProvider.GetRequiredService<MultiworldStatusWindow>();
             statusWindow.Owner = Window.GetWindow(this);
+            statusWindow.ParentPanel = this;
             statusWindow.Show();
         }
+
+
     }
 }

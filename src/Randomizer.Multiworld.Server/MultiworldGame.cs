@@ -9,6 +9,8 @@ public class MultiworldGame
 {
     private static readonly ConcurrentDictionary<string, MultiworldGame> s_games = new();
 
+    private static readonly ConcurrentDictionary<string, MultiworldPlayer> _playerConnections = new();
+
     private readonly ConcurrentDictionary<string, MultiworldPlayer> _players = new();
 
     public MultiworldGame(string guid)
@@ -17,7 +19,7 @@ public class MultiworldGame
         LastMessage = DateTime.Now;
     }
 
-    public static (MultiworldGame Game, MultiworldPlayer Player)? CreateNewGame(string playerName, out string? error)
+    public static (MultiworldGame Game, MultiworldPlayer Player)? CreateNewGame(string playerName, string playerConnectionId, out string? error)
     {
         string guid;
         do
@@ -35,18 +37,16 @@ public class MultiworldGame
 
         var playerGuid = System.Guid.NewGuid().ToString();
         var playerKey = System.Guid.NewGuid().ToString();
-        var player = new MultiworldPlayer(playerGuid, playerKey, playerName);
-        player.State.IsAdmin = true;
-
-        if (game.AddPlayer(player))
+        var player = new MultiworldPlayer(game, playerGuid, playerKey, playerName, playerConnectionId) { State =
         {
-            error = null;
-            game.AdminPlayer ??= player;
-            return (game, player);
-        }
+            IsAdmin = true
+        } };
 
-        error = "Unable to add player to game";
-        return null;
+        game.AdminPlayer ??= player;
+        game._players[playerGuid] = player;
+        _playerConnections[playerConnectionId] = player;
+        error = null;
+        return (game, player);
     }
 
     public static MultiworldGame? LoadGame(string guid)
@@ -60,10 +60,8 @@ public class MultiworldGame
 
     public MultiworldPlayer? AdminPlayer { get; set; }
 
-    public MultiworldPlayer? JoinGame(string playerName, out string? error)
+    public MultiworldPlayer? JoinGame(string playerName, string playerConnectionId, out string? error)
     {
-        error = null;
-
         if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
         {
             error = "Player name in use";
@@ -78,15 +76,11 @@ public class MultiworldGame
 
         var key = System.Guid.NewGuid().ToString();
 
-        var player = new MultiworldPlayer(guid, key, playerName);
-
-        if (_players.TryAdd(guid, player))
-        {
-            return player;
-        }
-
-        error = "Unable to add player to player list";
-        return null;
+        var player = new MultiworldPlayer(this, guid, key, playerName, playerConnectionId);
+        _players[guid] = player;
+        _playerConnections[playerConnectionId] = player;
+        error = null;
+        return player;
     }
 
     public List<MultiworldPlayerState> StartGame(List<string> players, TrackerState trackerState)
@@ -130,6 +124,17 @@ public class MultiworldGame
             worldId++;
         }
         return PlayerConfigs;
+    }
+
+    public static MultiworldPlayer? PlayerDisconnected(string connectionId)
+    {
+        if (_playerConnections.Remove(connectionId, out var player))
+        {
+            player.State.IsConnected = false;
+            return player;
+        }
+
+        return null;
     }
 
     public Dictionary<string, Config?> PlayerConfigs => _players.Values.ToDictionary(x => x.Guid, x => x.State.Config);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Randomizer.Data.Multiworld;
+using Randomizer.Data.Options;
 
 namespace Randomizer.Multiworld.Server
 {
@@ -13,7 +14,7 @@ namespace Randomizer.Multiworld.Server
                 return;
             }
 
-            var results = MultiworldGame.CreateNewGame(request.PlayerName, out var error);
+            var results = MultiworldGame.CreateNewGame(request.PlayerName, Context.ConnectionId, out var error);
 
             if (results == null)
             {
@@ -47,7 +48,7 @@ namespace Randomizer.Multiworld.Server
                 return;
             }
 
-            var player = game.JoinGame(request.PlayerName, out var error);
+            var player = game.JoinGame(request.PlayerName, Context.ConnectionId, out var error);
             if (player == null)
             {
                 await SendErrorResponse<JoinGameResponse>("JoinGame", error ?? "Unknown error joining game");
@@ -121,6 +122,17 @@ namespace Randomizer.Multiworld.Server
         {
             var response = new T() { IsSuccessful = false, Error = error };
             await Clients.Caller.SendAsync(method, response);
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {;
+            var player = MultiworldGame.PlayerDisconnected(Context.ConnectionId);
+            if (player == null) return;
+            await Clients.Group(player.Game.Guid).SendAsync("PlayerSync", new PlayerSyncResponse()
+            {
+                IsSuccessful = true,
+                PlayerState = player.State
+            });
         }
     }
 }

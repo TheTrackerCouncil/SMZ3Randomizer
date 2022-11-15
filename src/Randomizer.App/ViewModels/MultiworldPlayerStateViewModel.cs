@@ -14,19 +14,27 @@ namespace Randomizer.App.ViewModels
             IsLocalPlayer = isLocalPlayer;
         }
 
-        public MultiworldPlayerState State { get; }
+        public MultiworldPlayerState State { get; private set; }
         public string PlayerGuid { get; }
         public string PlayerName { get; }
         public bool IsLocalPlayer { get; }
         public string StatusLabel => "(" + Status + ")";
-        public string Status { get; private set; } = "Connected";
+
+        public string Status
+        {
+            get
+            {
+                if (State.Config == null) return "Waiting on settings";
+                return State.IsConnected ? "Connected" : "Not connected";
+            }
+        }
 
         public Visibility EditConfigVisibility => IsLocalPlayer ? Visibility.Visible : Visibility.Collapsed;
         public Visibility ForfeitVisiblity => IsLocalPlayer || State.IsAdmin ? Visibility.Visible : Visibility.Collapsed;
 
         public void Update(MultiworldPlayerState state)
         {
-            Status = "Updated";
+            State = state;
             OnPropertyChanged();
         }
 

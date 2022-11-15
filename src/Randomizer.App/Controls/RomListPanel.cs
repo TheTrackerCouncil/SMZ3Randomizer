@@ -57,7 +57,7 @@ namespace Randomizer.App.Controls
 
         protected virtual RandomizerContext DbContext { get; private set; }
 
-        protected RandomizerOptions Options { get; private set; }
+        public RandomizerOptions Options { get; private set; }
 
         protected readonly IServiceProvider ServiceProvider;
 
@@ -67,7 +67,7 @@ namespace Randomizer.App.Controls
         /// Launches a rom with the set quick launch options
         /// </summary>
         /// <param name="rom">The rom to launch</param>
-        protected void QuickLaunchRom(GeneratedRom rom)
+        public void QuickLaunchRom(GeneratedRom rom)
         {
             var launchButtonOptions = (LaunchButtonOptions)Options.GeneralOptions.LaunchButton;
 
@@ -96,7 +96,7 @@ namespace Randomizer.App.Controls
         /// Launches the tracker window for the given rom
         /// </summary>
         /// <param name="rom">The rom to open tracker for</param>
-        protected void LaunchTracker(GeneratedRom rom)
+        public void LaunchTracker(GeneratedRom rom)
         {
             if (!CanStartTracker)
             {
@@ -287,7 +287,7 @@ namespace Randomizer.App.Controls
 
         protected abstract void UpdateList();
 
-        protected bool ShowGenerateRomWindow(PlandoConfig? plandoConfig, bool isMulti)
+        public bool ShowGenerateRomWindow(PlandoConfig? plandoConfig, bool isMulti)
         {
             using var scope = ServiceProvider.CreateScope();
             var generateWindow = scope.ServiceProvider.GetRequiredService<GenerateRomWindow>();

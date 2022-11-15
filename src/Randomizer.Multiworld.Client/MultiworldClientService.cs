@@ -27,7 +27,7 @@ namespace Randomizer.Multiworld.Client
         public string? CurrentPlayerGuid { get; private set; }
         public string? CurrentPlayerKey { get; private set; }
         public List<MultiworldPlayerState>? Players { get; set; }
-        public MultiworldPlayerState? LocalPlayer { get; set; }
+        public MultiworldPlayerState? LocalPlayer => Players?.FirstOrDefault(x => x.Guid == CurrentPlayerGuid);
 
         public async Task Connect(string url)
         {
@@ -168,7 +168,6 @@ namespace Randomizer.Multiworld.Client
                 CurrentPlayerGuid = response.PlayerGuid;
                 CurrentPlayerKey = response.PlayerKey;
                 Players = response.AllPlayers;
-                LocalPlayer = Players!.First(x => x.Guid == CurrentPlayerGuid);
             }
             else
             {
@@ -187,7 +186,6 @@ namespace Randomizer.Multiworld.Client
                 CurrentPlayerGuid = response.PlayerGuid;
                 CurrentPlayerKey = response.PlayerKey;
                 Players = response.AllPlayers;
-                LocalPlayer = Players!.First(x => x.Guid == CurrentPlayerGuid);
             }
             else
             {
@@ -229,7 +227,10 @@ namespace Randomizer.Multiworld.Client
             if (response.IsValid)
             {
                 _logger.LogInformation("Received state for {PlayerName}", response.PlayerState!.PlayerName);
-                PlayerSync?.Invoke(response.PlayerState!);
+                var previous = Players?.FirstOrDefault(x => x.Guid == response.PlayerState.Guid);
+                if (previous != null) Players?.Remove(previous);
+                Players?.Add(response.PlayerState);
+                PlayerSync?.Invoke(previous, response.PlayerState!);
             }
             else
             {

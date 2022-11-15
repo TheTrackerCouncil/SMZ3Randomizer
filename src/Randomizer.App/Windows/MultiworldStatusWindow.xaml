@@ -9,7 +9,12 @@
         d:DataContext="{d:DesignInstance viewmodels:MultiworldPlayersViewModel, IsDesignTimeCreatable=True}"
         Title="MultiworldStatusWindow" Height="300" Width="500">
   <Grid>
-    <ListView Name="PlayersList" ItemsSource="{Binding Players}" SelectionMode="Single">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    
+    <ListView Name="PlayersList" ItemsSource="{Binding Players}" SelectionMode="Single" Grid.Row="0">
       <ListView.ItemTemplate>
         <DataTemplate>
           <Grid Margin="0,2">
@@ -40,5 +45,19 @@
         </Style>
       </ListView.ItemContainerStyle>
     </ListView>
+
+    <Border Grid.Row="1"
+            Style="{StaticResource BottomPanel}">
+      <Grid>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+          <Button x:Name="StartGameButton"
+                  Click="StartGameButton_Click"
+                  ToolTip="All players must have submitted their settings to start the game.">_Start game</Button>
+          <Button x:Name="OpenTrackerButton"
+                  Click="OpenTrackerButton_Click">_Open tracker</Button>
+        </StackPanel>
+      </Grid>
+    </Border>
   </Grid>
 </Window>

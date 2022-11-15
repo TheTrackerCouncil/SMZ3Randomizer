@@ -2,5 +2,5 @@
 
 namespace Randomizer.Multiworld.Client;
 
-public delegate void PlayerSyncEventHandler(MultiworldPlayerState state);
+public delegate void PlayerSyncEventHandler(MultiworldPlayerState? previousState, MultiworldPlayerState state);
 

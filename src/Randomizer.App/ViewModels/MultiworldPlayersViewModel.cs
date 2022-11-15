@@ -26,7 +26,7 @@ namespace Randomizer.App.ViewModels
                     {
                         Guid = "Player Two",
                         PlayerName = "Player Two",
-                    }, false)
+                    }, false),
                 };
             }
             else

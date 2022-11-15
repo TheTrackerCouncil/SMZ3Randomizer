@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Extensions.DependencyInjection;
+using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Multiworld;
 using Randomizer.Data.Options;
@@ -26,14 +27,11 @@ namespace Randomizer.App.Windows
     public partial class MultiworldStatusWindow : Window
     {
         private readonly MultiworldClientService _multiworldClientService;
-        private IServiceProvider _serviceProvider;
-        private RandomizerOptions _options;
+        private bool _openedConfig;
 
-        public MultiworldStatusWindow(IServiceProvider serviceProvider, MultiworldClientService multiworldClientService, OptionsFactory optionsFactory)
+        public MultiworldStatusWindow(MultiworldClientService multiworldClientService)
         {
-            _serviceProvider = serviceProvider;
             _multiworldClientService = multiworldClientService;
-            _options = optionsFactory.Create();
             DataContext = Model;
             InitializeComponent();
             UpdatePlayerList();
@@ -50,9 +48,10 @@ namespace Randomizer.App.Windows
 
         protected override void OnActivated(EventArgs e)
         {
-            if (_multiworldClientService.LocalPlayer?.Config == null)
+            if (_multiworldClientService.LocalPlayer?.Config == null && !_openedConfig)
             {
-                //ShowGenerateRomWindow();
+                ShowGenerateRomWindow();
+                _openedConfig = true;
             }
         }
 
@@ -72,12 +71,13 @@ namespace Randomizer.App.Windows
             UpdatePlayerList();
         }
 
-        private void MultiworldClientServiceOnPlayerSync(MultiworldPlayerState playerState)
+        private void MultiworldClientServiceOnPlayerSync(MultiworldPlayerState? previousState, MultiworldPlayerState state)
         {
-            Model.UpdatePlayer(playerState);
+            Model.UpdatePlayer(state);
         }
 
         public MultiworldPlayersViewModel Model { get; set; } = new();
+        public MultiRomListPanel ParentPanel { get; set; } = null!;
 
         protected void UpdatePlayerList()
         {
@@ -86,18 +86,22 @@ namespace Randomizer.App.Windows
 
         protected void ShowGenerateRomWindow()
         {
-            using var scope = _serviceProvider.CreateScope();
-            var generateWindow = scope.ServiceProvider.GetRequiredService<GenerateRomWindow>();
-            generateWindow.Owner = this;
-            generateWindow.Options = _options;
-            generateWindow.MultiMode = true;
-            var successful = generateWindow.ShowDialog();
-            if (successful != true) return;
-            Task.Run(async () => await _multiworldClientService.SubmitConfig(_options.ToConfig()));
+            if (ParentPanel.ShowGenerateRomWindow(null, true) != true) return;
+            Task.Run(async () => await _multiworldClientService.SubmitConfig(ParentPanel.Options.ToConfig()));
 
         }
 
         private void UpdateConfigButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowGenerateRomWindow();
+        }
+
+        private void StartGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowGenerateRomWindow();
+        }
+
+        private void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
         {
             ShowGenerateRomWindow();
         }
