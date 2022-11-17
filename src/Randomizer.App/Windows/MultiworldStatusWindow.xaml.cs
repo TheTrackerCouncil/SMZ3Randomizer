@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Extensions.DependencyInjection;
 using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Multiworld;
-using Randomizer.Data.Options;
 using Randomizer.Multiworld.Client;
 
 namespace Randomizer.App.Windows
@@ -41,9 +30,38 @@ namespace Randomizer.App.Windows
                 Close();
             }
 
+            Model.IsConnected = true;
+            Model.GameUrl = _multiworldClientService.GameUrl ?? "";
+
             _multiworldClientService.Error += MultiworldClientServiceError;
+            _multiworldClientService.GameRejoined += MultiworldClientServiceOnGameRejoined;
             _multiworldClientService.PlayerJoined += MultiworldClientServiceOnPlayerJoined;
+            _multiworldClientService.PlayerRejoined += MultiworldClientServiceOnPlayerRejoined;
             _multiworldClientService.PlayerSync += MultiworldClientServiceOnPlayerSync;
+            _multiworldClientService.Connected += MultiworldClientServiceOnConnected;
+            _multiworldClientService.ConnectionClosed += MultiworldClientServiceOnConnectionClosed;
+        }
+
+        private void MultiworldClientServiceOnPlayerRejoined()
+        {
+            UpdatePlayerList();
+        }
+
+        private void MultiworldClientServiceOnGameRejoined()
+        {
+            UpdatePlayerList();
+            Model.IsConnected = true;
+        }
+
+        private void MultiworldClientServiceOnConnected()
+        {
+            Task.Run(async () => await _multiworldClientService.RejoinGame());
+        }
+
+        private void MultiworldClientServiceOnConnectionClosed(Exception? exception)
+        {
+            Model.IsConnected = false;
+
         }
 
         protected override void OnActivated(EventArgs e)
@@ -63,7 +81,17 @@ namespace Randomizer.App.Windows
 
         private void MultiworldClientServiceError(string error, Exception? exception)
         {
-            MessageBox.Show(this, error, Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            if (Dispatcher.CheckAccess())
+            {
+                MessageBox.Show(this, error , "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    MultiworldClientServiceError(error, exception);
+                });
+            }
         }
 
         private void MultiworldClientServiceOnPlayerJoined()
@@ -76,7 +104,7 @@ namespace Randomizer.App.Windows
             Model.UpdatePlayer(state);
         }
 
-        public MultiworldPlayersViewModel Model { get; set; } = new();
+        public MultiworldStatusViewModel Model { get; set; } = new();
         public MultiRomListPanel ParentPanel { get; set; } = null!;
 
         protected void UpdatePlayerList()
@@ -104,6 +132,11 @@ namespace Randomizer.App.Windows
         private void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
         {
             ShowGenerateRomWindow();
+        }
+
+        private async void ReconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            await _multiworldClientService.Reconnect();
         }
     }
 }

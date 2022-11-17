@@ -6,12 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Randomizer.Data.Multiworld;
+using Randomizer.SMZ3.Tracking.AutoTracking;
 
 namespace Randomizer.App.ViewModels
 {
-    public class MultiworldPlayersViewModel : INotifyPropertyChanged
+    public class MultiworldStatusViewModel : INotifyPropertyChanged
     {
-        public MultiworldPlayersViewModel()
+        private bool _isConnected;
+        private string _gameUrl = "";
+
+        public MultiworldStatusViewModel()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
@@ -34,6 +38,39 @@ namespace Randomizer.App.ViewModels
                 Players = new();
             }
         }
+
+
+        public bool IsConnected
+        {
+            get
+            {
+                return _isConnected;
+            }
+            set
+            {
+                _isConnected = value;
+                OnPropertyChanged(nameof(IsConnected));
+                OnPropertyChanged(nameof(ConnectionStatus));
+                OnPropertyChanged(nameof(ReconnectButtonVisibility));
+            }
+        }
+
+        public string GameUrl
+        {
+            get
+            {
+                return _gameUrl;
+            }
+            set
+            {
+                _gameUrl = value;
+                OnPropertyChanged(nameof(GameUrl));
+            }
+        }
+
+        public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
+
+        public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
 
         public List<MultiworldPlayerStateViewModel> Players { get; private set; }
 

@@ -83,8 +83,16 @@ public class MultiworldGame
         return player;
     }
 
-    public List<MultiworldPlayerState> StartGame(List<string> players, TrackerState trackerState)
+    public void RejoinGame(MultiworldPlayer player, string playerConnectionId)
     {
+        _playerConnections[playerConnectionId] = player;
+        player.ConnectionId = playerConnectionId;
+        player.State.IsConnected = true;
+    }
+
+    public List<MultiworldPlayerState>? StartGame(List<string> players, TrackerState trackerState, out string? error)
+    {
+        error = "";
         var playerStates = new List<MultiworldPlayerState>();
 
         /*for (var i = 0; i < players.Count; i++)
@@ -105,10 +113,11 @@ public class MultiworldGame
         return playerStates;
     }
 
-    public MultiworldPlayer? GetPlayer(string guid, string? key, bool verifyKey)
+    public MultiworldPlayer? GetPlayer(string guid, string? key, bool verifyKey, bool verifyAdmin = false)
     {
         if (!_players.TryGetValue(guid, out var player)) return null;
         if (verifyKey && key != player.Key) return null;
+        if (verifyAdmin && AdminPlayer != player) return null;
         return player;
     }
 

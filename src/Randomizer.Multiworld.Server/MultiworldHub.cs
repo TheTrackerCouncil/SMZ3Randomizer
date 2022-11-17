@@ -6,11 +6,19 @@ namespace Randomizer.Multiworld.Server
 {
     public class MultiworldHub : Hub
     {
+        private ILogger<MultiworldHub> _logger;
+        private string _serverUrl;
+        public MultiworldHub(ILogger<MultiworldHub> logger, IConfiguration configuration)
+        {
+            _logger = logger;
+            _serverUrl = configuration.GetValue<string>("SMZ3:ServerUrl");
+        }
+
         public async Task CreateGame(CreateGameRequest request)
         {
             if (string.IsNullOrEmpty(request.PlayerName))
             {
-                await SendErrorResponse<JoinGameResponse>("CreateGame", "Missing required attributes");
+                await SendErrorResponse<CreateGameResponse>("CreateGame", "Missing required attributes");
                 return;
             }
 
@@ -18,9 +26,13 @@ namespace Randomizer.Multiworld.Server
 
             if (results == null)
             {
-                await SendErrorResponse<CreateGameResponse>("CreateGame", error ?? "Unknown error creating game");
+                error ??= "Unknown error creating game";
+                await SendErrorResponse<CreateGameResponse>("CreateGame", error);
+                _logger.LogError("Error when creating game: {Error}", error);
                 return;
             }
+
+            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Game created", results.Value.Game.Guid, results.Value.Player.Guid);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, results.Value.Game.Guid);
 
@@ -30,7 +42,8 @@ namespace Randomizer.Multiworld.Server
                 GameGuid = results.Value.Game.Guid,
                 PlayerGuid = results.Value.Player.Guid,
                 PlayerKey = results.Value.Player.Key,
-                AllPlayers = results.Value.Game.PlayerStates
+                AllPlayers = results.Value.Game.PlayerStates,
+                GameUrl = $"{_serverUrl}?game={results.Value.Game.Guid}",
             });
         }
 
@@ -44,16 +57,20 @@ namespace Randomizer.Multiworld.Server
             var game = MultiworldGame.LoadGame(request.GameGuid);
             if (game == null)
             {
-                await SendErrorResponse<JoinGameResponse>("JoinGame", "Unable to find game");
+                await SendErrorResponse<JoinGameResponse>("JoinGame", $"Unable to find game");
                 return;
             }
 
             var player = game.JoinGame(request.PlayerName, Context.ConnectionId, out var error);
             if (player == null)
             {
-                await SendErrorResponse<JoinGameResponse>("JoinGame", error ?? "Unknown error joining game");
+                error ??= "Unknown error joining game";
+                await SendErrorResponse<JoinGameResponse>("JoinGame", error);
+                _logger.LogError("Error when joining game: {Error}", error);
                 return;
             }
+
+            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player joined", game.Guid, player.Guid);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, request.GameGuid);
 
@@ -62,10 +79,57 @@ namespace Randomizer.Multiworld.Server
                 IsSuccessful = true,
                 PlayerGuid = player.Guid,
                 PlayerKey = player.Key,
-                AllPlayers = game.PlayerStates
+                AllPlayers = game.PlayerStates,
+                GameUrl = $"{_serverUrl}?game={game.Guid}",
             });
 
             await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerJoined", new PlayerJoinedResponse()
+            {
+                IsSuccessful = true,
+                PlayerGuid = player.Guid,
+                PlayerName = player.State.PlayerName,
+                AllPlayers = game.PlayerStates
+            });
+        }
+
+        public async Task RejoinGame(RejoinGameRequest request)
+        {
+            if (string.IsNullOrEmpty(request.GameGuid) || string.IsNullOrEmpty(request.PlayerGuid) || string.IsNullOrEmpty(request.PlayerKey))
+            {
+                await SendErrorResponse<JoinGameResponse>("JoinGame", "Missing required attributes");
+                return;
+            }
+
+            var game = MultiworldGame.LoadGame(request.GameGuid);
+            if (game == null)
+            {
+                await SendErrorResponse<JoinGameResponse>("JoinGame", $"Unable to find game");
+                return;
+            }
+
+            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true);
+            if (player == null)
+            {
+                await SendErrorResponse<SubmitConfigResponse>("SubmitConfig", "Unable to find player");
+                return;
+            }
+
+            game.RejoinGame(player, Context.ConnectionId);
+
+            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player rejoined", game.Guid, player.Guid);
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, request.GameGuid);
+
+            await Clients.Caller.SendAsync("RejoinGame", new RejoinGameResponse()
+            {
+                IsSuccessful = true,
+                PlayerGuid = player.Guid,
+                PlayerKey = player.Key,
+                AllPlayers = game.PlayerStates,
+                GameUrl = $"{_serverUrl}?game={game.Guid}",
+            });
+
+            await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerRejoined", new PlayerJoinedResponse()
             {
                 IsSuccessful = true,
                 PlayerGuid = player.Guid,
@@ -90,6 +154,8 @@ namespace Randomizer.Multiworld.Server
                 return;
             }
 
+            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Config submitted", game.Guid, player.Guid);
+
             var configs = game.UpdatePlayerConfig(player, request.Config);
 
             await Clients.Caller.SendAsync("SubmitConfig", new SubmitConfigResponse() { IsSuccessful = true });
@@ -110,7 +176,14 @@ namespace Randomizer.Multiworld.Server
                 return;
             }
 
-            var playerStates = game.StartGame(request.PlayerGuids, request.TrackerState);
+            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true, true);
+            if (player == null)
+            {
+                await SendErrorResponse<StartGameResponse>("StartGame", "Unable to find player");
+                return;
+            }
+
+            var playerStates = game.StartGame(request.PlayerGuids, request.TrackerState, out var error);
             await Clients.Group(request.GameGuid).SendAsync("StartGame", new StartGameResponse()
             {
                 IsSuccessful = true,

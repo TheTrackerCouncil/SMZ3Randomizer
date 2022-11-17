@@ -31,11 +31,21 @@ namespace Randomizer.App.Windows
 
         private void MultiworldClientServiceError(string error, Exception? exception)
         {
-            MessageBox.Show(this, error, Title, MessageBoxButton.OK, MessageBoxImage.Error);
-            if (IsConnecting)
+            if (Dispatcher.CheckAccess())
             {
-                IsConnecting = false;
-                OnPropertyChanged();
+                MessageBox.Show(this, error, "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (IsConnecting)
+                {
+                    IsConnecting = false;
+                    OnPropertyChanged();
+                }
+            }
+            else
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    MultiworldClientServiceError(error, exception);
+                });
             }
         }
 

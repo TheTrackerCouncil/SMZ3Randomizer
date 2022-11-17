@@ -6,15 +6,29 @@
         xmlns:local="clr-namespace:Randomizer.App.Windows"
         xmlns:viewmodels="clr-namespace:Randomizer.App.ViewModels"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance viewmodels:MultiworldPlayersViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance viewmodels:MultiworldStatusViewModel, IsDesignTimeCreatable=True}"
         Title="MultiworldStatusWindow" Height="300" Width="500">
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    
-    <ListView Name="PlayersList" ItemsSource="{Binding Players}" SelectionMode="Single" Grid.Row="0">
+
+    <Border Grid.Row="0"
+            Style="{StaticResource BottomPanel}">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0">
+          <TextBlock DockPanel.Dock="Left" Margin="0 3 6 0">Game Url:</TextBlock>
+          <TextBox Text="{Binding GameUrl, Mode=OneWay}" IsReadOnly="True"></TextBox>
+        </DockPanel>
+      </Grid>
+    </Border>
+
+    <ListView Name="PlayersList" ItemsSource="{Binding Players}" SelectionMode="Single" Grid.Row="1">
       <ListView.ItemTemplate>
         <DataTemplate>
           <Grid Margin="0,2">
@@ -26,8 +40,8 @@
               <TextBlock Grid.Column="0" Text="{Binding PlayerName}" Margin="0 0 6 0" />
               <TextBlock Text="{Binding StatusLabel}" />
             </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
               <Button Name="UpdateConfigButton"
                       Click="UpdateConfigButton_Click"
                       Visibility="{Binding EditConfigVisibility}">
@@ -46,10 +60,21 @@
       </ListView.ItemContainerStyle>
     </ListView>
 
-    <Border Grid.Row="1"
+    <Border Grid.Row="2"
             Style="{StaticResource BottomPanel}">
       <Grid>
-        <StackPanel Orientation="Horizontal"
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Orientation="Horizontal"
+                    HorizontalAlignment="Left">
+          <Button x:Name="ReconnectButton" Margin="0"
+                  Click="ReconnectButton_Click"
+                  Visibility="{Binding ReconnectButtonVisibility}">_Reconnect</Button>
+          <TextBlock Text="{Binding ConnectionStatus}" Margin="6 3 0 0 "></TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal"
                     HorizontalAlignment="Right">
           <Button x:Name="StartGameButton"
                   Click="StartGameButton_Click"
