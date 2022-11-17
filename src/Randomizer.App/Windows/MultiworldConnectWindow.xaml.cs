@@ -91,7 +91,7 @@ namespace Randomizer.App.Windows
         public bool IsCreatingGame { get; set; }
         public bool IsJoiningGame { get; set; }
         public bool IsConnecting { get; set; }
-        public string UrlLabelText => IsCreatingGame ? "Server url" : "Game url";
+        public string UrlLabelText => IsCreatingGame ? "Server url:" : "Game url:";
         public bool CanEnterInput => !IsConnecting;
         public bool CanEnterGameMode => !IsConnecting && IsCreatingGame;
         public bool CanPressButton => PlayerNameTextBox.Text.Length > 0;

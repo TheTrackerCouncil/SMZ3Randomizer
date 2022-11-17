@@ -25,12 +25,12 @@ namespace Randomizer.App.ViewModels
                     {
                         Guid = "Player One",
                         PlayerName = "Player One",
-                    }, true),
+                    }, true, false, true),
                     new MultiworldPlayerStateViewModel(new MultiworldPlayerState
                     {
                         Guid = "Player Two",
                         PlayerName = "Player Two",
-                    }, false),
+                    }, false, false, true),
                 };
             }
             else
@@ -52,6 +52,7 @@ namespace Randomizer.App.ViewModels
                 OnPropertyChanged(nameof(IsConnected));
                 OnPropertyChanged(nameof(ConnectionStatus));
                 OnPropertyChanged(nameof(ReconnectButtonVisibility));
+                Players.ForEach(x => x.IsConnectedToServer = value);
             }
         }
 
@@ -76,18 +77,18 @@ namespace Randomizer.App.ViewModels
 
         public void UpdateList(List<MultiworldPlayerState> players, MultiworldPlayerState? localPlayer)
         {
-            Players = players.Select(x => new MultiworldPlayerStateViewModel(x, x == localPlayer)).ToList();
+            Players = players.Select(x => new MultiworldPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected)).ToList();
             OnPropertyChanged();
         }
 
-        public void UpdatePlayer(MultiworldPlayerState player)
+        public void UpdatePlayer(MultiworldPlayerState player, MultiworldPlayerState? localPlayer)
         {
             var playerViewModel = Players.FirstOrDefault(x => x.PlayerGuid == player.Guid);
             if (playerViewModel != null)
                 playerViewModel.Update(player);
             else
             {
-                Players.Add(new MultiworldPlayerStateViewModel(player, false));
+                Players.Add(new MultiworldPlayerStateViewModel(player, false, localPlayer?.IsAdmin ?? false, IsConnected));
                 OnPropertyChanged();
             }
         }

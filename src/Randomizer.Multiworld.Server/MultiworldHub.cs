@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Randomizer.Data.Multiworld;
-using Randomizer.Data.Options;
 
 namespace Randomizer.Multiworld.Server
 {
     public class MultiworldHub : Hub
     {
-        private ILogger<MultiworldHub> _logger;
-        private string _serverUrl;
+        private readonly ILogger<MultiworldHub> _logger;
+        private readonly string _serverUrl;
         public MultiworldHub(ILogger<MultiworldHub> logger, IConfiguration configuration)
         {
             _logger = logger;
@@ -191,6 +190,56 @@ namespace Randomizer.Multiworld.Server
             });
         }
 
+        public async Task ForfeitGame(ForfeitGameRequest request)
+        {
+            var game = MultiworldGame.LoadGame(request.GameGuid);
+            if (game == null)
+            {
+                await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find game");
+                return;
+            }
+
+            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true);
+            if (player == null)
+            {
+                await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find player");
+                return;
+            }
+
+            if (!player.State.IsAdmin && player.Guid != request.ForfeitPlayerGuid)
+            {
+                await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find player");
+                return;
+            }
+
+            if (player.Guid != request.ForfeitPlayerGuid)
+            {
+                player = game.GetPlayer(request.ForfeitPlayerGuid, null, false);
+                if (player == null)
+                {
+                    await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find player");
+                    return;
+                }
+            }
+
+            game.ForfeitPlayer(player);
+
+            await Clients.Caller.SendAsync("ForfeitGame", new ForfeitGameResponse()
+            {
+                IsSuccessful = true,
+                ForfeitPlayerGuid = request.ForfeitPlayerGuid,
+                AllPlayers = game.PlayerStates
+            });
+
+            await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerForfeited", new PlayerForfeitedResponse()
+            {
+                IsSuccessful = true,
+                PlayerGuid = player.Guid,
+                PlayerName = player.State.PlayerName,
+                AllPlayers = game.PlayerStates
+            });
+        }
+
         private async Task SendErrorResponse<T>(string method, string error) where T : MultiworldResponse, new()
         {
             var response = new T() { IsSuccessful = false, Error = error };
@@ -198,9 +247,10 @@ namespace Randomizer.Multiworld.Server
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
-        {;
+        {
             var player = MultiworldGame.PlayerDisconnected(Context.ConnectionId);
             if (player == null) return;
+            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Config submitted", player.Game.Guid, player.Guid);
             await Clients.Group(player.Game.Guid).SendAsync("PlayerSync", new PlayerSyncResponse()
             {
                 IsSuccessful = true,

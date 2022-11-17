@@ -185,7 +185,7 @@ namespace Randomizer.App.Controls
             }
         }
 
-        protected void CopyTextToClipboard(string text)
+        public void CopyTextToClipboard(string text)
         {
             try
             {

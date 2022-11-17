@@ -12,6 +12,12 @@ public class MultiworldPlayerState
     public Config? Config { get; set; }
     public bool IsAdmin { get; set; }
     public bool IsConnected { get; set; } = true;
+    public bool HasForfeited { get; set; }
+
+    public bool HasCompleted { get; set; }
+
+    public MultiworldPlayerStatus Status { get; set; }
+
     public IEnumerable<TrackerLocationState>? Locations { get; set; }
     public IEnumerable<TrackerItemState>? Items { get; set; }
     public IEnumerable<TrackerBossState>? Bosses { get; set; }

@@ -23,6 +23,8 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0">
           <TextBlock DockPanel.Dock="Left" Margin="0 3 6 0">Game Url:</TextBlock>
+          <Button x:Name="CopyUrlButton" DockPanel.Dock="Right"
+                  Click="CopyUrlButton_OnClick">_Copy</Button>
           <TextBox Text="{Binding GameUrl, Mode=OneWay}" IsReadOnly="True"></TextBox>
         </DockPanel>
       </Grid>
@@ -37,18 +39,22 @@
               <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Margin="0 3 0 0">
-              <TextBlock Grid.Column="0" Text="{Binding PlayerName}" Margin="0 0 6 0" />
+              <TextBlock Text="{Binding PlayerName}" Margin="0 0 6 0" />
               <TextBlock Text="{Binding StatusLabel}" />
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
               <Button Name="UpdateConfigButton"
                       Click="UpdateConfigButton_Click"
-                      Visibility="{Binding EditConfigVisibility}">
+                      Visibility="{Binding EditConfigVisibility}"
+                      IsEnabled="{Binding IsConnectedToServer}">
                 Update Config
               </Button>
               <Button Name="ForfeitButton"
-                      Visibility="{Binding ForfeitVisiblity}">Forfeit</Button>
+                      Click="ForfeitButton_OnClick"
+                      Visibility="{Binding ForfeitVisiblity}"
+                      IsEnabled="{Binding IsConnectedToServer}"
+                      Tag="{Binding State}">Forfeit</Button>
             </StackPanel>
           </Grid>
         </DataTemplate>
@@ -78,8 +84,10 @@
                     HorizontalAlignment="Right">
           <Button x:Name="StartGameButton"
                   Click="StartGameButton_Click"
+                  IsEnabled="{Binding IsConnected}"
                   ToolTip="All players must have submitted their settings to start the game.">_Start game</Button>
           <Button x:Name="OpenTrackerButton"
+                  IsEnabled="{Binding IsConnected}"
                   Click="OpenTrackerButton_Click">_Open tracker</Button>
         </StackPanel>
       </Grid>

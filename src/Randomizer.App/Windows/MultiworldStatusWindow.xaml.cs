@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Multiworld;
 using Randomizer.Multiworld.Client;
+using Randomizer.SMZ3.Tracking.AutoTracking;
 
 namespace Randomizer.App.Windows
 {
@@ -35,11 +37,25 @@ namespace Randomizer.App.Windows
 
             _multiworldClientService.Error += MultiworldClientServiceError;
             _multiworldClientService.GameRejoined += MultiworldClientServiceOnGameRejoined;
+            _multiworldClientService.GameForfeit += MultiworldClientServiceOnGameForfeit;
             _multiworldClientService.PlayerJoined += MultiworldClientServiceOnPlayerJoined;
             _multiworldClientService.PlayerRejoined += MultiworldClientServiceOnPlayerRejoined;
             _multiworldClientService.PlayerSync += MultiworldClientServiceOnPlayerSync;
             _multiworldClientService.Connected += MultiworldClientServiceOnConnected;
             _multiworldClientService.ConnectionClosed += MultiworldClientServiceOnConnectionClosed;
+            _multiworldClientService.PlayerForfeit += MultiworldClientServiceOnPlayerForfeit;
+        }
+
+        private void MultiworldClientServiceOnGameForfeit()
+        {
+            if (_multiworldClientService.GameStatus != MultiworldGameStatus.Created) return;
+            Task.Run(async () => await _multiworldClientService.Disconnect());
+            Close();
+        }
+
+        private void MultiworldClientServiceOnPlayerForfeit()
+        {
+            UpdatePlayerList();
         }
 
         private void MultiworldClientServiceOnPlayerRejoined()
@@ -77,6 +93,14 @@ namespace Randomizer.App.Windows
         {
             base.OnClosing(e);
             _multiworldClientService.Error -= MultiworldClientServiceError;
+            _multiworldClientService.GameRejoined -= MultiworldClientServiceOnGameRejoined;
+            _multiworldClientService.GameForfeit -= MultiworldClientServiceOnGameForfeit;
+            _multiworldClientService.PlayerJoined -= MultiworldClientServiceOnPlayerJoined;
+            _multiworldClientService.PlayerRejoined -= MultiworldClientServiceOnPlayerRejoined;
+            _multiworldClientService.PlayerSync -= MultiworldClientServiceOnPlayerSync;
+            _multiworldClientService.Connected -= MultiworldClientServiceOnConnected;
+            _multiworldClientService.ConnectionClosed -= MultiworldClientServiceOnConnectionClosed;
+            _multiworldClientService.PlayerForfeit -= MultiworldClientServiceOnPlayerForfeit;
         }
 
         private void MultiworldClientServiceError(string error, Exception? exception)
@@ -101,7 +125,7 @@ namespace Randomizer.App.Windows
 
         private void MultiworldClientServiceOnPlayerSync(MultiworldPlayerState? previousState, MultiworldPlayerState state)
         {
-            Model.UpdatePlayer(state);
+            Model.UpdatePlayer(state, _multiworldClientService.LocalPlayer);
         }
 
         public MultiworldStatusViewModel Model { get; set; } = new();
@@ -137,6 +161,18 @@ namespace Randomizer.App.Windows
         private async void ReconnectButton_Click(object sender, RoutedEventArgs e)
         {
             await _multiworldClientService.Reconnect();
+        }
+
+        private async void ForfeitButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button { Tag: MultiworldPlayerState state })
+                return;
+            await _multiworldClientService.ForfeitGame(state.Guid);
+        }
+
+        private void CopyUrlButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ParentPanel.CopyTextToClipboard(_multiworldClientService.GameUrl ?? "");
         }
     }
 }

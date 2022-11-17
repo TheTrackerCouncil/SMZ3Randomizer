@@ -60,6 +60,10 @@ public class MultiworldGame
 
     public MultiworldPlayer? AdminPlayer { get; set; }
 
+    public bool HasGameStarted { get; set; }
+
+    public MultiworldGameStatus Status { get; private set; }
+
     public MultiworldPlayer? JoinGame(string playerName, string playerConnectionId, out string? error)
     {
         if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
@@ -88,12 +92,39 @@ public class MultiworldGame
         _playerConnections[playerConnectionId] = player;
         player.ConnectionId = playerConnectionId;
         player.State.IsConnected = true;
+        UpdatePlayerStatus(player);
+    }
+
+    public void ForfeitPlayer(MultiworldPlayer player)
+    {
+        player.State.HasForfeited = true;
+        if (player.State.IsAdmin)
+        {
+            player.State.IsAdmin = false;
+            var newAdmin = _players.Values.FirstOrDefault(x => !x.State.HasForfeited);
+            if (newAdmin != null)
+            {
+                newAdmin.State.IsAdmin = true;
+                AdminPlayer = newAdmin;
+            }
+        }
+
+        if (!HasGameStarted)
+        {
+            _playerConnections.TryRemove(player.ConnectionId, out _);
+            _players.TryRemove(player.Guid, out _);
+        }
+        else
+        {
+            UpdatePlayerStatus(player);
+        }
     }
 
     public List<MultiworldPlayerState>? StartGame(List<string> players, TrackerState trackerState, out string? error)
     {
         error = "";
         var playerStates = new List<MultiworldPlayerState>();
+        Status = MultiworldGameStatus.Started;
 
         /*for (var i = 0; i < players.Count; i++)
         {
@@ -124,6 +155,7 @@ public class MultiworldGame
     public Dictionary<string, Config?> UpdatePlayerConfig(MultiworldPlayer player, Config config)
     {
         player.State.Config = config;
+        UpdatePlayerStatus(player);
         var worldId = 0;
         foreach (var currentPlayer in _players.Values.Where(x => x.State.Config != null).OrderBy(x => x != AdminPlayer))
         {
@@ -140,6 +172,7 @@ public class MultiworldGame
         if (_playerConnections.Remove(connectionId, out var player))
         {
             player.State.IsConnected = false;
+            player.Game.UpdatePlayerStatus(player);
             return player;
         }
 
@@ -155,5 +188,16 @@ public class MultiworldGame
     private bool AddPlayer(MultiworldPlayer player)
     {
         return _players.TryAdd(player.Guid, player);
+    }
+
+    private void UpdatePlayerStatus(MultiworldPlayer player)
+    {
+        if (!player.State.IsConnected) player.State.Status = MultiworldPlayerStatus.Disconnected;
+        if (player.State.HasForfeited) player.State.Status = MultiworldPlayerStatus.Forfeit;
+        if (player.State.HasCompleted) player.State.Status = MultiworldPlayerStatus.Completed;
+        if (player.State.Config == null) player.State.Status = MultiworldPlayerStatus.ConfigPending;
+        player.State.Status = Status == MultiworldGameStatus.Created
+            ? MultiworldPlayerStatus.Ready
+            : MultiworldPlayerStatus.Playing;
     }
 }

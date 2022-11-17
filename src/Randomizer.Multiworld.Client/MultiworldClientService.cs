@@ -21,9 +21,11 @@ namespace Randomizer.Multiworld.Client
         public event GameCreatedEventHandler? GameCreated;
         public event GameJoinedEventHandler? GameJoined;
         public event GameRejoinedEventHandler? GameRejoined;
+        public event ForfeitGameEventHandler? GameForfeit;
         public event ErrorEventHandler? Error;
         public event PlayerJoinedEventHandler? PlayerJoined;
         public event PlayerRejoinedEventHandler? PlayerRejoined;
+        public event PlayerForfeitEventHandler? PlayerForfeit;
         public event PlayerSyncEventHandler? PlayerSync;
         public event ConnectionClosedEventHandler? ConnectionClosed;
 
@@ -34,6 +36,7 @@ namespace Randomizer.Multiworld.Client
         public MultiworldPlayerState? LocalPlayer => Players?.FirstOrDefault(x => x.Guid == CurrentPlayerGuid);
         public string? GameUrl { get; private set; }
         public string? ConnectionUrl { get; private set; }
+        public MultiworldGameStatus? GameStatus { get; private set; }
 
         public async Task Connect(string url)
         {
@@ -63,9 +66,13 @@ namespace Randomizer.Multiworld.Client
 
             _connection.On<RejoinGameResponse>("RejoinGame", OnRejoinGame);
 
+            _connection.On<ForfeitGameResponse>("ForfeitGame", OnForfeitGame);
+
             _connection.On<PlayerJoinedResponse>("PlayerJoined", OnPlayerJoined);
 
             _connection.On<PlayerRejoinedResponse>("PlayerRejoined", OnPlayerRejoined);
+
+            _connection.On<PlayerForfeitedResponse>("PlayerForfeited", OnPlayerForfeit);
 
             _connection.On<SubmitConfigResponse>("SubmitConfig", OnSubmitConfig);
 
@@ -156,9 +163,10 @@ namespace Randomizer.Multiworld.Client
             CurrentPlayerGuid = null;
             CurrentPlayerKey = null;
             Players = null;
-
-            if (!IsConnected) return;
+            GameStatus = null;
+            if (_connection == null) return;
             await _connection!.DisposeAsync();
+            _connection = null;
         }
 
         public async Task CreateGame(string playerName)
@@ -182,10 +190,17 @@ namespace Randomizer.Multiworld.Client
             if (!string.IsNullOrEmpty(gameGuid))
                 CurrentGameGuid = gameGuid;
             if (!string.IsNullOrEmpty(playerGuid))
-                CurrentGameGuid = playerGuid;
+                CurrentPlayerGuid = playerGuid;
             if (!string.IsNullOrEmpty(playerKey))
-                CurrentGameGuid = playerKey;
+                CurrentPlayerKey = playerKey;
             await MakeRequest("RejoinGame", new RejoinGameRequest(CurrentGameGuid!, CurrentPlayerGuid!, CurrentPlayerKey!));
+        }
+
+        public async Task ForfeitGame(string? playerGuid)
+        {
+            playerGuid ??= CurrentPlayerGuid;
+            await MakeRequest("ForfeitGame",
+                new ForfeitGameRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", playerGuid ?? ""));
         }
 
         public async Task StartGame(List<string> playerGuids, TrackerState trackerState)
@@ -239,6 +254,7 @@ namespace Randomizer.Multiworld.Client
                 CurrentPlayerKey = response.PlayerKey;
                 Players = response.AllPlayers;
                 GameUrl = response.GameUrl;
+                GameStatus = response.GameStatus;
             }
             else
             {
@@ -257,6 +273,7 @@ namespace Randomizer.Multiworld.Client
                 CurrentPlayerKey = response.PlayerKey;
                 Players = response.AllPlayers;
                 GameUrl = response.GameUrl;
+                GameStatus = response.GameStatus;
                 GameJoined?.Invoke(response.PlayerGuid!, response.PlayerKey!);
             }
             else
@@ -276,6 +293,7 @@ namespace Randomizer.Multiworld.Client
                 CurrentPlayerKey = response.PlayerKey;
                 Players = response.AllPlayers;
                 GameUrl = response.GameUrl;
+                GameStatus = response.GameStatus;
                 GameRejoined?.Invoke();
             }
             else
@@ -292,6 +310,7 @@ namespace Randomizer.Multiworld.Client
                 _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
                 Players = response.AllPlayers;
+                GameStatus = response.GameStatus;
                 PlayerJoined?.Invoke();
             }
             else
@@ -307,11 +326,39 @@ namespace Randomizer.Multiworld.Client
                 _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
                 Players = response.AllPlayers;
+                GameStatus = response.GameStatus;
                 PlayerRejoined?.Invoke();
             }
             else
             {
                 _logger.LogError("Received invalid player joined response");
+            }
+        }
+
+        private void OnPlayerForfeit(PlayerForfeitedResponse response)
+        {
+            if (response.IsValid)
+            {
+                _logger.LogInformation("Player forfeit | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
+                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
+                Players = response.AllPlayers;
+                GameStatus = response.GameStatus;
+                PlayerForfeit?.Invoke();
+            }
+            else
+            {
+                _logger.LogError("Received invalid player forfeit response");
+            }
+        }
+
+        private void OnForfeitGame(ForfeitGameResponse response)
+        {
+            if (response.IsValid)
+            {
+                _logger.LogInformation("Forfeit game");
+                Players = response.AllPlayers;
+                GameStatus = response.GameStatus;
+                GameForfeit?.Invoke();
             }
         }
 
