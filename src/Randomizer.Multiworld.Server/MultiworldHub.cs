@@ -224,14 +224,14 @@ namespace Randomizer.Multiworld.Server
 
             game.ForfeitPlayer(player);
 
-            await Clients.Caller.SendAsync("ForfeitGame", new ForfeitGameResponse()
+            await Clients.Client(player.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse()
             {
                 IsSuccessful = true,
                 ForfeitPlayerGuid = request.ForfeitPlayerGuid,
                 AllPlayers = game.PlayerStates
             });
 
-            await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerForfeited", new PlayerForfeitedResponse()
+            await Clients.GroupExcept(request.GameGuid, player.ConnectionId).SendAsync("PlayerForfeited", new PlayerForfeitedResponse()
             {
                 IsSuccessful = true,
                 PlayerGuid = player.Guid,
