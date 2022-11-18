@@ -1,24 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
 using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
-using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking;
-using SharpYaml;
 
 namespace Randomizer.App.Windows
 {
@@ -31,7 +20,6 @@ namespace Randomizer.App.Windows
         private readonly ILogger<RomListWindow> _logger;
         private readonly RandomizerContext _dbContext;
         private readonly RomGenerator _romGenerator;
-        private TrackerWindow? _trackerWindow;
         private readonly IChatAuthenticationService _chatAuthenticationService;
 
         public RomListWindow(IServiceProvider serviceProvider,
@@ -52,7 +40,7 @@ namespace Randomizer.App.Windows
             App.RestoreWindowPositionAndSize(this);
         }
 
-        public GeneratedRomsViewModel Model { get; }
+        public GeneratedRomsViewModel Model { get; } = new();
         public RandomizerOptions Options { get; }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -81,9 +69,9 @@ namespace Randomizer.App.Windows
             }
 
             var soloPanel = _serviceProvider.GetService<SoloRomListPanel>();
-            SoloTab.Children.Add(soloPanel);
+            if (soloPanel != null)  SoloTab.Children.Add(soloPanel);
             var multiPanel = _serviceProvider.GetService<MultiRomListPanel>();
-            MultiTab.Children.Add(multiPanel);
+            if (multiPanel != null) MultiTab.Children.Add(multiPanel);
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

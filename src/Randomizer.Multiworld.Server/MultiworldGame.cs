@@ -192,11 +192,11 @@ public class MultiworldGame
 
     private void UpdatePlayerStatus(MultiworldPlayer player)
     {
-        if (!player.State.IsConnected) player.State.Status = MultiworldPlayerStatus.Disconnected;
-        if (player.State.HasForfeited) player.State.Status = MultiworldPlayerStatus.Forfeit;
-        if (player.State.HasCompleted) player.State.Status = MultiworldPlayerStatus.Completed;
         if (player.State.Config == null) player.State.Status = MultiworldPlayerStatus.ConfigPending;
-        player.State.Status = Status == MultiworldGameStatus.Created
+        else if (!player.State.IsConnected) player.State.Status = MultiworldPlayerStatus.Disconnected;
+        else if (player.State.HasForfeited) player.State.Status = MultiworldPlayerStatus.Forfeit;
+        else if (player.State.HasCompleted) player.State.Status = MultiworldPlayerStatus.Completed;
+        else player.State.Status = Status == MultiworldGameStatus.Created
             ? MultiworldPlayerStatus.Ready
             : MultiworldPlayerStatus.Playing;
     }

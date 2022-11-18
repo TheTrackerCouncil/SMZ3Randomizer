@@ -44,7 +44,7 @@ namespace Randomizer.Multiworld.Client
             //.WithUrl("http://127.0.0.1:5291/multiworld")
             //.WithUrl("https://localhost:7050/multiworld")
 
-            if (_connection != null && url == ConnectionUrl)
+            if (_connection != null && url == ConnectionUrl && _connection.State == HubConnectionState.Disconnected)
             {
                 await Reconnect();
                 return;

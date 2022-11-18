@@ -55,7 +55,7 @@ namespace Randomizer.App.Windows
             SamusSprites.Add(Sprite.DefaultSamus);
             LinkSprites.Add(Sprite.DefaultLink);
             ShipSprites.Add(ShipSprite.DefaultShip);
-            _loadSpritesTask = Task.Run(() => LoadSprites())
+            _loadSpritesTask = Task.Run(LoadSprites)
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
         }
 
@@ -276,10 +276,10 @@ namespace Randomizer.App.Windows
         public void LoadSprites()
         {
             var spritesPath = Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess()?.MainModule?.FileName ?? "")!,
+                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
                 "Sprites");
             var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
-                .Select(x => Sprite.LoadSprite(x))
+                .Select(Sprite.LoadSprite)
                 .OrderBy(x => x.Name);
 
             var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
@@ -337,21 +337,20 @@ namespace Randomizer.App.Windows
             var selectedIndex = 0;
 
             // Add generic item placement options (Any, Progressive Items, Junk)
-            foreach (var itemPlacement in Enum.GetValues(typeof(ItemPool)))
+            foreach (var itemPlacement in Enum.GetValues<ItemPool>())
             {
                 if ((int)itemPlacement == prevValue)
                 {
                     selectedIndex = curIndex;
                 }
 
-                var itemPlacementField = itemPlacement.GetType().GetField(itemPlacement.ToString());
-                var description = itemPlacementField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
-                comboBox.Items.Add(new LocationItemOption { Value = (int)itemPlacement, Text = description == null ? itemPlacementField.Name : description.Description });
+                var description = itemPlacement.GetDescription();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemPlacement, Text = description });
                 curIndex++;
             }
 
             // Add specific progressive items
-            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
+            foreach (var itemType in Enum.GetValues<ItemType>())
             {
                 if (_metadataService.Item(itemType)?.IsProgression(null) != true)
                 {
@@ -363,9 +362,8 @@ namespace Randomizer.App.Windows
                     selectedIndex = curIndex;
                 }
 
-                var itemTypeField = itemType.GetType().GetField(itemType.ToString());
-                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
-                comboBox.Items.Add(new LocationItemOption { Value = (int)itemType, Text = description == null ? itemTypeField.Name : description.Description });
+                var description = itemType.GetDescription();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemType, Text = description });
                 curIndex++;
             }
 
@@ -378,7 +376,7 @@ namespace Randomizer.App.Windows
         private async void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
             var rom = PlandoMode
-                ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig)
+                ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig!)
                 : await _romGenerator.GenerateRandomRomAsync(Options);
             if (rom != null)
             {
@@ -393,7 +391,7 @@ namespace Randomizer.App.Windows
             Close();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             try
             {
@@ -596,10 +594,11 @@ namespace Randomizer.App.Windows
         /// <param name="e">The event object</param>
         private void LogicCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            var checkBox = sender as CheckBox;
+            if (sender is not CheckBox checkBox) return;
             var type = Options.LogicConfig.GetType();
             var property = type.GetProperty(checkBox.Name);
-            property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
+            if (property != null)
+                property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
         }
 
         /// <summary>
@@ -610,10 +609,11 @@ namespace Randomizer.App.Windows
         /// <param name="e">The event object</param>
         private void CasPatchCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            var checkBox = sender as CheckBox;
+            if (sender is not CheckBox checkBox) return;
             var type = Options.PatchOptions.CasPatches.GetType();
             var property = type.GetProperty(checkBox.Name);
-            property.SetValue(Options.PatchOptions.CasPatches, checkBox.IsChecked ?? false);
+            if (property != null)
+                property.SetValue(Options.PatchOptions.CasPatches, checkBox.IsChecked ?? false);
         }
 
         /// <summary>
@@ -623,8 +623,8 @@ namespace Randomizer.App.Windows
         /// <param name="e">The event object</param>
         private void LocationsRegionFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = sender as ComboBox;
-            var selectedRegion = comboBox.SelectedItem as string;
+            if (sender is not ComboBox { SelectedItem: string selectedRegion }) return;
+
             foreach (FrameworkElement obj in LocationsGrid.Children)
             {
                 if (obj.Tag is Location location)
@@ -641,9 +641,7 @@ namespace Randomizer.App.Windows
         /// <param name="e"></param>
         private void LocationsItemDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = sender as ComboBox;
-            var option = comboBox.SelectedItem as LocationItemOption;
-            var location = comboBox.Tag as Location;
+            if (sender is not ComboBox { SelectedItem: LocationItemOption option, Tag: Location location }) return;
             if (option.Value > 0)
             {
                 Options.SeedOptions.LocationItems[location.Id] = option.Value;
@@ -663,8 +661,7 @@ namespace Randomizer.App.Windows
         {
             foreach (FrameworkElement obj in LocationsGrid.Children)
             {
-                if (obj is not ComboBox comboBox) continue;
-                var location = comboBox.Tag as Location;
+                if (obj is not ComboBox { Tag: Location location } comboBox ) continue;
                 comboBox.SelectedIndex = 0;
                 Options.SeedOptions.LocationItems.Remove(location.Id);
             }
@@ -678,8 +675,7 @@ namespace Randomizer.App.Windows
         /// <param name="e">The event object</param>
         private void EarlyItemCheckbox_Checked(object sender, RoutedEventArgs e)
         {
-            var checkBox = sender as CheckBox;
-            var itemType = (ItemType)checkBox.Tag;
+            if (sender is not CheckBox { Tag: ItemType itemType } checkBox) return;
             if (checkBox.IsChecked.HasValue && checkBox.IsChecked.Value)
                 Options.SeedOptions.EarlyItems.Add(itemType);
             else
@@ -698,10 +694,10 @@ namespace Randomizer.App.Windows
 
         private void UpdateRaceCheckBoxes()
         {
-            DisableSpoilerLogCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
-            DisableTrackerHintsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
-            DisableTrackerSpoilersCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
-            DisableCheatsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+            DisableSpoilerLogCheckBox.IsEnabled = !Options.SeedOptions.Race;
+            DisableTrackerHintsCheckBox.IsEnabled = !Options.SeedOptions.Race;
+            DisableTrackerSpoilersCheckBox.IsEnabled = !Options.SeedOptions.Race;
+            DisableCheatsCheckBox.IsEnabled = !Options.SeedOptions.Race;
         }
 
         /// <summary>
@@ -709,13 +705,13 @@ namespace Randomizer.App.Windows
         /// </summary>
         private class LocationItemOption
         {
-            public int Value { get; set; }
-            public string Text { get; set; }
+            public int Value { get; init; }
+            public string Text { get; init; } = "";
 
             public override string ToString() => Text;
         }
 
-        private async void SubmitConfigsButton_OnClick(object sender, RoutedEventArgs e)
+        private void SubmitConfigsButton_OnClick(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
             Close();

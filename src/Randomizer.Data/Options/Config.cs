@@ -10,7 +10,6 @@ using System.Text.Json;
 using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
-using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Options
 {
@@ -63,6 +62,7 @@ namespace Randomizer.Data.Options
     [DefaultValue(Any)]
     public enum ItemPool
     {
+        [Description("Any")]
         Any = 0,
 
         [Description("Progression items")]
@@ -251,12 +251,12 @@ namespace Randomizer.Data.Options
         public static IEnumerable<Config> FromConfigString(string configString)
         {
             if (configString.Contains("{"))
-                return new List<Config>() { JsonSerializer.Deserialize<Config>(configString, s_options) };
+                return new List<Config>() { JsonSerializer.Deserialize<Config>(configString, s_options) ?? new Config() };
 
             if (configString.StartsWith("["))
             {
                 var configs = new List<Config>();
-                var configStrings = JsonSerializer.Deserialize<List<string>>(configString, s_options);
+                var configStrings = JsonSerializer.Deserialize<List<string>>(configString, s_options) ?? new List<string>();
                 return configStrings.SelectMany(x => FromConfigString(x));
             }
 
@@ -275,7 +275,7 @@ namespace Randomizer.Data.Options
                 }
 
                 var json = Encoding.UTF8.GetString(buffer);
-                return new List<Config>() { JsonSerializer.Deserialize<Config>(json, s_options) };
+                return new List<Config>() { JsonSerializer.Deserialize<Config>(json, s_options) ?? new Config() };
             }
         }
 

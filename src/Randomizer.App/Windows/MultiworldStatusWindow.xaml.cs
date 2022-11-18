@@ -101,6 +101,7 @@ namespace Randomizer.App.Windows
             _multiworldClientService.Connected -= MultiworldClientServiceOnConnected;
             _multiworldClientService.ConnectionClosed -= MultiworldClientServiceOnConnectionClosed;
             _multiworldClientService.PlayerForfeit -= MultiworldClientServiceOnPlayerForfeit;
+            Task.Run(async () => await _multiworldClientService.Disconnect());
         }
 
         private void MultiworldClientServiceError(string error, Exception? exception)

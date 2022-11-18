@@ -250,7 +250,7 @@ namespace Randomizer.Multiworld.Server
         {
             var player = MultiworldGame.PlayerDisconnected(Context.ConnectionId);
             if (player == null) return;
-            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Config submitted", player.Game.Guid, player.Guid);
+            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player disconnected", player.Game.Guid, player.Guid);
             await Clients.Group(player.Game.Guid).SendAsync("PlayerSync", new PlayerSyncResponse()
             {
                 IsSuccessful = true,
