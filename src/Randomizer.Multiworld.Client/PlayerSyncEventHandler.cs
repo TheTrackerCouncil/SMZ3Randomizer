@@ -1,6 +1,6 @@
-﻿using Randomizer.Data.Multiworld;
+﻿using Randomizer.Data.Multiplayer;
 
-namespace Randomizer.Multiworld.Client;
+namespace Randomizer.Multiplayer.Client;
 
-public delegate void PlayerSyncEventHandler(MultiworldPlayerState? previousState, MultiworldPlayerState state);
+public delegate void PlayerSyncEventHandler(MultiplayerPlayerState? previousState, MultiplayerPlayerState state);
 

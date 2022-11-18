@@ -21,7 +21,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
-using Randomizer.Multiworld.Client;
+using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Generation;
@@ -44,7 +44,7 @@ namespace Randomizer.App.Windows
             RomGenerator romGenerator,
             LocationConfig locations,
             IMetadataService metadataService,
-            MultiworldClientService multiworldClientService)
+            MultiplayerClientService MultiplayerClientService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;

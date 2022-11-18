@@ -13,7 +13,7 @@ using Randomizer.App.Windows;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
-using Randomizer.Multiworld.Client;
+using Randomizer.Multiplayer.Client;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
@@ -91,7 +91,7 @@ namespace Randomizer.App
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();
             services.AddSingleton<ITrackerStateService, TrackerStateService>();
-            services.AddSingleton<MultiworldClientService>();
+            services.AddSingleton<MultiplayerClientService>();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();

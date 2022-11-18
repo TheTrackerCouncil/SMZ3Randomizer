@@ -1,32 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using Randomizer.Data.Multiworld;
-using Randomizer.SMZ3.Tracking.AutoTracking;
+using Randomizer.Data.Multiplayer;
 
 namespace Randomizer.App.ViewModels
 {
-    public class MultiworldStatusViewModel : INotifyPropertyChanged
+    public class MultiplayerStatusViewModel : INotifyPropertyChanged
     {
         private bool _isConnected;
         private string _gameUrl = "";
 
-        public MultiworldStatusViewModel()
+        public MultiplayerStatusViewModel()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
-                Players = new List<MultiworldPlayerStateViewModel>()
+                Players = new List<MultiplayerPlayerStateViewModel>()
                 {
-                    new MultiworldPlayerStateViewModel(new MultiworldPlayerState
+                    new MultiplayerPlayerStateViewModel(new MultiplayerPlayerState
                     {
                         Guid = "Player One",
                         PlayerName = "Player One",
                     }, true, false, true),
-                    new MultiworldPlayerStateViewModel(new MultiworldPlayerState
+                    new MultiplayerPlayerStateViewModel(new MultiplayerPlayerState
                     {
                         Guid = "Player Two",
                         PlayerName = "Player Two",
@@ -73,22 +69,22 @@ namespace Randomizer.App.ViewModels
 
         public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
 
-        public List<MultiworldPlayerStateViewModel> Players { get; private set; }
+        public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
 
-        public void UpdateList(List<MultiworldPlayerState> players, MultiworldPlayerState? localPlayer)
+        public void UpdateList(List<MultiplayerPlayerState> players, MultiplayerPlayerState? localPlayer)
         {
-            Players = players.Select(x => new MultiworldPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected)).ToList();
+            Players = players.Select(x => new MultiplayerPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected)).ToList();
             OnPropertyChanged();
         }
 
-        public void UpdatePlayer(MultiworldPlayerState player, MultiworldPlayerState? localPlayer)
+        public void UpdatePlayer(MultiplayerPlayerState player, MultiplayerPlayerState? localPlayer)
         {
             var playerViewModel = Players.FirstOrDefault(x => x.PlayerGuid == player.Guid);
             if (playerViewModel != null)
                 playerViewModel.Update(player);
             else
             {
-                Players.Add(new MultiworldPlayerStateViewModel(player, false, localPlayer?.IsAdmin ?? false, IsConnected));
+                Players.Add(new MultiplayerPlayerStateViewModel(player, false, localPlayer?.IsAdmin ?? false, IsConnected));
                 OnPropertyChanged();
             }
         }

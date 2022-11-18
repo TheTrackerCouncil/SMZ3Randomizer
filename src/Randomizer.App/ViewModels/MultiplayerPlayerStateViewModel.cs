@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using Randomizer.Data.Multiworld;
+using Randomizer.Data.Multiplayer;
 using Randomizer.Shared;
 
 namespace Randomizer.App.ViewModels
 {
-    public class MultiworldPlayerStateViewModel : INotifyPropertyChanged
+    public class MultiplayerPlayerStateViewModel : INotifyPropertyChanged
     {
         private bool _isConnectedToServer;
-        public MultiworldPlayerStateViewModel(MultiworldPlayerState state, bool isLocalPlayer, bool isLocalPlayerAdmin, bool isConnectedToServer)
+        public MultiplayerPlayerStateViewModel(MultiplayerPlayerState state, bool isLocalPlayer, bool isLocalPlayerAdmin, bool isConnectedToServer)
         {
             State = state;
             PlayerGuid = state.Guid;
@@ -18,7 +18,7 @@ namespace Randomizer.App.ViewModels
             _isConnectedToServer = isConnectedToServer;
         }
 
-        public MultiworldPlayerState State { get; private set; }
+        public MultiplayerPlayerState State { get; private set; }
         public string PlayerGuid { get; }
         public string PlayerName { get; }
         public bool IsLocalPlayer { get; }
@@ -51,7 +51,7 @@ namespace Randomizer.App.ViewModels
         public Visibility EditConfigVisibility => IsLocalPlayer ? Visibility.Visible : Visibility.Collapsed;
         public Visibility ForfeitVisiblity => IsLocalPlayer || IsLocalPlayerAdmin ? Visibility.Visible : Visibility.Collapsed;
 
-        public void Update(MultiworldPlayerState state)
+        public void Update(MultiplayerPlayerState state)
         {
             State = state;
             OnPropertyChanged();

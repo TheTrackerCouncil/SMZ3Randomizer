@@ -1,8 +1,0 @@
-﻿namespace Randomizer.Data.Multiworld;
-
-public class MultiworldResponse
-{
-    public MultiworldGameStatus GameStatus { get; set; }
-    public bool IsSuccessful { get; set; }
-    public string Error { get; set; } = "Unknown Error";
-}

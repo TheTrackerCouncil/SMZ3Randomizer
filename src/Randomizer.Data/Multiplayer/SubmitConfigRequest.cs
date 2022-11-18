@@ -3,9 +3,9 @@ using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Models;
 
-namespace Randomizer.Data.Multiworld;
+namespace Randomizer.Data.Multiplayer;
 
-public class SubmitConfigRequest : MultiworldRequest
+public class SubmitConfigRequest : MultiplayerRequest
 {
     public SubmitConfigRequest(string gameGuid, string playerGuid, string playerKey, Config config)
     {

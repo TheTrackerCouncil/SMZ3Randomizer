@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace Randomizer.Data.Multiworld;
+namespace Randomizer.Data.Multiplayer;
 
-public enum MultiworldPlayerStatus
+public enum MultiplayerPlayerStatus
 {
     [Description("Waiting on Config")]
     ConfigPending,

@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Randomizer.Data.Multiworld;
+using Randomizer.Data.Multiplayer;
 
-namespace Randomizer.Multiworld.Server
+namespace Randomizer.Multiplayer.Server
 {
-    public class MultiworldHub : Hub
+    public class MultiplayerHub : Hub
     {
-        private readonly ILogger<MultiworldHub> _logger;
+        private readonly ILogger<MultiplayerHub> _logger;
         private readonly string _serverUrl;
-        public MultiworldHub(ILogger<MultiworldHub> logger, IConfiguration configuration)
+
+        public MultiplayerHub(ILogger<MultiplayerHub> logger, IConfiguration configuration)
         {
             _logger = logger;
             _serverUrl = configuration.GetValue<string>("SMZ3:ServerUrl");
@@ -21,7 +22,7 @@ namespace Randomizer.Multiworld.Server
                 return;
             }
 
-            var results = MultiworldGame.CreateNewGame(request.PlayerName, Context.ConnectionId, out var error);
+            var results = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, out var error);
 
             if (results == null)
             {
@@ -53,7 +54,7 @@ namespace Randomizer.Multiworld.Server
                 await SendErrorResponse<JoinGameResponse>("JoinGame", "Missing required attributes");
                 return;
             }
-            var game = MultiworldGame.LoadGame(request.GameGuid);
+            var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
                 await SendErrorResponse<JoinGameResponse>("JoinGame", $"Unable to find game");
@@ -99,7 +100,7 @@ namespace Randomizer.Multiworld.Server
                 return;
             }
 
-            var game = MultiworldGame.LoadGame(request.GameGuid);
+            var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
                 await SendErrorResponse<JoinGameResponse>("JoinGame", $"Unable to find game");
@@ -139,7 +140,7 @@ namespace Randomizer.Multiworld.Server
 
         public async Task SubmitConfig(SubmitConfigRequest request)
         {
-            var game = MultiworldGame.LoadGame(request.GameGuid);
+            var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
                 await SendErrorResponse<SubmitConfigResponse>("SubmitConfig", "Unable to find game");
@@ -168,7 +169,7 @@ namespace Randomizer.Multiworld.Server
 
         public async Task StartGame(StartGameRequest request)
         {
-            var game = MultiworldGame.LoadGame(request.GameGuid);
+            var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
                 await SendErrorResponse<StartGameResponse>("StartGame", "Unable to find game");
@@ -192,7 +193,7 @@ namespace Randomizer.Multiworld.Server
 
         public async Task ForfeitGame(ForfeitGameRequest request)
         {
-            var game = MultiworldGame.LoadGame(request.GameGuid);
+            var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
                 await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find game");
@@ -240,7 +241,7 @@ namespace Randomizer.Multiworld.Server
             });
         }
 
-        private async Task SendErrorResponse<T>(string method, string error) where T : MultiworldResponse, new()
+        private async Task SendErrorResponse<T>(string method, string error) where T : MultiplayerResponse, new()
         {
             var response = new T() { IsSuccessful = false, Error = error };
             await Clients.Caller.SendAsync(method, response);
@@ -248,7 +249,7 @@ namespace Randomizer.Multiworld.Server
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var player = MultiworldGame.PlayerDisconnected(Context.ConnectionId);
+            var player = MultiplayerGame.PlayerDisconnected(Context.ConnectionId);
             if (player == null) return;
             _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player disconnected", player.Game.Guid, player.Guid);
             await Clients.Group(player.Game.Guid).SendAsync("PlayerSync", new PlayerSyncResponse()

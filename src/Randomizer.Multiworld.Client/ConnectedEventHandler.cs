@@ -1,3 +1,3 @@
-﻿namespace Randomizer.Multiworld.Client;
+﻿namespace Randomizer.Multiplayer.Client;
 
 public delegate void ConnectedEventHandler();

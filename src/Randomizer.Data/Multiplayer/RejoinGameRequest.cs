@@ -1,8 +1,8 @@
 ﻿using Randomizer.Data.Options;
 
-namespace Randomizer.Data.Multiworld;
+namespace Randomizer.Data.Multiplayer;
 
-public class RejoinGameRequest : MultiworldRequest
+public class RejoinGameRequest : MultiplayerRequest
 {
     public RejoinGameRequest(string gameGuid, string playerGuid, string playerKey)
     {

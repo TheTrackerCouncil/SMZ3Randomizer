@@ -2,9 +2,9 @@
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 
-namespace Randomizer.Data.Multiworld;
+namespace Randomizer.Data.Multiplayer;
 
-public class MultiworldPlayerState
+public class MultiplayerPlayerState
 {
     public string Guid { get; init; } = null!;
     public string PlayerName { get; init; } = null!;
@@ -16,7 +16,7 @@ public class MultiworldPlayerState
 
     public bool HasCompleted { get; set; }
 
-    public MultiworldPlayerStatus Status { get; set; }
+    public MultiplayerPlayerStatus Status { get; set; }
 
     public IEnumerable<TrackerLocationState>? Locations { get; set; }
     public IEnumerable<TrackerItemState>? Items { get; set; }

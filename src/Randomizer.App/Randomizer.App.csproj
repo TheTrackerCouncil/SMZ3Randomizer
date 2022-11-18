@@ -64,7 +64,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
-    <ProjectReference Include="..\Randomizer.Multiworld.Client\Randomizer.Multiworld.Client.csproj" />
+    <ProjectReference Include="..\Randomizer.Multiworld.Client\Randomizer.Multiplayer.Client.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj" />

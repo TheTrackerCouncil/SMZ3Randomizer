@@ -36,7 +36,7 @@ namespace Randomizer.App.Controls
         private void CreateMultiGameButton_Click(object sender, RoutedEventArgs e)
         {
             using var scope = ServiceProvider.CreateScope();
-            var multiWindow = scope.ServiceProvider.GetRequiredService<MultiworldConnectWindow>();
+            var multiWindow = scope.ServiceProvider.GetRequiredService<MultiplayerConnectWindow>();
             multiWindow.Owner = Window.GetWindow(this);
             multiWindow.IsCreatingGame = true;
             if (multiWindow.ShowDialog() == true) NewMultiGame();
@@ -45,7 +45,7 @@ namespace Randomizer.App.Controls
         private void JoinMultiGameButton_Click(object sender, RoutedEventArgs e)
         {
             using var scope = ServiceProvider.CreateScope();
-            var multiWindow = scope.ServiceProvider.GetRequiredService<MultiworldConnectWindow>();
+            var multiWindow = scope.ServiceProvider.GetRequiredService<MultiplayerConnectWindow>();
             multiWindow.Owner = Window.GetWindow(this);
             multiWindow.IsJoiningGame = true;
             if (multiWindow.ShowDialog() == true) NewMultiGame();
@@ -59,7 +59,7 @@ namespace Randomizer.App.Controls
         private void OpenStatusWindow()
         {
             using var scope = ServiceProvider.CreateScope();
-            var statusWindow = scope.ServiceProvider.GetRequiredService<MultiworldStatusWindow>();
+            var statusWindow = scope.ServiceProvider.GetRequiredService<MultiplayerStatusWindow>();
             statusWindow.Owner = Window.GetWindow(this);
             statusWindow.ParentPanel = this;
             statusWindow.Show();

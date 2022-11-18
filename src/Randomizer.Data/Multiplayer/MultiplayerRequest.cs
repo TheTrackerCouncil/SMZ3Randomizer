@@ -1,6 +1,6 @@
-﻿namespace Randomizer.Data.Multiworld;
+﻿namespace Randomizer.Data.Multiplayer;
 
-public class MultiworldRequest
+public class MultiplayerRequest
 {
     public string GameGuid { get; set; } = "";
     public string PlayerGuid { get; set; } = "";

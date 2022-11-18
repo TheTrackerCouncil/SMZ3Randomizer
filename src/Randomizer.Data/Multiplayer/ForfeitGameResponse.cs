@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Randomizer.Data.Multiworld;
+namespace Randomizer.Data.Multiplayer;
 
-public class ForfeitGameResponse : MultiworldResponse
+public class ForfeitGameResponse : MultiplayerResponse
 {
     public string? ForfeitPlayerGuid { get; init; } = null;
 
-    public List<MultiworldPlayerState>? AllPlayers { get; init; }
+    public List<MultiplayerPlayerState>? AllPlayers { get; init; }
 
     public bool IsValid => IsSuccessful && !string.IsNullOrEmpty(ForfeitPlayerGuid);
 }

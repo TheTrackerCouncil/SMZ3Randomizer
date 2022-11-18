@@ -2,9 +2,9 @@
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Models;
 
-namespace Randomizer.Data.Multiworld;
+namespace Randomizer.Data.Multiplayer;
 
-public class StartGameRequest : MultiworldRequest
+public class StartGameRequest : MultiplayerRequest
 {
     public StartGameRequest(List<string> playerGuids, TrackerState initialState)
     {

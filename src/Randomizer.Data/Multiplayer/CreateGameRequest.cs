@@ -1,6 +1,6 @@
-﻿namespace Randomizer.Data.Multiworld;
+﻿namespace Randomizer.Data.Multiplayer;
 
-public class CreateGameRequest : MultiworldRequest
+public class CreateGameRequest : MultiplayerRequest
 {
     public CreateGameRequest(string playerName)
     {

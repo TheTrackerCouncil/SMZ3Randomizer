@@ -3,33 +3,33 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
-using Randomizer.Multiworld.Client;
+using Randomizer.Multiplayer.Client;
 
 namespace Randomizer.App.Windows
 {
     /// <summary>
-    /// Interaction logic for MultiworldConnectWindow.xaml
+    /// Interaction logic for MultiplayerConnectWindow.xaml
     /// </summary>
-    public partial class MultiworldConnectWindow : Window, INotifyPropertyChanged
+    public sealed partial class MultiplayerConnectWindow : Window, INotifyPropertyChanged
     {
-        private readonly MultiworldClientService _multiworldClientService;
+        private readonly MultiplayerClientService _multiplayerClientService;
         private readonly ILogger _logger;
 
-        public MultiworldConnectWindow(MultiworldClientService multiworldClientService, ILogger<MultiworldConnectWindow> logger)
+        public MultiplayerConnectWindow(MultiplayerClientService multiplayerClientService, ILogger<MultiplayerConnectWindow> logger)
         {
             _logger = logger;
-            _multiworldClientService = multiworldClientService;
+            _multiplayerClientService = multiplayerClientService;
             InitializeComponent();
             DataContext = this;
 
             _logger.LogInformation("Opening window");
-            _multiworldClientService.Connected += MultiworldClientServiceConnected;
-            _multiworldClientService.Error += MultiworldClientServiceError;
-            _multiworldClientService.GameCreated += MultiworldClientServiceGameCreated;
-            _multiworldClientService.GameJoined += MultiworldClientServiceGameJoined;
+            _multiplayerClientService.Connected += MultiplayerClientServiceConnected;
+            _multiplayerClientService.Error += MultiplayerClientServiceError;
+            _multiplayerClientService.GameCreated += MultiplayerClientServiceGameCreated;
+            _multiplayerClientService.GameJoined += MultiplayerClientServiceGameJoined;
         }
 
-        private void MultiworldClientServiceError(string error, Exception? exception)
+        private void MultiplayerClientServiceError(string error, Exception? exception)
         {
             if (Dispatcher.CheckAccess())
             {
@@ -44,33 +44,33 @@ namespace Randomizer.App.Windows
             {
                 Dispatcher.Invoke(() =>
                 {
-                    MultiworldClientServiceError(error, exception);
+                    MultiplayerClientServiceError(error, exception);
                 });
             }
         }
 
-        private async void MultiworldClientServiceConnected()
+        private async void MultiplayerClientServiceConnected()
         {
             if (IsCreatingGame)
             {
                 _logger.LogInformation("Connecting");
-                await _multiworldClientService.CreateGame(PlayerNameTextBox.Text);
+                await _multiplayerClientService.CreateGame(PlayerNameTextBox.Text);
             }
             else
             {
                 _logger.LogInformation("Joining");
-                await _multiworldClientService.JoinGame(GameGuid, PlayerNameTextBox.Text);
+                await _multiplayerClientService.JoinGame(GameGuid, PlayerNameTextBox.Text);
             }
         }
 
-        private void MultiworldClientServiceGameCreated(string gameGuid, string playerGuid, string playerKey)
+        private void MultiplayerClientServiceGameCreated(string gameGuid, string playerGuid, string playerKey)
         {
             SaveAndClose(gameGuid, playerGuid, playerKey);
         }
 
-        private void MultiworldClientServiceGameJoined(string playerGuid, string playerKey)
+        private void MultiplayerClientServiceGameJoined(string playerGuid, string playerKey)
         {
-            SaveAndClose(_multiworldClientService.CurrentGameGuid!, playerGuid, playerKey);
+            SaveAndClose(_multiplayerClientService.CurrentGameGuid!, playerGuid, playerKey);
         }
 
         private void SaveAndClose(string gameGuid, string playerGuid, string playerKey)
@@ -82,10 +82,10 @@ namespace Randomizer.App.Windows
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            _multiworldClientService.Connected -= MultiworldClientServiceConnected;
-            _multiworldClientService.Error -= MultiworldClientServiceError;
-            _multiworldClientService.GameJoined -= MultiworldClientServiceGameJoined;
-            _multiworldClientService.GameCreated -= MultiworldClientServiceGameCreated;
+            _multiplayerClientService.Connected -= MultiplayerClientServiceConnected;
+            _multiplayerClientService.Error -= MultiplayerClientServiceError;
+            _multiplayerClientService.GameJoined -= MultiplayerClientServiceGameJoined;
+            _multiplayerClientService.GameCreated -= MultiplayerClientServiceGameCreated;
         }
 
         public bool IsCreatingGame { get; set; }
@@ -116,8 +116,8 @@ namespace Randomizer.App.Windows
 
         private async void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            _multiworldClientService.Error -= MultiworldClientServiceError;
-            await _multiworldClientService.Disconnect();
+            _multiplayerClientService.Error -= MultiplayerClientServiceError;
+            await _multiplayerClientService.Disconnect();
             IsConnecting = false;
             Close();
         }
@@ -126,7 +126,7 @@ namespace Randomizer.App.Windows
         {
             if (IsConnecting)
             {
-                await _multiworldClientService.Disconnect();
+                await _multiplayerClientService.Disconnect();
                 IsConnecting = false;
                 OnPropertyChanged();
             }
@@ -134,7 +134,7 @@ namespace Randomizer.App.Windows
             {
                 IsConnecting = true;
                 OnPropertyChanged();
-                await _multiworldClientService.Connect(ServerUrl);
+                await _multiplayerClientService.Connect(ServerUrl);
             }
         }
 
@@ -146,7 +146,7 @@ namespace Randomizer.App.Windows
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string? propertyName = null)
+        private void OnPropertyChanged(string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

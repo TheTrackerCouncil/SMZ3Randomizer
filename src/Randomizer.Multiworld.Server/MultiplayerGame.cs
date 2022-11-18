@@ -1,25 +1,25 @@
 ﻿using System.Collections.Concurrent;
-using Randomizer.Data.Multiworld;
+using Randomizer.Data.Multiplayer;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 
-namespace Randomizer.Multiworld.Server;
+namespace Randomizer.Multiplayer.Server;
 
-public class MultiworldGame
+public class MultiplayerGame
 {
-    private static readonly ConcurrentDictionary<string, MultiworldGame> s_games = new();
+    private static readonly ConcurrentDictionary<string, MultiplayerGame> s_games = new();
 
-    private static readonly ConcurrentDictionary<string, MultiworldPlayer> _playerConnections = new();
+    private static readonly ConcurrentDictionary<string, MultiplayerPlayer> _playerConnections = new();
 
-    private readonly ConcurrentDictionary<string, MultiworldPlayer> _players = new();
+    private readonly ConcurrentDictionary<string, MultiplayerPlayer> _players = new();
 
-    public MultiworldGame(string guid)
+    public MultiplayerGame(string guid)
     {
         Guid = guid;
         LastMessage = DateTime.Now;
     }
 
-    public static (MultiworldGame Game, MultiworldPlayer Player)? CreateNewGame(string playerName, string playerConnectionId, out string? error)
+    public static (MultiplayerGame Game, MultiplayerPlayer Player)? CreateNewGame(string playerName, string playerConnectionId, out string? error)
     {
         string guid;
         do
@@ -27,7 +27,7 @@ public class MultiworldGame
             guid = System.Guid.NewGuid().ToString();
         } while (s_games.ContainsKey(guid));
 
-        var game = new MultiworldGame(guid);
+        var game = new MultiplayerGame(guid);
 
         if (!s_games.TryAdd(guid, game))
         {
@@ -37,7 +37,7 @@ public class MultiworldGame
 
         var playerGuid = System.Guid.NewGuid().ToString();
         var playerKey = System.Guid.NewGuid().ToString();
-        var player = new MultiworldPlayer(game, playerGuid, playerKey, playerName, playerConnectionId) { State =
+        var player = new MultiplayerPlayer(game, playerGuid, playerKey, playerName, playerConnectionId) { State =
         {
             IsAdmin = true
         } };
@@ -49,7 +49,7 @@ public class MultiworldGame
         return (game, player);
     }
 
-    public static MultiworldGame? LoadGame(string guid)
+    public static MultiplayerGame? LoadGame(string guid)
     {
         return s_games.TryGetValue(guid, out var game) ? game : null;
     }
@@ -58,13 +58,13 @@ public class MultiworldGame
 
     public DateTime LastMessage { get; set; }
 
-    public MultiworldPlayer? AdminPlayer { get; set; }
+    public MultiplayerPlayer? AdminPlayer { get; set; }
 
     public bool HasGameStarted { get; set; }
 
-    public MultiworldGameStatus Status { get; private set; }
+    public MultiplayerGameStatus Status { get; private set; }
 
-    public MultiworldPlayer? JoinGame(string playerName, string playerConnectionId, out string? error)
+    public MultiplayerPlayer? JoinGame(string playerName, string playerConnectionId, out string? error)
     {
         if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
         {
@@ -80,14 +80,14 @@ public class MultiworldGame
 
         var key = System.Guid.NewGuid().ToString();
 
-        var player = new MultiworldPlayer(this, guid, key, playerName, playerConnectionId);
+        var player = new MultiplayerPlayer(this, guid, key, playerName, playerConnectionId);
         _players[guid] = player;
         _playerConnections[playerConnectionId] = player;
         error = null;
         return player;
     }
 
-    public void RejoinGame(MultiworldPlayer player, string playerConnectionId)
+    public void RejoinGame(MultiplayerPlayer player, string playerConnectionId)
     {
         _playerConnections[playerConnectionId] = player;
         player.ConnectionId = playerConnectionId;
@@ -95,7 +95,7 @@ public class MultiworldGame
         UpdatePlayerStatus(player);
     }
 
-    public void ForfeitPlayer(MultiworldPlayer player)
+    public void ForfeitPlayer(MultiplayerPlayer player)
     {
         player.State.HasForfeited = true;
         if (player.State.IsAdmin)
@@ -120,18 +120,18 @@ public class MultiworldGame
         }
     }
 
-    public List<MultiworldPlayerState>? StartGame(List<string> players, TrackerState trackerState, out string? error)
+    public List<MultiplayerPlayerState>? StartGame(List<string> players, TrackerState trackerState, out string? error)
     {
         error = "";
-        var playerStates = new List<MultiworldPlayerState>();
-        Status = MultiworldGameStatus.Started;
+        var playerStates = new List<MultiplayerPlayerState>();
+        Status = MultiplayerGameStatus.Started;
 
         /*for (var i = 0; i < players.Count; i++)
         {
             var playerGuid = players[i];
             var player = _players[playerGuid];
             player.Id = i;
-            var playerState = new MultiworldPlayerState(i, playerGuid,
+            var playerState = new MultiplayerPlayerState(i, playerGuid,
                 trackerState.LocationStates.Where(x => x.WorldId == player.Id),
                 trackerState.ItemStates.Where(x => x.WorldId == player.Id),
                 trackerState.BossStates.Where(x => x.WorldId == player.Id),
@@ -144,7 +144,7 @@ public class MultiworldGame
         return playerStates;
     }
 
-    public MultiworldPlayer? GetPlayer(string guid, string? key, bool verifyKey, bool verifyAdmin = false)
+    public MultiplayerPlayer? GetPlayer(string guid, string? key, bool verifyKey, bool verifyAdmin = false)
     {
         if (!_players.TryGetValue(guid, out var player)) return null;
         if (verifyKey && key != player.Key) return null;
@@ -152,7 +152,7 @@ public class MultiworldGame
         return player;
     }
 
-    public Dictionary<string, Config?> UpdatePlayerConfig(MultiworldPlayer player, Config config)
+    public Dictionary<string, Config?> UpdatePlayerConfig(MultiplayerPlayer player, Config config)
     {
         player.State.Config = config;
         UpdatePlayerStatus(player);
@@ -167,7 +167,7 @@ public class MultiworldGame
         return PlayerConfigs;
     }
 
-    public static MultiworldPlayer? PlayerDisconnected(string connectionId)
+    public static MultiplayerPlayer? PlayerDisconnected(string connectionId)
     {
         if (_playerConnections.Remove(connectionId, out var player))
         {
@@ -183,21 +183,21 @@ public class MultiworldGame
 
     public Dictionary<string, string> PlayerNames => _players.Values.ToDictionary(x => x.Guid, x => x.State.PlayerName);
 
-    public List<MultiworldPlayerState> PlayerStates => _players.Values.Select(x => x.State).ToList();
+    public List<MultiplayerPlayerState> PlayerStates => _players.Values.Select(x => x.State).ToList();
 
-    private bool AddPlayer(MultiworldPlayer player)
+    private bool AddPlayer(MultiplayerPlayer player)
     {
         return _players.TryAdd(player.Guid, player);
     }
 
-    private void UpdatePlayerStatus(MultiworldPlayer player)
+    private void UpdatePlayerStatus(MultiplayerPlayer player)
     {
-        if (player.State.Config == null) player.State.Status = MultiworldPlayerStatus.ConfigPending;
-        else if (!player.State.IsConnected) player.State.Status = MultiworldPlayerStatus.Disconnected;
-        else if (player.State.HasForfeited) player.State.Status = MultiworldPlayerStatus.Forfeit;
-        else if (player.State.HasCompleted) player.State.Status = MultiworldPlayerStatus.Completed;
-        else player.State.Status = Status == MultiworldGameStatus.Created
-            ? MultiworldPlayerStatus.Ready
-            : MultiworldPlayerStatus.Playing;
+        if (player.State.Config == null) player.State.Status = MultiplayerPlayerStatus.ConfigPending;
+        else if (!player.State.IsConnected) player.State.Status = MultiplayerPlayerStatus.Disconnected;
+        else if (player.State.HasForfeited) player.State.Status = MultiplayerPlayerStatus.Forfeit;
+        else if (player.State.HasCompleted) player.State.Status = MultiplayerPlayerStatus.Completed;
+        else player.State.Status = Status == MultiplayerGameStatus.Created
+            ? MultiplayerPlayerStatus.Ready
+            : MultiplayerPlayerStatus.Playing;
     }
 }

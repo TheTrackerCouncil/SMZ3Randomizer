@@ -1,8 +1,8 @@
 ﻿using Randomizer.Data.Options;
 
-namespace Randomizer.Data.Multiworld;
+namespace Randomizer.Data.Multiplayer;
 
-public class ForfeitGameRequest : MultiworldRequest
+public class ForfeitGameRequest : MultiplayerRequest
 {
     public ForfeitGameRequest(string gameGuid, string playerGuid, string playerKey, string forfeitPlayerGuid)
     {

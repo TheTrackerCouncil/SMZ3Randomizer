@@ -1,18 +1,18 @@
 ﻿using System.Net.WebSockets;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
-using Randomizer.Data.Multiworld;
+using Randomizer.Data.Multiplayer;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 
-namespace Randomizer.Multiworld.Client
+namespace Randomizer.Multiplayer.Client
 {
-    public class MultiworldClientService
+    public class MultiplayerClientService
     {
-        private readonly ILogger<MultiworldClientService> _logger;
+        private readonly ILogger<MultiplayerClientService> _logger;
         private HubConnection? _connection;
 
-        public MultiworldClientService(ILogger<MultiworldClientService> logger)
+        public MultiplayerClientService(ILogger<MultiplayerClientService> logger)
         {
             _logger = logger;
         }
@@ -32,11 +32,11 @@ namespace Randomizer.Multiworld.Client
         public string? CurrentGameGuid { get; private set; }
         public string? CurrentPlayerGuid { get; private set; }
         public string? CurrentPlayerKey { get; private set; }
-        public List<MultiworldPlayerState>? Players { get; set; }
-        public MultiworldPlayerState? LocalPlayer => Players?.FirstOrDefault(x => x.Guid == CurrentPlayerGuid);
+        public List<MultiplayerPlayerState>? Players { get; set; }
+        public MultiplayerPlayerState? LocalPlayer => Players?.FirstOrDefault(x => x.Guid == CurrentPlayerGuid);
         public string? GameUrl { get; private set; }
         public string? ConnectionUrl { get; private set; }
-        public MultiworldGameStatus? GameStatus { get; private set; }
+        public MultiplayerGameStatus? GameStatus { get; private set; }
 
         public async Task Connect(string url)
         {

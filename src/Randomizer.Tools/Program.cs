@@ -22,7 +22,6 @@ using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
-using Randomizer.Multiworld.Client;
 
 namespace Randomizer.Tools
 {
@@ -43,7 +42,7 @@ namespace Randomizer.Tools
 
         public static void Main(string[] args)
         {
-            /*var client = new MultiworldClientService();
+            /*var client = new MultiplayerClientService();
             await client.Connect("http://localhost:63624/multiworld");
             await client.CreateGame();
             await Task.Delay(TimeSpan.FromSeconds(30));

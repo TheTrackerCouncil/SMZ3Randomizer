@@ -41,10 +41,10 @@
     </Border>
 
     <TabControl Grid.Row="1">
-      <TabItem Header="Solo" >
+      <TabItem Header="Singleplayer" >
         <DockPanel Name="SoloTab"></DockPanel>
       </TabItem>
-      <TabItem Header="Multiworld">
+      <TabItem Header="Multiplayer">
         <DockPanel Name="MultiTab"></DockPanel>
       </TabItem>
     </TabControl>
