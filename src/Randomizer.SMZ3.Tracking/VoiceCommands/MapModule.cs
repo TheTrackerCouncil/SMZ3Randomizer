@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -22,10 +22,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Constructor
         /// </summary>
         /// <param name="tracker"></param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger"></param>
         /// <param name="config"></param>
-        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, TrackerMapConfig config)
-            : base(tracker, itemService, logger)
+        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
+            : base(tracker, itemService, worldService, logger)
         {
             _logger = logger;
             _config = config;
@@ -92,7 +94,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetChangeMapRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name != "Content");
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();
 

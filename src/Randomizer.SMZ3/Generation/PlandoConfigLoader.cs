@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Randomizer.Data.Options;
 using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Generation

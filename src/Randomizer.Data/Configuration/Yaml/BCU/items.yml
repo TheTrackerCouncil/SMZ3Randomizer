@@ -1,0 +1,100 @@
+﻿- Item: Content
+  WhenTracked:
+    "10":
+    - Text: Good job. Big Twitch is surely pleased
+- Item: Death
+  WhenTracked:
+    "1":
+    - Text: I'm interested in this
+    - Text: It's time to get serious.
+    - Text: Tickets only. Next!
+      Weight: 0.5
+    - Text: It's time to get seewwious.
+      Weight: 0.5
+    "2":
+    - Text: It's time to get serious.
+    - Text: It's time to get seewwious.
+      Weight: 0.5
+    "3":
+    - Text: I said, it's time to get serious.
+    - Text: It's time to get seewwious.
+      Weight: 0.5
+    "4":
+    - Text: Are you ever going to get seewwious?
+- Item: Duck
+  WhenTracked:
+    "1":
+    - Text: I hope you were quiet during the cutscene.
+- Item: Hookshot
+  Name:
+  - Text: Second best grappling armament
+    Weight: 0.2
+- Item: Shovel
+  Name:
+  - Text: Shaktool Junior
+    Weight: 0.1
+  WhenTracked:
+    "1":
+    - Text: Toggled Shaktool Junior on
+      Weight: 0.2
+- Item: Cane of Somaria
+  Name:
+  - Text: Cane of Technical Prowess
+  - Text: Tech Cane
+  - Text: The Tech
+- Item: Magic Mirror
+  WhenTracked:
+    "1":
+    - Text: '{{Link}} pulls out their magic mirror.'
+    - Text: '{{Link}} feels a strange pulling sensation.'
+- Item: +5 Arrow Capacity
+  WhenTracked:
+    "1":
+    - Text: Maybe now you won't run out in Ganon's Tower
+      Weight: 0.1
+- Item: Gloves
+  WhenTracked:
+    "2":
+    - Text: Remember that time I called these boots? To be fair they are boots but for your hands. Toggled Mitts on.
+      Weight: 0.2
+    - Text: Toggled Boots on. <break strength='medium'/> Just kidding. Toggled Tiddy Mitts on.
+      Weight: 0.2
+- Item: Grappling Beam
+  Name:
+  - Text: Key to Shaktool's front door
+    Weight: 0.1
+  - Text: Slowbeef's worst enemy
+    Weight: 0.1
+- Item: Morph Bombs
+  Name:
+  - Text: That thing you forget you have
+    Weight: 0.5
+- Item: Super Missile
+  WhenTracked:
+    "1":
+    - Text: Not enough to defeat Crocomire, yet
+      Weight: 0.03
+    "2":
+    - Text: You now have the bare mininum to kill Crocomire. Don't miss.
+      Weight: 0.03
+- Item: Fire Rod
+  Name:
+  - Text: Spicy Rod
+  WhenTracked:
+    "1":
+    - Text: Toggling fire rod on
+    - Text: Toggling spicy rod on
+    - Text: Burn to the ground, Burn to the ground, Burn to the ground, <prosody rate='medium' pitch='x-high'>Burn! Woo!</prosody>
+      Weight: .2
+- Item: Charge Beam
+  WhenTracked:
+    "1":
+    - Text: Toggling charge beam on
+    - Text: Toggling soft lock prevention beam on
+      Weight: .2
+    - Text: Holy moly! Charge!
+      Weight: .2
+- Item: Bottle
+  WhenTracked:
+    "1":
+    - Text: Are you going to fill that with hot Diet Dr. Pepper or Pilk?

@@ -7,9 +7,9 @@
         xmlns:local="clr-namespace:Randomizer.App"
         xmlns:controls="clr-namespace:Randomizer.App.Controls"
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
-        xmlns:smz3="clr-namespace:Randomizer.SMZ3;assembly=Randomizer.SMZ3"
+        xmlns:data="clr-namespace:Randomizer.Data;assembly=Randomizer.Data"
         xmlns:shared="clr-namespace:Randomizer.Shared;assembly=Randomizer.Shared"
-        d:DataContext="{d:DesignInstance vm:RandomizerOptions, IsDesignTimeCreatable=True}"
+        xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="SMZ3 Cas' Randomizer"
@@ -20,7 +20,7 @@
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">
   <Window.DataContext>
-    <vm:RandomizerOptions></vm:RandomizerOptions>
+    <options:RandomizerOptions></options:RandomizerOptions>
   </Window.DataContext>
 
   <Grid>
@@ -155,21 +155,21 @@
 
               <controls:LabeledControl Text="Heart color:">
                 <ComboBox SelectedItem="{Binding HeartColor}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type smz3:HeartColor}}}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:HeartColor}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="ALttP Menu speed:">
                 <ComboBox SelectedItem="{Binding MenuSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type smz3:MenuSpeed}}}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:MenuSpeed}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Low health beep speed:">
                 <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type smz3:LowHealthBeepSpeed}}}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:LowHealthBeepSpeed}}}"
                           HorizontalAlignment="Left"
                           MinWidth="75" />
               </controls:LabeledControl>
@@ -177,17 +177,11 @@
               <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
                         Content="Disable low energy beep in Super Metroid" />
 
-              <CheckBox IsChecked="{Binding CasualSuperMetroidPatches}"
-                        Content="Super Cas'troid">
-                <CheckBox.ToolTip>
-                  <TextBlock>
-                    Enables the following patches:
-                    <LineBreak />
-                    • Infinite Space Jump: space jump is easier to use <LineBreak />
-                    • Respin: space jump can be restarted in mid-air
-                  </TextBlock>
-                </CheckBox.ToolTip>
-              </CheckBox>
+              <GroupBox Header="Cas' Patches"
+                        Padding="0,5,0,0" Margin="0,0,0,3">
+                <UniformGrid Columns="2" Name="CasPatchGrid" />
+              </GroupBox>
+
 
               <controls:LabeledControl Text="Custom music pack:">
                 <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
@@ -207,15 +201,15 @@
                   <RadioButton GroupName="ShuffleMusic"
                                Content="Default"
                                ToolTip="Plays the light or dark world dungeon theme depending on whether the dungeon has a pendant or crystal. With the extended soundtrack, each dungeon plays its own theme."
-                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MusicShuffleMode.Default}}" />
+                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static options:MusicShuffleMode.Default}}" />
                   <RadioButton GroupName="ShuffleMusic"
                                Content="Shuffle dungeon themes"
                                ToolTip="Randomly plays either the light or dark world dungeon theme. With the extended soundtrack, each dungeon plays a random dungeon theme."
-                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MusicShuffleMode.ShuffleDungeons}}" />
+                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static options:MusicShuffleMode.ShuffleDungeons}}" />
                   <RadioButton GroupName="ShuffleMusic"
                                Content="Shuffle all music"
                                ToolTip="Randomly plays any available music in dungeons."
-                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static smz3:MusicShuffleMode.ShuffleAll}}" />
+                               IsChecked="{Binding ShuffleDungeonMusic, Converter={StaticResource EnumBoolConverter}, ConverterParameter={x:Static options:MusicShuffleMode.ShuffleAll}}" />
                 </StackPanel>
               </controls:LabeledControl>
             </StackPanel>
@@ -250,6 +244,23 @@
                       Note: Accessible locations at the start of the run can have any item despite the selected progression item placement.
                     </TextBlock>
                   </controls:LabeledControl>
+                  <controls:LabeledControl Text="Unique in game hints:"
+                                           Margin="0,0,0,3"
+                                           ToolTip="The number of unique hints to generate for the Zelda telepathic tiles. Having fewer than the max will result in duplicated hints. Setting to 0 will use the default hints.">
+                    <StackPanel Orientation="Horizontal" >
+                      <TextBox Text="{Binding UniqueHintCount, Mode=TwoWay }"
+                               MinWidth="30"
+                               Margin="0,0,10,0"
+                               IsReadOnly="True">
+                      </TextBox>
+                      <Slider Width="200"
+                            Value="{Binding UniqueHintCount, Mode=TwoWay }"
+                            Minimum="0"
+                            Maximum="{Binding MaxHints}"/>
+                    </StackPanel>
+                    
+                  </controls:LabeledControl>
+                  
                 </StackPanel>
                 
               </GroupBox>

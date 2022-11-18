@@ -18,12 +18,13 @@ using System.Windows.Threading;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Randomizer.App.ViewModels;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 
 namespace Randomizer.App
 {
@@ -35,19 +36,19 @@ namespace Randomizer.App
         private readonly Task _loadSpritesTask;
         private readonly IServiceProvider _serviceProvider;
         private readonly RomGenerator _romGenerator;
-        private readonly SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig _locations;
+        private readonly LocationConfig _locations;
+        private readonly IMetadataService _metadataService;
         private RandomizerOptions _options;
-        private IItemService _itemService;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
-            SMZ3.Tracking.Configuration.ConfigFiles.LocationConfig locations,
-            IItemService itemService)
+            LocationConfig locations,
+            IMetadataService metadataService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
             _locations = locations;
-            _itemService = itemService;
+            _metadataService = metadataService;
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -97,6 +98,7 @@ namespace Randomizer.App
                 PopulateItemOptions();
                 PopulateLogicOptions();
                 PopulateLocationOptions();
+                PopulateCasPatchOptions();
                 UpdateRaceCheckBoxes();
             }
         }
@@ -108,7 +110,7 @@ namespace Randomizer.App
         {
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
+                if (_metadataService.Item(itemType)?.IsProgression(null) != true)
                 {
                     continue;
                 }
@@ -221,6 +223,36 @@ namespace Randomizer.App
             }
         }
 
+        /// <summary>
+        /// Populates the grid with cas' patches patches
+        /// reflection
+        /// </summary>
+        public void PopulateCasPatchOptions()
+        {
+            var type = Options.PatchOptions.CasPatches.GetType();
+
+            foreach (var property in type.GetProperties())
+            {
+                var name = property.Name;
+                var displayName = property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? name;
+                var description = property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? displayName;
+
+                if (property.PropertyType == typeof(bool))
+                {
+                    var checkBox = new CheckBox
+                    {
+                        Name = name,
+                        Content = displayName,
+                        IsChecked = (bool)property.GetValue(Options.PatchOptions.CasPatches),
+                        ToolTip = description
+                    };
+                    checkBox.Checked += CasPatchCheckBox_Checked;
+                    checkBox.Unchecked += CasPatchCheckBox_Checked;
+                    CasPatchGrid.Children.Add(checkBox);
+                }
+            }
+        }
+
         public void LoadSprites()
         {
             var spritesPath = Path.Combine(
@@ -301,7 +333,7 @@ namespace Randomizer.App
             // Add specific progressive items
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                if (_itemService.GetOrDefault(itemType)?.IsProgression(null) != true)
+                if (_metadataService.Item(itemType)?.IsProgression(null) != true)
                 {
                     continue;
                 }
@@ -323,22 +355,17 @@ namespace Randomizer.App
             return comboBox;
         }
 
-        private void GenerateRomButton_Click(object sender, RoutedEventArgs e)
+        private async void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
-            string error;
-            var successful = PlandoMode
-                ? _romGenerator.GeneratePlandoRom(Options, PlandoConfig, out _, out error, out _)
-                : _romGenerator.GenerateRandomRom(Options, out _, out error, out _);
-            if (!successful)
+            var rom = PlandoMode
+                ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig)
+                : await _romGenerator.GenerateRandomRomAsync(Options);
+            if (rom != null)
             {
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                return;
+                DialogResult = true;
+                Close();
             }
-            DialogResult = true;
-            Close();
+            
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -464,7 +491,7 @@ namespace Randomizer.App
         private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts)
         {
             var items = Enum.GetValues<ItemType>().ToDictionary(x => (int)x);
-            var locations = new SMZ3.World(new Config(), "", 0, "").Locations;
+            var locations = new World(new Config(), "", 0, "").Locations;
 
             var itemLocations = items.Values
                 .Where(item => itemCounts.Keys.Any(x => x.itemId == (int)item))
@@ -553,6 +580,20 @@ namespace Randomizer.App
             var type = Options.LogicConfig.GetType();
             var property = type.GetProperty(checkBox.Name);
             property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
+        }
+
+        /// <summary>
+        /// Updates the PatchOptions based on when a checkbox is
+        /// checked/unchecked using reflection
+        /// </summary>
+        /// <param name="sender">The checkbox that was checked</param>
+        /// <param name="e">The event object</param>
+        private void CasPatchCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            var type = Options.PatchOptions.CasPatches.GetType();
+            var property = type.GetProperty(checkBox.Name);
+            property.SetValue(Options.PatchOptions.CasPatches, checkBox.IsChecked ?? false);
         }
 
         /// <summary>

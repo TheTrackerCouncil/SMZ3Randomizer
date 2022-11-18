@@ -4,9 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Data.WorldData;
+using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData;
 
@@ -17,12 +21,18 @@ namespace Randomizer.SMZ3.Generation
         private readonly PlandoFillerFactory _fillerFactory;
         private readonly IWorldAccessor _worldAccessor;
         private readonly ILogger<Smz3Plandomizer> _logger;
+        private readonly IMetadataService _metadataService;
+        private readonly GameLinesConfig _gameLines;
+        private readonly IGameHintService _hintService;
 
-        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor, ILogger<Smz3Plandomizer> logger)
+        public Smz3Plandomizer(PlandoFillerFactory fillerFactory, IWorldAccessor worldAccessor, Configs configs, IMetadataService metadataService, IGameHintService gameHintGenerator, ILogger<Smz3Plandomizer> logger)
         {
             _fillerFactory = fillerFactory;
             _worldAccessor = worldAccessor;
             _logger = logger;
+            _gameLines = configs.GameLines;
+            _metadataService = metadataService;
+            _hintService = gameHintGenerator;
         }
 
         public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
@@ -64,15 +74,18 @@ namespace Randomizer.SMZ3.Generation
                 Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
             };
 
+            var hints = _hintService.GetInGameHints(worlds[0], worlds, playthrough, config.UniqueHintCount, 0);
+
             foreach (var world in worlds)
             {
                 var patchRnd = new Random();
-                var patch = new Patcher(world, worlds, seedData.Guid, 0, patchRnd);
-                seedData.Worlds.Add((world, patch.CreatePatch(config)));
+                var patch = new Patcher(world, worlds, seedData.Guid, 0, patchRnd, _metadataService, _gameLines);
+                seedData.Worlds.Add((world, patch.CreatePatch(config, hints)));
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
             _worldAccessor.World = worlds[0];
+            _worldAccessor.Worlds = worlds;
             return seedData;
         }
     }

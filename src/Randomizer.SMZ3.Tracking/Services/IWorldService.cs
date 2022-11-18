@@ -3,197 +3,108 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
-    /// <summary>
-    /// Service for retrieving information about the current state of
-    /// the world
-    /// </summary>
     public interface IWorldService
     {
         /// <summary>
-        /// Collection of all additional region information
+        /// Retrieves the world for the current player
         /// </summary>
-        public IReadOnlyCollection<RegionInfo> Regions { get; }
+        public World World { get; }
 
         /// <summary>
-        /// Collection of all additional dungeon information
+        /// Retrives all locations for current player's world
         /// </summary>
-        public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
+        /// <returns></returns>
+        public IEnumerable<Location> AllLocations();
 
         /// <summary>
-        /// Collection of all additional room information
+        /// Retrieves all accessible uncleared locations for the current player's world
         /// </summary>
-        public IReadOnlyCollection<RoomInfo> Rooms { get; }
+        /// <param name="progression">The progression object with all of the player's inventory and rewards</param>
+        /// <returns></returns>
+        public IEnumerable<Location> AccessibleLocations(Progression progression);
 
         /// <summary>
-        /// Collection of all additional location information
+        /// Retrieves all accessible uncleared locations for the current player's world
         /// </summary>
-        public IReadOnlyCollection<LocationInfo> Locations { get; }
+        /// <param name="assumeKeys">If keys and keycards should be assumed for the player</param>
+        /// <returns></returns>
+        public IEnumerable<Location> AccessibleLocations(bool assumeKeys);
 
         /// <summary>
-        /// Collection of all additional boss information
+        /// Retrieves all uncleared locations for the current player's world, regardless of if
+        /// they are accessible or out of logic
         /// </summary>
-        public IReadOnlyCollection<BossInfo> Bosses { get; }
+        /// <returns></returns>
+        public IEnumerable<Location> UnclearedLocations();
 
         /// <summary>
-        /// Returns extra information for the specified region.
+        /// Retrieves all locations for the current player's world that has been marked as
+        /// having an item at it
         /// </summary>
-        /// <param name="name">
-        /// The name or fully qualified type name of the region.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="RegionInfo"/> for the specified region.
-        /// </returns>
-        public RegionInfo Region(string name);
+        /// <returns></returns>
+        public IEnumerable<Location> MarkedLocations();
 
         /// <summary>
-        /// Returns extra information for the specified region.
+        /// Retrieves a collection of locations for the current player's world that match the given filter criteria
         /// </summary>
-        /// <param name="type">
-        /// The type of the region.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="RegionInfo"/> for the specified region.
-        /// </returns>
-        public RegionInfo Region(Type type);
+        /// <param name="unclearedOnly">Set to false to show locations that have already been cleared by the player</param>
+        /// <param name="outOfLogic">Set to true to show locations that are not currently accessible to the player</param>
+        /// <param name="assumeKeys">Set to true if keys should be ignored when it comes to determining logic</param>
+        /// <param name="sortByTopRegion">Set to true to sort locations by the most recent region and region with the most locations</param>
+        /// <param name="regionFilter">Filter for the type of region (SM or LttP)</param>
+        /// <param name="itemFilter">Set to return locations that have the matching item</param>
+        /// <param name="inRegion">Set to return locations that match a specific region</param>
+        /// <param name="keysanityByRegion">Set to true if keys should be assumed or not based on if keysanity is enabled for that region</param>
+        /// <returns></returns>
+        public IEnumerable<Location> Locations(bool unclearedOnly = true, bool outOfLogic = false, bool assumeKeys = false, bool sortByTopRegion = false, RegionFilter regionFilter = RegionFilter.None, ItemType itemFilter = ItemType.Nothing, Region? inRegion = null, bool keysanityByRegion = false);
 
         /// <summary>
-        /// Returns extra information for the specified region.
+        /// Returns the specific location matching the given id
         /// </summary>
-        /// <param name="region">The region to get extra information for.</param>
-        /// <returns>
-        /// A new <see cref="RegionInfo"/> for the specified region.
-        /// </returns>
-        public RegionInfo Region(Region region);
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Location Location(int id);
 
         /// <summary>
-        /// Returns extra information for the specified region.
+        /// Checks if the location is accessible with the given progression
         /// </summary>
-        /// <typeparam name="TRegion">
-        /// The type of region to get extra information for.
-        /// </typeparam>
-        /// <returns>
-        /// A new <see cref="RegionInfo"/> for the specified region.
-        /// </returns>
-        public RegionInfo Region<TRegion>() where TRegion : Region;
+        /// <param name="location">The location to check</param>
+        /// <param name="progression">The player's current inventory and rewards</param>
+        /// <returns>True if accessible, false otherwise</returns>
+        public bool IsAvailable(Location location, Progression progression);
 
         /// <summary>
-        /// Returns extra information for the specified dungeon.
+        /// Checks if the location is accessible
         /// </summary>
-        /// <param name="name">
-        /// The name or fully qualified type name of the dungeon region.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-        /// <c>null</c> if <paramref name="typeName"/> is not a valid dungeon.
-        /// </returns>
-        public DungeonInfo? Dungeon(string name);
+        /// <param name="location">The location to check</param>
+        /// <param name="assumeKeys">If keys should be ignored when it comes to determining logic</param>
+        /// <returns>True if accessible, false otherwise</returns>
+        public bool IsAvailable(Location location, bool assumeKeys);
 
         /// <summary>
-        /// Returns extra information for the specified dungeon.
+        /// Checks if the location is accessible based on that region's Keysanity logic
         /// </summary>
-        /// <param name="type">
-        /// The type of dungeon to be looked up
-        /// </param>
-        /// <returns>
-        /// A new <see cref="DungeonInfo"/> for the specified dungeon region, or
-        /// <c>null</c> if <paramref name="type"/> is not a valid dungeon.
-        /// </returns>
-        public DungeonInfo Dungeon(Type type);
+        /// <param name="location">The location to check</param>
+        /// <returns>True if accessible, false otherwise</returns>
+        public bool IsAvailable(Location location);
 
         /// <summary>
-        /// Returns extra information for the specified dungeon.
+        /// Returns all regions in the current player's world
         /// </summary>
-        /// <param name="region">
-        /// The dungeon region to get extra information for.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-        /// </returns>
-        public DungeonInfo Dungeon(Region region);
+        public IEnumerable<Region> Regions { get; }
 
         /// <summary>
-        /// Returns extra information for the specified dungeon.
+        /// Returns the region matching the given name
         /// </summary>
-        /// <typeparam name="TRegion">
-        /// The type of region that represents the dungeon to get extra
-        /// information for.
-        /// </typeparam>
-        /// <returns>
-        /// A new <see cref="DungeonInfo"/> for the specified dungeon region.
-        /// </returns>
-        public DungeonInfo Dungeon<TRegion>() where TRegion : Region;
-
-        /// <summary>
-        /// Returns extra information for the specified room.
-        /// </summary>
-        /// <param name="name">
-        /// The name or fully qualified type name of the room.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="RoomInfo"/> for the specified room.
-        /// </returns>
-        public RoomInfo Room(string name);
-
-        /// <summary>
-        /// Returns extra information for the specified room.
-        /// </summary>
-        /// <param name="type">
-        /// The type of the room.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="RoomInfo"/> for the specified room.
-        /// </returns>
-        public RoomInfo Room(Type type);
-
-        /// <summary>
-        /// Returns extra information for the specified room.
-        /// </summary>
-        /// <param name="room">The room to get extra information for.</param>
-        /// <returns>
-        /// A new <see cref="RoomInfo"/> for the specified room.
-        /// </returns>
-        public RoomInfo Room(Room room);
-
-        /// <summary>
-        /// Returns extra information for the specified room.
-        /// </summary>
-        /// <typeparam name="TRoom">
-        /// The type of room to get extra information for.
-        /// </typeparam>
-        /// <returns>
-        /// A new <see cref="RoomInfo"/> for the specified room.
-        /// </returns>
-        public RoomInfo Room<TRoom>() where TRoom : Room;
-
-        /// <summary>
-        /// Returns extra information for the specified location.
-        /// </summary>
-        /// <param name="id">The numeric ID of the location.</param>
-        /// <returns>
-        /// A new <see cref="LocationInfo"/> for the specified room.
-        /// </returns>
-        public LocationInfo Location(int id);
-
-        /// <summary>
-        /// Returns extra information for the specified location.
-        /// </summary>
-        /// <param name="location">
-        /// The location to get extra information for.
-        /// </param>
-        /// <returns>
-        /// A new <see cref="LocationInfo"/> for the specified room.
-        /// </returns>
-        public LocationInfo Location(Location location);
-
-        /// <summary>
-        /// Returns information about a specified boss
-        /// </summary>
-        /// <param name="name">The name of the boss</param>
-        /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
-        public BossInfo Boss(string name);
+        /// <param name="name">The region name to lookup</param>
+        /// <returns></returns>
+        public Region? Region(string name);
     }
 }

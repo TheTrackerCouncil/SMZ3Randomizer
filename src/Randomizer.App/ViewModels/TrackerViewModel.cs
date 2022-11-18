@@ -8,9 +8,11 @@ using System.Windows;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.WorldData;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.App.ViewModels
 {
@@ -18,7 +20,7 @@ namespace Randomizer.App.ViewModels
     {
         private readonly IUIService _uiService;
         private bool _isDesign;
-        private LocationFilter _filter;
+        private RegionFilter _filter;
         private TrackerLocationSyncer _syncer;
 
         public TrackerViewModel(IUIService uiService)
@@ -38,7 +40,7 @@ namespace Randomizer.App.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LocationFilter Filter
+        public RegionFilter Filter
         {
             get => _filter;
             set
@@ -65,11 +67,12 @@ namespace Randomizer.App.ViewModels
                 if (_isDesign)
                     return GetDummyMarkedLocations();
 
-                return _syncer.MarkedLocations.Select(x =>
-                {
-                    var location = _syncer.AllLocations.Single(location => location.Id == x.Key);
-                    return new MarkedLocationViewModel(location, x.Value, _uiService.GetSpritePath(x.Value), _syncer);
-                });
+                return _syncer.WorldService.MarkedLocations()
+                    .Select(loc => (location: loc, item: _syncer.Tracker.ItemService.FirstOrDefault(loc.State.MarkedItem.Value)))
+                    .Select(loc =>
+                    {
+                        return new MarkedLocationViewModel(loc.location, loc.item, _uiService.GetSpritePath(loc.item), _syncer);
+                    });
             }
         }
 
@@ -77,7 +80,7 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                return _syncer.GetTopLocations(Filter)
+                return _syncer.WorldService.Locations(unclearedOnly: true, outOfLogic: ShowOutOfLogicLocations, assumeKeys: true, sortByTopRegion: true, regionFilter: Filter)
                     .Select(x => new LocationViewModel(x, _syncer))
                     .ToImmutableList();
             }
@@ -89,14 +92,14 @@ namespace Randomizer.App.ViewModels
 
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {
-            var item = new ItemData(new("X-Ray Scope"), ItemType.XRay, null);
+            var item = new Item(ItemType.XRay, null, "X-Ray Scope");
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldSouth.Library,
                 item,
                 null,
                 _syncer);
 
-            item = new ItemData(new("Bullshit"), ItemType.Nothing, null);
+            item = new Item(ItemType.XRay, null, "Bow");
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
                 item,

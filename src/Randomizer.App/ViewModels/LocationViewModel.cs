@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using Randomizer.Data.WorldData;
 using Randomizer.SMZ3;
 
 namespace Randomizer.App.ViewModels
@@ -20,21 +20,21 @@ namespace Randomizer.App.ViewModels
             _syncer = syncer;
         }
 
-        public string Name => _syncer.GetName(_location);
+        public string Name => _location.Metadata.Name[0];
 
-        public string Area => _syncer.GetName(_location.Region);
+        public string Area => _location.Region.Metadata.Name[0];
 
-        public bool InLogic => _location.IsAvailable(_syncer.Progression);
+        public bool InLogic => _location.IsAvailable(_syncer.ItemService.GetProgression(false));
 
-        public bool InLogicWithKeys => !InLogic && _location.IsAvailable(_syncer.ProgressionWithKeys);
+        public bool InLogicWithKeys => !InLogic && _location.IsAvailable(_syncer.ItemService.GetProgression(true));
 
         public double Opacity => (InLogic || InLogicWithKeys) ? 1.0 : 0.33;
 
         public ICommand Clear => new DelegateCommand(
             execute: () =>
             {
-                _syncer.ClearLocation(_location);
+                _syncer.Tracker.Clear(_location);
             },
-            canExecute: () => _location.Cleared == false);
+            canExecute: () => _location.State.Cleared == false);
     }
 }

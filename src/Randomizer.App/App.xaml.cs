@@ -8,7 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-
+using Randomizer.App.ViewModels;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.Contracts;
@@ -75,6 +78,7 @@ namespace Randomizer.App
         protected static void ConfigureServices(IServiceCollection services)
         {
             // Randomizer + Tracker
+            services.AddConfigs();
             services.AddSmz3Randomizer();
             services.AddPlandomizer();
             services.AddTracker()
@@ -87,6 +91,7 @@ namespace Randomizer.App
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();
+            services.AddSingleton<ITrackerStateService, TrackerStateService>();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();

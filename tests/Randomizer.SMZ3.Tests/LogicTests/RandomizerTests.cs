@@ -6,8 +6,14 @@ using FluentAssertions;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
 
@@ -23,7 +29,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            var randomizer = new Smz3Randomizer(filler, new WorldAccessor(), GetLogger<Smz3Randomizer>());
+            var randomizer = GetRandomizer();
             var config = new Config();
 
             var seedData = randomizer.GenerateSeed(config, seed, default);
@@ -52,10 +58,10 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationItemConfig()
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            var randomizer = new Smz3Randomizer(filler, new WorldAccessor(), GetLogger<Smz3Randomizer>());
+            var randomizer = GetRandomizer();
 
             var config = new Config();
-            var region = new Regions.Zelda.LightWorld.LightWorldSouth(null, null);
+            var region = new Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth(null, null);
             var location1 = region.LinksHouse.Id;
             var location2 = region.MazeRace.Id;
             var location3 = region.IceCave.Id;
@@ -70,7 +76,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 world.Locations.First(x => x.Id == location1).Item.Progression.Should().BeTrue();
                 world.Locations.First(x => x.Id == location2).Item.Progression.Should().BeFalse();
                 var fireRodAtLocation = world.Locations.First(x => x.Id == location3).Item.Type == ItemType.Firerod;
-                var fireRodAccessible = !Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), new Progression()).Any();
+                var fireRodAccessible = !Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), new Progression(), out _).Any();
                 Assert.True(fireRodAtLocation || fireRodAccessible);
             }
         }
@@ -79,7 +85,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void EarlyItemConfig()
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            var randomizer = new Smz3Randomizer(filler, new WorldAccessor(), GetLogger<Smz3Randomizer>());
+            var randomizer = GetRandomizer();
 
             var config = new Config();
             config.EarlyItems.Add(ItemType.Firerod);
@@ -91,22 +97,39 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 var seedData = randomizer.GenerateSeed(config, null, default);
                 var world = seedData.Worlds.First().World;
                 var progression = new Progression();
-                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression).Should().BeEmpty();
-                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression).Should().BeEmpty();
-                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.MoonPearl), progression).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression, out _).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression, out _).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.MoonPearl), progression, out _).Should().BeEmpty();
             }
         }
 
         private static ILogger<T> GetLogger<T>()
         {
-            var serviceCollection = new ServiceCollection()
+            var serviceProvider = new ServiceCollection()
                 .AddLogging(options =>
                 {
 
                 })
                 .BuildServiceProvider();
+            return serviceProvider.GetRequiredService<ILogger<T>>();
+        }
 
-            return serviceCollection.GetRequiredService<ILogger<T>>();
+        private static Smz3Randomizer GetRandomizer()
+        {
+            var serviceProvider = new ServiceCollection()
+                .AddLogging(options => { })
+                .AddSingleton<OptionsFactory>()
+                .AddSingleton<Configs>()
+                .AddSingleton<IMetadataService, MetadataService>()
+                .AddSingleton<IGameHintService, GameHintService>()
+                .AddConfigs()
+                .BuildServiceProvider();
+
+            var filler = new StandardFiller(GetLogger<StandardFiller>());
+            return new Smz3Randomizer(filler, new WorldAccessor(), serviceProvider.GetRequiredService<Configs>(),
+                serviceProvider.GetRequiredService<IMetadataService>(),
+                serviceProvider.GetRequiredService<IGameHintService>(),
+                GetLogger<Smz3Randomizer>());
         }
     }
 }

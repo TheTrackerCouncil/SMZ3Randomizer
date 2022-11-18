@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -51,17 +53,17 @@ namespace Randomizer.SMZ3.Tracking
         /// with a comma, except for the two items, which are separated with
         /// "and".
         /// </returns>
-        public static string Join(IEnumerable<ItemData> items, Config config)
+        public static string Join(IEnumerable<Item> items, Config config)
         {
-            var groupedItems = items.GroupBy(x => x.InternalItemType, (type, items) =>
+            var groupedItems = items.GroupBy(x => x.Type, (type, items) =>
             {
                 var item = items.First(); // Just pick the first. It's possible (though unlikely) there's multiple items for a single item type
                 var count = items.Count();
                 return (item, count);
             });
 
-            var interestingItems = groupedItems.Where(x => !x.item.IsJunk(config)).ToList();
-            var junkItems = groupedItems.Where(x => x.item.IsJunk(config)).ToList();
+            var interestingItems = groupedItems.Where(x => !x.item.Metadata.IsJunk(config)).ToList();
+            var junkItems = groupedItems.Where(x => x.item.Metadata.IsJunk(config)).ToList();
 
             if (junkItems.Count == 0)
                 return Join(interestingItems.Select(GetPhrase));
@@ -74,8 +76,8 @@ namespace Randomizer.SMZ3.Tracking
 
             return Join(groupedItems.Select(GetPhrase));
 
-            static string GetPhrase((ItemData item, int count) x)
-                => x.count > 1 ? $"{x.count} {x.item.Plural ?? $"{x.item.Name}s"}": $"{x.item.Name}"; ;
+            static string GetPhrase((Item item, int count) x)
+                => x.count > 1 ? $"{x.count} {x.item.Metadata.Plural ?? $"{x.item.Name}s"}": $"{x.item.Name}"; ;
         }
     }
 }

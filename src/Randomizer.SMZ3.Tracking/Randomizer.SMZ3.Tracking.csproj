@@ -1,62 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Configuration\Yaml\BCU\bosses.yml" />
-    <None Remove="Configuration\Yaml\BCU\dungeons.yml" />
-    <None Remove="Configuration\Yaml\BCU\items.yml" />
-    <None Remove="Configuration\Yaml\BCU\locations.yml" />
-    <None Remove="Configuration\Yaml\BCU\regions.yml" />
-    <None Remove="Configuration\Yaml\BCU\requests.yml" />
-    <None Remove="Configuration\Yaml\BCU\responses.yml" />
-    <None Remove="Configuration\Yaml\BCU\rewards.yml" />
-    <None Remove="Configuration\Yaml\BCU\rooms.yml" />
-    <None Remove="Configuration\Yaml\Sassy\bosses.yml" />
-    <None Remove="Configuration\Yaml\Sassy\dungeons.yml" />
-    <None Remove="Configuration\Yaml\Sassy\items.yml" />
-    <None Remove="Configuration\Yaml\Sassy\locations.yml" />
-    <None Remove="Configuration\Yaml\Sassy\regions.yml" />
-    <None Remove="Configuration\Yaml\Sassy\requests.yml" />
-    <None Remove="Configuration\Yaml\Sassy\responses.yml" />
-    <None Remove="Configuration\Yaml\Sassy\rewards - Copy.yml" />
-    <None Remove="Configuration\Yaml\Sassy\rewards.yml" />
-    <None Remove="Configuration\Yaml\Sassy\rooms.yml" />
-    <None Remove="locations.json" />
-    <None Remove="maps.json" />
-    <None Remove="tracker.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Configuration\Yaml\BCU\bosses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\dungeons.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\items.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\locations.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\regions.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\requests.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\responses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\rewards.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\BCU\rooms.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\bosses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\dungeons.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\items.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\locations.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\regions.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\requests.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\responses.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Templates\rewards.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\rewards.yml" />
-    <EmbeddedResource Include="Configuration\Yaml\Sassy\rooms.yml" />
-    <EmbeddedResource Include="locations.json" />
-    <EmbeddedResource Include="maps.json" />
-    <EmbeddedResource Include="tracker.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BunLabs.Common" Version="1.0.2" />
@@ -68,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
     <ProjectReference Include="..\Randomizer.Shared\Randomizer.Shared.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />

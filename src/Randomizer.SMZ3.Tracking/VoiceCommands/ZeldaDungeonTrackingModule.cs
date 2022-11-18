@@ -4,8 +4,11 @@ using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Configuration.ConfigTypes;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -16,7 +19,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     public class ZeldaDungeonTrackingModule : TrackerModule
     {
         private const string RewardKey = "RewardName";
-        private const string MedallionKey = "MedallionName";
         private const string TreasureCountKey = "NumberOfTreasures";
 
         /// <summary>
@@ -24,20 +26,22 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// cref="ZeldaDungeonTrackingModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, ILogger<ZeldaDungeonTrackingModule> logger)
-            : base(tracker, itemService, logger)
+        public ZeldaDungeonTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ZeldaDungeonTrackingModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Mark dungeon pendant/crystal", GetMarkDungeonRewardRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
-                var reward = (RewardItem)result.Semantics[RewardKey].Value;
+                var reward = (RewardType)result.Semantics[RewardKey].Value;
                 tracker.SetDungeonReward(dungeon, reward, result.Confidence);
             });
 
             AddCommand("Mark remaining dungeons", GetMarkRemainingDungeonRewardsRule(), (tracker, result) =>
             {
-                tracker.SetUnmarkedDungeonReward(RewardItem.Crystal, result.Confidence);
+                tracker.SetUnmarkedDungeonReward(RewardType.CrystalBlue, result.Confidence);
             });
 
             AddCommand("Mark dungeon as cleared", GetClearDungeonRule(), (tracker, result) =>
@@ -49,8 +53,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Mark dungeon medallion", GetMarkDungeonRequirementRule(), (tracker, result) =>
             {
                 var dungeon = GetDungeonFromResult(tracker, result);
-                var medallion = (Medallion)result.Semantics[MedallionKey].Value;
-                tracker.SetDungeonRequirement(dungeon, medallion, result.Confidence);
+                var medallion = GetItemFromResult(tracker, result, out string itemName);
+                tracker.SetDungeonRequirement(dungeon, medallion.Type, result.Confidence);
             });
 
             AddCommand("Clear dungeon treasure", GetTreasureTrackingRule(), (tracker, result) =>
@@ -60,7 +64,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     : 1;
                 var dungeon = GetDungeonFromResult(tracker, result);
                 tracker.TrackDungeonTreasure(dungeon, result.Confidence, amount: count);
-                dungeon.HasManuallyClearedTreasure = true;
+                dungeon.DungeonState.HasManuallyClearedTreasure = true;
             });
         }
 
@@ -68,9 +72,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
             var rewardNames = new Choices();
-            foreach (var reward in Enum.GetValues<RewardItem>())
+            foreach (var reward in Enum.GetValues<RewardType>())
             {
-                foreach (var name in ItemService?.GetOrDefault(reward)?.Name ?? new Configuration.ConfigTypes.SchrodingersString())
+                foreach (var name in ItemService?.FirstOrDefault(reward)?.Metadata.Name ?? new SchrodingersString())
                     rewardNames.Add(new SemanticResultValue(name, (int)reward));
             }
 
@@ -109,19 +113,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetMarkDungeonRequirementRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: false);
-            var medallions = new Choices();
-            foreach (var medallion in Enum.GetValues<Medallion>())
-                medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
+            var medallions = GetMedallionNames();
 
             var dungeonFirst = new GrammarBuilder()
                 .Append("Hey tracker,")
                 .Append(DungeonKey, dungeonNames)
                 .OneOf("requires", "needs")
-                .Append(MedallionKey, medallions);
+                .Append(ItemNameKey, medallions);
 
             var itemFirst = new GrammarBuilder()
                 .Append("Hey tracker,")
-                .Append(MedallionKey, medallions)
+                .Append(ItemNameKey, medallions)
                 .OneOf("is required for", "is needed for")
                 .Append(DungeonKey, dungeonNames);
 
@@ -130,12 +132,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("mark")
                 .Append(DungeonKey, dungeonNames)
                 .OneOf("as", "as requiring", "as needing")
-                .Append(MedallionKey, medallions);
+                .Append(ItemNameKey, medallions);
 
             var markItem = new GrammarBuilder()
                 .Append("Hey tracker,")
                 .Append("mark")
-                .Append(MedallionKey, medallions)
+                .Append(ItemNameKey, medallions)
                 .OneOf("as", "as required for", "as needed for")
                 .Append(DungeonKey, dungeonNames);
 
@@ -147,10 +149,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetTreasureTrackingRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-
-            var medallions = new Choices();
-            foreach (var medallion in Enum.GetValues<Medallion>())
-                medallions.Add(new SemanticResultValue(medallion.ToString(), (int)medallion));
 
             var treasureCount = new Choices();
             for (var i = 2; i <= 20; i++)

@@ -6,13 +6,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.FileData.Patches;
-using Randomizer.SMZ3.Regions;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Text;
 
 using static Randomizer.SMZ3.FileData.DropPrize;
+using Randomizer.Data.Options;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Services;
 
 namespace Randomizer.SMZ3.FileData
 {
@@ -24,12 +28,14 @@ namespace Randomizer.SMZ3.FileData
         private readonly int _seed;
         private readonly Random _rnd;
         private readonly RomPatchFactory _romPatchFactory;
+        private readonly GameLinesConfig _gameLines;
+        private readonly IMetadataService _metadataService;
         private StringTable _stringTable;
         private List<(int offset, byte[] bytes)> _patches;
         private Queue<byte> _shuffledSoundtrack;
         private bool _enableMultiworld;
 
-        public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd)
+        public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd, IMetadataService metadataService, GameLinesConfig gameLines)
         {
             _myWorld = myWorld;
             _allWorlds = allWorlds;
@@ -38,6 +44,8 @@ namespace Randomizer.SMZ3.FileData
             _rnd = rnd;
             _romPatchFactory = new RomPatchFactory();
             _enableMultiworld = true;
+            _gameLines = gameLines;
+            _metadataService = metadataService;
         }
 
         /// <summary>
@@ -91,23 +99,22 @@ namespace Randomizer.SMZ3.FileData
         /// </returns>
         public static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
-        public Dictionary<int, byte[]> CreatePatch(Config config)
+        public Dictionary<int, byte[]> CreatePatch(Config config, IEnumerable<string> hints)
         {
             _stringTable = new StringTable();
             _patches = new List<(int, byte[])>();
 
             WriteMedallions();
             WriteRewards();
-            WriteDungeonMusic(config);
-
+            WriteRngBlock();
             WriteDiggingGameRng();
-
             WritePrizeShuffle();
+
+            WriteDungeonMusic(config);
 
             WriteRemoveEquipmentFromUncle(_myWorld.HyruleCastle.LinksUncle.Item);
 
             WriteGanonInvicible(config.GanonInvincible);
-            WriteRngBlock();
 
             // WritePreopenCurtains();
             WriteQuickSwap();
@@ -115,7 +122,7 @@ namespace Randomizer.SMZ3.FileData
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
-            WriteTexts(config);
+            WriteTexts(config, hints);
 
             WriteSMLocations(_myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
             WriteZ3Locations(_myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
@@ -180,8 +187,8 @@ namespace Randomizer.SMZ3.FileData
             var pendantRewards = new[] { 1, 2, 3 };
 
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var crystalRegions = regions.Where(x => x.Reward == RewardType.CrystalBlue).Concat(regions.Where(x => x.Reward == RewardType.CrystalRed));
-            var pendantRegions = regions.Where(x => x.Reward is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue).OrderBy(r => (int)r.Reward);
+            var crystalRegions = regions.Where(x => x.RewardType == RewardType.CrystalBlue).Concat(regions.Where(x => x.RewardType == RewardType.CrystalRed));
+            var pendantRegions = regions.Where(x => x.RewardType is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue).OrderBy(r => (int)r.RewardType);
 
             _patches.AddRange(RewardPatches(crystalRegions, crystalRewards, CrystalValues));
             _patches.AddRange(RewardPatches(pendantRegions, pendantRewards, PendantValues));
@@ -436,7 +443,7 @@ namespace Randomizer.SMZ3.FileData
             }
             else if (region is IHasReward dungeonRegion)
             {
-                ALttPSoundtrack? soundtrack = dungeonRegion.Reward switch
+                ALttPSoundtrack? soundtrack = dungeonRegion.RewardType switch
                 {
                     RewardType.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
                     RewardType.PendantRed => ALttPSoundtrack.LightWorldDungeon,
@@ -657,11 +664,18 @@ namespace Randomizer.SMZ3.FileData
             return (patches, duplicates);
         }
 
-        private void WriteTexts(Config config)
+        private void WriteTexts(Config config, IEnumerable<string> hints)
         {
             var regions = _myWorld.Regions.OfType<IHasReward>();
-            var greenPendantDungeon = regions.Where(x => x.Reward == RewardType.PendantGreen).Cast<Region>().First();
-            var redCrystalDungeons = regions.Where(x => x.Reward == RewardType.CrystalRed).Cast<Region>();
+
+            var greenPendantDungeon = regions
+                .Where(x => x.RewardType == RewardType.PendantGreen)
+                .Select(x => GetRegionName(x as Region))
+                .First();
+
+            var redCrystalDungeons = regions
+                .Where(x => x.RewardType == RewardType.CrystalRed)
+                .Select(x => GetRegionName(x as Region));
 
             var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
@@ -671,7 +685,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
             _stringTable.SetBombShopRevealText(bombShop);
 
-            var blind = Texts.Blind(_rnd);
+            var blind = Dialog.GetGameSafeString(_gameLines.BlindIntro);
             _patches.Add((Snes(0x308800), Dialog.Simple(blind)));
             _stringTable.SetBlindText(blind);
 
@@ -679,9 +693,19 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
             _stringTable.SetTavernManText(tavernMan);
 
-            var ganon = Texts.GanonFirstPhase(_rnd);
+            var ganon = Dialog.GetGameSafeString(_gameLines.GanonIntro);
             _patches.Add((Snes(0x308600), Dialog.Simple(ganon)));
             _stringTable.SetGanonFirstPhaseText(ganon);
+
+            // Have bottle merchant and zora say what they have if requested
+            if (config.CasPatches.PreventScams)
+            {
+                var item = GetItemName(config, _myWorld.LightWorldNorthWest.BottleMerchant.Item);
+                _stringTable.SetBottleVendorText(Dialog.GetChoiceText(_gameLines.BottleMerchant.Format(item), _gameLines.ChoiceYes, _gameLines.ChoiceNo));
+
+                item = GetItemName(config, _myWorld.LightWorldNorthEast.ZorasDomain.Zora.Item);
+                _stringTable.SetZoraText(Dialog.GetChoiceText(_gameLines.KingZora.Format(item), _gameLines.ChoiceYes, _gameLines.ChoiceNo));
+            }
 
             // Todo: Verify these two are correct if ganon invincible patch is
             // ever added ganon_fall_in_alt in v30
@@ -709,9 +733,11 @@ namespace Randomizer.SMZ3.FileData
                 _stringTable.SetGanonThirdPhaseText(silvers);
             }
 
-            var triforceRoom = Texts.TriforceRoom(_rnd);
+            var triforceRoom = Dialog.GetGameSafeString(_gameLines.TriforceRoom);
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             _stringTable.SetTriforceRoomText(triforceRoom);
+
+            _stringTable.SetHints(hints.Select(x => Dialog.GetGameSafeString(x)));
         }
 
         private void WriteStringTable()
@@ -780,7 +806,7 @@ namespace Randomizer.SMZ3.FileData
                 _patches.Add((Snes(0x400045), new byte[] { 0x0f })); // display ----dcba a: Small Keys, b: Big Key, c: Map, d: Compass
             }
             if (_myWorld.Config.Keysanity)
-            { 
+            {
                 _patches.Add((Snes(0x40016A), new byte[] { 1 })); // FreeItemText: db #$01 ; #00 = Off (default) - #$01 = On
             }
         }
@@ -969,6 +995,26 @@ namespace Randomizer.SMZ3.FileData
             /* Defaults to $01 at [asm]/z3/randomizer/tables.asm */
             // Todo: Z3r major glitches disables this, reconsider extending or dropping with glitched logic later.
             //patches.Add((Snes(0x3080A3), new byte[] { 0x01 }));
+        }
+
+        private string GetRegionName(Region region)
+        {
+            return Dialog.GetGameSafeString(_metadataService.Region(region).Name);
+        }
+
+        private string GetItemName(Config config, Item item)
+        {
+            var itemName = _metadataService.Item(item.Type).NameWithArticle;
+            if (!config.MultiWorld)
+            {
+                return itemName;
+            }
+            else
+            {
+                return _myWorld == item.World
+                    ? $"{itemName} belonging to you"
+                    : $"{itemName} belonging to another player"; // Will need to update to player name when multiworld is working
+            }
         }
     }
 }

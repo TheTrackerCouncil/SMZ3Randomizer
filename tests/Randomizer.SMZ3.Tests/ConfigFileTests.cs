@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 
 using Newtonsoft.Json.Linq;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
 using SharpYaml.Tokens;
 
 using Xunit;
@@ -22,7 +23,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void BossConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetBossConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -35,7 +36,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void DungeonConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetDungeonConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -48,7 +49,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void ItemConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetItemConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -61,7 +62,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void LocationConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetLocationConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -74,7 +75,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void RegionConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetRegionConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -87,7 +88,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void RequestConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetRequestConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -100,7 +101,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void ResponseConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetResponseConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -113,7 +114,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void RewardConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetRewardConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -126,7 +127,7 @@ namespace Randomizer.SMZ3.Tests
         [Fact]
         public void RoomConfigDoesNotContainDebugWeights()
         {
-            var provider = new TrackerConfigProvider(null);
+            var provider = new ConfigProvider(null);
             var config = provider.GetRoomConfig("BCU", "Sassy");
 
             var strings = EnumerateSchrodingersStrings(config);
@@ -134,6 +135,23 @@ namespace Randomizer.SMZ3.Tests
             {
                 value.Should().NotContain(x => x.Weight >= 90);
             }
+        }
+
+        [Fact]
+        public void GameLinesConfigHasValidStrings()
+        {
+            var provider = new ConfigProvider(null);
+            var config = provider.GetGameConfig("BCU", "Sassy");
+            var strings = EnumerateSchrodingersStrings(config);
+            foreach (var value in strings)
+            {
+                value.Should().NotContain(x => x.Weight >= 90);
+            }
+        }
+
+        private bool HasLongLine(SchrodingersString.Possibility possibility)
+        {
+            return possibility.Text.Split("\n").Any(x => x.Length > 19);
         }
 
         private IEnumerable<SchrodingersString> EnumerateSchrodingersStrings(object obj, int depth = 0)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {

@@ -10,10 +10,14 @@
         /// </summary>
         /// <param name="address"></param>
         /// <param name="data"></param>
-        public EmulatorDataReceivedEventArgs(int address, EmulatorMemoryData data)
+        /// <param name="romName"></param>
+        /// <param name="romHash"></param>
+        public EmulatorDataReceivedEventArgs(int address, EmulatorMemoryData data, string? romName = null, string? romHash = null)
         {
             Address = address;
             Data = data;
+            RomName = romName;
+            RomHash = romHash;
         }
 
         /// <summary>
@@ -25,5 +29,15 @@
         /// The data provided by the emulator
         /// </summary>
         public EmulatorMemoryData Data { get; }
+
+        /// <summary>
+        /// The filename of the current rom (BizHawk Lua connection only)
+        /// </summary>
+        public string? RomName { get; }
+
+        /// <summary>
+        /// The hash of the current rom (BizHawk Lua connection only)
+        /// </summary>
+        public string? RomHash { get; }
     }
 }

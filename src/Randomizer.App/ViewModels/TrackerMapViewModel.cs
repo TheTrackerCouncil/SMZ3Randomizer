@@ -7,7 +7,8 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App.ViewModels
 {
@@ -153,7 +154,7 @@ namespace Randomizer.App.ViewModels
                 if (Debugger.IsAttached)
                 {
                     var test = _currentMap.FullLocations
-                        .Where(mapLoc => Syncer.AllLocations.Where(loc => mapLoc.MatchesSMZ3Location(loc)).Count() == 0)
+                        .Where(mapLoc => Syncer.WorldService.AllLocations().Where(loc => mapLoc.MatchesSMZ3Location(loc)).Count() == 0)
                         .Select(mapLoc => mapLoc.Name)
                         .ToList();
 

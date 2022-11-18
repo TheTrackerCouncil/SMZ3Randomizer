@@ -12,7 +12,9 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
 using Randomizer.SMZ3.ChatIntegration;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Options;
+using static System.Int32;
 
 namespace Randomizer.App
 {
@@ -23,14 +25,14 @@ namespace Randomizer.App
     {
         private readonly IChatAuthenticationService _chatAuthenticationService;
         private readonly ILogger<OptionsWindow> _logger;
-        private readonly TrackerConfigProvider _trackerConfigProvider;
+        private readonly ConfigProvider _trackerConfigProvider;
         private GeneralOptions _options;
         private bool _canLogIn = true;
         private ICollection<string> _availableProfiles;
 
 
         public OptionsWindow(IChatAuthenticationService chatAuthenticationService,
-            TrackerConfigProvider configProvider,
+            ConfigProvider configProvider,
             ILogger<OptionsWindow> logger)
         {
             InitializeComponent();
@@ -229,6 +231,12 @@ namespace Randomizer.App
             TwitchLoginFeedback.Text = revoked ? "Logged out." : "Something went wrong.";
             TwitchLoginButton.Visibility = Visibility.Visible;
             TwitchLogoutButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void UndoExpirationTimeTextBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            _ = TryParse(new string(UndoExpirationTimeTextBox.Text.Where(char.IsDigit).ToArray()), out var number);
+            UndoExpirationTimeTextBox.Text = Math.Max(1, number).ToString();
         }
     }
 }

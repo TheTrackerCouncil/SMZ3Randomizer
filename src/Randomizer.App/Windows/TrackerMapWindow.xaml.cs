@@ -10,10 +10,13 @@ using System.Windows.Shapes;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.App.ViewModels;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
-using static Randomizer.SMZ3.Tracking.Configuration.ConfigTypes.TrackerMapLocation;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigTypes;
+using static Randomizer.Data.Configuration.ConfigTypes.TrackerMapLocation;
+using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App
 {
@@ -23,6 +26,7 @@ namespace Randomizer.App
     public partial class TrackerMapWindow : Window
     {
         private readonly ILogger<TrackerMapWindow> _logger;
+        private readonly Tracker _tracker;
         private TrackerLocationSyncer _syncer;
 
         /// <summary>
@@ -34,11 +38,13 @@ namespace Randomizer.App
         /// The config for the map json file with all the location details
         /// </param>
         /// <param name="logger">Logger for logging</param>
-        public TrackerMapWindow(TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
+        public TrackerMapWindow(Tracker tracker, TrackerLocationSyncer syncer, TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
         {
             InitializeComponent();
 
             _logger = logger;
+            _tracker = tracker;
+            _syncer = syncer;
 
             Maps = config.Maps;
             var regions = config.Regions;
@@ -175,7 +181,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void MapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _syncer.Tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
+            _tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
         }
 
         private void PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -206,19 +212,21 @@ namespace Randomizer.App
             // Determine what type of location this is
             if (shape.Tag is List<Location> locations)
             {
-                Syncer.ClearLocations(locations);
+                locations.Where(x => !x.State.Cleared)
+                    .ToList()
+                    .ForEach(x => _tracker.Clear(x));
             }
             else if (shape.Tag is Region region)
             {
-                Syncer.ClearRegion(region, false, true);
+                _tracker.ClearArea(region, false, false, null, region.Name != "Hyrule Castle");
             }
-            else if (shape.Tag is BossInfo boss)
+            else if (shape.Tag is Boss boss)
             {
-                Syncer.Tracker.MarkBossAsDefeated(boss);
+                _tracker.MarkBossAsDefeated(boss);
             }
-            else if(shape.Tag is DungeonInfo dungeon)
+            else if(shape.Tag is IDungeon dungeon)
             {
-                Syncer.Tracker.MarkDungeonAsCleared(dungeon);
+                _tracker.MarkDungeonAsCleared(dungeon);
             }
             
         }
@@ -237,7 +245,7 @@ namespace Randomizer.App
             if (menuItem.Tag is not Location location)
                 return;
 
-            Syncer.ClearLocation(location);
+            _tracker.Clear(location);
         }
     }
 }

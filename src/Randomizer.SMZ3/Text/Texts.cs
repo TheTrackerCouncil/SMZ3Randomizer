@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Regions.Zelda;
 
 using SharpYaml.Model;
 
@@ -12,18 +14,12 @@ namespace Randomizer.SMZ3.Text
     public static class Texts
     {
         private static readonly YamlMapping scripts;
-        private static readonly IList<string> blind;
-        private static readonly IList<string> ganon;
         private static readonly IList<string> tavernMan;
-        private static readonly IList<string> triforceRoom;
 
         static Texts()
         {
             scripts = ParseYamlScripts("Text.Scripts.General.yaml") as YamlMapping;
-            blind = ParseTextScript("Text.Scripts.BlindExtra.txt");
-            ganon = ParseTextScript("Text.Scripts.GanonExtra.txt");
             tavernMan = ParseTextScript("Text.Scripts.TavernMan.txt");
-            triforceRoom = ParseTextScript("Text.Scripts.TriforceRoomExtra.txt");
         }
 
         private static YamlElement ParseYamlScripts(string resource)
@@ -49,11 +45,24 @@ namespace Randomizer.SMZ3.Text
             return text.Replace("<dungeon>", dungeon.Area);
         }
 
+        public static string SahasrahlaReveal(string dungeonName)
+        {
+            var text = (scripts["SahasrahlaReveal"] as YamlValue).Value;
+            return text.Replace("<dungeon>", dungeonName);
+        }
+
         public static string BombShopReveal(IEnumerable<Region> dungeons)
         {
             var (first, second, _) = dungeons;
             var text = (scripts["BombShopReveal"] as YamlValue).Value;
             return text.Replace("<first>", first.Area).Replace("<second>", second.Area);
+        }
+
+        public static string BombShopReveal(IEnumerable<string> dungeonNames)
+        {
+            var (first, second, _) = dungeonNames;
+            var text = (scripts["BombShopReveal"] as YamlValue).Value;
+            return text.Replace("<first>", first).Replace("<second>", second);
         }
 
         public static string GanonThirdPhraseNone()
@@ -105,13 +114,7 @@ namespace Randomizer.SMZ3.Text
             return (items[name] as YamlValue)?.Value ?? (items["default"] as YamlValue).Value;
         }
 
-        public static string Blind(Random rnd) => RandomLine(rnd, blind);
-
         public static string TavernMan(Random rnd) => RandomLine(rnd, tavernMan);
-
-        public static string GanonFirstPhase(Random rnd) => RandomLine(rnd, ganon);
-
-        public static string TriforceRoom(Random rnd) => RandomLine(rnd, triforceRoom);
 
         private static string RandomLine(Random rnd, IList<string> lines) => lines[rnd.Next(lines.Count)];
 

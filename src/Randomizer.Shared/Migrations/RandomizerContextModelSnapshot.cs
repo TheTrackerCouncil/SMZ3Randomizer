@@ -68,6 +68,9 @@ namespace Randomizer.Shared.Migrations
                     b.Property<long?>("TrackerStateId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TrackerStateId");
@@ -84,16 +87,25 @@ namespace Randomizer.Shared.Migrations
                     b.Property<bool>("Cleared")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("HasManuallyClearedTreasure")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte?>("MarkedMedallion")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MarkedReward")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RemainingTreasure")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RequiredMedallion")
+                    b.Property<byte?>("RequiredMedallion")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Reward")
+                    b.Property<int?>("Reward")
                         .HasColumnType("INTEGER");
 
                     b.Property<long?>("TrackerStateId")
@@ -158,6 +170,9 @@ namespace Randomizer.Shared.Migrations
                     b.Property<int>("TrackingState")
                         .HasColumnType("INTEGER");
 
+                    b.Property<byte?>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TrackerStateId");
@@ -178,6 +193,9 @@ namespace Randomizer.Shared.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("LocationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte?>("MarkedItem")
                         .HasColumnType("INTEGER");
 
                     b.Property<long?>("TrackerStateId")

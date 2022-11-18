@@ -1,0 +1,2811 @@
+{
+  "Maps": [
+    {
+      "Name": "Light World",
+      "Image": "lttp_lightworld.png",
+      "Width": 2007,
+      "Height": 2007,
+      "Regions": [
+        {
+          "Name": "Light World North West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World North East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World South",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World Death Mountain West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World Death Mountain East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Eastern Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Desert Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Tower of Hera",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Hyrule Castle",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Castle Tower",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Dark World",
+      "Image": "lttp_darkworld.png",
+      "Width": 2007,
+      "Height": 2007,
+      "Regions": [
+        {
+          "Name": "Dark World North East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World North West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World South",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World Mire",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World Death Mountain West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World Death Mountain East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Palace of Darkness",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Swamp Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Skull Woods",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Thieves' Town",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Ice Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Misery Mire",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Turtle Rock",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Ganon's Tower",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": [
+        "Zelda Combined",
+        "Hyrule"
+      ],
+      "Image": "lttp_both.png",
+      "Width": 4064,
+      "Height": 2007,
+      "Regions": [
+        {
+          "Name": "Light World North West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World North East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World South",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World Death Mountain West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Light World Death Mountain East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Eastern Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Desert Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Tower of Hera",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Hyrule Castle",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Castle Tower",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World North East",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World North West",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World South",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World Mire",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World Death Mountain West",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Dark World Death Mountain East",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Palace of Darkness",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Swamp Palace",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Skull Woods",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Thieves' Town",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Ice Palace",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Misery Mire",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Turtle Rock",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Ganon's Tower",
+          "X": 2057,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Brinstar",
+      "Image": "map_brinstar.png",
+      "Width": 1872,
+      "Height": 828,
+      "Regions": [
+        {
+          "Name": "Blue Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Crateria",
+      "Image": "map_crateria.png",
+      "Width": 1632,
+      "Height": 796,
+      "Regions": [
+        {
+          "Name": "Central Crateria",
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "Name": "West Crateria",
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "Name": "East Crateria",
+          "X": 0,
+          "Y": 0
+        }
+      ]
+    },
+    {
+      "Name": "Wrecked Ship",
+      "Image": "map_ws.png",
+      "Width": 1008,
+      "Height": 636,
+      "Regions": [
+        {
+          "Name": "Wrecked Ship",
+          "X": 0,
+          "Y": 0
+        }
+      ]
+    },
+    {
+      "Name": "Maridia",
+      "Image": "map_maridia.png",
+      "Width": 1360,
+      "Height": 764,
+      "Regions": [
+        {
+          "Name": "Outer Maridia",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Norfair",
+      "Image": "map_norfair.png",
+      "Width": 1328,
+      "Height": 700,
+      "Regions": [
+        {
+          "Name": "Upper Norfair, West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": [
+        "Metroid Combined",
+        "Zebes",
+        "Zeebs"
+      ],
+      "Image": "map_full.png",
+      "Width": 2288,
+      "Height": 1916,
+      "Regions": [
+        {
+          "Name": "Blue Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Central Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "West Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "East Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "Outer Maridia",
+          "X": 928,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 928,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Wrecked Ship",
+          "X": 1104,
+          "Y": -68
+        },
+        {
+          "Name": "Upper Norfair, West",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 880,
+          "Y": 1210,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Brinstar Alt",
+      "Image": "map_brinstar_alt.png",
+      "Width": 1872,
+      "Height": 828,
+      "Regions": [
+        {
+          "Name": "Blue Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Crateria Alt",
+      "Image": "map_crateria_alt.png",
+      "Width": 1632,
+      "Height": 796,
+      "Regions": [
+        {
+          "Name": "Central Crateria",
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "Name": "West Crateria",
+          "X": 0,
+          "Y": 0
+        },
+        {
+          "Name": "East Crateria",
+          "X": 0,
+          "Y": 0
+        }
+      ]
+    },
+    {
+      "Name": "Wrecked Ship Alt",
+      "Image": "map_ws_alt.png",
+      "Width": 1008,
+      "Height": 636,
+      "Regions": [
+        {
+          "Name": "Wrecked Ship",
+          "X": 0,
+          "Y": 0
+        }
+      ]
+    },
+    {
+      "Name": "Maridia Alt",
+      "Image": "map_maridia_alt.png",
+      "Width": 1360,
+      "Height": 764,
+      "Regions": [
+        {
+          "Name": "Outer Maridia",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Norfair Alt",
+      "Image": "map_norfair_alt.png",
+      "Width": 1328,
+      "Height": 700,
+      "Regions": [
+        {
+          "Name": "Upper Norfair, West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": [
+        "Metroid Combined Alt",
+        "Zebes Alt",
+        "Zeebs Alt"
+      ],
+      "Image": "map_full_alt.png",
+      "Width": 2288,
+      "Height": 1916,
+      "Regions": [
+        {
+          "Name": "Blue Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 0,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Central Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "West Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "East Crateria",
+          "X": 128,
+          "Y": -4
+        },
+        {
+          "Name": "Outer Maridia",
+          "X": 928,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 928,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Wrecked Ship",
+          "X": 1104,
+          "Y": -68
+        },
+        {
+          "Name": "Upper Norfair, West",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 880,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 880,
+          "Y": 1210,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": [
+        "Eastern Palace Side",
+        "Eastern Palace East",
+        "Eastern Palace Right",
+        "Eastern Palace Right Side",
+        "Eastern Palace East Side"
+      ],
+      "Image": "ep_side.png",
+      "Width": 960,
+      "Height": 416,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 186 ]
+    },
+    {
+      "Name": [
+        "Eastern Palace Back",
+        "Eastern Palace Eyegore Room"
+      ],
+      "Image": "ep_back.png",
+      "Width": 704,
+      "Height": 416,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 153 ]
+    },
+    {
+      "Name": [
+        "Death Mountain Cave",
+        "Death Mountain Dark Cave",
+        "Old Man Cave"
+      ],
+      "Image": "dm_cave.png",
+      "Width": 1028,
+      "Height": 512,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 240, 241 ]
+    },
+    {
+      "Name": [
+        "Dark Palace Maze",
+        "Dark Palace Maze Room"
+      ],
+      "Image": "pod_maze.png",
+      "Width": 528,
+      "Height": 928,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 25 ]
+    },
+    {
+      "Name": [
+        "Dark Palace Dark Basement",
+        "Dark Palace Back",
+        "Dark Palace Basement"
+      ],
+      "Image": "pod_basement.png",
+      "Width": 1514,
+      "Height": 992,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 106, 11 ]
+    },
+    {
+      "Name": [
+        "Hyrule Castle Escape",
+        "Dark Cross"
+      ],
+      "Image": "hc_escape.png",
+      "Width": 1008,
+      "Height": 1163,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 33, 34, 50, 65, 66 ]
+    },
+    {
+      "Name": [
+        "Misery Mire Basement",
+        "Mire Basement",
+        "Misery Mire Dark Basement",
+        "Mire Dark Basement"
+      ],
+      "Image": "mm_basement.png",
+      "Width": 958,
+      "Height": 478,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 146, 147 ]
+    },
+    {
+      "Name": [
+        "Turtle Rock Dark Room",
+        "Turtle Rock Dark Maze"
+      ],
+      "Image": "tr_maze.png",
+      "Width": 992,
+      "Height": 960,
+      "Regions": [],
+      "IsDarkRoomMap": true,
+      "MemoryRoomNumbers": [ 181 ]
+    },
+    {
+      "Name": [
+        "SMZ3 Combined Alt",
+        "Everything Alt"
+      ],
+      "Image": "smz3_fullmap_alt.png",
+      "Width": 3246,
+      "Height": 1916,
+      "Regions": [
+        {
+          "Name": "Light World North West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World North East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World South",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World Death Mountain West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World Death Mountain East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Eastern Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Desert Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Tower of Hera",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Hyrule Castle",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Castle Tower",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World North East",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World North West",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World South",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Mire",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Death Mountain West",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Death Mountain East",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Palace of Darkness",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Swamp Palace",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Skull Woods",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Thieves' Town",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Ice Palace",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Misery Mire",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Turtle Rock",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Ganon's Tower",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Blue Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Central Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "West Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "East Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "Outer Maridia",
+          "X": 1886,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 1886,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Wrecked Ship",
+          "X": 2062,
+          "Y": -68
+        },
+        {
+          "Name": "Upper Norfair, West",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 1838,
+          "Y": 1214,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": [
+        "SMZ3 Combined",
+        "Everything"
+      ],
+      "Image": "smz3_fullmap.png",
+      "Width": 3246,
+      "Height": 1916,
+      "Regions": [
+        {
+          "Name": "Light World North West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World North East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World South",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World Death Mountain West",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Light World Death Mountain East",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Eastern Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Desert Palace",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Tower of Hera",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Hyrule Castle",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Castle Tower",
+          "X": 0,
+          "Y": 0,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World North East",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World North West",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World South",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Mire",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Death Mountain West",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Dark World Death Mountain East",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Palace of Darkness",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Swamp Palace",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Skull Woods",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Thieves' Town",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Ice Palace",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Misery Mire",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Turtle Rock",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Ganon's Tower",
+          "X": 0,
+          "Y": 958,
+          "Scale": 0.47733
+        },
+        {
+          "Name": "Blue Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Green Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Pink Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Red Brinstar",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Kraid's Lair",
+          "X": 958,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Central Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "West Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "East Crateria",
+          "X": 1086,
+          "Y": -4
+        },
+        {
+          "Name": "Outer Maridia",
+          "X": 1886,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Inner Maridia",
+          "X": 1886,
+          "Y": 572,
+          "Scale": 1
+        },
+        {
+          "Name": "Wrecked Ship",
+          "X": 2062,
+          "Y": -68
+        },
+        {
+          "Name": "Upper Norfair, West",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, East",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Upper Norfair, Crocomire",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, West",
+          "X": 1838,
+          "Y": 1212,
+          "Scale": 1
+        },
+        {
+          "Name": "Lower Norfair, East",
+          "X": 1838,
+          "Y": 1214,
+          "Scale": 1
+        }
+      ]
+    }
+  ],
+  "Regions": [
+    {
+      "Name": "Light World North West",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthWest",
+      "Rooms": [
+        {
+          "Name": "Master Sword Pedestal",
+          "X": 83,
+          "Y": 101,
+          "Scale": 1
+        },
+        {
+          "Name": "Kakariko Tavern",
+          "X": 320,
+          "Y": 1145,
+          "Scale": 1
+        },
+        {
+          "Name": "Chicken House",
+          "X": 197,
+          "Y": 1066,
+          "Scale": 1
+        },
+        {
+          "Name": "Kakariko Well",
+          "X": 47,
+          "Y": 833,
+          "Scale": 1
+        },
+        {
+          "Name": "Blind's Hideout",
+          "X": 307,
+          "Y": 840,
+          "Scale": 1
+        },
+        {
+          "Name": "Pegasus Rocks",
+          "X": 777,
+          "Y": 590,
+          "Scale": 1
+        },
+        {
+          "Name": "Bottle Merchant",
+          "X": 190,
+          "Y": 933,
+          "Scale": 1
+        },
+        {
+          "Name": "Magic Bat",
+          "X": 650,
+          "Y": 1127,
+          "Scale": 1
+        },
+        {
+          "Name": "Sick Kid",
+          "X": 314,
+          "Y": 1060,
+          "Scale": 1
+        },
+        {
+          "Name": "Lost Woods Hideout",
+          "X": 320,
+          "Y": 260,
+          "Scale": 1
+        },
+        {
+          "Name": "Lumberjack Tree",
+          "X": 633,
+          "Y": 117,
+          "Scale": 1
+        },
+        {
+          "Name": "Mushroom",
+          "X": 240,
+          "Y": 180,
+          "Scale": 1
+        },
+        {
+          "Name": "Graveyard Ledge",
+          "X": 1132,
+          "Y": 549,
+          "Scale": 1
+        },
+        {
+          "Name": "Blacksmith",
+          "X": 616,
+          "Y": 1054,
+          "Scale": 1
+        },
+        {
+          "Name": "King's Tomb",
+          "X": 1207,
+          "Y": 598,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Light World North East",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.LightWorld.LightWorldNorthEast",
+      "Rooms": [
+        {
+          "Name": "Sahasrahla's Hut",
+          "X": 1630,
+          "Y": 900,
+          "Scale": 1
+        },
+        {
+          "Name": "Zora's Domain",
+          "X": 1920,
+          "Y": 273,
+          "Scale": 1
+        },
+        {
+          "Name": "Potion Shop",
+          "X": 1607,
+          "Y": 670,
+          "Scale": 1
+        },
+        {
+          "Name": "Waterfall Fairy",
+          "X": 1806,
+          "Y": 286,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Light World South",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth",
+      "Rooms": [
+        {
+          "Name": "Swamp Ruins",
+          "X": 944,
+          "Y": 1880,
+          "Scale": 1
+        },
+        {
+          "Name": "Link's House",
+          "X": 1097,
+          "Y": 1366,
+          "Scale": 1
+        },
+        {
+          "Name": "Aginah's Cave",
+          "X": 400,
+          "Y": 1655,
+          "Scale": 1
+        },
+        {
+          "Name": "Mini Moldorm Cave",
+          "X": 1309,
+          "Y": 1887,
+          "Scale": 1
+        },
+        {
+          "Name": "Ice Rod Cave",
+          "X": 1795,
+          "Y": 1547,
+          "Scale": 1
+        },
+        {
+          "Name": "Hobo",
+          "X": 1390,
+          "Y": 1390,
+          "Scale": 1
+        },
+        {
+          "Name": "Checkerboard Cave",
+          "X": 354,
+          "Y": 1560,
+          "Scale": 1
+        },
+        {
+          "Name": "Library",
+          "X": 313,
+          "Y": 1310,
+          "Scale": 1
+        },
+        {
+          "Name": "Maze Race",
+          "X": 111,
+          "Y": 1354,
+          "Scale": 1
+        },
+        {
+          "Name": "Desert Ledge",
+          "X": 40,
+          "Y": 1835,
+          "Scale": 1
+        },
+        {
+          "Name": "Flute Spot",
+          "X": 600,
+          "Y": 1350,
+          "Scale": 1
+        },
+        {
+          "Name": "South of Grove",
+          "X": 552,
+          "Y": 1693,
+          "Scale": 1
+        },
+        {
+          "Name": "Bombos Tablet",
+          "X": 440,
+          "Y": 1845,
+          "Scale": 1
+        },
+        {
+          "Name": "Lake Hylia Island",
+          "X": 1450,
+          "Y": 1666,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Light World Death Mountain West",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainWest",
+      "Rooms": [
+        {
+          "Name": "Old Man",
+          "X": 816,
+          "Y": 378,
+          "Scale": 1
+        },
+        {
+          "Name": "Spectacle Rock",
+          "X": 980,
+          "Y": 178,
+          "Scale": 1
+        },
+        {
+          "Name": "Spectacle Rock Cave",
+          "X": 980,
+          "Y": 290,
+          "Scale": 1
+        },
+        {
+          "Name": "Ether Tablet",
+          "X": 844,
+          "Y": 38,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Light World Death Mountain East",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain.LightWorldDeathMountainEast",
+      "Rooms": [
+        {
+          "Name": "Spiral Cave",
+          "X": 1598,
+          "Y": 180,
+          "Scale": 1
+        },
+        {
+          "Name": "Paradox Cave",
+          "X": 1731,
+          "Y": 434,
+          "Scale": 1
+        },
+        {
+          "Name": "Floating Island",
+          "X": 1627,
+          "Y": 40,
+          "Scale": 1
+        },
+        {
+          "Name": "Mimic Cave",
+          "X": 1690,
+          "Y": 180,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Eastern Palace",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.EasternPalace",
+      "BossX": 1925,
+      "BossY": 791,
+      "Rooms": [
+        {
+          "Name": "Eastern Palace",
+          "X": 1925,
+          "Y": 791,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Desert Palace",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.DesertPalace",
+      "BossX": 146,
+      "BossY": 1584,
+      "Rooms": [
+        {
+          "Name": "Desert Palace",
+          "X": 146,
+          "Y": 1584,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Tower of Hera",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.TowerOfHera",
+      "BossX": 1126,
+      "BossY": 100,
+      "Rooms": [
+        {
+          "Name": "Tower of Hera",
+          "X": 1126,
+          "Y": 100,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Hyrule Castle",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.HyruleCastle",
+      "Rooms": [
+        {
+          "Name": "Hyrule Castle",
+          "X": 1003,
+          "Y": 906,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Castle Tower",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.CastleTower",
+      "BossX": 1003,
+      "BossY": 807,
+      "Rooms": [
+        {
+          "Name": "Castle Tower",
+          "X": 1003,
+          "Y": 807,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Dark World North East",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthEast",
+      "Rooms": [
+        {
+          "Name": "Catfish",
+          "X": 1813,
+          "Y": 347,
+          "Scale": 1
+        },
+        {
+          "Name": "Pyramid",
+          "X": 1164,
+          "Y": 922,
+          "Scale": 1
+        },
+        {
+          "Name": "Pyramid Fairy",
+          "X": 940,
+          "Y": 976,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Dark World North West",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldNorthWest",
+      "Rooms": [
+        {
+          "Name": "Brewery",
+          "X": 219,
+          "Y": 1171,
+          "Scale": 1
+        },
+        {
+          "Name": "C-Shaped House",
+          "X": 414,
+          "Y": 969,
+          "Scale": 1
+        },
+        {
+          "Name": "Chest Game",
+          "X": 100,
+          "Y": 936,
+          "Scale": 1
+        },
+        {
+          "Name": "Hammer Pegs",
+          "X": 636,
+          "Y": 1214,
+          "Scale": 1
+        },
+        {
+          "Name": "Bumper Cave",
+          "X": 687,
+          "Y": 340,
+          "Scale": 1
+        },
+        {
+          "Name": "Purple Chest",
+          "X": 616,
+          "Y": 1054,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Dark World South",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldSouth",
+      "Rooms": [
+        {
+          "Name": "Hype Cave",
+          "X": 1200,
+          "Y": 1560,
+          "Scale": 1
+        },
+        {
+          "Name": "Stumpy",
+          "X": 620,
+          "Y": 1371,
+          "Scale": 1
+        },
+        {
+          "Name": "Digging Game",
+          "X": 100,
+          "Y": 1385,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Dark World Mire",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DarkWorldMire",
+      "Rooms": [
+        {
+          "Name": "Mire Shed",
+          "X": 77,
+          "Y": 1600,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Dark World Death Mountain West",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainWest",
+      "Rooms": [
+        {
+          "Name": "Spike Cave",
+          "X": 1151,
+          "Y": 294,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Dark World Death Mountain East",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain.DarkWorldDeathMountainEast",
+      "Rooms": [
+        {
+          "Name": "Superbunny Cave",
+          "X": 1695,
+          "Y": 290,
+          "Scale": 1
+        },
+        {
+          "Name": "Hookshot Cave",
+          "X": 1670,
+          "Y": 126,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Palace of Darkness",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.PalaceOfDarkness",
+      "BossX": 1924,
+      "BossY": 800,
+      "Rooms": [
+        {
+          "Name": "Palace of Darkness",
+          "X": 1924,
+          "Y": 800,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Swamp Palace",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.SwampPalace",
+      "BossX": 940,
+      "BossY": 1880,
+      "Rooms": [
+        {
+          "Name": "Swamp Palace",
+          "X": 940,
+          "Y": 1880,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Skull Woods",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.SkullWoods",
+      "BossX": 79,
+      "BossY": 130,
+      "Rooms": [
+        {
+          "Name": "Skull Woods",
+          "X": 79,
+          "Y": 130,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Thieves' Town",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.ThievesTown",
+      "BossX": 251,
+      "BossY": 971,
+      "Rooms": [
+        {
+          "Name": "Thieves' Town",
+          "X": 251,
+          "Y": 971,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Ice Palace",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.IcePalace",
+      "BossX": 1600,
+      "BossY": 1735,
+      "Rooms": [
+        {
+          "Name": "Ice Palace",
+          "X": 1600,
+          "Y": 1735,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Misery Mire",
+      "BossX": 150,
+      "BossY": 1670,
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.MiseryMire",
+      "Rooms": [
+        {
+          "Name": "Misery Mire",
+          "X": 150,
+          "Y": 1670,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Turtle Rock",
+      "BossX": 1890,
+      "BossY": 144,
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.TurtleRock",
+      "Rooms": [
+        {
+          "Name": "Turtle Rock",
+          "X": 1890,
+          "Y": 144,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Ganon's Tower",
+      "TypeName": "Randomizer.Data.WorldData.Regions.Zelda.GanonsTower",
+      "Rooms": [
+        {
+          "Name": "Ganon's Tower",
+          "X": 1126,
+          "Y": 68,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Blue Brinstar",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar.BlueBrinstar",
+      "Rooms": [
+        {
+          "Name": "Morphing Ball",
+          "X": 744,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (blue Brinstar bottom)",
+          "X": 840,
+          "Y": 436,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (blue Brinstar)",
+          "X": 680,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Brinstar Ceiling",
+          "X": 936,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (blue Brinstar middle)",
+          "X": 968,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Blue Brinstar Top",
+          "X": 872,
+          "Y": 340,
+          "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Brinstar Level 1 Keycard",
+          "X": 887,
+          "Y": 403
+        },
+        {
+          "Item": "Brinstar Level 2 Keycard",
+          "X": 663,
+          "Y": 370
+        },
+        {
+          "Item": "Brinstar Level 2 Keycard",
+          "X": 599,
+          "Y": 338
+        },
+        {
+          "Item": "Brinstar Level 2 Keycard",
+          "X": 215,
+          "Y": 403
+        },
+        {
+          "Item": "Brinstar Boss Keycard",
+          "X": 646,
+          "Y": 195
+        },
+        {
+          "Item": "Brinstar Boss Keycard",
+          "X": 1687,
+          "Y": 691
+        }
+      ]
+    },
+    {
+      "Name": "Green Brinstar",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar.GreenBrinstar",
+      "Rooms": [
+        {
+          "Name": "Reserve Tank, Brinstar",
+          "X": 360,
+          "Y": 212,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (green Brinstar below super missile)",
+          "X": 296,
+          "Y": 212,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (green Brinstar top)",
+          "X": 264,
+          "Y": 180,
+          "Scale": 1
+        },
+        {
+          "Name": "Mockball Hall Hidden Room",
+          "X": 392,
+          "Y": 212,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Etecoons",
+          "X": 136,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (green Brinstar bottom)",
+          "X": 328,
+          "Y": 308,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (green Brinstar bottom)",
+          "X": 104,
+          "Y": 404,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Pink Brinstar",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar.PinkBrinstar",
+      "Rooms": [
+        {
+          "Name": "Charge Beam",
+          "X": 488,
+          "Y": 436,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (green Brinstar pipe)",
+          "X": 648,
+          "Y": 436,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Waterway",
+          "X": 200,
+          "Y": 500,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Brinstar Gate",
+          "X": 616,
+          "Y": 340,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (pink Brinstar)",
+          "X": 712,
+          "Y": 372,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (pink Brinstar)",
+          "X": 424,
+          "Y": 340,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (pink Brinstar top)",
+          "X": 488,
+          "Y": 308,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (pink Brinstar bottom)",
+          "X": 488,
+          "Y": 404,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Red Brinstar",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar.RedBrinstar",
+      "Rooms": [
+        {
+          "Name": "X-Ray Scope",
+          "X": 680,
+          "Y": 564,
+          "Scale": 1
+        },
+        {
+          "Name": "Spazer",
+          "X": 1160,
+          "Y": 628,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (red Brinstar sidehopper room)",
+          "X": 1064,
+          "Y": 340,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (red Brinstar spike room)",
+          "X": 1064,
+          "Y": 436,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (red Brinstar spike room)",
+          "X": 1032,
+          "Y": 436,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Kraid's Lair",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar.KraidsLair",
+      "BossX": 1720,
+      "BossY": 676,
+      "Rooms": [
+        {
+          "Name": "Energy Tank, Kraid",
+          "X": 1320,
+          "Y": 692,
+          "Scale": 1
+        },
+        {
+          "Name": "Varia Suit",
+          "X": 1768,
+          "Y": 692,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Kraid)",
+          "X": 1448,
+          "Y": 660,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Central Crateria",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria.CentralCrateria",
+      "Rooms": [
+        {
+          "Name": "Bombs",
+          "X": 712,
+          "Y": 276,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (Crateria)",
+          "X": 680,
+          "Y": 372,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Crateria middle)",
+          "X": 424,
+          "Y": 308,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Crateria bottom)",
+          "X": 552,
+          "Y": 660,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (Crateria surface)",
+          "X": 968,
+          "Y": 116,
+          "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Crateria Level 1 Keycard",
+          "X": 920,
+          "Y": 114
+        },
+        {
+          "Item": "Crateria Level 1 Keycard",
+          "X": 631,
+          "Y": 147
+        },
+        {
+          "Item": "Crateria Level 2 Keycard",
+          "X": 1047,
+          "Y": 211
+        },
+        {
+          "Item": "Crateria Boss Keycard",
+          "X": 695,
+          "Y": 276
+        },
+        {
+          "Item": "Crateria Boss Keycard",
+          "X": 279,
+          "Y": 339
+        }
+      ]
+    },
+    {
+      "Name": "West Crateria",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria.WestCrateria",
+      "Rooms": [
+        {
+          "Name": "Energy Tank, Gauntlet",
+          "X": 456,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Terminator",
+          "X": 296,
+          "Y": 276,
+          "Scale": 1
+        },
+        {
+          "Name": "Gauntlet Shaft",
+          "X": 264,
+          "Y": 180,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "East Crateria",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria.EastCrateria",
+      "Rooms": [
+        {
+          "Name": "Missile (outside Wrecked Ship bottom)",
+          "X": 1128,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (outside Wrecked Ship top)",
+          "X": 1160,
+          "Y": 84,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (outside Wrecked Ship middle)",
+          "X": 1128,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Crateria moat)",
+          "X": 1064,
+          "Y": 212,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Outer Maridia",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia.OuterMaridia",
+      "Rooms": [
+        {
+          "Name": "Missile (green Maridia shinespark)",
+          "X": 232,
+          "Y": 468,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (green Maridia)",
+          "X": 264,
+          "Y": 436,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Mama turtle",
+          "X": 488,
+          "Y": 468,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (green Maridia tatori)",
+          "X": 520,
+          "Y": 500,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Inner Maridia",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia.InnerMaridia",
+      "BossX": 1176,
+      "BossY": 388,
+      "Rooms": [
+        {
+          "Name": "Watering Hole",
+          "X": 296,
+          "Y": 276,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (yellow Maridia false wall)",
+          "X": 552,
+          "Y": 276,
+          "Scale": 1
+        },
+        {
+          "Name": "Left Sand Pit",
+          "X": 552,
+          "Y": 532,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (right Maridia sand pit room)",
+          "X": 648,
+          "Y": 532,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (right Maridia sand pit room)",
+          "X": 680,
+          "Y": 564,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (pink Maridia)",
+          "X": 712,
+          "Y": 372,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (pink Maridia)",
+          "X": 680,
+          "Y": 372,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Botwoon",
+          "X": 840,
+          "Y": 340,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Draygon)",
+          "X": 1256,
+          "Y": 308,
+          "Scale": 1
+        },
+        {
+          "Name": "Space Jump",
+          "X": 1128,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Plasma Beam",
+          "X": 808,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Spring Ball",
+          "X": 968,
+          "Y": 596,
+          "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Maridia Level 1 Keycard",
+          "X": 471,
+          "Y": 371
+        },
+        {
+          "Item": "Maridia Level 1 Keycard",
+          "X": 536,
+          "Y": 403
+        },
+        {
+          "Item": "Maridia Level 2 Keycard",
+          "X": 663,
+          "Y": 339
+        },
+        {
+          "Item": "Maridia Level 2 Keycard",
+          "X": 951,
+          "Y": 339
+        },
+        {
+          "Item": "Maridia Boss Keycard",
+          "X": 951,
+          "Y": 309
+        },
+        {
+          "Item": "Maridia Boss Keycard",
+          "X": 1207,
+          "Y": 371
+        }
+      ]
+    },
+    {
+      "Name": "Wrecked Ship",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.WreckedShip",
+      "BossX": 632,
+      "BossY": 436,
+      "Rooms": [
+        {
+          "Name": "Missile (Wrecked Ship middle)",
+          "X": 408,
+          "Y": 340,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Wrecked Ship",
+          "X": 600,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Right Super, Wrecked Ship",
+          "X": 696,
+          "Y": 372,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Wrecked Ship top)",
+          "X": 696,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (Wrecked Ship left)",
+          "X": 504,
+          "Y": 372,
+          "Scale": 1
+        },
+        {
+          "Name": "Reserve Tank, Wrecked Ship",
+          "X": 504,
+          "Y": 180,
+          "Scale": 1
+        },
+        {
+          "Name": "Gravity Suit",
+          "X": 344,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Gravity Suit)",
+          "X": 440,
+          "Y": 244,
+          "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Wrecked Ship Level 1 Keycard",
+          "X": 392,
+          "Y": 176
+        },
+        {
+          "Item": "Wrecked Ship Level 1 Keycard",
+          "X": 328,
+          "Y": 210
+        },
+        {
+          "Item": "Wrecked Ship Level 1 Keycard",
+          "X": 359,
+          "Y": 243
+        },
+        {
+          "Item": "Wrecked Ship Boss Keycard",
+          "X": 615,
+          "Y": 435
+        }
+      ]
+    },
+    {
+      "Name": "Upper Norfair, West",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairWest",
+      "Rooms": [
+        {
+          "Name": "Ice Beam",
+          "X": 216,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (below Ice Beam)",
+          "X": 120,
+          "Y": 212,
+          "Scale": 1
+        },
+        {
+          "Name": "Hi-Jump Boots",
+          "X": 280,
+          "Y": 276,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Hi-Jump Boots)",
+          "X": 312,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank (Hi-Jump Boots)",
+          "X": 344,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (lava room)",
+          "X": 568,
+          "Y": 212,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Upper Norfair, East",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairEast",
+      "Rooms": [
+        {
+          "Name": "Bubble Mountain Hidden Hall",
+          "X": 632,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Speed Booster",
+          "X": 1240,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Speed Booster)",
+          "X": 1208,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (bubble Norfair green door)",
+          "X": 728,
+          "Y": 148,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (bubble Norfair)",
+          "X": 792,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Wave Beam",
+          "X": 984,
+          "Y": 212,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Wave Beam)",
+          "X": 888,
+          "Y": 212,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Upper Norfair, Crocomire",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair.UpperNorfairCrocomire",
+      "Rooms": [
+        {
+          "Name": "Energy Tank, Crocomire",
+          "X": 664,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (below Crocomire)",
+          "X": 504,
+          "Y": 564,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (Crocomire)",
+          "X": 344,
+          "Y": 404,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Grappling Beam)",
+          "X": 312,
+          "Y": 564,
+          "Scale": 1
+        },
+        {
+          "Name": "Grappling Beam",
+          "X": 152,
+          "Y": 596,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (above Crocomire)",
+          "X": 408,
+          "Y": 276,
+          "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Norfair Level 1 Keycard",
+          "X": 358,
+          "Y": 178
+        },
+        {
+          "Item": "Norfair Level 1 Keycard",
+          "X": 135,
+          "Y": 307
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 583,
+          "Y": 210
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 743,
+          "Y": 243
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 758,
+          "Y": 260
+        },
+        {
+          "Item": "Norfair Level 2 Keycard",
+          "X": 807,
+          "Y": 182
+        },
+        {
+          "Item": "Norfair Boss Keycard",
+          "X": 533,
+          "Y": 388
+        }
+      ]
+    },
+    {
+      "Name": "Lower Norfair, West",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair.LowerNorfairWest",
+      "Rooms": [
+        {
+          "Name": "Screw Attack",
+          "X": 696,
+          "Y": 596,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Gold Torizo)",
+          "X": 632,
+          "Y": 564,
+          "Scale": 1
+        },
+        {
+          "Name": "Super Missile (Gold Torizo)",
+          "X": 664,
+          "Y": 564,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (Mickey Mouse room)",
+          "X": 952,
+          "Y": 404,
+          "Scale": 1
+        }
+      ]
+    },
+    {
+      "Name": "Lower Norfair, East",
+      "TypeName": "Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair.LowerNorfairEast",
+      "BossX": 792,
+      "BossY": 628,
+      "Rooms": [
+        {
+          "Name": "Missile (lower Norfair above fire flea room)",
+          "X": 1176,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (lower Norfair above fire flea room)",
+          "X": 1240,
+          "Y": 276,
+          "Scale": 1
+        },
+        {
+          "Name": "Power Bomb (Power Bombs of shame)",
+          "X": 1080,
+          "Y": 532,
+          "Scale": 1
+        },
+        {
+          "Name": "Missile (lower Norfair near Wave Beam)",
+          "X": 984,
+          "Y": 244,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Ridley",
+          "X": 760,
+          "Y": 628,
+          "Scale": 1
+        },
+        {
+          "Name": "Energy Tank, Firefleas",
+          "X": 1240,
+          "Y": 436,
+          "Scale": 1
+        }
+      ],
+      "Doors": [
+        {
+          "Item": "Lower Norfair Level 1 Keycard",
+          "X": 999,
+          "Y": 179
+        },
+        {
+          "Item": "Lower Norfair Level 1 Keycard",
+          "X": 1031,
+          "Y": 403
+        },
+        {
+          "Item": "Lower Norfair Boss Keycard",
+          "X": 807,
+          "Y": 596
+        }
+      ]
+    }
+  ]
+}

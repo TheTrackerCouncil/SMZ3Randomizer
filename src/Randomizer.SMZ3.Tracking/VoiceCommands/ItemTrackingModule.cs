@@ -21,9 +21,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public ItemTrackingModule(Tracker tracker, IItemService itemService, ILogger<ItemTrackingModule> logger)
-            : base(tracker, itemService, logger)
+        public ItemTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Track item", GetTrackItemRule(), (tracker, result) =>
             {
@@ -63,7 +65,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             AddCommand("Track death", GetTrackDeathRule(), (tracker, result) =>
             {
-                var death = itemService.FindOrDefault("Death");
+                var death = itemService.FirstOrDefault("Death");
                 if (death == null)
                 {
                     Logger.LogError("Tried to track death, but could not find an item named 'Death'.");
@@ -138,7 +140,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetTrackItemRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name != "Content");
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();
 

@@ -12,6 +12,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Tools", "src\Randomizer.Tools\Randomizer.Tools.csproj", "{B594A95C-7B87-447A-8A80-EBF6991EB04C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.App", "src\Randomizer.App\Randomizer.App.csproj", "{CCEDE012-894B-48F6-811E-B2324E74C604}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A9465041-3416-4C60-A160-1454A045B90F} = {A9465041-3416-4C60-A160-1454A045B90F}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F11C9119-7B5E-46E4-9A58-E157B80C7E9F}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,10 +22,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Tracking", "src\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj", "{286CCBD5-FB69-4120-A0DB-FBDAD5C43072}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A9465041-3416-4C60-A160-1454A045B90F} = {A9465041-3416-4C60-A160-1454A045B90F}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.Twitch", "src\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj", "{697D1425-8C0B-40C0-8FC8-E12EFC1D44DA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.SMZ3.ChatIntegration", "src\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj", "{81708EBE-6127-4CDB-B18D-5238B204BF47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Data", "src\Randomizer.Data\Randomizer.Data.csproj", "{A9465041-3416-4C60-A160-1454A045B90F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3DA99948-6C0A-47E6-87AB-92672ED88C09} = {3DA99948-6C0A-47E6-87AB-92672ED88C09}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +73,10 @@ Global
 		{81708EBE-6127-4CDB-B18D-5238B204BF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81708EBE-6127-4CDB-B18D-5238B204BF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81708EBE-6127-4CDB-B18D-5238B204BF47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9465041-3416-4C60-A160-1454A045B90F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9465041-3416-4C60-A160-1454A045B90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9465041-3416-4C60-A160-1454A045B90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9465041-3416-4C60-A160-1454A045B90F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

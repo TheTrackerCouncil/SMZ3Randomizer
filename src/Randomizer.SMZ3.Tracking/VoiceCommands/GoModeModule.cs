@@ -15,9 +15,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Initializes a new instance of the <see cref="GoModeModule"/> class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public GoModeModule(Tracker tracker, IItemService itemService, ILogger<GoModeModule> logger)
-            : base(tracker, itemService, logger)
+        public GoModeModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<GoModeModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Toggle Go Mode", "Hey tracker, track Go Mode.", (tracker, result) =>
             {

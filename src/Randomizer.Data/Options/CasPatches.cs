@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Randomizer.Data.Options
+{
+    public class CasPatches
+    {
+        [DisplayName("Disable flashing (Zelda only)")]
+        [Description("Disables flashing effects from things like Ether.")]
+        public bool DisableFlashing { get; set; } = true;
+
+        [DisplayName("Prevent Scams")]
+        [Description("The bottle merchant and King Zora will tell you what they have before asking if you want to purchase it, even if you don't have enough rupees.")]
+        public bool PreventScams { get; set; } = true;
+
+        [DisplayName("Aim with Any Button")]
+        [Description("Allows you to map the aiming button to any button.\nPatch developed by Kejardon.")]
+        public bool AimAnyButton { get; set; } = true;
+
+        [DisplayName("Infinite Space Jump")]
+        [Description("Updates to make the space jump timing easier.\nPatch developed by MetConst.")]
+        public bool InfiniteSpaceJump { get; set; } = true;
+
+        [DisplayName("Spin Jump Restart")]
+        [Description("Allows you to initiate a spinning jump in the middle of falling normally.\nPatch developed by Kejardon.")]
+        public bool Respin { get; set; } = true;
+
+        [DisplayName("Conserve Metroid Momentum")]
+        [Description("Preserve your horizontal movement when landing from a fall or jump.\nPatch developed by Oi27.")]
+        public bool Speedkeep { get; set; } = true;
+
+        [DisplayName("Starting Nerfed Charge Beam")]
+        [Description("You will always start with a weak charge beam to prevent soft locks against bosses when running out of missiles.\nPatch developed by Smiley and Flo.")]
+        public bool NerfedCharge { get; set; } = true;
+
+        [DisplayName("No Bomb Torizo Softlocks")]
+        [Description("Closes the door to Bomb Torizo faster after picking up the item to prevent softlocks by getting stuck in the door.")]
+        public bool NoBozoSoftlock { get; set; } = true;
+
+        [DisplayName("Fast Metroid Doors")]
+        [Description("Speeds up the transition between Metroid rooms via doors.\nPatch developed by Rakki.")]
+        public bool FastDoors { get; set; } = true;
+
+        [DisplayName("Fast Metroid Elevators")]
+        [Description("Speeds up the transition between Metroid areas via elevators.\nPatch developed by Lioran.")]
+        public bool FastElevators { get; set; } = true;
+
+        [DisplayName("Refill at Save Stations")]
+        [Description("Save stations will refill your ammo.\nPatch developed by Adam.")]
+        public bool RefillAtSaveStation { get; set; } = true;
+
+        public CasPatches Clone()
+        {
+            return (CasPatches)MemberwiseClone();
+        }
+    }
+}

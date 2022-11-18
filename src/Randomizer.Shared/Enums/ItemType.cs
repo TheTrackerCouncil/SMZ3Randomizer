@@ -257,15 +257,15 @@ namespace Randomizer.Shared
         Icerod = 0x08,
 
         [Description("Bombos")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
         Bombos = 0x0f,
 
         [Description("Ether")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
         Ether = 0x10,
 
         [Description("Quake")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
         Quake = 0x11,
 
         [Description("Lamp")]

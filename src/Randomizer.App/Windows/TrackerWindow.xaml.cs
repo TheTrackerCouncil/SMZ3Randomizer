@@ -22,16 +22,20 @@ using Microsoft.Win32;
 
 using Randomizer.App.ViewModels;
 using Randomizer.App.Windows;
+using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
+using Randomizer.SMZ3.Contracts;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.App
 {
@@ -46,48 +50,53 @@ namespace Randomizer.App
         private readonly ILogger<TrackerWindow> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IItemService _itemService;
-        private readonly IWorldService _worldService;
         private readonly IUIService _uiService;
         private readonly List<object> _mouseDownSenders = new();
+        private readonly IWorldAccessor _world;
+        private readonly RandomizerOptions _options;
+        private readonly RomGenerator _romGenerator;
+        private readonly ITrackerTimerService _timerService;
         private bool _pegWorldMode;
         private TrackerLocationsWindow _locationsWindow;
         private TrackerHelpWindow _trackerHelpWindow;
         private TrackerMapWindow _trackerMapWindow;
         private AutoTrackerWindow _autoTrackerHelpWindow;
         private TrackerLocationSyncer _locationSyncer;
-        private RomGenerator _romGenerator;
         private MenuItem _autoTrackerDisableMenuItem;
         private MenuItem _autoTrackerLuaMenuItem;
         private MenuItem _autoTrackerUSB2SNESMenuItem;
         private UILayout _layout;
         private UILayout _previousLayout;
-        private RandomizerOptions _options;
-
+        
         public TrackerWindow(IServiceProvider serviceProvider,
             IItemService itemService,
             ILogger<TrackerWindow> logger,
             RomGenerator romGenerator,
-            IWorldService worldService,
             IUIService uiService,
-            OptionsFactory optionsFactory
+            OptionsFactory optionsFactory,
+            IWorldAccessor world,
+            ITrackerTimerService timerService
         )
         {
             InitializeComponent();
 
             _serviceProvider = serviceProvider;
             _itemService = itemService;
-            _worldService = worldService;
             _logger = logger;
             _romGenerator = romGenerator;
             _uiService = uiService;
             _options = optionsFactory.Create();
             _layout = uiService.GetLayout(_options.GeneralOptions.SelectedLayout);
+            _world = world;
+            _timerService = timerService;
 
-            foreach(var layout in uiService.SelectableLayouts)
+            foreach (var layout in uiService.SelectableLayouts)
             {
-                var layoutMenuItem = new MenuItem();
-                layoutMenuItem.Header = layout.Name;
-                layoutMenuItem.Tag = layout;
+                var layoutMenuItem = new MenuItem
+                {
+                    Header = layout.Name,
+                    Tag = layout
+                };
                 layoutMenuItem.Click += LayoutMenuItem_Click;
                 layoutMenuItem.IsCheckable = true;
                 layoutMenuItem.IsChecked = layout == _layout;
@@ -96,10 +105,7 @@ namespace Randomizer.App
 
             _dispatcherTimer = new(TimeSpan.FromMilliseconds(1000), DispatcherPriority.Render, (sender, _) =>
             {
-                var elapsed = Tracker.TotalElapsedTime;
-                StatusBarTimer.Content = elapsed.Hours > 0
-                    ? elapsed.ToString("h':'mm':'ss")
-                    : elapsed.ToString("mm':'ss");
+                StatusBarTimer.Content = _timerService.TimeString;
             }, Dispatcher);
 
             App.RestoreWindowPositionAndSize(this);
@@ -230,6 +236,11 @@ namespace Randomizer.App
         {
             TrackerGrid.Children.Clear();
 
+            if (_world is null)
+            {
+                return;
+            }
+
             foreach (var gridLocation in _layout.GridLocations)
             {
                 var labelImage = (Image)null;
@@ -242,11 +253,11 @@ namespace Randomizer.App
                 // A group of items stacked on top of each other
                 if (gridLocation.Type == UIGridLocationType.Items)
                 {
-                    var items = new List<ItemData>();
+                    var items = new List<Item>();
                     Image latestImage = null;
                     foreach (var itemName in gridLocation.Identifiers)
                     {
-                        var item = _itemService.FindOrDefault(itemName);
+                        var item = _itemService.FirstOrDefault(itemName);
                         if (item == null)
                         {
                             _logger.LogError($"Item {itemName} could not be found");
@@ -258,14 +269,14 @@ namespace Randomizer.App
                         var overlay = GetOverlayImageFileName(item);
                         if (fileName == null)
                         {
-                            _logger.LogError($"Image for {item.Item} could not be found");
+                            _logger.LogError($"Image for {item.Name} could not be found");
                             continue;
                         }
 
                         latestImage = GetGridItemControl(fileName,
                             gridLocation.Column, gridLocation.Row,
                             item.Counter, overlay, minCounter: 2);
-                        latestImage.Opacity = item.TrackingState > 0 ? 1.0d : 0.2d;
+                        latestImage.Opacity = item.State.TrackingState > 0 ? 1.0d : 0.2d;
                         TrackerGrid.Children.Add(latestImage);
                     }
 
@@ -278,7 +289,7 @@ namespace Randomizer.App
 
                     if (labelImage != null)
                     {
-                        labelImage.Opacity = items.Any(x => x.TrackingState > 0) ? 1.0d : 0.2d;
+                        labelImage.Opacity = items.Any(x => x.State.TrackingState > 0) ? 1.0d : 0.2d;
                     }
 
                     latestImage.Tag = gridLocation;
@@ -287,18 +298,18 @@ namespace Randomizer.App
                 // If it's a Zelda dungeon
                 else if (gridLocation.Type == UIGridLocationType.Dungeon)
                 {
-                    var dungeon = _worldService.Dungeon(gridLocation.Identifiers.First());
+                    var dungeon = _world.World.Dungeons.FirstOrDefault(x => x.DungeonName == gridLocation.Identifiers.First());
                     if (dungeon == null)
                     {
                         _logger.LogError($"Dungeon {gridLocation.Identifiers.First()} could not be found");
                         continue;
                     }
-
+                    
                     var overlayPath = _uiService.GetSpritePath(dungeon);
-                    var rewardPath = dungeon.HasReward ? _uiService.GetSpritePath(dungeon.Reward) : null;
+                    var rewardPath = dungeon.MarkedReward != RewardType.None ? _uiService.GetSpritePath(dungeon.MarkedReward) : null;
                     var image = GetGridItemControl(rewardPath,
                         gridLocation.Column, gridLocation.Row,
-                        dungeon.TreasureRemaining, overlayPath, minCounter: 1);
+                        dungeon.DungeonState.RemainingTreasure, overlayPath, minCounter: 1);
                     image.Tag = gridLocation;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
@@ -308,22 +319,22 @@ namespace Randomizer.App
                         image.ContextMenu = CreateContextMenu(dungeon);
                     }
 
-                    image.Opacity = dungeon.Cleared ? 1.0d : 0.2d;
+                    image.Opacity = dungeon.DungeonState.Cleared ? 1.0d : 0.2d;
 
                     TrackerGrid.Children.Add(image);
                 }
                 // If it's a Super Metroid boss
                 else if (gridLocation.Type == UIGridLocationType.SMBoss)
                 {
-                    var boss = _worldService.Boss(gridLocation.Identifiers.First());
+                    var boss = _world.World.AllBosses.FirstOrDefault(x => x.Name == gridLocation.Identifiers.First());
                     if (boss == null)
                         continue;
 
-                    var fileName = _uiService.GetSpritePath(boss);
-                    var overlay = GetOverlayImageFileName(boss);
+                    var fileName = _uiService.GetSpritePath(boss.Metadata);
+                    var overlay = GetOverlayImageFileName(boss.Metadata);
                     if (fileName == null)
                     {
-                        _logger.LogError($"Image for {boss.Boss} could not be found");
+                        _logger.LogError($"Image for {boss.Name} could not be found");
                         continue;
                     }
 
@@ -333,19 +344,18 @@ namespace Randomizer.App
                     image.ContextMenu = CreateContextMenu(boss);
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
-                    image.Opacity = boss.Defeated ? 1.0d : 0.2d;
+                    image.Opacity = boss.State.Defeated ? 1.0d : 0.2d;
                     TrackerGrid.Children.Add(image);
                 }
                 // If it's a hammer peg
                 else if (gridLocation.Type == UIGridLocationType.Peg)
                 {
-                    int pegNumber = 0;
-                    if (!int.TryParse(gridLocation.Identifiers.First(), out pegNumber))
+                    if (!int.TryParse(gridLocation.Identifiers.First(), out var pegNumber))
                     {
                         _logger.LogError("Could not determine peg number");
                         continue;
                     }
-                     
+
                     var fileName = _uiService.GetSpritePath("Items",
                         Tracker.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
 
@@ -363,20 +373,20 @@ namespace Randomizer.App
             return null;
         }
 
-        private string GetOverlayImageFileName(ItemData item)
+        private string GetOverlayImageFileName(Item item)
         {
             return item switch
             {
-                { InternalItemType: ItemType.Bombos } => GetMatchingDungeonNameImages(Medallion.Bombos),
-                { InternalItemType: ItemType.Ether } => GetMatchingDungeonNameImages(Medallion.Ether),
-                { InternalItemType: ItemType.Quake } => GetMatchingDungeonNameImages(Medallion.Quake),
+                { Type: ItemType.Bombos } => GetMatchingDungeonNameImages(item.Type),
+                { Type: ItemType.Ether } => GetMatchingDungeonNameImages(item.Type),
+                { Type: ItemType.Quake } => GetMatchingDungeonNameImages(item.Type),
                 _ => null
             };
 
-            string GetMatchingDungeonNameImages(Medallion requirement)
+            string GetMatchingDungeonNameImages(ItemType requirement)
             {
-                var names = Tracker.WorldInfo.Dungeons.Where(x => x.Requirement == requirement)
-                    .Select(x => x.Name[0])
+                var names = Tracker.World.Dungeons.Where(x => x.DungeonState.MarkedMedallion == requirement)
+                    .Select(x => x.DungeonName)
                     .ToList();
 
                 if (names.Count == 1)
@@ -408,12 +418,12 @@ namespace Randomizer.App
                 {
                     if (gridLocation.Type == UIGridLocationType.Items)
                     {
-                        var item = _itemService.FindOrDefault(gridLocation.Identifiers.First());
+                        var item = _itemService.FirstOrDefault(gridLocation.Identifiers.First());
                         Tracker.TrackItem(item);
                     }
                     else if (gridLocation.Type == UIGridLocationType.Dungeon)
                     {
-                        var dungeon = _worldService.Dungeon(gridLocation.Identifiers.First());
+                        var dungeon = _world.World.Dungeons.First(x => x.DungeonName == gridLocation.Identifiers.First());
                         Tracker.MarkDungeonAsCleared(dungeon);
                     }
                     else if (gridLocation.Type == UIGridLocationType.Peg)
@@ -422,7 +432,7 @@ namespace Randomizer.App
                     }
                     else if (gridLocation.Type == UIGridLocationType.SMBoss)
                     {
-                        var boss = _worldService.Boss(gridLocation.Identifiers.First());
+                        var boss = _world.World.AllBosses.First(x => x.Name == gridLocation.Identifiers.First());
                         Tracker.MarkBossAsDefeated(boss);
                     }
                     else
@@ -437,7 +447,7 @@ namespace Randomizer.App
             };
         }
 
-        private ContextMenu CreateContextMenu(ICollection<ItemData> items)
+        private ContextMenu CreateContextMenu(ICollection<Item> items)
         {
             var menu = new ContextMenu
             {
@@ -446,11 +456,11 @@ namespace Randomizer.App
 
             foreach (var item in items)
             {
-                if (item.TrackingState == 0 || item.Multiple)
+                if (item.State.TrackingState == 0 || item.Metadata.Multiple)
                 {
                     var menuItem = new MenuItem
                     {
-                        Header = "Track " + item.Name[0],
+                        Header = "Track " + item.Name,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(_uiService.GetSpritePath(item)))
@@ -464,11 +474,11 @@ namespace Randomizer.App
                     menu.Items.Add(menuItem);
                 }
 
-                if (item.TrackingState > 0)
+                if (item.State.TrackingState > 0)
                 {
                     var menuItem = new MenuItem
                     {
-                        Header = "Untrack " + item.Name[0],
+                        Header = "Untrack " + item.Name,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(_uiService.GetSpritePath(item)))
@@ -482,29 +492,23 @@ namespace Randomizer.App
                     menu.Items.Add(menuItem);
                 }
 
-                var medallion = item.InternalItemType switch
+                if (item.Type is ItemType.Bombos or ItemType.Ether or ItemType.Quake)
                 {
-                    ItemType.Bombos => Medallion.Bombos,
-                    ItemType.Ether => Medallion.Ether,
-                    ItemType.Quake => Medallion.Quake,
-                    _ => Medallion.None
-                };
-                if (medallion != Medallion.None)
-                {
-                    var turtleRock = Tracker.WorldInfo.Dungeon<TurtleRock>();
-                    var miseryMire = Tracker.WorldInfo.Dungeon<MiseryMire>();
+                    var medallion = item.Type;
+                    var turtleRock = Tracker.World.TurtleRock as IDungeon;
+                    var miseryMire = Tracker.World.MiseryMire as IDungeon;
 
                     var requiredByNone = new MenuItem
                     {
                         Header = "Not required for any dungeon",
-                        IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement != medallion
+                        IsChecked = turtleRock.MarkedMedallion != medallion && miseryMire.MarkedMedallion != medallion
                     };
                     requiredByNone.Click += (sender, e) =>
                     {
-                        if (turtleRock.Requirement == medallion)
-                            turtleRock.Requirement = Medallion.None;
-                        if (miseryMire.Requirement == medallion)
-                            miseryMire.Requirement = Medallion.None;
+                        if (turtleRock.MarkedMedallion == medallion)
+                            turtleRock.MarkedMedallion = ItemType.Nothing;
+                        if (miseryMire.MarkedMedallion == medallion)
+                            miseryMire.MarkedMedallion = ItemType.Nothing;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -512,13 +516,13 @@ namespace Randomizer.App
                     var requiredByTR = new MenuItem
                     {
                         Header = "Required for Turtle Rock",
-                        IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement != medallion
+                        IsChecked = turtleRock.Medallion == medallion && miseryMire.Medallion != medallion
                     };
                     requiredByTR.Click += (sender, e) =>
                     {
-                        turtleRock.Requirement = medallion;
-                        if (miseryMire.Requirement == medallion)
-                            miseryMire.Requirement = Medallion.None;
+                        turtleRock.MarkedMedallion = medallion;
+                        if (miseryMire.MarkedMedallion == medallion)
+                            miseryMire.MarkedMedallion = ItemType.Nothing;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -526,13 +530,13 @@ namespace Randomizer.App
                     var requiredByMM = new MenuItem
                     {
                         Header = "Required for Misery Mire",
-                        IsChecked = turtleRock.Requirement != medallion && miseryMire.Requirement == medallion
+                        IsChecked = turtleRock.MarkedMedallion != medallion && miseryMire.MarkedMedallion == medallion
                     };
                     requiredByMM.Click += (sender, e) =>
                     {
-                        if (turtleRock.Requirement == medallion)
-                            turtleRock.Requirement = Medallion.None;
-                        miseryMire.Requirement = medallion;
+                        if (turtleRock.MarkedMedallion == medallion)
+                            turtleRock.MarkedMedallion = ItemType.Nothing;
+                        miseryMire.MarkedMedallion = medallion;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -540,12 +544,12 @@ namespace Randomizer.App
                     var requiredByBoth = new MenuItem
                     {
                         Header = "Required by both",
-                        IsChecked = turtleRock.Requirement == medallion && miseryMire.Requirement == medallion
+                        IsChecked = turtleRock.MarkedMedallion == medallion && miseryMire.MarkedMedallion == medallion
                     };
                     requiredByBoth.Click += (sender, e) =>
                     {
-                        turtleRock.Requirement = medallion;
-                        miseryMire.Requirement = medallion;
+                        turtleRock.MarkedMedallion = medallion;
+                        miseryMire.MarkedMedallion = medallion;
                         _locationSyncer.OnLocationUpdated("");
                         RefreshGridItems();
                     };
@@ -560,18 +564,18 @@ namespace Randomizer.App
             return menu.Items.Count > 0 ? menu : null;
         }
 
-        private ContextMenu CreateContextMenu(BossInfo boss)
+        private ContextMenu CreateContextMenu(Boss boss)
         {
             var menu = new ContextMenu
             {
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (boss.Defeated)
+            if (boss.State.Defeated == true)
             {
                 var unclear = new MenuItem
                 {
-                    Header = $"Revive {boss.Name[0]}",
+                    Header = $"Revive {boss.Name}",
                 };
                 unclear.Click += (sender, e) =>
                 {
@@ -583,14 +587,14 @@ namespace Randomizer.App
             return menu.Items.Count > 0 ? menu : null;
         }
 
-        private ContextMenu CreateContextMenu(DungeonInfo dungeon)
+        private ContextMenu CreateContextMenu(IDungeon dungeon)
         {
             var menu = new ContextMenu
             {
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (dungeon.Cleared)
+            if (dungeon.DungeonState.Cleared)
             {
                 var unclear = new MenuItem
                 {
@@ -603,14 +607,14 @@ namespace Randomizer.App
                 menu.Items.Add(unclear);
             }
 
-            if (dungeon.HasReward && dungeon.Type != typeof(CastleTower))
+            if (dungeon.HasReward && dungeon.GetType() != typeof(CastleTower))
             {
-                foreach (var reward in Enum.GetValues<RewardItem>().Where(x => x != RewardItem.Agahnim && x != RewardItem.NonGreenPendant))
+                foreach (var reward in Enum.GetValues<RewardType>().Where(x => x != RewardType.Agahnim))
                 {
                     var item = new MenuItem
                     {
                         Header = $"Mark as {reward.GetDescription()}",
-                        IsChecked = dungeon.Reward == reward,
+                        IsChecked = dungeon.DungeonState.MarkedReward == reward,
                         Icon = new Image
                         {
                             Source = new BitmapImage(new Uri(_uiService.GetSpritePath(reward)))
@@ -618,7 +622,7 @@ namespace Randomizer.App
                     };
                     item.Click += (sender, e) =>
                     {
-                        dungeon.Reward = reward;
+                        dungeon.DungeonState.MarkedReward = reward;
                         RefreshGridItems();
                     };
                     menu.Items.Add(item);
@@ -630,12 +634,12 @@ namespace Randomizer.App
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Background = new SolidColorBrush(Options.GeneralOptions.TrackerBackgroundColor);
+            Background = new SolidColorBrush(Color.FromArgb(Options.GeneralOptions.TrackerBGColor[0], Options.GeneralOptions.TrackerBGColor[1], Options.GeneralOptions.TrackerBGColor[2], Options.GeneralOptions.TrackerBGColor[3]));
 
             // If a rom was passed in, generate its seed to populate all locations and items
             if (GeneratedRom.IsValid(Rom))
             {
-                var config = SMZ3.Tracking.TrackerState.LoadConfig(Rom);
+                var config = Config.FromConfigString(Rom.Settings);
                 Options = Options.Clone();
                 Options.LogicConfig = config.LogicConfig;
                 Options.SeedOptions.Race = config.Race;
@@ -643,6 +647,7 @@ namespace Randomizer.App
                 Options.SeedOptions.ItemPlacementRule = config.ItemPlacementRule;
                 Options.SeedOptions.ConfigString = config.SettingsString;
                 Options.SeedOptions.CopySeedAndRaceSettings = config.CopySeedAndRaceSettings;
+                Options.SeedOptions.UniqueHintCount = config.UniqueHintCount;
                 if (Rom.GeneratorVersion == 0) Options.LogicConfig.FireRodDarkRooms = true;
                 _romGenerator.GenerateSeed(Options, Rom.Seed);
             }
@@ -650,12 +655,6 @@ namespace Randomizer.App
             InitializeTracker();
             ResetGridSize();
             RefreshGridItems();
-
-            // If a rom was passed in with a valid tracker state, reload the state from the database
-            if (GeneratedRom.IsValid(Rom))
-            {
-                Tracker.Load(Rom);
-            }
 
             if (!Tracker.TryStartTracking())
             {
@@ -690,6 +689,13 @@ namespace Randomizer.App
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(Options));
 
             Tracker = _serviceProvider.GetRequiredService<Tracker>();
+
+            // If a rom was passed in with a valid tracker state, reload the state from the database
+            if (GeneratedRom.IsValid(Rom))
+            {
+                Tracker.Load(Rom);
+            }
+            
             Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
             {
                 UpdateStats(e);
@@ -777,7 +783,7 @@ namespace Randomizer.App
             };
             _autoTrackerDisableMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.None);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.None);
             };
             menu.Items.Add(_autoTrackerDisableMenuItem);
 
@@ -788,7 +794,7 @@ namespace Randomizer.App
             };
             _autoTrackerLuaMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.Lua);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.Lua);
             };
             menu.Items.Add(_autoTrackerLuaMenuItem);
 
@@ -799,7 +805,7 @@ namespace Randomizer.App
             };
             _autoTrackerUSB2SNESMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(SMZ3.Tracking.AutoTracking.EmulatorConnectorType.USB2SNES);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.USB2SNES);
             };
             menu.Items.Add(_autoTrackerUSB2SNESMenuItem);
 
@@ -858,9 +864,9 @@ namespace Randomizer.App
             StatusBarAutoTrackerDisabled.Visibility = !Tracker.AutoTracker.IsEnabled ? Visibility.Visible : Visibility.Collapsed;
             StatusBarAutoTrackerEnabled.Visibility = Tracker.AutoTracker.IsEnabled && !Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
             StatusBarAutoTrackerConnected.Visibility = Tracker.AutoTracker.IsEnabled && Tracker.AutoTracker.IsConnected ? Visibility.Visible : Visibility.Collapsed;
-            _autoTrackerDisableMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.None;
-            _autoTrackerLuaMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.Lua;
-            _autoTrackerUSB2SNESMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == SMZ3.Tracking.AutoTracking.EmulatorConnectorType.USB2SNES;
+            _autoTrackerDisableMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.None;
+            _autoTrackerLuaMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.Lua;
+            _autoTrackerUSB2SNESMenuItem.IsChecked = Tracker.AutoTracker?.ConnectorType == EmulatorConnectorType.USB2SNES;
         }
 
         private void UpdateStats(TrackerEventArgs e)
@@ -893,7 +899,7 @@ namespace Randomizer.App
                 if (MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    await SaveState();
+                    await SaveStateAsync();
                 }
             }
             Tracker.StopTracking();
@@ -946,81 +952,26 @@ namespace Randomizer.App
             // If there is a valid rom, then load the state from the db
             if (GeneratedRom.IsValid(Rom))
             {
-                Tracker.Load(Rom);
+                await Task.Run(() => Tracker.Load(Rom));
+                
                 Tracker.StartTimer(true);
                 if (_dispatcherTimer.IsEnabled)
                 {
                     _dispatcherTimer.Start();
                 }
             }
-            // Otherwise save it to a file
             else
             {
-                var dialog = new OpenFileDialog
-                {
-                    Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*"
-                };
-
-                while (dialog.ShowDialog(this) == true)
-                {
-                    try
-                    {
-                        using (var stream = new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-                        using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
-                        {
-                            await Tracker.LoadAsync(gzip);
-                        }
-
-                        break;
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        _logger.LogError(ex, "Failed to load Tracker state from '{fileName}'.", dialog.FileName);
-
-                        var result = MessageBox.Show(this, "Could not load Tracker using the selected saved state file. Please check you selected the right file and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                        if (result == MessageBoxResult.Cancel)
-                            break;
-                    }
-                }
+                ShowErrorWindow("Could not save tracker state.");
             }
         }
 
-        private async Task SaveState()
+        private async Task SaveStateAsync()
         {
             // If there is a rom, save it to the database
             if (GeneratedRom.IsValid(Rom))
             {
                 await Tracker.SaveAsync(Rom);
-            }
-            // Otherwise open the save file dialog
-            else
-            {
-                var dialog = new SaveFileDialog
-                {
-                    Filter = "Tracker state files (*.json.gz)|*.json.gz|All files (*.*)|*.*",
-                    OverwritePrompt = true
-                };
-
-                while (dialog.ShowDialog(this) == true)
-                {
-                    try
-                    {
-                        using (var stream = new FileStream(dialog.FileName, FileMode.Create, FileAccess.Write, FileShare.None))
-                        using (var gzip = new GZipStream(stream, CompressionLevel.Fastest))
-                        {
-                            await Tracker.SaveAsync(gzip);
-                        }
-
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Failed to saved Tracker state to '{fileName}'.", dialog.FileName);
-                        var result = MessageBox.Show(this, "Could not save Tracker state to the selected file. Please check you have access and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                        if (result == MessageBoxResult.Cancel)
-                            break;
-                    }
-                }
             }
 
             SavedState.Invoke(this, null);
@@ -1028,7 +979,7 @@ namespace Randomizer.App
 
         private async void SaveStateMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            await SaveState();
+            await SaveStateAsync();
         }
 
         private void StatusBarTimer_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -1040,14 +991,7 @@ namespace Randomizer.App
         private void StatusBarTimer_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             // Pause/resume timer on right click
-            if (!Tracker.IsTimerPaused)
-            {
-                Tracker.PauseTimer();
-            }
-            else
-            {
-                Tracker.StartTimer();
-            }
+            Tracker.ToggleTimer();
         }
 
         /// <summary>
@@ -1105,6 +1049,14 @@ namespace Randomizer.App
         {
             MessageBox.Show(this, "There was a problem with loading one or more of the tracker modules.\n" +
                     "Some tracking functionality may be limited.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private void ShowErrorWindow(string baseErrorMessage)
+        {
+            var logFileLocation = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer");
+            MessageBox.Show($"{baseErrorMessage}\n\n" +
+                $"Please try again. If the problem persists, please see the log files in '{logFileLocation}' and " +
+                "post them in Discord or on GitHub at https://github.com/Vivelin/SMZ3Randomizer/issues.", "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void MapMenuItem_Click(object sender, RoutedEventArgs e)

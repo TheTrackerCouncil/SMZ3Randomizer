@@ -1,0 +1,8 @@
+﻿ChoiceYes:
+- Text: Hell yeah!
+  Weight: 0.1
+ChoiceNo:
+- Text: Fuck off.
+  Weight: 0.1
+- Text: Screw you.
+  Weight: 0.1

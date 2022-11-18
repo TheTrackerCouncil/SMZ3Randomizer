@@ -14,13 +14,15 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.App.Patches;
 using Randomizer.App.ViewModels;
+using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Regions;
 
 namespace Randomizer.App
 {
@@ -33,16 +35,20 @@ namespace Randomizer.App
         private readonly Smz3Randomizer _randomizer;
         private readonly Smz3Plandomizer _plandomizer;
         private readonly ILogger<RomGenerator> _logger;
+        private readonly ITrackerStateService _stateService;
 
         public RomGenerator(Smz3Randomizer randomizer,
             Smz3Plandomizer plandomizer,
             RandomizerContext dbContext,
-            ILogger<RomGenerator> logger)
+            ILogger<RomGenerator> logger,
+            ITrackerStateService stateService
+        )
         {
             _randomizer = randomizer;
             _plandomizer = plandomizer;
             _dbContext = dbContext;
             _logger = logger;
+            _stateService = stateService;
         }
 
         /// <summary>
@@ -53,7 +59,7 @@ namespace Randomizer.App
         /// <param name="error">Any error message from generating the rom</param>
         /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public bool GenerateRandomRom(RandomizerOptions options, out string path, out string error, out GeneratedRom rom, int attempts = 5)
+        public async Task<GeneratedRom> GenerateRandomRomAsync(RandomizerOptions options, int attempts = 5)
         {
             var latestError = "";
             var seed = (SeedData)null;
@@ -66,7 +72,6 @@ namespace Randomizer.App
                     seed = GenerateSeed(options);
                     if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
                     {
-                        path = null;
                         latestError = "";
                         validated = false;
                     }
@@ -89,24 +94,29 @@ namespace Randomizer.App
                         "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
                         "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
                 {
-                    path = null;
-                    error = "";
-                    rom = null;
-                    return false;
+                    return null;
                 }
                 else
                 {
-                    error = "";
-                    rom = GenerateRomInternal(seed, options, out path, out error);
-                    return true;
+                    var results = await GenerateRomInternalAsync(seed, options);
+                    if (!string.IsNullOrEmpty(results.MsuError))
+                    {
+                        System.Windows.Forms.MessageBox.Show(results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    return results.Rom;
                 }
             }
             else
             {
-                path = null;
-                error = latestError;
-                rom = null;
-                return false;
+                if (!string.IsNullOrEmpty(latestError))
+                {
+                    System.Windows.Forms.MessageBox.Show(latestError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("There was an unknown error creating the rom. Please check your settings and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                return null;
             }
             
         }
@@ -119,24 +129,29 @@ namespace Randomizer.App
         /// <param name="error">Any error message from generating the rom</param>
         /// <param name="rom">The db entry for the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public bool GeneratePlandoRom(RandomizerOptions options, PlandoConfig plandoConfig, out string path, out string error, out GeneratedRom rom)
+        public async Task<GeneratedRom> GeneratePlandoRomAsync(RandomizerOptions options, PlandoConfig plandoConfig)
         {
             try
             {
                 var seed = GeneratePlandoSeed(options, plandoConfig);
-                rom = GenerateRomInternal(seed, options, out path, out error);
-                return true;
+                var results = await GenerateRomInternalAsync(seed, options);
+
+                if (!string.IsNullOrEmpty(results.MsuError))
+                {
+                    System.Windows.Forms.MessageBox.Show("There was an error assigning the MSU\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                return results.Rom;
             }
             catch (PlandoConfigurationException e)
             {
-                path = null;
-                error = $"The plando configuration is invalid or incomplete.\n{e.Message}\nPlease check the plando configuration file you used and try again.";
-                rom = null;
-                return false;
+                var error = $"The plando configuration is invalid or incomplete.\n{e.Message}\nPlease check the plando configuration file you used and try again.";
+                System.Windows.Forms.MessageBox.Show(error, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
             }
         }
 
-        private GeneratedRom GenerateRomInternal(SeedData seed, RandomizerOptions options, out string path, out string error)
+        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options)
         {
             var bytes = GenerateRomBytes(options, seed);
             var config = seed.Playthrough.Config;
@@ -167,9 +182,13 @@ namespace Randomizer.App
 
             PrepareAutoTrackerFiles(options);
 
-            error = msuError;
-            path = romPath;
-            return SaveSeedToDatabase(options, seed, romPath, spoilerPath);
+            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath);
+
+            return new GenerateRomResults()
+            {
+                Rom = rom,
+                MsuError = msuError
+            };
         }
 
         private string ExportPlandoConfig(SeedData seed)
@@ -246,23 +265,11 @@ namespace Randomizer.App
         /// <returns>The bytes of the rom file</returns>
         protected byte[] GenerateRomBytes(RandomizerOptions options, SeedData seed)
         {
-            var assembly = GetType().Assembly;
-            var smIpsFiles = new List<Stream>();
-            if (options.PatchOptions.CasualSuperMetroidPatches)
-                smIpsFiles.Add(IpsPatch.Respin());
-
             byte[] rom;
-            try
+            using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
+            using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
             {
-                using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
-                using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
-                {
-                    rom = Rom.CombineSMZ3Rom(smRom, z3Rom, smIpsFiles);
-                }
-            }
-            finally
-            {
-                smIpsFiles.ForEach(x => x.Close());
+                rom = Rom.CombineSMZ3Rom(smRom, z3Rom);
             }
 
             using (var ips = IpsPatch.Smz3())
@@ -273,6 +280,54 @@ namespace Randomizer.App
 
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
+
+            if (options.PatchOptions.CasPatches.Respin)
+            {
+                using var patch = IpsPatch.Respin();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.NerfedCharge)
+            {
+                using var patch = IpsPatch.NerfedCharge();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.RefillAtSaveStation)
+            {
+                using var patch = IpsPatch.RefillAtSaveStation();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.FastDoors)
+            {
+                using var patch = IpsPatch.FastDoors();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.FastElevators)
+            {
+                using var patch = IpsPatch.FastElevators();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.AimAnyButton)
+            {
+                using var patch = IpsPatch.AimAnyButton();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.AimAnyButton)
+            {
+                using var patch = IpsPatch.AimAnyButton();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.Speedkeep)
+            {
+                using var patch = IpsPatch.SpeedKeep();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
 
             if (options.PatchOptions.ShipPatch?.FileName != null)
             {
@@ -298,10 +353,9 @@ namespace Randomizer.App
         /// <param name="romPath">The path to the rom file</param>
         /// <param name="spoilerPath">The path to the spoiler file</param>
         /// <returns>The db entry for the generated rom</returns>
-        protected GeneratedRom SaveSeedToDatabase(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
+        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
         {
             var config = seed.Playthrough.Config;
-            var trackerState = seed.Worlds[0].World.CreateTrackerState();
 
             var rom = new GeneratedRom()
             {
@@ -310,11 +364,10 @@ namespace Randomizer.App
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
                 Settings = config.SettingsString ?? Config.ToConfigString(config, true),
-                GeneratorVersion = Smz3Randomizer.Version.Major,
-                TrackerState = trackerState
+                GeneratorVersion = Smz3Randomizer.Version.Major
             };
             _dbContext.GeneratedRoms.Add(rom);
-            _dbContext.SaveChanges();
+            await _stateService.CreateStateAsync(seed.Worlds[0].World, rom);
             return rom;
         }
 
@@ -381,18 +434,10 @@ namespace Randomizer.App
 
             log.AppendLine(Underline("Rewards"));
             log.AppendLine();
-            var skipRewards = new[]
-            {
-                RewardType.Agahnim,
-                RewardType.Kraid,
-                RewardType.Phantoon,
-                RewardType.Draygon,
-                RewardType.Ridley
-            };
             foreach (var region in seed.Worlds[0].World.Regions)
             {
-                if (region is IHasReward rewardRegion && !skipRewards.Contains(rewardRegion.Reward))
-                    log.AppendLine($"{region.Name}: {rewardRegion.Reward}");
+                if (region is IHasReward rewardRegion)
+                    log.AppendLine($"{region.Name}: {rewardRegion.RewardType}");
             }
             log.AppendLine();
 
@@ -511,6 +556,12 @@ namespace Randomizer.App
                     CopyDirectory(subDir.FullName, destSubDir, recursive, overwrite);
                 }
             }
+        }
+
+        private class GenerateRomResults
+        {
+            public GeneratedRom Rom { get; set; }
+            public string MsuError { get; set; }
         }
     }
 }

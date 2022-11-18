@@ -8,9 +8,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks;
 using Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Data;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -30,13 +32,13 @@ namespace Randomizer.SMZ3.Tracking
         {
             services.AddBasicTrackerModules<TrackerModuleFactory>();
             services.AddScoped<TrackerModuleFactory>();
-            services.AddSingleton<IHistoryService, HistoryService>();
             services.AddScoped<TrackerOptionsAccessor>();
-            services.AddTrackerConfigs();
+            services.AddScoped<ITrackerTimerService, TrackerTimerService>();
+            services.AddScoped<IHistoryService, HistoryService>();
             services.AddScoped<IItemService, ItemService>();
-            services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<ICommunicator, TextToSpeechCommunicator>();
             services.AddScoped<IUIService, UIService>();
+            services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<IRandomizerConfigService, RandomizerConfigService>();
             services.AddScoped<Tracker>();
 
@@ -61,77 +63,7 @@ namespace Randomizer.SMZ3.Tracking
             return services;
         }
 
-        private static void AddTrackerConfigs(this IServiceCollection services)
-        {
-            services.AddSingleton<TrackerConfigProvider>();
-            services.AddTransient(serviceProvider =>
-            {
-                var configProvider = serviceProvider.GetRequiredService<TrackerConfigProvider>();
-                return configProvider.GetMapConfig();
-            });
-
-            services.AddScoped<TrackerConfigs>();
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Bosses;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Dungeons;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Items;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Locations;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Regions;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Requests;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Responses;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Rooms;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.Rewards;
-            });
-
-            services.AddScoped(serviceProvider =>
-            {
-                var configs = serviceProvider.GetRequiredService<TrackerConfigs>();
-                return configs.UILayouts;
-            });
-        }
+        
 
         /// <summary>
         /// Enables the specified tracker module.

@@ -5,9 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-
 using Microsoft.Extensions.Logging;
-
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.FileData;
@@ -20,12 +23,18 @@ namespace Randomizer.SMZ3.Generation
         private static readonly Regex s_continousSpace = new(@" +");
         private readonly IWorldAccessor _worldAccessor;
         private readonly ILogger<Smz3Randomizer> _logger;
+        private readonly IMetadataService _metadataService;
+        private readonly GameLinesConfig _gameLines;
+        private readonly IGameHintService _hintService;
 
-        public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, ILogger<Smz3Randomizer> logger)
+        public Smz3Randomizer(IFiller filler, IWorldAccessor worldAccessor, Configs configs, IMetadataService metadataService, IGameHintService gameHintGenerator, ILogger<Smz3Randomizer> logger)
         {
             Filler = filler;
             _worldAccessor = worldAccessor;
             _logger = logger;
+            _gameLines = configs.GameLines;
+            _metadataService = metadataService;
+            _hintService = gameHintGenerator;
         }
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
@@ -111,17 +120,20 @@ namespace Randomizer.SMZ3.Generation
                 return seedData;
             }
 
+            var hints = _hintService.GetInGameHints(worlds[0], worlds, playthrough, config.UniqueHintCount, rng.Next());
+
             /* Make sure RNG is the same when applying patches to the ROM to have consistent RNG for seed identifer etc */
             var patchSeed = rng.Next();
             foreach (var world in worlds)
             {
                 var patchRnd = new Random(patchSeed);
-                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : seedNumber, patchRnd);
-                seedData.Worlds.Add((world, patch.CreatePatch(config)));
+                var patch = new Patcher(world, worlds, seedData.Guid, config.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
+                seedData.Worlds.Add((world, patch.CreatePatch(config, hints)));
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
             _worldAccessor.World = worlds[0];
+            _worldAccessor.Worlds = worlds;
             LastGeneratedSeed = seedData;
             return seedData;
         }

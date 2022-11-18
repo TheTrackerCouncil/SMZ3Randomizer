@@ -10,10 +10,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Regions.Zelda;
 using Randomizer.SMZ3.Tracking.AutoTracking;
-using Randomizer.SMZ3.Tracking.Configuration;
+using Randomizer.Data.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
 {
@@ -22,21 +22,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class AutoTrackerModule : TrackerModule, IDisposable
     {
-        private readonly ILogger<AutoTrackerModule> _logger;
-        private AutoTracker _autoTracker;
+        private readonly AutoTracker _autoTracker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoTrackerModule"/>
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
         /// <param name="autoTracker">The auto tracker to associate with this module</param>
-        public AutoTrackerModule(Tracker tracker, IItemService itemService, ILogger<AutoTrackerModule> logger, AutoTracker autoTracker)
-            : base(tracker, itemService, logger)
+        public AutoTrackerModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger, AutoTracker autoTracker)
+            : base(tracker, itemService, worldService, logger)
         {
-            _logger = logger;
-            autoTracker.Tracker = tracker;
             Tracker.AutoTracker = autoTracker;
             _autoTracker = autoTracker;
 
@@ -66,7 +65,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <summary>
         /// Called when the module is destroyed
         /// </summary>
-        public void Dispose() {
+        public void Dispose()
+        {
             _autoTracker.SetConnector(EmulatorConnectorType.None);
         }
     }

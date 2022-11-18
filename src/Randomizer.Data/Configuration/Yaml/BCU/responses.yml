@@ -1,0 +1,105 @@
+﻿StartedTracking:
+- Text: I have also opened up my drink
+  Weight: 0.1
+- Text: My fate is sealed. I have <break strength='weak'/> no choice.
+  Weight: 0.5
+Misheard:
+- Text: Toggled boots on. <break time='750ms'/> Just kidding, I have no idea what you were trying to say.
+  Weight: 0.05
+TrackedOutOfLogicItem:
+- Text: The racing council will hear about this!
+- Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?
+  Weight: 0.08
+- Text: I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without {2}. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.
+  Weight: 0.08
+TrackedOutOfLogicItemTooManyMissing:
+- Text: The racing council will hear about this!
+- Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without all of the required items. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?
+  Weight: 0.08
+- Text: I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without having all of the required items. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.
+  Weight: 0.08
+- Text: But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.
+ShaktoolAvailable:
+- Text: Hey tracker, track Shaktool Go Mode
+- Text: I wonder how Shaktool is doing
+- Text: I hear its time to dig, underwater and maybe get something.
+- Text: It's time to get seewwious.
+  Weight: 0.5
+- Text: It's time to get serious.
+  Weight: 0.5
+PegWorldAvailable:
+- Text: Can we go to Peg World?
+- Text: I hear Peg World is beautiful this time of year.
+- Text: I think it is time we use our season tickets to Peg World.
+BossDefeated:
+- Text: 'Congratulations on beating off {0}.'
+Muted:
+- Text: Fine. But watch your metrics plummet.
+BeatGame:
+- Text: Congratulations on beating off the game.
+- Text: I will be submitting a log of this playthrough to The Racing Council for their review.
+Chat:
+  StartedGuessingGame:
+  - Text: The GT big key guessing game is now open for guesses. By the way, I'm taking a 50% cut of the souls this time.
+  ClosedGuessingGame:
+  - Text: If you like having a soul then I hope you made your guess because the floor is now closed.
+  ModeratorClosedGuessingGame:
+  - Text: 'If you like having a soul then I hope you made your guess because {0} closed the floor.'
+  ModeratorClosedGuessingGameWhileClosed:
+  - Text: Not this time, {0}.
+  - Text: I'm on to you, {0}.
+  - Text: I can't let you do that, {0}.
+  - Text: You didn't think I'd let you keep doing that, did you, {0}?
+  ModeratorClosedGuessingGameBeforeStarting:
+  - Text: Not this time, {0}.
+  - Text: I'm on to you, {0}.
+  - Text: I can't let you do that, {0}.
+  - Text: You didn't think I'd let you keep doing that, did you, {0}?
+  DeclareGuessingGameWinners:
+  - Text: '{1} must be pretty good.'
+  NobodyWonGuessingGame:
+  - Text: Hey chat, you're all pretty bad.
+  TrackerGuess:
+  TrackerGuessWon:
+  - Text: I guess I get to keep my soul. Not that you'd get it anyway.
+  - Text: I already knew I was pretty good.
+  TrackerGuessOnlyWinner:
+  - Text: I guess I'm the only one who guessed {0}. You're all pretty bad.
+  TrackerGuessFailed:
+  - Text: I might have lost, but you're still not getting my soul.
+  - Text: I guess I lost. I don't have a soul for you to steal though.
+  UserNamePronunciation:
+    pinkkittyrose: Pink Kitty Rose
+    skennedysa: s kennedy
+    the_betus: the underscore beetus
+    megaket: mega ket
+AutoTracker:
+  WhenConnected:
+  - Text: Connection established with the Council
+  NearKraidsAwfulSon:
+  - Text: Oh no. Please avert your eyes to avoid seeing an imminent disaster.
+  - Text: I'm suddenly feeling rather nautious. Is that Kraid's Awful Son I'm sensing?
+  NearShaktool:
+  - Text: Finally, we're nearly to Shaktool. I've been waiting for this since you started playing.
+  - Text: Shaktool content imminent. I can feel the metrics rising.
+  - Text: Its almost time for everyone's favorite diggy boy
+  NearCrocomire:
+  - Text: You currently have {0} out of {1} super missiles. Do you think you have enough?
+    Weight: 0.1
+  - Text: Are you sure that {0} super missiles are enough for Crocomire?
+    Weight: 0.1
+  DiverDown:
+  - Text: Is this underwater?
+  EnteredGTEarly:
+  - Text: The council is on the other line, what do you want me to tell them?
+  - Text: <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I would like to remind {{User}} that purr article 5 section 2, entering Gannon's Tower without all 7 crystals is illegal. Repeated offenses will result in reprimanding by content removal. Thank you.</prosody></voice>
+  FakeFlippers:
+  - Text: The racing council will hear about this.
+  RidleyFace:
+  - Text: <prosody rate='x-slow' pitch='x-high'>Ahhhh</prosody>. Sorry, I'm still working on my Ridley voice
+  - Text: Bet you can't wait to face Ridley. Welcome back to SMZ3 Randomizer.
+  - Text: Oh hi there
+Cheats:
+  EnabledCheats:
+  - Text: The racing council won't be happy about this, but since when have you cared about them?
+    Weight: 0.1

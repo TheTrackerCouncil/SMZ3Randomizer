@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -14,7 +15,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// Enumerates all items that can be tracked.
         /// </summary>
         /// <returns>A collection of items.</returns>
-        IEnumerable<ItemData> AllItems();
+
+        IEnumerable<Item> AllItems();
 
         /// <summary>
         /// Enumarates all currently tracked items.
@@ -22,7 +24,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>
         /// A collection of items that have been tracked at least once.
         /// </returns>
-        IEnumerable<ItemData> TrackedItems();
+        IEnumerable<Item> TrackedItems();
 
         /// <summary>
         /// Finds the item with the specified name.
@@ -35,7 +37,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// name, or <see langword="null"/> if there is no item that has the
         /// specified name.
         /// </returns>
-        ItemData? FindOrDefault(string name);
+        Item? FirstOrDefault(string name);
 
         /// <summary>
         /// Finds an item with the specified item type.
@@ -47,18 +49,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured items with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        ItemData? GetOrDefault(ItemType itemType);
-
-        /// <summary>
-        /// Returns the item data of the item at the specified location.
-        /// </summary>
-        /// <param name="location">The location whose item to check.</param>
-        /// <returns>
-        /// An <see cref="ItemData"/> representing the type of item found at the
-        /// specified location, or <see langword="null"/> if the location has no
-        /// item or if the item at the location is not configured.
-        /// </returns>
-        ItemData? GetOrDefault(Location location);
+        Item? FirstOrDefault(ItemType itemType);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -91,19 +82,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured rewards with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        RewardInfo? GetOrDefault(RewardType rewardType);
-
-        /// <summary>
-        /// Finds an reward with the specified item type.
-        /// </summary>
-        /// <param name="rewardItem">The type of reward to find.</param>
-        /// <returns>
-        /// An <see cref="RewardInfo"/> representing the reward. If there are
-        /// multiple configured rewards with the same type, this method returns
-        /// one at random. If there no configured rewards with the specified type,
-        /// this method returns <see langword="null"/>.
-        /// </returns>
-        RewardInfo? GetOrDefault(RewardItem rewardItem);
+        Reward? FirstOrDefault(RewardType rewardType);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -117,14 +96,54 @@ namespace Randomizer.SMZ3.Tracking.Services
         string GetName(RewardType rewardType);
 
         /// <summary>
-        /// Returns a random name for the specified item including article, e.g.
-        /// "a blue crystal" or "the green pendant".
+        /// Enumerates all rewards that can be tracked.
         /// </summary>
-        /// <param name="rewardItem">The reward of item whose name to get.</param>
+        /// <returns>A collection of rewards.</returns>
+
+        IEnumerable<Reward> AllRewards();
+
+        /// <summary>
+        /// Enumarates all currently tracked rewards.
+        /// </summary>
         /// <returns>
-        /// The name of the reward of item, including "a", "an" or "the" if
-        /// applicable.
+        /// A collection of reward that have been tracked.
         /// </returns>
-        string GetName(RewardItem rewardItem);
+        IEnumerable<Reward> TrackedRewards();
+
+        /// <summary>
+        /// Enumerates all bosses that can be tracked.
+        /// </summary>
+        /// <returns>A collection of bosses.</returns>
+
+        IEnumerable<Boss> AllBosses();
+
+        /// <summary>
+        /// Enumarates all currently tracked bosses.
+        /// </summary>
+        /// <returns>
+        /// A collection of bosses that have been tracked.
+        /// </returns>
+        IEnumerable<Boss> TrackedBosses();
+
+        /// <summary>
+        /// Retrieves the progression containing all of the tracked items, rewards, and bosses
+        /// for determining in logic locations
+        /// </summary>
+        /// <param name="assumeKeys">If it should be assumed that the player has all keys and keycards</param>
+        /// <returns></returns>
+        Progression GetProgression(bool assumeKeys);
+
+        /// <summary>
+        /// Retrieves the progression containing all of the tracked items, rewards, and bosses
+        /// for determining in logic locations
+        /// </summary>
+        /// <param name="area">The area being looked at to see if keys/keycards should be assumed or not</param>
+        /// <returns></returns>
+        Progression GetProgression(IHasLocations area);
+
+        /// <summary>
+        /// Clears cached progression
+        /// </summary>
+        void ResetProgression();
     }
 }

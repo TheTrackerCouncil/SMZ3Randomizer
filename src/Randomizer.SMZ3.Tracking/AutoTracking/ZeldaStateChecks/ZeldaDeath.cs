@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
@@ -45,10 +45,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                     }
                 }
 
-                var death = Items.FindOrDefault("Death");
+                var death = Items.FirstOrDefault("Death");
                 if (death is not null)
                 {
-                    tracker.TrackItem(death);
+                    tracker.TrackItem(death, autoTracked: true);
                     return true;
                 }
             }

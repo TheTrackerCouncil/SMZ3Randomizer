@@ -7,7 +7,7 @@ namespace Randomizer.Shared
     /// </summary>
     public enum RewardType
     {
-        [Description("None")]
+        [Description("Unknown")]
         None,
         [Description("Agahnim")]
         Agahnim,
@@ -19,14 +19,6 @@ namespace Randomizer.Shared
         CrystalBlue,
         [Description("Red Crystal")]
         CrystalRed,
-        [Description("Kraid")]
-        Kraid,
-        [Description("Phantoon")]
-        Phantoon,
-        [Description("Draygon")]
-        Draygon,
-        [Description("Ridley")]
-        Ridley,
         [Description("Blue Pendant")]
         PendantBlue,
     }

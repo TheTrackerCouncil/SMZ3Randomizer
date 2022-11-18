@@ -1,33 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
     <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Text\Scripts\Blind.txt" />
-    <None Remove="Text\Scripts\BlindExtra.txt" />
-    <None Remove="Text\Scripts\Ganon.txt" />
-    <None Remove="Text\Scripts\GanonExtra.txt" />
     <None Remove="Text\Scripts\General.yaml" />
     <None Remove="Text\Scripts\StringTable.yaml" />
     <None Remove="Text\Scripts\TavernMan.txt" />
-    <None Remove="Text\Scripts\TriforceRoom.txt" />
-    <None Remove="Text\Scripts\TriforceRoomExtra.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Text\Scripts\Blind.txt" />
-    <EmbeddedResource Include="Text\Scripts\BlindExtra.txt" />
-    <EmbeddedResource Include="Text\Scripts\GanonExtra.txt" />
-    <EmbeddedResource Include="Text\Scripts\Ganon.txt" />
     <EmbeddedResource Include="Text\Scripts\General.yaml" />
     <EmbeddedResource Include="Text\Scripts\StringTable.yaml" />
     <EmbeddedResource Include="Text\Scripts\TavernMan.txt" />
-    <EmbeddedResource Include="Text\Scripts\TriforceRoomExtra.txt" />
-    <EmbeddedResource Include="Text\Scripts\TriforceRoom.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
     <ProjectReference Include="..\Randomizer.Shared\Randomizer.Shared.csproj" />
   </ItemGroup>
 

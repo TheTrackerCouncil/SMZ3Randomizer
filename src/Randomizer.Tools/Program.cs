@@ -16,6 +16,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NHyphenator;
+using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
@@ -220,7 +222,7 @@ namespace Randomizer.Tools
 
         public static string GenerateStats(Config config, int count = 50)
         {
-            var start = DateTime.Now;
+            /*var start = DateTime.Now;
             var loggerFactory = new LoggerFactory();
             var worldAccessor = new WorldAccessor();
             var filler = new StandardFiller(new Logger<StandardFiller>(loggerFactory));
@@ -299,7 +301,8 @@ namespace Randomizer.Tools
             sb.AppendLine("Item with least unique locations: " + leastCommon + " with " + leastCount + " unique locations");
             sb.AppendLine("Run time: " + ts.TotalSeconds + "s");
             sb.AppendLine();
-            return sb.ToString();
+            return sb.ToString();*/
+            return "";
         }
 
         private class StatsDetails

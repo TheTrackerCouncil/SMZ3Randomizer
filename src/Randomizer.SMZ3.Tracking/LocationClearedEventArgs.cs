@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking
 {
