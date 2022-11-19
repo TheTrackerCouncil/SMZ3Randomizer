@@ -91,7 +91,7 @@ namespace Randomizer.App
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();
             services.AddSingleton<ITrackerStateService, TrackerStateService>();
-            services.AddSingleton<MultiplayerClientService>();
+            services.AddMultiplayerServices();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();

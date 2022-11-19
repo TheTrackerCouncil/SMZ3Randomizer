@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Randomizer.App.Controls"
+        xmlns:local="clr-namespace:Randomizer.App"
+        xmlns:shared="clr-namespace:Randomizer.Shared.Multiplayer;assembly=Randomizer.Shared"
         mc:Ignorable="d"
         Title="MultiworldWindow"
         ResizeMode="NoResize"
@@ -25,7 +27,7 @@
         <controls:LabeledControl Text="{Binding UrlLabelText}">
           <TextBox
             Name="ServerUrlTextBox"
-            Text="http://192.168.50.100:3000"
+            Text="http://192.168.50.100:5000"
             IsEnabled="{Binding CanEnterInput}"
             Margin="5 0 0 0" />
         </controls:LabeledControl>
@@ -37,12 +39,12 @@
                    Margin="5 0 0 0 " />
         </controls:LabeledControl>
         <controls:LabeledControl Text="Mode:">
-          <TextBox
-            Name="GameMode"
-            Text=""
-            Margin="5 0 0 0 "
-            IsEnabled="{Binding CanEnterGameMode}"
-          ></TextBox>
+          <ComboBox SelectedItem="{Binding MultiplayerGameType}"
+                    ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:MultiplayerGameType}}}"
+                    HorizontalAlignment="Left"
+                    MinWidth="75"
+                    Margin="5 0 0 0 "
+                    IsEnabled="{Binding IsCreatingGame}" />
         </controls:LabeledControl>
       </StackPanel>
     </Grid>

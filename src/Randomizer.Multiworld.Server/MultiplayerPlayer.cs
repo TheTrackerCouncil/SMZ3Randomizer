@@ -1,5 +1,4 @@
-﻿using Randomizer.Data.Multiplayer;
-using Randomizer.Data.Options;
+﻿using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
 

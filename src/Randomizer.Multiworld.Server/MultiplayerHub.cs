@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Randomizer.Data.Multiplayer;
+using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server
 {
@@ -22,7 +22,7 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            var results = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, out var error);
+            var results = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, request.GameType, out var error);
 
             if (results == null)
             {
@@ -44,6 +44,7 @@ namespace Randomizer.Multiplayer.Server
                 PlayerKey = results.Value.Player.Key,
                 AllPlayers = results.Value.Game.PlayerStates,
                 GameUrl = $"{_serverUrl}?game={results.Value.Game.Guid}",
+                GameStatus = results.Value.Game.Status
             });
         }
 
@@ -81,6 +82,8 @@ namespace Randomizer.Multiplayer.Server
                 PlayerKey = player.Key,
                 AllPlayers = game.PlayerStates,
                 GameUrl = $"{_serverUrl}?game={game.Guid}",
+                GameStatus = game.Status,
+                GameType = game.Type,
             });
 
             await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerJoined", new PlayerJoinedResponse()
@@ -88,7 +91,8 @@ namespace Randomizer.Multiplayer.Server
                 IsSuccessful = true,
                 PlayerGuid = player.Guid,
                 PlayerName = player.State.PlayerName,
-                AllPlayers = game.PlayerStates
+                AllPlayers = game.PlayerStates,
+                GameStatus = game.Status
             });
         }
 
@@ -127,6 +131,8 @@ namespace Randomizer.Multiplayer.Server
                 PlayerKey = player.Key,
                 AllPlayers = game.PlayerStates,
                 GameUrl = $"{_serverUrl}?game={game.Guid}",
+                GameStatus = game.Status,
+                GameType = game.Type,
             });
 
             await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerRejoined", new PlayerJoinedResponse()
@@ -134,7 +140,8 @@ namespace Randomizer.Multiplayer.Server
                 IsSuccessful = true,
                 PlayerGuid = player.Guid,
                 PlayerName = player.State.PlayerName,
-                AllPlayers = game.PlayerStates
+                AllPlayers = game.PlayerStates,
+                GameStatus = game.Status
             });
         }
 
@@ -163,7 +170,8 @@ namespace Randomizer.Multiplayer.Server
             await Clients.Groups(request.GameGuid).SendAsync("PlayerSync", new PlayerSyncResponse()
             {
                 IsSuccessful = true,
-                PlayerState = player.State
+                PlayerState = player.State,
+                GameStatus = game.Status,
             });
         }
 
@@ -183,11 +191,12 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            var playerStates = game.StartGame(request.PlayerGuids, request.TrackerState, out var error);
+            var playerStates = game.StartGame(request.PlayerStates, out var error);
             await Clients.Group(request.GameGuid).SendAsync("StartGame", new StartGameResponse()
             {
                 IsSuccessful = true,
-                Players = playerStates
+                Players = playerStates,
+                GameStatus = game.Status
             });
         }
 
@@ -229,7 +238,8 @@ namespace Randomizer.Multiplayer.Server
             {
                 IsSuccessful = true,
                 ForfeitPlayerGuid = request.ForfeitPlayerGuid,
-                AllPlayers = game.PlayerStates
+                AllPlayers = game.PlayerStates,
+                GameStatus = game.Status,
             });
 
             await Clients.GroupExcept(request.GameGuid, player.ConnectionId).SendAsync("PlayerForfeited", new PlayerForfeitedResponse()
@@ -237,6 +247,7 @@ namespace Randomizer.Multiplayer.Server
                 IsSuccessful = true,
                 PlayerGuid = player.Guid,
                 PlayerName = player.State.PlayerName,
+                GameStatus = game.Status,
                 AllPlayers = game.PlayerStates
             });
         }
@@ -255,7 +266,8 @@ namespace Randomizer.Multiplayer.Server
             await Clients.Group(player.Game.Guid).SendAsync("PlayerSync", new PlayerSyncResponse()
             {
                 IsSuccessful = true,
-                PlayerState = player.State
+                PlayerState = player.State,
+                GameStatus = player.Game.Status,
             });
         }
     }

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using Randomizer.Data.Multiplayer;
+using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.App.ViewModels
 {
@@ -10,6 +10,8 @@ namespace Randomizer.App.ViewModels
     {
         private bool _isConnected;
         private string _gameUrl = "";
+        private MultiplayerGameStatus? _gameStatus;
+        private bool _allPlayersSubmittedConfigs;
 
         public MultiplayerStatusViewModel()
         {
@@ -48,6 +50,7 @@ namespace Randomizer.App.ViewModels
                 OnPropertyChanged(nameof(IsConnected));
                 OnPropertyChanged(nameof(ConnectionStatus));
                 OnPropertyChanged(nameof(ReconnectButtonVisibility));
+                OnPropertyChanged(nameof(CanStartGame));
                 Players.ForEach(x => x.IsConnectedToServer = value);
             }
         }
@@ -65,20 +68,52 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public MultiplayerGameStatus? GameStatus
+        {
+            get
+            {
+                return _gameStatus;
+            }
+            set
+            {
+                _gameStatus = value;
+                OnPropertyChanged(nameof(GameStatus));
+            }
+        }
+
+        public bool AllPlayersSubmittedConfigs
+        {
+            get
+            {
+                return _allPlayersSubmittedConfigs;
+            }
+            set
+            {
+                _allPlayersSubmittedConfigs = value;
+                OnPropertyChanged(nameof(AllPlayersSubmittedConfigs));
+                OnPropertyChanged(nameof(CanStartGame));
+            }
+        }
+
         public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
-
         public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
 
+        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started;
+        public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
+        public MultiplayerPlayerState? LocalPlayer { get; private set; }
         public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
 
         public void UpdateList(List<MultiplayerPlayerState> players, MultiplayerPlayerState? localPlayer)
         {
+            LocalPlayer = localPlayer;
             Players = players.Select(x => new MultiplayerPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected)).ToList();
             OnPropertyChanged();
         }
 
         public void UpdatePlayer(MultiplayerPlayerState player, MultiplayerPlayerState? localPlayer)
         {
+            LocalPlayer = localPlayer;
             var playerViewModel = Players.FirstOrDefault(x => x.PlayerGuid == player.Guid);
             if (playerViewModel != null)
                 playerViewModel.Update(player);

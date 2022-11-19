@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
 using Randomizer.Multiplayer.Client;
+using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.App.Windows
 {
@@ -54,7 +55,7 @@ namespace Randomizer.App.Windows
             if (IsCreatingGame)
             {
                 _logger.LogInformation("Connecting");
-                await _multiplayerClientService.CreateGame(PlayerNameTextBox.Text);
+                await _multiplayerClientService.CreateGame(PlayerNameTextBox.Text, MultiplayerGameType);
             }
             else
             {
@@ -96,6 +97,7 @@ namespace Randomizer.App.Windows
         public bool CanEnterGameMode => !IsConnecting && IsCreatingGame;
         public bool CanPressButton => PlayerNameTextBox.Text.Length > 0;
         public string StatusText => IsConnecting ? "Connecting..." : "";
+        public MultiplayerGameType MultiplayerGameType { get; set; }
 
         public string ServerUrl => ServerUrlTextBox.Text.Contains('?')
             ? ServerUrlTextBox.Text[..ServerUrlTextBox.Text.IndexOf("?", StringComparison.Ordinal)]

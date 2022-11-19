@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
-using Randomizer.Data.Multiplayer;
+using Randomizer.Data.Options;
+using Randomizer.Shared.Multiplayer;
 using Randomizer.Multiplayer.Client;
 
 namespace Randomizer.App.Windows
@@ -17,11 +19,13 @@ namespace Randomizer.App.Windows
     public partial class MultiplayerStatusWindow : Window
     {
         private readonly MultiplayerClientService _multiplayerClientService;
+        private readonly MultiplayerGameService _multiplayerGameService;
         private bool _openedConfig;
 
-        public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService)
+        public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService, MultiplayerGameService multiplayerGameService)
         {
             _multiplayerClientService = multiplayerClientService;
+            _multiplayerGameService = multiplayerGameService;
             DataContext = Model;
             InitializeComponent();
             UpdatePlayerList();
@@ -33,6 +37,8 @@ namespace Randomizer.App.Windows
 
             Model.IsConnected = true;
             Model.GameUrl = _multiplayerClientService.GameUrl ?? "";
+
+            _multiplayerGameService.UpdateGameType(_multiplayerClientService.GameType ?? MultiplayerGameType.Multiworld);
 
             _multiplayerClientService.Error += MultiplayerClientServiceError;
             _multiplayerClientService.GameRejoined += MultiplayerClientServiceOnGameRejoined;
@@ -54,6 +60,7 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceOnPlayerForfeit()
         {
+            Model.GameStatus = _multiplayerClientService.GameStatus;
             UpdatePlayerList();
         }
 
@@ -64,8 +71,9 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceOnGameRejoined()
         {
-            UpdatePlayerList();
             Model.IsConnected = true;
+            Model.GameStatus = _multiplayerClientService.GameStatus;
+            UpdatePlayerList();
         }
 
         private void MultiplayerClientServiceOnConnected()
@@ -125,7 +133,9 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState? previousState, MultiplayerPlayerState state)
         {
+            Model.GameStatus = _multiplayerClientService.GameStatus;
             Model.UpdatePlayer(state, _multiplayerClientService.LocalPlayer);
+            CheckPlayerConfigs();
         }
 
         public MultiplayerStatusViewModel Model { get; set; } = new();
@@ -133,14 +143,27 @@ namespace Randomizer.App.Windows
 
         protected void UpdatePlayerList()
         {
+            Model.GameStatus = _multiplayerClientService.GameStatus;
             Model.UpdateList(_multiplayerClientService.Players ?? new List<MultiplayerPlayerState>(), _multiplayerClientService.LocalPlayer);
+            CheckPlayerConfigs();
+        }
+
+        protected void CheckPlayerConfigs()
+        {
+            if (_multiplayerClientService.LocalPlayer?.IsAdmin == true)
+            {
+                Model.AllPlayersSubmittedConfigs =
+                    _multiplayerClientService.Players?.All(x => x.Config != null) ?? false;
+            }
         }
 
         protected void ShowGenerateRomWindow()
         {
             if (ParentPanel.ShowGenerateRomWindow(null, true) != true) return;
-            Task.Run(async () => await _multiplayerClientService.SubmitConfig(ParentPanel.Options.ToConfig()));
-
+            var config = ParentPanel.Options.ToConfig();
+            config.PlayerGuid = _multiplayerClientService.CurrentPlayerGuid!;
+            config.PlayerName = _multiplayerClientService.LocalPlayer!.PlayerName;
+            Task.Run(async () => await _multiplayerClientService.SubmitConfig(Config.ToConfigString(config)));
         }
 
         private void UpdateConfigButton_Click(object sender, RoutedEventArgs e)
@@ -150,7 +173,12 @@ namespace Randomizer.App.Windows
 
         private void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowGenerateRomWindow();
+            if (_multiplayerClientService.Players == null)
+            {
+                MessageBox.Show(this, "No players found to start the game" , "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            var states = _multiplayerGameService.CreateWorld(_multiplayerClientService.Players!);
         }
 
         private void OpenTrackerButton_Click(object sender, RoutedEventArgs e)

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Randomizer.Data.Multiplayer;
-using Randomizer.Data.Options;
+using Randomizer.Shared.Multiplayer;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Multiplayer.Server;
@@ -9,17 +8,18 @@ public class MultiplayerGame
 {
     private static readonly ConcurrentDictionary<string, MultiplayerGame> s_games = new();
 
-    private static readonly ConcurrentDictionary<string, MultiplayerPlayer> _playerConnections = new();
+    private static readonly ConcurrentDictionary<string, MultiplayerPlayer> s_playerConnections = new();
 
     private readonly ConcurrentDictionary<string, MultiplayerPlayer> _players = new();
 
-    public MultiplayerGame(string guid)
+    public MultiplayerGame(string guid, MultiplayerGameType type)
     {
         Guid = guid;
         LastMessage = DateTime.Now;
+        Type = type;
     }
 
-    public static (MultiplayerGame Game, MultiplayerPlayer Player)? CreateNewGame(string playerName, string playerConnectionId, out string? error)
+    public static (MultiplayerGame Game, MultiplayerPlayer Player)? CreateNewGame(string playerName, string playerConnectionId, MultiplayerGameType gameType, out string? error)
     {
         string guid;
         do
@@ -27,7 +27,7 @@ public class MultiplayerGame
             guid = System.Guid.NewGuid().ToString();
         } while (s_games.ContainsKey(guid));
 
-        var game = new MultiplayerGame(guid);
+        var game = new MultiplayerGame(guid, gameType);
 
         if (!s_games.TryAdd(guid, game))
         {
@@ -44,7 +44,7 @@ public class MultiplayerGame
 
         game.AdminPlayer ??= player;
         game._players[playerGuid] = player;
-        _playerConnections[playerConnectionId] = player;
+        s_playerConnections[playerConnectionId] = player;
         error = null;
         return (game, player);
     }
@@ -60,9 +60,11 @@ public class MultiplayerGame
 
     public MultiplayerPlayer? AdminPlayer { get; set; }
 
-    public bool HasGameStarted { get; set; }
+    public bool HasGameStarted => Status != MultiplayerGameStatus.Created;
 
     public MultiplayerGameStatus Status { get; private set; }
+
+    public MultiplayerGameType Type { get; init; }
 
     public MultiplayerPlayer? JoinGame(string playerName, string playerConnectionId, out string? error)
     {
@@ -82,14 +84,14 @@ public class MultiplayerGame
 
         var player = new MultiplayerPlayer(this, guid, key, playerName, playerConnectionId);
         _players[guid] = player;
-        _playerConnections[playerConnectionId] = player;
+        s_playerConnections[playerConnectionId] = player;
         error = null;
         return player;
     }
 
     public void RejoinGame(MultiplayerPlayer player, string playerConnectionId)
     {
-        _playerConnections[playerConnectionId] = player;
+        s_playerConnections[playerConnectionId] = player;
         player.ConnectionId = playerConnectionId;
         player.State.IsConnected = true;
         UpdatePlayerStatus(player);
@@ -111,7 +113,7 @@ public class MultiplayerGame
 
         if (!HasGameStarted)
         {
-            _playerConnections.TryRemove(player.ConnectionId, out _);
+            s_playerConnections.TryRemove(player.ConnectionId, out _);
             _players.TryRemove(player.Guid, out _);
         }
         else
@@ -120,27 +122,28 @@ public class MultiplayerGame
         }
     }
 
-    public List<MultiplayerPlayerState>? StartGame(List<string> players, TrackerState trackerState, out string? error)
+    public List<MultiplayerPlayerState>? StartGame(List<MultiplayerPlayerState> players, out string? error)
     {
         error = "";
+
+        if (players.Count != _players.Count)
+        {
+            error = "Provided player states does not match game players";
+            return null;
+        }
+
+        if (!players.All(x => _players.ContainsKey(x.Guid)))
+        {
+            error = "Provided player states does not match game players";
+            return null;
+        }
+
+        foreach (var player in _players.Values)
+        {
+            player.State = players.Single(x => x.Guid == player.Guid);
+        }
         var playerStates = new List<MultiplayerPlayerState>();
         Status = MultiplayerGameStatus.Started;
-
-        /*for (var i = 0; i < players.Count; i++)
-        {
-            var playerGuid = players[i];
-            var player = _players[playerGuid];
-            player.Id = i;
-            var playerState = new MultiplayerPlayerState(i, playerGuid,
-                trackerState.LocationStates.Where(x => x.WorldId == player.Id),
-                trackerState.ItemStates.Where(x => x.WorldId == player.Id),
-                trackerState.BossStates.Where(x => x.WorldId == player.Id),
-                trackerState.DungeonStates.Where(x => x.WorldId == player.Id)
-            );
-            playerStates.Add(playerState);
-            player.State = playerState;
-        }*/
-
         return playerStates;
     }
 
@@ -152,24 +155,16 @@ public class MultiplayerGame
         return player;
     }
 
-    public Dictionary<string, Config?> UpdatePlayerConfig(MultiplayerPlayer player, Config config)
+    public Dictionary<string, string?> UpdatePlayerConfig(MultiplayerPlayer player, string config)
     {
         player.State.Config = config;
         UpdatePlayerStatus(player);
-        var worldId = 0;
-        foreach (var currentPlayer in _players.Values.Where(x => x.State.Config != null).OrderBy(x => x != AdminPlayer))
-        {
-            currentPlayer.State.WorldId = worldId;
-            currentPlayer.State.Config!.Id = worldId;
-            currentPlayer.State.Config!.PlayerGuid = currentPlayer.Guid;
-            worldId++;
-        }
         return PlayerConfigs;
     }
 
     public static MultiplayerPlayer? PlayerDisconnected(string connectionId)
     {
-        if (_playerConnections.Remove(connectionId, out var player))
+        if (s_playerConnections.Remove(connectionId, out var player))
         {
             player.State.IsConnected = false;
             player.Game.UpdatePlayerStatus(player);
@@ -179,7 +174,7 @@ public class MultiplayerGame
         return null;
     }
 
-    public Dictionary<string, Config?> PlayerConfigs => _players.Values.ToDictionary(x => x.Guid, x => x.State.Config);
+    public Dictionary<string, string?> PlayerConfigs => _players.Values.ToDictionary(x => x.Guid, x => x.State.Config);
 
     public Dictionary<string, string> PlayerNames => _players.Values.ToDictionary(x => x.Guid, x => x.State.PlayerName);
 

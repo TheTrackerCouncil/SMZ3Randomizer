@@ -84,10 +84,11 @@
                     HorizontalAlignment="Right">
           <Button x:Name="StartGameButton"
                   Click="StartGameButton_Click"
-                  IsEnabled="{Binding IsConnected}"
+                  IsEnabled="{Binding CanStartGame}"
+                  Visibility="{Binding StartButtonVisiblity}"
                   ToolTip="All players must have submitted their settings to start the game.">_Start game</Button>
           <Button x:Name="OpenTrackerButton"
-                  IsEnabled="{Binding IsConnected}"
+                  IsEnabled="{Binding PlayButtonsEnabled}"
                   Click="OpenTrackerButton_Click">_Open tracker</Button>
         </StackPanel>
       </Grid>

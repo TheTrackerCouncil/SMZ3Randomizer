@@ -294,5 +294,15 @@ namespace Randomizer.Data.Options
             }
             return JsonSerializer.Serialize(configStrings, s_options);
         }
+
+        /// <summary>
+        /// Takes a config file and generates it into a compressed config string
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static string ToConfigString(Config config)
+        {
+            return ToConfigString(new[] { config } );
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using Randomizer.Data.Multiplayer;
+using Randomizer.Shared.Multiplayer;
 using Randomizer.Shared;
 
 namespace Randomizer.App.ViewModels
