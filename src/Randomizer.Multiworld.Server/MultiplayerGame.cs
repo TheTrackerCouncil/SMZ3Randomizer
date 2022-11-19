@@ -162,6 +162,11 @@ public class MultiplayerGame
         return PlayerConfigs;
     }
 
+    public void UpdateGameStatus(MultiplayerGameStatus status)
+    {
+        Status = status;
+    }
+
     public static MultiplayerPlayer? PlayerDisconnected(string connectionId)
     {
         if (s_playerConnections.Remove(connectionId, out var player))

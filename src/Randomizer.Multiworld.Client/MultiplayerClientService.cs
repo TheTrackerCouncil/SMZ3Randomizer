@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared.Multiplayer;
-using Randomizer.Multiplayer.Client.EventHandlers;
-using ErrorEventHandler = Randomizer.Multiplayer.Client.EventHandlers.ErrorEventHandler;
 
 namespace Randomizer.Multiplayer.Client
 {
@@ -17,17 +15,16 @@ namespace Randomizer.Multiplayer.Client
             _logger = logger;
         }
 
-        public event ConnectedEventHandler? Connected;
-        public event GameCreatedEventHandler? GameCreated;
-        public event GameJoinedEventHandler? GameJoined;
-        public event GameRejoinedEventHandler? GameRejoined;
-        public event ForfeitGameEventHandler? GameForfeit;
-        public event ErrorEventHandler? Error;
-        public event PlayerJoinedEventHandler? PlayerJoined;
-        public event PlayerRejoinedEventHandler? PlayerRejoined;
-        public event PlayerForfeitEventHandler? PlayerForfeit;
-        public event PlayerSyncEventHandler? PlayerSync;
-        public event ConnectionClosedEventHandler? ConnectionClosed;
+        public event MultiplayerErrorEventHandler? Error;
+        public event MultiplayerGenericEventHandler? Connected;
+        public event MultiplayerErrorEventHandler? ConnectionClosed;
+        public event MultiplayerGenericEventHandler? GameCreated;
+        public event MultiplayerGenericEventHandler? GameJoined;
+        public event MultiplayerGenericEventHandler? GameRejoined;
+        public event MultiplayerGenericEventHandler? GameForfeit;
+        public event MultiplayerGenericEventHandler? PlayerListUpdated;
+        public event MultiplayerGenericEventHandler? GameStatusUpdated;
+        public event PlayerUpdatedEventHandler? PlayerUpdated;
 
         public string? CurrentGameGuid { get; private set; }
         public string? CurrentPlayerGuid { get; private set; }
@@ -75,6 +72,8 @@ namespace Randomizer.Multiplayer.Client
 
             _connection.On<PlayerSyncResponse>("PlayerSync", OnPlayerSync);
 
+            _connection.On<UpdateGameStatusResponse>("UpdateGameStatus", OnUpdateGameStatus);
+
             _connection.Reconnected += ConnectionOnReconnected;
 
             _connection.Reconnecting += ConnectionOnReconnecting;
@@ -101,6 +100,20 @@ namespace Randomizer.Multiplayer.Client
             {
                 _logger.LogError("Unable to connect to {Url} - Connection state: {State}", url, _connection.State);
                 Error?.Invoke($"Unable to connect to {url}");
+            }
+        }
+
+        private void OnUpdateGameStatus(UpdateGameStatusResponse response)
+        {
+            if (response.IsValid)
+            {
+                GameStatus = response.GameStatus;
+                GameStatusUpdated?.Invoke();
+            }
+            else
+            {
+                _logger.LogError("Unable to update game status: {Error}", response.Error);
+                Error?.Invoke($"Unable to update game status: {response.Error}");
             }
         }
 
@@ -144,7 +157,7 @@ namespace Randomizer.Multiplayer.Client
         private Task ConnectionOnClosed(Exception? arg)
         {
             _logger.LogWarning("Connection closed");
-            ConnectionClosed?.Invoke(arg);
+            ConnectionClosed?.Invoke("Connection closed", arg);
             return Task.CompletedTask;
         }
 
@@ -201,6 +214,12 @@ namespace Randomizer.Multiplayer.Client
                 new ForfeitGameRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", playerGuid ?? ""));
         }
 
+        public async Task UpdateGameStatus(MultiplayerGameStatus gameStatus)
+        {
+            await MakeRequest("UpdateGameStatus",
+                new UpdateGameStatusRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", gameStatus));
+        }
+
         public async Task StartGame(List<MultiplayerPlayerState> playerStates)
         {
             if (_connection?.State != HubConnectionState.Connected)
@@ -246,13 +265,13 @@ namespace Randomizer.Multiplayer.Client
             {
                 _logger.LogInformation("Game Created | Game Id: {GameGuid} | Player Guid: {PlayergGuid} | Player Key: {PlayerKey}", response.GameGuid, response.PlayerGuid, response.PlayerKey);
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                GameCreated?.Invoke(response.GameGuid!, response.PlayerGuid!, response.PlayerKey!);
                 CurrentGameGuid = response.GameGuid;
                 CurrentPlayerGuid = response.PlayerGuid;
                 CurrentPlayerKey = response.PlayerKey;
-                Players = response.AllPlayers;
                 GameUrl = response.GameUrl;
-                GameStatus = response.GameStatus;
+                GameCreated?.Invoke();
+                UpdateStatus(response.GameStatus);
+                UpdatePlayerList(response.AllPlayers);
             }
             else
             {
@@ -269,11 +288,11 @@ namespace Randomizer.Multiplayer.Client
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
                 CurrentPlayerGuid = response.PlayerGuid;
                 CurrentPlayerKey = response.PlayerKey;
-                Players = response.AllPlayers;
                 GameUrl = response.GameUrl;
-                GameStatus = response.GameStatus;
                 GameType = response.GameType;
-                GameJoined?.Invoke(response.PlayerGuid!, response.PlayerKey!);
+                GameJoined?.Invoke();
+                UpdateStatus(response.GameStatus);
+                UpdatePlayerList(response.AllPlayers);
             }
             else
             {
@@ -290,11 +309,11 @@ namespace Randomizer.Multiplayer.Client
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
                 CurrentPlayerGuid = response.PlayerGuid;
                 CurrentPlayerKey = response.PlayerKey;
-                Players = response.AllPlayers;
                 GameUrl = response.GameUrl;
-                GameStatus = response.GameStatus;
                 GameType = response.GameType;
                 GameRejoined?.Invoke();
+                UpdateStatus(response.GameStatus);
+                UpdatePlayerList(response.AllPlayers);
             }
             else
             {
@@ -309,9 +328,8 @@ namespace Randomizer.Multiplayer.Client
             {
                 _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                Players = response.AllPlayers;
-                GameStatus = response.GameStatus;
-                PlayerJoined?.Invoke();
+                UpdateStatus(response.GameStatus);
+                UpdatePlayerList(response.AllPlayers);
             }
             else
             {
@@ -325,9 +343,8 @@ namespace Randomizer.Multiplayer.Client
             {
                 _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                Players = response.AllPlayers;
-                GameStatus = response.GameStatus;
-                PlayerRejoined?.Invoke();
+                UpdateStatus(response.GameStatus);
+                UpdatePlayerList(response.AllPlayers);
             }
             else
             {
@@ -341,9 +358,8 @@ namespace Randomizer.Multiplayer.Client
             {
                 _logger.LogInformation("Player forfeit | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
                 _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                Players = response.AllPlayers;
-                GameStatus = response.GameStatus;
-                PlayerForfeit?.Invoke();
+                UpdateStatus(response.GameStatus);
+                UpdatePlayerList(response.AllPlayers);
             }
             else
             {
@@ -356,8 +372,8 @@ namespace Randomizer.Multiplayer.Client
             if (response.IsValid)
             {
                 _logger.LogInformation("Forfeit game");
-                Players = response.AllPlayers;
-                GameStatus = response.GameStatus;
+                UpdateStatus(response.GameStatus);
+                UpdatePlayerList(response.AllPlayers);
                 GameForfeit?.Invoke();
             }
         }
@@ -383,8 +399,8 @@ namespace Randomizer.Multiplayer.Client
                 var previous = Players?.FirstOrDefault(x => x.Guid == response.PlayerState.Guid);
                 if (previous != null) Players?.Remove(previous);
                 Players?.Add(response.PlayerState);
-                PlayerSync?.Invoke(previous, response.PlayerState!);
-                GameStatus = response.GameStatus;
+                UpdateStatus(response.GameStatus);
+                PlayerUpdated?.Invoke(response.PlayerState);
             }
             else
             {
@@ -405,6 +421,19 @@ namespace Randomizer.Multiplayer.Client
                 _logger.LogError(e, "Connection to server lost");
                 Error?.Invoke($"Connection to server lost");
             }
+        }
+
+        private void UpdatePlayerList(List<MultiplayerPlayerState>? players)
+        {
+            Players = players;
+            PlayerListUpdated?.Invoke();
+        }
+
+        private void UpdateStatus(MultiplayerGameStatus gameStatus)
+        {
+            if (gameStatus == GameStatus) return;
+            GameStatus = gameStatus;
+            GameStatusUpdated?.Invoke();
         }
     }
 }

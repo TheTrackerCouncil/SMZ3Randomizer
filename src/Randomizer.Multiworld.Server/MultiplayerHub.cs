@@ -252,6 +252,28 @@ namespace Randomizer.Multiplayer.Server
             });
         }
 
+        public async Task UpdateGameStatus(UpdateGameStatusRequest request)
+        {
+            var game = MultiplayerGame.LoadGame(request.GameGuid);
+            if (game == null)
+            {
+                await SendErrorResponse<UpdateGameStatusResponse>("UpdateGameStatus", "Unable to find game");
+                return;
+            }
+
+            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true, true);
+            if (player == null)
+            {
+                await SendErrorResponse<UpdateGameStatusResponse>("UpdateGameStatus", "Unable to find player");
+                return;
+            }
+
+            game.UpdateGameStatus(request.GameStatus);
+
+            await Clients.Group(game.Guid).SendAsync("UpdateGameStatus",
+                new UpdateGameStatusResponse { IsSuccessful = true, GameStatus = game.Status });
+        }
+
         private async Task SendErrorResponse<T>(string method, string error) where T : MultiplayerResponse, new()
         {
             var response = new T() { IsSuccessful = false, Error = error };

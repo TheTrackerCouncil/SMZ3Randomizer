@@ -26,7 +26,7 @@ namespace Randomizer.App.Windows
             _logger.LogInformation("Opening window");
             _multiplayerClientService.Connected += MultiplayerClientServiceConnected;
             _multiplayerClientService.Error += MultiplayerClientServiceError;
-            _multiplayerClientService.GameCreated += MultiplayerClientServiceGameCreated;
+            _multiplayerClientService.GameCreated += MultiplayerClientServiceGameJoined;
             _multiplayerClientService.GameJoined += MultiplayerClientServiceGameJoined;
         }
 
@@ -64,17 +64,7 @@ namespace Randomizer.App.Windows
             }
         }
 
-        private void MultiplayerClientServiceGameCreated(string gameGuid, string playerGuid, string playerKey)
-        {
-            SaveAndClose(gameGuid, playerGuid, playerKey);
-        }
-
-        private void MultiplayerClientServiceGameJoined(string playerGuid, string playerKey)
-        {
-            SaveAndClose(_multiplayerClientService.CurrentGameGuid!, playerGuid, playerKey);
-        }
-
-        private void SaveAndClose(string gameGuid, string playerGuid, string playerKey)
+        private void MultiplayerClientServiceGameJoined()
         {
             DialogResult = true;
             Close();
@@ -86,7 +76,7 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.Connected -= MultiplayerClientServiceConnected;
             _multiplayerClientService.Error -= MultiplayerClientServiceError;
             _multiplayerClientService.GameJoined -= MultiplayerClientServiceGameJoined;
-            _multiplayerClientService.GameCreated -= MultiplayerClientServiceGameCreated;
+            _multiplayerClientService.GameCreated -= MultiplayerClientServiceGameJoined;
         }
 
         public bool IsCreatingGame { get; set; }

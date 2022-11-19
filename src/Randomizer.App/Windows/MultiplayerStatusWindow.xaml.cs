@@ -20,7 +20,6 @@ namespace Randomizer.App.Windows
     {
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly MultiplayerGameService _multiplayerGameService;
-        private bool _openedConfig;
 
         public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService, MultiplayerGameService multiplayerGameService)
         {
@@ -37,18 +36,25 @@ namespace Randomizer.App.Windows
 
             Model.IsConnected = true;
             Model.GameUrl = _multiplayerClientService.GameUrl ?? "";
+            Model.GameStatus = _multiplayerClientService.GameStatus ?? MultiplayerGameStatus.Created;
+            Model.UpdateList(_multiplayerClientService.Players ?? new List<MultiplayerPlayerState>(),
+                _multiplayerClientService.LocalPlayer);
 
             _multiplayerGameService.UpdateGameType(_multiplayerClientService.GameType ?? MultiplayerGameType.Multiworld);
 
             _multiplayerClientService.Error += MultiplayerClientServiceError;
             _multiplayerClientService.GameRejoined += MultiplayerClientServiceOnGameRejoined;
             _multiplayerClientService.GameForfeit += MultiplayerClientServiceOnGameForfeit;
-            _multiplayerClientService.PlayerJoined += MultiplayerClientServiceOnPlayerJoined;
-            _multiplayerClientService.PlayerRejoined += MultiplayerClientServiceOnPlayerRejoined;
-            _multiplayerClientService.PlayerSync += MultiplayerClientServiceOnPlayerSync;
+            _multiplayerClientService.PlayerListUpdated += MultiplayerClientServiceOnPlayerListUpdated;
+            _multiplayerClientService.PlayerUpdated += MultiplayerClientServiceOnPlayerSync;
             _multiplayerClientService.Connected += MultiplayerClientServiceOnConnected;
             _multiplayerClientService.ConnectionClosed += MultiplayerClientServiceOnConnectionClosed;
-            _multiplayerClientService.PlayerForfeit += MultiplayerClientServiceOnPlayerForfeit;
+            _multiplayerClientService.GameStatusUpdated += MultiplayerClientServiceOnGameStatusUpdated;
+        }
+
+        private void MultiplayerClientServiceOnGameStatusUpdated()
+        {
+            Model.GameStatus = _multiplayerClientService.GameStatus;
         }
 
         private void MultiplayerClientServiceOnGameForfeit()
@@ -58,22 +64,9 @@ namespace Randomizer.App.Windows
             Close();
         }
 
-        private void MultiplayerClientServiceOnPlayerForfeit()
-        {
-            Model.GameStatus = _multiplayerClientService.GameStatus;
-            UpdatePlayerList();
-        }
-
-        private void MultiplayerClientServiceOnPlayerRejoined()
-        {
-            UpdatePlayerList();
-        }
-
         private void MultiplayerClientServiceOnGameRejoined()
         {
             Model.IsConnected = true;
-            Model.GameStatus = _multiplayerClientService.GameStatus;
-            UpdatePlayerList();
         }
 
         private void MultiplayerClientServiceOnConnected()
@@ -81,19 +74,9 @@ namespace Randomizer.App.Windows
             Task.Run(async () => await _multiplayerClientService.RejoinGame());
         }
 
-        private void MultiplayerClientServiceOnConnectionClosed(Exception? exception)
+        private void MultiplayerClientServiceOnConnectionClosed(string message, Exception? exception)
         {
             Model.IsConnected = false;
-
-        }
-
-        protected override void OnActivated(EventArgs e)
-        {
-            if (_multiplayerClientService.LocalPlayer?.Config == null && !_openedConfig)
-            {
-                ShowGenerateRomWindow();
-                _openedConfig = true;
-            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -102,12 +85,11 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.Error -= MultiplayerClientServiceError;
             _multiplayerClientService.GameRejoined -= MultiplayerClientServiceOnGameRejoined;
             _multiplayerClientService.GameForfeit -= MultiplayerClientServiceOnGameForfeit;
-            _multiplayerClientService.PlayerJoined -= MultiplayerClientServiceOnPlayerJoined;
-            _multiplayerClientService.PlayerRejoined -= MultiplayerClientServiceOnPlayerRejoined;
-            _multiplayerClientService.PlayerSync -= MultiplayerClientServiceOnPlayerSync;
+            _multiplayerClientService.PlayerListUpdated -= MultiplayerClientServiceOnPlayerListUpdated;
+            _multiplayerClientService.PlayerUpdated -= MultiplayerClientServiceOnPlayerSync;
             _multiplayerClientService.Connected -= MultiplayerClientServiceOnConnected;
             _multiplayerClientService.ConnectionClosed -= MultiplayerClientServiceOnConnectionClosed;
-            _multiplayerClientService.PlayerForfeit -= MultiplayerClientServiceOnPlayerForfeit;
+            _multiplayerClientService.GameStatusUpdated -= MultiplayerClientServiceOnGameStatusUpdated;
             Task.Run(async () => await _multiplayerClientService.Disconnect());
         }
 
@@ -126,14 +108,13 @@ namespace Randomizer.App.Windows
             }
         }
 
-        private void MultiplayerClientServiceOnPlayerJoined()
+        private void MultiplayerClientServiceOnPlayerListUpdated()
         {
             UpdatePlayerList();
         }
 
-        private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState? previousState, MultiplayerPlayerState state)
+        private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState state)
         {
-            Model.GameStatus = _multiplayerClientService.GameStatus;
             Model.UpdatePlayer(state, _multiplayerClientService.LocalPlayer);
             CheckPlayerConfigs();
         }
@@ -143,7 +124,6 @@ namespace Randomizer.App.Windows
 
         protected void UpdatePlayerList()
         {
-            Model.GameStatus = _multiplayerClientService.GameStatus;
             Model.UpdateList(_multiplayerClientService.Players ?? new List<MultiplayerPlayerState>(), _multiplayerClientService.LocalPlayer);
             CheckPlayerConfigs();
         }
@@ -177,6 +157,8 @@ namespace Randomizer.App.Windows
             {
                 MessageBox.Show(this, "No players found to start the game" , "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            Task.Run(async () => await _multiplayerClientService.UpdateGameStatus(MultiplayerGameStatus.Generating));
 
             var states = _multiplayerGameService.CreateWorld(_multiplayerClientService.Players!);
         }

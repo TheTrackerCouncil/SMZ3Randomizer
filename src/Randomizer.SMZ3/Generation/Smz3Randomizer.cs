@@ -82,50 +82,21 @@ namespace Randomizer.SMZ3.Generation
             if (primaryConfig.Race)
                 rng = new Random(rng.Next());
 
-            _logger.LogDebug(
-                "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule} | World count : {Count}",
-                seedNumber, primaryConfig.Race, primaryConfig.KeysanityMode, primaryConfig.ItemPlacementRule,
-                configs.Count);
-
-            // Testing code. Tests should fail if this code is present.
-            // This code will be remove once multiworld is properly implemented.
-            /*
-            primaryConfig.GameMode = GameMode.Multiworld;
-            if (primaryConfig.MultiWorld)
-            {
-                primaryConfig.Id = 0;
-                primaryConfig.PlayerName = "test0";
-                primaryConfig.PlayerGuid = Guid.NewGuid().ToString("N");
-                var configString = Config.ToConfigString(primaryConfig, false);
-                for (var i = 0; i < 4; i++)
-                {
-                    var newConfig = Config.FromConfigString(configString).First();
-                    newConfig.Id = i + 1;
-                    newConfig.PlayerName = "test" + newConfig.Id;
-                    newConfig.PlayerGuid = Guid.NewGuid().ToString("N");
-
-                    if (i == 0)
-                    {
-                        newConfig.KeysanityMode = KeysanityMode.Both;
-                    }
-
-                    newConfig.LogicConfig.PreventFivePowerBombSeed = false;
-                    newConfig.LogicConfig.PreventScrewAttackSoftLock = false;
-                    newConfig.EarlyItems.Add(ItemType.ScrewAttack);
-
-                    configs.Add(newConfig);
-                }
-            }*/
-
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
+            {
                 worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N")));
+                _logger.LogDebug(
+                    "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule}",
+                    seedNumber, primaryConfig.Race, primaryConfig.KeysanityMode, primaryConfig.ItemPlacementRule);
+            }
             else
             {
-                foreach (var config in configs)
-                {
-                    worlds.Add(new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == 0));
-                }
+                worlds.AddRange(configs.Select(config =>
+                    new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == 0)));
+                _logger.LogDebug(
+                    "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | World Count: {Count}",
+                    seedNumber, primaryConfig.Race, configs.Count);
             }
 
             Filler.SetRandom(rng);

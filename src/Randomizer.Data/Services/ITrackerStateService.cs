@@ -12,6 +12,8 @@ namespace Randomizer.Data.Services
     {
         public Task CreateStateAsync(IEnumerable<World> world, GeneratedRom generatedRom);
 
+        public TrackerState CreateTrackerState(IEnumerable<World> worlds);
+
         public Task SaveStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom, double secondsElapsed);
 
         public TrackerState? LoadState(IEnumerable<World> worlds, GeneratedRom generatedRom);

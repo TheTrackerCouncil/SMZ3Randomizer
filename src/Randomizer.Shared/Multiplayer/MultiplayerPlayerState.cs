@@ -17,8 +17,8 @@ public class MultiplayerPlayerState
 
     public MultiplayerPlayerStatus Status { get; set; }
 
-    public IEnumerable<TrackerLocationState>? Locations { get; set; }
-    public IEnumerable<TrackerItemState>? Items { get; set; }
-    public IEnumerable<TrackerBossState>? Bosses { get; set; }
-    public IEnumerable<TrackerDungeonState>? Dungeons { get; set; }
+    public List<TrackerLocationState>? Locations { get; set; }
+    public List<TrackerItemState>? Items { get; set; }
+    public List<TrackerBossState>? Bosses { get; set; }
+    public List<TrackerDungeonState>? Dungeons { get; set; }
 }

@@ -3,6 +3,7 @@
 public enum MultiplayerGameStatus
 {
     Created,
+    Generating,
     Started,
     Completed
 }
