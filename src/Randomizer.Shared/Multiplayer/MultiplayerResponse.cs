@@ -2,7 +2,10 @@
 
 public class MultiplayerResponse
 {
-    public MultiplayerGameStatus GameStatus { get; set; }
-    public bool IsSuccessful { get; set; }
-    public string Error { get; set; } = "Unknown Error";
+    protected MultiplayerResponse(MultiplayerGameState gameState)
+    {
+        GameState = gameState;
+    }
+
+    public MultiplayerGameState GameState { get; }
 }

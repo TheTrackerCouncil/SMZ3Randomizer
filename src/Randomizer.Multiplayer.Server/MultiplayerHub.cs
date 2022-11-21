@@ -18,47 +18,42 @@ namespace Randomizer.Multiplayer.Server
         {
             if (string.IsNullOrEmpty(request.PlayerName))
             {
-                await SendErrorResponse<CreateGameResponse>("CreateGame", "Missing required attributes");
+                await SendErrorResponse("Missing required attributes");
                 return;
             }
 
-            var results = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, request.GameType, out var error);
+            var results = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, request.GameType, _serverUrl, out var error);
 
             if (results == null)
             {
                 error ??= "Unknown error creating game";
-                await SendErrorResponse<CreateGameResponse>("CreateGame", error);
+                await SendErrorResponse(error);
                 _logger.LogError("Error when creating game: {Error}", error);
                 return;
             }
 
-            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Game created", results.Value.Game.Guid, results.Value.Player.Guid);
+            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Game created", results.Value.Game.State.Guid, results.Value.Player.Guid);
 
-            await Groups.AddToGroupAsync(Context.ConnectionId, results.Value.Game.Guid);
+            await Groups.AddToGroupAsync(Context.ConnectionId, results.Value.Game.State.Guid);
 
-            await Clients.Caller.SendAsync("CreateGame", new CreateGameResponse()
-            {
-                IsSuccessful = true,
-                GameGuid = results.Value.Game.Guid,
-                PlayerGuid = results.Value.Player.Guid,
-                PlayerKey = results.Value.Player.Key,
-                AllPlayers = results.Value.Game.PlayerStates,
-                GameUrl = $"{_serverUrl}?game={results.Value.Game.Guid}",
-                GameStatus = results.Value.Game.Status
-            });
+            await Clients.Caller.SendAsync("CreateGame",
+                new CreateGameResponse(results.Value.Game.State,
+                    results.Value.Player.Guid,
+                    results.Value.Player.Key,
+                    results.Value.Game.PlayerStates));
         }
 
         public async Task JoinGame(JoinGameRequest request)
         {
             if (string.IsNullOrEmpty(request.GameGuid) || string.IsNullOrEmpty(request.PlayerName))
             {
-                await SendErrorResponse<JoinGameResponse>("JoinGame", "Missing required attributes");
+                await SendErrorResponse("Missing required attributes");
                 return;
             }
             var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
-                await SendErrorResponse<JoinGameResponse>("JoinGame", $"Unable to find game");
+                await SendErrorResponse($"Unable to find game");
                 return;
             }
 
@@ -66,113 +61,87 @@ namespace Randomizer.Multiplayer.Server
             if (player == null)
             {
                 error ??= "Unknown error joining game";
-                await SendErrorResponse<JoinGameResponse>("JoinGame", error);
+                await SendErrorResponse(error);
                 _logger.LogError("Error when joining game: {Error}", error);
                 return;
             }
 
-            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player joined", game.Guid, player.Guid);
+            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player joined", game.State.Guid, player.Guid);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, request.GameGuid);
 
-            await Clients.Caller.SendAsync("JoinGame", new JoinGameResponse()
-            {
-                IsSuccessful = true,
-                PlayerGuid = player.Guid,
-                PlayerKey = player.Key,
-                AllPlayers = game.PlayerStates,
-                GameUrl = $"{_serverUrl}?game={game.Guid}",
-                GameStatus = game.Status,
-                GameType = game.Type,
-            });
+            await Clients.Caller.SendAsync("JoinGame",
+                new JoinGameResponse(game.State, player.Guid, player.Key, game.PlayerStates));
 
-            await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerJoined", new PlayerJoinedResponse()
-            {
-                IsSuccessful = true,
-                PlayerGuid = player.Guid,
-                PlayerName = player.State.PlayerName,
-                AllPlayers = game.PlayerStates,
-                GameStatus = game.Status
-            });
+            await SendPlayerSyncResponse(game, player, false);
         }
 
         public async Task RejoinGame(RejoinGameRequest request)
         {
             if (string.IsNullOrEmpty(request.GameGuid) || string.IsNullOrEmpty(request.PlayerGuid) || string.IsNullOrEmpty(request.PlayerKey))
             {
-                await SendErrorResponse<JoinGameResponse>("JoinGame", "Missing required attributes");
+                await SendErrorResponse("Missing required attributes");
                 return;
             }
 
             var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
-                await SendErrorResponse<JoinGameResponse>("JoinGame", $"Unable to find game");
+                await SendErrorResponse($"Unable to find game");
                 return;
             }
 
             var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true);
             if (player == null)
             {
-                await SendErrorResponse<SubmitConfigResponse>("SubmitConfig", "Unable to find player");
+                await SendErrorResponse("Unable to find player");
                 return;
             }
 
             game.RejoinGame(player, Context.ConnectionId);
 
-            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player rejoined", game.Guid, player.Guid);
+            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player rejoined", game.State.Guid, player.Guid);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, request.GameGuid);
 
-            await Clients.Caller.SendAsync("RejoinGame", new RejoinGameResponse()
-            {
-                IsSuccessful = true,
-                PlayerGuid = player.Guid,
-                PlayerKey = player.Key,
-                AllPlayers = game.PlayerStates,
-                GameUrl = $"{_serverUrl}?game={game.Guid}",
-                GameStatus = game.Status,
-                GameType = game.Type,
-            });
+            await Clients.Caller.SendAsync("RejoinGame",
+                new RejoinGameResponse(game.State, player.Guid, player.Key, game.PlayerStates));
 
-            await Clients.OthersInGroup(request.GameGuid).SendAsync("PlayerRejoined", new PlayerJoinedResponse()
-            {
-                IsSuccessful = true,
-                PlayerGuid = player.Guid,
-                PlayerName = player.State.PlayerName,
-                AllPlayers = game.PlayerStates,
-                GameStatus = game.Status
-            });
+            await SendPlayerSyncResponse(game, player, false);
         }
 
-        public async Task SubmitConfig(SubmitConfigRequest request)
+        public async Task UpdatePlayerState(UpdatePlayerStateRequest request)
         {
             var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
-                await SendErrorResponse<SubmitConfigResponse>("SubmitConfig", "Unable to find game");
+                await SendErrorResponse("Unable to find game");
                 return;
             }
 
             var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true);
             if (player == null)
             {
-                await SendErrorResponse<SubmitConfigResponse>("SubmitConfig", "Unable to find player");
+                await SendErrorResponse("Unable to find player");
                 return;
             }
 
-            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Config submitted", game.Guid, player.Guid);
-
-            var configs = game.UpdatePlayerConfig(player, request.Config);
-
-            await Clients.Caller.SendAsync("SubmitConfig", new SubmitConfigResponse() { IsSuccessful = true });
-
-            await Clients.Groups(request.GameGuid).SendAsync("PlayerSync", new PlayerSyncResponse()
+            if (request.State.Guid != request.PlayerGuid)
             {
-                IsSuccessful = true,
-                PlayerState = player.State,
-                GameStatus = game.Status,
-            });
+                player = game.GetPlayer(request.State.Guid, null, false, false);
+                if (player == null)
+                {
+                    await SendErrorResponse("Unable to find player");
+                    return;
+                }
+            }
+
+            game.UpdatePlayerState(player, request.State);
+
+            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player state updated", game.State.Guid, player.Guid);
+
+            await Clients.Groups(request.GameGuid)
+                .SendAsync("PlayerSync", new PlayerSyncResponse(game.State, player.State));
         }
 
         public async Task StartGame(StartGameRequest request)
@@ -180,24 +149,29 @@ namespace Randomizer.Multiplayer.Server
             var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
-                await SendErrorResponse<StartGameResponse>("StartGame", "Unable to find game");
+                await SendErrorResponse("Unable to find game");
                 return;
             }
 
             var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true, true);
             if (player == null)
             {
-                await SendErrorResponse<StartGameResponse>("StartGame", "Unable to find player");
+                await SendErrorResponse("Unable to find player");
                 return;
             }
 
-            var playerStates = game.StartGame(request.PlayerStates, out var error);
-            await Clients.Group(request.GameGuid).SendAsync("StartGame", new StartGameResponse()
+            var successful = game.StartGame(request.Seed, request.ValidationHash, out var error);
+
+            if (!successful)
             {
-                IsSuccessful = true,
-                Players = playerStates,
-                GameStatus = game.Status
-            });
+                await SendErrorResponse(error);
+                return;
+            }
+
+            _logger.LogInformation("Starting game");
+
+            await Clients.Group(request.GameGuid)
+                .SendAsync("PlayerListSync", new PlayerListSyncResponse(game.State, game.PlayerStates));
         }
 
         public async Task ForfeitGame(ForfeitGameRequest request)
@@ -205,20 +179,20 @@ namespace Randomizer.Multiplayer.Server
             var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
-                await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find game");
+                await SendErrorResponse("Unable to find game");
                 return;
             }
 
             var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true);
             if (player == null)
             {
-                await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find player");
+                await SendErrorResponse("Unable to find player");
                 return;
             }
 
             if (!player.State.IsAdmin && player.Guid != request.ForfeitPlayerGuid)
             {
-                await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find player");
+                await SendErrorResponse("Unable to find player");
                 return;
             }
 
@@ -227,29 +201,16 @@ namespace Randomizer.Multiplayer.Server
                 player = game.GetPlayer(request.ForfeitPlayerGuid, null, false);
                 if (player == null)
                 {
-                    await SendErrorResponse<ForfeitGameResponse>("ForfeitPlayer", "Unable to find player");
+                    await SendErrorResponse("Unable to find player");
                     return;
                 }
             }
 
             game.ForfeitPlayer(player);
 
-            await Clients.Client(player.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse()
-            {
-                IsSuccessful = true,
-                ForfeitPlayerGuid = request.ForfeitPlayerGuid,
-                AllPlayers = game.PlayerStates,
-                GameStatus = game.Status,
-            });
+            await Clients.Client(player.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse(game.State));
 
-            await Clients.GroupExcept(request.GameGuid, player.ConnectionId).SendAsync("PlayerForfeited", new PlayerForfeitedResponse()
-            {
-                IsSuccessful = true,
-                PlayerGuid = player.Guid,
-                PlayerName = player.State.PlayerName,
-                GameStatus = game.Status,
-                AllPlayers = game.PlayerStates
-            });
+            await SendPlayerSyncResponse(game, player, false);
         }
 
         public async Task UpdateGameStatus(UpdateGameStatusRequest request)
@@ -257,40 +218,40 @@ namespace Randomizer.Multiplayer.Server
             var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
-                await SendErrorResponse<UpdateGameStatusResponse>("UpdateGameStatus", "Unable to find game");
+                await SendErrorResponse("Unable to find game");
                 return;
             }
 
             var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true, true);
             if (player == null)
             {
-                await SendErrorResponse<UpdateGameStatusResponse>("UpdateGameStatus", "Unable to find player");
+                await SendErrorResponse("Unable to find player");
                 return;
             }
 
             game.UpdateGameStatus(request.GameStatus);
 
-            await Clients.Group(game.Guid).SendAsync("UpdateGameStatus",
-                new UpdateGameStatusResponse { IsSuccessful = true, GameStatus = game.Status });
+            await Clients.Group(game.State.Guid).SendAsync("UpdateGameStatus", new UpdateGameStatusResponse(game.State));
         }
 
-        private async Task SendErrorResponse<T>(string method, string error) where T : MultiplayerResponse, new()
+        private async Task SendPlayerSyncResponse(MultiplayerGame game, MultiplayerPlayer player, bool allPlayers = true)
         {
-            var response = new T() { IsSuccessful = false, Error = error };
-            await Clients.Caller.SendAsync(method, response);
+            var sendTo = allPlayers ? Clients.Group(game.State.Guid) : Clients.GroupExcept(game.State.Guid, player.ConnectionId);
+            await sendTo.SendAsync("PlayerSync", new PlayerSyncResponse(game.State, player.State));
+        }
+
+        private async Task SendErrorResponse(string? error)
+        {
+            await Clients.Caller.SendAsync("Error", new ErrorResponse(error ?? "Unknown Error"));
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var player = MultiplayerGame.PlayerDisconnected(Context.ConnectionId);
             if (player == null) return;
-            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player disconnected", player.Game.Guid, player.Guid);
-            await Clients.Group(player.Game.Guid).SendAsync("PlayerSync", new PlayerSyncResponse()
-            {
-                IsSuccessful = true,
-                PlayerState = player.State,
-                GameStatus = player.Game.Status,
-            });
+            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player disconnected", player.Game.State.Guid, player.Guid);
+            await Clients.Group(player.Game.State.Guid)
+                .SendAsync("PlayerSync", new PlayerSyncResponse(player.Game.State, player.State));
         }
     }
 }

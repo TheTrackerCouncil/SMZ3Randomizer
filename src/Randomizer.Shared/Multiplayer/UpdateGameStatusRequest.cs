@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Randomizer.Shared.Multiplayer;
+﻿namespace Randomizer.Shared.Multiplayer;
 
 public class UpdateGameStatusRequest : MultiplayerRequest
 {

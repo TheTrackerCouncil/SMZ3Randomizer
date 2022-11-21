@@ -139,6 +139,18 @@ namespace Randomizer.App
             }
         }
 
+        public async Task<GeneratedRom?> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed)
+        {
+            var results = await GenerateRomInternalAsync(seed, options);
+
+            if (!string.IsNullOrEmpty(results.MsuError))
+            {
+                MessageBox.Show("There was an error assigning the MSU\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            return results.Rom;
+        }
+
         private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options)
         {
             var bytes = GenerateRomBytes(options, seed);
@@ -273,7 +285,7 @@ namespace Randomizer.App
             {
                 Rom.ApplyIps(rom, ips);
             }
-            Rom.ApplySeed(rom, seed.Worlds[0].Patches);
+            Rom.ApplySeed(rom, seed.Worlds.Single(x => x.World.IsLocalWorld).Patches);
 
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);

@@ -20,11 +20,13 @@ namespace Randomizer.App.Windows
     {
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly MultiplayerGameService _multiplayerGameService;
+        private readonly RomGenerator _romGenerator;
 
-        public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService, MultiplayerGameService multiplayerGameService)
+        public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService, MultiplayerGameService multiplayerGameService, RomGenerator romGenerator)
         {
             _multiplayerClientService = multiplayerClientService;
             _multiplayerGameService = multiplayerGameService;
+            _romGenerator = romGenerator;
             DataContext = Model;
             InitializeComponent();
             UpdatePlayerList();
@@ -49,10 +51,24 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.PlayerUpdated += MultiplayerClientServiceOnPlayerSync;
             _multiplayerClientService.Connected += MultiplayerClientServiceOnConnected;
             _multiplayerClientService.ConnectionClosed += MultiplayerClientServiceOnConnectionClosed;
-            _multiplayerClientService.GameStatusUpdated += MultiplayerClientServiceOnGameStatusUpdated;
+            _multiplayerClientService.GameStateUpdated += MultiplayerClientServiceOnGameStateUpdated;
+            _multiplayerClientService.SeedDataGenerated += MultiplayerClientServiceOnSeedDataGenerated;
         }
 
-        private void MultiplayerClientServiceOnGameStatusUpdated()
+        private async void MultiplayerClientServiceOnSeedDataGenerated(string seed, string validationhash)
+        {
+            var seedData = _multiplayerGameService.RegenerateSeed(seed, validationhash, out var error);
+            if (!string.IsNullOrEmpty(error))
+            {
+                DisplayError(error);
+                return;
+            }
+
+            var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!);
+            DisplayError("Rom generated");
+        }
+
+        private void MultiplayerClientServiceOnGameStateUpdated()
         {
             Model.GameStatus = _multiplayerClientService.GameStatus;
         }
@@ -89,23 +105,14 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.PlayerUpdated -= MultiplayerClientServiceOnPlayerSync;
             _multiplayerClientService.Connected -= MultiplayerClientServiceOnConnected;
             _multiplayerClientService.ConnectionClosed -= MultiplayerClientServiceOnConnectionClosed;
-            _multiplayerClientService.GameStatusUpdated -= MultiplayerClientServiceOnGameStatusUpdated;
+            _multiplayerClientService.GameStateUpdated -= MultiplayerClientServiceOnGameStateUpdated;
+            _multiplayerClientService.SeedDataGenerated -= MultiplayerClientServiceOnSeedDataGenerated;
             Task.Run(async () => await _multiplayerClientService.Disconnect());
         }
 
         private void MultiplayerClientServiceError(string error, Exception? exception)
         {
-            if (Dispatcher.CheckAccess())
-            {
-                MessageBox.Show(this, error , "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    MultiplayerClientServiceError(error, exception);
-                });
-            }
+            DisplayError(error);
         }
 
         private void MultiplayerClientServiceOnPlayerListUpdated()
@@ -130,7 +137,7 @@ namespace Randomizer.App.Windows
 
         protected void CheckPlayerConfigs()
         {
-            if (_multiplayerClientService.LocalPlayer?.IsAdmin == true)
+            if (_multiplayerClientService.GameStatus == MultiplayerGameStatus.Created && _multiplayerClientService.LocalPlayer?.IsAdmin == true)
             {
                 Model.AllPlayersSubmittedConfigs =
                     _multiplayerClientService.Players?.All(x => x.Config != null) ?? false;
@@ -151,16 +158,21 @@ namespace Randomizer.App.Windows
             ShowGenerateRomWindow();
         }
 
-        private void StartGameButton_Click(object sender, RoutedEventArgs e)
+        private async void StartGameButton_Click(object sender, RoutedEventArgs e)
         {
             if (_multiplayerClientService.Players == null)
             {
-                MessageBox.Show(this, "No players found to start the game" , "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+                DisplayError("No players found to start the game.");
             }
 
-            Task.Run(async () => await _multiplayerClientService.UpdateGameStatus(MultiplayerGameStatus.Generating));
+            await _multiplayerClientService.UpdateGameStatus(MultiplayerGameStatus.Generating);
 
-            var states = _multiplayerGameService.CreateWorld(_multiplayerClientService.Players!);
+            var error = await _multiplayerGameService.GenerateSeed();
+
+            if (error != null)
+            {
+                DisplayError(error);
+            }
         }
 
         private void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
@@ -183,6 +195,21 @@ namespace Randomizer.App.Windows
         private void CopyUrlButton_OnClick(object sender, RoutedEventArgs e)
         {
             ParentPanel.CopyTextToClipboard(_multiplayerClientService.GameUrl ?? "");
+        }
+
+        private void DisplayError(string message)
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                MessageBox.Show(this, message , "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    DisplayError(message);
+                });
+            }
         }
     }
 }

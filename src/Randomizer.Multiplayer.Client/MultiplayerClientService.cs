@@ -1,4 +1,5 @@
 ﻿using System.Net.WebSockets;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared.Multiplayer;
@@ -23,18 +24,20 @@ namespace Randomizer.Multiplayer.Client
         public event MultiplayerGenericEventHandler? GameRejoined;
         public event MultiplayerGenericEventHandler? GameForfeit;
         public event MultiplayerGenericEventHandler? PlayerListUpdated;
-        public event MultiplayerGenericEventHandler? GameStatusUpdated;
+        public event MultiplayerGenericEventHandler? GameStateUpdated;
         public event PlayerUpdatedEventHandler? PlayerUpdated;
+        public event SeedDetailsRetrievedEventHandler? SeedDataGenerated;
 
         public string? CurrentGameGuid { get; private set; }
         public string? CurrentPlayerGuid { get; private set; }
         public string? CurrentPlayerKey { get; private set; }
+        public MultiplayerGameState? CurrentGameState { get; private set; }
+        public MultiplayerGameStatus? GameStatus => CurrentGameState?.Status;
+        public MultiplayerGameType? GameType => CurrentGameState?.Type;
         public List<MultiplayerPlayerState>? Players { get; set; }
         public MultiplayerPlayerState? LocalPlayer => Players?.FirstOrDefault(x => x.Guid == CurrentPlayerGuid);
-        public string? GameUrl { get; private set; }
+        public string? GameUrl => CurrentGameState?.Url;
         public string? ConnectionUrl { get; private set; }
-        public MultiplayerGameStatus? GameStatus { get; private set; }
-        public MultiplayerGameType? GameType { get; private set; }
 
         public async Task Connect(string url)
         {
@@ -62,17 +65,15 @@ namespace Randomizer.Multiplayer.Client
 
             _connection.On<ForfeitGameResponse>("ForfeitGame", OnForfeitGame);
 
-            _connection.On<PlayerJoinedResponse>("PlayerJoined", OnPlayerJoined);
-
-            _connection.On<PlayerRejoinedResponse>("PlayerRejoined", OnPlayerRejoined);
-
-            _connection.On<PlayerForfeitedResponse>("PlayerForfeited", OnPlayerForfeit);
-
             _connection.On<SubmitConfigResponse>("SubmitConfig", OnSubmitConfig);
 
             _connection.On<PlayerSyncResponse>("PlayerSync", OnPlayerSync);
 
+            _connection.On<PlayerListSyncResponse>("PlayerListSync", OnPlayerListSync);
+
             _connection.On<UpdateGameStatusResponse>("UpdateGameStatus", OnUpdateGameStatus);
+
+            _connection.On<ErrorResponse>("Error", OnError);
 
             _connection.Reconnected += ConnectionOnReconnected;
 
@@ -103,18 +104,22 @@ namespace Randomizer.Multiplayer.Client
             }
         }
 
+        private void OnPlayerListSync(PlayerListSyncResponse response)
+        {
+            _logger.LogInformation("Player list sync from server. Num Players: {PlayerCount}", response.AllPlayers.Count);
+            UpdatePlayerList(response.AllPlayers);
+            UpdateGameState(response.GameState);
+        }
+
+        private void OnError(ErrorResponse response)
+        {
+            Error?.Invoke(response.Error);
+        }
+
         private void OnUpdateGameStatus(UpdateGameStatusResponse response)
         {
-            if (response.IsValid)
-            {
-                GameStatus = response.GameStatus;
-                GameStatusUpdated?.Invoke();
-            }
-            else
-            {
-                _logger.LogError("Unable to update game status: {Error}", response.Error);
-                Error?.Invoke($"Unable to update game status: {response.Error}");
-            }
+            UpdateGameState(response.GameState);
+            GameStateUpdated?.Invoke();
         }
 
         public async Task Reconnect()
@@ -173,7 +178,7 @@ namespace Randomizer.Multiplayer.Client
             CurrentPlayerGuid = null;
             CurrentPlayerKey = null;
             Players = null;
-            GameStatus = null;
+            CurrentGameState = null;
             if (_connection == null) return;
             await _connection!.DisposeAsync();
             _connection = null;
@@ -181,19 +186,35 @@ namespace Randomizer.Multiplayer.Client
 
         public async Task CreateGame(string playerName, MultiplayerGameType gameType)
         {
-            GameType = gameType;
             await MakeRequest("CreateGame", new CreateGameRequest(playerName, gameType));
         }
 
         public async Task JoinGame(string gameGuid, string playerName)
         {
-            CurrentGameGuid = gameGuid;
             await MakeRequest("JoinGame", new JoinGameRequest(gameGuid, playerName));
         }
 
         public async Task SubmitConfig(string config)
         {
-            await MakeRequest("SubmitConfig", new SubmitConfigRequest(CurrentGameGuid!, CurrentPlayerGuid!, CurrentPlayerKey!, config), true);
+            if (LocalPlayer == null)
+            {
+                Error?.Invoke($"There is no active local player");
+                return;
+            }
+
+            LocalPlayer.Config = config;
+            await UpdatePlayerState(LocalPlayer);
+        }
+
+        public async Task UpdatePlayerState(MultiplayerPlayerState state, bool propogate = true)
+        {
+            if (LocalPlayer == null)
+            {
+                Error?.Invoke($"There is no active local player");
+                return;
+            }
+
+            await MakeRequest("UpdatePlayerState", new UpdatePlayerStateRequest(CurrentGameGuid!, CurrentPlayerGuid!, CurrentPlayerKey!, state, propogate), true);
         }
 
         public async Task RejoinGame(string? gameGuid = null, string? playerGuid = null, string? playerKey = null)
@@ -220,7 +241,7 @@ namespace Randomizer.Multiplayer.Client
                 new UpdateGameStatusRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", gameStatus));
         }
 
-        public async Task StartGame(List<MultiplayerPlayerState> playerStates)
+        public async Task StartGame(string seed, string validationHash)
         {
             if (_connection?.State != HubConnectionState.Connected)
             {
@@ -228,7 +249,7 @@ namespace Randomizer.Multiplayer.Client
                 return;
             }
 
-            await MakeRequest("StartGame", new StartGameRequest(playerStates));
+            await MakeRequest("StartGame", new StartGameRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", seed, validationHash));
         }
 
         public bool IsConnected => _connection?.State == HubConnectionState.Connected;
@@ -261,151 +282,60 @@ namespace Randomizer.Multiplayer.Client
 
         private void OnCreateGame(CreateGameResponse response)
         {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Game Created | Game Id: {GameGuid} | Player Guid: {PlayergGuid} | Player Key: {PlayerKey}", response.GameGuid, response.PlayerGuid, response.PlayerKey);
-                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                CurrentGameGuid = response.GameGuid;
-                CurrentPlayerGuid = response.PlayerGuid;
-                CurrentPlayerKey = response.PlayerKey;
-                GameUrl = response.GameUrl;
-                GameCreated?.Invoke();
-                UpdateStatus(response.GameStatus);
-                UpdatePlayerList(response.AllPlayers);
-            }
-            else
-            {
-                _logger.LogError("Unable to join game: {Error}", response.Error);
-                Error?.Invoke($"Unable to join game: {response.Error}");
-            }
+            _logger.LogInformation("Game Created | Game Id: {GameGuid} | Player Guid: {PlayergGuid} | Player Key: {PlayerKey}", response.GameState.Guid, response.PlayerGuid, response.PlayerKey);
+            _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers.Select(x => x.PlayerName)));
+            CurrentGameGuid = response.GameState.Guid;
+            CurrentPlayerGuid = response.PlayerGuid;
+            CurrentPlayerKey = response.PlayerKey;
+            GameCreated?.Invoke();
+            UpdatePlayerList(response.AllPlayers);
+            UpdateGameState(response.GameState);
         }
 
         private void OnJoinGame(JoinGameResponse response)
         {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Game joined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
-                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                CurrentPlayerGuid = response.PlayerGuid;
-                CurrentPlayerKey = response.PlayerKey;
-                GameUrl = response.GameUrl;
-                GameType = response.GameType;
-                GameJoined?.Invoke();
-                UpdateStatus(response.GameStatus);
-                UpdatePlayerList(response.AllPlayers);
-            }
-            else
-            {
-                _logger.LogError("Unable to join game: {Error}", response.Error);
-                Error?.Invoke($"Unable to join game: {response.Error}");
-            }
+            _logger.LogInformation("Game joined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
+            _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers.Select(x => x.PlayerName)));
+            CurrentGameGuid = response.GameState.Guid;
+            CurrentPlayerGuid = response.PlayerGuid;
+            CurrentPlayerKey = response.PlayerKey;
+            GameJoined?.Invoke();
+            UpdatePlayerList(response.AllPlayers);
+            UpdateGameState(response.GameState);
         }
 
         private void OnRejoinGame(RejoinGameResponse response)
         {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Game rejoined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
-                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                CurrentPlayerGuid = response.PlayerGuid;
-                CurrentPlayerKey = response.PlayerKey;
-                GameUrl = response.GameUrl;
-                GameType = response.GameType;
-                GameRejoined?.Invoke();
-                UpdateStatus(response.GameStatus);
-                UpdatePlayerList(response.AllPlayers);
-            }
-            else
-            {
-                _logger.LogError("Unable to join game: {Error}", response.Error);
-                Error?.Invoke($"Unable to join game: {response.Error}");
-            }
-        }
-
-        private void OnPlayerJoined(PlayerJoinedResponse response)
-        {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
-                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                UpdateStatus(response.GameStatus);
-                UpdatePlayerList(response.AllPlayers);
-            }
-            else
-            {
-                _logger.LogError("Received invalid player joined response");
-            }
-        }
-
-        private void OnPlayerRejoined(PlayerRejoinedResponse response)
-        {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Player joined | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
-                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                UpdateStatus(response.GameStatus);
-                UpdatePlayerList(response.AllPlayers);
-            }
-            else
-            {
-                _logger.LogError("Received invalid player joined response");
-            }
-        }
-
-        private void OnPlayerForfeit(PlayerForfeitedResponse response)
-        {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Player forfeit | Player Guid: {PlayerGuid} | Player Name: {PlayerName}", response.PlayerGuid, response.PlayerName);
-                _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers!.Select(x => x.PlayerName)));
-                UpdateStatus(response.GameStatus);
-                UpdatePlayerList(response.AllPlayers);
-            }
-            else
-            {
-                _logger.LogError("Received invalid player forfeit response");
-            }
+            _logger.LogInformation("Game rejoined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
+            _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers.Select(x => x.PlayerName)));
+            CurrentGameGuid = response.GameState.Guid;
+            CurrentPlayerGuid = response.PlayerGuid;
+            CurrentPlayerKey = response.PlayerKey;
+            GameRejoined?.Invoke();
+            UpdatePlayerList(response.AllPlayers);
+            UpdateGameState(response.GameState);
         }
 
         private void OnForfeitGame(ForfeitGameResponse response)
         {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Forfeit game");
-                UpdateStatus(response.GameStatus);
-                UpdatePlayerList(response.AllPlayers);
-                GameForfeit?.Invoke();
-            }
+            _logger.LogInformation("Forfeit game");
+            UpdateGameState(response.GameState);
+            GameForfeit?.Invoke();
         }
 
         private void OnSubmitConfig(SubmitConfigResponse response)
         {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Player submitted config");
-            }
-            else
-            {
-                _logger.LogError("Unable to submit config game: {Error}", response.Error);
-                Error?.Invoke($"Unable to submit game: {response.Error}");
-            }
+            _logger.LogInformation("Player submitted config");
         }
 
         private void OnPlayerSync(PlayerSyncResponse response)
         {
-            if (response.IsValid)
-            {
-                _logger.LogInformation("Received state for {PlayerName}", response.PlayerState!.PlayerName);
-                var previous = Players?.FirstOrDefault(x => x.Guid == response.PlayerState.Guid);
-                if (previous != null) Players?.Remove(previous);
-                Players?.Add(response.PlayerState);
-                UpdateStatus(response.GameStatus);
-                PlayerUpdated?.Invoke(response.PlayerState);
-            }
-            else
-            {
-                _logger.LogError("Error getting player sync value: {Error}", response.Error);
-            }
+            _logger.LogInformation("Received state for {PlayerName}", response.PlayerState.PlayerName);
+            var previous = Players?.FirstOrDefault(x => x.Guid == response.PlayerState.Guid);
+            if (previous != null) Players?.Remove(previous);
+            Players?.Add(response.PlayerState);
+            UpdateGameState(response.GameState);
+            PlayerUpdated?.Invoke(response.PlayerState);
         }
 
         private async Task MakeRequest(string methodName, object? argument = null, bool requireJoined = false)
@@ -416,7 +346,7 @@ namespace Randomizer.Multiplayer.Client
             {
                 await _connection!.InvokeAsync(methodName, argument);
             }
-            catch (WebSocketException e)
+            catch (Exception e) when (e is WebSocketException or HubException or TimeoutException)
             {
                 _logger.LogError(e, "Connection to server lost");
                 Error?.Invoke($"Connection to server lost");
@@ -429,11 +359,16 @@ namespace Randomizer.Multiplayer.Client
             PlayerListUpdated?.Invoke();
         }
 
-        private void UpdateStatus(MultiplayerGameStatus gameStatus)
+        private void UpdateGameState(MultiplayerGameState gameState)
         {
-            if (gameStatus == GameStatus) return;
-            GameStatus = gameStatus;
-            GameStatusUpdated?.Invoke();
+            if (CurrentGameState?.Status is MultiplayerGameStatus.Created or MultiplayerGameStatus.Generating &&
+                gameState.Status == MultiplayerGameStatus.Started)
+            {
+                _logger.LogInformation("Rom generation information sent | Seed: {Seed} | Hash: {Hash}", gameState.Seed, gameState.ValidationHash);
+                SeedDataGenerated?.Invoke(gameState.Seed, gameState.ValidationHash);
+            }
+            CurrentGameState = gameState;
+            GameStateUpdated?.Invoke();
         }
     }
 }

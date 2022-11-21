@@ -2,5 +2,7 @@
 
 public class SubmitConfigResponse : MultiplayerResponse
 {
-    public bool IsValid => IsSuccessful;
+    public SubmitConfigResponse(MultiplayerGameState gameState) : base(gameState)
+    {
+    }
 }

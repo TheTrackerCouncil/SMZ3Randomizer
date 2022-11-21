@@ -4,11 +4,15 @@ namespace Randomizer.Shared.Multiplayer;
 
 public class StartGameRequest : MultiplayerRequest
 {
-    public StartGameRequest(List<MultiplayerPlayerState> playerStates)
+    public StartGameRequest(string gameGuid, string playerGuid, string playerKey, string seed, string validationHash)
     {
-        PlayerStates = playerStates;
+        GameGuid = gameGuid;
+        PlayerGuid = playerGuid;
+        PlayerKey = playerKey;
+        Seed = seed;
+        ValidationHash = validationHash;
     }
 
-    public List<MultiplayerPlayerState> PlayerStates { get; }
-
+    public string Seed { get; }
+    public string ValidationHash { get; }
 }

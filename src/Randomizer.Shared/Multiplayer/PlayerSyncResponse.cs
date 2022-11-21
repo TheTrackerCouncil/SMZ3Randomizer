@@ -2,7 +2,12 @@
 
 public class PlayerSyncResponse : MultiplayerResponse
 {
-    public MultiplayerPlayerState? PlayerState { get; init; }
+    public PlayerSyncResponse(MultiplayerGameState gameState, MultiplayerPlayerState playerState) : base(gameState)
+    {
+        PlayerState = playerState;
+    }
 
-    public bool IsValid => IsSuccessful && PlayerState != null;
+    public MultiplayerPlayerState PlayerState { get; }
+
+
 }

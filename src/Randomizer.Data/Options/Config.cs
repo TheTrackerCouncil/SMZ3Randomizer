@@ -7,9 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Newtonsoft.Json;
 using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Randomizer.Data.Options
 {
@@ -207,6 +209,9 @@ namespace Randomizer.Data.Options
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
         public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
         public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
+
+        [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
+        public bool IsLocalConfig { get; set; } = true;
 
         public Config SeedOnly()
         {

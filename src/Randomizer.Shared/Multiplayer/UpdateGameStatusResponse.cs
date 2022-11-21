@@ -2,5 +2,7 @@
 
 public class UpdateGameStatusResponse : MultiplayerResponse
 {
-    public bool IsValid => IsSuccessful;
+    public UpdateGameStatusResponse(MultiplayerGameState gameState) : base(gameState)
+    {
+    }
 }

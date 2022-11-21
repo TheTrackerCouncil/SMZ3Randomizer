@@ -4,11 +4,17 @@ namespace Randomizer.Shared.Multiplayer;
 
 public class JoinGameResponse : MultiplayerResponse
 {
-    public string? PlayerGuid { get; init; }
-    public string? PlayerKey { get; init; }
-    public List<MultiplayerPlayerState>? AllPlayers { get; init; }
-    public string? GameUrl { get; init; }
-    public MultiplayerGameType GameType { get; init; }
 
-    public bool IsValid => IsSuccessful && !string.IsNullOrEmpty(PlayerGuid) && !string.IsNullOrEmpty(PlayerKey) && AllPlayers != null;
+    public JoinGameResponse(MultiplayerGameState gameState, string playerGuid, string playerKey, List<MultiplayerPlayerState> allPlayers) : base(gameState)
+    {
+        PlayerGuid = playerGuid;
+        PlayerKey = playerKey;
+        AllPlayers = allPlayers;
+    }
+
+    public string PlayerGuid { get; }
+    public string PlayerKey { get; }
+    public List<MultiplayerPlayerState> AllPlayers { get; }
+
+
 }

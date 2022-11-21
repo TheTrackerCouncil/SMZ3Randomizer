@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Generation
 
         public SeedData GenerateSeed(List<Config> configs, string? seed, CancellationToken cancellationToken = default)
         {
-            var primaryConfig = configs.First();
+            var primaryConfig = configs.OrderBy(x => x.Id).First();
 
             var seedNumber = ParseSeed(ref seed);
             var rng = new Random(seedNumber);
@@ -92,8 +92,8 @@ namespace Randomizer.SMZ3.Generation
             }
             else
             {
-                worlds.AddRange(configs.Select(config =>
-                    new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == 0)));
+                worlds.AddRange(configs.OrderBy(x => x.Id).Select(config =>
+                    new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.IsLocalConfig)));
                 _logger.LogDebug(
                     "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | World Count: {Count}",
                     seedNumber, primaryConfig.Race, configs.Count);
