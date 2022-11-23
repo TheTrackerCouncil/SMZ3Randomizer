@@ -41,6 +41,7 @@ namespace Randomizer.App.Controls
             var models = DbContext.GeneratedRoms
                     .Include(x => x.TrackerState)
                     .ThenInclude(x => x!.History)
+                    .Where(x => x.IsMultiplayer != true)
                     .OrderByDescending(x => x.Id)
                     .ToList();
             Model.UpdateList(models);

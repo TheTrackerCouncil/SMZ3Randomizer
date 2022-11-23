@@ -91,7 +91,7 @@ namespace Randomizer.App
                 }
                 else
                 {
-                    var results = await GenerateRomInternalAsync(seed, options);
+                    var results = await GenerateRomInternalAsync(seed, options, false);
                     if (!string.IsNullOrEmpty(results.MsuError))
                     {
                         MessageBox.Show(results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -122,7 +122,7 @@ namespace Randomizer.App
             try
             {
                 var seed = GeneratePlandoSeed(options, plandoConfig);
-                var results = await GenerateRomInternalAsync(seed, options);
+                var results = await GenerateRomInternalAsync(seed, options, false);
 
                 if (!string.IsNullOrEmpty(results.MsuError))
                 {
@@ -141,7 +141,7 @@ namespace Randomizer.App
 
         public async Task<GeneratedRom?> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed)
         {
-            var results = await GenerateRomInternalAsync(seed, options);
+            var results = await GenerateRomInternalAsync(seed, options, true);
 
             if (!string.IsNullOrEmpty(results.MsuError))
             {
@@ -151,7 +151,7 @@ namespace Randomizer.App
             return results.Rom;
         }
 
-        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options)
+        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, bool isMultiplayerGame)
         {
             var bytes = GenerateRomBytes(options, seed);
             var config = seed.Playthrough.Config;
@@ -182,7 +182,7 @@ namespace Randomizer.App
 
             PrepareAutoTrackerFiles(options);
 
-            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath);
+            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, isMultiplayerGame);
 
             return new GenerateRomResults()
             {
@@ -354,6 +354,7 @@ namespace Randomizer.App
 
             return rom;
         }
+
         /// <summary>
         /// Takes the given seed information and saves it to the database
         /// </summary>
@@ -361,8 +362,9 @@ namespace Randomizer.App
         /// <param name="seed">The generated seed data</param>
         /// <param name="romPath">The path to the rom file</param>
         /// <param name="spoilerPath">The path to the spoiler file</param>
+        /// <param name="isMultiplayer">If this rom is part of a multiplayer game or not</param>
         /// <returns>The db entry for the generated rom</returns>
-        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
+        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, bool isMultiplayer)
         {
             var settingsString = string.IsNullOrEmpty(seed.PrimaryConfig.SettingsString)
                 ? (seed.Configs.Count() > 1 ? Config.ToConfigString(seed.Configs) : Config.ToConfigString(seed.PrimaryConfig, true))
@@ -375,7 +377,8 @@ namespace Randomizer.App
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
                 Settings = settingsString,
-                GeneratorVersion = Smz3Randomizer.Version.Major
+                GeneratorVersion = Smz3Randomizer.Version.Major,
+                IsMultiplayer = isMultiplayer,
             };
             _dbContext.GeneratedRoms.Add(rom);
             await _stateService.CreateStateAsync(seed.Worlds.Select(x => x.World), rom);

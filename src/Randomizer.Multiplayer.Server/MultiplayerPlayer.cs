@@ -2,6 +2,9 @@
 
 namespace Randomizer.Multiplayer.Server;
 
+/// <summary>
+/// A particular player in a multiplayer game
+/// </summary>
 public class MultiplayerPlayer
 {
     public MultiplayerPlayer(MultiplayerGame game, string playerGuid, string playerKey, string playerName, string connectionId)
@@ -17,8 +20,8 @@ public class MultiplayerPlayer
         };
     }
     public MultiplayerGame Game { get; }
-    public string Guid { get; set; }
-    public string Key { get; set; }
+    public string Guid { get; }
+    public string Key { get; }
     public string ConnectionId { get; set; }
     public MultiplayerPlayerState State { get; set; }
 }

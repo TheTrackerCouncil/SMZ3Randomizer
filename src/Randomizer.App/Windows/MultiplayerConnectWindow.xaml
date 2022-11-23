@@ -24,6 +24,7 @@
       <StackPanel Grid.Row="0" Orientation="Vertical"
                    Margin="11,11,11,11"
                    Visibility="Visible">
+
         <controls:LabeledControl Text="{Binding UrlLabelText}">
           <TextBox
             Name="ServerUrlTextBox"
@@ -31,6 +32,7 @@
             IsEnabled="{Binding CanEnterInput}"
             Margin="5 0 0 0" />
         </controls:LabeledControl>
+
         <controls:LabeledControl Text="Name:">
           <TextBox Name="PlayerNameTextBox"
                    TextChanged="PlayerNameTextBox_OnTextChanged"
@@ -38,6 +40,7 @@
                    IsEnabled="{Binding CanEnterInput}"
                    Margin="5 0 0 0 " />
         </controls:LabeledControl>
+
         <controls:LabeledControl Text="Mode:">
           <ComboBox SelectedItem="{Binding MultiplayerGameType}"
                     ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:MultiplayerGameType}}}"
@@ -46,6 +49,7 @@
                     Margin="5 0 0 0 "
                     IsEnabled="{Binding IsCreatingGame}" />
         </controls:LabeledControl>
+
       </StackPanel>
     </Grid>
 

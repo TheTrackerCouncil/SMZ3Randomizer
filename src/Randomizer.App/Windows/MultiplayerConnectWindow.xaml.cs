@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
@@ -10,11 +12,13 @@ namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for MultiplayerConnectWindow.xaml
+    /// Window for creating a new multiplayer game or connecting to a previously started one
     /// </summary>
     public sealed partial class MultiplayerConnectWindow : Window, INotifyPropertyChanged
     {
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly ILogger _logger;
+        private readonly string _version;
 
         public MultiplayerConnectWindow(MultiplayerClientService multiplayerClientService, ILogger<MultiplayerConnectWindow> logger)
         {
@@ -23,7 +27,8 @@ namespace Randomizer.App.Windows
             InitializeComponent();
             DataContext = this;
 
-            _logger.LogInformation("Opening window");
+            _version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion ?? "";
+
             _multiplayerClientService.Connected += MultiplayerClientServiceConnected;
             _multiplayerClientService.Error += MultiplayerClientServiceError;
             _multiplayerClientService.GameCreated += MultiplayerClientServiceGameJoined;
@@ -55,12 +60,12 @@ namespace Randomizer.App.Windows
             if (IsCreatingGame)
             {
                 _logger.LogInformation("Connecting");
-                await _multiplayerClientService.CreateGame(PlayerNameTextBox.Text, MultiplayerGameType);
+                await _multiplayerClientService.CreateGame(PlayerNameTextBox.Text, MultiplayerGameType, _version);
             }
             else
             {
                 _logger.LogInformation("Joining");
-                await _multiplayerClientService.JoinGame(GameGuid, PlayerNameTextBox.Text);
+                await _multiplayerClientService.JoinGame(GameGuid, PlayerNameTextBox.Text, _version);
             }
         }
 
@@ -128,12 +133,6 @@ namespace Randomizer.App.Windows
                 OnPropertyChanged();
                 await _multiplayerClientService.Connect(ServerUrl);
             }
-        }
-
-        private void ServerUrlTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            IsJoiningGame = ServerUrlTextBox.Text.Contains("?game=");
-            OnPropertyChanged();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

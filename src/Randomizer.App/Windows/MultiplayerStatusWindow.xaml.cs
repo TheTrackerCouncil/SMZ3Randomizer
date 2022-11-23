@@ -15,6 +15,7 @@ namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for MultiplayerStatusWindow.xaml
+    /// This window lists all of the players and allows players to update their configs and forfeit
     /// </summary>
     public partial class MultiplayerStatusWindow : Window
     {

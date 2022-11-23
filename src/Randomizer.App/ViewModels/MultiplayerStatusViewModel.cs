@@ -96,18 +96,9 @@ namespace Randomizer.App.ViewModels
             }
         }
 
-        public string ConnectionStatus
-        {
-            get
-            {
-                if (GameStatus == MultiplayerGameStatus.Generating) return "Generating Seed";
-                return IsConnected ? "Connected" : "Not Connected";
-            }
-        }
-
+        public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
         public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
         public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
-
         public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started;
         public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
         public MultiplayerPlayerState? LocalPlayer { get; private set; }
