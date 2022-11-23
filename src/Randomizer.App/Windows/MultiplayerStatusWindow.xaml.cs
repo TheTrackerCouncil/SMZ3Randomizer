@@ -74,10 +74,10 @@ namespace Randomizer.App.Windows
             Model.GameStatus = _multiplayerClientService.GameStatus;
         }
 
-        private void MultiplayerClientServiceOnGameForfeit()
+        private async void MultiplayerClientServiceOnGameForfeit()
         {
             if (_multiplayerClientService.GameStatus != MultiplayerGameStatus.Created) return;
-            Task.Run(async () => await _multiplayerClientService.Disconnect());
+            await _multiplayerClientService.Disconnect();
             Close();
         }
 
@@ -86,9 +86,9 @@ namespace Randomizer.App.Windows
             Model.IsConnected = true;
         }
 
-        private void MultiplayerClientServiceOnConnected()
+        private async void MultiplayerClientServiceOnConnected()
         {
-            Task.Run(async () => await _multiplayerClientService.RejoinGame());
+            await _multiplayerClientService.RejoinGame();
         }
 
         private void MultiplayerClientServiceOnConnectionClosed(string message, Exception? exception)
@@ -145,18 +145,18 @@ namespace Randomizer.App.Windows
             }
         }
 
-        protected void ShowGenerateRomWindow()
+        protected async Task ShowGenerateRomWindow()
         {
             if (ParentPanel.ShowGenerateRomWindow(null, true) != true) return;
             var config = ParentPanel.Options.ToConfig();
             config.PlayerGuid = _multiplayerClientService.CurrentPlayerGuid!;
             config.PlayerName = _multiplayerClientService.LocalPlayer!.PlayerName;
-            Task.Run(async () => await _multiplayerClientService.SubmitConfig(Config.ToConfigString(config)));
+            await _multiplayerClientService.SubmitConfig(Config.ToConfigString(config));
         }
 
-        private void UpdateConfigButton_Click(object sender, RoutedEventArgs e)
+        private async void UpdateConfigButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowGenerateRomWindow();
+            await ShowGenerateRomWindow();
         }
 
         private async void StartGameButton_Click(object sender, RoutedEventArgs e)
@@ -176,9 +176,9 @@ namespace Randomizer.App.Windows
             }
         }
 
-        private void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
+        private async void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowGenerateRomWindow();
+            await ShowGenerateRomWindow();
         }
 
         private async void ReconnectButton_Click(object sender, RoutedEventArgs e)
