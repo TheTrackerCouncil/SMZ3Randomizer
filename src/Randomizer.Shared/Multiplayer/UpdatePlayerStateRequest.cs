@@ -1,18 +1,15 @@
 ﻿namespace Randomizer.Shared.Multiplayer;
 
-public class UpdatePlayerStateRequest : MultiplayerRequest
+public class UpdatePlayerStateRequest
 {
-    public UpdatePlayerStateRequest(string gameGuid, string playerGuid, string playerKey, MultiplayerPlayerState state, bool propogate = true)
+    public UpdatePlayerStateRequest(MultiplayerPlayerState state, bool propagate = true)
     {
-        GameGuid = gameGuid;
-        PlayerGuid = playerGuid;
-        PlayerKey = playerKey;
         State = state;
-        Propogate = propogate;
+        Propagate = propagate;
     }
 
     public MultiplayerPlayerState State { get; }
 
-    public bool Propogate { get; }
+    public bool Propagate { get; }
 
 }

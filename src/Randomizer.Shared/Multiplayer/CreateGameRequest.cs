@@ -1,6 +1,6 @@
 ﻿namespace Randomizer.Shared.Multiplayer;
 
-public class CreateGameRequest : MultiplayerRequest
+public class CreateGameRequest
 {
     public CreateGameRequest(string playerName, MultiplayerGameType gameType, string version)
     {

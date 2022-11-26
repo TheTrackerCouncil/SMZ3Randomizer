@@ -166,7 +166,7 @@ namespace Randomizer.App.Windows
                 DisplayError("No players found to start the game.");
             }
 
-            await _multiplayerClientService.UpdateGameStatus(MultiplayerGameStatus.Generating);
+            await _multiplayerClientService.UpdateGameState(MultiplayerGameStatus.Generating);
 
             var error = await _multiplayerGameService.GenerateSeed();
 

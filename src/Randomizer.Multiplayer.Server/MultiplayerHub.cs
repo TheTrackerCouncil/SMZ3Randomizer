@@ -44,7 +44,7 @@ namespace Randomizer.Multiplayer.Server
 
             var game = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, request.GameType, _serverUrl, "", out var error);
 
-            if (game == null || game.AdminPlayer == null)
+            if (game?.AdminPlayer == null)
             {
                 error ??= "Unknown error creating game";
                 await SendErrorResponse(error);
@@ -146,21 +146,15 @@ namespace Randomizer.Multiplayer.Server
         /// <param name="request"></param>
         public async Task UpdatePlayerState(UpdatePlayerStateRequest request)
         {
-            var game = MultiplayerGame.LoadGame(request.GameGuid);
-            if (game == null)
-            {
-                await SendErrorResponse("Unable to find game");
-                return;
-            }
-
-            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true);
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
             if (player == null)
             {
                 await SendErrorResponse("Unable to find player");
                 return;
             }
 
-            if (request.State.Guid != request.PlayerGuid)
+            var game = player.Game;
+            if (player.Guid != request.State.Guid)
             {
                 player = game.GetPlayer(request.State.Guid, null, false);
                 if (player == null)
@@ -174,7 +168,7 @@ namespace Randomizer.Multiplayer.Server
 
             _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player state updated", game.State.Guid, player.Guid);
 
-            await Clients.Groups(request.GameGuid)
+            await Clients.Groups(game.Guid)
                 .SendAsync("PlayerSync", new PlayerSyncResponse(game.State, player.State));
         }
 
@@ -184,20 +178,20 @@ namespace Randomizer.Multiplayer.Server
         /// <param name="request"></param>
         public async Task StartGame(StartGameRequest request)
         {
-            var game = MultiplayerGame.LoadGame(request.GameGuid);
-            if (game == null)
-            {
-                await SendErrorResponse("Unable to find game");
-                return;
-            }
-
-            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true, true);
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
             if (player == null)
             {
                 await SendErrorResponse("Unable to find player");
                 return;
             }
 
+            if (!player.IsGameAdmin)
+            {
+                await SendErrorResponse("Player does not have access to start the game");
+                return;
+            }
+
+            var game = player.Game;
             var successful = game.StartGame(request.Seed, request.ValidationHash, out var error);
 
             if (!successful)
@@ -208,7 +202,7 @@ namespace Randomizer.Multiplayer.Server
 
             _logger.LogInformation("Starting game");
 
-            await Clients.Group(request.GameGuid)
+            await Clients.Group(game.Guid)
                 .SendAsync("PlayerListSync", new PlayerListSyncResponse(game.State, game.PlayerStates));
         }
 
@@ -219,29 +213,22 @@ namespace Randomizer.Multiplayer.Server
         /// <param name="request"></param>
         public async Task ForfeitGame(ForfeitGameRequest request)
         {
-            var game = MultiplayerGame.LoadGame(request.GameGuid);
-            if (game == null)
-            {
-                await SendErrorResponse("Unable to find game");
-                return;
-            }
-
-            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true);
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
             if (player == null)
             {
                 await SendErrorResponse("Unable to find player");
                 return;
             }
 
-            if (!player.State.IsAdmin && player.Guid != request.ForfeitPlayerGuid)
+            if (player.Guid != request.PlayerGuid && !player.IsGameAdmin)
             {
-                await SendErrorResponse("Unable to find player");
+                await SendErrorResponse("Player does not have access to forfeit another player");
                 return;
             }
 
-            if (player.Guid != request.ForfeitPlayerGuid)
+            if (player.Guid != request.PlayerGuid)
             {
-                player = game.GetPlayer(request.ForfeitPlayerGuid, null, false);
+                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
                 if (player == null)
                 {
                     await SendErrorResponse("Unable to find player");
@@ -249,36 +236,151 @@ namespace Randomizer.Multiplayer.Server
                 }
             }
 
-            game.ForfeitPlayer(player);
+            player.Game.ForfeitPlayer(player);
 
-            await Clients.Client(player.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse(game.State));
+            await Clients.Client(player.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse(player.Game.State));
 
-            await SendPlayerSyncResponse(game, player, false);
+            await SendPlayerSyncResponse(player.Game, player, false);
         }
 
         /// <summary>
         /// Updates a game's status
         /// </summary>
         /// <param name="request"></param>
-        public async Task UpdateGameStatus(UpdateGameStatusRequest request)
+        public async Task UpdateGameState(UpdateGameStateRequest request)
         {
-            var game = MultiplayerGame.LoadGame(request.GameGuid);
-            if (game == null)
-            {
-                await SendErrorResponse("Unable to find game");
-                return;
-            }
-
-            var player = game.GetPlayer(request.PlayerGuid, request.PlayerKey, true, true);
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
             if (player == null)
             {
                 await SendErrorResponse("Unable to find player");
                 return;
             }
 
-            game.UpdateGameStatus(request.GameStatus);
+            if (!player.IsGameAdmin)
+            {
+                await SendErrorResponse("Player does not have access to update the multiplayer game state");
+                return;
+            }
 
-            await Clients.Group(game.State.Guid).SendAsync("UpdateGameStatus", new UpdateGameStatusResponse(game.State));
+            if (request.GameStatus != null) player.Game.UpdateGameStatus(request.GameStatus.Value);
+
+            await Clients.Group(player.Game.Guid).SendAsync("UpdateGameState", new UpdateGameStateResponse(player.Game.State));
+        }
+
+        /// <summary>
+        /// Request to mark a specific location as tracked
+        /// </summary>
+        /// <param name="request"></param>
+        public async Task TrackLocation(TrackLocationRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            if (request.PlayerGuid != player.Guid)
+            {
+                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
+                if (player == null)
+                {
+                    await SendErrorResponse("Unable to find player");
+                    return;
+                }
+            }
+
+            player.TrackLocation(request.LocationId);
+
+            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackLocation",
+                new TrackLocationResponse(player.Guid, request.LocationId));
+        }
+
+        /// <summary>
+        /// Request to mark a specific item as tracked
+        /// </summary>
+        /// <param name="request"></param>
+        public async Task TrackItem(TrackItemRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            if (request.PlayerGuid != player.Guid)
+            {
+                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
+                if (player == null)
+                {
+                    await SendErrorResponse("Unable to find player");
+                    return;
+                }
+            }
+
+            player.TrackItem(request.ItemType);
+
+            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackItem",
+                new TrackItemResponse(player.Guid, request.ItemType));
+        }
+
+        /// <summary>
+        /// Request to mark a specific boss as tracked
+        /// </summary>
+        /// <param name="request"></param>
+        public async Task TrackBoss(TrackBossRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            if (request.PlayerGuid != player.Guid)
+            {
+                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
+                if (player == null)
+                {
+                    await SendErrorResponse("Unable to find player");
+                    return;
+                }
+            }
+
+            player.TrackBoss(request.BossType);
+
+            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackBoss",
+                new TrackBossResponse(player.Guid, request.BossType));
+        }
+
+        /// <summary>
+        /// Request to mark a specific dungeon as tracked
+        /// </summary>
+        /// <param name="request"></param>
+        public async Task TrackDungeon(TrackDungeonRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            if (request.PlayerGuid != player.Guid)
+            {
+                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
+                if (player == null)
+                {
+                    await SendErrorResponse("Unable to find player");
+                    return;
+                }
+            }
+
+            player.TrackDungeon(request.DungeonName);
+
+            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackDungeon",
+                new TrackDungeonResponse(player.Guid, request.DungeonName));
         }
 
         /// <summary>

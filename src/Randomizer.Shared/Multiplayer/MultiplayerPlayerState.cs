@@ -20,9 +20,4 @@ public class MultiplayerPlayerState
     public Dictionary<BossType, bool>? Bosses { get; set; }
     public Dictionary<string, bool>? Dungeons { get; set; }
     public string? AdditionalData { get; set; }
-
-    //public List<TrackerLocationState>? Locations { get; set; }
-    //public List<TrackerItemState>? Items { get; set; }
-    //public List<TrackerBossState>? Bosses { get; set; }
-    //public List<TrackerDungeonState>? Dungeons { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Randomizer.Shared.Multiplayer;
 
-public class RejoinGameRequest : MultiplayerRequest
+public class RejoinGameRequest
 {
     public RejoinGameRequest(string gameGuid, string playerGuid, string playerKey)
     {
@@ -8,4 +8,8 @@ public class RejoinGameRequest : MultiplayerRequest
         PlayerGuid = playerGuid;
         PlayerKey = playerKey;
     }
+
+    public string GameGuid { get; }
+    public string PlayerGuid { get; }
+    public string PlayerKey { get; }
 }

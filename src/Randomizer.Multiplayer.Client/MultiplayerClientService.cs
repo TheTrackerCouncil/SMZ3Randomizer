@@ -91,7 +91,7 @@ namespace Randomizer.Multiplayer.Client
 
             _connection.On<PlayerListSyncResponse>("PlayerListSync", OnPlayerListSync);
 
-            _connection.On<UpdateGameStatusResponse>("UpdateGameStatus", OnUpdateGameStatus);
+            _connection.On<UpdateGameStateResponse>("UpdateGameState", OnUpdateGameState);
 
             _connection.On<ErrorResponse>("Error", OnError);
 
@@ -220,7 +220,7 @@ namespace Randomizer.Multiplayer.Client
                 return;
             }
 
-            await MakeRequest("UpdatePlayerState", new UpdatePlayerStateRequest(CurrentGameGuid!, CurrentPlayerGuid!, CurrentPlayerKey!, state, propogate), true);
+            await MakeRequest("UpdatePlayerState", new UpdatePlayerStateRequest(state, propogate), true);
         }
 
         /// <summary>
@@ -249,17 +249,17 @@ namespace Randomizer.Multiplayer.Client
         {
             playerGuid ??= CurrentPlayerGuid;
             await MakeRequest("ForfeitGame",
-                new ForfeitGameRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", playerGuid ?? ""));
+                new ForfeitGameRequest(playerGuid ?? ""));
         }
 
         /// <summary>
         /// Updates the current game's status
         /// </summary>
-        /// <param name="gameStatus">The new status to update</param>
-        public async Task UpdateGameStatus(MultiplayerGameStatus gameStatus)
+        /// <param name="gameStatus">The new status to update. Set to null to not update.</param>
+        public async Task UpdateGameState(MultiplayerGameStatus? gameStatus)
         {
-            await MakeRequest("UpdateGameStatus",
-                new UpdateGameStatusRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", gameStatus));
+            await MakeRequest("UpdateGameState",
+                new UpdateGameStateRequest(gameStatus));
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace Randomizer.Multiplayer.Client
                 return;
             }
 
-            await MakeRequest("StartGame", new StartGameRequest(CurrentGameGuid ?? "", CurrentPlayerGuid ?? "", CurrentPlayerKey ?? "", seed, validationHash));
+            await MakeRequest("StartGame", new StartGameRequest(seed, validationHash));
         }
         #endregion
 
@@ -316,7 +316,7 @@ namespace Randomizer.Multiplayer.Client
         /// On retrieving an update to the game's state
         /// </summary>
         /// <param name="response"></param>
-        private void OnUpdateGameStatus(UpdateGameStatusResponse response)
+        private void OnUpdateGameState(UpdateGameStateResponse response)
         {
             UpdateGameState(response.GameState);
             GameStateUpdated?.Invoke();

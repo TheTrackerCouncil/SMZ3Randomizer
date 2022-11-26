@@ -20,7 +20,7 @@ public class MultiplayerGame
     /// <param name="gameUrl">The url for players to use for connecting to the game</param>
     /// <param name="version">The SMZ3 version that the game is being generated on</param>
     /// <param name="type">The type of multiplayer game</param>
-    public MultiplayerGame(string guid, string gameUrl, string version, MultiplayerGameType type)
+    private MultiplayerGame(string guid, string gameUrl, string version, MultiplayerGameType type)
     {
         State = new MultiplayerGameState()
         {
@@ -28,10 +28,9 @@ public class MultiplayerGame
         };
     }
 
-    public MultiplayerGameState State { get; init; }
-
-    public MultiplayerPlayer? AdminPlayer { get; set; }
-
+    public string Guid => State.Guid;
+    public MultiplayerGameState State { get; }
+    public MultiplayerPlayer? AdminPlayer { get; private set; }
     public List<MultiplayerPlayerState> PlayerStates => _players.Values.Select(x => x.State).ToList();
 
 
@@ -52,7 +51,7 @@ public class MultiplayerGame
         string guid;
         do
         {
-            guid = Guid.NewGuid().ToString("N");
+            guid = System.Guid.NewGuid().ToString("N");
         } while (s_games.ContainsKey(guid));
 
         var game = new MultiplayerGame(guid, $"{baseUrl}?game={guid}", version, gameType);
@@ -63,8 +62,8 @@ public class MultiplayerGame
             return null;
         }
 
-        var playerGuid = Guid.NewGuid().ToString("N");
-        var playerKey = Guid.NewGuid().ToString("N");
+        var playerGuid = System.Guid.NewGuid().ToString("N");
+        var playerKey = System.Guid.NewGuid().ToString("N");
         var player = new MultiplayerPlayer(game, playerGuid, playerKey, playerName, playerConnectionId) { State =
         {
             IsAdmin = true
@@ -85,6 +84,16 @@ public class MultiplayerGame
     public static MultiplayerGame? LoadGame(string guid)
     {
         return s_games.TryGetValue(guid, out var game) ? game : null;
+    }
+
+    /// <summary>
+    /// Attempts to load a player based on the connection id
+    /// </summary>
+    /// <param name="connectionId">The player connection id to look up</param>
+    /// <returns>The player object if found, otherwise null</returns>
+    public static MultiplayerPlayer? LoadPlayer(string connectionId)
+    {
+        return s_playerConnections.TryGetValue(connectionId, out var player) ? player : null;
     }
 
     /// <summary>
@@ -112,7 +121,7 @@ public class MultiplayerGame
     /// <param name="playerConnectionId">The connection id of the player</param>
     /// <param name="version">The SMZ3 version the player is running on</param>
     /// <param name="error">Output of any error while trying to add the player to the game</param>
-    /// <returns>The player object for the added player, if succesfully added</returns>
+    /// <returns>The player object for the added player, if successfully added</returns>
     public MultiplayerPlayer? JoinGame(string playerName, string playerConnectionId, string version, out string? error)
     {
         if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
@@ -136,10 +145,10 @@ public class MultiplayerGame
         string guid;
         do
         {
-            guid = Guid.NewGuid().ToString("N");
+            guid = System.Guid.NewGuid().ToString("N");
         } while (_players.ContainsKey(guid));
 
-        var key = Guid.NewGuid().ToString("N");
+        var key = System.Guid.NewGuid().ToString("N");
 
         var player = new MultiplayerPlayer(this, guid, key, playerName, playerConnectionId);
         _players[guid] = player;
