@@ -6,26 +6,26 @@ namespace Randomizer.SMZ3.Tracking
     /// <summary>
     /// Provides data for events that occur when clearing a location.
     /// </summary>
-    public class LocationClearedEventArgs : TrackerEventArgs
+    public class BossTrackedEventArgs : TrackerEventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="LocationClearedEventArgs"/> class.
+        /// cref="BossTrackedEventArgs"/> class.
         /// </summary>
-        /// <param name="location">The location that was cleared.</param>
+        /// <param name="boss">The boss that was tracked.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="autoTracked">If the location was automatically tracked</param>
-        public LocationClearedEventArgs(Location location, float? confidence, bool autoTracked)
+        public BossTrackedEventArgs(Boss? boss, float? confidence, bool autoTracked)
             : base(confidence)
         {
-            Location = location;
+            Boss = boss;
             AutoTracked = autoTracked;
         }
 
         /// <summary>
-        /// Gets the location that was cleared.
+        /// Gets the boss that was tracked.
         /// </summary>
-        public Location Location { get; }
+        public Boss? Boss { get; }
 
         /// <summary>
         /// If the location was auto tracked

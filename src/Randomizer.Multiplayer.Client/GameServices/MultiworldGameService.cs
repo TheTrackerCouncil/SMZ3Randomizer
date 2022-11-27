@@ -1,12 +1,6 @@
-﻿using System.IO.Compression;
-using System.Text;
-using System.Text.Json;
-using Randomizer.Data.Configuration;
-using Randomizer.Data.Options;
+﻿using Randomizer.Data.Options;
 using Randomizer.Data.Services;
-using Randomizer.Data.WorldData;
 using Randomizer.Shared.Multiplayer;
-using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.Multiplayer.Client.GameServices;
@@ -15,7 +9,7 @@ public class MultiworldGameService : MultiplayerGameTypeService
 {
     private ITrackerStateService _trackerStateService;
 
-    public MultiworldGameService(Smz3Randomizer randomizer, ITrackerStateService trackerStateService) : base(randomizer)
+    public MultiworldGameService(Smz3Randomizer randomizer, MultiplayerClientService client, ITrackerStateService trackerStateService) : base(randomizer, client)
     {
         _trackerStateService = trackerStateService;
     }

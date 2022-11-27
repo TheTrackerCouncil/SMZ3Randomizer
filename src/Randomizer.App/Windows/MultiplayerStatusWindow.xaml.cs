@@ -66,7 +66,11 @@ namespace Randomizer.App.Windows
             }
 
             var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!);
-            DisplayError("Rom generated");
+
+            if (rom != null)
+            {
+                Model.GeneratedRom = rom;
+            }
         }
 
         private void MultiplayerClientServiceOnGameStateUpdated()
@@ -176,9 +180,9 @@ namespace Randomizer.App.Windows
             }
         }
 
-        private async void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
+        private void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
         {
-            await ShowGenerateRomWindow();
+            if (Model.GeneratedRom != null) ParentPanel.LaunchTracker(Model.GeneratedRom!);
         }
 
         private async void ReconnectButton_Click(object sender, RoutedEventArgs e)

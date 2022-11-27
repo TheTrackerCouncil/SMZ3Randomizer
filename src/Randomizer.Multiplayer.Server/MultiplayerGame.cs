@@ -103,14 +103,11 @@ public class MultiplayerGame
     /// <returns>The player object for the disconnected player, if found</returns>
     public static MultiplayerPlayer? PlayerDisconnected(string connectionId)
     {
-        if (s_playerConnections.Remove(connectionId, out var player))
-        {
-            player.State.IsConnected = false;
-            player.Game.UpdatePlayerStatus(player);
-            return player;
-        }
-
-        return null;
+        if (!s_playerConnections.Remove(connectionId, out var player)) return null;
+        player.ConnectionId = "";
+        player.State.IsConnected = false;
+        player.Game.UpdatePlayerStatus(player);
+        return player;
     }
     #endregion Static Methods
 

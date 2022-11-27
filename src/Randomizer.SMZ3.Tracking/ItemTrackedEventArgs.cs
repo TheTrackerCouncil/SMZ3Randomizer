@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -11,13 +12,16 @@ namespace Randomizer.SMZ3.Tracking
         /// Initializes a new instance of the <see cref="ItemTrackedEventArgs"/>
         /// class.
         /// </summary>
+        /// <param name="item">The item that was tracked or untracked</param>
         /// <param name="trackedAs">
         /// The name of the item that was tracked.
         /// </param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public ItemTrackedEventArgs(string? trackedAs, float? confidence)
+        /// <param name="autoTracked">If the item was auto tracked</param>
+        public ItemTrackedEventArgs(Item? item, string? trackedAs, float? confidence, bool autoTracked)
             : base(confidence)
         {
+            Item = item;
             TrackedAs = trackedAs;
         }
 
@@ -25,5 +29,15 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the name of the item as it was tracked.
         /// </summary>
         public string? TrackedAs { get; }
+
+        /// <summary>
+        /// The item that was tracked or untracked
+        /// </summary>
+        public Item? Item { get; }
+
+        /// <summary>
+        /// If the item was auto tracked
+        /// </summary>
+        public bool AutoTracked { get; }
     }
 }

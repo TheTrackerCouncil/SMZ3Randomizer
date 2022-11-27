@@ -179,12 +179,12 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Occurs when the properties of a dungeon have changed.
         /// </summary>
-        public event EventHandler<TrackerEventArgs>? DungeonUpdated;
+        public event EventHandler<DungeonTrackedEventArgs>? DungeonUpdated;
 
         /// <summary>
         /// Occurs when the properties of a boss have changed.
         /// </summary>
-        public event EventHandler<TrackerEventArgs>? BossUpdated;
+        public event EventHandler<BossTrackedEventArgs>? BossUpdated;
 
         /// <summary>
         /// Occurs when the marked locations have changed
@@ -514,7 +514,7 @@ namespace Randomizer.SMZ3.Tracking
                         Say(response.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure));
                 }
 
-                OnDungeonUpdated(new TrackerEventArgs(confidence));
+                OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
                 AddUndo(() => dungeon.DungeonState.RemainingTreasure += amount);
                 return true;
             }
@@ -555,7 +555,7 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.DungeonRewardMarked.Format(dungeon.DungeonMetadata.Name, rewardObj?.Metadata.Name ?? reward.GetDescription()));
             }
 
-            OnDungeonUpdated(new TrackerEventArgs(confidence));
+            OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
 
             if (!autoTracked) AddUndo(() => dungeon.DungeonState.MarkedReward = originalReward);
         }
@@ -576,7 +576,7 @@ namespace Randomizer.SMZ3.Tracking
                 Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
                 unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.Reward = reward);
                 AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState!.Reward = RewardType.None));
-                OnDungeonUpdated(new TrackerEventArgs(confidence));
+                OnDungeonUpdated(new DungeonTrackedEventArgs(null, confidence, false));
             }
             else
             {
@@ -610,7 +610,7 @@ namespace Randomizer.SMZ3.Tracking
                 medallionItems.Insert(0, ItemType.Nothing);
                 var index = (medallionItems.IndexOf(originalRequirement) + 1) % medallionItems.Count;
                 dungeon.DungeonState.MarkedMedallion = medallionItems[index];
-                OnDungeonUpdated(new TrackerEventArgs(confidence));
+                OnDungeonUpdated(new DungeonTrackedEventArgs(null, confidence, false));
             }
             else
             {
@@ -627,7 +627,7 @@ namespace Randomizer.SMZ3.Tracking
 
                 dungeon.DungeonState.MarkedMedallion = medallion.Value;
                 Say(Responses.DungeonRequirementMarked.Format(medallion.ToString(), dungeon.DungeonMetadata.Name));
-                OnDungeonUpdated(new TrackerEventArgs(confidence));
+                OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, false));
             }
 
             AddUndo(() => dungeon.DungeonState.MarkedMedallion = originalRequirement);
@@ -1163,7 +1163,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             var undoTrack = () => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); };
-            OnItemTracked(new ItemTrackedEventArgs(trackedAs, confidence));
+            OnItemTracked(new ItemTrackedEventArgs(item, trackedAs, confidence, autoTracked));
 
             // Check if we can clear a location
             Action? undoClear = null;
@@ -1195,7 +1195,7 @@ namespace Randomizer.SMZ3.Tracking
                         // cleared items
                         location.State.Cleared = true;
                         World.LastClearedLocation = location;
-                        OnLocationCleared(new(location, confidence));
+                        OnLocationCleared(new(location, confidence, autoTracked));
 
                         undoClear = () => location.State.Cleared = false;
                         if ((location.State.MarkedItem ?? ItemType.Nothing) != ItemType.Nothing)
@@ -1321,7 +1321,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             IsDirty = true;
-            OnItemTracked(new(null, confidence));
+            OnItemTracked(new(item, null, confidence, false));
             AddUndo(() => { item.State.TrackingState = originalTrackingState; ItemService.ResetProgression(); });
         }
 
@@ -1358,7 +1358,7 @@ namespace Randomizer.SMZ3.Tracking
             {
                 location.State.Cleared = true;
                 World.LastClearedLocation = location;
-                OnLocationCleared(new(location, confidence));
+                OnLocationCleared(new(location, confidence, false));
 
                 if (location.State.HasMarkedItem)
                 {
@@ -1471,7 +1471,7 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = true;
 
             AddUndo(() => { item.State.TrackingState = oldItemCount; ItemService.ResetProgression(); });
-            OnItemTracked(new(null, confidence));
+            OnItemTracked(new(item, null, confidence, false));
         }
 
         /// <summary>
@@ -1545,7 +1545,7 @@ namespace Randomizer.SMZ3.Tracking
                                 treasureTracked++;
                             location.State.Cleared = true;
                             World.LastClearedLocation = location;
-                            OnLocationCleared(new(location, confidence));
+                            OnLocationCleared(new(location, confidence, false));
                             continue;
                         }
 
@@ -1612,7 +1612,8 @@ namespace Randomizer.SMZ3.Tracking
                         }
                     }
                 }
-                OnItemTracked(new ItemTrackedEventArgs(null, confidence));
+
+                OnItemTracked(new ItemTrackedEventArgs(null, null, confidence, false));
             }
 
             IsDirty = true;
@@ -1691,7 +1692,7 @@ namespace Randomizer.SMZ3.Tracking
             }
             ItemService.ResetProgression();
 
-            OnDungeonUpdated(new(confidence));
+            OnDungeonUpdated(new(dungeon, confidence, false));
             AddUndo(() =>
             {
                 dungeon.DungeonState.RemainingTreasure = remaining;
@@ -1756,7 +1757,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             World.LastClearedLocation = location;
-            OnLocationCleared(new(location, confidence));
+            OnLocationCleared(new(location, confidence, autoTracked));
         }
 
         /// <summary>
@@ -1785,7 +1786,7 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.DungeonBossCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
             IsDirty = true;
             RestartIdleTimers();
-            OnDungeonUpdated(new TrackerEventArgs(confidence));
+            OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
 
             if (!autoTracked)
             {
@@ -1833,7 +1834,7 @@ namespace Randomizer.SMZ3.Tracking
             ItemService.ResetProgression();
 
             RestartIdleTimers();
-            OnBossUpdated(new(confidence));
+            OnBossUpdated(new(boss, confidence, autoTracked));
 
             if (!autoTracked)
             {
@@ -1864,7 +1865,7 @@ namespace Randomizer.SMZ3.Tracking
             IsDirty = true;
             ItemService.ResetProgression();
 
-            OnBossUpdated(new(confidence));
+            OnBossUpdated(new(boss, confidence, false));
             AddUndo(() => boss.State.Defeated = true);
         }
 
@@ -1912,14 +1913,14 @@ namespace Randomizer.SMZ3.Tracking
                 if (rewardLocation.State.Cleared)
                 {
                     rewardLocation.State.Cleared = false;
-                    OnLocationCleared(new(rewardLocation, null));
+                    OnLocationCleared(new(rewardLocation, null, false));
                     undoUnclear = () => rewardLocation.State.Cleared = true;
                 }
             }
 
             IsDirty = true;
 
-            OnDungeonUpdated(new TrackerEventArgs(confidence));
+            OnDungeonUpdated(new(dungeon, confidence, false));
             AddUndo(() =>
             {
                 dungeon.DungeonState.Cleared = false;
@@ -2235,14 +2236,14 @@ namespace Randomizer.SMZ3.Tracking
         /// Raises the <see cref="DungeonUpdated"/> event.
         /// </summary>
         /// <param name="e">Event data.</param>
-        protected virtual void OnDungeonUpdated(TrackerEventArgs e)
+        protected virtual void OnDungeonUpdated(DungeonTrackedEventArgs e)
             => DungeonUpdated?.Invoke(this, e);
 
         /// <summary>
         /// Raises the <see cref="BossUpdated"/> event.
         /// </summary>
         /// <param name="e">Event data.</param>
-        protected virtual void OnBossUpdated(TrackerEventArgs e)
+        protected virtual void OnBossUpdated(BossTrackedEventArgs e)
             => BossUpdated?.Invoke(this, e);
 
         /// <summary>

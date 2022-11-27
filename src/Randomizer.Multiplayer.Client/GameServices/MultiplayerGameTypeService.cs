@@ -2,6 +2,8 @@
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 using Randomizer.Shared.Multiplayer;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
@@ -11,12 +13,17 @@ namespace Randomizer.Multiplayer.Client.GameServices;
 public abstract class MultiplayerGameTypeService
 {
 
-    public MultiplayerGameTypeService(Smz3Randomizer randomizer)
+    public MultiplayerGameTypeService(Smz3Randomizer randomizer, MultiplayerClientService client)
     {
         Randomizer = randomizer;
+        Client = client;
     }
 
     protected Smz3Randomizer Randomizer { get; init; }
+
+    protected MultiplayerClientService Client { get; }
+
+    public TrackerState? TrackerState { get; set; }
 
     public abstract SeedData? GenerateSeed(List<MultiplayerPlayerState> players, out string error);
 
@@ -24,7 +31,7 @@ public abstract class MultiplayerGameTypeService
 
     public MultiplayerPlayerState GetPlayerDefaultState(MultiplayerPlayerState state, World world)
     {
-        state.Locations = world.Locations.ToDictionary(x => x.Id, x => false);
+        state.Locations = world.Locations.ToDictionary(x => x.Id, _ => false);
         state.Items = world.LocationItems.Select(x => x.Type).Distinct().ToDictionary(x => x, _ => 0);
         state.Bosses = world.GoldenBosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
         state.Dungeons = world.Dungeons.ToDictionary(x => x.DungeonName, _ => false);
@@ -80,5 +87,108 @@ public abstract class MultiplayerGameTypeService
                 .ThenBy(x => x.Name)
                 .OfType<IHasReward>().Select(x => x.RewardType.ToString()));
         return $"{NonCryptographicHash.Fnv1a(itemHashCode)}{NonCryptographicHash.Fnv1a(rewardHashCode)}";
+    }
+
+    public async Task TrackLocation(Location location)
+    {
+        await Client.TrackLocation(location.Id, location.World.Guid);
+    }
+
+    public async Task TrackItem(Item item)
+    {
+        await Client.TrackItem(item.Type, item.State.TrackingState, item.World.Guid);
+    }
+
+    public async Task TrackDungeon(IDungeon dungeon)
+    {
+        await Client.TrackDungeon(dungeon.DungeonName, (dungeon as Region)!.World.Guid);
+    }
+
+    public async Task TrackBoss(Boss boss)
+    {
+        await Client.TrackBoss(boss.Type, boss.World.Guid);
+    }
+
+    public PlayerTrackedLocationEventHandlerArgs PlayerTrackedLocation(MultiplayerPlayerState player, int locationId, bool isLocalPlayer)
+    {
+        var itemToGive = ItemType.Nothing;
+
+        if (TrackerState != null && !isLocalPlayer)
+        {
+            var locationState =
+                TrackerState.LocationStates.First(x =>
+                    x.WorldId == player.WorldId && x.LocationId == locationId);
+            locationState.Autotracked = true;
+            locationState.Cleared = true;
+            if (locationState.ItemWorldId == Client.LocalPlayer!.WorldId)
+            {
+                itemToGive = locationState.Item;
+            }
+        }
+
+        return new PlayerTrackedLocationEventHandlerArgs()
+        {
+            PlayerId = player.WorldId!.Value,
+            PlayerName = player.PlayerName,
+            IsLocalPlayer = isLocalPlayer,
+            LocationId = locationId,
+            ItemToGive = itemToGive
+        };
+    }
+
+    public PlayerTrackedItemEventHandlerArgs PlayerTrackedItem(MultiplayerPlayerState player, ItemType itemType, int trackingValue, bool isLocalPlayer)
+    {
+        if (TrackerState != null && itemType != ItemType.Nothing && !isLocalPlayer)
+        {
+            var itemState = TrackerState.ItemStates.First(x => x.WorldId == player.WorldId && x.Type == itemType);
+            itemState.TrackingState = trackingValue;
+        }
+
+        return new PlayerTrackedItemEventHandlerArgs()
+        {
+            PlayerId = player.WorldId!.Value,
+            PlayerName = player.PlayerName,
+            IsLocalPlayer = isLocalPlayer,
+            ItemType = itemType,
+            TrackingValue = trackingValue,
+        };
+    }
+
+    public PlayerTrackedBossEventHandlerArgs PlayerTrackedBoss(MultiplayerPlayerState player, BossType bossType, bool isLocalPlayer)
+    {
+        if (TrackerState != null && bossType != BossType.None && !isLocalPlayer)
+        {
+            var bossState = TrackerState.BossStates.First(x => x.WorldId == player.WorldId && x.Type == bossType);
+            bossState.Defeated = true;
+        }
+
+        return new PlayerTrackedBossEventHandlerArgs()
+        {
+            PlayerId = player.WorldId!.Value,
+            PlayerName = player.PlayerName,
+            IsLocalPlayer = isLocalPlayer,
+            BossType = bossType,
+        };
+    }
+
+    public PlayerTrackedDungeonEventHandlerArgs PlayerTrackedDungeon(MultiplayerPlayerState player, string dungeonName, bool isLocalPlayer)
+    {
+        if (TrackerState != null && !isLocalPlayer)
+        {
+            var dungeonState =
+                TrackerState.DungeonStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Name == dungeonName);
+            if (dungeonState != null)
+            {
+                dungeonState.Cleared = true;
+            }
+        }
+
+        return new PlayerTrackedDungeonEventHandlerArgs()
+        {
+            PlayerId = player.WorldId!.Value,
+            PlayerName = player.PlayerName,
+            IsLocalPlayer = isLocalPlayer,
+            DungeonName = dungeonName,
+        };
     }
 }

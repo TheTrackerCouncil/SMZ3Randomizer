@@ -26,8 +26,7 @@ namespace Randomizer.Multiplayer.Server
             var player = MultiplayerGame.PlayerDisconnected(Context.ConnectionId);
             if (player == null) return;
             _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player disconnected", player.Game.State.Guid, player.Guid);
-            await Clients.Group(player.Game.State.Guid)
-                .SendAsync("PlayerSync", new PlayerSyncResponse(player.Game.State, player.State));
+            await SendPlayerSyncResponse(player, false);
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace Randomizer.Multiplayer.Server
             await Clients.Caller.SendAsync("JoinGame",
                 new JoinGameResponse(game.State, player.Guid, player.Key, game.PlayerStates));
 
-            await SendPlayerSyncResponse(game, player, false);
+            await SendPlayerSyncResponse(player, false);
         }
 
         /// <summary>
@@ -137,7 +136,7 @@ namespace Randomizer.Multiplayer.Server
             await Clients.Caller.SendAsync("RejoinGame",
                 new RejoinGameResponse(game.State, player.Guid, player.Key, game.PlayerStates));
 
-            await SendPlayerSyncResponse(game, player, false);
+            await SendPlayerSyncResponse(player, false);
         }
 
         /// <summary>
@@ -168,8 +167,7 @@ namespace Randomizer.Multiplayer.Server
 
             _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player state updated", game.State.Guid, player.Guid);
 
-            await Clients.Groups(game.Guid)
-                .SendAsync("PlayerSync", new PlayerSyncResponse(game.State, player.State));
+            await SendPlayerSyncResponse(player);
         }
 
         /// <summary>
@@ -240,7 +238,7 @@ namespace Randomizer.Multiplayer.Server
 
             await Clients.Client(player.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse(player.Game.State));
 
-            await SendPlayerSyncResponse(player.Game, player, false);
+            await SendPlayerSyncResponse(player, false);
         }
 
         /// <summary>
@@ -290,7 +288,7 @@ namespace Randomizer.Multiplayer.Server
                 }
             }
 
-            player.TrackLocation(request.LocationId);
+            player.State.TrackLocation(request.LocationId);
 
             await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackLocation",
                 new TrackLocationResponse(player.Guid, request.LocationId));
@@ -319,10 +317,10 @@ namespace Randomizer.Multiplayer.Server
                 }
             }
 
-            player.TrackItem(request.ItemType);
+            player.State.TrackItem(request.ItemType, request.TrackedValue);
 
             await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackItem",
-                new TrackItemResponse(player.Guid, request.ItemType));
+                new TrackItemResponse(player.Guid, request.ItemType, request.TrackedValue));
         }
 
         /// <summary>
@@ -348,7 +346,7 @@ namespace Randomizer.Multiplayer.Server
                 }
             }
 
-            player.TrackBoss(request.BossType);
+            player.State.TrackBoss(request.BossType);
 
             await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackBoss",
                 new TrackBossResponse(player.Guid, request.BossType));
@@ -377,7 +375,7 @@ namespace Randomizer.Multiplayer.Server
                 }
             }
 
-            player.TrackDungeon(request.DungeonName);
+            player.State.TrackDungeon(request.DungeonName);
 
             await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackDungeon",
                 new TrackDungeonResponse(player.Guid, request.DungeonName));
@@ -386,11 +384,11 @@ namespace Randomizer.Multiplayer.Server
         /// <summary>
         /// Sends players a particular player's state
         /// </summary>
-        /// <param name="game">The game that the message is being sent to</param>
         /// <param name="player">The player state that is being sent out</param>
         /// <param name="allPlayers">If all players should receive the notification or if only players excluding the player whose state is being sent out</param>
-        private async Task SendPlayerSyncResponse(MultiplayerGame game, MultiplayerPlayer player, bool allPlayers = true)
+        private async Task SendPlayerSyncResponse(MultiplayerPlayer player, bool allPlayers = true)
         {
+            var game = player.Game;
             var sendTo = allPlayers ? Clients.Group(game.State.Guid) : Clients.GroupExcept(game.State.Guid, player.ConnectionId);
             await sendTo.SendAsync("PlayerSync", new PlayerSyncResponse(game.State, player.State));
         }

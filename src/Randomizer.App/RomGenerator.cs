@@ -146,6 +146,7 @@ namespace Randomizer.App
             if (!string.IsNullOrEmpty(results.MsuError))
             {
                 MessageBox.Show("There was an error assigning the MSU\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
             }
 
             return results.Rom;

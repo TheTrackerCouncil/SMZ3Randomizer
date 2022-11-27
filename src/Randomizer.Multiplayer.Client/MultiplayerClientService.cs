@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
+using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Client
@@ -30,6 +32,10 @@ namespace Randomizer.Multiplayer.Client
         public event MultiplayerGenericEventHandler? GameStateUpdated;
         public event PlayerUpdatedEventHandler? PlayerUpdated;
         public event SeedDetailsRetrievedEventHandler? SeedDataGenerated;
+        public event TrackLocationEventHandler? LocationTracked;
+        public event TrackItemEventHandler? ItemTracked;
+        public event TrackDungeonEventHandler? DungeonTracked;
+        public event TrackBossEventHandler? BossTracked;
 
         public string? CurrentGameGuid { get; private set; }
         public string? CurrentPlayerGuid { get; private set; }
@@ -92,6 +98,14 @@ namespace Randomizer.Multiplayer.Client
             _connection.On<PlayerListSyncResponse>("PlayerListSync", OnPlayerListSync);
 
             _connection.On<UpdateGameStateResponse>("UpdateGameState", OnUpdateGameState);
+
+            _connection.On<TrackLocationResponse>("TrackLocation", OnTrackLocation);
+
+            _connection.On<TrackItemResponse>("TrackItem", OnTrackItem);
+
+            _connection.On<TrackDungeonResponse>("TrackDungeon", OnTrackDungeon);
+
+            _connection.On<TrackBossResponse>("TrackBoss", OnTrackBoss);
 
             _connection.On<ErrorResponse>("Error", OnError);
 
@@ -269,13 +283,31 @@ namespace Randomizer.Multiplayer.Client
         /// <param name="validationHash">A hash with all location data for verifying that all players are synced up</param>
         public async Task StartGame(string seed, string validationHash)
         {
-            if (_connection?.State != HubConnectionState.Connected)
-            {
-                Console.WriteLine("Not connected");
-                return;
-            }
-
             await MakeRequest("StartGame", new StartGameRequest(seed, validationHash));
+        }
+
+        public async Task TrackLocation(int locationId, string? playerGuid = null)
+        {
+            playerGuid ??= CurrentPlayerGuid;
+            await MakeRequest("TrackLocation", new TrackLocationRequest(playerGuid ?? CurrentPlayerGuid!, locationId));
+        }
+
+        public async Task TrackItem(ItemType itemType, int trackedValue, string? playerGuid = null)
+        {
+            playerGuid ??= CurrentPlayerGuid;
+            await MakeRequest("TrackItem", new TrackItemRequest(playerGuid ?? CurrentPlayerGuid!, itemType, trackedValue));
+        }
+
+        public async Task TrackDungeon(string dungeonName, string? playerGuid = null)
+        {
+            playerGuid ??= CurrentPlayerGuid;
+            await MakeRequest("TrackDungeon", new TrackDungeonRequest(playerGuid ?? CurrentPlayerGuid!, dungeonName));
+        }
+
+        public async Task TrackBoss(BossType bossType, string? playerGuid = null)
+        {
+            playerGuid ??= CurrentPlayerGuid;
+            await MakeRequest("TrackBoss", new TrackBossRequest(playerGuid ?? CurrentPlayerGuid!, bossType));
         }
         #endregion
 
@@ -393,6 +425,38 @@ namespace Randomizer.Multiplayer.Client
             Players?.Add(response.PlayerState);
             UpdateGameState(response.GameState);
             PlayerUpdated?.Invoke(response.PlayerState);
+        }
+
+        private void OnTrackBoss(TrackBossResponse obj)
+        {
+            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
+            player.TrackBoss(obj.BossType);
+            _logger.LogInformation("{Player} tracked boss {BossType}", player.PlayerName, obj.BossType);
+            BossTracked?.Invoke(player, obj.BossType);
+        }
+
+        private void OnTrackDungeon(TrackDungeonResponse obj)
+        {
+            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
+            player.TrackDungeon(obj.DungeonName);
+            _logger.LogInformation("{Player} tracked dungeon {DungeonName}", player.PlayerName, obj.DungeonName);
+            DungeonTracked?.Invoke(player, obj.DungeonName);
+        }
+
+        private void OnTrackItem(TrackItemResponse obj)
+        {
+            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
+            player.TrackItem(obj.ItemType, obj.TrackedValue);
+            _logger.LogInformation("{Player} tracked item {ItemType}", player.PlayerName, obj.ItemType);
+            ItemTracked?.Invoke(player, obj.ItemType, obj.TrackedValue);
+        }
+
+        private void OnTrackLocation(TrackLocationResponse obj)
+        {
+            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
+            player.TrackLocation(obj.LocationId);
+            _logger.LogInformation("{Player} tracked location {LocationId}", player.PlayerName, obj.LocationId);
+            LocationTracked?.Invoke(player, obj.LocationId);
         }
         #endregion
 

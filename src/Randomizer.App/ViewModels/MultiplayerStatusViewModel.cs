@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using Randomizer.Shared.Models;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.App.ViewModels
@@ -12,6 +13,7 @@ namespace Randomizer.App.ViewModels
         private string _gameUrl = "";
         private MultiplayerGameStatus? _gameStatus;
         private bool _allPlayersSubmittedConfigs;
+        private GeneratedRom? _generatedRom;
 
         public MultiplayerStatusViewModel()
         {
@@ -99,10 +101,28 @@ namespace Randomizer.App.ViewModels
         public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
         public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
         public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
-        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started;
+
+        public Visibility PlayButtonsVisibility => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null;
         public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
         public MultiplayerPlayerState? LocalPlayer { get; private set; }
         public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
+
+        public GeneratedRom? GeneratedRom
+        {
+            get
+            {
+                return _generatedRom;
+            }
+            set
+            {
+                _generatedRom = value;
+                OnPropertyChanged(nameof(PlayButtonsEnabled));
+                OnPropertyChanged(nameof(PlayButtonsVisibility));
+            }
+        }
 
         public void UpdateList(List<MultiplayerPlayerState> players, MultiplayerPlayerState? localPlayer)
         {

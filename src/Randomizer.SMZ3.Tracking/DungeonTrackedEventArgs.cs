@@ -1,31 +1,32 @@
 ﻿using System;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>
-    /// Provides data for events that occur when clearing a location.
+    /// Provides data for events that occur when tracking a dungeon.
     /// </summary>
-    public class LocationClearedEventArgs : TrackerEventArgs
+    public class DungeonTrackedEventArgs : TrackerEventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see
-        /// cref="LocationClearedEventArgs"/> class.
+        /// cref="DungeonTrackedEventArgs"/> class.
         /// </summary>
-        /// <param name="location">The location that was cleared.</param>
+        /// <param name="dungeon">The dungeon that was tracked.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="autoTracked">If the location was automatically tracked</param>
-        public LocationClearedEventArgs(Location location, float? confidence, bool autoTracked)
+        public DungeonTrackedEventArgs(IDungeon? dungeon, float? confidence, bool autoTracked)
             : base(confidence)
         {
-            Location = location;
+            Dungeon = dungeon;
             AutoTracked = autoTracked;
         }
 
         /// <summary>
-        /// Gets the location that was cleared.
+        /// Gets the boss that was tracked.
         /// </summary>
-        public Location Location { get; }
+        public IDungeon? Dungeon { get; }
 
         /// <summary>
         /// If the location was auto tracked

@@ -530,7 +530,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var duckItem = _itemService.FirstOrDefault("Duck");
                     if (duckItem?.State.TrackingState == 0)
                     {
-                        Tracker.TrackItem(duckItem, null, null, false, true, null, false);
+                        Tracker.TrackItem(duckItem, null, null, false, true);
                     }
                 }
 
@@ -597,7 +597,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var flag = location.MemoryFlag ?? 0;
                     var currentCleared = (is16Bit && currentData.CheckUInt16(loc * 2, flag)) || (!is16Bit && currentData.CheckBinary8Bit(loc, flag));
                     var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
-                    if (location.State.Autotracked == false&& currentCleared && prevCleared)
+                    if (location.State.Autotracked == false && currentCleared && prevCleared)
                     {
                         if (location.Region is GanonsTower gt && location != gt.BobsTorch)
                         {
