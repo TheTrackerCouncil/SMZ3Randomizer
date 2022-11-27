@@ -143,7 +143,7 @@ namespace Randomizer.App.Controls
         /// Opens the folder containing the rom
         /// </summary>
         /// <param name="rom">The rom to open the folder for</param>
-        protected void OpenFolder(GeneratedRom rom)
+        public void OpenFolder(GeneratedRom rom)
         {
             var path = Path.Combine(Options.RomOutputPath, rom.RomPath);
             if (File.Exists(path))
@@ -160,7 +160,7 @@ namespace Randomizer.App.Controls
         /// Launches the current rom in the default program
         /// </summary>
         /// <param name="rom">The rom to execute</param>
-        protected void LaunchRom(GeneratedRom rom)
+        public void LaunchRom(GeneratedRom rom)
         {
             var path = Path.Combine(Options.RomOutputPath, rom.RomPath);
             if (File.Exists(path))

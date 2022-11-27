@@ -605,6 +605,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         }
 
                         var item = location.Item;
+                        location.State.Autotracked = true;
                         Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
                         _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
                     }

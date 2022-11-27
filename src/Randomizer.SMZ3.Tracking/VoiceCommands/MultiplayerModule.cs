@@ -38,6 +38,8 @@ public class MultiplayerModule : TrackerModule
         _multiplayerGameService.PlayerTrackedDungeon += PlayerTrackedDungeon;
 
         _multiplayerGameService.SetTrackerState(worldService.World.State!);
+
+        Logger.LogInformation("Multiplayer module initialized");
     }
 
     private void PlayerTrackedItem(PlayerTrackedItemEventHandlerArgs args)

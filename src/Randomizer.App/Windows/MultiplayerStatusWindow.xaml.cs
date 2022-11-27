@@ -182,7 +182,7 @@ namespace Randomizer.App.Windows
 
         private void OpenTrackerButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Model.GeneratedRom != null) ParentPanel.LaunchTracker(Model.GeneratedRom!);
+            if (Model.GeneratedRom != null) ParentPanel.QuickLaunchRom(Model.GeneratedRom!);
         }
 
         private async void ReconnectButton_Click(object sender, RoutedEventArgs e)
@@ -216,5 +216,6 @@ namespace Randomizer.App.Windows
                 });
             }
         }
+
     }
 }

@@ -90,7 +90,7 @@
           <Button x:Name="OpenTrackerButton"
                   Visibility="{Binding PlayButtonsVisibility}"
                   IsEnabled="{Binding PlayButtonsEnabled}"
-                  Click="OpenTrackerButton_Click">_Open tracker</Button>
+                  Click="OpenTrackerButton_Click">_Launch</Button>
         </StackPanel>
       </Grid>
     </Border>

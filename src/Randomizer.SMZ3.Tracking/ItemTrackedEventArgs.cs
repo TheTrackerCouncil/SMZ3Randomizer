@@ -23,6 +23,7 @@ namespace Randomizer.SMZ3.Tracking
         {
             Item = item;
             TrackedAs = trackedAs;
+            AutoTracked = autoTracked;
         }
 
         /// <summary>

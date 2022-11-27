@@ -25,7 +25,7 @@ namespace Randomizer.Multiplayer.Server
         {
             var player = MultiplayerGame.PlayerDisconnected(Context.ConnectionId);
             if (player == null) return;
-            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player disconnected", player.Game.State.Guid, player.Guid);
+            LogInfo(player, "Player disconnected");
             await SendPlayerSyncResponse(player, false);
         }
 
@@ -53,7 +53,7 @@ namespace Randomizer.Multiplayer.Server
 
             var player = game.AdminPlayer;
 
-            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Game created", game.State.Guid, player.Guid);
+            LogInfo(player, "Game created");
 
             await Groups.AddToGroupAsync(Context.ConnectionId, game.State.Guid);
 
@@ -91,7 +91,7 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player joined", game.State.Guid, player.Guid);
+            LogInfo(player, "Player joined game");
 
             await Groups.AddToGroupAsync(Context.ConnectionId, request.GameGuid);
 
@@ -127,9 +127,9 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            game.RejoinGame(player, Context.ConnectionId);
+            LogInfo(player, "Player rejoined game");
 
-            _logger.LogInformation("Game: {GameGuid} | Player:  {PlayerGuid} | Player rejoined", game.State.Guid, player.Guid);
+            game.RejoinGame(player, Context.ConnectionId);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, request.GameGuid);
 
@@ -153,19 +153,20 @@ namespace Randomizer.Multiplayer.Server
             }
 
             var game = player.Game;
-            if (player.Guid != request.State.Guid)
+
+            var playerToUpdate = request.State.Guid != player.Guid
+                ? player.Game.GetPlayer(request.State.Guid, null, false)
+                : player;
+
+            if (playerToUpdate == null)
             {
-                player = game.GetPlayer(request.State.Guid, null, false);
-                if (player == null)
-                {
-                    await SendErrorResponse("Unable to find player");
-                    return;
-                }
+                await SendErrorResponse("Unable to find player");
+                return;
             }
 
-            game.UpdatePlayerState(player, request.State);
+            LogInfo(player, $"Updating player state for {playerToUpdate.Guid}");
 
-            _logger.LogInformation("Game: {GameGuid} | Player: {PlayerGuid} | Player state updated", game.State.Guid, player.Guid);
+            game.UpdatePlayerState(playerToUpdate, request.State);
 
             await SendPlayerSyncResponse(player);
         }
@@ -198,7 +199,7 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            _logger.LogInformation("Starting game");
+            LogInfo(player, "Starting game");
 
             await Clients.Group(game.Guid)
                 .SendAsync("PlayerListSync", new PlayerListSyncResponse(game.State, game.PlayerStates));
@@ -224,21 +225,23 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            if (player.Guid != request.PlayerGuid)
+            var playerToUpdate = request.PlayerGuid != player.Guid
+                ? player.Game.GetPlayer(request.PlayerGuid, null, false)
+                : player;
+
+            if (playerToUpdate == null)
             {
-                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
-                if (player == null)
-                {
-                    await SendErrorResponse("Unable to find player");
-                    return;
-                }
+                await SendErrorResponse("Unable to find player");
+                return;
             }
 
-            player.Game.ForfeitPlayer(player);
+            LogInfo(player, $"Forfeiting player {playerToUpdate.Guid}");
 
-            await Clients.Client(player.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse(player.Game.State));
+            player.Game.ForfeitPlayer(playerToUpdate);
 
-            await SendPlayerSyncResponse(player, false);
+            await Clients.Client(playerToUpdate.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse(player.Game.State));
+
+            await SendPlayerSyncResponse(playerToUpdate, false);
         }
 
         /// <summary>
@@ -260,6 +263,8 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
+            LogInfo(player, $"Update game status");
+
             if (request.GameStatus != null) player.Game.UpdateGameStatus(request.GameStatus.Value);
 
             await Clients.Group(player.Game.Guid).SendAsync("UpdateGameState", new UpdateGameStateResponse(player.Game.State));
@@ -278,19 +283,21 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            if (request.PlayerGuid != player.Guid)
+            var playerToUpdate = request.PlayerGuid != player.Guid
+                ? player.Game.GetPlayer(request.PlayerGuid, null, false)
+                : player;
+
+            if (playerToUpdate == null)
             {
-                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
-                if (player == null)
-                {
-                    await SendErrorResponse("Unable to find player");
-                    return;
-                }
+                await SendErrorResponse("Unable to find player");
+                return;
             }
 
-            player.State.TrackLocation(request.LocationId);
+            LogInfo(player, $"Tracked location {request.LocationId} for {playerToUpdate.Guid}");
 
-            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackLocation",
+            playerToUpdate.State.TrackLocation(request.LocationId);
+
+            await SendPlayerTrackedResponse(player, "TrackLocation",
                 new TrackLocationResponse(player.Guid, request.LocationId));
         }
 
@@ -307,19 +314,21 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            if (request.PlayerGuid != player.Guid)
+            var playerToUpdate = request.PlayerGuid != player.Guid
+                ? player.Game.GetPlayer(request.PlayerGuid, null, false)
+                : player;
+
+            if (playerToUpdate == null)
             {
-                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
-                if (player == null)
-                {
-                    await SendErrorResponse("Unable to find player");
-                    return;
-                }
+                await SendErrorResponse("Unable to find player");
+                return;
             }
 
-            player.State.TrackItem(request.ItemType, request.TrackedValue);
+            LogInfo(player, $"Tracked item {request.ItemType} as value {request.TrackedValue} for {playerToUpdate.Guid}");
 
-            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackItem",
+            playerToUpdate.State.TrackItem(request.ItemType, request.TrackedValue);
+
+            await SendPlayerTrackedResponse(player, "TrackItem",
                 new TrackItemResponse(player.Guid, request.ItemType, request.TrackedValue));
         }
 
@@ -336,19 +345,21 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            if (request.PlayerGuid != player.Guid)
+            var playerToUpdate = request.PlayerGuid != player.Guid
+                ? player.Game.GetPlayer(request.PlayerGuid, null, false)
+                : player;
+
+            if (playerToUpdate == null)
             {
-                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
-                if (player == null)
-                {
-                    await SendErrorResponse("Unable to find player");
-                    return;
-                }
+                await SendErrorResponse("Unable to find player");
+                return;
             }
 
-            player.State.TrackBoss(request.BossType);
+            LogInfo(player, $"Tracked boss {request.BossType} for {playerToUpdate.Guid}");
 
-            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackBoss",
+            playerToUpdate.State.TrackBoss(request.BossType);
+
+            await SendPlayerTrackedResponse(player, "TrackBoss",
                 new TrackBossResponse(player.Guid, request.BossType));
         }
 
@@ -365,20 +376,29 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            if (request.PlayerGuid != player.Guid)
+            var playerToUpdate = request.PlayerGuid != player.Guid
+                ? player.Game.GetPlayer(request.PlayerGuid, null, false)
+                : player;
+
+            if (playerToUpdate == null)
             {
-                player = player.Game.GetPlayer(request.PlayerGuid, null, false);
-                if (player == null)
-                {
-                    await SendErrorResponse("Unable to find player");
-                    return;
-                }
+                await SendErrorResponse("Unable to find player");
+                return;
             }
 
-            player.State.TrackDungeon(request.DungeonName);
+            LogInfo(player, $"Tracked dungeon {request.DungeonName} for {playerToUpdate.Guid}");
 
-            await Clients.OthersInGroup(player.Game.Guid).SendAsync("TrackDungeon",
+            playerToUpdate.State.TrackDungeon(request.DungeonName);
+
+            await SendPlayerTrackedResponse(player, "TrackDungeon",
                 new TrackDungeonResponse(player.Guid, request.DungeonName));
+        }
+
+        private async Task SendPlayerTrackedResponse(MultiplayerPlayer player, string method, object message, bool allPlayers = true)
+        {
+            var game = player.Game;
+            var sendTo = allPlayers ? Clients.Group(game.State.Guid) : Clients.OthersInGroup(game.State.Guid);
+            await sendTo.SendAsync(method, message);
         }
 
         /// <summary>
@@ -401,6 +421,10 @@ namespace Randomizer.Multiplayer.Server
         {
             await Clients.Caller.SendAsync("Error", new ErrorResponse(error ?? "Unknown Error"));
         }
+
+        private void LogInfo(MultiplayerGame game, string message) => _logger.LogInformation("Game {GameGuid} | {Message}", game.Guid, message);
+
+        private void LogInfo(MultiplayerPlayer player, string message) => _logger.LogInformation("Game {GameGuid} | Player {PlayerGuid} | {Message}", player.Game.Guid, player.Guid, message);
 
     }
 }
