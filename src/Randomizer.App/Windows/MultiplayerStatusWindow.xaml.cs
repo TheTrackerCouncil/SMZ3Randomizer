@@ -65,7 +65,7 @@ namespace Randomizer.App.Windows
                 return;
             }
 
-            var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!);
+            var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!, _multiplayerClientService.GameType!.Value, _multiplayerClientService.GameUrl!);
 
             if (rom != null)
             {

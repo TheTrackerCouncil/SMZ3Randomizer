@@ -28,11 +28,14 @@ namespace Randomizer.Shared.Migrations
                     b.Property<int>("GeneratorVersion")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("IsMultiplayer")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Label")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("MultiplayerGameType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MultiplayerGameUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RomPath")

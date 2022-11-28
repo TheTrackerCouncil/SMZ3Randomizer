@@ -11,7 +11,7 @@
   <ScrollViewer VerticalScrollBarVisibility="Auto">
     <StackPanel HorizontalAlignment="Left"
               Margin="11">
-      <TextBlock 
+      <TextBlock
                 Margin="0"
                 Grid.Column="1"
                 Grid.Row="0"
@@ -53,7 +53,7 @@
       <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,5,0,0">
         • QUSB2SNES
       </TextBlock>
-      
+
       <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
         Older versions or other emulators may work, but they are currently untested.
       </TextBlock>
@@ -152,7 +152,32 @@
         Disabled
         </TextBlock>
       </StackPanel>
+
+      <TextBlock
+        FontWeight="Bold"
+        Margin="0,10,0,0"
+        FontSize="10pt"
+      >
+        Lua Script Errors
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        If you have an error when running the lua script, then try one of the following:
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        • Make sure you're using the correct autotracker.lua script in the folder matching your emulator. The 64bit version of snes9x-rr will need the auto tracker script within snex9xrr_64bit and 32bit will need snes9xrr_32bit. If you're not sure which version you are, try the one in the opposite folder.
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        • If you're using BizHawk, make sure you are set to use luainterface instead nlua.
+      </TextBlock>
+
+      <TextBlock TextWrapping="Wrap" Margin="0,5,0,0">
+        • Try copying the socket.dll file within the appropriate folder for your emulator and place it within the base directory of your emulator.
+      </TextBlock>
+
     </StackPanel>
   </ScrollViewer>
-  
+
 </Window>

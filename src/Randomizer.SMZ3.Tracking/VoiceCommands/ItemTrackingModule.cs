@@ -136,7 +136,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
-                .Append("I died");
+                .Append("I just died");
         }
 
         private GrammarBuilder GetTrackItemRule(bool isMultiworld)

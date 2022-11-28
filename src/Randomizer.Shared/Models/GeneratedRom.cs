@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Shared.Models
 {
@@ -17,7 +18,8 @@ namespace Randomizer.Shared.Models
         public int GeneratorVersion { get; init; }
         public string RomPath { get; init; } = "";
         public string SpoilerPath { get; init; } = "";
-        public bool? IsMultiplayer { get; init; } = false;
+        public MultiplayerGameType? MultiplayerGameType { get; set; }
+        public string? MultiplayerGameUrl { get; set; }
         public TrackerState? TrackerState { get; set; }
 
         public static bool IsValid([NotNullWhen(true)] GeneratedRom? rom)

@@ -106,8 +106,7 @@ namespace Randomizer.SMZ3.Generation
                 seed: seed ?? primaryConfig.Seed,
                 game: Name,
                 mode: primaryConfig.GameMode.ToLowerString(),
-                hints: new List<(World World, List<string>)>(),
-                worlds: new List<(World World, Dictionary<int, byte[]> Patches)>(),
+                worldGenerationData: new WorldGenerationDataCollection(),
                 playthrough: primaryConfig.Race ? new Playthrough(primaryConfig, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
                 configs: configs,
                 primaryConfig: primaryConfig
@@ -115,7 +114,7 @@ namespace Randomizer.SMZ3.Generation
 
             if (primaryConfig.GenerateSeedOnly)
             {
-                seedData.Worlds = worlds.Select(x => (x, new Dictionary<int, byte[]>())).ToList();
+                seedData.WorldGenerationData.AddRange(worlds.Select(x => new WorldGenerationData(x)));
                 return seedData;
             }
 
@@ -125,9 +124,9 @@ namespace Randomizer.SMZ3.Generation
             {
                 var patchRnd = new Random(patchSeed);
                 var hints = _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
-                seedData.Hints.Add((world, hints.ToList()));
                 var patch = new Patcher(world, worlds, seedData.Guid, primaryConfig.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
-                seedData.Worlds.Add((world, patch.CreatePatch(world.Config, hints)));
+                var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(world.Config, hints), hints);
+                seedData.WorldGenerationData.Add(worldGenerationData);
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
@@ -144,7 +143,7 @@ namespace Randomizer.SMZ3.Generation
         public bool ValidateSeedSettings(SeedData seedData)
         {
             // Go through and make sure specified locations are populated correctly
-            foreach (var world in seedData.Worlds.Select(x => x.World))
+            foreach (var world in seedData.WorldGenerationData.Worlds)
             {
                 var config = world.Config;
                 var configLocations = config.LocationItems;
