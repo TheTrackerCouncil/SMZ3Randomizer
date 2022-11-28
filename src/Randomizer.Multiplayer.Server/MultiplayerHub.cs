@@ -41,7 +41,7 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            var game = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, request.GameType, _serverUrl, "", out var error);
+            var game = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, request.GameType, _serverUrl, request.Version, out var error);
 
             if (game?.AdminPlayer == null)
             {
