@@ -160,6 +160,8 @@ namespace Randomizer.App
             var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}");
             Directory.CreateDirectory(folderPath);
 
+            // For BizHawk shuffler support, the file name is checked when running the BizHawk Auto Tracking Lua script
+            // If the fom file name is changed, make sure to update the BizHawk emulator.lua script and the LuaConnector
             var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
             var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);

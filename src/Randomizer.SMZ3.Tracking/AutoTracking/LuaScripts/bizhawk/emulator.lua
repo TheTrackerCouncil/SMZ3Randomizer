@@ -40,15 +40,22 @@ function emulator.print(message)
 end
 
 function emulator.read_bytes(address, length, domain)
-    return base64_encode(memory.readbyterange(translate_address(address, domain), length, domain), length)
+	if gameinfo.getromname():find("SMZ3 Cas") ~= nil then
+		return base64_encode(memory.readbyterange(translate_address(address, domain), length, domain), length)
+	end
+	return ""
 end
 
 function emulator.write_byte(address, value, domain)
-    memory.writebyte(translate_address(address, domain), value, domain)
+	if gameinfo.getromname():find("SMZ3 Cas") ~= nil then
+		memory.writebyte(translate_address(address, domain), value, domain)
+	end
 end
 
 function emulator.write_uint16(address, value, domain)
-	memory.write_u16_le(translate_address(address, domain), value, domain)
+	if gameinfo.getromname():find("SMZ3 Cas") ~= nil then
+		memory.write_u16_le(translate_address(address, domain), value, domain)
+	end
 end
 
 function emulator.get_rom_name()
