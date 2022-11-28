@@ -94,13 +94,8 @@ namespace Randomizer.App.Windows
         public string StatusText => IsConnecting ? "Connecting..." : "";
         public MultiplayerGameType MultiplayerGameType { get; set; }
 
-        public string ServerUrl => ServerUrlTextBox.Text.Contains('?')
-            ? ServerUrlTextBox.Text[..ServerUrlTextBox.Text.IndexOf("?", StringComparison.Ordinal)]
-            : ServerUrlTextBox.Text;
-
-        public string GameGuid => ServerUrlTextBox.Text.Contains('?')
-            ? ServerUrlTextBox.Text[(ServerUrlTextBox.Text.IndexOf("=", StringComparison.Ordinal) + 1)..]
-            : "";
+        public string ServerUrl => ServerUrlTextBox.Text.SubstringBeforeCharacter('?') ?? ServerUrlTextBox.Text;
+        public string GameGuid => ServerUrlTextBox.Text.SubstringAfterCharacter('=') ?? "";
 
         public string GameButtonText
         {

@@ -462,7 +462,7 @@ namespace Randomizer.App.Windows
 
         private void AddToMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, SeedData seed)
         {
-            foreach (var location in seed.Worlds[0].World.Locations)
+            foreach (var location in seed.WorldGenerationData.LocalWorld.World.Locations)
             {
                 itemCounts.Increment(((int)location.Item.Type, location.Id));
             }
@@ -483,7 +483,7 @@ namespace Randomizer.App.Windows
 
         private void GatherStats(ConcurrentDictionary<string, int> stats, SeedData seed)
         {
-            var world = seed.Worlds.Single();
+            var world = seed.WorldGenerationData.LocalWorld;
 
             stats.Increment("Successfully generated");
 

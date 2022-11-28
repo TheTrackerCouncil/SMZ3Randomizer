@@ -73,8 +73,7 @@ namespace Randomizer.SMZ3.Generation
                 seed: $"Plando: {plandoName}",
                 game: "SMZ3 Cas’ Plando",
                 mode: config.GameMode.ToLowerString(),
-                hints: new List<(World World, List<string>)>(),
-                worlds: new List<(World World, Dictionary<int, byte[]> Patches)>(),
+                worldGenerationData: new WorldGenerationDataCollection(),
                 playthrough: config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
                 configs: new List<Config>() { config },
                 primaryConfig: config
@@ -85,8 +84,8 @@ namespace Randomizer.SMZ3.Generation
                 var patchRnd = new Random();
                 var patch = new Patcher(world, worlds, seedData.Guid, 0, patchRnd, _metadataService, _gameLines);
                 var hints = _hintService.GetInGameHints(world, worlds, playthrough, 0);
-                seedData.Worlds.Add((world, patch.CreatePatch(config, hints)));
-                seedData.Hints.Add((world, hints.ToList()));
+                var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(config, hints), hints);
+                seedData.WorldGenerationData.Add(worldGenerationData);
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());

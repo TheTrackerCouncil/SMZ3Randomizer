@@ -9,8 +9,8 @@ using Randomizer.Shared.Models;
 namespace Randomizer.Shared.Migrations
 {
     [DbContext(typeof(RandomizerContext))]
-    [Migration("20221123034422_MultiplayerFlag")]
-    partial class MultiplayerFlag
+    [Migration("20221128172534_MultiplayerGameDetails")]
+    partial class MultiplayerGameDetails
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,11 +30,14 @@ namespace Randomizer.Shared.Migrations
                     b.Property<int>("GeneratorVersion")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("IsMultiplayer")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Label")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("MultiplayerGameType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MultiplayerGameUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RomPath")

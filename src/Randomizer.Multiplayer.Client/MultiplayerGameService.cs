@@ -42,13 +42,13 @@ public class MultiplayerGameService : IDisposable
         }
 
         var seed = seedData.Seed;
-        var hash = _currentGameService.GetValidationHash(seedData.Worlds.Select(x => x.World));
+        var hash = _currentGameService.GetValidationHash(seedData.WorldGenerationData.Worlds);
         _logger.LogInformation("Hash: {Hash}", hash);
         var playerList = players.ToList();
         foreach (var player in playerList)
         {
             var state = _currentGameService.GetPlayerDefaultState(player,
-                seedData.Worlds.Select(x => x.World).Single(x => x.Guid == player.Guid));
+                seedData.WorldGenerationData.GetWorld(player.Guid).World);
             await _client.UpdatePlayerState(state, false);
         }
 
@@ -68,7 +68,7 @@ public class MultiplayerGameService : IDisposable
             return null;
         }
 
-        var hash = _currentGameService.GetValidationHash(seedData.Worlds.Select(x => x.World));
+        var hash = _currentGameService.GetValidationHash(seedData.WorldGenerationData.Worlds);
         _logger.LogInformation("Generated Seed Hash: {Hash} | Expected Hash: {PreviousHash}", hash, validationHash);
         if (hash != validationHash)
         {
