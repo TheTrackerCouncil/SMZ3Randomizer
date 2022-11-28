@@ -202,7 +202,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var restore = new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .Optional("please", "would you please")
-                .OneOf("restore my", "fill my")
+                .OneOf("restore my", "fill my", "refill my")
                 .Append(s_fillCheatKey, fillChoices);
 
             var heal = new GrammarBuilder()
