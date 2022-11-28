@@ -125,7 +125,7 @@ namespace Randomizer.App.Windows
             UpdatePlayerList();
         }
 
-        private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState state)
+        private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState state, MultiplayerPlayerState previousState)
         {
             Model.UpdatePlayer(state, _multiplayerClientService.LocalPlayer);
             CheckPlayerConfigs();

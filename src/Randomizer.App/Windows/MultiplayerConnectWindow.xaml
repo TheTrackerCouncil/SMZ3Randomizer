@@ -38,6 +38,7 @@
                    TextChanged="PlayerNameTextBox_OnTextChanged"
                    Text=""
                    IsEnabled="{Binding CanEnterInput}"
+                   MaxLength="12"
                    Margin="5 0 0 0 " />
         </controls:LabeledControl>
 

@@ -424,7 +424,7 @@ namespace Randomizer.Multiplayer.Client
             if (previous != null) Players?.Remove(previous);
             Players?.Add(response.PlayerState);
             UpdateGameState(response.GameState);
-            PlayerUpdated?.Invoke(response.PlayerState);
+            PlayerUpdated?.Invoke(response.PlayerState, previous);
         }
 
         private void OnTrackBoss(TrackBossResponse obj)

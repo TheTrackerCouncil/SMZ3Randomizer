@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
@@ -8,7 +9,8 @@ namespace Randomizer.Multiplayer.Server;
 /// </summary>
 public class MultiplayerGame
 {
-
+    private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
+    private static readonly Regex s_continousSpace = new(@" +");
     private static readonly ConcurrentDictionary<string, MultiplayerGame> s_games = new();
     private static readonly ConcurrentDictionary<string, MultiplayerPlayer> s_playerConnections = new();
     private readonly ConcurrentDictionary<string, MultiplayerPlayer> _players = new();
@@ -64,7 +66,7 @@ public class MultiplayerGame
 
         var playerGuid = System.Guid.NewGuid().ToString("N");
         var playerKey = System.Guid.NewGuid().ToString("N");
-        var player = new MultiplayerPlayer(game, playerGuid, playerKey, playerName, playerConnectionId) { State =
+        var player = new MultiplayerPlayer(game, playerGuid, playerKey, CleanPlayerName(playerName), playerConnectionId) { State =
         {
             IsAdmin = true
         } };
@@ -147,7 +149,7 @@ public class MultiplayerGame
 
         var key = System.Guid.NewGuid().ToString("N");
 
-        var player = new MultiplayerPlayer(this, guid, key, playerName, playerConnectionId);
+        var player = new MultiplayerPlayer(this, guid, key, CleanPlayerName(playerName), playerConnectionId);
         _players[guid] = player;
         s_playerConnections[playerConnectionId] = player;
         error = null;
@@ -269,5 +271,12 @@ public class MultiplayerGame
         else player.State.Status = State.Status == MultiplayerGameStatus.Created
             ? MultiplayerPlayerStatus.Ready
             : MultiplayerPlayerStatus.Playing;
+    }
+
+    private static string CleanPlayerName(string name)
+    {
+        name = s_illegalCharacters.Replace(name, " ");
+        name = s_continousSpace.Replace(name, " ");
+        return name.Trim();
     }
 }

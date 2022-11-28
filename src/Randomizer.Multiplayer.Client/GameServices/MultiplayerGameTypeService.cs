@@ -191,4 +191,33 @@ public abstract class MultiplayerGameTypeService
             DungeonName = dungeonName,
         };
     }
+
+    public PlayerSyncReceivedEventHandlerArgs PlayerSyncReceived(MultiplayerPlayerState player,
+        MultiplayerPlayerState previousState, bool isLocalPlayer)
+    {
+        var itemsToGive = new List<ItemType>();
+
+        if (TrackerState != null && !isLocalPlayer)
+        {
+            foreach (var locationState in TrackerState.LocationStates.Where(x => x.WorldId == player.WorldId && !x.Cleared))
+            {
+                if (!player.Locations![locationState.LocationId] && !player.HasForfeited) continue;
+                locationState.Autotracked = true;
+                locationState.Cleared = true;
+                if (locationState.ItemWorldId == Client.LocalPlayer!.WorldId)
+                {
+                    itemsToGive.Add(locationState.Item);
+                }
+            }
+        }
+
+        return new PlayerSyncReceivedEventHandlerArgs()
+        {
+            PlayerId = player.WorldId!.Value,
+            PlayerName = player.PlayerName,
+            IsLocalPlayer = isLocalPlayer,
+            ItemsToGive = itemsToGive,
+            DidForfeit = player.HasForfeited && !previousState.HasForfeited
+        };
+    }
 }

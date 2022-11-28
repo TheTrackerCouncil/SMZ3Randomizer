@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ namespace Randomizer.App.Windows
     /// </summary>
     public sealed partial class MultiplayerConnectWindow : Window, INotifyPropertyChanged
     {
+        private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly ILogger _logger;
         private readonly string _version;
@@ -37,22 +39,7 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceError(string error, Exception? exception)
         {
-            if (Dispatcher.CheckAccess())
-            {
-                MessageBox.Show(this, error, "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
-                if (IsConnecting)
-                {
-                    IsConnecting = false;
-                    OnPropertyChanged();
-                }
-            }
-            else
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    MultiplayerClientServiceError(error, exception);
-                });
-            }
+            DisplayError(error);
         }
 
         private async void MultiplayerClientServiceConnected()
@@ -121,6 +108,12 @@ namespace Randomizer.App.Windows
 
         private async void NewGameButton_Click(object sender, RoutedEventArgs e)
         {
+            if (s_illegalCharacters.IsMatch(PlayerNameTextBox.Text))
+            {
+                DisplayError("Player names can only contains letters, numbers, hyphens, and underscores.");
+                return;
+            }
+
             if (IsConnecting)
             {
                 await _multiplayerClientService.Disconnect();
@@ -145,6 +138,26 @@ namespace Randomizer.App.Windows
         private void PlayerNameTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             OnPropertyChanged();
+        }
+
+        private void DisplayError(string message)
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                MessageBox.Show(this, message, "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (IsConnecting)
+                {
+                    IsConnecting = false;
+                    OnPropertyChanged();
+                }
+            }
+            else
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    DisplayError(message);
+                });
+            }
         }
     }
 }

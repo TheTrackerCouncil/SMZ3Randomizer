@@ -1283,6 +1283,20 @@ namespace Randomizer.SMZ3.Tracking
             return didTrack;
         }
 
+        public void TrackItems(List<Item> items)
+        {
+            ItemService.ResetProgression();
+
+            foreach (var item in items)
+            {
+                item.Track();
+            }
+
+            OnItemTracked(new ItemTrackedEventArgs(null, null, null, true));
+            IsDirty = true;
+            RestartIdleTimers();
+        }
+
         /// <summary>
         /// Removes an item from the tracker.
         /// </summary>

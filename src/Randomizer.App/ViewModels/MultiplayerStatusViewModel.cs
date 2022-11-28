@@ -25,12 +25,12 @@ namespace Randomizer.App.ViewModels
                     {
                         Guid = "Player One",
                         PlayerName = "Player One",
-                    }, true, false, true),
+                    }, true, false, true, MultiplayerGameStatus.Created),
                     new MultiplayerPlayerStateViewModel(new MultiplayerPlayerState
                     {
                         Guid = "Player Two",
                         PlayerName = "Player Two",
-                    }, false, false, true),
+                    }, false, false, true, MultiplayerGameStatus.Created),
                 };
             }
             else
@@ -81,6 +81,13 @@ namespace Randomizer.App.ViewModels
                 _gameStatus = value;
                 OnPropertyChanged(nameof(GameStatus));
                 OnPropertyChanged(nameof(ConnectionStatus));
+                if (_gameStatus != null)
+                {
+                    foreach (var player in Players)
+                    {
+                        player.Update(_gameStatus.Value);
+                    }
+                }
             }
         }
 
@@ -127,7 +134,7 @@ namespace Randomizer.App.ViewModels
         public void UpdateList(List<MultiplayerPlayerState> players, MultiplayerPlayerState? localPlayer)
         {
             LocalPlayer = localPlayer;
-            Players = players.Select(x => new MultiplayerPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected)).ToList();
+            Players = players.Select(x => new MultiplayerPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected, GameStatus ?? MultiplayerGameStatus.Created)).ToList();
             OnPropertyChanged();
         }
 
@@ -139,7 +146,7 @@ namespace Randomizer.App.ViewModels
                 playerViewModel.Update(player);
             else
             {
-                Players.Add(new MultiplayerPlayerStateViewModel(player, false, localPlayer?.IsAdmin ?? false, IsConnected));
+                Players.Add(new MultiplayerPlayerStateViewModel(player, false, localPlayer?.IsAdmin ?? false, IsConnected, GameStatus ?? MultiplayerGameStatus.Created));
                 OnPropertyChanged();
             }
         }

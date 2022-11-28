@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
@@ -20,8 +19,6 @@ namespace Randomizer.SMZ3.Generation
 {
     public class Smz3Randomizer : ISeededRandomizer
     {
-        private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9]", RegexOptions.IgnoreCase);
-        private static readonly Regex s_continousSpace = new(@" +");
         private readonly IWorldAccessor _worldAccessor;
         private readonly ILogger<Smz3Randomizer> _logger;
         private readonly IMetadataService _metadataService;
@@ -192,13 +189,6 @@ namespace Randomizer.SMZ3.Generation
             }
 
             return true;
-        }
-
-        private static string CleanPlayerName(string name)
-        {
-            name = s_illegalCharacters.Replace(name, " ");
-            name = s_continousSpace.Replace(name, " ");
-            return name.Trim();
         }
     }
 }

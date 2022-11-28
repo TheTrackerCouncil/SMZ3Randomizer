@@ -28,6 +28,7 @@ public class MultiplayerGameService
         _client.ItemTracked += ClientOnItemTracked;
         _client.BossTracked += ClientOnBossTracked;
         _client.DungeonTracked += ClientOnDungeonTracked;
+        _client.PlayerUpdated += ClientOnPlayerUpdated;
     }
 
     public void SetTrackerState(TrackerState state)
@@ -42,6 +43,8 @@ public class MultiplayerGameService
     public PlayerTrackedBossEventHandler? PlayerTrackedBoss;
 
     public PlayerTrackedDungeonEventHandler? PlayerTrackedDungeon;
+
+    public PlayerSyncReceivedEventHandler? PlayerSyncReceived;
 
     private void ClientOnDungeonTracked(MultiplayerPlayerState playerState, string dungeonName)
     {
@@ -64,6 +67,12 @@ public class MultiplayerGameService
     private void ClientOnLocationTracked(MultiplayerPlayerState playerState, int locationId)
     {
         PlayerTrackedLocation?.Invoke(_currentGameService.PlayerTrackedLocation(playerState, locationId,
+            playerState.Guid == _client.CurrentPlayerGuid));
+    }
+
+    private void ClientOnPlayerUpdated(MultiplayerPlayerState playerState, MultiplayerPlayerState previousState)
+    {
+        PlayerSyncReceived?.Invoke(_currentGameService.PlayerSyncReceived(playerState, previousState,
             playerState.Guid == _client.CurrentPlayerGuid));
     }
 

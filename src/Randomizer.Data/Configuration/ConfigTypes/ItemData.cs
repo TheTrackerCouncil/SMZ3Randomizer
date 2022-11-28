@@ -114,7 +114,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Use <c>null</c> to reset to the default item responses.
         /// </para>
         /// </remarks>
-        public Dictionary<int, SchrodingersString>? WhenTracked { get; set; }
+        public Dictionary<int, SchrodingersString?>? WhenTracked { get; set; }
 
         /// <summary>
         /// Gets or sets the path to the image to be displayed on the tracker.
@@ -205,7 +205,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             }
 
             if (WhenTracked.TryGetValue(trackingState, out response))
-                return true;
+                return response != null;
 
             var smallerKeys = WhenTracked.Keys.TakeWhile(x => x < trackingState).OrderBy(x => x);
             if (!smallerKeys.Any())
@@ -216,7 +216,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
 
             var closestSmallerKey = smallerKeys.Last();
             if (WhenTracked.TryGetValue(closestSmallerKey, out response))
-                return true;
+                return response != null;
 
             response = null;
             return false;

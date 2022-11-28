@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
@@ -36,10 +37,19 @@ public class MultiplayerModule : TrackerModule
         _multiplayerGameService.PlayerTrackedItem += PlayerTrackedItem;
         _multiplayerGameService.PlayerTrackedBoss += PlayerTrackedBoss;
         _multiplayerGameService.PlayerTrackedDungeon += PlayerTrackedDungeon;
+        _multiplayerGameService.PlayerSyncReceived += PlayerSyncReceived;
 
         _multiplayerGameService.SetTrackerState(worldService.World.State!);
 
         Logger.LogInformation("Multiplayer module initialized");
+    }
+
+    private void PlayerSyncReceived(PlayerSyncReceivedEventHandlerArgs args)
+    {
+        if (args.ItemsToGive == null || args.ItemsToGive.Count == 0) return;
+        var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
+        Tracker.GameService!.TryGiveItems(items, args.PlayerId);
+
     }
 
     private void PlayerTrackedItem(PlayerTrackedItemEventHandlerArgs args)
