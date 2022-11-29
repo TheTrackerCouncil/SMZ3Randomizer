@@ -70,7 +70,7 @@ public class MultiplayerGameService
             playerState.Guid == _client.CurrentPlayerGuid));
     }
 
-    private void ClientOnPlayerUpdated(MultiplayerPlayerState playerState, MultiplayerPlayerState previousState)
+    private void ClientOnPlayerUpdated(MultiplayerPlayerState playerState, MultiplayerPlayerState? previousState)
     {
         PlayerSyncReceived?.Invoke(_currentGameService.PlayerSyncReceived(playerState, previousState,
             playerState.Guid == _client.CurrentPlayerGuid));

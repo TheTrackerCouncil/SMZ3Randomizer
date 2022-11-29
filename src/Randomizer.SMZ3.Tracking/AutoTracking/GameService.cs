@@ -31,6 +31,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">The logger to associate with this module</param>
+        /// <param name="worldAccessor">The accesor to determine the tracker player id</param>
         public GameService(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<GameService> logger, IWorldAccessor worldAccessor)
             : base(tracker, itemService, worldService, logger)
         {

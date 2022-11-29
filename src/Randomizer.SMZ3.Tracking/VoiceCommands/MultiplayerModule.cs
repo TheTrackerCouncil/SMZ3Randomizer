@@ -26,7 +26,7 @@ public class MultiplayerModule : TrackerModule
     {
         _multiplayerGameService = multiplayerGameService;
 
-        if (Tracker.Rom is not { IsMultiplayer: true }) return;
+        if (Tracker.Rom is not { MultiplayerGameDetails: null }) return;
 
         Tracker.LocationCleared += TrackerOnLocationCleared;
         Tracker.BossUpdated += TrackerOnBossUpdated;

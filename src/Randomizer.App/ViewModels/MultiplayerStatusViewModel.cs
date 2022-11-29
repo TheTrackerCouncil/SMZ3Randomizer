@@ -151,6 +151,11 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public void Refresh()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string? propertyName = null)

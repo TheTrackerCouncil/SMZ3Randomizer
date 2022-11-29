@@ -10,6 +10,7 @@ using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Multiplayer;
 using Randomizer.Multiplayer.Client;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.App.Windows
 {
@@ -23,27 +24,14 @@ namespace Randomizer.App.Windows
         private readonly MultiplayerGameService _multiplayerGameService;
         private readonly RomGenerator _romGenerator;
 
-        public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService, MultiplayerGameService multiplayerGameService, RomGenerator romGenerator)
+        public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService,
+            MultiplayerGameService multiplayerGameService, RomGenerator romGenerator)
         {
             _multiplayerClientService = multiplayerClientService;
             _multiplayerGameService = multiplayerGameService;
             _romGenerator = romGenerator;
             DataContext = Model;
             InitializeComponent();
-            UpdatePlayerList();
-
-            if (!_multiplayerClientService.IsConnected)
-            {
-                Close();
-            }
-
-            Model.IsConnected = true;
-            Model.GameUrl = _multiplayerClientService.GameUrl ?? "";
-            Model.GameStatus = _multiplayerClientService.GameStatus ?? MultiplayerGameStatus.Created;
-            Model.UpdateList(_multiplayerClientService.Players ?? new List<MultiplayerPlayerState>(),
-                _multiplayerClientService.LocalPlayer);
-
-            _multiplayerGameService.UpdateGameType(_multiplayerClientService.GameType ?? MultiplayerGameType.Multiworld);
 
             _multiplayerClientService.Error += MultiplayerClientServiceError;
             _multiplayerClientService.GameRejoined += MultiplayerClientServiceOnGameRejoined;
@@ -56,6 +44,7 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.SeedDataGenerated += MultiplayerClientServiceOnSeedDataGenerated;
         }
 
+
         private async void MultiplayerClientServiceOnSeedDataGenerated(string seed, string validationhash)
         {
             var seedData = _multiplayerGameService.RegenerateSeed(seed, validationhash, out var error);
@@ -65,7 +54,7 @@ namespace Randomizer.App.Windows
                 return;
             }
 
-            var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!, _multiplayerClientService.GameType!.Value, _multiplayerClientService.GameUrl!);
+            var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!, _multiplayerClientService.DatabaseGameDetails!);
 
             if (rom != null)
             {
@@ -88,6 +77,14 @@ namespace Randomizer.App.Windows
         private void MultiplayerClientServiceOnGameRejoined()
         {
             Model.IsConnected = true;
+            Model.GameUrl = _multiplayerClientService.GameUrl ?? "";
+            Model.GameStatus = _multiplayerClientService.GameStatus ?? MultiplayerGameStatus.Created;
+            Model.UpdateList(_multiplayerClientService.Players ?? new List<MultiplayerPlayerState>(),
+                _multiplayerClientService.LocalPlayer);
+            _multiplayerGameService.UpdateGameType(_multiplayerClientService.GameType ??
+                                                   MultiplayerGameType.Multiworld);
+            UpdatePlayerList();
+            Model.Refresh();
         }
 
         private async void MultiplayerClientServiceOnConnected()
@@ -125,7 +122,7 @@ namespace Randomizer.App.Windows
             UpdatePlayerList();
         }
 
-        private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState state, MultiplayerPlayerState previousState)
+        private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState state, MultiplayerPlayerState? previousState)
         {
             Model.UpdatePlayer(state, _multiplayerClientService.LocalPlayer);
             CheckPlayerConfigs();
@@ -133,6 +130,7 @@ namespace Randomizer.App.Windows
 
         public MultiplayerStatusViewModel Model { get; set; } = new();
         public MultiRomListPanel ParentPanel { get; set; } = null!;
+        public MultiplayerGameDetails? MultiplayerGameDetails { get; set; }
 
         protected void UpdatePlayerList()
         {
@@ -217,5 +215,17 @@ namespace Randomizer.App.Windows
             }
         }
 
+        private async void MultiplayerStatusWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!_multiplayerClientService.IsConnected && MultiplayerGameDetails != null)
+            {
+                await _multiplayerClientService.Reconnect(MultiplayerGameDetails);
+            }
+            else if (_multiplayerClientService.IsConnected)
+            {
+                MultiplayerClientServiceOnGameRejoined();
+            }
+
+        }
     }
 }

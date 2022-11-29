@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Client
@@ -15,10 +16,12 @@ namespace Randomizer.Multiplayer.Client
     {
         private readonly ILogger<MultiplayerClientService> _logger;
         private HubConnection? _connection;
+        private readonly RandomizerContext _dbContext;
 
-        public MultiplayerClientService(ILogger<MultiplayerClientService> logger)
+        public MultiplayerClientService(ILogger<MultiplayerClientService> logger, RandomizerContext dbContext)
         {
             _logger = logger;
+            _dbContext = dbContext;
         }
 
         public event MultiplayerErrorEventHandler? Error;
@@ -59,6 +62,7 @@ namespace Randomizer.Multiplayer.Client
 
             return true;
         }
+        public MultiplayerGameDetails? DatabaseGameDetails { get; set; }
 
         #region Commands
 
@@ -134,6 +138,15 @@ namespace Randomizer.Multiplayer.Client
             }
         }
 
+        public async Task Reconnect(MultiplayerGameDetails gameDetails)
+        {
+            DatabaseGameDetails = gameDetails;
+            CurrentGameGuid = gameDetails.GameGuid;
+            CurrentPlayerGuid = gameDetails.PlayerGuid;
+            CurrentPlayerKey = gameDetails.PlayerKey;
+            await Connect(gameDetails.ConnectionUrl);
+        }
+
         /// <summary>
         /// Reconnects to the previously established connection
         /// </summary>
@@ -173,6 +186,7 @@ namespace Randomizer.Multiplayer.Client
         /// </summary>
         public async Task Disconnect()
         {
+            DatabaseGameDetails = null;
             CurrentGameGuid = null;
             CurrentPlayerGuid = null;
             CurrentPlayerKey = null;
@@ -358,7 +372,7 @@ namespace Randomizer.Multiplayer.Client
         /// On successfully creating a new game
         /// </summary>
         /// <param name="response"></param>
-        private void OnCreateGame(CreateGameResponse response)
+        private async void OnCreateGame(CreateGameResponse response)
         {
             _logger.LogInformation("Game Created | Game Id: {GameGuid} | Player Guid: {PlayergGuid} | Player Key: {PlayerKey}", response.GameState.Guid, response.PlayerGuid, response.PlayerKey);
             _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers.Select(x => x.PlayerName)));
@@ -368,13 +382,14 @@ namespace Randomizer.Multiplayer.Client
             GameCreated?.Invoke();
             UpdatePlayerList(response.AllPlayers);
             UpdateGameState(response.GameState);
+            await SaveGameToDatabase(response.GameState, response.PlayerGuid, response.PlayerKey);
         }
 
         /// <summary>
         /// On successfully joining an active game
         /// </summary>
         /// <param name="response"></param>
-        private void OnJoinGame(JoinGameResponse response)
+        private async void OnJoinGame(JoinGameResponse response)
         {
             _logger.LogInformation("Game joined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
             _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers.Select(x => x.PlayerName)));
@@ -384,6 +399,7 @@ namespace Randomizer.Multiplayer.Client
             GameJoined?.Invoke();
             UpdatePlayerList(response.AllPlayers);
             UpdateGameState(response.GameState);
+            await SaveGameToDatabase(response.GameState, response.PlayerGuid, response.PlayerKey);
         }
 
         /// <summary>
@@ -507,6 +523,24 @@ namespace Randomizer.Multiplayer.Client
                 Error?.Invoke($"Connection to server lost");
             }
         }
+
+        private async Task SaveGameToDatabase(MultiplayerGameState gameState, string playerGuid, string playerKey)
+        {
+            DatabaseGameDetails = new MultiplayerGameDetails
+            {
+                ConnectionUrl = ConnectionUrl!,
+                GameGuid = gameState.Guid,
+                GameUrl = gameState.Url,
+                Type = gameState.Type,
+                Status = gameState.Status,
+                PlayerGuid = playerGuid,
+                PlayerKey = playerKey,
+                JoinedDate = DateTimeOffset.Now,
+            };
+            _dbContext.MultiplayerGames.Add(DatabaseGameDetails);
+            await _dbContext.SaveChangesAsync();
+        }
+
         #endregion
     }
 }

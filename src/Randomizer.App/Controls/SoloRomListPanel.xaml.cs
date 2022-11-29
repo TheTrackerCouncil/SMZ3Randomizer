@@ -39,9 +39,10 @@ namespace Randomizer.App.Controls
         protected sealed override void UpdateList()
         {
             var models = DbContext.GeneratedRoms
+                    .Include(x => x.MultiplayerGameDetails)
                     .Include(x => x.TrackerState)
                     .ThenInclude(x => x!.History)
-                    .Where(x => x.MultiplayerGameType == null)
+                    .Where(x => x.MultiplayerGameDetails == null)
                     .OrderByDescending(x => x.Id)
                     .ToList();
             Model.UpdateList(models);

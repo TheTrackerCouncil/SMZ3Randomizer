@@ -193,7 +193,7 @@ public abstract class MultiplayerGameTypeService
     }
 
     public PlayerSyncReceivedEventHandlerArgs PlayerSyncReceived(MultiplayerPlayerState player,
-        MultiplayerPlayerState previousState, bool isLocalPlayer)
+        MultiplayerPlayerState? previousState, bool isLocalPlayer)
     {
         var itemsToGive = new List<ItemType>();
 
@@ -217,7 +217,7 @@ public abstract class MultiplayerGameTypeService
             PlayerName = player.PlayerName,
             IsLocalPlayer = isLocalPlayer,
             ItemsToGive = itemsToGive,
-            DidForfeit = player.HasForfeited && !previousState.HasForfeited
+            DidForfeit = player.HasForfeited && previousState?.HasForfeited != true
         };
     }
 }

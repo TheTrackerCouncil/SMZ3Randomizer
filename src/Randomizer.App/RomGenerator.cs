@@ -92,7 +92,7 @@ namespace Randomizer.App
                 }
                 else
                 {
-                    var results = await GenerateRomInternalAsync(seed, options, null, null);
+                    var results = await GenerateRomInternalAsync(seed, options, null);
                     if (!string.IsNullOrEmpty(results.MsuError))
                     {
                         MessageBox.Show(results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -123,7 +123,7 @@ namespace Randomizer.App
             try
             {
                 var seed = GeneratePlandoSeed(options, plandoConfig);
-                var results = await GenerateRomInternalAsync(seed, options, null, null);
+                var results = await GenerateRomInternalAsync(seed, options, null);
 
                 if (!string.IsNullOrEmpty(results.MsuError))
                 {
@@ -140,9 +140,9 @@ namespace Randomizer.App
             }
         }
 
-        public async Task<GeneratedRom?> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed, MultiplayerGameType multiplayerGameType, string multiplayerGameUrl)
+        public async Task<GeneratedRom?> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed, MultiplayerGameDetails multiplayerGameDetails)
         {
-            var results = await GenerateRomInternalAsync(seed, options, multiplayerGameType, multiplayerGameUrl);
+            var results = await GenerateRomInternalAsync(seed, options, multiplayerGameDetails);
 
             if (!string.IsNullOrEmpty(results.MsuError))
             {
@@ -150,10 +150,11 @@ namespace Randomizer.App
                 return null;
             }
 
+
             return results.Rom;
         }
 
-        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameType? multiplayerGameType, string? multiplayerGameUrl)
+        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails)
         {
             var bytes = GenerateRomBytes(options, seed);
             var config = seed.Playthrough.Config;
@@ -186,7 +187,7 @@ namespace Randomizer.App
 
             PrepareAutoTrackerFiles(options);
 
-            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameType, multiplayerGameUrl);
+            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails);
 
             return new GenerateRomResults()
             {
@@ -366,10 +367,9 @@ namespace Randomizer.App
         /// <param name="seed">The generated seed data</param>
         /// <param name="romPath">The path to the rom file</param>
         /// <param name="spoilerPath">The path to the spoiler file</param>
-        /// <param name="multiplayerGameType">The multiplayer game type, if any. Use null for singleplayer.</param>
-        /// <param name="multiplayerGameUrl">The multiplayer game url to connect to, if any.</param>
+        /// <param name="multiplayerGameDetails">Details of the connected multiplayer game</param>
         /// <returns>The db entry for the generated rom</returns>
-        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, MultiplayerGameType? multiplayerGameType, string? multiplayerGameUrl)
+        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, MultiplayerGameDetails? multiplayerGameDetails)
         {
             var settingsString = string.IsNullOrEmpty(seed.PrimaryConfig.SettingsString)
                 ? (seed.Configs.Count() > 1 ? Config.ToConfigString(seed.Configs) : Config.ToConfigString(seed.PrimaryConfig, true))
@@ -383,10 +383,15 @@ namespace Randomizer.App
                 Date = DateTimeOffset.Now,
                 Settings = settingsString,
                 GeneratorVersion = Smz3Randomizer.Version.Major,
-                MultiplayerGameType = multiplayerGameType,
-                MultiplayerGameUrl = multiplayerGameUrl
+                MultiplayerGameDetails = multiplayerGameDetails,
             };
             _dbContext.GeneratedRoms.Add(rom);
+
+            if (multiplayerGameDetails != null)
+            {
+                multiplayerGameDetails.GeneratedRom = rom;
+            }
+
             await _stateService.CreateStateAsync(seed.WorldGenerationData.Worlds, rom);
             return rom;
         }
