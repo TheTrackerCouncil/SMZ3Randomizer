@@ -191,7 +191,7 @@ namespace Randomizer.Multiplayer.Server
             }
 
             var game = player.Game;
-            var successful = game.StartGame(request.Seed, request.ValidationHash, out var error);
+            var successful = game.StartGame(request.ValidationHash, out var error);
 
             if (!successful)
             {
@@ -201,8 +201,9 @@ namespace Randomizer.Multiplayer.Server
 
             LogInfo(player, "Starting game");
 
-            await Clients.Group(game.Guid)
-                .SendAsync("PlayerListSync", new PlayerListSyncResponse(game.State, game.PlayerStates));
+            await Clients.Group(player.Game.Guid).SendAsync("StartGame",
+                new StartGameResponse(player.Game.State, player.Game.PlayerStates,
+                    player.Game.PlayerGenerationData));
         }
 
         /// <summary>
@@ -392,6 +393,50 @@ namespace Randomizer.Multiplayer.Server
 
             await SendPlayerTrackedResponse(player, "TrackDungeon",
                 new TrackDungeonResponse(player.Guid, request.DungeonName));
+        }
+
+        public async Task SubmitPlayerGenerationData(SubmitPlayerGenerationDataRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player is not { IsGameAdmin: true })
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            var playerToUpdate = request.PlayerGuid != player.Guid
+                ? player.Game.GetPlayer(request.PlayerGuid, null, false)
+                : player;
+
+            if (playerToUpdate == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            LogInfo(player, $"Received generation data for {playerToUpdate.Guid}");
+            player.PlayerGenerationData = request.PlayerGenerationData;
+        }
+
+        public async Task RequestPlayerGenerationData()
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            if (player.Game.State.Status != MultiplayerGameStatus.Started)
+            {
+                await SendErrorResponse("Game state invalid");
+                return;
+            }
+
+            LogInfo(player, $"Player requested generation data");
+            await Clients.Caller.SendAsync("StartGame",
+                new StartGameResponse(player.Game.State, player.Game.PlayerStates,
+                    player.Game.PlayerGenerationData));
         }
 
         private async Task SendPlayerTrackedResponse(MultiplayerPlayer player, string method, object message, bool allPlayers = true)

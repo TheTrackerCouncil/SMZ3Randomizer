@@ -25,9 +25,12 @@ public abstract class MultiplayerGameTypeService
 
     public TrackerState? TrackerState { get; set; }
 
-    public abstract SeedData? GenerateSeed(List<MultiplayerPlayerState> players, out string error);
+    public abstract SeedData? GenerateSeed(string seed, List<MultiplayerPlayerState> players,
+        MultiplayerPlayerState localPlayer, out string error);
 
-    public abstract SeedData? RegenerateSeed(List<MultiplayerPlayerState> players, MultiplayerPlayerState localPlayer, string seed, out string error);
+    public abstract SeedData? RegenerateSeed(string seed, List<MultiplayerPlayerGenerationData> playerGenerationData,
+        List<MultiplayerPlayerState> players, MultiplayerPlayerState localPlayer,
+        out string error);
 
     public MultiplayerPlayerState GetPlayerDefaultState(MultiplayerPlayerState state, World world)
     {

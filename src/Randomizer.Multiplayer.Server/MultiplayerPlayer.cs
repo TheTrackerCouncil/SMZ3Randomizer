@@ -25,5 +25,6 @@ public class MultiplayerPlayer
     public string Key { get; }
     public string ConnectionId { get; set; }
     public MultiplayerPlayerState State { get; set; }
+    public string? PlayerGenerationData { get; set; }
     public bool IsGameAdmin => Game.AdminPlayer == this;
 }

@@ -146,7 +146,11 @@ namespace Randomizer.App.ViewModels
                 playerViewModel.Update(player);
             else
             {
-                Players.Add(new MultiplayerPlayerStateViewModel(player, false, localPlayer?.IsAdmin ?? false, IsConnected, GameStatus ?? MultiplayerGameStatus.Created));
+                Players = Players.Concat(new List<MultiplayerPlayerStateViewModel>()
+                {
+                    new (player, false, localPlayer?.IsAdmin ?? false, IsConnected,
+                        GameStatus ?? MultiplayerGameStatus.Created)
+                }).ToList();
                 OnPropertyChanged();
             }
         }

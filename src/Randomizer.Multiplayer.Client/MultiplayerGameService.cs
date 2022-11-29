@@ -87,7 +87,10 @@ public class MultiplayerGameService
     public async Task<string?> GenerateSeed()
     {
         var players = _client.Players!;
-        var seedData = _currentGameService.GenerateSeed(players, out var error);
+        var error = "";
+        SeedData? seedData = null;
+
+        await Task.Run(() => seedData = _currentGameService.GenerateSeed(_client.CurrentGameState!.Seed, players, _client.LocalPlayer!, out error));
 
         if (!string.IsNullOrEmpty(error) || seedData == null)
         {
@@ -95,7 +98,6 @@ public class MultiplayerGameService
             return error;
         }
 
-        var seed = seedData.Seed;
         var hash = _currentGameService.GetValidationHash(seedData.WorldGenerationData.Worlds);
         _logger.LogInformation("Hash: {Hash}", hash);
         var playerList = players.ToList();
@@ -103,18 +105,21 @@ public class MultiplayerGameService
         {
             var state = _currentGameService.GetPlayerDefaultState(player,
                 seedData.WorldGenerationData.GetWorld(player.Guid).World);
+            _logger.LogInformation("Pushing state");
             await _client.UpdatePlayerState(state, false);
+            await _client.SubmitPlayerGenerationData(player.Guid,
+                seedData.WorldGenerationData.GetWorld(player.Guid).GetPlayerGenerationData());
         }
 
-        await _client.StartGame(seed, hash);
+        await _client.StartGame(hash);
         return null;
     }
 
-    public SeedData? RegenerateSeed(string seed, string validationHash, out string error)
+    public SeedData? RegenerateSeed(List<MultiplayerPlayerGenerationData> playerGenerationData, out string error)
     {
         var players = _client.Players!;
         var localPlayer = _client.LocalPlayer!;
-        var seedData = _currentGameService.RegenerateSeed(players, localPlayer, seed, out error);
+        var seedData = _currentGameService.RegenerateSeed(_client.CurrentGameState!.Seed, playerGenerationData, players, localPlayer, out error);
 
         if (!string.IsNullOrEmpty(error) || seedData == null)
         {
@@ -123,8 +128,8 @@ public class MultiplayerGameService
         }
 
         var hash = _currentGameService.GetValidationHash(seedData.WorldGenerationData.Worlds);
-        _logger.LogInformation("Generated Seed Hash: {Hash} | Expected Hash: {PreviousHash}", hash, validationHash);
-        if (hash != validationHash)
+        _logger.LogInformation("Generated Seed Hash: {Hash} | Expected Hash: {PreviousHash}", hash, _client.CurrentGameState.ValidationHash);
+        if (hash != _client.CurrentGameState.ValidationHash)
         {
             error = "Generated seed does not match. Make sure you are using the same version of the randomizer.";
             _logger.LogError("{Error}", error);

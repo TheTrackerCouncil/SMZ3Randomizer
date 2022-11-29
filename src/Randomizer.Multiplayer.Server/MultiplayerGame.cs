@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
+using Randomizer.Shared;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
@@ -26,7 +27,13 @@ public class MultiplayerGame
     {
         State = new MultiplayerGameState()
         {
-            Guid = guid, Url = gameUrl, Version = version, Type = type, Status = MultiplayerGameStatus.Created, LastMessage = DateTime.Now,
+            Guid = guid,
+            Url = gameUrl,
+            Version = version,
+            Type = type,
+            Status = MultiplayerGameStatus.Created,
+            LastMessage = DateTime.Now,
+            Seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString()
         };
     }
 
@@ -34,6 +41,7 @@ public class MultiplayerGame
     public MultiplayerGameState State { get; }
     public MultiplayerPlayer? AdminPlayer { get; private set; }
     public List<MultiplayerPlayerState> PlayerStates => _players.Values.Select(x => x.State).ToList();
+    public List<string> PlayerGenerationData => _players.Values.Select(x => x.PlayerGenerationData).NonNull().ToList();
 
 
     #region Static Methods
@@ -206,7 +214,7 @@ public class MultiplayerGame
     /// <param name="validationHash"></param>
     /// <param name="error"></param>
     /// <returns></returns>
-    public bool StartGame(string seed, string validationHash, out string? error)
+    public bool StartGame(string validationHash, out string? error)
     {
         error = "";
 
@@ -216,7 +224,12 @@ public class MultiplayerGame
             return false;
         }
 
-        State.Seed = seed;
+        if (PlayerGenerationData.Count != PlayerStates.Count)
+        {
+            error = "One or more players is missing generation data";
+            return false;
+        }
+
         State.ValidationHash = validationHash;
         State.Status = MultiplayerGameStatus.Started;
         return true;
@@ -256,6 +269,17 @@ public class MultiplayerGame
     public void UpdateGameStatus(MultiplayerGameStatus status)
     {
         State.Status = status;
+    }
+
+    /// <summary>
+    /// Updates a player's generation data and returns true if all players have been submitted
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="playerGenerationData"></param>
+    /// <returns></returns>
+    public void SetPlayerGenerationData(MultiplayerPlayer player, string playerGenerationData)
+    {
+        player.PlayerGenerationData = playerGenerationData;
     }
 
     /// <summary>

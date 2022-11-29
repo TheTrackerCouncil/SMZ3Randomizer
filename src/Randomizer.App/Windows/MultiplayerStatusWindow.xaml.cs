@@ -41,13 +41,13 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.Connected += MultiplayerClientServiceOnConnected;
             _multiplayerClientService.ConnectionClosed += MultiplayerClientServiceOnConnectionClosed;
             _multiplayerClientService.GameStateUpdated += MultiplayerClientServiceOnGameStateUpdated;
-            _multiplayerClientService.SeedDataGenerated += MultiplayerClientServiceOnSeedDataGenerated;
+            _multiplayerClientService.GameStarted += MultiplayerClientServiceOnGameStarted;
         }
 
 
-        private async void MultiplayerClientServiceOnSeedDataGenerated(string seed, string validationhash)
+        private async void MultiplayerClientServiceOnGameStarted(List<MultiplayerPlayerGenerationData> playerGenerationData)
         {
-            var seedData = _multiplayerGameService.RegenerateSeed(seed, validationhash, out var error);
+            var seedData = _multiplayerGameService.RegenerateSeed(playerGenerationData, out var error);
             if (!string.IsNullOrEmpty(error))
             {
                 DisplayError(error);
@@ -108,7 +108,7 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.Connected -= MultiplayerClientServiceOnConnected;
             _multiplayerClientService.ConnectionClosed -= MultiplayerClientServiceOnConnectionClosed;
             _multiplayerClientService.GameStateUpdated -= MultiplayerClientServiceOnGameStateUpdated;
-            _multiplayerClientService.SeedDataGenerated -= MultiplayerClientServiceOnSeedDataGenerated;
+            _multiplayerClientService.GameStarted -= MultiplayerClientServiceOnGameStarted;
             Task.Run(async () => await _multiplayerClientService.Disconnect());
         }
 
@@ -169,6 +169,8 @@ namespace Randomizer.App.Windows
             }
 
             await _multiplayerClientService.UpdateGameState(MultiplayerGameStatus.Generating);
+
+            //Task.Run(() => )
 
             var error = await _multiplayerGameService.GenerateSeed();
 

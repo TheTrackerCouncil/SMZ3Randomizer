@@ -34,7 +34,7 @@ namespace Randomizer.Multiplayer.Client
         public event MultiplayerGenericEventHandler? PlayerListUpdated;
         public event MultiplayerGenericEventHandler? GameStateUpdated;
         public event PlayerUpdatedEventHandler? PlayerUpdated;
-        public event SeedDetailsRetrievedEventHandler? SeedDataGenerated;
+        public event GameStartedEventHandler? GameStarted;
         public event TrackLocationEventHandler? LocationTracked;
         public event TrackItemEventHandler? ItemTracked;
         public event TrackDungeonEventHandler? DungeonTracked;
@@ -110,6 +110,8 @@ namespace Randomizer.Multiplayer.Client
             _connection.On<TrackDungeonResponse>("TrackDungeon", OnTrackDungeon);
 
             _connection.On<TrackBossResponse>("TrackBoss", OnTrackBoss);
+
+            _connection.On<StartGameResponse>("StartGame", OnStartGame);
 
             _connection.On<ErrorResponse>("Error", OnError);
 
@@ -293,11 +295,10 @@ namespace Randomizer.Multiplayer.Client
         /// <summary>
         /// Starts the game by sending rom generation details
         /// </summary>
-        /// <param name="seed">The seed number to generate</param>
         /// <param name="validationHash">A hash with all location data for verifying that all players are synced up</param>
-        public async Task StartGame(string seed, string validationHash)
+        public async Task StartGame(string validationHash)
         {
-            await MakeRequest("StartGame", new StartGameRequest(seed, validationHash));
+            await MakeRequest("StartGame", new StartGameRequest(validationHash));
         }
 
         public async Task TrackLocation(int locationId, string? playerGuid = null)
@@ -322,6 +323,11 @@ namespace Randomizer.Multiplayer.Client
         {
             playerGuid ??= CurrentPlayerGuid;
             await MakeRequest("TrackBoss", new TrackBossRequest(playerGuid ?? CurrentPlayerGuid!, bossType));
+        }
+
+        public async Task SubmitPlayerGenerationData(string playerGuid, MultiplayerPlayerGenerationData data)
+        {
+            await MakeRequest("SubmitPlayerGenerationData", new SubmitPlayerGenerationDataRequest(playerGuid, MultiplayerPlayerGenerationData.ToString(data)));
         }
         #endregion
 
@@ -406,7 +412,7 @@ namespace Randomizer.Multiplayer.Client
         /// On successfully rejoining a game
         /// </summary>
         /// <param name="response"></param>
-        private void OnRejoinGame(RejoinGameResponse response)
+        private async void OnRejoinGame(RejoinGameResponse response)
         {
             _logger.LogInformation("Game rejoined | Player Guid: {PlayerGuid} | Player Key: {PlayerKey}", response.PlayerGuid, response.PlayerKey);
             _logger.LogInformation("All players: {AllPlayers}", string.Join(", ", response.AllPlayers.Select(x => x.PlayerName)));
@@ -416,6 +422,11 @@ namespace Randomizer.Multiplayer.Client
             GameRejoined?.Invoke();
             UpdatePlayerList(response.AllPlayers);
             UpdateGameState(response.GameState);
+
+            if (response.GameState.Status == MultiplayerGameStatus.Started && DatabaseGameDetails?.GeneratedRom == null)
+            {
+                await MakeRequest("RequestPlayerGenerationData");
+            }
         }
 
         /// <summary>
@@ -474,6 +485,15 @@ namespace Randomizer.Multiplayer.Client
             _logger.LogInformation("{Player} tracked location {LocationId}", player.PlayerName, obj.LocationId);
             LocationTracked?.Invoke(player, obj.LocationId);
         }
+
+        private void OnStartGame(StartGameResponse obj)
+        {
+            _logger.LogInformation("Received start game");
+            UpdateGameState(obj.GameState);
+            UpdatePlayerList(obj.AllPlayers);
+            var data = obj.PlayerGenerationData.Select(MultiplayerPlayerGenerationData.FromString).NonNull().ToList();
+            GameStarted?.Invoke(data);
+        }
         #endregion
 
         #region Helper functions
@@ -485,12 +505,7 @@ namespace Randomizer.Multiplayer.Client
 
         private void UpdateGameState(MultiplayerGameState gameState)
         {
-            if (CurrentGameState?.Status is MultiplayerGameStatus.Created or MultiplayerGameStatus.Generating &&
-                gameState.Status == MultiplayerGameStatus.Started)
-            {
-                _logger.LogInformation("Rom generation information sent | Seed: {Seed} | Hash: {Hash}", gameState.Seed, gameState.ValidationHash);
-                SeedDataGenerated?.Invoke(gameState.Seed, gameState.ValidationHash);
-            }
+
             CurrentGameState = gameState;
             GameStateUpdated?.Invoke();
         }

@@ -14,8 +14,10 @@ public class MultiworldGameService : MultiplayerGameTypeService
         _trackerStateService = trackerStateService;
     }
 
-    public override SeedData? GenerateSeed(List<MultiplayerPlayerState> players, out string error)
+    public override SeedData? GenerateSeed(string seed, List<MultiplayerPlayerState> players,
+        MultiplayerPlayerState localPlayer, out string error)
     {
+
         var generationConfigs = new List<Config>();
         for (var i = 0; i < players.Count; i++)
         {
@@ -24,15 +26,17 @@ public class MultiworldGameService : MultiplayerGameTypeService
             var config = Config.FromConfigString(player.Config!).First();
             config.Id = i;
             config.GameMode = GameMode.Multiworld;
+            config.IsLocalConfig = player == localPlayer;
             player.Config = Config.ToConfigString(config);
-            generationConfigs.Add(config.SeedOnly());
+            generationConfigs.Add(config);
         }
 
-        return GenerateSeedInternal(generationConfigs, null, out error);
+        return GenerateSeedInternal(generationConfigs, seed, out error);
     }
 
-    public override SeedData? RegenerateSeed(List<MultiplayerPlayerState> players, MultiplayerPlayerState localPlayer,
-        string seed, out string error)
+    public override SeedData? RegenerateSeed(string seed, List<MultiplayerPlayerGenerationData> playerGenerationData,
+        List<MultiplayerPlayerState> players, MultiplayerPlayerState localPlayer,
+        out string error)
     {
         var generationConfigs = new List<Config>();
         foreach (var player in players)
