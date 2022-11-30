@@ -216,7 +216,7 @@ public abstract class MultiplayerGameTypeService
 
         return new PlayerSyncReceivedEventHandlerArgs()
         {
-            PlayerId = player.WorldId!.Value,
+            PlayerId = player.WorldId,
             PlayerName = player.PlayerName,
             IsLocalPlayer = isLocalPlayer,
             ItemsToGive = itemsToGive,

@@ -26,7 +26,7 @@ public class MultiplayerModule : TrackerModule
     {
         _multiplayerGameService = multiplayerGameService;
 
-        if (Tracker.Rom is not { MultiplayerGameDetails: null }) return;
+        if (Tracker.Rom is { MultiplayerGameDetails: null }) return;
 
         Tracker.LocationCleared += TrackerOnLocationCleared;
         Tracker.BossUpdated += TrackerOnBossUpdated;
@@ -46,9 +46,9 @@ public class MultiplayerModule : TrackerModule
 
     private void PlayerSyncReceived(PlayerSyncReceivedEventHandlerArgs args)
     {
-        if (args.ItemsToGive == null || args.ItemsToGive.Count == 0) return;
+        if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0) return;
         var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
-        Tracker.GameService!.TryGiveItems(items, args.PlayerId);
+        Tracker.GameService!.TryGiveItems(items, args.PlayerId.Value);
 
     }
 

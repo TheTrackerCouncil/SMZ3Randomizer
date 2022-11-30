@@ -415,7 +415,7 @@ namespace Randomizer.Multiplayer.Server
             }
 
             LogInfo(player, $"Received generation data for {playerToUpdate.Guid}");
-            player.PlayerGenerationData = request.PlayerGenerationData;
+            playerToUpdate.PlayerGenerationData = request.PlayerGenerationData;
         }
 
         public async Task RequestPlayerGenerationData()

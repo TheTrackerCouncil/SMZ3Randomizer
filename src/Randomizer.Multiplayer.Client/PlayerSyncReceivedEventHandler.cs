@@ -8,7 +8,7 @@ public delegate void PlayerSyncReceivedEventHandler(PlayerSyncReceivedEventHandl
 
 public class PlayerSyncReceivedEventHandlerArgs
 {
-    public int PlayerId { get; init; }
+    public int? PlayerId { get; init; }
     public string PlayerName { get; init; } = "";
     public ICollection<ItemType>? ItemsToGive { get; init; }
     public bool IsLocalPlayer { get; init; }
