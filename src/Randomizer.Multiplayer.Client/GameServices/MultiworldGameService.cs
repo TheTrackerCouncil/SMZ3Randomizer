@@ -5,7 +5,7 @@ using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.Multiplayer.Client.GameServices;
 
-public class MultiworldGameService : MultiplayerGameTypeService
+public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
 {
     private ITrackerStateService _trackerStateService;
 
@@ -48,5 +48,36 @@ public class MultiworldGameService : MultiplayerGameTypeService
         }
 
         return GenerateSeedInternal(generationConfigs, seed, out error);
+    }
+
+    public void Dispose()
+    {
+        EnableSync = false;
+        GC.SuppressFinalize(this);
+    }
+
+    public override void OnTrackingStarted()
+    {
+        EnableSync = true;
+        Task.Run(SyncPlayerState);
+    }
+
+    private bool EnableSync { get; set; }
+
+    /// <summary>
+    /// Send the local player's full state in case anything was missed
+    /// </summary>
+    private async Task SyncPlayerState()
+    {
+        while (EnableSync)
+        {
+            if (Client.LocalPlayer != null && TrackerState != null)
+            {
+                UpdatePlayerState(Client.LocalPlayer, TrackerState);
+                await Client.UpdatePlayerState(Client.LocalPlayer);
+            }
+
+            await Task.Delay(TimeSpan.FromSeconds(60));
+        }
     }
 }

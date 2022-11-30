@@ -227,4 +227,14 @@ public abstract class MultiplayerGameTypeService
             DidForfeit = player.HasForfeited && previousState?.HasForfeited != true
         };
     }
+
+    public void UpdatePlayerState(MultiplayerPlayerState state, TrackerState trackerState)
+    {
+        state.Locations = trackerState.LocationStates.Where(x => x.WorldId == state.WorldId).ToDictionary(x => x.LocationId, x => x.Autotracked);
+        state.Items = trackerState.ItemStates.Where(x => x.WorldId == state.WorldId).Where(x => x.Type != null && x.Type != ItemType.Nothing).ToDictionary(x => x.Type!.Value, x => x.TrackingState);
+        state.Bosses = trackerState.BossStates.Where(x => x.WorldId == state.WorldId).Where(x => x.Type != BossType.None).ToDictionary(x => x.Type, x => x.Defeated);
+        state.Dungeons = trackerState.DungeonStates.Where(x => x.WorldId == state.WorldId).ToDictionary(x => x.Name, x => x.Cleared);
+    }
+
+    public abstract void OnTrackingStarted();
 }

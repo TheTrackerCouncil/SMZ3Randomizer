@@ -29,6 +29,7 @@ public class MultiplayerGameService
         _client.BossTracked += ClientOnBossTracked;
         _client.DungeonTracked += ClientOnDungeonTracked;
         _client.PlayerUpdated += ClientOnPlayerUpdated;
+        _client.PlayerStateRequested += ClientOnPlayerStateRequested;
     }
 
     public void SetTrackerState(TrackerState state)
@@ -78,6 +79,17 @@ public class MultiplayerGameService
     {
         PlayerSyncReceived?.Invoke(_currentGameService.PlayerSyncReceived(playerState, previousState,
             playerState.Guid == _client.CurrentPlayerGuid));
+    }
+
+    private async void ClientOnPlayerStateRequested()
+    {
+        if (_client.LocalPlayer == null || _currentGameService.TrackerState == null)
+        {
+            _logger.LogWarning("Player state update requested, but either the local player multiplayer state or the tracker state is unavailable");
+            return;
+        }
+        _currentGameService.UpdatePlayerState(_client.LocalPlayer, _currentGameService.TrackerState);
+        await _client.UpdatePlayerState(_client.LocalPlayer);
     }
 
     public void UpdateGameType(MultiplayerGameType type)
@@ -161,5 +173,15 @@ public class MultiplayerGameService
     public async Task TrackBoss(Boss boss)
     {
         await _currentGameService.TrackBoss(boss);
+    }
+
+    public void OnTrackingStarted()
+    {
+        _currentGameService.OnTrackingStarted();
+    }
+
+    public void UpdatePlayerState(MultiplayerPlayerState state, TrackerState trackerState)
+    {
+        _currentGameService.UpdatePlayerState(state, trackerState);
     }
 }

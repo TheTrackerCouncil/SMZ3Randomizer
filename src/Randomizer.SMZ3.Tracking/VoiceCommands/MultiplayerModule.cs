@@ -43,6 +43,8 @@ public class MultiplayerModule : TrackerModule
 
         _multiplayerGameService.SetTrackerState(worldService.World.State!);
 
+        _multiplayerGameService.OnTrackingStarted();
+        ;
         Logger.LogInformation("Multiplayer module initialized");
     }
 
@@ -57,7 +59,7 @@ public class MultiplayerModule : TrackerModule
 
     private void PlayerTrackedItem(PlayerTrackedItemEventHandlerArgs args)
     {
-        
+
     }
 
     private void PlayerTrackedLocation(PlayerTrackedLocationEventHandlerArgs args)
@@ -119,8 +121,6 @@ public class MultiplayerModule : TrackerModule
         {
             Task.Run(() => Tracker.SaveAsync(Tracker.Rom));
         }
-
     }
-
 
 }

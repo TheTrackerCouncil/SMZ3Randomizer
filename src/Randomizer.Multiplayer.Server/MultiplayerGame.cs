@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
@@ -32,7 +33,8 @@ public class MultiplayerGame
             Version = version,
             Type = type,
             Status = MultiplayerGameStatus.Created,
-            LastMessage = DateTime.Now,
+            CreatedDate = DateTimeOffset.Now,
+            LastMessage = DateTimeOffset.Now,
             Seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString()
         };
     }
@@ -45,6 +47,29 @@ public class MultiplayerGame
 
 
     #region Static Methods
+
+    public static int ExpireGames(int expirationTime)
+    {
+        var amountExpired = 0;
+        foreach (var game in s_games.Values)
+        {
+            var timeDiff = DateTimeOffset.Now - game.State.LastMessage;
+            if (timeDiff.TotalMinutes > expirationTime)
+            {
+                foreach (var player in game._players.Values)
+                {
+                    if (!string.IsNullOrEmpty(player.ConnectionId))
+                    {
+                        s_playerConnections.TryRemove(player.ConnectionId, out _);
+                    }
+                }
+                s_games.TryRemove(game.Guid, out _);
+                amountExpired++;
+            }
+        }
+
+        return amountExpired;
+    }
 
     /// <summary>
     /// Creates a new multiplayer game
@@ -160,6 +185,7 @@ public class MultiplayerGame
         var player = new MultiplayerPlayer(this, guid, key, CleanPlayerName(playerName), playerConnectionId);
         _players[guid] = player;
         s_playerConnections[playerConnectionId] = player;
+        State.LastMessage = DateTimeOffset.Now;
         error = null;
         return player;
     }
@@ -174,6 +200,7 @@ public class MultiplayerGame
         s_playerConnections[playerConnectionId] = player;
         player.ConnectionId = playerConnectionId;
         player.State.IsConnected = true;
+        State.LastMessage = DateTimeOffset.Now;
         UpdatePlayerStatus(player);
     }
 
@@ -196,6 +223,8 @@ public class MultiplayerGame
             }
         }
 
+        State.LastMessage = DateTimeOffset.Now;
+
         if (!State.HasGameStarted)
         {
             s_playerConnections.TryRemove(player.ConnectionId, out _);
@@ -210,7 +239,6 @@ public class MultiplayerGame
     /// <summary>
     /// Marks a game as having started by setting its seed and validation hash for all players to generate their roms
     /// </summary>
-    /// <param name="seed">The seed for the </param>
     /// <param name="validationHash"></param>
     /// <param name="error"></param>
     /// <returns></returns>
@@ -232,6 +260,7 @@ public class MultiplayerGame
 
         State.ValidationHash = validationHash;
         State.Status = MultiplayerGameStatus.Started;
+        State.LastMessage = DateTimeOffset.Now;
         return true;
     }
 
@@ -268,6 +297,7 @@ public class MultiplayerGame
     /// <param name="status">The new status for the game</param>
     public void UpdateGameStatus(MultiplayerGameStatus status)
     {
+        State.LastMessage = DateTimeOffset.Now;
         State.Status = status;
     }
 
@@ -280,6 +310,52 @@ public class MultiplayerGame
     public void SetPlayerGenerationData(MultiplayerPlayer player, string playerGenerationData)
     {
         player.PlayerGenerationData = playerGenerationData;
+        State.LastMessage = DateTimeOffset.Now;
+    }
+
+    /// <summary>
+    /// Marks a location as accessed
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="locationId"></param>
+    public void TrackLocation(MultiplayerPlayer player, int locationId)
+    {
+        player.State.TrackLocation(locationId);
+        State.LastMessage = DateTimeOffset.Now;
+    }
+
+    /// <summary>
+    /// Updates the amount of an item that have been retrieved
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="type"></param>
+    /// <param name="trackedValue"></param>
+    public void TrackItem(MultiplayerPlayer player, ItemType type, int trackedValue)
+    {
+        player.State.TrackItem(type, trackedValue);
+        State.LastMessage = DateTimeOffset.Now;
+    }
+
+    /// <summary>
+    /// Marks a boss as defeated
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="type"></param>
+    public void TrackBoss(MultiplayerPlayer player, BossType type)
+    {
+        player.State.TrackBoss(type);
+        State.LastMessage = DateTimeOffset.Now;
+    }
+
+    /// <summary>
+    /// Marks a dungeon as completed
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="name"></param>
+    public void TrackDungeon(MultiplayerPlayer player, string name)
+    {
+        player.State.TrackDungeon(name);
+        State.LastMessage = DateTimeOffset.Now;
     }
 
     /// <summary>

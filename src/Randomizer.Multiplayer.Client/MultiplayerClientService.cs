@@ -33,6 +33,7 @@ namespace Randomizer.Multiplayer.Client
         public event MultiplayerGenericEventHandler? GameForfeit;
         public event MultiplayerGenericEventHandler? PlayerListUpdated;
         public event MultiplayerGenericEventHandler? GameStateUpdated;
+        public event MultiplayerGenericEventHandler? PlayerStateRequested;
         public event PlayerUpdatedEventHandler? PlayerUpdated;
         public event GameStartedEventHandler? GameStarted;
         public event TrackLocationEventHandler? LocationTracked;
@@ -115,6 +116,8 @@ namespace Randomizer.Multiplayer.Client
 
             _connection.On<ErrorResponse>("Error", OnError);
 
+            _connection.On<RequestPlayerUpdateRequest>("RequestPlayerUpdate", OnRequestPlayerUpdate);
+
             _connection.Closed += ConnectionOnClosed;
 
             try
@@ -138,6 +141,12 @@ namespace Randomizer.Multiplayer.Client
                 _logger.LogError("Unable to connect to {Url} - Connection state: {State}", url, _connection.State);
                 Error?.Invoke($"Unable to connect to {url}");
             }
+        }
+
+        private void OnRequestPlayerUpdate(RequestPlayerUpdateRequest obj)
+        {
+            _logger.LogInformation("Player state requested");
+            PlayerStateRequested?.Invoke();
         }
 
         public async Task Reconnect(MultiplayerGameDetails gameDetails)
@@ -329,6 +338,16 @@ namespace Randomizer.Multiplayer.Client
         {
             await MakeRequest("SubmitPlayerGenerationData", new SubmitPlayerGenerationDataRequest(playerGuid, MultiplayerPlayerGenerationData.ToString(data)));
         }
+
+        public async Task RequestPlayerList(bool sendToAllPlayers)
+        {
+            await MakeRequest("PlayerListSync", new PlayerListSyncRequest(sendToAllPlayers));
+        }
+
+        public async Task RequestPlayerUpdate(string? playerGuid)
+        {
+            await MakeRequest("RequestPlayerUpdate", new RequestPlayerUpdateRequest(playerGuid));
+        }
         #endregion
 
         #region Event Handlers
@@ -423,9 +442,10 @@ namespace Randomizer.Multiplayer.Client
             UpdateGameState(response.GameState);
             GameRejoined?.Invoke();
 
+            // If the game has started but we don't have any generation data, request it from the server
             if (response.GameState.Status == MultiplayerGameStatus.Started && DatabaseGameDetails?.GeneratedRom == null)
             {
-                await MakeRequest("RequestPlayerGenerationData");
+                await MakeRequest("RequestPlayerGenerationData", new MultiplayerRequest());
             }
         }
 

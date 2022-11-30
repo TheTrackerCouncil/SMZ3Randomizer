@@ -296,7 +296,7 @@ namespace Randomizer.Multiplayer.Server
 
             LogInfo(player, $"Tracked location {request.LocationId} for {playerToUpdate.Guid}");
 
-            playerToUpdate.State.TrackLocation(request.LocationId);
+            player.Game.TrackLocation(playerToUpdate, request.LocationId);
 
             await SendPlayerTrackedResponse(player, "TrackLocation",
                 new TrackLocationResponse(player.Guid, request.LocationId));
@@ -327,7 +327,7 @@ namespace Randomizer.Multiplayer.Server
 
             LogInfo(player, $"Tracked item {request.ItemType} as value {request.TrackedValue} for {playerToUpdate.Guid}");
 
-            playerToUpdate.State.TrackItem(request.ItemType, request.TrackedValue);
+            player.Game.TrackItem(playerToUpdate, request.ItemType, request.TrackedValue);
 
             await SendPlayerTrackedResponse(player, "TrackItem",
                 new TrackItemResponse(player.Guid, request.ItemType, request.TrackedValue));
@@ -358,7 +358,7 @@ namespace Randomizer.Multiplayer.Server
 
             LogInfo(player, $"Tracked boss {request.BossType} for {playerToUpdate.Guid}");
 
-            playerToUpdate.State.TrackBoss(request.BossType);
+            player.Game.TrackBoss(playerToUpdate, request.BossType);
 
             await SendPlayerTrackedResponse(player, "TrackBoss",
                 new TrackBossResponse(player.Guid, request.BossType));
@@ -389,7 +389,7 @@ namespace Randomizer.Multiplayer.Server
 
             LogInfo(player, $"Tracked dungeon {request.DungeonName} for {playerToUpdate.Guid}");
 
-            playerToUpdate.State.TrackDungeon(request.DungeonName);
+            player.Game.TrackDungeon(playerToUpdate, request.DungeonName);
 
             await SendPlayerTrackedResponse(player, "TrackDungeon",
                 new TrackDungeonResponse(player.Guid, request.DungeonName));
@@ -415,10 +415,10 @@ namespace Randomizer.Multiplayer.Server
             }
 
             LogInfo(player, $"Received generation data for {playerToUpdate.Guid}");
-            playerToUpdate.PlayerGenerationData = request.PlayerGenerationData;
+            player.Game.SetPlayerGenerationData(playerToUpdate, request.PlayerGenerationData);
         }
 
-        public async Task RequestPlayerGenerationData()
+        public async Task RequestPlayerGenerationData(MultiplayerRequest request)
         {
             var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
             if (player == null)
@@ -437,6 +437,42 @@ namespace Randomizer.Multiplayer.Server
             await Clients.Caller.SendAsync("StartGame",
                 new StartGameResponse(player.Game.State, player.Game.PlayerStates,
                     player.Game.PlayerGenerationData));
+        }
+
+        public async Task PlayerListSync(PlayerListSyncRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            if (request.SendToAllPlayers)
+                LogInfo(player, "Player list requested to be sent to all players");
+            else
+                LogInfo(player, "Player list requested");
+
+            var sendTo = request.SendToAllPlayers ? Clients.Group(player.Game.Guid) : Clients.Caller;
+            await sendTo.SendAsync("PlayerListSync",
+                new PlayerListSyncResponse(player.Game.State, player.Game.PlayerStates));
+        }
+
+        public async Task RequestPlayerUpdate(RequestPlayerUpdateRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            var playerToSendTo = request.PlayerGuid == null
+                ? null
+                : player.Game.GetPlayer(request.PlayerGuid, null, false);
+
+            var sendTo = playerToSendTo == null ? Clients.Group(player.Game.Guid) : Clients.Client(playerToSendTo.ConnectionId);
+            await sendTo.SendAsync("RequestPlayerUpdate", new RequestPlayerUpdateResponse());
         }
 
         private async Task SendPlayerTrackedResponse(MultiplayerPlayer player, string method, object message, bool allPlayers = true)
