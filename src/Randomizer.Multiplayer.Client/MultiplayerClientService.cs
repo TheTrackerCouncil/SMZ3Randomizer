@@ -419,9 +419,9 @@ namespace Randomizer.Multiplayer.Client
             CurrentGameGuid = response.GameState.Guid;
             CurrentPlayerGuid = response.PlayerGuid;
             CurrentPlayerKey = response.PlayerKey;
-            GameRejoined?.Invoke();
             UpdatePlayerList(response.AllPlayers);
             UpdateGameState(response.GameState);
+            GameRejoined?.Invoke();
 
             if (response.GameState.Status == MultiplayerGameStatus.Started && DatabaseGameDetails?.GeneratedRom == null)
             {

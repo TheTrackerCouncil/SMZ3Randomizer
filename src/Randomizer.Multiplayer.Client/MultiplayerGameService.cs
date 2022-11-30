@@ -48,26 +48,30 @@ public class MultiplayerGameService
 
     private void ClientOnDungeonTracked(MultiplayerPlayerState playerState, string dungeonName)
     {
-        PlayerTrackedDungeon?.Invoke(_currentGameService.PlayerTrackedDungeon(playerState, dungeonName,
-            playerState.Guid == _client.CurrentPlayerGuid));
+        var args = _currentGameService.PlayerTrackedDungeon(playerState, dungeonName,
+            playerState.Guid == _client.CurrentPlayerGuid);
+        if (args != null) PlayerTrackedDungeon?.Invoke(args);
     }
 
     private void ClientOnBossTracked(MultiplayerPlayerState playerState, BossType bossType)
     {
-        PlayerTrackedBoss?.Invoke(_currentGameService.PlayerTrackedBoss(playerState, bossType,
-            playerState.Guid == _client.CurrentPlayerGuid));
+        var args = _currentGameService.PlayerTrackedBoss(playerState, bossType,
+            playerState.Guid == _client.CurrentPlayerGuid);
+        if (args != null) PlayerTrackedBoss?.Invoke(args);
     }
 
     private void ClientOnItemTracked(MultiplayerPlayerState playerState, ItemType itemType, int trackingValue)
     {
-        PlayerTrackedItem?.Invoke(_currentGameService.PlayerTrackedItem(playerState, itemType, trackingValue,
-            playerState.Guid == _client.CurrentPlayerGuid));
+        var args = _currentGameService.PlayerTrackedItem(playerState, itemType, trackingValue,
+            playerState.Guid == _client.CurrentPlayerGuid);
+        if (args != null) PlayerTrackedItem?.Invoke(args);
     }
 
     private void ClientOnLocationTracked(MultiplayerPlayerState playerState, int locationId)
     {
-        PlayerTrackedLocation?.Invoke(_currentGameService.PlayerTrackedLocation(playerState, locationId,
-            playerState.Guid == _client.CurrentPlayerGuid));
+        var args = _currentGameService.PlayerTrackedLocation(playerState, locationId,
+            playerState.Guid == _client.CurrentPlayerGuid);
+        if (args != null) PlayerTrackedLocation?.Invoke(args);
     }
 
     private void ClientOnPlayerUpdated(MultiplayerPlayerState playerState, MultiplayerPlayerState? previousState)

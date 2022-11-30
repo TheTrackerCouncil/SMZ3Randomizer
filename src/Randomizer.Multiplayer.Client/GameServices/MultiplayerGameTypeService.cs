@@ -112,7 +112,7 @@ public abstract class MultiplayerGameTypeService
         await Client.TrackBoss(boss.Type, boss.World.Guid);
     }
 
-    public PlayerTrackedLocationEventHandlerArgs PlayerTrackedLocation(MultiplayerPlayerState player, int locationId, bool isLocalPlayer)
+    public PlayerTrackedLocationEventHandlerArgs? PlayerTrackedLocation(MultiplayerPlayerState player, int locationId, bool isLocalPlayer)
     {
         var itemToGive = ItemType.Nothing;
 
@@ -121,6 +121,7 @@ public abstract class MultiplayerGameTypeService
             var locationState =
                 TrackerState.LocationStates.First(x =>
                     x.WorldId == player.WorldId && x.LocationId == locationId);
+            if (locationState.Cleared) return null;
             locationState.Autotracked = true;
             locationState.Cleared = true;
             if (locationState.ItemWorldId == Client.LocalPlayer!.WorldId)
@@ -139,11 +140,12 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
-    public PlayerTrackedItemEventHandlerArgs PlayerTrackedItem(MultiplayerPlayerState player, ItemType itemType, int trackingValue, bool isLocalPlayer)
+    public PlayerTrackedItemEventHandlerArgs? PlayerTrackedItem(MultiplayerPlayerState player, ItemType itemType, int trackingValue, bool isLocalPlayer)
     {
         if (TrackerState != null && itemType != ItemType.Nothing && !isLocalPlayer)
         {
             var itemState = TrackerState.ItemStates.First(x => x.WorldId == player.WorldId && x.Type == itemType);
+            if (itemState.TrackingState > trackingValue) return null;
             itemState.TrackingState = trackingValue;
         }
 
@@ -157,11 +159,12 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
-    public PlayerTrackedBossEventHandlerArgs PlayerTrackedBoss(MultiplayerPlayerState player, BossType bossType, bool isLocalPlayer)
+    public PlayerTrackedBossEventHandlerArgs? PlayerTrackedBoss(MultiplayerPlayerState player, BossType bossType, bool isLocalPlayer)
     {
         if (TrackerState != null && bossType != BossType.None && !isLocalPlayer)
         {
             var bossState = TrackerState.BossStates.First(x => x.WorldId == player.WorldId && x.Type == bossType);
+            if (bossState.Defeated) return null;
             bossState.Defeated = true;
         }
 
@@ -174,7 +177,7 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
-    public PlayerTrackedDungeonEventHandlerArgs PlayerTrackedDungeon(MultiplayerPlayerState player, string dungeonName, bool isLocalPlayer)
+    public PlayerTrackedDungeonEventHandlerArgs? PlayerTrackedDungeon(MultiplayerPlayerState player, string dungeonName, bool isLocalPlayer)
     {
         if (TrackerState != null && !isLocalPlayer)
         {
@@ -182,6 +185,7 @@ public abstract class MultiplayerGameTypeService
                 TrackerState.DungeonStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Name == dungeonName);
             if (dungeonState != null)
             {
+                if (dungeonState.Cleared) return null;
                 dungeonState.Cleared = true;
             }
         }

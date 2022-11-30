@@ -90,7 +90,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 tempItemCounter += batch.Length;
             }
 
-            Tracker.TrackItems(items);
+            if (items.Count == 1)
+            {
+                Tracker.TrackItem(items.First(), null, null, false, true, null, true);
+            }
+            else
+            {
+                Tracker.TrackItems(items);
+            }
 
             // Up the item counter to have them actually pick it up
             action = new EmulatorAction()

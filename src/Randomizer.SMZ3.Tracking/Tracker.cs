@@ -1283,6 +1283,10 @@ namespace Randomizer.SMZ3.Tracking
             return didTrack;
         }
 
+        /// <summary>
+        /// Tracks multiple items
+        /// </summary>
+        /// <param name="items"></param>
         public void TrackItems(List<Item> items)
         {
             ItemService.ResetProgression();

@@ -221,6 +221,7 @@ namespace Randomizer.App.Windows
         {
             if (!_multiplayerClientService.IsConnected && MultiplayerGameDetails != null)
             {
+                Model.GeneratedRom = MultiplayerGameDetails.GeneratedRom;
                 await _multiplayerClientService.Reconnect(MultiplayerGameDetails);
             }
             else if (_multiplayerClientService.IsConnected)
