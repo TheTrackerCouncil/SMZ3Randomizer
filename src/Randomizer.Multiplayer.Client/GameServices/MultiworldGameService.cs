@@ -9,7 +9,7 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
 {
     private ITrackerStateService _trackerStateService;
 
-    public MultiworldGameService(Smz3Randomizer randomizer, MultiplayerClientService client, ITrackerStateService trackerStateService) : base(randomizer, client)
+    public MultiworldGameService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator,  MultiplayerClientService client, ITrackerStateService trackerStateService) : base(randomizer, multiplayerRomGenerator, client)
     {
         _trackerStateService = trackerStateService;
     }
@@ -44,10 +44,11 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
             var config = Config.FromConfigString(player.Config!).First();
             config.IsLocalConfig = player == localPlayer;
             config.Seed = seed;
+            config.MultiplayerPlayerGenerationData = playerGenerationData.Single(x => x.WorldId == config.Id);
             generationConfigs.Add(config);
         }
 
-        return GenerateSeedInternal(generationConfigs, seed, out error);
+        return RegenerateSeedInternal(generationConfigs, seed, out error);
     }
 
     public void Dispose()

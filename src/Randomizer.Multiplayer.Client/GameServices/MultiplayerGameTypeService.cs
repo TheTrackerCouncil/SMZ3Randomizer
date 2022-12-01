@@ -13,15 +13,18 @@ namespace Randomizer.Multiplayer.Client.GameServices;
 public abstract class MultiplayerGameTypeService
 {
 
-    public MultiplayerGameTypeService(Smz3Randomizer randomizer, MultiplayerClientService client)
+    public MultiplayerGameTypeService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator, MultiplayerClientService client)
     {
         Randomizer = randomizer;
         Client = client;
+        MultiplayerRomGenerator = multiplayerRomGenerator;
     }
 
     protected Smz3Randomizer Randomizer { get; init; }
 
     protected MultiplayerClientService Client { get; }
+
+    protected Smz3MultiplayerRomGenerator MultiplayerRomGenerator { get; }
 
     public TrackerState? TrackerState { get; set; }
 
@@ -54,6 +57,42 @@ public abstract class MultiplayerGameTypeService
             try
             {
                 seedData = Randomizer.GenerateSeed(configs, seed, CancellationToken.None);
+                if (!Randomizer.ValidateSeedSettings(seedData))
+                {
+                    error = "";
+                }
+                else
+                {
+                    validated = true;
+                    break;
+                }
+            }
+            catch (RandomizerGenerationException e)
+            {
+                seedData = null;
+                error = $"Error generating rom\n{e.Message}\nPlease try again. If it persists, try modifying your seed settings.";
+            }
+        }
+
+        if (!validated)
+        {
+            error = $"Could not successfully generate a seed with requested settings.";
+            seedData = null;
+        }
+
+        return seedData;
+    }
+
+    protected SeedData? RegenerateSeedInternal(List<Config> configs, string? seed, out string error)
+    {
+        SeedData? seedData = null;
+        var validated = false;
+        error = "";
+        for (var i = 0; i < 3; i++)
+        {
+            try
+            {
+                seedData = MultiplayerRomGenerator.GenerateSeed(configs, seed, CancellationToken.None);
                 if (!Randomizer.ValidateSeedSettings(seedData))
                 {
                     error = "";

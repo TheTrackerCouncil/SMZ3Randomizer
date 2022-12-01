@@ -98,10 +98,12 @@ namespace Randomizer.SMZ3.Generation
                 if (generatedData.Medallion != ItemType.Nothing && dungeon is INeedsMedallion medallionRegion)
                 {
                     medallionRegion.Medallion = generatedData.Medallion;
+                    _logger.LogDebug("Marked {Dungeon} as requiring {Medallion}", generatedData.Name, generatedData.Medallion);
                 }
                 if (generatedData.Reward != null && dungeon is IHasReward rewardRegion)
                 {
                     rewardRegion.Reward = new Reward(generatedData.Reward.Value, world, rewardRegion);
+                    _logger.LogDebug("Marked {Dungeon} as having {Medallion}", generatedData.Name, generatedData.Reward);
                 }
             }
             EnsureDungeonsHaveMedallions(world);
@@ -115,6 +117,7 @@ namespace Randomizer.SMZ3.Generation
             {
                 var generatedData = generatedLocationData.Single(x => x.Id == location.Id);
                 location.Item = new Item(generatedData.Item, worlds.Single(x => x.Id == generatedData.ItemWorldId));
+                _logger.LogDebug("Fast filled {Item} at {Location}", generatedData.Item, location.Name);
             }
             EnsureLocationsHaveItems(world);
         }

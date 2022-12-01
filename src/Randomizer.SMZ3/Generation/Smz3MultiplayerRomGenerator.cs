@@ -37,15 +37,15 @@ public class Smz3MultiplayerRomGenerator : ISeededRandomizer
     public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default) =>
         GenerateSeed(config, "", cancellationToken);
 
-    public SeedData GenerateSeed(Config config, string seed, CancellationToken cancellationToken = default) =>
+    public SeedData GenerateSeed(Config config, string? seed, CancellationToken cancellationToken = default) =>
         GenerateSeed(new List<Config>() { config }, seed, cancellationToken);
 
-    public SeedData GenerateSeed(List<Config> configs, string seed = "", CancellationToken cancellationToken = default)
+    public SeedData GenerateSeed(List<Config> configs, string? seed = "", CancellationToken cancellationToken = default)
     {
         var orderedConfigs = configs.OrderBy(x => x.Id).ToList();
         var primaryConfig = orderedConfigs.First();
 
-        var seedNumber = ISeededRandomizer.ParseSeed(ref seed!);
+        var seedNumber = ISeededRandomizer.ParseSeed(ref seed);
         var rng = new Random(seedNumber);
         primaryConfig.Seed = seedNumber.ToString();
         if (primaryConfig.Race)
