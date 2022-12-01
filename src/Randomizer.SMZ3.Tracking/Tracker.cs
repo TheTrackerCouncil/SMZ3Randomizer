@@ -1786,13 +1786,17 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="autoTracked">If this was cleared by the auto tracker</param>
         public void MarkDungeonAsCleared(IDungeon dungeon, float? confidence = null, bool autoTracked = false)
         {
-            ItemService.ResetProgression();
-
             if (dungeon.DungeonState.Cleared)
             {
-                Say(Responses.DungeonBossAlreadyCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+                if (!autoTracked)
+                    Say(Responses.DungeonBossAlreadyCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
+                else
+                    OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
+
                 return;
             }
+
+            ItemService.ResetProgression();
 
             var addedEvent = History.AddEvent(
                 HistoryEventType.BeatBoss,
@@ -1831,7 +1835,10 @@ namespace Randomizer.SMZ3.Tracking
         {
             if (boss.State.Defeated)
             {
-                Say(x => x.BossAlreadyDefeated, boss.Name);
+                if (!autoTracked)
+                    Say(x => x.BossAlreadyDefeated, boss.Name);
+                else
+                    OnBossUpdated(new(boss, confidence, autoTracked));
                 return;
             }
 

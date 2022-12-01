@@ -15,6 +15,7 @@ namespace Randomizer.Shared.Models {
         public TrackerState? TrackerState { get; set; }
         public string Name { get; set; } = string.Empty;
         public bool Cleared { get; set; }
+        public bool AutoTracked { get; set; }
         public int RemainingTreasure { get; set; }
         public RewardType? Reward { get; set; }
         public ItemType? RequiredMedallion { get; set; }

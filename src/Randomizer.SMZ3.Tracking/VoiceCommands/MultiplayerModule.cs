@@ -44,7 +44,7 @@ public class MultiplayerModule : TrackerModule
         _multiplayerGameService.SetTrackerState(worldService.World.State!);
 
         _multiplayerGameService.OnTrackingStarted();
-        ;
+
         Logger.LogInformation("Multiplayer module initialized");
     }
 
@@ -84,7 +84,7 @@ public class MultiplayerModule : TrackerModule
 
     private async void TrackerOnDungeonUpdated(object? sender, DungeonTrackedEventArgs e)
     {
-        if (e.Dungeon == null || !e.AutoTracked) return;
+        if (e.Dungeon == null || !e.AutoTracked || !e.Dungeon.DungeonState.Cleared) return;
         await _multiplayerGameService.TrackDungeon(e.Dungeon);
         SaveTracker();
     }

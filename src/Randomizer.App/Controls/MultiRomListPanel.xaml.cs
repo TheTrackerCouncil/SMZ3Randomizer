@@ -82,9 +82,14 @@ namespace Randomizer.App.Controls
             if (sender is not MenuItem { Tag: MultiplayerGameDetails details })
                 return;
 
+            // If there's a rom, try to delete it first and don't continue
+            // if it wasn't deleted
             if (details.GeneratedRom != null)
             {
-                DeleteGeneratedRom(details.GeneratedRom);
+                if (!DeleteGeneratedRom(details.GeneratedRom))
+                {
+                    return;
+                }
             }
 
             DbContext.MultiplayerGames.Remove(details);

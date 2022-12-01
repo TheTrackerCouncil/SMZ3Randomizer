@@ -640,8 +640,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     var prevValue = prevData.CheckUInt16((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
                     var currentValue = currentData.CheckUInt16((int)(region.MemoryAddress * 2), region.MemoryFlag ?? 0);
-                    if (dungeon.DungeonState.Cleared == false && prevValue && currentValue)
+                    if (dungeon.DungeonState.AutoTracked == false && prevValue && currentValue)
                     {
+                        dungeon.DungeonState.AutoTracked = true;
                         Tracker.MarkDungeonAsCleared(dungeon, autoTracked: true);
                         _logger.LogInformation($"Auto tracked {dungeon.DungeonName} as cleared");
                     }
@@ -661,10 +662,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="data">The response from the lua script</param>
         protected void CheckSMBosses(EmulatorMemoryData data)
         {
-            foreach (var boss in Tracker.World.AllBosses.Where(x => x.Metadata.MemoryAddress != null && x.Metadata.MemoryFlag > 0 && !x.State.Defeated))
+            foreach (var boss in Tracker.World.AllBosses.Where(x => x.Metadata.MemoryAddress != null && x.Metadata.MemoryFlag > 0 && !x.State.AutoTracked))
             {
                 if (data.CheckBinary8Bit(boss.Metadata.MemoryAddress ?? 0, boss.Metadata.MemoryFlag ?? 100))
                 {
+                    boss.State.AutoTracked = true;
                     Tracker.MarkBossAsDefeated(boss, true, null, true);
                     _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
                 }

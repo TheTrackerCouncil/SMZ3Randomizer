@@ -256,6 +256,7 @@ namespace Randomizer.App.Controls
                 return;
 
             DeleteGeneratedRom(rom);
+            UpdateList();
         }
 
         /// <summary>
