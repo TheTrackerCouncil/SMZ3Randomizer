@@ -59,6 +59,7 @@ namespace Randomizer.App.Windows
             if (rom != null)
             {
                 Model.GeneratedRom = rom;
+                DisplayMessage("Rom successfully generated.\nTo begin, launch tracker and the rom, then start auto tracking.");
             }
         }
 
@@ -170,13 +171,12 @@ namespace Randomizer.App.Windows
 
             await _multiplayerClientService.UpdateGameState(MultiplayerGameStatus.Generating);
 
-            //Task.Run(() => )
-
             var error = await _multiplayerGameService.GenerateSeed();
 
             if (error != null)
             {
                 DisplayError(error);
+                await _multiplayerClientService.UpdateGameState(MultiplayerGameStatus.Created);
             }
         }
 
@@ -202,18 +202,25 @@ namespace Randomizer.App.Windows
             ParentPanel.CopyTextToClipboard(_multiplayerClientService.GameUrl ?? "");
         }
 
-        private void DisplayError(string message)
+        private MessageBoxResult DisplayError(string message)
+        {
+            return DisplayMessage(message, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private MessageBoxResult DisplayMessage(string message, MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
         {
             if (Dispatcher.CheckAccess())
             {
-                MessageBox.Show(this, message , "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+                return MessageBox.Show(this, message , "SMZ3 Cas' Randomizer", buttons, image);
             }
             else
             {
+                var output = MessageBoxResult.OK;
                 Dispatcher.Invoke(() =>
                 {
-                    DisplayError(message);
+                    output = DisplayMessage(message, buttons, image);
                 });
+                return output;
             }
         }
 
@@ -229,6 +236,59 @@ namespace Randomizer.App.Windows
                 MultiplayerClientServiceOnGameRejoined();
             }
 
+        }
+
+
+
+        /// <summary>
+        /// Right click menu to play a rom
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlayMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (Model.GeneratedRom != null)
+                ParentPanel.LaunchRom(Model.GeneratedRom);
+        }
+
+        /// <summary>
+        /// Right click menu to open the folder for a rom
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenFolderMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (Model.GeneratedRom != null)
+                ParentPanel.OpenFolder(Model.GeneratedRom);
+        }
+
+        /// <summary>
+        /// Menu item for opening the tracker for a rom
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenTrackerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (Model.GeneratedRom != null)
+                ParentPanel.LaunchTracker(Model.GeneratedRom);
+        }
+
+        /// <summary>
+        /// Menu item for viewing the spoiler log for a rom
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ViewSpoilerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (Model.GeneratedRom != null)
+                ParentPanel.OpenSpoilerLog(Model.GeneratedRom);
+        }
+
+        private void LaunchOptions_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (LaunchOptions.ContextMenu == null) return;
+            LaunchOptions.ContextMenu.DataContext = LaunchOptions.DataContext;
+            LaunchOptions.ContextMenu.IsOpen = true;
         }
     }
 }

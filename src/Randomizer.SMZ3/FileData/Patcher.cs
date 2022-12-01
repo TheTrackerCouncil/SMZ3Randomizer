@@ -1020,7 +1020,7 @@ namespace Randomizer.SMZ3.FileData
             {
                 return _myWorld == item.World
                     ? $"{itemName} belonging to you"
-                    : $"{itemName} belonging to another player"; // Will need to update to player name when multiworld is working
+                    : $"{itemName} belonging to ${item.World.Player}";
             }
         }
     }

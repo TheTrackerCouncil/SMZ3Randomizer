@@ -54,5 +54,29 @@ namespace Randomizer.Shared.Enums
 
             return Array.Empty<ItemCategory>();
         }
+
+        /// <summary>
+        /// Determines whether the item type matches any of the specified
+        /// categories.
+        /// </summary>
+        /// <param name="itemType">The type of item.</param>
+        /// <param name="categories">The categories to match.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="itemType"/> matches any of
+        /// <paramref name="categories"/>; otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool IsPossibleProgression(this ItemType itemType, bool isZeldaKeysanity, bool isMetroidKeysanity)
+        {
+            if (itemType == ItemType.Nothing || itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
+                return false;
+
+            if (itemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
+                return isZeldaKeysanity;
+
+            if (itemType.IsInCategory(ItemCategory.Keycard))
+                return isMetroidKeysanity;
+
+            return true;
+        }
     }
 }

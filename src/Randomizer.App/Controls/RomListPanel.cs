@@ -271,7 +271,7 @@ namespace Randomizer.App.Controls
             return true;
         }
 
-        protected void OpenSpoilerLog(GeneratedRom rom)
+        public void OpenSpoilerLog(GeneratedRom rom)
         {
             var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath);
             if (File.Exists(path))

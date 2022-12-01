@@ -81,6 +81,8 @@ namespace Randomizer.App.ViewModels
                 _gameStatus = value;
                 OnPropertyChanged(nameof(GameStatus));
                 OnPropertyChanged(nameof(ConnectionStatus));
+                OnPropertyChanged(nameof(GeneratingLabelVisibility));
+                OnPropertyChanged(nameof(StartButtonVisiblity));
                 if (_gameStatus != null)
                 {
                     foreach (var player in Players)
@@ -106,6 +108,7 @@ namespace Randomizer.App.ViewModels
         }
 
         public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
+        public Visibility GeneratingLabelVisibility => GameStatus == MultiplayerGameStatus.Generating || (GameStatus == MultiplayerGameStatus.Started && _generatedRom == null) ? Visibility.Visible : Visibility.Collapsed;
         public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
         public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
 
@@ -128,6 +131,7 @@ namespace Randomizer.App.ViewModels
                 _generatedRom = value;
                 OnPropertyChanged(nameof(PlayButtonsEnabled));
                 OnPropertyChanged(nameof(PlayButtonsVisibility));
+                OnPropertyChanged(nameof(GeneratingLabelVisibility));
             }
         }
 

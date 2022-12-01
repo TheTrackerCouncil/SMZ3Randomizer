@@ -8,6 +8,7 @@
         xmlns:shared="clr-namespace:Randomizer.Shared.Multiplayer;assembly=Randomizer.Shared"
         mc:Ignorable="d"
         Title="MultiworldWindow"
+        Loaded="MultiplayerConnectWindow_OnLoaded"
         ResizeMode="NoResize"
         Height="200"
         Width="400">
@@ -28,9 +29,11 @@
         <controls:LabeledControl Text="{Binding UrlLabelText}">
           <TextBox
             Name="ServerUrlTextBox"
-            Text="http://192.168.50.100:5000"
+            Text="{Binding Url, Mode=TwoWay}"
             IsEnabled="{Binding CanEnterInput}"
-            Margin="5 0 0 0" />
+            Margin="5 0 0 0"
+
+            />
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Name:">

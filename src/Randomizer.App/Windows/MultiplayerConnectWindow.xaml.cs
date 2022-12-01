@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
 using Randomizer.Multiplayer.Client;
-using Randomizer.Shared.Models;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.App.Windows
@@ -80,10 +79,11 @@ namespace Randomizer.App.Windows
         public bool CanEnterGameMode => !IsConnecting && IsCreatingGame;
         public bool CanPressButton => PlayerNameTextBox.Text.Length > 0;
         public string StatusText => IsConnecting ? "Connecting..." : "";
+        public string Url { get; set; } = "";
         public MultiplayerGameType MultiplayerGameType { get; set; }
 
-        public string ServerUrl => ServerUrlTextBox.Text.SubstringBeforeCharacter('?') ?? ServerUrlTextBox.Text;
-        public string GameGuid => ServerUrlTextBox.Text.SubstringAfterCharacter('=') ?? "";
+        public string ServerUrl => Url.SubstringBeforeCharacter('?') ?? ServerUrlTextBox.Text;
+        public string GameGuid => Url.SubstringAfterCharacter('=') ?? "";
 
         public string GameButtonText
         {
@@ -153,6 +153,15 @@ namespace Randomizer.App.Windows
                 {
                     DisplayError(message);
                 });
+            }
+        }
+
+        private void MultiplayerConnectWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (IsCreatingGame)
+            {
+                Url = "http://192.168.50.100:5000";
+                OnPropertyChanged(nameof(Url));
             }
         }
     }

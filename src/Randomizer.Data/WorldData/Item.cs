@@ -24,13 +24,15 @@ namespace Randomizer.Data.WorldData
         /// <param name="name">The override name for the item</param>
         /// <param name="metadata">The metadata service to look up additional info about the item</param>
         /// <param name="trackerState">The tracking state of the run</param>
-        public Item(ItemType itemType, World world, string? name = null, IMetadataService? metadata = null, TrackerState? trackerState = null)
+        /// <param name="isProgression">If this is a progression item or not</param>
+        public Item(ItemType itemType, World world, string? name = null, IMetadataService? metadata = null, TrackerState? trackerState = null, bool isProgression = false)
         {
             Type = itemType;
             World = world;
             Name = string.IsNullOrEmpty(name) ? itemType.GetDescription() : name ;
             Metadata = metadata?.Item(itemType) ?? new ItemData(itemType);
             State = trackerState?.ItemStates.First(x => x.ItemName == Name && x.WorldId == world.Id) ?? new TrackerItemState();
+            Progression = isProgression;
         }
 
         /// <summary>

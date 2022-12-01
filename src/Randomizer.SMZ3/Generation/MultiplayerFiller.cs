@@ -9,6 +9,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.Data.Options;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -116,8 +117,10 @@ namespace Randomizer.SMZ3.Generation
             foreach (var location in world.Locations)
             {
                 var generatedData = generatedLocationData.Single(x => x.Id == location.Id);
-                location.Item = new Item(generatedData.Item, worlds.Single(x => x.Id == generatedData.ItemWorldId));
-                _logger.LogDebug("Fast filled {Item} at {Location}", generatedData.Item, location.Name);
+                var itemType = generatedData.Item;
+                var itemWorld = worlds.Single(x => x.Id == generatedData.ItemWorldId);
+                location.Item = new Item(itemType, itemWorld, isProgression: itemType.IsPossibleProgression(itemWorld.Config.ZeldaKeysanity, itemWorld.Config.MetroidKeysanity));
+                _logger.LogDebug("Fast-filled {Item} at {Location}", generatedData.Item, location.Name);
             }
             EnsureLocationsHaveItems(world);
         }

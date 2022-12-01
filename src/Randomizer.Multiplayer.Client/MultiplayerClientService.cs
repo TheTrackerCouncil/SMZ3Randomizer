@@ -525,8 +525,8 @@ namespace Randomizer.Multiplayer.Client
 
         private void UpdateGameState(MultiplayerGameState gameState)
         {
-
             CurrentGameState = gameState;
+            UpdateGameStatus();
             GameStateUpdated?.Invoke();
         }
 
@@ -574,6 +574,13 @@ namespace Randomizer.Multiplayer.Client
             };
             _dbContext.MultiplayerGames.Add(DatabaseGameDetails);
             await _dbContext.SaveChangesAsync();
+        }
+
+        private void UpdateGameStatus()
+        {
+            if (DatabaseGameDetails == null || CurrentGameState == null) return;
+            DatabaseGameDetails.Status = CurrentGameState.Status;
+            Task.Run(() => _dbContext.SaveChangesAsync());
         }
 
         #endregion

@@ -279,18 +279,8 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </remarks>
         public bool IsProgression(Config? config)
         {
-            if (InternalItemType == ItemType.Nothing || InternalItemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
-                return false;
-
-            if (InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
-                return config?.ZeldaKeysanity == true;
-
-            if (InternalItemType.IsInCategory(ItemCategory.Keycard))
-                return config?.MetroidKeysanity == true;
-
             // Todo: We can add special logic like checking if it's one of the first two swords
-
-            return true;
+            return InternalItemType.IsPossibleProgression(config?.ZeldaKeysanity == true, config?.MetroidKeysanity == true);
         }
 
         /// <summary>
