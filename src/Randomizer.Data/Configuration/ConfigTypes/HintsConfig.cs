@@ -343,5 +343,58 @@ namespace Randomizer.Data.Configuration
         /// </remarks>
         public SchrodingersString AreaWorthComplicated { get; init; }
             = new("It's complicated.");
+
+        /// <summary>
+        /// Gets the hint to give for an item that is in another world,
+        /// but does not mention the specific player
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item.
+        /// </remarks>
+        public SchrodingersString ItemInUnknownWorld { get; init; }
+            = new("{0} can be found in another universe.");
+
+        /// <summary>
+        /// Gets the hint to give for an item that is in another world,
+        /// mentioning the player name
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item.
+        /// <c>{1}</c> is a placeholder for the name of the player.
+        /// </remarks>
+        public SchrodingersString ItemInPlayerWorld { get; init; }
+            = new("{0} can be found in {1}'s universe.");
+
+        /// <summary>
+        /// Gets the hint to give for an item that is in another
+        /// player's ALttP world
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item.
+        /// <c>{1}</c> is a placeholder for the name of the player.
+        /// </remarks>
+        public SchrodingersString ItemInPlayerWorldALttP { get; init; }
+            = new("{0} can be found in {1}'s universe in a world of light and dark.");
+
+        /// <summary>
+        /// Gets the hint to give for an item that is in another
+        /// player's SM world
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the item.
+        /// <c>{1}</c> is a placeholder for the name of the player.
+        /// </remarks>
+        public SchrodingersString ItemInPlayerWorldSuperMetroid { get; init; }
+            = new("{0} can be found in {1}'s universe on a strange planet.");
+
+        /// <summary>
+        /// When giving a hint for a specific region or room, this states which player
+        /// the hint belongs to
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the player.
+        /// </remarks>
+        public SchrodingersString ItemInPlayerWorldRegionRoomPrefixHint { get; init; }
+            = new("You can tell {0},");
     }
 }

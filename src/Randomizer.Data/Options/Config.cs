@@ -196,6 +196,7 @@ namespace Randomizer.Data.Options
         public bool Keysanity => KeysanityMode != KeysanityMode.None;
         public int Id { get; set; }
         public string PlayerName { get; set; } = "";
+        public string PhoneticName { get; set; } = "";
         public string PlayerGuid { get; set; } = "";
         public string Seed { get; set; } = "";
         public string SettingsString { get; set; } = "";

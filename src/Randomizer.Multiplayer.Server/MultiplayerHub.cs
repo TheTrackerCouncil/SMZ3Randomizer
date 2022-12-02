@@ -41,7 +41,7 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            var game = MultiplayerGame.CreateNewGame(request.PlayerName, Context.ConnectionId, request.GameType, _serverUrl, request.Version, out var error);
+            var game = MultiplayerGame.CreateNewGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.GameType, _serverUrl, request.Version, out var error);
 
             if (game?.AdminPlayer == null)
             {
@@ -82,7 +82,7 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            var player = game.JoinGame(request.PlayerName, Context.ConnectionId, request.Version, out var error);
+            var player = game.JoinGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.Version, out var error);
             if (player == null)
             {
                 error ??= "Unknown error joining game";

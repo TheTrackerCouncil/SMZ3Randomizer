@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewmodels:MultiplayerStatusViewModel, IsDesignTimeCreatable=True}"
         Loaded="MultiplayerStatusWindow_OnLoaded"
-        Title="MultiworldStatusWindow" Height="300" Width="500">
+        Title="SMZ3 Cas' Randomizer" Height="300" Width="500">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />

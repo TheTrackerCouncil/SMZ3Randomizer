@@ -155,6 +155,7 @@ namespace Randomizer.App.Windows
             var config = ParentPanel.Options.ToConfig();
             config.PlayerGuid = _multiplayerClientService.CurrentPlayerGuid!;
             config.PlayerName = _multiplayerClientService.LocalPlayer!.PlayerName;
+            config.PhoneticName = _multiplayerClientService.LocalPlayer!.PhoneticName;
             await _multiplayerClientService.SubmitConfig(Config.ToConfigString(config));
         }
 

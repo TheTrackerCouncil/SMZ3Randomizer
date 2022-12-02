@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared.Multiplayer;
+using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.App.Windows
 {
@@ -21,8 +22,9 @@ namespace Randomizer.App.Windows
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly ILogger _logger;
         private readonly string _version;
+        private readonly ICommunicator _communicator;
 
-        public MultiplayerConnectWindow(MultiplayerClientService multiplayerClientService, ILogger<MultiplayerConnectWindow> logger)
+        public MultiplayerConnectWindow(MultiplayerClientService multiplayerClientService, ILogger<MultiplayerConnectWindow> logger, ICommunicator communicator)
         {
             _logger = logger;
             _multiplayerClientService = multiplayerClientService;
@@ -35,6 +37,8 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.Error += MultiplayerClientServiceError;
             _multiplayerClientService.GameCreated += MultiplayerClientServiceGameJoined;
             _multiplayerClientService.GameJoined += MultiplayerClientServiceGameJoined;
+
+            _communicator = communicator;
         }
 
         private void MultiplayerClientServiceError(string error, Exception? exception)
@@ -47,12 +51,12 @@ namespace Randomizer.App.Windows
             if (IsCreatingGame)
             {
                 _logger.LogInformation("Connecting");
-                await _multiplayerClientService.CreateGame(PlayerNameTextBox.Text, MultiplayerGameType, _version);
+                await _multiplayerClientService.CreateGame(DisplayName, PhoneticName, MultiplayerGameType, _version);
             }
             else
             {
                 _logger.LogInformation("Joining");
-                await _multiplayerClientService.JoinGame(GameGuid, PlayerNameTextBox.Text, _version);
+                await _multiplayerClientService.JoinGame(GameGuid, DisplayName, PhoneticName, _version);
             }
         }
 
@@ -74,12 +78,14 @@ namespace Randomizer.App.Windows
         public bool IsCreatingGame { get; set; }
         public bool IsJoiningGame { get; set; }
         public bool IsConnecting { get; set; }
-        public string UrlLabelText => IsCreatingGame ? "Server url:" : "Game url:";
+        public string UrlLabelText => IsCreatingGame ? "Server Url:" : "Game Url:";
         public bool CanEnterInput => !IsConnecting;
         public bool CanEnterGameMode => !IsConnecting && IsCreatingGame;
         public bool CanPressButton => PlayerNameTextBox.Text.Length > 0;
         public string StatusText => IsConnecting ? "Connecting..." : "";
         public string Url { get; set; } = "";
+        public string DisplayName => PlayerNameTextBox.Text;
+        public string PhoneticName { get; set; } = "";
         public MultiplayerGameType MultiplayerGameType { get; set; }
 
         public string ServerUrl => Url.SubstringBeforeCharacter('?') ?? ServerUrlTextBox.Text;
@@ -163,6 +169,11 @@ namespace Randomizer.App.Windows
                 Url = "http://192.168.50.100:5000";
                 OnPropertyChanged(nameof(Url));
             }
+        }
+
+        private void PhoneticNameTestButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _communicator.Say(string.IsNullOrEmpty(PhoneticName) ? DisplayName : PhoneticName);
         }
     }
 }

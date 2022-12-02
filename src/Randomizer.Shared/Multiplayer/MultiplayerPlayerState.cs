@@ -8,6 +8,7 @@ public class MultiplayerPlayerState
 {
     public string Guid { get; init; } = null!;
     public string PlayerName { get; init; } = null!;
+    public string PhoneticName { get; init; } = null!;
     public int? WorldId { get; set; }
     public string? Config { get; set; }
     public bool IsAdmin { get; set; }

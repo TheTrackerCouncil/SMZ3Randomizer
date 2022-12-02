@@ -75,13 +75,14 @@ public class MultiplayerGame
     /// Creates a new multiplayer game
     /// </summary>
     /// <param name="playerName">The requested name of the admin player</param>
+    /// <param name="phoneticName">The requested name of the admin player for tracker</param>
     /// <param name="playerConnectionId">The connection id of the admin player</param>
     /// <param name="gameType">The type of multiplayer game</param>
     /// <param name="baseUrl">The server's base url</param>
     /// <param name="version">The SMZ3 version that the game is being generated on</param>
     /// <param name="error">Output of any error messages during creating the new multiplayer game</param>
     /// <returns>The instance of the created Multiplayer game</returns>
-    public static MultiplayerGame? CreateNewGame(string playerName, string playerConnectionId, MultiplayerGameType gameType, string baseUrl, string version, out string? error)
+    public static MultiplayerGame? CreateNewGame(string playerName, string phoneticName, string playerConnectionId, MultiplayerGameType gameType, string baseUrl, string version, out string? error)
     {
         string guid;
         do
@@ -99,7 +100,7 @@ public class MultiplayerGame
 
         var playerGuid = System.Guid.NewGuid().ToString("N");
         var playerKey = System.Guid.NewGuid().ToString("N");
-        var player = new MultiplayerPlayer(game, playerGuid, playerKey, CleanPlayerName(playerName), playerConnectionId) { State =
+        var player = new MultiplayerPlayer(game, playerGuid, playerKey, CleanPlayerName(playerName), phoneticName, playerConnectionId) { State =
         {
             IsAdmin = true
         } };
@@ -150,11 +151,12 @@ public class MultiplayerGame
     /// Adds a player to a multiplayer game
     /// </summary>
     /// <param name="playerName">The desired name of the player</param>
+    /// <param name="phoneticName">The desired name of the player for tracker</param>
     /// <param name="playerConnectionId">The connection id of the player</param>
     /// <param name="version">The SMZ3 version the player is running on</param>
     /// <param name="error">Output of any error while trying to add the player to the game</param>
     /// <returns>The player object for the added player, if successfully added</returns>
-    public MultiplayerPlayer? JoinGame(string playerName, string playerConnectionId, string version, out string? error)
+    public MultiplayerPlayer? JoinGame(string playerName, string phoneticName, string playerConnectionId, string version, out string? error)
     {
         if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
         {
@@ -182,7 +184,7 @@ public class MultiplayerGame
 
         var key = System.Guid.NewGuid().ToString("N");
 
-        var player = new MultiplayerPlayer(this, guid, key, CleanPlayerName(playerName), playerConnectionId);
+        var player = new MultiplayerPlayer(this, guid, key, CleanPlayerName(playerName), phoneticName, playerConnectionId);
         _players[guid] = player;
         s_playerConnections[playerConnectionId] = player;
         State.LastMessage = DateTimeOffset.Now;

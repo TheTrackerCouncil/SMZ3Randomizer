@@ -212,11 +212,12 @@ namespace Randomizer.Multiplayer.Client
         /// Creates a new multiplayer game on the server
         /// </summary>
         /// <param name="playerName">The requested player name</param>
+        /// <param name="phoneticName">The requested player name for tracker to say</param>
         /// <param name="gameType">The requested game type</param>
         /// <param name="version">The local SMZ3 version to ensure compatibility between all players</param>
-        public async Task CreateGame(string playerName, MultiplayerGameType gameType, string version)
+        public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string version)
         {
-            await MakeRequest("CreateGame", new CreateGameRequest(playerName, gameType, version));
+            await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, version));
         }
 
         /// <summary>
@@ -224,10 +225,11 @@ namespace Randomizer.Multiplayer.Client
         /// </summary>
         /// <param name="gameGuid">The unique identifier of the game</param>
         /// <param name="playerName">The requested player name</param>
+        /// <param name="phoneticName">The requested player name for tracker to say</param>
         /// <param name="version">The local SMZ3 version to ensure compatibility between all players</param>
-        public async Task JoinGame(string gameGuid, string playerName, string version)
+        public async Task JoinGame(string gameGuid, string playerName, string phoneticName, string version)
         {
-            await MakeRequest("JoinGame", new JoinGameRequest(gameGuid, playerName, version));
+            await MakeRequest("JoinGame", new JoinGameRequest(gameGuid, playerName, phoneticName, version));
         }
 
         /// <summary>

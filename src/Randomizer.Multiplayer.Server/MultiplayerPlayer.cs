@@ -9,7 +9,7 @@ namespace Randomizer.Multiplayer.Server;
 /// </summary>
 public class MultiplayerPlayer
 {
-    public MultiplayerPlayer(MultiplayerGame game, string playerGuid, string playerKey, string playerName, string connectionId)
+    public MultiplayerPlayer(MultiplayerGame game, string playerGuid, string playerKey, string playerName, string phoneticName, string connectionId)
     {
         Game = game;
         Key = playerKey;
@@ -17,7 +17,8 @@ public class MultiplayerPlayer
         State = new MultiplayerPlayerState
         {
             Guid = playerGuid,
-            PlayerName = playerName
+            PlayerName = playerName,
+            PhoneticName = string.IsNullOrEmpty(phoneticName) ? playerName : phoneticName
         };
     }
     public MultiplayerGame Game { get; }
