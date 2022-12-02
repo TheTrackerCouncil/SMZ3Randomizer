@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
-using Randomizer.Shared.Models;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -53,7 +52,6 @@ public class MultiplayerModule : TrackerModule
         if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0) return;
         var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
         Tracker.GameService!.TryGiveItems(items, args.PlayerId.Value);
-        SaveTracker();
 
     }
 
@@ -69,7 +67,6 @@ public class MultiplayerModule : TrackerModule
         if (item == null)
             throw new InvalidOperationException($"Player retrieved invalid item {args.ItemToGive}");
         Tracker.GameService!.TryGiveItem(item, args.PlayerId);
-        SaveTracker();
     }
 
     private void PlayerTrackedDungeon(PlayerTrackedDungeonEventHandlerArgs args)
@@ -86,41 +83,26 @@ public class MultiplayerModule : TrackerModule
     {
         if (e.Dungeon == null || !e.AutoTracked || !e.Dungeon.DungeonState.Cleared) return;
         await _multiplayerGameService.TrackDungeon(e.Dungeon);
-        SaveTracker();
     }
 
     private async void TrackerOnItemTracked(object? sender, ItemTrackedEventArgs e)
     {
-        if (e.Item == null || !e.AutoTracked) return;
+        if (e.Item == null || e.Item.Type == ItemType.Nothing || !e.AutoTracked) return;
 
         if (e.Item.World.Guid == Tracker.World.Guid)
             await _multiplayerGameService.TrackItem(e.Item);
-        SaveTracker();
     }
 
     private async void TrackerOnBossUpdated(object? sender, BossTrackedEventArgs e)
     {
-        if (e.Boss == null || !e.AutoTracked) return;
+        if (e.Boss == null || e.Boss.Type == BossType.None || !e.AutoTracked) return;
         await _multiplayerGameService.TrackBoss(e.Boss);
-        SaveTracker();
     }
 
     private async void TrackerOnLocationCleared(object? sender, LocationClearedEventArgs e)
     {
         if (!e.AutoTracked) return;
         await _multiplayerGameService.TrackLocation(e.Location);
-        SaveTracker();
-    }
-
-    /// <summary>
-    /// Monitor task tp force disconnect the socket if we haven't received a message within the last 5 seconds
-    /// </summary>
-    private void SaveTracker()
-    {
-        if (GeneratedRom.IsValid(Tracker.Rom))
-        {
-            Task.Run(() => Tracker.SaveAsync(Tracker.Rom));
-        }
     }
 
 }

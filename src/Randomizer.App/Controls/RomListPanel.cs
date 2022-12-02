@@ -288,7 +288,7 @@ namespace Randomizer.App.Controls
             }
         }
 
-        protected abstract void UpdateList();
+        public abstract void UpdateList();
 
         public bool ShowGenerateRomWindow(PlandoConfig? plandoConfig, bool isMulti)
         {

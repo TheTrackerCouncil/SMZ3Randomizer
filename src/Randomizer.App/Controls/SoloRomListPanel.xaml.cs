@@ -36,7 +36,7 @@ namespace Randomizer.App.Controls
 
         public GeneratedRomsViewModel Model { get; }
 
-        protected sealed override void UpdateList()
+        public sealed override void UpdateList()
         {
             var models = DbContext.GeneratedRoms
                     .Include(x => x.MultiplayerGameDetails)

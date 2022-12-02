@@ -23,6 +23,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly IWorldAccessor _world;
         private readonly ITrackerTimerService _timerService;
         private ICollection<TrackerHistoryEvent> _historyEvents => _world.World.State?.History ?? new List<TrackerHistoryEvent>();
+        private bool _isMultiworld;
 
         /// <summary>
         /// Constructor
@@ -35,6 +36,7 @@ namespace Randomizer.SMZ3.Tracking
             _world = world;
             _logger = logger;
             _timerService = timerService;
+            _isMultiworld = world.World.Config.MultiWorld;
         }
 
         /// <summary>
@@ -74,6 +76,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="histEvent">The event to add</param>
         public void AddEvent(TrackerHistoryEvent histEvent)
         {
+            if (_isMultiworld) return;
             _historyEvents.Add(histEvent);
         }
 
@@ -82,6 +85,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         public void RemoveLastEvent()
         {
+            if (_isMultiworld) return;
             if (_historyEvents.Count > 0)
             {
                 Remove(_historyEvents.OrderByDescending(x => x.Id).First());
@@ -94,6 +98,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="histEvent">The event to log</param>
         public void Remove(TrackerHistoryEvent histEvent)
         {
+            if (_isMultiworld) return;
             _historyEvents.Remove(histEvent);
         }
 
@@ -101,7 +106,7 @@ namespace Randomizer.SMZ3.Tracking
         /// Retrieves the current history log
         /// </summary>
         /// <returns>The collection of events</returns>
-        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _historyEvents.ToList();
+        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _isMultiworld ? new List<TrackerHistoryEvent>() : _historyEvents.ToList();
 
         /// <summary>
         /// Creates the progression log based off of the history

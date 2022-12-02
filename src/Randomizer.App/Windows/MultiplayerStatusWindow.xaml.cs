@@ -111,6 +111,7 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.GameStateUpdated -= MultiplayerClientServiceOnGameStateUpdated;
             _multiplayerClientService.GameStarted -= MultiplayerClientServiceOnGameStarted;
             Task.Run(async () => await _multiplayerClientService.Disconnect());
+            ParentPanel.UpdateList();
         }
 
         private void MultiplayerClientServiceError(string error, Exception? exception)
