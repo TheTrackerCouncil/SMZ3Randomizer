@@ -211,7 +211,7 @@ public class MultiplayerGame
     /// player as forfeit so players can collect their items if the game has already started
     /// </summary>
     /// <param name="player">The player to mark as forfeit</param>
-    public void ForfeitPlayer(MultiplayerPlayer player)
+    public void ForfeitPlayerGame(MultiplayerPlayer player)
     {
         player.State.HasForfeited = true;
         if (player.State.IsAdmin)
@@ -248,7 +248,7 @@ public class MultiplayerGame
     /// player as forfeit so players can collect their items if the game has already started
     /// </summary>
     /// <param name="player">The player to mark as forfeit</param>
-    public void CompletePlayer(MultiplayerPlayer player)
+    public void CompletePlayerGame(MultiplayerPlayer player)
     {
         player.State.HasCompleted = true;
         if (player.State.IsAdmin)

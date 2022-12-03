@@ -19,11 +19,10 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="autoTracked">If the item was auto tracked</param>
         public ItemTrackedEventArgs(Item? item, string? trackedAs, float? confidence, bool autoTracked)
-            : base(confidence)
+            : base(confidence, autoTracked)
         {
             Item = item;
             TrackedAs = trackedAs;
-            AutoTracked = autoTracked;
         }
 
         /// <summary>
@@ -35,10 +34,5 @@ namespace Randomizer.SMZ3.Tracking
         /// The item that was tracked or untracked
         /// </summary>
         public Item? Item { get; }
-
-        /// <summary>
-        /// If the item was auto tracked
-        /// </summary>
-        public bool AutoTracked { get; }
     }
 }

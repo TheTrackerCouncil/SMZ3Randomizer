@@ -189,6 +189,11 @@ public class MultiplayerGameService
         await _currentGameService.TrackBoss(boss);
     }
 
+    public async Task CompletePlayerGame()
+    {
+        await _client.CompletePlayerGame();
+    }
+
     public void OnTrackingStarted()
     {
         _currentGameService.OnTrackingStarted();

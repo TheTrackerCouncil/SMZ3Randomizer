@@ -16,20 +16,14 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         /// <param name="autoTracked">If the location was automatically tracked</param>
         public BossTrackedEventArgs(Boss? boss, float? confidence, bool autoTracked)
-            : base(confidence)
+            : base(confidence, autoTracked)
         {
             Boss = boss;
-            AutoTracked = autoTracked;
         }
 
         /// <summary>
         /// Gets the boss that was tracked.
         /// </summary>
         public Boss? Boss { get; }
-
-        /// <summary>
-        /// If the location was auto tracked
-        /// </summary>
-        public bool AutoTracked { get; }
     }
 }

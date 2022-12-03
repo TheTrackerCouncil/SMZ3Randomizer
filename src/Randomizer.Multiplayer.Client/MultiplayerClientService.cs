@@ -97,9 +97,9 @@ namespace Randomizer.Multiplayer.Client
 
             _connection.On<RejoinGameResponse>("RejoinGame", OnRejoinGame);
 
-            _connection.On<ForfeitGameResponse>("ForfeitGame", OnForfeitGame);
+            _connection.On<ForfeitPlayerGameResponse>("ForfeitPlayerGame", OnForfeitPlayerGame);
 
-            _connection.On<CompleteGameResponse>("CompleteGame", OnCompleteGame);
+            _connection.On<CompletePlayerGameResponse>("CompletePlayerGame", OnCompletePlayerGame);
 
             _connection.On<PlayerSyncResponse>("PlayerSync", OnPlayerSync);
 
@@ -217,10 +217,10 @@ namespace Randomizer.Multiplayer.Client
         /// <param name="playerName">The requested player name</param>
         /// <param name="phoneticName">The requested player name for tracker to say</param>
         /// <param name="gameType">The requested game type</param>
-        /// <param name="version">The local SMZ3 version to ensure compatibility between all players</param>
-        public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string version)
+        /// <param name="randomizerVersion">The local SMZ3 version to ensure compatibility between all players</param>
+        public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion)
         {
-            await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, version));
+            await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, randomizerVersion, MultiplayerVersion.Id));
         }
 
         /// <summary>
@@ -229,10 +229,10 @@ namespace Randomizer.Multiplayer.Client
         /// <param name="gameGuid">The unique identifier of the game</param>
         /// <param name="playerName">The requested player name</param>
         /// <param name="phoneticName">The requested player name for tracker to say</param>
-        /// <param name="version">The local SMZ3 version to ensure compatibility between all players</param>
-        public async Task JoinGame(string gameGuid, string playerName, string phoneticName, string version)
+        /// <param name="randomizerVersion">The local SMZ3 version to ensure compatibility between all players</param>
+        public async Task JoinGame(string gameGuid, string playerName, string phoneticName, string randomizerVersion)
         {
-            await MakeRequest("JoinGame", new JoinGameRequest(gameGuid, playerName, phoneticName, version));
+            await MakeRequest("JoinGame", new JoinGameRequest(gameGuid, playerName, phoneticName, randomizerVersion, MultiplayerVersion.Id));
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Randomizer.Multiplayer.Client
                 CurrentPlayerGuid = playerGuid;
             if (!string.IsNullOrEmpty(playerKey))
                 CurrentPlayerKey = playerKey;
-            await MakeRequest("RejoinGame", new RejoinGameRequest(CurrentGameGuid!, CurrentPlayerGuid!, CurrentPlayerKey!));
+            await MakeRequest("RejoinGame", new RejoinGameRequest(CurrentGameGuid!, CurrentPlayerGuid!, CurrentPlayerKey!, MultiplayerVersion.Id));
         }
 
         /// <summary>
@@ -289,19 +289,19 @@ namespace Randomizer.Multiplayer.Client
         /// it will update the player state so that all other players know to collect all their items
         /// </summary>
         /// <param name="playerGuid">The player to forfeit. If no value is provided, it will use the local player's guid</param>
-        public async Task ForfeitGame(string? playerGuid)
+        public async Task ForfeitPlayerGame(string? playerGuid)
         {
             playerGuid ??= CurrentPlayerGuid;
-            await MakeRequest("ForfeitGame",
-                new ForfeitGameRequest(playerGuid ?? ""));
+            await MakeRequest("ForfeitPlayerGame",
+                new ForfeitPlayerGameRequest(playerGuid ?? ""));
         }
 
         /// <summary>
         /// Marks the player as having completed the game
         /// </summary>
-        public async Task CompleteGame()
+        public async Task CompletePlayerGame()
         {
-            await MakeRequest("CompleteGame", new CompleteGameRequest());
+            await MakeRequest("CompletePlayerGame", new CompletePlayerGameRequest());
         }
 
         /// <summary>
@@ -466,7 +466,7 @@ namespace Randomizer.Multiplayer.Client
         /// On forfeiting from a game
         /// </summary>
         /// <param name="response"></param>
-        private async Task OnForfeitGame(ForfeitGameResponse response)
+        private async Task OnForfeitPlayerGame(ForfeitPlayerGameResponse response)
         {
             _logger.LogInformation("Forfeit game");
             var isLocalPlayer = response.PlayerState.Guid == CurrentPlayerGuid;
@@ -484,7 +484,7 @@ namespace Randomizer.Multiplayer.Client
         /// On forfeiting from a game
         /// </summary>
         /// <param name="response"></param>
-        private async Task OnCompleteGame(CompleteGameResponse response)
+        private async Task OnCompletePlayerGame(CompletePlayerGameResponse response)
         {
             _logger.LogInformation("Complete game");
             var isLocalPlayer = response.PlayerState.Guid == CurrentPlayerGuid;

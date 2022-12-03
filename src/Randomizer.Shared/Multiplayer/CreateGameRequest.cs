@@ -2,12 +2,13 @@
 
 public class CreateGameRequest
 {
-    public CreateGameRequest(string playerName, string phoneticName, MultiplayerGameType gameType, string version)
+    public CreateGameRequest(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, int multiplayerVersion)
     {
         PlayerName = playerName;
         PhoneticName = phoneticName;
         GameType = gameType;
-        Version = version;
+        RandomizerVersion = randomizerVersion;
+        MultiplayerVersion = multiplayerVersion;
     }
 
     public string PlayerName { get; }
@@ -16,5 +17,7 @@ public class CreateGameRequest
 
     public MultiplayerGameType GameType { get; }
 
-    public string Version { get; }
+    public string RandomizerVersion { get; }
+
+    public int MultiplayerVersion { get; }
 }

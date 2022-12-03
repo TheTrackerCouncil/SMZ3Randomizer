@@ -41,7 +41,13 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            var game = MultiplayerGame.CreateNewGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.GameType, _serverUrl, request.Version, out var error);
+            if (MultiplayerVersion.Id != request.MultiplayerVersion)
+            {
+                await SendErrorResponse("Multiplayer version mismatch. Please update your SMZ3 version.");
+                return;
+            }
+
+            var game = MultiplayerGame.CreateNewGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.GameType, _serverUrl, request.RandomizerVersion, out var error);
 
             if (game?.AdminPlayer == null)
             {
@@ -75,6 +81,13 @@ namespace Randomizer.Multiplayer.Server
                 await SendErrorResponse("Missing required attributes");
                 return;
             }
+
+            if (MultiplayerVersion.Id != request.MultiplayerVersion)
+            {
+                await SendErrorResponse("Multiplayer version mismatch. Please update your SMZ3 version.");
+                return;
+            }
+
             var game = MultiplayerGame.LoadGame(request.GameGuid);
             if (game == null)
             {
@@ -82,7 +95,7 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            var player = game.JoinGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.Version, out var error);
+            var player = game.JoinGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.RandomizerVersion, out var error);
             if (player == null)
             {
                 error ??= "Unknown error joining game";
@@ -110,6 +123,12 @@ namespace Randomizer.Multiplayer.Server
             if (string.IsNullOrEmpty(request.GameGuid) || string.IsNullOrEmpty(request.PlayerGuid) || string.IsNullOrEmpty(request.PlayerKey))
             {
                 await SendErrorResponse("Missing required attributes");
+                return;
+            }
+
+            if (MultiplayerVersion.Id != request.MultiplayerVersion)
+            {
+                await SendErrorResponse("Multiplayer version mismatch. Please update your SMZ3 version.");
                 return;
             }
 
@@ -211,7 +230,7 @@ namespace Randomizer.Multiplayer.Server
         /// them as forfeited if the game has already started so that the other players can take their items
         /// </summary>
         /// <param name="request"></param>
-        public async Task ForfeitGame(ForfeitGameRequest request)
+        public async Task ForfeitPlayerGame(ForfeitPlayerGameRequest request)
         {
             var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
             if (player == null)
@@ -236,19 +255,25 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
-            LogInfo(player, $"Forfeiting player {playerToUpdate.Guid}");
+            if (playerToUpdate.State.HasCompleted || playerToUpdate.State.HasForfeited)
+            {
+                await SendErrorResponse("Player already ended game");
+                return;
+            }
 
-            player.Game.ForfeitPlayer(playerToUpdate);
+            LogInfo(player, $"Forfeiting game for player {playerToUpdate.Guid}");
 
-            await Clients.Group(player.Game.Guid).SendAsync("ForfeitGame",
-                new ForfeitGameResponse(player.Game.State, playerToUpdate.State));
+            player.Game.ForfeitPlayerGame(playerToUpdate);
+
+            await Clients.Group(player.Game.Guid).SendAsync("ForfeitPlayerGame",
+                new ForfeitPlayerGameResponse(player.Game.State, playerToUpdate.State));
         }
 
         /// <summary>
         /// Marks a player as having completed the game
         /// </summary>
         /// <param name="request"></param>
-        public async Task CompleteGame(CompleteGameRequest request)
+        public async Task CompletePlayerGame(CompletePlayerGameRequest request)
         {
             var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
             if (player == null)
@@ -257,12 +282,18 @@ namespace Randomizer.Multiplayer.Server
                 return;
             }
 
+            if (player.State.HasCompleted || player.State.HasForfeited)
+            {
+                await SendErrorResponse("Player already ended game");
+                return;
+            }
+
             LogInfo(player, $"Completing game for player {player.Guid}");
 
-            player.Game.CompletePlayer(player);
+            player.Game.CompletePlayerGame(player);
 
-            await Clients.Group(player.Game.Guid).SendAsync("CompleteGame",
-                new CompleteGameResponse(player.Game.State, player.State));
+            await Clients.Group(player.Game.Guid).SendAsync("CompletePlayerGame",
+                new CompletePlayerGameResponse(player.Game.State, player.State));
         }
 
         /// <summary>

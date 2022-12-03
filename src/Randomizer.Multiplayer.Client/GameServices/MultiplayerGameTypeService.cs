@@ -168,6 +168,7 @@ public abstract class MultiplayerGameTypeService
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
+            PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             LocationState = locationState,
             ItemToGive = itemToGive
@@ -180,12 +181,12 @@ public abstract class MultiplayerGameTypeService
 
         var itemState = TrackerState.ItemStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Type == itemType);
         if (itemState == null || itemState.TrackingState > trackingValue) return null;
-            //itemState.TrackingState = trackingValue;
 
         return new PlayerTrackedItemEventHandlerArgs()
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
+            PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             ItemState = itemState,
             TrackingValue = trackingValue,
@@ -203,6 +204,7 @@ public abstract class MultiplayerGameTypeService
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
+            PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             BossState = bossState,
         };
@@ -219,6 +221,7 @@ public abstract class MultiplayerGameTypeService
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
+            PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             DungeonState = dungeonState,
         };
@@ -255,6 +258,7 @@ public abstract class MultiplayerGameTypeService
         {
             PlayerId = player.WorldId,
             PlayerName = player.PlayerName,
+            PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             UpdatedLocationStates = updatedLocationStates,
             UpdatedItemStates = updatedItemStates,
@@ -280,6 +284,7 @@ public abstract class MultiplayerGameTypeService
         {
             PlayerId = player.WorldId,
             PlayerName = player.PlayerName,
+            PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             DidForfeit = didForfeit,
             DidComplete = didComplete

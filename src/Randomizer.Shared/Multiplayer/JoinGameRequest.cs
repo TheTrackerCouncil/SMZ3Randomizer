@@ -2,12 +2,12 @@
 
 public class JoinGameRequest
 {
-    public JoinGameRequest(string gameGuid, string playerName, string phoneticName, string version)
+    public JoinGameRequest(string gameGuid, string playerName, string phoneticName, string randomizerVersion, int multiplayerVersion)
     {
         GameGuid = gameGuid;
         PlayerName = playerName;
         PhoneticName = phoneticName;
-        Version = version;
+        RandomizerVersion = randomizerVersion;
     }
 
     public string GameGuid { get; }
@@ -16,5 +16,6 @@ public class JoinGameRequest
 
     public string PhoneticName { get; }
 
-    public string Version { get; }
+    public string RandomizerVersion { get; }
+    public int MultiplayerVersion { get; }
 }

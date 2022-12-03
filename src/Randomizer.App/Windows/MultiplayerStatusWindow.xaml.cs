@@ -43,7 +43,7 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.GameStateUpdated += MultiplayerClientServiceOnGameStateUpdated;
             _multiplayerClientService.GameStarted += MultiplayerClientServiceOnGameStarted;
         }
-        
+
         private async void MultiplayerClientServiceOnGameStarted(List<MultiplayerPlayerGenerationData> playerGenerationData)
         {
             var seedData = _multiplayerGameService.RegenerateSeed(playerGenerationData, out var error);
@@ -195,7 +195,7 @@ namespace Randomizer.App.Windows
         {
             if (sender is not Button { Tag: MultiplayerPlayerState state })
                 return;
-            await _multiplayerClientService.ForfeitGame(state.Guid);
+            await _multiplayerClientService.ForfeitPlayerGame(state.Guid);
         }
 
         private void CopyUrlButton_OnClick(object sender, RoutedEventArgs e)

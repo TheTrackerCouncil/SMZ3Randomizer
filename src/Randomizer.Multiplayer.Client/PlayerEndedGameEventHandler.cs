@@ -11,6 +11,7 @@ public class PlayerEndedGameEventHandlerArgs
 {
     public int? PlayerId { get; init; }
     public string PlayerName { get; init; } = "";
+    public string PhoneticName { get; init; } = "";
     public bool IsLocalPlayer { get; init; }
     public bool DidForfeit { get; init; }
     public bool DidComplete { get; init; }

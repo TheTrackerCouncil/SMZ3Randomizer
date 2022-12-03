@@ -1,8 +1,8 @@
 ﻿namespace Randomizer.Shared.Multiplayer;
 
-public class ForfeitGameRequest
+public class ForfeitPlayerGameRequest
 {
-    public ForfeitGameRequest(string playerGuid)
+    public ForfeitPlayerGameRequest(string playerGuid)
     {
         PlayerGuid = playerGuid;
     }

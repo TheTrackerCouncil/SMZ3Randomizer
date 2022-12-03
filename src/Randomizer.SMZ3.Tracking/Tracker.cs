@@ -212,6 +212,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler? MapUpdated;
 
         /// <summary>
+        /// Occurs when the map has been updated
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? BeatGame;
+
+        /// <summary>
         /// Set when the progression needs to be updated for the current tracker
         /// instance
         /// </summary>
@@ -2100,6 +2105,7 @@ namespace Randomizer.SMZ3.Tracking
                 _beatenGame = true;
                 var pauseUndo = PauseTimer(false);
                 Say(x => x.BeatGame);
+                BeatGame?.Invoke(this, new TrackerEventArgs(autoTracked));
                 if (!autoTracked)
                 {
                     AddUndo(() =>

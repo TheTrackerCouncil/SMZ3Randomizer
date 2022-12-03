@@ -36,6 +36,7 @@ public class MultiplayerModule : TrackerModule
         Tracker.BossUpdated += TrackerOnBossUpdated;
         Tracker.ItemTracked += TrackerOnItemTracked;
         Tracker.DungeonUpdated += TrackerOnDungeonUpdated;
+        Tracker.BeatGame += TrackerOnBeatGame;
         autoTracker.AutoTrackerConnected += AutoTrackerOnAutoTrackerConnected;
 
         _multiplayerGameService.PlayerTrackedLocation += PlayerTrackedLocation;
@@ -159,6 +160,12 @@ public class MultiplayerModule : TrackerModule
     {
         if (!e.AutoTracked) return;
         await _multiplayerGameService.TrackLocation(e.Location);
+    }
+
+    private async void TrackerOnBeatGame(object? sender, TrackerEventArgs e)
+    {
+        if (!e.AutoTracked) return;
+        await _multiplayerGameService.CompletePlayerGame();
     }
 
 }

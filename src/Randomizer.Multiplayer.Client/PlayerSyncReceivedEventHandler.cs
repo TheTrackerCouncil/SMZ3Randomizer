@@ -1,8 +1,5 @@
-﻿using Randomizer.Data.WorldData;
-using Randomizer.Shared;
-using Randomizer.Shared.Enums;
+﻿using Randomizer.Shared;
 using Randomizer.Shared.Models;
-using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Client;
 
@@ -12,6 +9,7 @@ public class PlayerSyncReceivedEventHandlerArgs
 {
     public int? PlayerId { get; init; }
     public string PlayerName { get; init; } = "";
+    public string PhoneticName { get; init; } = "";
     public ICollection<TrackerLocationState> UpdatedLocationStates { get; init; } = null!;
     public ICollection<(TrackerItemState State, int TrackingValue)> UpdatedItemStates { get; init; } = null!;
     public ICollection<TrackerBossState> UpdatedBossStates { get; init; } = null!;
