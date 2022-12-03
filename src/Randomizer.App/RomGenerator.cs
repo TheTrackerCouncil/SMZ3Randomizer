@@ -15,6 +15,7 @@ using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
+using Randomizer.Shared.Multiplayer;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
@@ -91,7 +92,7 @@ namespace Randomizer.App
                 }
                 else
                 {
-                    var results = await GenerateRomInternalAsync(seed, options);
+                    var results = await GenerateRomInternalAsync(seed, options, null, null);
                     if (!string.IsNullOrEmpty(results.MsuError))
                     {
                         MessageBox.Show(results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -122,7 +123,7 @@ namespace Randomizer.App
             try
             {
                 var seed = GeneratePlandoSeed(options, plandoConfig);
-                var results = await GenerateRomInternalAsync(seed, options);
+                var results = await GenerateRomInternalAsync(seed, options, null, null);
 
                 if (!string.IsNullOrEmpty(results.MsuError))
                 {
@@ -139,7 +140,19 @@ namespace Randomizer.App
             }
         }
 
-        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options)
+        public async Task<GeneratedRom?> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed, MultiplayerGameType multiplayerGameType, string multiplayerGameUrl)
+        {
+            var results = await GenerateRomInternalAsync(seed, options, multiplayerGameType, multiplayerGameUrl);
+
+            if (!string.IsNullOrEmpty(results.MsuError))
+            {
+                MessageBox.Show("There was an error assigning the MSU\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            return results.Rom;
+        }
+
+        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameType? multiplayerGameType, string? multiplayerGameUrl)
         {
             var bytes = GenerateRomBytes(options, seed);
             var config = seed.Playthrough.Config;
@@ -148,6 +161,8 @@ namespace Randomizer.App
             var folderPath = Path.Combine(options.RomOutputPath, $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}");
             Directory.CreateDirectory(folderPath);
 
+            // For BizHawk shuffler support, the file name is checked when running the BizHawk Auto Tracking Lua script
+            // If the fom file name is changed, make sure to update the BizHawk emulator.lua script and the LuaConnector
             var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
             var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);
@@ -170,7 +185,7 @@ namespace Randomizer.App
 
             PrepareAutoTrackerFiles(options);
 
-            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath);
+            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameType, multiplayerGameUrl);
 
             return new GenerateRomResults()
             {
@@ -183,13 +198,13 @@ namespace Randomizer.App
         {
             try
             {
-                if (seed.Worlds.Count > 1)
+                if (seed.WorldGenerationData.Count > 1)
                 {
                     _logger.LogWarning("Attempting to export plando config for multi-world seed. Skipping.");
                     return null;
                 }
 
-                var world = seed.Worlds[0].World;
+                var world = seed.WorldGenerationData.LocalWorld.World;
                 var plandoConfig = new PlandoConfig(world);
 
                 var serializer = new YamlDotNet.Serialization.Serializer();
@@ -245,6 +260,11 @@ namespace Randomizer.App
             return _plandomizer.GenerateSeed(config, CancellationToken.None);
         }
 
+        public SeedData GenerateMultiworldSeed(List<Config> configs)
+        {
+            return _randomizer.GenerateSeed(configs, seed: null);
+        }
+
         /// <summary>
         /// Uses the options to generate the rom
         /// </summary>
@@ -268,7 +288,7 @@ namespace Randomizer.App
             {
                 Rom.ApplyIps(rom, ips);
             }
-            Rom.ApplySeed(rom, seed.Worlds[0].Patches);
+            Rom.ApplySeed(rom, seed.WorldGenerationData.LocalWorld.Patches);
 
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
@@ -337,6 +357,7 @@ namespace Randomizer.App
 
             return rom;
         }
+
         /// <summary>
         /// Takes the given seed information and saves it to the database
         /// </summary>
@@ -344,8 +365,10 @@ namespace Randomizer.App
         /// <param name="seed">The generated seed data</param>
         /// <param name="romPath">The path to the rom file</param>
         /// <param name="spoilerPath">The path to the spoiler file</param>
+        /// <param name="multiplayerGameType">The multiplayer game type, if any. Use null for singleplayer.</param>
+        /// <param name="multiplayerGameUrl">The multiplayer game url to connect to, if any.</param>
         /// <returns>The db entry for the generated rom</returns>
-        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
+        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, MultiplayerGameType? multiplayerGameType, string? multiplayerGameUrl)
         {
             var settingsString = string.IsNullOrEmpty(seed.PrimaryConfig.SettingsString)
                 ? (seed.Configs.Count() > 1 ? Config.ToConfigString(seed.Configs) : Config.ToConfigString(seed.PrimaryConfig, true))
@@ -358,10 +381,12 @@ namespace Randomizer.App
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
                 Settings = settingsString,
-                GeneratorVersion = Smz3Randomizer.Version.Major
+                GeneratorVersion = Smz3Randomizer.Version.Major,
+                MultiplayerGameType = multiplayerGameType,
+                MultiplayerGameUrl = multiplayerGameUrl
             };
             _dbContext.GeneratedRoms.Add(rom);
-            await _stateService.CreateStateAsync(seed.Worlds.Select(x => x.World), rom);
+            await _stateService.CreateStateAsync(seed.WorldGenerationData.Worlds, rom);
             return rom;
         }
 
@@ -397,7 +422,7 @@ namespace Randomizer.App
             log.AppendLine(Underline("Settings", '='));
             log.AppendLine();
 
-            foreach (var world in seed.Worlds.Select(x => x.World))
+            foreach (var world in seed.WorldGenerationData.Worlds)
             {
                 if (world.Config.MultiWorld)
                 {
@@ -440,15 +465,15 @@ namespace Randomizer.App
             log.AppendLine(Underline("Hints", '='));
             log.AppendLine();
 
-            foreach (var (world, hints) in seed.Hints)
+            foreach (var worldGenerationData in seed.WorldGenerationData)
             {
-                if (world.Config.MultiWorld)
+                if (worldGenerationData.Config.MultiWorld)
                 {
-                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine(Underline("Player: " + worldGenerationData.World.Player));
                     log.AppendLine();
                 }
 
-                foreach (var hint in hints)
+                foreach (var hint in worldGenerationData.Hints)
                 {
                     log.AppendLine(hint);
                 }
@@ -476,7 +501,7 @@ namespace Randomizer.App
             log.AppendLine(Underline("Dungeons", '='));
             log.AppendLine();
 
-            foreach (var world in seed.Worlds.Select(x => x.World))
+            foreach (var world in seed.WorldGenerationData.Worlds)
             {
                 log.AppendLine(world.Config.MultiWorld
                     ? Underline("Player " + world.Player + " Rewards")
@@ -508,7 +533,7 @@ namespace Randomizer.App
             log.AppendLine(Underline("All Items", '='));
             log.AppendLine();
 
-            foreach (var world in seed.Worlds.Select(x => x.World))
+            foreach (var world in seed.WorldGenerationData.Worlds)
             {
                 if (world.Config.MultiWorld)
                 {

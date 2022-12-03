@@ -74,7 +74,7 @@ namespace Randomizer.SMZ3.Generation
 
         public SeedData GenerateSeed(List<Config> configs, string? seed, CancellationToken cancellationToken = default)
         {
-            var primaryConfig = configs.First();
+            var primaryConfig = configs.OrderBy(x => x.Id).First();
 
             var seedNumber = ParseSeed(ref seed);
             var rng = new Random(seedNumber);
@@ -82,47 +82,21 @@ namespace Randomizer.SMZ3.Generation
             if (primaryConfig.Race)
                 rng = new Random(rng.Next());
 
-            _logger.LogDebug($"Seed: {seedNumber} | Race: {primaryConfig.Race} | Keysanity: {primaryConfig.KeysanityMode} | Item placement: {primaryConfig.ItemPlacementRule} | World count : {configs.Count()}");
-
-            // Testing code. Tests should fail if this code is present.
-            // This code will be remove once multiworld is properly implemented.
-            /*
-            primaryConfig.GameMode = GameMode.Multiworld;
-            if (primaryConfig.MultiWorld)
-            {
-                primaryConfig.Id = 0;
-                primaryConfig.PlayerName = "test0";
-                primaryConfig.PlayerGuid = Guid.NewGuid().ToString("N");
-                var configString = Config.ToConfigString(primaryConfig, false);
-                for (var i = 0; i < 4; i++)
-                {
-                    var newConfig = Config.FromConfigString(configString).First();
-                    newConfig.Id = i + 1;
-                    newConfig.PlayerName = "test" + newConfig.Id;
-                    newConfig.PlayerGuid = Guid.NewGuid().ToString("N");
-
-                    if (i == 0)
-                    {
-                        newConfig.KeysanityMode = KeysanityMode.Both;
-                    }
-
-                    newConfig.LogicConfig.PreventFivePowerBombSeed = false;
-                    newConfig.LogicConfig.PreventScrewAttackSoftLock = false;
-                    newConfig.EarlyItems.Add(ItemType.ScrewAttack);
-
-                    configs.Add(newConfig);
-                }
-            }*/
-
             var worlds = new List<World>();
             if (primaryConfig.SingleWorld)
+            {
                 worlds.Add(new World(primaryConfig, "Player", 0, Guid.NewGuid().ToString("N")));
+                _logger.LogDebug(
+                    "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | Keysanity: {PrimaryConfigKeysanityMode} | Item placement: {PrimaryConfigItemPlacementRule}",
+                    seedNumber, primaryConfig.Race, primaryConfig.KeysanityMode, primaryConfig.ItemPlacementRule);
+            }
             else
             {
-                foreach (var config in configs)
-                {
-                    worlds.Add(new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.Id == 0));
-                }
+                worlds.AddRange(configs.OrderBy(x => x.Id).Select(config =>
+                    new World(config, config.PlayerName, config.Id, config.PlayerGuid, config.IsLocalConfig)));
+                _logger.LogDebug(
+                    "Seed: {SeedNumber} | Race: {PrimaryConfigRace} | World Count: {Count}",
+                    seedNumber, primaryConfig.Race, configs.Count);
             }
 
             Filler.SetRandom(rng);
@@ -135,8 +109,7 @@ namespace Randomizer.SMZ3.Generation
                 seed: seed ?? primaryConfig.Seed,
                 game: Name,
                 mode: primaryConfig.GameMode.ToLowerString(),
-                hints: new List<(World World, List<string>)>(),
-                worlds: new List<(World World, Dictionary<int, byte[]> Patches)>(),
+                worldGenerationData: new WorldGenerationDataCollection(),
                 playthrough: primaryConfig.Race ? new Playthrough(primaryConfig, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
                 configs: configs,
                 primaryConfig: primaryConfig
@@ -144,7 +117,7 @@ namespace Randomizer.SMZ3.Generation
 
             if (primaryConfig.GenerateSeedOnly)
             {
-                seedData.Worlds = worlds.Select(x => (x, new Dictionary<int, byte[]>())).ToList();
+                seedData.WorldGenerationData.AddRange(worlds.Select(x => new WorldGenerationData(x)));
                 return seedData;
             }
 
@@ -154,9 +127,9 @@ namespace Randomizer.SMZ3.Generation
             {
                 var patchRnd = new Random(patchSeed);
                 var hints = _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
-                seedData.Hints.Add((world, hints.ToList()));
                 var patch = new Patcher(world, worlds, seedData.Guid, primaryConfig.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
-                seedData.Worlds.Add((world, patch.CreatePatch(world.Config, hints)));
+                var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(world.Config, hints), hints);
+                seedData.WorldGenerationData.Add(worldGenerationData);
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
@@ -173,12 +146,12 @@ namespace Randomizer.SMZ3.Generation
         public bool ValidateSeedSettings(SeedData seedData)
         {
             // Go through and make sure specified locations are populated correctly
-            foreach (var world in seedData.Worlds.Select(x => x.World))
+            foreach (var world in seedData.WorldGenerationData.Worlds)
             {
                 var config = world.Config;
                 var configLocations = config.LocationItems;
 
-                foreach ((var locationId, var value) in configLocations)
+                foreach (var (locationId, value) in configLocations)
                 {
                     var location = world.Locations.First(x => x.Id == locationId);
                     if (value < Enum.GetValues(typeof(ItemPool)).Length)
@@ -186,7 +159,9 @@ namespace Randomizer.SMZ3.Generation
                         var itemPool = (ItemPool)value;
                         if ((itemPool == ItemPool.Progression && !location.Item.Progression) || (itemPool == ItemPool.Junk && !location.Item.Type.IsInCategory(ItemCategory.Junk)))
                         {
-                            _logger.LogInformation($"Location {location.Name} did not have the correct ItemType of {itemPool}. Actual item: {location.Item.Name}");
+                            _logger.LogInformation(
+                                "Location {LocationName} did not have the correct ItemType of {ItemPool}. Actual item: {ItemName}",
+                                location.Name, itemPool, location.Item.Name);
                             return false;
                         }
                     }
@@ -195,7 +170,9 @@ namespace Randomizer.SMZ3.Generation
                         var itemType = (ItemType)value;
                         if (location.Item.Type != itemType)
                         {
-                            _logger.LogInformation($"Location {location.Name} did not have the correct Item of {itemType}. Actual item: {location.Item.Name}");
+                            _logger.LogInformation(
+                                "Location {LocationName} did not have the correct Item of {ItemType}. Actual item: {ItemName}",
+                                location.Name, itemType, location.Item.Name);
                             return false;
                         }
                     }
@@ -207,7 +184,7 @@ namespace Randomizer.SMZ3.Generation
                     var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
                     if (sphereIndex > 2)
                     {
-                        _logger.LogInformation($"Item {itemType} did not show up early as expected. Sphere: {sphereIndex}");
+                        _logger.LogInformation("Item {ItemType} did not show up early as expected. Sphere: {SphereIndex}", itemType, sphereIndex);
                         return false;
                     }
                 }

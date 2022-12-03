@@ -16,7 +16,8 @@ namespace Randomizer.Data.Options
             Author = author;
             FilePath = filePath ?? "";
             SpriteType = spriteType;
-            _isDefault = string.IsNullOrEmpty(filePath);
+            if (string.IsNullOrEmpty(filePath))
+                _isDefault = true;
         }
 
         private Sprite(string name, SpriteType spriteType)

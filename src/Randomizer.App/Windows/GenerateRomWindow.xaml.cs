@@ -15,19 +15,18 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-
 using Microsoft.Extensions.DependencyInjection;
-
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
-using Randomizer.Shared;
-using Randomizer.SMZ3.Generation;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
+using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Multiplayer.Client;
+using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.SMZ3.Generation;
 
-namespace Randomizer.App
+namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for GenerateRomWindow.xaml
@@ -44,7 +43,8 @@ namespace Randomizer.App
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
             LocationConfig locations,
-            IMetadataService metadataService)
+            IMetadataService metadataService,
+            MultiplayerClientService MultiplayerClientService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
@@ -55,15 +55,15 @@ namespace Randomizer.App
             SamusSprites.Add(Sprite.DefaultSamus);
             LinkSprites.Add(Sprite.DefaultLink);
             ShipSprites.Add(ShipSprite.DefaultShip);
-            _loadSpritesTask = Task.Run(() => LoadSprites())
+            _loadSpritesTask = Task.Run(LoadSprites)
                 .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
         }
 
-#nullable enable
         public PlandoConfig? PlandoConfig { get; set; }
-#nullable disable
 
         public bool PlandoMode => PlandoConfig != null;
+
+        public bool MultiMode { get; set; }
 
         /// <summary>
         /// Gets the visibility of controls which should be hidden when plando
@@ -78,10 +78,28 @@ namespace Randomizer.App
         public Visibility VisibleInPlando => PlandoMode ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
+        /// Gets the visibility of controls which should be hidden when plando
+        /// mode is active.
+        /// </summary>
+        public Visibility InvisibleInMultiworld => MultiMode ? Visibility.Collapsed : Visibility.Visible;
+
+        /// <summary>
+        /// Gets the visibility of controls which should be shown only when
+        /// plando mode is active.
+        /// </summary>
+        public Visibility VisibleInMultiworld => MultiMode ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
         /// Gets the IsEnabled value for controls which should be disabled when
         /// plando mode is active.
         /// </summary>
         public bool DisabledInPlando => !PlandoMode;
+
+        /// <summary>
+        /// Gets the IsEnabled value for controls which should be disabled when
+        /// plando mode is active.
+        /// </summary>
+        public bool DisabledInMultiworld => !true;
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
@@ -117,7 +135,8 @@ namespace Randomizer.App
                 }
 
                 var itemTypeField = itemType.GetType().GetField(itemType.ToString());
-                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault().Description;
+                if (itemTypeField == null) continue;
+                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description;
                 var checkBox = new CheckBox
                 {
                     Name = itemTypeField.Name,
@@ -161,7 +180,7 @@ namespace Randomizer.App
                     {
                         Name = name,
                         Content = displayName,
-                        IsChecked = (bool)property.GetValue(Options.LogicConfig),
+                        IsChecked = (bool)property.GetValue(Options.LogicConfig)!,
                         ToolTip = description
                     };
                     checkBox.Checked += LogicCheckBox_Checked;
@@ -244,7 +263,7 @@ namespace Randomizer.App
                     {
                         Name = name,
                         Content = displayName,
-                        IsChecked = (bool)property.GetValue(Options.PatchOptions.CasPatches),
+                        IsChecked = (bool)property.GetValue(Options.PatchOptions.CasPatches)!,
                         ToolTip = description
                     };
                     checkBox.Checked += CasPatchCheckBox_Checked;
@@ -257,10 +276,10 @@ namespace Randomizer.App
         public void LoadSprites()
         {
             var spritesPath = Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
                 "Sprites");
             var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
-                .Select(x => Sprite.LoadSprite(x))
+                .Select(Sprite.LoadSprite)
                 .OrderBy(x => x.Name);
 
             var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
@@ -318,21 +337,20 @@ namespace Randomizer.App
             var selectedIndex = 0;
 
             // Add generic item placement options (Any, Progressive Items, Junk)
-            foreach (var itemPlacement in Enum.GetValues(typeof(ItemPool)))
+            foreach (var itemPlacement in Enum.GetValues<ItemPool>())
             {
                 if ((int)itemPlacement == prevValue)
                 {
                     selectedIndex = curIndex;
                 }
 
-                var itemPlacementField = itemPlacement.GetType().GetField(itemPlacement.ToString());
-                var description = itemPlacementField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
-                comboBox.Items.Add(new LocationItemOption { Value = (int)itemPlacement, Text = description == null ? itemPlacementField.Name : description.Description });
+                var description = itemPlacement.GetDescription();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemPlacement, Text = description });
                 curIndex++;
             }
 
             // Add specific progressive items
-            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
+            foreach (var itemType in Enum.GetValues<ItemType>())
             {
                 if (_metadataService.Item(itemType)?.IsProgression(null) != true)
                 {
@@ -344,9 +362,8 @@ namespace Randomizer.App
                     selectedIndex = curIndex;
                 }
 
-                var itemTypeField = itemType.GetType().GetField(itemType.ToString());
-                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
-                comboBox.Items.Add(new LocationItemOption { Value = (int)itemType, Text = description == null ? itemTypeField.Name : description.Description });
+                var description = itemType.GetDescription();
+                comboBox.Items.Add(new LocationItemOption { Value = (int)itemType, Text = description });
                 curIndex++;
             }
 
@@ -359,14 +376,14 @@ namespace Randomizer.App
         private async void GenerateRomButton_Click(object sender, RoutedEventArgs e)
         {
             var rom = PlandoMode
-                ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig)
+                ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig!)
                 : await _romGenerator.GenerateRandomRomAsync(Options);
             if (rom != null)
             {
                 DialogResult = true;
                 Close();
             }
-            
+
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -374,7 +391,7 @@ namespace Randomizer.App
             Close();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             try
             {
@@ -445,7 +462,7 @@ namespace Randomizer.App
 
         private void AddToMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, SeedData seed)
         {
-            foreach (var location in seed.Worlds[0].World.Locations)
+            foreach (var location in seed.WorldGenerationData.LocalWorld.World.Locations)
             {
                 itemCounts.Increment(((int)location.Item.Type, location.Id));
             }
@@ -466,7 +483,7 @@ namespace Randomizer.App
 
         private void GatherStats(ConcurrentDictionary<string, int> stats, SeedData seed)
         {
-            var world = seed.Worlds.Single();
+            var world = seed.WorldGenerationData.LocalWorld;
 
             stats.Increment("Successfully generated");
 
@@ -577,10 +594,11 @@ namespace Randomizer.App
         /// <param name="e">The event object</param>
         private void LogicCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            var checkBox = sender as CheckBox;
+            if (sender is not CheckBox checkBox) return;
             var type = Options.LogicConfig.GetType();
             var property = type.GetProperty(checkBox.Name);
-            property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
+            if (property != null)
+                property.SetValue(Options.LogicConfig, checkBox.IsChecked ?? false);
         }
 
         /// <summary>
@@ -591,10 +609,11 @@ namespace Randomizer.App
         /// <param name="e">The event object</param>
         private void CasPatchCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            var checkBox = sender as CheckBox;
+            if (sender is not CheckBox checkBox) return;
             var type = Options.PatchOptions.CasPatches.GetType();
             var property = type.GetProperty(checkBox.Name);
-            property.SetValue(Options.PatchOptions.CasPatches, checkBox.IsChecked ?? false);
+            if (property != null)
+                property.SetValue(Options.PatchOptions.CasPatches, checkBox.IsChecked ?? false);
         }
 
         /// <summary>
@@ -604,8 +623,8 @@ namespace Randomizer.App
         /// <param name="e">The event object</param>
         private void LocationsRegionFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = sender as ComboBox;
-            var selectedRegion = comboBox.SelectedItem as string;
+            if (sender is not ComboBox { SelectedItem: string selectedRegion }) return;
+
             foreach (FrameworkElement obj in LocationsGrid.Children)
             {
                 if (obj.Tag is Location location)
@@ -622,9 +641,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void LocationsItemDropdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = sender as ComboBox;
-            var option = comboBox.SelectedItem as LocationItemOption;
-            var location = comboBox.Tag as Location;
+            if (sender is not ComboBox { SelectedItem: LocationItemOption option, Tag: Location location }) return;
             if (option.Value > 0)
             {
                 Options.SeedOptions.LocationItems[location.Id] = option.Value;
@@ -644,8 +661,7 @@ namespace Randomizer.App
         {
             foreach (FrameworkElement obj in LocationsGrid.Children)
             {
-                if (obj is not ComboBox comboBox) continue;
-                var location = comboBox.Tag as Location;
+                if (obj is not ComboBox { Tag: Location location } comboBox ) continue;
                 comboBox.SelectedIndex = 0;
                 Options.SeedOptions.LocationItems.Remove(location.Id);
             }
@@ -659,8 +675,7 @@ namespace Randomizer.App
         /// <param name="e">The event object</param>
         private void EarlyItemCheckbox_Checked(object sender, RoutedEventArgs e)
         {
-            var checkBox = sender as CheckBox;
-            var itemType = (ItemType)checkBox.Tag;
+            if (sender is not CheckBox { Tag: ItemType itemType } checkBox) return;
             if (checkBox.IsChecked.HasValue && checkBox.IsChecked.Value)
                 Options.SeedOptions.EarlyItems.Add(itemType);
             else
@@ -679,10 +694,10 @@ namespace Randomizer.App
 
         private void UpdateRaceCheckBoxes()
         {
-            DisableSpoilerLogCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
-            DisableTrackerHintsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
-            DisableTrackerSpoilersCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
-            DisableCheatsCheckBox.IsEnabled = !Options?.SeedOptions.Race ?? true;
+            DisableSpoilerLogCheckBox.IsEnabled = !Options.SeedOptions.Race;
+            DisableTrackerHintsCheckBox.IsEnabled = !Options.SeedOptions.Race;
+            DisableTrackerSpoilersCheckBox.IsEnabled = !Options.SeedOptions.Race;
+            DisableCheatsCheckBox.IsEnabled = !Options.SeedOptions.Race;
         }
 
         /// <summary>
@@ -690,10 +705,16 @@ namespace Randomizer.App
         /// </summary>
         private class LocationItemOption
         {
-            public int Value { get; set; }
-            public string Text { get; set; }
+            public int Value { get; init; }
+            public string Text { get; init; } = "";
 
             public override string ToString() => Text;
+        }
+
+        private void SubmitConfigsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
         }
     }
 }

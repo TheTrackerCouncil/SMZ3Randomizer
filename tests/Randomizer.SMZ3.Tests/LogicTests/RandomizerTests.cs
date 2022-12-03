@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var config = new Config();
 
             var seedData = randomizer.GenerateSeed(config, seed, default);
-            var worldHash = GetHashForWorld(seedData.Worlds[0].World);
+            var worldHash = GetHashForWorld(seedData.WorldGenerationData.LocalWorld.World);
 
             worldHash.Should().Be(expectedHash);
         }
@@ -73,7 +73,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             for (var i = 0; i < 3; i++)
             {
                 var seedData = randomizer.GenerateSeed(config, null, default);
-                world = seedData.Worlds.First().World;
+                world = seedData.WorldGenerationData.LocalWorld.World;
                 world.Locations.First(x => x.Id == location1).Item.Progression.Should().BeTrue();
                 world.Locations.First(x => x.Id == location2).Item.Progression.Should().BeFalse();
                 var fireRodAtLocation = world.Locations.First(x => x.Id == location3).Item.Type == ItemType.Firerod;
@@ -96,7 +96,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             for (var i = 0; i < 3; i++)
             {
                 var seedData = randomizer.GenerateSeed(config, null, default);
-                var world = seedData.Worlds.First().World;
+                var world = seedData.WorldGenerationData.LocalWorld.World;
                 var progression = new Progression();
                 Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression, out _).Should().BeEmpty();
                 Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression, out _).Should().BeEmpty();

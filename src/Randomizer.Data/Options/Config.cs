@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Newtonsoft.Json;
 using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
-using Randomizer.Shared.Enums;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Randomizer.Data.Options
 {
@@ -63,6 +64,7 @@ namespace Randomizer.Data.Options
     [DefaultValue(Any)]
     public enum ItemPool
     {
+        [Description("Any")]
         Any = 0,
 
         [Description("Progression items")]
@@ -201,14 +203,15 @@ namespace Randomizer.Data.Options
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
         public CasPatches CasPatches { get; set; } = new();
-#nullable enable
         public PlandoConfig? PlandoConfig { get; set; }
-#nullable disable
         public ItemPlacementRule ItemPlacementRule { get; set; }
         public int UniqueHintCount { get; set; } = 8;
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;
         public bool MetroidKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.SuperMetroid;
         public bool KeysanityForRegion(Region region) => KeysanityMode == KeysanityMode.Both || (region is Z3Region && ZeldaKeysanity) || (region is SMRegion && MetroidKeysanity);
+
+        [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
+        public bool IsLocalConfig { get; set; } = true;
 
         public Config SeedOnly()
         {
@@ -253,12 +256,12 @@ namespace Randomizer.Data.Options
         public static IEnumerable<Config> FromConfigString(string configString)
         {
             if (configString.Contains("{"))
-                return new List<Config>() { JsonSerializer.Deserialize<Config>(configString, s_options) };
+                return new List<Config>() { JsonSerializer.Deserialize<Config>(configString, s_options) ?? new Config() };
 
             if (configString.StartsWith("["))
             {
                 var configs = new List<Config>();
-                var configStrings = JsonSerializer.Deserialize<List<string>>(configString, s_options);
+                var configStrings = JsonSerializer.Deserialize<List<string>>(configString, s_options) ?? new List<string>();
                 return configStrings.SelectMany(x => FromConfigString(x));
             }
 
@@ -277,7 +280,7 @@ namespace Randomizer.Data.Options
                 }
 
                 var json = Encoding.UTF8.GetString(buffer);
-                return new List<Config>() { JsonSerializer.Deserialize<Config>(json, s_options) };
+                return new List<Config>() { JsonSerializer.Deserialize<Config>(json, s_options) ?? new Config() };
             }
         }
 
@@ -295,6 +298,16 @@ namespace Randomizer.Data.Options
                 configStrings.Add(ToConfigString(config, true));
             }
             return JsonSerializer.Serialize(configStrings, s_options);
+        }
+
+        /// <summary>
+        /// Takes a config file and generates it into a compressed config string
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static string ToConfigString(Config config)
+        {
+            return ToConfigString(new[] { config } );
         }
     }
 }

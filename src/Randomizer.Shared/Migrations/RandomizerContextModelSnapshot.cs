@@ -32,6 +32,12 @@ namespace Randomizer.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("MultiplayerGameType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MultiplayerGameUrl")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("RomPath")
                         .IsRequired()
                         .HasColumnType("TEXT");

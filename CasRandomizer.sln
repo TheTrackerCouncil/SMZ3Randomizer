@@ -35,6 +35,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Data", "src\Rand
 		{3DA99948-6C0A-47E6-87AB-92672ED88C09} = {3DA99948-6C0A-47E6-87AB-92672ED88C09}
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Multiplayer.Client", "src\Randomizer.Multiplayer.Client\Randomizer.Multiplayer.Client.csproj", "{3BB9FA87-0DEB-4E55-8F73-A0B0B727FCA3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Randomizer.Multiplayer.Server", "src\Randomizer.Multiplayer.Server\Randomizer.Multiplayer.Server.csproj", "{92B6AE88-7993-445C-AA32-9D20406074A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +81,14 @@ Global
 		{A9465041-3416-4C60-A160-1454A045B90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9465041-3416-4C60-A160-1454A045B90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9465041-3416-4C60-A160-1454A045B90F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BB9FA87-0DEB-4E55-8F73-A0B0B727FCA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BB9FA87-0DEB-4E55-8F73-A0B0B727FCA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BB9FA87-0DEB-4E55-8F73-A0B0B727FCA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BB9FA87-0DEB-4E55-8F73-A0B0B727FCA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92B6AE88-7993-445C-AA32-9D20406074A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92B6AE88-7993-445C-AA32-9D20406074A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92B6AE88-7993-445C-AA32-9D20406074A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92B6AE88-7993-445C-AA32-9D20406074A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

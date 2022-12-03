@@ -24,6 +24,20 @@ namespace Randomizer.Data.Services
 
         public async Task CreateStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom)
         {
+            var state = CreateTrackerState(worlds);
+
+            foreach (var world in worlds)
+            {
+                world.State = state;
+            }
+
+            generatedRom.TrackerState = state;
+            await _randomizerContext.SaveChangesAsync();
+
+        }
+
+        public TrackerState CreateTrackerState(IEnumerable<World> worlds)
+        {
             var locationStates = worlds
                 .SelectMany(x => x.Locations)
                 .Select(x => new TrackerLocationState
@@ -74,7 +88,7 @@ namespace Randomizer.Data.Services
                 })
                 .ToList();
 
-            var state = new TrackerState()
+            return new TrackerState()
             {
                 LocationStates = locationStates,
                 ItemStates = itemStates,
@@ -84,15 +98,6 @@ namespace Randomizer.Data.Services
                 StartDateTime = DateTimeOffset.Now,
                 UpdatedDateTime = DateTimeOffset.Now
             };
-
-            foreach (var world in worlds)
-            {
-                world.State = state;
-            }
-
-            generatedRom.TrackerState = state;
-            await _randomizerContext.SaveChangesAsync();
-
         }
 
         public TrackerState? LoadState(IEnumerable<World> worlds, GeneratedRom generatedRom)
