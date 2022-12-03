@@ -288,6 +288,11 @@ namespace Randomizer.App.Controls
             }
         }
 
+        public void CloseTracker()
+        {
+            _trackerWindow?.Close();
+        }
+
         public abstract void UpdateList();
 
         public bool ShowGenerateRomWindow(PlandoConfig? plandoConfig, bool isMulti)

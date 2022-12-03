@@ -146,12 +146,10 @@ namespace Randomizer.Multiplayer.Client
             }
         }
 
-        private void OnRequestPlayerUpdate(RequestPlayerUpdateRequest obj)
-        {
-            _logger.LogInformation("Player state requested");
-            PlayerStateRequested?.Invoke();
-        }
-
+        /// <summary>
+        /// Reconnects to the server using previously saved details
+        /// </summary>
+        /// <param name="gameDetails">The database game details to reload</param>
         public async Task Reconnect(MultiplayerGameDetails gameDetails)
         {
             DatabaseGameDetails = gameDetails;
@@ -323,40 +321,74 @@ namespace Randomizer.Multiplayer.Client
             await MakeRequest("StartGame", new StartGameRequest(validationHash));
         }
 
+        /// <summary>
+        /// Notifies the server that a location has been cleared
+        /// </summary>
+        /// <param name="locationId">The id of the location that was cleared</param>
+        /// <param name="playerGuid">The player whose dungeon was cleared. Set to null to use the local player.</param>
         public async Task TrackLocation(int locationId, string? playerGuid = null)
         {
             playerGuid ??= CurrentPlayerGuid;
             await MakeRequest("TrackLocation", new TrackLocationRequest(playerGuid ?? CurrentPlayerGuid!, locationId));
         }
 
+        /// <summary>
+        /// Notifies the server that an item has been tracked
+        /// </summary>
+        /// <param name="itemType">The item type that has been received</param>
+        /// <param name="trackedValue">The new tracking state of the item</param>
+        /// <param name="playerGuid">The player whose dungeon was cleared. Set to null to use the local player.</param>
         public async Task TrackItem(ItemType itemType, int trackedValue, string? playerGuid = null)
         {
             playerGuid ??= CurrentPlayerGuid;
             await MakeRequest("TrackItem", new TrackItemRequest(playerGuid ?? CurrentPlayerGuid!, itemType, trackedValue));
         }
 
+        /// <summary>
+        /// Notifies the server that a dungeon has been cleared
+        /// </summary>
+        /// <param name="dungeonName">The name of the dungeon that has been cleared</param>
+        /// <param name="playerGuid">The player whose dungeon was cleared. Set to null to use the local player.</param>
         public async Task TrackDungeon(string dungeonName, string? playerGuid = null)
         {
             playerGuid ??= CurrentPlayerGuid;
             await MakeRequest("TrackDungeon", new TrackDungeonRequest(playerGuid ?? CurrentPlayerGuid!, dungeonName));
         }
 
+        /// <summary>
+        /// Notifies the server that a boss has been defeated
+        /// </summary>
+        /// <param name="bossType">The boss that has been defeated</param>
+        /// <param name="playerGuid">The player whose dungeon was cleared. Set to null to use the local player.</param>
         public async Task TrackBoss(BossType bossType, string? playerGuid = null)
         {
             playerGuid ??= CurrentPlayerGuid;
             await MakeRequest("TrackBoss", new TrackBossRequest(playerGuid ?? CurrentPlayerGuid!, bossType));
         }
 
+        /// <summary>
+        /// Submits the world data for a player so that they can generate their seed
+        /// </summary>
+        /// <param name="playerGuid">The player guid the data is applicable to</param>
+        /// <param name="data">The object of all of the details needed for the player to generate their rom</param>
         public async Task SubmitPlayerGenerationData(string playerGuid, MultiplayerPlayerGenerationData data)
         {
             await MakeRequest("SubmitPlayerGenerationData", new SubmitPlayerGenerationDataRequest(playerGuid, MultiplayerPlayerGenerationData.ToString(data)));
         }
 
+        /// <summary>
+        /// Requests the current player list from the server
+        /// </summary>
+        /// <param name="sendToAllPlayers">If the list should be sent to all players</param>
         public async Task RequestPlayerList(bool sendToAllPlayers)
         {
             await MakeRequest("PlayerListSync", new PlayerListSyncRequest(sendToAllPlayers));
         }
 
+        /// <summary>
+        /// Requests a player to send an update
+        /// </summary>
+        /// <param name="playerGuid">The player guid to request</param>
         public async Task RequestPlayerUpdate(string? playerGuid)
         {
             await MakeRequest("RequestPlayerUpdate", new RequestPlayerUpdateRequest(playerGuid));
@@ -494,7 +526,7 @@ namespace Randomizer.Multiplayer.Client
         }
 
         /// <summary>
-        /// On retrieving a player's full status object
+        /// On retrieving a player's full status object of all things that have been tracked for them
         /// </summary>
         /// <param name="response"></param>
         private async Task OnPlayerSync(PlayerSyncResponse response)
@@ -504,45 +536,75 @@ namespace Randomizer.Multiplayer.Client
             UpdateLocalPlayerState(response.PlayerState);
         }
 
-        private void OnTrackBoss(TrackBossResponse obj)
+        /// <summary>
+        /// One retrieving a player defeating a boss
+        /// </summary>
+        /// <param name="response"></param>
+        private void OnTrackBoss(TrackBossResponse response)
         {
-            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
-            player.TrackBoss(obj.BossType);
-            _logger.LogInformation("{Player} tracked boss {BossType}", player.PlayerName, obj.BossType);
-            BossTracked?.Invoke(player, obj.BossType);
+            var player = Players!.First(x => x.Guid == response.PlayerGuid);
+            player.TrackBoss(response.BossType);
+            _logger.LogInformation("{Player} tracked boss {BossType}", player.PlayerName, response.BossType);
+            BossTracked?.Invoke(player, response.BossType);
         }
 
-        private void OnTrackDungeon(TrackDungeonResponse obj)
+        /// <summary>
+        /// On retrieving a player clearing a dungeon
+        /// </summary>
+        /// <param name="response"></param>
+        private void OnTrackDungeon(TrackDungeonResponse response)
         {
-            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
-            player.TrackDungeon(obj.DungeonName);
-            _logger.LogInformation("{Player} tracked dungeon {DungeonName}", player.PlayerName, obj.DungeonName);
-            DungeonTracked?.Invoke(player, obj.DungeonName);
+            var player = Players!.First(x => x.Guid == response.PlayerGuid);
+            player.TrackDungeon(response.DungeonName);
+            _logger.LogInformation("{Player} tracked dungeon {DungeonName}", player.PlayerName, response.DungeonName);
+            DungeonTracked?.Invoke(player, response.DungeonName);
         }
 
-        private void OnTrackItem(TrackItemResponse obj)
+        /// <summary>
+        /// On retrieving a player tracking an item
+        /// </summary>
+        /// <param name="response"></param>
+        private void OnTrackItem(TrackItemResponse response)
         {
-            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
-            player.TrackItem(obj.ItemType, obj.TrackedValue);
-            _logger.LogInformation("{Player} tracked item {ItemType}", player.PlayerName, obj.ItemType);
-            ItemTracked?.Invoke(player, obj.ItemType, obj.TrackedValue);
+            var player = Players!.First(x => x.Guid == response.PlayerGuid);
+            player.TrackItem(response.ItemType, response.TrackedValue);
+            _logger.LogInformation("{Player} tracked item {ItemType}", player.PlayerName, response.ItemType);
+            ItemTracked?.Invoke(player, response.ItemType, response.TrackedValue);
         }
 
-        private void OnTrackLocation(TrackLocationResponse obj)
+        /// <summary>
+        /// On retrieving a player clearing a location
+        /// </summary>
+        /// <param name="response"></param>
+        private void OnTrackLocation(TrackLocationResponse response)
         {
-            var player = Players!.First(x => x.Guid == obj.PlayerGuid);
-            player.TrackLocation(obj.LocationId);
-            _logger.LogInformation("{Player} tracked location {LocationId}", player.PlayerName, obj.LocationId);
-            LocationTracked?.Invoke(player, obj.LocationId);
+            var player = Players!.First(x => x.Guid == response.PlayerGuid);
+            player.TrackLocation(response.LocationId);
+            _logger.LogInformation("{Player} tracked location {LocationId}", player.PlayerName, response.LocationId);
+            LocationTracked?.Invoke(player, response.LocationId);
         }
 
-        private async Task OnStartGame(StartGameResponse obj)
+        /// <summary>
+        /// On retrieving details for regenerating the worlds and creating the rom for the player
+        /// </summary>
+        /// <param name="response"></param>
+        private async Task OnStartGame(StartGameResponse response)
         {
             _logger.LogInformation("Received start game");
-            await UpdateLocalGameState(obj.GameState);
-            UpdatePlayerList(obj.AllPlayers);
-            var data = obj.PlayerGenerationData.Select(MultiplayerPlayerGenerationData.FromString).NonNull().ToList();
+            await UpdateLocalGameState(response.GameState);
+            UpdatePlayerList(response.AllPlayers);
+            var data = response.PlayerGenerationData.Select(MultiplayerPlayerGenerationData.FromString).NonNull().ToList();
             GameStarted?.Invoke(data);
+        }
+
+        /// <summary>
+        /// On a player's state is being requested by the server
+        /// </summary>
+        /// <param name="response"></param>
+        private void OnRequestPlayerUpdate(RequestPlayerUpdateRequest response)
+        {
+            _logger.LogInformation("Player state requested");
+            PlayerStateRequested?.Invoke();
         }
         #endregion
 

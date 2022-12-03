@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Windows;
-using Accessibility;
 using Randomizer.Shared.Models;
-using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.App.ViewModels;
 
+/// <summary>
+/// View model for the list of multiplayer games
+/// </summary>
 public class MultiplayerGamesViewModel : INotifyPropertyChanged
 {
     public List<MultiplayerGameViewModel> Games { get; set; }
@@ -37,38 +36,3 @@ public class MultiplayerGamesViewModel : INotifyPropertyChanged
     }
 }
 
-public class MultiplayerGameViewModel
-{
-    public MultiplayerGameViewModel(MultiplayerGameDetails details)
-    {
-        Details = details;
-    }
-
-    public MultiplayerGameDetails Details { get; set; }
-
-    public string TypeLabel => $"Type: {Details.Type}";
-    public string StatusLabel => $"Status: {Details.Status}";
-
-    public string TimeLabel
-    {
-        get
-        {
-            return $"{Details.JoinedDate.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern)} {Details.JoinedDate.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern)}";
-        }
-    }
-
-    public string ElapsedLabel
-    {
-        get
-        {
-            if (Details.GeneratedRom?.TrackerState == null) return "";
-            var timeSpan = TimeSpan.FromSeconds(Details.GeneratedRom.TrackerState.SecondsElapsed);
-            var duration = timeSpan.Hours > 0
-                ? timeSpan.ToString("h':'mm':'ss")
-                : timeSpan.ToString("mm':'ss");
-            return $"Duration: {duration}";
-        }
-    }
-
-    public Visibility GeneratedRomMenuItemVisibility => Details.GeneratedRom != null ? Visibility.Visible : Visibility.Collapsed;
-}

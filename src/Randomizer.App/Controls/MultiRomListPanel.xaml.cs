@@ -61,6 +61,10 @@ namespace Randomizer.App.Controls
             UpdateList();
         }
 
+        /// <summary>
+        /// Opens the multiplayer status window
+        /// </summary>
+        /// <param name="game"></param>
         private void OpenStatusWindow(MultiplayerGameDetails? game)
         {
             using var scope = ServiceProvider.CreateScope();
@@ -72,7 +76,7 @@ namespace Randomizer.App.Controls
         }
 
         /// <summary>
-        /// Menu item for deleting a rom from the db and filesystem
+        /// Menu item for deleting a multiplayer game and rom
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

@@ -44,8 +44,13 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.GameStarted += MultiplayerClientServiceOnGameStarted;
         }
 
+        public MultiplayerStatusViewModel Model { get; set; } = new();
+        public MultiRomListPanel ParentPanel { get; set; } = null!;
+        public MultiplayerGameDetails? MultiplayerGameDetails { get; set; }
+
         private async void MultiplayerClientServiceOnGameStarted(List<MultiplayerPlayerGenerationData> playerGenerationData)
         {
+            // Regenerate the seed using all of the data for the players that came from the server
             var seedData = _multiplayerGameService.RegenerateSeed(playerGenerationData, out var error);
             if (!string.IsNullOrEmpty(error))
             {
@@ -54,7 +59,6 @@ namespace Randomizer.App.Windows
             }
 
             var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!, _multiplayerClientService.DatabaseGameDetails!);
-
             if (rom != null)
             {
                 Model.GeneratedRom = rom;
@@ -79,10 +83,6 @@ namespace Randomizer.App.Windows
             Model.IsConnected = true;
             Model.GameUrl = _multiplayerClientService.GameUrl ?? "";
             Model.GameStatus = _multiplayerClientService.GameStatus ?? MultiplayerGameStatus.Created;
-            Model.UpdateList(_multiplayerClientService.Players ?? new List<MultiplayerPlayerState>(),
-                _multiplayerClientService.LocalPlayer);
-            _multiplayerGameService.UpdateGameType(_multiplayerClientService.GameType ??
-                                                   MultiplayerGameType.Multiworld);
             UpdatePlayerList();
             Model.Refresh();
         }
@@ -110,6 +110,7 @@ namespace Randomizer.App.Windows
             _multiplayerClientService.GameStarted -= MultiplayerClientServiceOnGameStarted;
             _multiplayerClientService.PlayerForfeited -= MultiplayerClientServiceOnPlayerForfeit;
             Task.Run(async () => await _multiplayerClientService.Disconnect());
+            ParentPanel.CloseTracker();
             ParentPanel.UpdateList();
         }
 
@@ -128,10 +129,6 @@ namespace Randomizer.App.Windows
             Model.UpdatePlayer(state, _multiplayerClientService.LocalPlayer);
             CheckPlayerConfigs();
         }
-
-        public MultiplayerStatusViewModel Model { get; set; } = new();
-        public MultiRomListPanel ParentPanel { get; set; } = null!;
-        public MultiplayerGameDetails? MultiplayerGameDetails { get; set; }
 
         protected void UpdatePlayerList()
         {
@@ -174,6 +171,7 @@ namespace Randomizer.App.Windows
 
             var error = await _multiplayerGameService.GenerateSeed();
 
+            // If an error happened, set it back to being to the initial state
             if (error != null)
             {
                 DisplayError(error);
@@ -283,6 +281,11 @@ namespace Randomizer.App.Windows
                 ParentPanel.OpenSpoilerLog(Model.GeneratedRom);
         }
 
+        /// <summary>
+        /// Opens the launch options drop down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LaunchOptions_OnClick(object sender, RoutedEventArgs e)
         {
             if (LaunchOptions.ContextMenu == null) return;

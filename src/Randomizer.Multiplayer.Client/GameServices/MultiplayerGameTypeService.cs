@@ -21,6 +21,8 @@ public abstract class MultiplayerGameTypeService
         MultiplayerRomGenerator = multiplayerRomGenerator;
     }
 
+    public TrackerState? TrackerState { get; set; }
+
     protected Smz3Randomizer Randomizer { get; init; }
 
     protected MultiplayerClientService Client { get; }
@@ -29,15 +31,36 @@ public abstract class MultiplayerGameTypeService
 
     protected int LocalPlayerId => Client.LocalPlayer?.WorldId ?? 0;
 
-    public TrackerState? TrackerState { get; set; }
-
+    /// <summary>
+    /// Generates seed data for all of the players
+    /// </summary>
+    /// <param name="seed">The seed for the random generator</param>
+    /// <param name="players">The list of player states</param>
+    /// <param name="localPlayer">The local player's player state</param>
+    /// <param name="error">Output of any error that happened</param>
+    /// <returns>The seed data object with all of the world details</returns>
     public abstract SeedData? GenerateSeed(string seed, List<MultiplayerPlayerState> players,
         MultiplayerPlayerState localPlayer, out string error);
 
+    /// <summary>
+    /// Regenerates seed data given pregenerated data for each of the players
+    /// </summary>
+    /// <param name="seed">The seed for the random generator</param>
+    /// <param name="playerGenerationData">The list of generation data for each of the players</param>
+    /// <param name="players">The list of player states</param>
+    /// <param name="localPlayer">The local player's player state</param>
+    /// <param name="error">Output of any error that happened</param>
+    /// <returns>The seed data object with all of the world details</returns>
     public abstract SeedData? RegenerateSeed(string seed, List<MultiplayerPlayerGenerationData> playerGenerationData,
         List<MultiplayerPlayerState> players, MultiplayerPlayerState localPlayer,
         out string error);
 
+    /// <summary>
+    /// Creates the default player state based on the player's world
+    /// </summary>
+    /// <param name="state">The state of the player</param>
+    /// <param name="world">The world of the player</param>
+    /// <returns>The newly created multiplayer player state</returns>
     public MultiplayerPlayerState GetPlayerDefaultState(MultiplayerPlayerState state, World world)
     {
         state.Locations = world.Locations.ToDictionary(x => x.Id, _ => false);
@@ -47,9 +70,13 @@ public abstract class MultiplayerGameTypeService
         return state;
     }
 
-    protected IEnumerable<Config> GetPlayerConfigs(List<MultiplayerPlayerState> players)
-        => players.Select(x => Config.FromConfigString(x.Config!).First());
-
+    /// <summary>
+    /// Generates seed data from a list of player configs
+    /// </summary>
+    /// <param name="configs">The list of player configs</param>
+    /// <param name="seed">The seed number to use for random generation</param>
+    /// <param name="error">Output of any error that happened</param>
+    /// <returns>The generated seed data with all of the worlds</returns>
     protected SeedData? GenerateSeedInternal(List<Config> configs, string? seed, out string error)
     {
         SeedData? seedData = null;
@@ -86,6 +113,13 @@ public abstract class MultiplayerGameTypeService
         return seedData;
     }
 
+    /// <summary>
+    /// Regenerates seed data from a list of configs that have the pregenerated multiplayer world data
+    /// </summary>
+    /// <param name="configs">The list of configs with the player data</param>
+    /// <param name="seed">The seed to use for the random generator</param>
+    /// <param name="error">Output of any error that happened</param>
+    /// <returns>The regenerated seed data</returns>
     protected SeedData? RegenerateSeedInternal(List<Config> configs, string? seed, out string error)
     {
         SeedData? seedData = null;
@@ -122,6 +156,11 @@ public abstract class MultiplayerGameTypeService
         return seedData;
     }
 
+    /// <summary>
+    /// Creates a has for each of the worlds to use to confirm that seeds match
+    /// </summary>
+    /// <param name="worlds">The list of worlds to use to generate the hash</param>
+    /// <returns>A unique hash for all of the location items and dungeon rewards</returns>
     public string GetValidationHash(IEnumerable<World> worlds)
     {
         var itemHashCode = string.Join(",",
@@ -134,26 +173,50 @@ public abstract class MultiplayerGameTypeService
         return $"{NonCryptographicHash.Fnv1a(itemHashCode)}{NonCryptographicHash.Fnv1a(rewardHashCode)}";
     }
 
+    /// <summary>
+    /// Notifies the server that a location has been tracked by the local player
+    /// </summary>
+    /// <param name="location">The location that was tracked</param>
     public async Task TrackLocation(Location location)
     {
         await Client.TrackLocation(location.Id, location.World.Guid);
     }
 
+    /// <summary>
+    /// Notifies the server that an item belonging to the local player has been tracked
+    /// </summary>
+    /// <param name="item">The item that has been tracked</param>
     public async Task TrackItem(Item item)
     {
         await Client.TrackItem(item.Type, item.State.TrackingState, item.World.Guid);
     }
 
+    /// <summary>
+    /// Notifies the server that a dungeon has been tracked by the local player
+    /// </summary>
+    /// <param name="dungeon">The dungeon that has been tracked</param>
     public async Task TrackDungeon(IDungeon dungeon)
     {
         await Client.TrackDungeon(dungeon.DungeonName, (dungeon as Region)!.World.Guid);
     }
 
+    /// <summary>
+    /// Notifies the server that a boss has been tracked by the local player
+    /// </summary>
+    /// <param name="boss">The boss that has been tracked</param>
     public async Task TrackBoss(Boss boss)
     {
         await Client.TrackBoss(boss.Type, boss.World.Guid);
     }
 
+    /// <summary>
+    /// Creates arguments to send to Tracker when a player tracks a location which includes the location state
+    /// and an item type to give to the player, if applicable
+    /// </summary>
+    /// <param name="player">The player that tracked a location</param>
+    /// <param name="locationId">The id of </param>
+    /// <param name="isLocalPlayer"></param>
+    /// <returns></returns>
     public PlayerTrackedLocationEventHandlerArgs? PlayerTrackedLocation(MultiplayerPlayerState player, int locationId, bool isLocalPlayer)
     {
         if (TrackerState == null || isLocalPlayer) return null;
@@ -175,6 +238,14 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
+    /// <summary>
+    /// Creates arguments to send to Tracker when a player tracks an item
+    /// </summary>
+    /// <param name="player">The player that tracked an item</param>
+    /// <param name="itemType">The type of item that was tracked</param>
+    /// <param name="trackingValue">Thew new tracking value for the item</param>
+    /// <param name="isLocalPlayer">If it was the local player tracking the item</param>
+    /// <returns></returns>
     public PlayerTrackedItemEventHandlerArgs? PlayerTrackedItem(MultiplayerPlayerState player, ItemType itemType, int trackingValue, bool isLocalPlayer)
     {
         if (TrackerState == null || itemType == ItemType.Nothing || isLocalPlayer) return null;
@@ -193,6 +264,13 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
+    /// <summary>
+    /// Creates arguments to send to Tracker when a player tracks a boss
+    /// </summary>
+    /// <param name="player">The player that tracked a boss</param>
+    /// <param name="bossType">The boss type that was tracked</param>
+    /// <param name="isLocalPlayer">If it was the local player tracking the item</param>
+    /// <returns></returns>
     public PlayerTrackedBossEventHandlerArgs? PlayerTrackedBoss(MultiplayerPlayerState player, BossType bossType, bool isLocalPlayer)
     {
         if (TrackerState == null || bossType == BossType.None || isLocalPlayer) return null;
@@ -210,6 +288,13 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
+    /// <summary>
+    /// Creates arguments to send to Tracker when a player tracks a dungeon
+    /// </summary>
+    /// <param name="player">The player that tracked the dungeon</param>
+    /// <param name="dungeonName">The name of the dungeon that was tracked</param>
+    /// <param name="isLocalPlayer"></param>
+    /// <param name="isLocalPlayer">If it was the local player tracking the item</param>
     public PlayerTrackedDungeonEventHandlerArgs? PlayerTrackedDungeon(MultiplayerPlayerState player, string dungeonName, bool isLocalPlayer)
     {
         if (TrackerState == null || isLocalPlayer) return null;
@@ -227,6 +312,14 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
+    /// <summary>
+    /// Creates arguments for when receiving a player state from the server by determining what locations, items, etc.
+    /// mismatch with the tracker state
+    /// </summary>
+    /// <param name="player">The player state that is being synced</param>
+    /// <param name="previousState">The previous state for the player before this one</param>
+    /// <param name="isLocalPlayer">If this is the local player being synced</param>
+    /// <returns></returns>
     public PlayerSyncReceivedEventHandlerArgs? PlayerSyncReceived(MultiplayerPlayerState player,
         MultiplayerPlayerState? previousState, bool isLocalPlayer)
     {
@@ -270,6 +363,11 @@ public abstract class MultiplayerGameTypeService
         };
     }
 
+    /// <summary>
+    /// Updates a player state to match the current tracker state
+    /// </summary>
+    /// <param name="state">The player that is being updated</param>
+    /// <param name="trackerState">The tracker state for the player</param>
     public void UpdatePlayerState(MultiplayerPlayerState state, TrackerState trackerState)
     {
         state.Locations = trackerState.LocationStates.Where(x => x.WorldId == state.WorldId).ToDictionary(x => x.LocationId, x => x.Autotracked);
@@ -278,6 +376,14 @@ public abstract class MultiplayerGameTypeService
         state.Dungeons = trackerState.DungeonStates.Where(x => x.WorldId == state.WorldId).ToDictionary(x => x.Name, x => x.Cleared);
     }
 
+    /// <summary>
+    /// Creates arguments for when a player's game has ended, either by forfeiting or by completing the game
+    /// </summary>
+    /// <param name="player">The player twhose game was ended</param>
+    /// <param name="isLocalPlayer">If it was a local player or not</param>
+    /// <param name="didForfeit">If the player forfeited</param>
+    /// <param name="didComplete">If the player completed the game</param>
+    /// <returns></returns>
     public PlayerEndedGameEventHandlerArgs PlayerEndedGame(MultiplayerPlayerState player, bool isLocalPlayer, bool didForfeit, bool didComplete)
     {
         return new PlayerEndedGameEventHandlerArgs

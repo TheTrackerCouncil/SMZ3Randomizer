@@ -8,6 +8,7 @@ public class JoinGameRequest
         PlayerName = playerName;
         PhoneticName = phoneticName;
         RandomizerVersion = randomizerVersion;
+        MultiplayerVersion = multiplayerVersion;
     }
 
     public string GameGuid { get; }

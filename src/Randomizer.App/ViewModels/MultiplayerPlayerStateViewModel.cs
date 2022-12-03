@@ -5,6 +5,9 @@ using Randomizer.Shared;
 
 namespace Randomizer.App.ViewModels
 {
+    /// <summary>
+    /// View model for an individual player in the muliplayer status window
+    /// </summary>
     public class MultiplayerPlayerStateViewModel : INotifyPropertyChanged
     {
         private bool _isConnectedToServer;
@@ -51,8 +54,15 @@ namespace Randomizer.App.ViewModels
             }
         }
 
-        public Visibility EditConfigVisibility => GameStatus == MultiplayerGameStatus.Created && IsLocalPlayer ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility ForfeitVisiblity => (IsLocalPlayer || IsLocalPlayerAdmin) && !State.HasForfeited && !State.HasCompleted ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility EditConfigVisibility => GameStatus == MultiplayerGameStatus.Created && IsLocalPlayer
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        public Visibility ForfeitVisiblity =>
+            (IsLocalPlayer || IsLocalPlayerAdmin) && GameStatus != MultiplayerGameStatus.Generating &&
+            !State.HasForfeited && !State.HasCompleted
+                ? Visibility.Visible
+                : Visibility.Collapsed;
 
         public void Update(MultiplayerPlayerState state)
         {

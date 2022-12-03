@@ -7,6 +7,9 @@ using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.App.ViewModels
 {
+    /// <summary>
+    /// View model for the multiplayer status window
+    /// </summary>
     public class MultiplayerStatusViewModel : INotifyPropertyChanged
     {
         private bool _isConnected;
@@ -39,6 +42,17 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
+        public Visibility GeneratingLabelVisibility => GameStatus == MultiplayerGameStatus.Generating || (GameStatus == MultiplayerGameStatus.Started && _generatedRom == null) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility PlayButtonsVisibility => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null && LocalPlayer?.HasCompleted != true && LocalPlayer?.HasForfeited != true;
+        public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
+        public MultiplayerPlayerState? LocalPlayer { get; private set; }
+        public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
 
         public bool IsConnected
         {
@@ -107,19 +121,6 @@ namespace Randomizer.App.ViewModels
             }
         }
 
-        public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
-        public Visibility GeneratingLabelVisibility => GameStatus == MultiplayerGameStatus.Generating || (GameStatus == MultiplayerGameStatus.Started && _generatedRom == null) ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
-        public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
-
-        public Visibility PlayButtonsVisibility => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null
-            ? Visibility.Visible
-            : Visibility.Collapsed;
-        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null && LocalPlayer?.HasCompleted != true && LocalPlayer?.HasForfeited != true;
-        public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
-        public MultiplayerPlayerState? LocalPlayer { get; private set; }
-        public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
-
         public GeneratedRom? GeneratedRom
         {
             get
@@ -134,6 +135,8 @@ namespace Randomizer.App.ViewModels
                 OnPropertyChanged(nameof(GeneratingLabelVisibility));
             }
         }
+
+
 
         public void UpdateList(List<MultiplayerPlayerState> players, MultiplayerPlayerState? localPlayer)
         {
