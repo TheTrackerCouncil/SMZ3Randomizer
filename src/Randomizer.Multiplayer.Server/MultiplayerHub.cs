@@ -240,9 +240,29 @@ namespace Randomizer.Multiplayer.Server
 
             player.Game.ForfeitPlayer(playerToUpdate);
 
-            await Clients.Client(playerToUpdate.ConnectionId).SendAsync("ForfeitGame", new ForfeitGameResponse(player.Game.State));
+            await Clients.Group(player.Game.Guid).SendAsync("ForfeitGame",
+                new ForfeitGameResponse(player.Game.State, playerToUpdate.State));
+        }
 
-            await SendPlayerSyncResponse(playerToUpdate, false);
+        /// <summary>
+        /// Marks a player as having completed the game
+        /// </summary>
+        /// <param name="request"></param>
+        public async Task CompleteGame(CompleteGameRequest request)
+        {
+            var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                await SendErrorResponse("Unable to find player");
+                return;
+            }
+
+            LogInfo(player, $"Completing game for player {player.Guid}");
+
+            player.Game.CompletePlayer(player);
+
+            await Clients.Group(player.Game.Guid).SendAsync("CompleteGame",
+                new CompleteGameResponse(player.Game.State, player.State));
         }
 
         /// <summary>

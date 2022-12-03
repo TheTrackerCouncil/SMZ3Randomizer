@@ -30,6 +30,8 @@ public class MultiplayerGameService
         _client.DungeonTracked += ClientOnDungeonTracked;
         _client.PlayerUpdated += ClientOnPlayerUpdated;
         _client.PlayerStateRequested += ClientOnPlayerStateRequested;
+        _client.PlayerForfeited += ClientOnPlayerForfeited;
+        _client.PlayerCompleted += ClientOnPlayerCompleted;
     }
 
     public void SetTrackerState(TrackerState state)
@@ -46,6 +48,8 @@ public class MultiplayerGameService
     public PlayerTrackedDungeonEventHandler? PlayerTrackedDungeon;
 
     public PlayerSyncReceivedEventHandler? PlayerSyncReceived;
+
+    public PlayerEndedGameEventHandler? PlayerEndedGame;
 
     private void ClientOnDungeonTracked(MultiplayerPlayerState playerState, string dungeonName)
     {
@@ -75,10 +79,20 @@ public class MultiplayerGameService
         if (args != null) PlayerTrackedLocation?.Invoke(args);
     }
 
-    private void ClientOnPlayerUpdated(MultiplayerPlayerState playerState, MultiplayerPlayerState? previousState)
+    private void ClientOnPlayerUpdated(MultiplayerPlayerState playerState, MultiplayerPlayerState? previousState, bool isLocalPlayer)
     {
-        PlayerSyncReceived?.Invoke(_currentGameService.PlayerSyncReceived(playerState, previousState,
-            playerState.Guid == _client.CurrentPlayerGuid));
+        var args = _currentGameService.PlayerSyncReceived(playerState, previousState, isLocalPlayer);
+        if (args != null) PlayerSyncReceived?.Invoke(args);
+    }
+
+    private void ClientOnPlayerCompleted(MultiplayerPlayerState state, bool isLocalPlayer)
+    {
+        PlayerEndedGame?.Invoke(_currentGameService.PlayerEndedGame(state, isLocalPlayer, false, true));
+    }
+
+    private void ClientOnPlayerForfeited(MultiplayerPlayerState state, bool isLocalPlayer)
+    {
+        PlayerEndedGame?.Invoke(_currentGameService.PlayerEndedGame(state, isLocalPlayer, true, false));
     }
 
     private async void ClientOnPlayerStateRequested()
@@ -178,6 +192,16 @@ public class MultiplayerGameService
     public void OnTrackingStarted()
     {
         _currentGameService.OnTrackingStarted();
+    }
+
+    public void OnAutoTrackingConnected()
+    {
+        if (_client.Players == null) return;
+        foreach (var playerState in _client.Players.Where(x => x != _client.LocalPlayer))
+        {
+            var args = _currentGameService.PlayerSyncReceived(playerState, null, false);
+            if (args != null) PlayerSyncReceived?.Invoke(args);
+        }
     }
 
     public void UpdatePlayerState(MultiplayerPlayerState state, TrackerState trackerState)

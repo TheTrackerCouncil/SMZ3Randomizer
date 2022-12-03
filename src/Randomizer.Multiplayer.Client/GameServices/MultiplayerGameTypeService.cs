@@ -1,4 +1,5 @@
-﻿using Randomizer.Data.Options;
+﻿using System.Diagnostics.CodeAnalysis;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
@@ -25,6 +26,8 @@ public abstract class MultiplayerGameTypeService
     protected MultiplayerClientService Client { get; }
 
     protected Smz3MultiplayerRomGenerator MultiplayerRomGenerator { get; }
+
+    protected int LocalPlayerId => Client.LocalPlayer?.WorldId ?? 0;
 
     public TrackerState? TrackerState { get; set; }
 
@@ -153,117 +156,113 @@ public abstract class MultiplayerGameTypeService
 
     public PlayerTrackedLocationEventHandlerArgs? PlayerTrackedLocation(MultiplayerPlayerState player, int locationId, bool isLocalPlayer)
     {
-        var itemToGive = ItemType.Nothing;
+        if (TrackerState == null || isLocalPlayer) return null;
 
-        if (TrackerState != null && !isLocalPlayer)
-        {
-            var locationState =
-                TrackerState.LocationStates.First(x =>
-                    x.WorldId == player.WorldId && x.LocationId == locationId);
-            if (locationState.Cleared) return null;
-            locationState.Autotracked = true;
-            locationState.Cleared = true;
-            if (locationState.ItemWorldId == Client.LocalPlayer!.WorldId)
-            {
-                itemToGive = locationState.Item;
-            }
-        }
+        var locationState = TrackerState.LocationStates.FirstOrDefault(x =>
+            x.WorldId == player.WorldId && x.LocationId == locationId);
+        if (locationState == null || locationState.Autotracked) return null;
+
+        var itemToGive = locationState.ItemWorldId == LocalPlayerId ? locationState.Item : ItemType.Nothing;
 
         return new PlayerTrackedLocationEventHandlerArgs()
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
             IsLocalPlayer = isLocalPlayer,
-            LocationId = locationId,
+            LocationState = locationState,
             ItemToGive = itemToGive
         };
     }
 
     public PlayerTrackedItemEventHandlerArgs? PlayerTrackedItem(MultiplayerPlayerState player, ItemType itemType, int trackingValue, bool isLocalPlayer)
     {
-        if (TrackerState != null && itemType != ItemType.Nothing && !isLocalPlayer)
-        {
-            var itemState = TrackerState.ItemStates.First(x => x.WorldId == player.WorldId && x.Type == itemType);
-            if (itemState.TrackingState > trackingValue) return null;
-            itemState.TrackingState = trackingValue;
-        }
+        if (TrackerState == null || itemType == ItemType.Nothing || isLocalPlayer) return null;
+
+        var itemState = TrackerState.ItemStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Type == itemType);
+        if (itemState == null || itemState.TrackingState > trackingValue) return null;
+            //itemState.TrackingState = trackingValue;
 
         return new PlayerTrackedItemEventHandlerArgs()
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
             IsLocalPlayer = isLocalPlayer,
-            ItemType = itemType,
+            ItemState = itemState,
             TrackingValue = trackingValue,
         };
     }
 
     public PlayerTrackedBossEventHandlerArgs? PlayerTrackedBoss(MultiplayerPlayerState player, BossType bossType, bool isLocalPlayer)
     {
-        if (TrackerState != null && bossType != BossType.None && !isLocalPlayer)
-        {
-            var bossState = TrackerState.BossStates.First(x => x.WorldId == player.WorldId && x.Type == bossType);
-            if (bossState.Defeated) return null;
-            bossState.Defeated = true;
-        }
+        if (TrackerState == null || bossType == BossType.None || isLocalPlayer) return null;
+
+        var bossState = TrackerState.BossStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Type == bossType);
+        if (bossState == null || bossState.AutoTracked) return null;
 
         return new PlayerTrackedBossEventHandlerArgs()
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
             IsLocalPlayer = isLocalPlayer,
-            BossType = bossType,
+            BossState = bossState,
         };
     }
 
     public PlayerTrackedDungeonEventHandlerArgs? PlayerTrackedDungeon(MultiplayerPlayerState player, string dungeonName, bool isLocalPlayer)
     {
-        if (TrackerState != null && !isLocalPlayer)
-        {
-            var dungeonState =
-                TrackerState.DungeonStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Name == dungeonName);
-            if (dungeonState != null)
-            {
-                if (dungeonState.Cleared) return null;
-                dungeonState.Cleared = true;
-            }
-        }
+        if (TrackerState == null || isLocalPlayer) return null;
+        var dungeonState =
+            TrackerState.DungeonStates.FirstOrDefault(x => x.WorldId == player.WorldId && x.Name == dungeonName);
+        if (dungeonState == null || dungeonState.AutoTracked) return null;
 
         return new PlayerTrackedDungeonEventHandlerArgs()
         {
             PlayerId = player.WorldId!.Value,
             PlayerName = player.PlayerName,
             IsLocalPlayer = isLocalPlayer,
-            DungeonName = dungeonName,
+            DungeonState = dungeonState,
         };
     }
 
-    public PlayerSyncReceivedEventHandlerArgs PlayerSyncReceived(MultiplayerPlayerState player,
+    public PlayerSyncReceivedEventHandlerArgs? PlayerSyncReceived(MultiplayerPlayerState player,
         MultiplayerPlayerState? previousState, bool isLocalPlayer)
     {
-        var itemsToGive = new List<ItemType>();
+        if (TrackerState == null || isLocalPlayer || player.Locations == null || player.Items == null || player.Bosses == null || player.Dungeons == null) return null;
 
-        if (TrackerState != null && !isLocalPlayer)
-        {
-            foreach (var locationState in TrackerState.LocationStates.Where(x => x.WorldId == player.WorldId && !x.Cleared))
-            {
-                if (!player.Locations![locationState.LocationId] && !player.HasForfeited) continue;
-                locationState.Autotracked = true;
-                locationState.Cleared = true;
-                if (locationState.ItemWorldId == Client.LocalPlayer!.WorldId)
-                {
-                    itemsToGive.Add(locationState.Item);
-                }
-            }
-        }
+        // Gather data for locations that have been cleared
+        var clearedLocationIds = player.Locations.Where(x => x.Value || player.HasForfeited || player.HasCompleted).Select(x => x.Key).ToList();
+        var updatedLocationStates = TrackerState.LocationStates.Where(x =>
+            x.WorldId == player.WorldId && !x.Autotracked && clearedLocationIds.Contains(x.LocationId)).ToList();
+        var itemsToGive = updatedLocationStates.Where(x => x.ItemWorldId == LocalPlayerId).Select(x => x.Item).ToList();
+
+        // Gather items that have been updated
+        var trackedItems = player.Items.Where(x => x.Value > 0).Select(x => x.Key).ToList();
+        var updatedItemStates = TrackerState.ItemStates.Where(x =>
+            x.WorldId == player.WorldId && x.Type != null && trackedItems.Contains(x.Type.Value) &&
+            player.Items[x.Type.Value] > x.TrackingState).Select(x => (x, player.Items[x.Type!.Value])).ToList();
+
+        // Gather bosses that have been defeated
+        var defeatedBosses = player.Bosses.Where(x => x.Value).Select(x => x.Key).ToList();
+        var updatedBossStates = TrackerState.BossStates.Where(x =>
+            x.WorldId == player.WorldId && x.Type != BossType.None && !x.AutoTracked && defeatedBosses.Contains(x.Type)).ToList();
+
+        // Gather dungeons that have been cleared
+        var clearedDungeons = player.Dungeons.Where(x => x.Value).Select(x => x.Key).ToList();
+        var updatedDungeonStates = TrackerState.DungeonStates.Where(x =>
+            x.WorldId == player.WorldId && !x.AutoTracked && clearedDungeons.Contains(x.Name)).ToList();
 
         return new PlayerSyncReceivedEventHandlerArgs()
         {
             PlayerId = player.WorldId,
             PlayerName = player.PlayerName,
             IsLocalPlayer = isLocalPlayer,
+            UpdatedLocationStates = updatedLocationStates,
+            UpdatedItemStates = updatedItemStates,
+            UpdatedBossStates = updatedBossStates,
+            UpdatedDungeonStates = updatedDungeonStates,
             ItemsToGive = itemsToGive,
-            DidForfeit = player.HasForfeited && previousState?.HasForfeited != true
+            DidForfeit = player.HasForfeited && previousState?.HasForfeited != true,
+            DidComplete = player.HasCompleted && previousState?.HasCompleted != true
         };
     }
 
@@ -273,6 +272,18 @@ public abstract class MultiplayerGameTypeService
         state.Items = trackerState.ItemStates.Where(x => x.WorldId == state.WorldId).Where(x => x.Type != null && x.Type != ItemType.Nothing).ToDictionary(x => x.Type!.Value, x => x.TrackingState);
         state.Bosses = trackerState.BossStates.Where(x => x.WorldId == state.WorldId).Where(x => x.Type != BossType.None).ToDictionary(x => x.Type, x => x.Defeated);
         state.Dungeons = trackerState.DungeonStates.Where(x => x.WorldId == state.WorldId).ToDictionary(x => x.Name, x => x.Cleared);
+    }
+
+    public PlayerEndedGameEventHandlerArgs PlayerEndedGame(MultiplayerPlayerState player, bool isLocalPlayer, bool didForfeit, bool didComplete)
+    {
+        return new PlayerEndedGameEventHandlerArgs
+        {
+            PlayerId = player.WorldId,
+            PlayerName = player.PlayerName,
+            IsLocalPlayer = isLocalPlayer,
+            DidForfeit = didForfeit,
+            DidComplete = didComplete
+        };
     }
 
     public abstract void OnTrackingStarted();

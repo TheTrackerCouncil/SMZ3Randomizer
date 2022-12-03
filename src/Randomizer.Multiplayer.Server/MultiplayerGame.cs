@@ -217,12 +217,54 @@ public class MultiplayerGame
         if (player.State.IsAdmin)
         {
             player.State.IsAdmin = false;
-            var newAdmin = _players.Values.FirstOrDefault(x => !x.State.HasForfeited);
+            var newAdmin = _players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
             if (newAdmin != null)
             {
                 newAdmin.State.IsAdmin = true;
                 AdminPlayer = newAdmin;
             }
+        }
+
+        if (_players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
+        {
+            State.Status = MultiplayerGameStatus.Completed;
+        }
+
+        State.LastMessage = DateTimeOffset.Now;
+
+        if (!State.HasGameStarted)
+        {
+            s_playerConnections.TryRemove(player.ConnectionId, out _);
+            _players.TryRemove(player.Guid, out _);
+        }
+        else
+        {
+            UpdatePlayerStatus(player);
+        }
+    }
+
+    /// <summary>
+    /// Forfeits a player by either removing them from the game if the game hasn't started yet or by marking the
+    /// player as forfeit so players can collect their items if the game has already started
+    /// </summary>
+    /// <param name="player">The player to mark as forfeit</param>
+    public void CompletePlayer(MultiplayerPlayer player)
+    {
+        player.State.HasCompleted = true;
+        if (player.State.IsAdmin)
+        {
+            player.State.IsAdmin = false;
+            var newAdmin = _players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
+            if (newAdmin != null)
+            {
+                newAdmin.State.IsAdmin = true;
+                AdminPlayer = newAdmin;
+            }
+        }
+
+        if (_players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
+        {
+            State.Status = MultiplayerGameStatus.Completed;
         }
 
         State.LastMessage = DateTimeOffset.Now;

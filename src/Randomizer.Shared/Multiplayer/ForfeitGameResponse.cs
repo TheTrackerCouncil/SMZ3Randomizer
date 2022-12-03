@@ -2,7 +2,10 @@
 
 public class ForfeitGameResponse : MultiplayerResponse
 {
-    public ForfeitGameResponse(MultiplayerGameState gameState) : base(gameState)
+    public ForfeitGameResponse(MultiplayerGameState gameState, MultiplayerPlayerState playerstate) : base(gameState)
     {
+        PlayerState = playerstate;
     }
+
+    public MultiplayerPlayerState PlayerState { get; }
 }

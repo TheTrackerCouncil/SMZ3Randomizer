@@ -1,4 +1,5 @@
 ﻿using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Client;
@@ -9,6 +10,6 @@ public class PlayerTrackedDungeonEventHandlerArgs
 {
     public int PlayerId { get; init; }
     public string PlayerName { get; init; } = "";
-    public string DungeonName { get; init; } = "";
+    public TrackerDungeonState DungeonState { get; init; } = null!;
     public bool IsLocalPlayer { get; init; }
 }

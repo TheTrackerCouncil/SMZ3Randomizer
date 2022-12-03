@@ -52,7 +52,7 @@ namespace Randomizer.App.ViewModels
         }
 
         public Visibility EditConfigVisibility => GameStatus == MultiplayerGameStatus.Created && IsLocalPlayer ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility ForfeitVisiblity => IsLocalPlayer || IsLocalPlayerAdmin ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ForfeitVisiblity => (IsLocalPlayer || IsLocalPlayerAdmin) && !State.HasForfeited && !State.HasCompleted ? Visibility.Visible : Visibility.Collapsed;
 
         public void Update(MultiplayerPlayerState state)
         {

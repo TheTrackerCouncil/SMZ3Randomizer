@@ -596,7 +596,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 case 0:
                     {
 
-                        var isInLogic = itemLocations.Any(x => x.IsAvailable(ItemService.GetProgression(x.Region)));
+                        var isInLogic = itemLocations.Any(x => x.IsAvailable(ItemService.GetProgression(x.Region)) && x.World.IsLocalWorld);
                         if (isInLogic)
                         {
                             var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
@@ -657,6 +657,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             }
                         }
 
+                        var otherWorldLocation = itemLocations.FirstOrDefault(x => !x.World.IsLocalWorld);
+                        if (otherWorldLocation != null)
+                        {
+                            return GiveItemHint(x => x.ItemInPlayerWorld, item,
+                                otherWorldLocation.World.Config.PhoneticName);
+                        }
+
+
                         if (_playthrough == null)
                         {
                             return GiveItemHint(x => x.PlaythroughImpossible, item);
@@ -694,7 +702,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item, x => true);
 
-                        if (randomLocation?.World?.IsLocalWorld == false)
+                        if (randomLocation?.World.IsLocalWorld == false)
                         {
                             if (randomLocation?.Region is Z3Region)
                                 return GiveItemHint(x => x.ItemInPlayerWorldALttP, item,
@@ -810,7 +818,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private Location? GetRandomItemLocationWithFilter(Item item, Func<Location, bool> predicate)
         {
-            var randomLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true)
+            var randomLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
                 .Where(predicate)
                 .Random();
 
@@ -818,7 +826,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 // If the item is not at any accessible location, try to look in
                 // out-of-logic places, too.
-                randomLocation = WorldService.Locations(outOfLogic: true,  itemFilter: item.Type, keysanityByRegion: true)
+                randomLocation = WorldService.Locations(outOfLogic: true,  itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
                     .Where(predicate)
                     .Random();
             }

@@ -115,7 +115,7 @@ namespace Randomizer.App.ViewModels
         public Visibility PlayButtonsVisibility => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null
             ? Visibility.Visible
             : Visibility.Collapsed;
-        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null;
+        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null && LocalPlayer?.HasCompleted != true && LocalPlayer?.HasForfeited != true;
         public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
         public MultiplayerPlayerState? LocalPlayer { get; private set; }
         public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
@@ -147,7 +147,10 @@ namespace Randomizer.App.ViewModels
             LocalPlayer = localPlayer;
             var playerViewModel = Players.FirstOrDefault(x => x.PlayerGuid == player.Guid);
             if (playerViewModel != null)
+            {
                 playerViewModel.Update(player);
+                if (player == LocalPlayer) OnPropertyChanged(nameof(PlayButtonsEnabled));
+            }
             else
             {
                 Players = Players.Concat(new List<MultiplayerPlayerStateViewModel>()

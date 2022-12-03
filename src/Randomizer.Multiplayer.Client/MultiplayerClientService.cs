@@ -30,10 +30,11 @@ namespace Randomizer.Multiplayer.Client
         public event MultiplayerGenericEventHandler? GameCreated;
         public event MultiplayerGenericEventHandler? GameJoined;
         public event MultiplayerGenericEventHandler? GameRejoined;
-        public event MultiplayerGenericEventHandler? GameForfeit;
         public event MultiplayerGenericEventHandler? PlayerListUpdated;
         public event MultiplayerGenericEventHandler? GameStateUpdated;
         public event MultiplayerGenericEventHandler? PlayerStateRequested;
+        public event PlayerFinishedEventHandler? PlayerForfeited;
+        public event PlayerFinishedEventHandler? PlayerCompleted;
         public event PlayerUpdatedEventHandler? PlayerUpdated;
         public event GameStartedEventHandler? GameStarted;
         public event TrackLocationEventHandler? LocationTracked;
@@ -97,6 +98,8 @@ namespace Randomizer.Multiplayer.Client
             _connection.On<RejoinGameResponse>("RejoinGame", OnRejoinGame);
 
             _connection.On<ForfeitGameResponse>("ForfeitGame", OnForfeitGame);
+
+            _connection.On<CompleteGameResponse>("CompleteGame", OnCompleteGame);
 
             _connection.On<PlayerSyncResponse>("PlayerSync", OnPlayerSync);
 
@@ -294,10 +297,18 @@ namespace Randomizer.Multiplayer.Client
         }
 
         /// <summary>
+        /// Marks the player as having completed the game
+        /// </summary>
+        public async Task CompleteGame()
+        {
+            await MakeRequest("CompleteGame", new CompleteGameRequest());
+        }
+
+        /// <summary>
         /// Updates the current game's status
         /// </summary>
         /// <param name="gameStatus">The new status to update. Set to null to not update.</param>
-        public async Task UpdateGameState(MultiplayerGameStatus? gameStatus)
+        public async Task UpdateGameStatus(MultiplayerGameStatus? gameStatus)
         {
             await MakeRequest("UpdateGameState",
                 new UpdateGameStateRequest(gameStatus));
@@ -373,7 +384,7 @@ namespace Randomizer.Multiplayer.Client
         {
             _logger.LogInformation("Player list sync from server. Num Players: {PlayerCount}", response.AllPlayers.Count);
             UpdatePlayerList(response.AllPlayers);
-            await UpdateGameState(response.GameState);
+            await UpdateLocalGameState(response.GameState);
         }
 
         /// <summary>
@@ -391,7 +402,7 @@ namespace Randomizer.Multiplayer.Client
         /// <param name="response"></param>
         private async Task OnUpdateGameState(UpdateGameStateResponse response)
         {
-            await UpdateGameState(response.GameState);
+            await UpdateLocalGameState(response.GameState);
             GameStateUpdated?.Invoke();
         }
 
@@ -408,7 +419,7 @@ namespace Randomizer.Multiplayer.Client
             CurrentPlayerKey = response.PlayerKey;
             GameCreated?.Invoke();
             UpdatePlayerList(response.AllPlayers);
-            await UpdateGameState(response.GameState);
+            await UpdateLocalGameState(response.GameState);
             await SaveGameToDatabase(response.GameState, response.PlayerGuid, response.PlayerKey);
         }
 
@@ -425,7 +436,7 @@ namespace Randomizer.Multiplayer.Client
             CurrentPlayerKey = response.PlayerKey;
             GameJoined?.Invoke();
             UpdatePlayerList(response.AllPlayers);
-            await UpdateGameState(response.GameState);
+            await UpdateLocalGameState(response.GameState);
             await SaveGameToDatabase(response.GameState, response.PlayerGuid, response.PlayerKey);
         }
 
@@ -441,7 +452,7 @@ namespace Randomizer.Multiplayer.Client
             CurrentPlayerGuid = response.PlayerGuid;
             CurrentPlayerKey = response.PlayerKey;
             UpdatePlayerList(response.AllPlayers);
-            await UpdateGameState(response.GameState);
+            await UpdateLocalGameState(response.GameState);
             GameRejoined?.Invoke();
 
             // If the game has started but we don't have any generation data, request it from the server
@@ -458,12 +469,28 @@ namespace Randomizer.Multiplayer.Client
         private async Task OnForfeitGame(ForfeitGameResponse response)
         {
             _logger.LogInformation("Forfeit game");
-            if (response.GameState.Status == MultiplayerGameStatus.Created && DatabaseGameDetails != null)
+            var isLocalPlayer = response.PlayerState.Guid == CurrentPlayerGuid;
+            if (isLocalPlayer && response.GameState.Status == MultiplayerGameStatus.Created && DatabaseGameDetails != null)
             {
                 _dbContext.MultiplayerGames.Remove(DatabaseGameDetails);
+                await _dbContext.SaveChangesAsync();
             }
-            await UpdateGameState(response.GameState);
-            GameForfeit?.Invoke();
+            await UpdateLocalGameState(response.GameState);
+            UpdateLocalPlayerState(response.PlayerState);
+            PlayerForfeited?.Invoke(response.PlayerState, isLocalPlayer);
+        }
+
+        /// <summary>
+        /// On forfeiting from a game
+        /// </summary>
+        /// <param name="response"></param>
+        private async Task OnCompleteGame(CompleteGameResponse response)
+        {
+            _logger.LogInformation("Complete game");
+            var isLocalPlayer = response.PlayerState.Guid == CurrentPlayerGuid;
+            await UpdateLocalGameState(response.GameState);
+            UpdateLocalPlayerState(response.PlayerState);
+            PlayerCompleted?.Invoke(response.PlayerState, isLocalPlayer);
         }
 
         /// <summary>
@@ -473,17 +500,8 @@ namespace Randomizer.Multiplayer.Client
         private async Task OnPlayerSync(PlayerSyncResponse response)
         {
             _logger.LogInformation("Received state for {PlayerName}", response.PlayerState.PlayerName);
-            var previous = Players?.FirstOrDefault(x => x.Guid == response.PlayerState.Guid);
-            if (previous != null) Players?.Remove(previous);
-
-            if (response.PlayerState.HasForfeited && response.GameState.Status == MultiplayerGameStatus.Created)
-            {
-                UpdatePlayerList(Players);
-                return;
-            }
-            Players?.Add(response.PlayerState);
-            await UpdateGameState(response.GameState);
-            PlayerUpdated?.Invoke(response.PlayerState, previous);
+            await UpdateLocalGameState(response.GameState);
+            UpdateLocalPlayerState(response.PlayerState);
         }
 
         private void OnTrackBoss(TrackBossResponse obj)
@@ -521,7 +539,7 @@ namespace Randomizer.Multiplayer.Client
         private async Task OnStartGame(StartGameResponse obj)
         {
             _logger.LogInformation("Received start game");
-            await UpdateGameState(obj.GameState);
+            await UpdateLocalGameState(obj.GameState);
             UpdatePlayerList(obj.AllPlayers);
             var data = obj.PlayerGenerationData.Select(MultiplayerPlayerGenerationData.FromString).NonNull().ToList();
             GameStarted?.Invoke(data);
@@ -535,11 +553,26 @@ namespace Randomizer.Multiplayer.Client
             PlayerListUpdated?.Invoke();
         }
 
-        private async Task UpdateGameState(MultiplayerGameState gameState)
+        private async Task UpdateLocalGameState(MultiplayerGameState gameState)
         {
             CurrentGameState = gameState;
-            await UpdateGameStatus();
+            await UpdateLocalGameStatus();
             GameStateUpdated?.Invoke();
+        }
+
+        private void UpdateLocalPlayerState(MultiplayerPlayerState playerState)
+        {
+            var previous = Players?.FirstOrDefault(x => x.Guid == playerState.Guid);
+            if (previous != null) Players?.Remove(previous);
+
+            if (playerState.HasForfeited && CurrentGameState?.Status == MultiplayerGameStatus.Created)
+            {
+                UpdatePlayerList(Players);
+                return;
+            }
+
+            Players?.Add(playerState);
+            PlayerUpdated?.Invoke(playerState, previous, playerState.Guid == CurrentGameGuid);
         }
 
         private bool VerifyConnection()
@@ -588,7 +621,7 @@ namespace Randomizer.Multiplayer.Client
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task UpdateGameStatus()
+        private async Task UpdateLocalGameStatus()
         {
             if (DatabaseGameDetails == null || CurrentGameState == null) return;
             DatabaseGameDetails.Status = CurrentGameState.Status;
