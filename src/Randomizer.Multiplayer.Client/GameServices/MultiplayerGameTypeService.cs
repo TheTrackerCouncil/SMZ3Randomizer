@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Randomizer.Data.Options;
+﻿using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
@@ -60,13 +59,21 @@ public abstract class MultiplayerGameTypeService
     /// </summary>
     /// <param name="state">The state of the player</param>
     /// <param name="world">The world of the player</param>
+    /// <param name="allWorlds"></param>
     /// <returns>The newly created multiplayer player state</returns>
-    public MultiplayerPlayerState GetPlayerDefaultState(MultiplayerPlayerState state, World world)
+    public MultiplayerPlayerState GetPlayerDefaultState(MultiplayerPlayerState state, World world, IEnumerable<World> allWorlds)
     {
+        // Grab the item types that belong to this player, not the ones that are in their world
+        var playerItemTypes = allWorlds
+            .SelectMany(x => x.LocationItems)
+            .Where(x => x.World.Id == world.Id)
+            .Select(x => x.Type)
+            .Distinct()
+            .ToList();
         state.Locations = world.Locations.ToDictionary(x => x.Id, _ => false);
-        state.Items = world.LocationItems.Select(x => x.Type).Distinct().ToDictionary(x => x, _ => 0);
+        state.Items = playerItemTypes.ToDictionary(x => x, _ => 0);
         state.Bosses = world.GoldenBosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
-        state.Dungeons = world.Dungeons.ToDictionary(x => x.DungeonName, _ => false);
+        state.Dungeons = world.Dungeons.ToDictionary(x => x.GetType().Name, _ => false);
         return state;
     }
 
@@ -197,7 +204,7 @@ public abstract class MultiplayerGameTypeService
     /// <param name="dungeon">The dungeon that has been tracked</param>
     public async Task TrackDungeon(IDungeon dungeon)
     {
-        await Client.TrackDungeon(dungeon.DungeonName, (dungeon as Region)!.World.Guid);
+        await Client.TrackDungeon(dungeon.DungeonState.Name, (dungeon as Region)!.World.Guid);
     }
 
     /// <summary>
@@ -293,7 +300,6 @@ public abstract class MultiplayerGameTypeService
     /// </summary>
     /// <param name="player">The player that tracked the dungeon</param>
     /// <param name="dungeonName">The name of the dungeon that was tracked</param>
-    /// <param name="isLocalPlayer"></param>
     /// <param name="isLocalPlayer">If it was the local player tracking the item</param>
     public PlayerTrackedDungeonEventHandlerArgs? PlayerTrackedDungeon(MultiplayerPlayerState player, string dungeonName, bool isLocalPlayer)
     {
@@ -378,9 +384,10 @@ public abstract class MultiplayerGameTypeService
             .Select(x => (TrackerState: x, PrevValue: state.Locations?[x.LocationId] ?? false))
             .ToDictionary(x => x.TrackerState.LocationId, x => x.TrackerState.Autotracked || x.PrevValue);
 
+        var previousItemTypes = state.Items?.Keys.ToList() ?? new List<ItemType>();
         state.Items = trackerState.ItemStates
             .Where(x => x.WorldId == state.WorldId && x.Type != null && x.Type != ItemType.Nothing)
-            .Select(x => (TrackerState: x, PrevValue: state.Items?[x.Type!.Value] ?? 0))
+            .Select(x => (TrackerState: x, PrevValue: previousItemTypes.Contains(x.Type!.Value) ? state.Items![x.Type!.Value] : 0))
             .ToDictionary(x => x.TrackerState.Type!.Value, x => Math.Max(x.TrackerState.TrackingState, x.PrevValue));
 
         state.Bosses = trackerState.BossStates

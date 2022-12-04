@@ -32,7 +32,16 @@ public class MultiplayerGameService : IDisposable
         _client.PlayerForfeited += ClientOnPlayerForfeited;
         _client.PlayerCompleted += ClientOnPlayerCompleted;
         _client.GameRejoined += ClientOnGameRejoined;
+        _client.ConnectionClosed += ClientOnConnectionClosed;
         _currentGameService = UpdateGameService(_client.GameType ?? MultiplayerGameType.Multiworld);
+    }
+
+    private async void ClientOnConnectionClosed(string error, Exception? exception)
+    {
+        if (_currentGameService.TrackerState != null && _client.CurrentGameGuid != null)
+        {
+            await _client.Reconnect();
+        }
     }
 
     public PlayerTrackedLocationEventHandler? PlayerTrackedLocation;
@@ -80,7 +89,7 @@ public class MultiplayerGameService : IDisposable
         foreach (var player in playerList)
         {
             var state = _currentGameService.GetPlayerDefaultState(player,
-                seedData.WorldGenerationData.GetWorld(player.Guid).World);
+                seedData.WorldGenerationData.GetWorld(player.Guid).World, seedData.WorldGenerationData.Worlds);
             _logger.LogInformation("Pushing state");
             await _client.UpdatePlayerState(state, false);
             await _client.SubmitPlayerGenerationData(player.Guid,
@@ -204,6 +213,7 @@ public class MultiplayerGameService : IDisposable
         _client.PlayerForfeited -= ClientOnPlayerForfeited;
         _client.PlayerCompleted -= ClientOnPlayerCompleted;
         _client.GameRejoined -= ClientOnGameRejoined;
+        _client.ConnectionClosed -= ClientOnConnectionClosed;
         GC.SuppressFinalize(this);
     }
 
