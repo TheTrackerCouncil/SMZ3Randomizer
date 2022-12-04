@@ -60,10 +60,11 @@ namespace Randomizer.Shared.Enums
         /// categories.
         /// </summary>
         /// <param name="itemType">The type of item.</param>
-        /// <param name="categories">The categories to match.</param>
+        /// <param name="isZeldaKeysanity">If playing with Zelda Key Sanity enabled.</param>
+        /// <param name="isMetroidKeysanity">If playing with Metroid Key Sanity enabled.</param>
         /// <returns>
         /// <see langword="true"/> if <paramref name="itemType"/> matches any of
-        /// <paramref name="categories"/>; otherwise, <see langword="false"/>.
+        /// could possibly be progression; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool IsPossibleProgression(this ItemType itemType, bool isZeldaKeysanity, bool isMetroidKeysanity)
         {

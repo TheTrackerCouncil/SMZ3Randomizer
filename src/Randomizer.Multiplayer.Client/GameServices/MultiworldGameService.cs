@@ -1,4 +1,5 @@
-﻿using Randomizer.Data.Options;
+﻿using Microsoft.Extensions.Logging;
+using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Multiplayer;
 using Randomizer.SMZ3.Generation;
@@ -8,10 +9,12 @@ namespace Randomizer.Multiplayer.Client.GameServices;
 public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
 {
     private ITrackerStateService _trackerStateService;
+    private ILogger<MultiworldGameService> _logger;
 
-    public MultiworldGameService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator,  MultiplayerClientService client, ITrackerStateService trackerStateService) : base(randomizer, multiplayerRomGenerator, client)
+    public MultiworldGameService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator,  MultiplayerClientService client, ITrackerStateService trackerStateService, ILogger<MultiworldGameService> logger) : base(randomizer, multiplayerRomGenerator, client)
     {
         _trackerStateService = trackerStateService;
+        _logger = logger;
     }
 
     public override SeedData? GenerateSeed(string seed, List<MultiplayerPlayerState> players,
@@ -59,8 +62,16 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
 
     public override void OnTrackingStarted()
     {
-        EnableSync = true;
-        Task.Run(SyncPlayerState);
+
+    }
+
+    public override void OnAutoTrackerConnected()
+    {
+        if (!EnableSync)
+        {
+            EnableSync = true;
+            Task.Run(SyncPlayerState);
+        }
     }
 
     private bool EnableSync { get; set; }

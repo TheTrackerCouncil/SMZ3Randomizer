@@ -178,8 +178,13 @@ public class MultiplayerGameService : IDisposable
     /// Called when auto tracking has successfully been connected.
     /// Used to check the current player states to see if any items need to be given to the player
     /// </summary>
-    public void OnAutoTrackingConnected()
+    public async Task OnAutoTrackingConnected()
     {
+        if (!_client.IsConnected)
+        {
+            await _client.Reconnect();
+            return;
+        }
         if (_client.Players == null) return;
         foreach (var playerState in _client.Players.Where(x => x != _client.LocalPlayer))
         {
@@ -258,9 +263,22 @@ public class MultiplayerGameService : IDisposable
         await _client.UpdatePlayerState(_client.LocalPlayer);
     }
 
-    private void ClientOnGameRejoined()
+    private async void ClientOnGameRejoined()
     {
         UpdateGameService(_client.GameType ?? MultiplayerGameType.Multiworld);
+        if (_client.Players == null) return;
+
+        // If the player rejoined, make sure they didn't miss anything
+        foreach (var playerState in _client.Players.Where(x => x != _client.LocalPlayer))
+        {
+            var args = _currentGameService.PlayerSyncReceived(playerState, null, false);
+            if (args != null) PlayerSyncReceived?.Invoke(args);
+        }
+
+        // Also push out the latest state for the local player in case they did something while not connected
+        if (_client.LocalPlayer == null || _currentGameService.TrackerState == null) return;
+        _currentGameService.UpdatePlayerState(_client.LocalPlayer, _currentGameService.TrackerState);
+        await _client.UpdatePlayerState(_client.LocalPlayer);
     }
     #endregion
 

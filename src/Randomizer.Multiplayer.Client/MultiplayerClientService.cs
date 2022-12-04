@@ -659,11 +659,15 @@ namespace Randomizer.Multiplayer.Client
             {
                 await _connection!.InvokeAsync(methodName, argument);
             }
-            catch (Exception e) when (e is WebSocketException or HubException or TimeoutException)
+            catch (Exception e)
             {
-                _logger.LogError(e, "Connection to server lost");
-                Error?.Invoke($"Connection to server lost");
+                if (e is WebSocketException or HubException or TimeoutException or InvalidOperationException)
+                {
+                    _logger.LogError(e, "Connection to server lost");
+                    Error?.Invoke($"Connection to server lost");
+                }
             }
+
         }
 
         private async Task SaveGameToDatabase(MultiplayerGameState gameState, string playerGuid, string playerKey)

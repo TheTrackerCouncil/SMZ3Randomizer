@@ -96,7 +96,7 @@ namespace Randomizer.SMZ3.Generation
             _logger.LogDebug("Possible in game hints");
             foreach (var hint in allHints.Distinct())
             {
-                _logger.LogDebug(hint);
+                _logger.LogDebug("{Hint}", hint);
             }
 
             return allHints.Distinct().Shuffle(_random);
@@ -130,7 +130,7 @@ namespace Randomizer.SMZ3.Generation
                 .NonNull();
 
             foreach (var hint in hints)
-                _logger.LogInformation(hint);
+                _logger.LogInformation("{Hint}", hint);
 
             return hints;
         }

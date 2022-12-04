@@ -495,7 +495,7 @@ namespace Randomizer.SMZ3.Tracking
 
             if (amount > dungeon.DungeonState.RemainingTreasure && !dungeon.DungeonState.HasManuallyClearedTreasure)
             {
-                _logger.LogWarning("Trying to track {amount} treasures in a dungeon with only {left} treasures left.", amount, dungeon.DungeonState.RemainingTreasure);
+                _logger.LogWarning("Trying to track {Amount} treasures in a dungeon with only {Left} treasures left.", amount, dungeon.DungeonState.RemainingTreasure);
                 Say(Responses.DungeonTooManyTreasuresTracked?.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonState.RemainingTreasure, amount));
                 return false;
             }
@@ -1138,7 +1138,7 @@ namespace Randomizer.SMZ3.Tracking
                     }
                     else
                     {
-                        _logger.LogWarning("Encountered multiple item with counter 0: {item} has counter {counter}", item, item.Counter);
+                        _logger.LogWarning("Encountered multiple item with counter 0: {Item} has counter {Counter}", item, item.Counter);
                         if (stateResponse)
                             Say(Responses.TrackedItem.Format(itemName, item.Metadata.NameWithArticle));
                     }
@@ -1238,7 +1238,7 @@ namespace Randomizer.SMZ3.Tracking
                             var missingItems = allMissingCombinations.MinBy(x => x.Length);
                             if (missingItems == null)
                             {
-                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Name, locationInfo.Name);
+                                Say(x => x.TrackedOutOfLogicItemTooManyMissing, item.Metadata.Name, locationInfo.Name);
                             }
                             // Do not say anything if the only thing missing are keys
                             else
@@ -1250,7 +1250,7 @@ namespace Randomizer.SMZ3.Tracking
                                 if (itemsChanged && !onlyKeys)
                                 {
                                     var missingItemNames = NaturalLanguage.Join(missingItems.Select(ItemService.GetName));
-                                    Say(x => x.TrackedOutOfLogicItem, item.Name, locationInfo.Name, missingItemNames);
+                                    Say(x => x.TrackedOutOfLogicItem, item.Metadata.Name, locationInfo.Name, missingItemNames);
                                 }
                             }
 
@@ -1289,16 +1289,44 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
-        /// Tracks multiple items
+        /// Tracks multiple items at the same time
         /// </summary>
-        /// <param name="items"></param>
-        public void TrackItems(List<Item> items)
+        /// <param name="items">The items to track</param>
+        /// <param name="autoTracked">If the items were tracked via auto tracker</param>
+        /// <param name="giftedItem">If the items were gifted to the player</param>
+        public void TrackItems(List<Item> items, bool autoTracked, bool giftedItem)
         {
+            if (items.Count == 1)
+            {
+                TrackItem(items.First(), null, null, false, autoTracked, null, giftedItem);
+                return;
+            }
+
             ItemService.ResetProgression();
 
             foreach (var item in items)
             {
                 item.Track();
+            }
+
+            if (items.Count == 2)
+            {
+                Say(x => x.TrackedTwoItems, items[0].Metadata.Name, items[1].Metadata.Name);
+            }
+            else if (items.Count == 3)
+            {
+                Say(x => x.TrackedThreeItems, items[0].Metadata.Name, items[1].Metadata.Name, items[2].Metadata.Name);
+            }
+            else
+            {
+                var itemsToSay = items.Where(x => x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(2).ToList();
+                if (itemsToSay.Count() < 2)
+                {
+                    var numToTake = 2 - itemsToSay.Count();
+                    itemsToSay.AddRange(items.Where(x => !x.Type.IsPossibleProgression(World.Config.ZeldaKeysanity, World.Config.MetroidKeysanity)).Take(numToTake));
+                }
+
+                Say(x => x.TrackedManyItems, itemsToSay[0].Metadata.Name, itemsToSay[1].Metadata.Name, items.Count - 2);
             }
 
             OnItemTracked(new ItemTrackedEventArgs(null, null, null, true));
@@ -1574,7 +1602,7 @@ namespace Randomizer.SMZ3.Tracking
 
                         var item = location.Item;
                         if (!item.Track())
-                            _logger.LogWarning("Failed to track {itemType} in {area}.", item.Name, area.Name); // Probably the compass or something, who cares
+                            _logger.LogWarning("Failed to track {ItemType} in {Area}.", item.Name, area.Name); // Probably the compass or something, who cares
                         else
                             itemsTracked.Add(item);
                         if (IsTreasure(location.Item) || World.Config.ZeldaKeysanity)

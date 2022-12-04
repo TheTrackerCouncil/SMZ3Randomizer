@@ -364,16 +364,34 @@ public abstract class MultiplayerGameTypeService
     }
 
     /// <summary>
-    /// Updates a player state to match the current tracker state
+    /// Updates a player state by merging the previous multiplayer state and the current tracker state
     /// </summary>
     /// <param name="state">The player that is being updated</param>
     /// <param name="trackerState">The tracker state for the player</param>
     public void UpdatePlayerState(MultiplayerPlayerState state, TrackerState trackerState)
     {
-        state.Locations = trackerState.LocationStates.Where(x => x.WorldId == state.WorldId).ToDictionary(x => x.LocationId, x => x.Autotracked);
-        state.Items = trackerState.ItemStates.Where(x => x.WorldId == state.WorldId).Where(x => x.Type != null && x.Type != ItemType.Nothing).ToDictionary(x => x.Type!.Value, x => x.TrackingState);
-        state.Bosses = trackerState.BossStates.Where(x => x.WorldId == state.WorldId).Where(x => x.Type != BossType.None).ToDictionary(x => x.Type, x => x.Defeated);
-        state.Dungeons = trackerState.DungeonStates.Where(x => x.WorldId == state.WorldId).ToDictionary(x => x.Name, x => x.Cleared);
+        // Grab the tracker state values for the current world, then get the applicable multiplayer state value for
+        // that same location, item, etc. Use the greater of the two values to update the state dictionaries to send
+        // over to the server
+        state.Locations = trackerState.LocationStates
+            .Where(x => x.WorldId == state.WorldId)
+            .Select(x => (TrackerState: x, PrevValue: state.Locations?[x.LocationId] ?? false))
+            .ToDictionary(x => x.TrackerState.LocationId, x => x.TrackerState.Autotracked || x.PrevValue);
+
+        state.Items = trackerState.ItemStates
+            .Where(x => x.WorldId == state.WorldId && x.Type != null && x.Type != ItemType.Nothing)
+            .Select(x => (TrackerState: x, PrevValue: state.Items?[x.Type!.Value] ?? 0))
+            .ToDictionary(x => x.TrackerState.Type!.Value, x => Math.Max(x.TrackerState.TrackingState, x.PrevValue));
+
+        state.Bosses = trackerState.BossStates
+            .Where(x => x.WorldId == state.WorldId && x.Type != BossType.None)
+            .Select(x => (TrackerState: x, PrevValue: state.Bosses?[x.Type] ?? false))
+            .ToDictionary(x => x.TrackerState.Type, x => x.TrackerState.Defeated || x.PrevValue);
+
+        state.Dungeons = trackerState.DungeonStates
+            .Where(x => x.WorldId == state.WorldId)
+            .Select(x => (TrackerState: x, PrevValue: state.Dungeons?[x.Name] ?? false))
+            .ToDictionary(x => x.TrackerState.Name, x => x.TrackerState.Cleared || x.PrevValue);
     }
 
     /// <summary>
@@ -398,4 +416,6 @@ public abstract class MultiplayerGameTypeService
     }
 
     public abstract void OnTrackingStarted();
+
+    public abstract void OnAutoTrackerConnected();
 }
