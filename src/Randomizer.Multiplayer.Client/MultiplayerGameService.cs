@@ -200,6 +200,7 @@ public class MultiplayerGameService : IDisposable
             var args = _currentGameService.PlayerSyncReceived(playerState, null, false);
             if (args != null) PlayerSyncReceived?.Invoke(args);
         }
+        _currentGameService.OnAutoTrackerConnected();
     }
 
     public void Dispose()
