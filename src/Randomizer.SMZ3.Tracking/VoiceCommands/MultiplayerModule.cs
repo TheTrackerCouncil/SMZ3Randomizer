@@ -64,7 +64,7 @@ public class MultiplayerModule : TrackerModule
                 if (Tracker.AutoTracker?.IsConnected != true) return;
             } while (Tracker.AutoTracker!.CurrentGame == Game.Neither);
             Logger.LogInformation("Requesting player sync");
-            _multiplayerGameService.OnAutoTrackingConnected();
+            await _multiplayerGameService.OnAutoTrackingConnected();
         });
     }
 
