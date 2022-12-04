@@ -166,7 +166,12 @@ namespace Randomizer.App.Windows
         {
             if (IsCreatingGame)
             {
+                // Todo: This should probably be in the saved user options so that it can be changed and saved per user
+#if DEBUG
                 Url = "http://192.168.50.100:5000";
+#else
+                Url = "https://smz3.celestialrealm.net";
+#endif
                 OnPropertyChanged(nameof(Url));
             }
         }

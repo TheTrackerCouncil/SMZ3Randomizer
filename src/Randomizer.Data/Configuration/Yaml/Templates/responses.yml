@@ -22,6 +22,23 @@ Misheard:
 # {1} is replaced with the item name prefixed by an article (e.g. the lamp)
 TrackedItem:
 
+# The list of possibilities when two items are tracked at the same time
+# {0} is replaced with the first item's name
+# {1} is replaced with the second item's name
+TrackedTwoItems:
+
+# The list of possibilities when three items are tracked at the same time
+# {0} is replaced with the first item's name
+# {1} is replaced with the second item's name
+# {2} is replaced with the third item's name
+TrackedThreeItems:
+
+# The list of possibilities when more than 3 items are tracked at the same time
+# {0} is replaced with one of the tracked item's names
+# {1} is replaced with another one of the tracked item's names
+# {2} is replaced with the number of remaining tracked items
+TrackedManyItems:
+
 # The list of possibilities when a progressive item such as a sword is tracked as a particular stage
 # {0} is replaced with the item name (e.g. sword)
 # {1} is replaced with the stage name {e.g. Master Sword}
@@ -878,4 +895,4 @@ Cheats:
   CheatFailed:
 
   # The list of possibilities when an item is requested, but it is not a valid item
-  CheatInvalidItem: 
+  CheatInvalidItem:
