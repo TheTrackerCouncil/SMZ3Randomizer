@@ -78,6 +78,17 @@
         /// <c>{2}</c> is a placeholder for the item name prefixed by an article
         /// </remarks>
         public SchrodingersString GiftedUsefulItemToOtherPlayer { get; init; }
-            = new("{0} has forfeit. Distributing the items from their world.");
+            = new("Say goodbye to {1}. That goes to {0} instead.");
+
+        /// <summary>
+        /// Gets the phrases to respond when a player receives an item from aanother player
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the player name the item is being gifted from
+        /// <c>{1}</c> is a placeholder for the item name
+        /// <c>{2}</c> is a placeholder for the item name prefixed by an article
+        /// </remarks>
+        public SchrodingersString ReceivedUsefulItemFromOtherPlayer { get; init; }
+            = new("You should thank {0} for that {1}.");
     }
 }

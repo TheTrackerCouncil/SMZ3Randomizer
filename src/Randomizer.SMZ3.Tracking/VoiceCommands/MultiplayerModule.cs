@@ -140,6 +140,8 @@ public class MultiplayerModule : TrackerModule
         if (item == null)
             throw new InvalidOperationException($"Player retrieved invalid item {args.ItemToGive}");
         Tracker.GameService!.TryGiveItem(item, args.PlayerId);
+        Tracker.Say(x => x.Multiplayer.ReceivedUsefulItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
+            item.Metadata.NameWithArticle);
         args.LocationState.Cleared = true;
         args.LocationState.Autotracked = true;
     }
@@ -169,7 +171,7 @@ public class MultiplayerModule : TrackerModule
         args.BossState.AutoTracked = true;
         var boss = WorldService.World.GoldenBosses.FirstOrDefault(x => x.Type == args.BossState.Type);
         if (boss == null) return;
-        Tracker.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, boss.Metadata.Name);
+        Tracker.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args.PhoneticName, boss.Metadata.Name);
     }
 
     private async void TrackerOnDungeonUpdated(object? sender, DungeonTrackedEventArgs e)
