@@ -18,6 +18,11 @@ namespace Randomizer.SMZ3.Tracking.Services
         public World World { get; }
 
         /// <summary>
+        /// Retrieves all worlds
+        /// </summary>
+        public List<World> Worlds { get; }
+
+        /// <summary>
         /// Retrives all locations for current player's world
         /// </summary>
         /// <returns></returns>

@@ -56,6 +56,8 @@ public class MultiplayerGameService : IDisposable
 
     public PlayerEndedGameEventHandler? PlayerEndedGame;
 
+    public MultiplayerPlayerState? LocalPlayer => _client.LocalPlayer;
+
     /// <summary>
     /// Updates the tracker state for the current game service
     /// </summary>

@@ -742,6 +742,11 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         public CheatsConfig Cheats { get; init; } = new();
 
         /// <summary>
+        /// Gets the configured phrases for multiplayer
+        /// </summary>
+        public MultiplayerConfig Multiplayer { get; init; } = new();
+
+        /// <summary>
         /// Returns default response information
         /// </summary>
         /// <returns></returns>

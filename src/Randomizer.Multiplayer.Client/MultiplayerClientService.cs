@@ -507,9 +507,10 @@ namespace Randomizer.Multiplayer.Client
                 _dbContext.MultiplayerGames.Remove(DatabaseGameDetails);
                 await _dbContext.SaveChangesAsync();
             }
+            PlayerForfeited?.Invoke(response.PlayerState, isLocalPlayer);
             await UpdateLocalGameState(response.GameState);
             UpdateLocalPlayerState(response.PlayerState);
-            PlayerForfeited?.Invoke(response.PlayerState, isLocalPlayer);
+
         }
 
         /// <summary>
@@ -520,9 +521,9 @@ namespace Randomizer.Multiplayer.Client
         {
             _logger.LogInformation("Complete game");
             var isLocalPlayer = response.PlayerState.Guid == CurrentPlayerGuid;
+            PlayerCompleted?.Invoke(response.PlayerState, isLocalPlayer);
             await UpdateLocalGameState(response.GameState);
             UpdateLocalPlayerState(response.PlayerState);
-            PlayerCompleted?.Invoke(response.PlayerState, isLocalPlayer);
         }
 
         /// <summary>

@@ -206,8 +206,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
             _zeldaStateChecks = zeldaStateChecks;
             _metroidStateChecks = metroidStateChecks;
-            _logger.LogInformation($"Zelda state checks: {_zeldaStateChecks.Count()}");
-            _logger.LogInformation($"Metroid state checks: {_metroidStateChecks.Count()}");
+            _logger.LogInformation("Zelda state checks: {ZeldaStateCount}", _zeldaStateChecks.Count());
+            _logger.LogInformation("Metroid state checks: {MetroidStateCount}", _metroidStateChecks.Count());
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 if (!string.IsNullOrEmpty(_previousRom) && e.RomName != _previousRom)
                 {
-                    _logger.LogInformation($"Changed to SMZ3 Rom {e.RomName} ({e.RomHash})");
+                    _logger.LogInformation("Changed to SMZ3 rom {RomName} ({RomHash})", e.RomName,e.RomHash);
                     Tracker.Say(x => x.AutoTracker.SwitchedToSMZ3Rom);
                 }
 
@@ -385,7 +385,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // If the user is switching to a non-SMZ3 rom
             else if (!string.IsNullOrEmpty(e.RomName) && e.RomName != _previousRom)
             {
-                _logger.LogInformation($"Ignoring rom {e.RomName} ({e.RomHash})");
+                _logger.LogInformation("Ignoring rom {RomName} ({RomHash})", e.RomName,e.RomHash);
 
                 var key = "Unknown";
                 if (Tracker.Responses.AutoTracker.SwitchedToOtherRom.ContainsKey(e.RomHash!))
@@ -405,7 +405,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         protected async Task SendMessagesAsync(CancellationToken cancellationToken)
         {
             Thread.CurrentThread.Name = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            _logger.LogInformation("Start sending messages " + Thread.CurrentThread.Name);
+            _logger.LogInformation("Start sending messages {ThreadName}", Thread.CurrentThread.Name);
             IsSendingMessages = true;
             while (_connector != null && _connector.IsConnected() && !cancellationToken.IsCancellationRequested)
             {
@@ -434,7 +434,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 await Task.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken);
             }
             IsSendingMessages = false;
-            _logger.LogInformation("Stop sending messages " + Thread.CurrentThread.Name);
+            _logger.LogInformation("Stop sending messages {ThreadName}", Thread.CurrentThread.Name);
         }
 
         /// <summary>
@@ -459,7 +459,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 _logger.LogInformation("Game started");
                 _hasStarted = true;
-                Tracker.Say(x => x.AutoTracker.GameStarted, Tracker.Rom?.Seed);
+
+                if (Tracker.World.Config.MultiWorld && _worldService.Worlds.Count > 1)
+                {
+                    var worldCount = _worldService.Worlds.Count;
+                    var otherPlayerName = _worldService.Worlds.Where(x => x != _worldService.World).Random(new Random())!.Config.PhoneticName;
+                    Tracker.Say(x => x.AutoTracker.GameStartedMultiplayer, worldCount, otherPlayerName);
+                }
+                else
+                {
+                    Tracker.Say(x => x.AutoTracker.GameStarted, Tracker.Rom?.Seed);
+                }
             }
         }
 
@@ -482,7 +492,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
             if (_previousGame != CurrentGame)
             {
-                _logger.LogInformation($"Game changed to: {CurrentGame}");
+                _logger.LogInformation("Game changed to: {CurrentGame}", CurrentGame);
             }
         }
 
@@ -541,7 +551,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     if (castleTower.DungeonState.Cleared ==false)
                     {
                         Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
-                        _logger.LogInformation($"Auto tracked {castleTower.Name} as cleared");
+                        _logger.LogInformation("Auto tracked {Name} as cleared", castleTower.Name);
                     }
                 }
             }
@@ -607,13 +617,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         var item = location.Item;
                         location.State.Autotracked = true;
                         Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
-                        _logger.LogInformation($"Auto tracked {location.Item.Name} from {location.Name}");
+                        _logger.LogInformation("Auto tracked {ItemName} from {LocationName}", location.Item.Name, location.Name);
                     }
 
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Unable to auto track location: " + location.Name);
+                    _logger.LogError(e, "Unable to auto track location: {LocationName}", location.Name);
                     Tracker.Error();
                 }
             }
@@ -644,13 +654,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     {
                         dungeon.DungeonState.AutoTracked = true;
                         Tracker.MarkDungeonAsCleared(dungeon, autoTracked: true);
-                        _logger.LogInformation($"Auto tracked {dungeon.DungeonName} as cleared");
+                        _logger.LogInformation("Auto tracked {DungeonName} as cleared", dungeon.DungeonName);
                     }
 
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Unable to auto track Dungeon: " + dungeon.DungeonName);
+                    _logger.LogError(e, "Unable to auto track Dungeon: {DungeonName}", dungeon.DungeonName);
                     Tracker.Error();
                 }
             }
@@ -668,7 +678,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 {
                     boss.State.AutoTracked = true;
                     Tracker.MarkBossAsDefeated(boss, true, null, true);
-                    _logger.LogInformation($"Auto tracked {boss.Name} as defeated");
+                    _logger.LogInformation("Auto tracked {BossName} as defeated", boss.Name);
                 }
             }
         }
@@ -682,7 +692,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             if (_previousGame != CurrentGame || action.CurrentData == null) return;
             var prevState = ZeldaState;
             ZeldaState = new(action.CurrentData);
-            _logger.LogDebug(ZeldaState.ToString());
+            _logger.LogDebug("{StateDetails}", ZeldaState.ToString());
             if (prevState == null) return;
 
             if (!_seenGTTorch
@@ -708,7 +718,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 if (check != null && check.ExecuteCheck(Tracker, ZeldaState, prevState))
                 {
-                    _logger.LogInformation($"{check.GetType().Name} detected");
+                    _logger.LogInformation("{StateName} detected", check.GetType().Name);
                 }
             }
         }
@@ -779,14 +789,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             if (_previousGame != CurrentGame || action.CurrentData == null) return;
             var prevState = MetroidState;
             MetroidState = new(action.CurrentData);
-            _logger.LogDebug(MetroidState.ToString());
+            _logger.LogDebug("{StateDetails}", MetroidState.ToString());
             if (prevState == null) return;
 
             foreach (var check in _metroidStateChecks)
             {
                 if (check != null && check.ExecuteCheck(Tracker, MetroidState, prevState))
                 {
-                    _logger.LogInformation($"{check.GetType().Name} detected");
+                    _logger.LogInformation("{StateName} detected", check.GetType().Name);
                 }
             }
         }

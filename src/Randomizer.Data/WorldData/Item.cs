@@ -44,13 +44,15 @@ namespace Randomizer.Data.WorldData
         /// <param name="name">The override name for the item</param>
         /// <param name="metadata">The metadata object with additional info about the item</param>
         /// <param name="state">The tracking state of the item</param>
-        public Item(ItemType itemType, World world, string name, ItemData metadata, TrackerItemState state)
+        /// <param name="isProgression">If this is a progression item or not</param>
+        public Item(ItemType itemType, World world, string name, ItemData metadata, TrackerItemState state, bool isProgression = false)
         {
             Type = itemType;
             World = world;
             Name = name;
             Metadata = metadata;
             State = state;
+            Progression = isProgression;
         }
 
         /// <summary>

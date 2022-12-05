@@ -104,11 +104,31 @@ public class MultiplayerModule : TrackerModule
     private void PlayerEndedGame(PlayerEndedGameEventHandlerArgs args)
     {
         // Comment on player forfeiting or completing
+        if (args.IsLocalPlayer || _multiplayerGameService.LocalPlayer == null ||
+            _multiplayerGameService.LocalPlayer.HasCompleted ||
+            _multiplayerGameService.LocalPlayer.HasForfeited) return;
+        if (args.DidComplete)
+        {
+            Tracker.Say(x => x.Multiplayer.OtherPlayerBeatGame, args.PhoneticName);
+        }
+        else if (args.DidForfeit)
+        {
+            Tracker.Say(x => x.Multiplayer.OtherPlayerForfeitGame, args.PhoneticName);
+        }
     }
 
     private void PlayerTrackedItem(PlayerTrackedItemEventHandlerArgs args)
     {
         args.ItemState.TrackingState = args.TrackingValue;
+        if (args.ItemState.Type == null || args.IsLocalPlayer) return;
+        var item = ItemService.FirstOrDefault(args.ItemState.Type.Value);
+        if (item == null || args.TrackingValue <= item.State.TrackingState || !item.Progression)
+        {
+            return;
+        }
+
+        Tracker.Say(x => x.Multiplayer.OtherPlayerTrackedItem, args.PhoneticName, item.Metadata.Name,
+            item.Metadata.NameWithArticle);
     }
 
     private void PlayerTrackedLocation(PlayerTrackedLocationEventHandlerArgs args)
@@ -128,12 +148,28 @@ public class MultiplayerModule : TrackerModule
     {
         args.DungeonState.Cleared = true;
         args.DungeonState.AutoTracked = true;
+        var dungeon = WorldService.World.Dungeons.FirstOrDefault(x => x.GetType().Name == args.DungeonState.Name);
+        if (dungeon == null) return;
+        if (dungeon.HasReward && dungeon.DungeonReward != null)
+        {
+            Tracker.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithReward, args.PhoneticName,
+                dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss, dungeon.DungeonReward.Metadata.Name,
+                dungeon.DungeonReward.Metadata.NameWithArticle);
+        }
+        else
+        {
+            Tracker.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithoutReward, args.PhoneticName,
+                dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss);
+        }
     }
 
     private void PlayerTrackedBoss(PlayerTrackedBossEventHandlerArgs args)
     {
         args.BossState.Defeated = true;
         args.BossState.AutoTracked = true;
+        var boss = WorldService.World.GoldenBosses.FirstOrDefault(x => x.Type == args.BossState.Type);
+        if (boss == null) return;
+        Tracker.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, boss.Metadata.Name);
     }
 
     private async void TrackerOnDungeonUpdated(object? sender, DungeonTrackedEventArgs e)
@@ -160,6 +196,12 @@ public class MultiplayerModule : TrackerModule
     {
         if (!e.AutoTracked) return;
         await _multiplayerGameService.TrackLocation(e.Location);
+        if (e.Location.World == e.Location.Item.World || !e.Location.Item.Progression) return;
+        var localItem = ItemService.FirstOrDefault(e.Location.Item.Type);
+        if (localItem == null || localItem.State.TrackingState > 0) return;
+        var otherPlayer = e.Location.Item.World.Config.PhoneticName;
+        Tracker.Say(x => x.Multiplayer.GiftedUsefulItemToOtherPlayer, otherPlayer, localItem.Metadata.Name,
+            localItem.Metadata.NameWithArticle);
     }
 
     private async void TrackerOnBeatGame(object? sender, TrackerEventArgs e)

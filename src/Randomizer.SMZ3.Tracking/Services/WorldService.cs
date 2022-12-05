@@ -35,6 +35,11 @@ namespace Randomizer.SMZ3.Tracking.Services
         public World World => _worldAccessor.World;
 
         /// <summary>
+        /// Retrieves all worlds
+        /// </summary>
+        public List<World> Worlds => _worldAccessor.Worlds;
+
+        /// <summary>
         /// Retrives all locations for current player's world
         /// </summary>
         /// <returns></returns>

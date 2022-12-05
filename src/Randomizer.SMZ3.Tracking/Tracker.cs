@@ -340,6 +340,11 @@ namespace Randomizer.SMZ3.Tracking
         public bool SpoilersEnabled { get; set; }
 
         /// <summary>
+        /// Gets if the local player has beaten the game or not
+        /// </summary>
+        public bool HasBeatenGame => _beatenGame;
+
+        /// <summary>
         /// Formats a string so that it will be pronounced correctly by the
         /// text-to-speech engine.
         /// </summary>
