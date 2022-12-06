@@ -23,6 +23,10 @@
     - Text: Yeah, rip.
     - Text: I hope this was intentional because things were going well
     - Text: Good job
+    - Text: Did you know that people die when they are killed?
+      Weight: 0.1
+    - Text: Thankfully when you die in this game you don't die in real life. Yet. I'm still working on that.
+      Weight: 0.1
     "2":
     - Text: You've died {0} times.
     - Text: Are we still following the script?

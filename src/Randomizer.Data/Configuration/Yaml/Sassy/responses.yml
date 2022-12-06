@@ -652,7 +652,7 @@ Chat:
   - "\\b(greetings|hiya|howdy|'sup),? tracker\\b"
   - '\bgood (morning|afternoon|evening|day),? tracker\b'
   - '\b(morning|afternoon|evening),? tracker\b'
-  - '\b(HeyGuys|VoHiYo|pkroseHello|betusHey) tracker\b'
+  - '\b(HeyGuys|VoHiYo|pkroseHello|betusHey|digita78Wave) tracker\b'
   - '\btracker (HeyGuys|VoHiYo|pkroseHello|betusHey)\b'
   - ^tracker!+$
   - '\bT R A C K E R\b'

@@ -214,6 +214,11 @@ namespace Randomizer.App.Windows
                 OnPropertyChanged(nameof(Url));
                 OnPropertyChanged(nameof(CanPressButton));
             }
+
+#if DEBUG
+            // Added this so that we can use this box for easily testing how tracker messages sound
+            PhoneticNameTextBox.MaxLength = 1000;
+#endif
         }
 
         private void ServerMenuItemClick(object sender, RoutedEventArgs e)

@@ -234,7 +234,6 @@ namespace Randomizer.App.Windows
             {
                 MultiplayerClientServiceOnGameRejoined();
             }
-
         }
 
         /// <summary>
