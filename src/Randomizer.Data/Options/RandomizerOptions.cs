@@ -69,6 +69,7 @@ namespace Randomizer.Data.Options
 
         public double WindowHeight { get; set; } = 600d;
 
+        public string MultiplayerUrl { get; set; } = "";
 
         public string RomOutputPath
         {

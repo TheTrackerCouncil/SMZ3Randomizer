@@ -47,6 +47,7 @@ namespace Randomizer.App.Controls
             var multiWindow = scope.ServiceProvider.GetRequiredService<MultiplayerConnectWindow>();
             multiWindow.Owner = Window.GetWindow(this);
             multiWindow.IsCreatingGame = true;
+            multiWindow.Options = Options;
             if (multiWindow.ShowDialog() == true) OpenStatusWindow(null);
             UpdateList();
         }

@@ -87,9 +87,18 @@ namespace Randomizer.Multiplayer.Client
                 await _connection.DisposeAsync();
             }
 
-            _connection = new HubConnectionBuilder()
-                .WithUrl(url)
-                .Build();
+            try
+            {
+                _connection = new HubConnectionBuilder()
+                    .WithUrl(url)
+                    .Build();
+            }
+            catch (UriFormatException e)
+            {
+                _logger.LogError(e, "Invalid url {Url}", url);
+                Error?.Invoke($"Invalid url {url}", e);
+                return;
+            }
 
             _connection.On<CreateGameResponse>("CreateGame", OnCreateGame);
 

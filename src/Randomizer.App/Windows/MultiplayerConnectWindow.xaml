@@ -27,13 +27,35 @@
                    Visibility="Visible">
 
         <controls:LabeledControl Text="{Binding UrlLabelText}" IsTabStop="False">
-          <TextBox
-            Name="ServerUrlTextBox"
-            Text="{Binding Url, Mode=TwoWay}"
-            IsEnabled="{Binding CanEnterInput}"
-            Margin="5 0 0 0"
-
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"></ColumnDefinition>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox
+              Grid.Column="0"
+              Name="ServerUrlTextBox"
+              Text="{Binding Url, Mode=TwoWay}"
+              IsEnabled="{Binding CanEnterInput}"
+              Margin="5 0 0 0"
             />
+            <Button Grid.Column="1"
+                    x:Name="ServerListButton"
+                    MinWidth="0"
+                    Width="23"
+                    Content="▼"
+                    FontSize="8"
+                    BorderThickness="0,1,1,1"
+                    Margin="0,0,0,0"
+                    Visibility="{Binding ServerListVisibility}"
+                    Click="ServerListButton_OnClick">
+              <Button.ContextMenu>
+                <ContextMenu>
+                </ContextMenu>
+              </Button.ContextMenu>
+            </Button>
+          </Grid>
+
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Display Name:" IsTabStop="False">
@@ -61,7 +83,6 @@
           </Grid>
 
         </controls:LabeledControl>
-
 
         <controls:LabeledControl Text="Game Mode:" IsTabStop="False">
           <ComboBox SelectedItem="{Binding MultiplayerGameType}"

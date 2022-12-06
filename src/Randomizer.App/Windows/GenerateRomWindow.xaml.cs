@@ -43,8 +43,7 @@ namespace Randomizer.App.Windows
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
             LocationConfig locations,
-            IMetadataService metadataService,
-            MultiplayerClientService MultiplayerClientService)
+            IMetadataService metadataService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;

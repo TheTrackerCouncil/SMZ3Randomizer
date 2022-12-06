@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.Options;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared.Multiplayer;
 using Randomizer.SMZ3.Tracking.Services;
@@ -19,6 +22,16 @@ namespace Randomizer.App.Windows
     public sealed partial class MultiplayerConnectWindow : Window, INotifyPropertyChanged
     {
         private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
+
+        private static List<string> s_defaultServers = new List<string>()
+        {
+            "https://smz3.celestialrealm.net",
+#if DEBUG
+            "http://192.168.50.100:5000",
+            "http://localhost:5000"
+#endif
+        };
+
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly ILogger _logger;
         private readonly string _version;
@@ -50,12 +63,13 @@ namespace Randomizer.App.Windows
         {
             if (IsCreatingGame)
             {
-                _logger.LogInformation("Connecting");
+                _logger.LogInformation("Connected to server successfully. Creating new game.");
+                if (Options != null) Options.MultiplayerUrl = Url;
                 await _multiplayerClientService.CreateGame(DisplayName, PhoneticName, MultiplayerGameType, _version);
             }
             else
             {
-                _logger.LogInformation("Joining");
+                _logger.LogInformation("Connected to Server successfully. Joining game.");
                 await _multiplayerClientService.JoinGame(GameGuid, DisplayName, PhoneticName, _version);
             }
         }
@@ -81,9 +95,25 @@ namespace Randomizer.App.Windows
         public string UrlLabelText => IsCreatingGame ? "Server Url:" : "Game Url:";
         public bool CanEnterInput => !IsConnecting;
         public bool CanEnterGameMode => !IsConnecting && IsCreatingGame;
-        public bool CanPressButton => PlayerNameTextBox.Text.Length > 0;
+        public bool CanPressButton => PlayerNameTextBox.Text.Length > 0 && Url.Length > 0;
         public string StatusText => IsConnecting ? "Connecting..." : "";
-        public string Url { get; set; } = "";
+        public RandomizerOptions? Options { get; set; }
+        public Visibility ServerListVisibility => IsCreatingGame ? Visibility.Visible : Visibility.Collapsed;
+
+        private string _url = "";
+        public string Url
+        {
+            get
+            {
+                return _url;
+            }
+            set
+            {
+                _url = value;
+                OnPropertyChanged(nameof(Url));
+                OnPropertyChanged(nameof(CanPressButton));
+            }
+        }
         public string DisplayName => PlayerNameTextBox.Text;
         public string PhoneticName { get; set; } = "";
         public MultiplayerGameType MultiplayerGameType { get; set; }
@@ -166,19 +196,43 @@ namespace Randomizer.App.Windows
         {
             if (IsCreatingGame)
             {
-                // Todo: This should probably be in the saved user options so that it can be changed and saved per user
-#if DEBUG
-                Url = "http://192.168.50.100:5000";
-#else
-                Url = "https://smz3.celestialrealm.net";
-#endif
+                if (!string.IsNullOrEmpty(Options?.MultiplayerUrl))
+                    Url = Options.MultiplayerUrl;
+                else
+                    Url = s_defaultServers.First();
+
+                if (ServerListButton.ContextMenu != null)
+                {
+                    foreach (var url in s_defaultServers)
+                    {
+                        var menuItem = new MenuItem { Header = url };
+                        menuItem.Click += ServerMenuItemClick;
+                        ServerListButton.ContextMenu.Items.Add(menuItem);
+                    }
+
+                }
                 OnPropertyChanged(nameof(Url));
+                OnPropertyChanged(nameof(CanPressButton));
             }
+        }
+
+        private void ServerMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is not MenuItem menuItem) return;
+            Url = menuItem.Header as string ?? s_defaultServers.First();
+            OnPropertyChanged(nameof(Url));
         }
 
         private void PhoneticNameTestButton_OnClick(object sender, RoutedEventArgs e)
         {
             _communicator.Say(string.IsNullOrEmpty(PhoneticName) ? DisplayName : PhoneticName);
+        }
+
+        private void ServerListButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (ServerListButton.ContextMenu == null) return;
+            ServerListButton.ContextMenu.DataContext = ServerListButton.DataContext;
+            ServerListButton.ContextMenu.IsOpen = true;
         }
     }
 }
