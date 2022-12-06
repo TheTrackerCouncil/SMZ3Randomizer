@@ -122,7 +122,7 @@ public class MultiplayerModule : TrackerModule
         args.ItemState.TrackingState = args.TrackingValue;
         if (args.ItemState.Type == null || args.IsLocalPlayer) return;
         var item = ItemService.FirstOrDefault(args.ItemState.Type.Value);
-        if (item == null || args.TrackingValue <= item.State.TrackingState || !item.Progression)
+        if (item == null || item.State.TrackingState >= args.TrackingValue || !item.Progression)
         {
             return;
         }
@@ -140,8 +140,16 @@ public class MultiplayerModule : TrackerModule
         if (item == null)
             throw new InvalidOperationException($"Player retrieved invalid item {args.ItemToGive}");
         Tracker.GameService!.TryGiveItem(item, args.PlayerId);
-        Tracker.Say(x => x.Multiplayer.ReceivedUsefulItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
-            item.Metadata.NameWithArticle);
+        if (item.Type.IsPossibleProgression(item.World.Config.ZeldaKeysanity, item.World.Config.MetroidKeysanity))
+        {
+            Tracker.Say(x => x.Multiplayer.ReceivedUsefulItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
+                item.Metadata.NameWithArticle);
+        }
+        else if (item.Type.IsInCategory(ItemCategory.Junk))
+        {
+            Tracker.Say(x => x.Multiplayer.ReceivedJunkItemFromOtherPlayer, args.PhoneticName, item.Metadata.Name,
+                item.Metadata.NameWithArticle);
+        }
         args.LocationState.Cleared = true;
         args.LocationState.Autotracked = true;
     }
@@ -200,7 +208,7 @@ public class MultiplayerModule : TrackerModule
         await _multiplayerGameService.TrackLocation(e.Location);
         if (e.Location.World == e.Location.Item.World || !e.Location.Item.Progression) return;
         var localItem = ItemService.FirstOrDefault(e.Location.Item.Type);
-        if (localItem == null || localItem.State.TrackingState > 0) return;
+        if (localItem == null || localItem.State.TrackingState >= e.Location.Item.State.TrackingState) return;
         var otherPlayer = e.Location.Item.World.Config.PhoneticName;
         Tracker.Say(x => x.Multiplayer.GiftedUsefulItemToOtherPlayer, otherPlayer, localItem.Metadata.Name,
             localItem.Metadata.NameWithArticle);

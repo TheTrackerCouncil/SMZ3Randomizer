@@ -764,6 +764,11 @@ AutoTracker:
   # The list of possibilities when the auto tracker detects the player is in the game
   GameStarted:
 
+  # The list of possibilities when the player is in the game and it's a multiplayer game
+  # {0} is replaced with the number of players.
+  # {1} is replaced with a random other player's name
+  GameStartedMultiplayer:
+
   # The list of possibilities when entering the room with Kraid's Awful Son
   NearKraidsAwfulSon:
 
@@ -873,7 +878,7 @@ Map:
   # The list of possibilities when requesting to show a dark room map, but the player has the lamp
   HasLamp:
 
-# This seciton is for cheat responses
+# This section is for cheat responses
 Cheats:
 
   # The list of possibilities when cheats are enabled
@@ -896,3 +901,59 @@ Cheats:
 
   # The list of possibilities when an item is requested, but it is not a valid item
   CheatInvalidItem:
+
+# This section is for multiplayer game responses
+Multiplayer:
+
+  # The list of possibilities when another player tracks a useful item the local player does not have
+  # {0} is replaced with the other player's name
+  # {1} is replaced with the item name
+  # {2} is replaced with the item name prefixed by an article
+  OtherPlayerTrackedItem:
+
+  # The list of possibilities when another player clears a dungeon with a reward
+  # {0} is replaced with the other player's name
+  # {1} is replaced with the dungeon name
+  # {2} is replaced with the dungeon boss name
+  # {3} is replaced with the reward name
+  # {4} is replaced with the reward name prefixed by an article
+  OtherPlayerClearedDungeonWithReward:
+
+  # The list of possibilities when another player clears a dungeon without a reward
+  # {0} is replaced with the other player's name
+  # {1} is replaced with the dungeon name
+  # {2} is replaced with the dungeon boss name
+  OtherPlayerClearedDungeonWithoutReward:
+
+  # The list of possibilities when another player defeats a Super Metroid Golden Boss
+  # {0} is replaced with the other player's name
+  # {1} is replaced with the boss name
+  OtherPlayerDefeatedBoss:
+
+  # The list of possibilities when another player completes the game by beating both Ganon and 
+  # Mother Brain and either enter the Triforce Room or enters the ship
+  # {0} is replaced with the other player's name
+  OtherPlayerBeatGame: 
+
+  # The list of possibilities when another player forfeits and all of their items are
+  # sent out to the other players
+  # {0} is replaced with the other player's name
+  OtherPlayerForfeitGame:
+
+  # The list of possibilities when the local player gifts a useful item to another player
+  # {0} is replaced with the other player's name
+  # {1} is replaced with the item name
+  # {2} is replaced with the item name prefixed by an article
+  GiftedUsefulItemToOtherPlayer:
+
+  # The list of possibilities when the local player receives a useful item to another player
+  # {0} is replaced with the other player's name
+  # {1} is replaced with the item name
+  # {2} is replaced with the item name prefixed by an article
+  ReceivedUsefulItemFromOtherPlayer:
+
+  # The list of possibilities when the local player receives a junk item to another player
+  # {0} is replaced with the other player's name
+  # {1} is replaced with the item name
+  # {2} is replaced with the item name prefixed by an article
+  ReceivedJunkItemFromOtherPlayer:

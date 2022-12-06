@@ -14,7 +14,7 @@
         /// <c>{2}</c> is a placeholder for the item name prefixed by an article
         /// </remarks>
         public SchrodingersString OtherPlayerTrackedItem { get; init; }
-            = new("You should congratulate {0} on getting the {1}.");
+            = new("");
 
         /// <summary>
         /// Gets the phrases for when another player clears a dungeon
@@ -27,7 +27,7 @@
         /// <c>{4}</c> is a placeholder for the reward name prefixed by an article
         /// </remarks>
         public SchrodingersString OtherPlayerClearedDungeonWithReward { get; init; }
-            = new("You should congratulate {0} on getting the {3} from {1}.");
+            = new("");
 
         /// <summary>
         /// Gets the phrases for when another player clears a dungeon
@@ -38,7 +38,7 @@
         /// <c>{2}</c> is a placeholder for the dungeon boss name
         /// </remarks>
         public SchrodingersString OtherPlayerClearedDungeonWithoutReward { get; init; }
-            = new("You should congratulate {0} on completing {1}.");
+            = new();
 
         /// <summary>
         /// Gets the phrases to respond when a player defeats a golden boss in SM
@@ -48,7 +48,7 @@
         /// <c>{1}</c> is a placeholder for the boss name
         /// </remarks>
         public SchrodingersString OtherPlayerDefeatedBoss { get; init; }
-            = new("You should congratulate {0} on defeating {1}.");
+            = new();
 
         /// <summary>
         /// Gets the phrases to respond when a player beats the game by defeating both Ganon and Mother Brain
@@ -67,7 +67,7 @@
         /// <c>{0}</c> is a placeholder for the player name
         /// </remarks>
         public SchrodingersString OtherPlayerForfeitGame { get; init; }
-            = new("{0} has forfeit. Distributing the items from their world.");
+            = new("{0} has forfeit. Distributing the items from {0}'s world.");
 
         /// <summary>
         /// Gets the phrases to respond when a player gets an item that is for another player
@@ -78,10 +78,10 @@
         /// <c>{2}</c> is a placeholder for the item name prefixed by an article
         /// </remarks>
         public SchrodingersString GiftedUsefulItemToOtherPlayer { get; init; }
-            = new("Say goodbye to {1}. That goes to {0} instead.");
+            = new("");
 
         /// <summary>
-        /// Gets the phrases to respond when a player receives an item from aanother player
+        /// Gets the phrases to respond when a player receives a potentially progression item from another player
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the player name the item is being gifted from
@@ -89,6 +89,17 @@
         /// <c>{2}</c> is a placeholder for the item name prefixed by an article
         /// </remarks>
         public SchrodingersString ReceivedUsefulItemFromOtherPlayer { get; init; }
-            = new("You should thank {0} for that {1}.");
+            = new("");
+
+        /// <summary>
+        /// Gets the phrases to respond when a player receives a junk item from another player
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the player name the item is being gifted from
+        /// <c>{1}</c> is a placeholder for the item name
+        /// <c>{2}</c> is a placeholder for the item name prefixed by an article
+        /// </remarks>
+        public SchrodingersString ReceivedJunkItemFromOtherPlayer { get; init; }
+            = new("");
     }
 }

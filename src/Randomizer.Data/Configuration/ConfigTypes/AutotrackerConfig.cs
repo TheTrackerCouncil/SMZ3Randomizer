@@ -31,7 +31,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the number of players.
-        /// <c>{1}</c> is a placeholder for a random player name
+        /// <c>{1}</c> is a placeholder for a random player name.
         /// </remarks>
         public SchrodingersString GameStartedMultiplayer { get; init; }
             = new("Multiplayer game started! Good luck.");
