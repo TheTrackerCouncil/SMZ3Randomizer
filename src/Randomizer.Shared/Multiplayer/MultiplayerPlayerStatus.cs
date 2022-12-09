@@ -17,8 +17,5 @@ public enum MultiplayerPlayerStatus
     Forfeit,
 
     [Description("Completed")]
-    Completed,
-
-    [Description("Disconnected")]
-    Disconnected,
+    Completed
 }

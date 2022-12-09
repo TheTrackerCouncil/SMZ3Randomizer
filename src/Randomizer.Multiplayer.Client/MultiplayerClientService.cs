@@ -80,7 +80,7 @@ namespace Randomizer.Multiplayer.Client
                 return;
             }
 
-            ConnectionUrl = url;
+            ConnectionUrl = url.SubstringBeforeCharacter('?') ?? url;
 
             if (_connection != null && _connection.State != HubConnectionState.Disconnected)
             {
@@ -130,6 +130,8 @@ namespace Randomizer.Multiplayer.Client
 
             _connection.On<RequestPlayerUpdateRequest>("RequestPlayerUpdate", OnRequestPlayerUpdate);
 
+            _connection.On<MultiplayerRequest>("Disconnect", OnDisconnectRequest);
+
             _connection.Closed += ConnectionOnClosed;
 
             try
@@ -155,6 +157,15 @@ namespace Randomizer.Multiplayer.Client
             }
         }
 
+        private async Task OnDisconnectRequest(MultiplayerRequest obj)
+        {
+            _logger.LogInformation("Server requested player to disconnected.");
+            if (_connection == null) return;
+            await _connection!.DisposeAsync();
+            _connection = null;
+            ConnectionClosed?.Invoke("Connection closed");
+        }
+
         /// <summary>
         /// Reconnects to the server using previously saved details
         /// </summary>
@@ -173,9 +184,15 @@ namespace Randomizer.Multiplayer.Client
         /// </summary>
         public async Task Reconnect()
         {
-            if (_connection == null || string.IsNullOrEmpty(ConnectionUrl))
+            if (string.IsNullOrEmpty(ConnectionUrl))
             {
                 Error?.Invoke($"Could not reconnect as you were not previously connected.");
+                return;
+            }
+
+            if (_connection == null)
+            {
+                await Connect(ConnectionUrl);
                 return;
             }
 
@@ -225,9 +242,10 @@ namespace Randomizer.Multiplayer.Client
         /// <param name="phoneticName">The requested player name for tracker to say</param>
         /// <param name="gameType">The requested game type</param>
         /// <param name="randomizerVersion">The local SMZ3 version to ensure compatibility between all players</param>
-        public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion)
+        /// <param name="saveToDatabase">If the game should be saved ot the database</param>
+        public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, bool saveToDatabase)
         {
-            await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, randomizerVersion, MultiplayerVersion.Id));
+            await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, randomizerVersion, MultiplayerVersion.Id, saveToDatabase));
         }
 
         /// <summary>
@@ -254,8 +272,7 @@ namespace Randomizer.Multiplayer.Client
                 return;
             }
 
-            LocalPlayer.Config = config;
-            await UpdatePlayerState(LocalPlayer);
+            await MakeRequest("UpdatePlayerConfig", new UpdatePlayerConfigRequest(LocalPlayer.Guid, config), true);
         }
 
         /// <summary>
@@ -272,6 +289,23 @@ namespace Randomizer.Multiplayer.Client
             }
 
             await MakeRequest("UpdatePlayerState", new UpdatePlayerStateRequest(state, propogate), true);
+        }
+
+        /// <summary>
+        /// Updates the local player's state
+        /// </summary>
+        /// <param name="player">The player state to with all updated details</param>
+        /// <param name="world"></param>
+        /// <param name="propogate">The if the update should immediately be sent to all players</param>
+        public async Task UpdatePlayerWorld(MultiplayerPlayerState player, MultiplayerWorldState world, bool propogate = true)
+        {
+            if (LocalPlayer == null)
+            {
+                Error?.Invoke($"There is no active local player");
+                return;
+            }
+
+            await MakeRequest("UpdatePlayerWorld", new UpdatePlayerWorldRequest(player.Guid, world, propogate), true);
         }
 
         /// <summary>
@@ -382,7 +416,7 @@ namespace Randomizer.Multiplayer.Client
         /// <param name="data">The object of all of the details needed for the player to generate their rom</param>
         public async Task SubmitPlayerGenerationData(string playerGuid, MultiplayerPlayerGenerationData data)
         {
-            await MakeRequest("SubmitPlayerGenerationData", new SubmitPlayerGenerationDataRequest(playerGuid, MultiplayerPlayerGenerationData.ToString(data)));
+            await MakeRequest("SubmitPlayerGenerationData", new SubmitPlayerGenerationDataRequest(playerGuid, data.WorldId, MultiplayerPlayerGenerationData.ToString(data)));
         }
 
         /// <summary>
@@ -684,7 +718,7 @@ namespace Randomizer.Multiplayer.Client
         {
             DatabaseGameDetails = new MultiplayerGameDetails
             {
-                ConnectionUrl = ConnectionUrl!,
+                ConnectionUrl = gameState.Url!,
                 GameGuid = gameState.Guid,
                 GameUrl = gameState.Url,
                 Type = gameState.Type,

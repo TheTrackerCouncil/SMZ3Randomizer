@@ -61,8 +61,9 @@ public abstract class MultiplayerGameTypeService
     /// <param name="world">The world of the player</param>
     /// <param name="allWorlds"></param>
     /// <returns>The newly created multiplayer player state</returns>
-    public MultiplayerPlayerState GetPlayerDefaultState(MultiplayerPlayerState state, World world, IEnumerable<World> allWorlds)
+    public MultiplayerWorldState GetPlayerDefaultState(World world, IEnumerable<World> allWorlds)
     {
+
         // Grab the item types that belong to this player, not the ones that are in their world
         var playerItemTypes = allWorlds
             .SelectMany(x => x.LocationItems)
@@ -70,10 +71,11 @@ public abstract class MultiplayerGameTypeService
             .Select(x => x.Type)
             .Distinct()
             .ToList();
-        state.Locations = world.Locations.ToDictionary(x => x.Id, _ => false);
-        state.Items = playerItemTypes.ToDictionary(x => x, _ => 0);
-        state.Bosses = world.GoldenBosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
-        state.Dungeons = world.Dungeons.ToDictionary(x => x.GetType().Name, _ => false);
+        var locations = world.Locations.ToDictionary(x => x.Id, _ => false);
+        var items = playerItemTypes.ToDictionary(x => x, _ => 0);
+        var bosses = world.GoldenBosses.Select(x => x.Type).ToDictionary(x => x, _ => false);
+        var dungeons = world.Dungeons.ToDictionary(x => x.GetType().Name, _ => false);
+        var state = new MultiplayerWorldState(locations, items, bosses, dungeons);
         return state;
     }
 
@@ -332,24 +334,24 @@ public abstract class MultiplayerGameTypeService
         if (TrackerState == null || isLocalPlayer || player.Locations == null || player.Items == null || player.Bosses == null || player.Dungeons == null) return null;
 
         // Gather data for locations that have been cleared
-        var clearedLocationIds = player.Locations.Where(x => x.Value || player.HasForfeited || player.HasCompleted).Select(x => x.Key).ToList();
+        var clearedLocationIds = player.Locations.Where(x => x.Tracked || player.HasForfeited || player.HasCompleted).Select(x => x.LocationId).ToList();
         var updatedLocationStates = TrackerState.LocationStates.Where(x =>
             x.WorldId == player.WorldId && !x.Autotracked && clearedLocationIds.Contains(x.LocationId)).ToList();
         var itemsToGive = updatedLocationStates.Where(x => x.ItemWorldId == LocalPlayerId).Select(x => x.Item).ToList();
 
         // Gather items that have been updated
-        var trackedItems = player.Items.Where(x => x.Value > 0).Select(x => x.Key).ToList();
+        var trackedItems = player.Items.Where(x => x.TrackingValue > 0).Select(x => x.Item).ToList();
         var updatedItemStates = TrackerState.ItemStates.Where(x =>
             x.WorldId == player.WorldId && x.Type != null && trackedItems.Contains(x.Type.Value) &&
-            player.Items[x.Type.Value] > x.TrackingState).Select(x => (x, player.Items[x.Type!.Value])).ToList();
+            player.GetItem(x.Type.Value)!.TrackingValue > x.TrackingState).Select(x => (x, player.GetItem(x.Type!.Value)!.TrackingValue)).ToList();
 
         // Gather bosses that have been defeated
-        var defeatedBosses = player.Bosses.Where(x => x.Value).Select(x => x.Key).ToList();
+        var defeatedBosses = player.Bosses.Where(x => x.Tracked).Select(x => x.Boss).ToList();
         var updatedBossStates = TrackerState.BossStates.Where(x =>
             x.WorldId == player.WorldId && x.Type != BossType.None && !x.AutoTracked && defeatedBosses.Contains(x.Type)).ToList();
 
         // Gather dungeons that have been cleared
-        var clearedDungeons = player.Dungeons.Where(x => x.Value).Select(x => x.Key).ToList();
+        var clearedDungeons = player.Dungeons.Where(x => x.Tracked).Select(x => x.Dungeon).ToList();
         var updatedDungeonStates = TrackerState.DungeonStates.Where(x =>
             x.WorldId == player.WorldId && !x.AutoTracked && clearedDungeons.Contains(x.Name)).ToList();
 
@@ -374,31 +376,28 @@ public abstract class MultiplayerGameTypeService
     /// </summary>
     /// <param name="state">The player that is being updated</param>
     /// <param name="trackerState">The tracker state for the player</param>
-    public void UpdatePlayerState(MultiplayerPlayerState state, TrackerState trackerState)
+    public MultiplayerWorldState GetPlayerWorldState(MultiplayerPlayerState state, TrackerState trackerState)
     {
         // Grab the tracker state values for the current world, then get the applicable multiplayer state value for
         // that same location, item, etc. Use the greater of the two values to update the state dictionaries to send
         // over to the server
-        state.Locations = trackerState.LocationStates
+        var locations = trackerState.LocationStates
             .Where(x => x.WorldId == state.WorldId)
-            .Select(x => (TrackerState: x, PrevValue: state.Locations?[x.LocationId] ?? false))
-            .ToDictionary(x => x.TrackerState.LocationId, x => x.TrackerState.Autotracked || x.PrevValue);
+            .ToDictionary(x => x.LocationId, x => x.Autotracked);
 
-        var previousItemTypes = state.Items?.Keys.ToList() ?? new List<ItemType>();
-        state.Items = trackerState.ItemStates
+        var items = trackerState.ItemStates
             .Where(x => x.WorldId == state.WorldId && x.Type != null && x.Type != ItemType.Nothing)
-            .Select(x => (TrackerState: x, PrevValue: previousItemTypes.Contains(x.Type!.Value) ? state.Items![x.Type!.Value] : 0))
-            .ToDictionary(x => x.TrackerState.Type!.Value, x => Math.Max(x.TrackerState.TrackingState, x.PrevValue));
+            .ToDictionary(x => x.Type ?? ItemType.Nothing, x => x.TrackingState);
 
-        state.Bosses = trackerState.BossStates
+        var bosses = trackerState.BossStates
             .Where(x => x.WorldId == state.WorldId && x.Type != BossType.None)
-            .Select(x => (TrackerState: x, PrevValue: state.Bosses?[x.Type] ?? false))
-            .ToDictionary(x => x.TrackerState.Type, x => x.TrackerState.Defeated || x.PrevValue);
+            .ToDictionary(x => x.Type, x => x.AutoTracked);
 
-        state.Dungeons = trackerState.DungeonStates
+        var dungeons = trackerState.DungeonStates
             .Where(x => x.WorldId == state.WorldId)
-            .Select(x => (TrackerState: x, PrevValue: state.Dungeons?[x.Name] ?? false))
-            .ToDictionary(x => x.TrackerState.Name, x => x.TrackerState.Cleared || x.PrevValue);
+            .ToDictionary(x => x.Name, x => x.AutoTracked);
+
+        return new MultiplayerWorldState(locations, items, bosses, dungeons);
     }
 
     /// <summary>

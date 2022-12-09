@@ -90,10 +90,10 @@ public class MultiplayerGameService : IDisposable
         var playerList = players.ToList();
         foreach (var player in playerList)
         {
-            var state = _currentGameService.GetPlayerDefaultState(player,
+            var world = _currentGameService.GetPlayerDefaultState(
                 seedData.WorldGenerationData.GetWorld(player.Guid).World, seedData.WorldGenerationData.Worlds);
             _logger.LogInformation("Pushing state");
-            await _client.UpdatePlayerState(state, false);
+            await _client.UpdatePlayerWorld(player, world, false);
             await _client.SubmitPlayerGenerationData(player.Guid,
                 seedData.WorldGenerationData.GetWorld(player.Guid).GetPlayerGenerationData());
         }
@@ -272,8 +272,8 @@ public class MultiplayerGameService : IDisposable
             _logger.LogWarning("Player state update requested, but either the local player multiplayer state or the tracker state is unavailable");
             return;
         }
-        _currentGameService.UpdatePlayerState(_client.LocalPlayer, _currentGameService.TrackerState);
-        await _client.UpdatePlayerState(_client.LocalPlayer);
+        var world = _currentGameService.GetPlayerWorldState(_client.LocalPlayer, _currentGameService.TrackerState);
+        await _client.UpdatePlayerWorld(_client.LocalPlayer, world);
     }
 
     private async void ClientOnGameRejoined()
@@ -290,8 +290,8 @@ public class MultiplayerGameService : IDisposable
 
         // Also push out the latest state for the local player in case they did something while not connected
         if (_client.LocalPlayer == null || _currentGameService.TrackerState == null) return;
-        _currentGameService.UpdatePlayerState(_client.LocalPlayer, _currentGameService.TrackerState);
-        await _client.UpdatePlayerState(_client.LocalPlayer);
+        var world = _currentGameService.GetPlayerWorldState(_client.LocalPlayer, _currentGameService.TrackerState);
+        await _client.UpdatePlayerWorld(_client.LocalPlayer, world);
     }
     #endregion
 

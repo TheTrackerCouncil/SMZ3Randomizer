@@ -45,6 +45,8 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
         foreach (var player in players)
         {
             var config = Config.FromConfigString(player.Config!).First();
+            config.Id = player.WorldId!.Value;
+            config.GameMode = GameMode.Multiworld;
             config.IsLocalConfig = player == localPlayer;
             config.Seed = seed;
             config.MultiplayerPlayerGenerationData = playerGenerationData.Single(x => x.WorldId == config.Id);
@@ -85,8 +87,8 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
         {
             if (Client.LocalPlayer != null && TrackerState != null)
             {
-                UpdatePlayerState(Client.LocalPlayer, TrackerState);
-                await Client.UpdatePlayerState(Client.LocalPlayer);
+                var world = GetPlayerWorldState(Client.LocalPlayer, TrackerState);
+                await Client.UpdatePlayerWorld(Client.LocalPlayer, world);
             }
 
             await Task.Delay(TimeSpan.FromSeconds(60));

@@ -11,11 +11,13 @@ namespace Randomizer.Multiplayer.Server;
 /// </summary>
 public class MultiplayerGame
 {
+    public static int GameCount => s_games.Count;
+    public static int PlayerCount => s_playerConnections.Count;
+
     private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
     private static readonly Regex s_continousSpace = new(@" +");
     private static readonly ConcurrentDictionary<string, MultiplayerGame> s_games = new();
     private static readonly ConcurrentDictionary<string, MultiplayerPlayer> s_playerConnections = new();
-    private readonly ConcurrentDictionary<string, MultiplayerPlayer> _players = new();
 
     /// <summary>
     /// Constructor
@@ -24,7 +26,8 @@ public class MultiplayerGame
     /// <param name="gameUrl">The url for players to use for connecting to the game</param>
     /// <param name="version">The SMZ3 version that the game is being generated on</param>
     /// <param name="type">The type of multiplayer game</param>
-    private MultiplayerGame(string guid, string gameUrl, string version, MultiplayerGameType type)
+    /// <param name="saveToDatabase">If this database should be saved to the database</param>
+    private MultiplayerGame(string guid, string gameUrl, string version, MultiplayerGameType type, bool saveToDatabase)
     {
         State = new MultiplayerGameState()
         {
@@ -35,28 +38,39 @@ public class MultiplayerGame
             Status = MultiplayerGameStatus.Created,
             CreatedDate = DateTimeOffset.Now,
             LastMessage = DateTimeOffset.Now,
-            Seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString()
+            Seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString(),
+            SaveToDatabase = saveToDatabase
         };
+    }
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="state">Previous state</param>
+    private MultiplayerGame(MultiplayerGameState state)
+    {
+        State = state;
     }
 
     public string Guid => State.Guid;
     public MultiplayerGameState State { get; }
     public MultiplayerPlayer? AdminPlayer { get; private set; }
-    public List<MultiplayerPlayerState> PlayerStates => _players.Values.Select(x => x.State).ToList();
-    public List<string> PlayerGenerationData => _players.Values.Select(x => x.PlayerGenerationData).NonNull().ToList();
+    public ConcurrentDictionary<string, MultiplayerPlayer> Players = new();
+    public List<MultiplayerPlayerState> PlayerStates => Players.Values.Select(x => x.State).ToList();
+    public List<string> PlayerGenerationData => Players.Values.Select(x => x.PlayerGenerationData).NonNull().ToList();
 
 
     #region Static Methods
 
-    public static int ExpireGames(int expirationTime)
+    public static List<string> ExpireGamesInMemory(int expirationTime)
     {
-        var amountExpired = 0;
+        var expiredGuids = new List<string>();
         foreach (var game in s_games.Values)
         {
             var timeDiff = DateTimeOffset.Now - game.State.LastMessage;
             if (timeDiff.TotalMinutes > expirationTime)
             {
-                foreach (var player in game._players.Values)
+                foreach (var player in game.Players.Values)
                 {
                     if (!string.IsNullOrEmpty(player.ConnectionId))
                     {
@@ -64,11 +78,11 @@ public class MultiplayerGame
                     }
                 }
                 s_games.TryRemove(game.Guid, out _);
-                amountExpired++;
+                expiredGuids.Add(game.Guid);
             }
         }
 
-        return amountExpired;
+        return expiredGuids;
     }
 
     /// <summary>
@@ -80,9 +94,10 @@ public class MultiplayerGame
     /// <param name="gameType">The type of multiplayer game</param>
     /// <param name="baseUrl">The server's base url</param>
     /// <param name="version">The SMZ3 version that the game is being generated on</param>
+    /// <param name="saveToDatabase">If this game needs to be saved to the database or not</param>
     /// <param name="error">Output of any error messages during creating the new multiplayer game</param>
     /// <returns>The instance of the created Multiplayer game</returns>
-    public static MultiplayerGame? CreateNewGame(string playerName, string phoneticName, string playerConnectionId, MultiplayerGameType gameType, string baseUrl, string version, out string? error)
+    public static MultiplayerGame? CreateNewGame(string playerName, string phoneticName, string playerConnectionId, MultiplayerGameType gameType, string baseUrl, string version, bool saveToDatabase, out string? error)
     {
         string guid;
         do
@@ -90,7 +105,7 @@ public class MultiplayerGame
             guid = System.Guid.NewGuid().ToString("N");
         } while (s_games.ContainsKey(guid));
 
-        var game = new MultiplayerGame(guid, $"{baseUrl}?game={guid}", version, gameType);
+        var game = new MultiplayerGame(guid, $"{baseUrl}?game={guid}", version, gameType, saveToDatabase);
 
         if (!s_games.TryAdd(guid, game))
         {
@@ -100,13 +115,13 @@ public class MultiplayerGame
 
         var playerGuid = System.Guid.NewGuid().ToString("N");
         var playerKey = System.Guid.NewGuid().ToString("N");
-        var player = new MultiplayerPlayer(game, playerGuid, playerKey, CleanPlayerName(playerName), phoneticName, playerConnectionId) { State =
-        {
-            IsAdmin = true
-        } };
+        var player =
+            new MultiplayerPlayer(game, playerGuid, playerKey, CleanPlayerName(playerName), phoneticName,
+                playerConnectionId) { State = { IsAdmin = true } };
 
+        game.State.Players.Add(player.State);
         game.AdminPlayer ??= player;
-        game._players[playerGuid] = player;
+        game.Players[playerGuid] = player;
         s_playerConnections[playerConnectionId] = player;
         error = null;
         return game;
@@ -120,6 +135,19 @@ public class MultiplayerGame
     public static MultiplayerGame? LoadGame(string guid)
     {
         return s_games.TryGetValue(guid, out var game) ? game : null;
+    }
+
+    public static MultiplayerGame? LoadGameFromState(MultiplayerGameState? gameState)
+    {
+        if (gameState == null) return null;
+        var game = new MultiplayerGame(gameState);
+        if (!s_games.TryAdd(gameState.Guid, game)) return null;
+
+        foreach (var playerState in gameState.Players)
+        {
+            game.Players[playerState.Guid] = new MultiplayerPlayer(game, playerState);
+        }
+        return game;
     }
 
     /// <summary>
@@ -142,7 +170,6 @@ public class MultiplayerGame
         if (!s_playerConnections.Remove(connectionId, out var player)) return null;
         player.ConnectionId = "";
         player.State.IsConnected = false;
-        player.Game.UpdatePlayerStatus(player);
         return player;
     }
     #endregion Static Methods
@@ -158,7 +185,7 @@ public class MultiplayerGame
     /// <returns>The player object for the added player, if successfully added</returns>
     public MultiplayerPlayer? JoinGame(string playerName, string phoneticName, string playerConnectionId, string version, out string? error)
     {
-        if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
+        if (Players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
         {
             error = "Player name in use";
             return null;
@@ -180,12 +207,12 @@ public class MultiplayerGame
         do
         {
             guid = System.Guid.NewGuid().ToString("N");
-        } while (_players.ContainsKey(guid));
+        } while (Players.ContainsKey(guid));
 
         var key = System.Guid.NewGuid().ToString("N");
 
         var player = new MultiplayerPlayer(this, guid, key, CleanPlayerName(playerName), phoneticName, playerConnectionId);
-        _players[guid] = player;
+        Players[guid] = player;
         s_playerConnections[playerConnectionId] = player;
         State.LastMessage = DateTimeOffset.Now;
         error = null;
@@ -203,7 +230,6 @@ public class MultiplayerGame
         player.ConnectionId = playerConnectionId;
         player.State.IsConnected = true;
         State.LastMessage = DateTimeOffset.Now;
-        UpdatePlayerStatus(player);
     }
 
     /// <summary>
@@ -211,13 +237,15 @@ public class MultiplayerGame
     /// player as forfeit so players can collect their items if the game has already started
     /// </summary>
     /// <param name="player">The player to mark as forfeit</param>
-    public void ForfeitPlayerGame(MultiplayerPlayer player)
+    /// <param name="deleteFromDatabase">Set to true when a player forfeits before the game starts</param>
+    /// <param name="gameStatusUpdated">Set to true when a game is set to complete after the final player forfeiting</param>
+    public void ForfeitPlayerGame(MultiplayerPlayer player, out bool deleteFromDatabase, out bool gameStatusUpdated)
     {
-        player.State.HasForfeited = true;
+        player.State.Status = MultiplayerPlayerStatus.Forfeit;
         if (player.State.IsAdmin)
         {
             player.State.IsAdmin = false;
-            var newAdmin = _players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
+            var newAdmin = Players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
             if (newAdmin != null)
             {
                 newAdmin.State.IsAdmin = true;
@@ -225,9 +253,14 @@ public class MultiplayerGame
             }
         }
 
-        if (_players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
+        if (Players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
         {
             State.Status = MultiplayerGameStatus.Completed;
+            gameStatusUpdated = true;
+        }
+        else
+        {
+            gameStatusUpdated = false;
         }
 
         State.LastMessage = DateTimeOffset.Now;
@@ -235,11 +268,13 @@ public class MultiplayerGame
         if (!State.HasGameStarted)
         {
             s_playerConnections.TryRemove(player.ConnectionId, out _);
-            _players.TryRemove(player.Guid, out _);
+            Players.TryRemove(player.Guid, out _);
+            State.Players.Remove(player.State);
+            deleteFromDatabase = true;
         }
         else
         {
-            UpdatePlayerStatus(player);
+            deleteFromDatabase = false;
         }
     }
 
@@ -248,13 +283,14 @@ public class MultiplayerGame
     /// player as forfeit so players can collect their items if the game has already started
     /// </summary>
     /// <param name="player">The player to mark as forfeit</param>
-    public void CompletePlayerGame(MultiplayerPlayer player)
+    /// <param name="gameStatusUpdated">Set to true when the game is set to complete after the final player completes the game</param>
+    public void CompletePlayerGame(MultiplayerPlayer player, out bool gameStatusUpdated)
     {
-        player.State.HasCompleted = true;
+        player.State.Status = MultiplayerPlayerStatus.Completed;
         if (player.State.IsAdmin)
         {
             player.State.IsAdmin = false;
-            var newAdmin = _players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
+            var newAdmin = Players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
             if (newAdmin != null)
             {
                 newAdmin.State.IsAdmin = true;
@@ -262,22 +298,17 @@ public class MultiplayerGame
             }
         }
 
-        if (_players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
+        if (Players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
         {
             State.Status = MultiplayerGameStatus.Completed;
-        }
-
-        State.LastMessage = DateTimeOffset.Now;
-
-        if (!State.HasGameStarted)
-        {
-            s_playerConnections.TryRemove(player.ConnectionId, out _);
-            _players.TryRemove(player.Guid, out _);
+            gameStatusUpdated = true;
         }
         else
         {
-            UpdatePlayerStatus(player);
+            gameStatusUpdated = false;
         }
+
+        State.LastMessage = DateTimeOffset.Now;
     }
 
     /// <summary>
@@ -302,6 +333,11 @@ public class MultiplayerGame
             return false;
         }
 
+        foreach (var state in PlayerStates.Where(x => !string.IsNullOrEmpty(x.GenerationData)))
+        {
+            state.Status = MultiplayerPlayerStatus.Playing;
+        }
+
         State.ValidationHash = validationHash;
         State.Status = MultiplayerGameStatus.Started;
         State.LastMessage = DateTimeOffset.Now;
@@ -318,7 +354,7 @@ public class MultiplayerGame
     /// <returns></returns>
     public MultiplayerPlayer? GetPlayer(string guid, string? key, bool verifyKey, bool verifyAdmin = false)
     {
-        if (!_players.TryGetValue(guid, out var player)) return null;
+        if (!Players.TryGetValue(guid, out var player)) return null;
         if (verifyKey && key != player.Key) return null;
         if (verifyAdmin && AdminPlayer != player) return null;
         return player;
@@ -332,7 +368,30 @@ public class MultiplayerGame
     public void UpdatePlayerState(MultiplayerPlayer player, MultiplayerPlayerState state)
     {
         player.State = state;
-        UpdatePlayerStatus(player);
+    }
+
+    /// <summary>
+    /// Updates the player's config
+    /// </summary>
+    /// <param name="player">The player object to update</param>
+    /// <param name="config">The new config for the player</param>
+    public void UpdatePlayerConfig(MultiplayerPlayer player, string config)
+    {
+        player.State.Config = config;
+        if (!State.HasGameStarted) player.State.Status = MultiplayerPlayerStatus.Ready;
+    }
+
+    /// <summary>
+    /// Updates the player world
+    /// </summary>
+    /// <param name="player">The player object to update</param>
+    /// <param name="state">The new state for the player</param>
+    /// <returns>A collection of all objects that were updated for the player</returns>
+    public PlayerWorldUpdates UpdatePlayerWorld(MultiplayerPlayer player, MultiplayerWorldState state)
+    {
+        var updates = player.State.SyncPlayerWorld(state);
+        if (updates.HasUpdates) State.LastMessage = DateTimeOffset.Now;
+        return updates;
     }
 
     /// <summary>
@@ -348,12 +407,14 @@ public class MultiplayerGame
     /// <summary>
     /// Updates a player's generation data and returns true if all players have been submitted
     /// </summary>
-    /// <param name="player"></param>
-    /// <param name="playerGenerationData"></param>
+    /// <param name="player">The player to modify</param>
+    /// <param name="worldId">The world id of the player</param>
+    /// <param name="playerGenerationData">The string representation of the player generation data</param>
     /// <returns></returns>
-    public void SetPlayerGenerationData(MultiplayerPlayer player, string playerGenerationData)
+    public void SetPlayerGenerationData(MultiplayerPlayer player, int worldId, string playerGenerationData)
     {
-        player.PlayerGenerationData = playerGenerationData;
+        player.State.WorldId = worldId;
+        player.State.GenerationData = playerGenerationData;
         State.LastMessage = DateTimeOffset.Now;
     }
 
@@ -362,10 +423,11 @@ public class MultiplayerGame
     /// </summary>
     /// <param name="player"></param>
     /// <param name="locationId"></param>
-    public void TrackLocation(MultiplayerPlayer player, int locationId)
+    public MultiplayerLocationState? TrackLocation(MultiplayerPlayer player, int locationId)
     {
-        player.State.TrackLocation(locationId);
+        var location = player.State.TrackLocation(locationId);
         State.LastMessage = DateTimeOffset.Now;
+        return location;
     }
 
     /// <summary>
@@ -374,10 +436,11 @@ public class MultiplayerGame
     /// <param name="player"></param>
     /// <param name="type"></param>
     /// <param name="trackedValue"></param>
-    public void TrackItem(MultiplayerPlayer player, ItemType type, int trackedValue)
+    public MultiplayerItemState? TrackItem(MultiplayerPlayer player, ItemType type, int trackedValue)
     {
-        player.State.TrackItem(type, trackedValue);
+        var item = player.State.TrackItem(type, trackedValue);
         State.LastMessage = DateTimeOffset.Now;
+        return item;
     }
 
     /// <summary>
@@ -385,10 +448,11 @@ public class MultiplayerGame
     /// </summary>
     /// <param name="player"></param>
     /// <param name="type"></param>
-    public void TrackBoss(MultiplayerPlayer player, BossType type)
+    public MultiplayerBossState? TrackBoss(MultiplayerPlayer player, BossType type)
     {
-        player.State.TrackBoss(type);
+        var boss = player.State.TrackBoss(type);
         State.LastMessage = DateTimeOffset.Now;
+        return boss;
     }
 
     /// <summary>
@@ -396,25 +460,11 @@ public class MultiplayerGame
     /// </summary>
     /// <param name="player"></param>
     /// <param name="name"></param>
-    public void TrackDungeon(MultiplayerPlayer player, string name)
+    public MultiplayerDungeonState? TrackDungeon(MultiplayerPlayer player, string name)
     {
-        player.State.TrackDungeon(name);
+        var dungeon = player.State.TrackDungeon(name);
         State.LastMessage = DateTimeOffset.Now;
-    }
-
-    /// <summary>
-    /// Updates a player's status based on both
-    /// </summary>
-    /// <param name="player">The player object to update</param>
-    private void UpdatePlayerStatus(MultiplayerPlayer player)
-    {
-        if (player.State.Config == null) player.State.Status = MultiplayerPlayerStatus.ConfigPending;
-        else if (!player.State.IsConnected) player.State.Status = MultiplayerPlayerStatus.Disconnected;
-        else if (player.State.HasForfeited) player.State.Status = MultiplayerPlayerStatus.Forfeit;
-        else if (player.State.HasCompleted) player.State.Status = MultiplayerPlayerStatus.Completed;
-        else player.State.Status = State.Status == MultiplayerGameStatus.Created
-            ? MultiplayerPlayerStatus.Ready
-            : MultiplayerPlayerStatus.Playing;
+        return dungeon;
     }
 
     private static string CleanPlayerName(string name)

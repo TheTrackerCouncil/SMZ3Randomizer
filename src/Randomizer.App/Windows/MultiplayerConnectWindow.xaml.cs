@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Options;
 using Randomizer.Multiplayer.Client;
+using Randomizer.Shared;
 using Randomizer.Shared.Multiplayer;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -23,7 +24,7 @@ namespace Randomizer.App.Windows
     {
         private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
 
-        private static List<string> s_defaultServers = new List<string>()
+        private static readonly List<string> s_defaultServers = new()
         {
             "https://smz3.celestialrealm.net",
 #if DEBUG
@@ -65,7 +66,7 @@ namespace Randomizer.App.Windows
             {
                 _logger.LogInformation("Connected to server successfully. Creating new game.");
                 if (Options != null) Options.MultiplayerUrl = Url;
-                await _multiplayerClientService.CreateGame(DisplayName, PhoneticName, MultiplayerGameType, _version);
+                await _multiplayerClientService.CreateGame(DisplayName, PhoneticName, MultiplayerGameType, _version, AsyncGame);
             }
             else
             {
@@ -99,6 +100,7 @@ namespace Randomizer.App.Windows
         public string StatusText => IsConnecting ? "Connecting..." : "";
         public RandomizerOptions? Options { get; set; }
         public Visibility ServerListVisibility => IsCreatingGame ? Visibility.Visible : Visibility.Collapsed;
+        public bool AsyncGame { get; set; }
 
         private string _url = "";
         public string Url

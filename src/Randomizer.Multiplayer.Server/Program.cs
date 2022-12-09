@@ -9,6 +9,8 @@ if (string.IsNullOrEmpty(builder.Configuration.GetValue<string>("SMZ3:ServerUrl"
 
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<GameManager>();
+builder.Services.AddSingleton<MultiplayerDbService>();
+builder.Services.AddDbContextFactory<MultiplayerDbContext>();
 
 var app = builder.Build();
 

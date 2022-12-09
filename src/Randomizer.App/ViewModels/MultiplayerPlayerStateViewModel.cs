@@ -50,7 +50,7 @@ namespace Randomizer.App.ViewModels
             get
             {
                 if (!IsConnectedToServer) return IsLocalPlayer ? "Disconnected" : "Unknown";
-                return State.Status.GetDescription();
+                return State.IsConnected ? State.Status.GetDescription() : "Disconnected";
             }
         }
 
