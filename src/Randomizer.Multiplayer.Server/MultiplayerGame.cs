@@ -54,8 +54,8 @@ public class MultiplayerGame
 
     public string Guid => State.Guid;
     public MultiplayerGameState State { get; }
-    public MultiplayerPlayer? AdminPlayer { get; private set; }
     public ConcurrentDictionary<string, MultiplayerPlayer> Players = new();
+    public MultiplayerPlayer? AdminPlayer => Players.Values.FirstOrDefault(x => x.IsGameAdmin);
     public List<MultiplayerPlayerState> PlayerStates => Players.Values.Select(x => x.State).ToList();
     public List<string> PlayerGenerationData => Players.Values.Select(x => x.PlayerGenerationData).NonNull().ToList();
 
@@ -120,7 +120,6 @@ public class MultiplayerGame
                 playerConnectionId) { State = { IsAdmin = true } };
 
         game.State.Players.Add(player.State);
-        game.AdminPlayer ??= player;
         game.Players[playerGuid] = player;
         s_playerConnections[playerConnectionId] = player;
         error = null;
@@ -249,7 +248,6 @@ public class MultiplayerGame
             if (newAdmin != null)
             {
                 newAdmin.State.IsAdmin = true;
-                AdminPlayer = newAdmin;
             }
         }
 
@@ -294,7 +292,6 @@ public class MultiplayerGame
             if (newAdmin != null)
             {
                 newAdmin.State.IsAdmin = true;
-                AdminPlayer = newAdmin;
             }
         }
 

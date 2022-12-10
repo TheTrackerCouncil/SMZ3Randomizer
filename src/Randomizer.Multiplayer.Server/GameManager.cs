@@ -18,8 +18,8 @@ public class GameManager
         _hubContext = hubContext;
         _dbService = dbService;
 
-        _expirationMinutes = configuration.GetValue("SMZ3:GameMemoryExpirationInMinutes", 15);
-        _checkFrequencyMinutes = configuration.GetValue("SMZ3:GameCheckFrequencyInMinutes", 60);
+        _expirationMinutes = configuration.GetValue("SMZ3:GameMemoryExpirationInMinutes", 60);
+        _checkFrequencyMinutes = configuration.GetValue("SMZ3:GameCheckFrequencyInMinutes", 15);
         _databaseExpirationDays = configuration.GetValue("SMZ3:GameDatabaseExpirationInDays", 30);
 
         Task.Run(CheckGames);

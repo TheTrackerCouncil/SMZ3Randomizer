@@ -710,6 +710,10 @@ namespace Randomizer.Multiplayer.Client
                     _logger.LogError(e, "Connection to server lost");
                     Error?.Invoke($"Connection to server lost");
                 }
+                else
+                {
+                    _logger.LogError(e, "Could not make request");
+                }
             }
 
         }

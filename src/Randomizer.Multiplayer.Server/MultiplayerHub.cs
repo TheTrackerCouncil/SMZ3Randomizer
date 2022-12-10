@@ -608,7 +608,7 @@ namespace Randomizer.Multiplayer.Server
         }
 
         /// <summary>
-        /// Requests all of the player data from the server, either just for that play or to send out to all players
+        /// Requests all of the player data from the server, either just for that player or to send out to all players
         /// </summary>
         /// <param name="request"></param>
         public async Task PlayerListSync(PlayerListSyncRequest request)

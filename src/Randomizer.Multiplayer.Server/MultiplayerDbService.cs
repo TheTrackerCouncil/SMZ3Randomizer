@@ -41,18 +41,46 @@ public class MultiplayerDbService
     {
         if (!_isDatabaseEnabled) return null;
         using var dbContext = _contextFactory.CreateDbContext();
-        var gameState = dbContext.MultiplayerGameStates
-            .Where(x => x.Guid == guid)
-            .Include(x => x.Players)
-                .ThenInclude(x => x.Locations)
-            .Include(x => x.Players)
-                .ThenInclude(x => x.Items)
-            .Include(x => x.Players)
-                .ThenInclude(x => x.Dungeons)
-            .Include(x => x.Players)
-                .ThenInclude(x => x.Bosses)
-            .FirstOrDefault();
-        return MultiplayerGame.LoadGameFromState(gameState);
+        try
+        {
+            var gameState = dbContext.MultiplayerGameStates
+                .Where(x => x.Guid == guid)
+                .Include(x => x.Players)
+                .FirstOrDefault();
+
+            if (gameState == null) return null;
+
+            // For some reason grabbing these via Include or ThenInclude
+            // would sometimes hang, so grab them individually and manually
+            // assign them
+            var gameLocations = dbContext.MultiplayerLocationStates
+                .Where(x => x.GameId == gameState.Id)
+                .ToList();
+            var gameItems = dbContext.MultiplayerItemStates
+                .Where(x => x.GameId == gameState.Id)
+                .ToList();
+            var gameDungeons = dbContext.MultiplayerDungeonStates
+                .Where(x => x.GameId == gameState.Id)
+                .ToList();
+            var gameBosses = dbContext.MultiplayerBossStates
+                .Where(x => x.GameId == gameState.Id)
+                .ToList();
+
+            foreach (var player in gameState.Players)
+            {
+                player.Locations = gameLocations.Where(x => x.PlayerId == player.Id).ToList();
+                player.Items = gameItems.Where(x => x.PlayerId == player.Id).ToList();
+                player.Dungeons = gameDungeons.Where(x => x.PlayerId == player.Id).ToList();
+                player.Bosses = gameBosses.Where(x => x.PlayerId == player.Id).ToList();
+            }
+
+            return MultiplayerGame.LoadGameFromState(gameState);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex, "Unable to load game from database");
+            return null;
+        }
     }
 
     /// <summary>

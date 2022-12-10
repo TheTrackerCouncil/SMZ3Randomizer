@@ -7,5 +7,5 @@ if (Test-Path $outputZip) {
     Remove-Item $outputZip -Force
 }
 if (-not (Test-Path $outputZip)) {
-    Compress-Archive -Path "$folder\*.*" -DestinationPath $outputZip
+    Compress-Archive -Path "$folder\*" -DestinationPath $outputZip
 }

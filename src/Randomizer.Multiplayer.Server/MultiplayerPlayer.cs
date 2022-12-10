@@ -1,6 +1,4 @@
-﻿using Randomizer.Shared;
-using Randomizer.Shared.Enums;
-using Randomizer.Shared.Multiplayer;
+﻿using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
 
@@ -37,5 +35,5 @@ public class MultiplayerPlayer
     public string ConnectionId { get; set; } = "";
     public MultiplayerPlayerState State { get; set; }
     public string? PlayerGenerationData => State.GenerationData;
-    public bool IsGameAdmin => Game.AdminPlayer == this;
+    public bool IsGameAdmin => State.IsAdmin;
 }
