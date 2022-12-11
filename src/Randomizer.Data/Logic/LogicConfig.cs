@@ -35,6 +35,11 @@ namespace Randomizer.Data.Logic
         [Category("Logic")]
         public bool EasyEastCrateriaSkyItem { get; set; }
 
+        [DisplayName("Easy Blue Brinstar Top Access")]
+        [Description("You're expected to have the space jump or gravity suit to get to the room up at the top of blue brinstar with the two items.")]
+        [Category("Logic")]
+        public bool EasyBlueBrinstarTop { get; set; }
+
         [DisplayName("Kholdstare Needs Somaria")]
         [Description("You're expected to have the Cane of Somaria to get to Kholdstare to prevent from having to clear Ice Palace the vanilla way.")]
         [Category("Logic")]

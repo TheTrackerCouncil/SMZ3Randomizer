@@ -410,5 +410,41 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             missingItems = Logic.GetMissingRequiredItems(tempWorld.IcePalace.KholdstareReward, progression, out _);
             missingItems.Should().BeEmpty();
         }
+
+        [Fact]
+        public void TestEasyBlueBrinstarTop()
+        {
+            var config = new Config { LogicConfig = { EasyBlueBrinstarTop = false, }, KeysanityMode = KeysanityMode.None };
+
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.CardBrinstarL1 }, new List<RewardType>(), new List<BossType>());
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem, progression, out _).Should().BeEmpty();
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem, progression, out _).Should().BeEmpty();
+            tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem.IsAvailable(progression).Should().BeTrue();
+            tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem.IsAvailable(progression).Should().BeTrue();
+
+            config.LogicConfig.EasyBlueBrinstarTop = true;
+            tempWorld = new World(config, "", 0, "");
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem, progression, out _).Should().HaveCount(2)
+                .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
+                .And.ContainEquivalentOf(new[] { ItemType.Gravity });
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem, progression, out _).Should().HaveCount(2)
+                .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
+                .And.ContainEquivalentOf(new[] { ItemType.Gravity });
+            tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem.IsAvailable(progression).Should().BeFalse();
+            tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem.IsAvailable(progression).Should().BeFalse();
+
+            progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.Gravity, ItemType.CardBrinstarL1 }, new List<RewardType>(), new List<BossType>());
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem, progression, out _).Should().BeEmpty();
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem, progression, out _).Should().BeEmpty();
+            tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem.IsAvailable(progression).Should().BeTrue();
+            tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem.IsAvailable(progression).Should().BeTrue();
+
+            progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.SpaceJump, ItemType.CardBrinstarL1 }, new List<RewardType>(), new List<BossType>());
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem, progression, out _).Should().BeEmpty();
+            Logic.GetMissingRequiredItems(tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem, progression, out _).Should().BeEmpty();
+            tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem.IsAvailable(progression).Should().BeTrue();
+            tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem.IsAvailable(progression).Should().BeTrue();
+        }
     }
 }

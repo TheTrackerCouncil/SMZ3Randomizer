@@ -51,7 +51,7 @@
         or may not be completable.
             </TextBlock>
           </Border>
-          
+
           <Expander Header="Early Items"
                     x:Name="EarlyItemsExpander"
                     Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
@@ -97,12 +97,12 @@
                         Margin="24,11,11,11"
                         DataContext="{Binding LogicConfig}">
 
-              <GroupBox Header="Basic Logic"
+              <GroupBox Header="Cas' Logic"
                         Padding="0,5,0,0" Margin="0,0,0,3">
                 <UniformGrid Columns="2" Name="LogicGrid" />
               </GroupBox>
 
-              <GroupBox Header="Tricks"
+              <GroupBox Header="Tricks and Advanced Logic"
                         Padding="0,5,0,0" Margin="0,0,0,1">
                 <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
                   <UniformGrid Columns="2"
@@ -258,11 +258,11 @@
                             Minimum="0"
                             Maximum="{Binding MaxHints}"/>
                     </StackPanel>
-                    
+
                   </controls:LabeledControl>
-                  
+
                 </StackPanel>
-                
+
               </GroupBox>
 
               <GroupBox Header="Race Settings"
