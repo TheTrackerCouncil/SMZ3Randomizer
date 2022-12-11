@@ -9,9 +9,13 @@ namespace Randomizer.Data.Options
 {
     public class CasPatches
     {
-        [DisplayName("Disable flashing (Zelda only)")]
-        [Description("Disables flashing effects from things like Ether.")]
+        [DisplayName("Disable flashing")]
+        [Description("Disables many flashing effects from things like Ether, lightning, and Metroid bosses. Note some flashing may still exist unfortunately.\nMetroid patch developed by Kara.")]
         public bool DisableFlashing { get; set; } = true;
+
+        [DisplayName("Disable screen shake (Metroid)")]
+        [Description("Disables the screen shake effect during escape and when lava/acid is rising.\nPatch developed by flo.")]
+        public bool DisableScreenShake { get; set; } = true;
 
         [DisplayName("Prevent Scams")]
         [Description("The bottle merchant and King Zora will tell you what they have before asking if you want to purchase it, even if you don't have enough rupees.")]

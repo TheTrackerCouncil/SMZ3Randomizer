@@ -27,7 +27,7 @@ using Randomizer.SMZ3.Generation;
 namespace Randomizer.App
 {
     /// <summary>
-    /// Class to handle generating roms 
+    /// Class to handle generating roms
     /// </summary>
     public class RomGenerator
     {
@@ -64,7 +64,7 @@ namespace Randomizer.App
             var latestError = "";
             var seed = (SeedData)null;
             var validated = false;
-            
+
             for (var i = 0; i < attempts; i++)
             {
                 try
@@ -118,7 +118,7 @@ namespace Randomizer.App
                 }
                 return null;
             }
-            
+
         }
 
         /// <summary>
@@ -325,9 +325,15 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.CasPatches.Speedkeep)
+            if (options.PatchOptions.CasPatches.DisableFlashing)
             {
-                using var patch = IpsPatch.SpeedKeep();
+                using var patch = IpsPatch.DisableMetroidFlashing();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.DisableScreenShake)
+            {
+                using var patch = IpsPatch.DisableMetroidScreenShake();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
@@ -383,7 +389,7 @@ namespace Randomizer.App
             => text + "\n" + new string(line, text.Length);
 
         /// <summary>
-        /// Gets the spoiler log of a given seed 
+        /// Gets the spoiler log of a given seed
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
         /// <param name="seed">The previously generated seed data</param>

@@ -93,9 +93,14 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public Location HiddenItem { get; }
 
             public bool CanEnter(Progression items)
-                => items.CardBrinstarL1 && Logic.CanUsePowerBombs(items)
-                && (((items.HiJump || items.Gravity) && items.SpeedBooster)
-                    || Logic.CanWallJump(WallJumpDifficulty.Medium) || items.SpaceJump);
+            {
+                // Can get to east side of blue brin
+                return items.CardBrinstarL1 && Logic.CanUsePowerBombs(items) &&
+                       // Can climb the shaft
+                       (Logic.CanWallJump(WallJumpDifficulty.Medium) || items.SpaceJump || items.SpeedBooster) &&
+                       // Can either easily jump out of the water or is comfortable doing the door jump
+                       (!World.Config.LogicConfig.EasyBlueBrinstarTop || items.Gravity || items.SpaceJump);
+            }
         }
     }
 }

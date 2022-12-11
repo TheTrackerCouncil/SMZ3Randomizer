@@ -65,7 +65,7 @@ namespace Randomizer.Data.Logic
         public bool CanHyruleSouthFakeFlippers(Progression items, bool fairyChests);
 
         public bool CanNavigateMaridiaLeftSandPit(Progression items);
-        
+
         public bool CanWallJump(WallJumpDifficulty difficulty);
 
         public bool CheckAgahnim(Progression items, World world, bool requireRewards);
