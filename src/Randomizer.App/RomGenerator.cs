@@ -15,7 +15,6 @@ using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
-using Randomizer.Shared.Multiplayer;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;

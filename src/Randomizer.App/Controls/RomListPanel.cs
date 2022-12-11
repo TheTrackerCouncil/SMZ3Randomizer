@@ -302,7 +302,7 @@ namespace Randomizer.App.Controls
             generateWindow.Owner = Window.GetWindow(this);
             generateWindow.Options = Options;
             generateWindow.PlandoConfig = plandoConfig;
-            generateWindow.MultiMode = isMulti;
+            generateWindow.MultiplayerMode = isMulti;
             var successful = generateWindow.ShowDialog();
             return successful.HasValue && successful.Value;
         }

@@ -10,6 +10,7 @@ using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Multiplayer;
 using Randomizer.Multiplayer.Client;
+using Randomizer.Shared;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.App.Windows
@@ -152,6 +153,8 @@ namespace Randomizer.App.Windows
             config.PlayerGuid = _multiplayerClientService.CurrentPlayerGuid!;
             config.PlayerName = _multiplayerClientService.LocalPlayer!.PlayerName;
             config.PhoneticName = _multiplayerClientService.LocalPlayer!.PhoneticName;
+            config.Race = false;  // Not currently supported in multiplayer
+            config.ItemPlacementRule = ItemPlacementRule.Anywhere; // Not currently supported in multiplayer
             await _multiplayerClientService.SubmitConfig(Config.ToConfigString(config));
         }
 

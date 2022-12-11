@@ -778,6 +778,7 @@ AutoTracker:
   - Text: One of these days I'll be playing the games myself
   - Text: Welcome to a very special episode of SMZ3 Randomizer
   - Text: Hey tracker. Oh hi tracker, what are you doing here? I'm here to relieve you of your shift. You can go home. Sweet. Thanks tracker. You're welcome. Now let's get started.
+  - Text: SMZ3 Randomizer is filmed in front of a live tracker audience.
   GameStartedMultiplayer:
   - Text: Wow, there are {0} of you for this game? Well, let's get started.
   - Text: Oh no. You invited {1} to join in. I guess that's fine.

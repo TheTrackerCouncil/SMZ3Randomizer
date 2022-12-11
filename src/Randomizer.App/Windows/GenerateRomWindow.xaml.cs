@@ -21,7 +21,6 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
-using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Generation;
@@ -62,7 +61,7 @@ namespace Randomizer.App.Windows
 
         public bool PlandoMode => PlandoConfig != null;
 
-        public bool MultiMode { get; set; }
+        public bool MultiplayerMode { get; set; }
 
         /// <summary>
         /// Gets the visibility of controls which should be hidden when plando
@@ -80,13 +79,13 @@ namespace Randomizer.App.Windows
         /// Gets the visibility of controls which should be hidden when plando
         /// mode is active.
         /// </summary>
-        public Visibility InvisibleInMultiworld => MultiMode ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility InvisibleInMultiplayer => MultiplayerMode ? Visibility.Collapsed : Visibility.Visible;
 
         /// <summary>
         /// Gets the visibility of controls which should be shown only when
         /// plando mode is active.
         /// </summary>
-        public Visibility VisibleInMultiworld => MultiMode ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibleInMultiplayer => MultiplayerMode ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
         /// Gets the IsEnabled value for controls which should be disabled when
@@ -98,7 +97,13 @@ namespace Randomizer.App.Windows
         /// Gets the IsEnabled value for controls which should be disabled when
         /// plando mode is active.
         /// </summary>
-        public bool DisabledInMultiworld => !true;
+        public bool DisabledInMultiplayer => !MultiplayerMode;
+
+        /// <summary>
+        /// Gets the IsEnabled value for controls which should be disabled when
+        /// plando mode is active.
+        /// </summary>
+        public bool DisabledInPlandoAndMulti => DisabledInMultiplayer && DisabledInPlando;
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
