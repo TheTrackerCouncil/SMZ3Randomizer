@@ -13,11 +13,13 @@ public class MultiplayerGame
 {
     public static int GameCount => s_games.Count;
     public static int PlayerCount => s_playerConnections.Count;
+    public static IEnumerable<MultiplayerGameState> GameStates => s_games.Values.Select(x => x.State);
 
     private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
     private static readonly Regex s_continousSpace = new(@" +");
     private static readonly ConcurrentDictionary<string, MultiplayerGame> s_games = new();
     private static readonly ConcurrentDictionary<string, MultiplayerPlayer> s_playerConnections = new();
+
 
     /// <summary>
     /// Constructor

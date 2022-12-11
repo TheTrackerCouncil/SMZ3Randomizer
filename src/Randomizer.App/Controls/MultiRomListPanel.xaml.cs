@@ -96,6 +96,14 @@ namespace Randomizer.App.Controls
                     return;
                 }
             }
+            else
+            {
+                var rom = DbContext.GeneratedRoms.FirstOrDefault(x => x.MultiplayerGameDetailsId == details.Id);
+                if (rom != null && !DeleteGeneratedRom(rom))
+                {
+                    return;
+                }
+            }
 
             DbContext.MultiplayerGames.Remove(details);
             DbContext.SaveChanges();

@@ -18,8 +18,8 @@ public class GameManager
         _hubContext = hubContext;
         _dbService = dbService;
 
-        _expirationMinutes = configuration.GetValue("SMZ3:GameMemoryExpirationInMinutes", 60);
         _checkFrequencyMinutes = configuration.GetValue("SMZ3:GameCheckFrequencyInMinutes", 15);
+        _expirationMinutes = configuration.GetValue("SMZ3:GameMemoryExpirationInMinutes", 60);
         _databaseExpirationDays = configuration.GetValue("SMZ3:GameDatabaseExpirationInDays", 30);
 
         Task.Run(CheckGames);
@@ -32,6 +32,9 @@ public class GameManager
     {
         while (true)
         {
+            // Save any games in memory to the database
+            await _dbService.SaveGameStates(MultiplayerGame.GameStates);
+
             var expiredGuids = MultiplayerGame.ExpireGamesInMemory(_expirationMinutes);
             _logger.LogInformation("Removed {Amount} inactive games(s) from memory", expiredGuids.Count);
 

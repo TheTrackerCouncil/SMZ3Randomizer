@@ -107,8 +107,26 @@ public class MultiplayerDbService
         var dbState = dbContext.MultiplayerGameStates
             .FirstOrDefault(x => x.Id == gameState.Id);
         if (dbState == null) return;
-        dbState.Status = gameState.Status;
+        dbState.Copy(gameState);
         await SaveChanges(dbContext, $"Unable to save game state {gameState.Guid}");
+    }
+
+    /// <summary>
+    /// Saves all of the provided game states to the database if they are set to be saved
+    /// </summary>
+    /// <param name="gameStates"></param>
+    public async Task SaveGameStates(IEnumerable<MultiplayerGameState> gameStates)
+    {
+        if (!_isDatabaseEnabled) return;
+        await using var dbContext = await _contextFactory.CreateDbContextAsync();
+        var gameIds = gameStates.Where(x => x.SaveToDatabase).Select(x => x.Id).ToList();
+        var dbStates = dbContext.MultiplayerGameStates
+            .Where(x => gameIds.Contains(x.Id));
+        foreach (var dbState in dbStates)
+        {
+            dbState.Copy(gameStates.First(x => x.Id == dbState.Id));
+        }
+        await SaveChanges(dbContext, "Unable to save game states");
     }
 
     /// <summary>
@@ -122,7 +140,7 @@ public class MultiplayerDbService
         await using var dbContext = await _contextFactory.CreateDbContextAsync();
         var dbState = await dbContext.MultiplayerPlayerStates.FindAsync(playerState.Id);
         if (dbState == null) return;
-        SyncPlayerStates(dbState, playerState);
+        dbState.Copy(playerState);
         await SaveChanges(dbContext, $"Unable to save player state for player {playerState.Guid}");
     }
 
@@ -140,7 +158,7 @@ public class MultiplayerDbService
             .Where(x => playerIds.Contains(x.Id));
         foreach (var dbState in dbStates)
         {
-            SyncPlayerStates(dbState, playerStates.First(x => x.Id == dbState.Id));
+            dbState.Copy(playerStates.First(x => x.Id == dbState.Id));
         }
         await SaveChanges(dbContext, "Unable to save player states");
     }
@@ -334,15 +352,6 @@ public class MultiplayerDbService
 
         await SaveChanges(dbContext, "Unable to delete old game saves");
         return deletedGuids;
-    }
-
-    private void SyncPlayerStates(MultiplayerPlayerState dbState, MultiplayerPlayerState requestState)
-    {
-        dbState.IsAdmin = requestState.IsAdmin;
-        dbState.Config = requestState.Config;
-        dbState.Status = requestState.Status;
-        dbState.GenerationData = requestState.GenerationData;
-        dbState.WorldId = requestState.WorldId;
     }
 
     private async Task SaveChanges(MultiplayerDbContext dbContext, string errorMessage)

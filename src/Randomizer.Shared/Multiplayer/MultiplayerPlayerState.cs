@@ -223,4 +223,17 @@ public class MultiplayerPlayerState
 
         return worldUpdate;
     }
+
+    /// <summary>
+    /// Copies properties from the provided state
+    /// </summary>
+    /// <param name="other"></param>
+    public void Copy(MultiplayerPlayerState other)
+    {
+        IsAdmin = other.IsAdmin;
+        Config = other.Config;
+        Status = other.Status;
+        GenerationData = other.GenerationData;
+        WorldId = other.WorldId;
+    }
 }

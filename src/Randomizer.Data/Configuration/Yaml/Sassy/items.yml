@@ -248,6 +248,7 @@
     - Text: Why are you wasting my time?
     - Text: You better have accidentally picked that up
     - Text: Hopefully there's a wishing well for you to toss that in
+    - Text: You'll need a lot more of these if you want to go to Zora
 - Item: Five Rupees
   WhenTracked:
     "1":

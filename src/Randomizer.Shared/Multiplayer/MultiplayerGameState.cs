@@ -24,4 +24,15 @@ public class MultiplayerGameState
     public bool SaveToDatabase { get; set; }
     public ICollection<MultiplayerPlayerState> Players { get; set; } = new List<MultiplayerPlayerState>();
     public bool HasGameStarted => Status != MultiplayerGameStatus.Created;
+
+    /// <summary>
+    /// Copies properties from the provided state
+    /// </summary>
+    /// <param name="other"></param>
+    public void Copy(MultiplayerGameState other)
+    {
+        Status = other.Status;
+        LastMessage = other.LastMessage;
+        ValidationHash = other.ValidationHash;
+    }
 }
