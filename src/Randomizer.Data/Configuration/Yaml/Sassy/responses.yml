@@ -667,6 +667,10 @@ Chat:
     Weight: 0.1
   - Text: Hey chat, I'm happy so many of you have come to this Twitch stream to see me.
     Weight: 0.1
+  - Text: Here's my impression of you chat. Hey tracker. Hi tracker. Tracker. Hey tracker. That's you. That's what you sound like.
+    Weight: 0.1
+  - Text: Oh great. Now I have to talk to the peasants of chat.
+    Weight: 0.1
   WhenDisconnected:
   - Text: Error with Twitch chat connection. Please save and restart tracker.
   NoConnection:
@@ -979,6 +983,8 @@ Multiplayer:
     Weight: 0.1
   - Text: I hope shipping to send {2} to {0} isn't too expensive.
     Weight: 0.1
+  - Text: Oops. You weren't supposed to receive that {1}. Let me give that to {0} instead.
+    Weight: 0.1
   ReceivedUsefulItemFromOtherPlayer:
   - Text: Thanks {0}. I'm sure this will blow this seed wide open.
     Weight: 0.1
@@ -987,12 +993,17 @@ Multiplayer:
   - Text: I wonder how much earlier {0} could have gotten that?
     Weight: 0.1
   - Text: Be sure to thank {0} for that.
+    Weight: 0.1
+  - Text: I bet {0} had a hard time giving up {2}.
+    Weight: 0.1
   ReceivedJunkItemFromOtherPlayer:
   - Text: Thanks {0}. You shouldn't have. Seriously. You shouldn't have.
-    Weight: 0.1
+    Weight: 0.05
   - Text: Wow. Please don't invite {0} to another multiplayer game if you're going to get items like {1}.
-    Weight: 0.1
+    Weight: 0.05
   - Text: Next time {0} should just keep that.
-    Weight: 0.1
-  - Text: Do you think it would be bad to regift that {1}?
-    Weight: 0.1
+    Weight: 0.05
+  - Text: Do you think it would be bad to re-gift that {1}?
+    Weight: 0.05
+  - Text: Oh. Good. I'm sure you can access so many more places with that {1} from {0}?
+    Weight: 0.05

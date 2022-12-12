@@ -16,6 +16,6 @@
   WhenDefeated:
   - Text: It's a living
     Weight: 0.2
-  - Text: It's a living. Or it was. Before your killed him.
+  - Text: It's a living. Or it was. Before you killed him.
     Weight: 0.1
 

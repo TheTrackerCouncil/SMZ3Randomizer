@@ -181,6 +181,8 @@
     Weight: 0.2
   - Text: Cane of Brian
     Weight: 0.1
+  - Text: Cane of <prosody rate='x-slow'>slowdown</prosody>
+    Weight: 0.1
 - Item: Magic Cape
   Name:
   - Text: The cape of invisibility and invincibility
@@ -462,7 +464,7 @@
     "1":
     - Text: Toggled Morph Ball on
     - Text: It's morphin' time!
-    - Text: Time to becomne orb
+    - Text: Time to become an orb
     - Text: I hope the morph ball works out better for you than it did space pirates
       Weight: 0.1
 - Item: Screw Attack
