@@ -97,8 +97,7 @@ namespace Randomizer.Data.Options
 
         public int AutoTrackerDefaultConnector { get; set; } = (int)EmulatorConnectorType.None;
 
-        public bool AutoTrackerChangeMap { get; set; } = true;
-
+        public bool AutoTrackerChangeMap { get; set; }
         public int UndoExpirationTime { get; set; } = 3;
 
         public string? TwitchUserName
