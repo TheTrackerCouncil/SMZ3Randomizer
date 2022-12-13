@@ -336,9 +336,15 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.CasPatches.Speedkeep)
+            if (options.PatchOptions.CasPatches.DisableFlashing)
             {
-                using var patch = IpsPatch.SpeedKeep();
+                using var patch = IpsPatch.DisableMetroidFlashing();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.DisableScreenShake)
+            {
+                using var patch = IpsPatch.DisableMetroidScreenShake();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
