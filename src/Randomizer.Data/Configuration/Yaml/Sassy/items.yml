@@ -121,11 +121,14 @@
 - Item: Shovel
   Name:
   - Text: Digging Tool
+  - Text: Pooper Scooper
   WhenTracked:
     "1":
     - Text: Toggled Shaktool Junior on
       Weight: 0.2
     - Text: I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.
+      Weight: 0.1
+    - Text: Tracked pooper scooper
       Weight: 0.1
 - Item: Bottle
   Name:
