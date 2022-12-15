@@ -129,7 +129,7 @@ namespace Randomizer.SMZ3.Generation
             {
                 var config = world.Config;
 
-                // Populate items that were directly specified at locations
+                // Populate location preferences
                 var configLocations = config.LocationItems.Shuffle(Random);
                 foreach (var (locationId, value) in configLocations)
                 {
@@ -141,6 +141,7 @@ namespace Randomizer.SMZ3.Generation
                         continue;
                     }
 
+                    // First if a location is requested to be either progression or junk item pools
                     if (value < Enum.GetValues(typeof(ItemPool)).Length)
                     {
                         var itemPool = (ItemPool)value;
@@ -156,7 +157,7 @@ namespace Randomizer.SMZ3.Generation
                                 FillItemAtLocation(progressionItems, item.Type, location);
                             else
                             {
-                                _logger.LogDebug($"Could not find item to place at {location.Name}");
+                                _logger.LogDebug("Could not find item to place at {Location}", location.Name);
                             }
                         }
                         else if (itemPool == ItemPool.Junk && junkItems.Any())
@@ -164,6 +165,7 @@ namespace Randomizer.SMZ3.Generation
                             FastFill(junkItems, world.Locations.Where(x => x.Id == locationId && x.World == world));
                         }
                     }
+                    // If a specific item is requested
                     else
                     {
                         var itemType = (ItemType)value;
@@ -263,7 +265,7 @@ namespace Randomizer.SMZ3.Generation
                 var location = locations.Empty().CanFillWithinWorld(item, inventory, currentRewards, currentBosses).FirstOrDefault();
                 if (location == null)
                 {
-                    _logger.LogDebug("Could not find anywhere to place {item}", item);
+                    _logger.LogDebug("Could not find anywhere to place {Item}", item);
                     itemsToAdd.Add(item);
 
                     if (!failedAttempts.ContainsKey(item))
@@ -277,7 +279,7 @@ namespace Randomizer.SMZ3.Generation
 
                 location.Item = item;
                 itemPool.Remove(item);
-                _logger.LogDebug("Placed {item} at {location}", item, location);
+                _logger.LogDebug("Placed {Item} at {Location}", item, location);
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
@@ -334,7 +336,7 @@ namespace Randomizer.SMZ3.Generation
 
             location.Item = item;
             itemPool.Remove(item);
-            _logger.LogDebug("Front-filled {item} at {location}", item, location);
+            _logger.LogDebug("Front-filled {Item} at {Location}", item, location);
         }
 
         private void GanonTowerFill(List<World> worlds, List<Item> itemPool, double factor)
@@ -352,17 +354,17 @@ namespace Randomizer.SMZ3.Generation
             {
                 location.Item = item;
                 itemPool.Remove(item);
-                _logger.LogDebug("Fast-filled {item} at {location}", item, location);
+                _logger.LogDebug("Fast-filled {Item} at {Location}", item, location);
             }
         }
 
         private void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location)
         {
-            var itemToPlace = itemPool.Get(itemType);
+            var itemToPlace = itemPool.Get(itemType, location.World);
             location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);
 
-            _logger.LogDebug("Manually placed {item} at {location}", itemToPlace, location);
+            _logger.LogDebug("Manually placed {Item} at {Location}", itemToPlace, location);
         }
     }
 }
