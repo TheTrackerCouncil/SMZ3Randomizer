@@ -418,6 +418,7 @@ namespace Randomizer.App.Windows
             var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
             var ct = progressDialog.CancellationToken;
             var finished = false;
+            ThreadPool.GetAvailableThreads(out int workerThreads, out int completionPortThreads);
             var genTask = Task.Run(() =>
             {
                 var i = 0;
@@ -460,7 +461,7 @@ namespace Randomizer.App.Windows
             if (finished)
             {
                 ReportStats(stats, itemCounts, numberOfSeeds);
-                WriteMegaSpoilerLog(itemCounts);
+                WriteMegaSpoilerLog(itemCounts, numberOfSeeds);
             }
         }
 
@@ -510,7 +511,7 @@ namespace Randomizer.App.Windows
                 stats.Increment("The GT Moldorm chest contains a Metroid item");
         }
 
-        private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts)
+        private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, int numberOfSeeds)
         {
             var items = Enum.GetValues<ItemType>().ToDictionary(x => (int)x);
             var locations = new World(new Config(), "", 0, "").Locations;
@@ -542,6 +543,20 @@ namespace Randomizer.App.Windows
                 .GroupBy(x => x.Area, x => new { x.Name, x.Items })
                 .ToDictionary(x => x.Key, x => x.ToList());
 
+            var total = (double)numberOfSeeds;
+            var dungeonItems = locations
+                .Where(x => x.Region is IDungeon)
+                .OrderBy(x => x.Region.Name)
+                .Select(location => new
+                {
+                    Name = location.ToString(),
+                    Keys = (GetLocationSmallKeyCount(location.Id)/total).ToString("0.00%"),
+                    BigKeys = (GetLocationBigKeyCount(location.Id)/total).ToString("0.00%"),
+                    MapCompass = (GetLocationMapCompassCount(location.Id)/total).ToString("0.00%"),
+                    Treasures = (GetLocationTreasureCount(location.Id)/total).ToString("0.00%"),
+                    Progression = (GetLocationProgressionCount(location.Id)/total).ToString("0.00%"),
+                });
+
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true,
@@ -551,7 +566,8 @@ namespace Randomizer.App.Windows
             var json = JsonSerializer.Serialize(new
             {
                 ByItem = itemLocations,
-                ByLocation = locationItems
+                ByLocation = locationItems,
+                DungeonItems = dungeonItems
             }, options);
 
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -563,6 +579,44 @@ namespace Randomizer.App.Windows
                 UseShellExecute = true
             };
             Process.Start(startInfo);
+
+            int GetLocationSmallKeyCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    items[x.Key.itemId].IsInCategory(ItemCategory.SmallKey)).Sum(x => x.Value);
+            }
+
+            int GetLocationBigKeyCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    items[x.Key.itemId].IsInCategory(ItemCategory.BigKey)).Sum(x => x.Value);
+            }
+
+            int GetLocationMapCompassCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    items[x.Key.itemId].IsInAnyCategory(ItemCategory.Compass, ItemCategory.Map)).Sum(x => x.Value);
+            }
+
+            int GetLocationTreasureCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    !items[x.Key.itemId].IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Compass, ItemCategory.Map))
+                    .Sum(x => x.Value);
+            }
+
+            int GetLocationProgressionCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                        x.Key.locationId == locationId &&
+                        !items[x.Key.itemId].IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Compass, ItemCategory.Map) &&
+                        items[x.Key.itemId].IsPossibleProgression(false, false))
+                    .Sum(x => x.Value);
+            }
         }
 
         private void ReportStats(IDictionary<string, int> stats,
