@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>8.0.0-beta.1</Version>
+    <Version>8.0.0-beta.2</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>

@@ -330,9 +330,9 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.CasPatches.AimAnyButton)
+            if (options.PatchOptions.CasPatches.Speedkeep)
             {
-                using var patch = IpsPatch.AimAnyButton();
+                using var patch = IpsPatch.SpeedKeep();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 

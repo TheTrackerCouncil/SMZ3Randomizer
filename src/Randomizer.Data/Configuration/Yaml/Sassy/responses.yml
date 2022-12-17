@@ -933,15 +933,15 @@ Cheats:
 Multiplayer:
   OtherPlayerTrackedItem:
   - Text: You should congratulate {0} on getting {2}.
-    Weight: 0.02
+    Weight: 0.03
   - Text: I hope you're not too jealous of {0} getting {2}.
-    Weight: 0.02
+    Weight: 0.03
   - Text: Wow. {0} just got {2}. Don't you wish you had gotten that?
-    Weight: 0.02
+    Weight: 0.03
   - Text: If you want {2}, {0} just got one that you can steal.
-    Weight: 0.02
+    Weight: 0.03
   - Text: I just noticed that {0} got {2}. Maybe you will get something good here soon.
-    Weight: 0.02
+    Weight: 0.03
   OtherPlayerClearedDungeonWithReward:
   - Text: You should congratulate {0} on getting {4} from {1}.
     Weight: 0.1
@@ -998,12 +998,12 @@ Multiplayer:
     Weight: 0.1
   ReceivedJunkItemFromOtherPlayer:
   - Text: Thanks {0}. You shouldn't have. Seriously. You shouldn't have.
-    Weight: 0.05
+    Weight: 0.04
   - Text: Wow. Please don't invite {0} to another multiplayer game if you're going to get items like {1}.
-    Weight: 0.05
+    Weight: 0.04
   - Text: Next time {0} should just keep that.
-    Weight: 0.05
+    Weight: 0.04
   - Text: Do you think it would be bad to re-gift that {1}?
-    Weight: 0.05
+    Weight: 0.04
   - Text: Oh. Good. I'm sure you can access so many more places with that {1} from {0}?
-    Weight: 0.05
+    Weight: 0.04
