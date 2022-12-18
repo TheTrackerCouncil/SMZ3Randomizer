@@ -279,6 +279,12 @@ namespace Randomizer.Data.WorldData
                                                 && _weight <= -10;
             var fillable = _alwaysAllow(item, items)
                 || (Region.CanFill(item, items) || isCustomPlacementAndSphereOne) && _allow(item, items) && IsAvailable(items);
+
+            // There is currently an issue in multiplayer where if you give a shield to another player, then receive a
+            // shield for yourself, then you get a free shield. As a work around, player shields must be in their own world
+            if (World.Config.MultiWorld && item.Type == ItemType.ProgressiveShield && item.World != World)
+                fillable = false;
+
             Item = oldItem;
             return fillable;
         }
