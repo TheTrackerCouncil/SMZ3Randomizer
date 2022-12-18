@@ -944,13 +944,15 @@ Multiplayer:
     Weight: 0.03
   OtherPlayerClearedDungeonWithReward:
   - Text: You should congratulate {0} on getting {4} from {1}.
-    Weight: 0.1
+    Weight: 0.08
   - Text: I just heard that {0} defeated {2}. What have you done lately?
-    Weight: 0.1
+    Weight: 0.08
   - Text: Can you believe that {0} just got completed {1}? I don't believe it. I think they cheated.
-    Weight: 0.1
+    Weight: 0.08
   - Text: Good job {0} on defeating {2}. You always were my favorite. Oh. Did you hear that?
-    Weight: 0.1
+    Weight: 0.08
+  - Text: Oh wow {0} got a wonderful present of {4} from {2}.
+    Weight: 0.08
   OtherPlayerClearedDungeonWithoutReward:
   - Text: You should congratulate {0} on completing {1}.
     Weight: 0.2
@@ -958,13 +960,15 @@ Multiplayer:
     Weight: 0.2
   OtherPlayerDefeatedBoss:
   - Text: You should congratulate {0} on defeating {1}.
-    Weight: 0.1
+    Weight: 0.08
   - Text: Good job {0} on beating {1}. I knew you could do it. <prosody volume='medium'>I didn't actually believe {0} could do it.</prosody>
-    Weight: 0.1
+    Weight: 0.08
   - Text: I'm sure that's the last time anyone will have to kill {1} thanks to {0}.
-    Weight: 0.1
+    Weight: 0.08
   - Text: Oh good. {0} just defeated {1}. Maybe that means you'll get some good items soon.
-    Weight: 0.1
+    Weight: 0.08
+  - Text: "{0} just gifted {1} with a present of death. So kind."
+    Weight: 0.08
   OtherPlayerBeatGame:
   - Text: "{0} just finished the game. What's taking you so long?"
   - Text: Let's see what good items you'll get now that {0} just beat the game.
@@ -974,36 +978,64 @@ Multiplayer:
   - Text: "{0} just forfeit the game, so lets see what else was in {0}'s world."
   GiftedUsefulItemToOtherPlayer:
   - Text: Say goodbye to {1}. That goes to {0} instead.
-    Weight: 0.1
+    Weight: 0.05
   - Text: I sure hope you didn't want that {1} as it belongs to {0}.
-    Weight: 0.1
+    Weight: 0.05
   - Text: Wow, you sure could have used that {1}. Oh well.
-    Weight: 0.1
+    Weight: 0.05
   - Text: Look, if you just want {2}, you'll just have to fight {0} for it to get it back.
-    Weight: 0.1
+    Weight: 0.05
   - Text: I hope shipping to send {2} to {0} isn't too expensive.
-    Weight: 0.1
+    Weight: 0.05
   - Text: Oops. You weren't supposed to receive that {1}. Let me give that to {0} instead.
-    Weight: 0.1
+    Weight: 0.05
+  - Text: Looking at you being a good friend, giving that {1} to {0}.
+    Weight: 0.05
+  - Text: I put a bow on that {1} before I gave it to {0}.
+    Weight: 0.05
+  - Text: What a wonderful present for {0}.
+    Weight: 0.05
+  - Text: Did you do a good job wrapping that {1} for {0}?
+    Weight: 0.05
   ReceivedUsefulItemFromOtherPlayer:
   - Text: Thanks {0}. I'm sure this will blow this seed wide open.
-    Weight: 0.1
+    Weight: 0.05
   - Text: Aww, {0}. How did you know that I wanted {2}
-    Weight: 0.1
+    Weight: 0.05
   - Text: I wonder how much earlier {0} could have gotten that?
-    Weight: 0.1
+    Weight: 0.05
   - Text: Be sure to thank {0} for that.
-    Weight: 0.1
+    Weight: 0.05
   - Text: I bet {0} had a hard time giving up {2}.
-    Weight: 0.1
+    Weight: 0.05
+  - Text: "{0} wanted me to give that {2} to you."
+    Weight: 0.05
+  - Text: You just got a wonderful present from {0}, so I hope you have something good to give back in return.
+    Weight: 0.05
+  - Text: Be sure to be careful when opening that {1} from {0}. You wouldn't want to break it.
+    Weight: 0.05
+  - Text: I'm sure that {0} spent a lot of time wrapping that {1} for you.
+    Weight: 0.05
+  - Text: What did you do to earn that {1}?
+    Weight: 0.05
   ReceivedJunkItemFromOtherPlayer:
   - Text: Thanks {0}. You shouldn't have. Seriously. You shouldn't have.
-    Weight: 0.04
-  - Text: Wow. Please don't invite {0} to another multiplayer game if you're going to get items like {1}.
-    Weight: 0.04
+    Weight: 0.02
+  - Text: Wow. Please don't invite {0} to another multiplayer game if you're going to get items like {2}.
+    Weight: 0.02
   - Text: Next time {0} should just keep that.
-    Weight: 0.04
+    Weight: 0.02
   - Text: Do you think it would be bad to re-gift that {1}?
-    Weight: 0.04
+    Weight: 0.02
   - Text: Oh. Good. I'm sure you can access so many more places with that {1} from {0}?
-    Weight: 0.04
+    Weight: 0.02
+  - Text: Oh wow. I would have preferred literally anything else instead of that {1} from {0}.
+    Weight: 0.02
+  - Text: I'd be embarrassed if I gave {2} as a present, but I guess {0} wasn't.
+    Weight: 0.02
+  - Text: You should have let {0} know what you wanted. You might have gotten something like a screw attack instead of {2}.
+    Weight: 0.02
+  - Text: Did you make {0} angry to get that {1}?
+    Weight: 0.02
+  - Text: Make sure to not give {0} any good items since you got that {1}.
+    Weight: 0.02

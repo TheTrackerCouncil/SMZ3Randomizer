@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -322,7 +321,7 @@ namespace Randomizer.SMZ3.FileData
                 }
                 else if (new[] { LocationType.Pedestal, LocationType.Ether, LocationType.Bombos }.Contains(location.Type))
                 {
-                    var text = Texts.ItemTextbox(location.Item);
+                    var text = GetPedestalHint(location.World.Config, location.Item);
                     var dialog = Dialog.Simple(text);
                     if (location.Type == LocationType.Pedestal)
                     {
@@ -675,11 +674,15 @@ namespace Randomizer.SMZ3.FileData
                 .Where(x => x.RewardType == RewardType.CrystalRed)
                 .Select(x => GetRegionName((Region)x));
 
-            var sahasrahla = Texts.SahasrahlaReveal(greenPendantDungeon);
+            var sahasrahla =
+                Dialog.GetGameSafeString(_gameLines.SahasrahlaReveal?.Format(greenPendantDungeon) ?? "{NOTEXT}");
             _patches.Add((Snes(0x308A00), Dialog.Simple(sahasrahla)));
             _stringTable.SetSahasrahlaRevealText(sahasrahla);
 
-            var bombShop = Texts.BombShopReveal(redCrystalDungeons);
+            var bombShop =
+                Dialog.GetGameSafeString(
+                    _gameLines.BombShopReveal?.Format(redCrystalDungeons.First(), redCrystalDungeons.Last()) ??
+                    "{NOTEXT}");
             _patches.Add((Snes(0x308E00), Dialog.Simple(bombShop)));
             _stringTable.SetBombShopRevealText(bombShop);
 
@@ -687,7 +690,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308800), Dialog.Simple(blind)));
             _stringTable.SetBlindText(blind);
 
-            var tavernMan = Texts.TavernMan(_rnd);
+            var tavernMan = Dialog.GetGameSafeString(_gameLines.TavernMan?.ToString() ?? "{NOTEXT}");
             _patches.Add((Snes(0x308C00), Dialog.Simple(tavernMan)));
             _stringTable.SetTavernManText(tavernMan);
 
@@ -718,15 +721,15 @@ namespace Randomizer.SMZ3.FileData
             var silversLocation = _allWorlds.SelectMany(world => world.Locations).FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, _myWorld));
             if (silversLocation != null)
             {
-                var silvers = config.MultiWorld
-                    ? Texts.GanonThirdPhaseMulti(silversLocation.Region, _myWorld)
-                    : Texts.GanonThirdPhaseSingle(silversLocation.Region);
+                var silvers = Dialog.GetGameSafeString(_gameLines.GanonSilversHint?.Format(
+                    !config.MultiWorld || silversLocation.World == _myWorld ? "you" : silversLocation.World.Player,
+                    silversLocation.Region.Area) ?? "{NOTEXT}");
                 _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
                 _stringTable.SetGanonThirdPhaseText(silvers);
             }
             else
             {
-                var silvers = Texts.GanonThirdPhraseNone();
+                var silvers = Dialog.GetGameSafeString(_gameLines.GanonNoSilvers?.ToString() ?? "{NOTEXT}");
                 _patches.Add((Snes(0x308700), Dialog.Simple(silvers)));
                 _stringTable.SetGanonThirdPhaseText(silvers);
             }
@@ -1006,7 +1009,7 @@ namespace Randomizer.SMZ3.FileData
 
         private string GetRegionName(Region region)
         {
-            return Dialog.GetGameSafeString(_metadataService.Region(region).Name?.ToString() ?? region.Name);
+            return Dialog.GetGameSafeString(_metadataService.Region(region).Name.ToString() ?? region.Name);
         }
 
         private string GetItemName(Config config, Item item)
@@ -1020,7 +1023,22 @@ namespace Randomizer.SMZ3.FileData
             {
                 return _myWorld == item.World
                     ? $"{itemName} belonging to you"
-                    : $"{itemName} belonging to ${item.World.Player}";
+                    : $"{itemName} belonging to {item.World.Player}";
+            }
+        }
+
+        private string GetPedestalHint(Config config, Item item)
+        {
+            var hintText = _metadataService.Item(item.Type)?.PedestalHints?.ToString() ?? item.Name;
+            if (!config.MultiWorld)
+            {
+                return hintText;
+            }
+            else
+            {
+                return _myWorld == item.World
+                    ? $"{hintText} belonging to you"
+                    : $"{hintText} belonging to {item.World.Player}";
             }
         }
     }

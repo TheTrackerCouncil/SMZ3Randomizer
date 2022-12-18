@@ -125,7 +125,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 Opcode = "PutAddress",
                 Space = "SNES",
-                Operands = new List<string>() { address, data.Length.ToString() }
+                Operands = new List<string>() { address, data.Length.ToString("X") }
             });
 
             _client.Send(message);
@@ -187,7 +187,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     _isConnected = true;
                     OnConnected?.Invoke(this, new());
                 }));
-                
+
             }
             // If it's a binary response, find the last requested message to use it as the address since
             // USB2SNES returns with NO context for what this is a response to...

@@ -453,7 +453,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Consult the Book of Mudora
                 case 2:
-                    var pedText = Texts.ItemTextbox(location.Item).Replace('\n', ' ');
+                    var pedText = location.Item.Metadata.PedestalHints;
                     var bookOfMudoraName = ItemService.GetName(ItemType.Book);
                     return GiveLocationHint(x => x.BookHint, location, pedText, bookOfMudoraName);
             }

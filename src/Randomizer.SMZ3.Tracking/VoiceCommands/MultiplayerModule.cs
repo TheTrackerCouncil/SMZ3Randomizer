@@ -72,7 +72,7 @@ public class MultiplayerModule : TrackerModule
     {
         // Ignore the sync if auto tracker is not connected as we don't want to lose out on items
         if (Tracker.AutoTracker?.IsConnected != true) return;
-        if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0) return;
+        if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0 || args.IsLocalPlayer) return;
         var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
         Tracker.GameService!.TryGiveItems(items, args.PlayerId.Value);
 
@@ -158,9 +158,10 @@ public class MultiplayerModule : TrackerModule
     {
         args.DungeonState.Cleared = true;
         args.DungeonState.AutoTracked = true;
-        var dungeon = WorldService.World.Dungeons.FirstOrDefault(x => x.GetType().Name == args.DungeonState.Name);
+        var dungeon = WorldService.GetWorld(args.PlayerId).Dungeons
+            .FirstOrDefault(x => x.GetType().Name == args.DungeonState.Name);
         if (dungeon == null) return;
-        if (dungeon.HasReward && dungeon.DungeonReward != null)
+        if (dungeon is { HasReward: true, DungeonReward: { } })
         {
             Tracker.Say(x => x.Multiplayer.OtherPlayerClearedDungeonWithReward, args.PhoneticName,
                 dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss, dungeon.DungeonReward.Metadata.Name,

@@ -4,6 +4,7 @@ using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
@@ -118,6 +119,7 @@ namespace Randomizer.SMZ3.Generation
                     trackerState.BossStates.Add(bossState);
                 }
             }
+
 
             _worldAccessor.Worlds = worlds;
             _worldAccessor.World = worlds.First(x => x.IsLocalWorld);

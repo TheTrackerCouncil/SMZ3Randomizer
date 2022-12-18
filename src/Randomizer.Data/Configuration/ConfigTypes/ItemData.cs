@@ -127,6 +127,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         public SchrodingersString? Hints { get; set; }
 
         /// <summary>
+        /// Gets the possible hints for the item, if any are defined.
+        /// </summary>
+        public SchrodingersString? PedestalHints { get; set; }
+
+        /// <summary>
         /// Gets the highest stage the item supports, or 1 if the item does not
         /// have stages, or 0 if the item has no limit.
         /// </summary>

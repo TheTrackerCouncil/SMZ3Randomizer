@@ -23,6 +23,13 @@ namespace Randomizer.SMZ3.Tracking.Services
         public List<World> Worlds { get; }
 
         /// <summary>
+        /// Retrieves a particular world matching a player id
+        /// </summary>
+        /// <param name="id">The player id of the world to get</param>
+        /// <returns></returns>
+        public World GetWorld(int id);
+
+        /// <summary>
         /// Retrives all locations for current player's world
         /// </summary>
         /// <returns></returns>

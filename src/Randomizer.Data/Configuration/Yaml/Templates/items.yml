@@ -16,798 +16,931 @@
 # Stages: For progressive items such as swords and shields, this allows you to give
 #     different names for each stage. For example, for swords stage 1 can be the fighter's
 #     sword and stage 2 can be master sword.
-# Hints: The list of possibilities for vague descriptors of the item for the hint system
+# Hints: PedestalHints: The list of possibilities for vague descriptors of the item for the hint system
+# PedestalHints: The list of possibilities for hints to show up on the pedestal and tablets
 
 - Item: Nothing
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Content
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Death
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Duck
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Fire Rod
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ice Rod
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Hammer
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Hookshot
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Bow
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Blue Boomerang
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Magic Powder
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Bombos
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ether
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Quake
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Lamp
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Shovel
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Flute
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Cane of Somaria
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Bottle
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Heart piece
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Cane of Byrna
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Magic Cape
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Magic Mirror
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Book of Mudora
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Zora's Flippers
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Moon Pearl
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Bug Catching Net
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Bombs
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Mushroom
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Red Boomerang
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: One Rupee
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Five Rupees
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Twenty Rupees
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Heart Container
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Heart Container Refill
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: One Hundred Rupees
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Fifty Rupees
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Single Arrow
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ten Arrows
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Three Hundred Rupees
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Pegasus Boots
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Half Magic
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: +5 Bomb Capacity
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: +5 Arrow Capacity
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Silver Arrows
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Sword
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Shield
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Mail
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Gloves
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ganons Tower Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Turtle Rock Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Thieves Town Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Tower of Hera Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ice Palace Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Skull Woods Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Misery Mire Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Palace of Darkness Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Swamp Palace Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Desert Palace Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Eastern Palace Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Hyrule Castle Map
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ganons Tower Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Turtle Rock Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Thieves Town Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Tower of Hera Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ice Palace Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Skull Woods Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Misery Mire Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Palace of Darkness Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Swamp Palace Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Desert Palace Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Eastern Palace Compass
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ganons Tower Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Turtle Rock Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Thieves Town Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Tower of Hera Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ice Palace Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Skull Woods Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Misery Mire Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Palace of Darkness Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Swamp Palace Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Desert Palace Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Eastern Palace Big Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Sewer Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Desert Palace Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Castle Tower Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Swamp Palace Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Palace of Darkness Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Misery Mire Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Skull Woods Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ice Palace Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Tower of Hera Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Thieves Town Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Turtle Rock Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ganons Tower Key
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Grappling Beam
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: X-Ray Scope
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Varia Suit
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Spring Ball
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Morphing Ball
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Screw Attack
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Gravity Suit
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Hi-Jump Boots
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Space Jump
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Morph Bombs
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Speed Booster
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Charge Beam
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Ice Beam
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Wave Beam
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Spazer
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Plasma Beam
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Energy Tank
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Reserve Tank
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Missile
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Super Missile
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Power Bomb
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Crateria Level 1 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Crateria Level 2 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Crateria Boss Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Brinstar Level 1 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Brinstar Level 2 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Brinstar Boss Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Norfair Level 1 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Norfair Level 2 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Norfair Boss Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Maridia Level 1 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Maridia Level 2 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Maridia Boss Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Wrecked Ship Level 1 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Wrecked Ship Boss Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Lower Norfair Level 1 Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 - Item: Lower Norfair Boss Keycard
   Name: 
   Plural: 
   WhenTracked: 
   Stages: 
-  Hints: 
+  Hints:
+  PedestalHints: 
 
