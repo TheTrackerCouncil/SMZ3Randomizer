@@ -931,9 +931,15 @@ Multiplayer:
   OtherPlayerDefeatedBoss:
 
   # The list of possibilities when another player completes the game by beating both Ganon and 
-  # Mother Brain and either enter the Triforce Room or enters the ship
+  # Mother Brain and either enter the Triforce Room or enters the ship and the items are being
+  # dispersed to the other players
   # {0} is replaced with the other player's name
   OtherPlayerBeatGame: 
+
+  # The list of possibilities when another player completes the game by beating both Ganon and 
+  # Mother Brain and either enter the Triforce Room or enters the ship and no items are being
+  # dispersed to the other players
+  OtherPlayerBeatGameNoItems:
 
   # The list of possibilities when another player forfeits and all of their items are
   # sent out to the other players

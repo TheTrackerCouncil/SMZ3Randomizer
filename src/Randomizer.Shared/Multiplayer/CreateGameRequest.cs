@@ -2,7 +2,7 @@
 
 public class CreateGameRequest
 {
-    public CreateGameRequest(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, int multiplayerVersion, bool saveToDatabase)
+    public CreateGameRequest(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, int multiplayerVersion, bool saveToDatabase, bool sendItemsOnComplete)
     {
         PlayerName = playerName;
         PhoneticName = phoneticName;
@@ -10,6 +10,7 @@ public class CreateGameRequest
         RandomizerVersion = randomizerVersion;
         MultiplayerVersion = multiplayerVersion;
         SaveToDatabase = saveToDatabase;
+        SendItemsOnComplete = sendItemsOnComplete;
     }
 
     public string PlayerName { get; }
@@ -23,4 +24,6 @@ public class CreateGameRequest
     public int MultiplayerVersion { get; }
 
     public bool SaveToDatabase { get; }
+
+    public bool SendItemsOnComplete { get; }
 }

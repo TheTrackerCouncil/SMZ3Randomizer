@@ -15,4 +15,5 @@ public class PlayerEndedGameEventHandlerArgs
     public bool IsLocalPlayer { get; init; }
     public bool DidForfeit { get; init; }
     public bool DidComplete { get; init; }
+    public bool SendItemsOnComplete { get; init; }
 }

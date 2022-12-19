@@ -66,7 +66,7 @@ namespace Randomizer.App.Windows
             {
                 _logger.LogInformation("Connected to server successfully. Creating new game.");
                 if (Options != null) Options.MultiplayerUrl = Url;
-                await _multiplayerClientService.CreateGame(DisplayName, PhoneticName, MultiplayerGameType, _version, AsyncGame);
+                await _multiplayerClientService.CreateGame(DisplayName, PhoneticName, MultiplayerGameType, _version, AsyncGame, SendItemsOnComplete);
             }
             else
             {
@@ -101,6 +101,7 @@ namespace Randomizer.App.Windows
         public RandomizerOptions? Options { get; set; }
         public Visibility ServerListVisibility => IsCreatingGame ? Visibility.Visible : Visibility.Collapsed;
         public bool AsyncGame { get; set; }
+        public bool SendItemsOnComplete { get; set; }
 
         private string _url = "";
         public string Url

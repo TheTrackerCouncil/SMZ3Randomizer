@@ -57,7 +57,6 @@ public abstract class MultiplayerGameTypeService
     /// <summary>
     /// Creates the default player state based on the player's world
     /// </summary>
-    /// <param name="state">The state of the player</param>
     /// <param name="world">The world of the player</param>
     /// <param name="allWorlds"></param>
     /// <returns>The newly created multiplayer player state</returns>
@@ -333,8 +332,10 @@ public abstract class MultiplayerGameTypeService
     {
         if (TrackerState == null || isLocalPlayer || player.Locations == null || player.Items == null || player.Bosses == null || player.Dungeons == null) return null;
 
+        var ifSendItemsOnComplete = Client.CurrentGameState?.SendItemsOnComplete ?? true;
+
         // Gather data for locations that have been cleared
-        var clearedLocationIds = player.Locations.Where(x => x.Tracked || player.HasForfeited || player.HasCompleted).Select(x => x.LocationId).ToList();
+        var clearedLocationIds = player.Locations.Where(x => x.Tracked || player.HasForfeited || (ifSendItemsOnComplete && player.HasCompleted)).Select(x => x.LocationId).ToList();
         var updatedLocationStates = TrackerState.LocationStates.Where(x =>
             x.WorldId == player.WorldId && !x.Autotracked && clearedLocationIds.Contains(x.LocationId)).ToList();
         var itemsToGive = updatedLocationStates.Where(x => x.ItemWorldId == LocalPlayerId).Select(x => x.Item).ToList();
@@ -417,7 +418,8 @@ public abstract class MultiplayerGameTypeService
             PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             DidForfeit = didForfeit,
-            DidComplete = didComplete
+            DidComplete = didComplete,
+            SendItemsOnComplete = Client.CurrentGameState?.SendItemsOnComplete ?? true
         };
     }
 

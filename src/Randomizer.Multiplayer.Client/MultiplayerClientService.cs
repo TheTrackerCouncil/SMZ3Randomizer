@@ -243,9 +243,10 @@ namespace Randomizer.Multiplayer.Client
         /// <param name="gameType">The requested game type</param>
         /// <param name="randomizerVersion">The local SMZ3 version to ensure compatibility between all players</param>
         /// <param name="saveToDatabase">If the game should be saved ot the database</param>
-        public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, bool saveToDatabase)
+        /// <param name="sendItemsOnComplete">If items in a player's world should be auto distributed on beating the game</param>
+        public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, bool saveToDatabase, bool sendItemsOnComplete)
         {
-            await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, randomizerVersion, MultiplayerVersion.Id, saveToDatabase));
+            await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, randomizerVersion, MultiplayerVersion.Id, saveToDatabase, sendItemsOnComplete));
         }
 
         /// <summary>

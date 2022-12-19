@@ -29,7 +29,8 @@ public class MultiplayerGame
     /// <param name="version">The SMZ3 version that the game is being generated on</param>
     /// <param name="type">The type of multiplayer game</param>
     /// <param name="saveToDatabase">If this database should be saved to the database</param>
-    private MultiplayerGame(string guid, string gameUrl, string version, MultiplayerGameType type, bool saveToDatabase)
+    /// <param name="sendItemsOnComplete">If items in a player's world should be auto distributed on beating the game</param>
+    private MultiplayerGame(string guid, string gameUrl, string version, MultiplayerGameType type, bool saveToDatabase, bool sendItemsOnComplete)
     {
         State = new MultiplayerGameState()
         {
@@ -41,7 +42,8 @@ public class MultiplayerGame
             CreatedDate = DateTimeOffset.Now,
             LastMessage = DateTimeOffset.Now,
             Seed = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue).ToString(),
-            SaveToDatabase = saveToDatabase
+            SaveToDatabase = saveToDatabase,
+            SendItemsOnComplete = sendItemsOnComplete
         };
     }
 
@@ -97,9 +99,10 @@ public class MultiplayerGame
     /// <param name="baseUrl">The server's base url</param>
     /// <param name="version">The SMZ3 version that the game is being generated on</param>
     /// <param name="saveToDatabase">If this game needs to be saved to the database or not</param>
+    /// <param name="sendItemsOnComplete">If items in a player's world should be auto distributed on beating the game</param>
     /// <param name="error">Output of any error messages during creating the new multiplayer game</param>
     /// <returns>The instance of the created Multiplayer game</returns>
-    public static MultiplayerGame? CreateNewGame(string playerName, string phoneticName, string playerConnectionId, MultiplayerGameType gameType, string baseUrl, string version, bool saveToDatabase, out string? error)
+    public static MultiplayerGame? CreateNewGame(string playerName, string phoneticName, string playerConnectionId, MultiplayerGameType gameType, string baseUrl, string version, bool saveToDatabase, bool sendItemsOnComplete, out string? error)
     {
         string guid;
         do
@@ -107,7 +110,7 @@ public class MultiplayerGame
             guid = System.Guid.NewGuid().ToString("N");
         } while (s_games.ContainsKey(guid));
 
-        var game = new MultiplayerGame(guid, $"{baseUrl}?game={guid}", version, gameType, saveToDatabase);
+        var game = new MultiplayerGame(guid, $"{baseUrl}?game={guid}", version, gameType, saveToDatabase, sendItemsOnComplete);
 
         if (!s_games.TryAdd(guid, game))
         {

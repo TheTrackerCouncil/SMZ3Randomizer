@@ -974,8 +974,12 @@ Multiplayer:
   - Text: Let's see what good items you'll get now that {0} just beat the game.
   - Text: Now that {0} just beat the game, I wonder what items you could have gotten sooner had {0} not focused on beating the game.
   - Text: You better hurry up because {0} just beat the game.
+  OtherPlayerBeatGameNoItems:
+  - Text: "{0} just finished the game. What's taking you so long?"
+  - Text: You better hurry up because {0} just beat the game.
   OtherPlayerForfeitGame:
   - Text: "{0} just forfeit the game, so lets see what else was in {0}'s world."
+  - Text: "{0} just left the game. Dispersing the items from {0}'s world."
   GiftedUsefulItemToOtherPlayer:
   - Text: Say goodbye to {1}. That goes to {0} instead.
     Weight: 0.05

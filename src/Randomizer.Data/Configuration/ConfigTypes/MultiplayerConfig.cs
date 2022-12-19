@@ -52,12 +52,22 @@
 
         /// <summary>
         /// Gets the phrases to respond when a player beats the game by defeating both Ganon and Mother Brain
-        /// before the local player has completed for forfeited.
+        /// before the local player has completed or forfeited.
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the player name
         /// </remarks>
         public SchrodingersString OtherPlayerBeatGame { get; init; }
+            = new("You should congratulate {0} on finishing the game.");
+
+        /// <summary>
+        /// Gets the phrases to respond when a player beats the game by defeating both Ganon and Mother Brain
+        /// before the local player has completed for forfeited, but the local player isn't getting any items
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the player name
+        /// </remarks>
+        public SchrodingersString OtherPlayerBeatGameNoItems { get; init; }
             = new("You should congratulate {0} on finishing the game.");
 
         /// <summary>
