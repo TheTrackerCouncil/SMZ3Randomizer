@@ -55,6 +55,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             = new("You currently have {0} out of {1} super missiles. Do you think you have enough?");
 
         /// <summary>
+        /// Gets the phrases to respond with when at crumble shaft
+        /// </summary>
+        public SchrodingersString AtCrumbleShaft { get; init; } = new();
+
+        /// <summary>
         /// Gets the phrases to respond with when falling down the pit from moldorm
         /// </summary>
         public SchrodingersString FallFromMoldorm { get; init; }
