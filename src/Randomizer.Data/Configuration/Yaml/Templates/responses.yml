@@ -778,6 +778,9 @@ AutoTracker:
   # The list of possibilities when above Crocomire
   NearCrocomire:
 
+  # The list of possibilities when entering Crumble Shaft
+  AtCrumbleShaft:
+
   # The list of possibilities when falling from Tower of Hera Moldorm
   FallFromMoldorm:
 

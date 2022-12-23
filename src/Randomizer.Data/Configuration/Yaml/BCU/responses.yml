@@ -88,6 +88,8 @@ AutoTracker:
     Weight: 0.1
   - Text: Are you sure that {0} super missiles are enough for Crocomire?
     Weight: 0.1
+  AtCrumbleShaft:
+  - Text: Good luck.
   DiverDown:
   - Text: Is this underwater?
   EnteredGTEarly:
