@@ -57,8 +57,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the phrases to respond with when at crumble shaft
         /// </summary>
-        public SchrodingersString AtCrumbleShaft { get; init; }
-            = new("Good luck.");
+        public SchrodingersString AtCrumbleShaft { get; init; } = new();
 
         /// <summary>
         /// Gets the phrases to respond with when falling down the pit from moldorm
