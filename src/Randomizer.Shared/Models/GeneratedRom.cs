@@ -18,8 +18,9 @@ namespace Randomizer.Shared.Models
         public int GeneratorVersion { get; init; }
         public string RomPath { get; init; } = "";
         public string SpoilerPath { get; init; } = "";
-        public MultiplayerGameType? MultiplayerGameType { get; set; }
-        public string? MultiplayerGameUrl { get; set; }
+        [ForeignKey("MultiplayerGameDetails")]
+        public long? MultiplayerGameDetailsId { get; set; }
+        public virtual MultiplayerGameDetails? MultiplayerGameDetails { get; set; }
         public TrackerState? TrackerState { get; set; }
 
         public static bool IsValid([NotNullWhen(true)] GeneratedRom? rom)

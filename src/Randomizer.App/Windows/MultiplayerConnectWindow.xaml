@@ -7,9 +7,10 @@
         xmlns:local="clr-namespace:Randomizer.App"
         xmlns:shared="clr-namespace:Randomizer.Shared.Multiplayer;assembly=Randomizer.Shared"
         mc:Ignorable="d"
-        Title="MultiworldWindow"
+        Title="SMZ3 Cas' Randomizer"
+        Loaded="MultiplayerConnectWindow_OnLoaded"
         ResizeMode="NoResize"
-        Height="200"
+        Height="275"
         Width="400">
 
   <Grid>
@@ -25,29 +26,83 @@
                    Margin="11,11,11,11"
                    Visibility="Visible">
 
-        <controls:LabeledControl Text="{Binding UrlLabelText}">
-          <TextBox
-            Name="ServerUrlTextBox"
-            Text="http://192.168.50.100:5000"
-            IsEnabled="{Binding CanEnterInput}"
-            Margin="5 0 0 0" />
+        <controls:LabeledControl Text="{Binding UrlLabelText}" IsTabStop="False">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"></ColumnDefinition>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox
+              Grid.Column="0"
+              Name="ServerUrlTextBox"
+              Text="{Binding Url, Mode=TwoWay}"
+              IsEnabled="{Binding CanEnterInput}"
+              Margin="5 0 0 0"
+            />
+            <Button Grid.Column="1"
+                    x:Name="ServerListButton"
+                    MinWidth="0"
+                    Width="23"
+                    Content="▼"
+                    FontSize="8"
+                    BorderThickness="0,1,1,1"
+                    Margin="0,0,0,0"
+                    Visibility="{Binding ServerListVisibility}"
+                    Click="ServerListButton_OnClick">
+              <Button.ContextMenu>
+                <ContextMenu>
+                </ContextMenu>
+              </Button.ContextMenu>
+            </Button>
+          </Grid>
+
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Name:">
+        <controls:LabeledControl Text="Display Name:" IsTabStop="False">
           <TextBox Name="PlayerNameTextBox"
                    TextChanged="PlayerNameTextBox_OnTextChanged"
-                   Text=""
                    IsEnabled="{Binding CanEnterInput}"
+                   MaxLength="12"
                    Margin="5 0 0 0 " />
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Mode:">
-          <ComboBox SelectedItem="{Binding MultiplayerGameType}"
-                    ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:MultiplayerGameType}}}"
-                    HorizontalAlignment="Left"
-                    MinWidth="75"
-                    Margin="5 0 0 0 "
-                    IsEnabled="{Binding IsCreatingGame}" />
+        <controls:LabeledControl Text="Phonetic Name:" IsTabStop="False">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"></ColumnDefinition>
+              <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox Name="PhoneticNameTextBox"
+                     Text="{Binding PhoneticName, Mode=OneWayToSource}"
+                     IsEnabled="{Binding CanEnterInput}"
+                     MaxLength="30"
+                     Margin="5 0 0 0 " />
+            <Button Grid.Column="1" Click="PhoneticNameTestButton_OnClick" Name="PhoneticNameTestButton">
+              Test
+            </Button>
+          </Grid>
+
+        </controls:LabeledControl>
+
+        <controls:LabeledControl Text="Game Mode:" IsTabStop="False">
+          <StackPanel Orientation="Vertical">
+            <ComboBox SelectedItem="{Binding MultiplayerGameType}"
+                      ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:MultiplayerGameType}}}"
+                      HorizontalAlignment="Left"
+                      MinWidth="75"
+                      Margin="5 0 0 0 "
+                      IsEnabled="{Binding IsCreatingGame}" />
+            <CheckBox IsChecked="{Binding AsyncGame}"
+                      Margin="5 5 0 0"
+                      Content="Async/multi-session game"
+                      IsEnabled="{Binding IsCreatingGame}"
+                      ToolTip="Saves the game to a database on the server so that the game can be continued even when the server does not receive updates from any players."/>
+            <CheckBox IsChecked="{Binding SendItemsOnComplete}"
+                      Margin="5 5 0 0"
+                      Content="Auto send items on beating the game"
+                      IsEnabled="{Binding IsCreatingGame}"
+                      ToolTip="If items in a player's world should be automatically distributed to other players after beating both Ganon and Mother Brain and entering the Triforce room or entering the ship."/>
+            </StackPanel>
         </controls:LabeledControl>
 
       </StackPanel>

@@ -32,11 +32,8 @@ namespace Randomizer.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("MultiplayerGameType")
+                    b.Property<long?>("MultiplayerGameDetailsId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("MultiplayerGameUrl")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("RomPath")
                         .IsRequired()
@@ -59,15 +56,66 @@ namespace Randomizer.Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MultiplayerGameDetailsId");
+
                     b.HasIndex("TrackerStateId");
 
                     b.ToTable("GeneratedRoms");
+                });
+
+            modelBuilder.Entity("Randomizer.Shared.Models.MultiplayerGameDetails", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ConnectionUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GameGuid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GameUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("GeneratedRomId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("JoinedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PlayerGuid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PlayerKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneratedRomId")
+                        .IsUnique();
+
+                    b.ToTable("MultiplayerGames");
                 });
 
             modelBuilder.Entity("Randomizer.Shared.Models.TrackerBossState", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AutoTracked")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BossName")
@@ -97,6 +145,9 @@ namespace Randomizer.Shared.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AutoTracked")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Cleared")
@@ -318,11 +369,26 @@ namespace Randomizer.Shared.Migrations
 
             modelBuilder.Entity("Randomizer.Shared.Models.GeneratedRom", b =>
                 {
+                    b.HasOne("Randomizer.Shared.Models.MultiplayerGameDetails", "MultiplayerGameDetails")
+                        .WithMany()
+                        .HasForeignKey("MultiplayerGameDetailsId");
+
                     b.HasOne("Randomizer.Shared.Models.TrackerState", "TrackerState")
                         .WithMany()
                         .HasForeignKey("TrackerStateId");
 
+                    b.Navigation("MultiplayerGameDetails");
+
                     b.Navigation("TrackerState");
+                });
+
+            modelBuilder.Entity("Randomizer.Shared.Models.MultiplayerGameDetails", b =>
+                {
+                    b.HasOne("Randomizer.Shared.Models.GeneratedRom", "GeneratedRom")
+                        .WithOne()
+                        .HasForeignKey("Randomizer.Shared.Models.MultiplayerGameDetails", "GeneratedRomId");
+
+                    b.Navigation("GeneratedRom");
                 });
 
             modelBuilder.Entity("Randomizer.Shared.Models.TrackerBossState", b =>

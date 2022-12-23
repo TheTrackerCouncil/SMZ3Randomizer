@@ -60,3 +60,26 @@ ChoiceYes:
 # presented with a yes or no choice.
 # Limited to a max of 12 characters.
 ChoiceNo: 
+
+# The list of possibilities for Ganon to hint at the location of 
+# the silver arrows
+# {0} is replaced with the player name (or the text "you")
+# {1} is replaced with the general area name
+GanonSilversHint:
+
+# The list of possibilities for Ganon when there are no silvers
+GanonNoSilvers:
+
+# The list of possibilities for Sahasrahla revealing which
+# dungeon is a pendant dungeon
+# {0} is replaced with the dungeon name
+SahasrahlaReveal:
+
+# The list of possibilities for the bomb merchant revealing which
+# dungeons are red crystals
+# {0} is replaced with the first dungeon name
+# {1} is repalced with the second dungeon name
+BombShopReveal:
+
+# The list of possibilities for the guy in the Kakariko tavern
+TavernMan:

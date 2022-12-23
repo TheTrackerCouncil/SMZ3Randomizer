@@ -5,10 +5,14 @@ using Randomizer.Shared;
 
 namespace Randomizer.App.ViewModels
 {
+    /// <summary>
+    /// View model for an individual player in the muliplayer status window
+    /// </summary>
     public class MultiplayerPlayerStateViewModel : INotifyPropertyChanged
     {
         private bool _isConnectedToServer;
-        public MultiplayerPlayerStateViewModel(MultiplayerPlayerState state, bool isLocalPlayer, bool isLocalPlayerAdmin, bool isConnectedToServer)
+
+        public MultiplayerPlayerStateViewModel(MultiplayerPlayerState state, bool isLocalPlayer, bool isLocalPlayerAdmin, bool isConnectedToServer, MultiplayerGameStatus gameStatus)
         {
             State = state;
             PlayerGuid = state.Guid;
@@ -16,6 +20,7 @@ namespace Randomizer.App.ViewModels
             IsLocalPlayer = isLocalPlayer;
             IsLocalPlayerAdmin = isLocalPlayerAdmin;
             _isConnectedToServer = isConnectedToServer;
+            GameStatus = gameStatus;
         }
 
         public MultiplayerPlayerState State { get; private set; }
@@ -24,6 +29,7 @@ namespace Randomizer.App.ViewModels
         public bool IsLocalPlayer { get; }
         public bool IsLocalPlayerAdmin { get;  }
         public string StatusLabel => "(" + Status + ")";
+        public MultiplayerGameStatus GameStatus { get; set; }
 
         public bool IsConnectedToServer
         {
@@ -44,16 +50,29 @@ namespace Randomizer.App.ViewModels
             get
             {
                 if (!IsConnectedToServer) return IsLocalPlayer ? "Disconnected" : "Unknown";
-                return State.Status.GetDescription();
+                return State.IsConnected ? State.Status.GetDescription() : "Disconnected";
             }
         }
 
-        public Visibility EditConfigVisibility => IsLocalPlayer ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility ForfeitVisiblity => IsLocalPlayer || IsLocalPlayerAdmin ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility EditConfigVisibility => GameStatus == MultiplayerGameStatus.Created && IsLocalPlayer
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        public Visibility ForfeitVisiblity =>
+            (IsLocalPlayer || IsLocalPlayerAdmin) && GameStatus != MultiplayerGameStatus.Generating &&
+            !State.HasForfeited && !State.HasCompleted
+                ? Visibility.Visible
+                : Visibility.Collapsed;
 
         public void Update(MultiplayerPlayerState state)
         {
             State = state;
+            OnPropertyChanged();
+        }
+
+        public void Update(MultiplayerGameStatus status)
+        {
+            GameStatus = status;
             OnPropertyChanged();
         }
 

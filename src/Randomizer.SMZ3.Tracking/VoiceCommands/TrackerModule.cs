@@ -363,7 +363,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
-            foreach (var item in ItemService.AllItems().Where(x => x.Metadata is { Multiple: true, HasStages: false }))
+            foreach (var item in ItemService.LocalPlayersItems().Where(x => x.Metadata is { Multiple: true, HasStages: false }))
             {
                 if (item.Metadata.Plural == null)
                 {
@@ -390,7 +390,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             where ??= a => true;
 
             var itemNames = new Choices();
-            foreach (var item in ItemService.AllItems().Where(where))
+            foreach (var item in ItemService.LocalPlayersItems().Where(where))
             {
                 foreach (var name in item.Metadata.Name)
                 {

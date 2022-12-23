@@ -14,9 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Text\Scripts\General.yaml" />
     <EmbeddedResource Include="Text\Scripts\StringTable.yaml" />
-    <EmbeddedResource Include="Text\Scripts\TavernMan.txt" />
   </ItemGroup>
 
   <ItemGroup>

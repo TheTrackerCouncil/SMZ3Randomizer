@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Randomizer.Data.Logic;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using Randomizer.Shared.Multiplayer;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Randomizer.Data.Options
@@ -195,6 +196,7 @@ namespace Randomizer.Data.Options
         public bool Keysanity => KeysanityMode != KeysanityMode.None;
         public int Id { get; set; }
         public string PlayerName { get; set; } = "";
+        public string PhoneticName { get; set; } = "";
         public string PlayerGuid { get; set; } = "";
         public string Seed { get; set; } = "";
         public string SettingsString { get; set; } = "";
@@ -204,6 +206,7 @@ namespace Randomizer.Data.Options
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
         public CasPatches CasPatches { get; set; } = new();
         public PlandoConfig? PlandoConfig { get; set; }
+        public MultiplayerPlayerGenerationData? MultiplayerPlayerGenerationData { get; set; }
         public ItemPlacementRule ItemPlacementRule { get; set; }
         public int UniqueHintCount { get; set; } = 8;
         public bool ZeldaKeysanity => KeysanityMode == KeysanityMode.Both || KeysanityMode == KeysanityMode.Zelda;

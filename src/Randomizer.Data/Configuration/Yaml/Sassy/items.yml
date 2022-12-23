@@ -23,6 +23,10 @@
     - Text: Yeah, rip.
     - Text: I hope this was intentional because things were going well
     - Text: Good job
+    - Text: Did you know that people die when they are killed?
+      Weight: 0.1
+    - Text: Thankfully when you die in this game you don't die in real life. Yet. I'm still working on that.
+      Weight: 0.1
     "2":
     - Text: You've died {0} times.
     - Text: Are we still following the script?
@@ -117,11 +121,14 @@
 - Item: Shovel
   Name:
   - Text: Digging Tool
+  - Text: Pooper Scooper
   WhenTracked:
     "1":
     - Text: Toggled Shaktool Junior on
       Weight: 0.2
     - Text: I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.
+      Weight: 0.1
+    - Text: Tracked pooper scooper
       Weight: 0.1
 - Item: Bottle
   Name:
@@ -176,6 +183,8 @@
   - Text: Cane of slowdown
     Weight: 0.2
   - Text: Cane of Brian
+    Weight: 0.1
+  - Text: Cane of <prosody rate='x-slow'>slowdown</prosody>
     Weight: 0.1
 - Item: Magic Cape
   Name:
@@ -244,6 +253,7 @@
     - Text: Why are you wasting my time?
     - Text: You better have accidentally picked that up
     - Text: Hopefully there's a wishing well for you to toss that in
+    - Text: You'll need a lot more of these if you want to go to Zora
 - Item: Five Rupees
   WhenTracked:
     "1":
@@ -457,7 +467,7 @@
     "1":
     - Text: Toggled Morph Ball on
     - Text: It's morphin' time!
-    - Text: Time to becomne orb
+    - Text: Time to become an orb
     - Text: I hope the morph ball works out better for you than it did space pirates
       Weight: 0.1
 - Item: Screw Attack
@@ -474,6 +484,7 @@
   Name:
   - Text: Air Jordans
   - Text: Big up's
+  - Text: Hello Jump Boots
 - Item: Morph Bombs
   Name:
   - Text: Not so powerful bombs

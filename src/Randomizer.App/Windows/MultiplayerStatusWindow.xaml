@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Randomizer.App.Windows"
         xmlns:viewmodels="clr-namespace:Randomizer.App.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewmodels:MultiplayerStatusViewModel, IsDesignTimeCreatable=True}"
-        Title="MultiworldStatusWindow" Height="300" Width="500">
+        Loaded="MultiplayerStatusWindow_OnLoaded"
+        Title="SMZ3 Cas' Randomizer" Height="300" Width="500">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -82,14 +82,34 @@
         </StackPanel>
         <StackPanel Grid.Column="1" Orientation="Horizontal"
                     HorizontalAlignment="Right">
+          <Label Visibility="{Binding GeneratingLabelVisibility}">Generating rom...</Label>
           <Button x:Name="StartGameButton"
                   Click="StartGameButton_Click"
                   IsEnabled="{Binding CanStartGame}"
                   Visibility="{Binding StartButtonVisiblity}"
                   ToolTip="All players must have submitted their settings to start the game.">_Start game</Button>
           <Button x:Name="OpenTrackerButton"
+                  Visibility="{Binding PlayButtonsVisibility}"
                   IsEnabled="{Binding PlayButtonsEnabled}"
-                  Click="OpenTrackerButton_Click">_Open tracker</Button>
+                  Click="OpenTrackerButton_Click">_Launch</Button>
+          <Button x:Name="LaunchOptions"
+                  Visibility="{Binding PlayButtonsVisibility}"
+                  MinWidth="0"
+                  Width="23"
+                  Content="▼"
+                  FontSize="8"
+                  BorderThickness="0,1,1,1"
+                  Margin="0,0,0,0"
+                  Click="LaunchOptions_OnClick">
+            <Button.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="_Play" Click="PlayMenuItem_Click" IsEnabled="{Binding PlayButtonsEnabled}"></MenuItem>
+                <MenuItem Header="Open _Folder" Click="OpenFolderMenuItem_Click"></MenuItem>
+                <MenuItem Header="Open _Tracker" Click="OpenTrackerMenuItem_Click" IsEnabled="{Binding PlayButtonsEnabled}"></MenuItem>
+                <MenuItem Header="View _Spoiler Log" Click="ViewSpoilerMenuItem_Click"></MenuItem>
+              </ContextMenu>
+            </Button.ContextMenu>
+          </Button>
         </StackPanel>
       </Grid>
     </Border>

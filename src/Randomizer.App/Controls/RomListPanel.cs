@@ -143,7 +143,7 @@ namespace Randomizer.App.Controls
         /// Opens the folder containing the rom
         /// </summary>
         /// <param name="rom">The rom to open the folder for</param>
-        protected void OpenFolder(GeneratedRom rom)
+        public void OpenFolder(GeneratedRom rom)
         {
             var path = Path.Combine(Options.RomOutputPath, rom.RomPath);
             if (File.Exists(path))
@@ -160,7 +160,7 @@ namespace Randomizer.App.Controls
         /// Launches the current rom in the default program
         /// </summary>
         /// <param name="rom">The rom to execute</param>
-        protected void LaunchRom(GeneratedRom rom)
+        public void LaunchRom(GeneratedRom rom)
         {
             var path = Path.Combine(Options.RomOutputPath, rom.RomPath);
             if (File.Exists(path))
@@ -223,11 +223,31 @@ namespace Randomizer.App.Controls
             });
         }
 
-        protected void DeleteGeneratedRom(GeneratedRom rom)
+        protected bool DeleteGeneratedRom(GeneratedRom rom)
         {
             if (ShowWarningMessageBox("Are you sure you want to delete this rom and tracker information? This cannot be undone.") == MessageBoxResult.No)
             {
-                return;
+                return false;
+            }
+
+            // Try to delete the folder first
+            try
+            {
+                var path = Path.GetDirectoryName(Path.Combine(Options.RomOutputPath, rom.RomPath));
+
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var directory = new DirectoryInfo(path);
+                    directory.Delete(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is not DirectoryNotFoundException)
+                {
+                    ShowErrorMessageBox("There was an error in trying to delete the rom directory. Verify the rom is not open in your emulator.");
+                    return false;
+                }
             }
 
             // Delete the tracker info if it is available
@@ -248,27 +268,10 @@ namespace Randomizer.App.Controls
             DbContext.GeneratedRoms.Remove(rom);
             DbContext.SaveChanges();
 
-            // Try to delete the folder
-            try
-            {
-                var path = Path.GetDirectoryName(Path.Combine(Options.RomOutputPath, rom.RomPath));
-
-                if (!string.IsNullOrEmpty(path))
-                {
-                    var directory = new DirectoryInfo(path);
-                    directory.Delete(true);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex is not DirectoryNotFoundException)
-                {
-                    ShowWarningMessageBox("There was an error in trying to delete the rom directory.");
-                }
-            }
+            return true;
         }
 
-        protected void OpenSpoilerLog(GeneratedRom rom)
+        public void OpenSpoilerLog(GeneratedRom rom)
         {
             var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath);
             if (File.Exists(path))
@@ -285,7 +288,12 @@ namespace Randomizer.App.Controls
             }
         }
 
-        protected abstract void UpdateList();
+        public void CloseTracker()
+        {
+            _trackerWindow?.Close();
+        }
+
+        public abstract void UpdateList();
 
         public bool ShowGenerateRomWindow(PlandoConfig? plandoConfig, bool isMulti)
         {
@@ -294,14 +302,14 @@ namespace Randomizer.App.Controls
             generateWindow.Owner = Window.GetWindow(this);
             generateWindow.Options = Options;
             generateWindow.PlandoConfig = plandoConfig;
-            generateWindow.MultiMode = isMulti;
+            generateWindow.MultiplayerMode = isMulti;
             var successful = generateWindow.ShowDialog();
             return successful.HasValue && successful.Value;
         }
 
         protected MessageBoxResult ShowWarningMessageBox(string message)
         {
-            return MessageBox.Show(Window.GetWindow(this)!, message, "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return MessageBox.Show(Window.GetWindow(this)!, message, "SMZ3 Cas’ Randomizer", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         }
 
         protected MessageBoxResult ShowErrorMessageBox(string message)

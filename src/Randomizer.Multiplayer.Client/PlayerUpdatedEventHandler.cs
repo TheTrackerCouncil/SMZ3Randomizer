@@ -2,4 +2,4 @@
 
 namespace Randomizer.Multiplayer.Client;
 
-public delegate void PlayerUpdatedEventHandler(MultiplayerPlayerState state);
+public delegate void PlayerUpdatedEventHandler(MultiplayerPlayerState state, MultiplayerPlayerState? previousState, bool isLocalPlayer);

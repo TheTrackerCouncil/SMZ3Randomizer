@@ -14,6 +14,7 @@ namespace Randomizer.Shared.Models
         public TrackerState? TrackerState { get; init; }
         public string BossName { get; init; } = string.Empty;
         public bool Defeated { get; set; }
+        public bool AutoTracked { get; set; }
         public BossType Type { get; init; }
         public int WorldId { get; set; }
     }

@@ -2,16 +2,28 @@
 
 public class CreateGameRequest
 {
-    public CreateGameRequest(string playerName, MultiplayerGameType gameType, string version)
+    public CreateGameRequest(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, int multiplayerVersion, bool saveToDatabase, bool sendItemsOnComplete)
     {
         PlayerName = playerName;
+        PhoneticName = phoneticName;
         GameType = gameType;
-        Version = version;
+        RandomizerVersion = randomizerVersion;
+        MultiplayerVersion = multiplayerVersion;
+        SaveToDatabase = saveToDatabase;
+        SendItemsOnComplete = sendItemsOnComplete;
     }
 
     public string PlayerName { get; }
 
+    public string PhoneticName { get; }
+
     public MultiplayerGameType GameType { get; }
 
-    public string Version { get; }
+    public string RandomizerVersion { get; }
+
+    public int MultiplayerVersion { get; }
+
+    public bool SaveToDatabase { get; }
+
+    public bool SendItemsOnComplete { get; }
 }

@@ -162,7 +162,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual UIConfig GetUIConfig(params string?[] profiles) => 
+        public virtual UIConfig GetUIConfig(params string?[] profiles) =>
             LoadYamlConfigs<UIConfig, UILayout>("ui.yml", profiles);
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Randomizer.Data.Configuration
             {
                 throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IConfigFile.");
             }
-            
+
             var mergeableConfig = (IMergeable<T2>)config;
             if (mergeableConfig == null)
             {
@@ -212,7 +212,7 @@ namespace Randomizer.Data.Configuration
             }
 
             if (profiles == null || profiles.Count == 0) return config;
-            
+
             foreach (var profile in profiles)
             {
                 if (!string.IsNullOrEmpty(profile))
@@ -247,7 +247,7 @@ namespace Randomizer.Data.Configuration
             }
             catch (Exception ex) when (ex is YamlDotNet.Core.SemanticErrorException or YamlDotNet.Core.YamlException)
             {
-                _logger.LogError(ex, "Unable to load config file " + path);
+                _logger?.LogError(ex, "Unable to load config file {Path}", path);
                 throw new YamlDotNet.Core.SemanticErrorException("Unable to load config file " + path, ex);
             }
             return obj;

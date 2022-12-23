@@ -892,7 +892,11 @@ namespace Randomizer.App.Windows
         {
             if (Tracker.IsDirty)
             {
-                if (MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
+                if (Tracker.World.Config.MultiWorld)
+                {
+                    await SaveStateAsync();
+                }
+                else if (MessageBox.Show("You have unsaved changes in your tracker. Do you want to save?", "SMZ3 Cas’ Randomizer",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     await SaveStateAsync();

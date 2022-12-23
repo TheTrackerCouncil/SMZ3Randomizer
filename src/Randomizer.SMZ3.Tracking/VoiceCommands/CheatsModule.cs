@@ -152,7 +152,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 Tracker.Say(x => x.Cheats.CheatInvalidItem);
             }
-            else if (Tracker.GameService?.TryGiveItem(item) == true)
+            else if (Tracker.GameService?.TryGiveItem(item, null) == true)
             {
                 Tracker.Say(x => x.Cheats.CheatPerformed);
             }

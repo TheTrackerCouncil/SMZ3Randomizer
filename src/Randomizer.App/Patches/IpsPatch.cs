@@ -70,5 +70,17 @@ namespace Randomizer.App.Patches
         /// </summary>
         /// <returns>A new stream that contains the IPS patch.</returns>
         public static Stream SpeedKeep() => GetStream("rando_speed.ips");
+
+        /// <summary>
+        /// Gets a stream for the IPS patch to prevent flashing in Super Metroid
+        /// </summary>
+        /// <returns>A new stream that contains the IPS patch.</returns>
+        public static Stream DisableMetroidFlashing() => GetStream("noflashing.ips");
+
+        /// <summary>
+        /// Gets a stream for the IPS patch to prevent screen shaking in Super Metroid
+        /// </summary>
+        /// <returns>A new stream that contains the IPS patch.</returns>
+        public static Stream DisableMetroidScreenShake() => GetStream("disable_screen_shake.ips");
     }
 }

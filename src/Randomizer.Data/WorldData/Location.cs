@@ -274,11 +274,17 @@ namespace Randomizer.Data.WorldData
         {
             var oldItem = Item;
             Item = item;
-            var isCustomPlacementAndSphereOne = (item.Progression || item.IsDungeonItem && Region.Config.ZeldaKeysanity || item.IsKeycard && Region.Config.MetroidKeysanity)
+            var isCustomPlacementAndSphereOne = (item.Progression || item.IsDungeonItem && item.World.Config.ZeldaKeysanity || item.IsKeycard && item.World.Config.MetroidKeysanity)
                                                 && Region.Config.ItemPlacementRule != ItemPlacementRule.Anywhere
                                                 && _weight <= -10;
             var fillable = _alwaysAllow(item, items)
                 || (Region.CanFill(item, items) || isCustomPlacementAndSphereOne) && _allow(item, items) && IsAvailable(items);
+
+            // There is currently an issue in multiplayer where if you give a shield to another player, then receive a
+            // shield for yourself, then you get a free shield. As a work around, player shields must be in their own world
+            if (World.Config.MultiWorld && item.Type == ItemType.ProgressiveShield && item.World != World)
+                fillable = false;
+
             Item = oldItem;
             return fillable;
         }

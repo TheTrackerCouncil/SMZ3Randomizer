@@ -35,6 +35,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly Playthrough? _playthrough;
         private readonly IRandomizerConfigService _randomizerConfigService;
         private readonly bool _isMultiworld;
+        private readonly int _localWorldId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpoilerModule"/> class.
@@ -51,6 +52,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             Tracker.SpoilersEnabled = !tracker.World.Config.Race && !tracker.World.Config.DisableTrackerSpoilers && tracker.Options.SpoilersEnabled;
             _randomizerConfigService = randomizerConfigService;
             _isMultiworld = tracker.World.Config.MultiWorld;
+            _localWorldId = worldService.World.Id;
             if (tracker.World.Config.Race) return;
 
             Playthrough.TryGenerate(new[] { tracker.World }, tracker.World.Config, out _playthrough);
@@ -451,7 +453,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Consult the Book of Mudora
                 case 2:
-                    var pedText = Texts.ItemTextbox(location.Item).Replace('\n', ' ');
+                    var pedText = location.Item.Metadata.PedestalHints;
                     var bookOfMudoraName = ItemService.GetName(ItemType.Book);
                     return GiveLocationHint(x => x.BookHint, location, pedText, bookOfMudoraName);
             }
@@ -590,19 +592,28 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // - Is it out of logic?
                 // - Is it only in one game (mostly useful for progression
                 // items)
+                // - Is it in another player's world?
                 case 0:
                     {
-                        var isInLogic = itemLocations.Any(x => x.IsAvailable(ItemService.GetProgression(x.Region)));
-                        if (!isInLogic)
+
+                        var isInLogic = itemLocations.Any(x => x.IsAvailable(ItemService.GetProgression(x.Region)) && x.World.IsLocalWorld);
+                        if (isInLogic)
+                        {
+                            var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
+                            if (isOnlyInSuperMetroid)
+                                return GiveItemHint(x => x.ItemInSuperMetroid, item);
+
+                            var isOnlyInALinkToThePast = itemLocations.Select(x => x.Region).All(x => x is Z3Region);
+                            if (isOnlyInALinkToThePast)
+                                return GiveItemHint(x => x.ItemInALttP, item);
+                        }
+                        else
+                        {
+                            var isInOtherWorld = itemLocations.Any(x => !x.World.IsLocalWorld);
+                            if (isInOtherWorld)
+                                return GiveItemHint(x => x.ItemInUnknownWorld, item);
                             return GiveItemHint(x => x.ItemNotInLogic, item);
-
-                        var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
-                        if (isOnlyInSuperMetroid)
-                            return GiveItemHint(x => x.ItemInSuperMetroid, item);
-
-                        var isOnlyInALinkToThePast = itemLocations.Select(x => x.Region).All(x => x is Z3Region);
-                        if (isOnlyInALinkToThePast)
-                            return GiveItemHint(x => x.ItemInALttP, item);
+                        }
 
                         return GiveItemHint(x => x.NoApplicableHints, item);
                     }
@@ -610,6 +621,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Lv1 hints are still pretty vague:
                 // - Is it early or late?
                 // - Where will you NOT find it?
+                // - Exactly which player's world is the item in?
                 case 1:
                     {
                         if (itemLocations.All(x => !x.IsAvailable(ItemService.GetProgression(x.Region))))
@@ -619,6 +631,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             if (randomLocation == null)
                             {
                                 return GiveItemHint(x => x.NoApplicableHints, item);
+                            }
+
+                            if (!randomLocation.World.IsLocalWorld)
+                            {
+                                return GiveItemHint(x => x.ItemInPlayerWorld, item,
+                                    randomLocation.World.Config.PhoneticName);
                             }
 
                             var progression = ItemService.GetProgression(randomLocation.Region);
@@ -638,6 +656,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                     return GiveItemHint(x => x.ItemRequiresOtherItem, item, randomMissingItem.Metadata.NameWithArticle);
                             }
                         }
+
+                        var otherWorldLocation = itemLocations.FirstOrDefault(x => !x.World.IsLocalWorld);
+                        if (otherWorldLocation != null)
+                        {
+                            return GiveItemHint(x => x.ItemInPlayerWorld, item,
+                                otherWorldLocation.World.Config.PhoneticName);
+                        }
+
 
                         if (_playthrough == null)
                         {
@@ -671,9 +697,21 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // Lv2 hints are less vague still: have you there or not?
                 // - Is it in a dungeon? Have you been there before or not?
                 // - Is it in an area you've been before?
+                // - Is it in another player's ALttP or SM?
                 case 2:
                     {
                         var randomLocation = GetRandomItemLocationWithFilter(item, x => true);
+
+                        if (randomLocation?.World.IsLocalWorld == false)
+                        {
+                            if (randomLocation?.Region is Z3Region)
+                                return GiveItemHint(x => x.ItemInPlayerWorldALttP, item,
+                                    randomLocation.World.Config.PhoneticName);
+                            else if (randomLocation?.Region is SMRegion)
+                                return GiveItemHint(x => x.ItemInPlayerWorldSuperMetroid, item,
+                                    randomLocation.World.Config.PhoneticName);
+                        }
+
                         if (randomLocation?.Region is Z3Region and IHasReward dungeon && dungeon.RewardType != RewardType.Agahnim)
                         {
                             if (randomLocation.Region.Locations.Any(x => x.State.Cleared))
@@ -697,7 +735,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         {
                             var regionHint = randomLocationWithHint.Region.Metadata.Hints;
                             if (regionHint is { Count: > 0 })
+                            {
+                                if (!randomLocationWithHint.World.IsLocalWorld)
+                                    Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                        randomLocationWithHint.World.Config.PhoneticName);
                                 return GiveItemHint(regionHint, item);
+                            }
                         }
 
                         return GiveItemHint(x => x.NoApplicableHints, item);
@@ -721,6 +764,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 var roomHint = randomLocation.Room.Metadata.Hints;
                                 if (roomHint is { Count: > 0 })
                                 {
+                                    if (!randomLocation.World.IsLocalWorld)
+                                        Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                            randomLocation.World.Config.PhoneticName);
                                     return GiveItemHint(roomHint, item);
                                 }
                             }
@@ -728,6 +774,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                             var locationHint = randomLocation.Metadata.Hints;
                             if (locationHint is { Count: > 0 })
                             {
+                                if (!randomLocation.World.IsLocalWorld)
+                                    Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                        randomLocation.World.Config.PhoneticName);
                                 return GiveItemHint(locationHint, item);
                             }
                         }
@@ -735,6 +784,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         randomLocation = GetRandomItemLocationWithFilter(item, x => x.VanillaItem.IsInCategory(ItemCategory.Plentiful));
                         if (randomLocation != null && randomLocation.VanillaItem.IsInCategory(ItemCategory.Plentiful))
                         {
+                            if (!randomLocation.World.IsLocalWorld)
+                                Tracker.Say(x => x.Hints.ItemInPlayerWorldRegionRoomPrefixHint,
+                                    randomLocation.World.Config.PhoneticName);
+
                             if (randomLocation.Region is SMRegion
                                 && randomLocation.Name.ContainsAny(StringComparison.OrdinalIgnoreCase, s_worthlessLocationNameIndicators))
                             {
@@ -765,7 +818,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private Location? GetRandomItemLocationWithFilter(Item item, Func<Location, bool> predicate)
         {
-            var randomLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true)
+            var randomLocation = WorldService.Locations(itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
                 .Where(predicate)
                 .Random();
 
@@ -773,7 +826,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             {
                 // If the item is not at any accessible location, try to look in
                 // out-of-logic places, too.
-                randomLocation = WorldService.Locations(outOfLogic: true,  itemFilter: item.Type, keysanityByRegion: true)
+                randomLocation = WorldService.Locations(outOfLogic: true,  itemFilter: item.Type, keysanityByRegion: true, checkAllWorlds: true)
                     .Where(predicate)
                     .Random();
             }

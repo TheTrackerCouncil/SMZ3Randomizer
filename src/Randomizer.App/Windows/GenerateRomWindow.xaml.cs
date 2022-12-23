@@ -21,7 +21,6 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
-using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Generation;
@@ -43,8 +42,7 @@ namespace Randomizer.App.Windows
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
             LocationConfig locations,
-            IMetadataService metadataService,
-            MultiplayerClientService MultiplayerClientService)
+            IMetadataService metadataService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
@@ -63,7 +61,7 @@ namespace Randomizer.App.Windows
 
         public bool PlandoMode => PlandoConfig != null;
 
-        public bool MultiMode { get; set; }
+        public bool MultiplayerMode { get; set; }
 
         /// <summary>
         /// Gets the visibility of controls which should be hidden when plando
@@ -81,13 +79,13 @@ namespace Randomizer.App.Windows
         /// Gets the visibility of controls which should be hidden when plando
         /// mode is active.
         /// </summary>
-        public Visibility InvisibleInMultiworld => MultiMode ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility InvisibleInMultiplayer => MultiplayerMode ? Visibility.Collapsed : Visibility.Visible;
 
         /// <summary>
         /// Gets the visibility of controls which should be shown only when
         /// plando mode is active.
         /// </summary>
-        public Visibility VisibleInMultiworld => MultiMode ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility VisibleInMultiplayer => MultiplayerMode ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
         /// Gets the IsEnabled value for controls which should be disabled when
@@ -99,7 +97,13 @@ namespace Randomizer.App.Windows
         /// Gets the IsEnabled value for controls which should be disabled when
         /// plando mode is active.
         /// </summary>
-        public bool DisabledInMultiworld => !true;
+        public bool DisabledInMultiplayer => !MultiplayerMode;
+
+        /// <summary>
+        /// Gets the IsEnabled value for controls which should be disabled when
+        /// plando mode is active.
+        /// </summary>
+        public bool DisabledInPlandoAndMulti => DisabledInMultiplayer && DisabledInPlando;
 
         public ObservableCollection<Sprite> SamusSprites { get; } = new();
 
@@ -414,6 +418,7 @@ namespace Randomizer.App.Windows
             var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
             var ct = progressDialog.CancellationToken;
             var finished = false;
+            ThreadPool.GetAvailableThreads(out int workerThreads, out int completionPortThreads);
             var genTask = Task.Run(() =>
             {
                 var i = 0;
@@ -456,7 +461,7 @@ namespace Randomizer.App.Windows
             if (finished)
             {
                 ReportStats(stats, itemCounts, numberOfSeeds);
-                WriteMegaSpoilerLog(itemCounts);
+                WriteMegaSpoilerLog(itemCounts, numberOfSeeds);
             }
         }
 
@@ -506,7 +511,7 @@ namespace Randomizer.App.Windows
                 stats.Increment("The GT Moldorm chest contains a Metroid item");
         }
 
-        private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts)
+        private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, int numberOfSeeds)
         {
             var items = Enum.GetValues<ItemType>().ToDictionary(x => (int)x);
             var locations = new World(new Config(), "", 0, "").Locations;
@@ -538,6 +543,20 @@ namespace Randomizer.App.Windows
                 .GroupBy(x => x.Area, x => new { x.Name, x.Items })
                 .ToDictionary(x => x.Key, x => x.ToList());
 
+            var total = (double)numberOfSeeds;
+            var dungeonItems = locations
+                .Where(x => x.Region is IDungeon)
+                .OrderBy(x => x.Region.Name)
+                .Select(location => new
+                {
+                    Name = location.ToString(),
+                    Keys = (GetLocationSmallKeyCount(location.Id)/total).ToString("0.00%"),
+                    BigKeys = (GetLocationBigKeyCount(location.Id)/total).ToString("0.00%"),
+                    MapCompass = (GetLocationMapCompassCount(location.Id)/total).ToString("0.00%"),
+                    Treasures = (GetLocationTreasureCount(location.Id)/total).ToString("0.00%"),
+                    Progression = (GetLocationProgressionCount(location.Id)/total).ToString("0.00%"),
+                });
+
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true,
@@ -547,7 +566,8 @@ namespace Randomizer.App.Windows
             var json = JsonSerializer.Serialize(new
             {
                 ByItem = itemLocations,
-                ByLocation = locationItems
+                ByLocation = locationItems,
+                DungeonItems = dungeonItems
             }, options);
 
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -559,6 +579,44 @@ namespace Randomizer.App.Windows
                 UseShellExecute = true
             };
             Process.Start(startInfo);
+
+            int GetLocationSmallKeyCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    items[x.Key.itemId].IsInCategory(ItemCategory.SmallKey)).Sum(x => x.Value);
+            }
+
+            int GetLocationBigKeyCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    items[x.Key.itemId].IsInCategory(ItemCategory.BigKey)).Sum(x => x.Value);
+            }
+
+            int GetLocationMapCompassCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    items[x.Key.itemId].IsInAnyCategory(ItemCategory.Compass, ItemCategory.Map)).Sum(x => x.Value);
+            }
+
+            int GetLocationTreasureCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                    x.Key.locationId == locationId &&
+                    !items[x.Key.itemId].IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Compass, ItemCategory.Map))
+                    .Sum(x => x.Value);
+            }
+
+            int GetLocationProgressionCount(int locationId)
+            {
+                return itemCounts.Where(x =>
+                        x.Key.locationId == locationId &&
+                        !items[x.Key.itemId].IsInAnyCategory(ItemCategory.BigKey, ItemCategory.SmallKey, ItemCategory.Compass, ItemCategory.Map) &&
+                        items[x.Key.itemId].IsPossibleProgression(false, false))
+                    .Sum(x => x.Value);
+            }
         }
 
         private void ReportStats(IDictionary<string, int> stats,

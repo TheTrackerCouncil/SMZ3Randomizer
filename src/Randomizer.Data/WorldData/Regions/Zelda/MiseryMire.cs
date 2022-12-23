@@ -106,6 +106,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Misery Mire", "MM", "Vitreous");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            Medallion = DungeonState.RequiredMedallion ?? ItemType.Nothing;
         }
 
         public override string Name => "Misery Mire";

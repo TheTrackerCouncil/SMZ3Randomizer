@@ -93,6 +93,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Turtle Rock", "TR", "Trinexx");
             DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
             Reward = new Reward(DungeonState.Reward ?? RewardType.None, world, this, metadata, DungeonState);
+            Medallion = DungeonState.RequiredMedallion ?? ItemType.Nothing;
         }
 
         public override string Name => "Turtle Rock";

@@ -1,6 +1,4 @@
-﻿using Randomizer.Shared;
-using Randomizer.Shared.Enums;
-using Randomizer.Shared.Multiplayer;
+﻿using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
 
@@ -9,68 +7,33 @@ namespace Randomizer.Multiplayer.Server;
 /// </summary>
 public class MultiplayerPlayer
 {
-    public MultiplayerPlayer(MultiplayerGame game, string playerGuid, string playerKey, string playerName, string connectionId)
+    public MultiplayerPlayer(MultiplayerGame game, string playerGuid, string playerKey, string playerName, string phoneticName, string connectionId)
     {
         Game = game;
-        Key = playerKey;
         ConnectionId = connectionId;
         State = new MultiplayerPlayerState
         {
             Guid = playerGuid,
-            PlayerName = playerName
+            Key = playerKey,
+            PlayerName = playerName,
+            PhoneticName = string.IsNullOrEmpty(phoneticName) ? playerName : phoneticName,
+            GameId = game.State.Id,
+            IsConnected = true
         };
     }
+
+    public MultiplayerPlayer(MultiplayerGame game, MultiplayerPlayerState state)
+    {
+        Game = game;
+        State = state;
+        State.IsConnected = false;
+    }
+
     public MultiplayerGame Game { get; }
     public string Guid => State.Guid;
-    public string Key { get; }
-    public string ConnectionId { get; set; }
+    public string Key => State.Key;
+    public string ConnectionId { get; set; } = "";
     public MultiplayerPlayerState State { get; set; }
-    public bool IsGameAdmin => Game.AdminPlayer == this;
-
-    /// <summary>
-    /// Marks a location as accessed
-    /// </summary>
-    /// <param name="locationId"></param>
-    public void TrackLocation(int locationId)
-    {
-        if (State.Locations != null)
-            State.Locations[locationId] = true;
-    }
-
-    /// <summary>
-    /// Updates the amount of an item that have been retrieved
-    /// </summary>
-    /// <param name="type"></param>
-    public void TrackItem(ItemType type)
-    {
-        if (State.Items == null) return;
-        if (State.Items.TryGetValue(type, out var value))
-        {
-            State.Items[type] = value + 1;
-        }
-        else
-        {
-            State.Items[type] = 1;
-        }
-    }
-
-    /// <summary>
-    /// Marks a boss as defeated
-    /// </summary>
-    /// <param name="type"></param>
-    public void TrackBoss(BossType type)
-    {
-        if (State.Bosses == null) return;
-        State.Bosses[type] = true;
-    }
-
-    /// <summary>
-    /// Marks a dungeon as completed
-    /// </summary>
-    /// <param name="name"></param>
-    public void TrackDungeon(string name)
-    {
-        if (State.Dungeons == null) return;
-        State.Dungeons[name] = true;
-    }
+    public string? PlayerGenerationData => State.GenerationData;
+    public bool IsGameAdmin => State.IsAdmin;
 }

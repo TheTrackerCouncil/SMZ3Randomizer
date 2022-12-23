@@ -2,16 +2,21 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using Randomizer.Shared.Models;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.App.ViewModels
 {
+    /// <summary>
+    /// View model for the multiplayer status window
+    /// </summary>
     public class MultiplayerStatusViewModel : INotifyPropertyChanged
     {
         private bool _isConnected;
         private string _gameUrl = "";
         private MultiplayerGameStatus? _gameStatus;
         private bool _allPlayersSubmittedConfigs;
+        private GeneratedRom? _generatedRom;
 
         public MultiplayerStatusViewModel()
         {
@@ -23,12 +28,12 @@ namespace Randomizer.App.ViewModels
                     {
                         Guid = "Player One",
                         PlayerName = "Player One",
-                    }, true, false, true),
+                    }, true, false, true, MultiplayerGameStatus.Created),
                     new MultiplayerPlayerStateViewModel(new MultiplayerPlayerState
                     {
                         Guid = "Player Two",
                         PlayerName = "Player Two",
-                    }, false, false, true),
+                    }, false, false, true, MultiplayerGameStatus.Created),
                 };
             }
             else
@@ -37,6 +42,17 @@ namespace Randomizer.App.ViewModels
             }
         }
 
+        public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
+        public Visibility GeneratingLabelVisibility => GameStatus == MultiplayerGameStatus.Generating || (GameStatus == MultiplayerGameStatus.Started && _generatedRom == null) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility PlayButtonsVisibility => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started && _generatedRom != null && LocalPlayer?.HasCompleted != true && LocalPlayer?.HasForfeited != true;
+        public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
+        public MultiplayerPlayerState? LocalPlayer { get; private set; }
+        public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
 
         public bool IsConnected
         {
@@ -79,6 +95,15 @@ namespace Randomizer.App.ViewModels
                 _gameStatus = value;
                 OnPropertyChanged(nameof(GameStatus));
                 OnPropertyChanged(nameof(ConnectionStatus));
+                OnPropertyChanged(nameof(GeneratingLabelVisibility));
+                OnPropertyChanged(nameof(StartButtonVisiblity));
+                if (_gameStatus != null)
+                {
+                    foreach (var player in Players)
+                    {
+                        player.Update(_gameStatus.Value);
+                    }
+                }
             }
         }
 
@@ -96,18 +121,27 @@ namespace Randomizer.App.ViewModels
             }
         }
 
-        public string ConnectionStatus => IsConnected ? "Connected" : "Not Connected";
-        public Visibility ReconnectButtonVisibility => IsConnected ? Visibility.Collapsed : Visibility.Visible;
-        public Visibility StartButtonVisiblity => (LocalPlayer?.IsAdmin ?? false) && GameStatus == MultiplayerGameStatus.Created ? Visibility.Visible : Visibility.Collapsed;
-        public bool PlayButtonsEnabled => GameStatus == MultiplayerGameStatus.Started;
-        public bool CanStartGame => IsConnected && AllPlayersSubmittedConfigs;
-        public MultiplayerPlayerState? LocalPlayer { get; private set; }
-        public List<MultiplayerPlayerStateViewModel> Players { get; private set; }
+        public GeneratedRom? GeneratedRom
+        {
+            get
+            {
+                return _generatedRom;
+            }
+            set
+            {
+                _generatedRom = value;
+                OnPropertyChanged(nameof(PlayButtonsEnabled));
+                OnPropertyChanged(nameof(PlayButtonsVisibility));
+                OnPropertyChanged(nameof(GeneratingLabelVisibility));
+            }
+        }
+
+
 
         public void UpdateList(List<MultiplayerPlayerState> players, MultiplayerPlayerState? localPlayer)
         {
             LocalPlayer = localPlayer;
-            Players = players.Select(x => new MultiplayerPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected)).ToList();
+            Players = players.Select(x => new MultiplayerPlayerStateViewModel(x, x == localPlayer, localPlayer?.IsAdmin ?? false, IsConnected, GameStatus ?? MultiplayerGameStatus.Created)).ToList();
             OnPropertyChanged();
         }
 
@@ -116,12 +150,24 @@ namespace Randomizer.App.ViewModels
             LocalPlayer = localPlayer;
             var playerViewModel = Players.FirstOrDefault(x => x.PlayerGuid == player.Guid);
             if (playerViewModel != null)
+            {
                 playerViewModel.Update(player);
+                if (player == LocalPlayer) OnPropertyChanged(nameof(PlayButtonsEnabled));
+            }
             else
             {
-                Players.Add(new MultiplayerPlayerStateViewModel(player, false, localPlayer?.IsAdmin ?? false, IsConnected));
+                Players = Players.Concat(new List<MultiplayerPlayerStateViewModel>()
+                {
+                    new (player, false, localPlayer?.IsAdmin ?? false, IsConnected,
+                        GameStatus ?? MultiplayerGameStatus.Created)
+                }).ToList();
                 OnPropertyChanged();
             }
+        }
+
+        public void Refresh()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

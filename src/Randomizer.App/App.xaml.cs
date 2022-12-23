@@ -80,6 +80,7 @@ namespace Randomizer.App
             services.AddSmz3Randomizer();
             services.AddPlandomizer();
             services.AddGeneratedRomLoader();
+            services.AddSmz3MultiplayerRomGenerator();
             services.AddTracker()
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()

@@ -180,7 +180,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// A collection of reward that have been tracked.
         /// </returns>
         public virtual IEnumerable<Reward> TrackedRewards()
-            => _world.World.Dungeons.Where(x => x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
+            => _world.World.Dungeons.Where(x => x.HasReward && x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
 
         /// <summary>
         /// Enumerates all bosses that can be tracked for all players.

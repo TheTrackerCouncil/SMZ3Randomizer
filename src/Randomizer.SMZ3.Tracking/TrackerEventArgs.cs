@@ -12,9 +12,11 @@ namespace Randomizer.SMZ3.Tracking
         /// class.
         /// </summary>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public TrackerEventArgs(float? confidence)
+        /// <param name="autoTracked">If the event was triggered by auto tracker</param>
+        public TrackerEventArgs(float? confidence, bool autoTracked = false)
         {
             Confidence = confidence;
+            AutoTracked = autoTracked;
         }
 
         /// <summary>
@@ -30,6 +32,16 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TrackerEventArgs"/>
+        /// class.
+        /// </summary>
+        /// <param name="autoTracked">If the event was triggered by auto tracker</param>
+        public TrackerEventArgs(bool autoTracked)
+        {
+            AutoTracked = autoTracked;
+        }
+
+        /// <summary>
         /// Gets the speech recognition confidence as a value between 0.0 and
         /// 1.0, or <c>null</c> if the event was not initiated by speech
         /// recognition.
@@ -40,5 +52,10 @@ namespace Randomizer.SMZ3.Tracking
         /// Gets the phrase Tracker recognized, or <c>null</c>.
         /// </summary>
         public string? Phrase { get; }
+
+        /// <summary>
+        /// If the event was triggered by auto tracker
+        /// </summary>
+        public bool AutoTracked { get; init; }
     }
 }

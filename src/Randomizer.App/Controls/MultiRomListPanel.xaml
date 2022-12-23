@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:Randomizer.App.Controls"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:viewmodels="clr-namespace:Randomizer.App.ViewModels"
+             d:DataContext="{d:DesignInstance viewmodels:MultiplayerGamesViewModel, IsDesignTimeCreatable=True}"
              Background="White">
   <Grid>
     <Grid.RowDefinitions>
@@ -14,22 +16,16 @@
     </Grid.RowDefinitions>
 
     <Grid Grid.Row="0" Grid.IsSharedSizeScope="True">
-      <!--
-      <ListView Name="RomsList" ItemsSource="{Binding RomsList}" SelectionMode="Single" Visibility="{Binding RomsListVisibility}">
+      <ListView Name="GamesList" ItemsSource="{Binding Games}" SelectionMode="Single" Visibility="{Binding GamesVisibility}">
         <ListView.ItemTemplate>
           <DataTemplate>
             <Grid Margin="0,2">
               <Grid.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="_Play" Tag="{Binding Rom}" Click="PlayMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Open _Folder" Tag="{Binding Rom}" Click="OpenFolderMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Open _Tracker" Tag="{Binding Rom}" Click="OpenTrackerMenuItem_Click"></MenuItem>
-                  <MenuItem Header="View _Spoiler Log" Tag="{Binding Rom}" Click="ViewSpoilerMenuItem_Click"></MenuItem>
-                  <MenuItem Header="View _Progression Log" Tag="{Binding Rom}" Click="ProgressionLogMenuItem_Click" Visibility="{Binding ProgressionLogVisibility}"></MenuItem>
-                  <MenuItem Header="_Edit Label" Tag="{Binding Rom}" Click="EditLabelMenuItem_Click"></MenuItem>
-                  <MenuItem Header="_Copy Seed" Tag="{Binding Rom}" Click="CopySeedMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Copy _Randomizer Settings String" Tag="{Binding Rom}" Click="CopyConfigMenuItem_Click"></MenuItem>
-                  <MenuItem Header="_Delete Rom" Tag="{Binding Rom}" Click="DeleteRomMenuItem_Click"></MenuItem>
+                  <MenuItem Header="Open _Folder" Tag="{Binding Details}" Click="OpenFolderMenuItem_Click" Visibility="{Binding GeneratedRomMenuItemVisibility}"></MenuItem>
+                  <MenuItem Header="View _Spoiler Log" Tag="{Binding Details}" Click="ViewSpoilerMenuItem_Click" Visibility="{Binding GeneratedRomMenuItemVisibility}"></MenuItem>
+                  <MenuItem Header="View _Progression Log" Tag="{Binding Details}" Click="ProgressionLogMenuItem_Click"  Visibility="{Binding GeneratedRomMenuItemVisibility}"></MenuItem>
+                  <MenuItem Header="_Delete" Tag="{Binding Details}" Click="DeleteRomMenuItem_Click"></MenuItem>
                 </ContextMenu>
               </Grid.ContextMenu>
               <Grid.ColumnDefinitions>
@@ -41,7 +37,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
               </Grid.RowDefinitions>
-              <TextBox Text="{Binding Name, Mode=OneWay}" Name="EditLabelTextBox" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Top" Visibility="Collapsed" LostFocus="EditLabelTextBox_LostFocus" KeyDown="EditLabelTextBox_KeyDown" Tag="{Binding Rom}">
+              <TextBox Text="{Binding Name, Mode=OneWay}" Name="EditLabelTextBox" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Top" Visibility="Collapsed" Tag="{Binding Details}"><!--LostFocus="EditLabelTextBox_LostFocus" KeyDown="EditLabelTextBox_KeyDown" >-->
                 <TextBox.Style>
                   <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                     <Style.Resources>
@@ -65,12 +61,12 @@
                   </Style>
                 </TextBox.Style>
               </TextBox>
-              <TextBlock Text="{Binding NameLabel}" Name="LabelTextBlock" Grid.Row="0" />
+              <TextBlock Text="{Binding TypeLabel}" Name="LabelTextBlock" Grid.Row="0" />
               <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" TextAlignment="Right" Margin="0,0,8,0"/>
-              <TextBlock Text="{Binding LocationsLabel}" Grid.Row="1" Grid.Column="0" />
+              <TextBlock Text="{Binding StatusLabel}" Grid.Row="1" Grid.Column="0" />
               <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" Margin="0,0,8,0" TextAlignment="Right" />
-              <DockPanel Grid.Column="2" Grid.RowSpan="2">
-                <Button Margin="0,0,0,0" Click="LaunchButton_Click" Tag="{Binding Rom}">Launch</Button>
+              <DockPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
+                <Button Margin="0,0,0,0" Click="LaunchButton_Click" Tag="{Binding Details}">Reconnect</Button>
               </DockPanel>
             </Grid>
           </DataTemplate>
@@ -81,10 +77,9 @@
           </Style>
         </ListView.ItemContainerStyle>
       </ListView>
-      -->
 
       <StackPanel Visibility="{Binding IntroVisibility}" Margin="5 2">
-        <TextBlock TextWrapping="Wrap">It looks like you don't have any generated roms yet! Press quick play below to generate and launch a rom with the either the default or last used settings, or click generate custom game to change settings before playing.</TextBlock>
+        <TextBlock TextWrapping="Wrap">It looks like you haven't joined or created any multiplayer games! Click Create game to host a name game for others to join, or click Join game to join a multiplayer game created by someone else. Multiplayer games require auto tracking, so verify that is fully setup.</TextBlock>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
           <Button HorizontalAlignment="Right" Click="CreateMultiGameButton_Click">_Create game...</Button>
           <Button HorizontalAlignment="Left" Click="JoinMultiGameButton_Click">_Join game...</Button>

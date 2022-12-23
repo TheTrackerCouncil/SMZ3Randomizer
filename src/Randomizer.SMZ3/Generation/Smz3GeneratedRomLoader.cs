@@ -4,7 +4,9 @@ using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 
@@ -57,8 +59,11 @@ namespace Randomizer.SMZ3.Generation
                 var itemState = trackerState.ItemStates.First(s =>
                     s.Type == locationState.Item && s.WorldId == locationState.ItemWorldId);
                 var itemMetadata = _metadata.Item(locationState.Item) ?? new ItemData(locationState.Item);
-                location.Item = new Item(locationState.Item, worlds.First(w => w.Id == locationState.ItemWorldId),
-                    itemState.ItemName, itemMetadata, itemState);
+                var itemWorld = worlds.First(w => w.Id == locationState.ItemWorldId);
+                location.Item = new Item(locationState.Item, itemWorld,
+                    itemState.ItemName, itemMetadata, itemState,
+                    locationState.Item.IsPossibleProgression(itemWorld.Config.ZeldaKeysanity,
+                        itemWorld.Config.MetroidKeysanity));
             }
 
             // Create items for saved state items not in the world
@@ -114,6 +119,7 @@ namespace Randomizer.SMZ3.Generation
                     trackerState.BossStates.Add(bossState);
                 }
             }
+
 
             _worldAccessor.Worlds = worlds;
             _worldAccessor.World = worlds.First(x => x.IsLocalWorld);

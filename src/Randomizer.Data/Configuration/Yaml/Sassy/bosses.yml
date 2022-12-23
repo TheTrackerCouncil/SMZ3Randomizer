@@ -9,6 +9,8 @@
   WhenDefeated:
   - Text: Toggled Crocomire on.
   - Text: Toggled Crocomire on. Did you actually have to kill him this time?
+  - Text: Did you see that spooky skelington? Scary.
+    Weight: 0.2
 - Boss: Phantoon
   Name:
   - Text: Spooky Ghost
