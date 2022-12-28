@@ -1,15 +1,32 @@
 !SPC_MUSIC_REQUEST = $012C
+!SPC_MUSIC_CONTROL = $012B
 
-!MSU_CURRENT_TRACK = $0127
-!MSU_CURRENT_VOLUME = $0129
-!MSU_TARGET_VOLUME = $0130
+!MSU_CURRENT_VOLUME = $0127
+!MSU_TARGET_VOLUME = $0129
+!MSU_CURRENT_TRACK = $0130
 !MSU_CURRENT_COMMAND = $0133
 
 !VAL_VOLUME_INCREMENT = #$10
 !VAL_VOLUME_DECREMENT = #$02
 !VAL_VOLUME_MUTE = #$0
-!VAL_VOLUME_HALF = #$80
+!VAL_VOLUME_HALF = #$40
 !VAL_VOLUME_FULL = #$FF
+
+CheckMusicLoadRequest:
+    PHP : REP #$10 : PHA : PHX : PHY
+    LDA !SPC_MUSIC_REQUEST : BEQ .skip : BMI .skip : CMP !REG_CURRENTMSU_CURRENT_COMMAND_COMMAND : BNE .mute
+.skip
+    STA !SPC_MUSIC_CONTROL : STZ !SPC_MUSIC_REQUEST
+    PLY : PLX : PLA : PLP
+    RTL
+    
+    ; PLY : PLX : PLA : PLP
+    RTL
+.mute
+    LDA.b #$FF : STA $2140
+    LDA.b #SPCMutePayload : STA $00
+    LDA.b #SPCMutePayload>>8 : STA $01
+    LDA.b #SPCMutePayload>>16
 
 msu_main:
     SEP #$20    ; set 8-BIT accumulator
@@ -17,29 +34,19 @@ msu_main:
     REP #$20    ; set 16-BIT accumulator
     LDA $2002 : CMP #$2D53 : BNE .no_msu
     SEP #$30
-    BRA .test
+    BRA .check_music_request
 
 .no_msu
     SEP #$30
-    LDA #1
-    STA $7e0055 ; test
     JML spc_continue
-
-.test
-    LDA $7e0055
-    INC
-    STA $7e0056 ; test
-    LDX !SPC_MUSIC_REQUEST
-    TXA
-    STA $7e0056 ; test
-    CPX #0 : BNE .test2
-    BRA .check_music_request
-
-.test2
     BRA .check_music_request
 
 .check_music_request
     LDX !SPC_MUSIC_REQUEST ; Load the PCM music request to X
+    LDA !MSU_CURRENT_VOLUME
+    STA $7e0055
+    LDA !MSU_TARGET_VOLUME
+    STA $7e0056
     CPX #$F1 : BEQ .fade_out
     CPX #$F2 : BEQ .fade_half
     CPX #$F3 : BEQ .full_volume
@@ -53,6 +60,7 @@ msu_main:
     CMP !MSU_TARGET_VOLUME
     BCC .increase_volume
     BRA .decrease_volume
+    ;BRA .increase_volume
 
 .increase_volume
     ADC !VAL_VOLUME_INCREMENT : BCC .save_volume
@@ -72,11 +80,13 @@ msu_main:
     JML spc_continue
 
 .fade_half
-    LDA !VAL_VOLUME_HALF : STA !MSU_TARGET_VOLUME
+    LDA !VAL_VOLUME_HALF : CMP !MSU_TARGET_VOLUME : BEQ .change_volume
+    STA !MSU_TARGET_VOLUME
     JML spc_continue
 
 .full_volume
-    LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME
+    LDA !VAL_VOLUME_FULL : CMP !MSU_TARGET_VOLUME : BEQ .change_volume
+    STA !MSU_TARGET_VOLUME
     JML spc_continue
 
 .exit_msu
@@ -86,16 +96,17 @@ msu_main:
 ; it is the same song from changing screens
 .check_new_song
     CPX !MSU_CURRENT_TRACK : BNE .change_song ; If the track changed, play it
-    LDX.b #00 : STX !SPC_MUSIC_REQUEST ; Otherwise mute the SPC again
+    ;LDX.b #00 : STX !SPC_MUSIC_REQUEST ; Otherwise mute the SPC again
     JML spc_continue
 
 ; Plays an MSU based on the song value stored in X
 .change_song
-    ; LDA #5 ; test
-    ; STA $7e0055 ; test
+    ;TXA
+    ;STA $7e0055 ; test
     STX !MSU_CURRENT_TRACK ; Saves the track being played
     STX $2004 : STZ $2005 ; Sets the MSU track from X
     LDA.l MSUTrackList,X : STA $2007 ; Sets the track code from the track table
     LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME
+    ;STA $7e0056 ; test
     ;LDX.b #00 : STX !SPC_MUSIC_REQUEST ; Clear music request to mute SPC
     JML spc_continue
