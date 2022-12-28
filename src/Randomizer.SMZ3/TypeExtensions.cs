@@ -18,13 +18,13 @@ namespace Randomizer.SMZ3
         /// <param name="instance">The instance used to get the properties' values.</param>
         /// <param name="bindingFlags">The binding flags to use.</param>
         /// <returns>A collection of values of properties of the specified property type.</returns>
-        public static IEnumerable<TProperty> GetPropertyValues<TProperty>(this Type type,
+        public static IEnumerable<TProperty?> GetPropertyValues<TProperty>(this Type type,
             object instance,
             BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance)
         {
             return type.GetProperties(bindingFlags)
                 .Where(x => x.PropertyType.IsAssignableTo(typeof(TProperty)))
-                .Select(x => (TProperty)x.GetValue(instance));
+                .Select(x => (TProperty)x.GetValue(instance)!);
         }
     }
 }

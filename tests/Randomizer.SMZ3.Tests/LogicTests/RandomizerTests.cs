@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
     {
         // If this test breaks, update Smz3Randomizer.Version
         [Theory]
-        [InlineData("test", 62178842)] // Smz3Randomizer v2.0
+        [InlineData("test", -1514734414)] // Smz3Randomizer v3.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var config = new Config();
 
             var seedData = randomizer.GenerateSeed(config, seed, default);
-            var worldHash = GetHashForWorld(seedData.Worlds[0].World);
+            var worldHash = GetHashForWorld(seedData.WorldGenerationData.LocalWorld.World);
 
             worldHash.Should().Be(expectedHash);
         }
@@ -61,7 +61,8 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var randomizer = GetRandomizer();
 
             var config = new Config();
-            var region = new Data.WorldData.Regions.Zelda.LightWorld.LightWorldSouth(null, null);
+            var world = new World(config, "", 0, "");
+            var region = world.LightWorldSouth;
             var location1 = region.LinksHouse.Id;
             var location2 = region.MazeRace.Id;
             var location3 = region.IceCave.Id;
@@ -72,7 +73,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             for (var i = 0; i < 3; i++)
             {
                 var seedData = randomizer.GenerateSeed(config, null, default);
-                var world = seedData.Worlds.First().World;
+                world = seedData.WorldGenerationData.LocalWorld.World;
                 world.Locations.First(x => x.Id == location1).Item.Progression.Should().BeTrue();
                 world.Locations.First(x => x.Id == location2).Item.Progression.Should().BeFalse();
                 var fireRodAtLocation = world.Locations.First(x => x.Id == location3).Item.Type == ItemType.Firerod;
@@ -95,7 +96,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             for (var i = 0; i < 3; i++)
             {
                 var seedData = randomizer.GenerateSeed(config, null, default);
-                var world = seedData.Worlds.First().World;
+                var world = seedData.WorldGenerationData.LocalWorld.World;
                 var progression = new Progression();
                 Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression, out _).Should().BeEmpty();
                 Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression, out _).Should().BeEmpty();

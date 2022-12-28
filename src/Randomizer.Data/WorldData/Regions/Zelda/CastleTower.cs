@@ -1,26 +1,28 @@
 ﻿using System.Collections.Generic;
-using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
+using System.Linq;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda
 {
     public class CastleTower : Z3Region, IHasReward, IDungeon
     {
-        public CastleTower(World world, Config config)
-            : base(world, config)
+        public CastleTower(World world, Config config, IMetadataService? metadata, TrackerState? trackerState)
+            : base(world, config, metadata, trackerState)
         {
             RegionItems = new[] { ItemType.KeyCT };
 
-            Foyer = new FoyerRoom(this);
-            DarkMaze = new DarkMazeRoom(this);
+            Foyer = new FoyerRoom(this, metadata, trackerState);
+            DarkMaze = new DarkMazeRoom(this, metadata, trackerState);
 
             StartingRooms = new List<int>() { 224 };
-
-            Reward = new Reward(RewardType.Agahnim, world, this);
+            Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Castle Tower");
+            DungeonMetadata = metadata?.Dungeon(GetType()) ?? new DungeonInfo("Castle Tower", "AT", "Agahnim");
+            DungeonState = trackerState?.DungeonStates.First(x => x.WorldId == world.Id && x.Name == GetType().Name) ?? new TrackerDungeonState();
+            Reward = new Reward(RewardType.Agahnim, world, this, metadata, DungeonState);
         }
 
         public override string Name => "Castle Tower";
@@ -29,8 +31,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
 
         public Reward Reward { get; set; }
-
-        public RewardType RewardType { get; set; } = RewardType.Agahnim;
 
         public FoyerRoom Foyer { get; }
 
@@ -54,13 +54,15 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public class FoyerRoom : Room
         {
-            public FoyerRoom(Region region)
-                : base(region, "Foyer")
+            public FoyerRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Foyer", metadata)
             {
-                Chest = new Location(region, 256 + 101, 0x1EAB5, LocationType.Regular, 
+                Chest = new Location(region, 256 + 101, 0x1EAB5, LocationType.Regular,
                     name: "Castle Tower - Foyer",
-                    memoryAddress: 0xE0, 
-                    memoryFlag: 0x4);
+                    memoryAddress: 0xE0,
+                    memoryFlag: 0x4,
+                    metadata: metadata,
+                    trackerState: trackerState);
             }
 
             public Location Chest { get; }
@@ -68,14 +70,16 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public class DarkMazeRoom : Room
         {
-            public DarkMazeRoom(Region region)
-                : base(region, "Dark Maze")
+            public DarkMazeRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Dark Maze", metadata)
             {
-                Chest = new Location(region, 256 + 102, 0x1EAB2, LocationType.Regular, 
+                Chest = new Location(region, 256 + 102, 0x1EAB2, LocationType.Regular,
                     name: "Castle Tower - Dark Maze",
-                    access: items => items.Lamp && items.KeyCT >= 1, 
-                    memoryAddress: 0xD0, 
-                    memoryFlag: 0x4);
+                    access: items => items.Lamp && items.KeyCT >= 1,
+                    memoryAddress: 0xD0,
+                    memoryFlag: 0x4,
+                    metadata: metadata,
+                    trackerState: trackerState);
             }
 
             public Location Chest { get; }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.Data.WorldData.Regions;
@@ -18,61 +17,63 @@ using Randomizer.Data.WorldData.Regions.Zelda.LightWorld;
 using Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.WorldData
 {
     public class World
     {
-        public World(Config config, string player, int id, string guid)
+        public World(Config config, string player, int id, string guid, bool isLocalWorld = true, IMetadataService? metadata = null, TrackerState? trackerState = null)
         {
             Config = config;
             Player = player;
             Id = id;
             Guid = guid;
+            IsLocalWorld = isLocalWorld;
 
             Logic = new Logic.Logic(this);
 
-            CastleTower = new(this, Config);
-            EasternPalace = new(this, Config);
-            DesertPalace = new(this, Config);
-            TowerOfHera = new(this, Config);
-            PalaceOfDarkness = new(this, Config);
-            SwampPalace = new(this, Config);
-            SkullWoods = new(this, Config);
-            ThievesTown = new(this, Config);
-            IcePalace = new(this, Config);
-            MiseryMire = new(this, Config);
-            TurtleRock = new(this, Config);
-            GanonsTower = new(this, Config);
-            LightWorldDeathMountainWest = new(this, Config);
-            LightWorldDeathMountainEast = new(this, Config);
-            LightWorldNorthWest = new(this, Config);
-            LightWorldNorthEast = new(this, Config);
-            LightWorldSouth = new(this, Config);
-            HyruleCastle = new(this, Config);
-            DarkWorldDeathMountainWest = new(this, Config);
-            DarkWorldDeathMountainEast = new(this, Config);
-            DarkWorldNorthWest = new(this, Config);
-            DarkWorldNorthEast = new(this, Config);
-            DarkWorldSouth = new(this, Config);
-            DarkWorldMire = new(this, Config);
-            CentralCrateria = new(this, Config);
-            WestCrateria = new(this, Config);
-            EastCrateria = new(this, Config);
-            BlueBrinstar = new(this, Config);
-            GreenBrinstar = new(this, Config);
-            KraidsLair = new(this, Config);
-            PinkBrinstar = new(this, Config);
-            RedBrinstar = new(this, Config);
-            OuterMaridia = new(this, Config);
-            InnerMaridia = new(this, Config);
-            UpperNorfairWest = new(this, Config);
-            UpperNorfairEast = new(this, Config);
-            UpperNorfairCrocomire = new(this, Config);
-            LowerNorfairWest = new(this, Config);
-            LowerNorfairEast = new(this, Config);
-            WreckedShip = new(this, Config);
+            CastleTower = new(this, Config, metadata, trackerState);
+            EasternPalace = new(this, Config, metadata, trackerState);
+            DesertPalace = new(this, Config, metadata, trackerState);
+            TowerOfHera = new(this, Config, metadata, trackerState);
+            PalaceOfDarkness = new(this, Config, metadata, trackerState);
+            SwampPalace = new(this, Config, metadata, trackerState);
+            SkullWoods = new(this, Config, metadata, trackerState);
+            ThievesTown = new(this, Config, metadata, trackerState);
+            IcePalace = new(this, Config, metadata, trackerState);
+            MiseryMire = new(this, Config, metadata, trackerState);
+            TurtleRock = new(this, Config, metadata, trackerState);
+            GanonsTower = new(this, Config, metadata, trackerState);
+            LightWorldDeathMountainWest = new(this, Config, metadata, trackerState);
+            LightWorldDeathMountainEast = new(this, Config, metadata, trackerState);
+            LightWorldNorthWest = new(this, Config, metadata, trackerState);
+            LightWorldNorthEast = new(this, Config, metadata, trackerState);
+            LightWorldSouth = new(this, Config, metadata, trackerState);
+            HyruleCastle = new(this, Config, metadata, trackerState);
+            DarkWorldDeathMountainWest = new(this, Config, metadata, trackerState);
+            DarkWorldDeathMountainEast = new(this, Config, metadata, trackerState);
+            DarkWorldNorthWest = new(this, Config, metadata, trackerState);
+            DarkWorldNorthEast = new(this, Config, metadata, trackerState);
+            DarkWorldSouth = new(this, Config, metadata, trackerState);
+            DarkWorldMire = new(this, Config, metadata, trackerState);
+            CentralCrateria = new(this, Config, metadata, trackerState);
+            WestCrateria = new(this, Config, metadata, trackerState);
+            EastCrateria = new(this, Config, metadata, trackerState);
+            BlueBrinstar = new(this, Config, metadata, trackerState);
+            GreenBrinstar = new(this, Config, metadata, trackerState);
+            KraidsLair = new(this, Config, metadata, trackerState);
+            PinkBrinstar = new(this, Config, metadata, trackerState);
+            RedBrinstar = new(this, Config, metadata, trackerState);
+            OuterMaridia = new(this, Config, metadata, trackerState);
+            InnerMaridia = new(this, Config, metadata, trackerState);
+            UpperNorfairWest = new(this, Config, metadata, trackerState);
+            UpperNorfairEast = new(this, Config, metadata, trackerState);
+            UpperNorfairCrocomire = new(this, Config, metadata, trackerState);
+            LowerNorfairWest = new(this, Config, metadata, trackerState);
+            LowerNorfairEast = new(this, Config, metadata, trackerState);
+            WreckedShip = new(this, Config, metadata, trackerState);
             Regions = new List<Region> {
                 CastleTower, EasternPalace, DesertPalace, TowerOfHera,
                 PalaceOfDarkness, SwampPalace, SkullWoods, ThievesTown,
@@ -90,16 +91,23 @@ namespace Randomizer.Data.WorldData
             };
             Locations = Regions.SelectMany(x => x.Locations).ToImmutableList();
             Rooms = Regions.SelectMany(x => x.Rooms).ToImmutableList();
+            State = trackerState ?? new TrackerState();
+
+            /*if (metadata != null && trackerState != null)
+            {
+                LoadAdditionalData(metadata, trackerState);
+            }*/
         }
 
         public Config Config { get; }
         public string Player { get; }
         public string Guid { get; }
         public int Id { get; }
+        public bool IsLocalWorld { get; set; }
         public IEnumerable<Region> Regions { get; }
         public IEnumerable<Room> Rooms { get; }
         public IEnumerable<Location> Locations { get; }
-        public IEnumerable<Item> LocationItems => Locations.Select(l => l.Item).Where(i => i != null);
+        public IEnumerable<Item> LocationItems => Locations.Select(l => l.Item);
         public List<Item> TrackerItems { get; } = new List<Item>();
         public IEnumerable<Item> AllItems => TrackerItems.Concat(LocationItems);
         public ILogic Logic { get; }
@@ -151,7 +159,7 @@ namespace Randomizer.Data.WorldData
 
         public Location? LastClearedLocation { get; set; }
 
-        public Location FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
+        public Location? FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             return Locations.FirstOrDefault(x => x.Name.Equals(name, comparisonType))
                 ?? Locations.FirstOrDefault(x => x.AlternateNames.Contains(name, StringComparer.FromComparison(comparisonType)))
@@ -161,9 +169,7 @@ namespace Randomizer.Data.WorldData
         public bool CanAquire(Progression items, RewardType reward)
         {
             var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.RewardType);
-            if (dungeonWithReward == null)
-                return false;
-            return dungeonWithReward.CanComplete(items);
+            return dungeonWithReward != null && dungeonWithReward.CanComplete(items);
         }
 
         public bool CanAquireAll(Progression items, params RewardType[] rewards)
@@ -182,7 +188,7 @@ namespace Randomizer.Data.WorldData
             SetRewards(rnd);
         }
 
-        public TrackerState State { get; set; }
+        public TrackerState? State { get; set; }
 
         private void SetMedallions(Random rnd)
         {
@@ -204,13 +210,51 @@ namespace Randomizer.Data.WorldData
                 RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue, RewardType.CrystalBlue }.Shuffle(rnd);
             foreach (var region in Regions.OfType<IHasReward>().Where(x => x.RewardType == RewardType.None))
             {
-                region.RewardType = rewards.First();
+                region.Reward = new Reward(rewards.First(), this, region);
                 rewards.Remove(region.RewardType);
             }
+        }
 
-            foreach (var region in Regions.OfType<IHasReward>())
+        private void LoadAdditionalData(IMetadataService metadata, TrackerState trackerState)
+        {
+            foreach (var itemMetadata in metadata.Items.Where(m => !LocationItems.Any(i => i.Is(m.InternalItemType, m.Item))))
             {
-                region.Reward = new Reward(region.RewardType, this, region);
+                var itemState = trackerState.ItemStates.FirstOrDefault(s =>
+                    s.ItemName == itemMetadata.Item && s.Type == itemMetadata.InternalItemType);
+
+                if (itemState == null)
+                {
+                    itemState = new TrackerItemState
+                    {
+                        ItemName = itemMetadata.Item,
+                        Type = itemMetadata.InternalItemType,
+                        TrackerState = trackerState,
+                        WorldId = Id
+                    };
+                    trackerState.ItemStates.Add(itemState);
+                }
+
+                TrackerItems.Add(new Item(itemMetadata.InternalItemType, this, itemMetadata.Item, itemMetadata, itemState));
+            }
+
+            foreach (var bossMetadata in metadata.Bosses.Where(m => !GoldenBosses.Any(b => b.Is(m.Type, m.Boss))))
+            {
+                var bossState = trackerState.BossStates.FirstOrDefault(s =>
+                    s.BossName == bossMetadata.Boss && s.Type == bossMetadata.Type);
+
+                if (bossState == null)
+                {
+                    bossState = new TrackerBossState
+                    {
+                        BossName = bossMetadata.Boss,
+                        Type = bossMetadata.Type,
+                        TrackerState = trackerState,
+                        WorldId = Id,
+                    };
+                    trackerState.BossStates.Add(bossState);
+                }
+
+                TrackerBosses.Add(new Boss(bossMetadata.Type, this, bossMetadata.Boss, bossMetadata, bossState));
             }
         }
     }

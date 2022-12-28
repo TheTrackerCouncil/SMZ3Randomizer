@@ -24,7 +24,8 @@ namespace Randomizer.Shared
         {
             return type.GetProperties(bindingFlags)
                 .Where(x => x.PropertyType.IsAssignableTo(typeof(TProperty)))
-                .Select(x => (TProperty)x.GetValue(instance));
+                .Select(x => (TProperty?)x.GetValue(instance))
+                .NonNull();
         }
     }
 }

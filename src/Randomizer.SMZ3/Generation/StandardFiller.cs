@@ -25,6 +25,7 @@ namespace Randomizer.SMZ3.Generation
         public StandardFiller(ILogger<StandardFiller> logger)
         {
             _logger = logger;
+            Random = new Random();
         }
 
         protected Random Random { get; set; }
@@ -56,24 +57,30 @@ namespace Randomizer.SMZ3.Generation
 
             var progressionItems = new List<Item>();
             var assumedInventory = new List<Item>();
+            var niceItems = worlds.SelectMany(Item.CreateNicePool).Shuffle(Random);
+            var junkItems = worlds.SelectMany(Item.CreateJunkPool).Shuffle(Random);
 
             foreach (var world in worlds)
             {
+                var worldConfig = world.Config;
+
                 /* The dungeon pool order is significant, don't shuffle */
                 var dungeon = Item.CreateDungeonPool(world);
                 var progression = Item.CreateProgressionPool(world);
 
+                var preferenceItems = ApplyItemPoolPreferences(progression, junkItems, world);
+
                 InitialFillInOwnWorld(dungeon, progression, world, config);
 
-                if (config.ZeldaKeysanity == false)
+                if (worldConfig.ZeldaKeysanity == false)
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
                     var keyCards = Item.CreateKeycards(world);
-                    AssumedFill(dungeon, progression.Concat(keyCards).ToList(), worldLocations, new[] { world }, cancellationToken);
+                    AssumedFill(dungeon, progression.Concat(keyCards).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
                 }
 
-                if (config.MetroidKeysanity)
+                if (worldConfig.MetroidKeysanity)
                 {
                     progressionItems.AddRange(Item.CreateKeycards(world));
                 }
@@ -88,8 +95,6 @@ namespace Randomizer.SMZ3.Generation
             }
 
             progressionItems = progressionItems.Shuffle(Random);
-            var niceItems = worlds.SelectMany(world => Item.CreateNicePool(world)).Shuffle(Random);
-            var junkItems = worlds.SelectMany(world => Item.CreateJunkPool(world)).Shuffle(Random);
 
             var locations = worlds.SelectMany(x => x.Locations).Empty().Shuffle(Random);
             if (config.SingleWorld)
@@ -106,7 +111,6 @@ namespace Randomizer.SMZ3.Generation
                 });
             }
 
-            ApplyItemPoolPreferences(progressionItems, junkItems, locations, worlds, config);
             _logger.LogDebug("Filling GT with junk");
             GanonTowerFill(worlds, junkItems, 2);
 
@@ -120,13 +124,16 @@ namespace Randomizer.SMZ3.Generation
             FastFill(junkItems, locations);
         }
 
-        private void ApplyItemPoolPreferences(List<Item> progressionItems, List<Item> junkItems, List<Location> locations, List<World> worlds, Config config)
+        private List<Item> ApplyItemPoolPreferences(List<Item> progressionItems, List<Item> junkItems, World world)
         {
-            // Populate items that were directly specified at locations
+            var placedItems = new List<Item>();
+            var config = world.Config;
+
+            // Populate location preferences
             var configLocations = config.LocationItems.Shuffle(Random);
             foreach (var (locationId, value) in configLocations)
             {
-                var location = worlds[0].Locations.FirstOrDefault(x => x.Id == locationId && x.Item == null);
+                var location = world.Locations.FirstOrDefault(x => x.Id == locationId && x.Item.Type == ItemType.Nothing);
 
                 if (location == null)
                 {
@@ -134,6 +141,7 @@ namespace Randomizer.SMZ3.Generation
                     continue;
                 }
 
+                // First if a location is requested to be either progression or junk item pools
                 if (value < Enum.GetValues(typeof(ItemPool)).Length)
                 {
                     var itemPool = (ItemPool)value;
@@ -146,17 +154,22 @@ namespace Randomizer.SMZ3.Generation
                         var item = progressionItems.FirstOrDefault(x => x.Type.IsInCategory(ItemCategory.Metroid) && location.Region is Z3Region || x.Type.IsInCategory(ItemCategory.Zelda) && location.Region is SMRegion);
 
                         if (item != null)
+                        {
                             FillItemAtLocation(progressionItems, item.Type, location);
+                            placedItems.Add(item);
+                        }
                         else
                         {
-                            _logger.LogDebug($"Could not find item to place at {location.Name}");
+                            _logger.LogDebug("Could not find item to place at {Location}", location.Name);
                         }
                     }
                     else if (itemPool == ItemPool.Junk && junkItems.Any())
                     {
-                        FastFill(junkItems, worlds.SelectMany(x => x.Locations.Where(y => y.Id == locationId)));
+                        placedItems.AddRange(FastFill(junkItems, world.Locations.Where(x => x.Id == locationId && x.World == world)));
+
                     }
                 }
+                // If a specific item is requested
                 else
                 {
                     var itemType = (ItemType)value;
@@ -168,7 +181,9 @@ namespace Randomizer.SMZ3.Generation
 
                         // If no items required or at least one combination of items required does not contain this item
                         if (!itemsRequired.Any() || itemsRequired.Any(x => !x.Contains(itemType)))
-                            FillItemAtLocation(progressionItems, itemType, location);
+                        {
+                            placedItems.Add(FillItemAtLocation(progressionItems, itemType, location));
+                        }
                         else
                         {
                             throw new RandomizerGenerationException($"{itemType} was selected as the item for {location}, but it is required to get there.");
@@ -184,12 +199,14 @@ namespace Randomizer.SMZ3.Generation
             {
                 if (progressionItems.Any(x => x.Type == itemType))
                 {
-                    var accessibleLocations = worlds[0].Locations.Where(x => x.Item == null && x.IsAvailable(new Progression(addedItems, new List<RewardType>(), new List<BossType>()))).Shuffle(Random);
+                    var accessibleLocations = world.Locations.Where(x => x.Item.Type == ItemType.Nothing && x.IsAvailable(new Progression(addedItems, new List<RewardType>(), new List<BossType>()))).Shuffle(Random);
                     var location = accessibleLocations.First();
-                    FillItemAtLocation(progressionItems, itemType, location);
+                    placedItems.Add(FillItemAtLocation(progressionItems, itemType, location));
                     addedItems.Add(itemType);
                 }
             }
+
+            return placedItems;
         }
 
         private void ApplyItemBias(List<Item> itemPool, IEnumerable<(ItemType type, double weight)> reorder)
@@ -223,15 +240,6 @@ namespace Randomizer.SMZ3.Generation
                    select location.x;
         }
 
-        private static Location GetVanillaLocation(ItemType itemType, World world)
-        {
-            return itemType switch
-            {
-                ItemType.ProgressiveSword => world.HyruleCastle.LinksUncle,
-                _ => world.Locations.TrySingle(x => x.VanillaItem == itemType),
-            };
-        }
-
         private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world, Config config)
         {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
@@ -247,7 +255,7 @@ namespace Randomizer.SMZ3.Generation
             IEnumerable<Location> locations, IEnumerable<World> worlds,
             CancellationToken cancellationToken)
         {
-            var allRewards = worlds.SelectMany(w => Reward.CreatePool(w));
+            var allRewards = worlds.SelectMany(Reward.CreatePool);
             var allBosses = worlds.SelectMany(w => w.GoldenBosses);
             var itemsToAdd = new List<Item>(itemPool);
             var failedAttempts = new Dictionary<Item, int>();
@@ -263,7 +271,7 @@ namespace Randomizer.SMZ3.Generation
                 var location = locations.Empty().CanFillWithinWorld(item, inventory, currentRewards, currentBosses).FirstOrDefault();
                 if (location == null)
                 {
-                    _logger.LogDebug("Could not find anywhere to place {item}", item);
+                    _logger.LogDebug("Could not find anywhere to place {Item}", item);
                     itemsToAdd.Add(item);
 
                     if (!failedAttempts.ContainsKey(item))
@@ -277,7 +285,13 @@ namespace Randomizer.SMZ3.Generation
 
                 location.Item = item;
                 itemPool.Remove(item);
-                _logger.LogDebug("Placed {item} at {location}", item, location);
+                _logger.LogDebug("Placed {Item} at {Location}", item, location);
+
+                if (item.IsBigKey && !itemsToAdd.Any(x => x.IsBigKey))
+                {
+                    locations = locations.Shuffle(Random);
+                    _logger.LogDebug("Reshuffling locations after final big key placement");
+                }
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
@@ -308,7 +322,7 @@ namespace Randomizer.SMZ3.Generation
 
             return worlds
                 .SelectMany(w => w.Regions)
-                .Where(r => r is IHasReward && ((IHasReward)r).CanComplete(progressions[r.World]))
+                .Where(r => r is IHasReward reward && reward.CanComplete(progressions[r.World]))
                 .SelectMany(r => rewardPool.Where(p => p.Type == ((IHasReward)r).RewardType && p.Region == r));
         }
 
@@ -318,7 +332,7 @@ namespace Randomizer.SMZ3.Generation
 
             return worlds
                 .SelectMany(w => w.Regions)
-                .Where(r => r is IHasBoss && ((IHasBoss)r).CanBeatBoss(progressions[r.World]))
+                .Where(r => r is IHasBoss boss && boss.CanBeatBoss(progressions[r.World]))
                 .SelectMany(r => bossPool.Where(p => p.Type == ((IHasBoss)r).BossType && p.Region == r));
         }
 
@@ -327,14 +341,14 @@ namespace Randomizer.SMZ3.Generation
             var item = itemPool.Get(itemType);
             var location = world.Locations.Empty()
                 .Available(world.LocationItems, new List<Reward>(), new List<Boss>())
-                .Where(x => world.Config.LocationItems == null || !world.Config.LocationItems.ContainsKey(x.Id))
+                .Where(x => !world.Config.LocationItems.ContainsKey(x.Id))
                 .Random(Random);
             if (location == null)
                 throw new InvalidOperationException($"Tried to front fill {item.Name} in, but no location was available");
 
             location.Item = item;
             itemPool.Remove(item);
-            _logger.LogDebug("Front-filled {item} at {location}", item, location);
+            _logger.LogDebug("Front-filled {Item} at {Location}", item, location);
         }
 
         private void GanonTowerFill(List<World> worlds, List<Item> itemPool, double factor)
@@ -346,23 +360,27 @@ namespace Randomizer.SMZ3.Generation
             FastFill(itemPool, locations.Take((int)(locations.Count / factor)));
         }
 
-        private void FastFill(List<Item> itemPool, IEnumerable<Location> locations)
+        private List<Item> FastFill(List<Item> itemPool, IEnumerable<Location> locations)
         {
+            var placedItems = new List<Item>();
             foreach (var (location, item) in locations.Empty().Zip(itemPool, (l, i) => (l, i)).ToList())
             {
                 location.Item = item;
                 itemPool.Remove(item);
-                _logger.LogDebug("Fast-filled {item} at {location}", item, location);
+                _logger.LogDebug("Fast-filled {Item} at {Location}", item, location);
+                placedItems.Add(item);
             }
+
+            return placedItems;
         }
 
-        private void FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location)
+        private Item FillItemAtLocation(List<Item> itemPool, ItemType itemType, Location location)
         {
-            var itemToPlace = itemPool.Get(itemType);
+            var itemToPlace = itemPool.Get(itemType, location.World);
             location.Item = itemToPlace ?? throw new InvalidOperationException($"Tried to place item {itemType} at {location.Name}, but there is no such item in the item pool");
             itemPool.Remove(itemToPlace);
-
-            _logger.LogDebug("Manually placed {item} at {location}", itemToPlace, location);
+            _logger.LogDebug("Manually placed {Item} at {Location}", itemToPlace, location);
+            return itemToPlace;
         }
     }
 }

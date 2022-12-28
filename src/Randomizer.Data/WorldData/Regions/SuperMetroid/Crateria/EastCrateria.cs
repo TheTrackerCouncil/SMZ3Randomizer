@@ -1,14 +1,14 @@
-﻿using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
+﻿using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared;
-using static Randomizer.Data.Options.SMLogic;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
 {
     public class EastCrateria : SMRegion
     {
-        public EastCrateria(World world, Config config) : base(world, config)
+        public EastCrateria(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
             FloodedCavernUnderWater = new Location(this, 1, 0x8F81E8, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship bottom)",
@@ -17,7 +17,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 access: items => CanAccessFloodedCavernUnderWater(items, true),
                 relevanceRequirement: items => CanAccessFloodedCavernUnderWater(items, false),
                 memoryAddress: 0x0,
-                memoryFlag: 0x2);
+                memoryFlag: 0x2,
+                metadata: metadata,
+                trackerState: trackerState);
             SkyMissile = new Location(this, 2, 0x8F81EE, LocationType.Hidden,
                 name: "Missile (outside Wrecked Ship top)",
                 alsoKnownAs: new[] { "Sky Missile" },
@@ -25,7 +27,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 access: items => CanAccessSkyItem(items, true),
                 relevanceRequirement: items => CanAccessSkyItem(items, false),
                 memoryAddress: 0x0,
-                memoryFlag: 0x4);
+                memoryFlag: 0x4,
+                metadata: metadata,
+                trackerState: trackerState);
             MorphBallMaze = new Location(this, 3, 0x8F81F4, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship middle)",
                 alsoKnownAs: new[] { "Morph Ball Maze" },
@@ -33,14 +37,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 access: items => CanPassThroughWreckedShip(items, true),
                 relevanceRequirement: items => CanPassThroughWreckedShip(items, false),
                 memoryAddress: 0x0,
-                memoryFlag: 0x8);
+                memoryFlag: 0x8,
+                metadata: metadata,
+                trackerState: trackerState);
             Moat = new Location(this, 4, 0x8F8248, LocationType.Visible,
                 name: "Missile (Crateria moat)",
                 alsoKnownAs: new[] { "The Moat", "Interior Lake" },
                 vanillaItem: ItemType.Missile,
                 memoryAddress: 0x0,
-                memoryFlag: 0x10);
+                memoryFlag: 0x10,
+                metadata: metadata,
+                trackerState: trackerState);
             MemoryRegionId = 0;
+            Metadata = metadata?.Region(GetType()) ?? new RegionInfo("East Crateria");
         }
 
         public override string Name => "East Crateria";

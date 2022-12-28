@@ -90,7 +90,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual BossConfig GetBossConfig(params string[] profiles) =>
+        public virtual BossConfig GetBossConfig(params string?[] profiles) =>
             LoadYamlConfigs<BossConfig, BossInfo>("bosses.yml", profiles);
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual DungeonConfig GetDungeonConfig(params string[] profiles) =>
+        public virtual DungeonConfig GetDungeonConfig(params string?[] profiles) =>
             LoadYamlConfigs<DungeonConfig, DungeonInfo>("dungeons.yml", profiles);
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual ItemConfig GetItemConfig(params string[] profiles) =>
+        public virtual ItemConfig GetItemConfig(params string?[] profiles) =>
             LoadYamlConfigs<ItemConfig, ItemData>("items.yml", profiles);
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual LocationConfig GetLocationConfig(params string[] profiles) =>
+        public virtual LocationConfig GetLocationConfig(params string?[] profiles) =>
             LoadYamlConfigs<LocationConfig, LocationInfo>("locations.yml", profiles);
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RegionConfig GetRegionConfig(params string[] profiles) =>
+        public virtual RegionConfig GetRegionConfig(params string?[] profiles) =>
             LoadYamlConfigs<RegionConfig, RegionInfo>("regions.yml", profiles);
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RequestConfig GetRequestConfig(params string[] profiles) =>
+        public virtual RequestConfig GetRequestConfig(params string?[] profiles) =>
             LoadYamlConfigs<RequestConfig, BasicVoiceRequest>("requests.yml", profiles);
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual ResponseConfig GetResponseConfig(params string[] profiles) =>
+        public virtual ResponseConfig GetResponseConfig(params string?[] profiles) =>
             LoadYamlConfigs<ResponseConfig, ResponseConfig>("responses.yml", profiles);
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RoomConfig GetRoomConfig(params string[] profiles) =>
+        public virtual RoomConfig GetRoomConfig(params string?[] profiles) =>
             LoadYamlConfigs<RoomConfig, RoomInfo>("rooms.yml", profiles);
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual RewardConfig GetRewardConfig(params string[] profiles) =>
+        public virtual RewardConfig GetRewardConfig(params string?[] profiles) =>
             LoadYamlConfigs<RewardConfig, RewardInfo>("rewards.yml", profiles);
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual UIConfig GetUIConfig(params string[] profiles) => 
+        public virtual UIConfig GetUIConfig(params string?[] profiles) =>
             LoadYamlConfigs<UIConfig, UILayout>("ui.yml", profiles);
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         /// <param name="profiles">The selected tracker profile(s) to load</param>
         /// <returns></returns>
-        public virtual GameLinesConfig GetGameConfig(params string[] profiles) =>
+        public virtual GameLinesConfig GetGameConfig(params string?[] profiles) =>
             LoadYamlConfigs<GameLinesConfig, GameLinesConfig>("game.yml", profiles);
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Randomizer.Data.Configuration
         /// </summary>
         public virtual string ConfigDirectory => _basePath;
 
-        private T LoadYamlConfigs<T, T2>(string fileName, ICollection<string>? profiles = null) where T : new()
+        private T LoadYamlConfigs<T, T2>(string fileName, ICollection<string?>? profiles = null) where T : new()
         {
             var defaultMethod = typeof(T).GetMethod("Default");
             if (defaultMethod == null)
@@ -204,7 +204,7 @@ namespace Randomizer.Data.Configuration
             {
                 throw new InvalidOperationException($"The class '{typeof(T).Name}' does not implement IConfigFile.");
             }
-            
+
             var mergeableConfig = (IMergeable<T2>)config;
             if (mergeableConfig == null)
             {
@@ -212,7 +212,7 @@ namespace Randomizer.Data.Configuration
             }
 
             if (profiles == null || profiles.Count == 0) return config;
-            
+
             foreach (var profile in profiles)
             {
                 if (!string.IsNullOrEmpty(profile))
@@ -247,7 +247,7 @@ namespace Randomizer.Data.Configuration
             }
             catch (Exception ex) when (ex is YamlDotNet.Core.SemanticErrorException or YamlDotNet.Core.YamlException)
             {
-                _logger.LogError(ex, "Unable to load config file " + path);
+                _logger?.LogError(ex, "Unable to load config file {Path}", path);
                 throw new YamlDotNet.Core.SemanticErrorException("Unable to load config file " + path, ex);
             }
             return obj;

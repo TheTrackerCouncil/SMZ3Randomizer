@@ -1,25 +1,31 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Shared.Models
 {
     public class GeneratedRom
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        [Key]
+        public long Id { get; } = 0;
         public DateTimeOffset Date { get; set; }
-        public string Label { get; set; }
-        public string Seed { get; set; }
-        public string Settings { get; set; }
-        public int GeneratorVersion { get; set; }
-        public string RomPath { get; set; }
-        public string SpoilerPath { get; set; }
-        public TrackerState TrackerState { get; set; }
+        public string Label { get; set; } = "";
+        public string Seed { get; init;  } = "";
+        public string Settings { get; init;  } = "";
+        public int GeneratorVersion { get; init; }
+        public string RomPath { get; init; } = "";
+        public string SpoilerPath { get; init; } = "";
+        [ForeignKey("MultiplayerGameDetails")]
+        public long? MultiplayerGameDetailsId { get; set; }
+        public virtual MultiplayerGameDetails? MultiplayerGameDetails { get; set; }
+        public TrackerState? TrackerState { get; set; }
 
-        public static bool IsValid(GeneratedRom rom)
+        public static bool IsValid([NotNullWhen(true)] GeneratedRom? rom)
         {
-            return rom != null && rom.Id > 0;
+            return rom is { Id: > 0 };
         }
     }
 

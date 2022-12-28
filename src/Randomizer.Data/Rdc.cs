@@ -12,11 +12,11 @@ namespace Randomizer.Data
     public class Rdc
     {
 
-        private readonly static char[] header = "RETRODATACONTAINER".ToCharArray();
+        private static readonly char[] s_header = "RETRODATACONTAINER".ToCharArray();
         private const int Version = 1;
 
-        private IDictionary<uint, uint> offsets;
-        private IDictionary<uint, BlockType> blocks = new Dictionary<uint, BlockType>();
+        private readonly IDictionary<uint, uint> _offsets;
+        private readonly IDictionary<uint, IBlockType> _blocks = new Dictionary<uint, IBlockType>();
 
         public string Author { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Randomizer.Data
         public static Rdc Parse(Stream stream)
         {
             using var data = new BinaryReader(stream, Encoding.UTF8, true);
-            if (!data.ReadChars(18).SequenceEqual(header))
+            if (!data.ReadChars(18).SequenceEqual(s_header))
                 throw new InvalidDataException("Could not find the RDC format header");
             var version = data.ReadByte();
             if (version != Version)
@@ -66,39 +66,39 @@ namespace Randomizer.Data
         private Rdc(string author, IEnumerable<(uint type, uint offset)> offsets)
         {
             Author = author;
-            this.offsets = offsets.ToDictionary(x => x.type, x => x.offset);
+            this._offsets = offsets.ToDictionary(x => x.type, x => x.offset);
         }
 
-        public bool TryParse<TBlock>(Stream stream, out TBlock block) where TBlock : BlockType, new()
+        public bool TryParse<TBlock>(Stream stream, out TBlock? block) where TBlock : IBlockType, new()
         {
             block = default;
 
             var template = new TBlock();
-            if (!offsets.ContainsKey(template.Type))
+            if (!_offsets.ContainsKey(template.Type))
                 return false;
 
             block = template;
-            if (blocks.TryGetValue(block.Type, out var cache))
+            if (_blocks.TryGetValue(block.Type, out var cache))
             {
                 block = (TBlock)cache;
                 return true;
             }
 
-            stream.Position = offsets[block.Type];
+            stream.Position = _offsets[block.Type];
             block.Parse(stream);
             return true;
         }
 
-        public bool Contains<TBlock>() where TBlock : BlockType, new()
+        public bool Contains<TBlock>() where TBlock : IBlockType, new()
         {
             var template = new TBlock();
-            return offsets.ContainsKey(template.Type);
+            return _offsets.ContainsKey(template.Type);
         }
 
-        public static void Write(Stream stream, string author, params BlockType[] blocks)
+        public static void Write(Stream stream, string author, params IBlockType[] blocks)
         {
             using var data = new BinaryWriter(stream, Encoding.UTF8, true);
-            data.Write(header);
+            data.Write(s_header);
             data.Write((byte)Version);
 
             var authorData = NullTermBytes(author);
@@ -130,7 +130,7 @@ namespace Randomizer.Data
 
     }
 
-    public interface BlockType
+    public interface IBlockType
     {
         uint Type { get; }
         int Length { get; }
@@ -138,19 +138,22 @@ namespace Randomizer.Data
         void Write(Stream rdc);
     }
 
-    public class MetaDataBlock : BlockType
+    public class MetaDataBlock : IBlockType
     {
+
+        public MetaDataBlock()
+        {
+
+        }
 
         public uint Type { get; } = 0;
 
-        public JToken Content { get; private set; }
+        public JToken? Content { get; private set; }
 
         public int Length
         {
-            get { return sizeof(uint) + Encoding.UTF8.GetByteCount(Content.ToString(Formatting.None)); }
+            get { return sizeof(uint) + Encoding.UTF8.GetByteCount(Content?.ToString(Formatting.None) ?? ""); }
         }
-
-        public MetaDataBlock() { }
 
         public MetaDataBlock(JToken content)
         {
@@ -169,7 +172,7 @@ namespace Randomizer.Data
         public void Write(Stream stream)
         {
             using var data = new BinaryWriter(stream, Encoding.UTF8, true);
-            var meta = Content.ToString(Formatting.None);
+            var meta = Content?.ToString(Formatting.None) ?? "";
             var bytes = Encoding.UTF8.GetBytes(meta);
             data.Write((uint)bytes.Length);
             data.Write(bytes);
@@ -177,14 +180,14 @@ namespace Randomizer.Data
 
     }
 
-    public abstract class DataBlock : BlockType
+    public abstract class DataBlock : IBlockType
     {
 
         public abstract uint Type { get; }
 
         protected abstract IList<(IEnumerable<int>, int, IEnumerable<int>)> Manifest { get; }
 
-        protected readonly IList<byte[]> content = new List<byte[]>();
+        protected readonly IList<byte[]> Content = new List<byte[]>();
 
         public int Length
         {
@@ -205,13 +208,13 @@ namespace Randomizer.Data
             {
                 var count = offsets.Count();
                 stream.Read(slice = new byte[count * length]);
-                content.Add(slice);
+                Content.Add(slice);
             }
         }
 
         public void Write(Stream stream)
         {
-            foreach (var data in content)
+            foreach (var data in Content)
             {
                 stream.Write(data);
             }
@@ -219,7 +222,7 @@ namespace Randomizer.Data
 
         public void Apply(byte[] rom)
         {
-            foreach (var (field, data) in Manifest.Zip(content, (m, d) => (m, d)))
+            foreach (var (field, data) in Manifest.Zip(Content, (m, d) => (m, d)))
             {
                 var (addrs, length, offsets) = field;
                 foreach (var addr in addrs)
@@ -249,13 +252,13 @@ namespace Randomizer.Data
 
         public override uint Type { get; } = 1;
 
-        protected override IList<(IEnumerable<int>, int, IEnumerable<int>)> Manifest { get; } = manifest;
+        protected override IList<(IEnumerable<int>, int, IEnumerable<int>)> Manifest { get; } = s_manifest;
 
-        static readonly IList<(IEnumerable<int>, int, IEnumerable<int>)> manifest;
+        private static readonly IList<(IEnumerable<int>, int, IEnumerable<int>)> s_manifest;
 
         static LinkSprite()
         {
-            manifest = new[] {
+            s_manifest = new[] {
                 (Addr(0x508000), 0x7000, Single), // sprite
                 (Addr(0x5BD308), 4 * 30, Single), // palette
                 (Addr(0x5BEDF5), 4, Single),      // gloves
@@ -265,14 +268,14 @@ namespace Randomizer.Data
         public byte[] Fetch8x8(int tileIndex)
         {
             byte[] bytes;
-            content[0].AsSpan(tileIndex * 0x20, 0x20).CopyTo(bytes = new byte[0x20]);
+            Content[0].AsSpan(tileIndex * 0x20, 0x20).CopyTo(bytes = new byte[0x20]);
             return bytes;
         }
 
         public byte[] FetchPalette(int index)
         {
             byte[] bytes;
-            content[1].AsSpan(index * 30, 30).CopyTo(bytes = new byte[30]);
+            Content[1].AsSpan(index * 30, 30).CopyTo(bytes = new byte[30]);
             return bytes;
         }
 
@@ -283,14 +286,14 @@ namespace Randomizer.Data
 
         public override uint Type { get; } = 4;
 
-        protected override IList<(IEnumerable<int>, int, IEnumerable<int>)> Manifest { get; } = manifest;
+        protected override IList<(IEnumerable<int>, int, IEnumerable<int>)> Manifest { get; } = s_manifest;
 
-        private static readonly IList<(IEnumerable<int>, int, IEnumerable<int>)> manifest;
+        private static readonly IList<(IEnumerable<int>, int, IEnumerable<int>)> s_manifest;
 
         static SamusSprite()
         {
             var loaderOffsets = new[] { 0x0, 0x24, 0x4F, 0x73, 0x9E, 0xC2, 0xED, 0x111, 0x139 };
-            manifest = new[] {
+            s_manifest = new[] {
                 // DMA banks
                 (Addr(0x440000), 0x8000, Single),     // DMA bank 1
                 (Addr(0x450000), 0x8000, Single),     // DMA bank 2
@@ -357,14 +360,14 @@ namespace Randomizer.Data
         {
             byte[] bytes;
             var addr = tileIndex * 0x20;
-            var bank = content[addr / 0x8000];
+            var bank = Content[addr / 0x8000];
             bank.AsSpan(addr % 0x8000, 0x20).CopyTo(bytes = new byte[0x20]);
             return bytes;
         }
 
         public byte[] FetchPowerStandardPalette()
         {
-            return content[20];
+            return Content[20];
         }
 
     }

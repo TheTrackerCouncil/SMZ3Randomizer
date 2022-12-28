@@ -1,0 +1,117 @@
+﻿<Window x:Class="Randomizer.App.Windows.MultiplayerStatusWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:Randomizer.App.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewmodels:MultiplayerStatusViewModel, IsDesignTimeCreatable=True}"
+        Loaded="MultiplayerStatusWindow_OnLoaded"
+        Title="SMZ3 Cas' Randomizer" Height="300" Width="500">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0"
+            Style="{StaticResource BottomPanel}">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0">
+          <TextBlock DockPanel.Dock="Left" Margin="0 3 6 0">Game Url:</TextBlock>
+          <Button x:Name="CopyUrlButton" DockPanel.Dock="Right"
+                  Click="CopyUrlButton_OnClick">_Copy</Button>
+          <TextBox Text="{Binding GameUrl, Mode=OneWay}" IsReadOnly="True"></TextBox>
+        </DockPanel>
+      </Grid>
+    </Border>
+
+    <ListView Name="PlayersList" ItemsSource="{Binding Players}" SelectionMode="Single" Grid.Row="1">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <Grid Margin="0,2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Margin="0 3 0 0">
+              <TextBlock Text="{Binding PlayerName}" Margin="0 0 6 0" />
+              <TextBlock Text="{Binding StatusLabel}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+              <Button Name="UpdateConfigButton"
+                      Click="UpdateConfigButton_Click"
+                      Visibility="{Binding EditConfigVisibility}"
+                      IsEnabled="{Binding IsConnectedToServer}">
+                Update Config
+              </Button>
+              <Button Name="ForfeitButton"
+                      Click="ForfeitButton_OnClick"
+                      Visibility="{Binding ForfeitVisiblity}"
+                      IsEnabled="{Binding IsConnectedToServer}"
+                      Tag="{Binding State}">Forfeit</Button>
+            </StackPanel>
+          </Grid>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+      <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+      </ListView.ItemContainerStyle>
+    </ListView>
+
+    <Border Grid.Row="2"
+            Style="{StaticResource BottomPanel}">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Orientation="Horizontal"
+                    HorizontalAlignment="Left">
+          <Button x:Name="ReconnectButton" Margin="0"
+                  Click="ReconnectButton_Click"
+                  Visibility="{Binding ReconnectButtonVisibility}">_Reconnect</Button>
+          <TextBlock Text="{Binding ConnectionStatus}" Margin="6 3 0 0 "></TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+          <Label Visibility="{Binding GeneratingLabelVisibility}">Generating rom...</Label>
+          <Button x:Name="StartGameButton"
+                  Click="StartGameButton_Click"
+                  IsEnabled="{Binding CanStartGame}"
+                  Visibility="{Binding StartButtonVisiblity}"
+                  ToolTip="All players must have submitted their settings to start the game.">_Start game</Button>
+          <Button x:Name="OpenTrackerButton"
+                  Visibility="{Binding PlayButtonsVisibility}"
+                  IsEnabled="{Binding PlayButtonsEnabled}"
+                  Click="OpenTrackerButton_Click">_Launch</Button>
+          <Button x:Name="LaunchOptions"
+                  Visibility="{Binding PlayButtonsVisibility}"
+                  MinWidth="0"
+                  Width="23"
+                  Content="▼"
+                  FontSize="8"
+                  BorderThickness="0,1,1,1"
+                  Margin="0,0,0,0"
+                  Click="LaunchOptions_OnClick">
+            <Button.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="_Play" Click="PlayMenuItem_Click" IsEnabled="{Binding PlayButtonsEnabled}"></MenuItem>
+                <MenuItem Header="Open _Folder" Click="OpenFolderMenuItem_Click"></MenuItem>
+                <MenuItem Header="Open _Tracker" Click="OpenTrackerMenuItem_Click" IsEnabled="{Binding PlayButtonsEnabled}"></MenuItem>
+                <MenuItem Header="View _Spoiler Log" Click="ViewSpoilerMenuItem_Click"></MenuItem>
+              </ContextMenu>
+            </Button.ContextMenu>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

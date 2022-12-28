@@ -54,6 +54,38 @@ namespace Randomizer.Data.Configuration.ConfigFiles
             = new SchrodingersString("Toggled {0} on.");
 
         /// <summary>
+        /// Gets the phrases to respond with when tracking two items at once.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the first item.
+        /// <c>{1}</c> is a placeholder for the name of the second item.
+        /// </remarks>
+        public SchrodingersString TrackedTwoItems { get; init; }
+            = new SchrodingersString("Tracked {0} and {1}");
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking three items at once.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the first item.
+        /// <c>{1}</c> is a placeholder for the name of the second item.
+        /// <c>{2}</c> is a placeholder for the name of the third item.
+        /// </remarks>
+        public SchrodingersString TrackedThreeItems { get; init; }
+            = new SchrodingersString("Tracked {0}, {1}, and {2}");
+
+        /// <summary>
+        /// Gets the phrases to respond with when tracking more than three items
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the name of the first item.
+        /// <c>{1}</c> is a placeholder for the name of the second item.
+        /// <c>{2}</c> is the number of remaining items tracked.
+        /// </remarks>
+        public SchrodingersString TrackedManyItems { get; init; }
+            = new SchrodingersString("Tracked {0}, {1}, and {2} other items");
+
+        /// <summary>
         /// Gets the phrases to respond with when tracking a progressive item
         /// using a specific stage name.
         /// </summary>
@@ -708,6 +740,11 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// Gets the configured phrases for cheats
         /// </summary>
         public CheatsConfig Cheats { get; init; } = new();
+
+        /// <summary>
+        /// Gets the configured phrases for multiplayer
+        /// </summary>
+        public MultiplayerConfig Multiplayer { get; init; } = new();
 
         /// <summary>
         /// Returns default response information

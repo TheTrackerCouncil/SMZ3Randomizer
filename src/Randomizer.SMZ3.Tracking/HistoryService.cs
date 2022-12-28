@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Speech.Recognition;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
-using Randomizer.SMZ3.Generation;
-using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.SMZ3.Tracking.VoiceCommands;
 
-namespace Randomizer.SMZ3.Tracking.VoiceCommands
+namespace Randomizer.SMZ3.Tracking
 {
     /// <summary>
     /// Service for managing the history of events through a playthrough
@@ -24,8 +22,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private readonly ILogger<HistoryService> _logger;
         private readonly IWorldAccessor _world;
         private readonly ITrackerTimerService _timerService;
-        private ICollection<TrackerHistoryEvent> _historyEvents => _world.World.State.History;
-        private Tracker? _tracker;
+        private ICollection<TrackerHistoryEvent> _historyEvents => _world.World.State?.History ?? new List<TrackerHistoryEvent>();
+        private bool _isMultiworld;
 
         /// <summary>
         /// Constructor
@@ -38,6 +36,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             _world = world;
             _logger = logger;
             _timerService = timerService;
+            _isMultiworld = world.World.Config.MultiWorld;
         }
 
         /// <summary>
@@ -50,7 +49,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>The created event</returns>
         public TrackerHistoryEvent AddEvent(HistoryEventType type, bool isImportant, string objectName, Location? location = null)
         {
-            var regionName = location?.Region.Name.ToString();
+            if (_world.World.State == null)
+            {
+                throw new InvalidOperationException("World tracker state not loaded");
+            }
+
+            var regionName = location?.Region.Name;
             var locationName = location?.Room != null ? $"{location.Room.Name} - {location.Name}" : location?.Name;
             var addedEvent = new TrackerHistoryEvent()
             {
@@ -72,6 +76,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="histEvent">The event to add</param>
         public void AddEvent(TrackerHistoryEvent histEvent)
         {
+            if (_isMultiworld) return;
             _historyEvents.Add(histEvent);
         }
 
@@ -80,6 +85,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public void RemoveLastEvent()
         {
+            if (_isMultiworld) return;
             if (_historyEvents.Count > 0)
             {
                 Remove(_historyEvents.OrderByDescending(x => x.Id).First());
@@ -92,6 +98,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="histEvent">The event to log</param>
         public void Remove(TrackerHistoryEvent histEvent)
         {
+            if (_isMultiworld) return;
             _historyEvents.Remove(histEvent);
         }
 
@@ -99,7 +106,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// Retrieves the current history log
         /// </summary>
         /// <returns>The collection of events</returns>
-        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _historyEvents.ToList();
+        public IReadOnlyCollection<TrackerHistoryEvent> GetHistory() => _isMultiworld ? new List<TrackerHistoryEvent>() : _historyEvents.ToList();
 
         /// <summary>
         /// Creates the progression log based off of the history
@@ -118,7 +125,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             log.AppendLine();
 
             var enumType = typeof(HistoryEventType);
-            
+
             foreach (var historyEvent in history.Where(x => !x.IsUndone && (!importantOnly || x.IsImportant)).OrderBy(x => x.Time))
             {
                 var time = TimeSpan.FromSeconds(historyEvent.Time).ToString(@"hh\:mm\:ss");
@@ -136,8 +143,8 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             }
 
-            var finalTime = TimeSpan.FromSeconds(rom.TrackerState.SecondsElapsed).ToString(@"hh\:mm\:ss");
-            
+            var finalTime = TimeSpan.FromSeconds(rom.TrackerState?.SecondsElapsed ?? 0).ToString(@"hh\:mm\:ss");
+
             log.AppendLine();
             log.AppendLine($"Final time: {finalTime}");
 

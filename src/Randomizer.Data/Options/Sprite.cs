@@ -1,11 +1,5 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Randomizer.Data.Options
 {
@@ -14,13 +8,13 @@ namespace Randomizer.Data.Options
         public static readonly Sprite DefaultSamus = new("Default", SpriteType.Samus);
         public static readonly Sprite DefaultLink = new("Default", SpriteType.Link);
 
-        private readonly bool _isDefault = false;
+        private readonly bool _isDefault;
 
-        public Sprite(string name, string author, string filePath, SpriteType spriteType)
+        public Sprite(string name, string author, string? filePath, SpriteType spriteType)
         {
             Name = name;
             Author = author;
-            FilePath = filePath;
+            FilePath = filePath ?? "";
             SpriteType = spriteType;
             if (string.IsNullOrEmpty(filePath))
                 _isDefault = true;
@@ -68,11 +62,11 @@ namespace Randomizer.Data.Options
             var author = rdc.Author;
             if (rdc.TryParse<MetaDataBlock>(stream, out var block))
             {
-                var title = block.Content.Value<string>("title");
+                var title = block?.Content?.Value<string>("title");
                 if (!string.IsNullOrEmpty(title))
                     name = title;
 
-                var author2 = block.Content.Value<string>("author");
+                var author2 = block?.Content?.Value<string>("author");
                 if (string.IsNullOrEmpty(author) && !string.IsNullOrEmpty(author2))
                     author = author2;
             }
@@ -88,16 +82,16 @@ namespace Randomizer.Data.Options
             var rdc = Rdc.Parse(stream);
 
             if (rdc.TryParse<LinkSprite>(stream, out var linkSprite))
-                linkSprite.Apply(rom);
+                linkSprite?.Apply(rom);
 
             if (rdc.TryParse<SamusSprite>(stream, out var samusSprite))
-                samusSprite.Apply(rom);
+                samusSprite?.Apply(rom);
         }
 
-        public static bool operator ==(Sprite a, Sprite b)
+        public static bool operator ==(Sprite? a, Sprite? b)
             => a is null && b is null || a?.Equals(b) == true;
 
-        public static bool operator !=(Sprite a, Sprite b)
+        public static bool operator !=(Sprite? a, Sprite? b)
             => !(a == b);
 
         public override bool Equals(object? obj)
@@ -111,7 +105,7 @@ namespace Randomizer.Data.Options
         public bool Equals(Sprite? other)
         {
             return FilePath == other?.FilePath
-                && SpriteType == other?.SpriteType;
+                && SpriteType == other.SpriteType;
         }
 
         public override int GetHashCode()

@@ -2,10 +2,7 @@
 using System.Linq;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
-using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.Data.Configuration.ConfigTypes;
-using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {
@@ -18,6 +15,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         private readonly HashSet<Region> _enteredDungeons = new();
         private readonly IWorldAccessor _worldAccessor;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="worldAccessor"></param>
         public EnteredDungeon(IWorldAccessor worldAccessor)
         {
             _worldAccessor = worldAccessor;
@@ -34,19 +35,19 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         {
             if (currentState.State == 0x07 && (prevState.State == 0x06 || prevState.State == 0x09 || prevState.State == 0x0F || prevState.State == 0x10 || prevState.State == 0x11))
             {
-                // Get the region for the room 
-                var region = tracker.World.Regions.Where(x => x is Z3Region)
-                    .Select(x => x as Z3Region)
-                    .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(currentState.CurrentRoom) && !x.IsOverworld);
+                // Get the region for the room
+                var region = tracker.World.Regions
+                    .OfType<Z3Region>()
+                    .FirstOrDefault(x => x.StartingRooms.Count == 0 && x.StartingRooms.Contains(currentState.CurrentRoom) && !x.IsOverworld);
                 if (region == null) return false;
 
                 // Get the dungeon info for the room
                 var dungeon = region as IDungeon;
                 if (dungeon == null) return false;
 
-                if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && (dungeon.RewardType is RewardType.PendantBlue or RewardType.PendantGreen or RewardType.PendantRed))
+                if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
                 {
-                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.Reward?.Metadata?.Name);
+                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name);
                 }
                 else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
                 {
@@ -55,7 +56,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 else if (region is GanonsTower)
                 {
                     var clearedCrystalDungeonCount = tracker.World.Dungeons
-                                                        .Count(x => x.DungeonState.Cleared && x.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed);
+                                                        .Count(x => x.DungeonState.Cleared && x.IsCrystalDungeon);
 
                     if (clearedCrystalDungeonCount < 7)
                     {

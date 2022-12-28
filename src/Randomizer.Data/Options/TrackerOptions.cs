@@ -98,6 +98,6 @@ namespace Randomizer.Data
         /// <summary>
         /// The selected profiles for tracker responses
         /// </summary>
-        public ICollection<string> TrackerProfiles { get; set; } = new List<string>() { "Sassy" };
+        public ICollection<string?> TrackerProfiles { get; set; } = new List<string?>() { "Sassy" };
     }
 }

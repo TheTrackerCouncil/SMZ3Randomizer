@@ -14,12 +14,12 @@ namespace Randomizer.App
             _canExecute = canExecute;
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
             => _canExecute();
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
             => _execute();
     }
 }

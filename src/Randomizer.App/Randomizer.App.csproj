@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>7.0.5</Version>
+    <Version>8.0.0-rc.2</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -13,6 +13,7 @@
     <PackageId>Randomizer.App</PackageId>
     <NeutralLanguage>en</NeutralLanguage>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -67,6 +68,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
+    <ProjectReference Include="..\Randomizer.Multiplayer.Client\Randomizer.Multiplayer.Client.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.ChatIntegration\Randomizer.SMZ3.ChatIntegration.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj" />

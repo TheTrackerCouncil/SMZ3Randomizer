@@ -1,13 +1,14 @@
-﻿using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData;
+﻿using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Shared;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 {
     public class PinkBrinstar : SMRegion
     {
-        public PinkBrinstar(World world, Config config) : base(world, config)
+        public PinkBrinstar(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
             Weight = -4;
             SporeSpawnReward = new Location(this, 14, 0x8F84E4, LocationType.Chozo,
@@ -16,27 +17,35 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 vanillaItem: ItemType.Super,
                 access: items => items.CardBrinstarBoss && Logic.CanPassBombPassages(items) && items.Super,
                 memoryAddress: 0x1,
-                memoryFlag: 0x40);
+                memoryFlag: 0x40,
+                metadata: metadata,
+                trackerState: trackerState);
             PinkShaftTop = new Location(this, 21, 0x8F8608, LocationType.Visible,
                 name: "Missile (pink Brinstar top)",
                 alsoKnownAs: new[] { "Pink Shaft (top)", "Big Pink (top)" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items),
                 memoryAddress: 0x2,
-                memoryFlag: 0x20);
+                memoryFlag: 0x20,
+                metadata: metadata,
+                trackerState: trackerState);
             PinkShaftBottom = new Location(this, 22, 0x8F860E, LocationType.Visible,
                 name: "Missile (pink Brinstar bottom)",
                 alsoKnownAs: new[] { "Pink Shaft (bottom)", "Big Pink (bottom)" },
                 vanillaItem: ItemType.Missile,
                 memoryAddress: 0x2,
-                memoryFlag: 0x40);
+                memoryFlag: 0x40,
+                metadata: metadata,
+                trackerState: trackerState);
             PinkShaftChozo = new Location(this, 23, 0x8F8614, LocationType.Chozo,
                 name: "Charge Beam",
                 alsoKnownAs: new[] { "Pink Shaft - Chozo" },
                 vanillaItem: ItemType.Charge,
                 access: items => Logic.CanPassBombPassages(items),
                 memoryAddress: 0x2,
-                memoryFlag: 0x80);
+                memoryFlag: 0x80,
+                metadata: metadata,
+                trackerState: trackerState);
             MissionImpossible = new Location(this, 24, 0x8F865C, LocationType.Visible,
                 name: "Power Bomb (pink Brinstar)",
                 alsoKnownAs: new[] { "Mission: Impossible", "Pink Brinstar Power Bomb Room" },
@@ -44,7 +53,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 access: items => Logic.CanUsePowerBombs(items) && items.Super && Logic.HasEnergyReserves(items, 1)
                               && (items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x3,
-                memoryFlag: 0x1);
+                memoryFlag: 0x1,
+                metadata: metadata,
+                trackerState: trackerState);
             GreenHillZone = new Location(this, 25, 0x8F8676, LocationType.Visible,
                 name: "Missile (green Brinstar pipe)",
                 alsoKnownAs: new[] { "Green Hill Zone", "Jungle slope" },
@@ -53,7 +64,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                               && (items.PowerBomb || items.Super || Logic.CanAccessNorfairUpperPortal(items))
                               && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x3,
-                memoryFlag: 0x2);
+                memoryFlag: 0x2,
+                metadata: metadata,
+                trackerState: trackerState);
             Waterway = new Location(this, 33, 0x8F87FA, LocationType.Visible,
                 name: "Energy Tank, Waterway",
                 alsoKnownAs: new[] { "Waterway" },
@@ -61,7 +74,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && items.SpeedBooster &&
                         ((Logic.HasEnergyReserves(items, 1) && !World.Config.LogicConfig.WaterwayNeedsGravitySuit) || items.Gravity),
                 memoryAddress: 0x4,
-                memoryFlag: 0x2);
+                memoryFlag: 0x2,
+                metadata: metadata,
+                trackerState: trackerState);
             WaveBeamGlitchRoom = new Location(this, 35, 0x8F8824, LocationType.Visible,
                 name: "Energy Tank, Brinstar Gate",
                 alsoKnownAs: new[] { "Hoptank Room", "Wave Beam Glitch room" },
@@ -70,8 +85,11 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                               && items.Wave && Logic.HasEnergyReserves(items, 1)
                               && (items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
                 memoryAddress: 0x4,
-                memoryFlag: 0x8); // Grapple or Walljump
+                memoryFlag: 0x8,
+                metadata: metadata,
+                trackerState: trackerState);
             MemoryRegionId = 1;
+            Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Pink Brinstar");
         }
 
         public override string Name => "Pink Brinstar";

@@ -84,5 +84,37 @@ namespace Randomizer.Data.Configuration.ConfigFiles
         /// </summary>
         public SchrodingersString? ChoiceNo { get; init; }
             = new SchrodingersString("Nah.", "Nope.", "No way!");
+
+        /// <summary>
+        /// Options for Ganon giving a hint to the silvers location
+        /// </summary>
+        public SchrodingersString? GanonSilversHint { get; init; }
+            = new SchrodingersString("Did {0} find the silvers in {1}?");
+
+        /// <summary>
+        /// options for Ganon saying that silvers aren't found for the player in a plando
+        /// </summary>
+        public SchrodingersString? GanonNoSilvers { get; init; }
+            = new SchrodingersString("Silver arrows? What are those?");
+
+        /// <summary>
+        /// Options for Sahasrahla's green pendant dungeon reveal text
+        /// </summary>
+        public SchrodingersString? SahasrahlaReveal { get; init; }
+            = new SchrodingersString(
+                "Want something\nfor free? Go\nearn the green\npendant in\n{0}\nand I'll give\nyou something.");
+
+        /// <summary>
+        /// Options for the bomb shop red crystal dungeon reveal text
+        /// </summary>
+        public SchrodingersString? BombShopReveal { get; init; }
+            = new SchrodingersString(
+                "Bring me the\ncrystals from\n{0}\nand\n{1}\nso I can make\na big bomb!\n");
+
+        /// <summary>
+        /// Options for the guy in the Kak bar that has a bunch of jokes in vanilla
+        /// </summary>
+        public SchrodingersString? TavernMan { get; init; }
+            = new SchrodingersString("What. Did you want me to say something funny?", "Why are you even talking to me? Get to work.");
     }
 }

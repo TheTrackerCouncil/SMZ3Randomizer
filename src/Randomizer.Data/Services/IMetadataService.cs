@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.Configuration.ConfigTypes;
@@ -41,6 +38,16 @@ namespace Randomizer.Data.Services
         /// Collection of all additional boss information
         /// </summary>
         public IReadOnlyCollection<BossInfo> Bosses { get; }
+
+        /// <summary>
+        /// Collection of all additional item information
+        /// </summary>
+        public IReadOnlyCollection<ItemData> Items { get; }
+
+        /// <summary>
+        /// Collection of all additional reward information
+        /// </summary>
+        public IReadOnlyCollection<RewardInfo> Rewards { get; }
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -209,14 +216,14 @@ namespace Randomizer.Data.Services
         /// </summary>
         /// <param name="name">The name of the boss</param>
         /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
-        public BossInfo Boss(string name);
+        public BossInfo? Boss(string name);
 
         /// <summary>
         /// Returns information about a specified boss
         /// </summary>
         /// <param name="boss">The type of the boss</param>
         /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
-        public BossInfo Boss(BossType boss);
+        public BossInfo? Boss(BossType boss);
 
         /// <summary>
         /// Returns information about a specified item
@@ -226,9 +233,17 @@ namespace Randomizer.Data.Services
         public ItemData? Item(ItemType type);
 
         /// <summary>
-        /// Applies various metadata to the world, such as LocationData and ItemData
+        /// Returns information about a specified item
         /// </summary>
-        /// <param name="world">The world to apply metadata to</param>
-        public void LoadWorldMetadata(World world);
+        /// <param name="name">The name of the item</param>
+        /// <returns></returns>
+        public ItemData? Item(string name);
+
+        /// <summary>
+        /// Returns information about a specified reward
+        /// </summary>
+        /// <param name="type">The type of the reward</param>
+        /// <returns></returns>
+        public RewardInfo? Reward(RewardType type);
     }
 }

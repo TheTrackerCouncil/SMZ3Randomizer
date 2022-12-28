@@ -1,4 +1,4 @@
-﻿<Window x:Class="Randomizer.App.TrackerLocationsWindow"
+﻿<Window x:Class="Randomizer.App.Windows.TrackerLocationsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,7 @@
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
         xmlns:enum="clr-namespace:Randomizer.Shared.Enums;assembly=Randomizer.Shared"
         xmlns:local="clr-namespace:Randomizer.App"
+        xmlns:windows="clr-namespace:Randomizer.App.Windows"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TrackerViewModel, IsDesignTimeCreatable=True}"
         Title="Tracker — Locations — SMZ3 Cas' Randomizer"
@@ -120,7 +121,7 @@
                 <StackPanel Orientation="Horizontal">
                   <TextBlock Text="{Binding Path=ItemCount}"
                              FontWeight="Bold" />
-                  <Image Source="{Binding ChestSprite, RelativeSource={RelativeSource AncestorType={x:Type local:TrackerLocationsWindow}, Mode=FindAncestor}}"
+                  <Image Source="{Binding ChestSprite, RelativeSource={RelativeSource AncestorType={x:Type windows:TrackerLocationsWindow}, Mode=FindAncestor}}"
                          Width="16px"
                          Height="16px"
                          Margin="3,0,7,0" />
@@ -144,7 +145,7 @@
                           Grid.Column="0">
                 <TextBlock Text="{Binding Name}"
                            Opacity="{Binding Opacity}" />
-                <Image Source="{Binding KeySprite, RelativeSource={RelativeSource AncestorType={x:Type local:TrackerLocationsWindow}, Mode=FindAncestor}}"
+                <Image Source="{Binding KeySprite, RelativeSource={RelativeSource AncestorType={x:Type windows:TrackerLocationsWindow}, Mode=FindAncestor}}"
                        Visibility="{Binding InLogicWithKeys, Converter={StaticResource BooleanToVisibilityConverter}}"
                        RenderOptions.BitmapScalingMode="NearestNeighbor"
                        Width="8px"

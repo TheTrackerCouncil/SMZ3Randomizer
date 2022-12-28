@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
 
 using Microsoft.Extensions.Logging;
 
 using Randomizer.App.Patches;
-using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
@@ -21,7 +17,6 @@ using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
-using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.App
@@ -55,14 +50,12 @@ namespace Randomizer.App
         /// Generates a randomizer ROM and returns details about the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
-        /// <param name="path">The path to the rom</param>
-        /// <param name="error">Any error message from generating the rom</param>
-        /// <param name="rom">The db entry for the rom</param>
+        /// <param name="attempts">The number of times the rom should be attempted to be generated</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public async Task<GeneratedRom> GenerateRandomRomAsync(RandomizerOptions options, int attempts = 5)
+        public async Task<GeneratedRom?> GenerateRandomRomAsync(RandomizerOptions options, int attempts = 5)
         {
             var latestError = "";
-            var seed = (SeedData)null;
+            var seed = (SeedData?)null;
             var validated = false;
 
             for (var i = 0; i < attempts; i++)
@@ -70,7 +63,7 @@ namespace Randomizer.App
                 try
                 {
                     seed = GenerateSeed(options);
-                    if (!_randomizer.ValidateSeedSettings(seed, seed.Playthrough.Config))
+                    if (!_randomizer.ValidateSeedSettings(seed))
                     {
                         latestError = "";
                         validated = false;
@@ -90,7 +83,7 @@ namespace Randomizer.App
 
             if (seed != null)
             {
-                if (!validated && System.Windows.Forms.MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
+                if (!validated && MessageBox.Show("The seed generated is playable but does not contain all requested settings.\n" +
                         "Retrying to generate the seed may work, but the selected settings may be impossible to generate successfully and will need to be updated.\n" +
                         "Continue with the current seed that does not meet all requested settings?", "SMZ3 Cas’ Randomizer", MessageBoxButtons.YesNo) == DialogResult.No)
                 {
@@ -98,24 +91,21 @@ namespace Randomizer.App
                 }
                 else
                 {
-                    var results = await GenerateRomInternalAsync(seed, options);
+                    var results = await GenerateRomInternalAsync(seed, options, null);
                     if (!string.IsNullOrEmpty(results.MsuError))
                     {
-                        System.Windows.Forms.MessageBox.Show(results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     return results.Rom;
                 }
             }
             else
             {
-                if (!string.IsNullOrEmpty(latestError))
-                {
-                    System.Windows.Forms.MessageBox.Show(latestError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
-                    System.Windows.Forms.MessageBox.Show("There was an unknown error creating the rom. Please check your settings and try again.", "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show(
+                    !string.IsNullOrEmpty(latestError)
+                        ? latestError
+                        : "There was an unknown error creating the rom. Please check your settings and try again.",
+                    "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
@@ -125,20 +115,18 @@ namespace Randomizer.App
         /// Generates a plando ROM and returns details about the rom
         /// </summary>
         /// <param name="options">The randomizer generation options</param>
-        /// <param name="path">The path to the rom</param>
-        /// <param name="error">Any error message from generating the rom</param>
-        /// <param name="rom">The db entry for the rom</param>
+        /// <param name="plandoConfig">Config with the details of how to generate the rom</param>
         /// <returns>True if the rom was generated successfully, false otherwise</returns>
-        public async Task<GeneratedRom> GeneratePlandoRomAsync(RandomizerOptions options, PlandoConfig plandoConfig)
+        public async Task<GeneratedRom?> GeneratePlandoRomAsync(RandomizerOptions options, PlandoConfig plandoConfig)
         {
             try
             {
                 var seed = GeneratePlandoSeed(options, plandoConfig);
-                var results = await GenerateRomInternalAsync(seed, options);
+                var results = await GenerateRomInternalAsync(seed, options, null);
 
                 if (!string.IsNullOrEmpty(results.MsuError))
                 {
-                    System.Windows.Forms.MessageBox.Show("There was an error assigning the MSU\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("There was an error assigning the MSU\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 return results.Rom;
@@ -146,12 +134,26 @@ namespace Randomizer.App
             catch (PlandoConfigurationException e)
             {
                 var error = $"The plando configuration is invalid or incomplete.\n{e.Message}\nPlease check the plando configuration file you used and try again.";
-                System.Windows.Forms.MessageBox.Show(error, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(error, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
 
-        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options)
+        public async Task<GeneratedRom?> GeneratePreSeededRomAsync(RandomizerOptions options, SeedData seed, MultiplayerGameDetails multiplayerGameDetails)
+        {
+            var results = await GenerateRomInternalAsync(seed, options, multiplayerGameDetails);
+
+            if (!string.IsNullOrEmpty(results.MsuError))
+            {
+                MessageBox.Show("There was an error assigning the MSU\n" + results.MsuError, "SMZ3 Cas’ Randomizer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+
+
+            return results.Rom;
+        }
+
+        private async Task<GenerateRomResults> GenerateRomInternalAsync(SeedData seed, RandomizerOptions options, MultiplayerGameDetails? multiplayerGameDetails)
         {
             var bytes = GenerateRomBytes(options, seed);
             var config = seed.Playthrough.Config;
@@ -167,24 +169,24 @@ namespace Randomizer.App
             var romPath = Path.Combine(folderPath, romFileName);
             EnableMsu1Support(options, bytes, romPath, out var msuError);
             Rom.UpdateChecksum(bytes);
-            File.WriteAllBytes(romPath, bytes);
+            await File.WriteAllBytesAsync(romPath, bytes);
 
             var spoilerLog = GetSpoilerLog(options, seed, config.Race || config.DisableSpoilerLog);
             var spoilerFileName = $"Spoiler_Log_{fileSuffix}.txt";
             var spoilerPath = Path.Combine(folderPath, spoilerFileName);
-            File.WriteAllText(spoilerPath, spoilerLog);
+            await File.WriteAllTextAsync(spoilerPath, spoilerLog);
 
             var plandoConfigString = ExportPlandoConfig(seed);
             if (!string.IsNullOrEmpty(plandoConfigString))
             {
                 var plandoFileName = $"Spoiler_Plando_{fileSuffix}.yml";
                 var plandoPath = Path.Combine(folderPath, plandoFileName);
-                File.WriteAllText(plandoPath, plandoConfigString);
+                await File.WriteAllTextAsync(plandoPath, plandoConfigString);
             }
 
             PrepareAutoTrackerFiles(options);
 
-            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath);
+            var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails);
 
             return new GenerateRomResults()
             {
@@ -193,17 +195,17 @@ namespace Randomizer.App
             };
         }
 
-        private string ExportPlandoConfig(SeedData seed)
+        private string? ExportPlandoConfig(SeedData seed)
         {
             try
             {
-                if (seed.Worlds.Count > 1)
+                if (seed.WorldGenerationData.Count > 1)
                 {
                     _logger.LogWarning("Attempting to export plando config for multi-world seed. Skipping.");
                     return null;
                 }
 
-                var world = seed.Worlds[0].World;
+                var world = seed.WorldGenerationData.LocalWorld.World;
                 var plandoConfig = new PlandoConfig(world);
 
                 var serializer = new YamlDotNet.Serialization.Serializer();
@@ -244,7 +246,7 @@ namespace Randomizer.App
         /// <param name="options">The randomizer generation options</param>
         /// <param name="seed">The string seed to use for generating the rom</param>
         /// <returns>The seed data</returns>
-        public SeedData GenerateSeed(RandomizerOptions options, string seed = null)
+        public SeedData GenerateSeed(RandomizerOptions options, string? seed = null)
         {
             var config = options.ToConfig();
             return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
@@ -259,6 +261,11 @@ namespace Randomizer.App
             return _plandomizer.GenerateSeed(config, CancellationToken.None);
         }
 
+        public SeedData GenerateMultiworldSeed(List<Config> configs)
+        {
+            return _randomizer.GenerateSeed(configs, seed: null);
+        }
+
         /// <summary>
         /// Uses the options to generate the rom
         /// </summary>
@@ -267,6 +274,10 @@ namespace Randomizer.App
         /// <returns>The bytes of the rom file</returns>
         protected byte[] GenerateRomBytes(RandomizerOptions options, SeedData seed)
         {
+            if (string.IsNullOrEmpty(options.GeneralOptions.SMRomPath) ||
+                string.IsNullOrEmpty(options.GeneralOptions.Z3RomPath))
+                throw new InvalidOperationException("Super Metroid or Zelda rom path is not specified");
+
             byte[] rom;
             using (var smRom = File.OpenRead(options.GeneralOptions.SMRomPath))
             using (var z3Rom = File.OpenRead(options.GeneralOptions.Z3RomPath))
@@ -278,7 +289,7 @@ namespace Randomizer.App
             {
                 Rom.ApplyIps(rom, ips);
             }
-            Rom.ApplySeed(rom, seed.Worlds[0].Patches);
+            Rom.ApplySeed(rom, seed.WorldGenerationData.LocalWorld.Patches);
 
             options.PatchOptions.SamusSprite.ApplyTo(rom);
             options.PatchOptions.LinkSprite.ApplyTo(rom);
@@ -319,9 +330,9 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.CasPatches.AimAnyButton)
+            if (options.PatchOptions.CasPatches.Speedkeep)
             {
-                using var patch = IpsPatch.AimAnyButton();
+                using var patch = IpsPatch.SpeedKeep();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
@@ -337,7 +348,7 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.ShipPatch?.FileName != null)
+            if (options.PatchOptions.ShipPatch.FileName != null)
             {
 
                 var shipPatchFileName = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships", options.PatchOptions.ShipPatch.FileName);
@@ -353,6 +364,7 @@ namespace Randomizer.App
 
             return rom;
         }
+
         /// <summary>
         /// Takes the given seed information and saves it to the database
         /// </summary>
@@ -360,10 +372,13 @@ namespace Randomizer.App
         /// <param name="seed">The generated seed data</param>
         /// <param name="romPath">The path to the rom file</param>
         /// <param name="spoilerPath">The path to the spoiler file</param>
+        /// <param name="multiplayerGameDetails">Details of the connected multiplayer game</param>
         /// <returns>The db entry for the generated rom</returns>
-        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath)
+        protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, MultiplayerGameDetails? multiplayerGameDetails)
         {
-            var config = seed.Playthrough.Config;
+            var settingsString = string.IsNullOrEmpty(seed.PrimaryConfig.SettingsString)
+                ? (seed.Configs.Count() > 1 ? Config.ToConfigString(seed.Configs) : Config.ToConfigString(seed.PrimaryConfig, true))
+                : seed.PrimaryConfig.SettingsString;
 
             var rom = new GeneratedRom()
             {
@@ -371,11 +386,18 @@ namespace Randomizer.App
                 RomPath = Path.GetRelativePath(options.RomOutputPath, romPath),
                 SpoilerPath = Path.GetRelativePath(options.RomOutputPath, spoilerPath),
                 Date = DateTimeOffset.Now,
-                Settings = config.SettingsString ?? Config.ToConfigString(config, true),
-                GeneratorVersion = Smz3Randomizer.Version.Major
+                Settings = settingsString,
+                GeneratorVersion = Smz3Randomizer.Version.Major,
+                MultiplayerGameDetails = multiplayerGameDetails,
             };
             _dbContext.GeneratedRoms.Add(rom);
-            await _stateService.CreateStateAsync(seed.Worlds[0].World, rom);
+
+            if (multiplayerGameDetails != null)
+            {
+                multiplayerGameDetails.GeneratedRom = rom;
+            }
+
+            await _stateService.CreateStateAsync(seed.WorldGenerationData.Worlds, rom);
             return rom;
         }
 
@@ -401,23 +423,46 @@ namespace Randomizer.App
             log.AppendLine(Underline($"SMZ3 Cas’ spoiler log", '='));
             log.AppendLine($"Generated on {DateTime.Now:F}");
             log.AppendLine($"Seed: {options.SeedOptions.Seed} (actual: {seed.Seed})");
-            log.AppendLine($"Settings String: {seed.Playthrough.Config.SettingsString}");
-            log.AppendLine($"Early Items: {string.Join(',', seed.Playthrough.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
 
-            var locationPrefs = new List<string>();
-            foreach (var (locationId, value) in seed.Playthrough.Config.LocationItems)
+            if (options.SeedOptions.Race)
             {
-                var itemPref = value < Enum.GetValues(typeof(ItemPool)).Length ? ((ItemPool)value).ToString() : ((ItemType)value).ToString();
-                locationPrefs.Add($"{seed.Worlds[0].World.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
+                log.AppendLine("[Race]");
             }
-            log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
 
-            var type = options.LogicConfig.GetType();
-            var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(seed.Playthrough.Config.LogicConfig)}"));
-            log.AppendLine($"Logic Options: {logicOptions}");
+            log.AppendLine();
+            log.AppendLine(Underline("Settings", '='));
+            log.AppendLine();
 
-            log.AppendLine((options.SeedOptions.Keysanity ? "[Keysanity] " : "")
-                         + (options.SeedOptions.Race ? "[Race] " : ""));
+            foreach (var world in seed.WorldGenerationData.Worlds)
+            {
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine();
+                }
+
+                log.AppendLine($"Settings String: {Config.ToConfigString(world.Config, true)}");
+                log.AppendLine($"Early Items: {string.Join(',', world.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
+
+                var locationPrefs = new List<string>();
+                foreach (var (locationId, value) in world.Config.LocationItems)
+                {
+                    var itemPref = value < Enum.GetValues(typeof(ItemPool)).Length ? ((ItemPool)value).ToString() : ((ItemType)value).ToString();
+                    locationPrefs.Add($"{world.Locations.First(x => x.Id == locationId).Name} - {itemPref}");
+                }
+                log.AppendLine($"Location Preferences: {string.Join(',', locationPrefs.ToArray())}");
+
+                var type = options.LogicConfig.GetType();
+                var logicOptions = string.Join(',', type.GetProperties().Select(x => $"{x.Name}: {x.GetValue(world.Config.LogicConfig)}"));
+                log.AppendLine($"Logic Options: {logicOptions}");
+
+                if (world.Config.Keysanity)
+                {
+                    log.AppendLine("Keysanity: " + world.Config.KeysanityMode.ToString());
+                }
+                log.AppendLine();
+            }
+
             if (File.Exists(options.PatchOptions.Msu1Path))
                 log.AppendLine($"MSU-1 pack: {Path.GetFileNameWithoutExtension(options.PatchOptions.Msu1Path)}");
             log.AppendLine();
@@ -426,6 +471,29 @@ namespace Randomizer.App
             {
                 return log.ToString();
             }
+
+            log.AppendLine();
+            log.AppendLine(Underline("Hints", '='));
+            log.AppendLine();
+
+            foreach (var worldGenerationData in seed.WorldGenerationData)
+            {
+                if (worldGenerationData.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + worldGenerationData.World.Player));
+                    log.AppendLine();
+                }
+
+                foreach (var hint in worldGenerationData.Hints)
+                {
+                    log.AppendLine(hint);
+                }
+                log.AppendLine();
+            }
+
+            log.AppendLine();
+            log.AppendLine(Underline("Spheres", '='));
+            log.AppendLine();
 
             var spheres = seed.Playthrough.GetPlaythroughText();
             for (var i = 0; i < spheres.Count; i++)
@@ -440,31 +508,57 @@ namespace Randomizer.App
                 log.AppendLine();
             }
 
-            log.AppendLine(Underline("Rewards"));
             log.AppendLine();
-            foreach (var region in seed.Worlds[0].World.Regions)
+            log.AppendLine(Underline("Dungeons", '='));
+            log.AppendLine();
+
+            foreach (var world in seed.WorldGenerationData.Worlds)
             {
-                if (region is IHasReward rewardRegion)
-                    log.AppendLine($"{region.Name}: {rewardRegion.RewardType}");
+                log.AppendLine(world.Config.MultiWorld
+                    ? Underline("Player " + world.Player + " Rewards")
+                    : Underline("Rewards"));
+
+                log.AppendLine();
+
+                foreach (var region in world.Regions)
+                {
+                    if (region is IHasReward rewardRegion)
+                        log.AppendLine($"{region.Name}: {rewardRegion.RewardType}");
+                }
+                log.AppendLine();
+
+                log.AppendLine(world.Config.MultiWorld
+                    ? Underline("Player " + world.Player + " Medallions")
+                    : Underline("Medallions"));
+                log.AppendLine();
+
+                foreach (var region in world.Regions)
+                {
+                    if (region is INeedsMedallion medallionReegion)
+                        log.AppendLine($"{region.Name}: {medallionReegion.Medallion}");
+                }
+                log.AppendLine();
             }
+
+            log.AppendLine();
+            log.AppendLine(Underline("All Items", '='));
             log.AppendLine();
 
-            log.AppendLine(Underline("Medallions"));
-            log.AppendLine();
-            foreach (var region in seed.Worlds[0].World.Regions)
+            foreach (var world in seed.WorldGenerationData.Worlds)
             {
-                if (region is INeedsMedallion medallionReegion)
-                    log.AppendLine($"{region.Name}: {medallionReegion.Medallion}");
-            }
-            log.AppendLine();
+                if (world.Config.MultiWorld)
+                {
+                    log.AppendLine(Underline("Player: " + world.Player));
+                    log.AppendLine();
+                }
 
-            log.AppendLine(Underline("All items"));
-            log.AppendLine();
-
-            var world = seed.Worlds.Single();
-            foreach (var location in world.World.Locations)
-            {
-                log.AppendLine($"{location}: {location.Item}");
+                foreach (var location in world.Locations)
+                {
+                    log.AppendLine(world.Config.MultiWorld
+                        ? $"{location}: {location.Item} ({location.Item.World.Player})"
+                        : $"{location}: {location.Item}");
+                }
+                log.AppendLine();
             }
 
             return log.ToString();
@@ -489,7 +583,7 @@ namespace Randomizer.App
 
             var romDrive = Path.GetPathRoot(romPath);
             var msuDrive = Path.GetPathRoot(msuPath);
-            if (!romDrive.Equals(msuDrive, StringComparison.OrdinalIgnoreCase))
+            if (romDrive?.Equals(msuDrive, StringComparison.OrdinalIgnoreCase) == false)
             {
                 error = $"Due to technical limitations, the MSU-1 " +
                     $"pack and the ROM need to be on the same drive. MSU-1 " +
@@ -508,12 +602,12 @@ namespace Randomizer.App
             var msuFolder = Path.GetDirectoryName(msuPath);
             var romBaseName = Path.GetFileNameWithoutExtension(romPath);
             var msuBaseName = Path.GetFileNameWithoutExtension(msuPath);
-            foreach (var msuFile in Directory.EnumerateFiles(msuFolder, $"{msuBaseName}*"))
+            foreach (var msuFile in Directory.EnumerateFiles(msuFolder!, $"{msuBaseName}*"))
             {
                 var fileName = Path.GetFileName(msuFile);
                 var suffix = fileName.Replace(msuBaseName, "");
 
-                var link = Path.Combine(romFolder, romBaseName + suffix);
+                var link = Path.Combine(romFolder!, romBaseName + suffix);
                 NativeMethods.CreateHardLink(link, msuFile, IntPtr.Zero);
             }
 
@@ -523,20 +617,20 @@ namespace Randomizer.App
 
         private string GetSourceDirectory()
         {
-            var currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            var currentDirectory = Directory.GetCurrentDirectory();
             var directory = Directory.GetParent(currentDirectory);
-            while (directory.Name != "src")
+            while (directory != null && directory.Name != "src")
             {
                 directory = Directory.GetParent(directory.FullName);
             }
-            return directory.FullName;
+            return directory?.FullName ?? currentDirectory;
         }
 
         private void CopyDirectory(string source, string dest, bool recursive, bool overwrite)
         {
             var sourceDir = new DirectoryInfo(source);
 
-            DirectoryInfo[] sourceSubDirs = sourceDir.GetDirectories();
+            var sourceSubDirs = sourceDir.GetDirectories();
 
             if (!Directory.Exists(dest))
             {
@@ -568,8 +662,8 @@ namespace Randomizer.App
 
         private class GenerateRomResults
         {
-            public GeneratedRom Rom { get; set; }
-            public string MsuError { get; set; }
+            public GeneratedRom? Rom { get; init; }
+            public string? MsuError { get; init; }
         }
     }
 }

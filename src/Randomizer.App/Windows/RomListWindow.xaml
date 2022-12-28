@@ -1,10 +1,11 @@
-﻿<Window x:Class="Randomizer.App.RomListWindow"
+﻿<Window x:Class="Randomizer.App.Windows.RomListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
         xmlns:local="clr-namespace:Randomizer.App"
+        xmlns:controls="clr-namespace:Randomizer.App.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:GeneratedRomsViewModel, IsDesignTimeCreatable=True}"
         Loaded="Window_Loaded"
@@ -20,7 +21,6 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
     <Border Grid.Row="0"
@@ -40,97 +40,13 @@
       </Menu>
     </Border>
 
-    <Grid Grid.Row="1" Grid.IsSharedSizeScope="True">
-      <ListView Name="RomsList" ItemsSource="{Binding RomsList}" SelectionMode="Single" Visibility="{Binding RomsListVisibility}">
-        <ListView.ItemTemplate>
-          <DataTemplate>
-            <Grid Margin="0,2">
-              <Grid.ContextMenu>
-                <ContextMenu>
-                  <MenuItem Header="_Play" Tag="{Binding Rom}" Click="PlayMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Open _Folder" Tag="{Binding Rom}" Click="OpenFolderMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Open _Tracker" Tag="{Binding Rom}" Click="OpenTrackerMenuItem_Click"></MenuItem>
-                  <MenuItem Header="View _Spoiler Log" Tag="{Binding Rom}" Click="ViewSpoilerMenuItem_Click"></MenuItem>
-                  <MenuItem Header="View _Progression Log" Tag="{Binding Rom}" Click="ProgressionLogMenuItem_Click" Visibility="{Binding ProgressionLogVisibility}"></MenuItem>
-                  <MenuItem Header="_Edit Label" Tag="{Binding Rom}" Click="EditLabelMenuItem_Click"></MenuItem>
-                  <MenuItem Header="_Copy Seed" Tag="{Binding Rom}" Click="CopySeedMenuItem_Click"></MenuItem>
-                  <MenuItem Header="Copy _Randomizer Settings String" Tag="{Binding Rom}" Click="CopyConfigMenuItem_Click"></MenuItem>
-                  <MenuItem Header="_Delete Rom" Tag="{Binding Rom}" Click="DeleteRomMenuItem_Click"></MenuItem>
-                </ContextMenu>
-              </Grid.ContextMenu>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="75" />
-              </Grid.ColumnDefinitions>
-              <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-              </Grid.RowDefinitions>
-              <TextBox Text="{Binding Name, Mode=OneWay}" Name="EditLabelTextBox" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Top" Visibility="Collapsed" LostFocus="EditLabelTextBox_LostFocus" KeyDown="EditLabelTextBox_KeyDown" Tag="{Binding Rom}">
-                <TextBox.Style>
-                  <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                    <Style.Resources>
-                      <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                        <VisualBrush.Visual>
-                          <Label Content="Label" Foreground="LightGray" VerticalAlignment="Center" />
-                        </VisualBrush.Visual>
-                      </VisualBrush>
-                    </Style.Resources>
-                    <Style.Triggers>
-                      <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                      </Trigger>
-                      <Trigger Property="Text" Value="{x:Null}">
-                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                      </Trigger>
-                      <Trigger Property="IsKeyboardFocused" Value="True">
-                        <Setter Property="Background" Value="White" />
-                      </Trigger>
-                    </Style.Triggers>
-                  </Style>
-                </TextBox.Style>
-              </TextBox>
-              <TextBlock Text="{Binding NameLabel}" Name="LabelTextBlock" Grid.Row="0" />
-              <TextBlock Text="{Binding TimeLabel}" Grid.Row="0" Grid.Column="1" TextAlignment="Right" Margin="0,0,8,0"/>
-              <TextBlock Text="{Binding LocationsLabel}" Grid.Row="1" Grid.Column="0" />
-              <TextBlock Text="{Binding ElapsedLabel}" Grid.Row="1" Grid.Column="1" Margin="0,0,8,0" TextAlignment="Right" />
-              <DockPanel Grid.Column="2" Grid.RowSpan="2">
-                <Button Margin="0,0,0,0" Click="LaunchButton_Click" Tag="{Binding Rom}">Launch</Button>
-              </DockPanel>
-            </Grid>
-          </DataTemplate>
-        </ListView.ItemTemplate>
-        <ListView.ItemContainerStyle>
-          <Style TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-          </Style>
-        </ListView.ItemContainerStyle>
-      </ListView>
-
-      <StackPanel Visibility="{Binding IntroVisibility}" Margin="5 2">
-        <TextBlock TextWrapping="Wrap">It looks like you don't have any generated roms yet! Press quick play below to generate and launch a rom with the either the default or last used settings, or click generate custom game to change settings before playing.</TextBlock>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-          <Button Grid.Column="0" HorizontalAlignment="Right" Click="QuickPlayButton_Click">_Quick play</Button>
-          <Button Grid.Column="1" HorizontalAlignment="Left" Click="GenerateRomButton_Click">Generate custom game...</Button>
-        </StackPanel>
-      </StackPanel>
-
-    </Grid>
-
-    <Border Grid.Row="2"
-            Style="{StaticResource BottomPanel}">
-      <Grid>
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-          <Button x:Name="QuickPlayButton"
-                  Click="QuickPlayButton_Click">_Quick play</Button>
-          <Button x:Name="StartPlandoButton"
-                  Click="StartPlandoButton_Click">Start plando...</Button>
-          <Button x:Name="GenerateRomButton"
-                  Click="GenerateRomButton_Click">Generate custom game...</Button>
-        </StackPanel>
-      </Grid>
-    </Border>
+    <TabControl Grid.Row="1">
+      <TabItem Header="Singleplayer" >
+        <DockPanel Name="SoloTab"></DockPanel>
+      </TabItem>
+      <TabItem Header="Multiplayer">
+        <DockPanel Name="MultiTab"></DockPanel>
+      </TabItem>
+    </TabControl>
   </Grid>
 </Window>

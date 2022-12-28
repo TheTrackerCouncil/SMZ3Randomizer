@@ -3,8 +3,10 @@ using System.Linq;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
-using Randomizer.Data.WorldData;
+using Randomizer.Data.Services;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions
 {
@@ -19,10 +21,13 @@ namespace Randomizer.Data.WorldData.Regions
         /// </summary>
         /// <param name="world">The world the region is in.</param>
         /// <param name="config">The config used.</param>
-        protected Region(World world, Config config)
+        /// <param name="metadata"></param>
+        /// <param name="trackerState"></param>
+        protected Region(World world, Config config, IMetadataService? metadata, TrackerState? trackerState)
         {
             Config = config;
             World = world;
+            Metadata = null!;
         }
 
         /// <summary>
@@ -59,7 +64,7 @@ namespace Randomizer.Data.WorldData.Regions
         /// <summary>
         /// Gets the relative weight used to bias the randomization process.
         /// </summary>
-        public int Weight { get; init; } = 0;
+        public int Weight { get; init; }
 
         /// <summary>
         /// Gets the randomizer configuration options.
@@ -79,7 +84,7 @@ namespace Randomizer.Data.WorldData.Regions
         /// <summary>
         /// Gets the list of region-specific items, e.g. keys, maps, compasses.
         /// </summary>
-        protected IList<ItemType> RegionItems { get; set; } = new List<ItemType>();
+        protected IList<ItemType> RegionItems { get; init; } = new List<ItemType>();
 
         /// <summary>
         /// Determines whether the specified item is specific to this region.
@@ -107,22 +112,23 @@ namespace Randomizer.Data.WorldData.Regions
         /// </returns>
         public virtual bool CanFill(Item item, Progression items)
         {
-            return (Config.ZeldaKeysanity || !item.IsDungeonItem || IsRegionItem(item)) && MatchesItemPlacementRule(item);
+            return (item.World.Config.ZeldaKeysanity || !item.IsDungeonItem || IsRegionItem(item)) && MatchesItemPlacementRule(item);
         }
 
         private bool MatchesItemPlacementRule(Item item)
         {
+            if (Config.MultiWorld) return true;
             var rule = Config.ItemPlacementRule;
             if (rule == ItemPlacementRule.Anywhere
                 || (!item.Progression && !item.IsKey && !item.IsKeycard && !item.IsBigKey)
-                || (!Config.ZeldaKeysanity && (item.IsKey || item.IsBigKey))) return true;
+                || (!item.World.Config.ZeldaKeysanity && (item.IsKey || item.IsBigKey))) return true;
             else if (rule == ItemPlacementRule.DungeonsAndMetroid)
             {
-                return (this is Z3Region region && !region.IsOverworld) || this is SMRegion;
+                return this is Z3Region { IsOverworld: false } || this is SMRegion;
             }
             else if (rule == ItemPlacementRule.CrystalDungeonsAndMetroid)
             {
-                return (this is IHasReward rewardRegion && rewardRegion.RewardType is RewardType.CrystalBlue or RewardType.CrystalRed) || this is SMRegion;
+                return this is IHasReward { RewardType: RewardType.CrystalBlue or RewardType.CrystalRed } || this is SMRegion;
             }
             else if (rule == ItemPlacementRule.OppositeGame)
             {

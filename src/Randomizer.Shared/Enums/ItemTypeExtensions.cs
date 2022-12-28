@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Randomizer.Shared
+namespace Randomizer.Shared.Enums
 {
     public static class ItemTypeExtensions
     {
@@ -35,7 +32,7 @@ namespace Randomizer.Shared
         /// </returns>
         public static bool IsInAnyCategory(this ItemType itemType, params ItemCategory[] categories)
         {
-            return GetCategories(itemType).Any(x => categories.Contains(x));
+            return GetCategories(itemType).Any(categories.Contains);
         }
 
         /// <summary>
@@ -49,11 +46,38 @@ namespace Randomizer.Shared
         public static ItemCategory[] GetCategories(this ItemType itemType)
         {
             var valueType = itemType.GetType().GetField(itemType.ToString());
-            var attrib = valueType.GetCustomAttribute<ItemCategoryAttribute>(inherit: false);
-            if (attrib == null)
-                return Array.Empty<ItemCategory>();
+            if (valueType != null)
+            {
+                var attrib = valueType.GetCustomAttribute<ItemCategoryAttribute>(inherit: false);
+                if (attrib != null) return attrib.Categories;
+            }
 
-            return attrib.Categories;
+            return Array.Empty<ItemCategory>();
+        }
+
+        /// <summary>
+        /// Determines whether the item type matches any of the specified
+        /// categories.
+        /// </summary>
+        /// <param name="itemType">The type of item.</param>
+        /// <param name="isZeldaKeysanity">If playing with Zelda Key Sanity enabled.</param>
+        /// <param name="isMetroidKeysanity">If playing with Metroid Key Sanity enabled.</param>
+        /// <returns>
+        /// <see langword="true"/> if <paramref name="itemType"/> matches any of
+        /// could possibly be progression; otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool IsPossibleProgression(this ItemType itemType, bool isZeldaKeysanity, bool isMetroidKeysanity)
+        {
+            if (itemType == ItemType.Nothing || itemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
+                return false;
+
+            if (itemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
+                return isZeldaKeysanity;
+
+            if (itemType.IsInCategory(ItemCategory.Keycard))
+                return isMetroidKeysanity;
+
+            return true;
         }
     }
 }

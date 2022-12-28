@@ -37,15 +37,18 @@ namespace Randomizer.SMZ3.Generation
 
         public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default)
         {
+            if (config.PlandoConfig == null)
+                throw new InvalidOperationException("No plando config provided for plandomizer");
+
             var worlds = new List<World>
             {
-                new World(config, "Player", 0, Guid.NewGuid().ToString("N"))
+                new(config, "Player", 0, Guid.NewGuid().ToString("N"))
             };
 
             var filler = _fillerFactory.Create(config.PlandoConfig);
             filler.Fill(worlds, config, cancellationToken);
 
-            Playthrough playthrough = null;
+            Playthrough playthrough;
             try
             {
                 playthrough = Playthrough.Generate(worlds, config);
@@ -65,22 +68,24 @@ namespace Randomizer.SMZ3.Generation
             }
 
             var seedData = new SeedData
-            {
-                Guid = Guid.NewGuid().ToString("N"),
-                Seed = $"Plando: {plandoName}",
-                Game = "SMZ3 Cas’ Plando",
-                Mode = config.GameMode.ToLowerString(),
-                Playthrough = config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
-                Worlds = new List<(World World, Dictionary<int, byte[]> Patches)>()
-            };
-
-            var hints = _hintService.GetInGameHints(worlds[0], worlds, playthrough, config.UniqueHintCount, 0);
+            (
+                guid: Guid.NewGuid().ToString("N"),
+                seed: $"Plando: {plandoName}",
+                game: "SMZ3 Cas’ Plando",
+                mode: config.GameMode.ToLowerString(),
+                worldGenerationData: new WorldGenerationDataCollection(),
+                playthrough: config.Race ? new Playthrough(config, Enumerable.Empty<Playthrough.Sphere>()) : playthrough,
+                configs: new List<Config>() { config },
+                primaryConfig: config
+            );
 
             foreach (var world in worlds)
             {
                 var patchRnd = new Random();
                 var patch = new Patcher(world, worlds, seedData.Guid, 0, patchRnd, _metadataService, _gameLines);
-                seedData.Worlds.Add((world, patch.CreatePatch(config, hints)));
+                var hints = _hintService.GetInGameHints(world, worlds, playthrough, 0);
+                var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(config, hints), hints);
+                seedData.WorldGenerationData.Add(worldGenerationData);
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());

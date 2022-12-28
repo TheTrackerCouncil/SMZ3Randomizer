@@ -18,9 +18,8 @@ namespace Randomizer.SMZ3.Contracts
         /// <param name="hintPlayerWorld">The player that will be receiving the hints</param>
         /// <param name="allWorlds">All worlds that are a part of the seed</param>
         /// <param name="playthrough">The initial playthrough with all of the spheres</param>
-        /// <param name="hintCount">The number of hints to generate</param>
         /// <param name="seed">Seed number for shuffling and randomization</param>
         /// <returns>A collection of strings to use for the in game hints</returns>
-        IEnumerable<string> GetInGameHints(World world, ICollection<World> allWorlds, Playthrough playthrough, int hintCount, int seed);
+        IEnumerable<string> GetInGameHints(World hintPlayerWorld, ICollection<World> allWorlds, Playthrough playthrough, int seed);
     }
 }

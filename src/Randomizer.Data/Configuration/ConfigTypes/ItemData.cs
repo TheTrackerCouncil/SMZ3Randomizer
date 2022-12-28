@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text.Json.Serialization;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -29,12 +29,27 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <param name="internalItemType">
         /// The internal <see cref="ItemType"/> of the item.
         /// </param>
+        /// <param name="hints">List of hints to provide for this item</param>
         public ItemData(SchrodingersString name, ItemType internalItemType, SchrodingersString hints)
         {
             Item = internalItemType.GetDescription();
             Name = name;
             InternalItemType = internalItemType;
             Hints = hints;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ItemData"/> class with
+        /// the specified item name and type.
+        /// </summary>
+        /// <param name="internalItemType">
+        /// The internal <see cref="ItemType"/> of the item.
+        /// </param>
+        public ItemData(ItemType internalItemType)
+        {
+            Item = internalItemType.GetDescription();
+            Name = new SchrodingersString(Item);
+            InternalItemType = internalItemType;
         }
 
         /// <summary>
@@ -90,7 +105,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the phrases to respond with when tracking this item, or
         /// <c>null</c> to use the generic item responses. The dictionary key
-        /// represents the current <see cref="TrackingState"/>.
+        /// represents the current TrackingState
         /// </summary>
         /// <remarks>
         /// <c>{0}</c> is a placeholder for the item counter.
@@ -99,7 +114,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Use <c>null</c> to reset to the default item responses.
         /// </para>
         /// </remarks>
-        public Dictionary<int, SchrodingersString>? WhenTracked { get; set; }
+        public Dictionary<int, SchrodingersString?>? WhenTracked { get; set; }
 
         /// <summary>
         /// Gets or sets the path to the image to be displayed on the tracker.
@@ -110,6 +125,11 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Gets the possible hints for the item, if any are defined.
         /// </summary>
         public SchrodingersString? Hints { get; set; }
+
+        /// <summary>
+        /// Gets the possible hints for the item, if any are defined.
+        /// </summary>
+        public SchrodingersString? PedestalHints { get; set; }
 
         /// <summary>
         /// Gets the highest stage the item supports, or 1 if the item does not
@@ -172,6 +192,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Retrieves the item-specific phrases to respond with when tracking
         /// the item.
         /// </summary>
+        /// <param name="trackingState">The new tracking state for the item</param>
         /// <param name="response">
         /// When this method returns <c>true</c>, contains the possible phrases
         /// to respond with when tracking the item.
@@ -263,18 +284,8 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </remarks>
         public bool IsProgression(Config? config)
         {
-            if (InternalItemType == ItemType.Nothing || InternalItemType.IsInAnyCategory(new[] { ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Map, ItemCategory.Compass, ItemCategory.Nice }))
-                return false;
-
-            if (InternalItemType.IsInAnyCategory(new[] { ItemCategory.SmallKey, ItemCategory.BigKey }))
-                return config?.ZeldaKeysanity == true;
-
-            if (InternalItemType.IsInCategory(ItemCategory.Keycard))
-                return config?.MetroidKeysanity == true;
-
             // Todo: We can add special logic like checking if it's one of the first two swords
-
-            return true;
+            return InternalItemType.IsPossibleProgression(config?.ZeldaKeysanity == true, config?.MetroidKeysanity == true);
         }
 
         /// <summary>

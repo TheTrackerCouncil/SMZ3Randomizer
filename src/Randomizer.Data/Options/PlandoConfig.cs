@@ -34,7 +34,7 @@ namespace Randomizer.Data.Options
             Items = world.Locations
                 .ToDictionary(x => x.ToString(), x => x.Item.Type);
             Rewards = world.Regions.Where(x => x is IHasReward)
-                .ToDictionary(x => x.ToString(), x => ((IHasReward)x).Reward.Type);
+                .ToDictionary(x => x.ToString(), x => ((IHasReward)x).RewardType);
             Medallions = world.Regions.Where(x => x is INeedsMedallion)
                 .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
             Logic = world.Config.LogicConfig.Clone();
@@ -45,7 +45,7 @@ namespace Randomizer.Data.Options
         /// deserialized.
         /// </summary>
         [YamlIgnore]
-        public string FileName { get; set; }
+        public string FileName { get; set; } = "";
 
         /// <summary>
         /// Gets or sets a value indicating whether Keysanity should be enabled.
@@ -55,24 +55,24 @@ namespace Randomizer.Data.Options
         /// <summary>
         /// Gets or sets the logic options that apply to the plando.
         /// </summary>
-        public LogicConfig Logic { get; set; }
+        public LogicConfig Logic { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a dictionary that contains the names of locations and
         /// the types of items they should be filled with.
         /// </summary>
-        public Dictionary<string, ItemType> Items { get; set; }
+        public Dictionary<string, ItemType> Items { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a dictionary that contains the names of regions and the
         /// boss rewards they should be filled with.
         /// </summary>
-        public Dictionary<string, RewardType> Rewards { get; set; }
+        public Dictionary<string, RewardType> Rewards { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a dictionary that contains the names of regions and the
         /// medallions they require.
         /// </summary>
-        public Dictionary<string, ItemType> Medallions { get; set; }
+        public Dictionary<string, ItemType> Medallions { get; set; } = new();
     }
 }

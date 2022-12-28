@@ -30,5 +30,18 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<Smz3Plandomizer>();
             return services;
         }
+
+        public static IServiceCollection AddGeneratedRomLoader(this IServiceCollection services)
+        {
+            services.AddSingleton<Smz3GeneratedRomLoader>();
+            return services;
+        }
+
+        public static IServiceCollection AddSmz3MultiplayerRomGenerator(this IServiceCollection services)
+        {
+            services.AddSingleton<MultiplayerFillerFactory>();
+            services.AddSingleton<Smz3MultiplayerRomGenerator>();
+            return services;
+        }
     }
 }

@@ -126,21 +126,26 @@ namespace Randomizer.SMZ3.Text {
         static IList<(string, byte[])> ParseEntries(string resource) {
             using var stream = EmbeddedStream.For(resource);
             using var reader = new StreamReader(stream);
-            var content = YamlStream.Load(reader).First().Contents;
+            var content = YamlStream.Load(reader).First().Contents as YamlSequence;
+            if (content == null)
+                throw new InvalidOperationException("Unable to parse string table");
+
             var convert = new ByteConverter();
-            return (
-                from entry in content as YamlSequence
-                select (entry as YamlMapping).First() into entry
-                select ((entry.Key as YamlValue).Value, entry.Value switch {
-                    YamlSequence bytes => (
-                        from b in bytes
-                        select (b as YamlValue).Value into b
-                        select (byte)convert.ConvertFromInvariantString(b)
-                    ).ToArray(),
+
+            // For each entry in the YAML file, convert strings to dialog entries and
+            // arrays into byte arrays
+            return content.OfType<YamlMapping>()
+                .Select(entry => entry.First())
+                .Select(firstEntry => (((YamlValue)firstEntry.Key).Value, firstEntry.Value switch
+                {
+                    YamlSequence bytes => bytes.OfType<YamlValue>()
+                        .Select(b => (byte?)convert.ConvertFromInvariantString(b.Value))
+                        .OfType<byte>()
+                        .ToArray(),
                     YamlValue text => Dialog.Compiled(text.Value),
-                    var o => throw new InvalidOperationException($"Did not expect an object of type {o.GetType()}"),
-                })
-            ).ToList();
+                    var o => throw new InvalidOperationException($"Did not expect an object of type {o?.GetType()}"),
+                }))
+                .ToList();
         }
 
     }

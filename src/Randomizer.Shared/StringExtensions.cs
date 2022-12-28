@@ -66,5 +66,15 @@ namespace Randomizer.Shared
                 value.Replace(oldChar, newChar);
             return value.ToString();
         }
+
+        public static string? SubstringBeforeCharacter(this string value, char character)
+            => value.Contains(character, StringComparison.Ordinal)
+                ? value[..value.IndexOf(character, StringComparison.Ordinal)]
+                : null;
+
+        public static string? SubstringAfterCharacter(this string value, char character)
+            => value.Contains(character, StringComparison.Ordinal)
+                ? value[(value.IndexOf(character, StringComparison.Ordinal) + 1)..]
+                : null;
     }
 }

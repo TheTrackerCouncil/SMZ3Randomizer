@@ -27,6 +27,16 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             = new("Incoming PB for seed {0}");
 
         /// <summary>
+        /// Gets the phrases to respond with when the game is started in a multiplayer game.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the number of players.
+        /// <c>{1}</c> is a placeholder for a random player name.
+        /// </remarks>
+        public SchrodingersString GameStartedMultiplayer { get; init; }
+            = new("Multiplayer game started! Good luck.");
+
+        /// <summary>
         /// Gets the phrases to respond with when nearing KAD
         /// </summary>
         public SchrodingersString NearKraidsAwfulSon { get; init; }
@@ -47,8 +57,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// <summary>
         /// Gets the phrases to respond with when at crumble shaft
         /// </summary>
-        public SchrodingersString AtCrumbleShaft { get; init; }
-            = new("Good luck.");
+        public SchrodingersString AtCrumbleShaft { get; init; } = new();
 
         /// <summary>
         /// Gets the phrases to respond with when falling down the pit from moldorm

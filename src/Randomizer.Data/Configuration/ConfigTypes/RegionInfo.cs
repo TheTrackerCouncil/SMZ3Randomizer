@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
-using Randomizer.Shared;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -27,6 +26,17 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         {
             Name = name;
             MapName = mapName;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RegionInfo"/> class
+        /// with the specified info.
+        /// </summary>
+        /// <param name="name">The possible names for the region.</param>
+        public RegionInfo(string name)
+        {
+            Region = name;
+            Name = new SchrodingersString(name);
         }
 
         /// <summary>
@@ -74,7 +84,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// Returns a string representation of the region.
         /// </summary>
         /// <returns>A string representation of this region.</returns>
-        public override string? ToString() => Name[0];
+        public override string ToString() => Name[0];
 
         /// <summary>
         /// Text for Tracker to say when dying in a room or screen in the region

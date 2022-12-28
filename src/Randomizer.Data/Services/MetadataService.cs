@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
-using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared.Enums;
@@ -20,13 +17,6 @@ namespace Randomizer.Data.Services
     /// </summary>
     public class MetadataService : IMetadataService
     {
-        protected IReadOnlyCollection<RegionInfo> _regions;
-        protected IReadOnlyCollection<DungeonInfo> _dungeons;
-        protected IReadOnlyCollection<RoomInfo> _rooms;
-        protected IReadOnlyCollection<LocationInfo> _locations;
-        protected IReadOnlyCollection<BossInfo> _bosses;
-        protected IReadOnlyCollection<ItemData> _items;
-        protected IReadOnlyCollection<RewardInfo> _rewards;
         private readonly ILogger<MetadataService> _logger;
 
         /// <summary>
@@ -36,45 +26,50 @@ namespace Randomizer.Data.Services
         /// <param name="logger"></param>
         public MetadataService(Configs configs, ILogger<MetadataService> logger)
         {
-            _regions = configs.Regions;
-            _dungeons = configs.Dungeons;
-            _rooms = configs.Rooms;
-            _locations = configs.Locations;
-            _bosses = configs.Bosses;
-            _items = configs.Items;
-            _rewards = configs.Rewards;
+            Regions = configs.Regions;
+            Dungeons = configs.Dungeons;
+            Rooms = configs.Rooms;
+            Locations = configs.Locations;
+            Bosses = configs.Bosses;
+            Items = configs.Items;
+            Rewards = configs.Rewards;
             _logger = logger;
         }
 
         /// <summary>
         /// Collection of all additional region information
         /// </summary>
-        public IReadOnlyCollection<RegionInfo> Regions => _regions;
+        public IReadOnlyCollection<RegionInfo> Regions { get; }
 
         /// <summary>
         /// Collection of all additional dungeon information
         /// </summary>
-        public IReadOnlyCollection<DungeonInfo> Dungeons => _dungeons;
+        public IReadOnlyCollection<DungeonInfo> Dungeons { get; }
 
         /// <summary>
         /// Collection of all additional room information
         /// </summary>
-        public IReadOnlyCollection<RoomInfo> Rooms => _rooms;
+        public IReadOnlyCollection<RoomInfo> Rooms { get; }
 
         /// <summary>
         /// Collection of all additional location information
         /// </summary>
-        public IReadOnlyCollection<LocationInfo> Locations => _locations;
+        public IReadOnlyCollection<LocationInfo> Locations { get; }
 
         /// <summary>
         /// Collection of all additional boss information
         /// </summary>
-        public IReadOnlyCollection<BossInfo> Bosses => _bosses;
+        public IReadOnlyCollection<BossInfo> Bosses { get; }
 
         /// <summary>
-        /// Collection of all additional boss information
+        /// Collection of all additional item information
         /// </summary>
-        public IReadOnlyCollection<ItemData> Items => _items;
+        public IReadOnlyCollection<ItemData> Items { get; }
+
+        /// <summary>
+        /// Collection of all additional reward information
+        /// </summary>
+        public IReadOnlyCollection<RewardInfo> Rewards { get; }
 
         /// <summary>
         /// Returns extra information for the specified region.
@@ -258,16 +253,16 @@ namespace Randomizer.Data.Services
         /// </summary>
         /// <param name="name">The name of the boss</param>
         /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
-        public BossInfo Boss(string name)
-            => Bosses.Single(x => x.Boss == name);
+        public BossInfo? Boss(string name)
+            => Bosses.SingleOrDefault(x => x.Boss == name);
 
         /// <summary>
         /// Returns information about a specified boss
         /// </summary>
         /// <param name="boss">The type of the boss</param>
         /// <returns>The <see cref="BossInfo"/> for the specified boss.</returns>
-        public BossInfo Boss(BossType boss)
-            => Bosses.Single(x => x.Type == boss);
+        public BossInfo? Boss(BossType boss)
+            => Bosses.SingleOrDefault(x => x.Type == boss);
 
         /// <summary>
         /// Returns information about a specified item
@@ -278,60 +273,19 @@ namespace Randomizer.Data.Services
             => Items.FirstOrDefault(x => x.InternalItemType == type);
 
         /// <summary>
-        /// Applies various metadata to the world, such as LocationData and ItemData
+        /// Returns information about a specified item
         /// </summary>
-        /// <param name="world">The world to apply metadata to</param>
-        public void LoadWorldMetadata(World world)
-        {
-            world.Locations.ToList().ForEach(loc => loc.Metadata = Location(loc.Id));
-            world.Dungeons.ToList().ForEach(d => d.DungeonMetadata = Dungeon(d));
-            world.Rewards.ToList().ForEach(r => r.Metadata = _rewards.First(md => md.RewardType == r.Type));
-            world.Regions.ToList().ForEach(r => r.Metadata = _regions.First(md => md.Type == r.GetType()));
-            world.Rooms.ToList().ForEach(r => r.Metadata = _rooms.First(md => md.Type == r.GetType()));
+        /// <param name="name">The name of the item</param>
+        /// <returns></returns>
+        public ItemData? Item(string name)
+            => Items.SingleOrDefault(x => x.Item == name);
 
-            foreach (var (metadata, worldItems) in _items.Select(x => (item: x, worldItems: world.AllItems.Where(w => w.Is(x.InternalItemType, x.Item)))))
-            {
-                if (worldItems.Any())
-                    worldItems.ToList().ForEach(x => x.Metadata = metadata);
-                else
-                {
-                    _logger.LogInformation($"No data found {metadata.Item}");
-                    var item = new Item(metadata.InternalItemType, world, metadata.Item)
-                    {
-                        State = new()
-                        {
-                            ItemName = metadata.Item,
-                            Type = metadata.InternalItemType,
-                            TrackerState = world.State
-                        },
-                        Metadata = metadata
-                    };
-                    world.State.ItemStates.Add(item.State);
-                    world.TrackerItems.Add(item);
-                }
-            }
-
-            foreach (var (metadata, worldBoss) in _bosses.Select(md => (boss: md, worldBoss: world.AllBosses.FirstOrDefault(w => w.Is(md.Type, md.Boss)))))
-            {
-                if (worldBoss != null)
-                    worldBoss.Metadata = metadata;
-                else
-                {
-                    _logger.LogInformation($"No data found {metadata.Boss}");
-                    var boss = new Boss(metadata.Type, world, metadata.Boss)
-                    {
-                        State = new()
-                        {
-                            BossName = metadata.Boss,
-                            Type = metadata.Type,
-                            TrackerState = world.State
-                        },
-                        Metadata = metadata
-                    };
-                    world.State.BossStates.Add(boss.State);
-                    world.TrackerBosses.Add(boss);
-                }
-            }
-        }
+        /// <summary>
+        /// Returns information about a specified reward
+        /// </summary>
+        /// <param name="type">The type of the reward</param>
+        /// <returns></returns>
+        public RewardInfo? Reward(RewardType type)
+            => Rewards.FirstOrDefault(x => x.RewardType == type);
     }
 }

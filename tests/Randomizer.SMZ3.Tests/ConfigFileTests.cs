@@ -189,6 +189,7 @@ namespace Randomizer.SMZ3.Tests
                         if (property.PropertyType == typeof(Type))
                             continue;
                         var value = property.GetValue(obj);
+                        if (value == null) continue;
                         var nestedStrings = EnumerateSchrodingersStrings(value, depth + 1);
                         foreach (var x in nestedStrings)
                             yield return x;

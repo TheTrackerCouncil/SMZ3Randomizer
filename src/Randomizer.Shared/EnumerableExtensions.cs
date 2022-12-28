@@ -38,7 +38,6 @@ namespace Randomizer.Shared
             return -1;
         }
 
-#nullable enable
         /// <summary>
         /// Filters a sequence of nullable values and returns only elements that
         /// have a value.
@@ -55,7 +54,6 @@ namespace Randomizer.Shared
             return source.Where(x => x != null)
                 .Select(x => x!);
         }
-#nullable restore
 
         public static List<T> Shuffle<T>(this IEnumerable<T> source, Random rnd)
         {
@@ -69,12 +67,10 @@ namespace Randomizer.Shared
             return copy;
         }
 
-        public static T Random<T>(this IEnumerable<T> source, Random rnd)
+        public static T? Random<T>(this IEnumerable<T> source, Random rnd)
         {
             var list = source.ToList();
-            if (list.Count == 0)
-                return default;
-            return list.ElementAt(rnd.Next(list.Count));
+            return list.Count == 0 ? default : list.ElementAt(rnd.Next(list.Count));
         }
 
         /// <summary>
@@ -97,7 +93,7 @@ namespace Randomizer.Shared
         /// elements in <paramref name="source"/> match <paramref
         /// name="predicate"/>.
         /// </returns>
-        public static T RandomOrDefault<T>(this IEnumerable<T> source, Func<T, bool> predicate, Random rng)
+        public static T? RandomOrDefault<T>(this IEnumerable<T> source, Func<T, bool> predicate, Random rng)
         {
             var matchingElements = source.Where(predicate).ToList();
             if (matchingElements.Count == 0)
@@ -116,7 +112,7 @@ namespace Randomizer.Shared
 
         public static void Deconstruct<T>(this IEnumerable<T> source, out T first, out IEnumerable<T> rest)
         {
-            first = source.FirstOrDefault();
+            first = source.First();
             rest = source.Skip(1);
         }
 
@@ -144,7 +140,7 @@ namespace Randomizer.Shared
         /// The only element in <paramref name="source"/> if it has exactly one
         /// element; otherwise, the default value for <typeparamref name="T"/>.
         /// </returns>
-        public static T TrySingle<T>(this IEnumerable<T> source)
+        public static T? TrySingle<T>(this IEnumerable<T> source)
         {
             if (source is null)
                 throw new ArgumentNullException(nameof(source));
@@ -168,7 +164,7 @@ namespace Randomizer.Shared
         /// The only element in <paramref name="source"/> if it has exactly one
         /// element; otherwise, the default value for <typeparamref name="T"/>.
         /// </returns>
-        public static T TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+        public static T? TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate)
         {
             if (source is null)
                 throw new ArgumentNullException(nameof(source));

@@ -19,7 +19,7 @@ namespace Randomizer.App
             return $"#{color[0]:X2}{color[1]:X2}{color[2]:X2}{color[3]:X2}";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (targetType != typeof(byte[]))
                 throw new ArgumentException($"Invalid target type '{targetType}', expected Color.");

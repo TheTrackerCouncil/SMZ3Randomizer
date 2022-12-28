@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
@@ -23,7 +22,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public BossTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (tracker, result) =>
+            AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
             {
                 var dungeon = GetBossDungeonFromResult(tracker, result);
                 if (dungeon != null)
@@ -46,7 +45,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
             });
 
-            AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (tracker, result) =>
+            AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
             {
                 var dungeon = GetBossDungeonFromResult(tracker, result);
                 if (dungeon != null)
@@ -67,7 +66,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
             });
 
-            AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (tracker, result) =>
+            AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
             {
                 var contentItemData = itemService.FirstOrDefault("Content");
 

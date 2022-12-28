@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Controls="clr-namespace:Randomizer.App.Controls" x:Class="Randomizer.App.TrackerWindow"
+        xmlns:Controls="clr-namespace:Randomizer.App.Controls" x:Class="Randomizer.App.Windows.TrackerWindow"
         mc:Ignorable="d"
         Title="Tracker — SMZ3 Cas' Randomizer"
         Height="350"

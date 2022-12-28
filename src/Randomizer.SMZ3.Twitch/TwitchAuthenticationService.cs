@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.ChatIntegration;

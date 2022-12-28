@@ -5,7 +5,9 @@ using Randomizer.Data.Logic;
 using Randomizer.Shared.Enums;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData
@@ -31,11 +33,10 @@ namespace Randomizer.Data.WorldData
 
         private int? _weight;
 
-#nullable enable
-        public Location(Room room, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Room room, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
-                    : this(room.Region, id, romAddress, type, name, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
+                    : this(room.Region, id, romAddress, type, name, metadata, trackerState, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
         {
             Room = room;
         }
@@ -50,6 +51,8 @@ namespace Randomizer.Data.WorldData
         /// <param name="romAddress">The byte address of the location.</param>
         /// <param name="type">The type of location.</param>
         /// <param name="name">The name of the location.</param>
+        /// <param name="metadata">Metadata service.</param>
+        /// <param name="trackerState">Tracker state.</param>
         /// <param name="alsoKnownAs">
         /// A collection of alternate names for the item or location.
         /// </param>
@@ -62,8 +65,9 @@ namespace Randomizer.Data.WorldData
         /// <param name="memoryAddress">The address in memory to check to see if it's cleared</param>
         /// <param name="memoryFlag">The value to check at the memory address to see if it's cleared</param>
         /// <param name="memoryType">The type of location</param>
-
-        public Location(Region region, int id, int romAddress, LocationType type, string name, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+        /// <param name="relevanceRequirement">Logic for if the location is accessible following defeating a boss or collecting a reward</param>
+        /// <param name="trackerLogic">Special logic for if the location should be displayed in tracker</param>
+        public Location(Region region, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
         {
@@ -82,8 +86,10 @@ namespace Randomizer.Data.WorldData
             MemoryType = memoryType;
             _relevanceRequirement = relevanceRequirement ?? (items => _canAccess(items));
             _trackerLogic = trackerLogic ?? (_ => true);
+            Metadata = metadata?.Location(id) ?? new LocationInfo(id, name);
+            State = trackerState?.LocationStates.First(x => x.LocationId == id && x.WorldId == World.Id) ?? new TrackerLocationState();
+            Item = new Item(ItemType.Nothing, region.World, "");
         }
-#nullable disable
 
         /// <summary>
         /// Gets the internal identifier of the location.
@@ -128,7 +134,7 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Gets the room the location is in, if any.
         /// </summary>
-        public Room Room { get; }
+        public Room? Room { get; }
 
         /// <summary>
         /// Gets the world that the location is a part of
@@ -173,7 +179,7 @@ namespace Randomizer.Data.WorldData
         /// </summary>
         public int Weight => _weight ?? Region.Weight;
 
-        public bool ItemIs(ItemType type, World world) => Item?.Is(type, world) ?? false;
+        public bool ItemIs(ItemType type, World world) => Item.Is(type, world);
 
         public bool ItemIsNot(ItemType type, World world) => !ItemIs(type, world);
 
@@ -222,6 +228,7 @@ namespace Randomizer.Data.WorldData
         /// Determines whether the item is accessible with the specified items.
         /// </summary>
         /// <param name="items">The available items.</param>
+        /// <param name="applyTrackerLogic">If tracker logic should be applied to the available logic</param>
         /// <returns>
         /// <see langword="true"/> if the item is available with <paramref
         /// name="items"/>; otherwise, <see langword="false"/>.
@@ -267,11 +274,17 @@ namespace Randomizer.Data.WorldData
         {
             var oldItem = Item;
             Item = item;
-            var isCustomPlacementAndSphereOne = (item.Progression || item.IsDungeonItem && Region.Config.ZeldaKeysanity || item.IsKeycard && Region.Config.MetroidKeysanity)
+            var isCustomPlacementAndSphereOne = (item.Progression || item.IsDungeonItem && item.World.Config.ZeldaKeysanity || item.IsKeycard && item.World.Config.MetroidKeysanity)
                                                 && Region.Config.ItemPlacementRule != ItemPlacementRule.Anywhere
                                                 && _weight <= -10;
             var fillable = _alwaysAllow(item, items)
                 || (Region.CanFill(item, items) || isCustomPlacementAndSphereOne) && _allow(item, items) && IsAvailable(items);
+
+            // There is currently an issue in multiplayer where if you give a shield to another player, then receive a
+            // shield for yourself, then you get a free shield. As a work around, player shields must be in their own world
+            if (World.Config.MultiWorld && item.Type == ItemType.ProgressiveShield && item.World != World)
+                fillable = false;
+
             Item = oldItem;
             return fillable;
         }
