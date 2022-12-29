@@ -12,21 +12,29 @@
 !VAL_VOLUME_HALF = #$40
 !VAL_VOLUME_FULL = #$FF
 
-CheckMusicLoadRequest:
-    PHP : REP #$10 : PHA : PHX : PHY
-    LDA !SPC_MUSIC_REQUEST : BEQ .skip : BMI .skip : CMP !REG_CURRENTMSU_CURRENT_COMMAND_COMMAND : BNE .mute
-.skip
-    STA !SPC_MUSIC_CONTROL : STZ !SPC_MUSIC_REQUEST
-    PLY : PLX : PLA : PLP
-    RTL
-    
-    ; PLY : PLX : PLA : PLP
-    RTL
-.mute
-    LDA.b #$FF : STA $2140
-    LDA.b #SPCMutePayload : STA $00
-    LDA.b #SPCMutePayload>>8 : STA $01
-    LDA.b #SPCMutePayload>>16
+
+check_msu:
+    ;JML check_msu_continue
+    STA $0133
+    PHA
+    LDA $2000
+    STA $7e0055
+
+    LDA $2000 : AND #$08
+    STA $7e0056
+    CMP #$08 : BNE .msu_found
+    BRA .msu_not_found
+
+.msu_found:
+    LDA #$F1
+    STA $2140
+    PLA
+    JML check_msu_continue
+
+.msu_not_found:
+    PLA
+    STA $2140
+    JML check_msu_continue
 
 msu_main:
     SEP #$20    ; set 8-BIT accumulator
@@ -43,10 +51,10 @@ msu_main:
 
 .check_music_request
     LDX !SPC_MUSIC_REQUEST ; Load the PCM music request to X
-    LDA !MSU_CURRENT_VOLUME
-    STA $7e0055
-    LDA !MSU_TARGET_VOLUME
-    STA $7e0056
+    ; LDA !MSU_CURRENT_VOLUME
+    ; STA $7e0055
+    ; LDA !MSU_TARGET_VOLUME
+    ; STA $7e0056
     CPX #$F1 : BEQ .fade_out
     CPX #$F2 : BEQ .fade_half
     CPX #$F3 : BEQ .full_volume
@@ -107,6 +115,8 @@ msu_main:
     STX $2004 : STZ $2005 ; Sets the MSU track from X
     LDA.l MSUTrackList,X : STA $2007 ; Sets the track code from the track table
     LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME
+    ;LDA #$F1 : STA $2140
     ;STA $7e0056 ; test
     ;LDX.b #00 : STX !SPC_MUSIC_REQUEST ; Clear music request to mute SPC
     JML spc_continue
+
