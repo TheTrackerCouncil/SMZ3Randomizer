@@ -58,7 +58,7 @@ msu_main:
         CPX #$F2 : BEQ .fade_half
         CPX #$F3 : BEQ .full_volume
         CPX #$FF : BEQ .exit
-        CPX #0 : BNE .check_new_song
+        CPX #0 : BNE .determine_song
         LDA !MSU_CURRENT_VOLUME : CMP !MSU_TARGET_VOLUME : BNE .change_volume
         BRA .exit
 
@@ -98,20 +98,66 @@ msu_main:
     .exit
         JML spc_continue
 
-    ; Checks if a new song value is stored in X or if
-    ; it is the same song from changing screens
-    .check_new_song
-        CPX !MSU_CURRENT_TRACK : BNE .change_song ; If the track changed, play it
-        BRA .exit
+    ; Determines which song needs to be played based off of the SPC that was requested
+    .determine_song
+        CPX #2 : BEQ .load_light_world_song
+        CPX #16 : BEQ .load_castle_song
+        CPX #17 : BEQ .load_dungeon_song
+        CPX #22 : BEQ .load_dungeon_song
+        CPX #21 : BEQ .load_boss_song
+        CPX #13 : BEQ .load_dark_mountain_woods_song
+        CPX #9 : BEQ .load_dark_world_song
+        BRA .change_song
+
+    .load_light_world_song
+        LDA $7EF300 : AND #$40 : CMP #$40 : BNE +
+            LDX #60 : BRA ++
+        +
+        LDA $008A : CMP #$00 : BNE ++
+            LDX #5
+        ++
+        BRA .change_song
+
+    .load_dungeon_song
+        LDA $040C : LSR : !ADD #$21 : TAX
+        BRA .change_song
+
+    .load_boss_song
+        LDA $040C : LSR : !ADD #$2D : TAX
+        BRA .change_song
+
+    .load_castle_song
+        LDA $040C : CMP #$08 : BNE +
+            LDX #37
+        +
+        BRA .change_song
+
+    .load_dark_world_song
+        LDA $7EF37A : CMP #$7F : BNE +
+            LDX #61
+        +
+        BRA .change_song
+
+    .load_dark_mountain_woods_song
+        LDA $008A : CMP #$40 : BNE +
+            LDX #15
+        +
+        LDA $7EF37A : CMP #$7F : BNE +
+            LDX #61
+        +
+        BRA .change_song
 
     ; Plays an MSU based on the song value stored in X
     .change_song
+        CPX !MSU_CURRENT_TRACK : BEQ .done ; If the track is the same, ignore it
         STX !MSU_CURRENT_TRACK ; Saves the track being played
         STX !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from X
         LDA.l MSUTrackList,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
         LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME
-        BRA .exit
+        BRA .done
 
+    .done
+        JML spc_continue
 
 pendant_fanfare:
     .init
@@ -121,11 +167,11 @@ pendant_fanfare:
         LDA !MSU_STATUS : BIT #$08 : BNE .spc
         LDA !MSU_STATUS : BIT #$10 : BEQ .done
     .continue
-        jml pendant_continue
+        JML pendant_continue
     .spc
         SEP #$20
     .done
-        jml pendant_done
+        JML pendant_done
 
 crystal_fanfare:
     .init
@@ -135,11 +181,11 @@ crystal_fanfare:
         LDA !MSU_STATUS : BIT #$08 : BNE .spc
         LDA !MSU_STATUS : BIT #$10 : BEQ .done
     .continue
-        jml crystal_continue
+        JML crystal_continue
     .spc
         SEP #$20
     .done
-        jml crystal_done
+        JML crystal_done
 
 ending_wait:
     .init
@@ -151,4 +197,63 @@ ending_wait:
     .done
         SEP #$20
         LDA #$22
+        RTL
+
+SpiralStairsPreCheck:
+    .init
+        REP #$20
+        LDA $A0
+
+        ; Fade out going when going to GT lobby when GT climb music is playing
+        CMP.w #$000C : BNE +
+            LDA !MSU_CURRENT_TRACK : AND.w #$00FF : CMP.w #59 : BEQ .fade
+            BRA .done
+        +
+
+        ; Fade out going upstairs from GT lobby when you have the GT big key
+        CMP.w #$006B : BNE +
+            LDA !MSU_CURRENT_TRACK : AND.w #$00FF : CMP.w #46 : BNE ++
+                LDA $7EF366 : AND.w #$0004 : CMP.w #$0004 : BNE .done
+                BRA .fade
+            ++
+            LDA !MSU_CURRENT_TRACK : AND.w #$00FF : CMP.w #22 : BNE ++
+                LDA $7EF366 : AND.w #$0004 : CMP.w #$0004 : BNE .done
+                BRA .fade
+            ++
+            BRA .done
+        +
+
+        BRA .done
+
+
+    .fade
+        LDX.b #$F1 : STX !SPC_MUSIC_REQUEST
+
+    .done
+        LDA $A0
+        RTL
+
+SpiralStairsPostCheck:
+    .init
+        LDA $A0
+        ;STA $7E0056
+
+        ; If we're faded out from climbing down the stairs
+        CMP.w #$000C : BNE +
+            LDX !MSU_CURRENT_TRACK : CPX.b #$F1 : BNE ++ ; TODO: Figure out why current track gets set to 0xF1
+                LDX.b #46 : STX !SPC_MUSIC_REQUEST
+            ++
+            BRA .done
+        +
+
+        ; If we're faded out from climbing up the stairs
+        CMP.w #$006B : BNE +
+            LDX !MSU_CURRENT_TRACK : CPX.b #$F1 : BNE ++ ; TODO: Figure out why current track gets set to 0xF1
+                LDX.b #59 : STX !SPC_MUSIC_REQUEST
+            ++
+            BRA .done
+        +
+
+    .done
+        LDA $A0
         RTL

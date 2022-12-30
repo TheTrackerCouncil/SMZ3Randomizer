@@ -1107,6 +1107,12 @@ spc_nmi:
     NOP
 spc_continue:
 
+org $028B7A ; <- C220 A5A0 - Bank02.asm:2225 (REP #$20 : LDA $A0)
+JSL SpiralStairsPreCheck
+
+org $029069 ; <- A21C A5A0 - Bank02.asm:3081 (LDX.b #$1C : LDA $A0)
+JSL SpiralStairsPostCheck
+
 org $08C421 ; <- AD4021 F005 - ancilla_receive_item.asm:108 (LDA $2140 : BEQ .wait_for_music)
 JML pendant_fanfare : NOP
 pendant_continue:
