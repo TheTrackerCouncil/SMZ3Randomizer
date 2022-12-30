@@ -18,6 +18,7 @@
 !VAL_VOLUME_HALF = #$40
 !VAL_VOLUME_FULL = #$FF
 !VAL_MSU_FLAG = #$2D53
+!VAL_OFFSET = #100
 
 ; Checks the status of the MSU and either mutes the SPC
 ; if it is playing propertly or re-enables the SPC
@@ -149,9 +150,11 @@ msu_main:
 
     ; Plays an MSU based on the song value stored in X
     .change_song
+        TXA : !ADD !VAL_OFFSET ; Sets A to song and adds 100 for the offset
+        STA $7E0056
         CPX !MSU_CURRENT_TRACK : BEQ .done ; If the track is the same, ignore it
         STX !MSU_CURRENT_TRACK ; Saves the track being played
-        STX !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from X
+        STA !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from A
         LDA.l MSUTrackList,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
         LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME
         BRA .done
@@ -236,7 +239,6 @@ SpiralStairsPreCheck:
 SpiralStairsPostCheck:
     .init
         LDA $A0
-        ;STA $7E0056
 
         ; If we're faded out from climbing down the stairs
         CMP.w #$000C : BNE +
