@@ -1,183 +1,154 @@
-;=======================================
-;
-; MSU-1 Enhanced Audio Patch
-; Zelda no Densetsu - Kamigami no Triforce
-; Modified for VT Randomizer
-; 
-; Author: qwertymodo
-;
-; Free space used: 0x77DDD-0x77F8A
-;
-;=======================================
+!SPC_MUSIC_REQUEST = $012C
+!SPC_MUSIC_CONTROL = $012B
+!SPC_CONTROL = $2140
 
-!REG_MSU_STATUS = $2000
-
-!REG_MSU_ID_0 = $2002
-!REG_MSU_ID_1 = $2003
-!REG_MSU_ID_2 = $2004
-!REG_MSU_ID_3 = $2005
-!REG_MSU_ID_4 = $2006
-!REG_MSU_ID_5 = $2007
-
-!REG_MSU_ID_01 = $2002
-!REG_MSU_ID_23 = $2004
-!REG_MSU_ID_45 = $2006
-
-
-!VAL_MSU_ID_0 = #$53    ;   'S'
-!VAL_MSU_ID_1 = #$2D    ;   '-'
-!VAL_MSU_ID_2 = #$4D    ;   'M'
-!VAL_MSU_ID_3 = #$53    ;   'S'
-!VAL_MSU_ID_4 = #$55    ;   'U'
-!VAL_MSU_ID_5 = #$31    ;   '1'
-
-!VAL_MSU_ID_01 = #$2D53 ;   'S-'
-!VAL_MSU_ID_23 = #$534D ;   'MS'
-!VAL_MSU_ID_45 = #$3155 ;   'U1'
-
-
-!REG_MSU_TRACK = $2004
-!REG_MSU_TRACK_LO = $2004
-!REG_MSU_TRACK_HI = $2005
-!REG_MSU_VOLUME = $2006
-!REG_MSU_CONTROL = $2007
-
-
-!FLAG_MSU_PLAY = #$01
-!FLAG_MSU_REPEAT = #$02
-!FLAG_MSU_STATUS_TRACK_MISSING = #$08
-!FLAG_MSU_STATUS_AUDIO_PLAYING = #$10
-!FLAG_MSU_STATUS_AUDIO_REPEATING = #$20
-!FLAG_MSU_STATUS_AUDIO_BUSY = #$40
-!FLAG_MSU_STATUS_DATA_BUSY = #$80
-
-
-!REG_CURRENT_VOLUME = $0127
-!REG_TARGET_VOLUME = $0129
-!REG_CURRENT_MSU_TRACK = $012B
-!REG_MUSIC_CONTROL = $012C
-!REG_CURRENT_TRACK = $0130
-!REG_CURRENT_COMMAND = $0133
-
-!REG_SPC_CONTROL = $2140
-!REG_NMI_FLAGS = $4210
-
-!VAL_COMMAND_FADE_OUT = #$F1
-!VAL_COMMAND_FADE_HALF = #$F2
-!VAL_COMMAND_FULL_VOLUME = #$F3
-!VAL_COMMAND_LOAD_NEW_BANK = #$FF
+!MSU_CURRENT_VOLUME = $0127
+!MSU_TARGET_VOLUME = $0129
+!MSU_CURRENT_TRACK = $0130
+!MSU_CURRENT_COMMAND = $0133
+!MSU_STATUS = $2000
+!MSU_FLAG = $2002
+!MSU_TRACK_LO = $2004
+!MSU_TRACK_HI = $2005
+!MSU_REPEAT = $2007
 
 !VAL_VOLUME_INCREMENT = #$10
 !VAL_VOLUME_DECREMENT = #$02
-!VAL_VOLUME_HALF = #$80
+!VAL_VOLUME_MUTE = #$0
+!VAL_VOLUME_HALF = #$40
 !VAL_VOLUME_FULL = #$FF
+!VAL_MSU_FLAG = #$2D53
 
+; Checks the status of the MSU and either mutes the SPC
+; if it is playing propertly or re-enables the SPC
+check_msu:
+    .init
+        STA !MSU_CURRENT_COMMAND : PHA ; Retrieve current MSU Command and push it to the stack
+        LDA !MSU_FLAG : CMP !VAL_MSU_FLAG : BNE .msu_not_found ; If MSU isn't supported
+        LDA !MSU_STATUS : AND #$08 : CMP #$08 : BEQ .msu_not_found ; If the current MSU command says that the MSU wasn't found
+        BRA .msu_found ; Otherwise the msu is found and is playing
+
+    .msu_found:
+        LDA #$F1 : STA !SPC_CONTROL ; Mute the original SPC comand
+        PLA ; Clear item from the stack
+        JML check_msu_continue
+
+    .msu_not_found:
+        PLA : STA !SPC_CONTROL ; Apply the command from the stack that was saved
+        JML check_msu_continue
+
+; Main method that listens for if new songs are being requested
+; and played the appropriate MSU for them
 msu_main:
-    SEP #$20 ; set 8-bit accumulator
-    LDA $4210 ; thing we wrote over
-    REP #$20 ; set 16-bit accumulator
-    LDA !REG_MSU_ID_01
-    CMP !VAL_MSU_ID_01
-    BEQ .continue
-.nomsu
-    SEP #$30
-    JML spc_continue
-.continue
-    LDA !REG_MSU_ID_23
-    CMP !VAL_MSU_ID_23
-    BNE .nomsu
-    LDA !REG_MSU_ID_45
-    CMP !VAL_MSU_ID_45
-    BNE .nomsu
-    SEP #$30
-    LDX !REG_MUSIC_CONTROL
-    BNE command_ff
-    
-do_fade:
-    LDA !REG_CURRENT_VOLUME
-    CMP !REG_TARGET_VOLUME
-    BNE .continue
-    JML spc_continue
-.continue
-    BCC .increment
-.decrement
-    SBC !VAL_VOLUME_DECREMENT
-    BCS .set
-.mute
-    STZ !REG_CURRENT_VOLUME
-    STZ !REG_MSU_CONTROL
-    STZ !REG_CURRENT_MSU_TRACK
-    BRA .set
-.increment
-    ADC !VAL_VOLUME_INCREMENT
-    BCC .set
-    LDA !VAL_VOLUME_FULL
-.set
-    STA !REG_CURRENT_VOLUME
-    STA !REG_MSU_VOLUME
-    JML spc_continue
+    .init
+        SEP #$20    ; set 8-BIT accumulator
+        LDA $4210   ; thing we wrote over
+        REP #$20    ; set 16-BIT accumulator
+        LDA !MSU_FLAG : CMP !VAL_MSU_FLAG : BNE .no_msu ; Verify that MSU is supported
+        SEP #$30
+        BRA .check_music_request
 
-command_ff:
-    CPX !VAL_COMMAND_LOAD_NEW_BANK
-    BNE command_f3
-    JML spc_continue
+    .no_msu
+        SEP #$30
+        BRA .exit
 
-command_f3:
-    CPX !VAL_COMMAND_FULL_VOLUME
-    BNE command_f2
-    STX !REG_SPC_CONTROL
-    LDA !VAL_VOLUME_FULL
-    STA !REG_TARGET_VOLUME
-    JML spc_continue
+    .check_music_request
+        LDX !SPC_MUSIC_REQUEST ; Load the PCM music request to X
+        CPX #$F1 : BEQ .fade_out
+        CPX #$F2 : BEQ .fade_half
+        CPX #$F3 : BEQ .full_volume
+        CPX #$FF : BEQ .exit
+        CPX #0 : BNE .check_new_song
+        LDA !MSU_CURRENT_VOLUME : CMP !MSU_TARGET_VOLUME : BNE .change_volume
+        BRA .exit
 
-command_f2:
-    CPX !VAL_COMMAND_FADE_HALF
-    BNE command_f1
-    STX !REG_SPC_CONTROL
-    LDA !VAL_VOLUME_HALF
-    STA !REG_TARGET_VOLUME
-    JML spc_continue
+    .change_volume
+        LDA !MSU_CURRENT_VOLUME
+        CMP !MSU_TARGET_VOLUME
+        BCC .increase_volume
+        BRA .decrease_volume
 
-command_f1:
-    CPX !VAL_COMMAND_FADE_OUT
-    BNE load_track
-    STX !REG_SPC_CONTROL
-    STZ !REG_TARGET_VOLUME
-    JML spc_continue
+    .increase_volume
+        ADC !VAL_VOLUME_INCREMENT : BCC .save_volume
+        LDA !MSU_TARGET_VOLUME : BRA .save_volume
 
-load_track:
-    CPX !REG_CURRENT_MSU_TRACK
-    BNE .continue
-    CPX #$1B
-    BEQ .continue
-    JML spc_continue
-.continue
-    STX !REG_MSU_TRACK_LO
-    STZ !REG_MSU_TRACK_HI
-    STZ !REG_MSU_CONTROL
-    LDA !VAL_VOLUME_FULL
-    STA !REG_TARGET_VOLUME
-    STA !REG_CURRENT_VOLUME
-    STA !REG_MSU_VOLUME
+    .decrease_volume
+        SBC !VAL_VOLUME_DECREMENT : BCS .save_volume
+        LDA !MSU_TARGET_VOLUME : BRA .save_volume
 
-msu_check_busy:
-    LDA !REG_MSU_STATUS
-    BIT !FLAG_MSU_STATUS_AUDIO_BUSY
-    BNE msu_check_busy
-    BIT !FLAG_MSU_STATUS_TRACK_MISSING
-    BEQ msu_play
+    .save_volume
+        STA $2006 : STA !MSU_CURRENT_VOLUME
+        BRA .exit
 
-spc_fallback:
-    STZ !REG_MSU_CONTROL
-    STZ !REG_CURRENT_MSU_TRACK
-    STZ !REG_TARGET_VOLUME
-    STZ !REG_CURRENT_VOLUME
-    STZ !REG_MSU_VOLUME
-    JML spc_continue
+    .fade_out
+        LDA !VAL_VOLUME_MUTE : CMP !MSU_TARGET_VOLUME : BEQ .change_volume
+        STA !MSU_TARGET_VOLUME
+        BRA .exit
 
-msu_play:
-    LDA.l track_list,x
-    STA $7e0055
-    STA !REG_MSU_CONTROL
-    STX !REG_CURRENT_MSU_TRACK
-    JML spc_continue
+    .fade_half
+        LDA !VAL_VOLUME_HALF : CMP !MSU_TARGET_VOLUME : BEQ .change_volume
+        STA !MSU_TARGET_VOLUME
+        BRA .exit
+
+    .full_volume
+        LDA !VAL_VOLUME_FULL : CMP !MSU_TARGET_VOLUME : BEQ .change_volume
+        STA !MSU_TARGET_VOLUME
+        BRA .exit
+
+    .exit
+        JML spc_continue
+
+    ; Checks if a new song value is stored in X or if
+    ; it is the same song from changing screens
+    .check_new_song
+        CPX !MSU_CURRENT_TRACK : BNE .change_song ; If the track changed, play it
+        BRA .exit
+
+    ; Plays an MSU based on the song value stored in X
+    .change_song
+        STX !MSU_CURRENT_TRACK ; Saves the track being played
+        STX !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from X
+        LDA.l MSUTrackList,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
+        LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME
+        BRA .exit
+
+
+pendant_fanfare:
+    .init
+        REP #$20
+        LDA !MSU_FLAG : CMP !VAL_MSU_FLAG : BNE .spc
+        SEP #$20
+        LDA !MSU_STATUS : BIT #$08 : BNE .spc
+        LDA !MSU_STATUS : BIT #$10 : BEQ .done
+    .continue
+        jml pendant_continue
+    .spc
+        SEP #$20
+    .done
+        jml pendant_done
+
+crystal_fanfare:
+    .init
+        REP #$20
+        LDA !MSU_FLAG : CMP !VAL_MSU_FLAG : BNE .spc
+        SEP #$20
+        LDA !MSU_STATUS : BIT #$08 : BNE .spc
+        LDA !MSU_STATUS : BIT #$10 : BEQ .done
+    .continue
+        jml crystal_continue
+    .spc
+        SEP #$20
+    .done
+        jml crystal_done
+
+ending_wait:
+    .init
+        REP #$20
+        LDA !MSU_FLAG : CMP #$2D53 : BNE .done
+        SEP #$20
+    .wait
+        LDA !MSU_STATUS : BIT #$10 : BNE .wait
+    .done
+        SEP #$20
+        LDA #$22
+        RTL
