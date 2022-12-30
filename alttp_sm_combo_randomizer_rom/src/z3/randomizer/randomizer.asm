@@ -96,7 +96,7 @@ incsrc entrances.asm
 incsrc heartbeep.asm
 incsrc capacityupgrades.asm
 incsrc doorframefixes.asm
-incsrc msu.asm
+incsrc z3_msu.asm
 incsrc music.asm
 incsrc roomloading.asm
 incsrc icepalacegraphics.asm
