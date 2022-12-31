@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Randomizer.App.Patches;
 using Randomizer.Data.Options;
+using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
-using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.App;
@@ -45,88 +44,94 @@ public class RomMsuGenerator
     };
 
     /// <summary>
-        /// Enables MSU support for a rom
-        /// </summary>
-        /// <param name="options">The randomizer generation options</param>
-        /// <param name="rom">The bytes of the previously generated rom</param>
-        /// <param name="romPath">The path to the rom file</param>
-        /// <param name="error">Any error that was ran into when updating the rom</param>
-        /// <returns>True if successful, false otherwise</returns>
-        public static bool EnableMsu1Support(RandomizerOptions options, byte[] rom, string romPath, WorldGenerationData worldGenerationData, out string error)
+    /// Enables MSU support for a rom
+    /// </summary>
+    /// <param name="options">The randomizer generation options</param>
+    /// <param name="rom">The bytes of the previously generated rom</param>
+    /// <param name="romPath">The path to the rom file</param>
+    /// <param name="error">Any error that was ran into when updating the rom</param>
+    /// <returns>True if successful, false otherwise</returns>
+    public static bool EnableMsu1Support(RandomizerOptions options, byte[] rom, string romPath, WorldGenerationData worldGenerationData, out string error)
+    {
+        var msuPath = options.PatchOptions.Msu1Path;
+        if (!File.Exists(msuPath))
         {
-            var msuPath = options.PatchOptions.Msu1Path;
-            if (!File.Exists(msuPath))
-            {
-                error = "";
-                return false;
-            }
-
-            var romDrive = Path.GetPathRoot(romPath);
-            var msuDrive = Path.GetPathRoot(msuPath);
-            if (romDrive?.Equals(msuDrive, StringComparison.OrdinalIgnoreCase) == false)
-            {
-                error = $"Due to technical limitations, the MSU-1 " +
-                    $"pack and the ROM need to be on the same drive. MSU-1 " +
-                    $"support cannot be enabled.\n\nPlease move or copy the MSU-1 " +
-                    $"files to somewhere on {romDrive}, or change the ROM output " +
-                    $"folder setting to be on the {msuDrive} drive.";
-                return false;
-            }
-
-            var romFolder = Path.GetDirectoryName(romPath);
-            var msuFolder = Path.GetDirectoryName(msuPath);
-            var romBaseName = Path.GetFileNameWithoutExtension(romPath);
-            var msuBaseName = Path.GetFileNameWithoutExtension(msuPath);
-
-            // First copy base files
-            foreach (var msuFile in Directory.EnumerateFiles(msuFolder!, $"{msuBaseName}*"))
-            {
-                var fileName = Path.GetFileName(msuFile);
-                var suffix = fileName.Replace(msuBaseName, "");
-
-                var link = Path.Combine(romFolder!, romBaseName + suffix);
-                NativeMethods.CreateHardLink(link, msuFile, IntPtr.Zero);
-            }
-
-            // Loop through dungeons and fix missing pendant/crystal themes
-            var fallbackPendantFile = Path.Combine(romFolder!, $"{romBaseName}-117.pcm");
-            var fallbackCrystalFile = Path.Combine(romFolder!, $"{romBaseName}-122.pcm");
-            foreach (var dungeon in worldGenerationData.World.Dungeons.Where(x => x.HasReward))
-            {
-                var intendedPcmIndex = 135 + dungeon.SongIndex;
-                var intendedPcmFile = Path.Combine(romFolder!, $"{romBaseName}-{intendedPcmIndex}.pcm");
-                if (File.Exists(intendedPcmFile)) continue;
-                var fallbackPcmFile = dungeon.DungeonRewardType is RewardType.CrystalBlue or RewardType.CrystalRed
-                    ? fallbackCrystalFile
-                    : fallbackPendantFile;
-                if (File.Exists(fallbackPcmFile))
-                    NativeMethods.CreateHardLink(intendedPcmFile, fallbackPcmFile, IntPtr.Zero);
-            }
-
-            // Loop through files with fallbacks
-            foreach (var intendedPcmIndex in s_fallbackSongs.Keys.OrderBy(x => x))
-            {
-                var intendedPcmFile = Path.Combine(romFolder!, $"{romBaseName}-{intendedPcmIndex}.pcm");
-                if (File.Exists(intendedPcmFile)) continue;
-                var fallbackPcmIndex = s_fallbackSongs[intendedPcmIndex];
-                var fallbackPcmFile = Path.Combine(romFolder!, $"{romBaseName}-{fallbackPcmIndex}.pcm");
-                if (File.Exists(fallbackPcmFile))
-                    NativeMethods.CreateHardLink(intendedPcmFile, fallbackPcmFile, IntPtr.Zero);
-            }
-
-            // To avoid weirdness with missing boss fanfare, use an empty pcm file in its place
-            var bossVictoryPcmFile = Path.Combine(romFolder!, $"{romBaseName}-119.pcm");
-            if (!File.Exists(bossVictoryPcmFile))
-            {
-                using var stream = Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("Randomizer.App.Resources.empty.pcm");
-                if (stream == null) throw new FileNotFoundException("empty.pcm file not found");
-                using var fileStream = new FileStream(bossVictoryPcmFile, FileMode.Create, FileAccess.Write);
-                stream.CopyTo(fileStream);
-            }
-
             error = "";
-            return true;
+            return false;
         }
+
+        var romDrive = Path.GetPathRoot(romPath);
+        var msuDrive = Path.GetPathRoot(msuPath);
+        if (romDrive?.Equals(msuDrive, StringComparison.OrdinalIgnoreCase) == false)
+        {
+            error = $"Due to technical limitations, the MSU-1 " +
+                $"pack and the ROM need to be on the same drive. MSU-1 " +
+                $"support cannot be enabled.\n\nPlease move or copy the MSU-1 " +
+                $"files to somewhere on {romDrive}, or change the ROM output " +
+                $"folder setting to be on the {msuDrive} drive.";
+            return false;
+        }
+
+        var romFolder = Path.GetDirectoryName(romPath);
+        var msuFolder = Path.GetDirectoryName(msuPath);
+        var romBaseName = Path.GetFileNameWithoutExtension(romPath);
+        var msuBaseName = Path.GetFileNameWithoutExtension(msuPath);
+
+        // First copy base files
+        foreach (var msuFile in Directory.EnumerateFiles(msuFolder!, $"{msuBaseName}*"))
+        {
+            var fileName = Path.GetFileName(msuFile);
+            var suffix = fileName.Replace(msuBaseName, "");
+
+            var link = Path.Combine(romFolder!, romBaseName + suffix);
+            NativeMethods.CreateHardLink(link, msuFile, IntPtr.Zero);
+        }
+
+        // Loop through dungeons and fix missing pendant/crystal themes
+        var fallbackPendantFile = Path.Combine(romFolder!, $"{romBaseName}-117.pcm");
+        var fallbackCrystalFile = Path.Combine(romFolder!, $"{romBaseName}-122.pcm");
+        foreach (var dungeon in worldGenerationData.World.Dungeons.Where(x => x.HasReward && x is not CastleTower))
+        {
+            var intendedPcmIndex = 135 + dungeon.SongIndex;
+            var intendedPcmFile = Path.Combine(romFolder!, $"{romBaseName}-{intendedPcmIndex}.pcm");
+            if (File.Exists(intendedPcmFile))
+            {
+                if (!options.PatchOptions.EnableExtendedSoundtrack)
+                    File.Delete(intendedPcmFile);
+                else
+                    continue;
+            }
+            var fallbackPcmFile = dungeon.DungeonRewardType is RewardType.CrystalBlue or RewardType.CrystalRed
+                ? fallbackCrystalFile
+                : fallbackPendantFile;
+            if (File.Exists(fallbackPcmFile))
+                NativeMethods.CreateHardLink(intendedPcmFile, fallbackPcmFile, IntPtr.Zero);
+        }
+
+        // Loop through files with fallbacks
+        foreach (var intendedPcmIndex in s_fallbackSongs.Keys.OrderBy(x => x))
+        {
+            var intendedPcmFile = Path.Combine(romFolder!, $"{romBaseName}-{intendedPcmIndex}.pcm");
+            if (File.Exists(intendedPcmFile)) continue;
+            var fallbackPcmIndex = s_fallbackSongs[intendedPcmIndex];
+            var fallbackPcmFile = Path.Combine(romFolder!, $"{romBaseName}-{fallbackPcmIndex}.pcm");
+            if (File.Exists(fallbackPcmFile))
+                NativeMethods.CreateHardLink(intendedPcmFile, fallbackPcmFile, IntPtr.Zero);
+        }
+
+        // To avoid weirdness with missing boss fanfare, use an empty pcm file in its place
+        var bossVictoryPcmFile = Path.Combine(romFolder!, $"{romBaseName}-119.pcm");
+        if (!File.Exists(bossVictoryPcmFile))
+        {
+            using var stream = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("Randomizer.App.Resources.empty.pcm");
+            if (stream == null) throw new FileNotFoundException("empty.pcm file not found");
+            using var fileStream = new FileStream(bossVictoryPcmFile, FileMode.Create, FileAccess.Write);
+            stream.CopyTo(fileStream);
+        }
+
+        error = "";
+        return true;
+    }
 
 }
