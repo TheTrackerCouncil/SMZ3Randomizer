@@ -108,12 +108,11 @@ MSU_Main:
 	
 	;; Loading $00 means calling the original code
 	beq OriginalCode
+	BRA PlayMusic
 
-PlayMusic:
-	tay
+PlayMsu:
 	sta.w !MSU_AUDIO_TRACK_LO
 	stz.w !MSU_AUDIO_TRACK_HI
-	sta.w $7e002c
 	
 CheckAudioStatus:
 	lda.w !MSU_STATUS
@@ -159,6 +158,105 @@ OriginalCode:
 	plp
 	sta.w !SPC_COMM_0
 	rts
+
+PlayMusic:
+	.init
+		tay
+		sta $7e002d
+		CMP #10 : BEQ .load_samus_theme
+		CMP #19 : BEQ .load_boss_theme_one
+		CMP #22 : BEQ .load_boss_theme_two
+		CMP #23 : BEQ .load_tension_song
+		bra PlayMsu
+
+	.done
+		bra PlayMsu
+	
+	; Song for outside crateria, after baby drops you to 1HP, and using hyper beam
+	.load_samus_theme
+		TAX
+		LDA $7E079F
+
+		CMP #5 : BNE +
+			LDA #39
+			bra .done
+		+
+
+		TXA
+		bra .done
+
+	; Song before fighting some of the bosses
+	.load_tension_song
+		TAX
+		LDA $7E079F
+		sta $7e002c
+
+		; Kraid
+		CMP #1 : BNE +
+            LDA #31
+			bra .done
+        +
+
+		; Phantoon
+		CMP #3 : BNE +
+            LDA #33
+			bra .done
+        +
+
+		; Baby
+		CMP #5 : BNE +
+            LDA #37
+			bra .done
+        +
+
+		TXA
+		bra .done
+
+	; Boss theme for Ridley, Draygon, and Torizo statues
+	.load_boss_theme_one
+		TAX
+		LDA $7E079F
+
+		; Ridley
+		CMP #2 : BNE +
+            LDA #36
+			bra .done
+        +
+
+		; Draygon
+		CMP #4 : BNE +
+            LDA #35
+			bra .done
+        +
+
+		TXA
+		bra .done
+
+	; Boss theme for Kraid, Crocomire, Phantoon, and the Baby
+	.load_boss_theme_two
+		TAX
+		LDA $7E079F
+
+		; Kraid
+		CMP #1 : BNE +
+            LDA #32
+			bra .done
+        +
+
+		; Phantoon
+		CMP #3 : BNE +
+            LDA #34
+			bra .done
+        +
+
+		; Baby
+		CMP #5 : BNE +
+            LDA #38
+			bra .done
+        +
+
+		TXA
+		bra .done
 	
 MusicMappingPointers:
 	dw bank_00
