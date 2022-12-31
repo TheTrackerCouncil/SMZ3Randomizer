@@ -11,6 +11,7 @@
 !MSU_TRACK_LO = $2004
 !MSU_TRACK_HI = $2005
 !MSU_REPEAT = $2007
+!MSU_LAST_PLAYED_TRACK = $7F50AB
 
 !VAL_VOLUME_INCREMENT = #$10
 !VAL_VOLUME_DECREMENT = #$02
@@ -25,7 +26,9 @@
 check_msu:
     .init
         STA !MSU_CURRENT_COMMAND : PHA ; Retrieve current MSU Command and push it to the stack
+        REP #$20
         LDA !MSU_FLAG : CMP !VAL_MSU_FLAG : BNE .msu_not_found ; If MSU isn't supported
+        SEP #$30
         LDA !MSU_STATUS : AND #$08 : CMP #$08 : BEQ .msu_not_found ; If the current MSU command says that the MSU wasn't found
         BRA .msu_found ; Otherwise the msu is found and is playing
 
@@ -35,6 +38,7 @@ check_msu:
         JML check_msu_continue
 
     .msu_not_found:
+        SEP #$30
         PLA : STA !SPC_CONTROL ; Apply the command from the stack that was saved
         JML check_msu_continue
 
@@ -151,9 +155,8 @@ msu_main:
     ; Plays an MSU based on the song value stored in X
     .change_song
         TXA : !ADD !VAL_OFFSET ; Sets A to song and adds 100 for the offset
-        STA $7E0056
-        CPX !MSU_CURRENT_TRACK : BEQ .done ; If the track is the same, ignore it
-        STX !MSU_CURRENT_TRACK ; Saves the track being played
+        CMP !MSU_LAST_PLAYED_TRACK : BEQ .done ; If the track is the same, ignore it
+        STA !MSU_LAST_PLAYED_TRACK : STA !MSU_CURRENT_TRACK ; Saves the track being played
         STA !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from A
         LDA.l MSUTrackList,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
         LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME

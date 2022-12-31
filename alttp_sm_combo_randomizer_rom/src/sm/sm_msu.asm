@@ -162,7 +162,6 @@ OriginalCode:
 PlayMusic:
 	.init
 		tay
-		sta $7e002d
 		CMP #10 : BEQ .load_samus_theme
 		CMP #19 : BEQ .load_boss_theme_one
 		CMP #22 : BEQ .load_boss_theme_two
@@ -178,8 +177,11 @@ PlayMusic:
 		LDA $7E079F
 
 		CMP #5 : BNE +
-			LDA #39
-			bra .done
+			LDA $7E079D : CMP #7 : BEQ ++
+				LDA #39
+				bra .done
+			++
+			bra StopMSUMusic
 		+
 
 		TXA

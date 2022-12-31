@@ -122,6 +122,7 @@
   Name:
   - Text: Digging Tool
   - Text: Pooper Scooper
+    Weight: 0.1
   WhenTracked:
     "1":
     - Text: Toggled Shaktool Junior on
