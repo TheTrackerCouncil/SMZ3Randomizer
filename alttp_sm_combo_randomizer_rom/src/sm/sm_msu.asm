@@ -191,7 +191,6 @@ PlayMusic:
 	.load_tension_song
 		TAX
 		LDA $7E079F
-		sta $7e002c
 
 		; Kraid
 		CMP #1 : BNE +
