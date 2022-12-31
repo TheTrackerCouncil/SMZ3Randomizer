@@ -110,6 +110,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Misery Mire";
 
+        public int SongIndex { get; init; } = 5;
+
         public Reward Reward { get; set; }
 
         public DungeonInfo DungeonMetadata { get; set; }

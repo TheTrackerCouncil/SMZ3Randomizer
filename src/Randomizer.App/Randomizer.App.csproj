@@ -52,6 +52,7 @@
     <EmbeddedResource Include="Patches\refill_before_save.ips" />
     <EmbeddedResource Include="Patches\spinjumprestart.ips" />
     <EmbeddedResource Include="Patches\zsm.ips" />
+    <EmbeddedResource Include="Resources\empty.pcm" />
   </ItemGroup>
 
   <ItemGroup>

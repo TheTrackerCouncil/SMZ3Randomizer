@@ -108,8 +108,6 @@ namespace Randomizer.SMZ3.FileData
             WriteDiggingGameRng();
             WritePrizeShuffle();
 
-            WriteDungeonMusic(config);
-
             WriteRemoveEquipmentFromUncle(_myWorld.HyruleCastle.LinksUncle.Item);
 
             WriteGanonInvicible(config.GanonInvincible);
@@ -375,38 +373,11 @@ namespace Randomizer.SMZ3.FileData
             return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
         }
 
-        private void WriteDungeonMusic(Config config)
-        {
-            foreach (var region in _myWorld.Regions.OfType<Z3Region>())
-            {
-                var addresses = GetMusicAddresses(region.GetType());
-                if (addresses == null)
-                    continue;
-
-                var soundtrack = SelectSoundtrack(region, config.ExtendedMsuSupport, config.ShuffleDungeonMusic);
-                if (soundtrack == null)
-                    continue;
-
-                AddPatch(addresses, new byte[] { soundtrack.Value });
-                Debug.WriteLine($"Set {region.Name} dungeon music to {GetSoundtrackTitle(soundtrack.Value)}");
-            }
-        }
-
         private string GetSoundtrackTitle(byte soundtrackValue)
         {
             return Enum.GetName(typeof(ALttpExtendedSoundtrack), soundtrackValue)
                 ?? Enum.GetName(typeof(ALttPSoundtrack), soundtrackValue)
                 ?? $"Unknown soundtrack (0x{soundtrackValue:X2})";
-        }
-
-        private int[]? GetMusicAddresses(Type regionType)
-        {
-            var musicAddresses = regionType.GetField("MusicAddresses",
-                BindingFlags.Public | BindingFlags.Static);
-
-            return musicAddresses != null
-                ? musicAddresses.GetValue(null) as int[]
-                : null;
         }
 
         private byte? SelectSoundtrack(Region region, bool extended, MusicShuffleMode shuffleMode) => shuffleMode switch

@@ -122,6 +122,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Ganon's Tower";
 
+        public int SongIndex { get; init; } = 11;
+
         public DungeonInfo DungeonMetadata { get; set; }
 
         public TrackerDungeonState DungeonState { get; set; }

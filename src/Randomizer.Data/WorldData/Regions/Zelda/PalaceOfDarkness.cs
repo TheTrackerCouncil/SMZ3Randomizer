@@ -128,6 +128,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Area => "Dark Palace";
 
+        public int SongIndex { get; init; } = 4;
+
         public Reward Reward { get; set; }
 
         public DungeonInfo DungeonMetadata { get; set; }
