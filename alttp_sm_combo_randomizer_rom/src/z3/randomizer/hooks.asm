@@ -1097,11 +1097,45 @@ JSL.l GetMagicBatItem
 ; ;================================================================================
 ; ; MSU Music
 ; ;--------------------------------------------------------------------------------
-; org $0080D7 ; <- D7 - Bank00.asm:172 (SEP #$30)
-; spc_nmi:
-;     JML msu_main
-;     NOP
-; spc_continue:
+org $0080f3
+JML check_msu : NOP : NOP
+check_msu_continue:
+
+org $0080D7 ; <- D7 - Bank00.asm:172 (SEP #$30)
+spc_nmi:
+    JML msu_main
+    NOP
+spc_continue:
+
+org $028B7A ; <- C220 A5A0 - Bank02.asm:2225 (REP #$20 : LDA $A0)
+JSL SpiralStairsPreCheck
+
+org $029069 ; <- A21C A5A0 - Bank02.asm:3081 (LDX.b #$1C : LDA $A0)
+JSL SpiralStairsPostCheck
+
+org $08C421 ; <- AD4021 F005 - ancilla_receive_item.asm:108 (LDA $2140 : BEQ .wait_for_music)
+JML pendant_fanfare : NOP
+pendant_continue:
+
+org $08C42B
+pendant_done:
+
+org $08C62A ; <- AD4021 D008 - ancilla_receive_item.asm:442 (LDA $2140 : BNE .waitForSilence)
+JML crystal_fanfare : NOP
+crystal_done:
+
+org $08C637
+crystal_continue:
+
+org $0EE6EC ; <- E220 A922 - Bank0E.asm:2892 (SEP #$20 : LDA.b #$22 : STA $012C)
+JSL.l ending_wait
+
+; ; Process music commands in NMI from new location after muting is processed
+; org $0080DD
+; dw $012C
+
+; org $008101
+; dw $012C
 
 ; org $0EE6EC ; <- E220 A922 - Bank0E.asm:2892 (SEP #$20)
 ; JSL.l ending_wait
@@ -1527,8 +1561,8 @@ org $1DE112 ; <- EE112 sprite_great_catfish.asm : 341 (JSL Sprite_ShowMessageMin
 NOP #4
 ;----------------------------------------------------
 ;-- King Zora
-;org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
-;STZ $1CE8 : NOP
+org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
+STZ $1CE8 : NOP
 ;----------------------------------------------------
 ;-- Before Agah 1 fight
 org $1DD299 ; <- ED299 sprite_chatty_agahnim.asm : 111 (JSL Sprite_ShowMessageMinimal)
@@ -2285,8 +2319,8 @@ org $1DE112 ; <- EE112 sprite_great_catfish.asm : 341 (JSL Sprite_ShowMessageMin
 NOP #4
 ;----------------------------------------------------
 ;-- King Zora
-;org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
-;STZ $1CE8 : NOP
+org $059A7D ; <- 29A7D sprite_zora_king.asm : 223 - (JSL Sprite_ShowMessageMinimal)
+STZ $1CE8 : NOP
 ;----------------------------------------------------
 ;-- Before Agah 1 fight
 org $1DD299 ; <- ED299 sprite_chatty_agahnim.asm : 111 (JSL Sprite_ShowMessageMinimal)
@@ -2398,10 +2432,10 @@ org $05F8F5 ; <- 2F8F5 sprite_potion_shop.asm : 620 - (JSL Sprite_ShowSolicitedM
 JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
 ;----------------------------------------------------------
 ;-- Bottle Vendor
-; org $05EAE3 ; <- 2EAE3 sprite_bottle_vendor.asm : 104 - (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .didnt_converse)
-; JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
-; org $05EB03 ; <- 2EB03 sprite_bottle_vendor.asm : 129 - (JSL Sprite_ShowMessageUnconditional)
-; NOP #4
+org $05EAE3 ; <- 2EAE3 sprite_bottle_vendor.asm : 104 - (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .didnt_converse)
+JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
+org $05EB03 ; <- 2EB03 sprite_bottle_vendor.asm : 129 - (JSL Sprite_ShowMessageUnconditional)
+NOP #4
 ;----------------------------------------------------------
 ;-- Digging Game Guy
 org $1DFC76 ; <- EFC76 sprite_digging_game_guy.asm : 46 (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .return)

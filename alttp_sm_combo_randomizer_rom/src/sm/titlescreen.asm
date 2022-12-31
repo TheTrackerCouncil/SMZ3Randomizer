@@ -36,7 +36,7 @@ org $CB9C5F
     NOP
 
 ; Offset 0x00D000, free space in SM
-org $C0D000
+org $C0D200
 titlescreen_gfx:
     incbin "../data/titlescreen-gfx.bin"
 titlescreen_end:

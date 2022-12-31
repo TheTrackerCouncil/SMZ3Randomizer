@@ -58,6 +58,11 @@ namespace Randomizer.Data.WorldData.Regions
         public bool IsCrystalDungeon => DungeonRewardType is RewardType.CrystalBlue or RewardType.CrystalRed;
 
         /// <summary>
+        /// The MSU song index for the dungeon
+        /// </summary>
+        public int SongIndex { get; init; }
+
+        /// <summary>
         /// The reward marked by the player
         /// </summary>
         public RewardType MarkedReward

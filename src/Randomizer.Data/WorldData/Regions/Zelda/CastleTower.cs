@@ -30,6 +30,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
 
+        public int SongIndex { get; init; } = 2;
+
         public Reward Reward { get; set; }
 
         public FoyerRoom Foyer { get; }

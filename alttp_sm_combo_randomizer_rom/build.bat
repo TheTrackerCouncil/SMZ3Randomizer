@@ -16,3 +16,5 @@ copy zsm.ips ..\build\zsm.ips > NUL
 
 cd ..
 echo Done
+
+pause

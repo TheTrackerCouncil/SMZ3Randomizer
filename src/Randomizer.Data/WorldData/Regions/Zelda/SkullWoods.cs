@@ -111,6 +111,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Skill Woods" };
 
+        public int SongIndex { get; init; } = 6;
+
         public Reward Reward { get; set; }
 
         public DungeonInfo DungeonMetadata { get; set; }

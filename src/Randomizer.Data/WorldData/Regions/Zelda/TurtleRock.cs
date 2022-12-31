@@ -98,6 +98,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Turtle Rock";
 
+        public int SongIndex { get; init; } = 10;
+
         public Reward Reward { get; set; }
 
         public DungeonInfo DungeonMetadata { get; set; }

@@ -56,6 +56,7 @@
     <EmbeddedResource Include="Patches\noflashing.ips" />
     <None Remove="Patches\disable_screen_shake.ips" />
     <EmbeddedResource Include="Patches\disable_screen_shake.ips" />
+    <EmbeddedResource Include="Resources\empty.pcm" />
   </ItemGroup>
 
   <ItemGroup>
