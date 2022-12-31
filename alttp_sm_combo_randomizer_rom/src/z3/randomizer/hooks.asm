@@ -2432,10 +2432,10 @@ org $05F8F5 ; <- 2F8F5 sprite_potion_shop.asm : 620 - (JSL Sprite_ShowSolicitedM
 JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
 ;----------------------------------------------------------
 ;-- Bottle Vendor
-;org $05EAE3 ; <- 2EAE3 sprite_bottle_vendor.asm : 104 - (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .didnt_converse)
-;JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
-;org $05EB03 ; <- 2EB03 sprite_bottle_vendor.asm : 129 - (JSL Sprite_ShowMessageUnconditional)
-;NOP #4
+; org $05EAE3 ; <- 2EAE3 sprite_bottle_vendor.asm : 104 - (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .didnt_converse)
+; JSL Sprite_ShowSolicitedMessageIfPlayerFacing_Edit
+; org $05EB03 ; <- 2EB03 sprite_bottle_vendor.asm : 129 - (JSL Sprite_ShowMessageUnconditional)
+; NOP #4
 ;----------------------------------------------------------
 ;-- Digging Game Guy
 org $1DFC76 ; <- EFC76 sprite_digging_game_guy.asm : 46 (JSL Sprite_ShowSolicitedMessageIfPlayerFacing : BCC .return)
