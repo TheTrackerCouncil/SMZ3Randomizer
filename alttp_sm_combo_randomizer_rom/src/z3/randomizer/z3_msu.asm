@@ -10,13 +10,14 @@
 !MSU_FLAG = $2002
 !MSU_TRACK_LO = $2004
 !MSU_TRACK_HI = $2005
+!MSU_VOLUME = $2006
 !MSU_REPEAT = $2007
 !MSU_LAST_PLAYED_TRACK = $7F50AB
 
 !VAL_VOLUME_INCREMENT = #$10
 !VAL_VOLUME_DECREMENT = #$02
 !VAL_VOLUME_MUTE = #$0
-!VAL_VOLUME_HALF = #$40
+!VAL_VOLUME_HALF = #$80
 !VAL_VOLUME_FULL = #$FF
 !VAL_MSU_FLAG = #$2D53
 !VAL_OFFSET = #100
@@ -82,7 +83,7 @@ msu_main:
         LDA !MSU_TARGET_VOLUME : BRA .save_volume
 
     .save_volume
-        STA $2006 : STA !MSU_CURRENT_VOLUME
+        STA !MSU_VOLUME : STA !MSU_CURRENT_VOLUME
         BRA .exit
 
     .fade_out
@@ -159,7 +160,7 @@ msu_main:
         STA !MSU_LAST_PLAYED_TRACK : STA !MSU_CURRENT_TRACK ; Saves the track being played
         STA !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from A
         LDA.l MSUTrackList,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
-        LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME
+        LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME : STA !MSU_CURRENT_VOLUME : STA !MSU_VOLUME
         BRA .done
 
     .done
