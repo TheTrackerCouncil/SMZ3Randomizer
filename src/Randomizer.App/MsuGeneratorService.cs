@@ -10,9 +10,9 @@ using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.App;
 
-public class RomMsuGenerator
+public class MsuGeneratorService
 {
-    private static Dictionary<int, int> s_fallbackSongs = new Dictionary<int, int>()
+    private static readonly Dictionary<int, int> s_fallbackSongs = new()
     {
         { 31, 23 }, // Pre-Kraid -> Tension / Hostile Incoming theme
         { 32, 22 }, // Kraid Fight -> Big Boss Battle 2
@@ -49,9 +49,10 @@ public class RomMsuGenerator
     /// <param name="options">The randomizer generation options</param>
     /// <param name="rom">The bytes of the previously generated rom</param>
     /// <param name="romPath">The path to the rom file</param>
+    /// <param name="worldGenerationData">World data for using </param>
     /// <param name="error">Any error that was ran into when updating the rom</param>
     /// <returns>True if successful, false otherwise</returns>
-    public static bool EnableMsu1Support(RandomizerOptions options, byte[] rom, string romPath, WorldGenerationData worldGenerationData, out string error)
+    public bool EnableMsu1Support(RandomizerOptions options, byte[] rom, string romPath, WorldGenerationData worldGenerationData, out string error)
     {
         var msuPath = options.PatchOptions.Msu1Path;
         if (!File.Exists(msuPath))

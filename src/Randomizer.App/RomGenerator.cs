@@ -13,7 +13,6 @@ using Randomizer.App.Patches;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
-using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
@@ -32,12 +31,14 @@ namespace Randomizer.App
         private readonly Smz3Plandomizer _plandomizer;
         private readonly ILogger<RomGenerator> _logger;
         private readonly ITrackerStateService _stateService;
+        private readonly MsuGeneratorService _msuGeneratorService;
 
         public RomGenerator(Smz3Randomizer randomizer,
             Smz3Plandomizer plandomizer,
             RandomizerContext dbContext,
             ILogger<RomGenerator> logger,
-            ITrackerStateService stateService
+            ITrackerStateService stateService,
+            MsuGeneratorService msuGeneratorService
         )
         {
             _randomizer = randomizer;
@@ -45,6 +46,7 @@ namespace Randomizer.App
             _dbContext = dbContext;
             _logger = logger;
             _stateService = stateService;
+            _msuGeneratorService = msuGeneratorService;
         }
 
         /// <summary>
@@ -168,7 +170,7 @@ namespace Randomizer.App
             var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
             var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);
-            RomMsuGenerator.EnableMsu1Support(options, bytes, romPath, seed.WorldGenerationData.LocalWorld, out var msuError);
+            _msuGeneratorService.EnableMsu1Support(options, bytes, romPath, seed.WorldGenerationData.LocalWorld, out var msuError);
             Rom.UpdateChecksum(bytes);
             await File.WriteAllBytesAsync(romPath, bytes);
 

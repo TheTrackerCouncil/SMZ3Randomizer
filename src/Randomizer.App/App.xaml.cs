@@ -88,6 +88,7 @@ namespace Randomizer.App
                 .AddOptionalModule<MapModule>()
                 .AddOptionalModule<GameService>();
 
+            services.AddSingleton<MsuGeneratorService>();
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();

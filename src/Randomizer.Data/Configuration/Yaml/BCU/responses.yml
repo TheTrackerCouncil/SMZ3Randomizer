@@ -90,6 +90,7 @@ AutoTracker:
     Weight: 0.1
   AtCrumbleShaft:
   - Text: Good luck.
+    Weight: 0.5
   DiverDown:
   - Text: Is this underwater?
   EnteredGTEarly:
