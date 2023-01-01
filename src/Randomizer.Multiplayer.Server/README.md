@@ -22,7 +22,7 @@ To run the server, you will need to execute to have a configured appsettings.jso
 Below are explanations of all of the settings:
 
 - SMZ3
-    - **ServerUrl**: Required. Specifies the base URL that is used for generating game URLs to send to players. Include the protocol and subdomain (e.g. https://smz3.whateverdomain.com)
+    - **ServerUrl**: Required. Specifies the base URL that is used for generating game URLs to send to players. Include the protocol and subdomain (e.g. https<nolink>://smz3.whateverdomain.com)
     - **GameMemoryExpirationInMinutes**: Optional. Defaults to 60 minutes. Specifies how long in minutes before a game is removed from memory if no updates have been sent by any players. If a server does not have a database setup or if a game is not setup to be async or multi-session, then the game will be inaccessible after that point in time.
     - **GameCheckFrequencyInMinutes**: Optional. Defaults to 15 minutes. Specifies how frequently the server will check for expired games that need to be removed from memory or the database. Based on start time of the application.
     - **GameDatabaseExpirationInDays**: Optional. Defaults to 30 days. Specifies how long in days before a game is removed from the database if no updates have been sent by any players. Games saved to the database will be inaccessible after that point in time.
@@ -30,7 +30,7 @@ Below are explanations of all of the settings:
 
 ## Ports
 
-By default .NET apps are only accessible via http://localhost:5000 and https://localhost:5001 and cannot be accessed by other devices. It is recommended for you to use IIS, Nginx, Apache, or something similar to act as a proxy to those paths as you can setup security certicates and things like that.
+By default .NET apps are only accessible via http<nolink>://localhost:5000 and https<nolink>://localhost:5001 and cannot be accessed by other devices. It is recommended for you to use IIS, Nginx, Apache, or something similar to act as a proxy to those paths as you can setup security certicates and things like that.
 
 ### Changing port numbers
 
