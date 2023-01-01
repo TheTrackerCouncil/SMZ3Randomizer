@@ -30,7 +30,10 @@ This document will cover all of the different parts of the code involved with mu
 ## Example Flows
 
 ### Create Game
+![CreateGame drawio](https://user-images.githubusercontent.com/63823784/210160787-06cae011-c309-4405-8882-f4cf10957734.png)
 
 ### Start Game
+![StartGame drawio](https://user-images.githubusercontent.com/63823784/210160790-27a295be-d350-4d5e-9bd0-325a7e925644.png)
 
 ### Track Location
+![TrackLocation drawio](https://user-images.githubusercontent.com/63823784/210160791-76af5ba7-5a7a-44f5-a884-209ebb1ee7bc.png)
