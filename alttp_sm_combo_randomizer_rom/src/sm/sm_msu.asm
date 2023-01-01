@@ -64,10 +64,15 @@ MSU_Main:
 	lda.w !RequestedMusic
 	and.b #$7F
 	beq StopMSUMusic
-	
-	;; $04 is usually ambience, call original code
-	cmp.b #$04
-	beq OriginalCode
+
+	;; $04 is usually ambience, but it's also used on game over screen
+	;; If game over screen, play track 40 instead
+	cmp.b #$04 : BNE +
+		TAX : LDA.w $7e0998 : TAY : TXA
+		CPY #$1A : BNE OriginalCode
+		LDA #40
+		BRA PlayMusic
+	+
 	
 	;; Check if the song is already playing
 	cmp.w !CurrentMusic

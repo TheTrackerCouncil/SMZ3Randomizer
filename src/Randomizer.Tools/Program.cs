@@ -42,7 +42,7 @@ namespace Randomizer.Tools
 
         public static void Main(string[] args)
         {
-            RomGenerator.GenerateRom(true);
+            RomGenerator.GenerateRom(args);
         }
 
         //public static void GenerateLocationConfig()
