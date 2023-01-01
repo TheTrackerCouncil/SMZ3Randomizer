@@ -6,7 +6,11 @@ using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.Multiplayer.Client.GameServices;
 
-public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
+
+/// <summary>
+/// Service for handling multiworld games
+/// </summary>
+public class MultiworldGameService : MultiplayerGameTypeService
 {
     private ITrackerStateService _trackerStateService;
     private ILogger<MultiworldGameService> _logger;
@@ -17,6 +21,14 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
         _logger = logger;
     }
 
+    /// <summary>
+    /// Generates a multiworld seed
+    /// </summary>
+    /// <param name="seed">Seed number</param>
+    /// <param name="players">The states for each of the players</param>
+    /// <param name="localPlayer">The state for the local player</param>
+    /// <param name="error">Error from generating the seed</param>
+    /// <returns>The seed data object with all of the world and patch details</returns>
     public override SeedData? GenerateSeed(string seed, List<MultiplayerPlayerState> players,
         MultiplayerPlayerState localPlayer, out string error)
     {
@@ -37,6 +49,15 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
         return GenerateSeedInternal(generationConfigs, seed, out error);
     }
 
+    /// <summary>
+    /// Regenerates a multiworld seed based on the generation data sent from the host
+    /// </summary>
+    /// <param name="seed">Seed number</param>
+    /// <param name="playerGenerationData">List of all of the data needed to generate each of the worlds locally</param>
+    /// <param name="players">List of player states</param>
+    /// <param name="localPlayer">The locla player's state</param>
+    /// <param name="error">Error from regenerating the seed</param>
+    /// <returns>The seed data object with all of the world and patch details</returns>
     public override SeedData? RegenerateSeed(string seed, List<MultiplayerPlayerGenerationData> playerGenerationData,
         List<MultiplayerPlayerState> players, MultiplayerPlayerState localPlayer,
         out string error)
@@ -56,42 +77,6 @@ public class MultiworldGameService : MultiplayerGameTypeService, IDisposable
         return RegenerateSeedInternal(generationConfigs, seed, out error);
     }
 
-    public void Dispose()
-    {
-        EnableSync = false;
-        GC.SuppressFinalize(this);
-    }
+    public override void OnTrackingStarted() {  }
 
-    public override void OnTrackingStarted()
-    {
-
-    }
-
-    public override void OnAutoTrackerConnected()
-    {
-        if (!EnableSync)
-        {
-            EnableSync = true;
-            Task.Run(SyncPlayerState);
-        }
-    }
-
-    private bool EnableSync { get; set; }
-
-    /// <summary>
-    /// Send the local player's full state in case anything was missed
-    /// </summary>
-    private async Task SyncPlayerState()
-    {
-        while (EnableSync)
-        {
-            if (Client.LocalPlayer != null && TrackerState != null)
-            {
-                var world = GetPlayerWorldState(Client.LocalPlayer, TrackerState);
-                await Client.UpdatePlayerWorld(Client.LocalPlayer, world);
-            }
-
-            await Task.Delay(TimeSpan.FromSeconds(60));
-        }
-    }
 }

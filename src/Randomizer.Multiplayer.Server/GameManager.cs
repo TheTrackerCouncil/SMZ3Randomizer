@@ -3,6 +3,9 @@ using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
 
+/// <summary>
+/// Class that checks for games that need to be cleared from memory or the database
+/// </summary>
 public class GameManager
 {
     private readonly ILogger<GameManager> _logger;

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
+using Randomizer.Multiplayer.Client.EventHandlers;
 using Randomizer.Multiplayer.Client.GameServices;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
@@ -11,6 +12,10 @@ using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.Multiplayer.Client;
 
+/// <summary>
+/// Service for interacting with a current multiplayer game regardless
+/// of the type of multiplayer game
+/// </summary>
 public class MultiplayerGameService : IDisposable
 {
     private readonly ILogger<MultiplayerGameService> _logger;

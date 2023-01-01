@@ -15,11 +15,10 @@ public class MultiplayerGame
     public static int PlayerCount => s_playerConnections.Count;
     public static IEnumerable<MultiplayerGameState> GameStates => s_games.Values.Select(x => x.State);
 
-    private static readonly Regex s_illegalCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
+    private static readonly Regex s_illegalPlayerNameCharacters = new(@"[^A-Z0-9\-]", RegexOptions.IgnoreCase);
     private static readonly Regex s_continousSpace = new(@" +");
     private static readonly ConcurrentDictionary<string, MultiplayerGame> s_games = new();
     private static readonly ConcurrentDictionary<string, MultiplayerPlayer> s_playerConnections = new();
-
 
     /// <summary>
     /// Constructor
@@ -58,10 +57,10 @@ public class MultiplayerGame
 
     public string Guid => State.Guid;
     public MultiplayerGameState State { get; }
-    public ConcurrentDictionary<string, MultiplayerPlayer> Players = new();
-    public MultiplayerPlayer? AdminPlayer => Players.Values.FirstOrDefault(x => x.IsGameAdmin);
-    public List<MultiplayerPlayerState> PlayerStates => Players.Values.Select(x => x.State).ToList();
-    public List<string> PlayerGenerationData => Players.Values.Select(x => x.PlayerGenerationData).NonNull().ToList();
+    private readonly ConcurrentDictionary<string, MultiplayerPlayer> _players = new();
+    public MultiplayerPlayer? AdminPlayer => _players.Values.FirstOrDefault(x => x.IsGameAdmin);
+    public List<MultiplayerPlayerState> PlayerStates => _players.Values.Select(x => x.State).ToList();
+    public List<string> PlayerGenerationData => _players.Values.Select(x => x.PlayerGenerationData).NonNull().ToList();
 
 
     #region Static Methods
@@ -74,7 +73,7 @@ public class MultiplayerGame
             var timeDiff = DateTimeOffset.Now - game.State.LastMessage;
             if (timeDiff.TotalMinutes > expirationTime)
             {
-                foreach (var player in game.Players.Values)
+                foreach (var player in game._players.Values)
                 {
                     if (!string.IsNullOrEmpty(player.ConnectionId))
                     {
@@ -125,7 +124,7 @@ public class MultiplayerGame
                 playerConnectionId) { State = { IsAdmin = true } };
 
         game.State.Players.Add(player.State);
-        game.Players[playerGuid] = player;
+        game._players[playerGuid] = player;
         s_playerConnections[playerConnectionId] = player;
         error = null;
         return game;
@@ -149,7 +148,7 @@ public class MultiplayerGame
 
         foreach (var playerState in gameState.Players)
         {
-            game.Players[playerState.Guid] = new MultiplayerPlayer(game, playerState);
+            game._players[playerState.Guid] = new MultiplayerPlayer(game, playerState);
         }
         return game;
     }
@@ -189,7 +188,7 @@ public class MultiplayerGame
     /// <returns>The player object for the added player, if successfully added</returns>
     public MultiplayerPlayer? JoinGame(string playerName, string phoneticName, string playerConnectionId, string version, out string? error)
     {
-        if (Players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
+        if (_players.Values.Any(prevPlayer => prevPlayer.State.PlayerName == playerName))
         {
             error = "Player name in use";
             return null;
@@ -211,12 +210,12 @@ public class MultiplayerGame
         do
         {
             guid = System.Guid.NewGuid().ToString("N");
-        } while (Players.ContainsKey(guid));
+        } while (_players.ContainsKey(guid));
 
         var key = System.Guid.NewGuid().ToString("N");
 
         var player = new MultiplayerPlayer(this, guid, key, CleanPlayerName(playerName), phoneticName, playerConnectionId);
-        Players[guid] = player;
+        _players[guid] = player;
         s_playerConnections[playerConnectionId] = player;
         State.LastMessage = DateTimeOffset.Now;
         error = null;
@@ -249,14 +248,14 @@ public class MultiplayerGame
         if (player.State.IsAdmin)
         {
             player.State.IsAdmin = false;
-            var newAdmin = Players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
+            var newAdmin = _players.Values.FirstOrDefault(x => x.State is { HasForfeited: false, HasCompleted: false });
             if (newAdmin != null)
             {
                 newAdmin.State.IsAdmin = true;
             }
         }
 
-        if (Players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
+        if (_players.Values.All(x => x.State is { HasCompleted: true, HasForfeited: true }))
         {
             State.Status = MultiplayerGameStatus.Completed;
             gameStatusUpdated = true;
@@ -271,7 +270,7 @@ public class MultiplayerGame
         if (!State.HasGameStarted)
         {
             s_playerConnections.TryRemove(player.ConnectionId, out _);
-            Players.TryRemove(player.Guid, out _);
+            _players.TryRemove(player.Guid, out _);
             State.Players.Remove(player.State);
             deleteFromDatabase = true;
         }
@@ -293,14 +292,14 @@ public class MultiplayerGame
         if (player.State.IsAdmin)
         {
             player.State.IsAdmin = false;
-            var newAdmin = Players.Values.FirstOrDefault(x => !x.State.HasForfeited && !x.State.HasCompleted);
+            var newAdmin = _players.Values.FirstOrDefault(x => x.State is { HasForfeited: false, HasCompleted: false });
             if (newAdmin != null)
             {
                 newAdmin.State.IsAdmin = true;
             }
         }
 
-        if (Players.Values.All(x => x.State.HasCompleted && x.State.HasForfeited))
+        if (_players.Values.All(x => x.State is { HasCompleted: true, HasForfeited: true }))
         {
             State.Status = MultiplayerGameStatus.Completed;
             gameStatusUpdated = true;
@@ -356,7 +355,7 @@ public class MultiplayerGame
     /// <returns></returns>
     public MultiplayerPlayer? GetPlayer(string guid, string? key, bool verifyKey, bool verifyAdmin = false)
     {
-        if (!Players.TryGetValue(guid, out var player)) return null;
+        if (!_players.TryGetValue(guid, out var player)) return null;
         if (verifyKey && key != player.Key) return null;
         if (verifyAdmin && AdminPlayer != player) return null;
         return player;
@@ -471,7 +470,7 @@ public class MultiplayerGame
 
     private static string CleanPlayerName(string name)
     {
-        name = s_illegalCharacters.Replace(name, " ");
+        name = s_illegalPlayerNameCharacters.Replace(name, " ");
         name = s_continousSpace.Replace(name, " ");
         return name.Trim();
     }
