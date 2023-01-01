@@ -1,7 +1,7 @@
 ﻿using Randomizer.Shared;
 using Randomizer.Shared.Models;
 
-namespace Randomizer.Multiplayer.Client;
+namespace Randomizer.Multiplayer.Client.EventHandlers;
 
 public delegate void PlayerSyncReceivedEventHandler(PlayerSyncReceivedEventHandlerArgs args);
 

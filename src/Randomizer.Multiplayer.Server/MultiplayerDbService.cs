@@ -4,7 +4,7 @@ using Randomizer.Shared.Multiplayer;
 namespace Randomizer.Multiplayer.Server;
 
 /// <summary>
-/// Service to handle saving to the database
+/// Service to handle querying from and saving to the database via a DbContextFactory
 /// </summary>
 public class MultiplayerDbService
 {

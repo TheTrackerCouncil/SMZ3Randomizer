@@ -1,6 +1,6 @@
 ﻿using Randomizer.Shared.Models;
 
-namespace Randomizer.Multiplayer.Client;
+namespace Randomizer.Multiplayer.Client.EventHandlers;
 
 public delegate void PlayerTrackedItemEventHandler(PlayerTrackedItemEventHandlerArgs args);
 

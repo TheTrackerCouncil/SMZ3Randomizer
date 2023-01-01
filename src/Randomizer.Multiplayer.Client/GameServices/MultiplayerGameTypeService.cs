@@ -1,6 +1,7 @@
 ﻿using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
+using Randomizer.Multiplayer.Client.EventHandlers;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
@@ -10,10 +11,14 @@ using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.Multiplayer.Client.GameServices;
 
-public abstract class MultiplayerGameTypeService
+/// <summary>
+/// Abstract class for all of the different multiplayer game types
+/// Houses a lot of of the basic logic for generating seeds and
+/// handling players tracking locations and items
+/// </summary>
+public abstract class MultiplayerGameTypeService : IDisposable
 {
-
-    public MultiplayerGameTypeService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator, MultiplayerClientService client)
+    protected MultiplayerGameTypeService(Smz3Randomizer randomizer, Smz3MultiplayerRomGenerator multiplayerRomGenerator, MultiplayerClientService client)
     {
         Randomizer = randomizer;
         Client = client;
@@ -425,5 +430,40 @@ public abstract class MultiplayerGameTypeService
 
     public abstract void OnTrackingStarted();
 
-    public abstract void OnAutoTrackerConnected();
+    public void OnAutoTrackerConnected()
+    {
+        if (!RunSync)
+        {
+            RunSync = true;
+            Task.Run(RunPlayerSyncLoop);
+        }
+    }
+
+    public void Dispose()
+    {
+        RunSync = false;
+        GC.SuppressFinalize(this);
+    }
+
+    protected bool RunSync { get; set; }
+
+    private async Task RunPlayerSyncLoop()
+    {
+        while (RunSync)
+        {
+            await PlayerSync();
+            await Task.Delay(TimeSpan.FromSeconds(60));
+        }
+    }
+
+    protected async Task PlayerSync()
+    {
+        if (Client.LocalPlayer != null && TrackerState != null)
+        {
+            var world = GetPlayerWorldState(Client.LocalPlayer, TrackerState);
+            await Client.UpdatePlayerWorld(Client.LocalPlayer, world);
+        }
+    }
+
+
 }

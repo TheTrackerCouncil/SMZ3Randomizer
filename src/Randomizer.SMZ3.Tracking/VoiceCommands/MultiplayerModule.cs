@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Multiplayer.Client;
+using Randomizer.Multiplayer.Client.EventHandlers;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.AutoTracking;
