@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Randomizer.Shared.Multiplayer;
 
 #pragma warning disable CS8618
@@ -11,9 +12,9 @@ public sealed class MultiplayerDbContext : DbContext
     public static bool IsSetup { get; private set; }
     private readonly string? _sqliteConnectionString;
 
-    public MultiplayerDbContext(IConfiguration configuration)
+    public MultiplayerDbContext(IOptions<SMZ3ServerSettings> options)
     {
-        _sqliteConnectionString = configuration.GetConnectionString("Sqlite");
+        _sqliteConnectionString = $"FileName={options.Value.SQLiteFilePath}";
         if (string.IsNullOrEmpty(_sqliteConnectionString)) return;
         Database.Migrate();
     }
@@ -27,7 +28,6 @@ public sealed class MultiplayerDbContext : DbContext
         });
         base.OnConfiguring(optionsBuilder);
         IsSetup = true;
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

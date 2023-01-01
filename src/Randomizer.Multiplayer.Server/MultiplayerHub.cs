@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
@@ -12,10 +13,10 @@ public class MultiplayerHub : Hub
     private readonly string _serverUrl;
     private readonly MultiplayerDbService _dbService;
 
-    public MultiplayerHub(ILogger<MultiplayerHub> logger, IConfiguration configuration, MultiplayerDbService dbService)
+    public MultiplayerHub(ILogger<MultiplayerHub> logger, IOptions<SMZ3ServerSettings> options, MultiplayerDbService dbService)
     {
         _logger = logger;
-        _serverUrl = configuration.GetValue<string>("SMZ3:ServerUrl");
+        _serverUrl = options.Value.ServerUrl;
         _dbService = dbService;
     }
 

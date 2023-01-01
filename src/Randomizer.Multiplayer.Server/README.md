@@ -26,8 +26,7 @@ Below are explanations of all of the settings:
     - **GameMemoryExpirationInMinutes**: Optional. Defaults to 60 minutes. Specifies how long in minutes before a game is removed from memory if no updates have been sent by any players. If a server does not have a database setup or if a game is not setup to be async or multi-session, then the game will be inaccessible after that point in time.
     - **GameCheckFrequencyInMinutes**: Optional. Defaults to 15 minutes. Specifies how frequently the server will check for expired games that need to be removed from memory or the database. Based on start time of the application.
     - **GameDatabaseExpirationInDays**: Optional. Defaults to 30 days. Specifies how long in days before a game is removed from the database if no updates have been sent by any players. Games saved to the database will be inaccessible after that point in time.
-- ConnectionStrings
-    - **Sqlite**: Optional. Used to specify the path to the sqlite database file that is used for storing games. Can be either a relative or absolute path. If no database is specified, then the server will not support saving games to the database.
+    - **SQLiteFilePath**: Optional. Used to specify the path to the sqlite database file that is used for storing games. Can be either a relative or absolute path. If no database is specified, then the server will not support saving games to the database.
 
 ## Ports
 
