@@ -80,6 +80,9 @@ msu_main:
 
     .decrease_volume
         SBC !VAL_VOLUME_DECREMENT : BCS .save_volume
+        ; Clear the last played song when muting so that it'll play if
+        ; the same song is reloaded (save and restart in Sanc for example)
+        LDA #0 : STA !MSU_LAST_PLAYED_TRACK
         LDA !MSU_TARGET_VOLUME : BRA .save_volume
 
     .save_volume
@@ -87,6 +90,8 @@ msu_main:
         BRA .exit
 
     .fade_out
+        ; Prevent fading out when leaving the under the bridge area
+        LDA $7E008A : CMP #$80 : BEQ .exit
         LDA !VAL_VOLUME_MUTE : CMP !MSU_TARGET_VOLUME : BEQ .change_volume
         STA !MSU_TARGET_VOLUME
         BRA .exit
