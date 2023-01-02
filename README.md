@@ -63,3 +63,6 @@ In addition to making IBJ completely optional, there is also:
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
 [GitHub releases]: https://github.com/Vivelin/SMZ3Randomizer/releases
+
+## Hosting a SMZ3 Cas' Multiplayer Server
+Interested in hosting your own server for multiplayer games? Take a look at the [Server Setup Documentation](docs/ServerSetup.md).

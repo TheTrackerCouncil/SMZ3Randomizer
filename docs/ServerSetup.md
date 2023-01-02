@@ -1,19 +1,12 @@
-# SMZ3 Cas’ Multiplayer Server
+# SMZ3 Cas’ Multiplayer Server Setup
 
-Randomizer.Multiplayer.Server is a cross platform SignalR .NET application designed to route messages between various players in a Cas' Multiplayer game. In this implementation, all seed and rom generation is handled on the client end and the server simply acts a sort of router for the traffic between the players in a game.
+The SMZ3 Cas' Multiplayer server is built as a cross platform SignalR .NET application designed to route messages between various players in a Cas' Multiplayer game. In this implementation, all seed and rom generation is handled on the client end and the server simply acts a sort of router for the traffic between the players in a game.
 
 ## Prerequisites
 
 - ASP.NET Core 6
 - .NET Core 6
 - IIS, Nginx, or similar to use as a proxy (recommended)
-- Visual Studio 2022 (for building)
-
-## Creating a new Build
-
-1. Update the package version
-1. Publish the Randomizer.Multiplayer.Server project to the bin\Release\net6.0\publish\ folder
-1. Execute MultiplayerServerZipper.ps1 in the setup folder to create a versioned zip file with
 
 ## appsettings.json
 
@@ -22,7 +15,7 @@ To run the server, you will need to execute to have a configured appsettings.jso
 Below are explanations of all of the settings:
 
 - SMZ3
-    - **ServerUrl**: Required. Specifies the base URL that is used for generating game URLs to send to players. Include the protocol and subdomain (e.g. https<nolink>://smz3.whateverdomain.com)
+    - **ServerUrl**: Required. Specifies the base URL that is used for generating game URLs to send to players. Include the protocol and subdomain (e.g. https<nolink>://smz3.example.com)
     - **GameMemoryExpirationInMinutes**: Optional. Defaults to 60 minutes. Specifies how long in minutes before a game is removed from memory if no updates have been sent by any players. If a server does not have a database setup or if a game is not setup to be async or multi-session, then the game will be inaccessible after that point in time.
     - **GameCheckFrequencyInMinutes**: Optional. Defaults to 15 minutes. Specifies how frequently the server will check for expired games that need to be removed from memory or the database. Based on start time of the application.
     - **GameDatabaseExpirationInDays**: Optional. Defaults to 30 days. Specifies how long in days before a game is removed from the database if no updates have been sent by any players. Games saved to the database will be inaccessible after that point in time.
