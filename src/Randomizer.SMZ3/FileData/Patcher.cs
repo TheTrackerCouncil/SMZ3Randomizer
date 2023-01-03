@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
@@ -30,10 +27,9 @@ namespace Randomizer.SMZ3.FileData
         private readonly RomPatchFactory _romPatchFactory;
         private readonly GameLinesConfig _gameLines;
         private readonly IMetadataService _metadataService;
-        private StringTable _stringTable = new();
-        private List<(int offset, byte[] bytes)> _patches = new();
-        private Queue<byte>? _shuffledSoundtrack;
-        private bool _enableMultiworld;
+        private readonly StringTable _stringTable = new();
+        private readonly List<(int offset, byte[] bytes)> _patches = new();
+        private readonly bool _enableMultiworld;
 
         public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd, IMetadataService metadataService, GameLinesConfig gameLines)
         {
