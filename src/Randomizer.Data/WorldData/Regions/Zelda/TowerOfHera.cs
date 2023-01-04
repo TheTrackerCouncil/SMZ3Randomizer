@@ -84,6 +84,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Tower of Hera";
 
+        public int SongIndex { get; init; } = 8;
+
         public Reward Reward { get; set; }
 
         public DungeonInfo DungeonMetadata { get; set; }

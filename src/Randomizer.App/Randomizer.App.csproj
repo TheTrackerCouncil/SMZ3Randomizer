@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>8.0.0-rc.2</Version>
+    <Version>8.0.0</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -56,6 +56,7 @@
     <EmbeddedResource Include="Patches\noflashing.ips" />
     <None Remove="Patches\disable_screen_shake.ips" />
     <EmbeddedResource Include="Patches\disable_screen_shake.ips" />
+    <EmbeddedResource Include="Resources\empty.pcm" />
   </ItemGroup>
 
   <ItemGroup>

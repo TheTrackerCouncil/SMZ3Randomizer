@@ -648,12 +648,12 @@ Spoilers:
   - Text: It's got {1}
 Chat:
   RecognizedGreetings:
-  - '\b(hi|hey|hello)( there)?,? tracker\b'
-  - "\\b(greetings|hiya|howdy|'sup),? tracker\\b"
-  - '\bgood (morning|afternoon|evening|day),? tracker\b'
-  - '\b(morning|afternoon|evening),? tracker\b'
-  - '\b(HeyGuys|VoHiYo|pkroseHello|betusHey|digita78Wave) tracker\b'
-  - '\btracker (HeyGuys|VoHiYo|pkroseHello|betusHey)\b'
+  - '\b(hi|hey|hello)( there)?,? (tracker|betusTracker)\b'
+  - "\\b(greetings|hiya|howdy|'sup),? (tracker|betusTracker)\\b"
+  - '\bgood (morning|afternoon|evening|day),? (tracker|betusTracker)\b'
+  - '\b(morning|afternoon|evening),? (tracker|betusTracker)\b'
+  - '\b(HeyGuys|VoHiYo|pkroseHello|betusHey|digita78Wave) (tracker|betusTracker)\b'
+  - '\b(betusTracker|tracker) (HeyGuys|VoHiYo|pkroseHello|betusHey)\b'
   - ^tracker!+$
   - '\bT R A C K E R\b'
   WhenConnected:

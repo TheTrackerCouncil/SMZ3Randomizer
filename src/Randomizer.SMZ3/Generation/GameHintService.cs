@@ -326,7 +326,9 @@ namespace Randomizer.SMZ3.Generation
 
         private string GetItemName(World hintPlayerWorld, Item item)
         {
-            var itemName = _metadataService.Item(item.Type)?.NameWithArticle ?? item.Name;
+            var itemName = _metadataService.Item(item.Type)?.NameWithArticle;
+            if (itemName == null || itemName.Contains('<'))
+                itemName = item.Name;
             return $"{itemName}{GetMultiworldSuffix(hintPlayerWorld, item)}";
         }
 

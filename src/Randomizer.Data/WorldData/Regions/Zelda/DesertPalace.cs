@@ -92,6 +92,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Dessert Palace" };
 
+        public int SongIndex { get; init; } = 1;
+
         public Reward Reward { get; set; }
 
         public DungeonInfo DungeonMetadata { get; set; }

@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Multiplayer.Server;
 
+/// <summary>
+/// Class that checks for games that need to be cleared from memory or the database
+/// </summary>
 public class GameManager
 {
     private readonly ILogger<GameManager> _logger;
@@ -12,15 +16,15 @@ public class GameManager
     private readonly int _checkFrequencyMinutes;
     private readonly int _databaseExpirationDays;
 
-    public GameManager(ILogger<GameManager> logger, IHubContext<MultiplayerHub> hubContext, IConfiguration configuration, MultiplayerDbService dbService)
+    public GameManager(ILogger<GameManager> logger, IHubContext<MultiplayerHub> hubContext, IOptions<SMZ3ServerSettings> options, MultiplayerDbService dbService)
     {
         _logger = logger;
         _hubContext = hubContext;
         _dbService = dbService;
 
-        _checkFrequencyMinutes = configuration.GetValue("SMZ3:GameCheckFrequencyInMinutes", 15);
-        _expirationMinutes = configuration.GetValue("SMZ3:GameMemoryExpirationInMinutes", 60);
-        _databaseExpirationDays = configuration.GetValue("SMZ3:GameDatabaseExpirationInDays", 30);
+        _checkFrequencyMinutes = options.Value.GameCheckFrequencyInMinutes;
+        _expirationMinutes = options.Value.GameMemoryExpirationInMinutes;
+        _databaseExpirationDays = options.Value.GameDatabaseExpirationInDays;
 
         Task.Run(CheckGames);
     }

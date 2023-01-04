@@ -14,12 +14,12 @@ found on the [GitHub releases] page.
 ## Features
 In addition to making IBJ completely optional, there is also:
 
- - Integrated voice-enabled item & location tracker;
+ - Integrated voice-enabled/automated item & location tracker;
  - Built-in MSU-1 support for custom music packs;
- - Item Quickswap in <cite>A Link to the Past</cite> based on a [contribution] 
-   that never made it in;
  - More logic customization options;
+ - Various accessibility patches;
  - Customizable ship sprites;
+ - In game hint tiles and voice-enabled hints via tracker;
  - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 
 ## Credits
@@ -62,5 +62,7 @@ In addition to making IBJ completely optional, there is also:
 
 The original repository can be found at <https://github.com/tewtal/SMZ3Randomizer>.
 
-[contribution]: https://github.com/tewtal/alttp_sm_combo_randomizer_rom/pull/55
 [GitHub releases]: https://github.com/Vivelin/SMZ3Randomizer/releases
+
+## Hosting a SMZ3 Cas' Multiplayer Server
+Interested in hosting your own server for multiplayer games? Take a look at the [Server Setup Documentation](docs/ServerSetup.md).

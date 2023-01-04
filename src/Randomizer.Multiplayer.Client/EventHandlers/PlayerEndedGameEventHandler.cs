@@ -1,9 +1,4 @@
-﻿using Randomizer.Shared;
-using Randomizer.Shared.Enums;
-using Randomizer.Shared.Models;
-using Randomizer.Shared.Multiplayer;
-
-namespace Randomizer.Multiplayer.Client;
+﻿namespace Randomizer.Multiplayer.Client.EventHandlers;
 
 public delegate void PlayerEndedGameEventHandler(PlayerEndedGameEventHandlerArgs args);
 

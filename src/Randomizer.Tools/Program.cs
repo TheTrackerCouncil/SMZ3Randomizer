@@ -42,31 +42,7 @@ namespace Randomizer.Tools
 
         public static void Main(string[] args)
         {
-            /*var client = new MultiplayerClientService();
-            await client.Connect("http://localhost:63624/multiworld");
-            await client.CreateGame();
-            await Task.Delay(TimeSpan.FromSeconds(30));
-            //var rootCommand = new RootCommand("SMZ3 Randomizer command-line tools");
-
-            /*
-             * ConvertConfigs();
-            TestConfigs();
-            TestMerge();*/
-
-            /*var formatText = new Command("format", "Formats text entries for ALttP.")
-            {
-                new Argument<FileInfo>("input",
-                    "The file containing the entries to format. Every entry should be on a separate line.")
-                    .ExistingOnly(),
-            };
-            formatText.Handler = CommandHandler.Create<FileInfo>(FormatText);
-            rootCommand.AddCommand(formatText);
-
-            //var generateLocationConfig = new Command("generate-locations", "Generates locations.json");
-            //generateLocationConfig.Handler = CommandHandler.Create(GenerateLocationConfig);
-            //rootCommand.AddCommand(generateLocationConfig);
-
-            rootCommand.Invoke(args);*/
+            RomGenerator.GenerateRom(args);
         }
 
         //public static void GenerateLocationConfig()

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
@@ -30,10 +27,9 @@ namespace Randomizer.SMZ3.FileData
         private readonly RomPatchFactory _romPatchFactory;
         private readonly GameLinesConfig _gameLines;
         private readonly IMetadataService _metadataService;
-        private StringTable _stringTable = new();
-        private List<(int offset, byte[] bytes)> _patches = new();
-        private Queue<byte>? _shuffledSoundtrack;
-        private bool _enableMultiworld;
+        private readonly StringTable _stringTable = new();
+        private readonly List<(int offset, byte[] bytes)> _patches = new();
+        private readonly bool _enableMultiworld;
 
         public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd, IMetadataService metadataService, GameLinesConfig gameLines)
         {
@@ -106,8 +102,6 @@ namespace Randomizer.SMZ3.FileData
             WriteRngBlock();
             WriteDiggingGameRng();
             WritePrizeShuffle();
-
-            WriteDungeonMusic(config);
 
             WriteRemoveEquipmentFromUncle(_myWorld.HyruleCastle.LinksUncle.Item);
 
@@ -372,128 +366,6 @@ namespace Randomizer.SMZ3.FileData
             var type = location.Item.World == location.Region.World ? 0 : 1;
             var owner = location.Item.World.Id;
             return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
-        }
-
-        private void WriteDungeonMusic(Config config)
-        {
-            foreach (var region in _myWorld.Regions.OfType<Z3Region>())
-            {
-                var addresses = GetMusicAddresses(region.GetType());
-                if (addresses == null)
-                    continue;
-
-                var soundtrack = SelectSoundtrack(region, config.ExtendedMsuSupport, config.ShuffleDungeonMusic);
-                if (soundtrack == null)
-                    continue;
-
-                AddPatch(addresses, new byte[] { soundtrack.Value });
-                Debug.WriteLine($"Set {region.Name} dungeon music to {GetSoundtrackTitle(soundtrack.Value)}");
-            }
-        }
-
-        private string GetSoundtrackTitle(byte soundtrackValue)
-        {
-            return Enum.GetName(typeof(ALttpExtendedSoundtrack), soundtrackValue)
-                ?? Enum.GetName(typeof(ALttPSoundtrack), soundtrackValue)
-                ?? $"Unknown soundtrack (0x{soundtrackValue:X2})";
-        }
-
-        private int[]? GetMusicAddresses(Type regionType)
-        {
-            var musicAddresses = regionType.GetField("MusicAddresses",
-                BindingFlags.Public | BindingFlags.Static);
-
-            return musicAddresses != null
-                ? musicAddresses.GetValue(null) as int[]
-                : null;
-        }
-
-        private byte? SelectSoundtrack(Region region, bool extended, MusicShuffleMode shuffleMode) => shuffleMode switch
-        {
-            MusicShuffleMode.Default => GetDefaultSoundtrack(region, extended),
-            MusicShuffleMode.ShuffleDungeons => GetRandomSoundtrack(false, extended),
-            MusicShuffleMode.ShuffleAll => GetRandomSoundtrack(true, extended),
-            _ => throw new InvalidEnumArgumentException(nameof(shuffleMode), (int)shuffleMode, typeof(MusicShuffleMode))
-        };
-
-        private byte? GetDefaultSoundtrack(Region region, bool extended)
-        {
-            if (extended)
-            {
-                var soundtrack = region switch
-                {
-                    EasternPalace => ALttpExtendedSoundtrack.EasternPalace,
-                    DesertPalace => ALttpExtendedSoundtrack.DesertPalace,
-                    SwampPalace => ALttpExtendedSoundtrack.SwampPalace,
-                    PalaceOfDarkness => ALttpExtendedSoundtrack.PalaceOfDarkness,
-                    MiseryMire => ALttpExtendedSoundtrack.MiseryMire,
-                    SkullWoods => ALttpExtendedSoundtrack.SkullWoods,
-                    IcePalace => ALttpExtendedSoundtrack.IcePalace,
-                    TowerOfHera => ALttpExtendedSoundtrack.TowerOfHera,
-                    ThievesTown => ALttpExtendedSoundtrack.ThievesTown,
-                    TurtleRock => ALttpExtendedSoundtrack.TurtleRock,
-                    GanonsTower => ALttpExtendedSoundtrack.GanonsTower,
-                    _ => throw new ArgumentOutOfRangeException(nameof(region),
-                        "Region does not support extended soundtrack.")
-                };
-                return (byte)soundtrack;
-            }
-            else if (region is IHasReward dungeonRegion)
-            {
-                ALttPSoundtrack? soundtrack = dungeonRegion.RewardType switch
-                {
-                    RewardType.PendantGreen => ALttPSoundtrack.LightWorldDungeon,
-                    RewardType.PendantRed => ALttPSoundtrack.LightWorldDungeon,
-                    RewardType.PendantBlue => ALttPSoundtrack.LightWorldDungeon,
-                    RewardType.CrystalBlue => ALttPSoundtrack.DarkWorldDungeon,
-                    RewardType.CrystalRed => ALttPSoundtrack.DarkWorldDungeon,
-                    _ => null
-                };
-                return soundtrack != null
-                    ? (byte)soundtrack
-                    : null;
-            }
-
-            return null;
-        }
-
-        private byte GetRandomSoundtrack(bool includeNonDungeonMusic, bool extended)
-        {
-            if (_shuffledSoundtrack == null)
-            {
-                _shuffledSoundtrack = new Queue<byte>(includeNonDungeonMusic
-                    ? ShuffleSoundtrack(extended)
-                    : ShuffleDungeonSoundtracks(extended));
-            }
-
-            return _shuffledSoundtrack.Dequeue();
-        }
-
-        private IEnumerable<byte> ShuffleDungeonSoundtracks(bool extended)
-        {
-            var list = new List<byte>();
-            if (!extended)
-            {
-                list.AddRange(Enumerable.Repeat((byte)ALttPSoundtrack.LightWorldDungeon, 6));
-                list.AddRange(Enumerable.Repeat((byte)ALttPSoundtrack.DarkWorldDungeon, 6));
-            }
-            else
-            {
-                list.Add((byte)ALttPSoundtrack.LightWorldDungeon);
-                list.Add((byte)ALttPSoundtrack.DarkWorldDungeon);
-                list.AddRange(Enumerable.Range(35, 12).Select(x => (byte)x));
-            }
-            return list.Shuffle(_rnd);
-        }
-
-        private IEnumerable<byte> ShuffleSoundtrack(bool extended)
-        {
-            var list = new List<byte>();
-            list.AddRange(Enum.GetValues<ALttPSoundtrack>().Cast<byte>());
-            if (extended)
-                list.AddRange(Enum.GetValues<ALttpExtendedSoundtrack>().Cast<byte>());
-            list.Remove(0x00);
-            return list.Shuffle(_rnd);
         }
 
         private void WritePrizeShuffle()
