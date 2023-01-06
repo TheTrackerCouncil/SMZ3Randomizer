@@ -164,7 +164,7 @@ msu_main:
         CMP !MSU_LAST_PLAYED_TRACK : BEQ .done ; If the track is the same, ignore it
         STA !MSU_LAST_PLAYED_TRACK : STA !MSU_CURRENT_TRACK ; Saves the track being played
         STA !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from A
-        LDA.l MSUTrackList,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
+        LDA.l MSUTrackFlags,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
         LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME : STA !MSU_CURRENT_VOLUME : STA !MSU_VOLUME
         BRA .done
 

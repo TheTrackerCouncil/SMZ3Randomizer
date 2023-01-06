@@ -223,15 +223,17 @@ PlayMusic:
 		TAX
 		LDA $7E079F
 
-		; Ridley
-		CMP #2 : BNE +
-            LDA #36
-			bra .done
-        +
-
 		; Draygon
 		CMP #4 : BNE +
             LDA #35
+			bra .done
+        +
+
+		LDA $7E079D
+
+		; Ridley
+		CMP #$3A : BNE +
+            LDA #36
 			bra .done
         +
 
