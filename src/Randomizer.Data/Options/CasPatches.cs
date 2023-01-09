@@ -37,9 +37,9 @@ namespace Randomizer.Data.Options
         [Description("Preserve your horizontal movement when landing from a fall or jump.\nPatch developed by Oi27.")]
         public bool Speedkeep { get; set; } = true;
 
-        [DisplayName("Starting Nerfed Charge Beam")]
+        /*[DisplayName("Starting Nerfed Charge Beam")]
         [Description("You will always start with a weak charge beam to prevent soft locks against bosses when running out of missiles.\nPatch developed by Smiley and Flo.")]
-        public bool NerfedCharge { get; set; } = true;
+        public bool NerfedCharge { get; set; } = true;*/
 
         [DisplayName("No Bomb Torizo Softlocks")]
         [Description("Closes the door to Bomb Torizo faster after picking up the item to prevent softlocks by getting stuck in the door.")]
