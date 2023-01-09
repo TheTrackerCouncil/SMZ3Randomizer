@@ -129,8 +129,7 @@ namespace Randomizer.SMZ3.Generation
                     GetItemName(hintPlayerWorld, x.Item)))
                 .NonNull();
 
-            foreach (var hint in hints)
-                _logger.LogInformation("{Hint}", hint);
+            _logger.LogInformation("Generated {Count} progression item hints", hints.Count());
 
             return hints;
         }
@@ -168,6 +167,8 @@ namespace Randomizer.SMZ3.Generation
                 }
             }
 
+            _logger.LogInformation("Generated {Count} dungeon hints", hints.Count);
+
             return hints;
         }
 
@@ -194,6 +195,8 @@ namespace Randomizer.SMZ3.Generation
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldDeathMountainEast.HookshotCave.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.LightWorldDeathMountainEast.ParadoxCave.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.UpperNorfairCrocomire.Locations);
+
+            _logger.LogInformation("Generated {Count} location hints", hints.Count);
 
             return hints;
         }

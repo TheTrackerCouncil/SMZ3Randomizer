@@ -76,6 +76,10 @@ namespace Randomizer.SMZ3.Generation
             var seedNumber = ParseSeed(ref seed);
             var rng = new Random(seedNumber);
             primaryConfig.Seed = seedNumber.ToString();
+
+            _logger.LogInformation("Attempting to generate seed {SeedNumber}", seedNumber);
+            _logger.LogInformation("Configs: {ConfigString}", Config.ToConfigString(configs));
+
             if (primaryConfig.Race)
                 rng = new Random(rng.Next());
 
@@ -124,12 +128,14 @@ namespace Randomizer.SMZ3.Generation
             {
                 var patchRnd = new Random(patchSeed);
                 var hints = _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
-                var patch = new Patcher(world, worlds, seedData.Guid, primaryConfig.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines);
+                var patch = new Patcher(world, worlds, seedData.Guid, primaryConfig.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines, _logger);
                 var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(world.Config, hints), hints);
+                _logger.LogInformation("Patch created for world {WorldId}", world.Id);
                 seedData.WorldGenerationData.Add(worldGenerationData);
             }
 
             Debug.WriteLine("Generated seed on randomizer instance " + GetHashCode());
+            _logger.LogInformation("Generated seed successfully");
             _worldAccessor.World = worlds.First(x => x.IsLocalWorld);
             _worldAccessor.Worlds = worlds;
             return seedData;

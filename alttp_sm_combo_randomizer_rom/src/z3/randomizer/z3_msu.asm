@@ -40,7 +40,12 @@ check_msu:
 
     .msu_not_found:
         SEP #$30
-        PLA : STA !SPC_CONTROL ; Apply the command from the stack that was saved
+        ; Load the command from the stack, but correct it for where 
+        ; falling from Ganon throws 0xE0 (224) instead of 0x1C (28)
+        PLA : CMP #$E0 : BNE +
+            LDA #$1C
+        +
+        STA !SPC_CONTROL ; Apply the command from the stack that was saved
         JML check_msu_continue
 
 ; Main method that listens for if new songs are being requested
@@ -54,10 +59,6 @@ msu_main:
         SEP #$30
         BRA .check_music_request
 
-    .no_msu
-        SEP #$30
-        BRA .exit
-
     .check_music_request
         LDX !SPC_MUSIC_REQUEST ; Load the PCM music request to X
         CPX #$F1 : BEQ .fade_out
@@ -66,6 +67,10 @@ msu_main:
         CPX #$FF : BEQ .exit
         CPX #0 : BNE .determine_song
         LDA !MSU_CURRENT_VOLUME : CMP !MSU_TARGET_VOLUME : BNE .change_volume
+        BRA .exit
+
+    .no_msu
+        SEP #$30
         BRA .exit
 
     .change_volume
@@ -118,6 +123,12 @@ msu_main:
         CPX #21 : BEQ .load_boss_song
         CPX #13 : BEQ .load_dark_mountain_woods_song
         CPX #9 : BEQ .load_dark_world_song
+
+        ; For some reason falling from Ganon throws 0xE0 (224) instead of 0x1C (28)
+        CPX #$E0 : BNE +
+            LDX #28
+        +
+
         BRA .change_song
 
     .load_light_world_song
@@ -164,7 +175,7 @@ msu_main:
         CMP !MSU_LAST_PLAYED_TRACK : BEQ .done ; If the track is the same, ignore it
         STA !MSU_LAST_PLAYED_TRACK : STA !MSU_CURRENT_TRACK ; Saves the track being played
         STA !MSU_TRACK_LO : STZ !MSU_TRACK_HI ; Sets the MSU track from A
-        LDA.l MSUTrackFlags,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
+        LDA.l MSUTrackFlags-1,X : STA !MSU_REPEAT ; Sets the track repeat flag from the track table
         LDA !VAL_VOLUME_FULL : STA !MSU_TARGET_VOLUME : STA !MSU_CURRENT_VOLUME : STA !MSU_VOLUME
         BRA .done
 
@@ -214,6 +225,7 @@ ending_wait:
 SpiralStairsPreCheck:
     .init
         REP #$20
+        LDA !MSU_FLAG : CMP !VAL_MSU_FLAG : BNE .done
         LDA $A0
 
         ; Fade out going when going to GT lobby when GT climb music is playing
@@ -247,6 +259,8 @@ SpiralStairsPreCheck:
 
 SpiralStairsPostCheck:
     .init
+        REP #$20
+        LDA !MSU_FLAG : CMP !VAL_MSU_FLAG : BNE .done
         LDA $A0
 
         ; If we're faded out from climbing down the stairs
@@ -266,5 +280,6 @@ SpiralStairsPostCheck:
         +
 
     .done
+        SEP #20
         LDA $A0
         RTL
