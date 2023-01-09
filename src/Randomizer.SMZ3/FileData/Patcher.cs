@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Data.WorldData;
@@ -30,8 +31,9 @@ namespace Randomizer.SMZ3.FileData
         private readonly StringTable _stringTable = new();
         private readonly List<(int offset, byte[] bytes)> _patches = new();
         private readonly bool _enableMultiworld;
+        private readonly ILogger _logger;
 
-        public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd, IMetadataService metadataService, GameLinesConfig gameLines)
+        public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd, IMetadataService metadataService, GameLinesConfig gameLines, ILogger logger)
         {
             _myWorld = myWorld;
             _allWorlds = allWorlds;
@@ -42,6 +44,7 @@ namespace Randomizer.SMZ3.FileData
             _enableMultiworld = true;
             _gameLines = gameLines;
             _metadataService = metadataService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -97,6 +100,7 @@ namespace Randomizer.SMZ3.FileData
 
         public Dictionary<int, byte[]> CreatePatch(Config config, IEnumerable<string> hints)
         {
+            _logger.LogInformation("Creating basic world patches");
             WriteMedallions();
             WriteRewards();
             WriteDungeonMusic(config.Keysanity);
@@ -114,16 +118,21 @@ namespace Randomizer.SMZ3.FileData
             WriteSaveAndQuitFromBossRoom();
             WriteWorldOnAgahnimDeath();
 
+            _logger.LogInformation("Creating text patches");
             WriteTexts(config, hints);
+
+            _logger.LogInformation("Creating location patches");
 
             WriteSMLocations(_myWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations));
             WriteZ3Locations(_myWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations));
 
             WriteStringTable();
 
+            _logger.LogInformation("Creating keysanity patches (if applicable)");
             WriteSMKeyCardDoors();
             WriteZ3KeysanityFlags();
 
+            _logger.LogInformation("Creating metadata patches");
             WritePlayerNames();
             WriteSeedData();
             WriteGameTitle();
