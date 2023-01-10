@@ -310,6 +310,7 @@
     "1":
     - Text: This is now my favorite stick
     - Text: It's a single arrow, why are you having me track this?
+    - Text: It's one arrow, {{User}}. How much could it cost, ten rupees?
     "2":
 - Item: Ten Arrows
   Name:
