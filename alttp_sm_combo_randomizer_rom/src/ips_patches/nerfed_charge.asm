@@ -48,8 +48,7 @@ base $90b9e6
 ;;; hijack for SBA ammo spend
 org $d0ccd2
 base $90ccd2
-    jmp $ccc8 ; For now, skip SBA (charged power bomb combo) 
-	;jmp sba_ammo
+	jmp fire_sba
 
 ;;; nerfed charge : damage modification
 org $d0f6a0
@@ -80,24 +79,24 @@ nochargesba:
         dw $0000 ; 9: Plasma + wave
         dw $0000 ; Ah: Plasma + ice
         dw $0000 ; Bh: Plasma + ice + wave
-sba_ammo:
-    LDA #5
-    jmp $ccd9
-	lda $09a6
-    STA $7e00cA
-	bit #$1000 : beq .nocharge  ; if charge :
-	lda $09ce    		    ; 	restore A (PB count)
-    STA $7e00cB
-	jmp $ccd4		    ;   continue original routine
-.nocharge:
-	;; vanilla code actually works only with 1s or 0s in the table
-	;; so we add an actual check for PB qty
-	lda $09ce		    ; PB count
-	sec : sbc nochargesba,X	    ; substract PB qty needed
-	bmi .notenough		    ; if enough PBs:
-	jmp $ccd9		    ; 	proceed with routine after original substraction
-.notenough:			    ; else:
-	jmp $ccc8		    ;   make original function return with carry clear (SBA failed)
+fire_sba:
+	lda.l $d0cc21, x : beq .nosba  ; Load original table and exit if sba is not active for current beams
+	TAY ; Store vanilla required power bomb count
+	lda $09a6 : bit #$1000 : bne + ; Check if the player has the charge beam
+		; If no charge beam, substract 3 power bombs
+		lda $09ce
+		sec : sbc nochargesba,X
+		bmi .nosba : BRA .fire ; Check if player has enough power bombs
+	+
+	; If charge beam, subtract the vanilla amount
+	lda $09ce
+	SEC : sbc $d0cc21, x
+	bmi .nosba : BRA .fire ; Check if player has enough power bombs
+.fire
+	STA $09ce ; Store the updated power bomb amount
+	jmp $cce1 ; Jump to SBA code following power bomb decrement
+.nosba:			    
+	jmp $ccef ; Jump to RTS (no SBA)
 
 ;;; nerf pseudo screw damage
 org $e0a4cc

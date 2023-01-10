@@ -303,11 +303,11 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            /*if (options.PatchOptions.CasPatches.NerfedCharge)
+            if (options.PatchOptions.CasPatches.NerfedCharge)
             {
                 using var patch = IpsPatch.NerfedCharge();
-                Rom.ApplySuperMetroidIps(rom, patch);
-            }*/
+                Rom.ApplyIps(rom, patch);
+            }
 
             if (options.PatchOptions.CasPatches.RefillAtSaveStation)
             {
