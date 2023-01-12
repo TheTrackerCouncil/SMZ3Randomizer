@@ -15,10 +15,8 @@ cd resources
 python create_dummies.py 00.sfc ff.sfc
 asar --no-title-check --symbols=wla --symbols-path=..\build\zsm.sym ..\src\main.asm 00.sfc
 asar --no-title-check --symbols=wla --symbols-path=..\build\zsm.sym ..\src\main.asm ff.sfc
-python create_ips.py 00.sfc ff.sfc zsm.ips
+python create_ips.py 00.sfc ff.sfc ..\build\zsm.ips
 del 00.sfc ff.sfc
-
-copy zsm.ips ..\build\zsm.ips > NUL
 
 cd ..
 

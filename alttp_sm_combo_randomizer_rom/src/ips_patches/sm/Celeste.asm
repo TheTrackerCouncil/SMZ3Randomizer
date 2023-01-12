@@ -1,3 +1,5 @@
+lorom
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; By Benox50
 ;;;;; Snap to hole;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Move samus to nearby hole space or air, Celeste style, if its detected as close enough

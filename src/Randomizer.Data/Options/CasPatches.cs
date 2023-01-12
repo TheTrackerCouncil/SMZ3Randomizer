@@ -57,6 +57,14 @@ namespace Randomizer.Data.Options
         [Description("Save stations will refill your ammo.\nPatch developed by Adam.")]
         public bool RefillAtSaveStation { get; set; } = true;
 
+        [DisplayName("Easier Wall Jumps")]
+        [Description("Makes the timing of wall jumps more leniant.\nPatch developed by Benox50.")]
+        public bool EasierWallJumps { get; set; } = true;
+
+        [DisplayName("Snap Morph to Holes")]
+        [Description("Makes it easier to get into morph ball holes and allows you to morph over some 1 tile wide pits.\nPatch developed by Benox50.")]
+        public bool SnapMorph { get; set; } = true;
+
         public CasPatches Clone()
         {
             return (CasPatches)MemberwiseClone();

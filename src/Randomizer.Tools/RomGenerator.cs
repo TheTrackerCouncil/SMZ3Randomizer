@@ -20,7 +20,7 @@ public class RomGenerator
     {
         { @"..\..\..\..\Randomizer.App\Patches\zsm.ips", "" },
         { @"..\..\..\..\Randomizer.App\Patches\spinjumprestart.ips", "SM" },
-        { @"..\..\..\..\Randomizer.App\Patches\nerfed_charge.ips", "" },
+        { @"..\..\..\..\Randomizer.App\Patches\nerfed_charge.ips", "SM" },
         { @"..\..\..\..\Randomizer.App\Patches\refill_before_save.ips", "SM" },
         { @"..\..\..\..\Randomizer.App\Patches\fast_doors.ips", "SM" },
         { @"..\..\..\..\Randomizer.App\Patches\elevators_speed.ips", "SM" },
@@ -28,6 +28,8 @@ public class RomGenerator
         { @"..\..\..\..\Randomizer.App\Patches\rando_speed.ips", "SM" },
         { @"..\..\..\..\Randomizer.App\Patches\noflashing.ips", "SM" },
         { @"..\..\..\..\Randomizer.App\Patches\disable_screen_shake.ips", "SM" },
+        { @"..\..\..\..\Randomizer.App\Patches\Celeste.ips", "SM" },
+        { @"..\..\..\..\Randomizer.App\Patches\EasierWJ.ips", "SM" },
     };
 
     public static string GenerateRom(string[] args)
@@ -58,7 +60,7 @@ public class RomGenerator
         // Copy the build.bat output patches to the SMZ3 patch folder
         if (copyPatches)
         {
-            var resources = new DirectoryInfo(@"..\..\..\..\..\alttp_sm_combo_randomizer_rom\resources");
+            var resources = new DirectoryInfo(@"..\..\..\..\..\alttp_sm_combo_randomizer_rom\build");
             foreach (var file in resources.EnumerateFiles().Where(x => x.Extension.Contains("ips")))
             {
                 file.CopyTo(@"..\..\..\..\Randomizer.App\Patches\"+file.Name, true);

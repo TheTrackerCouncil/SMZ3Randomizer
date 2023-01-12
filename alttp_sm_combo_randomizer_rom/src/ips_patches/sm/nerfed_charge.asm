@@ -10,11 +10,8 @@
 
 ;;; compile with asar v1.81 (https://github.com/RPGHacker/asar/releases/tag/v1.81)
 
-
-; lorom
-; arch 65816
-
-exhirom
+lorom
+arch 65816
 
 ;;; divides projectile damage by 3
 macro divprojdmg3()
@@ -30,29 +27,24 @@ macro divprojdmg3()
 endmacro
 
 ;;; goes to charge branch whatever items
-org $d0b81e
-base $90b81e
+org $90b81e
 	bit #$0000
 	bra $0a
 
 ;;; disables a "no charge" check
-org $d0b8f2
-base $90b8f2
+org $90b8f2
 	bra $00
 
 ;;; hijack for beam damage modification 
-org $d0b9e6
-base $90b9e6
+org $90b9e6
 	jsr charge
 
 ;;; hijack for SBA ammo spend
-org $d0ccd2
-base $90ccd2
+org $90ccd2
 	jmp fire_sba
 
 ;;; nerfed charge : damage modification
-org $d0f6a0
-base $90f6a0
+org $90f6a0
 charge:
 	lda $09A6		; equipped beams
 	bit #$1000		; check for charge
@@ -63,8 +55,7 @@ charge:
 	lda $0C18,X
 	rts
 
-org $d0f810
-base $90f810
+org $90f810
 nochargesba:
 ; This alternate table is just as inefficient as the original
         dw $0000 ; 0: Power
@@ -80,7 +71,7 @@ nochargesba:
         dw $0000 ; Ah: Plasma + ice
         dw $0000 ; Bh: Plasma + ice + wave
 fire_sba:
-	lda.l $d0cc21, x : beq .nosba  ; Load original table and exit if sba is not active for current beams
+	lda.l $90cc21, x : beq .nosba  ; Load original table and exit if sba is not active for current beams
 	TAY ; Store vanilla required power bomb count
 	lda $09a6 : bit #$1000 : bne + ; Check if the player has the charge beam
 		; If no charge beam, substract 3 power bombs
@@ -90,7 +81,7 @@ fire_sba:
 	+
 	; If charge beam, subtract the vanilla amount
 	lda $09ce
-	SEC : sbc $d0cc21, x
+	SEC : sbc $90cc21, x
 	bmi .nosba : BRA .fire ; Check if player has enough power bombs
 .fire
 	STA $09ce ; Store the updated power bomb amount
@@ -99,12 +90,10 @@ fire_sba:
 	jmp $ccef ; Jump to RTS (no SBA)
 
 ;;; nerf pseudo screw damage
-org $e0a4cc
-base $e0a4cc
+org $a0a4cc
 	jsr pseudo
 
-org $e0f800
-base $e0f800
+org $a0f800
 pseudo:
 	;; we can't freely use A here. Y shall contain pseudo screw dmg at the end
 	pha
@@ -120,4 +109,4 @@ pseudo:
 	pla
 	rts
 
-warnpc $e0f820
+warnpc $a0f820
