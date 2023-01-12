@@ -82,5 +82,17 @@ namespace Randomizer.App.Patches
         /// </summary>
         /// <returns>A new stream that contains the IPS patch.</returns>
         public static Stream DisableMetroidScreenShake() => GetStream("disable_screen_shake.ips");
+
+        /// <summary>
+        /// Gets a stream for the IPS patch to make it easier to wall jump
+        /// </summary>
+        /// <returns>A new stream that contains the IPS patch.</returns>
+        public static Stream EasierWallJumps() => GetStream("EasierWJ.ips");
+
+        /// <summary>
+        /// Gets a stream for the IPS patch to make it easier to get into morph passages
+        /// </summary>
+        /// <returns>A new stream that contains the IPS patch.</returns>
+        public static Stream SnapMorph() => GetStream("Celeste.ips");
     }
 }

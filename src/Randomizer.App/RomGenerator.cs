@@ -303,11 +303,11 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            /*if (options.PatchOptions.CasPatches.NerfedCharge)
+            if (options.PatchOptions.CasPatches.NerfedCharge)
             {
                 using var patch = IpsPatch.NerfedCharge();
                 Rom.ApplySuperMetroidIps(rom, patch);
-            }*/
+            }
 
             if (options.PatchOptions.CasPatches.RefillAtSaveStation)
             {
@@ -348,6 +348,18 @@ namespace Randomizer.App
             if (options.PatchOptions.CasPatches.DisableScreenShake)
             {
                 using var patch = IpsPatch.DisableMetroidScreenShake();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.EasierWallJumps)
+            {
+                using var patch = IpsPatch.EasierWallJumps();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.CasPatches.SnapMorph)
+            {
+                using var patch = IpsPatch.SnapMorph();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 

@@ -2,7 +2,7 @@
   "profiles": {
     "Randomizer.Tools": {
       "commandName": "Project",
-      "commandLineArgs": "openrom"
+      "commandLineArgs": "openrom applypatches copypatches"
     }
   }
 }
