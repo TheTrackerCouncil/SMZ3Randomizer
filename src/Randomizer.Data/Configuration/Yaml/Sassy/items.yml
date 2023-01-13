@@ -166,11 +166,12 @@
     - Text: Another full heart, neat
     - Text: Increased survivablity by one step
     - Text: Maybe now you won't die.
+    - Text: It would have been much easier to find a heart container, you know.
     "5":
     "8":
     - Text: Wow another full heart
     - Text: Increased survivablity by one step
-    - Text: Enough pieces for three full hearts. Wow
+    - Text: Enough pieces for two full hearts. Wow
     "9":
     "12":
     - Text: I'm running out of jokes to make about you finding so many heart pieces
@@ -498,6 +499,7 @@
   Name:
   - Text: Super speedy boots
   - Text: Light speed
+  - Text: Green boomerang
 - Item: Charge Beam
   Name:
   - Text: Soft lock prevention beam
