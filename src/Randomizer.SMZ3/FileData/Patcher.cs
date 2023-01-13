@@ -620,7 +620,7 @@ namespace Randomizer.SMZ3.FileData
             _patches.Add((Snes(0x308400), Dialog.Simple(triforceRoom)));
             _stringTable.SetTriforceRoomText(triforceRoom);
 
-            if (hints.Any())
+            if (hints.Any() && config.UniqueHintCount > 0)
             {
                 hints = hints.Take(config.UniqueHintCount);
                 while (hints.Count() < GameHintService.HintLocations.Count)
