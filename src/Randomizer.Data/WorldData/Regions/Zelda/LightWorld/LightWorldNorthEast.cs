@@ -133,7 +133,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     name: "King Zora",
                     alsoKnownAs: new[] { "Zora" },
                     vanillaItem: ItemType.Flippers,
-                    access: items => (Logic.CanLiftLight(items) || items.Flippers) && items.Rupees >= 500,
+                    access: items => (Logic.CanLiftLight(items) || items.Flippers) && (!Config.LogicConfig.ZoraNeedsRupeeItems || items.Rupees >= 500),
                     memoryAddress: 0x190,
                     memoryFlag: 0x2,
                     memoryType: LocationMemoryType.ZeldaMisc,

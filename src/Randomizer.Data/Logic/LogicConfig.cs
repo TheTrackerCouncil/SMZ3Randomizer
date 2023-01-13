@@ -45,6 +45,11 @@ namespace Randomizer.Data.Logic
         [Category("Logic")]
         public bool KholdstareNeedsCaneOfSomaria { get; set; }
 
+        [DisplayName("Zora Needs Rupee Items")]
+        [Description("You're expected to find enough rupee items at locations in order to purchase the item from Zora so that you don't have to farm rupees from enemies, the Houlihan room, etc.")]
+        [Category("Logic")]
+        public bool ZoraNeedsRupeeItems { get; set; }
+
         [DisplayName("Fire Rod for Dark Rooms")]
         [Description("You're expected to be able to use the fire rod to light torches for navigating Hyrule Castle escape, Eastern Palace Armos Knights, and select rooms in Palace of Darkness.")]
         [Category("Tricks")]

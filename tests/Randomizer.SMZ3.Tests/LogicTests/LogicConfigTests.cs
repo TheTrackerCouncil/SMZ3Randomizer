@@ -446,5 +446,29 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             tempWorld.BlueBrinstar.BlueBrinstarTop.MainItem.IsAvailable(progression).Should().BeTrue();
             tempWorld.BlueBrinstar.BlueBrinstarTop.HiddenItem.IsAvailable(progression).Should().BeTrue();
         }
+
+        [Fact]
+        public void TestZoraNeedsRupeeItems()
+        {
+            var config = new Config { LogicConfig = { ZoraNeedsRupeeItems = false, }};
+
+            var tempWorld = new World(config, "", 0, "");
+            var progression = new Progression(new[] { ItemType.Flippers, ItemType.ThreeHundredRupees}, new List<RewardType>(), new List<BossType>());
+            Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.ZorasDomain.Zora, progression, out _).Should().BeEmpty();
+            tempWorld.LightWorldNorthEast.ZorasDomain.Zora.IsAvailable(progression).Should().BeTrue();
+
+            config.LogicConfig.ZoraNeedsRupeeItems = true;
+            tempWorld = new World(config, "", 0, "");
+            var items = Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.ZorasDomain.Zora, progression,
+                out _);
+            Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.ZorasDomain.Zora, progression, out _).Should()
+                .HaveCount(1)
+                .And.ContainEquivalentOf(new[] { ItemType.ThreeHundredRupees });
+            tempWorld.LightWorldNorthEast.ZorasDomain.Zora.IsAvailable(progression).Should().BeFalse();
+
+            progression = new Progression(new[] { ItemType.Flippers, ItemType.ThreeHundredRupees, ItemType.ThreeHundredRupees }, new List<RewardType>(), new List<BossType>());
+            Logic.GetMissingRequiredItems(tempWorld.LightWorldNorthEast.ZorasDomain.Zora, progression, out _).Should().BeEmpty();
+            tempWorld.LightWorldNorthEast.ZorasDomain.Zora.IsAvailable(progression).Should().BeTrue();
+        }
     }
 }
