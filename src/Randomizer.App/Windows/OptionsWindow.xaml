@@ -34,16 +34,20 @@
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,0">
 
-              <controls:LabeledControl Text="A Link to the Past ROM (required):">
+              <controls:LabeledControl Text="ALttP Japanese v1.0 ROM (required):">
                 <controls:FileSystemInput Path="{Binding Z3RomPath, Mode=TwoWay}"
                                           Filter="SNES ROMs (*.sfc, *.smc)|*.sfc;*.smc|All files (*.*)|*.*"
-                                          DialogTitle="Select 'A Link to the Past' ROM" />
+                                          DialogTitle="Select 'A Link to the Past' ROM"
+                                          FileValidationHash="03a63945398191337e896e5771f77173"
+                                          FileValidationErrorMessage="Selected rom does not match the known hash for the Japanese v1.0 version of A Link to the Past and may not work as expected. Would you like to continue?" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Super Metroid ROM (required):">
+              <controls:LabeledControl Text="Super Metroid Japanese/US ROM (required):">
                 <controls:FileSystemInput Path="{Binding SMRomPath, Mode=TwoWay}"
                                           Filter="SNES ROMs (*.sfc, *.smc)|*.sfc;*.smc|All files (*.*)|*.*"
-                                          DialogTitle="Select 'Super Metroid' ROM" />
+                                          DialogTitle="Select 'Super Metroid' ROM"
+                                          FileValidationHash="21f3e98df4780ee1c667b84e57d88675"
+                                          FileValidationErrorMessage="Selected rom does not match the known hash for the Japanese/US version of Super Metroid and may not work as expected. Would you like to continue?"/>
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="ROM output folder:">
