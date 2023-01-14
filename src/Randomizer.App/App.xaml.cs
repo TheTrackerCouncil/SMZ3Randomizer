@@ -62,10 +62,33 @@ namespace Randomizer.App
                 if (key == null)
                     return;
 
+                var vScreenWidth = SystemParameters.VirtualScreenWidth;
+                var vScreenHeight = SystemParameters.VirtualScreenHeight;
+                var vScreenTop = SystemParameters.VirtualScreenTop;
+                var vScreenLeft = SystemParameters.VirtualScreenLeft;
+                
                 window.Width = (int)key.GetValue("Width", window.Width)!;
                 window.Height = (int)key.GetValue("Height", window.Height)!;
                 window.Left = (int)key.GetValue("Left", window.Left)!;
                 window.Top = (int)key.GetValue("Top", window.Top)!;
+
+                if (window.Left < vScreenLeft)
+                {
+                    window.Left = vScreenLeft;
+                }
+                else if (window.Left > vScreenLeft + vScreenWidth - window.Width)
+                {
+                    window.Left = vScreenLeft + vScreenWidth - window.Width;
+                }
+
+                if (window.Top < vScreenTop)
+                {
+                    window.Top = vScreenTop;
+                }
+                else if (window.Top > vScreenTop + vScreenHeight - window.Height)
+                {
+                    window.Top = vScreenTop + vScreenHeight - window.Height;
+                }
             }
             catch (Exception)
             {
