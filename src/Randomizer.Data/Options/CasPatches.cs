@@ -23,7 +23,7 @@ namespace Randomizer.Data.Options
 
         [DisplayName("Item Patches")]
         [Description("Includes additional item patches, such as quarter magic, randomized filled bottles, and fairy bottle trades.")]
-        public bool ExpandedItems { get; set; }
+        public bool ExpandedItems { get; set; } = true;
 
         [DisplayName("Aim with Any Button")]
         [Description("Allows you to map the aiming button to any button.\nPatch developed by Kejardon.")]

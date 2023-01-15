@@ -362,7 +362,7 @@ namespace Randomizer.Data.WorldData
             itemPool.AddRange(Copies(4, () => new Item(ItemType.BombUpgrade5, world)));
             itemPool.AddRange(Copies(2, () => new Item(ItemType.OneRupee, world)));
             itemPool.AddRange(Copies(4, () => new Item(ItemType.FiveRupees, world)));
-            itemPool.AddRange(Copies(world.Config.MetroidKeysanity ? 25 : 28, () => new Item(ItemType.TwentyRupees, world)));
+            itemPool.AddRange(Copies(world.Config.MetroidKeysanity ? 24 : 27, () => new Item(ItemType.TwentyRupees, world)));
             itemPool.AddRange(Copies(7, () => new Item(ItemType.FiftyRupees, world)));
             itemPool.AddRange(Copies(3, () => new Item(ItemType.ThreeHundredRupees, world)));
 
@@ -371,6 +371,7 @@ namespace Randomizer.Data.WorldData
             itemPool.AddRange(Copies(15, () => new Item(ItemType.Super, world)));
             itemPool.AddRange(Copies(8, () => new Item(ItemType.PowerBomb, world)));
 
+            // If no quarter magic, add an extra 20 rupees back
             if (!world.Config.CasPatches.ExpandedItems)
             {
                 itemPool.Add(new Item(ItemType.TwentyRupees, world));

@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.Generation
 
         public static string Name => "Super Metroid & A Link to the Past Cas’ Randomizer";
 
-        public static Version Version => new(3, 0);
+        public static Version Version => new(4, 0);
 
         protected IFiller Filler { get; }
 
