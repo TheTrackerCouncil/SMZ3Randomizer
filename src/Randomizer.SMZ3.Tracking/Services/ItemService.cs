@@ -226,9 +226,9 @@ namespace Randomizer.SMZ3.Tracking.Services
 
             if (!_world.World.Config.MetroidKeysanity || assumeKeys)
             {
-                progression.AddRange(Item.CreateKeycards(_world.World));
+                progression.AddRange(_world.World.ItemPools.Keycards);
                 if (assumeKeys)
-                    progression.AddRange(Item.CreateDungeonPool(_world.World));
+                    progression.AddRange(_world.World.ItemPools.Dungeon);
             }
 
             foreach (var item in TrackedItems().Select(x => x.State).Distinct())

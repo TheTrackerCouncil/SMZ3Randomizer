@@ -97,7 +97,7 @@ namespace Randomizer.SMZ3
             {
                 if (!world.Config.MetroidKeysanity)
                 {
-                    var keycards = Item.CreateKeycards(world);
+                    var keycards = world.ItemPools.Keycards;
                     items.AddRange(keycards);
                     keycardCount += keycards.Count();
                 }

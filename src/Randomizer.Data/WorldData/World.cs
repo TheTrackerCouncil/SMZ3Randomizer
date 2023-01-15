@@ -92,6 +92,7 @@ namespace Randomizer.Data.WorldData
             Locations = Regions.SelectMany(x => x.Locations).ToImmutableList();
             Rooms = Regions.SelectMany(x => x.Rooms).ToImmutableList();
             State = trackerState ?? new TrackerState();
+            ItemPools = new WorldItemPools(this);
 
             /*if (metadata != null && trackerState != null)
             {
@@ -156,6 +157,7 @@ namespace Randomizer.Data.WorldData
         public LowerNorfairWest LowerNorfairWest { get; }
         public LowerNorfairEast LowerNorfairEast { get; }
         public WreckedShip WreckedShip { get; }
+        public WorldItemPools ItemPools { get; }
 
         public Location? LastClearedLocation { get; set; }
 
