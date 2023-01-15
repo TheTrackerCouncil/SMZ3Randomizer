@@ -333,6 +333,11 @@ namespace Randomizer.Data.WorldData
                 new Item(ItemType.XRay, world),
             };
 
+            if (world.Config.CasPatches.ExpandedItems)
+            {
+                itemPool.Add(new Item(ItemType.HalfMagic, world));
+            }
+
             itemPool.AddRange(Copies(10, () => new Item(ItemType.HeartContainer, world)));
 
             return itemPool;
@@ -365,6 +370,11 @@ namespace Randomizer.Data.WorldData
             itemPool.AddRange(Copies(39, () => new Item(ItemType.Missile, world)));
             itemPool.AddRange(Copies(15, () => new Item(ItemType.Super, world)));
             itemPool.AddRange(Copies(8, () => new Item(ItemType.PowerBomb, world)));
+
+            if (!world.Config.CasPatches.ExpandedItems)
+            {
+                itemPool.Add(new Item(ItemType.TwentyRupees, world));
+            }
 
             return itemPool;
         }

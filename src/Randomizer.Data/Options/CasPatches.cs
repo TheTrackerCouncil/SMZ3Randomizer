@@ -22,7 +22,7 @@ namespace Randomizer.Data.Options
         public bool PreventScams { get; set; } = true;
 
         [DisplayName("Item Patches")]
-        [Description("Updates some bottles to be filled by default and randomizes bottle fills at fairy fountains.")]
+        [Description("Includes additional item patches, such as quarter magic, randomized filled bottles, and fairy bottle trades.")]
         public bool ExpandedItems { get; set; }
 
         [DisplayName("Aim with Any Button")]

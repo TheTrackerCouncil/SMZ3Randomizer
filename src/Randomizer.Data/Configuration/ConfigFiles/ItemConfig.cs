@@ -366,6 +366,17 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Half Magic",
                     Name = new("Half Magic"),
                     InternalItemType = ItemType.HalfMagic,
+                    Multiple = true,
+                    Stages = new Dictionary<int, SchrodingersString>()
+                    {
+                        {1, new SchrodingersString("Half Magic") },
+                        {2, new SchrodingersString("Quarter Magic") }
+                    },
+                    WhenTracked = new Dictionary<int, SchrodingersString?>()
+                    {
+                        {1, new SchrodingersString("Tracked half magic") },
+                        {2, new SchrodingersString("Tracked quarter magic") }
+                    },
                     Hints = new("It's green."),
                     PedestalHints = new("The ability to do more magical things"),
                 },
