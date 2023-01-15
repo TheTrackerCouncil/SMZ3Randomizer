@@ -90,6 +90,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// </summary>
         public ICollection<Location>? Locations { get; set; }
 
+        /// <summary>
+        /// Clears both the previous and current data sets
+        /// </summary>
+        public void ClearData()
+        {
+            PreviousData = null;
+            CurrentData = null;
+        }
+
     }
 
 }
