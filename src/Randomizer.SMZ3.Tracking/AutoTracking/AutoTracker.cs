@@ -37,6 +37,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         private int _currentIndex;
         private Game _previousGame;
         private bool _hasStarted;
+        private bool _hasValidState;
         private IEmulatorConnector? _connector;
         private readonly Queue<EmulatorAction> _sendActions = new();
         private CancellationTokenSource? _stopSendingMessages;
@@ -357,7 +358,16 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             _logger.LogInformation("Disconnected");
             AutoTrackerDisconnected?.Invoke(this, EventArgs.Empty);
             _stopSendingMessages?.Cancel();
+
+            // Reset everything once
             IsSendingMessages = false;
+            foreach (var action in _readActions)
+            {
+                action.ClearData();
+            }
+            _sendActions.Clear();
+            CurrentGame = Game.Neither;
+            _hasValidState = false;
         }
 
         /// <summary>
@@ -485,6 +495,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             if (value == 0x00)
             {
                 CurrentGame = Game.Zelda;
+                _hasValidState = true;
             }
             else if (value == 0xFF)
             {
@@ -503,11 +514,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckZeldaRooms(EmulatorAction action)
         {
-            if (action.CurrentData != null && action.PreviousData != null)
-            {
-                CheckLocations(action, LocationMemoryType.Default, true, Game.Zelda);
-                CheckDungeons(action.CurrentData, action.PreviousData);
-            }
+            if (!_hasValidState) return;
+            if (action.CurrentData == null || action.PreviousData == null) return;
+            CheckLocations(action, LocationMemoryType.Default, true, Game.Zelda);
+            CheckDungeons(action.CurrentData, action.PreviousData);
         }
 
         /// <summary>
@@ -517,42 +527,41 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckZeldaMisc(EmulatorAction action)
         {
-            if (action.CurrentData != null && action.PreviousData != null)
+            if (!_hasValidState) return;
+            if (action.CurrentData == null || action.PreviousData == null) return;
+            // Failsafe to prevent incorrect checking
+            if (action.CurrentData?.ReadUInt8(0x190) == 0xFF && action.CurrentData?.ReadUInt8(0x191) == 0xFF)
             {
-                // Failsafe to prevent incorrect checking
-                if (action.CurrentData?.ReadUInt8(0x190) == 0xFF && action.CurrentData?.ReadUInt8(0x191) == 0xFF)
+                _logger.LogInformation("Ignoring due to transition");
+                return;
+            }
+
+            CheckLocations(action, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
+
+            PlayerHasFairy = false;
+            for (var i = 0; i < 4; i++)
+            {
+                PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
+            }
+
+            // Activated flute
+            if (action.CurrentData?.CheckBinary8Bit(0x10C, 0x01) == true && action.PreviousData?.CheckBinary8Bit(0x10C, 0x01) != true)
+            {
+                var duckItem = _itemService.FirstOrDefault("Duck");
+                if (duckItem?.State.TrackingState == 0)
                 {
-                    _logger.LogInformation("Ignoring due to transition");
-                    return;
+                    Tracker.TrackItem(duckItem, null, null, false, true);
                 }
+            }
 
-                CheckLocations(action, LocationMemoryType.ZeldaMisc, false, Game.Zelda);
-
-                PlayerHasFairy = false;
-                for (var i = 0; i < 4; i++)
+            // Check if the player cleared Aga
+            if (action.CurrentData?.ReadUInt8(0x145) >= 3)
+            {
+                var castleTower = Tracker.World.CastleTower;
+                if (castleTower.DungeonState.Cleared ==false)
                 {
-                    PlayerHasFairy |= action.CurrentData?.ReadUInt8(0xDC + i) == 6;
-                }
-
-                // Activated flute
-                if (action.CurrentData?.CheckBinary8Bit(0x10C, 0x01) == true && action.PreviousData?.CheckBinary8Bit(0x10C, 0x01) != true)
-                {
-                    var duckItem = _itemService.FirstOrDefault("Duck");
-                    if (duckItem?.State.TrackingState == 0)
-                    {
-                        Tracker.TrackItem(duckItem, null, null, false, true);
-                    }
-                }
-
-                // Check if the player cleared Aga
-                if (action.CurrentData?.ReadUInt8(0x145) >= 3)
-                {
-                    var castleTower = Tracker.World.CastleTower;
-                    if (castleTower.DungeonState.Cleared ==false)
-                    {
-                        Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
-                        _logger.LogInformation("Auto tracked {Name} as cleared", castleTower.Name);
-                    }
+                    Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
+                    _logger.LogInformation("Auto tracked {Name} as cleared", castleTower.Name);
                 }
             }
         }
@@ -563,6 +572,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckMetroidLocations(EmulatorAction action)
         {
+            if (!_hasValidState) return;
             if (action.CurrentData != null && action.PreviousData != null)
             {
                 CheckLocations(action, LocationMemoryType.Default, false, Game.SM);
@@ -575,6 +585,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="action"></param>
         protected void CheckMetroidBosses(EmulatorAction action)
         {
+            if (!_hasValidState) return;
             if (action.CurrentData != null && action.PreviousData != null)
             {
                 CheckSMBosses(action.CurrentData);
@@ -791,6 +802,19 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             MetroidState = new(action.CurrentData);
             _logger.LogDebug("{StateDetails}", MetroidState.ToString());
             if (prevState == null) return;
+
+            // If the game hasn't booted up, wait until we find valid data in the Metroid state before we start
+            // checking locations
+            if (_hasValidState != MetroidState.IsValid)
+            {
+                _hasValidState = MetroidState.IsValid;
+                if (_hasValidState)
+                {
+                    _logger.LogInformation("Valid game state detected");
+                }
+            }
+
+            if (!_hasValidState) return;
 
             foreach (var check in _metroidStateChecks)
             {
