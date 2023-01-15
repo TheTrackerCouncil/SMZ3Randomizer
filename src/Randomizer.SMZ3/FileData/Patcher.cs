@@ -33,6 +33,22 @@ namespace Randomizer.SMZ3.FileData
         private readonly bool _enableMultiworld;
         private readonly ILogger _logger;
 
+        private static readonly List<ItemType> s_bottleTypes = new()
+        {
+            ItemType.Bottle,
+            ItemType.BottleWithBee,
+            ItemType.BottleWithFairy,
+            ItemType.BottleWithBluePotion,
+            ItemType.BottleWithGoldBee,
+            ItemType.BottleWithGreenPotion,
+            ItemType.BottleWithRedPotion
+        };
+
+        private static readonly List<byte> s_fairyPondTrades = new()
+        {
+            0x16, 0x2B, 0x2C, 0x2D, 0x3C, 0x3D, 0x48
+        };
+
         public Patcher(World myWorld, List<World> allWorlds, string seedGuid, int seed, Random rnd, IMetadataService metadataService, GameLinesConfig gameLines, ILogger logger)
         {
             _myWorld = myWorld;
@@ -107,6 +123,7 @@ namespace Randomizer.SMZ3.FileData
             WriteRngBlock();
             WriteDiggingGameRng();
             WritePrizeShuffle();
+            UpdateFairyPondTrades();
 
             WriteRemoveEquipmentFromUncle(_myWorld.HyruleCastle.LinksUncle.Item);
 
@@ -359,8 +376,13 @@ namespace Randomizer.SMZ3.FileData
         private byte GetZ3ItemId(Location location)
         {
             var item = location.Item;
+            var itemType = item.Type;
+            if (itemType == ItemType.Bottle && _myWorld.Config.CasPatches.ExpandedItems)
+            {
+                itemType = s_bottleTypes.Random(_rnd);
+            }
             var value = location.Type == LocationType.NotInDungeon ||
-                !(item.IsDungeonItem && location.Region.IsRegionItem(item) && item.World == _myWorld) ? item.Type : item switch
+                !(item.IsDungeonItem && location.Region.IsRegionItem(item) && item.World == _myWorld) ? itemType : item switch
                 {
                     _ when item.IsKey => ItemType.Key,
                     _ when item.IsBigKey => ItemType.BigKey,
@@ -958,6 +980,13 @@ namespace Randomizer.SMZ3.FileData
                 TurtleRock _ => new[] { 0x2D5C7, 0x2D5A7, 0x2D5AA, 0x2D5AB },
                 var x => throw new InvalidOperationException($"Region {x} should not be a dungeon music region"),
             };
+        }
+
+        private void UpdateFairyPondTrades()
+        {
+            if (!_myWorld.Config.CasPatches.ExpandedItems) return;
+            _patches.Add((Snes(0x6C8FF), new[] { s_fairyPondTrades.Random(_rnd) }));
+            _patches.Add((Snes(0x6C93B), new[] { s_fairyPondTrades.Random(_rnd) }));
         }
     }
 }

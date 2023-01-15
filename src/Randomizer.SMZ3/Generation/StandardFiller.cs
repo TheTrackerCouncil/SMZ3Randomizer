@@ -57,16 +57,16 @@ namespace Randomizer.SMZ3.Generation
 
             var progressionItems = new List<Item>();
             var assumedInventory = new List<Item>();
-            var niceItems = worlds.SelectMany(Item.CreateNicePool).Shuffle(Random);
-            var junkItems = worlds.SelectMany(Item.CreateJunkPool).Shuffle(Random);
+            var niceItems = worlds.SelectMany(x => x.ItemPools.Nice).Shuffle(Random);
+            var junkItems = worlds.SelectMany(x => x.ItemPools.Junk).Shuffle(Random);
 
             foreach (var world in worlds)
             {
                 var worldConfig = world.Config;
 
                 /* The dungeon pool order is significant, don't shuffle */
-                var dungeon = Item.CreateDungeonPool(world);
-                var progression = Item.CreateProgressionPool(world);
+                var dungeon = world.ItemPools.Dungeon.ToList();
+                var progression = world.ItemPools.Progression.ToList();
 
                 var preferenceItems = ApplyItemPoolPreferences(progression, junkItems, world);
 
@@ -76,18 +76,17 @@ namespace Randomizer.SMZ3.Generation
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
-                    var keyCards = Item.CreateKeycards(world);
+                    var keyCards = world.ItemPools.Keycards;
                     AssumedFill(dungeon, progression.Concat(keyCards).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
                 }
 
                 if (worldConfig.MetroidKeysanity)
                 {
-                    progressionItems.AddRange(Item.CreateKeycards(world));
+                    progressionItems.AddRange(world.ItemPools.Keycards);
                 }
                 else
                 {
-                    var keyCards = Item.CreateKeycards(world);
-                    assumedInventory = assumedInventory.Concat(keyCards).ToList();
+                    assumedInventory = assumedInventory.Concat(world.ItemPools.Keycards).ToList();
                 }
 
                 progressionItems.AddRange(dungeon);
