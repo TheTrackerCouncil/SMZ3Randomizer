@@ -21,6 +21,10 @@ namespace Randomizer.Data.Options
         [Description("The bottle merchant and King Zora will tell you what they have before asking if you want to purchase it, even if you don't have enough rupees.")]
         public bool PreventScams { get; set; } = true;
 
+        [DisplayName("Item Patches")]
+        [Description("Updates some bottles to be filled by default and randomizes bottle fills at fairy fountains.")]
+        public bool ExpandedItems { get; set; }
+
         [DisplayName("Aim with Any Button")]
         [Description("Allows you to map the aiming button to any button.\nPatch developed by Kejardon.")]
         public bool AimAnyButton { get; set; } = true;
