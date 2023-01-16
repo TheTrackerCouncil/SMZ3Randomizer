@@ -94,5 +94,11 @@ namespace Randomizer.App.Patches
         /// </summary>
         /// <returns>A new stream that contains the IPS patch.</returns>
         public static Stream SnapMorph() => GetStream("Celeste.ips");
+
+        /// <summary>
+        /// Gets a stream for the IPS patch to allow you to run without holding the run button
+        /// </summary>
+        /// <returns>A new stream that contains the IPS patch.</returns>
+        public static Stream AutoRun() => GetStream("AutoRun.ips");
     }
 }

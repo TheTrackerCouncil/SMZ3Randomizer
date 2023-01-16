@@ -69,6 +69,10 @@ namespace Randomizer.Data.Options
         [Description("Makes it easier to get into morph ball holes and allows you to morph over some 1 tile wide pits.\nPatch developed by Benox50.")]
         public bool SnapMorph { get; set; } = true;
 
+        [DisplayName("Auto Run")]
+        [Description("Enables you to run without holding down the run button. Instead, holding the run button will prevent you from increasing in speed and can be used to walk or prevent speed boosting.")]
+        public bool AutoRun { get; set; } = true;
+
         public CasPatches Clone()
         {
             return (CasPatches)MemberwiseClone();
