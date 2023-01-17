@@ -73,6 +73,10 @@ namespace Randomizer.Data.Options
         [Description("Enables you to run without holding down the run button. Instead, holding the run button will prevent you from increasing in speed and can be used to walk or prevent speed boosting.")]
         public bool AutoRun { get; set; } = true;
 
+        [DisplayName("Quick Toggle")]
+        [Description("Pressing the item cancel button when you don't have an item selected will select either the power bombs or super missiles based on if you are morphed or not.")]
+        public bool QuickToggle { get; set; } = true;
+
         public CasPatches Clone()
         {
             return (CasPatches)MemberwiseClone();

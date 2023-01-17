@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>8.1.0-alpha.3</Version>
+    <Version>8.1.0-alpha.4</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -61,6 +61,8 @@
     <EmbeddedResource Include="Patches\Celeste.ips" />
     <None Remove="Patches\AutoRun.ips" />
     <EmbeddedResource Include="Patches\AutoRun.ips" />
+    <None Remove="Patches\QuickToggle.ips" />
+    <EmbeddedResource Include="Patches\QuickToggle.ips" />
   </ItemGroup>
 
   <ItemGroup>

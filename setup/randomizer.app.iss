@@ -4,7 +4,7 @@
 #include "CodeDependencies.iss"
 
 #define MyAppName "SMZ3 Cas' Randomizer"
-#define MyAppVersion "8.1.0-alpha.3"
+#define MyAppVersion "8.1.0-alpha.4"
 #define MyAppPublisher "Vivelin"
 #define MyAppURL "https://github.com/Vivelin/SMZ3Randomizer"
 #define MyAppExeName "Randomizer.App.exe"

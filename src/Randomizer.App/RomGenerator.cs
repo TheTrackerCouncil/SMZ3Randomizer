@@ -369,6 +369,12 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
+            if (options.PatchOptions.CasPatches.QuickToggle)
+            {
+                using var patch = IpsPatch.QuickToggle();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
             if (options.PatchOptions.ShipPatch.FileName != null)
             {
 
