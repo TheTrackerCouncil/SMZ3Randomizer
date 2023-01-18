@@ -14,38 +14,46 @@ quick_toggle:
         BRA .clear_item
     +
 
-    ; If the player is in morph ball mode
-    LDA $7E0A1C : BIT #$0040 : BEQ +
-        
-        ; If the player has no power bombs, don't select anything
-        LDA $09CE : CMP #$0000 : BNE ++
-            BRA .clear_item
-        ++
+    ; Annoyingly there's no good way of easily seeing if the player
+    ; is morphed or not. We have to check a bunch of different states.
+    LDA $0A1F : AND #$00FF
+    CMP #$0004 : BEQ .check_power_bomb ; Morph ball on ground
+    CMP #$0008 : BEQ .check_power_bomb ; Morph ball falling
+    CMP #$0011 : BEQ .check_power_bomb ; Spring ball on ground
+    CMP #$0012 : BEQ .check_power_bomb ; Spring ball in air
+    CMP #$0013 : BEQ .check_power_bomb ; Spring ball falling
 
-        ; Otherwise select the power bombs
-        LDA #$0002 : STA $7e00CC
-        BRA .select_item
-    +
+    BRA .check_missiles 
 
-    ; If the player has no super missiles, try missiles
+; Checks if the player has power bombs ammo. If they don't, 
+; don't select anything
+.check_power_bomb
+    LDA $09CE : CMP #$0000 : BNE ++
+        BRA .clear_item
+    ++
+    LDA #$0002
+    BRA .select_item
+
+; Checks if the player has super missile ammo. If they don't,
+; check if they have missile ammo. If neither, select nothing
+.check_missiles
     LDA $09CA : CMP #$0000 : BNE +
-
-        ; If the player has no missiles, don't select anything
         LDA $09C6 : CMP #$0000 : BNE ++
             BRA .clear_item
         ++
         LDA #$0000
         BRA .select_item
     +
-
-    ; Select super missiles
     LDA #$0001
     BRA .select_item
 
+; Selects nothing (default behavior)
 .clear_item
     STZ $0a04
     JML $90C4E9
 
+; Selects an item by setting the currently selected item to the left
+; of the item we want, then calling the default change selection code
 .select_item
     STA $09D2
     STZ $16
