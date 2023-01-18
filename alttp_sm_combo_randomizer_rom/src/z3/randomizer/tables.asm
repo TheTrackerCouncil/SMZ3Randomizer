@@ -161,6 +161,14 @@ org $400040 ; PC 0x180040
 PreopenCurtains:
 db #$00 ; #$00 = Off (default) - #$01 = On
 ;--------------------------------------------------------------------------------
+org $40008B ; AKA "Fast Ganon" -- PC 0x18008B
+PreopenPyramidHole:
+db #$00 ; #$00 = Off ( default) - #$01 = On
+;--------------------------------------------------------------------------------
+org $40008C ; (old)org $30808C ; PC 0x18008C
+PreopenGanonsTower:
+db #$00 ; #$00 = Off (default) - #$01 = On
+;--------------------------------------------------------------------------------
 org $400041 ; PC 0x180041
 AllowSwordlessMedallionUse:
 db #$00 ; #$00 = Off (default) - #$01 = Medallion Pads - #$02 = Always (Not Implemented)
@@ -171,7 +179,7 @@ db #$00 ; #$00 = Off (default) - #$01 = On
 ;--------------------------------------------------------------------------------
 org $400043 ; PC 0x180043
 StartingSword:
-db #$01 ; #$00 = No Sword (default) - #$FF = Non-Sword
+db #$00 ; #$00 = No Sword (default) - #$FF = Non-Sword
 ;--------------------------------------------------------------------------------
 org $400044 ; PC 0x180044
 AllowHammerTablets:
@@ -251,6 +259,15 @@ CrystalPendantFlags_2:
 ;Crystal: $40
 ;--------------------------------------------------------------------------------
 ; 0x18005D - 0x18005F (unused)
+;--------------------------------------------------------------------------------
+; old -- org $30805E ; PC 0x18005E - Number of crystals required to enter GT
+org $40005E ; PC 0x18005E - Number of crystals required to enter GT
+NumberOfCrystalsRequiredForTower:
+db #$07 ; #$07 = 7 Crystals
+; old -- org $30805F ; PC 0x18005F - Number of crystals required to kill Ganon
+org $40005F ; PC 0x18005F - Number of crystals required to kill Ganon
+NumberOfCrystalsRequiredForGanon:
+db #$07 ; #$07 = 7 Crystals
 ;--------------------------------------------------------------------------------
 org $400060 ; PC 0x180060 - 0x18007E
 ProgrammableItemLogicJump_1:

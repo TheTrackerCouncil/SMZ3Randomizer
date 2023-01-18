@@ -5,18 +5,33 @@ org $c38c5c
 ; Door ASM to set the G4 open event bit if all major bosses are killed
 org $cfea00
 base $8fea00
+    PHX
+    ldx #$0000
+
     lda $7ed828
     bit.w #$0100
-    beq +
-    lda $7ed82c
+    beq + : inx
+
++   lda $7ed82c
     bit.w #$0001
-    beq +
-    lda $7ed82a
+    beq + : inx
+
++   lda $7ed82a
     and.w #$0101
-    cmp.w #$0101
-    bne +
+    bit.w #$0001
+    beq + : inx
+
++   bit.w #$0100
+    beq + : inx
+
++   
+    txa
+    cmp.l config_sm_bosses
+    bcc +
+
     lda $7ed820
-    ora.w #$0400
+    ora.w #$07C0
     sta $7ed820
-+
-    rts
+
++   PLX
+    RTS
