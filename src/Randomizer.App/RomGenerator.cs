@@ -260,6 +260,10 @@ namespace Randomizer.App
             var config = options.ToConfig();
             config.PlandoConfig = plandoConfig;
             config.KeysanityMode = plandoConfig.KeysanityMode;
+            config.GanonsTowerCrystalCount = plandoConfig.GanonsTowerCrystalCount;
+            config.GanonCrystalCount = plandoConfig.GanonCrystalCount;
+            config.OpenPyramid = plandoConfig.OpenPyramid;
+            config.TourianBossCount = plandoConfig.TourianBossCount;
             config.LogicConfig = plandoConfig.Logic.Clone();
             return _plandomizer.GenerateSeed(config, CancellationToken.None);
         }
@@ -487,6 +491,13 @@ namespace Randomizer.App
                 {
                     log.AppendLine("Keysanity: " + world.Config.KeysanityMode.ToString());
                 }
+
+                var gtCrystals = world.Config.GanonsTowerCrystalCount;
+                var ganonCrystals = world.Config.GanonCrystalCount;
+                var pyramid = world.Config.OpenPyramid ? "Open" : "Closed";
+                var tourianBosses = world.Config.TourianBossCount;
+                log.AppendLine($"Win Conditions: GT = {gtCrystals} Crystals, Ganon = {ganonCrystals} Crystals, Pyramid = {pyramid}, Tourian = {tourianBosses} Bosses");
+
                 log.AppendLine();
             }
 

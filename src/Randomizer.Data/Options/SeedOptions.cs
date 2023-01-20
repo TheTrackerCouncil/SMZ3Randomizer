@@ -54,6 +54,11 @@ namespace Randomizer.Data.Options
 
         public int UniqueHintCount { get; set; } = 8;
 
+        public int GanonsTowerCrystalCount { get; set; } = 7;
+        public int GanonCrystalCount { get; set; } = 7;
+        public bool OpenPyramid { get; set; } = false;
+        public int TourianBossCount { get; set; } = 4;
+
         [JsonIgnore]
         public int MaxHints => 15;
 

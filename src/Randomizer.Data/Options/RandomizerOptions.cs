@@ -143,6 +143,10 @@ namespace Randomizer.Data.Options
                     CopySeedAndRaceSettings = true,
                     Seed = SeedOptions.Seed,
                     UniqueHintCount = SeedOptions.UniqueHintCount,
+                    GanonsTowerCrystalCount = SeedOptions.GanonsTowerCrystalCount,
+                    GanonCrystalCount = SeedOptions.GanonCrystalCount,
+                    OpenPyramid = SeedOptions.OpenPyramid,
+                    TourianBossCount = SeedOptions.TourianBossCount,
                 };
                 return config;
             }
@@ -155,7 +159,7 @@ namespace Randomizer.Data.Options
                 var disableTrackerHints = SeedOptions.DisableTrackerHints;
                 var disableTrackerSpoilers = SeedOptions.DisableTrackerSpoilers;
                 var disableCheats = SeedOptions.DisableCheats;
-                var uniqueHintcount = SeedOptions.UniqueHintCount;
+                var casPatches = PatchOptions.CasPatches.Clone();
                 var seed = SeedOptions.Seed;
 
                 if (SeedOptions.CopySeedAndRaceSettings)
@@ -165,7 +169,7 @@ namespace Randomizer.Data.Options
                     disableTrackerHints = oldConfig.DisableTrackerHints;
                     disableTrackerSpoilers = oldConfig.DisableTrackerSpoilers;
                     disableCheats = oldConfig.DisableCheats;
-                    uniqueHintcount = oldConfig.UniqueHintCount;
+                    casPatches = oldConfig.CasPatches;
                     seed = oldConfig.Seed;
                 }
 
@@ -192,10 +196,14 @@ namespace Randomizer.Data.Options
                     LocationItems = oldConfig.LocationItems,
                     EarlyItems = oldConfig.EarlyItems,
                     LogicConfig = oldConfig.LogicConfig,
-                    CasPatches = oldConfig.CasPatches,
+                    CasPatches = casPatches,
                     SettingsString = SeedOptions.ConfigString,
-                    UniqueHintCount = uniqueHintcount,
-                    CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings
+                    UniqueHintCount = oldConfig.UniqueHintCount,
+                    CopySeedAndRaceSettings = SeedOptions.CopySeedAndRaceSettings,
+                    GanonsTowerCrystalCount = oldConfig.GanonsTowerCrystalCount,
+                    GanonCrystalCount = oldConfig.GanonCrystalCount,
+                    OpenPyramid = oldConfig.OpenPyramid,
+                    TourianBossCount = oldConfig.TourianBossCount,
                 };
             }
         }

@@ -252,6 +252,70 @@
 
               </GroupBox>
 
+              <GroupBox Header="Goal Settings"
+                        IsEnabled="{Binding DisabledInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                        Padding="0,5,0,0"
+                        Margin="0,0,0,10">
+                <StackPanel>
+
+                  <CheckBox IsChecked="{Binding OpenPyramid}"
+                        Content="Open Ganon's pyramid by default." />
+                  
+                  <controls:LabeledControl Text="Crystals needed for GT:"
+                                           Margin="0,0,0,3"
+                                           ToolTip="The number of crystals needed to enter Ganon's Tower.">
+                    <StackPanel Orientation="Horizontal" >
+                      <TextBox Text="{Binding GanonsTowerCrystalCount, Mode=TwoWay }"
+                               MinWidth="25"
+                               TextAlignment="Center"
+                               Margin="0,0,10,0"
+                               IsReadOnly="True">
+                      </TextBox>
+                      <Slider Width="200"
+                            Value="{Binding GanonsTowerCrystalCount, Mode=TwoWay }"
+                            Minimum="0"
+                            Maximum="7"/>
+                    </StackPanel>
+                  </controls:LabeledControl>
+
+                  <controls:LabeledControl Text="Crystals needed for Ganon:"
+                                           Margin="0,0,0,3"
+                                           ToolTip="The number of crystals needed to hurt Ganon.">
+                    <StackPanel Orientation="Horizontal" >
+                      <TextBox Text="{Binding GanonCrystalCount, Mode=TwoWay }"
+                               MinWidth="25"
+                               TextAlignment="Center"
+                               Margin="0,0,10,0"
+                               IsReadOnly="True">
+                      </TextBox>
+                      <Slider Width="200"
+                            Value="{Binding GanonCrystalCount, Mode=TwoWay }"
+                            Minimum="0"
+                            Maximum="7"/>
+                    </StackPanel>
+                  </controls:LabeledControl>
+
+                  <controls:LabeledControl Text="Bosses needed for Tourian:"
+                                           Margin="0,0,0,3"
+                                           ToolTip="The number of golden bosses needed to enter Tourian.">
+                    <StackPanel Orientation="Horizontal" >
+                      <TextBox Text="{Binding TourianBossCount, Mode=TwoWay }"
+                               MinWidth="25"
+                               TextAlignment="Center"
+                               Margin="0,0,10,0"
+                               IsReadOnly="True">
+                      </TextBox>
+                      <Slider Width="200"
+                            Value="{Binding TourianBossCount, Mode=TwoWay }"
+                            Minimum="0"
+                            Maximum="4"/>
+                    </StackPanel>
+                  </controls:LabeledControl>
+
+                </StackPanel>
+
+              </GroupBox>
+
               <GroupBox Header="Race Settings"
                         Padding="0,5,0,0"
                         Margin="0,0,0,10">
