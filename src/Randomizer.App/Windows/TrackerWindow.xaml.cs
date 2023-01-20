@@ -21,6 +21,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
@@ -251,7 +252,7 @@ namespace Randomizer.App.Windows
                         var item = _itemService.FirstOrDefault(itemName);
                         if (item == null)
                         {
-                            _logger.LogError($"Item {itemName} could not be found");
+                            _logger.LogError("Item {ItemName} could not be found", itemName);
                             continue;
                         }
 
@@ -260,14 +261,28 @@ namespace Randomizer.App.Windows
                         var overlay = GetOverlayImageFileName(item);
                         if (fileName == null)
                         {
-                            _logger.LogError($"Image for {item.Name} could not be found");
+                            _logger.LogError("Image for {ItemName} could not be found", item.Name);
                             continue;
+                        }
+
+                        var counter = item.Counter;
+
+                        // Group bottle counts together
+                        if (item.Type == ItemType.Bottle)
+                        {
+                            var countedBottleTypes = _itemService.LocalPlayersItems()
+                                .Where(x => x.Type != ItemType.Bottle && x.Type.IsInCategory(ItemCategory.Bottle))
+                                .Select(x => x.Type).Distinct().ToList();
+                            foreach (var type in countedBottleTypes)
+                            {
+                                counter += _itemService.FirstOrDefault(type)?.Counter ?? 0;
+                            }
                         }
 
                         latestImage = GetGridItemControl(fileName,
                             gridLocation.Column, gridLocation.Row,
-                            item.Counter, overlay, minCounter: 2);
-                        latestImage.Opacity = item.State.TrackingState > 0 ? 1.0d : 0.2d;
+                            counter, overlay, minCounter: 2);
+                        latestImage.Opacity = item.State.TrackingState > 0 || counter > 0 ? 1.0d : 0.2d;
                         TrackerGrid.Children.Add(latestImage);
                     }
 
@@ -294,7 +309,7 @@ namespace Randomizer.App.Windows
                     var dungeon = _world.World.Dungeons.FirstOrDefault(x => x.DungeonName == gridLocation.Identifiers.First());
                     if (dungeon == null)
                     {
-                        _logger.LogError($"Dungeon {gridLocation.Identifiers.First()} could not be found");
+                        _logger.LogError("Dungeon {DungeonName} could not be found", gridLocation.Identifiers.First());
                         continue;
                     }
 
@@ -327,7 +342,7 @@ namespace Randomizer.App.Windows
                     var overlay = GetOverlayImageFileName(boss.Metadata);
                     if (fileName == null)
                     {
-                        _logger.LogError($"Image for {boss.Name} could not be found");
+                        _logger.LogError("Image for {BossName} could not be found", boss.Name);
                         continue;
                     }
 
@@ -567,7 +582,7 @@ namespace Randomizer.App.Windows
                 Style = Application.Current.FindResource("DarkContextMenu") as Style
             };
 
-            if (boss.State.Defeated == true)
+            if (boss.State.Defeated)
             {
                 var unclear = new MenuItem
                 {

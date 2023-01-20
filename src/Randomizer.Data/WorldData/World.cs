@@ -193,6 +193,7 @@ namespace Randomizer.Data.WorldData
         {
             SetMedallions(rnd);
             SetRewards(rnd);
+            SetBottles(rnd);
         }
 
         public TrackerState? State { get; set; }
@@ -219,6 +220,26 @@ namespace Randomizer.Data.WorldData
             {
                 region.Reward = new Reward(rewards.First(), this, region);
                 rewards.Remove(region.RewardType);
+            }
+        }
+
+        private void SetBottles(Random rnd)
+        {
+            if (!Config.CasPatches.ExpandedItems) return;
+            var bottleTypes = new List<ItemType>()
+            {
+                ItemType.Bottle,
+                ItemType.BottleWithBee,
+                ItemType.BottleWithFairy,
+                ItemType.BottleWithBluePotion,
+                ItemType.BottleWithGoldBee,
+                ItemType.BottleWithGreenPotion,
+                ItemType.BottleWithRedPotion
+            };
+            foreach (var bottleItem in ItemPools.AllItems.Where(x => x.Type == ItemType.Bottle))
+            {
+                var newType = bottleTypes.Random(rnd);
+                bottleItem.UpdateItemType(newType);
             }
         }
 

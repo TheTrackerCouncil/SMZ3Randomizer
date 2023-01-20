@@ -37,6 +37,7 @@ public class WorldItemPools
     public IReadOnlyCollection<Item> Junk { get; }
     public IReadOnlyCollection<Item> Dungeon { get; set; }
     public IReadOnlyCollection<Item> Keycards { get; set; }
+    public IEnumerable<Item> AllItems => Progression.Concat(Nice).Concat(Junk).Concat(Dungeon).Concat(Keycards);
 
     /// <summary>
     /// Returns a list of items that are nice to have but are not required

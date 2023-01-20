@@ -33,17 +33,6 @@ namespace Randomizer.SMZ3.FileData
         private readonly bool _enableMultiworld;
         private readonly ILogger _logger;
 
-        private static readonly List<ItemType> s_bottleTypes = new()
-        {
-            ItemType.Bottle,
-            ItemType.BottleWithBee,
-            ItemType.BottleWithFairy,
-            ItemType.BottleWithBluePotion,
-            ItemType.BottleWithGoldBee,
-            ItemType.BottleWithGreenPotion,
-            ItemType.BottleWithRedPotion
-        };
-
         private static readonly List<byte> s_fairyPondTrades = new()
         {
             0x16, 0x2B, 0x2C, 0x2D, 0x3C, 0x3D, 0x48
@@ -377,10 +366,6 @@ namespace Randomizer.SMZ3.FileData
         {
             var item = location.Item;
             var itemType = item.Type;
-            if (itemType == ItemType.Bottle && _myWorld.Config.CasPatches.ExpandedItems)
-            {
-                itemType = s_bottleTypes.Random(_rnd);
-            }
             var value = location.Type == LocationType.NotInDungeon ||
                 !(item.IsDungeonItem && location.Region.IsRegionItem(item) && item.World == _myWorld) ? itemType : item switch
                 {
