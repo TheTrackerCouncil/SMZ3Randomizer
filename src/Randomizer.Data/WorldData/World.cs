@@ -184,6 +184,11 @@ namespace Randomizer.Data.WorldData
             return Regions.OfType<IHasBoss>().Where(x => bosses.Contains(x.BossType)).All(x => x.CanBeatBoss(items));
         }
 
+        public int CanDefeatBossCount(Progression items, params BossType[] bosses)
+        {
+            return Regions.OfType<IHasBoss>().Where(x => bosses.Contains(x.BossType)).Count(x => x.CanBeatBoss(items));
+        }
+
         public void Setup(Random rnd)
         {
             SetMedallions(rnd);
