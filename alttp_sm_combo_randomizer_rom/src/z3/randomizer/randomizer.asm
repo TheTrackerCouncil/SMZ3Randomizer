@@ -71,6 +71,7 @@ incsrc heartpieces.asm
 incsrc npcitems.asm
 incsrc utilities.asm
 incsrc flipperkill.asm
+incsrc goalitem.asm
 incsrc pendantcrystalhud.asm
 incsrc potions.asm
 incsrc shopkeeper.asm

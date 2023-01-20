@@ -122,8 +122,8 @@ JSL.l SpawnZelda : NOP #2
 ; ; Alternate Goal
 ; ;--------------------------------------------------------------------------------
 ;Invincible Ganon
-;org $06F2C8 ; <- 372C8 - Bank06.asm : 5776 (LDA $44 : CMP.b #$80 : BEQ .no_collision)
-;JSL.l GoalItemGanonCheck
+org $06F2C8 ; <- 372C8 - Bank06.asm : 5776 (LDA $44 : CMP.b #$80 : BEQ .no_collision)
+JSL.l GoalItemGanonCheck
 ; ;--------------------------------------------------------------------------------
 ; ;Hammerable Ganon
 ; org $06F2EA ; <- 372EA - Bank06.asm : 5791 (LDA $0E20, X : CMP.b #$D6 : BCS .no_collision)
@@ -1600,6 +1600,35 @@ NOP #4
 ;-- Breaking Ganon's Tower Seal
 org $08CD3A ; <- 44D3A ancilla_break_tower_seal.asm : 55 (JSL Main_ShowTextMessage)
 NOP #4
+;--------------------------------------------------------------------------------
+org $08CF19 ; <- 44F19 - ancilla_break_tower_seal.asm : 336 (TXA : AND.b #$07 : TAX)
+JSL.l GetRequiredCrystalsInX
+;--------------------------------------------------------------------------------
+org $08CFC9 ; <- 44FC9 - ancilla_break_tower_seal.asm : 414 (RTS)
+db #$6B
+;--------------------------------------------------------------------------------
+
+org $08CE93
+Ancilla_BreakTowerSeal_draw_single_crystal:
+
+org $08CEC3
+Ancilla_BreakTowerSeal_stop_spawning_sparkles:
+
+org $08CF59
+BreakTowerSeal_ExecuteSparkles:
+
+;================================================================================
+; Crystals Mode
+;--------------------------------------------------------------------------------
+org $099B7B ; <- ancilla_init.asm : 4136 (LDA $7EF37A : AND.b #$7F : CMP.b #$7F)
+JSL.l CheckEnoughCrystalsForTower
+NOP #4
+db #$90 ; BCC
+;--------------------------------------------------------------------------------
+org $08CE0C ; <- 44E0C - ancilla_break_tower_seal.asm : 168 (BEQ #$03 : JSR BreakTowerSeal_ExecuteSparkles : LDX.b #$06)
+JML.l GetRequiredCrystalsForTower
+NOP #3
+GetRequiredCrystalsForTower_continue:
 ;----------------------------------------------------
 ;-- Bombos tablet
 ;org $05F3BF ; <- 2F3BF sprite_medallion_tablet.asm : 254 (JSL Sprite_ShowMessageUnconditional)
