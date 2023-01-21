@@ -352,11 +352,15 @@ namespace Randomizer.SMZ3.Generation
 
         private void GanonTowerFill(List<World> worlds, List<Item> itemPool, double factor)
         {
-            var locations = worlds
-                .SelectMany(x => x.Locations)
-                .Where(x => x.Region is Data.WorldData.Regions.Zelda.GanonsTower)
-                .Empty().Shuffle(Random);
-            FastFill(itemPool, locations.Take((int)(locations.Count / factor)));
+            foreach (var world in worlds)
+            {
+                var locations = world.Locations
+                    .Where(x => x.Region is Data.WorldData.Regions.Zelda.GanonsTower)
+                    .Empty()
+                    .Shuffle(Random);
+                var numLocations = (int)Math.Floor(15.0 * world.Config.GanonsTowerCrystalCount / 7);
+                FastFill(itemPool, locations.Take(numLocations));
+            }
         }
 
         private List<Item> FastFill(List<Item> itemPool, IEnumerable<Location> locations)
