@@ -25,12 +25,13 @@ namespace Randomizer.SMZ3.Tests.LogicTests
     {
         // If this test breaks, update Smz3Randomizer.Version
         [Theory]
-        [InlineData("test", -873297690)] // Smz3Randomizer v4.0
+        [InlineData("test", 1262712068)] // Smz3Randomizer v4.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
             var randomizer = GetRandomizer();
             var config = new Config();
+            config.CasPatches.ExpandedItems = false;
 
             var seedData = randomizer.GenerateSeed(config, seed, default);
             var worldHash = GetHashForWorld(seedData.WorldGenerationData.LocalWorld.World);
