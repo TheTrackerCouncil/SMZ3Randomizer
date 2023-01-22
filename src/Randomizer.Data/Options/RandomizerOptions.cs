@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Randomizer.Data.Logic;
-using Randomizer.Shared;
 
 namespace Randomizer.Data.Options
 {
@@ -63,7 +61,8 @@ namespace Randomizer.Data.Options
         public bool CustomizationExpanded { get; set; } = false;
         public bool LogicExpanded { get; set; } = false;
 
-        public bool CommonExpanded { get; set; } = true;
+        public bool CommonExpanded { get; set; } = false;
+        public bool MetroidControlsExpanded { get; set; } = false;
 
         public double WindowWidth { get; set; } = 500d;
 
@@ -147,6 +146,7 @@ namespace Randomizer.Data.Options
                     GanonCrystalCount = SeedOptions.GanonCrystalCount,
                     OpenPyramid = SeedOptions.OpenPyramid,
                     TourianBossCount = SeedOptions.TourianBossCount,
+                    MetroidControls = PatchOptions.MetroidControls.Clone(),
                 };
                 return config;
             }
@@ -204,6 +204,7 @@ namespace Randomizer.Data.Options
                     GanonCrystalCount = oldConfig.GanonCrystalCount,
                     OpenPyramid = oldConfig.OpenPyramid,
                     TourianBossCount = oldConfig.TourianBossCount,
+                    MetroidControls = PatchOptions.MetroidControls.Clone(),
                 };
             }
         }
