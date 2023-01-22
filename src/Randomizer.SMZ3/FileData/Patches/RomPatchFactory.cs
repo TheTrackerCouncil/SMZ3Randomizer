@@ -18,6 +18,7 @@ namespace Randomizer.SMZ3.FileData.Patches
             yield return new FlashRemovalPatch();
             yield return new NoBozoSoftlock();
             yield return new GoalsPatch();
+            yield return new MetroidControlsPatch();
         }
     }
 }

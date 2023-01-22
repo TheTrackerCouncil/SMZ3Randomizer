@@ -205,6 +205,7 @@ namespace Randomizer.Data.Options
         public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
         public CasPatches CasPatches { get; set; } = new();
+        public MetroidControlOptions MetroidControls { get; set; } = new();
         public PlandoConfig? PlandoConfig { get; set; }
         public MultiplayerPlayerGenerationData? MultiplayerPlayerGenerationData { get; set; }
         public ItemPlacementRule ItemPlacementRule { get; set; }

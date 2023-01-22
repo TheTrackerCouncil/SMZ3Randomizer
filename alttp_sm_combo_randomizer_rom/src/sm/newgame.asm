@@ -88,3 +88,16 @@ introskip_doorflags:
 .ret:   
     lda #$0000
     rtl
+
+; Setup moonwalk code
+org $81b35d
+JSR init_moonwalk
+
+ORG $81EE00
+init_moonwalk:
+    LDA moonwalk_setting : STA $09e4
+    RTS
+
+org $81EE80
+moonwalk_setting:
+    dw $0000

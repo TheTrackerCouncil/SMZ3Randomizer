@@ -60,6 +60,8 @@ namespace Randomizer.Data.Options
 
         public CasPatches CasPatches { get; set; } = new();
 
+        public MetroidControlOptions MetroidControls { get; set; } = new();
+
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -367,15 +367,15 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.CasPatches.AutoRun)
+            if (options.PatchOptions.MetroidControls.AutoRun)
             {
                 using var patch = IpsPatch.AutoRun();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.CasPatches.QuickToggle)
+            if (options.PatchOptions.MetroidControls.ItemCancelBehavior != ItemCancelBehavior.Vanilla)
             {
-                using var patch = IpsPatch.QuickToggle();
+                using var patch = options.PatchOptions.MetroidControls.ItemCancelBehavior == ItemCancelBehavior.Hold ? IpsPatch.ItemCancelHoldFire() : IpsPatch.ItemCancelToggle();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
