@@ -90,7 +90,7 @@ namespace Randomizer.Data.WorldData
         public bool Shovel => Contains(ItemType.Shovel);
         public bool Flute => Contains(ItemType.Flute);
         public bool Book => Contains(ItemType.Book);
-        public bool Bottle => Contains(ItemType.Bottle);
+        public bool Bottle => Items.Any(x => x.IsInCategory(ItemCategory.Bottle));
         public bool Somaria => Contains(ItemType.Somaria);
         public bool Byrna => Contains(ItemType.Byrna);
         public bool Cape => Contains(ItemType.Cape);

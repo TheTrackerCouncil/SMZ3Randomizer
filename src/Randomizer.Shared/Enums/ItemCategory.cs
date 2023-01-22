@@ -76,6 +76,11 @@
         /// <summary>
         /// This is a medallion that can be used to enter a dungeon
         /// </summary>
-        Medallion
+        Medallion,
+
+        /// <summary>
+        /// This is one of the bottle item types
+        /// </summary>
+        Bottle,
     }
 }

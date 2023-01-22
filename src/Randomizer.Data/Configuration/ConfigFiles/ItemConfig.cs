@@ -172,6 +172,66 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 },
                 new ItemData()
                 {
+                    Item = "Bee bottle",
+                    Name = new("Bee bottle", "Bottle with a bee"),
+                    InternalItemType = ItemType.BottleWithBee,
+                    Plural = new("Bee bottles", "Bottles with a bee"),
+                    Multiple = true,
+                    Hints = new("You could find it in real life."),
+                    PedestalHints = new("Something to hold various liquids and things with"),
+                },
+                new ItemData()
+                {
+                    Item = "Gold bee bottle",
+                    Name = new("Gold bee bottle", "Good bee bottle", "Bottle with a gold bee"),
+                    InternalItemType = ItemType.BottleWithGoldBee,
+                    Plural = new("Gold bee bottles", "Good bee bottles", "Bottles with a gold bee"),
+                    Multiple = true,
+                    Hints = new("You could find it in real life."),
+                    PedestalHints = new("Something to hold various liquids and things with"),
+                },
+                new ItemData()
+                {
+                    Item = "Fairy bottle",
+                    Name = new("Fairy bottle", "Bottle with a fairy"),
+                    InternalItemType = ItemType.BottleWithFairy,
+                    Plural = new("Fairy bottles", "Bottles with a fairy"),
+                    Multiple = true,
+                    Hints = new("You could find it in real life."),
+                    PedestalHints = new("Something to hold various liquids and things with"),
+                },
+                new ItemData()
+                {
+                    Item = "Blue potion bottle",
+                    Name = new("Blue potion bottle", "Bottle with a blue potion"),
+                    InternalItemType = ItemType.BottleWithBluePotion,
+                    Plural = new("Blue potion bottles", "Bottles with a blue potion"),
+                    Multiple = true,
+                    Hints = new("You could find it in real life."),
+                    PedestalHints = new("Something to hold various liquids and things with"),
+                },
+                new ItemData()
+                {
+                    Item = "Green potion bottle",
+                    Name = new("Green potion bottle", "Bottle with a green potion"),
+                    InternalItemType = ItemType.BottleWithGreenPotion,
+                    Plural = new("Green potion bottles", "Bottles with a green potion"),
+                    Multiple = true,
+                    Hints = new("You could find it in real life."),
+                    PedestalHints = new("Something to hold various liquids and things with"),
+                },
+                new ItemData()
+                {
+                    Item = "Red potion bottle",
+                    Name = new("Red potion bottle", "Bottle with a red potion"),
+                    InternalItemType = ItemType.BottleWithRedPotion,
+                    Plural = new("Red potion bottles", "Bottles with a red potion"),
+                    Multiple = true,
+                    Hints = new("You could find it in real life."),
+                    PedestalHints = new("Something to hold various liquids and things with"),
+                },
+                new ItemData()
+                {
                     Item = "Heart piece",
                     Name = new("Heart piece", "Piece of Heart"),
                     InternalItemType = ItemType.HeartPiece,

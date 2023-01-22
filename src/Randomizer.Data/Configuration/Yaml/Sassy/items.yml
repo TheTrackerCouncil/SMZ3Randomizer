@@ -145,8 +145,56 @@
   WhenTracked:
     "1":
     - Text: I hope you enjoy your first bottle
-    - Text: Was there a bee in this one?
+    - Text: If only there were something useful in it
     - Text: Potion storage increased by one step
+    "2":
+- Item: Bee bottle
+  WhenTracked:
+    "1":
+    - Text: Tracked bee bottle
+    - Text: Not the bees!
+    - Text: What are you going to sick this bee on?
+    - Text: Aww. You made a friend
+    "2":
+- Item: Gold bee bottle
+  WhenTracked:
+    "1":
+      - Text: Tracked golden bee bottle
+      - Text: Not the bees! Wait, this one's good.
+      - Text: What a good bee.
+      - Text: Aww. You made a friend
+    "2":
+- Item: Fairy bottle
+  WhenTracked:
+    "1":
+      - Text: Tracked fairy bottle
+      - Text: Good. This will help you not die.
+      - Text: Darn, and I wanted you to die.
+      - Text: Do you think it's kinda cramped in there?
+    "2":
+- Item: Blue potion bottle
+  WhenTracked:
+    "1":
+      - Text: Tracked blue potion bottle
+      - Text: You sure got lucky with this filled bottle.
+      - Text: Tracked blue gatorade
+      - Text: Nice, that's one less trip to the potion shop.
+    "2":
+- Item: Green potion bottle
+  WhenTracked:
+    "1":
+      - Text: Tracked green potion bottle
+      - Text: This will come in handy when you miss Trinexx with the ice rod
+      - Text: Tracked mountain dew
+      - Text: Good, now you're free to use the cape on Ganon.
+    "2":
+- Item: Red potion bottle
+  WhenTracked:
+    "1":
+      - Text: Tracked red potion bottle
+      - Text: Tracked the least useful potion of the three
+      - Text: Tracked bottle of blood
+      - Text: Hopefully you can use it in time before you die
     "2":
 - Item: Heart piece
   WhenTracked:

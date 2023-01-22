@@ -58,12 +58,12 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Gets the name of the item.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the type of item.
         /// </summary>
-        public ItemType Type { get; }
+        public ItemType Type { get; private set; }
 
         /// <summary>
         /// Indicates whether the item is an item required to make progress.
@@ -262,6 +262,16 @@ namespace Randomizer.Data.WorldData
         /// name="type"/> otherwise, <see langword="false"/>.
         public bool Is(ItemType type, string name)
             => (Type != ItemType.Nothing && Type == type) || (Type == ItemType.Nothing && Name == name);
+
+        /// <summary>
+        /// Updates an item in the middle of world generation
+        /// </summary>
+        /// <param name="type">The item type change to</param>
+        public void UpdateItemType(ItemType type)
+        {
+            Type = type;
+            Name = type.GetDescription();
+        }
 
         /// <summary>
         /// Returns a string that represents the item.
