@@ -37,13 +37,13 @@ public class StartingEquipmentPatch : RomPatch
             {
                 foreach (var patchData in selectedOption.MemoryValues)
                 {
-                    if (metroidData.ContainsKey(patchData.offset))
+                    if (metroidData.ContainsKey(patchData.Key))
                     {
-                        metroidData[patchData.offset].Add(patchData.value);
+                        metroidData[patchData.Key].Add(patchData.Value);
                     }
                     else
                     {
-                        metroidData[patchData.offset] = new List<int>() { patchData.value };
+                        metroidData[patchData.Key] = new List<int>() { patchData.Value };
                     }
                 }
             }
@@ -53,7 +53,7 @@ public class StartingEquipmentPatch : RomPatch
             {
                 foreach (var patchData in selectedOption.MemoryValues)
                 {
-                    zeldaData[patchData.offset] = (byte)patchData.value;
+                    zeldaData[patchData.Key] = (byte)patchData.Value;
                 }
 
             }

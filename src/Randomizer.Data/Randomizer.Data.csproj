@@ -54,6 +54,7 @@
     <EmbeddedResource Include="Configuration\Yaml\Sassy\rooms.yml" />
     <EmbeddedResource Include="Configuration\Yaml\Templates\rewards.yml" />
     <EmbeddedResource Include="maps.json" />
+    <EmbeddedResource Include="Options\ItemSettingOptions.yml" />
   </ItemGroup>
 
   <ItemGroup>
