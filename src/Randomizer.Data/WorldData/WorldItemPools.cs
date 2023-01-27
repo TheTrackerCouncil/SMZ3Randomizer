@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 
 namespace Randomizer.Data.WorldData;
@@ -12,24 +13,43 @@ public class WorldItemPools
 {
     public WorldItemPools(World world)
     {
-        Progression = CreateProgressionPool(world);
-        Nice = CreateNicePool(world);
-        Dungeon = CreateDungeonPool(world);
-        Keycards = CreateKeycards(world);
-
+        // Create the item pools
+        var progression = CreateProgressionPool(world);
+        var nice = CreateNicePool(world);
+        var dungeon = CreateDungeonPool(world);
+        var keycards = CreateKeycards(world);
         var junk = CreateJunkPool(world);
-        var itemCount = Progression.Count + Nice.Count + Dungeon.Count + junk.Count;
-        if (world.Config.MetroidKeysanity)
-            itemCount += Keycards.Count;
-        var locationCount = world.Locations.Count();
+
+        // Remove starting inventory items
+        foreach (var itemType in ItemSettingOptions.GetStartingItemTypes(world.Config))
+        {
+            if (progression.Any(x => x.Type == itemType))
+                progression.Remove(progression.First(x => x.Type == itemType));
+            else if (nice.Any(x => x.Type == itemType))
+                nice.Remove(nice.First(x => x.Type == itemType));
+            else if (junk.Any(x => x.Type == itemType))
+                junk.Remove(junk.First(x => x.Type == itemType));
+            else if (dungeon.Any(x => x.Type == itemType))
+                dungeon.Remove(dungeon.First(x => x.Type == itemType));
+            else if (keycards.Any(x => x.Type == itemType))
+                keycards.Remove(keycards.First(x => x.Type == itemType));
+        }
 
         // If we're missing any items, fill up the spots with twenty rupees
+        var itemCount = progression.Count + nice.Count + dungeon.Count + junk.Count;
+        if (world.Config.MetroidKeysanity)
+            itemCount += keycards.Count;
+        var locationCount = world.Locations.Count();
         if (itemCount < locationCount)
         {
             junk.AddRange(Copies(locationCount - itemCount, () => new Item(ItemType.TwentyRupees, world)));
         }
 
+        Progression = progression;
+        Nice = nice;
         Junk = junk;
+        Dungeon = dungeon;
+        Keycards = keycards;
     }
 
     public IReadOnlyCollection<Item> Progression { get; set; }

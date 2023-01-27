@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData.Regions.Zelda;
@@ -87,6 +88,30 @@ namespace Randomizer.Data.Services
                     WorldId = boss.World.Id,
                 })
                 .ToList();
+
+            // Add starting equipment, including items that may not be in the world anymore
+            foreach (var world in worlds)
+            {
+                var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config);
+                foreach (var itemType in startingInventory.Distinct())
+                {
+                    var addedItem = itemStates.FirstOrDefault(x => x.WorldId == world.Id && x.Type == itemType);
+                    if (addedItem != null)
+                    {
+                        addedItem.TrackingState = startingInventory.Count(x => x == itemType);
+                    }
+                    else
+                    {
+                        itemStates.Add(new TrackerItemState
+                        {
+                            ItemName = itemType.GetDescription(),
+                            Type = itemType,
+                            WorldId = world.Id,
+                            TrackingState = startingInventory.Count(x => x == itemType)
+                        });
+                    }
+                }
+            }
 
             return new TrackerState()
             {

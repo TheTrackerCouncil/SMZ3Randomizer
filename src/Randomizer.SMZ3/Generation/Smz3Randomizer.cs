@@ -182,7 +182,7 @@ namespace Randomizer.SMZ3.Generation
                 }
 
                 // Through and make sure the early items are populated in early spheres
-                foreach (var itemType in config.EarlyItems)
+                foreach (var itemType in ItemSettingOptions.GetEarlyItemTypes(config))
                 {
                     var sphereIndex = seedData.Playthrough.Spheres.IndexOf(x => x.Items.Any(y => y.Progression && y.Type == itemType));
                     if (sphereIndex > 2)

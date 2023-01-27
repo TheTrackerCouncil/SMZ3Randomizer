@@ -202,7 +202,6 @@ namespace Randomizer.Data.Options
         public string SettingsString { get; set; } = "";
         public bool CopySeedAndRaceSettings { get; set; }
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
-        public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
         public CasPatches CasPatches { get; set; } = new();
         public MetroidControlOptions MetroidControls { get; set; } = new();
@@ -217,6 +216,7 @@ namespace Randomizer.Data.Options
         public int GanonCrystalCount { get; set; } = 7;
         public bool OpenPyramid { get; set; }
         public int TourianBossCount { get; set; }  = 4;
+        public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
 
         [System.Text.Json.Serialization.JsonIgnore, JsonIgnore]
         public bool IsLocalConfig { get; set; } = true;
