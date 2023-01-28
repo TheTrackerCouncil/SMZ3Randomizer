@@ -68,6 +68,8 @@
 - Phrases:
   - I love you
   Response:
+  - Text: I am not holding your hand, that's too fucking lewd
+    Weight: 0.5
   - Text: Hey, thanks. Thank you. That's awesome, fucking awesome. I mean, that's cool, you can say that.
     Weight: 0.2
 

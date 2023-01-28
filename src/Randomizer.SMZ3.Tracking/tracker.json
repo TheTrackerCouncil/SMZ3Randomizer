@@ -31,6 +31,7 @@
         "1": [
           "Tracked content. Don't let it get to your head.",
           "Congratulations on your new first content.",
+          "You finally did something worth tracking.",
           [ "Toggled content<break time='1s'/> on.", 0.1 ],
           [ "Tracked content. Be good or I'll take it away.", 0.1 ]
         ],
@@ -58,22 +59,27 @@
       "Multiple": true,
       "WhenTracked": {
         "1": [
-          "lawl, you died",
+          "Finally",
           "I'm interested in this",
           "Yeah, rip.",
           "It's time to get serious.",
           "I hope this was intentional because things were going well",
           "Good job",
-          [ "Tickets only. Next!", 0.5 ],
+          "It's going to be one of those days, huh?",
+          [ "lawl, you died", 0.1 ],
+          [ "The first of many", 0.3 ],
+          [ "Tickets only. Next!", 0.3 ],
           [ "It's time to get seewwious.", 0.5 ]
         ],
         "2": [
           "You've died {0} times.",
           "It's time to get serious.",
           "Are we still following the script?",
+          "{0} deaths? Already?",
+          [ "It's time to get seewwious.", 0.4 ],
           [ "You've manipulated RNG {0} times.", 0.5 ],
-          [ "You've performed {0} tactical resets.", 0.5 ],
-          [ "It's time to get seewwious.", 0.5 ]
+          [ "That reset didn't look too tactical.", 0.5],
+          [ "You've performed {0} tactical resets.", 0.5 ]
         ],
         "3": [
           "Death is only the beginning.",
@@ -87,6 +93,10 @@
         "4": [
           "You've died {0} times now.",
           "Are you ever going to get seewwious?",
+          "{0} deaths? Already?",
+          "I thought you were good at video games?",
+          "Maybe I shouldn't count that one. It feels like bullying",
+          "Don't worry! One day you wont die so many times you hear this",
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ],
           [ "Maybe I should take over", 0.5 ]
@@ -94,6 +104,8 @@
         "8": [
           "You've died {0} times now.",
           "Such devastation... This was not my intention!",
+          "Am I allowed to make fun of you for dying {0} times?",
+          "I am starting to run out of ways to say you died so please, die less",
           [ "You've manipulated RNG {0} times.", 0.5 ],
           [ "You've performed {0} tactical resets.", 0.5 ],
           [ "Maybe I should take over", 0.5 ],
@@ -119,7 +131,7 @@
       }
     },
     {
-      "Name": [ "Fire Rod", "Spicy Rod" ],
+      "Name": [ "Fire Rod", "Spicy Rod", "Ang ee Rod" ],
       "InternalItemType": 7,
       "Column": 0,
       "Row": 1,
@@ -1985,7 +1997,9 @@
         "the_betus": "the underscore beetus",
         "Axnollouse": "Fragger",
         "MattEqualsCoder": "matt equals coder",
-        "Megaket": "mega ket"
+        "Megaket": "mega ket",
+        "Dr_Dubz": "Doctor Dubz",
+        "MrGeop": "Gee Op"
       },
       "AskChatAboutContent": [
         "Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.",
@@ -2719,6 +2733,12 @@
       "Response": [
         "Pfft. Hahahahaha.",
         "I'm interested in this."
+      ]
+    },
+    {
+      "Phrases": [ "Run a test" ],
+      "Response": [
+        "Hey everyone can we get some f's in the chat"
       ]
     },
     {

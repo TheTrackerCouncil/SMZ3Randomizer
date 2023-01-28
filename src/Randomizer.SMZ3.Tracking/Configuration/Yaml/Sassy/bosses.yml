@@ -5,6 +5,7 @@
   WhenDefeated:
   - Text: Toggled Kraid on.
   - Text: Toggled Kraid on. Did you get the quick kill?
+  - Text: Toggled Kraid on. Did you get the quick kill? You wouldn't lie to me, would you?
 - Boss: Crocomire
   WhenDefeated:
   - Text: Toggled Crocomire on.
