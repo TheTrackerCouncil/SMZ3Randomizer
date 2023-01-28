@@ -22,22 +22,6 @@ namespace Randomizer.Data.Options
         [JsonIgnore]
         public string ConfigString { get; set; } = "";
 
-        public ItemPlacement SwordLocation { get; set; }
-
-        public ItemPlacement MorphLocation { get; set; }
-
-        public ItemPlacement MorphBombsLocation { get; set; }
-
-        public ItemPlacement PegasusBootsLocation { get; set; }
-
-        public ItemPlacement SpaceJumpLocation { get; set; }
-
-        public ItemPool ShaktoolItem { get; set; }
-
-        public ItemPool PegWorldItem { get; set; }
-
-        public bool Keysanity { get; set; }
-
         public KeysanityMode KeysanityMode { get; set; } = KeysanityMode.None;
 
         public ItemPlacementRule ItemPlacementRule { get; set; } = ItemPlacementRule.Anywhere;
@@ -65,8 +49,8 @@ namespace Randomizer.Data.Options
         [JsonIgnore]
         public bool CopySeedAndRaceSettings { get; set; }
 
-        public ISet<ItemType> EarlyItems { get; set; } = new HashSet<ItemType>();
-
         public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
+
+        public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
     }
 }

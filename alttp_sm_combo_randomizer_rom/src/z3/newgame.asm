@@ -19,6 +19,17 @@ alttp_new_game:
     cpx #$2000
     bne -
 
+    ; Copy starting Zelda equipment to SRAM
+    SEP #$30
+    LDX #$00 : -
+    	LDA StartingEquipment, X
+    	CMP #$00 : BEQ +
+    		STA $A06340, X
+    	+
+    	INX
+    CPX #$4F : BNE -
+    REP #$30
+
     jsl zelda_fix_checksum
     
     plp

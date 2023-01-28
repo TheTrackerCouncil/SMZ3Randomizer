@@ -50,13 +50,18 @@ namespace Randomizer.SMZ3.Generation
                     "valid instance prior this calling this method.");
             }
 
+            // Setup the assumed inventory with the starting items
+            var startingInventory = new List<Item>();
             foreach (var world in worlds)
             {
                 world.Setup(Random);
+                startingInventory.AddRange(ItemSettingOptions.GetStartingItemTypes(world.Config)
+                    .Select(x => new Item(x, world)));
             }
 
             var progressionItems = new List<Item>();
             var assumedInventory = new List<Item>();
+            assumedInventory.AddRange(startingInventory);
             var niceItems = worlds.SelectMany(x => x.ItemPools.Nice).Shuffle(Random);
             var junkItems = worlds.SelectMany(x => x.ItemPools.Junk).Shuffle(Random);
 
@@ -68,16 +73,16 @@ namespace Randomizer.SMZ3.Generation
                 var dungeon = world.ItemPools.Dungeon.ToList();
                 var progression = world.ItemPools.Progression.ToList();
 
-                var preferenceItems = ApplyItemPoolPreferences(progression, junkItems, world);
+                var preferenceItems = ApplyItemPoolPreferences(startingInventory, progression, niceItems, junkItems, world);
 
-                InitialFillInOwnWorld(dungeon, progression, world, config);
+                InitialFillInOwnWorld(dungeon, progression, world, config, startingInventory);
 
                 if (worldConfig.ZeldaKeysanity == false)
                 {
                     _logger.LogDebug("Distributing dungeon items according to logic");
                     var worldLocations = world.Locations.Empty().Shuffle(Random);
                     var keyCards = world.ItemPools.Keycards;
-                    AssumedFill(dungeon, progression.Concat(keyCards).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
+                    AssumedFill(dungeon, progression.Concat(keyCards).Concat(assumedInventory).Concat(preferenceItems).ToList(), worldLocations, new[] { world }, cancellationToken);
                 }
 
                 if (worldConfig.MetroidKeysanity)
@@ -123,7 +128,7 @@ namespace Randomizer.SMZ3.Generation
             FastFill(junkItems, locations);
         }
 
-        private List<Item> ApplyItemPoolPreferences(List<Item> progressionItems, List<Item> junkItems, World world)
+        private List<Item> ApplyItemPoolPreferences(List<Item> startingInventory, List<Item> progressionItems, List<Item> niceItems, List<Item> junkItems, World world)
         {
             var placedItems = new List<Item>();
             var config = world.Config;
@@ -188,21 +193,33 @@ namespace Randomizer.SMZ3.Generation
                             throw new RandomizerGenerationException($"{itemType} was selected as the item for {location}, but it is required to get there.");
                         }
                     }
+                    else if (niceItems.Any(x => x.Type == itemType))
+                    {
+                        placedItems.Add(FillItemAtLocation(niceItems, itemType, location));
+                    }
+                    else if (junkItems.Any(x => x.Type == itemType))
+                    {
+                        placedItems.Add(FillItemAtLocation(junkItems, itemType, location));
+                    }
                 }
             }
 
             // Push requested progression items to the top
-            var configItems = config.EarlyItems.Shuffle(Random);
+            var configItems = ItemSettingOptions.GetEarlyItemTypes(config).Shuffle(Random);
             var addedItems = new List<ItemType>();
+            addedItems.AddRange(startingInventory.Where(x => x.World == world).Select(x => x.Type));
             foreach (var itemType in configItems)
             {
+                if (progressionItems.Concat(niceItems).Concat(junkItems).All(x => x.Type != itemType)) continue;
+                var accessibleLocations = world.Locations.Where(x => x.Item.Type == ItemType.Nothing && x.IsAvailable(new Progression(addedItems, new List<RewardType>(), new List<BossType>()))).Shuffle(Random);
+                var location = accessibleLocations.First();
                 if (progressionItems.Any(x => x.Type == itemType))
-                {
-                    var accessibleLocations = world.Locations.Where(x => x.Item.Type == ItemType.Nothing && x.IsAvailable(new Progression(addedItems, new List<RewardType>(), new List<BossType>()))).Shuffle(Random);
-                    var location = accessibleLocations.First();
                     placedItems.Add(FillItemAtLocation(progressionItems, itemType, location));
-                    addedItems.Add(itemType);
-                }
+                else if(niceItems.Any(x => x.Type == itemType))
+                    placedItems.Add(FillItemAtLocation(niceItems, itemType, location));
+                else
+                    placedItems.Add(FillItemAtLocation(junkItems, itemType, location));
+                addedItems.Add(itemType);
             }
 
             return placedItems;
@@ -239,15 +256,17 @@ namespace Randomizer.SMZ3.Generation
                    select location.x;
         }
 
-        private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world, Config config)
+        private void InitialFillInOwnWorld(List<Item> dungeonItems, List<Item> progressionItems, World world, Config config, List<Item> startingInventory)
         {
             FillItemAtLocation(dungeonItems, ItemType.KeySW, world.SkullWoods.PinballRoom);
 
             /* We place a PB and Super in Sphere 1 to make sure the filler
              * doesn't start locking items behind this when there are a
              * high chance of the trash fill actually making them available */
-            FrontFillItemInOwnWorld(progressionItems, ItemType.Super, world);
-            FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
+            if (!startingInventory.Any(x => x.World == world && x.Type == ItemType.Super))
+                FrontFillItemInOwnWorld(progressionItems, ItemType.Super, world);
+            if (!startingInventory.Any(x => x.World == world && x.Type == ItemType.PowerBomb))
+                FrontFillItemInOwnWorld(progressionItems, ItemType.PowerBomb, world);
         }
 
         private void AssumedFill(List<Item> itemPool, List<Item> initialInventory,

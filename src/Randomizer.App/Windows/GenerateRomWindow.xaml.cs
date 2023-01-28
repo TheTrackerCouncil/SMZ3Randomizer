@@ -118,40 +118,10 @@ namespace Randomizer.App.Windows
             {
                 DataContext = value;
                 _options = value;
-                PopulateItemOptions();
                 PopulateLogicOptions();
                 PopulateLocationOptions();
                 PopulateCasPatchOptions();
                 UpdateRaceCheckBoxes();
-            }
-        }
-
-        /// <summary>
-        /// Populates the options for early items
-        /// </summary>
-        public void PopulateItemOptions()
-        {
-            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
-            {
-                if (_metadataService.Item(itemType)?.IsProgression(null) != true)
-                {
-                    continue;
-                }
-
-                var itemTypeField = itemType.GetType().GetField(itemType.ToString());
-                if (itemTypeField == null) continue;
-                var description = itemTypeField.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description;
-                var checkBox = new CheckBox
-                {
-                    Name = itemTypeField.Name,
-                    Content = description,
-                    Tag = itemType,
-                    IsChecked = Options.SeedOptions.EarlyItems.Contains(itemType),
-                    ToolTip = description
-                };
-                checkBox.Checked += EarlyItemCheckbox_Checked;
-                checkBox.Unchecked += EarlyItemCheckbox_Checked;
-                EarlyItemsGrid.Children.Add(checkBox);
             }
         }
 
@@ -353,13 +323,10 @@ namespace Randomizer.App.Windows
                 curIndex++;
             }
 
-            // Add specific progressive items
+            // Add specific items
             foreach (var itemType in Enum.GetValues<ItemType>())
             {
-                if (_metadataService.Item(itemType)?.IsProgression(null) != true)
-                {
-                    continue;
-                }
+                if (itemType.IsInCategory(ItemCategory.NonRandomized)) continue;
 
                 if ((int)itemType == prevValue)
                 {
@@ -723,21 +690,6 @@ namespace Randomizer.App.Windows
                 comboBox.SelectedIndex = 0;
                 Options.SeedOptions.LocationItems.Remove(location.Id);
             }
-        }
-
-        /// <summary>
-        /// Updates the EarlyItems based on when a checkbox is checked/unchecked
-        /// using reflection
-        /// </summary>
-        /// <param name="sender">The checkbox that was checked</param>
-        /// <param name="e">The event object</param>
-        private void EarlyItemCheckbox_Checked(object sender, RoutedEventArgs e)
-        {
-            if (sender is not CheckBox { Tag: ItemType itemType } checkBox) return;
-            if (checkBox.IsChecked.HasValue && checkBox.IsChecked.Value)
-                Options.SeedOptions.EarlyItems.Add(itemType);
-            else
-                Options.SeedOptions.EarlyItems.Remove(itemType);
         }
 
         private void RaceCheckBox_Checked(object sender, RoutedEventArgs e)

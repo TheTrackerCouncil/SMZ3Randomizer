@@ -473,7 +473,8 @@ namespace Randomizer.App
                 }
 
                 log.AppendLine($"Settings String: {Config.ToConfigString(world.Config, true)}");
-                log.AppendLine($"Early Items: {string.Join(',', world.Config.EarlyItems.Select(x => x.ToString()).ToArray())}");
+                log.AppendLine($"Early Items: {string.Join(',', ItemSettingOptions.GetEarlyItemTypes(world.Config).Select(x => x.ToString()).ToArray())}");
+                log.AppendLine($"Starting Inventory: {string.Join(',', ItemSettingOptions.GetStartingItemTypes(world.Config).Select(x => x.ToString()).ToArray())}");
 
                 var locationPrefs = new List<string>();
                 foreach (var (locationId, value) in world.Config.LocationItems)

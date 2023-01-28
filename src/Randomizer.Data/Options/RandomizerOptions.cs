@@ -136,7 +136,6 @@ namespace Randomizer.Data.Options
                     LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
                     SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
                     LocationItems = SeedOptions.LocationItems,
-                    EarlyItems = SeedOptions.EarlyItems,
                     LogicConfig = LogicConfig.Clone(),
                     CasPatches = PatchOptions.CasPatches.Clone(),
                     CopySeedAndRaceSettings = true,
@@ -147,6 +146,7 @@ namespace Randomizer.Data.Options
                     OpenPyramid = SeedOptions.OpenPyramid,
                     TourianBossCount = SeedOptions.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
+                    ItemOptions = SeedOptions.ItemOptions,
                 };
                 return config;
             }
@@ -194,7 +194,6 @@ namespace Randomizer.Data.Options
                     LinkName = PatchOptions.LinkSprite == Sprite.DefaultLink ? "Link" : PatchOptions.LinkSprite.Name,
                     SamusName = PatchOptions.SamusSprite == Sprite.DefaultSamus ? "Samus" : PatchOptions.SamusSprite.Name,
                     LocationItems = oldConfig.LocationItems,
-                    EarlyItems = oldConfig.EarlyItems,
                     LogicConfig = oldConfig.LogicConfig,
                     CasPatches = casPatches,
                     SettingsString = SeedOptions.ConfigString,
@@ -205,6 +204,7 @@ namespace Randomizer.Data.Options
                     OpenPyramid = oldConfig.OpenPyramid,
                     TourianBossCount = oldConfig.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
+                    ItemOptions = oldConfig.ItemOptions,
                 };
             }
         }

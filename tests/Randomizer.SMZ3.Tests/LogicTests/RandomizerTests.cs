@@ -88,11 +88,22 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());
             var randomizer = GetRandomizer();
+            var options = ItemSettingOptions.GetOptions();
+
+            var fireRod = options.First(opts =>
+                opts.Options.Any(opt => opt.MatchingItemTypes?.Contains(ItemType.Firerod) == true));
+            var iceRod = options.First(opts =>
+                opts.Options.Any(opt => opt.MatchingItemTypes?.Contains(ItemType.Icerod) == true));
+            var hiJump = options.First(opts =>
+                opts.Options.Any(opt => opt.MatchingItemTypes?.Contains(ItemType.HiJump) == true));
 
             var config = new Config();
-            config.EarlyItems.Add(ItemType.Firerod);
-            config.EarlyItems.Add(ItemType.Icerod);
-            config.EarlyItems.Add(ItemType.MoonPearl);
+            config.ItemOptions[fireRod.Item] =
+                fireRod.Options.FindIndex(x => x.MemoryValues == null && x.MatchingItemTypes != null);
+            config.ItemOptions[iceRod.Item] =
+                iceRod.Options.FindIndex(x => x.MemoryValues == null && x.MatchingItemTypes != null);
+            config.ItemOptions[hiJump.Item] =
+                hiJump.Options.FindIndex(x => x.MemoryValues == null && x.MatchingItemTypes != null);
 
             for (var i = 0; i < 3; i++)
             {
@@ -101,7 +112,39 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 var progression = new Progression();
                 Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Firerod), progression, out _).Should().BeEmpty();
                 Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.Icerod), progression, out _).Should().BeEmpty();
-                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.MoonPearl), progression, out _).Should().BeEmpty();
+                Logic.GetMissingRequiredItems(world.Locations.First(x => x.Item.Type == ItemType.HiJump), progression, out _).Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public void StartingItemConfigs()
+        {
+            var filler = new StandardFiller(GetLogger<StandardFiller>());
+            var randomizer = GetRandomizer();
+            var options = ItemSettingOptions.GetOptions();
+
+            var fireRod = options.First(opts =>
+                opts.Options.Any(opt => opt.MatchingItemTypes?.Contains(ItemType.Firerod) == true));
+            var iceRod = options.First(opts =>
+                opts.Options.Any(opt => opt.MatchingItemTypes?.Contains(ItemType.Icerod) == true));
+            var hiJump = options.First(opts =>
+                opts.Options.Any(opt => opt.MatchingItemTypes?.Contains(ItemType.HiJump) == true));
+
+            var config = new Config();
+            config.ItemOptions[fireRod.Item] =
+                fireRod.Options.FindIndex(x => x.MemoryValues != null && x.MatchingItemTypes != null);
+            config.ItemOptions[iceRod.Item] =
+                iceRod.Options.FindIndex(x => x.MemoryValues != null && x.MatchingItemTypes != null);
+            config.ItemOptions[hiJump.Item] =
+                hiJump.Options.FindIndex(x => x.MemoryValues != null && x.MatchingItemTypes != null);
+
+            for (var i = 0; i < 3; i++)
+            {
+                var seedData = randomizer.GenerateSeed(config, null, default);
+                var world = seedData.WorldGenerationData.LocalWorld.World;
+                world.AllItems.Should().NotContain(x => x.Type == ItemType.Firerod);
+                world.AllItems.Should().NotContain(x => x.Type == ItemType.Icerod);
+                world.AllItems.Should().NotContain(x => x.Type == ItemType.HiJump);
             }
         }
 

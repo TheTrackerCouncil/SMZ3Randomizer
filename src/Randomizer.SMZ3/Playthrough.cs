@@ -101,6 +101,8 @@ namespace Randomizer.SMZ3
                     items.AddRange(keycards);
                     keycardCount += keycards.Count();
                 }
+
+                items.AddRange(ItemSettingOptions.GetStartingItemTypes(world.Config).Select(x => new Item(x, world)));
             }
 
             var totalItemCount = allLocations.Select(x => x.Item).Count();

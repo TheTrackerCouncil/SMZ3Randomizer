@@ -1,0 +1,1096 @@
+- Item: Bow
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Bow
+    MemoryValues:
+    MatchingItemTypes:
+    - Bow
+  - Display: Early Bow and Silver Arrows
+    MemoryValues:
+    MatchingItemTypes:
+    - Bow
+    - SilverArrows
+  - Display: Start with Bow
+    MemoryValues:
+      0: 2
+    MatchingItemTypes:
+    - Bow
+  - Display: Start with Bow and Silver Arrows
+    MemoryValues:
+      0: 4
+    MatchingItemTypes:
+    - Bow
+    - SilverArrows
+- Item: Boomerang
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Blue Boomerang
+    MemoryValues:
+    MatchingItemTypes:
+    - BlueBoomerang
+  - Display: Early Red Boomerang
+    MemoryValues:
+    MatchingItemTypes:
+    - RedBoomerang
+  - Display: Start with Blue Boomerang
+    MemoryValues:
+      1: 2
+    MatchingItemTypes:
+    - BlueBoomerang
+  - Display: Start with Red Boomerang
+    MemoryValues:
+      1: 2
+    MatchingItemTypes:
+    - RedBoomerang
+- Item: Hookshot
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Hookshot
+    MemoryValues:
+    MatchingItemTypes:
+    - Hookshot
+  - Display: Start with Hookshot
+    MemoryValues:
+      2: 1
+    MatchingItemTypes:
+    - Hookshot
+- Item: Fire Rods
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Fire Rod
+    MemoryValues:
+    MatchingItemTypes:
+    - Firerod
+  - Display: Start with Fire Rod
+    MemoryValues:
+      5: 1
+    MatchingItemTypes:
+    - Firerod
+- Item: Ice Rods
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Ice Rod
+    MemoryValues:
+    MatchingItemTypes:
+    - Icerod
+  - Display: Start with Ice Rod
+    MemoryValues:
+      6: 1
+    MatchingItemTypes:
+    - Icerod
+- Item: Mushroom & Powder
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Mushroom
+    MemoryValues:
+    MatchingItemTypes:
+    - Mushroom
+  - Display: Early Magic Powder
+    MemoryValues:
+    MatchingItemTypes:
+    - Powder
+  - Display: Start with Magic Powder
+    MemoryValues:
+      4: 2
+    MatchingItemTypes:
+    - Powder
+- Item: Medallions
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Bombos
+    MemoryValues:
+    MatchingItemTypes:
+    - Bombos
+  - Display: Early Ether
+    MemoryValues:
+    MatchingItemTypes:
+    - Ether
+  - Display: Early Quake
+    MemoryValues:
+    MatchingItemTypes:
+    - Quake
+  - Display: Early Medallions
+    MemoryValues:
+    MatchingItemTypes:
+    - Bombos
+    - Ether
+    - Quake
+  - Display: Start with Bombos
+    MemoryValues:
+      7: 1
+    MatchingItemTypes:
+    - Bombos
+  - Display: Start with Ether
+    MemoryValues:
+      8: 1
+    MatchingItemTypes:
+    - Ether
+  - Display: Start with Quake
+    MemoryValues:
+      9: 1
+    MatchingItemTypes:
+    - Quake
+  - Display: Start with all Medallions
+    MemoryValues:
+      7: 1
+      8: 1
+      9: 1
+    MatchingItemTypes:
+    - Bombos
+    - Ether
+    - Quake
+- Item: Lamp
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Lamp
+    MemoryValues:
+    MatchingItemTypes:
+    - Lamp
+  - Display: Start with Lamp
+    MemoryValues:
+      10: 1
+    MatchingItemTypes:
+    - Lamp
+- Item: Hammer
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Hammer
+    MemoryValues:
+    MatchingItemTypes:
+    - Hammer
+  - Display: Start with Hammer
+    MemoryValues:
+      11: 1
+    MatchingItemTypes:
+    - Hammer
+- Item: Flute
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Flute
+    MemoryValues:
+    MatchingItemTypes:
+    - Flute
+  - Display: Start with Flute
+    MemoryValues:
+      12: 3
+    MatchingItemTypes:
+    - Flute
+- Item: Bug Net
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Bug Net
+    MemoryValues:
+    MatchingItemTypes:
+    - Bugnet
+  - Display: Start with Bug Net
+    MemoryValues:
+      13: 1
+    MatchingItemTypes:
+    - Bugnet
+- Item: Book of Mudora
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Book of Mudora
+    MemoryValues:
+    MatchingItemTypes:
+    - Book
+  - Display: Start with Book of Mudora
+    MemoryValues:
+      14: 1
+    MatchingItemTypes:
+    - Book
+- Item: Bottles
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Bottle
+    MemoryValues:
+    MatchingItemTypes:
+    - Bottle
+  - Display: Start with 1 Bottle
+    MemoryValues:
+      15: 1
+      28: 2
+    MatchingItemTypes:
+    - Bottle
+  - Display: Start with 4 Bottles
+    MemoryValues:
+      15: 4
+      28: 2
+      29: 2
+      30: 2
+      31: 2
+    MatchingItemTypes:
+    - Bottle
+    - Bottle
+    - Bottle
+    - Bottle
+- Item: Cane of Somaria
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Cane of Somaria
+    MemoryValues:
+    MatchingItemTypes:
+    - Somaria
+  - Display: Start with Cane of Somaria
+    MemoryValues:
+      16: 1
+    MatchingItemTypes:
+    - Somaria
+- Item: Cane of Byrna
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Cane of Byrna
+    MemoryValues:
+    MatchingItemTypes:
+    - Somaria
+  - Display: Start with Cane of Byrna
+    MemoryValues:
+      17: 1
+    MatchingItemTypes:
+    - Somaria
+- Item: Magic Cape
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Magic Cape
+    MemoryValues:
+    MatchingItemTypes:
+    - Cape
+  - Display: Start with Magic Cape
+    MemoryValues:
+      18: 1
+    MatchingItemTypes:
+    - Cape
+- Item: Mirror
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Mirror
+    MemoryValues:
+    MatchingItemTypes:
+    - Mirror
+  - Display: Start with Mirror
+    MemoryValues:
+      19: 2
+    MatchingItemTypes:
+    - Mirror
+- Item: Gloves
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Power Glove
+    MemoryValues:
+    MatchingItemTypes:
+    - ProgressiveGlove
+  - Display: Early Tita's Mitts
+    MemoryValues:
+    MatchingItemTypes:
+    - ProgressiveGlove
+    - ProgressiveGlove
+  - Display: Start with Power Glove
+    MemoryValues:
+      20: 1
+    MatchingItemTypes:
+    - ProgressiveGlove
+  - Display: Start with Titan's Mitt
+    MemoryValues:
+      20: 2
+    MatchingItemTypes:
+    - ProgressiveGlove
+    - ProgressiveGlove
+- Item: Pegasus Boots
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Pegasus Boots
+    MemoryValues:
+    MatchingItemTypes:
+    - Boots
+  - Display: Start with Pegasus Boots
+    MemoryValues:
+      21: 1
+      57: 252
+    MatchingItemTypes:
+    - Boots
+- Item: Flippers
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Flippers
+    MemoryValues:
+    MatchingItemTypes:
+    - Flippers
+  - Display: Start with Flippers
+    MemoryValues:
+      22: 1
+    MatchingItemTypes:
+    - Flippers
+- Item: Moon Pearl
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Moon Pearl
+    MemoryValues:
+    MatchingItemTypes:
+    - MoonPearl
+  - Display: Start with Moon Pearl
+    MemoryValues:
+      23: 1
+    MatchingItemTypes:
+    - MoonPearl
+- Item: Sword
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Sword
+    MemoryValues:
+    MatchingItemTypes:
+    - ProgressiveSword
+  - Display: Start with Fighter's Sword
+    MemoryValues:
+      25: 1
+    MatchingItemTypes:
+    - ProgressiveSword
+  - Display: Start with Master Sword
+    MemoryValues:
+      25: 2
+    MatchingItemTypes:
+    - ProgressiveSword
+    - ProgressiveSword
+  - Display: Start with Tempered Sword
+    MemoryValues:
+      25: 3
+    MatchingItemTypes:
+    - ProgressiveSword
+    - ProgressiveSword
+    - ProgressiveSword
+  - Display: Start with Golden Sword
+    MemoryValues:
+      25: 4
+    MatchingItemTypes:
+    - ProgressiveSword
+    - ProgressiveSword
+    - ProgressiveSword
+    - ProgressiveSword
+- Item: Shield
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Shield
+    MemoryValues:
+    MatchingItemTypes:
+    - ProgressiveShield
+  - Display: Start with Blue Shield
+    MemoryValues:
+      26: 1
+    MatchingItemTypes:
+    - ProgressiveShield
+  - Display: Start with Hero's Shield
+    MemoryValues:
+      26: 2
+    MatchingItemTypes:
+    - ProgressiveShield
+    - ProgressiveShield
+  - Display: Start with Mirror Shield
+    MemoryValues:
+      26: 3
+    MatchingItemTypes:
+    - ProgressiveShield
+    - ProgressiveShield
+    - ProgressiveShield
+- Item: Mail
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Mail
+    MemoryValues:
+    MatchingItemTypes:
+    - ProgressiveTunic
+  - Display: Start with Blue Mail
+    MemoryValues:
+      27: 1
+    MatchingItemTypes:
+    - ProgressiveTunic
+  - Display: Start with Red Mail
+    MemoryValues:
+      27: 2
+    MatchingItemTypes:
+    - ProgressiveTunic
+    - ProgressiveTunic
+- Item: Rupees
+  IsMetroid: false
+  Options:
+  - Display: Start with 0 Rupees
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Start with 100 Rupees
+    MemoryValues:
+      32: 100
+      34: 100
+    MatchingItemTypes:
+  - Display: Start with 500 Rupees
+    MemoryValues:
+      32: 244
+      33: 1
+      34: 244
+      35: 1
+    MatchingItemTypes:
+    - ThreeHundredRupees
+  - Display: Start with 1000 Rupees
+    MemoryValues:
+      32: 232
+      33: 3
+      34: 232
+      35: 3
+    MatchingItemTypes:
+    - ThreeHundredRupees
+    - ThreeHundredRupees
+- Item: Hearts
+  IsMetroid: false
+  Options:
+  - Display: Start with 3 Hearts
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Start with 5 Hearts
+    MemoryValues:
+      44: 64
+      45: 64
+    MatchingItemTypes:
+  - Display: Start with 10 Hearts
+    MemoryValues:
+      44: 128
+      45: 128
+    MatchingItemTypes:
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+  - Display: Start with 20 Hearts
+    MemoryValues:
+      44: 160
+      45: 160
+    MatchingItemTypes:
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartContainer
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartPiece
+    - HeartContainerRefill
+- Item: Zelda Ammo
+  IsMetroid: false
+  Options:
+  - Display: Start with No Ammo
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Start with 10 Bombs
+    MemoryValues:
+      53: 10
+    MatchingItemTypes:
+  - Display: Start with 10 bombs, 30 arrows, and full magic
+    MemoryValues:
+      53: 10
+      54: 30
+      51: 128
+    MatchingItemTypes:
+- Item: Half Magic
+  IsMetroid: false
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Half Magic
+    MemoryValues:
+    MatchingItemTypes:
+    - HalfMagic
+  - Display: Start with Half Magic
+    MemoryValues:
+      59: 1
+    MatchingItemTypes:
+    - HalfMagic
+  - Display: Start with Quarter Magic
+    MemoryValues:
+      59: 2
+    MatchingItemTypes:
+    - HalfMagic
+    - HalfMagic
+- Item: Wave Beam
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Wave Beam
+    MemoryValues:
+    MatchingItemTypes:
+    - Wave
+  - Display: Start with Wave Beam
+    MemoryValues:
+      2: 1
+    MatchingItemTypes:
+    - Wave
+- Item: Ice Beam
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Ice Beam
+    MemoryValues:
+    MatchingItemTypes:
+    - Ice
+  - Display: Start with Ice Beam
+    MemoryValues:
+      2: 2
+    MatchingItemTypes:
+    - Ice
+- Item: Spazer Beam
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Spazer Beam
+    MemoryValues:
+    MatchingItemTypes:
+    - Spazer
+  - Display: Start with Spazer Beam
+    MemoryValues:
+      2: 4
+    MatchingItemTypes:
+    - Spazer
+- Item: Plasma Beam
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Plasma Beam
+    MemoryValues:
+    MatchingItemTypes:
+    - Plasma
+  - Display: Start with Plasma Beam
+    MemoryValues:
+      2: 8
+    MatchingItemTypes:
+    - Plasma
+- Item: Charge Beam
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Charge Beam
+    MemoryValues:
+    MatchingItemTypes:
+    - Charge
+  - Display: Start Charge Beam
+    MemoryValues:
+      2: 4096
+    MatchingItemTypes:
+    - Charge
+- Item: Varia Suit
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Varia Suit
+    MemoryValues:
+    MatchingItemTypes:
+    - Varia
+  - Display: Start with Varia Suit
+    MemoryValues:
+      0: 1
+    MatchingItemTypes:
+    - Varia
+- Item: Spring Ball
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Spring Ball
+    MemoryValues:
+    MatchingItemTypes:
+    - SpringBall
+  - Display: Start with Spring Ball
+    MemoryValues:
+      0: 2
+    MatchingItemTypes:
+    - SpringBall
+- Item: Morph Ball
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Morph Ball
+    MemoryValues:
+    MatchingItemTypes:
+    - Morph
+  - Display: Start with Morph Ball
+    MemoryValues:
+      0: 4
+    MatchingItemTypes:
+    - Morph
+- Item: Screw Attack
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Screw Attack
+    MemoryValues:
+    MatchingItemTypes:
+    - ScrewAttack
+  - Display: Start with Screw Attack
+    MemoryValues:
+      0: 8
+    MatchingItemTypes:
+    - ScrewAttack
+- Item: Gravity Suit
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Gravity Suit
+    MemoryValues:
+    MatchingItemTypes:
+    - Gravity
+  - Display: Start with Gravity Suit
+    MemoryValues:
+      0: 32
+    MatchingItemTypes:
+    - Gravity
+- Item: Hi Jump
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Hi Jump
+    MemoryValues:
+    MatchingItemTypes:
+    - HiJump
+  - Display: Start with Hi Jump
+    MemoryValues:
+      0: 256
+    MatchingItemTypes:
+    - HiJump
+- Item: Space Jump
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Space Jump
+    MemoryValues:
+    MatchingItemTypes:
+    - SpaceJump
+  - Display: Start with Space Jump
+    MemoryValues:
+      0: 512
+    MatchingItemTypes:
+    - SpaceJump
+- Item: Morph Bombs
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Morph Bombs
+    MemoryValues:
+    MatchingItemTypes:
+    - Bombs
+  - Display: Start with Morph Bombs
+    MemoryValues:
+      0: 4096
+    MatchingItemTypes:
+    - Bombs
+- Item: Speed Booster
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Speed Booster
+    MemoryValues:
+    MatchingItemTypes:
+    - SpeedBooster
+  - Display: Start with Speed Booster
+    MemoryValues:
+      0: 8192
+    MatchingItemTypes:
+    - SpeedBooster
+- Item: Grapple Beam
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early Grapple Beam
+    MemoryValues:
+    MatchingItemTypes:
+    - Grapple
+  - Display: Start with Grapple Beam
+    MemoryValues:
+      0: 16384
+    MatchingItemTypes:
+    - Grapple
+- Item: X-Ray Scope
+  IsMetroid: true
+  Options:
+  - Display: Randomized
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Early X-Ray Scope
+    MemoryValues:
+    MatchingItemTypes:
+    - XRay
+  - Display: Start with X-Ray Scope
+    MemoryValues:
+      0: 32768
+    MatchingItemTypes:
+    - XRay
+- Item: Energy Tanks
+  IsMetroid: true
+  Options:
+  - Display: Start with No Energy Tanks
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Start with 3 Energy Tanks
+    MemoryValues:
+      4: 399
+    MatchingItemTypes:
+    - ETank
+    - ETank
+    - ETank
+  - Display: Start with 7 Energy Tanks
+    MemoryValues:
+      4: 799
+    MatchingItemTypes:
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+  - Display: Start with 14 Energy Tanks
+    MemoryValues:
+      4: 1499
+    MatchingItemTypes:
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+    - ETank
+- Item: Missiles
+  IsMetroid: true
+  Options:
+  - Display: Start with No Missiles
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Start with 5 Missiles
+    MemoryValues:
+      6: 5
+    MatchingItemTypes:
+    - Missile
+  - Display: Start with 20 Missiles
+    MemoryValues:
+      6: 20
+    MatchingItemTypes:
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+  - Display: Start with 40 Missiles
+    MemoryValues:
+      6: 40
+    MatchingItemTypes:
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+  - Display: Start with 100 Missiles
+    MemoryValues:
+      6: 100
+    MatchingItemTypes:
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+  - Display: Start with 200 Missiles
+    MemoryValues:
+      6: 200
+    MatchingItemTypes:
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+    - Missile
+- Item: Super Missiles
+  IsMetroid: true
+  Options:
+  - Display: Start with No Super Missiles
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Start with 5 Super Missiles
+    MemoryValues:
+      8: 5
+    MatchingItemTypes:
+    - Super
+  - Display: Start with 20 Super Missiles
+    MemoryValues:
+      8: 20
+    MatchingItemTypes:
+    - Super
+    - Super
+    - Super
+    - Super
+  - Display: Start with 40 Super Missiles
+    MemoryValues:
+      8: 40
+    MatchingItemTypes:
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+  - Display: Start with 80 Super Missiles
+    MemoryValues:
+      8: 80
+    MatchingItemTypes:
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+    - Super
+- Item: Power Bombs
+  IsMetroid: true
+  Options:
+  - Display: Start with No Power Bombs
+    MemoryValues:
+    MatchingItemTypes:
+  - Display: Start with 5 Power Bombs
+    MemoryValues:
+      10: 5
+    MatchingItemTypes:
+    - PowerBomb
+  - Display: Start with 10 Power Bombs
+    MemoryValues:
+      10: 10
+    MatchingItemTypes:
+    - PowerBomb
+    - PowerBomb
+  - Display: Start with 20 Power Bombs
+    MemoryValues:
+      10: 20
+    MatchingItemTypes:
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+  - Display: Start with 50 Power Bombs
+    MemoryValues:
+      10: 50
+    MatchingItemTypes:
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb
+    - PowerBomb

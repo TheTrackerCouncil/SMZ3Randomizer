@@ -51,159 +51,6 @@
             </TextBlock>
           </Border>
 
-          <Expander Header="Early Items"
-                    x:Name="EarlyItemsExpander"
-                    Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                    IsExpanded="{Binding EarlyItemsExpanded}">
-            <StackPanel Orientation="Vertical"
-                        Margin="24,11,11,11">
-              <UniformGrid Columns="2"
-                           Name="EarlyItemsGrid" />
-            </StackPanel>
-          </Expander>
-
-          <Expander Header="Locations"
-                    Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                    x:Name="Locations">
-            <StackPanel Orientation="Vertical"
-                        Margin="24,11,11,11">
-              <ComboBox Name="LocationsRegionFilter"
-                        SelectionChanged="LocationsRegionFilter_SelectionChanged" />
-              <ScrollViewer VerticalScrollBarVisibility="Auto"
-                            HorizontalScrollBarVisibility="Disabled"
-                            MaxHeight="200"
-                            Margin="0,10,0,10"
-                            VerticalAlignment="Top">
-                <Grid Name="LocationsGrid"
-                      VerticalAlignment="Top">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                  </Grid.ColumnDefinitions>
-                </Grid>
-              </ScrollViewer>
-              <Button Content="Reset All"
-                      Click="ResetAllLocationsButton_Click"
-                      Name="ResetAllLocationsButton" />
-            </StackPanel>
-          </Expander>
-
-          <Expander Header="Logic Options"
-                    x:Name="LogicOptionsExpander"
-                    Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
-                    IsExpanded="{Binding LogicExpanded}">
-            <StackPanel Orientation="Vertical"
-                        Margin="24,11,11,11"
-                        DataContext="{Binding LogicConfig}">
-
-              <GroupBox Header="Cas' Logic"
-                        Padding="0,5,0,0" Margin="0,0,0,3">
-                <UniformGrid Columns="2" Name="LogicGrid" />
-              </GroupBox>
-
-              <GroupBox Header="Tricks and Advanced Logic"
-                        Padding="0,5,0,0" Margin="0,0,0,1">
-                <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
-                  <UniformGrid Columns="2"
-                               Name="TricksGrid" />
-                  <controls:LabeledControl Text="Wall jump difficulty:"
-                                           ToolTip="The kind of wall jumps you're expected to be able to do."
-                                           Margin="0,4,0,0">
-                    <ComboBox SelectedItem="{Binding WallJumpDifficulty}"
-                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:WallJumpDifficulty}}}"
-                              HorizontalAlignment="Left"
-                              MinWidth="75" />
-                  </controls:LabeledControl>
-                </StackPanel>
-              </GroupBox>
-
-              <!--<GroupBox Header="Patches"
-                        Padding="0,5,0,0" Margin="0,0,0,5">
-                <UniformGrid Columns="1" Name="PatchesGrid" />
-              </GroupBox>-->
-
-            </StackPanel>
-          </Expander>
-
-          <Expander Header="Customization"
-                    x:Name="CustomizationExpander"
-                    IsExpanded="{Binding CustomizationExpanded}">
-            <StackPanel Orientation="Vertical"
-                        Margin="24,11,11,11"
-                        DataContext="{Binding PatchOptions}">
-              <controls:LabeledControl Text="Samus sprite:">
-                <ComboBox x:Name="SamusSpriteDropdown"
-                          ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedItem="{Binding SamusSprite}" />
-              </controls:LabeledControl>
-
-              <controls:LabeledControl Text="Link sprite:">
-                <ComboBox x:Name="LinkSpriteDropdown"
-                          ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedItem="{Binding LinkSprite}" />
-              </controls:LabeledControl>
-
-              <controls:LabeledControl Text="Ship sprite:">
-                <ComboBox x:Name="ShipSpriteDropdown"
-                          ItemsSource="{Binding ShipSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedItem="{Binding ShipPatch}" />
-              </controls:LabeledControl>
-
-              <controls:LabeledControl Text="Heart color:">
-                <ComboBox SelectedItem="{Binding HeartColor}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:HeartColor}}}"
-                          HorizontalAlignment="Left"
-                          MinWidth="75" />
-              </controls:LabeledControl>
-
-              <controls:LabeledControl Text="ALttP Menu speed:">
-                <ComboBox SelectedItem="{Binding MenuSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:MenuSpeed}}}"
-                          HorizontalAlignment="Left"
-                          MinWidth="75" />
-              </controls:LabeledControl>
-
-              <controls:LabeledControl Text="Low health beep speed:">
-                <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
-                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:LowHealthBeepSpeed}}}"
-                          HorizontalAlignment="Left"
-                          MinWidth="75" />
-              </controls:LabeledControl>
-
-              <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
-                        Content="Disable low energy beep in Super Metroid" />
-
-              <GroupBox Header="Cas' Patches"
-                        Padding="0,5,0,0" Margin="0,0,0,3">
-                <UniformGrid Columns="2" Name="CasPatchGrid" />
-              </GroupBox>
-
-
-              <controls:LabeledControl Text="Custom music pack:">
-                <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
-                                          Filter="MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*"
-                                          DialogTitle="Select MSU-1 file" />
-              </controls:LabeledControl>
-
-              <controls:LabeledControl Text="">
-                <CheckBox IsChecked="{Binding EnableExtendedSoundtrack}"
-                          IsEnabled="{Binding CanEnableExtendedSoundtrack}"
-                          Content="Enable extended soundtrack"
-                          ToolTip="Enables support for the extended MSU-1 soundtrack. Only available if a custom music pack is selected." />
-              </controls:LabeledControl>
-
-            </StackPanel>
-          </Expander>
-
-          <Expander Header="Metroid Controls"
-                    x:Name="MetroidControlsExpander"
-                    IsExpanded="{Binding MetroidControlsExpanded}">
-            <controls:MetroidControlsPanel DataContext="{Binding PatchOptions.MetroidControls}" Margin="24,11,11,11"></controls:MetroidControlsPanel>
-          </Expander>
-
           <Expander Header="Common"
                     x:Name="CommonExpander"
                     IsExpanded="{Binding CommonExpanded}">
@@ -364,6 +211,161 @@
               </controls:LabeledControl>
             </StackPanel>
           </Expander>
+
+          <Expander Header="Logic Options"
+                    x:Name="LogicOptionsExpander"
+                    Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                    IsExpanded="{Binding LogicExpanded}">
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,11"
+                        DataContext="{Binding LogicConfig}">
+
+              <GroupBox Header="Cas' Logic"
+                        Padding="0,5,0,0" Margin="0,0,0,3">
+                <UniformGrid Columns="2" Name="LogicGrid" />
+              </GroupBox>
+
+              <GroupBox Header="Tricks and Advanced Logic"
+                        Padding="0,5,0,0" Margin="0,0,0,1">
+                <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True">
+                  <UniformGrid Columns="2"
+                               Name="TricksGrid" />
+                  <controls:LabeledControl Text="Wall jump difficulty:"
+                                           ToolTip="The kind of wall jumps you're expected to be able to do."
+                                           Margin="0,4,0,0">
+                    <ComboBox SelectedItem="{Binding WallJumpDifficulty}"
+                              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type shared:WallJumpDifficulty}}}"
+                              HorizontalAlignment="Left"
+                              MinWidth="75" />
+                  </controls:LabeledControl>
+                </StackPanel>
+              </GroupBox>
+
+              <!--<GroupBox Header="Patches"
+                        Padding="0,5,0,0" Margin="0,0,0,5">
+                <UniformGrid Columns="1" Name="PatchesGrid" />
+              </GroupBox>-->
+
+            </StackPanel>
+          </Expander>
+
+          <Expander Header="Customization"
+                    x:Name="CustomizationExpander"
+                    IsExpanded="{Binding CustomizationExpanded}">
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,11"
+                        DataContext="{Binding PatchOptions}">
+              <controls:LabeledControl Text="Samus sprite:">
+                <ComboBox x:Name="SamusSpriteDropdown"
+                          ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding SamusSprite}" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Link sprite:">
+                <ComboBox x:Name="LinkSpriteDropdown"
+                          ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding LinkSprite}" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Ship sprite:">
+                <ComboBox x:Name="ShipSpriteDropdown"
+                          ItemsSource="{Binding ShipSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding ShipPatch}" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Heart color:">
+                <ComboBox SelectedItem="{Binding HeartColor}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:HeartColor}}}"
+                          HorizontalAlignment="Left"
+                          MinWidth="75" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="ALttP Menu speed:">
+                <ComboBox SelectedItem="{Binding MenuSpeed}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:MenuSpeed}}}"
+                          HorizontalAlignment="Left"
+                          MinWidth="75" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Low health beep speed:">
+                <ComboBox SelectedItem="{Binding LowHealthBeepSpeed}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:LowHealthBeepSpeed}}}"
+                          HorizontalAlignment="Left"
+                          MinWidth="75" />
+              </controls:LabeledControl>
+
+              <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
+                        Content="Disable low energy beep in Super Metroid" />
+
+              <GroupBox Header="Cas' Patches"
+                        Padding="0,5,0,0" Margin="0,0,0,3">
+                <UniformGrid Columns="2" Name="CasPatchGrid" />
+              </GroupBox>
+
+
+              <controls:LabeledControl Text="Custom music pack:">
+                <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
+                                          Filter="MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*"
+                                          DialogTitle="Select MSU-1 file" />
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="">
+                <CheckBox IsChecked="{Binding EnableExtendedSoundtrack}"
+                          IsEnabled="{Binding CanEnableExtendedSoundtrack}"
+                          Content="Enable extended soundtrack"
+                          ToolTip="Enables support for the extended MSU-1 soundtrack. Only available if a custom music pack is selected." />
+              </controls:LabeledControl>
+
+            </StackPanel>
+          </Expander>
+
+          <Expander Header="Metroid Controls"
+                    x:Name="MetroidControlsExpander"
+                    IsExpanded="{Binding MetroidControlsExpanded}">
+            <controls:MetroidControlsPanel DataContext="{Binding PatchOptions.MetroidControls}" Margin="24,11,11,11"></controls:MetroidControlsPanel>
+          </Expander>
+
+          <Expander Header="Items"
+                    x:Name="EarlyItemsExpander"
+                    Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                    IsExpanded="{Binding EarlyItemsExpanded}">
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,11">
+              <controls:ItemSettingsPanel
+                DataContext="{Binding SeedOptions}"
+              ></controls:ItemSettingsPanel>
+            </StackPanel>
+          </Expander>
+
+          <Expander Header="Locations"
+                    Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                    x:Name="Locations">
+            <StackPanel Orientation="Vertical"
+                        Margin="24,11,11,11">
+              <ComboBox Name="LocationsRegionFilter"
+                        SelectionChanged="LocationsRegionFilter_SelectionChanged" />
+              <ScrollViewer VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Disabled"
+                            MaxHeight="200"
+                            Margin="0,10,0,10"
+                            VerticalAlignment="Top">
+                <Grid Name="LocationsGrid"
+                      VerticalAlignment="Top">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                  </Grid.ColumnDefinitions>
+                </Grid>
+              </ScrollViewer>
+              <Button Content="Reset All"
+                      Click="ResetAllLocationsButton_Click"
+                      Name="ResetAllLocationsButton" />
+            </StackPanel>
+          </Expander>
+
         </StackPanel>
       </ScrollViewer>
     </Grid>
