@@ -364,7 +364,7 @@ BossAlreadyDefeated:
 BossUndefeated:
 - Text: Marked {0} as still alive.
 - Text: Revived {0}.
-- Tect: {0} lives again
+- Text: "{0} lives again"
 BossNotYetDefeated:
 - Text: But you never defeated {0} in the first place.
 Muted:
@@ -852,7 +852,7 @@ AutoTracker:
   - Text: That was an okay icebreaker, but how about this one? What item from another Metroidvania do you wish was in this?
   - Text: Did you just phase through that wall? Spooky
   - Text: That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?
-   Weight: 0.2
+    Weight: 0.2
   DiverDown:
   - Text: Good job on the tech. Was it a first try?
   - Text: Since when could you walk on water?

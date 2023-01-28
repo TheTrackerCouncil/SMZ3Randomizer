@@ -34,7 +34,7 @@
     "2":
     - Text: You've died {0} times.
     - Text: Are we still following the script?
-    - Text: {0} deaths? Already?
+    - Text: "{0} deaths? Already?"
     - Text: That reset didn't look too tactical.
     - Text: You've manipulated RNG {0} times.
       Weight: 0.5
@@ -43,7 +43,7 @@
     "3":
     - Text: Death is only the beginning.
     - Text: Are we still following the script?
-    - Text: {0} deaths? Already?
+    - Text: "{0} deaths? Already?"
     - Text: Death is not the end. Long live the new flesh
     - Text: You've manipulated RNG {0} times.
       Weight: 0.5
@@ -51,7 +51,7 @@
       Weight: 0.5
     "4":
     - Text: You've died {0} times now.
-    - Text: {0} deaths? Already?
+    - Text: "{0} deaths? Already?"
     - Text: I thought you were good at video games?
     - Text: Maybe I shouldn't count that one. It feels like bullying
     - Text: Don't worry! One day you wont die so many times you hear this
@@ -63,7 +63,7 @@
       Weight: 0.5
     "8":
     - Text: You've died {0} times now.
-    - Text: {0} deaths. Now it feels like bullying
+    - Text: "{0} deaths. Now it feels like bullying"
     - Text: Am I allowed to make fun of you for dying {0} times?
     - Text: I am starting to run out of ways to say you died so please, die less
     - Text: Such devastation... This was not my intention!
