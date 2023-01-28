@@ -16,6 +16,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NHyphenator;
+using Randomizer.Data.Logic;
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
@@ -40,48 +42,7 @@ namespace Randomizer.Tools
 
         public static void Main(string[] args)
         {
-            var logicConfig = new LogicConfig()
-            {
-                PreventScrewAttackSoftLock = true,
-                PreventFivePowerBombSeed = true,
-                LeftSandPitRequiresSpringBall = true,
-                LaunchPadRequiresIceBeam = true,
-                EasyEastCrateriaSkyItem = true,
-                WaterwayNeedsGravitySuit = true,
-            };
-            var sb = new StringBuilder();
-            foreach (KeysanityMode keysanityMode in Enum.GetValues(typeof(KeysanityMode)))
-            {
-                foreach (ItemPlacementRule itemPlacementRule in Enum.GetValues(typeof(ItemPlacementRule)))
-                {
-                    var output = GenerateStats(new Config() { KeysanityMode = keysanityMode, ItemPlacementRule = itemPlacementRule , LogicConfig = logicConfig }, 1000);
-                    sb.AppendLine(output);
-                    Console.WriteLine(output);
-                }
-            }
-
-            Console.WriteLine("Complete!");
-            //var rootCommand = new RootCommand("SMZ3 Randomizer command-line tools");
-
-            /*
-             * ConvertConfigs();
-            TestConfigs();
-            TestMerge();*/
-
-            /*var formatText = new Command("format", "Formats text entries for ALttP.")
-            {
-                new Argument<FileInfo>("input",
-                    "The file containing the entries to format. Every entry should be on a separate line.")
-                    .ExistingOnly(),
-            };
-            formatText.Handler = CommandHandler.Create<FileInfo>(FormatText);
-            rootCommand.AddCommand(formatText);
-
-            //var generateLocationConfig = new Command("generate-locations", "Generates locations.json");
-            //generateLocationConfig.Handler = CommandHandler.Create(GenerateLocationConfig);
-            //rootCommand.AddCommand(generateLocationConfig);
-
-            rootCommand.Invoke(args);*/
+            RomGenerator.GenerateRom(args);
         }
 
         //public static void GenerateLocationConfig()
@@ -218,9 +179,34 @@ namespace Randomizer.Tools
             return start + slice.LastIndexOfAny(' ', SoftHyphen);
         }
 
+        public static void GeneralAllState()
+        {
+            var logicConfig = new LogicConfig()
+            {
+                PreventScrewAttackSoftLock = true,
+                PreventFivePowerBombSeed = true,
+                LeftSandPitRequiresSpringBall = true,
+                LaunchPadRequiresIceBeam = true,
+                EasyEastCrateriaSkyItem = true,
+                WaterwayNeedsGravitySuit = true,
+            };
+            var sb = new StringBuilder();
+            foreach (KeysanityMode keysanityMode in Enum.GetValues(typeof(KeysanityMode)))
+            {
+                foreach (ItemPlacementRule itemPlacementRule in Enum.GetValues(typeof(ItemPlacementRule)))
+                {
+                    var output = GenerateStats(new Config() { KeysanityMode = keysanityMode, ItemPlacementRule = itemPlacementRule, LogicConfig = logicConfig }, 1000);
+                    sb.AppendLine(output);
+                    Console.WriteLine(output);
+                }
+            }
+
+            Console.WriteLine("Complete!");
+        }
+
         public static string GenerateStats(Config config, int count = 50)
         {
-            var start = DateTime.Now;
+            /*var start = DateTime.Now;
             var loggerFactory = new LoggerFactory();
             var worldAccessor = new WorldAccessor();
             var filler = new StandardFiller(new Logger<StandardFiller>(loggerFactory));
@@ -241,7 +227,7 @@ namespace Randomizer.Tools
                     });
                 }
                 catch (Exception)
-                { 
+                {
                 }
             });
 
@@ -299,20 +285,20 @@ namespace Randomizer.Tools
             sb.AppendLine("Item with least unique locations: " + leastCommon + " with " + leastCount + " unique locations");
             sb.AppendLine("Run time: " + ts.TotalSeconds + "s");
             sb.AppendLine();
-            return sb.ToString();
+            return sb.ToString();*/
+            return "";
         }
 
         private class StatsDetails
         {
             public int NumSpheres { get; set; }
-            public List<(int, ItemType)> ItemLocations { get; set; }
+            public List<(int, ItemType)> ItemLocations { get; set; } = new List<(int, ItemType)>();
         }
 
         private static int UniqueLocations(List<(int, ItemType, int)> itemLocationCountsList, ItemType item)
         {
             return itemLocationCountsList
-               .Where(x => x.Item2 == item)
-               .Count();
+                .Count(x => x.Item2 == item);
         }
 
     }

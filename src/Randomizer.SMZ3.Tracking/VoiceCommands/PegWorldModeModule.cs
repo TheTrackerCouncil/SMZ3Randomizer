@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -19,15 +16,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        public PegWorldModeModule(Tracker tracker, IItemService itemService, ILogger<PegWorldModeModule> logger)
-            : base(tracker, itemService, logger)
+        public PegWorldModeModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<PegWorldModeModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             AddCommand("Toggle Peg World mode on", new[] {
                 "Hey tracker, toggle Peg World Mode on",
                 "Hey tracker, we're going to Peg World!",
                 "Hey tracker, let's go to Peg World!"
-            }, (tracker, result) =>
+            }, (result) =>
             {
                 tracker.StartPegWorldMode(result.Confidence);
             });
@@ -38,7 +37,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, I want to go on something more thrilling than Peg World",
                 "Hey tracker, please release me from Peg World",
                 "Hey tracker, release me from Peg World"
-            }, (tracker, result) =>
+            }, (result) =>
             {
                 tracker.StopPegWorldMode(result.Confidence);
             });
@@ -46,7 +45,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AddCommand("Track Peg World peg", new[] {
                 "Hey tracker, track Peg.",
                 "Hey tracker, peg."
-            }, (tracker, result) =>
+            }, (result) =>
             {
                 if (tracker.PegsPegged < TotalPegs)
                 {

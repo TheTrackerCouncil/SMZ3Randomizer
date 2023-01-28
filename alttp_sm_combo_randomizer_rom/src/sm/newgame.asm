@@ -43,7 +43,7 @@ introskip_doorflags:
     sta $7ed8b8
 
     ; Set up open mode event bit flags
-    lda #$0001
+    lda.l config_events
     sta $7ed820
     
     lda #$0000
@@ -52,6 +52,7 @@ introskip_doorflags:
     sta.l !SRAM_ALTTP_EQUIPMENT_2
     sta.l !SRAM_ALTTP_COMPLETED
     sta.l !SRAM_ALTTP_RANDOMIZER_SAVED
+    sta.l !SRAM_ALTTP_FRESH_FILE
     sta.l !door_timer_tmp
     sta.l !door_adjust_tmp
     sta.l !add_time_tmp
@@ -87,3 +88,16 @@ introskip_doorflags:
 .ret:   
     lda #$0000
     rtl
+
+; Setup moonwalk code
+org $81b35d
+JSR init_moonwalk
+
+ORG $81EE00
+init_moonwalk:
+    LDA moonwalk_setting : STA $09e4
+    RTS
+
+org $81EE80
+moonwalk_setting:
+    dw $0000

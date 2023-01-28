@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 
 using Randomizer.Shared;
@@ -17,11 +16,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public BossTrackingModule(Tracker tracker, IItemService itemService, ILogger<BossTrackingModule> logger)
-            : base(tracker, itemService, logger)
+        public BossTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<BossTrackingModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (tracker, result) =>
+            AddCommand("Mark boss as defeated", GetMarkBossAsDefeatedRule(), (result) =>
             {
                 var dungeon = GetBossDungeonFromResult(tracker, result);
                 if (dungeon != null)
@@ -44,7 +45,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
             });
 
-            AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (tracker, result) =>
+            AddCommand("Mark boss as alive", GetMarkBossAsNotDefeatedRule(), (result) =>
             {
                 var dungeon = GetBossDungeonFromResult(tracker, result);
                 if (dungeon != null)
@@ -65,9 +66,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 throw new Exception($"Could not find boss or dungeon in command: '{result.Text}'");
             });
 
-            AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (tracker, result) =>
+            AddCommand("Mark boss as defeated with content", GetBossDefeatedWithContentRule(), (result) =>
             {
-                var contentItemData = itemService.FindOrDefault("Content");
+                var contentItemData = itemService.FirstOrDefault("Content");
 
                 var dungeon = GetBossDungeonFromResult(tracker, result);
                 if (dungeon != null)

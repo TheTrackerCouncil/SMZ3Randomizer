@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using Randomizer.Data.WorldData;
+using Randomizer.SMZ3.Contracts;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking
 {
@@ -16,48 +18,79 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
     /// auto tracker
     /// </summary>
     public class GameService : TrackerModule
-    { 
+    {
         private AutoTracker? _autoTracker => Tracker.AutoTracker;
         private readonly ILogger<GameService> _logger;
+        private readonly int trackerPlayerId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameService"/>
         /// class.
         /// </summary>
         /// <param name="tracker">The tracker instance.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">The logger to associate with this module</param>
-        public GameService(Tracker tracker, IItemService itemService, ILogger<GameService> logger)
-            : base(tracker, itemService, logger)
+        /// <param name="worldAccessor">The accesor to determine the tracker player id</param>
+        public GameService(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<GameService> logger, IWorldAccessor worldAccessor)
+            : base(tracker, itemService, worldService, logger)
         {
             Tracker.GameService = this;
             _logger = logger;
+            trackerPlayerId = worldAccessor.Worlds.Count > 0 ? worldAccessor.Worlds.Count : 0;
         }
 
         /// <summary>
         /// Gives an item to the player
         /// </summary>
         /// <param name="item">The item to give</param>
-        /// <param name="fromPlayerId">The id of the player giving the item to the player (0 for tracker)</param>
+        /// <param name="fromPlayerId">The id of the player giving the item to the player (null for tracker)</param>
         /// <returns>False if it is currently unable to give an item to the player</returns>
-        public bool TryGiveItem(ItemData item, int fromPlayerId = 0)
+        public bool TryGiveItem(Item item, int? fromPlayerId)
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected)
+            return TryGiveItems(new List<Item>() { item }, fromPlayerId ?? trackerPlayerId);
+        }
+
+        /// <summary>
+        /// Gives a series of items to the player
+        /// </summary>
+        /// <param name="items">The list of items to give to the player</param>
+        /// <param name="fromPlayerId">The id of the player giving the item to the player</param>
+        /// <returns>False if it is currently unable to give an item to the player</returns>
+        public bool TryGiveItems(List<Item> items, int fromPlayerId)
+        {
+            if (_autoTracker is not { IsConnected: true, IsInSMZ3: true })
             {
                 return false;
             }
 
-            // First give the player the item by the requested 
-            var bytes = new List<byte>();
-            bytes.AddRange(Int16ToBytes(fromPlayerId + 1));
-            bytes.AddRange(Int16ToBytes((int)item.InternalItemType));
-            var action = new EmulatorAction()
+            var tempItemCounter = ItemCounter;
+            EmulatorAction action;
+
+            // First give the player all of the requested items
+            // Batch them into chunks of 50 due to byte limit for QUSB2SNES
+            foreach (var batch in items.Chunk(50))
             {
-                Type = EmulatorActionType.WriteBytes,
-                Domain = MemoryDomain.CartRAM,
-                Address = 0xA26000 + (ItemCounter * 4),
-                WriteValues = bytes
-            };
-            _autoTracker.WriteToMemory(action);
+                var bytes = new List<byte>();
+                foreach (var item in batch)
+                {
+                    bytes.AddRange(Int16ToBytes(fromPlayerId));
+                    bytes.AddRange(Int16ToBytes((int)item.Type));
+                }
+
+                action = new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.CartRAM,
+                    Address = 0xA26000 + (tempItemCounter * 4),
+                    WriteValues = bytes
+                };
+                _autoTracker.WriteToMemory(action);
+
+                tempItemCounter += batch.Length;
+            }
+
+            Tracker.TrackItems(items, true, true);
 
             // Up the item counter to have them actually pick it up
             action = new EmulatorAction()
@@ -65,21 +98,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.CartRAM,
                 Address = 0xA26602,
-                WriteValues = Int16ToBytes(ItemCounter + 1)
+                WriteValues = Int16ToBytes(tempItemCounter)
             };
             _autoTracker.WriteToMemory(action);
 
-            // Track the item
-            Tracker.TrackItem(item,
-                              trackedAs: null,
-                              confidence: null,
-                              tryClear: false,
-                              autoTracked: true,
-                              location: null,
-                              giftedItem: true);
-
-            ItemCounter++;
-
+            ItemCounter = tempItemCounter;
             return true;
         }
 
@@ -89,7 +112,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryHealPlayer()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected)
+            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -138,7 +161,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give magic to the player</returns>
         public bool TryFillMagic()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -160,7 +183,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give bombs to the player</returns>
         public bool TryFillZeldaBombs()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -182,7 +205,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give arrows to the player</returns>
         public bool TryFillArrows()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -204,7 +227,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give rupees to the player</returns>
         public bool TryFillRupees()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -226,7 +249,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give missiles to the player</returns>
         public bool TryFillMissiles()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -249,7 +272,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give super missiles to the player</returns>
         public bool TryFillSuperMissiles()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -272,7 +295,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give power bombs to the player</returns>
         public bool TryFillPowerBombs()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM)
+            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }
@@ -295,7 +318,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if successful</returns>
         public bool TryKillPlayer()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected)
+            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3)
             {
                 return false;
             }

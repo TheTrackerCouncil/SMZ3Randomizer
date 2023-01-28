@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.SMZ3.Contracts;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -14,7 +15,8 @@ namespace Randomizer.SMZ3.Tracking.Services
     /// </summary>
     public class ItemService : IItemService
     {
-        private static readonly Random s_random = new Random();
+        private readonly IWorldAccessor _world;
+        private readonly Dictionary<string, Progression> _progression = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ItemService"/> class
@@ -27,10 +29,12 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="rewards">
         /// Specifies the configuration that contains the reward data
         /// </param>
-        public ItemService(ItemConfig items, RewardConfig rewards)
+        /// <param name="world">Accessor to get data of the world</param>
+        public ItemService(ItemConfig items, RewardConfig rewards, IWorldAccessor world)
         {
             Items = items;
             Rewards = rewards;
+            _world = world;
         }
 
         /// <summary>
@@ -44,7 +48,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         protected IReadOnlyCollection<RewardInfo> Rewards { get; }
 
         /// <summary>
-        /// Finds the item with the specified name.
+        /// Finds the item with the specified name for the local player.
         /// </summary>
         /// <param name="name">
         /// The name of the item or item stage to find.
@@ -54,12 +58,13 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// name, or <see langword="null"/> if there is no item that has the
         /// specified name.
         /// </returns>
-        public virtual ItemData? FindOrDefault(string name)
-            => Items.SingleOrDefault(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
-            ?? Items.SingleOrDefault(x => x.GetStage(name) != null);
+        public Item? FirstOrDefault(string name)
+            => LocalPlayersItems().FirstOrDefault(x => x.Name == name)
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            ?? LocalPlayersItems().FirstOrDefault(x => x.Metadata.GetStage(name) != null);
 
         /// <summary>
-        /// Finds an item with the specified item type.
+        /// Finds an item with the specified item type for the local player.
         /// </summary>
         /// <param name="itemType">The type of item to find.</param>
         /// <returns>
@@ -68,23 +73,12 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured items with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        public virtual ItemData? GetOrDefault(ItemType itemType)
-            => Items.RandomOrDefault(x => x.InternalItemType == itemType, s_random);
+        public Item? FirstOrDefault(ItemType itemType)
+            => LocalPlayersItems().FirstOrDefault(x => x.Type == itemType);
 
         /// <summary>
-        /// Returns the item data of the item at the specified location.
-        /// </summary>
-        /// <param name="location">The location whose item to check.</param>
-        /// <returns>
-        /// An <see cref="ItemData"/> representing the type of item found at the
-        /// specified location, or <see langword="null"/> if the location has no
-        /// item or if the item at the location is not configured.
-        /// </returns>
-        public virtual ItemData? GetOrDefault(Location location) // TODO: move this to IWorldService, whenever that becomes available
-            => GetOrDefault(location.Item.Type);
-
-        /// <summary>
-        /// Indicates whether an item of the specified type has been tracked.
+        /// Indicates whether an item of the specified type has been tracked
+        /// for the local player.
         /// </summary>
         /// <param name="itemType">The type of item to check.</param>
         /// <returns>
@@ -92,23 +86,30 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// tracked at least once; otherwise, <see langword="false"/>.
         /// </returns>
         public virtual bool IsTracked(ItemType itemType)
-            => Items.Any(x => x.InternalItemType == itemType && x.TrackingState > 0);
+            => LocalPlayersItems().Any(x => x.Type == itemType && x.State.TrackingState > 0);
 
         /// <summary>
-        /// Enumerates all items that can be tracked.
+        /// Enumerates all items that can be tracked for all players.
         /// </summary>
         /// <returns>A collection of items.</returns>
-        public virtual IEnumerable<ItemData> AllItems() // I really want to discourage this, but necessary for now
-            => Items;
+        public IEnumerable<Item> AllItems() // I really want to discourage this, but necessary for now
+            => _world.Worlds.SelectMany(x => x.AllItems);
 
         /// <summary>
-        /// Enumarates all currently tracked items.
+        /// Enumerates all items that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of items.</returns>
+        public IEnumerable<Item> LocalPlayersItems()
+            => _world.Worlds.SelectMany(x => x.AllItems).Where(x => x.World == _world.World);
+
+        /// <summary>
+        /// Enumarates all currently tracked items for the local player.
         /// </summary>
         /// <returns>
         /// A collection of items that have been tracked at least once.
         /// </returns>
-        public virtual IEnumerable<ItemData> TrackedItems()
-            => Items.Where(x => x.TrackingState > 0);
+        public IEnumerable<Item> TrackedItems()
+            => LocalPlayersItems().Where(x => x.State.TrackingState > 0);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -121,8 +122,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public virtual string GetName(ItemType itemType)
         {
-            var item = GetOrDefault(itemType);
-            return item?.NameWithArticle ?? itemType.GetDescription();
+            var item = FirstOrDefault(itemType);
+            return item?.Metadata.NameWithArticle ?? itemType.GetDescription();
         }
 
 
@@ -136,21 +137,8 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// one at random. If there no configured rewards with the specified type,
         /// this method returns <see langword="null"/>.
         /// </returns>
-        public virtual RewardInfo? GetOrDefault(RewardType rewardType)
-            => Rewards.RandomOrDefault(x => x.RewardType == rewardType, s_random);
-
-        /// <summary>
-        /// Finds an reward with the specified item type.
-        /// </summary>
-        /// <param name="rewardItem">The type of reward to find.</param>
-        /// <returns>
-        /// An <see cref="RewardInfo"/> representing the reward. If there are
-        /// multiple configured rewards with the same type, this method returns
-        /// one at random. If there no configured rewards with the specified type,
-        /// this method returns <see langword="null"/>.
-        /// </returns>
-        public virtual RewardInfo? GetOrDefault(RewardItem rewardItem)
-            => Rewards.RandomOrDefault(x => x.RewardItem == rewardItem, s_random);
+        public virtual Reward? FirstOrDefault(RewardType rewardType)
+            => LocalPlayersRewards().FirstOrDefault(x => x.Type == rewardType);
 
         /// <summary>
         /// Returns a random name for the specified item including article, e.g.
@@ -163,24 +151,136 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </returns>
         public virtual string GetName(RewardType rewardType)
         {
-            var reward = GetOrDefault(rewardType);
-            return reward?.NameWithArticle ?? rewardType.GetDescription();
+            var reward = FirstOrDefault(rewardType);
+            return reward?.Metadata.NameWithArticle ?? rewardType.GetDescription();
         }
 
         /// <summary>
-        /// Returns a random name for the specified item including article, e.g.
-        /// "a blue crystal" or "the green pendant".
+        /// Enumerates all rewards that can be tracked for all players.
         /// </summary>
-        /// <param name="rewardItem">The reward of item whose name to get.</param>
+        /// <returns>A collection of rewards.</returns>
+
+        public virtual IEnumerable<Reward> AllRewards()
+            => _world.Worlds.SelectMany(x => x.Rewards);
+
+        /// <summary>
+        /// Enumerates all rewards that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of rewards.</returns>
+
+        public virtual IEnumerable<Reward> LocalPlayersRewards()
+            => _world.World.Rewards;
+
+        /// <summary>
+        /// Enumarates all currently tracked rewards for the local player.
+        /// This uses what the player marked as the reward for dungeons,
+        /// not the actual dungeon reward.
+        /// </summary>
         /// <returns>
-        /// The name of the reward of item, including "a", "an" or "the" if
-        /// applicable.
+        /// A collection of reward that have been tracked.
         /// </returns>
-        public virtual string GetName(RewardItem rewardItem)
+        public virtual IEnumerable<Reward> TrackedRewards()
+            => _world.World.Dungeons.Where(x => x.HasReward && x.DungeonState.Cleared).Select(x => new Reward(x.MarkedReward, _world.World, (IHasReward)x));
+
+        /// <summary>
+        /// Enumerates all bosses that can be tracked for all players.
+        /// </summary>
+        /// <returns>A collection of bosses.</returns>
+
+        public virtual IEnumerable<Boss> AllBosses()
+            => _world.Worlds.SelectMany(x => x.AllBosses);
+
+        /// <summary>
+        /// Enumerates all bosses that can be tracked for the local player.
+        /// </summary>
+        /// <returns>A collection of bosses.</returns>
+
+        public virtual IEnumerable<Boss> LocalPlayersBosses()
+            => _world.World.AllBosses;
+
+        /// <summary>
+        /// Enumarates all currently tracked bosses for the local player.
+        /// </summary>
+        /// <returns>
+        /// A collection of bosses that have been tracked.
+        /// </returns>
+        public virtual IEnumerable<Boss> TrackedBosses()
+            => LocalPlayersBosses().Where(x => x.State.Defeated);
+
+        /// <summary>
+        /// Gets the current progression based on the items the user has collected,
+        /// bosses that the user has beaten, and rewards that the user has received
+        /// </summary>
+        /// <param name="assumeKeys">If it should be assumed that the player has all keys</param>
+        /// <returns>The progression object</returns>
+        public Progression GetProgression(bool assumeKeys)
         {
-            var reward = GetOrDefault(rewardItem);
-            return reward?.NameWithArticle ?? rewardItem.GetDescription();
+            var key = $"{assumeKeys}";
+
+            if (_progression.ContainsKey(key))
+            {
+                return _progression[key];
+            }
+
+            var progression = new Progression();
+
+            if (!_world.World.Config.MetroidKeysanity || assumeKeys)
+            {
+                progression.AddRange(_world.World.ItemPools.Keycards);
+                if (assumeKeys)
+                    progression.AddRange(_world.World.ItemPools.Dungeon);
+            }
+
+            foreach (var item in TrackedItems().Select(x => x.State).Distinct())
+            {
+                if (item.Type == null || item.Type == ItemType.Nothing) continue;
+                progression.AddRange(Enumerable.Repeat(item.Type.Value, item.TrackingState));
+            }
+
+            foreach (var reward in TrackedRewards())
+            {
+                progression.Add(reward);
+            }
+
+            foreach (var boss in TrackedBosses())
+            {
+                progression.Add(boss);
+            }
+
+            _progression[key] = progression;
+            return progression;
         }
+
+        /// <summary>
+        /// Gets the current progression based on the items the user has collected,
+        /// bosses that the user has beaten, and rewards that the user has received
+        /// </summary>
+        /// <param name="area">The area to check to see if keys should be assumed
+        /// or not</param>
+        /// <returns>The progression object</returns>
+        public Progression GetProgression(IHasLocations area)
+        {
+            switch (area)
+            {
+                case Z3Region:
+                case Room { Region: Z3Region }:
+                    return GetProgression(assumeKeys: !_world.World.Config.ZeldaKeysanity);
+                case SMRegion:
+                case Room { Region: SMRegion }:
+                    return GetProgression(assumeKeys: !_world.World.Config.MetroidKeysanity);
+                default:
+                    return GetProgression(assumeKeys: _world.World.Config.KeysanityMode == KeysanityMode.None);
+            }
+        }
+
+        /// <summary>
+        /// Clears the progression cache after collecting new items, rewards, or bosses
+        /// </summary>
+        public void ResetProgression()
+        {
+            _progression.Clear();
+        }
+
 
         // TODO: Tracking methods
     }

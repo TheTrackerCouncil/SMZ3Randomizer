@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigFiles;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.Tracking.Services
 {
@@ -18,9 +18,7 @@ namespace Randomizer.SMZ3.Tracking.Services
     public class UIService: IUIService
     {
         private readonly UIConfig _layouts;
-        private readonly TrackerOptionsAccessor _options;
-        private readonly TrackerConfigProvider _configProvider;
-        private readonly List<string> IconPaths;
+        private readonly List<string> _iconPaths;
 
         /// <summary>
         /// Constructor
@@ -29,19 +27,22 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="configProvider">The tracker configs</param>
         /// <param name="uiConfig">The UI configs</param>
         public UIService(TrackerOptionsAccessor options,
-            TrackerConfigProvider configProvider,
+            ConfigProvider configProvider,
             UIConfig uiConfig
         )
         {
             _layouts = uiConfig;
-            _options = options;
-            _configProvider = configProvider;
 
-            var iconPaths = _options.Options.TrackerProfiles
+            var iconPaths = options.Options?.TrackerProfiles
                 .Where(x => !string.IsNullOrEmpty(x))
-                .Select(x => Path.Combine(_configProvider.ConfigDirectory, x)).Reverse().ToList();
-            iconPaths.Add(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            IconPaths = iconPaths;
+                .NonNull()
+                .Select(x => Path.Combine(configProvider.ConfigDirectory, x)).Reverse().ToList() ?? new();
+            var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (basePath != null)
+            {
+                iconPaths.Add(basePath);
+            }
+            _iconPaths = iconPaths;
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="name">The name of the requested</param>
         /// <returns>The matching layout or the first one if it is not found</returns>
-        public UILayout GetLayout(string name) => _layouts.FirstOrDefault(x => x.Name == name) ?? _layouts[0];
+        public UILayout GetLayout(string? name) => _layouts.FirstOrDefault(x => x.Name == name) ?? _layouts[0];
 
         /// <summary>
         /// Returns the path of the sprite for the number
@@ -68,28 +69,28 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="item">The item requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(ItemData item)
+        public string? GetSpritePath(Item item)
         {
-            var fileName = (string?)null;
+            string? fileName;
 
-            if (item.Image != null)
+            if (item.Metadata.Image != null)
             {
-                fileName = GetSpritePath("Items", item.Image, out _);
+                fileName = GetSpritePath("Items", item.Metadata.Image, out _);
                 if (File.Exists(fileName))
                     return fileName;
             }
 
-            if (item.HasStages || item.Multiple)
+            if (item.Metadata.HasStages || item.Metadata.Multiple)
             {
-                var baseFileName = GetSpritePath("Items", $"{item.Item.ToLowerInvariant()}.png", out string profilePath);
-                fileName = GetSpritePath("Items", $"{item.Item.ToLowerInvariant()} ({item.TrackingState}).png", out _, profilePath);
+                var baseFileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out var profilePath);
+                fileName = GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()} ({item.State.TrackingState}).png", out _, profilePath);
                 if (File.Exists(fileName))
                     return fileName;
                 else
                     return baseFileName;
             }
 
-            return GetSpritePath("Items", $"{item.Item.ToLowerInvariant()}.png", out _);
+            return GetSpritePath("Items", $"{item.Metadata.Item.ToLowerInvariant()}.png", out _);
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <returns>The full path of the sprite or null if it's not found</returns>
         public string? GetSpritePath(BossInfo boss)
         {
-            var fileName = (string?)null;
+            string? fileName;
 
             if (boss.Image != null)
             {
@@ -116,15 +117,22 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="dungeon">The dungeon requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(DungeonInfo dungeon) => GetSpritePath("Dungeons",
-            $"{dungeon.Dungeon.ToLowerInvariant()}.png", out _);
+        public string? GetSpritePath(IDungeon dungeon) => GetSpritePath("Dungeons",
+            $"{dungeon.DungeonName.ToLowerInvariant()}.png", out _);
 
         /// <summary>
         /// Returns the path of the sprite for the reward
         /// </summary>
         /// <param name="reward">The reward requested</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(RewardItem reward) => GetSpritePath("Dungeons",
+        public string? GetSpritePath(Reward reward) => GetSpritePath(reward.Type);
+
+        /// <summary>
+        /// Returns the path of the sprite for the reward
+        /// </summary>
+        /// <param name="reward">The reward requested</param>
+        /// <returns>The full path of the sprite or null if it's not found</returns>
+        public string? GetSpritePath(RewardType reward) => GetSpritePath("Dungeons",
             $"{reward.GetDescription().ToLowerInvariant()}.png", out _);
 
         /// <summary>
@@ -135,7 +143,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <param name="profilePath">The path of the selected profile</param>
         /// <param name="basePath">The base path of the desired sprite</param>
         /// <returns>The full path of the sprite or null if it's not found</returns>
-        public string? GetSpritePath(string category, string imageFileName, out string profilePath, string basePath = null)
+        public string? GetSpritePath(string category, string imageFileName, out string? profilePath, string? basePath = null)
         {
             if (!string.IsNullOrEmpty(basePath))
             {
@@ -148,7 +156,7 @@ namespace Randomizer.SMZ3.Tracking.Services
             }
             else
             {
-                foreach (var profile in IconPaths)
+                foreach (var profile in _iconPaths)
                 {
                     var path = Path.Combine(profile, "Sprites", category, imageFileName);
                     if (File.Exists(path))

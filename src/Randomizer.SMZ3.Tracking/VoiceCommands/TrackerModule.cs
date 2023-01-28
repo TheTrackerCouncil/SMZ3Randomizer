@@ -5,8 +5,11 @@ using System.Linq;
 using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -60,11 +63,13 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
         /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to log information.</param>
-        protected TrackerModule(Tracker tracker, IItemService itemService, ILogger logger)
+        protected TrackerModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger logger)
         {
             Tracker = tracker;
             ItemService = itemService;
+            WorldService = worldService;
             Logger = logger;
         }
 
@@ -86,7 +91,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         protected Tracker Tracker { get; }
 
+        /// <summary>
+        /// Service for getting item data
+        /// </summary>
         protected IItemService ItemService { get; }
+
+        /// <summary>
+        /// Service for getting world data
+        /// </summary>
+        protected IWorldService WorldService { get; }
 
         /// <summary>
         /// Gets a list of speech recognition grammars provided by the module.
@@ -121,11 +134,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static DungeonInfo GetDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static IDungeon GetDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
-            var dungeonTypeName = (string)result.Semantics[DungeonKey].Value;
-            var dungeon = tracker.WorldInfo.Dungeon(dungeonTypeName);
-            return dungeon ?? throw new Exception($"Could not find dungeon {dungeonTypeName} (\"{result.Text}\").");
+            var name = (string)result.Semantics[DungeonKey].Value;
+            var dungeon = tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
+            return dungeon ?? throw new Exception($"Could not find dungeon {name} (\"{result.Text}\").");
         }
 
         /// <summary>
@@ -137,10 +150,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="DungeonInfo"/> from the recognition result.
         /// </returns>
-        protected static DungeonInfo? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
+        protected static IDungeon? GetBossDungeonFromResult(Tracker tracker, RecognitionResult result)
         {
-            var dungeonTypeName = (string)result.Semantics[BossKey].Value;
-            return tracker.WorldInfo.Dungeon(dungeonTypeName);
+            var name = (string)result.Semantics[BossKey].Value;
+            return tracker.World.Dungeons.FirstOrDefault(x => x.DungeonName == name);
         }
 
         /// <summary>
@@ -152,10 +165,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// A <see cref="BossInfo"/> from the recognition result.
         /// </returns>
-        protected static BossInfo? GetBossFromResult(Tracker tracker, RecognitionResult result)
+        protected static Boss? GetBossFromResult(Tracker tracker, RecognitionResult result)
         {
             var bossName = (string)result.Semantics[BossKey].Value;
-            return tracker.WorldInfo.Bosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
+            return tracker.World.AllBosses.SingleOrDefault(x => x.Name.Contains(bossName, StringComparison.Ordinal));
         }
 
         /// <summary>
@@ -170,12 +183,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns>
         /// An <see cref="ItemData"/> from the recognition result.
         /// </returns>
-        protected ItemData GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
+        protected Item GetItemFromResult(Tracker tracker, RecognitionResult result, out string itemName)
         {
             itemName = (string)result.Semantics[ItemNameKey].Value;
-            var itemData = ItemService.FindOrDefault(itemName);
+            var item = ItemService.FirstOrDefault(itemName);
 
-            return itemData ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
+            return item ?? throw new Exception($"Could not find recognized item '{itemName}' (\"{result.Text}\")");
         }
 
         /// <summary>
@@ -190,7 +203,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
         {
             var id = (int)result.Semantics[LocationKey].Value;
-            var location = tracker.WorldInfo.Location(id).GetLocation(tracker.World);
+            var location = tracker.World.Locations.First(x => x.Id == id);
             return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
         }
 
@@ -204,7 +217,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static Room GetRoomFromResult(Tracker tracker, RecognitionResult result)
         {
             var roomTypeName = (string)result.Semantics[RoomKey].Value;
-            var room = tracker.WorldInfo.Room(roomTypeName).GetRoom(tracker.World);
+            var room = tracker.World.Rooms.First(x => x.GetType().FullName == roomTypeName);
             return room ?? throw new Exception($"Could not find room {roomTypeName} (\"{result.Text}\").");
         }
 
@@ -220,7 +233,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected static Region GetRegionFromResult(Tracker tracker, RecognitionResult result)
         {
             var regionTypeName = (string)result.Semantics[RegionKey].Value;
-            var region = tracker.WorldInfo.Region(regionTypeName).GetRegion(tracker.World);
+            var region = tracker.World.Regions.First(x => x.GetType().FullName == regionTypeName);
             return region ?? throw new Exception($"Could not find region {regionTypeName} (\"{result.Text}\").");
         }
 
@@ -252,7 +265,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// The command to execute when the phrase is recognized.
         /// </param>
         protected void AddCommand(string ruleName, string phrase,
-            Action<Tracker, RecognitionResult> executeCommand)
+            Action<RecognitionResult> executeCommand)
         {
             var builder = new GrammarBuilder()
                 .Append(phrase);
@@ -270,7 +283,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// The command to execute when any of the phrases is recognized.
         /// </param>
         protected void AddCommand(string ruleName, string[] phrases,
-            Action<Tracker, RecognitionResult> executeCommand)
+            Action<RecognitionResult> executeCommand)
         {
             var builder = new GrammarBuilder()
                 .OneOf(phrases);
@@ -289,7 +302,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// recognized.
         /// </param>
         protected void AddCommand(string ruleName, GrammarBuilder grammarBuilder,
-            Action<Tracker, RecognitionResult> executeCommand)
+            Action<RecognitionResult> executeCommand)
         {
             _syntax.TryAdd(ruleName, grammarBuilder.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
@@ -307,7 +320,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                                 e.Result.Text, e.Result.Confidence);
                             Tracker.RestartIdleTimers();
 
-                            executeCommand(Tracker, e.Result);
+                            executeCommand(e.Result);
                         }
                         else
                         {
@@ -350,16 +363,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetPluralItemNames()
         {
             var itemNames = new Choices();
-            foreach (var itemData in ItemService.AllItems().Where(x => x.Multiple && !x.HasStages))
+            foreach (var item in ItemService.LocalPlayersItems().Where(x => x.Metadata is { Multiple: true, HasStages: false }))
             {
-                if (itemData.Plural == null)
+                if (item.Metadata.Plural == null)
                 {
-                    Logger.LogWarning("{item} is marked as Multiple but does not have plural names", itemData.Name[0]);
+                    Logger.LogWarning("{item} is marked as Multiple but does not have plural names", item.Name);
                     continue;
                 }
 
-                foreach (var name in itemData.Plural)
-                    itemNames.Add(new SemanticResultValue(name.ToString(), itemData.Name[0].Text));
+                foreach (var name in item.Metadata.Plural)
+                    itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
             }
 
             return itemNames;
@@ -372,24 +385,23 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// A new <see cref="Choices"/> object representing all possible item
         /// names.
         /// </returns>
-        protected virtual Choices GetItemNames(Func<ItemData, bool>? where = null)
+        protected virtual Choices GetItemNames(Func<Item, bool>? where = null)
         {
-            if (where == null)
-            {
-                where = a => 1 == 1;
-            }
+            where ??= a => true;
 
             var itemNames = new Choices();
-            foreach (var itemData in ItemService.AllItems().Where(where))
+            foreach (var item in ItemService.LocalPlayersItems().Where(where))
             {
-                foreach (var name in itemData.Name)
-                    itemNames.Add(new SemanticResultValue(name.ToString(), name.ToString()));
-
-                if (itemData.Stages != null)
+                foreach (var name in item.Metadata.Name)
                 {
-                    foreach (var stageName in itemData.Stages.SelectMany(x => x.Value))
+                    itemNames.Add(new SemanticResultValue(name.ToString(), item.Name));
+                }
+
+                if (item.Metadata.Stages != null)
+                {
+                    foreach (var stageName in item.Metadata.Stages.SelectMany(x => x.Value))
                     {
-                        itemNames.Add(new SemanticResultValue(stageName.ToString(), stageName.ToString()));
+                        itemNames.Add(new SemanticResultValue(stageName.ToString(), item.Name));
                     }
                 }
             }
@@ -407,12 +419,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetDungeonNames(bool includeDungeonsWithoutReward = false)
         {
             var dungeonNames = new Choices();
-            foreach (var dungeon in Tracker.WorldInfo.Dungeons)
+            foreach (var dungeon in Tracker.World.Dungeons)
             {
-                if (dungeon.HasReward || includeDungeonsWithoutReward)
+                if ((dungeon.DungeonState.HasReward || includeDungeonsWithoutReward))
                 {
-                    foreach (var name in dungeon.Name)
-                        dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.Type.FullName));
+                    foreach (var name in dungeon.DungeonMetadata.Name)
+                        dungeonNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
                 }
             }
 
@@ -429,15 +441,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         protected virtual Choices GetBossNames()
         {
             var bossNames = new Choices();
-            foreach (var dungeon in Tracker.WorldInfo.Dungeons)
+            foreach (var dungeon in Tracker.World.Dungeons)
             {
-                foreach (var name in dungeon.Boss)
-                    bossNames.Add(new SemanticResultValue(name.Text, dungeon.Type.FullName));
+                foreach (var name in dungeon.DungeonMetadata.Boss)
+                    bossNames.Add(new SemanticResultValue(name.Text, dungeon.DungeonName));
             }
-            foreach (var boss in Tracker.WorldInfo.Bosses)
+            foreach (var boss in Tracker.World.AllBosses)
             {
-                foreach (var name in boss.Name)
-                    bossNames.Add(new SemanticResultValue(name.Text, name.Text));
+                foreach (var name in boss.Metadata.Name)
+                    bossNames.Add(new SemanticResultValue(name.Text, boss.Name));
             }
             return bossNames;
         }
@@ -453,10 +465,10 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var locationNames = new Choices();
 
-            foreach (var location in Tracker.WorldInfo.Locations)
+            foreach (var location in Tracker.World.Locations)
             {
-                foreach (var name in location.Name)
-                    locationNames.Add(new SemanticResultValue(name.Text, location.LocationNumber));
+                foreach (var name in location.Metadata.Name)
+                    locationNames.Add(new SemanticResultValue(name.Text, location.Id));
             }
 
             return locationNames;
@@ -473,10 +485,12 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var roomNames = new Choices();
 
-            foreach (var room in Tracker.WorldInfo.Rooms)
+            foreach (var room in Tracker.World.Rooms)
             {
-                foreach (var name in room.Name)
-                    roomNames.Add(new SemanticResultValue(name.Text, room.Type.FullName));
+                var roomName = room.GetType().FullName;
+                if (roomName == null) continue;
+                foreach (var name in room.Metadata.Name)
+                    roomNames.Add(new SemanticResultValue(name.Text, roomName));
             }
 
             return roomNames;
@@ -493,16 +507,42 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             var regionNames = new Choices();
 
-            foreach (var region in Tracker.WorldInfo.Regions)
+            foreach (var region in Tracker.World.Regions)
             {
-                if (excludeDungeons && Tracker.WorldInfo.Dungeon(region.Type.FullName) != null)
+                var regionName = region.GetType().FullName;
+                if (excludeDungeons && region is IDungeon || regionName == null)
                     continue;
 
-                foreach (var name in region.Name)
-                    regionNames.Add(new SemanticResultValue(name.Text, region.Type.FullName));
+                foreach (var name in region.Metadata.Name)
+                    regionNames.Add(new SemanticResultValue(name.Text, regionName));
             }
 
             return regionNames;
+        }
+
+        /// <summary>
+        /// Get the medallion names for speech recognition.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Choices"/> object representing all possible medallion
+        /// names mapped to the primary item name.
+        /// </returns>
+        protected virtual Choices GetMedallionNames()
+        {
+            var medallions = new Choices();
+
+            var medallionTypes = new List<ItemType>(Enum.GetValues<ItemType>());
+            foreach (var medallion in medallionTypes.Where(x => x == ItemType.Nothing || x.IsInCategory(ItemCategory.Medallion)))
+            {
+                var item = ItemService.FirstOrDefault(medallion);
+                if (item?.Metadata != null)
+                {
+                    foreach (var name in item.Metadata.Name)
+                        medallions.Add(new SemanticResultValue(medallion.ToString(), item.Name));
+                }
+            }
+
+            return medallions;
         }
     }
 }

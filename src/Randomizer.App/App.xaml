@@ -337,6 +337,7 @@
       <local:ItemSpriteImageSourceConverter x:Key="ItemSpriteConverter" />
       <local:StringColorConverter x:Key="ColorConverter" />
       <local:ColorBrushConverter x:Key="ColorBrushConverter" />
+      <local:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

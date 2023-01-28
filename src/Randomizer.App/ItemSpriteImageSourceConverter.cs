@@ -13,7 +13,7 @@ namespace Randomizer.App
         {
             return new BitmapImage(new Uri(
                 Path.Combine(
-                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
                     "Sprites", "Items", (string)value)));
         }
 

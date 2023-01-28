@@ -2,8 +2,7 @@
   "profiles": {
     "Randomizer.Tools": {
       "commandName": "Project",
-      "commandLineArgs": "generate-locations",
-      "workingDirectory": "D:\\Documents\\ConfigsTest\\output"
+      "commandLineArgs": "openrom applypatches copypatches"
     }
   }
 }

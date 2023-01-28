@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Randomizer.App
 {
     public static class DictionaryExtensions
     {
-        public static void Increment<TKey>(this Dictionary<TKey, int> dictionary, TKey key)
+        public static void Increment<TKey>(this Dictionary<TKey, int> dictionary, TKey key) where TKey : notnull
         {
             if (!dictionary.ContainsKey(key))
             {
@@ -21,7 +17,7 @@ namespace Randomizer.App
             }
         }
 
-        public static void Increment<TKey>(this ConcurrentDictionary<TKey, int> dictionary, TKey key)
+        public static void Increment<TKey>(this ConcurrentDictionary<TKey, int> dictionary, TKey key) where TKey : notnull
         {
             dictionary.AddOrUpdate(key, 1, (_, current) => current + 1);
         }

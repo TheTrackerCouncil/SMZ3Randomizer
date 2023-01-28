@@ -571,6 +571,56 @@ SkipDrawEOR:
 RTL
 ;--------------------------------------------------------------------------------
 
+;================================================================================
+; 8-bit registers
+; in:   A(b) - Byte to Convert
+; out:  $05 - $07 (high - low)
+;================================================================================
+HudHexToDec3Digit: ; this may be overkill, could have used the 4 digit one...
+    LDY.b #$90
+    -
+        CMP.b #100 : !BLT +
+        INY
+        SBC.b #100 : BRA -
+    +
+    STY $05 : LDY.b #$90 ; Store 100s digit and reset Y
+    -
+        CMP.b #10 : !BLT +
+        INY
+        SBC.b #10 : BRA -
+    +
+    STY $06 : LDY #$90 ; Store 10s digit and reset Y
+    CMP.b #1 : !BLT +
+    -
+        INY
+        DEC : BNE -
+    +
+    STY $07 ; Store 1s digit
+RTS
+
+;--------------------------------------------------------------------------------
+; CountBits
+; in: A(b) - Byte to count bits in
+; out: A(b) - sum of bits
+; caller is responsible for setting 8-bit mode and preserving X and Y
+;--------------------------------------------------------------------------------
+CountBits:
+    PHB : PHK : PLB
+    TAX                     ; Save a copy of value
+    LSR #4                  ; Shift down hi nybble, Leave <3> in C
+    TAY                     ; And save <7:4> in Y
+    TXA                     ; Recover value
+    AND.b #$07              ; Put out <2:0> in X
+    TAX                     ; And save in X
+    LDA   NybbleBitCounts, Y; Fetch count for Y
+    ADC.l NybbleBitCounts, X; Add count for X & C
+    PLB
+RTL
+
+; Look up table of bit counts in the values $00-$0F
+NybbleBitCounts:
+db #00, #01, #01, #02, #01, #02, #02, #03, #01, #02, #02, #03, #02, #03, #03, #04
+
 ;--------------------------------------------------------------------------------
 ; HexToDec
 ; in:	A(w) - Word to Convert

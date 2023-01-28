@@ -1,4 +1,5 @@
 ﻿using System;
+using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Tracking
 {
@@ -13,8 +14,9 @@ namespace Randomizer.SMZ3.Tracking
         /// </summary>
         /// <param name="location">The location that was cleared.</param>
         /// <param name="confidence">The speech recognition confidence.</param>
-        public LocationClearedEventArgs(Location location, float? confidence)
-            : base(confidence)
+        /// <param name="autoTracked">If the location was automatically tracked</param>
+        public LocationClearedEventArgs(Location location, float? confidence, bool autoTracked)
+            : base(confidence, autoTracked)
         {
             Location = location;
         }

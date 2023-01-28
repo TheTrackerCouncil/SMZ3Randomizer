@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Randomizer.Shared;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Regions;
-using Randomizer.SMZ3.Regions.Zelda;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
-using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
 {
@@ -15,13 +12,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
     /// </summary>
     public class EnteredDungeon : IZeldaStateCheck
     {
-        private readonly HashSet<DungeonInfo> _enteredDungeons = new();
-        private readonly IItemService _itemService;
+        private readonly HashSet<Region> _enteredDungeons = new();
         private readonly IWorldAccessor _worldAccessor;
 
-        public EnteredDungeon(IItemService itemService, IWorldAccessor worldAccessor)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="worldAccessor"></param>
+        public EnteredDungeon(IWorldAccessor worldAccessor)
         {
-            _itemService = itemService;
             _worldAccessor = worldAccessor;
         }
 
@@ -36,18 +35,19 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         {
             if (currentState.State == 0x07 && (prevState.State == 0x06 || prevState.State == 0x09 || prevState.State == 0x0F || prevState.State == 0x10 || prevState.State == 0x11))
             {
-                // Get the region for the room 
-                var region = tracker.World.Regions.Where(x => x is Z3Region)
-                    .Select(x => x as Z3Region)
-                    .FirstOrDefault(x => x != null && x.StartingRooms != null && x.StartingRooms.Contains(currentState.CurrentRoom) && !x.IsOverworld);
+                // Get the region for the room
+                var region = tracker.World.Regions
+                    .OfType<Z3Region>()
+                    .FirstOrDefault(x => x.StartingRooms.Count == 0 && x.StartingRooms.Contains(currentState.CurrentRoom) && !x.IsOverworld);
                 if (region == null) return false;
 
                 // Get the dungeon info for the room
-                var dungeonInfo = tracker.WorldInfo.Dungeons.First(x => x.Is(region));
+                var dungeon = region as IDungeon;
+                if (dungeon == null) return false;
 
-                if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(dungeonInfo) && (dungeonInfo.Reward == RewardItem.RedPendant || dungeonInfo.Reward == RewardItem.GreenPendant || dungeonInfo.Reward == RewardItem.BluePendant || dungeonInfo.Reward == RewardItem.NonGreenPendant))
+                if (!_worldAccessor.World.Config.ZeldaKeysanity && !_enteredDungeons.Contains(region) && dungeon.IsPendantDungeon)
                 {
-                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeonInfo.Name, _itemService.GetName(dungeonInfo.Reward));
+                    tracker.Say(tracker.Responses.AutoTracker.EnterPendantDungeon, dungeon.DungeonMetadata.Name, dungeon.DungeonReward?.Metadata.Name);
                 }
                 else if (!_worldAccessor.World.Config.ZeldaKeysanity && region is CastleTower)
                 {
@@ -55,10 +55,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 }
                 else if (region is GanonsTower)
                 {
-                    var clearedCrystalDungeonCount = tracker.WorldInfo.Dungeons
-                                                        .Where(x => x.Cleared)
-                                                        .Select(x => x.GetRegion(tracker.World) as IHasReward)
-                                                        .Count(x => x != null && x.Reward is RewardType.CrystalBlue or RewardType.CrystalRed);
+                    var clearedCrystalDungeonCount = tracker.World.Dungeons
+                                                        .Count(x => x.DungeonState.Cleared && x.IsCrystalDungeon);
+
                     if (clearedCrystalDungeonCount < 7)
                     {
                         tracker.SayOnce(x => x.AutoTracker.EnteredGTEarly, clearedCrystalDungeonCount);
@@ -66,7 +65,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 }
 
                 tracker.UpdateRegion(region, tracker.Options.AutoTrackerChangeMap);
-                _enteredDungeons.Add(dungeonInfo);
+                _enteredDungeons.Add(region);
                 return true;
             }
 

@@ -35,8 +35,7 @@ incsrc "sm/titlescreen.asm"                 ; Super Metroid Upload New Title Scr
 incsrc "sm/keycards.asm"                    ; Super Metroid Keycard system
 incsrc "sm/plminject.asm"                   ; Super Metroid PLM Injection
 incsrc "sm/messagebox.asm"                  ; Super Metroid Messagebox improvements
-incsrc "sm/EasierWJ.asm"                    ; Super Metroid Easier Wall Jump by Benox50
-incsrc "sm/Celeste.asm"                     ; Super Metroid Collision Clearance by Benox50
+incsrc "sm/sm_msu.asm"                      ; Super Metroid MSU support
 
 ; --- ALTTP code ---
 incsrc "z3/hirom.asm"	                    ; ALTTP ExHiROM patch

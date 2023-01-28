@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using FluentAssertions;
-
 using Randomizer.SMZ3.Text;
-
 using Xunit;
 
 namespace Randomizer.SMZ3.Tests.Text

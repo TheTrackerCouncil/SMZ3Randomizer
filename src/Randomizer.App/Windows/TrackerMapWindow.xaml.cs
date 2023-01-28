@@ -6,16 +6,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
-
 using Microsoft.Extensions.Logging;
-
 using Randomizer.App.ViewModels;
-using Randomizer.SMZ3;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
-using static Randomizer.SMZ3.Tracking.Configuration.ConfigTypes.TrackerMapLocation;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.WorldData;
+using Randomizer.Data.WorldData.Regions;
+using Randomizer.SMZ3.Tracking;
+using static Randomizer.Data.Configuration.ConfigTypes.TrackerMapLocation;
 
-namespace Randomizer.App
+namespace Randomizer.App.Windows
 {
     /// <summary>
     /// Interaction logic for TrackerMapWindow.xaml
@@ -23,6 +23,7 @@ namespace Randomizer.App
     public partial class TrackerMapWindow : Window
     {
         private readonly ILogger<TrackerMapWindow> _logger;
+        private readonly Tracker _tracker;
         private TrackerLocationSyncer _syncer;
 
         /// <summary>
@@ -30,15 +31,19 @@ namespace Randomizer.App
         /// class to display the map of accessible locations that the player can
         /// go to
         /// </summary>
+        /// <param name="tracker">The tracker for tracking locations and items</param>
+        /// <param name="syncer">Syncer to help communicate between the UI and tracker</param>
         /// <param name="config">
         /// The config for the map json file with all the location details
         /// </param>
         /// <param name="logger">Logger for logging</param>
-        public TrackerMapWindow(TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
+        public TrackerMapWindow(Tracker tracker, TrackerLocationSyncer syncer, TrackerMapConfig config, ILogger<TrackerMapWindow> logger)
         {
             InitializeComponent();
 
             _logger = logger;
+            _tracker = tracker;
+            _syncer = syncer;
 
             Maps = config.Maps;
             var regions = config.Regions;
@@ -49,35 +54,36 @@ namespace Randomizer.App
             foreach (var map in Maps)
             {
                 map.FullLocations = new List<TrackerMapLocation>();
-                if (map.Regions != null)
+                foreach (var mapRegion in map.Regions)
                 {
-                    foreach (var mapRegion in map.Regions)
+                    var region = regions.First(region => mapRegion.Name == region.Name);
+                    if (region.Rooms != null)
                     {
-                        var region = regions.First(region => mapRegion.Name == region.Name);
                         var mapLocations = region.Rooms
                             .Select(room => new TrackerMapLocation(MapLocationType.Item, mapRegion.Name, region.TypeName, room.Name,
                                 x: (int)Math.Floor(room.X * mapRegion.Scale) + mapRegion.X,
                                 y: (int)Math.Floor(room.Y * mapRegion.Scale) + mapRegion.Y))
                             .ToList();
                         map.FullLocations.AddRange(mapLocations);
+                    }
 
-                        // Add the boss for this region if one is specified
-                        if (region.BossX != null && region.BossY != null)
-                        {
-                            map.FullLocations.Add(new TrackerMapLocation(MapLocationType.Boss, mapRegion.Name, region.TypeName, null,
-                                x: (int)Math.Floor((region.BossX ?? 0) * mapRegion.Scale) + mapRegion.X,
-                                y: (int)Math.Floor((region.BossY ?? 0) * mapRegion.Scale) + mapRegion.Y));
-                        }
+                    // Add the boss for this region if one is specified
+                    if (region.BossX != null && region.BossY != null)
+                    {
+                        map.FullLocations.Add(new TrackerMapLocation(MapLocationType.Boss, mapRegion.Name, region.TypeName, "",
+                            x: (int)Math.Floor((region.BossX ?? 0) * mapRegion.Scale) + mapRegion.X,
+                            y: (int)Math.Floor((region.BossY ?? 0) * mapRegion.Scale) + mapRegion.Y));
+                    }
 
-                        // Add all SM keysanity doors
-                        if (region.Doors != null)
+                    // Add all SM keysanity doors
+                    if (region.Doors != null)
+                    {
+                        foreach (var door in region.Doors)
                         {
-                            foreach (var door in region.Doors)
-                            {
-                                map.FullLocations.Add(new TrackerMapLocation(MapLocationType.SMDoor, mapRegion.Name, region.TypeName, door.Item,
-                                    x: (int)Math.Floor((door.X) * mapRegion.Scale) + mapRegion.X,
-                                    y: (int)Math.Floor((door.Y) * mapRegion.Scale) + mapRegion.Y));
-                            }
+                            map.FullLocations.Add(new TrackerMapLocation(MapLocationType.SMDoor, mapRegion.Name,
+                                region.TypeName, door.Item,
+                                x: (int)Math.Floor((door.X) * mapRegion.Scale) + mapRegion.X,
+                                y: (int)Math.Floor((door.Y) * mapRegion.Scale) + mapRegion.Y));
                         }
                     }
                 }
@@ -98,7 +104,7 @@ namespace Randomizer.App
         /// <summary>
         /// The current selected map
         /// </summary>
-        public TrackerMap CurrentMap { get; private set; }
+        public TrackerMap? CurrentMap { get; private set; }
 
         /// <summary>
         /// The view model for the tracker map window
@@ -125,7 +131,7 @@ namespace Randomizer.App
         /// <param name="mapName">The name of the map to display</param>
         public void UpdateMap(string mapName)
         {
-            if (mapName == null)
+            if (string.IsNullOrEmpty(mapName))
                 return;
 
             UpdateMap(Maps.First(x => x.ToString() == mapName));
@@ -159,7 +165,7 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Maps == null || Maps.Count == 0)
+            if (Maps.Count == 0)
             {
                 _logger.LogError("Map json was not loaded successfully");
                 return;
@@ -175,10 +181,10 @@ namespace Randomizer.App
         /// <param name="e"></param>
         private void MapComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _syncer.Tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
+            _tracker.UpdateMap(Maps.ElementAt(MapComboBox.SelectedIndex).ToString());
         }
 
-        private void PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void PropertyChanged(object?sender, PropertyChangedEventArgs e)
         {
             TrackerMapViewModel.OnPropertyChanged();
         }
@@ -206,21 +212,23 @@ namespace Randomizer.App
             // Determine what type of location this is
             if (shape.Tag is List<Location> locations)
             {
-                Syncer.ClearLocations(locations);
+                locations.Where(x => x.State.Cleared == false)
+                    .ToList()
+                    .ForEach(x => _tracker.Clear(x));
             }
             else if (shape.Tag is Region region)
             {
-                Syncer.ClearRegion(region, false, true);
+                _tracker.ClearArea(region, false, false, null, region.Name != "Hyrule Castle");
             }
-            else if (shape.Tag is BossInfo boss)
+            else if (shape.Tag is Boss boss)
             {
-                Syncer.Tracker.MarkBossAsDefeated(boss);
+                _tracker.MarkBossAsDefeated(boss);
             }
-            else if(shape.Tag is DungeonInfo dungeon)
+            else if(shape.Tag is IDungeon dungeon)
             {
-                Syncer.Tracker.MarkDungeonAsCleared(dungeon);
+                _tracker.MarkDungeonAsCleared(dungeon);
             }
-            
+
         }
 
         /// <summary>
@@ -237,7 +245,7 @@ namespace Randomizer.App
             if (menuItem.Tag is not Location location)
                 return;
 
-            Syncer.ClearLocation(location);
+            _tracker.Clear(location);
         }
     }
 }

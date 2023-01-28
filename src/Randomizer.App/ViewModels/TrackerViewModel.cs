@@ -8,37 +8,34 @@ using System.Windows;
 using Randomizer.Shared;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Tracking;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 using Randomizer.SMZ3.Tracking.Services;
+using Randomizer.Data.WorldData;
+using Randomizer.Shared.Enums;
 
 namespace Randomizer.App.ViewModels
 {
     public class TrackerViewModel : INotifyPropertyChanged
     {
         private readonly IUIService _uiService;
-        private bool _isDesign;
-        private LocationFilter _filter;
-        private TrackerLocationSyncer _syncer;
-
-        public TrackerViewModel(IUIService uiService)
-        {
-            _isDesign = DesignerProperties.GetIsInDesignMode(new DependencyObject());
-            _syncer = new TrackerLocationSyncer();
-            _uiService = uiService;
-        }
+        private readonly bool _isDesign;
+        private readonly TrackerLocationSyncer _syncer;
+        private RegionFilter _filter;
 
         public TrackerViewModel(TrackerLocationSyncer syncer, IUIService uiService)
         {
+            _isDesign = DesignerProperties.GetIsInDesignMode(new DependencyObject());
             _syncer = syncer;
             _syncer.TrackedLocationUpdated += (_, _) => OnPropertyChanged(nameof(TopLocations));
             _syncer.MarkedLocationUpdated += (_, _) => OnPropertyChanged(nameof(MarkedLocations));
             _uiService = uiService;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public LocationFilter Filter
+        public RegionFilter Filter
         {
             get => _filter;
             set
@@ -65,11 +62,18 @@ namespace Randomizer.App.ViewModels
                 if (_isDesign)
                     return GetDummyMarkedLocations();
 
-                return _syncer.MarkedLocations.Select(x =>
+                var viewModels = new List<MarkedLocationViewModel>();
+
+                foreach (var markedLocation in _syncer.WorldService.MarkedLocations())
                 {
-                    var location = _syncer.AllLocations.Single(location => location.Id == x.Key);
-                    return new MarkedLocationViewModel(location, x.Value, _uiService.GetSpritePath(x.Value), _syncer);
-                });
+                    var markedItemType = markedLocation.State.MarkedItem ?? ItemType.Nothing;
+                    if (markedItemType == ItemType.Nothing) continue;
+                    var item = _syncer.Tracker.ItemService.FirstOrDefault(markedItemType);
+                    if (item == null) continue;
+                    viewModels.Add(new MarkedLocationViewModel(markedLocation, item, _uiService.GetSpritePath(item), _syncer));
+                }
+
+                return viewModels;
             }
         }
 
@@ -77,26 +81,27 @@ namespace Randomizer.App.ViewModels
         {
             get
             {
-                return _syncer.GetTopLocations(Filter)
+                return _syncer.WorldService.Locations(unclearedOnly: true, outOfLogic: ShowOutOfLogicLocations, assumeKeys: true, sortByTopRegion: true, regionFilter: Filter)
                     .Select(x => new LocationViewModel(x, _syncer))
                     .ToImmutableList();
             }
         }
 
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
                     => PropertyChanged?.Invoke(this, new(propertyName));
 
         private IEnumerable<MarkedLocationViewModel> GetDummyMarkedLocations()
         {
-            var item = new ItemData(new("X-Ray Scope"), ItemType.XRay, null);
+            var world = new World(new Config(), "", 0, "");
+            var item = new Item(ItemType.XRay, world, "X-Ray Scope");
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldSouth.Library,
                 item,
                 null,
                 _syncer);
 
-            item = new ItemData(new("Bullshit"), ItemType.Nothing, null);
+            item = new Item(ItemType.XRay, world, "Bow");
             yield return new MarkedLocationViewModel(
                 _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
                 item,

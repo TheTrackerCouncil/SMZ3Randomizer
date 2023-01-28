@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.FileData.Patches
 {

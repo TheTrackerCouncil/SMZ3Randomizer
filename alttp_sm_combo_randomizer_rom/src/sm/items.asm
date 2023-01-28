@@ -892,7 +892,7 @@ alttp_item_pickup:
     lda.l alttp_item_table+4,x  ; Get item type
     sta.l $89                   ; Store item type in temp variable
     and #$00ff
-    
+
     cmp #$0000
     beq .normal_item_jmp
     cmp #$0001
@@ -1384,7 +1384,7 @@ namespace "alttp_item_"
     dw $0055, $0001, $0005, $003D       ; 4B Boots                      
     dw $0000, $0000, $0000, $0000       ; 4C Dummy - 50+bombs
     dw $0000, $0000, $0000, $0000       ; 4D Dummy - 70+arrows
-    dw $007B, $0001, $0000, $0055       ; 4E Half Magic
+    dw $007B, $0001, $0100, $0055       ; 4E Half Magic
     dw $007B, $0002, $0000, $0056       ; 4F Quarter Magic              
     
     dw $0059, $0002, $0100, $0040       ; 50 Master Sword

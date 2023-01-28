@@ -8,12 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-
-using Randomizer.Shared.Models;
+using Randomizer.App.Controls;
+using Randomizer.App.Windows;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Options;
+using Randomizer.Data.Services;
+using Randomizer.Multiplayer.Client;
 using Randomizer.SMZ3.ChatIntegration;
-using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.Generation;
-using Randomizer.SMZ3.Infrastructure;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -24,13 +25,13 @@ namespace Randomizer.App
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private const string BaseRegistryKey = "Software\\SMZ3 Cas Randomizer";
         private const string WindowPositionKey = "Windows";
 
-        private IHost _host;
-        private ILogger<App> _logger;
+        private IHost? _host;
+        private ILogger<App>? _logger;
 
         public static void SaveWindowPositionAndSize<TWindow>(TWindow window)
             where TWindow : Window
@@ -61,10 +62,33 @@ namespace Randomizer.App
                 if (key == null)
                     return;
 
-                window.Width = (int)key.GetValue("Width", window.Width);
-                window.Height = (int)key.GetValue("Height", window.Height);
-                window.Left = (int)key.GetValue("Left", window.Left);
-                window.Top = (int)key.GetValue("Top", window.Top);
+                var vScreenWidth = SystemParameters.VirtualScreenWidth;
+                var vScreenHeight = SystemParameters.VirtualScreenHeight;
+                var vScreenTop = SystemParameters.VirtualScreenTop;
+                var vScreenLeft = SystemParameters.VirtualScreenLeft;
+                
+                window.Width = (int)key.GetValue("Width", window.Width)!;
+                window.Height = (int)key.GetValue("Height", window.Height)!;
+                window.Left = (int)key.GetValue("Left", window.Left)!;
+                window.Top = (int)key.GetValue("Top", window.Top)!;
+
+                if (window.Left < vScreenLeft)
+                {
+                    window.Left = vScreenLeft;
+                }
+                else if (window.Left > vScreenLeft + vScreenWidth - window.Width)
+                {
+                    window.Left = vScreenLeft + vScreenWidth - window.Width;
+                }
+
+                if (window.Top < vScreenTop)
+                {
+                    window.Top = vScreenTop;
+                }
+                else if (window.Top > vScreenTop + vScreenHeight - window.Height)
+                {
+                    window.Top = vScreenTop + vScreenHeight - window.Height;
+                }
             }
             catch (Exception)
             {
@@ -75,8 +99,11 @@ namespace Randomizer.App
         protected static void ConfigureServices(IServiceCollection services)
         {
             // Randomizer + Tracker
+            services.AddConfigs();
             services.AddSmz3Randomizer();
             services.AddPlandomizer();
+            services.AddGeneratedRomLoader();
+            services.AddSmz3MultiplayerRomGenerator();
             services.AddTracker()
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()
@@ -84,19 +111,25 @@ namespace Randomizer.App
                 .AddOptionalModule<MapModule>()
                 .AddOptionalModule<GameService>();
 
+            services.AddSingleton<MsuGeneratorService>();
             services.AddSingleton<RomGenerator>();
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();
+            services.AddSingleton<ITrackerStateService, TrackerStateService>();
+            services.AddMultiplayerServices();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();
             services.AddScoped<IChatClient, TwitchChatClient>();
             services.AddSingleton<IChatAuthenticationService, TwitchAuthenticationService>();
-            
+
             // WPF
             services.AddSingleton<OptionsFactory>();
             services.AddSingleton<RomListWindow>();
+            services.AddTransient<SoloRomListPanel>();
+            services.AddTransient<MultiRomListPanel>();
             services.AddWindows<App>();
+
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)

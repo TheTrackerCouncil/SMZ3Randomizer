@@ -257,15 +257,15 @@ namespace Randomizer.Shared
         Icerod = 0x08,
 
         [Description("Bombos")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
         Bombos = 0x0f,
 
         [Description("Ether")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
         Ether = 0x10,
 
         [Description("Quake")]
-        [ItemCategory(ItemCategory.Zelda)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Medallion)]
         Quake = 0x11,
 
         [Description("Lamp")]
@@ -293,7 +293,7 @@ namespace Randomizer.Shared
         Book = 0x1D,
 
         [Description("Bottle")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
         Bottle = 0x16,
 
         [Description("Cane of Somaria")]
@@ -549,27 +549,27 @@ namespace Randomizer.Shared
         SpeedBooster = 0xBA,
 
         [Description("Bottle with Red Potion")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
         BottleWithRedPotion = 0x2B,
 
         [Description("Bottle with Green Potion")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
         BottleWithGreenPotion = 0x2C,
 
         [Description("Bottle with Blue Potion")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
         BottleWithBluePotion = 0x2D,
 
         [Description("Bottle with Fairy")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
         BottleWithFairy = 0x3D,
 
         [Description("Bottle with Bee")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
         BottleWithBee = 0x3C,
 
         [Description("Bottle with Gold Bee")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.NonRandomized)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Bottle)]
         BottleWithGoldBee = 0x48,
 
         [Description("Red Potion Refill")]

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,6 +25,12 @@ namespace Randomizer.App.Controls
 
         public static readonly DependencyProperty IsFolderPickerProperty =
             DependencyProperty.Register("IsFolderPicker", typeof(bool), typeof(FileSystemInput), new PropertyMetadata(false));
+
+        public static readonly DependencyProperty FileValidationHashProperty =
+            DependencyProperty.Register(nameof(FileValidationHash), typeof(string), typeof(FileSystemInput), new PropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty FileValidationErrorMessageProperty =
+            DependencyProperty.Register(nameof(FileValidationErrorMessage), typeof(string), typeof(FileSystemInput), new PropertyMetadata(string.Empty));
 
         public FileSystemInput()
         {
@@ -53,6 +61,18 @@ namespace Randomizer.App.Controls
             set => SetValue(IsFolderPickerProperty, value);
         }
 
+        public string FileValidationHash
+        {
+            get => (string)GetValue(FileValidationHashProperty);
+            set => SetValue(FileValidationHashProperty, value);
+        }
+
+        public string FileValidationErrorMessage
+        {
+            get => (string)GetValue(FileValidationErrorMessageProperty);
+            set => SetValue(FileValidationErrorMessageProperty, value);
+        }
+
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
             if (IsFolderPicker)
@@ -76,7 +96,26 @@ namespace Randomizer.App.Controls
             var owner = Window.GetWindow(this);
             if (dialog.ShowDialog(owner) == true)
             {
-                Path = dialog.FileName;
+                if (string.IsNullOrEmpty(FileValidationHash) || string.IsNullOrEmpty(FileValidationErrorMessage))
+                {
+                    Path = dialog.FileName;
+                }
+                else
+                {
+                    using var md5 = MD5.Create();
+                    using var stream = File.OpenRead(dialog.FileName);
+                    var hash = md5.ComputeHash(stream);
+                    var hashString = BitConverter.ToString(hash).Replace("-", "");
+
+                    if (!FileValidationHash.Equals(hashString, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var response = MessageBox.Show(Window.GetWindow(this)!, FileValidationErrorMessage, "SMZ3 Cas’ Randomizer",
+                            MessageBoxButton.YesNo, MessageBoxImage.Error);
+                        if (response == MessageBoxResult.No) return;
+                    }
+
+                    Path = dialog.FileName;
+                }
             }
         }
 
@@ -96,5 +135,6 @@ namespace Randomizer.App.Controls
                 Path = dialog.FileName;
             }
         }
+
     }
 }

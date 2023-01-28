@@ -19,4 +19,4 @@ org $c4d33b
 
 ; Door close timer
 org $c4ba54
-    dw $28*2 ; Double vanilla
+    dw $28

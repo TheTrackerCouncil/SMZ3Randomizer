@@ -8,24 +8,8 @@ namespace Randomizer.SMZ3.FileData
 {
     public static class Rom
     {
-        public static byte[] CombineSMZ3Rom(Stream smRom, Stream z3Rom, IReadOnlyCollection<Stream> smIpsStreams)
+        public static byte[] CombineSMZ3Rom(Stream smRom, Stream z3Rom)
         {
-            // Apply any ips files to SM if they are provided
-            if (smIpsStreams?.Count > 0)
-            {
-                byte[] smBytes;
-                using (var memoryStream = new MemoryStream())
-                {
-                    smRom.CopyTo(memoryStream);
-                    smBytes = memoryStream.ToArray();
-                }
-
-                foreach (var patch in smIpsStreams)
-                    ApplyIps(smBytes, patch);
-
-                smRom = new MemoryStream(smBytes);
-            }
-
             int pos;
             var combined = new byte[0x600000];
 
@@ -81,6 +65,12 @@ namespace Randomizer.SMZ3.FileData
             if (isHiBank)
                 i++;
             return baseOffset + (i * 0x8000);
+        }
+
+        public static int TranslateZeldaOffset(int offset)
+        {
+            var val = ((offset / 0x8000) + 0x1) * 0x8000 + offset;
+            return val;
         }
 
         public static void ApplyIps(byte[] rom, Stream ips, Func<int, int> translateOffset)

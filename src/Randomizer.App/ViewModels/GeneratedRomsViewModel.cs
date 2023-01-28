@@ -26,17 +26,22 @@ namespace Randomizer.App.ViewModels
                     new(new GeneratedRom() { Label = "Test3", Date = DateTimeOffset.UtcNow, Seed = "4564656423" })
                 };
             }
+            else
+            {
+                RomsList = new();
+            }
         }
 
         public GeneratedRomsViewModel(List<GeneratedRom> roms)
         {
-            UpdateList(roms);
+            RomsList = UpdateList(roms);
         }
 
-        public void UpdateList(List<GeneratedRom> roms)
+        public List<GeneratedRomViewModel> UpdateList(List<GeneratedRom> roms)
         {
             RomsList = roms.Select(x => new GeneratedRomViewModel(x)).ToList();
             OnPropertyChanged();
+            return RomsList;
         }
 
         public Visibility RomsListVisibility => RomsList.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
@@ -45,7 +50,7 @@ namespace Randomizer.App.ViewModels
 
         public List<GeneratedRomViewModel> RomsList { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void OnPropertyChanged()
         {

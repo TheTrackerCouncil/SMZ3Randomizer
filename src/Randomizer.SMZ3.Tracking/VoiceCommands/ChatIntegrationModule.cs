@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Speech.Recognition;
-using System.Speech.Synthesis.TtsEngine;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.ChatIntegration;
 using Randomizer.SMZ3.ChatIntegration.Models;
-using Randomizer.SMZ3.Tracking.Configuration;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -26,13 +24,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private const string WinningGuessKey = "WinningGuess";
         private readonly Dictionary<string, int> _usersGreetedTimes = new();
         private readonly IItemService _itemService;
+        private readonly ITrackerTimerService _timerService;
         private bool _askChatAboutContentCheckPollResults = true;
         private string? _askChatAboutContentPollId;
         private int _askChatAboutContentPollTime = 60;
-        private bool _hasAskedChatAboutContent = false;
-        private DateTimeOffset? _guessingGameStart = null;
-        private DateTimeOffset? _guessingGameClosed = null;
-        private int? _trackerGuess = null;
+        private bool _hasAskedChatAboutContent;
+        private DateTimeOffset? _guessingGameStart;
+        private DateTimeOffset? _guessingGameClosed ;
+        private int? _trackerGuess;
 
         /// <summary>
         /// Initializes a new instance of the <see
@@ -40,35 +39,39 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// dependencies.
         /// </summary>
         /// <param name="tracker">The tracker instance to use.</param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
+        /// <param name="timerService"></param>
         /// <param name="chatClient">The chat client to use.</param>
         /// <param name="logger">Used to write logging information.</param>
-        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, ILogger<ChatIntegrationModule> logger)
-            : base(tracker, itemService, logger)
+        public ChatIntegrationModule(Tracker tracker, IChatClient chatClient, IItemService itemService, IWorldService worldService, ITrackerTimerService timerService, ILogger<ChatIntegrationModule> logger)
+            : base(tracker, itemService, worldService, logger)
         {
             ChatClient = chatClient;
             _itemService = itemService;
+            _timerService = timerService;
             ChatClient.Connected += ChatClient_Connected;
             ChatClient.MessageReceived += ChatClient_MessageReceived;
             ChatClient.Disconnected += ChatClient_Disconnected;
             ChatClient.SendMessageFailure += ChatClient_SendMessageFailure;
 
-            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (tracker, result) =>
+            AddCommand("Start Ganon's Tower Big Key Guessing Game", GetStartGuessingGameRule(), async (result) =>
             {
                 await StartGanonsTowerGuessingGame();
             });
 
-            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (tracker, result) =>
+            AddCommand("Close Ganon's Tower Big Key Guessing Game", GetStopGuessingGameGuessesRule(), async (result) =>
             {
                 await CloseGanonsTowerGuessingGameGuesses();
             });
 
-            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (tracker, result) =>
+            AddCommand("Declare Ganon's Tower Big Key Guessing Game Winner", GetRevealGuessingGameWinnerRule(), async (result) =>
             {
                 var winningNumber = (int)result.Semantics[WinningGuessKey].Value;
                 await DeclareGanonsTowerGuessingGameWinner(winningNumber);
             });
 
-            AddCommand("Track Content", GetTrackContent(), async (tracker, result) =>
+            AddCommand("Track Content", GetTrackContent(), async (result) =>
             {
                 await AskChatAboutContent();
             });
@@ -289,7 +292,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <returns></returns>
         public async Task AskChatAboutContent()
         {
-            var contentItemData = _itemService.FindOrDefault("Content");
+            var contentItemData = _itemService.FirstOrDefault("Content");
             if (contentItemData == null)
             {
                 Logger.LogError("Unable to determine content item data");
@@ -405,7 +408,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
         private bool ShouldRespondToGreetings => Tracker.Options.ChatGreetingEnabled
             && (Tracker.Options.ChatGreetingTimeLimit == 0
-                || Tracker.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
+                || _timerService.TotalElapsedTime.TotalMinutes <= Tracker.Options.ChatGreetingTimeLimit);
 
         private bool ShouldCreatePolls => Tracker.Options.PollCreationEnabled;
 

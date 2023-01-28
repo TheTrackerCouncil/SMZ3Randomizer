@@ -1,0 +1,57 @@
+﻿- Boss: Spore Spawn
+  WhenDefeated:
+  - Text: Hahahaha. You must be real desperate. Very well, toggled Spore Spawn on.
+- Boss: Kraid
+  WhenDefeated:
+  - Text: Toggled Kraid on.
+  - Text: Toggled Kraid on. Did you get the quick kill?
+  - Text: Toggled Kraid on. Did you get the quick kill? You wouldn't lie to me, would you?
+- Boss: Crocomire
+  WhenDefeated:
+  - Text: Toggled Crocomire on.
+  - Text: Toggled Crocomire on. Did you actually have to kill him this time?
+  - Text: Did you see that spooky skelington? Scary.
+    Weight: 0.2
+- Boss: Phantoon
+  Name:
+  - Text: Spooky Ghost
+    Weight: 0.25
+  WhenDefeated:
+  - Text: Toggled Phantoon on.
+  - Text: Toggled Spooky Ghost on.
+  - Text: Bustin makes me feel good.
+- Boss: Shaktool
+  WhenTracked:
+  - Text: Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.
+  - Text: Toggled Shaktool on. Did you get something nice?
+  WhenDefeated:
+  - Text: How dare you?
+  - Text: You monster.
+  - Text: You'll pay for this.
+  - Text: My disappointment is immeasurable.
+- Boss: Draygon
+  WhenDefeated:
+  - Text: Toggled Draygon on.
+  - Text: How could you? She has a family.
+    Weight: 0.25
+  - Text: Toggled Draygon on. Did you microwave her?
+    Weight: 0.25
+- Boss: Ridley
+  WhenDefeated:
+  - Text: Toggled Ridley on.
+  - Text: Toggled Ridley on. I'm sure they'll revive him in the next game.
+    Weight: 0.25
+- Boss: Mother Brain
+  WhenDefeated:
+  - Text: Toggled Mother Brain on.
+  - Text: Toggled Big Brain on.
+  - Text: Toggled Aurora Unit on. Wait. Wrong game.
+    Weight: 0.1
+  - Text: Good. That's what she deserves for killing the baby.
+    Weight: 0.1
+- Boss: Bomb Torizo
+  Name:
+  - Text: Bomb Chorizo
+- Boss: Golden Torizo
+  Name:
+  - Text: Golden Chorizo

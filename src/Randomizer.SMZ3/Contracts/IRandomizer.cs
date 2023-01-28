@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-
+using Randomizer.Data.Options;
 using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.SMZ3.Contracts

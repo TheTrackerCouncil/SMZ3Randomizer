@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
-using Randomizer.SMZ3.Tracking.Configuration;
-using Randomizer.SMZ3.Tracking.Configuration.ConfigTypes;
+using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands
@@ -15,31 +13,32 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     {
         private readonly TrackerMapConfig _config;
         private readonly ILogger<MapModule> _logger;
-        private readonly IReadOnlyCollection<TrackerMap> _darkRoomMaps;
         private string _prevMap = "";
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="tracker"></param>
+        /// <param name="itemService">Service to get item information</param>
+        /// <param name="worldService">Service to get world information</param>
         /// <param name="logger"></param>
         /// <param name="config"></param>
-        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, TrackerMapConfig config)
-            : base(tracker, itemService, logger)
+        public MapModule(Tracker tracker, IItemService itemService, ILogger<MapModule> logger, IWorldService worldService, TrackerMapConfig config)
+            : base(tracker, itemService, worldService, logger)
         {
             _logger = logger;
             _config = config;
 
-            _darkRoomMaps = config.Maps.Where(x => x.IsDarkRoomMap == true && x.MemoryRoomNumbers?.Count > 0).ToList();
+            var darkRoomMaps = config.Maps.Where(x => x.IsDarkRoomMap == true && x.MemoryRoomNumbers?.Count > 0).ToList();
 
-            AddCommand("Update map", GetChangeMapRule(), (tracker, result) =>
+            AddCommand("Update map", GetChangeMapRule(), (result) =>
             {
                 var mapName = (string)result.Semantics[MapKey].Value;
                 Tracker.UpdateMap(mapName);
                 Tracker.Say(x => x.Map.UpdateMap, mapName);
             });
 
-            AddCommand("Show dark room map", DarkRoomRule(), (tracker, result) =>
+            AddCommand("Show dark room map", DarkRoomRule(), (result) =>
             {
                 // If the player is not in a Zelda cave/dungeon
                 if (Tracker.AutoTracker?.CurrentGame != AutoTracking.Game.Zelda || Tracker.AutoTracker?.ZeldaState?.OverworldScreen != 0)
@@ -50,7 +49,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
                 // Get the room and map for the player
                 var roomNumber = Tracker.AutoTracker?.ZeldaState?.CurrentRoom ?? -1;
-                var map = _darkRoomMaps.FirstOrDefault(x => x.MemoryRoomNumbers?.Contains(roomNumber) == true);
+                var map = darkRoomMaps.FirstOrDefault(x => x.MemoryRoomNumbers?.Contains(roomNumber) == true);
 
                 if (map != null)
                 {
@@ -63,9 +62,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                     _prevMap = Tracker.CurrentMap;
                     if (string.IsNullOrEmpty(_prevMap))
                     {
-                        _prevMap = _config.Maps.Last().ToString() ?? "";
+                        _prevMap = _config.Maps.Last().ToString();
                     }
-                    Tracker.UpdateMap(map.ToString() ?? _prevMap);
+                    Tracker.UpdateMap(map.ToString());
                     Tracker.Say(x => x.Map.ShowDarkRoomMap, map.Name);
                 }
                 else
@@ -74,7 +73,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 }
             });
 
-            AddCommand("Hide dark room map", CanSeeRule(), (tracker, result) =>
+            AddCommand("Hide dark room map", CanSeeRule(), (result) =>
             {
                 if (string.IsNullOrEmpty(_prevMap))
                 {
@@ -92,7 +91,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         private GrammarBuilder GetChangeMapRule()
         {
             var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
-            var itemNames = GetItemNames(x => x.Name[0] != "Content");
+            var itemNames = GetItemNames(x => x.Name != "Content");
             var locationNames = GetLocationNames();
             var roomNames = GetRoomNames();
 

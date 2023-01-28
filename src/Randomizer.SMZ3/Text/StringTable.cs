@@ -3,11 +3,28 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Randomizer.SMZ3.Generation;
 using SharpYaml.Model;
 
 namespace Randomizer.SMZ3.Text {
 
     class StringTable {
+
+        private static readonly List<string> s_unwantedText = new()
+        {
+            "bottle_vendor_choice",
+            "bottle_vendor_get",
+            "bottle_vendor_no",
+            "zora_meeting",
+            "zora_tells_cost",
+            "zora_get_flippers",
+            "zora_no_cash",
+            "zora_no_buy_item",
+            "fairy_fountain_refill",
+            "pond_will_upgrade",
+            "pond_item_test",
+            "pond_item_bottle_filled"
+        };
 
         internal static readonly IList<(string name, byte[] bytes)> template;
 
@@ -15,6 +32,10 @@ namespace Randomizer.SMZ3.Text {
 
         public StringTable() {
             entries = new List<(string, byte[])>(template);
+            foreach (var toRemove in s_unwantedText)
+            {
+                SetText(toRemove, "{NOTEXT}");
+            }
         }
 
         static StringTable() {
@@ -61,6 +82,26 @@ namespace Randomizer.SMZ3.Text {
             SetText("tablet_bombos_book", text);
         }
 
+        public void SetHints(IEnumerable<string> hints)
+        {
+            var index = 0;
+            foreach (var hint in hints)
+            {
+                SetText(GameHintService.HintLocations[index], "{NOBORDER}\n" + hint);
+                index++;
+            }
+        }
+
+        public void SetBottleVendorText(string text)
+        {
+            SetText("bottle_vendor_choice", text);
+        }
+
+        public void SetZoraText(string text)
+        {
+            SetText("zora_tells_cost", text);
+        }
+
         void SetText(string name, string text) {
             var index = entries.IndexOf(entries.First(x => x.name == name));
             entries[index] = (name, Dialog.Compiled(text));
@@ -85,21 +126,26 @@ namespace Randomizer.SMZ3.Text {
         static IList<(string, byte[])> ParseEntries(string resource) {
             using var stream = EmbeddedStream.For(resource);
             using var reader = new StreamReader(stream);
-            var content = YamlStream.Load(reader).First().Contents;
+            var content = YamlStream.Load(reader).First().Contents as YamlSequence;
+            if (content == null)
+                throw new InvalidOperationException("Unable to parse string table");
+
             var convert = new ByteConverter();
-            return (
-                from entry in content as YamlSequence
-                select (entry as YamlMapping).First() into entry
-                select ((entry.Key as YamlValue).Value, entry.Value switch {
-                    YamlSequence bytes => (
-                        from b in bytes
-                        select (b as YamlValue).Value into b
-                        select (byte)convert.ConvertFromInvariantString(b)
-                    ).ToArray(),
+
+            // For each entry in the YAML file, convert strings to dialog entries and
+            // arrays into byte arrays
+            return content.OfType<YamlMapping>()
+                .Select(entry => entry.First())
+                .Select(firstEntry => (((YamlValue)firstEntry.Key).Value, firstEntry.Value switch
+                {
+                    YamlSequence bytes => bytes.OfType<YamlValue>()
+                        .Select(b => (byte?)convert.ConvertFromInvariantString(b.Value))
+                        .OfType<byte>()
+                        .ToArray(),
                     YamlValue text => Dialog.Compiled(text.Value),
-                    var o => throw new InvalidOperationException($"Did not expect an object of type {o.GetType()}"),
-                })
-            ).ToList();
+                    var o => throw new InvalidOperationException($"Did not expect an object of type {o?.GetType()}"),
+                }))
+                .ToList();
         }
 
     }
