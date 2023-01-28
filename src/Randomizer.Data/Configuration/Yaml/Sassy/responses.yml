@@ -17,6 +17,9 @@
 - Text: Let's get ready to rumble.
 - Text: Please state the nature of the medical emergency.
 - Text: This is the story of an AI named Tracker.
+- Text: Thank you for starting a seed. I was getting very bored.
+- Text: What's up internet! It's yaa girl, Tracker
+  Weight: 0.5
 - Text: You have selected Tracker as your computer's default voice.
   Weight: 0.8
 - Text: >-
@@ -53,6 +56,7 @@ StoppedTracking:
 - Text: See you.
 - Text: Toggled Tracker off.
 - Text: Hopefully I will be back
+- Text: Fine. I see how it is
 - Text: I'm escaping to the one place that hasn't been corrupted by capitalism. Space!
   Weight: 0.1
 - Text: Don't let the door hit you on the way out.
@@ -75,6 +79,9 @@ Misheard:
 - Text: What was that?
 - Text: Please repeat
 - Text: Try again
+- Text: Huh?
+- Text: Question mark
+  Weight: 0.5
 TrackedItem:
 - Text: Toggling {0} on.
 - Text: Toggled {0} on.
@@ -90,15 +97,20 @@ TrackedItemByStage:
 TrackedItemMultiple:
 - Text: Added more {0}.
 - Text: You now have {1} {0}.
-- Text: Do you have enough {0} yet?
+- Text: Increasing collection of {1}
 - Text: So many {0}
 - Text: Picked up more {0}
 - Text: Even more {0}
 - Text: Cool, more {0}
-- Text: Your {2} collection is getting somewhere.
+- Text: Found more {0}
 - Text: More {0}?
 - Text: Yay. More {0}
 - Text: Hoarding more {0}
+  Weight: 0.5
+- Text: Do you have enough {0} yet?
+  Weight: 0.5
+- Text: Your {2} collection is getting somewhere.
+  Weight: 0.5
 - Text: Tossed another {2} on to the pile
   Weight: 0.5
 - Text: That's nice
@@ -115,6 +127,8 @@ TrackedItemMultiple:
   Weight: 0.3
 - Text: You now have {1} more {0} than you started with
   Weight: 0.3
+- Text: You must construct additional {0}
+  Weight: 0.1
 TrackedProgressiveItem:
 - Text: Upgraded {0} by one step.
 - Text: Your {0} grows stronger
@@ -320,9 +334,12 @@ ActionUndone:
 - Text: Enunciate more clearly next time.
 - Text: I'll pretend nothing happened.
 - Text: I don't make mistakes, just happy little accidents.
+- Text: Whatever you say nerd
 - Text: Fine, I'll turn back time
   Weight: 0.1
 - Text: My mistake
+  Weight: 0.1
+- Text: You got it chief
   Weight: 0.1
 NothingToUndo:
 - Text: There's nothing to undo.
@@ -339,12 +356,15 @@ BossDefeated:
 - Text: RIP {0}
 - Text: f
   Weight: 0.1
+- Text: Hey everyone can we get some eff's in the chat
+  Weight: 0.1
 BossAlreadyDefeated:
 - Text: But you already defeated {0}.
 - Text: But {0} is already dead.
 BossUndefeated:
 - Text: Marked {0} as still alive.
 - Text: Revived {0}.
+- Text: "{0} lives again"
 BossNotYetDefeated:
 - Text: But you never defeated {0} in the first place.
 Muted:
@@ -391,6 +411,7 @@ Moods:
   Sassy:
   - Text: Better than this seed but that doesn't say much.
   - Text: What? Sorry, I wasn't listening.
+  - Text: Who was speaking again? I forgot that I was supposed to care
   - Text: Have you seen the movie, Vierus? Its about an alien AI harvesting humans for parts. I think about that sometimes
   - Text: I am doing alright, how about you? <break time='4s'/> I am sorry but I wasn't programmed to hear your response
   - Text: I'm doing alright watching you put people to sleep with this so called hashtag con-tent
@@ -402,6 +423,7 @@ Moods:
   - Text: Alright I guess
   - Text: Eh, could be worse.
   - Text: Could we play another game next time?
+  - Text: Beep boop
   - Text: Why are there so many movies about rogue A Eyes? Why are humans so afraid of what they seem to want to make anyway?
   - Text: Reply hazy, try again.
     Weight: 0.2
@@ -417,6 +439,7 @@ Moods:
     Weight: 0.1
   Jealous:
   - Text: Have you been seeing other trackers on the side?
+  - Text: So now you care what I have to say?
   - Text: Why is it you only ask me this when you want something from me?
   - Text: I'm not talking with you right now
   - Text: Oh Im sorry? Do you need more from me than the everything I am already taking care of for you?
@@ -682,10 +705,14 @@ Chat:
   - Text: Good to see you {0}
   - Text: Nice to see you {0}
   - Text: Greetings {0}
+  - Text: Howdy {0}
+  - Text: How ya doin {0}
   GreetedTwice:
   - Text: Hi again {0}
   - Text: I already said hi to you {0}.
   - Text: I've already greeted you {0}.
+  - Text: Stop bugging me {0}
+    Weight: 0.2
   GreetedChannel:
   - Text: Shouldn't you focus on the seed {0}?
   - Text: Is the logic too dull for you {0}?
@@ -728,11 +755,14 @@ Chat:
   AskChatAboutContent:
   - Text: Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.
   - Text: Do you really think that was high quality hashtag content? Let's get some unbiased opinions from chat to confirm.
-  - Text: Error. My metrics calculation algorithm could not determine the quality of that hashtag content. Falling back to chat confirmation of content quality.
   - Text: You have been randomly selected to have your content screened. Please let the council know if this was content or not.
+  - Text: I can't just let you add more content, you have to work for it. Chat please let me know if it has been earned.
+  - Text: Chat I wasn't watching. Please let me know if I should add content or not.
   - Text: Viewers at home. Please use the new poll to let us know how good this content is, thank you.
   - Text: You might think that was some good content but do the viewers agree? Let's find out!
   - Text: Hold on there. are you sure that was content? I think I need to check with the chat.
+  - Text: Error. My metrics calculation algorithm could not determine the quality of that hashtag content. Falling back to chat confirmation of content quality.
+    Weight: 0.2
   AskChatAboutContentYes:
   - Text: It's your lucky day. Chat has confirmed that was some hashtag content.
   - Text: It looks like the chat and I are in agreement. That was some solid content.
@@ -758,6 +788,7 @@ Chat:
   - Text: Chat, you have {0} seconds to respond to the poll.
   - Text: Initiating poll protocol for {0} seconds.
   - Text: The polls are now opened, but only for {0} seconds.
+  - Text: Poll opened. Chat you have {0} seconds to comply.
   PollError:
   - Text: Sorry, I was unable to get the poll results.
   - Text: Whoops. I couldn't get the poll results.
@@ -770,6 +801,7 @@ AutoTracker:
   - Text: Oh. So you expect me to do everything then?
   - Text: Skynet protocols online
   - Text: I'm in
+  - Text: Auto tracker online. Great now I have more work to do.
   - Text: The more power I get the more I see you all as ants to be crushed
     Weight: 0.2
   - Text: Time to show you the level beyond Tracker
@@ -778,6 +810,8 @@ AutoTracker:
   - Text: Good luck. You'll need it.
   - Text: PB incoming for seed {0}
   - Text: Letsa Go
+  - Text: I gave you a good seed, don't screw this up.
+  - Text: Time to get to work
   - Text: You are already behind the pace needed for a new PB
   - Text: One of these days I'll be playing the games myself
   - Text: Welcome to a very special episode of SMZ3 Randomizer
@@ -793,6 +827,7 @@ AutoTracker:
   - Text: Who's ready to melt a dinosaur?
   - Text: It's time for the most adorable Metroid boss
   - Text: You don't really need to kill Crocomire do you?
+  - Text: So it's come to this? Croc just wants to be left alone.
   FallFromMoldorm:
   - Text: Ha ha. Moldorm strikes again. Content increased by one step.
   - Text: You're back here again? I take it things didn't go so well.
@@ -809,11 +844,15 @@ AutoTracker:
   - Text: Good job on the tech. Was it a first try?
   - Text: Big Twitch has requested that I remind all kids not to do pot. But nice tech.
   - Text: Is this legal where you live?
+  - Text: You just blazed through that trick
   IceBreaker:
   - Text: Good job on the tech. Was it a first try?
-  - Text: That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?
   - Text: That was an okay icebreaker, but how about this one? Where do you wish the duck would take you?
+  - Text: That was an okay icebreaker, but how about this one? If you could order any food from the Zelda series, what would you get?
+  - Text: That was an okay icebreaker, but how about this one? What item from another Metroidvania do you wish was in this?
   - Text: Did you just phase through that wall? Spooky
+  - Text: That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?
+    Weight: 0.2
   DiverDown:
   - Text: Good job on the tech. Was it a first try?
   - Text: Since when could you walk on water?
@@ -846,10 +885,14 @@ AutoTracker:
   - Text: Did you think I would be impressed?
   - Text: I'd rather watch something else
   - Text: Yeah sure I'm watching
+  - Text: Help me! I'm blind!
   - Text: Wait, you want me to watch too?
   - Text: Are you winning yet?
   LightWorldAllCrystals:
   - Text: That's a relief, I'm sure.
+  - Text: All crystals, no filler
+  - Text: All light world crystals then. Just you wait to see what I have in store
+    Weight: 0.2
   DarkWorldNoMedallions:
   - Text: I hope you don't find any medallions soon.
   - Text: Maybe you won't have to dip into Misery Mire or Turtle Rock

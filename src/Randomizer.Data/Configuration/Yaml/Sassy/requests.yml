@@ -1771,6 +1771,8 @@
   - Text: Thanks
   - Text: Are you sure about that?
   - Text: Okay.
+  - Text: That's good for you.
+  - Text: Someone has to.
   - Text: neat
   - Text: What is the number for HR again?
 - Phrases:
@@ -1784,7 +1786,7 @@
   - Text: Let's keep this relationship professional.
   - Text: No.
   - Text: No homo, right?
-    Weight: 0.2
+    Weight: 0.02
 - Phrases:
   - thank you
   Response:

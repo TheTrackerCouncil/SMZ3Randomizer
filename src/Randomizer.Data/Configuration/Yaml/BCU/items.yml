@@ -5,16 +5,17 @@
 - Item: Death
   WhenTracked:
     "1":
-    - Text: I'm interested in this
     - Text: It's time to get serious.
+    - Text: I'm interested in this
+      Weight: 0.1
     - Text: Tickets only. Next!
-      Weight: 0.5
+      Weight: 0.3
     - Text: It's time to get seewwious.
       Weight: 0.5
     "2":
     - Text: It's time to get serious.
     - Text: It's time to get seewwious.
-      Weight: 0.5
+      Weight: 0.4
     "3":
     - Text: I said, it's time to get serious.
     - Text: It's time to get seewwious.

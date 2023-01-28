@@ -18,6 +18,7 @@
   Name:
   - Text: Drugs
   - Text: Prescription medicine
+  - Text: The good shit
 - Item: Bottle
   WhenTracked:
     "1":

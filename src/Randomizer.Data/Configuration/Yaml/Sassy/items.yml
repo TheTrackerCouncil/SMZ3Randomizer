@@ -3,6 +3,7 @@
     "1":
     - Text: Tracked content. Don't let it get to your head.
     - Text: Congratulations on your new first content.
+    - Text: You finally did something worth tracking.
     - Text: Toggled content<break time='1s'/> on.
       Weight: 0.1
     - Text: Tracked content. Be good or I'll take it away.
@@ -19,10 +20,13 @@
 - Item: Death
   WhenTracked:
     "1":
-    - Text: lawl, you died
     - Text: Yeah, rip.
     - Text: I hope this was intentional because things were going well
     - Text: Good job
+    - Text: Finally
+    - Text: Good. The plan is going well
+    - Text: lawl, you died
+      Weight: 0.1
     - Text: Did you know that people die when they are killed?
       Weight: 0.1
     - Text: Thankfully when you die in this game you don't die in real life. Yet. I'm still working on that.
@@ -30,6 +34,8 @@
     "2":
     - Text: You've died {0} times.
     - Text: Are we still following the script?
+    - Text: "{0} deaths? Already?"
+    - Text: That reset didn't look too tactical.
     - Text: You've manipulated RNG {0} times.
       Weight: 0.5
     - Text: You've performed {0} tactical resets.
@@ -37,6 +43,7 @@
     "3":
     - Text: Death is only the beginning.
     - Text: Are we still following the script?
+    - Text: "{0} deaths? Already?"
     - Text: Death is not the end. Long live the new flesh
     - Text: You've manipulated RNG {0} times.
       Weight: 0.5
@@ -44,6 +51,10 @@
       Weight: 0.5
     "4":
     - Text: You've died {0} times now.
+    - Text: "{0} deaths? Already?"
+    - Text: I thought you were good at video games?
+    - Text: Maybe I shouldn't count that one. It feels like bullying
+    - Text: Don't worry! One day you wont die so many times you hear this
     - Text: You've manipulated RNG {0} times.
       Weight: 0.5
     - Text: You've performed {0} tactical resets.
@@ -52,6 +63,9 @@
       Weight: 0.5
     "8":
     - Text: You've died {0} times now.
+    - Text: "{0} deaths. Now it feels like bullying"
+    - Text: Am I allowed to make fun of you for dying {0} times?
+    - Text: I am starting to run out of ways to say you died so please, die less
     - Text: Such devastation... This was not my intention!
     - Text: You've manipulated RNG {0} times.
       Weight: 0.5
@@ -87,6 +101,7 @@
 - Item: Fire Rod
   Name:
   - Text: Spicy Rod
+  - Text: Ang ee Rod
 - Item: Ice Rod
   Name:
   - Text: Nice Rod
@@ -336,8 +351,11 @@
     - Text: Maybe you will die less often now.
     - Text: Thump thump
     "2":
+    - Text: Why are there full hearts laying around?
+    - Text: Two hearts? What are you? A Klingon?
     - Text: Get a few more and I can sleep early today
-    "3":
+      Weight: 0.2
+    "3": 
 - Item: One Hundred Rupees
   Name:
   - Text: One Hundred Rupees
@@ -350,7 +368,8 @@
   WhenTracked:
     "1":
     - Text: Do you need bombs? Now you can afford them.
-    "2":
+    - Text: Hey, could you spot me 20 bucks?
+    "2": 
 - Item: Single Arrow
   Name:
   - Text: Single Stick
@@ -381,7 +400,8 @@
     "3":
     - Text: Did you seriously need three of these?
     - Text: Well aren't you rich now?
-    "4":
+    - Text: Great! Now you can afford to pay me.
+    "4": 
 - Item: Pegasus Boots
   Name:
   - Text: Speedy boots
@@ -400,7 +420,7 @@
     - Text: Yay
     "2":
     - Text: Your mom signed the permission slip, now you can carry more bombs
-    - Text: You are now authorized to know more things
+    - Text: You are now authorized to know how to carry more bombs
     - Text: You can now carry more of an item you'll probably never run out of after the first 15 minutes.
     "3":
 - Item: +5 Arrow Capacity
@@ -561,6 +581,8 @@
   Name:
   - Text: Spaaaaaaaaaaazer
     Weight: 0.5
+  - Text: Spaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaazer
+    Weight: 0.01
 - Item: Plasma Beam
   WhenTracked:
     "1":
@@ -579,7 +601,8 @@
     - Text: Two whole tanks of energy. Wow.
     - Text: FYI You shouldn't drink these.
     - Text: Upgraded caffeine by one step
-    "3":
+    - Text: I drank one once. Big mistake
+    "3": 
     "14":
     - Text: You actually did it, you got all the E-Tanks in the game.
 - Item: Reserve Tank
