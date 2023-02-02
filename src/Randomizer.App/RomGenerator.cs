@@ -367,7 +367,7 @@ namespace Randomizer.App
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 
-            if (options.PatchOptions.MetroidControls.AutoRun)
+            if (options.PatchOptions.MetroidControls.RunButtonBehavior == RunButtonBehavior.AutoRun)
             {
                 using var patch = IpsPatch.AutoRun();
                 Rom.ApplySuperMetroidIps(rom, patch);
@@ -375,7 +375,13 @@ namespace Randomizer.App
 
             if (options.PatchOptions.MetroidControls.ItemCancelBehavior != ItemCancelBehavior.Vanilla)
             {
-                using var patch = options.PatchOptions.MetroidControls.ItemCancelBehavior == ItemCancelBehavior.Hold ? IpsPatch.ItemCancelHoldFire() : IpsPatch.ItemCancelToggle();
+                using var patch = options.PatchOptions.MetroidControls.ItemCancelBehavior == ItemCancelBehavior.Toggle ? IpsPatch.ItemCancelToggle() : IpsPatch.ItemCancelHoldFire();
+                Rom.ApplySuperMetroidIps(rom, patch);
+            }
+
+            if (options.PatchOptions.MetroidControls.AimButtonBehavior == AimButtonBehavior.UnifiedAim)
+            {
+                using var patch = IpsPatch.UnifiedAim();
                 Rom.ApplySuperMetroidIps(rom, patch);
             }
 

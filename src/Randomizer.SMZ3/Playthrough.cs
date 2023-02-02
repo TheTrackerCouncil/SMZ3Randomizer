@@ -92,21 +92,21 @@ namespace Randomizer.SMZ3
             var bossRegions = worlds.SelectMany(w => w.GoldenBosses).Select(x => x.Region).Cast<IHasBoss>();
             var bosses = new List<Boss>();
 
-            var keycardCount = 0;
             foreach (var world in worlds)
             {
                 if (!world.Config.MetroidKeysanity)
                 {
                     var keycards = world.ItemPools.Keycards;
                     items.AddRange(keycards);
-                    keycardCount += keycards.Count();
                 }
 
                 items.AddRange(ItemSettingOptions.GetStartingItemTypes(world.Config).Select(x => new Item(x, world)));
             }
 
+            var initInventoryCount = items.Count;
             var totalItemCount = allLocations.Select(x => x.Item).Count();
-            while (items.Count - keycardCount < totalItemCount)
+            var prevRewardCount = 0;
+            while (items.Count - initInventoryCount < totalItemCount)
             {
                 var sphere = new Sphere();
 
@@ -119,7 +119,7 @@ namespace Randomizer.SMZ3
                 locations.AddRange(newLocations);
                 items.AddRange(newItems);
 
-                if (!newItems.Any())
+                if (!newItems.Any() && prevRewardCount == rewards.Count)
                 {
                     /* With no new items added we might have a problem, so list inaccessable items */
                     var inaccessibleLocations = allLocations.Where(l => !locations.Contains(l)).ToList();
@@ -143,6 +143,7 @@ namespace Randomizer.SMZ3
                 sphere.Locations.AddRange(newLocations);
                 sphere.Items.AddRange(newItems);
                 spheres.Add(sphere);
+                prevRewardCount = rewards.Count;
 
                 if (spheres.Count > 100)
                     throw new RandomizerGenerationException("Too many spheres, seed likely impossible.");

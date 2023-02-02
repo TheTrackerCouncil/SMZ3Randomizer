@@ -7,9 +7,11 @@ namespace Randomizer.Data.Options;
 /// </summary>
 public enum ItemCancelBehavior
 {
-    [Description("Press to deselect item (Vanilla)")]
+    [Description("Deselects item (Vanilla)")]
     Vanilla,
-    [Description("Hold and press shoot to fire supers/power bombs")]
+    [Description("Hold to keep supers/power bombs selected.")]
+    HoldSupersOnly,
+    [Description("Hold to keep missiles/supers/pbs selected. Item select changes weapon.")]
     Hold,
     [Description("Press to toggle supers/pbs on or off")]
     Toggle

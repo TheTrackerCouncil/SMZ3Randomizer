@@ -13,6 +13,8 @@ lorom
 !SLOT_MISSILE = #$0000
 !SLOT_SUPER_MISSILE = #$0001
 !SLOT_POWER_BOMB = #$0002
+!SUPERS_ONLY = #$0000
+!HOLD_TYPE = $90FF50
 
 macro branch_no_missiles(branch)
 	LDA $09C6 : CMP #$0000 : BEQ <branch>
@@ -78,7 +80,7 @@ quick_toggle:
         BRA .clear_item
 
     .press_item_clear
-        LDA $0A1F : AND #$00FF : JSR check_morph : CMP #$0001 : BNE +
+        JSR check_morph : CMP #$0001 : BNE +
             BRA .check_power_bomb
         +
         BRA .check_missiles
@@ -100,6 +102,9 @@ quick_toggle:
     ; Checks if the player has super missile ammo. If they don't,
     ; check if they have missile ammo. If neither, select nothing
     .check_missiles
+        ; If Fusion-style is set, don't check the missile type and simply try supers
+        LDA !HOLD_TYPE : CMP !SUPERS_ONLY : BEQ +
+
         ; If the user was previous on missiles, try to select them first
         LDA !MISSILE_TYPE : CMP !MISSILE : BNE +
             %branch_no_missiles(++)
@@ -134,6 +139,7 @@ quick_toggle:
 ; Loads A with 1 if morphed or 0 otherwise
 check_morph:
     .init
+        LDA $0A1F : AND #$00FF
         CMP #$0004 : BEQ .morph ; Morph ball on ground
         CMP #$0008 : BEQ .morph ; Morph ball falling
         CMP #$0011 : BEQ .morph ; Spring ball on ground
@@ -149,6 +155,12 @@ item_select:
         LDA $8b : AND $09B8 : CMP $09B8 : BEQ +
             LDA $09D2 ; Load the current item selected
             JML $90C4F9 ; Jump to where it increments the current item
+        +
+
+        ; If supers only is set, select the previously selected item
+        LDA !HOLD_TYPE : CMP !SUPERS_ONLY : BNE +
+            LDA $09D2 : DEC
+            BRA .select_item
         +
 
         ; If morphed, keep the current item
@@ -197,16 +209,18 @@ item_select:
         
         BRA .clear_item
 
-    ; Selects nothing (default behavior)
-    .clear_item
-        STZ $0a04
-        JML $90C4E9
-
     ; Selects an item by setting the currently selected item to the left
     ; of the item we want, then calling the default change selection code
     .select_item
         STA $09D2
         STZ $16
         JML $90c4f6
+
+    ; Selects nothing
+    .clear_item
+        STZ $0a04
+        JML $90C4E9
+
+    
 
 

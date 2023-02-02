@@ -50,6 +50,8 @@ namespace Randomizer.SMZ3.Generation
                     "valid instance prior this calling this method.");
             }
 
+            Random.Sanitize();
+
             // Setup the assumed inventory with the starting items
             var startingInventory = new List<Item>();
             foreach (var world in worlds)

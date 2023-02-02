@@ -126,7 +126,7 @@ namespace Randomizer.SMZ3.Generation
             var patchSeed = rng.Next();
             foreach (var world in worlds)
             {
-                var patchRnd = new Random(patchSeed);
+                var patchRnd = new Random(patchSeed).Sanitize();
                 var hints = _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
                 var patch = new Patcher(world, worlds, seedData.Guid, primaryConfig.Race ? 0 : seedNumber, patchRnd, _metadataService, _gameLines, _logger);
                 var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(world.Config, hints), hints);

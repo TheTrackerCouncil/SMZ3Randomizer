@@ -13,8 +13,9 @@ public class MetroidControlOptions
     public MetroidButton AimUp { get; set; } = MetroidButton.R;
     public MetroidButton AimDown { get; set; } = MetroidButton.L;
     public bool MoonWalk { get; set; }
-    public bool AutoRun { get; set; }
     public ItemCancelBehavior ItemCancelBehavior { get; set; } = ItemCancelBehavior.Vanilla;
+    public RunButtonBehavior RunButtonBehavior { get; set; } = RunButtonBehavior.Vanilla;
+    public AimButtonBehavior AimButtonBehavior { get; set; } = AimButtonBehavior.Vanilla;
 
     public MetroidControlOptions Clone()
     {
