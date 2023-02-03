@@ -41,4 +41,48 @@ public partial class MetroidControlsPanel : UserControl
         var missingButton = Enum.GetValues<MetroidButton>().First(x => !selectedButtons.Contains(x));
         duplicateDropdown.SelectedItem = missingButton;
     }
+
+    private void SetLabels()
+    {
+        var options = DataContext as MetroidControlOptions;
+
+        if (RunButtonLabel == null) return;
+
+        RunButtonLabel.Text = options?.RunButtonBehavior switch
+        {
+            RunButtonBehavior.AutoRun => "Walk button",
+            _ => "Run button"
+        };
+
+        ItemCancelLabel.Text = options?.ItemCancelBehavior switch
+        {
+            ItemCancelBehavior.HoldSupersOnly => "Hold to equip",
+            ItemCancelBehavior.Hold => "Hold to equip",
+            ItemCancelBehavior.Toggle => "Quick item toggle",
+            _ => "Item Cancel button"
+        };
+
+        AimUpLabel.Text = options?.AimButtonBehavior switch
+        {
+            AimButtonBehavior.UnifiedAim => "Aim button",
+            _ => "Angle up button"
+        };
+
+        AimDownLabel.Text = options?.AimButtonBehavior switch
+        {
+            AimButtonBehavior.UnifiedAim => "Quick Morph button",
+            _ => "Angle down button"
+        };
+
+    }
+
+    private void ComboBox_OptionSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        SetLabels();
+    }
+
+    private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        SetLabels();
+    }
 }

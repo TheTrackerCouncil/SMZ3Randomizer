@@ -7,7 +7,8 @@
              xmlns:controls="clr-namespace:Randomizer.App.Controls"
              xmlns:local="clr-namespace:Randomizer.App"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="UserControl_Loaded">
   <UserControl.DataContext>
     <options:MetroidControlOptions></options:MetroidControlOptions>
   </UserControl.DataContext>
@@ -17,8 +18,64 @@
     </Style>
   </d:DesignerProperties.DesignStyle>
   <StackPanel>
-    <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">Button mappings are based on the default SNES controls and do not account for different emulator button mappings.</TextBlock>
+    
+    <GroupBox Header="Control Options" Padding="3">
+      <StackPanel>
+
+        <controls:LabeledControl Text="Run Button Behavior:">
+          <ComboBox SelectedItem="{Binding RunButtonBehavior}"
+              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:RunButtonBehavior}}}"
+              HorizontalAlignment="Left"
+              MinWidth="75"
+              SelectionChanged="ComboBox_OptionSelectionChanged">
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </controls:LabeledControl>
         
+        <controls:LabeledControl Text="Item Cancel Behavior:">
+          <ComboBox SelectedItem="{Binding ItemCancelBehavior}"
+              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:ItemCancelBehavior}}}"
+              HorizontalAlignment="Left"
+              MinWidth="75"
+              SelectionChanged="ComboBox_OptionSelectionChanged">
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </controls:LabeledControl>
+
+        <controls:LabeledControl Text="Aim Button Behavior:">
+          <ComboBox SelectedItem="{Binding AimButtonBehavior}"
+              ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:AimButtonBehavior}}}"
+              HorizontalAlignment="Left"
+              MinWidth="75"
+              SelectionChanged="ComboBox_OptionSelectionChanged">
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+        </controls:LabeledControl>
+
+        <CheckBox IsChecked="{Binding MoonWalk}"
+                  Grid.Column="0"
+                  Grid.Row="0"
+                  Content="Moon Walk" />
+        
+      </StackPanel>
+    </GroupBox>
+    
+    <GroupBox Header="Button Mappings" Margin="0 5 0 0" Padding="3">
+      <StackPanel>
+        <TextBlock Margin="0,0,0,10" TextWrapping="Wrap">Button mappings are based on the default SNES controls and do not account for different emulator button mappings.</TextBlock>
+
         <controls:LabeledControl Text="Shoot button:">
           <ComboBox Name="ComboBox_Shoot"
                     SelectionChanged="ComboBox_ButtonMappingChanged"
@@ -37,7 +94,7 @@
                     MinWidth="75" />
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Dash button:">
+        <controls:LabeledControl Text="Run button:" x:Name="RunButtonLabel">
           <StackPanel>
             <ComboBox Name="ComboBox_Dash"
                       SelectionChanged="ComboBox_ButtonMappingChanged"
@@ -45,13 +102,9 @@
                       ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:MetroidButton}}}"
                       HorizontalAlignment="Left"
                       MinWidth="75" />
-            <CheckBox IsChecked="{Binding AutoRun}"
-                      Margin="0 2 0 0"
-                      Content="Reverse running behavior (auto run)"
-                      ToolTip="Enabling will have Samus run automatically. Holding the Dash button will allow Samus to walk or keep at her current speed."/>
           </StackPanel>
-          
-          
+
+
         </controls:LabeledControl>
 
         <controls:LabeledControl Text="Item Select button:">
@@ -63,7 +116,7 @@
                     MinWidth="75" />
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Item Cancel button:">
+        <controls:LabeledControl Text="Item Cancel button:" x:Name="ItemCancelLabel">
           <StackPanel>
             <ComboBox Name="ComboBox_ItemCancel"
                     SelectionChanged="ComboBox_ButtonMappingChanged"
@@ -71,23 +124,11 @@
                     ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:MetroidButton}}}"
                     HorizontalAlignment="Left"
                     MinWidth="75" />
-            <TextBlock Padding="0 2 0 0">Item cancel button behavior:</TextBlock>
-            <ComboBox SelectedItem="{Binding ItemCancelBehavior}"
-            ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:ItemCancelBehavior}}}"
-            HorizontalAlignment="Left"
-            MinWidth="75">
-              <ComboBox.ItemTemplate>
-                <DataTemplate>
-                  <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
-                </DataTemplate>
-              </ComboBox.ItemTemplate>
-            </ComboBox>
-
           </StackPanel>
-          
+
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Angle Up button:">
+        <controls:LabeledControl Text="Angle Up button:" x:Name="AimUpLabel">
           <ComboBox Name="ComboBox_AngleUp"
                     SelectionChanged="ComboBox_ButtonMappingChanged"
                     SelectedItem="{Binding AimUp}"
@@ -96,7 +137,7 @@
                     MinWidth="75" />
         </controls:LabeledControl>
 
-        <controls:LabeledControl Text="Angle Down button:">
+        <controls:LabeledControl Text="Angle Down button:" x:Name="AimDownLabel">
           <ComboBox Name="ComboBox_AngleDown"
                     SelectionChanged="ComboBox_ButtonMappingChanged"
                     SelectedItem="{Binding AimDown}"
@@ -104,11 +145,9 @@
                     HorizontalAlignment="Left"
                     MinWidth="75" />
         </controls:LabeledControl>
-
-        <CheckBox IsChecked="{Binding MoonWalk}"
-                  Grid.Column="0"
-                  Grid.Row="0"
-                  Content="Moon Walk" />
+      </StackPanel>
+    </GroupBox>
+   
         
   </StackPanel>
 </UserControl>

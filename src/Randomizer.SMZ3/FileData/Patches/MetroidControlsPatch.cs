@@ -18,5 +18,6 @@ public class MetroidControlsPatch : RomPatch
         yield return (Patcher.Snes(0x81B343), Patcher.UshortBytes((int)config.MetroidControls.AimUp));
         yield return (Patcher.Snes(0x81B349), Patcher.UshortBytes((int)config.MetroidControls.AimDown));
         yield return (Patcher.Snes(0x81EE80), Patcher.UshortBytes(config.MetroidControls.MoonWalk ? 0x0001 : 0x0000));
+        yield return (Patcher.Snes(0x90FF50), Patcher.UshortBytes(config.MetroidControls.ItemCancelBehavior == ItemCancelBehavior.Hold ? 0x0001 : 0x0000));
     }
 }

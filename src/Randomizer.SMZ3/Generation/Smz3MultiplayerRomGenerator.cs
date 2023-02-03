@@ -46,10 +46,7 @@ public class Smz3MultiplayerRomGenerator : ISeededRandomizer
         var primaryConfig = orderedConfigs.First();
 
         var seedNumber = ISeededRandomizer.ParseSeed(ref seed);
-        var rng = new Random(seedNumber);
         primaryConfig.Seed = seedNumber.ToString();
-        if (primaryConfig.Race)
-            rng = new Random(rng.Next());
 
         var worlds = orderedConfigs
             .Select(c => new World(c, c.PlayerName, c.Id, c.PlayerGuid, c.IsLocalConfig)).ToList();
@@ -76,7 +73,7 @@ public class Smz3MultiplayerRomGenerator : ISeededRandomizer
 
         foreach (var world in worlds.OrderBy(x => x.Id))
         {
-            var patchRnd = new Random(seedNumber % 1000 + world.Id);
+            var patchRnd = new Random(seedNumber % 1000 + world.Id).Sanitize();
             var patch = new Patcher(world, worlds, seedData.Guid, seedNumber, patchRnd, _metadataService, _gameLines, _logger);
             var hints = world.Config.MultiplayerPlayerGenerationData!.Hints;
             var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(world.Config, hints), hints);

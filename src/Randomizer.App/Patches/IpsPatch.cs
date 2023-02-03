@@ -112,5 +112,12 @@ namespace Randomizer.App.Patches
         /// </summary>
         /// <returns>A new stream that contains the IPS patch.</returns>
         public static Stream ItemCancelHoldFire() => GetStream("HoldFire.ips");
+
+        /// <summary>
+        /// Gets a stream for the IPS patch to have a single aim button as aim up and replacing aim down with
+        /// a quick morph
+        /// </summary>
+        /// <returns>A new stream that contains the IPS patch.</returns>
+        public static Stream UnifiedAim() => GetStream("UnifiedAim.ips");
     }
 }

@@ -80,7 +80,7 @@ namespace Randomizer.SMZ3.Generation
         /// <returns>A collection of strings to use for the in game hints</returns>
         public IEnumerable<string> GetInGameHints(World hintPlayerWorld, ICollection<World> allWorlds, Playthrough playthrough, int seed)
         {
-            _random = new Random(seed);
+            _random = new Random(seed).Sanitize();
             var lateSpheres = playthrough.Spheres.TakeLast((int)(playthrough.Spheres.Count * .5));
 
             var allHints = new List<string>();
