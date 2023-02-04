@@ -509,6 +509,21 @@ namespace Randomizer.SMZ3.Tracking
             {
                 dungeon.DungeonState.RemainingTreasure -= amount;
 
+                // If there are no more treasures and the boss is defeated, clear all locations in the dungeon
+                var clearedLocations = new List<Location>();
+                if (dungeon.DungeonState.RemainingTreasure == 0 && dungeon.DungeonState.Cleared)
+                {
+                    foreach (var location in ((Region)dungeon).Locations.Where(x => !x.State.Cleared))
+                    {
+                        location.State.Cleared = true;
+                        if (autoTracked)
+                        {
+                            location.State.Autotracked = true;
+                        }
+                        clearedLocations.Add(location);
+                    }
+                }
+
                 // Always add a response if there's treasure left, even when
                 // clearing a dungeon (because that means it was out of logic
                 // and could be relevant)
@@ -525,7 +540,15 @@ namespace Randomizer.SMZ3.Tracking
                 }
 
                 OnDungeonUpdated(new DungeonTrackedEventArgs(dungeon, confidence, autoTracked));
-                AddUndo(() => dungeon.DungeonState.RemainingTreasure += amount);
+                AddUndo(() =>
+                {
+                    dungeon.DungeonState.RemainingTreasure += amount;
+                    foreach (var location in clearedLocations)
+                    {
+                        location.State.Cleared = false;
+                    }
+                });
+
                 return true;
             }
             else if (stateResponse && confidence != null && Responses.DungeonTreasureTracked.TryGetValue(-1, out var response))
@@ -1842,6 +1865,21 @@ namespace Randomizer.SMZ3.Tracking
                 dungeon.DungeonMetadata.Boss.ToString() ?? $"boss of {dungeon.DungeonMetadata.Name}"
             );
 
+            // If all treasures have been retrieved and the boss is defeated, clear all locations in the dungeon
+            var clearedLocations = new List<Location>();
+            if (dungeon.DungeonState.RemainingTreasure == 0)
+            {
+                foreach (var location in ((Region)dungeon).Locations.Where(x => !x.State.Cleared))
+                {
+                    location.State.Cleared = true;
+                    if (autoTracked)
+                    {
+                        location.State.Autotracked = true;
+                    }
+                    clearedLocations.Add(location);
+                }
+            }
+
             dungeon.DungeonState.Cleared = true;
             Say(Responses.DungeonBossCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
             IsDirty = true;
@@ -1855,6 +1893,10 @@ namespace Randomizer.SMZ3.Tracking
                     ItemService.ResetProgression();
                     dungeon.DungeonState.Cleared = false;
                     addedEvent.IsUndone = true;
+                    foreach (var location in clearedLocations)
+                    {
+                        location.State.Cleared = false;
+                    }
                 });
             }
         }
