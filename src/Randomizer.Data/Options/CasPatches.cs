@@ -21,7 +21,7 @@ namespace Randomizer.Data.Options
         [Description("The bottle merchant and King Zora will tell you what they have before asking if you want to purchase it, even if you don't have enough rupees.")]
         public bool PreventScams { get; set; } = true;
 
-        [DisplayName("Item Patches")]
+        [DisplayName("Zelda Item Patches")]
         [Description("Includes additional item patches, such as quarter magic, randomized filled bottles, and fairy bottle trades.")]
         public bool ExpandedItems { get; set; } = true;
 
