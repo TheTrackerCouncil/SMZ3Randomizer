@@ -110,12 +110,14 @@ namespace Randomizer.SMZ3
             {
                 var sphere = new Sphere();
 
-                var accessibleLocations = allLocations.Where(l => l.IsAvailable(new Progression(items.Where(i => i.World == l.World), rewards.Where(r => r.World == l.World), bosses.Where(b => b.World == l.World))));
-                var newLocations = accessibleLocations.Except(locations).ToList();
-                var newItems = newLocations.Select(l => l.Item).ToList();
                 var tempProgression = new Progression(items, new List<Reward>(), new List<Boss>());
                 rewards = allRewards.Where(x => x.Region.CanComplete(tempProgression)).ToList();
                 bosses = bossRegions.Where(x => x.CanBeatBoss(tempProgression)).Select(x => x.Boss).ToList();
+
+                var accessibleLocations = allLocations.Where(l => l.IsAvailable(new Progression(items.Where(i => i.World == l.World), rewards.Where(r => r.World == l.World), bosses.Where(b => b.World == l.World))));
+                var newLocations = accessibleLocations.Except(locations).ToList();
+                var newItems = newLocations.Select(l => l.Item).ToList();
+
                 locations.AddRange(newLocations);
                 items.AddRange(newItems);
 
