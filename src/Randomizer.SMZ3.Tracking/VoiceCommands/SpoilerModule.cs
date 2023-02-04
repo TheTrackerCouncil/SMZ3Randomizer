@@ -432,19 +432,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         ? Tracker.CorrectPronunciation(location.World.Config.SamusName)
                         : Tracker.CorrectPronunciation(location.World.Config.LinkName);
 
-                    if (location.Item.Metadata.IsJunk(location.Item.World.Config))
-                    {
-                        return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
-                    }
-
-                    // Todo: Add check for if it's progression
-
-                    if (location.Item.Metadata.IsGood(location.Item.World.Config))
+                    if (Tracker.IsWorth(location.Item))
                     {
                         return GiveLocationHint(x => x.LocationHasUsefulItem, location, characterName);
                     }
-
-                    return GiveLocationHint(x => x.NoApplicableHints, location);
+                    return GiveLocationHint(x => x.LocationHasJunkItem, location, characterName);
 
                 // Try to give a hint from the config
                 case 1:
