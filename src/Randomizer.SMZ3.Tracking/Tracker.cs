@@ -2230,9 +2230,9 @@ namespace Randomizer.SMZ3.Tracking
                 [ItemType.BottleWithRedPotion] = new[] { World.LightWorldNorthWest.SickKid },
             };
 
-            if (leads.TryGetValue(item.Type, out var leadsToLocation))
+            if (leads.TryGetValue(item.Type, out var leadsToLocation) && !ItemService.IsTracked(item.Type))
             {
-                foreach (var location in leadsToLocation.Where(x => !x.State.Cleared))
+                foreach (var location in leadsToLocation)
                 {
                     var reward = location.Item;
                     if (reward.Type != ItemType.Nothing)
