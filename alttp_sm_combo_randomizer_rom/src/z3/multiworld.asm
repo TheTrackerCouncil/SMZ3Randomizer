@@ -616,6 +616,12 @@ alttp_mw_check_softreset:
     rtl
 
 alttp_mw_softreset:
+
+    lda $000202
+    sta !SRAM_ALTTP_EQUIPMENT_1
+    lda $000303
+    sta !SRAM_ALTTP_EQUIPMENT_2
+
     sei                         ; Disable IRQ's
     
     %i16()
