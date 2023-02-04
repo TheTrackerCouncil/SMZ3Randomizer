@@ -341,7 +341,7 @@ namespace Randomizer.Shared
         HeartContainer = 0x3E,
 
         [Description("Sanctuary Heart Container")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Scam, ItemCategory.Junk)]
         HeartContainerRefill = 0x3F,
 
         [Description("Three Bombs")]

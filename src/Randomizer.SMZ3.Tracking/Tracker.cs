@@ -2220,10 +2220,17 @@ namespace Randomizer.SMZ3.Tracking
                 {
                     World.LightWorldDeathMountainWest.EtherTablet,
                     World.LightWorldSouth.BombosTablet
-                }
+                },
+                [ItemType.Bottle] = new[] { World.LightWorldNorthWest.SickKid },
+                [ItemType.BottleWithBee] = new[] { World.LightWorldNorthWest.SickKid },
+                [ItemType.BottleWithFairy] = new[] { World.LightWorldNorthWest.SickKid },
+                [ItemType.BottleWithBluePotion] = new[] { World.LightWorldNorthWest.SickKid },
+                [ItemType.BottleWithGoldBee] = new[] { World.LightWorldNorthWest.SickKid },
+                [ItemType.BottleWithGreenPotion] = new[] { World.LightWorldNorthWest.SickKid },
+                [ItemType.BottleWithRedPotion] = new[] { World.LightWorldNorthWest.SickKid },
             };
 
-            if (leads.TryGetValue(item.Type, out var leadsToLocation))
+            if (leads.TryGetValue(item.Type, out var leadsToLocation) && !ItemService.IsTracked(item.Type))
             {
                 foreach (var location in leadsToLocation)
                 {
