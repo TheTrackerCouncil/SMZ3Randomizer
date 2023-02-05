@@ -225,7 +225,7 @@ namespace Randomizer.Data.WorldData
 
         private void SetBottles(Random rnd)
         {
-            if (!Config.CasPatches.ExpandedItems) return;
+            if (!Config.CasPatches.RandomizedBottles) return;
             var bottleTypes = new List<ItemType>()
             {
                 ItemType.Bottle,
