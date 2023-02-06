@@ -92,17 +92,22 @@ loadspc:
 
     ; Copy $02-ef to SPC RAM
     ; sendmusicblock $e0 $c002 $0002 $00ee
-    sep #!A_8BIT
-    lda #$f6    ; 1
-    sta $14
-    rep #!A_8BIT
-    lda #$0002  ; 2
-    sta $12
+    sep #$30
+    lda $2002 : cmp.b #'S' : BEQ +
+        rep #$30
+        sep #!A_8BIT
+        lda #$f6    ; 1
+        sta $14
+        rep #!A_8BIT
+        lda #$0002  ; 2
+        sta $12
 
+        rep #!XY_8BIT
+        ldx #$0002 ; 3
+        ldy #$00ee ; 4
+        jsr copyblocktospc
+    +
     rep #!XY_8BIT
-    ldx #$0002 ; 3
-    ldy #$00ee ; 4
-    jsr copyblocktospc
 
     ; sendmusicblock $f6 $0100 $0100 $7f00
     sep #!A_8BIT
@@ -118,17 +123,22 @@ loadspc:
     jsr copyblocktospc
 
     ; sendmusicblock $f7 $0000 $8000 $7fc0
-    sep #!A_8BIT
-    lda #$f7 ; 1
-    sta $14
-    rep #!A_8BIT
-    lda #$0000 ; 2
-    sta $12
+    sep #$30
+    lda $2002 : cmp.b #'S' : BEQ +
+        rep #$30
+        sep #!A_8BIT
+        lda #$f7 ; 1
+        sta $14
+        rep #!A_8BIT
+        lda #$0000 ; 2
+        sta $12
 
+        rep #!XY_8BIT
+        ldx #$8000 ; 3
+        ldy #$7fc0 ; 4
+        jsr copyblocktospc
+    +
     rep #!XY_8BIT
-    ldx #$8000 ; 3
-    ldy #$7fc0 ; 4
-    jsr copyblocktospc
 
     ; Create SPC init code that sets up registers
     jsr makespcinitcode

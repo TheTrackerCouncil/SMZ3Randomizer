@@ -81,16 +81,14 @@ init:
     ; Otherwise, play the built in music
     pha
     sep #$30
+
+    jsl playmusic
+
     lda $2002 : cmp.b #'S' : BNE +
-        LDA $2000 : AND #$08 : CMP #$08 : BEQ +
-            LDA #99 : STA $2004 : STZ $2005 ; Play track 99
-            LDA #1 : STA $2007 ; Sets the track to not repeat
-            LDA #$FF : STA $2006 ; Set to max volume
-            BRA ++
+        LDA #99 : STA $2004 : STZ $2005 ; Play track 99
+        LDA #1 : STA $2007 ; Sets the track to not repeat
+        LDA #$FF : STA $2006 ; Set to max volume
     + 
-        jsl playmusic
-    ++
-    pla
 
     ; Load credits fonts and palettes into VRAM/CGRAM
     %ai16()
