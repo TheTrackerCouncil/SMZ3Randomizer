@@ -63,7 +63,7 @@
       2: 1
     MatchingItemTypes:
     - Hookshot
-- Item: Fire Rods
+- Item: Fire Rod
   IsMetroid: false
   Options:
   - Display: Randomized
@@ -78,7 +78,7 @@
       5: 1
     MatchingItemTypes:
     - Firerod
-- Item: Ice Rods
+- Item: Ice Rod
   IsMetroid: false
   Options:
   - Display: Randomized

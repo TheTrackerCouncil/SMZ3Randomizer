@@ -21,9 +21,13 @@ namespace Randomizer.Data.Options
         [Description("The bottle merchant and King Zora will tell you what they have before asking if you want to purchase it, even if you don't have enough rupees.")]
         public bool PreventScams { get; set; } = true;
 
-        [DisplayName("Zelda Item Patches")]
-        [Description("Includes additional item patches, such as quarter magic, randomized filled bottles, and fairy bottle trades.")]
-        public bool ExpandedItems { get; set; } = true;
+        [DisplayName("Randomized Bottles")]
+        [Description("Adds randomly filled bottles instead of empty bottles and random fairy bottle trades.")]
+        public bool RandomizedBottles { get; set; } = true;
+
+        [DisplayName("Quarter Magic")]
+        [Description("Adds an additional progressive half magic to the item pool.")]
+        public bool QuarterMagic { get; set; } = true;
 
         [DisplayName("Aim with Any Button")]
         [Description("Allows you to map the aiming button to any button.\nPatch developed by Kejardon.")]

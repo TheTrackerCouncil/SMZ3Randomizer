@@ -43,10 +43,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         {
             if (tracker.AutoTracker == null) return false;
 
-            if (currentState.State == 14 && currentState.Substate == 7 && currentState.ReadUInt8(0xE0) == 0x80 && (tracker.AutoTracker.LatestViewAction == null || !tracker.AutoTracker.LatestViewAction.IsValid))
+            if (currentState.State == 14 && currentState.Substate == 7 && currentState.ReadUInt8(0xE0) == 0x80)
             {
                 _tracker = tracker;
-                var currentRegion = tracker.CurrentRegion?.GetRegion(tracker.World);
+                var currentRegion = tracker.World.Regions
+                    .OfType<Z3Region>()
+                    .FirstOrDefault(x => x.StartingRooms != null && x.StartingRooms.Contains(currentState.OverworldScreen) && x.IsOverworld);
                 if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest)
                 {
                     tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateLightWorldRewards);

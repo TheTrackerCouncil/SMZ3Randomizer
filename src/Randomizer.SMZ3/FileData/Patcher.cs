@@ -969,7 +969,7 @@ namespace Randomizer.SMZ3.FileData
 
         private void UpdateFairyPondTrades()
         {
-            if (!_myWorld.Config.CasPatches.ExpandedItems) return;
+            if (!_myWorld.Config.CasPatches.RandomizedBottles) return;
             _patches.Add((Snes(0x6C8FF), new[] { s_fairyPondTrades.Random(_rnd) }));
             _patches.Add((Snes(0x6C93B), new[] { s_fairyPondTrades.Random(_rnd) }));
         }
