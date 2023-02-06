@@ -139,6 +139,9 @@ sm_spc_reset:
     lda #$ff                    ; Send N-SPC into "upload mode"
     sta $2140
 
+    lda #$00 : STA $2004
+    lda #$00 : STA $2005
+
     lda.b #sm_spc_data            ; Store the location of our "exploit data"
     sta $00                     ; so that the ALTTP music upload routine
     lda.b #sm_spc_data>>8         ; uses it.
