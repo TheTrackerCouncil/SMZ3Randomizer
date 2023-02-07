@@ -19,6 +19,7 @@ In addition to making IBJ completely optional, there is also:
  - More logic customization options;
  - Various accessibility patches;
  - Customizable ship sprites;
+ - Patches for modern Super Metroid controls;
  - In game hint tiles and voice-enabled hints via tracker;
  - Sprites made by members of [Diabetus’](https://twitch.tv/the_betus) community and others;
 

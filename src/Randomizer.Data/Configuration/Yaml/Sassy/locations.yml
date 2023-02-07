@@ -82,6 +82,7 @@
 - LocationNumber: 259
   OutOfLogic:
   - "That was kind of you to help that old man when you couldn't see"
+  - "Do you expect me to be impressed? Everyone does that out of logic."
 # Zora / King Zora
 - LocationNumber: 292
   OutOfLogic:
@@ -91,3 +92,8 @@
   Name:
   - Text: "Pyramid of Sour"
     Weight: 0.2
+# Eastern Palace Big Key Chest
+- LocationNumber: 363
+  OutOfLogic: 
+  - "Fine, I'll let this pass since it's not that hard to do."
+  - "Next you should climb castle tower without the lamp."

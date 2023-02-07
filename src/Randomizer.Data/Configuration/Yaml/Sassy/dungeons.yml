@@ -16,7 +16,11 @@
 - Dungeon: Turtle Rock
   Name:
   - Text: Tortoise Rock
+  - Text: Teenage mutant ninja turtle rock
+    Weight: 0.1
 - Dungeon: Ganon's Tower
   Boss:
   - Text: Gannondork
-
+- Dungeon: Ice Palace
+  Name:
+  - Text: Frigid palace

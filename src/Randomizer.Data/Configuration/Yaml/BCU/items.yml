@@ -16,6 +16,8 @@
     - Text: It's time to get serious.
     - Text: It's time to get seewwious.
       Weight: 0.4
+    - Text: Oh no, not the hall of death again. The only way out of here is death!
+      Weight: 0.1
     "3":
     - Text: I said, it's time to get serious.
     - Text: It's time to get seewwious.
@@ -64,11 +66,9 @@
   Name:
   - Text: Key to Shaktool's front door
     Weight: 0.1
-  - Text: Slowbeef's worst enemy
-    Weight: 0.1
 - Item: Morph Bombs
   Name:
-  - Text: That thing you forget you have
+  - Text: thing you forget you have
     Weight: 0.5
 - Item: Super Missile
   WhenTracked:
@@ -85,6 +85,8 @@
     "1":
     - Text: Toggling fire rod on
     - Text: Toggling spicy rod on
+    - Text: Spicy!
+      Weight: 0.2
     - Text: Burn to the ground, Burn to the ground, Burn to the ground, <prosody rate='medium' pitch='x-high'>Burn! Woo!</prosody>
       Weight: .2
 - Item: Charge Beam

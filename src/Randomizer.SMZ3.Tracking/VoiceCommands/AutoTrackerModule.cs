@@ -39,7 +39,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return new GrammarBuilder()
                 .Append("Hey tracker, ")
                 .Optional("please", "would you please")
-                .OneOf("look at this", "look here", "record this", "log this", "take a look at this")
+                .OneOf("look at this", "look here", "record this", "log this", "take a look at this", "get a load of this")
                 .Optional("shit", "crap");
         }
 
