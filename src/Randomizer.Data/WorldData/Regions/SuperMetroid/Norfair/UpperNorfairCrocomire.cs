@@ -23,7 +23,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 name: "Missile (above Crocomire)",
                 alsoKnownAs: new[] { "Crocomire Escape" },
                 vanillaItem: ItemType.Missile,
-                access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster),
+                access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster && Logic.CanWallJump(WallJumpDifficulty.Hard)),
                 memoryAddress: 0x6,
                 memoryFlag: 0x40,
                 metadata: metadata,

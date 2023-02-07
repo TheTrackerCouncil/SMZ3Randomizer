@@ -19,6 +19,9 @@ TrackedOutOfLogicItemTooManyMissing:
 - Text: I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without having all of the required items. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.
   Weight: 0.08
 - Text: But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.
+TrackedItemMultiple:
+- Text: Increasing collection of {1}
+  Weight: 0.05
 ShaktoolAvailable:
 - Text: Hey tracker, track Shaktool Go Mode
 - Text: I wonder how Shaktool is doing
@@ -31,6 +34,8 @@ PegWorldAvailable:
 - Text: Can we go to Peg World?
 - Text: I hear Peg World is beautiful this time of year.
 - Text: I think it is time we use our season tickets to Peg World.
+- Text: Is there time for a quick pegging sesh?
+  Weight: 0.1
 BossDefeated:
 - Text: 'Congratulations on beating off {0}.'
 Muted:
@@ -38,6 +43,10 @@ Muted:
 BeatGame:
 - Text: Congratulations on beating off the game.
 - Text: I will be submitting a log of this playthrough to The Racing Council for their review.
+StoppedTrackingPostGoMode:
+- Text: Dead to rights?
+- Text: Dead to rights? <voice gender='male'><prosody rate='slow'>Dead to rights.</prosody></voice>
+  Weight: 0.1
 Chat:
   StartedGuessingGame:
   - Text: The GT big key guessing game is now open for guesses. By the way, I'm taking a 50% cut of the souls this time.

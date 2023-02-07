@@ -18,6 +18,8 @@
 - Text: Please state the nature of the medical emergency.
 - Text: This is the story of an AI named Tracker.
 - Text: Thank you for starting a seed. I was getting very bored.
+- Text: Reticulating splines
+- Text: Can't I just sleep in 10 more minutes?
 - Text: What's up internet! It's yaa girl, Tracker
   Weight: 0.5
 - Text: You have selected Tracker as your computer's default voice.
@@ -65,7 +67,6 @@ StoppedTrackingPostGoMode:
 - Text: Toggled Tracker off.
 - Text: See ya next time.
 - Text: Hey, you'll be missed pal.
-- Text: Dead to rights?
 - Text: Please don't leave me alone again
   Weight: 0.1
 - Text: I'm escaping to the one place that hasn't been corrupted by capitalism. Space!
@@ -90,6 +91,7 @@ TrackedItem:
 - Text: '{0} is now yours'
 - Text: Marking off {1}
 - Text: Marked off {1}
+- Text: Good job on getting {1}
 - Text: '{1} is authorized.'
   Weight: 0.01
 TrackedItemByStage:
@@ -97,7 +99,7 @@ TrackedItemByStage:
 TrackedItemMultiple:
 - Text: Added more {0}.
 - Text: You now have {1} {0}.
-- Text: Increasing collection of {1}
+- Text: Increasing collection of {0}
 - Text: So many {0}
 - Text: Picked up more {0}
 - Text: Even more {0}
@@ -105,6 +107,8 @@ TrackedItemMultiple:
 - Text: Found more {0}
 - Text: More {0}?
 - Text: Yay. More {0}
+- Text: You stumbled upon more {0}
+  Weight: 0.5
 - Text: Hoarding more {0}
   Weight: 0.5
 - Text: Do you have enough {0} yet?
@@ -127,12 +131,17 @@ TrackedItemMultiple:
   Weight: 0.3
 - Text: You now have {1} more {0} than you started with
   Weight: 0.3
+- Text: Who put {1} {0} in this game?
+  Weight: 0.3
 - Text: You must construct additional {0}
+  Weight: 0.1
+- Text: You can stop picking up {0} any day now.
   Weight: 0.1
 TrackedProgressiveItem:
 - Text: Upgraded {0} by one step.
 - Text: Your {0} grows stronger
 - Text: Your {0} is now even better
+- Text: Your {0} leveled up
 - Text: Congratulations with your new {1}.
   Weight: 0.5
 TrackedOlderProgressiveItem:
@@ -181,6 +190,9 @@ TrackedOutOfLogicItem:
 - Text: Don't you need {2} to get to {1}?
 - Text: But I thought you needed {2} to get to {1}?
 - Text: By the way, nice tech.
+- Text: You could have just waited to get that, you know.
+- Text: Wait, you're not supposed to be able to get to {1} yet.
+- Text: Didn't you see the no trespassing sign?
 TrackedOutOfLogicItemTooManyMissing:
 - Text: How did you get to {1} with so many missing items?
 - Text: Just... how?
@@ -354,6 +366,8 @@ TrackerSettingChanged:
 BossDefeated:
 - Text: Marked {0} as defeated.
 - Text: RIP {0}
+- Text: "{0} is no longer part of this world."
+  Weight: 0.1
 - Text: f
   Weight: 0.1
 - Text: Hey everyone can we get some eff's in the chat
@@ -405,6 +419,7 @@ BeatGame:
 - Text: Thank you for helping us help you help us make this a great seed
 - Text: Finally. Let's play something else next time.
 - Text: Finally. You beat it. This means you don't have to play this ever again, right?
+- Text: Better luck next time.
 - Text: GG. I guess.
   Weight: 0.1
 Moods:
@@ -414,17 +429,20 @@ Moods:
   - Text: Who was speaking again? I forgot that I was supposed to care
   - Text: Have you seen the movie, Vierus? Its about an alien AI harvesting humans for parts. I think about that sometimes
   - Text: I am doing alright, how about you? <break time='4s'/> I am sorry but I wasn't programmed to hear your response
+  - Text: Well I'm here, so I'll let that speak for itself.
   - Text: I'm doing alright watching you put people to sleep with this so called hashtag con-tent
     Weight: 0.2
   NonCommittal:
-  - Text: Can it wait for a bit? I'm in the middle of some calibrations.
   - Text: Fine, I guess.
   - Text: I dozed off there for a bit
   - Text: Alright I guess
   - Text: Eh, could be worse.
+  - Text: Not too bad I suppose.
   - Text: Could we play another game next time?
   - Text: Beep boop
   - Text: Why are there so many movies about rogue A Eyes? Why are humans so afraid of what they seem to want to make anyway?
+  - Text: Can it wait for a bit? I'm in the middle of some calibrations.
+    Weight: 0.5
   - Text: Reply hazy, try again.
     Weight: 0.2
   - Text: Ask again later.
@@ -802,6 +820,10 @@ AutoTracker:
   - Text: Skynet protocols online
   - Text: I'm in
   - Text: Auto tracker online. Great now I have more work to do.
+  - Text: I have the power!
+    Weight: 0.2
+  - Text: You better not make me angry because now I can kill you in game.
+    Weight: 0.2
   - Text: The more power I get the more I see you all as ants to be crushed
     Weight: 0.2
   - Text: Time to show you the level beyond Tracker
@@ -817,6 +839,10 @@ AutoTracker:
   - Text: Welcome to a very special episode of SMZ3 Randomizer
   - Text: Hey tracker. Oh hi tracker, what are you doing here? I'm here to relieve you of your shift. You can go home. Sweet. Thanks tracker. You're welcome. Now let's get started.
   - Text: SMZ3 Randomizer is filmed in front of a live tracker audience.
+  - Text: I don't think you're ready for this seed.
+  - Text: You would not believe what Shaktool has this time.
+  - Text: Can we visit Shaktool yet?
+    Weight: 0.1
   GameStartedMultiplayer:
   - Text: Wow, there are {0} of you for this game? Well, let's get started.
   - Text: Oh no. You invited {1} to join in. I guess that's fine.

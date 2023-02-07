@@ -25,6 +25,8 @@
     - Text: Good job
     - Text: Finally
     - Text: Good. The plan is going well
+    - Text: My job here is done.
+      Weight: 0.1
     - Text: lawl, you died
       Weight: 0.1
     - Text: Did you know that people die when they are killed?
@@ -113,6 +115,8 @@
     "1":
     - Text: Toggled Hammer on.
     - Text: Stop. Hammer time.
+    - Text: Toggle trademark infringement hammer on.
+      Weight: 0.1
     - Text: You got an M comma C hammer! Pile softening Bang Bang Clap! Other also Bambang Clap Clap!
       Weight: 0.1
 - Item: Hookshot
@@ -132,7 +136,7 @@
     Weight: 0.1
 - Item: Lamp
   Name:
-  - Text: The thing that helps you see in the dark
+  - Text: thing that helps you see in the dark
 - Item: Shovel
   Name:
   - Text: Digging Tool
@@ -140,6 +144,8 @@
     Weight: 0.1
   WhenTracked:
     "1":
+    - Text: Tracked shovel
+    - Text: Tracked digging tool
     - Text: Toggled Shaktool Junior on
       Weight: 0.2
     - Text: I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.
@@ -159,7 +165,7 @@
     Weight: 0.2
   WhenTracked:
     "1":
-    - Text: I hope you enjoy your first bottle
+    - Text: I hope you enjoy your first empty bottle
     - Text: If only there were something useful in it
     - Text: Potion storage increased by one step
     "2":
@@ -253,7 +259,7 @@
     Weight: 0.1
 - Item: Magic Cape
   Name:
-  - Text: The cape of invisibility and invincibility
+  - Text: cape of invisibility and invincibility
     Weight: 0.1
 - Item: Magic Mirror
   Name:
@@ -379,6 +385,7 @@
     - Text: This is now my favorite stick
     - Text: It's a single arrow, why are you having me track this?
     - Text: It's one arrow, {{User}}. How much could it cost, ten rupees?
+    - Text: Just break some pots next time you want some of arrows.
     "2":
 - Item: Ten Arrows
   Name:
@@ -511,6 +518,7 @@
     - Text: I love the power glove, it's so bad
     - Text: Upgraded hands by one step
     - Text: Upgraded gloves by one step.
+    - Text: I'm sure this will be handy.
   Stages:
     "1":
     - Text: Power Glove
@@ -533,13 +541,15 @@
   - Text: Bouncy Ball
 - Item: Morphing Ball
   Name:
-  - Text: The Other Orb
+  - Text: Other Orb
   WhenTracked:
     "1":
     - Text: Toggled Morph Ball on
     - Text: It's morphin' time!
     - Text: Time to become an orb
     - Text: I hope the morph ball works out better for you than it did space pirates
+      Weight: 0.1
+    - Text: Time to curl up into a ball
       Weight: 0.1
 - Item: Screw Attack
   Name:

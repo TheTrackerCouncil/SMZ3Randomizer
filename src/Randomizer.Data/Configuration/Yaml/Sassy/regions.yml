@@ -32,7 +32,11 @@
   Name:
   - Text: Tortoise Rock
     Weight: 0.1
+  - Text: Teenage mutant ninja turtle rock
+    Weight: 0.1
 - Region: Ice Palace
+  Name:
+  - Text: Frigid palace
   Hints:
   - Text: You're not sending ME to cooler!
   - Text: Are you going to break the ice?
