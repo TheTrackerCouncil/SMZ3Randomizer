@@ -47,6 +47,9 @@ StoppedTrackingPostGoMode:
 - Text: Dead to rights?
 - Text: Dead to rights? <voice gender='male'><prosody rate='slow'>Dead to rights.</prosody></voice>
   Weight: 0.1
+Spoilers:
+  EnabledSpoilers:
+  - Text: Here {{User}}, this will explain everything.
 Chat:
   StartedGuessingGame:
   - Text: The GT big key guessing game is now open for guesses. By the way, I'm taking a 50% cut of the souls this time.
