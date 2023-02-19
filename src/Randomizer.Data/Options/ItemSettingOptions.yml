@@ -516,13 +516,13 @@
     MatchingItemTypes:
   - Display: Start with 5 Hearts
     MemoryValues:
-      44: 64
-      45: 64
+      44: 40
+      45: 40
     MatchingItemTypes:
   - Display: Start with 10 Hearts
     MemoryValues:
-      44: 128
-      45: 128
+      44: 80
+      45: 80
     MatchingItemTypes:
     - HeartContainer
     - HeartContainer
