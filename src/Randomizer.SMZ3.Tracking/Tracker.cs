@@ -607,8 +607,8 @@ namespace Randomizer.SMZ3.Tracking
             if (unmarkedDungeons.Count > 0)
             {
                 Say(Responses.RemainingDungeonsMarked.Format(ItemService.GetName(reward)));
-                unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.Reward = reward);
-                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState!.Reward = RewardType.None));
+                unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState.MarkedReward = reward);
+                AddUndo(() => unmarkedDungeons.ForEach(dungeon => dungeon.DungeonState!.MarkedReward = RewardType.None));
                 OnDungeonUpdated(new DungeonTrackedEventArgs(null, confidence, false));
             }
             else

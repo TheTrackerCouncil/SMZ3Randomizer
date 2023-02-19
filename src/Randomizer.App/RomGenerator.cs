@@ -413,9 +413,9 @@ namespace Randomizer.App
         /// <returns>The db entry for the generated rom</returns>
         protected async Task<GeneratedRom> SaveSeedToDatabaseAsync(RandomizerOptions options, SeedData seed, string romPath, string spoilerPath, MultiplayerGameDetails? multiplayerGameDetails)
         {
-            var settingsString = string.IsNullOrEmpty(seed.PrimaryConfig.SettingsString)
-                ? (seed.Configs.Count() > 1 ? Config.ToConfigString(seed.Configs) : Config.ToConfigString(seed.PrimaryConfig, true))
-                : seed.PrimaryConfig.SettingsString;
+            var settingsString = seed.Configs.Count() > 1
+                ? Config.ToConfigString(seed.Configs)
+                : Config.ToConfigString(seed.PrimaryConfig, true);
 
             var rom = new GeneratedRom()
             {

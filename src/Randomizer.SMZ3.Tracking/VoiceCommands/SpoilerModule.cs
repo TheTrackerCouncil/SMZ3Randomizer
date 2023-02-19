@@ -588,7 +588,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 case 0:
                     {
 
-                        var isInLogic = itemLocations.Any(x => x.IsAvailable(ItemService.GetProgression(x.Region)) && x.World.IsLocalWorld);
+                        var isInLogic = itemLocations.Any(x => x.IsRelevant(ItemService.GetProgression(x.Region)) && x.World.IsLocalWorld);
                         if (isInLogic)
                         {
                             var isOnlyInSuperMetroid = itemLocations.Select(x => x.Region).All(x => x is SMRegion);
@@ -616,9 +616,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 // - Exactly which player's world is the item in?
                 case 1:
                     {
-                        if (itemLocations.All(x => !x.IsAvailable(ItemService.GetProgression(x.Region))))
+                        if (itemLocations.All(x => !x.IsRelevant(ItemService.GetProgression(x.Region))))
                         {
-                            var randomLocation = itemLocations.Where(x => !x.IsAvailable(ItemService.GetProgression(x.Region))).Random();
+                            var randomLocation = itemLocations.Where(x => !x.IsRelevant(ItemService.GetProgression(x.Region))).Random();
 
                             if (randomLocation == null)
                             {
