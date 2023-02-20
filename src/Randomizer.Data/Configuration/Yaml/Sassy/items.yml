@@ -79,6 +79,8 @@
       Weight: 0.5
     - Text: Wow you're good at this aren't you?
       Weight: 0.5
+    - Text: I'm starting to feel bad. Just kidding, I'm not programmed to feel that emotion.
+      Weight: 0.5
 - Item: Shaktool Go Mode
   Name:
   - Text: Shaktool Go Mode
@@ -146,6 +148,8 @@
     "1":
     - Text: Tracked shovel
     - Text: Tracked digging tool
+    - Text: Tracked dirt mover
+      Weight: 0.2
     - Text: Toggled Shaktool Junior on
       Weight: 0.2
     - Text: I borrowed an excavator. If you can dig, you will fall in love with the hole. Let's dig.
@@ -222,6 +226,7 @@
     "1":
     - Text: Three more and it will matter. Kind of. Maybe.
     - Text: Neat. A whole quarter of a heart
+    - Text: Oh no, it's a broken heart.
     - Text: Four more and it will matter. Wait, I'm thinking of Twilight Princess. Three more and it will matter.
       Weight: 0.2
     "2":
@@ -325,6 +330,10 @@
     - Text: You better have accidentally picked that up
     - Text: Hopefully there's a wishing well for you to toss that in
     - Text: You'll need a lot more of these if you want to go to Zora
+    - Text: It ain't easy bein' green
+    - Text: It's Greg!
+    - Text: Wow. It's a penny.
+    - Text: Why are there two of these in the pool?
 - Item: Five Rupees
   WhenTracked:
     "1":
@@ -335,6 +344,7 @@
     "2":
     - Text: Blue pee? Maybe you should see a doctor.
     - Text: I hope your wallet is big enough
+    - Text: Why so blue?
     "3":
 - Item: Twenty Rupees
   Name:
@@ -361,7 +371,7 @@
     - Text: Two hearts? What are you? A Klingon?
     - Text: Get a few more and I can sleep early today
       Weight: 0.2
-    "3": 
+    "3":
 - Item: One Hundred Rupees
   Name:
   - Text: One Hundred Rupees
@@ -375,7 +385,7 @@
     "1":
     - Text: Do you need bombs? Now you can afford them.
     - Text: Hey, could you spot me 20 bucks?
-    "2": 
+    "2":
 - Item: Single Arrow
   Name:
   - Text: Single Stick
@@ -385,7 +395,7 @@
     - Text: This is now my favorite stick
     - Text: It's a single arrow, why are you having me track this?
     - Text: It's one arrow, {{User}}. How much could it cost, ten rupees?
-    - Text: Just break some pots next time you want some of arrows.
+    - Text: Just break some pots next time you want some arrows.
     "2":
 - Item: Ten Arrows
   Name:
@@ -408,7 +418,7 @@
     - Text: Did you seriously need three of these?
     - Text: Well aren't you rich now?
     - Text: Great! Now you can afford to pay me.
-    "4": 
+    "4":
 - Item: Pegasus Boots
   Name:
   - Text: Speedy boots
@@ -612,7 +622,7 @@
     - Text: FYI You shouldn't drink these.
     - Text: Upgraded caffeine by one step
     - Text: I drank one once. Big mistake
-    "3": 
+    "3":
     "14":
     - Text: You actually did it, you got all the E-Tanks in the game.
 - Item: Reserve Tank

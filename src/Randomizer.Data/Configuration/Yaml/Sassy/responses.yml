@@ -901,6 +901,8 @@ AutoTracker:
   - Text: Good job on the tech. Was it a first try?
   - Text: You just had to get these items early didn't you?
   - Text: License and registration please <break time='1s'/>Do you know why I pulled you over? You were going 15 over the speed limit.
+  - Text: Why is mock ball not spelled m a c h? Why is it spelled like mock as in what I do to you all the time?
+    Weight: 0.1
   SkipSporeSpawn:
   - Text: Skipping spore spawn again?
   - Text: Why don't we go visit spore spawn for old times sake?

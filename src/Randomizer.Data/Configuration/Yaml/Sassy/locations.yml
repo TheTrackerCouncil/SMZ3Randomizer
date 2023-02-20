@@ -35,6 +35,7 @@
   - Text: Phew.
   WhenMarkingProgression:
   - Text: I'm so sorry.
+  - Text: Sorry, not sorry.
 # Lumberjack Tree / Lumberjack Ledge
 - LocationNumber: 273
   WhenTrackingJunk:
@@ -94,6 +95,17 @@
     Weight: 0.2
 # Eastern Palace Big Key Chest
 - LocationNumber: 363
-  OutOfLogic: 
+  OutOfLogic:
   - "Fine, I'll let this pass since it's not that hard to do."
   - "Next you should climb castle tower without the lamp."
+# Waterfall Fairy Right
+- LocationNumber: 295
+  OutOfLogic:
+  - ""
+# Waterfall Fairy Left
+- LocationNumber: 510
+  OutOfLogic:
+  - Did you fake flipper or water walk to get here?
+  - Fine. I'll just not give you the flippers next seed.
+  - If you're expecting me to be impressed, I'm not.
+  - Sure, this is the waterfall fairy, but what about the agile fairy?
