@@ -1363,7 +1363,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                 new LocationInfo()
                 {
                     LocationNumber = 430,
-                    Name = new("Misery Mire Big Key Chest"),
+                    Name = new("Misery Mire Big Key Chest", "Misery Mire Cutscene Chest"),
                 },
                 new LocationInfo()
                 {
