@@ -102,3 +102,8 @@
     "1":
     - Text: Are you going to fill that with hot Diet Dr. Pepper or Pilk?
     - Text: It is empty of con-tent, but not empty of meaning
+- Item: Red potion bottle
+  WhenTracked:
+    "1":
+      - Text: Tracked bottle of hyper realistic blood
+        Weight: 0.2

@@ -34,7 +34,7 @@ namespace Randomizer.SMZ3.Twitch.Models
         /// <summary>
         /// If a poll was finished successfully
         /// </summary>
-        public bool IsPollSuccessful => WinningChoice != null && "COMPLETED".Equals(Status, StringComparison.OrdinalIgnoreCase);
+        public bool IsPollSuccessful => WinningChoice?.Votes > 0;
 
         /// <summary>
         /// Returns choice that was voted on the most
