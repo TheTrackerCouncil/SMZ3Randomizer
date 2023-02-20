@@ -108,7 +108,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(BuildingInsideVisualStudio)' == 'true'">
-    <Exec Command="xcopy $(ProjectDir)Sprites\ $(TargetDir)Sprites\ /S /I /Y" />
+    <Exec Command="xcopy &quot;$(ProjectDir)Sprites\&quot; &quot;$(TargetDir)Sprites\&quot; /S /I /Y" />
   </Target>
 
   <ProjectExtensions>
