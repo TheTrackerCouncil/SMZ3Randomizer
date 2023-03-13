@@ -15,7 +15,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
         {
             PowerBombRoom = new Location(this, 0, 0x8F81CC, LocationType.Visible,
                 name: "Power Bomb (Crateria surface)",
-                alsoKnownAs: new[] { "Chozo Ruins entrance" }, // Referring to Metroid Zero Mission, I guess?
                 vanillaItem: ItemType.PowerBomb,
                 access: items => (Config.MetroidKeysanity ? items.CardCrateriaL1 : Logic.CanUsePowerBombs(items)) && (items.SpeedBooster || Logic.CanFly(items)),
                 memoryAddress: 0x0,
@@ -24,7 +23,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 trackerState: trackerState);
             FinalMissileBombWay = new Location(this, 12, 0x8F8486, LocationType.Visible,
                 name: "Missile (Crateria middle)",
-                alsoKnownAs: new[] { "Final Missile Bombway", "The Final Missile", "Dental Plan Missiles" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanPassBombPassages(items),
                 memoryAddress: 0x1,
@@ -33,7 +31,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 trackerState: trackerState);
             MotherBrainTreasure = new Location(this, 6, 0x8F83EE, LocationType.Visible,
                 name: "Missile (Crateria bottom)",
-                alsoKnownAs: new[] { "Mother Brain's reliquary", "Pit Room" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanDestroyBombWalls(items),
                 memoryAddress: 0x0,
@@ -42,7 +39,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 trackerState: trackerState);
             SuperMissile = new Location(this, 11, 0x8F8478, LocationType.Visible,
                 name: "Super Missile (Crateria)",
-                alsoKnownAs: new[] { "Old Tourian launchpad" },
                 vanillaItem: ItemType.Super,
                 access: items => Logic.CanUsePowerBombs(items) && Logic.HasEnergyReserves(items, 2) && items.SpeedBooster && (!World.Config.LogicConfig.LaunchPadRequiresIceBeam || items.Ice),
                 memoryAddress: 0x1,
@@ -51,7 +47,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 trackerState: trackerState);
             BombTorizo = new Location(this, 7, 0x8F8404, LocationType.Chozo,
                 name: "Bombs",
-                alsoKnownAs: new[] { "Bomb Torizo room" },
                 vanillaItem: ItemType.Bombs,
                 access: items => (Config.MetroidKeysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))
                                  && (Logic.CanPassBombPassages(items) || Logic.CanWallJump(WallJumpDifficulty.Hard)),

@@ -22,7 +22,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 trackerState: trackerState);
             KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
                 name: "Varia Suit",
-                alsoKnownAs: new[] { "Kraid's Reliquary" },
                 vanillaItem: ItemType.Varia,
                 access: items => items.Kraid,
                 relevanceRequirement: items => CanBeatBoss(items),
@@ -32,7 +31,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 trackerState: trackerState);
             MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
                 name: "Missile (Kraid)",
-                alsoKnownAs: new[] { "Warehouse Kihunter Room" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x5,

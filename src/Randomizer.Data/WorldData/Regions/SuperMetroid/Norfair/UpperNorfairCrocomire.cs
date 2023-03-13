@@ -12,7 +12,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
         {
             Crocomire = new Location(this, 52, 0x8F8BA4, LocationType.Visible,
                 name: "Energy Tank, Crocomire",
-                alsoKnownAs: new[] { "Crocomire's Pit" },
                 vanillaItem: ItemType.ETank,
                 access: items => CanAccessCrocomire(items) && ((Logic.HasEnergyReserves(items, 1) && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.Grapple),
                 memoryAddress: 0x6,
@@ -21,7 +20,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             CrocomireEscape = new Location(this, 54, 0x8F8BC0, LocationType.Visible,
                 name: "Missile (above Crocomire)",
-                alsoKnownAs: new[] { "Crocomire Escape" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster && Logic.CanWallJump(WallJumpDifficulty.Hard)),
                 memoryAddress: 0x6,
@@ -30,7 +28,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             PostCrocPowerBombRoom = new Location(this, 57, 0x8F8C04, LocationType.Visible,
                 name: "Power Bomb (Crocomire)",
-                alsoKnownAs: new[] { "Post Crocomire Power Bomb Room" },
                 vanillaItem: ItemType.PowerBomb,
                 access: items => CanAccessCrocomire(items) && (Logic.CanFly(items) || items.HiJump || items.Grapple),
                 memoryAddress: 0x7,
@@ -39,7 +36,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             CosineRoom = new Location(this, 58, 0x8F8C14, LocationType.Visible,
                 name: "Missile (below Crocomire)",
-                alsoKnownAs: new[] { "Cosine Room", "Post Crocomire Missile Room" },
                 vanillaItem: ItemType.Missile,
                 access: items =>
                     // Can access item
@@ -52,7 +48,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             IndianaJonesRoom = new Location(this, 59, 0x8F8C2A, LocationType.Visible,
                 name: "Missile (Grappling Beam)",
-                alsoKnownAs: new[] { "Indiana Jones Room", "Pantry", "Post Crocomire Jump Room" },
                 vanillaItem: ItemType.Missile,
                 access: items =>
                     // Can access item
@@ -65,7 +60,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             GrappleBeamRoom = new Location(this, 60, 0x8F8C36, LocationType.Chozo,
                 name: "Grappling Beam",
-                alsoKnownAs: new[] { "Grapple Beam Room" },
                 vanillaItem: ItemType.Grapple,
                 access: items =>
                     // Can access item

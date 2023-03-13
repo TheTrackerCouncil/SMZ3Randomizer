@@ -164,7 +164,6 @@ namespace Randomizer.Data.WorldData
         public Location? FindLocation(string name, StringComparison comparisonType = StringComparison.Ordinal)
         {
             return Locations.FirstOrDefault(x => x.Name.Equals(name, comparisonType))
-                ?? Locations.FirstOrDefault(x => x.AlternateNames.Contains(name, StringComparer.FromComparison(comparisonType)))
                 ?? Locations.FirstOrDefault(x => x.ToString().Equals(name, comparisonType));
         }
 

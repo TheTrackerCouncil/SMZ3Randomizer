@@ -15,7 +15,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
         {
             MasterSwordPedestal = new Location(this, 256 + 14, 0x589B0, LocationType.Pedestal,
                 name: "Master Sword Pedestal",
-                alsoKnownAs: new[] { "Ped" },
                 vanillaItem: ItemType.ProgressiveSword,
                 access: items => items.AllPendants,
                 relevanceRequirement: items => World.CanAquireAll(items, RewardType.PendantGreen, RewardType.PendantBlue, RewardType.PendantRed),
@@ -56,7 +55,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
 
             PegasusRocks = new Location(this, 256 + 18, 0x1EB3F, LocationType.Regular,
                 name: "Pegasus Rocks",
-                alsoKnownAs: new[] { "Bonk Rocks" },
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Boots,
                 memoryAddress: 0x124,
@@ -100,7 +98,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
 
             ChickenHouse = new Location(this, 256 + 250, 0x1E9E9, LocationType.Regular,
                 name: "Chicken House",
-                alsoKnownAs: new[] { "Chicken Lady's House" },
                 vanillaItem: ItemType.TenArrows,
                 memoryAddress: 0x108,
                 memoryFlag: 0x4,
@@ -110,7 +107,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
 
             SickKid = new Location(this, 256 + 33, 0x6B9CF, LocationType.Regular,
                 name: "Sick Kid",
-                alsoKnownAs: new[] { "Bug Catching Kid's House" },
                 vanillaItem: ItemType.Bugnet,
                 access: items => items.Bottle,
                 memoryAddress: 0x190,
@@ -121,7 +117,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
 
             TavernBackRoom = new Location(this, 256 + 34, 0x1E9CE, LocationType.Regular,
                 name: "Kakariko Tavern",
-                alsoKnownAs: new[] { "Inn back room" },
                 vanillaItem: ItemType.Bottle,
                 memoryAddress: 0x103,
                 memoryFlag: 0x4,
@@ -200,7 +195,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             {
                 BackCave = new Location(this, 256 + 21, 0x1EA8E, LocationType.Regular,
                     name: "Top",
-                    alsoKnownAs: new[] { "Back cave" },
                     vanillaItem: ItemType.HeartPiece,
                     memoryAddress: 0x2F,
                     memoryFlag: 0x4,

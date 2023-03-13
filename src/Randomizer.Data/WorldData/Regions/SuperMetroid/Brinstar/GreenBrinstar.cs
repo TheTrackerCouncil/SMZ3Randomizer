@@ -22,7 +22,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 trackerState: trackerState);
             MissileBelowSuperMissile = new Location(this, 15, 0x8F8518, LocationType.Visible,
                 name: "Missile (green Brinstar below super missile)",
-                alsoKnownAs: new[] { "Mockball Room - Fail item" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanPassBombPassages(items) && Logic.CanOpenRedDoors(items),
                 memoryAddress: 0x1,
@@ -31,7 +30,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 trackerState: trackerState);
             TopSuperMissile = new Location(this, 16, 0x8F851E, LocationType.Visible,
                 name: "Super Missile (green Brinstar top)",
-                alsoKnownAs: new[] { "Mockball Room Attic" },
                 vanillaItem: ItemType.Super,
                 access: items => Logic.CanOpenRedDoors(items) && Logic.CanMoveAtHighSpeeds(items),
                 memoryAddress: 0x2,
@@ -40,7 +38,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                 trackerState: trackerState);
             ReserveTank = new Location(this, 17, 0x8F852C, LocationType.Chozo,
                 name: "Reserve Tank, Brinstar",
-                alsoKnownAs: new[] { "Mockball Chozo" },
                 vanillaItem: ItemType.ReserveTank,
                 access: items => Logic.CanOpenRedDoors(items) && Logic.CanMoveAtHighSpeeds(items),
                 memoryAddress: 0x2,
@@ -102,7 +99,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             {
                 HiddenItem = new Location(this, 18, 0x8F8532, LocationType.Hidden,
                     name: "Hidden Item",
-                    alsoKnownAs: new[] { "Missile (green Brinstar behind missile)", "Mockball - Back room hidden item", "Ron Popeil missiles" },
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanMoveAtHighSpeeds(items) && Logic.CanPassBombPassages(items) && Logic.CanOpenRedDoors(items),
                     memoryAddress: 0x2,
@@ -112,7 +108,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 
                 MainItem = new Location(this, 19, 0x8F8538, LocationType.Visible,
                     name: "Main Item",
-                    alsoKnownAs: new[] { "Missile (green Brinstar behind reserve tank)", "Mockball - Back room" },
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanMoveAtHighSpeeds(items) && Logic.CanOpenRedDoors(items) && items.Morph,
                     memoryAddress: 0x2,

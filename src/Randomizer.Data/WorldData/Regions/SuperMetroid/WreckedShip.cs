@@ -12,7 +12,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
         {
             MainShaftSideRoom = new Location(this, 128, 0x8FC265, LocationType.Visible,
                 name: "Missile (Wrecked Ship middle)",
-                alsoKnownAs: new[] { "Main Shaft - Side room" },
                 vanillaItem: ItemType.Missile,
                 access: items => Logic.CanPassBombPassages(items),
                 memoryAddress: 0x10,
@@ -21,7 +20,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 trackerState: trackerState);
             PostChozoConcertSpeedBoosterItem = new Location(this, 129, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
                 name: "Reserve Tank, Wrecked Ship",
-                alsoKnownAs: new[] { "Post Chozo Concert - Speed Booster Item", "Bowling Alley - Speed Booster Item" },
                 vanillaItem: ItemType.ReserveTank,
                 access: items => CanViewConcert(items, requireRewards: true) && items.SpeedBooster && Logic.CanUsePowerBombs(items),
                 relevanceRequirement: items => CanViewConcert(items, requireRewards: false) && items.SpeedBooster && Logic.CanUsePowerBombs(items),
@@ -31,7 +29,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 trackerState: trackerState);
             PostChozoConcertBreakableChozo = new Location(this, 130, 0x8FC2EF, LocationType.Visible,
                 name: "Missile (Gravity Suit)",
-                alsoKnownAs: new[] { "Post Chozo Concert - Breakable Chozo" },
                 vanillaItem: ItemType.Missile,
                 access: items => CanViewConcert(items, requireRewards: true),
                 relevanceRequirement: items => CanViewConcert(items, requireRewards: false),
@@ -41,7 +38,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 trackerState: trackerState);
             AtticAssemblyLine = new Location(this, 131, 0x8FC319, LocationType.Visible,
                 name: "Missile (Wrecked Ship top)",
-                alsoKnownAs: new[] { "Attic - Assembly Line" },
                 vanillaItem: ItemType.Missile,
                 access: items => CanAccessShutDownRooms(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessShutDownRooms(items, requireRewards: false),
@@ -51,7 +47,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 trackerState: trackerState);
             WreckedPool = new Location(this, 132, 0x8FC337, LocationType.Visible,
                 name: "Energy Tank, Wrecked Ship",
-                alsoKnownAs: new[] { "Wrecked Pool" },
                 vanillaItem: ItemType.ETank,
                 access: items => CanAccessWreckedPool(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessWreckedPool(items, requireRewards: false),
@@ -61,7 +56,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 trackerState: trackerState);
             LeftSuperMissileChamber = new Location(this, 133, 0x8FC357, LocationType.Visible,
                 name: "Super Missile (Wrecked Ship left)",
-                alsoKnownAs: new[] { "Left Super Missile Chamber" },
                 vanillaItem: ItemType.Super,
                 access: items => CanAccessShutDownRooms(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessShutDownRooms(items, requireRewards: false),
@@ -71,7 +65,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 trackerState: trackerState);
             RightSuperMissileChamber = new Location(this, 134, 0x8FC365, LocationType.Visible,
                 name: "Right Super, Wrecked Ship",
-                alsoKnownAs: new[] { "Right Super Missile Chamber" },
                 vanillaItem: ItemType.Super,
                 access: items => CanAccessShutDownRooms(items, requireRewards: true),
                 relevanceRequirement: items => CanAccessShutDownRooms(items, requireRewards: false),
@@ -81,7 +74,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                 trackerState: trackerState);
             PostChozoConcertGravitySuitChamber = new Location(this, 135, 0x8FC36D, LocationType.Chozo,
                 name: "Gravity Suit",
-                alsoKnownAs: new[] { "Post Chozo Concert - Gravity Suit Chamber" },
                 vanillaItem: ItemType.Gravity,
                 access: items => CanViewConcert(items, requireRewards: true),
                 relevanceRequirement: items => CanViewConcert(items, requireRewards: false),

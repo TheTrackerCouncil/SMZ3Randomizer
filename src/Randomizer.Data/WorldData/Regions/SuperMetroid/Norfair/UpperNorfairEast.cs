@@ -13,7 +13,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 
             BubbleMountainMissileRoom = new Location(this, 63, 0x8F8C52, LocationType.Visible,
                 name: "Missile (bubble Norfair green door)",
-                alsoKnownAs: new[] { "Bubble Mountain Missile Room" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2 && CanReachBubbleMountainLeftSide(items),
                 memoryAddress: 0x7,
@@ -22,7 +21,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             BubbleMountain = new Location(this, 64, 0x8F8C66, LocationType.Visible,
                 name: "Missile (bubble Norfair)",
-                alsoKnownAs: new[] { "Bubble Mountain" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2,
                 memoryAddress: 0x8,
@@ -31,7 +29,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             SpeedBoosterHallCeiling = new Location(this, 65, 0x8F8C74, LocationType.Hidden,
                 name: "Missile (Speed Booster)",
-                alsoKnownAs: new[] { "Speed Booster Hall - Ceiling" },
                 vanillaItem: ItemType.Missile,
                 access: items => items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)
                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
@@ -41,7 +38,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             SpeedBoosterRoom = new Location(this, 66, 0x8F8C82, LocationType.Chozo,
                 name: "Speed Booster",
-                alsoKnownAs: new[] { "Speed Booster Room" },
                 vanillaItem: ItemType.SpeedBooster,
                 access: items => items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)
                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
@@ -51,7 +47,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             DoubleChamber = new Location(this, 67, 0x8F8CBC, LocationType.Visible,
                 name: "Missile (Wave Beam)",
-                alsoKnownAs: new[] { "Double Chamber", "Grapple Crossing" },
                 vanillaItem: ItemType.Missile,
                 access: items => (items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)) ||
                     (items.SpeedBooster && items.Wave && items.Morph && items.Super),
@@ -61,7 +56,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                 trackerState: trackerState);
             WaveBeamRoom = new Location(this, 68, 0x8F8CCA, LocationType.Chozo,
                 name: "Wave Beam",
-                alsoKnownAs: new[] { "Wave Beam Room" },
                 vanillaItem: ItemType.Wave,
                 access: items => items.Morph && (
                         (items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)) ||
@@ -132,7 +126,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             {
                 MainItem = new Location(this, 61, 0x8F8C3E, LocationType.Chozo,
                     name: "Main Item",
-                    alsoKnownAs: new[] { "Reserve Tank, Norfair" },
                     vanillaItem: ItemType.ReserveTank,
                     access: items => items.CardNorfairL2 && items.Morph && region.CanReachBubbleMountainLeftSide(items),
                     memoryAddress: 0x7,
@@ -142,7 +135,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 
                 HiddenItem = new Location(this, 62, 0x8F8C44, LocationType.Hidden,
                     name: "Hidden Item",
-                    alsoKnownAs: new[] { "Missile (Norfair Reserve Tank)" },
                     vanillaItem: ItemType.Missile,
                     access: items => items.CardNorfairL2 && items.Morph && region.CanReachBubbleMountainLeftSide(items),
                     memoryAddress: 0x7,
