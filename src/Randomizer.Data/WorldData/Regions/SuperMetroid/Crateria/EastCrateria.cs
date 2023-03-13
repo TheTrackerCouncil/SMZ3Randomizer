@@ -12,7 +12,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
         {
             FloodedCavernUnderWater = new Location(this, 1, 0x8F81E8, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship bottom)",
-                alsoKnownAs: new[] { "Flooded Cavern - under water", "West Ocean - under water" },
                 vanillaItem: ItemType.Missile,
                 access: items => CanAccessFloodedCavernUnderWater(items, true),
                 relevanceRequirement: items => CanAccessFloodedCavernUnderWater(items, false),
@@ -22,7 +21,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 trackerState: trackerState);
             SkyMissile = new Location(this, 2, 0x8F81EE, LocationType.Hidden,
                 name: "Missile (outside Wrecked Ship top)",
-                alsoKnownAs: new[] { "Sky Missile" },
                 vanillaItem: ItemType.Missile,
                 access: items => CanAccessSkyItem(items, true),
                 relevanceRequirement: items => CanAccessSkyItem(items, false),
@@ -32,7 +30,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 trackerState: trackerState);
             MorphBallMaze = new Location(this, 3, 0x8F81F4, LocationType.Visible,
                 name: "Missile (outside Wrecked Ship middle)",
-                alsoKnownAs: new[] { "Morph Ball Maze" },
                 vanillaItem: ItemType.Missile,
                 access: items => CanPassThroughWreckedShip(items, true),
                 relevanceRequirement: items => CanPassThroughWreckedShip(items, false),
@@ -42,7 +39,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                 trackerState: trackerState);
             Moat = new Location(this, 4, 0x8F8248, LocationType.Visible,
                 name: "Missile (Crateria moat)",
-                alsoKnownAs: new[] { "The Moat", "Interior Lake" },
                 vanillaItem: ItemType.Missile,
                 memoryAddress: 0x0,
                 memoryFlag: 0x10,

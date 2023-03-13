@@ -13,7 +13,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
         {
             BumperCaveLedge = new Location(this, 256 + 71, 0x308146, LocationType.Regular,
                 name: "Bumper Cave",
-                alsoKnownAs: new[] { "Bumper Cave Ledge" },
                 vanillaItem: ItemType.HeartPiece,
                 access: items => Logic.CanLiftLight(items) && items.Cape,
                 memoryAddress: 0x4A,
@@ -48,7 +47,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
 
             PegWorld = new Location(this, 256 + 75, 0x308006, LocationType.Regular,
                 name: "Hammer Pegs",
-                alsoKnownAs: new[] { "Peg World" },
                 vanillaItem: ItemType.HeartPiece,
                 access: items => Logic.CanLiftHeavy(items) && items.Hammer,
                 memoryAddress: 0x127,
@@ -58,7 +56,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
 
             PurpleChestTurnin = new Location(this, 256 + 77, 0x6BD68, LocationType.Regular,
                 name: "Purple Chest",
-                alsoKnownAs: new[] { "Purple Chest turn-in" },
                 vanillaItem: ItemType.Bottle,
                 access: items => Logic.CanLiftHeavy(items),
                 memoryAddress: 0x149,

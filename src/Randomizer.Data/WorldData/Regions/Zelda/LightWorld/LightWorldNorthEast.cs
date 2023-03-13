@@ -13,7 +13,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
         {
             MushroomItem = new Location(this, 256 + 40, 0x308014, LocationType.Regular,
                 name: "Potion Shop",
-                alsoKnownAs: new[] { "Mushroom Item" },
                 vanillaItem: ItemType.Powder,
                 access: items => items.Mushroom,
                 memoryAddress: 0x191,
@@ -131,7 +130,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             {
                 Zora = new Location(this, 256 + 36, 0x1DE1C3, LocationType.Regular,
                     name: "King Zora",
-                    alsoKnownAs: new[] { "Zora" },
                     vanillaItem: ItemType.Flippers,
                     access: items => (Logic.CanLiftLight(items) || items.Flippers) && (!Config.LogicConfig.ZoraNeedsRupeeItems || items.Rupees >= 500),
                     memoryAddress: 0x190,

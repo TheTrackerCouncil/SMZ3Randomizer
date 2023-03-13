@@ -13,7 +13,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
         {
             Catfish = new Location(this, 256 + 78, 0x1DE185, LocationType.Regular,
                 name: "Catfish",
-                alsoKnownAs: new[] { "Lake of Ill Omen" },
                 vanillaItem: ItemType.Quake,
                 access: items => items.MoonPearl && Logic.CanLiftLight(items),
                 memoryAddress: 0x190,
@@ -24,7 +23,6 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
 
             Pyramid = new Location(this, 256 + 79, 0x308147, LocationType.Regular,
                 name: "Pyramid",
-                alsoKnownAs: new[] { "Pyramid of Power" },
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x5B,
                 memoryFlag: 0x40,

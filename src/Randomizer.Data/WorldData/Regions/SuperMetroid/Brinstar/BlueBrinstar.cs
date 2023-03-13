@@ -12,7 +12,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
         {
             MorphBall = new Location(this, 26, 0x8F86EC, LocationType.Visible,
                 name: "Morphing Ball",
-                alsoKnownAs: new[] { "Morph Ball (Corridor No. 1)" },
                 vanillaItem: ItemType.Morph,
                 memoryAddress: 0x3,
                 memoryFlag: 0x4,
@@ -21,7 +20,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 
             PowerBomb = new Location(this, 27, 0x8F874C, LocationType.Visible,
                 name: "Power Bomb (blue Brinstar)",
-                alsoKnownAs: new[] { "Power Bomb wall (Corridor No. 1)" },
                 vanillaItem: ItemType.PowerBomb,
                 access: items => Logic.CanUsePowerBombs(items),
                 memoryAddress: 0x3,
@@ -86,7 +84,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             {
                 MainItem = new Location(this, 36, 0x8F8836, LocationType.Visible,
                     name: "Main Item",
-                    alsoKnownAs: new[] { "Missile (blue Brinstar top)", "Billy Mays Room" },
                     vanillaItem: ItemType.Missile,
                     access: CanEnter,
                     memoryAddress: 0x4,
@@ -96,7 +93,6 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 
                 HiddenItem = new Location(this, 37, 0x8F883C, LocationType.Hidden,
                     name: "Hidden Item",
-                    alsoKnownAs: new[] { "Missile (blue Brinstar behind missile)", "Billy Mays Room - Hidden item" },
                     vanillaItem: ItemType.Missile,
                     access: CanEnter,
                     memoryAddress: 0x4,

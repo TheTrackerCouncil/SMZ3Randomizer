@@ -33,10 +33,10 @@ namespace Randomizer.Data.WorldData
 
         private int? _weight;
 
-        public Location(Room room, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Room room, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
-                    : this(room.Region, id, romAddress, type, name, metadata, trackerState, alsoKnownAs, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
+                    : this(room.Region, id, romAddress, type, name, metadata, trackerState, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
         {
             Room = room;
         }
@@ -53,9 +53,6 @@ namespace Randomizer.Data.WorldData
         /// <param name="name">The name of the location.</param>
         /// <param name="metadata">Metadata service.</param>
         /// <param name="trackerState">Tracker state.</param>
-        /// <param name="alsoKnownAs">
-        /// A collection of alternate names for the item or location.
-        /// </param>
         /// <param name="vanillaItem">
         /// The item that can be found in this location in the regular game.
         /// </param>
@@ -67,7 +64,7 @@ namespace Randomizer.Data.WorldData
         /// <param name="memoryType">The type of location</param>
         /// <param name="relevanceRequirement">Logic for if the location is accessible following defeating a boss or collecting a reward</param>
         /// <param name="trackerLogic">Special logic for if the location should be displayed in tracker</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, string[]? alsoKnownAs = null, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Region region, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
         {
@@ -76,7 +73,6 @@ namespace Randomizer.Data.WorldData
             Name = name;
             Type = type;
             RomAddress = romAddress;
-            AlternateNames = new ReadOnlyCollection<string>(alsoKnownAs ?? Array.Empty<string>());
             VanillaItem = vanillaItem;
             _canAccess = access ?? (_ => true);
             _alwaysAllow = (_, _) => false;
@@ -145,11 +141,6 @@ namespace Randomizer.Data.WorldData
         /// The Logic to be used to determine if certain actions can be done
         /// </summary>
         public ILogic Logic => Region.Logic;
-
-        /// <summary>
-        /// Gets any alternate names for the location.
-        /// </summary>
-        public IReadOnlyCollection<string> AlternateNames { get; }
 
         /// <summary>
         /// Gets the item that can be found in this location in the vanilla
