@@ -278,7 +278,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Zora's Flippers",
                     Name = new(new("Zora's Flippers", 0), "Flippers"),
                     InternalItemType = ItemType.Flippers,
-                    Hints = new("You could use it to get around.", "It's blue."),
+                    Hints = new("You could use it to get around.", "It's blue.", "It goes on your extremities."),
                     PedestalHints = new("Something to put on your feet to swim"),
                 },
                 new ItemData()
@@ -418,7 +418,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Pegasus Boots",
                     Name = new("Pegasus Boots", "Boots"),
                     InternalItemType = ItemType.Boots,
-                    Hints = new("You could use it to get around.", "It's red."),
+                    Hints = new("You could use it to get around.", "It's red.", "It goes on your extremities."),
                     PedestalHints = new("Something to let you run into enemies with your sword"),
                 },
                 new ItemData()
@@ -481,7 +481,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Shield", new("Progressive Shield", 0)),
                     InternalItemType = ItemType.ProgressiveShield,
                     Multiple = true,
-                    Hints = new("It improves your survivability."),
+                    Hints = new("It improves your survivability.", "It goes on your extremities."),
                     PedestalHints = new("A way to block arrows and fireballs"),
                 },
                 new ItemData()
@@ -490,7 +490,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Mail", new("Tunic", 0.1), new("Progressive Mail", 0)),
                     InternalItemType = ItemType.ProgressiveTunic,
                     Multiple = true,
-                    Hints = new("It improves your survivability."),
+                    Hints = new("It's something you could wear.", "It improves your survivability."),
                     PedestalHints = new("A change of clothes to help you survive"),
                 },
                 new ItemData()
@@ -499,7 +499,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Gloves", new("Progressive Glove", 0)),
                     InternalItemType = ItemType.ProgressiveGlove,
                     Multiple = true,
-                    Hints = new("It's something magical.", "It's something you could wear."),
+                    Hints = new("It's something you could wear.", "It goes on your extremities."),
                     PedestalHints = new("Something to help you lift heavy things"),
                 },
                 new ItemData()
@@ -978,7 +978,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Hi-Jump Boots",
                     Name = new("Hi-Jump Boots", "Hi-Jump"),
                     InternalItemType = ItemType.HiJump,
-                    Hints = new("You could use it to get around.", "It's something you could wear."),
+                    Hints = new("You could use it to get around.", "It's something you could wear.", "It goes on your extremities."),
                     PedestalHints = new("Shoes that help you reach slightly higher places"),
                 },
                 new ItemData()
