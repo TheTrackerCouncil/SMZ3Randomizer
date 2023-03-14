@@ -101,7 +101,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Magic Powder",
                     Name = new("Magic Powder"),
                     InternalItemType = ItemType.Powder,
-                    Hints = new("It's something magical."),
+                    Hints = new("It's something magical.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to sprinkle on anti-faeries"),
                 },
                 new ItemData()
@@ -141,7 +141,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Shovel",
                     Name = new("Shovel"),
                     InternalItemType = ItemType.Shovel,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("A digging tool that isn't Shaktool"),
                 },
                 new ItemData()
@@ -167,7 +167,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.Bottle,
                     Plural = new("Bottles"),
                     Multiple = true,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to hold various liquids and things with"),
                 },
                 new ItemData()
@@ -177,7 +177,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.BottleWithBee,
                     Plural = new("Bee bottles", "Bottles with a bee"),
                     Multiple = true,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to hold various liquids and things with"),
                 },
                 new ItemData()
@@ -187,7 +187,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.BottleWithGoldBee,
                     Plural = new("Gold bee bottles", "Good bee bottles", "Bottles with a gold bee"),
                     Multiple = true,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to hold various liquids and things with"),
                 },
                 new ItemData()
@@ -197,7 +197,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.BottleWithFairy,
                     Plural = new("Fairy bottles", "Bottles with a fairy"),
                     Multiple = true,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to hold various liquids and things with"),
                 },
                 new ItemData()
@@ -207,7 +207,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.BottleWithBluePotion,
                     Plural = new("Blue potion bottles", "Bottles with a blue potion"),
                     Multiple = true,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to hold various liquids and things with"),
                 },
                 new ItemData()
@@ -217,7 +217,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.BottleWithGreenPotion,
                     Plural = new("Green potion bottles", "Bottles with a green potion"),
                     Multiple = true,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to hold various liquids and things with"),
                 },
                 new ItemData()
@@ -227,7 +227,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     InternalItemType = ItemType.BottleWithRedPotion,
                     Plural = new("Red potion bottles", "Bottles with a red potion"),
                     Multiple = true,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Something to hold various liquids and things with"),
                 },
                 new ItemData()
@@ -245,7 +245,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Cane of Byrna",
                     Name = new("Cane of Byrna", new("Blue Cane", 0)),
                     InternalItemType = ItemType.Byrna,
-                    Hints = new("It's something magical.", "It's blue."),
+                    Hints = new("It's something magical.", "It's blue.", "It's an item that's very rarely progression."),
                     PedestalHints = new("A magical device for becoming invincible"),
                 },
                 new ItemData()
@@ -278,7 +278,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Zora's Flippers",
                     Name = new(new("Zora's Flippers", 0), "Flippers"),
                     InternalItemType = ItemType.Flippers,
-                    Hints = new("You could use it to get around.", "It's blue."),
+                    Hints = new("You could use it to get around.", "It's blue.", "It goes on your extremities."),
                     PedestalHints = new("Something to put on your feet to swim"),
                 },
                 new ItemData()
@@ -312,7 +312,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Mushroom",
                     Name = new("Mushroom"),
                     InternalItemType = ItemType.Mushroom,
-                    Hints = new("You could find it in real life."),
+                    Hints = new("You could find it in real life.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Some sort of fungus"),
                 },
                 new ItemData()
@@ -418,7 +418,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Pegasus Boots",
                     Name = new("Pegasus Boots", "Boots"),
                     InternalItemType = ItemType.Boots,
-                    Hints = new("You could use it to get around.", "It's red."),
+                    Hints = new("You could use it to get around.", "It's red.", "It goes on your extremities."),
                     PedestalHints = new("Something to let you run into enemies with your sword"),
                 },
                 new ItemData()
@@ -481,7 +481,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Shield", new("Progressive Shield", 0)),
                     InternalItemType = ItemType.ProgressiveShield,
                     Multiple = true,
-                    Hints = new("It improves your survivability."),
+                    Hints = new("It improves your survivability.", "It's an item that's very rarely progression."),
                     PedestalHints = new("A way to block arrows and fireballs"),
                 },
                 new ItemData()
@@ -490,7 +490,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Mail", new("Tunic", 0.1), new("Progressive Mail", 0)),
                     InternalItemType = ItemType.ProgressiveTunic,
                     Multiple = true,
-                    Hints = new("It improves your survivability."),
+                    Hints = new("It's something you could wear.", "It improves your survivability."),
                     PedestalHints = new("A change of clothes to help you survive"),
                 },
                 new ItemData()
@@ -499,7 +499,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Name = new("Gloves", new("Progressive Glove", 0)),
                     InternalItemType = ItemType.ProgressiveGlove,
                     Multiple = true,
-                    Hints = new("It's something magical.", "It's something you could wear."),
+                    Hints = new("It's something you could wear.", "It goes on your extremities."),
                     PedestalHints = new("Something to help you lift heavy things"),
                 },
                 new ItemData()
@@ -978,7 +978,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Hi-Jump Boots",
                     Name = new("Hi-Jump Boots", "Hi-Jump"),
                     InternalItemType = ItemType.HiJump,
-                    Hints = new("You could use it to get around.", "It's something you could wear."),
+                    Hints = new("You could use it to get around.", "It's something you could wear.", "It goes on your extremities."),
                     PedestalHints = new("Shoes that help you reach slightly higher places"),
                 },
                 new ItemData()
@@ -994,7 +994,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Item = "Morph Bombs",
                     Name = new("Morph Bombs", "Morph Bomb", "Morph Ball Bombs"),
                     InternalItemType = ItemType.Bombs,
-                    Hints = new("It's useful but not required."),
+                    Hints = new("It's useful but not required.", "It's an item that's very rarely progression."),
                     PedestalHints = new("Basic reusable futuristic explosives"),
                 },
                 new ItemData()
