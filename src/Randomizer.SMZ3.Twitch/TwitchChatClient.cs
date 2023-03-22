@@ -82,7 +82,7 @@ namespace Randomizer.SMZ3.Twitch
         {
             if (announce)
             {
-                message = $".announce {message}";
+                return SendAnnouncementAsync(message);
             }
 
             try
@@ -94,8 +94,14 @@ namespace Randomizer.SMZ3.Twitch
                 Logger.LogError(e, "Error in sending chat message");
                 SendMessageFailure?.Invoke(this, new());
             }
-            
+
             return Task.CompletedTask;
+        }
+
+        public async Task SendAnnouncementAsync(string message)
+        {
+            var announcement = new TwitchAnnouncement() { BroadcasterId = Id, ModeratorId = Id, Message = message };
+            await _chatApi.MakeApiCallAsync<TwitchAnnouncement, TwitchAnnouncement>("chat/announcements", announcement, HttpMethod.Post, default);
         }
 
         protected virtual void OnConnected()

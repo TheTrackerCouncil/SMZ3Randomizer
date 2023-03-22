@@ -36,7 +36,7 @@ namespace Randomizer.SMZ3.Twitch
                 $"?client_id={_twitchChatAPI.GetClientId()}" +
                 $"&redirect_uri={Uri.EscapeDataString(redirectUri.ToString())}" +
                 "&response_type=token" +
-                $"&scope={Uri.EscapeDataString("chat:read chat:edit channel:moderate channel:read:polls channel:manage:polls channel:read:predictions channel:manage:predictions")}");
+                $"&scope={Uri.EscapeDataString("chat:read chat:edit channel:moderate channel:read:polls channel:manage:polls channel:read:predictions channel:manage:predictions moderator:manage:announcements")}");
         }
 
         public override async Task<bool> ValidateTokenAsync(string accessToken, CancellationToken cancellationToken)
