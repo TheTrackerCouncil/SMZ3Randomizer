@@ -326,7 +326,7 @@ namespace Randomizer.App.Windows
             // Add specific items
             foreach (var itemType in Enum.GetValues<ItemType>())
             {
-                if (itemType.IsInCategory(ItemCategory.NonRandomized)) continue;
+                if (itemType.IsInCategory(ItemCategory.NonRandomized) || itemType == ItemType.Nothing) continue;
 
                 if ((int)itemType == prevValue)
                 {
