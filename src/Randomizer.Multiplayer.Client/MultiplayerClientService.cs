@@ -545,7 +545,7 @@ public class MultiplayerClientService
     /// <param name="response"></param>
     private async Task OnForfeitPlayerGame(ForfeitPlayerGameResponse response)
     {
-        _logger.LogInformation("Forfeit game");
+        _logger.LogInformation("Forfeit game for {PlayerName}", response.PlayerState.PlayerName);
         var isLocalPlayer = response.PlayerState.Guid == CurrentPlayerGuid;
         if (isLocalPlayer && response.GameState.Status == MultiplayerGameStatus.Created && DatabaseGameDetails != null)
         {
@@ -564,7 +564,7 @@ public class MultiplayerClientService
     /// <param name="response"></param>
     private async Task OnCompletePlayerGame(CompletePlayerGameResponse response)
     {
-        _logger.LogInformation("Complete game");
+        _logger.LogInformation("Complete game for {PlayerName}", response.PlayerState.PlayerName);
         var isLocalPlayer = response.PlayerState.Guid == CurrentPlayerGuid;
         PlayerCompleted?.Invoke(response.PlayerState, isLocalPlayer);
         await UpdateLocalGameState(response.GameState);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
@@ -16,11 +17,13 @@ namespace Randomizer.Data.Services
     {
         private readonly RandomizerContext _randomizerContext;
         private readonly ILogger<TrackerStateService> _logger;
+        private readonly Configs _configs;
 
-        public TrackerStateService(RandomizerContext dbContext, ILogger<TrackerStateService> logger)
+        public TrackerStateService(RandomizerContext dbContext, ILogger<TrackerStateService> logger, Configs configs)
         {
             _randomizerContext = dbContext;
             _logger = logger;
+            _configs = configs;
         }
 
         public async Task CreateStateAsync(IEnumerable<World> worlds, GeneratedRom generatedRom)
@@ -89,12 +92,14 @@ namespace Randomizer.Data.Services
                 })
                 .ToList();
 
+
             // Add starting equipment, including items that may not be in the world anymore
             foreach (var world in worlds)
             {
                 var startingInventory = ItemSettingOptions.GetStartingItemTypes(world.Config);
                 foreach (var itemType in startingInventory.Distinct())
                 {
+                    _logger.LogInformation("Adding Starting Inventory Item {ItemName} to Tracker State", itemType.GetDescription());
                     var addedItem = itemStates.FirstOrDefault(x => x.WorldId == world.Id && x.Type == itemType);
                     if (addedItem != null)
                     {
@@ -110,6 +115,22 @@ namespace Randomizer.Data.Services
                             TrackingState = startingInventory.Count(x => x == itemType)
                         });
                     }
+                }
+            }
+
+            // Add items from metadata that may be missing
+            foreach (var world in worlds)
+            {
+                foreach (var itemMetadata in _configs.Items.Where(m => !itemStates.Any(s => m.Is(s) && s.WorldId == world.Id)))
+                {
+                    _logger.LogInformation("Adding Metadata Item {ItemName} to Tracker State", itemMetadata.Item);
+                    itemStates.Add(new TrackerItemState
+                    {
+                        ItemName = itemMetadata.InternalItemType == ItemType.Nothing ? itemMetadata.Item : itemMetadata.InternalItemType.GetDescription(),
+                        Type = itemMetadata.InternalItemType,
+                        WorldId = world.Id,
+                        TrackingState = 0
+                    });
                 }
             }
 

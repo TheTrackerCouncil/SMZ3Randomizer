@@ -287,12 +287,12 @@
   - Display: Early Cane of Byrna
     MemoryValues:
     MatchingItemTypes:
-    - Somaria
+    - Byrna
   - Display: Start with Cane of Byrna
     MemoryValues:
       17: 1
     MatchingItemTypes:
-    - Somaria
+    - Byrna
 - Item: Magic Cape
   IsMetroid: false
   Options:
@@ -333,7 +333,7 @@
     MemoryValues:
     MatchingItemTypes:
     - ProgressiveGlove
-  - Display: Early Tita's Mitts
+  - Display: Early Titan's Mitts
     MemoryValues:
     MatchingItemTypes:
     - ProgressiveGlove

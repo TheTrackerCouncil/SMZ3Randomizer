@@ -5,6 +5,7 @@ using System.Linq;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -180,6 +181,17 @@ namespace Randomizer.Data.Configuration.ConfigTypes
                     && type == ItemType.HeartContainerRefill
                 || InternalItemType == ItemType.HeartContainerRefill
                     && type == ItemType.HeartContainer;
+        }
+
+        /// <summary>
+        /// If this item metadata matches a tracker item state
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public bool Is(TrackerItemState state)
+        {
+            return (InternalItemType == ItemType.Nothing && Item == state.ItemName) ||
+                   (InternalItemType != ItemType.Nothing && InternalItemType == state.Type);
         }
 
         /// <summary>

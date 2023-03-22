@@ -67,9 +67,9 @@ namespace Randomizer.SMZ3.Generation
             }
 
             // Create items for saved state items not in the world
-            foreach (var itemState in trackerState.ItemStates.Where(s => worlds.First(w => w.Id == s.WorldId).LocationItems.All(i => i.Type != s.Type)))
+            foreach (var itemState in trackerState.ItemStates.Where(s => worlds.SelectMany(w => w.LocationItems).All(i => i.World.Id != s.WorldId || i.Type != s.Type)))
             {
-                var itemMetadata = _metadata.Item(itemState.ItemName) ??
+                var itemMetadata = (itemState.Type != null && itemState.Type != ItemType.Nothing ? _metadata.Item(itemState.Type ?? ItemType.Nothing) : _metadata.Item(itemState.ItemName)) ??
                                    new ItemData(new SchrodingersString(itemState.ItemName),
                                        itemState.Type ?? ItemType.Nothing, new SchrodingersString());
                 var world = worlds.First(w => w.Id == itemState.WorldId);
@@ -77,19 +77,20 @@ namespace Randomizer.SMZ3.Generation
             }
 
             // Create items for metadata items not in the world
+            var allItems = worlds.SelectMany(x => x.AllItems).ToList();
             foreach (var world in worlds)
             {
-                foreach (var itemMetadata in _metadata.Items.Where(m => !world.AllItems.Any(i => i.Is(m.InternalItemType, m.Item))))
+                foreach (var itemMetadata in _metadata.Items.Where(m => !allItems.Any(i => i.World == world && i.Is(m.InternalItemType, m.Item))))
                 {
                     var itemState = new TrackerItemState
                     {
-                        ItemName = itemMetadata.Item,
+                        ItemName = itemMetadata.InternalItemType == ItemType.Nothing ? itemMetadata.Item : itemMetadata.InternalItemType.GetDescription(),
                         Type = itemMetadata.InternalItemType,
                         TrackerState = trackerState,
                         WorldId = world.Id
                     };
 
-                    world.TrackerItems.Add(new Item(itemMetadata.InternalItemType, world, itemMetadata.Item, itemMetadata, itemState));
+                    world.TrackerItems.Add(new Item(itemMetadata.InternalItemType, world, itemState.ItemName, itemMetadata, itemState));
                     trackerState.ItemStates.Add(itemState);
                 }
             }
