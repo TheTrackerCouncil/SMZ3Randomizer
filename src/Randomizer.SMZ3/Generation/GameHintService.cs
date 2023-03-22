@@ -85,9 +85,7 @@ namespace Randomizer.SMZ3.Generation
 
             var allHints = new List<string>();
 
-            var importantLocations = allWorlds.SelectMany(w => w.Locations)
-                .Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression || l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Keycard))
-                .ToList();
+            var importantLocations = GetImportantLocations(allWorlds);
 
             allHints.AddRange(GetProgressionItemHints(hintPlayerWorld, lateSpheres, 8));
             allHints.AddRange(GetDungeonHints(hintPlayerWorld, allWorlds, importantLocations));
@@ -249,8 +247,6 @@ namespace Randomizer.SMZ3.Generation
         private LocationUsefulness CheckIfLocationsAreImportant(IEnumerable<World> allWorlds, IEnumerable<Location> importantLocations, IEnumerable<Location> locations)
         {
             var worldLocations = importantLocations.Except(locations).ToList();
-            var locationItems = locations.Select(x => x.Item.Type).ToList();
-            var region = locations.First().Region;
             try
             {
                 var spheres = Playthrough.GenerateSpheres(worldLocations);
@@ -273,7 +269,7 @@ namespace Randomizer.SMZ3.Generation
                     return LocationUsefulness.Mandatory;
                 }
 
-                var usefulItems = locations.Where(x => x.Item.Progression || x.Item.Type.IsInCategory(ItemCategory.Nice) || x.Item.Type == ItemType.ProgressiveSword).Select(x => x.Item);
+                var usefulItems = locations.Where(x => (x.Item.Progression && !x.Item.Type.IsInCategory(ItemCategory.Junk)) || x.Item.Type.IsInCategory(ItemCategory.Nice) || x.Item.Type == ItemType.ProgressiveSword).Select(x => x.Item);
                 return usefulItems.Any() ? LocationUsefulness.NiceToHave : LocationUsefulness.Useless;
             }
             catch
@@ -367,6 +363,40 @@ namespace Randomizer.SMZ3.Generation
                     ? " in your world"
                     : $" in {locationWorld.Player}'s world";
             }
+        }
+
+        private IEnumerable<Location> GetImportantLocations(IEnumerable<World> allWorlds)
+        {
+            // Get the first accessible ammo locations to make sure early ammo isn't considered mandatory when there
+            // are others available
+            var spheres = Playthrough.GenerateSpheres(allWorlds.SelectMany(x => x.Locations));
+            var ammoItemTypes = new List<ItemType>()
+            {
+                ItemType.Missile,
+                ItemType.Super,
+                ItemType.PowerBomb,
+                ItemType.ETank,
+                ItemType.ReserveTank,
+            };
+            var ammoLocations = new List<Location>();
+            foreach (var sphere in spheres)
+            {
+                foreach (var location in sphere.Locations.Where(x => ammoItemTypes.Contains(x.Item.Type)))
+                {
+                    if (ammoLocations.Count(x =>
+                            x.Item.World.Id == location.Item.World.Id && x.Item.Type == location.Item.Type) < 3)
+                    {
+                        ammoLocations.Add(location);
+                    }
+                }
+            }
+
+            return allWorlds.SelectMany(w => w.Locations)
+                .Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression ||
+                            l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey,
+                                ItemCategory.Keycard) || l.Item.Type is ItemType.Super or ItemType.PowerBomb)
+                .Concat(ammoLocations)
+                .Distinct();
         }
 
         private enum LocationUsefulness
