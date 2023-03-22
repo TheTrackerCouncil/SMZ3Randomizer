@@ -267,6 +267,12 @@ namespace Randomizer.SMZ3.Generation
                 {
                     return LocationUsefulness.Mandatory;
                 }
+
+                if (locations.Any(x => x.Item.Type == ItemType.SilverArrows))
+                {
+                    return LocationUsefulness.Mandatory;
+                }
+
                 var usefulItems = locations.Where(x => x.Item.Progression || x.Item.Type.IsInCategory(ItemCategory.Nice) || x.Item.Type == ItemType.ProgressiveSword).Select(x => x.Item);
                 return usefulItems.Any() ? LocationUsefulness.NiceToHave : LocationUsefulness.Useless;
             }
