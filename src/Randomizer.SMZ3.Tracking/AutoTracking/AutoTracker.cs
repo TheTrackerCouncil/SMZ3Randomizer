@@ -563,7 +563,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             if (action.CurrentData?.ReadUInt8(0x145) >= 3)
             {
                 var castleTower = Tracker.World.CastleTower;
-                if (castleTower.DungeonState.Cleared ==false)
+                if (castleTower.DungeonState.Cleared == false)
                 {
                     Tracker.MarkDungeonAsCleared(castleTower, null, autoTracked: true);
                     _logger.LogInformation("Auto tracked {Name} as cleared", castleTower.Name);
@@ -625,6 +625,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var prevCleared = (is16Bit && prevData.CheckUInt16(loc * 2, flag)) || (!is16Bit && prevData.CheckBinary8Bit(loc, flag));
                     if (location.State.Autotracked == false && currentCleared && prevCleared)
                     {
+                        // Increment GT guessing game number
                         if (location.Region is GanonsTower gt && location != gt.BobsTorch)
                         {
                             IncrementGTItems(location);
@@ -634,6 +635,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         location.State.Autotracked = true;
                         Tracker.TrackItem(item: item, trackedAs: null, confidence: null, tryClear: true, autoTracked: true, location: location);
                         _logger.LogInformation("Auto tracked {ItemName} from {LocationName}", location.Item.Name, location.Name);
+
+                        // Mark HC as cleared if this was Zelda's Cell
+                        if (location.Id == 256 + 98 && Tracker.World.HyruleCastle.DungeonState.Cleared == false)
+                        {
+                            Tracker.MarkDungeonAsCleared(Tracker.World.HyruleCastle, null, autoTracked: true);
+                        }
                     }
 
                 }
