@@ -62,7 +62,7 @@ public class MultiplayerModule : TrackerModule
             do
             {
                 await Task.Delay(TimeSpan.FromSeconds(5));
-                if (Tracker.AutoTracker?.IsConnected != true) return;
+                if (Tracker.AutoTracker?.HasValidState != true) return;
             } while (Tracker.AutoTracker!.CurrentGame == Game.Neither);
             Logger.LogInformation("Requesting player sync");
             await _multiplayerGameService.OnAutoTrackingConnected();
@@ -72,7 +72,7 @@ public class MultiplayerModule : TrackerModule
     private void PlayerSyncReceived(PlayerSyncReceivedEventHandlerArgs args)
     {
         // Ignore the sync if auto tracker is not connected as we don't want to lose out on items
-        if (Tracker.AutoTracker?.IsConnected != true) return;
+        if (Tracker.AutoTracker?.HasValidState != true) return;
         if (args.PlayerId == null || args.ItemsToGive == null || args.ItemsToGive.Count == 0 || args.IsLocalPlayer) return;
         var items = args.ItemsToGive.Select(x => ItemService.FirstOrDefault(x)).NonNull().ToList();
         Tracker.GameService!.TryGiveItems(items, args.PlayerId.Value);
@@ -138,7 +138,7 @@ public class MultiplayerModule : TrackerModule
     private void PlayerTrackedLocation(PlayerTrackedLocationEventHandlerArgs args)
     {
         // Ignore the sync if auto tracker is not connected as we don't want to lose out on items
-        if (Tracker.AutoTracker?.IsConnected != true) return;
+        if (Tracker.AutoTracker?.HasValidState != true) return;
         if (args.ItemToGive == ItemType.Nothing) return;
         var item = ItemService.FirstOrDefault(args.ItemToGive);
         if (item == null)

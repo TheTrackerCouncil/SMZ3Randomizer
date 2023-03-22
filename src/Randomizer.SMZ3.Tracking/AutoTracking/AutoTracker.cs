@@ -306,6 +306,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public bool IsConnected => _connector != null && _connector.IsConnected();
 
         /// <summary>
+        /// If a connector is currently connected to the emulator and a valid game state is detected
+        /// </summary>
+        public bool HasValidState => IsConnected && _hasValidState;
+
+        /// <summary>
         /// If the auto tracker is currently sending messages
         /// </summary>
         public bool IsSendingMessages { get; set; }
@@ -743,6 +748,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         protected void CheckBeatFinalBosses(EmulatorAction action)
         {
             if (_previousGame != CurrentGame || action.CurrentData == null) return;
+            var didUpdate = false;
 
             if (action.PreviousData?.ReadUInt8(0x2) == 0 && action.CurrentData.ReadUInt8(0x2) > 0)
             {
@@ -751,7 +757,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var gt = Tracker.World.GanonsTower;
                     if (gt.DungeonState.Cleared == false)
                     {
+                        _logger.LogInformation("Auto tracked Ganon's Tower");
                         Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
+                        didUpdate = true;
                     }
                 }
                 else if (CurrentGame == Game.SM)
@@ -759,7 +767,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
                     if (motherBrain.State.Defeated != true)
                     {
+                        _logger.LogInformation("Auto tracked Mother Brain");
                         Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
+                        didUpdate = true;
                     }
                 }
             }
@@ -771,7 +781,9 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var gt = Tracker.World.GanonsTower;
                     if (gt.DungeonState.Cleared == false)
                     {
+                        _logger.LogInformation("Auto tracked Ganon's Tower");
                         Tracker.MarkDungeonAsCleared(gt, confidence: null, autoTracked: true);
+                        didUpdate = true;
                     }
                 }
                 else if (CurrentGame == Game.SM)
@@ -779,12 +791,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     var motherBrain = Tracker.World.AllBosses.First(x => x.Name == "Mother Brain");
                     if (motherBrain.State.Defeated != true)
                     {
+                        _logger.LogInformation("Auto tracked Mother Brain");
                         Tracker.MarkBossAsDefeated(motherBrain, admittedGuilt: true, confidence: null, autoTracked: true);
+                        didUpdate = true;
                     }
                 }
             }
 
-            if (action.CurrentData.ReadUInt8(0x2) > 0 && action.CurrentData.ReadUInt8(0x106) > 0)
+            if (didUpdate && action.CurrentData.ReadUInt8(0x2) > 0 && action.CurrentData.ReadUInt8(0x106) > 0)
             {
                 _beatBothBosses = true;
             }
