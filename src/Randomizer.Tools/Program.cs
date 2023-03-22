@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -18,7 +19,9 @@ using Newtonsoft.Json.Converters;
 using NHyphenator;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
+using Randomizer.Data.WorldData;
 using Randomizer.Shared;
+using Randomizer.Shared.Enums;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
@@ -42,7 +45,15 @@ namespace Randomizer.Tools
 
         public static void Main(string[] args)
         {
-            RomGenerator.GenerateRom(args);
+            //RomGenerator.GenerateRom(args);
+
+            var output = GenerateStats(
+                new Config()
+                {
+                    GanonsTowerCrystalCount = 7, GanonCrystalCount = 7, OpenPyramid = false, TourianBossCount = 4
+                }, 10, 4, true);
+
+            Console.Write(output);
         }
 
         //public static void GenerateLocationConfig()
@@ -204,95 +215,89 @@ namespace Randomizer.Tools
             Console.WriteLine("Complete!");
         }
 
-        public static string GenerateStats(Config config, int count = 50)
+        public static string GenerateStats(Config config, int count = 50, int playerCount = 2, bool roundRobin = true)
         {
-            /*var start = DateTime.Now;
+            var start = DateTime.Now;
             var loggerFactory = new LoggerFactory();
-            var worldAccessor = new WorldAccessor();
-            var filler = new StandardFiller(new Logger<StandardFiller>(loggerFactory));
-            var randomizer = new Smz3Randomizer(filler, worldAccessor, new Logger<Smz3Randomizer>(loggerFactory));
             var stats = new ConcurrentBag<StatsDetails>();
-            var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
 
             Parallel.For(0, count, (iteration, state) =>
             {
                 try
                 {
-                    var seed = randomizer.GenerateSeed(config.SeedOnly(), null);
-                    var playthrough = Playthrough.Generate(seed.Worlds.Select(x => x.World).ToList(), config);
-                    stats.Add(new()
+                    var worlds = new List<World>();
+                    for (var i = 1; i <= playerCount; i++)
                     {
-                        NumSpheres = playthrough.Spheres.Count,
-                        ItemLocations = seed.Worlds.First().World.Locations.Select(x => (x.Id, x.Item.Type)).ToList()
-                    });
+                        var worldConfig = config.SeedOnly();
+                        worlds.Add(new World(worldConfig, $"Player{i}", i-1, Guid.NewGuid().ToString("N")));
+                    }
+                    var filler = new StandardFiller(new Logger<StandardFiller>(loggerFactory));
+                    filler.RoundRobin = roundRobin;
+                    filler.SetRandom(new Random(System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, int.MaxValue)));
+                    filler.Fill(worlds, config, CancellationToken.None);
+                    var playthrough = Playthrough.Generate(worlds, config);
+
+                    var generatedStats = new StatsDetails() { NumSpheres = playthrough.Spheres.Count };
+                    for (var i = 0; i < playthrough.Spheres.Count; i++)
+                    {
+                        if (!playthrough.Spheres[i].NewlyBeatenWorlds.Any()) continue;
+                        if (generatedStats.FirstSolvedSphere == 0)
+                        {
+                            generatedStats.FirstSolvedSphere = i + 1;
+                        }
+                        generatedStats.LastSolvedSphere = i + 1;
+                    }
+
+                    generatedStats.SolvedSphereSpread =
+                        generatedStats.LastSolvedSphere - generatedStats.FirstSolvedSphere;
+
+                    stats.Add(generatedStats);
                 }
                 catch (Exception)
                 {
                 }
             });
 
-            var itemLocationCounts = new Dictionary<(int, ItemType), (int, ItemType, int)>();
-            foreach (var itemLocation in stats.SelectMany(x => x.ItemLocations))
-            {
-                if (!itemLocation.Item2.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map, ItemCategory.Keycard) && itemLocation.Item2 != ItemType.Nothing
-                    && !(itemLocation.Item2 is ItemType.ProgressiveGlove or ItemType.ProgressiveShield or ItemType.ProgressiveSword or ItemType.ProgressiveTunic))
-                {
-                    if (!itemLocationCounts.ContainsKey(itemLocation))
-                        itemLocationCounts.Add(itemLocation, (itemLocation.Item1, itemLocation.Item2, 1));
-                    else
-                        itemLocationCounts[itemLocation] = (itemLocation.Item1, itemLocation.Item2, itemLocationCounts[itemLocation].Item3 + 1);
-                }
-            }
-            var itemLocationCountsList = itemLocationCounts.Values.OrderBy(x => x.Item2).ToList();
-
-            var leastCommon = ItemType.Nothing;
-            var leastCount = int.MaxValue;
-            var mostCommon = ItemType.Nothing;
-            var mostCount = int.MinValue;
-
-            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
-            {
-                if (!itemType.IsInAnyCategory(ItemCategory.Junk, ItemCategory.Scam, ItemCategory.NonRandomized, ItemCategory.Compass,
-                    ItemCategory.SmallKey, ItemCategory.BigKey, ItemCategory.Map, ItemCategory.Keycard) && itemType != ItemType.Nothing
-                    && !(itemType is ItemType.ProgressiveGlove or ItemType.ProgressiveShield or ItemType.ProgressiveSword or ItemType.ProgressiveTunic))
-                {
-                    var uniqueLocations = UniqueLocations(itemLocationCountsList, itemType);
-                    if (uniqueLocations < leastCount)
-                    {
-                        leastCommon = itemType;
-                        leastCount = uniqueLocations;
-                    }
-                    if (uniqueLocations > mostCount)
-                    {
-                        mostCommon = itemType;
-                        mostCount = uniqueLocations;
-                    }
-                }
-            }
-
             var end = DateTime.Now;
             var ts = (end - start);
 
             var sb = new StringBuilder();
-            sb.AppendLine("Keysanity: " + config.KeysanityMode + " | Item placement: " + config.ItemPlacementRule);
             sb.AppendLine("----------------------------------------------------------------------------------------");
-            sb.AppendLine($"Num succeeded: {stats.Count} ({stats.Count * 1f / count * 100f}%)");
-            sb.AppendLine("Average spheres: " + stats.Sum(x => x.NumSpheres) * 1f / stats.Count() * 1f);
-            sb.AppendLine("Max spheres: " + stats.Max(x => x.NumSpheres));
-            sb.AppendLine("Min spheres: " + stats.Min(x => x.NumSpheres));
-            sb.AppendLine("Item with most unique locations: " + mostCommon + " with " + mostCount + " unique locations");
-            sb.AppendLine("Item with least unique locations: " + leastCommon + " with " + leastCount + " unique locations");
+            sb.AppendLine($"Num stats: {stats.Count}");
+            sb.AppendLine($"Num players: {playerCount}");
+            sb.AppendLine($"Round robin: {roundRobin}");
+            sb.AppendLine($"GT crystal count: {config.GanonsTowerCrystalCount}");
+            sb.AppendLine($"Ganon crystal count: {config.GanonCrystalCount}");
+            sb.AppendLine($"Open pyramid: {config.OpenPyramid}");
+            sb.AppendLine($"Tourian boss count: {config.TourianBossCount}");
+            sb.AppendLine("");
+            sb.AppendLine($"Average spheres: {stats.Average(x => x.NumSpheres)}");
+            sb.AppendLine($"Max spheres: {stats.Max(x => x.NumSpheres)}");
+            sb.AppendLine($"Min spheres: {stats.Min(x => x.NumSpheres)}");
+            sb.AppendLine("");
+            sb.AppendLine($"Average first solved sphere: {stats.Average(x => x.FirstSolvedSphere)}");
+            sb.AppendLine($"Max first solved sphere: {stats.Max(x => x.FirstSolvedSphere)}");
+            sb.AppendLine($"Min first solved sphere: {stats.Min(x => x.FirstSolvedSphere)}");
+            sb.AppendLine("");
+            sb.AppendLine($"Average last solved sphere: {stats.Average(x => x.LastSolvedSphere)}");
+            sb.AppendLine($"Max last solved sphere: {stats.Max(x => x.LastSolvedSphere)}");
+            sb.AppendLine($"Min last solved sphere: {stats.Min(x => x.LastSolvedSphere)}");
+            sb.AppendLine("");
+            sb.AppendLine($"Average solved sphere difference: {stats.Average(x => x.SolvedSphereSpread)}");
+            sb.AppendLine($"Max solved sphere difference: {stats.Max(x => x.SolvedSphereSpread)}");
+            sb.AppendLine($"Min solved sphere difference: {stats.Min(x => x.SolvedSphereSpread)}");
+            sb.AppendLine("");
             sb.AppendLine("Run time: " + ts.TotalSeconds + "s");
             sb.AppendLine();
-            return sb.ToString();*/
-            return "";
+            return sb.ToString();
         }
 
         private class StatsDetails
         {
             public int NumSpheres { get; set; }
-            public List<(int, ItemType)> ItemLocations { get; set; } = new List<(int, ItemType)>();
+            public int FirstSolvedSphere { get; set; }
+            public int LastSolvedSphere { get; set; }
+            public int SolvedSphereSpread { get; set; }
         }
 
         private static int UniqueLocations(List<(int, ItemType, int)> itemLocationCountsList, ItemType item)

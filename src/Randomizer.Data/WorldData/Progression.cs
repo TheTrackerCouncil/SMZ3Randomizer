@@ -131,7 +131,8 @@ namespace Randomizer.Data.WorldData
         public bool Phantoon => DefeatedBosses.Contains(BossType.Phantoon);
         public bool Draygon => DefeatedBosses.Contains(BossType.Draygon);
         public bool Ridley => DefeatedBosses.Contains(BossType.Ridley);
-        public bool AllMetroidBosses => DefeatedBosses.Count(r => r is BossType.Kraid or BossType.Phantoon or BossType.Draygon or BossType.Ridley) >= 4;
+        public bool AllMetroidBosses => DefeatedMetroidBossCount >= 4;
+        public int DefeatedMetroidBossCount => DefeatedBosses.Count(r => r is BossType.Kraid or BossType.Phantoon or BossType.Draygon or BossType.Ridley);
         public int CrystalCount => Rewards.Count(r => r is RewardType.CrystalBlue or RewardType.CrystalRed);
         public int Count => Items.Count;
         public bool IsReadOnly => false;

@@ -22,6 +22,8 @@ namespace Randomizer.SMZ3.Generation
     {
         private readonly ILogger<StandardFiller> _logger;
 
+        public bool RoundRobin { get; set; }
+
         public StandardFiller(ILogger<StandardFiller> logger)
         {
             _logger = logger;
@@ -101,6 +103,11 @@ namespace Randomizer.SMZ3.Generation
             }
 
             progressionItems = progressionItems.Shuffle(Random);
+
+            if (worlds.Count > 1 && RoundRobin)
+            {
+                progressionItems = MultiworldRoundRobinitems(worlds, progressionItems);
+            }
 
             var locations = worlds.SelectMany(x => x.Locations).Empty().Shuffle(Random);
             if (config.SingleWorld)
@@ -405,6 +412,23 @@ namespace Randomizer.SMZ3.Generation
             itemPool.Remove(itemToPlace);
             _logger.LogDebug("Manually placed {Item} at {Location}", itemToPlace, location);
             return itemToPlace;
+        }
+
+        private List<Item> MultiworldRoundRobinitems(List<World> worlds, List<Item> items)
+        {
+            var toReturn = new List<Item>();
+
+            var index = 0;
+            while (items.Count > 0)
+            {
+                var item = items.FirstOrDefault(x => x.World == worlds[index]);
+                index = (index + 1) % worlds.Count;
+                if (item == null) continue;
+                items.Remove(item);
+                toReturn.Add(item);
+            }
+
+            return toReturn;
         }
     }
 }

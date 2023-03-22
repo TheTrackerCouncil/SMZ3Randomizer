@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.Patches;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
+using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
@@ -548,6 +549,23 @@ namespace Randomizer.App
 
                 log.AppendLine(Underline($"Sphere {i + 1}"));
                 log.AppendLine();
+
+                if (seed.Playthrough.Spheres[i].NewlyBeatenWorlds.Any())
+                {
+                    foreach (var world in seed.Playthrough.Spheres[i].NewlyBeatenWorlds)
+                    {
+                        if (world.Config.MultiWorld)
+                        {
+                            log.AppendLine($"{world.Player} Finished Game");
+                        }
+                        else
+                        {
+                            log.AppendLine("Player Finished Game");
+                        }
+                    }
+                    log.AppendLine();
+                }
+
                 foreach (var (location, item) in spheres[i])
                     log.AppendLine($"{location}: {item}");
                 log.AppendLine();

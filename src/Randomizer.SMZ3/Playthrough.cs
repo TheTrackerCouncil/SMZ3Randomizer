@@ -83,6 +83,7 @@ namespace Randomizer.SMZ3
             var spheres = new List<Sphere>();
             var locations = new List<Location>();
             var items = new List<Item>();
+            var finishedWorlds = new List<World>();
 
             var allRewards = worlds.SelectMany(w => w.Regions).OfType<IHasReward>().Select(x => x.Reward);
             var regions = new List<Region>();
@@ -144,6 +145,13 @@ namespace Randomizer.SMZ3
 
                 sphere.Locations.AddRange(newLocations);
                 sphere.Items.AddRange(newItems);
+
+                foreach (var world in worlds.Where(x => !finishedWorlds.Contains(x) && CanBeatGame(x, items, rewards, bosses)))
+                {
+                    sphere.NewlyBeatenWorlds.Add(world);
+                    finishedWorlds.Add(world);
+                }
+
                 spheres.Add(sphere);
                 prevRewardCount = rewards.Count;
 
@@ -180,6 +188,19 @@ namespace Randomizer.SMZ3
             }).ToList();
         }
 
+        private static bool CanBeatGame(World world, IEnumerable<Item> items, IEnumerable<Reward> rewards, IEnumerable<Boss> bosses)
+        {
+            var progression = new Progression(items.Where(x => x.World == world), rewards.Where(x => x.World == world),
+                bosses.Where(x => x.World == world));
+
+            var canAccessPyramid = world.Config.OpenPyramid || world.GanonsTower.MoldormChest.IsAvailable(progression);
+            var canDefeatGanon = progression.CrystalCount >= world.Config.GanonCrystalCount && progression.MasterSword;
+            var canAccessTourian = (!world.Config.MetroidKeysanity || progression.CardCrateriaBoss) &&
+                                   progression.DefeatedMetroidBossCount >= world.Config.TourianBossCount;
+
+            return canAccessPyramid && canDefeatGanon && canAccessTourian;
+        }
+
         public class Sphere
         {
             public List<Location> Locations { get; } = new();
@@ -187,6 +208,8 @@ namespace Randomizer.SMZ3
             public List<Item> Items { get; } = new();
 
             public List<Location> InaccessibleLocations { get; } = new();
+
+            public List<World> NewlyBeatenWorlds { get; } = new();
         }
     }
 }
