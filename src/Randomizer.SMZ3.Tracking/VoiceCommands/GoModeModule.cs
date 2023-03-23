@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.SMZ3.Tracking.Services;
@@ -11,6 +11,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class GoModeModule : TrackerModule
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GoModeModule"/> class.
         /// </summary>
@@ -22,10 +23,17 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public GoModeModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<GoModeModule> logger, ResponseConfig responseConfig)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Toggle Go Mode", responseConfig.GoModePrompts.ToArray(), (result) =>
+            AddCommand("Toggle Go Mode", GetGoModeRule(responseConfig.GoModePrompts), (result) =>
             {
                 tracker.ToggleGoMode(result.Confidence);
             });
+        }
+
+        private GrammarBuilder GetGoModeRule(List<string> prompts)
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf(prompts.ToArray());
         }
     }
 }

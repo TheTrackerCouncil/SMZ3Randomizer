@@ -273,9 +273,8 @@ LocationHasDifferentItem:
 # {0} is replaced with the name of the location
 LocationCleared:
 
-# A list of different statements that will toggle go mode on. Note that you will want to include
-# "Hey tracker," at the start, and each line is just the string (so do not include "Text: " at the
-# beginning of the line).
+# A list of different statements that will toggle go mode on. Not that you will need to say "Hey tracker" before each
+# entry, and each line is just the string (no "Text: ") before it.
 GoModePrompts:
 
 # The list of possibilities when the player turns off go mode
