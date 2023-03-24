@@ -383,7 +383,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             var stopwatch = Stopwatch.StartNew();
             try
             {
-                var senderName = Tracker.CorrectUserNamePronunciation(e.Message.SenderUserName);
+                var senderName = Tracker.CorrectUserNamePronunciation(e.Message.Sender);
 
                 if (ShouldRespondToGreetings)
                     TryRespondToGreetings(e.Message, senderName);
