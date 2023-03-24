@@ -33,7 +33,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// <param name="itemService">Service to get item information</param>
         /// <param name="worldService">Service to get world information</param>
         /// <param name="logger">Used to write logging information.</param>
-        public CheatsModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<AutoTrackerModule> logger)
+        public CheatsModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<CheatsModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
             if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
@@ -67,6 +67,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 if (!PlayerCanCheat()) return;
 
                 if (Tracker.GameService?.TryKillPlayer() == true)
+                {
+                    Tracker.Say(x => x.Cheats.CheatPerformed);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Cheats.CheatFailed);
+                }
+            });
+
+            AddCommand("Setup Crystal Flash", SetupCrystalFlashRule(), (result) =>
+            {
+                if (!PlayerCanCheat()) return;
+
+                if (Tracker.GameService?.TrySetupCrystalFlash() == true)
                 {
                     Tracker.Say(x => x.Cheats.CheatPerformed);
                 }
@@ -221,6 +235,14 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .Optional("please", "would you kindly")
                 .OneOf("kill me", "give me a tactical reset");
+        }
+
+        private GrammarBuilder SetupCrystalFlashRule()
+        {
+            return new GrammarBuilder()
+                .Append("Hey tracker,")
+                .Optional("please", "would you kindly")
+                .OneOf("setup crystal flash requirements", "ready a crystal flash");
         }
     }
 

@@ -300,13 +300,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 return false;
             }
 
-            var maxPowerMissiles = _autoTracker.MetroidState?.MaxPowerBombs ?? 0;
+            var maxPowerBombs = _autoTracker.MetroidState?.MaxPowerBombs ?? 0;
             _autoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
                 Address = 0x7E09CE,
-                WriteValues = Int16ToBytes(maxPowerMissiles)
+                WriteValues = Int16ToBytes(maxPowerBombs)
             });
 
             return true;
@@ -347,6 +347,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
             else if (_autoTracker.CurrentGame == Game.SM)
             {
+                // Empty reserves
+                _autoTracker.WriteToMemory(new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.WRAM,
+                    Address = 0x7E09D6,
+                    WriteValues = new List<byte>() { 0x0, 0x0 }
+                });
+
                 // Set HP to 1 (to prevent saving with 0 energy)
                 _autoTracker.WriteToMemory(new EmulatorAction()
                 {
@@ -368,6 +377,68 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Sets the player to have the requirements for a crystal flash
+        /// </summary>
+        /// <returns>True if successful</returns>
+        public bool TrySetupCrystalFlash()
+        {
+            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3 || _autoTracker.CurrentGame != Game.SM)
+            {
+                return false;
+            }
+
+            // Set HP to 50 health
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09C2,
+                WriteValues = new List<byte>() { 0x32, 0x0 }
+            });
+
+            // Empty reserves
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09D6,
+                WriteValues = new List<byte>() { 0x0, 0x0 }
+            });
+
+            // Fill missiles
+            var maxMissiles = _autoTracker.MetroidState?.MaxMissiles ?? 0;
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09C6,
+                WriteValues = Int16ToBytes(maxMissiles)
+            });
+
+            // Fill super missiles
+            var maxSuperMissiles = _autoTracker.MetroidState?.MaxSuperMissiles ?? 0;
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09CA,
+                WriteValues = Int16ToBytes(maxSuperMissiles)
+            });
+
+            // Fill power bombs
+            var maxPowerBombs = _autoTracker.MetroidState?.MaxPowerBombs ?? 0;
+            _autoTracker.WriteToMemory(new EmulatorAction()
+            {
+                Type = EmulatorActionType.WriteBytes,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E09CE,
+                WriteValues = Int16ToBytes(maxPowerBombs)
+            });
+
+            return true;
         }
 
         /// <summary>

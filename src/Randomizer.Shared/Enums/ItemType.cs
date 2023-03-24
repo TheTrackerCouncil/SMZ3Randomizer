@@ -193,19 +193,19 @@ namespace Randomizer.Shared
         KeyGT = 0xAD,
 
         [Description("Small Key")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.SmallKey)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.SmallKey, ItemCategory.NonRandomized)]
         Key = 0x24,
 
         [Description("Compass")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Compass, ItemCategory.NonRandomized)]
         Compass = 0x25,
 
         [Description("Big Key")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.BigKey)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.BigKey, ItemCategory.NonRandomized)]
         BigKey = 0x32,
 
         [Description("Map")]
-        [ItemCategory(ItemCategory.Zelda, ItemCategory.Map)]
+        [ItemCategory(ItemCategory.Zelda, ItemCategory.Map, ItemCategory.NonRandomized)]
         Map = 0x33,
 
         [Description("Progressive Mail")]

@@ -556,6 +556,11 @@ namespace Randomizer.Data.Configuration.ConfigFiles
             = new SchrodingersString("Cleared {0}.");
 
         /// <summary>
+        /// Gets the phrases to request tracker to initiate go mode
+        /// </summary>
+        public List<string> GoModePrompts { get; init; } = new() { "track Go Mode." };
+
+        /// <summary>
         /// Gets the phrases to respond with when undoing Go Mode.
         /// </summary>
         public SchrodingersString? GoModeToggledOff { get; init; }

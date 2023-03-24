@@ -273,6 +273,15 @@ LocationHasDifferentItem:
 # {0} is replaced with the name of the location
 LocationCleared:
 
+# A list of different statements that will toggle go mode on. Not that you will need to say "Hey tracker" before each
+# entry, and each line is just the string (no "Text: ") before it.
+# For example, the following would allow you to say "Hey tracker, enable go mode" and "Hey tracker, initiate go mode"
+# to toggle go mode on.
+# GoModePrompts:
+# - "enable go mode"
+# - "initiate go mode"
+GoModePrompts:
+
 # The list of possibilities when the player turns off go mode
 GoModeToggledOff:
 
@@ -933,13 +942,13 @@ Multiplayer:
   # {1} is replaced with the boss name
   OtherPlayerDefeatedBoss:
 
-  # The list of possibilities when another player completes the game by beating both Ganon and 
+  # The list of possibilities when another player completes the game by beating both Ganon and
   # Mother Brain and either enter the Triforce Room or enters the ship and the items are being
   # dispersed to the other players
   # {0} is replaced with the other player's name
-  OtherPlayerBeatGame: 
+  OtherPlayerBeatGame:
 
-  # The list of possibilities when another player completes the game by beating both Ganon and 
+  # The list of possibilities when another player completes the game by beating both Ganon and
   # Mother Brain and either enter the Triforce Room or enters the ship and no items are being
   # dispersed to the other players
   OtherPlayerBeatGameNoItems:
