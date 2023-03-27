@@ -145,20 +145,20 @@ namespace Randomizer.SMZ3.Generation
             foreach (var dungeon in dungeons)
             {
                 var dungeonRegion = (Region)dungeon;
-                var usefulNess = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
+                var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
                 var dungeonName = GetDungeonName(hintPlayerWorld, dungeon, dungeonRegion);
 
-                if (usefulNess == LocationUsefulness.Mandatory)
+                if (usefulness == LocationUsefulness.Mandatory)
                 {
                     var hint = _gameLines.HintLocationIsMandatory?.Format(dungeonName);
                     if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
                 }
-                else if (usefulNess == LocationUsefulness.NiceToHave)
+                else if (usefulness == LocationUsefulness.NiceToHave)
                 {
                     var hint = _gameLines.HintLocationHasUsefulItem?.Format(dungeonName);
                     if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
                 }
-                else if (usefulNess == LocationUsefulness.Sword)
+                else if (usefulness == LocationUsefulness.Sword)
                 {
                     var hint = _gameLines.HintLocationHasSword?.Format(dungeonName);
                     if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
