@@ -58,6 +58,8 @@ namespace Randomizer.Data.Logic
 
         public bool CanParlorSpeedBoost(Progression items);
 
+        public bool CanMoatSpeedBoost(Progression items);
+
         public bool CanMoveAtHighSpeeds(Progression items);
 
         public bool CanPassSwordOnlyDarkRooms(Progression items);
