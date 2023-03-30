@@ -134,6 +134,11 @@ namespace Randomizer.Data.Logic
             return items.SpeedBooster && World.Config.LogicConfig.ParlorSpeedBooster;
         }
 
+        public bool CanMoatSpeedBoost(Progression items)
+        {
+            return items.SpeedBooster && World.Config.LogicConfig.MoatSpeedBooster;
+        }
+
         public bool CanMoveAtHighSpeeds(Progression items)
         {
             return items.SpeedBooster || (items.Morph && World.Config.LogicConfig.MockBall);

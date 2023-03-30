@@ -65,6 +65,11 @@ namespace Randomizer.Data.Logic
         [Category("Tricks")]
         public bool ParlorSpeedBooster { get; set; }
 
+        [DisplayName("Moat Speed Booster Fly By")]
+        [Description("You're expected to be able to use the speed booster to shine spark over the moat in order to get to the Wrecked Ship.")]
+        [Category("Tricks")]
+        public bool MoatSpeedBooster { get; set; }
+
         [DisplayName("Mockball")]
         [Description("You're expected to be able to use to mockball to avoid having the speed booster at the entrance to Green Brinstar and Upper Norfair West.")]
         [Category("Tricks")]
