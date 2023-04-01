@@ -145,17 +145,22 @@ namespace Randomizer.SMZ3.Generation
             foreach (var dungeon in dungeons)
             {
                 var dungeonRegion = (Region)dungeon;
-                var usefulNess = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
+                var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
                 var dungeonName = GetDungeonName(hintPlayerWorld, dungeon, dungeonRegion);
 
-                if (usefulNess == LocationUsefulness.Mandatory)
+                if (usefulness == LocationUsefulness.Mandatory)
                 {
                     var hint = _gameLines.HintLocationIsMandatory?.Format(dungeonName);
                     if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
                 }
-                else if (usefulNess == LocationUsefulness.NiceToHave)
+                else if (usefulness == LocationUsefulness.NiceToHave)
                 {
                     var hint = _gameLines.HintLocationHasUsefulItem?.Format(dungeonName);
+                    if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
+                }
+                else if (usefulness == LocationUsefulness.Sword)
+                {
+                    var hint = _gameLines.HintLocationHasSword?.Format(dungeonName);
                     if (!string.IsNullOrEmpty(hint)) hints.Add(hint);
                 }
                 else
@@ -233,6 +238,11 @@ namespace Randomizer.SMZ3.Generation
                 var hint = _gameLines.HintLocationHasUsefulItem?.Format(areaName);
                 if (hint != null) hints.Add(hint);
             }
+            else if (usefulness == LocationUsefulness.Sword)
+            {
+                var hint = _gameLines.HintLocationHasSword?.Format(areaName);
+                if (hint != null) hints.Add(hint);
+            }
             else
             {
                 var hint = _gameLines.HintLocationEmpty?.Format(areaName);
@@ -259,14 +269,30 @@ namespace Randomizer.SMZ3.Generation
                 var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, 78, allWorlds.Count());
                 var allCrateriaBosSKeys = CheckSphereCrateriaBossKeys(sphereLocations);
 
+                // Make sure all players have the silver arrows
+                if (sphereLocations.Count(x => x.Item.Type == ItemType.SilverArrows) < allWorlds.Count())
+                {
+                    return LocationUsefulness.Mandatory;
+                }
+
+                // Make sure all players have the master sword
+                foreach (var world in allWorlds)
+                {
+                    if (sphereLocations.Count(x => x.Item.Type == ItemType.ProgressiveSword && x.Item.World == world) <
+                        2)
+                    {
+                        return LocationUsefulness.Mandatory;
+                    }
+                }
+
                 if (!canBeatGT || !canBeatKraid || !canBeatPhantoon || !canBeatDraygon || !canBeatRidley || !allCrateriaBosSKeys)
                 {
                     return LocationUsefulness.Mandatory;
                 }
 
-                if (locations.Any(x => x.Item.Type == ItemType.SilverArrows))
+                if (locations.Any(x => x.Item.Type == ItemType.ProgressiveSword))
                 {
-                    return LocationUsefulness.Mandatory;
+                    return LocationUsefulness.Sword;
                 }
 
                 var usefulItems = locations.Where(x => (x.Item.Progression && !x.Item.Type.IsInCategory(ItemCategory.Junk)) || x.Item.Type.IsInCategory(ItemCategory.Nice) || x.Item.Type == ItemType.ProgressiveSword).Select(x => x.Item);
@@ -394,7 +420,7 @@ namespace Randomizer.SMZ3.Generation
             return allWorlds.SelectMany(w => w.Locations)
                 .Where(l => s_importantLocations.Contains(l.Id) || l.Item.Progression ||
                             l.Item.Type.IsInAnyCategory(ItemCategory.SmallKey, ItemCategory.BigKey,
-                                ItemCategory.Keycard) || l.Item.Type is ItemType.Super or ItemType.PowerBomb)
+                                ItemCategory.Keycard) || l.Item.Type is ItemType.Super or ItemType.PowerBomb or ItemType.ProgressiveSword or ItemType.SilverArrows)
                 .Concat(ammoLocations)
                 .Distinct();
         }
@@ -403,7 +429,8 @@ namespace Randomizer.SMZ3.Generation
         {
             Useless,
             NiceToHave,
-            Mandatory
+            Mandatory,
+            Sword
         }
     }
 }

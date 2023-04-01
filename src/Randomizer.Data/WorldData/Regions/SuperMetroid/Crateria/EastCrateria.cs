@@ -62,7 +62,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
 
         private bool CanAccessFloodedCavernUnderWater(Progression items, bool requireRewards)
             => items.Morph && (
-                items.SpeedBooster
+                Logic.CanMoatSpeedBoost(items)
                 || items.Grapple
                 || items.SpaceJump
                 || (items.Gravity && (Logic.CanIbj(items) || items.HiJump))
