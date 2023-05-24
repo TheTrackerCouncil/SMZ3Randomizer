@@ -232,12 +232,22 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 return false;
             }
 
+            List<byte> bytes = BitConverter.GetBytes((short)2000).ToList();
+
+            if (!BitConverter.IsLittleEndian)
+            {
+                bytes.Reverse();
+            }
+
+            // Writing the target value to $7EF360 makes the rupee count start counting toward it.
+            // Writing the target value to $7EF362 immediately sets the rupee count, but then it starts counting back toward where it was.
+            // Writing the target value to both locations immediately sets the rupee count and keeps it there.
             _autoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
                 Address = 0x7EF360,
-                WriteValues = new List<byte>() { 0xd0, 0x07, 0xd0, 0x07 }
+                WriteValues = bytes.Concat(bytes).ToList()
             });
 
             return true;
