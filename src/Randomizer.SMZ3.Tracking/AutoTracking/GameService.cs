@@ -237,7 +237,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
                 Address = 0x7EF360,
-                WriteValues = new List<byte>() { 0x13, 0x88, 0x13, 0x88 }
+                WriteValues = new List<byte>() { 0xd0, 0x07, 0xd0, 0x07 }
             });
 
             return true;
