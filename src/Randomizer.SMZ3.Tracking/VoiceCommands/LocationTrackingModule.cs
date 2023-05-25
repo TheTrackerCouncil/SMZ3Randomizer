@@ -57,6 +57,31 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                         confidence: result.Confidence);
                 }
             });
+
+            AddCommand("Clear all items in an area (including out-of-logic)", GetClearAreaIncludingOutOfLogicRule(), (result) =>
+            {
+                if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(tracker, result);
+                    tracker.ClearArea(room,
+                        trackItems: false,
+                        includeUnavailable: true,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(DungeonKey))
+                {
+                    var dungeon = GetDungeonFromResult(tracker, result);
+                    tracker.ClearDungeon(dungeon, result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RegionKey))
+                {
+                    var region = GetRegionFromResult(tracker, result);
+                    tracker.ClearArea(region,
+                        trackItems:false,
+                        includeUnavailable: true,
+                        confidence: result.Confidence);
+                }
+            });
         }
 
         private GrammarBuilder GetMarkItemAtLocationRule()
@@ -130,6 +155,33 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
 
             var clearRegion = new GrammarBuilder()
                 .Append("Hey tracker,")
+                .OneOf("clear", "please clear")
+                .Append(RegionKey, regionNames);
+
+            return GrammarBuilder.Combine(clearDungeon, clearRoom, clearRegion);
+        }
+
+        private GrammarBuilder GetClearAreaIncludingOutOfLogicRule()
+        {
+            var dungeonNames = GetDungeonNames(includeDungeonsWithoutReward: true);
+            var roomNames = GetRoomNames();
+            var regionNames = GetRegionNames(excludeDungeons: true);
+
+            var clearDungeon = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("force", "sudo")
+                .OneOf("clear", "please clear")
+                .Append(DungeonKey, dungeonNames);
+
+            var clearRoom = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("force", "sudo")
+                .OneOf("clear", "please clear")
+                .Append(RoomKey, roomNames);
+
+            var clearRegion = new GrammarBuilder()
+                .Append("Hey tracker,")
+                .OneOf("force", "sudo")
                 .OneOf("clear", "please clear")
                 .Append(RegionKey, regionNames);
 
