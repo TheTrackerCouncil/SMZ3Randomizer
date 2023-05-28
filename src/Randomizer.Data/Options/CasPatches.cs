@@ -73,6 +73,10 @@ namespace Randomizer.Data.Options
         [Description("Makes it easier to get into morph ball holes and allows you to morph over some 1 tile wide pits.\nPatch developed by Benox50.")]
         public bool SnapMorph { get; set; } = true;
 
+        [DisplayName("Auto Save on Metroid Deaths")]
+        [Description("Save you progress when dying in Metroid. Does not apply to Start+Select+L+R resets.")]
+        public bool MetroidAutoSave { get; set; } = true;
+
         public CasPatches Clone()
         {
             return (CasPatches)MemberwiseClone();
