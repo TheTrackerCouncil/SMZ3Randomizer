@@ -74,7 +74,7 @@ namespace Randomizer.Data.Options
         public bool SnapMorph { get; set; } = true;
 
         [DisplayName("Auto Save on Metroid Deaths")]
-        [Description("Save you progress when dying in Metroid. Does not apply to Start+Select+L+R resets.")]
+        [Description("Save your progress when dying in Metroid. Does not apply to Start+Select+L+R resets.")]
         public bool MetroidAutoSave { get; set; } = true;
 
         public CasPatches Clone()
