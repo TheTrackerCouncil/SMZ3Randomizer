@@ -28,3 +28,6 @@ config_sm_bosses:    ; $F47008
 ; 03C0 is G4 statues already grey (no animation)
 config_events:       ; F4700A
     dw #$0001
+
+config_autosave:
+    dw #$0000       ; F4700C

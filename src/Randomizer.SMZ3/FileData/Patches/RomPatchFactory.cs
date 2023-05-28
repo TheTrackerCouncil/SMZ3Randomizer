@@ -20,6 +20,7 @@ namespace Randomizer.SMZ3.FileData.Patches
             yield return new GoalsPatch();
             yield return new MetroidControlsPatch();
             yield return new StartingEquipmentPatch();
+            yield return new MetroidAutoSavePatch();
         }
     }
 }
