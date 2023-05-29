@@ -499,7 +499,7 @@ Hints:
   - Text: I'll stop giving you hints.
   - Text: I can no longer assist
   - Text: Fine. Figure it out yourself.
-  - Text: Good. One less than I have to do.
+  - Text: Good. One less thing that I have to do.
   PromptEnableItemHints:
   - Text: If you want me to give a hint, say 'Hey tracker, enable hints'.
   - Text: If you want me to give a hint, say 'Hey tracker, turn on hints'.
