@@ -10,22 +10,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
     {
         public WestCrateria(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            Terminator = new Location(this, 8, 0x8F8432, LocationType.Visible,
-                name: "Energy Tank, Terminator",
-                vanillaItem: ItemType.ETank,
-                memoryAddress: 0x1,
-                memoryFlag: 0x1,
-                metadata: metadata,
-                trackerState: trackerState);
-            Gauntlet = new Location(this, 5, 0x8F8264, LocationType.Visible,
-                name: "Energy Tank, Gauntlet",
-                vanillaItem: ItemType.ETank,
-                access: items => CanEnterAndLeaveGauntlet(items) && Logic.HasEnergyReserves(items, 1),
-                memoryAddress: 0x0,
-                memoryFlag: 0x20,
-                metadata: metadata,
-                trackerState: trackerState);
             GauntletShaft = new GauntletShaftRoom(this, metadata, trackerState);
+            GauntletEnergyTank = new GauntletEnergyTankRoom(this, metadata, trackerState);
+            Terminator = new TerminatorRoom(this, metadata, trackerState);
             MemoryRegionId = 0;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("West Crateria");
         }
@@ -34,11 +21,11 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
 
         public override string Area => "Crateria";
 
-        public Location Terminator { get; }
-
-        public Location Gauntlet { get; }
-
         public GauntletShaftRoom GauntletShaft { get; }
+
+        public GauntletEnergyTankRoom GauntletEnergyTank { get; }
+
+        public TerminatorRoom Terminator { get; }
 
         public override bool CanEnter(Progression items, bool requireRewards)
         {
@@ -83,6 +70,39 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public Location GauntletLeft { get; }
         }
 
-    }
+        public class GauntletEnergyTankRoom : Room
+        {
+            public GauntletEnergyTankRoom(WestCrateria region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Gauntlet Energy Tank Room", metadata)
+            {
+                Gauntlet = new Location(this, 5, 0x8F8264, LocationType.Visible,
+                    name: "Energy Tank, Gauntlet",
+                    vanillaItem: ItemType.ETank,
+                    access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.HasEnergyReserves(items, 1),
+                    memoryAddress: 0x0,
+                    memoryFlag: 0x20,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
 
+            public Location Gauntlet { get; }
+        }
+
+        public class TerminatorRoom : Room
+        {
+            public TerminatorRoom(WestCrateria region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Terminator Room", metadata)
+            {
+                Terminator = new Location(this, 8, 0x8F8432, LocationType.Visible,
+                    name: "Energy Tank, Terminator",
+                    vanillaItem: ItemType.ETank,
+                    memoryAddress: 0x1,
+                    memoryFlag: 0x1,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location Terminator { get; }
+        }
+    }
 }

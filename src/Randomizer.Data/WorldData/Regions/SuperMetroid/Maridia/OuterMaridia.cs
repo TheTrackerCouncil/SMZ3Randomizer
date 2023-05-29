@@ -10,47 +10,8 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
     {
         public OuterMaridia(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            MainStreetCeiling = new Location(this, 136, 0x8FC437, LocationType.Visible,
-                name: "Missile (green Maridia shinespark)",
-                vanillaItem: ItemType.Missile,
-                access: items => items.SpeedBooster,
-                memoryAddress: 0x11,
-                memoryFlag: 0x1,
-                metadata: metadata,
-                trackerState: trackerState);
-            MainStreetCrabSupers = new Location(this, 137, 0x8FC43D, LocationType.Visible,
-                name: "Super Missile (green Maridia)",
-                vanillaItem: ItemType.Super,
-                access: items => Logic.CanWallJump(WallJumpDifficulty.Medium)
-                              || (Logic.CanWallJump(WallJumpDifficulty.Easy) && items.Ice)
-                              || items.HiJump || Logic.CanFly(items),
-                memoryAddress: 0x11,
-                memoryFlag: 0x2,
-                metadata: metadata,
-                trackerState: trackerState);
-            MamaTurtleRoom = new Location(this, 138, 0x8FC47D, LocationType.Visible,
-                name: "Energy Tank, Mama turtle",
-                vanillaItem: ItemType.ETank,
-                access: items => CanReachTurtleRoom(items)
-                              && (Logic.CanFly(items)
-                                  || items.SpeedBooster
-                                  || items.Grapple), // Reaching the item
-                memoryAddress: 0x11,
-                memoryFlag: 0x4,
-                metadata: metadata,
-                trackerState: trackerState);
-            MamaTurtleWallItem = new Location(this, 139, 0x8FC483, LocationType.Hidden,
-                name: "Missile (green Maridia tatori)",
-                vanillaItem: ItemType.Missile,
-                access: items => CanReachTurtleRoom(items)
-                              && (Logic.CanWallJump(WallJumpDifficulty.Easy)
-                                  || items.SpeedBooster
-                                  || (items.Grapple && items.HiJump)
-                                  || Logic.CanFly(items)), // Reaching the item
-                memoryAddress: 0x11,
-                memoryFlag: 0x8,
-                metadata: metadata,
-                trackerState: trackerState);
+            MainStreet = new MainStreetRoom(this, metadata, trackerState);
+            MamaTurtle = new MamaTurtleRoom(this, metadata, trackerState);
             MemoryRegionId = 4;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Outer Maridia");
         }
@@ -59,13 +20,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
 
         public override string Area => "Maridia";
 
-        public Location MainStreetCeiling { get; }
+        public MainStreetRoom MainStreet { get; }
 
-        public Location MainStreetCrabSupers { get; }
-
-        public Location MamaTurtleRoom { get; }
-
-        public Location MamaTurtleWallItem { get; }
+        public MamaTurtleRoom MamaTurtle { get; }
 
         public override bool CanEnter(Progression items, bool requireRewards)
         {
@@ -82,6 +39,70 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                 || (Logic.CanWallJump(WallJumpDifficulty.Easy) && (items.Plasma || items.ScrewAttack))
                 || items.HiJump
                 || Logic.CanFly(items));
-    }
 
+        public class MainStreetRoom : Room
+        {
+            public MainStreetRoom(OuterMaridia region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Main Street Room", metadata, "Main Street")
+            {
+                MainStreetCeiling = new Location(this, 136, 0x8FC437, LocationType.Visible,
+                    name: "Missile (green Maridia shinespark)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => items.SpeedBooster,
+                    memoryAddress: 0x11,
+                    memoryFlag: 0x1,
+                    metadata: metadata,
+                    trackerState: trackerState);
+                MainStreetCrabSupers = new Location(this, 137, 0x8FC43D, LocationType.Visible,
+                    name: "Super Missile (green Maridia)",
+                    vanillaItem: ItemType.Super,
+                    access: items => Logic.CanWallJump(WallJumpDifficulty.Medium)
+                                  || (Logic.CanWallJump(WallJumpDifficulty.Easy) && items.Ice)
+                                  || items.HiJump || Logic.CanFly(items),
+                    memoryAddress: 0x11,
+                    memoryFlag: 0x2,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location MainStreetCeiling { get; }
+
+            public Location MainStreetCrabSupers { get; }
+        }
+
+        public class MamaTurtleRoom : Room
+        {
+            public MamaTurtleRoom(OuterMaridia region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Mama Turtle Room", metadata)
+            {
+                EnergyTank = new Location(this, 138, 0x8FC47D, LocationType.Visible,
+                    name: "Energy Tank, Mama turtle",
+                    vanillaItem: ItemType.ETank,
+                    access: items => region.CanReachTurtleRoom(items)
+                                  && (Logic.CanFly(items)
+                                      || items.SpeedBooster
+                                      || items.Grapple), // Reaching the item
+                    memoryAddress: 0x11,
+                    memoryFlag: 0x4,
+                    metadata: metadata,
+                    trackerState: trackerState);
+                MamaTurtleWallItem = new Location(this, 139, 0x8FC483, LocationType.Hidden,
+                    name: "Missile (green Maridia tatori)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => region.CanReachTurtleRoom(items)
+                                  && (Logic.CanWallJump(WallJumpDifficulty.Easy)
+                                      || items.SpeedBooster
+                                      || (items.Grapple && items.HiJump)
+                                      || Logic.CanFly(items)), // Reaching the item
+                    memoryAddress: 0x11,
+                    memoryFlag: 0x8,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location EnergyTank { get; }
+
+            public Location MamaTurtleWallItem { get; }
+        }
+    }
 }
