@@ -333,7 +333,9 @@ namespace Randomizer.SMZ3.Generation
             }
             else if (locations.All(x => x.Room != null))
             {
-                var name = _metadataService.Room(locations.First().Room!).Name;
+                var room = locations.First().Room!;
+                var roomInfo = _metadataService.Room(room);
+                var name = roomInfo?.Name ?? room.Name;
                 return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
             }
             else

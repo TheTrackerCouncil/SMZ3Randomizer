@@ -201,8 +201,8 @@ namespace Randomizer.Data.Services
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room(Type type)
-            => Rooms.Single(x => x.Type == type);
+        public RoomInfo? Room(Type type)
+            => Rooms.SingleOrDefault(x => x.Type == type);
 
         /// <summary>
         /// Returns extra information for the specified room.
@@ -211,7 +211,7 @@ namespace Randomizer.Data.Services
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room(Room room)
+        public RoomInfo? Room(Room room)
             => Room(room.GetType());
 
         /// <summary>
