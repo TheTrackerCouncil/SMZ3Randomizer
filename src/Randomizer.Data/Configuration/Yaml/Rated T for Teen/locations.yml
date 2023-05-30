@@ -12,3 +12,7 @@
 - LocationNumber: 496
   WhenMarkingJunk:
   - Text: Its never bullshit to visit your local Library
+# Lumberjack Tree / Lumberjack Ledge
+- LocationNumber: 273
+  WhenMarkingJunk:
+  - Text: It's never bullshit to visit your local lumberjack.

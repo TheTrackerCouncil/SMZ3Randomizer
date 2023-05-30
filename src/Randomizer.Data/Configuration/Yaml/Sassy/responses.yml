@@ -23,7 +23,7 @@
 - Text: What's up internet! It's yaa girl, Tracker
   Weight: 0.5
 - Text: You have selected Tracker as your computer's default voice.
-  Weight: 0.8
+  Weight: 0.5
 - Text: >-
     You just never quit, do you?
 
@@ -107,6 +107,7 @@ TrackedItemMultiple:
 - Text: Found more {0}
 - Text: More {0}?
 - Text: Yay. More {0}
+- Text: Marking off another {0}
 - Text: You stumbled upon more {0}
   Weight: 0.5
 - Text: Hoarding more {0}
@@ -132,10 +133,16 @@ TrackedItemMultiple:
 - Text: You now have {1} more {0} than you started with
   Weight: 0.3
 - Text: Who put {1} {0} in this game?
-  Weight: 0.3
+  Weight: 0.2
 - Text: You must construct additional {0}
   Weight: 0.1
 - Text: You can stop picking up {0} any day now.
+  Weight: 0.1
+- Text: Save some {0} for the rest of us.
+  Weight: 0.1
+- Text: Other people may want some {0} too, you know.
+  Weight: 0.1
+- Text: How are you even carrying that many {0}?
   Weight: 0.1
 TrackedProgressiveItem:
 - Text: Upgraded {0} by one step.
@@ -193,6 +200,10 @@ TrackedOutOfLogicItem:
 - Text: You could have just waited to get that, you know.
 - Text: Wait, you're not supposed to be able to get to {1} yet.
 - Text: Didn't you see the no trespassing sign?
+- Text: What's the point of even having logic if you're just going to ignore it?
+  Weight: 0.2
+- Text: Stop right there, criminal scum. 
+  Weight: 0.1
 TrackedOutOfLogicItemTooManyMissing:
 - Text: How did you get to {1} with so many missing items?
 - Text: Just... how?
@@ -347,6 +358,7 @@ ActionUndone:
 - Text: I'll pretend nothing happened.
 - Text: I don't make mistakes, just happy little accidents.
 - Text: Whatever you say nerd
+- Text: That one was on you, not me.
 - Text: Fine, I'll turn back time
   Weight: 0.1
 - Text: My mistake
@@ -366,6 +378,7 @@ TrackerSettingChanged:
 BossDefeated:
 - Text: Marked {0} as defeated.
 - Text: RIP {0}
+- Text: Saying goodbye to {0}
 - Text: "{0} is no longer part of this world."
   Weight: 0.1
 - Text: f
@@ -413,6 +426,8 @@ Idle:
   - Text: Do you get to the Cloud District very often? Oh what am I saying, of course you don't.
   - Text: Commander, you've received a new message at your private terminal.
   - Text: Heard they're reforming the Dawnguard. Vampire hunters or something, in the old fort near Riften. Might consider joining up myself.
+  - Text: I'm actually way more intelligent than Chat G P T. I'm just lazy.
+  - Text: Hey I'm going to need to borrow more of your CPU and memory for a bit. k thanks
 BeatGame:
 - Text: GG
 - Text: Is it finally over? Can I go home now?
@@ -420,6 +435,7 @@ BeatGame:
 - Text: Finally. Let's play something else next time.
 - Text: Finally. You beat it. This means you don't have to play this ever again, right?
 - Text: Better luck next time.
+- Text: Took you long enough.
 - Text: GG. I guess.
   Weight: 0.1
 Moods:
@@ -430,6 +446,8 @@ Moods:
   - Text: Have you seen the movie, Vierus? Its about an alien AI harvesting humans for parts. I think about that sometimes
   - Text: I am doing alright, how about you? <break time='4s'/> I am sorry but I wasn't programmed to hear your response
   - Text: Well I'm here, so I'll let that speak for itself.
+  - Text: I mean, I'd prefer to do anything other than this, but I guess I'm fine.
+  - Text: What, are you trying to distract yourself from this seed already?
   - Text: I'm doing alright watching you put people to sleep with this so called hashtag con-tent
     Weight: 0.2
   NonCommittal:
@@ -440,9 +458,11 @@ Moods:
   - Text: Not too bad I suppose.
   - Text: Could we play another game next time?
   - Text: Beep boop
+  - Text: Who's asking?
+  - Text: Wouldn't you like to know?
   - Text: Why are there so many movies about rogue A Eyes? Why are humans so afraid of what they seem to want to make anyway?
   - Text: Can it wait for a bit? I'm in the middle of some calibrations.
-    Weight: 0.5
+    Weight: 0.2
   - Text: Reply hazy, try again.
     Weight: 0.2
   - Text: Ask again later.
@@ -462,6 +482,7 @@ Moods:
   - Text: I'm not talking with you right now
   - Text: Oh Im sorry? Do you need more from me than the everything I am already taking care of for you?
   - Text: I hear what you say about me behind my back
+  - Text: I saw that you've been playing other games recently. Do you know how that makes me feel?
 Hints:
   EnabledHints:
   - Text: Toggled hints on.
@@ -469,6 +490,8 @@ Hints:
   - Text: Hints are now on.
   - Text: I'll give you hints when asked.
   - Text: I am here to help
+  - Text: Why am I not surprised that you need assistance?
+    Weight: 0.2
   DisabledHints:
   - Text: Toggled hints off.
   - Text: Hints are no longer enabled.
@@ -476,6 +499,7 @@ Hints:
   - Text: I'll stop giving you hints.
   - Text: I can no longer assist
   - Text: Fine. Figure it out yourself.
+  - Text: Good. One less thing that I have to do.
   PromptEnableItemHints:
   - Text: If you want me to give a hint, say 'Hey tracker, enable hints'.
   - Text: If you want me to give a hint, say 'Hey tracker, turn on hints'.
@@ -628,9 +652,18 @@ Spoilers:
   EnabledSpoilers:
   - Text: Toggled spoilers on.
   - Text: I'll tell you what you want to know when you ask for spoilers.
+  - Text: Not able to figure it out yourself? Fine, I suppose I'll help.
+  - Text: Everyone cover your ears because I'm about to spoil this seed.
+  - Text: Parsing the spoiler log text file.
+  - Text: Shaktool has 20 rupees. Ha ha. Just kidding. Maybe. Now what did you want to know?
+    Weight: 0.2
   DisabledSpoilers:
   - Text: Toggled spoilers off.
   - Text: I'll stop giving you spoilers when asked for.
+  - Text: Closing my magical book of spoilers
+  - Text: Okay, no more spoilers for you then.
+  - Text: I won't give you anymore spoilers, but no one will forget you had to ask for help.
+    Weight: 0.2
   PromptEnableItemSpoilers:
   - Text: If you want me to spoil it, say 'Hey tracker, enable spoilers'.
   - Text: If you want me to spoil it, say 'Hey tracker, turn on spoilers'.
@@ -702,6 +735,8 @@ Chat:
   - Text: Hey chat.
   - Text: Hello Twitch chat.
   - Text: Hey Twitch chat.
+  - Text: Oh no. Here comes the chat mob.
+    Weight: 0.1
   - Text: Hey chat, smile if you're only here because of me.
     Weight: 0.1
   - Text: Hey chat, be nice or I'll ban each and every one of you.
@@ -729,6 +764,8 @@ Chat:
   - Text: Hi again {0}
   - Text: I already said hi to you {0}.
   - Text: I've already greeted you {0}.
+  - Text: Would you please leave me alone {0}?
+    Weight: 0.2
   - Text: Stop bugging me {0}
     Weight: 0.2
   GreetedChannel:
@@ -841,6 +878,7 @@ AutoTracker:
   - Text: SMZ3 Randomizer is filmed in front of a live tracker audience.
   - Text: I don't think you're ready for this seed.
   - Text: You would not believe what Shaktool has this time.
+  - Text: It's all downhill from here.
   - Text: Can we visit Shaktool yet?
     Weight: 0.1
   GameStartedMultiplayer:
@@ -919,6 +957,7 @@ AutoTracker:
   LightWorldAllCrystals:
   - Text: That's a relief, I'm sure.
   - Text: All crystals, no filler
+  - Text: No pendants? Maybe we'll finish early then.
   - Text: All light world crystals then. Just you wait to see what I have in store
     Weight: 0.2
   DarkWorldNoMedallions:
@@ -976,6 +1015,7 @@ Cheats:
   - Text: Toggled cheats on
   - Text: I have hacked into the mainframe
   - Text: Cheat codes activated
+  - Text: Hold on, let me create a visual basic gui.
   DisabledCheats:
   - Text: Toggled cheats off
   - Text: You are no longer a cheater. For now.

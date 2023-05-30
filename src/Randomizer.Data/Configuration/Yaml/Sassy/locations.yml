@@ -20,10 +20,13 @@
   WhenMarkingJunk:
   - Text: This island makes no sense!
   - Text: Sky floating crap is kind of rare to see.
+  - Text: Sky floating crap is kind of rare to see. Just kidding, it seems to happen all the time.
+    Weight: 0.1
   WhenMarkingProgression:
   - Text: Maybe the mitts are right around the corner.
   - Text: It's so close and yet so far.
   - Text: Too bad you can't track a ladder.
+  - Text: Unfortunately there's no ascend ability in this game.
 # Master Sword Pedestal / Pedestal / Ped
 - LocationNumber: 270
   WhenTrackingJunk:
@@ -48,7 +51,6 @@
   - Text: Not an AhGah seed then?
   - Text: That's a good sign? Right?
   - Text: Oops, I sent you the wrong seed
-  - Text: It's never bullshit to visit your local lumberjack.
   WhenMarkingProgression:
   - Text: Sucks to be you.
   - Text: It's going to be one of those seeds.
