@@ -217,6 +217,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? BeatGame;
 
         /// <summary>
+        /// Occurs when the map has died
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? PlayerDied;
+
+        /// <summary>
         /// Set when the progression needs to be updated for the current tracker
         /// instance
         /// </summary>
@@ -2193,6 +2198,14 @@ namespace Randomizer.SMZ3.Tracking
                     });
                 }
             }
+        }
+
+        /// <summary>
+        /// Called when the player has died
+        /// </summary>
+        public void TrackDeath(bool autoTracked)
+        {
+            PlayerDied?.Invoke(this, new TrackerEventArgs(autoTracked));
         }
 
         internal void RestartIdleTimers()

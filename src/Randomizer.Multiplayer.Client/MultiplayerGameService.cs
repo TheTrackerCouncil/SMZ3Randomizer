@@ -32,6 +32,7 @@ public class MultiplayerGameService : IDisposable
         _client.ItemTracked += ClientOnItemTracked;
         _client.BossTracked += ClientOnBossTracked;
         _client.DungeonTracked += ClientOnDungeonTracked;
+        _client.DeathTracked += ClientOnDeathTracked;
         _client.PlayerUpdated += ClientOnPlayerUpdated;
         _client.PlayerStateRequested += ClientOnPlayerStateRequested;
         _client.PlayerForfeited += ClientOnPlayerForfeited;
@@ -56,6 +57,8 @@ public class MultiplayerGameService : IDisposable
     public PlayerTrackedBossEventHandler? PlayerTrackedBoss;
 
     public PlayerTrackedDungeonEventHandler? PlayerTrackedDungeon;
+
+    public PlayerTrackedDeathEventHandler? PlayerTrackedDeath;
 
     public PlayerSyncReceivedEventHandler? PlayerSyncReceived;
 
@@ -174,6 +177,14 @@ public class MultiplayerGameService : IDisposable
     }
 
     /// <summary>
+    /// Sends a player died event to the server
+    /// </summary>
+    public async Task TrackDeath()
+    {
+        await _currentGameService.TrackDeath();
+    }
+
+    /// <summary>
     /// Sends a player completed game event to the server so that
     /// the other players can receive their items
     /// </summary>
@@ -245,6 +256,12 @@ public class MultiplayerGameService : IDisposable
         var args = _currentGameService.PlayerTrackedItem(playerState, itemType, trackingValue,
             playerState.Guid == _client.CurrentPlayerGuid);
         if (args != null) PlayerTrackedItem?.Invoke(args);
+    }
+
+    private void ClientOnDeathTracked(MultiplayerPlayerState playerState)
+    {
+        var args = _currentGameService.PlayerTrackedDeath(playerState, playerState.Guid == _client.CurrentPlayerGuid);
+        if (args != null) PlayerTrackedDeath?.Invoke(args);
     }
 
     private void ClientOnLocationTracked(MultiplayerPlayerState playerState, int locationId)

@@ -38,12 +38,14 @@ public class MultiplayerModule : TrackerModule
         Tracker.ItemTracked += TrackerOnItemTracked;
         Tracker.DungeonUpdated += TrackerOnDungeonUpdated;
         Tracker.BeatGame += TrackerOnBeatGame;
+        Tracker.PlayerDied += TrackerOnPlayerDied;
         autoTracker.AutoTrackerConnected += AutoTrackerOnAutoTrackerConnected;
 
         _multiplayerGameService.PlayerTrackedLocation += PlayerTrackedLocation;
         _multiplayerGameService.PlayerTrackedItem += PlayerTrackedItem;
         _multiplayerGameService.PlayerTrackedBoss += PlayerTrackedBoss;
         _multiplayerGameService.PlayerTrackedDungeon += PlayerTrackedDungeon;
+        _multiplayerGameService.PlayerTrackedDeath += PlayerTrackedDeath;
         _multiplayerGameService.PlayerSyncReceived += PlayerSyncReceived;
         _multiplayerGameService.PlayerEndedGame += PlayerEndedGame;
 
@@ -187,6 +189,20 @@ public class MultiplayerModule : TrackerModule
         Tracker.Say(x => x.Multiplayer.OtherPlayerDefeatedBoss, args.PhoneticName, boss.Metadata.Name);
     }
 
+    private void PlayerTrackedDeath(PlayerTrackedDeathEventHandlerArgs args)
+    {
+        if (args.DeathLinkEnabled && !args.IsLocalPlayer)
+        {
+            Tracker.GameService!.TryKillPlayer();
+            Tracker.Say(x => x.Multiplayer.OtherPlayedDiedDeathLink, args.PhoneticName);
+        }
+        else if(!args.IsLocalPlayer)
+        {
+            Tracker.Say(x => x.Multiplayer.OtherPlayedDied, args.PhoneticName);
+        }
+
+    }
+
     private async void TrackerOnDungeonUpdated(object? sender, DungeonTrackedEventArgs e)
     {
         if (e.Dungeon == null || !e.AutoTracked || !e.Dungeon.DungeonState.Cleared) return;
@@ -223,6 +239,12 @@ public class MultiplayerModule : TrackerModule
     {
         if (!e.AutoTracked) return;
         await _multiplayerGameService.CompletePlayerGame();
+    }
+
+    private async void TrackerOnPlayerDied(object? sender, TrackerEventArgs e)
+    {
+        if (!e.AutoTracked) return;
+        await _multiplayerGameService.TrackDeath();
     }
 
 }

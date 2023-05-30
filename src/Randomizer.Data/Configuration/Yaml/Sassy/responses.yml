@@ -202,7 +202,7 @@ TrackedOutOfLogicItem:
 - Text: Didn't you see the no trespassing sign?
 - Text: What's the point of even having logic if you're just going to ignore it?
   Weight: 0.2
-- Text: Stop right there, criminal scum. 
+- Text: Stop right there, criminal scum.
   Weight: 0.1
 TrackedOutOfLogicItemTooManyMissing:
 - Text: How did you get to {1} with so many missing items?
@@ -1154,3 +1154,17 @@ Multiplayer:
     Weight: 0.02
   - Text: Make sure to not give {0} any good items since you got that {1}.
     Weight: 0.02
+  OtherPlayedDied:
+  - Text: You wouldn't believe where {0} just died.
+  - Text: "{0} just died. I'm sure it was a tactical reset, though."
+  - Text: Try not to make fun of {0} too much for dying.
+  - Text: Marking off a death for {0}
+  OtherPlayedDiedDeathLink:
+  - Text: You can thank {0} for this one.
+  - Text: I take no joy in killing you. I'm sure {0} does, though.
+  - Text: I was getting bored, so I figured I'd kill everyone.
+  - Text: Finally, things are getting interesting.
+  - Text: Good job on {0} for dying and taking everyone down with you.
+  - Text: Are you sure that {0} didn't die on purpose?
+  - Text: Don't forget. You enabled death link. You asked for this.
+

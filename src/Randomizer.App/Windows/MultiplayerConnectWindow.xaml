@@ -10,7 +10,7 @@
         Title="SMZ3 Cas' Randomizer"
         Loaded="MultiplayerConnectWindow_OnLoaded"
         ResizeMode="NoResize"
-        Height="275"
+        Height="300"
         Width="400">
 
   <Grid>
@@ -102,6 +102,11 @@
                       Content="Auto send items on beating the game"
                       IsEnabled="{Binding IsCreatingGame}"
                       ToolTip="If items in a player's world should be automatically distributed to other players after beating both Ganon and Mother Brain and entering the Triforce room or entering the ship."/>
+            <CheckBox IsChecked="{Binding DeathLink}"
+                      Margin="5 5 0 0"
+                      Content="Death link (experimental)"
+                      IsEnabled="{Binding IsCreatingGame}"
+                      ToolTip="If one player dies, automatically kill all of the other players."/>
             </StackPanel>
         </controls:LabeledControl>
 
