@@ -2580,7 +2580,7 @@ namespace Randomizer.SMZ3.Tracking
                     .OrderByDescending(x => x.Count())
                     .ThenBy(x => x.Key.Name);
 
-                if (newlyAccessible.Contains(World.InnerMaridia.ShaktoolItem))
+                if (newlyAccessible.Contains(World.InnerMaridia.SpringBall.ShaktoolItem))
                     Say(Responses.ShaktoolAvailable);
 
                 if (newlyAccessible.Contains(World.DarkWorldNorthWest.PegWorld))
