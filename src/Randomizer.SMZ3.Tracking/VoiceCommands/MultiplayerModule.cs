@@ -193,11 +193,12 @@ public class MultiplayerModule : TrackerModule
     {
         if (args.DeathLinkEnabled && !args.IsLocalPlayer)
         {
-
+            Tracker.GameService!.TryKillPlayer();
+            Tracker.Say(x => x.Multiplayer.OtherPlayedDiedDeathLink, args.PhoneticName);
         }
         else if(!args.IsLocalPlayer)
         {
-            Tracker.Say(x => x.Multiplayer.OtherPlayedDied);
+            Tracker.Say(x => x.Multiplayer.OtherPlayedDied, args.PhoneticName);
         }
 
     }
@@ -240,10 +241,10 @@ public class MultiplayerModule : TrackerModule
         await _multiplayerGameService.CompletePlayerGame();
     }
 
-    private void TrackerOnPlayerDied(object? sender, TrackerEventArgs e)
+    private async void TrackerOnPlayerDied(object? sender, TrackerEventArgs e)
     {
         if (!e.AutoTracked) return;
-        throw new NotImplementedException();
+        await _multiplayerGameService.TrackDeath();
     }
 
 }

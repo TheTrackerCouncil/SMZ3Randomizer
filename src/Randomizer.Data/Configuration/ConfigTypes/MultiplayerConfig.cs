@@ -60,6 +60,15 @@
             = new();
 
         /// <summary>
+        /// Gets the phrases to respond when a player dies and death link is enabled
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the player name
+        /// </remarks>
+        public SchrodingersString OtherPlayedDiedDeathLink { get; init; }
+            = new();
+
+        /// <summary>
         /// Gets the phrases to respond when a player beats the game by defeating both Ganon and Mother Brain
         /// before the local player has completed or forfeited.
         /// </summary>

@@ -28,5 +28,5 @@ public class CreateGameRequest
 
     public bool SendItemsOnComplete { get; }
 
-    public bool DeathLink;
+    public bool DeathLink { get; }
 }
