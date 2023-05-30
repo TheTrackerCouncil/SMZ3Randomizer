@@ -56,7 +56,7 @@ public class MultiplayerHub : Hub
             return;
         }
 
-        var game = MultiplayerGame.CreateNewGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.GameType, _serverUrl, request.RandomizerVersion, request.SaveToDatabase, request.SendItemsOnComplete, out var error);
+        var game = MultiplayerGame.CreateNewGame(request.PlayerName, request.PhoneticName, Context.ConnectionId, request.GameType, _serverUrl, request.RandomizerVersion, request.SaveToDatabase, request.SendItemsOnComplete, request.DeathLink, out var error);
 
         if (game?.AdminPlayer == null)
         {
@@ -552,6 +552,35 @@ public class MultiplayerHub : Hub
             new TrackDungeonResponse(playerToUpdate.Guid, request.DungeonName));
 
         if (dungeon != null) await _dbService.SaveDungeonState(playerToUpdate.Game.State, dungeon);
+    }
+
+    /// <summary>
+    /// Request to notify all players of a death
+    /// </summary>
+    /// <param name="request"></param>
+    public async Task TrackDeath(TrackDeathRequest request)
+    {
+        var player = MultiplayerGame.LoadPlayer(Context.ConnectionId);
+        if (player == null)
+        {
+            await SendErrorResponse("Unable to find player");
+            return;
+        }
+
+        var playerToUpdate = request.PlayerGuid != player.Guid
+            ? player.Game.GetPlayer(request.PlayerGuid, null, false)
+            : player;
+
+        if (playerToUpdate == null)
+        {
+            await SendErrorResponse("Unable to find player");
+            return;
+        }
+
+        LogInfo(player, $"Tracked death for {playerToUpdate.Guid}");
+
+        await SendPlayerTrackedResponse(playerToUpdate, "TrackDeath",
+            new TrackDeathResponse(playerToUpdate.Guid));
     }
 
     /// <summary>

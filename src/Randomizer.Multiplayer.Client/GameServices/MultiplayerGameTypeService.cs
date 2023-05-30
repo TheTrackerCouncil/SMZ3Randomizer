@@ -223,6 +223,14 @@ public abstract class MultiplayerGameTypeService : IDisposable
     }
 
     /// <summary>
+    /// Notifies the server that the player has died
+    /// </summary>
+    public async Task TrackDeath()
+    {
+        await Client.TrackDeath();
+    }
+
+    /// <summary>
     /// Creates arguments to send to Tracker when a player tracks a location which includes the location state
     /// and an item type to give to the player, if applicable
     /// </summary>
@@ -298,6 +306,26 @@ public abstract class MultiplayerGameTypeService : IDisposable
             PhoneticName = player.PhoneticName,
             IsLocalPlayer = isLocalPlayer,
             BossState = bossState,
+        };
+    }
+
+    /// <summary>
+    /// Creates arguments to send to Tracker when a player tracks a death
+    /// </summary>
+    /// <param name="player">The player that tracked a death</param>
+    /// <param name="isLocalPlayer">If it was the local player who died</param>
+    /// <returns></returns>
+    public PlayerTrackedDeathEventHandlerArgs? PlayerTrackedDeath(MultiplayerPlayerState player, bool isLocalPlayer)
+    {
+        if (TrackerState == null || isLocalPlayer) return null;
+
+        return new PlayerTrackedDeathEventHandlerArgs
+        {
+            PlayerId = player.WorldId!.Value,
+            PlayerName = player.PlayerName,
+            PhoneticName = player.PhoneticName,
+            IsLocalPlayer = isLocalPlayer,
+            DeathLinkEnabled = Client.CurrentGameState?.DeathLink ?? false
         };
     }
 

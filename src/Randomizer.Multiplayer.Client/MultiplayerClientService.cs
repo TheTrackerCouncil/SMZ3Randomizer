@@ -42,6 +42,7 @@ public class MultiplayerClientService
     public event TrackItemEventHandler? ItemTracked;
     public event TrackDungeonEventHandler? DungeonTracked;
     public event TrackBossEventHandler? BossTracked;
+    public event TrackDeathEventHandler? DeathTracked;
 
     public string? CurrentGameGuid { get; private set; }
     public string? CurrentPlayerGuid { get; private set; }
@@ -124,6 +125,8 @@ public class MultiplayerClientService
         _connection.On<TrackDungeonResponse>("TrackDungeon", OnTrackDungeon);
 
         _connection.On<TrackBossResponse>("TrackBoss", OnTrackBoss);
+
+        _connection.On<TrackDeathResponse>("TrackDeath", OnTrackDeath);
 
         _connection.On<StartGameResponse>("StartGame", OnStartGame);
 
@@ -245,9 +248,10 @@ public class MultiplayerClientService
     /// <param name="randomizerVersion">The local SMZ3 version to ensure compatibility between all players</param>
     /// <param name="saveToDatabase">If the game should be saved ot the database</param>
     /// <param name="sendItemsOnComplete">If items in a player's world should be auto distributed on beating the game</param>
-    public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, bool saveToDatabase, bool sendItemsOnComplete)
+    /// <param name="deathLink">If all players should die when a player dies</param>
+    public async Task CreateGame(string playerName, string phoneticName, MultiplayerGameType gameType, string randomizerVersion, bool saveToDatabase, bool sendItemsOnComplete, bool deathLink)
     {
-        await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, randomizerVersion, MultiplayerVersion.Id, saveToDatabase, sendItemsOnComplete));
+        await MakeRequest("CreateGame", new CreateGameRequest(playerName, phoneticName, gameType, randomizerVersion, MultiplayerVersion.Id, saveToDatabase, sendItemsOnComplete, deathLink));
     }
 
     /// <summary>
@@ -409,6 +413,14 @@ public class MultiplayerClientService
     {
         playerGuid ??= CurrentPlayerGuid;
         await MakeRequest("TrackBoss", new TrackBossRequest(playerGuid ?? CurrentPlayerGuid!, bossType));
+    }
+
+    /// <summary>
+    /// Notifies the server that the local player has died
+    /// </summary>
+    public async Task TrackDeath()
+    {
+        await MakeRequest("TrackDeath", new TrackDeathRequest(CurrentPlayerGuid!));
     }
 
     /// <summary>
@@ -592,6 +604,17 @@ public class MultiplayerClientService
         player.TrackBoss(response.BossType);
         _logger.LogInformation("{Player} tracked boss {BossType}", player.PlayerName, response.BossType);
         BossTracked?.Invoke(player, response.BossType);
+    }
+
+    /// <summary>
+    /// One retrieving a player has died
+    /// </summary>
+    /// <param name="response"></param>
+    private void OnTrackDeath(TrackDeathResponse response)
+    {
+        var player = Players!.First(x => x.Guid == response.PlayerGuid);
+        _logger.LogInformation("{Player} tracked death", player.PlayerName);
+        DeathTracked?.Invoke(player);
     }
 
     /// <summary>

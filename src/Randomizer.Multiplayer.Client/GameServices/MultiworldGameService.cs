@@ -32,7 +32,6 @@ public class MultiworldGameService : MultiplayerGameTypeService
     public override SeedData? GenerateSeed(string seed, List<MultiplayerPlayerState> players,
         MultiplayerPlayerState localPlayer, out string error)
     {
-
         var generationConfigs = new List<Config>();
         for (var i = 0; i < players.Count; i++)
         {

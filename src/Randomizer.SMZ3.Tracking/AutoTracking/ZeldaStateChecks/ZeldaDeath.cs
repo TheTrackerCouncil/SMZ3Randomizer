@@ -45,6 +45,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                     }
                 }
 
+                tracker.TrackDeath(true);
+
                 var death = Items.FirstOrDefault("Death");
                 if (death is not null)
                 {

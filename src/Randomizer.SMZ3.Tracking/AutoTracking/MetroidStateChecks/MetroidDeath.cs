@@ -44,6 +44,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
                     tracker.SayOnce(region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion]);
                 }
 
+                tracker.TrackDeath(true);
+
                 var death = Items.FirstOrDefault("Death");
                 if (death is not null)
                 {

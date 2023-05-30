@@ -23,6 +23,7 @@ public class MultiplayerGameState
     public string ValidationHash { get; set; } = "";
     public bool SaveToDatabase { get; set; }
     public bool SendItemsOnComplete { get; set; }
+    public bool DeathLink { get; set; }
     public ICollection<MultiplayerPlayerState> Players { get; set; } = new List<MultiplayerPlayerState>();
     public bool HasGameStarted => Status != MultiplayerGameStatus.Created;
 
