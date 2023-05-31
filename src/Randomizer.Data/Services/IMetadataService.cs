@@ -189,7 +189,7 @@ namespace Randomizer.Data.Services
         /// <returns>
         /// A new <see cref="RoomInfo"/> for the specified room.
         /// </returns>
-        public RoomInfo Room<TRoom>() where TRoom : Room;
+        public RoomInfo? Room<TRoom>() where TRoom : Room;
 
         /// <summary>
         /// Returns extra information for the specified location.
