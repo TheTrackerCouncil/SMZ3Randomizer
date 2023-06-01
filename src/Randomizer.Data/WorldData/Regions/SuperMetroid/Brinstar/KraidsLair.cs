@@ -11,32 +11,9 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
     {
         public KraidsLair(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            ETank = new Location(this, 43, 0x8F899C, LocationType.Hidden,
-                name: "Energy Tank, Kraid",
-                vanillaItem: ItemType.ETank,
-                access: items => items.Kraid,
-                relevanceRequirement: items => CanBeatBoss(items),
-                memoryAddress: 0x5,
-                memoryFlag: 0x8,
-                metadata: metadata,
-                trackerState: trackerState);
-            KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
-                name: "Varia Suit",
-                vanillaItem: ItemType.Varia,
-                access: items => items.Kraid,
-                relevanceRequirement: items => CanBeatBoss(items),
-                memoryAddress: 0x6,
-                memoryFlag: 0x1,
-                metadata: metadata,
-                trackerState: trackerState);
-            MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
-                name: "Missile (Kraid)",
-                vanillaItem: ItemType.Missile,
-                access: items => Logic.CanUsePowerBombs(items),
-                memoryAddress: 0x5,
-                memoryFlag: 0x10,
-                metadata: metadata,
-                trackerState: trackerState);
+            WarehouseEnergyTank = new WarehouseEnergyTankRoom(this, metadata, trackerState);
+            WarehouseKihunter = new WarehouseKihunterRoom(this, metadata, trackerState);
+            VariaSuit = new VariaSuitRoom(this, metadata, trackerState);
             MemoryRegionId = 1;
             Boss = new Boss(Shared.Enums.BossType.Kraid, World, this, metadata, trackerState);
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Kraid's Lair");
@@ -53,11 +30,11 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 
         public Boss Boss{ get; set; }
 
-        public Location ETank { get; }
+        public WarehouseEnergyTankRoom WarehouseEnergyTank { get; }
 
-        public Location KraidsItem { get; }
+        public WarehouseKihunterRoom WarehouseKihunter { get; }
 
-        public Location MissileBeforeKraid { get; }
+        public VariaSuitRoom VariaSuit { get; }
 
         public override bool CanEnter(Progression items, bool requireRewards)
         {
@@ -71,6 +48,60 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             return CanEnter(items, true) && items.CardBrinstarBoss;
         }
 
-    }
+        public class WarehouseEnergyTankRoom : Room
+        {
+            public WarehouseEnergyTankRoom(KraidsLair region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Warehouse Energy Tank Room", metadata)
+            {
+                    ETank = new Location(this, 43, 0x8F899C, LocationType.Hidden,
+                        name: "Energy Tank, Kraid",
+                        vanillaItem: ItemType.ETank,
+                        access: items => items.Kraid,
+                        relevanceRequirement: items => region.CanBeatBoss(items),
+                        memoryAddress: 0x5,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState);
+            }
 
+            public Location ETank { get; }
+        }
+
+        public class WarehouseKihunterRoom : Room
+        {
+            public WarehouseKihunterRoom(KraidsLair region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Warehouse Kihunter Room", metadata)
+            {
+                MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
+                    name: "Missile (Kraid)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => Logic.CanUsePowerBombs(items),
+                    memoryAddress: 0x5,
+                    memoryFlag: 0x10,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location MissileBeforeKraid { get; }
+        }
+
+        public class VariaSuitRoom : Room
+        {
+            public VariaSuitRoom(KraidsLair region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Varia Suit Room", metadata)
+            {
+                KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
+                    name: "Varia Suit",
+                    vanillaItem: ItemType.Varia,
+                    access: items => items.Kraid,
+                    relevanceRequirement: items => region.CanBeatBoss(items),
+                    memoryAddress: 0x6,
+                    memoryFlag: 0x1,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location KraidsItem { get; }
+        }
+    }
 }

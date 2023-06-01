@@ -42,17 +42,17 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.PreventScrewAttackSoftLock = false;
             World tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeTrue();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeTrue();
 
             config.LogicConfig.PreventScrewAttackSoftLock = true;
             tempWorld = new World(config, "", 0, "");
             progression = new Progression(new[] { ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().HaveCount(1)
                 .And.ContainEquivalentOf(new[] { ItemType.Morph });
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeFalse();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeFalse();
         }
 
         [Fact]
@@ -63,24 +63,24 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.PreventFivePowerBombSeed = false;
             World tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb }, new List<RewardType>(), new List<BossType>());
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeTrue();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeTrue();
 
             config.LogicConfig.PreventFivePowerBombSeed = true;
             tempWorld = new World(config, "", 0, "");
             progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().HaveCount(3)
                 .And.ContainEquivalentOf(new[] { ItemType.Bombs })
                 .And.ContainEquivalentOf(new[] { ItemType.ScrewAttack })
                 .And.ContainEquivalentOf(new[] { ItemType.PowerBomb });
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeFalse();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeFalse();
 
             progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeTrue();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeTrue();
         }
 
         [Fact]
@@ -119,18 +119,18 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.InfiniteBombJump = false;
             World tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.Bombs }, new List<RewardType>(), new List<BossType>());
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.PowerBombRoom, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.PowerBomb.PowerBomb, progression, out _);
             missingItems.Should().HaveCount(2)
                 .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
                 .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
-            tempWorld.CentralCrateria.PowerBombRoom.IsAvailable(progression).Should().BeFalse();
+            tempWorld.CentralCrateria.PowerBomb.PowerBomb.IsAvailable(progression).Should().BeFalse();
 
             config.LogicConfig.InfiniteBombJump = true;
             tempWorld = new World(config, "", 0, "");
             progression = new Progression(new[] { ItemType.Morph, ItemType.PowerBomb, ItemType.Bombs }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.PowerBombRoom, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.PowerBomb.PowerBomb, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.CentralCrateria.PowerBombRoom.IsAvailable(progression).Should().BeTrue();
+            tempWorld.CentralCrateria.PowerBomb.PowerBomb.IsAvailable(progression).Should().BeTrue();
         }
 
         [Fact]
@@ -141,23 +141,23 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.ParlorSpeedBooster = false;
             World tempWorld = new World(config, "", 0, "");
             var progression = new Progression();
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().HaveCount(7)
                 .And.NotContainEquivalentOf(new[] { ItemType.SpeedBooster });
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeFalse();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeFalse();
 
             config.LogicConfig.ParlorSpeedBooster = true;
             tempWorld = new World(config, "", 0, "");
             progression = new Progression();
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().HaveCount(8)
                 .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeFalse();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeFalse();
 
             progression = new Progression(new[] { ItemType.SpeedBooster }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.WestCrateria.Terminator.Terminator, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.WestCrateria.Terminator.IsAvailable(progression).Should().BeTrue();
+            tempWorld.WestCrateria.Terminator.Terminator.IsAvailable(progression).Should().BeTrue();
         }
 
         [Fact]
@@ -168,23 +168,23 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.MockBall = false;
             World tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.Morph, ItemType.Bombs , ItemType.Missile , ItemType.PowerBomb, ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.TopSuperMissile, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.MockballHall.TopSuperMissile, progression, out _);
             missingItems.Should().HaveCount(1)
                 .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
-            tempWorld.GreenBrinstar.TopSuperMissile.IsAvailable(progression).Should().BeFalse();
+            tempWorld.GreenBrinstar.MockballHall.TopSuperMissile.IsAvailable(progression).Should().BeFalse();
 
             config.LogicConfig.MockBall = true;
             tempWorld = new World(config, "", 0, "");
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.TopSuperMissile, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.MockballHall.TopSuperMissile, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.GreenBrinstar.TopSuperMissile.IsAvailable(progression).Should().BeTrue();
+            tempWorld.GreenBrinstar.MockballHall.TopSuperMissile.IsAvailable(progression).Should().BeTrue();
 
             progression = new Progression(new[] { ItemType.Bombs, ItemType.Missile, ItemType.PowerBomb, ItemType.ScrewAttack }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.TopSuperMissile, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.GreenBrinstar.MockballHall.TopSuperMissile, progression, out _);
             missingItems.Should().HaveCount(2)
                 .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster })
                 .And.ContainEquivalentOf(new[] { ItemType.Morph });
-            tempWorld.GreenBrinstar.TopSuperMissile.IsAvailable(progression).Should().BeFalse();
+            tempWorld.GreenBrinstar.MockballHall.TopSuperMissile.IsAvailable(progression).Should().BeFalse();
         }
 
         [Fact]
@@ -294,21 +294,21 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.LaunchPadRequiresIceBeam = false;
             var tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb}, new List<RewardType>(), new List<BossType>());
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.CrateriaSuper.SuperMissile, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeTrue();
+            tempWorld.CentralCrateria.CrateriaSuper.SuperMissile.IsAvailable(progression).Should().BeTrue();
 
             config.LogicConfig.LaunchPadRequiresIceBeam = true;
             tempWorld = new World(config, "", 0, "");
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.CrateriaSuper.SuperMissile, progression, out _);
             missingItems.Should().HaveCount(1)
                 .And.ContainEquivalentOf(new[] { ItemType.Ice });
-            tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeFalse();
+            tempWorld.CentralCrateria.CrateriaSuper.SuperMissile.IsAvailable(progression).Should().BeFalse();
 
             progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Ice }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.CrateriaSuper.SuperMissile, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.CentralCrateria.SuperMissile.IsAvailable(progression).Should().BeTrue();
+            tempWorld.CentralCrateria.CrateriaSuper.SuperMissile.IsAvailable(progression).Should().BeTrue();
         }
 
         [Fact]
@@ -319,21 +319,21 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.WaterwayNeedsGravitySuit = false;
             var tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile }, new List<RewardType>(), new List<BossType>());
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.Waterway, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.WaterwayEnergyTank.Waterway, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeTrue();
+            tempWorld.PinkBrinstar.WaterwayEnergyTank.Waterway.IsAvailable(progression).Should().BeTrue();
 
             config.LogicConfig.WaterwayNeedsGravitySuit = true;
             tempWorld = new World(config, "", 0, "");
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.Waterway, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.PinkBrinstar.WaterwayEnergyTank.Waterway, progression, out _);
             missingItems.Should().HaveCount(1)
                 .And.ContainEquivalentOf(new[] { ItemType.Gravity });
-            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeFalse();
+            tempWorld.PinkBrinstar.WaterwayEnergyTank.Waterway.IsAvailable(progression).Should().BeFalse();
 
             progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.SpeedBooster, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Missile, ItemType.Gravity }, new List<RewardType>(), new List<BossType>());
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.SuperMissile, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.CentralCrateria.CrateriaSuper.SuperMissile, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.PinkBrinstar.Waterway.IsAvailable(progression).Should().BeTrue();
+            tempWorld.PinkBrinstar.WaterwayEnergyTank.Waterway.IsAvailable(progression).Should().BeTrue();
         }
 
         [Fact]
@@ -344,23 +344,23 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             config.LogicConfig.EasyEastCrateriaSkyItem = false;
             var tempWorld = new World(config, "", 0, "");
             var progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.Grapple }, new List<RewardType>(), new List<BossType>() { BossType.Phantoon });
-            var missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.SkyMissile, progression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.WestOcean.SkyMissile, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.EastCrateria.SkyMissile.IsAvailable(progression).Should().BeTrue();
+            tempWorld.EastCrateria.WestOcean.SkyMissile.IsAvailable(progression).Should().BeTrue();
 
             config.LogicConfig.EasyEastCrateriaSkyItem = true;
             tempWorld = new World(config, "", 0, "");
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.SkyMissile, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.WestOcean.SkyMissile, progression, out _);
             missingItems.Should().HaveCount(2)
                 .And.ContainEquivalentOf(new[] { ItemType.SpaceJump })
                 .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster });
 
-            tempWorld.EastCrateria.SkyMissile.IsAvailable(progression).Should().BeFalse();
+            tempWorld.EastCrateria.WestOcean.SkyMissile.IsAvailable(progression).Should().BeFalse();
 
             progression = new Progression(new[] { ItemType.ETank, ItemType.ETank, ItemType.Morph, ItemType.PowerBomb, ItemType.PowerBomb, ItemType.Super, ItemType.Gravity, ItemType.Grapple, ItemType.SpaceJump }, new List<RewardType>(), new List<BossType>() { BossType.Phantoon });
-            missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.SkyMissile, progression, out _);
+            missingItems = Logic.GetMissingRequiredItems(tempWorld.EastCrateria.WestOcean.SkyMissile, progression, out _);
             missingItems.Should().BeEmpty();
-            tempWorld.EastCrateria.SkyMissile.IsAvailable(progression).Should().BeTrue();
+            tempWorld.EastCrateria.WestOcean.SkyMissile.IsAvailable(progression).Should().BeTrue();
         }
 
         [Fact]

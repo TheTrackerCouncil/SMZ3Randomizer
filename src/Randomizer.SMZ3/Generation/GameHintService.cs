@@ -331,15 +331,21 @@ namespace Randomizer.SMZ3.Generation
             {
                 return GetLocationName(hintPlayerWorld, locations.First());
             }
-            else if (locations.All(x => x.Room != null))
-            {
-                var name = _metadataService.Room(locations.First().Room!).Name;
-                return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
-            }
             else
             {
-                var name = _metadataService.Region(locations.First().Region).Name;
-                return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
+                var room = locations.First().Room;
+
+                if (room != null && locations.All(x => x.Room == room))
+                {
+                    var roomInfo = _metadataService.Room(room);
+                    var name = roomInfo?.Name ?? room.Name;
+                    return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
+                }
+                else
+                {
+                    var name = _metadataService.Region(locations.First().Region).Name;
+                    return $"{name}{GetMultiworldSuffix(hintPlayerWorld, locations.First().World)}";
+                }
             }
         }
 

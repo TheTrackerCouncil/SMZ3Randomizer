@@ -10,62 +10,13 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
     {
         public UpperNorfairEast(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-
-            BubbleMountainMissileRoom = new Location(this, 63, 0x8F8C52, LocationType.Visible,
-                name: "Missile (bubble Norfair green door)",
-                vanillaItem: ItemType.Missile,
-                access: items => items.CardNorfairL2 && CanReachBubbleMountainLeftSide(items),
-                memoryAddress: 0x7,
-                memoryFlag: 0x80,
-                metadata: metadata,
-                trackerState: trackerState);
-            BubbleMountain = new Location(this, 64, 0x8F8C66, LocationType.Visible,
-                name: "Missile (bubble Norfair)",
-                vanillaItem: ItemType.Missile,
-                access: items => items.CardNorfairL2,
-                memoryAddress: 0x8,
-                memoryFlag: 0x1,
-                metadata: metadata,
-                trackerState: trackerState);
-            SpeedBoosterHallCeiling = new Location(this, 65, 0x8F8C74, LocationType.Hidden,
-                name: "Missile (Speed Booster)",
-                vanillaItem: ItemType.Missile,
-                access: items => items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)
-                                 && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
-                memoryAddress: 0x8,
-                memoryFlag: 0x2,
-                metadata: metadata,
-                trackerState: trackerState);
-            SpeedBoosterRoom = new Location(this, 66, 0x8F8C82, LocationType.Chozo,
-                name: "Speed Booster",
-                vanillaItem: ItemType.SpeedBooster,
-                access: items => items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)
-                                 && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
-                memoryAddress: 0x8,
-                memoryFlag: 0x4,
-                metadata: metadata,
-                trackerState: trackerState);
-            DoubleChamber = new Location(this, 67, 0x8F8CBC, LocationType.Visible,
-                name: "Missile (Wave Beam)",
-                vanillaItem: ItemType.Missile,
-                access: items => (items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)) ||
-                    (items.SpeedBooster && items.Wave && items.Morph && items.Super),
-                memoryAddress: 0x8,
-                memoryFlag: 0x8,
-                metadata: metadata,
-                trackerState: trackerState);
-            WaveBeamRoom = new Location(this, 68, 0x8F8CCA, LocationType.Chozo,
-                name: "Wave Beam",
-                vanillaItem: ItemType.Wave,
-                access: items => items.Morph && (
-                        (items.CardNorfairL2 && CanReachBubbleMountainRightSide(items)) ||
-                        (items.SpeedBooster && items.Wave && items.Morph && items.Super)
-                    ),
-                memoryAddress: 0x8,
-                memoryFlag: 0x10,
-                metadata: metadata,
-                trackerState: trackerState);
             BubbleMountainHiddenHall = new BubbleMountainHiddenHallRoom(this, metadata, trackerState);
+            GreenBubblesMissile = new GreenBubblesMissileRoom(this, metadata, trackerState);
+            BubbleMountain = new BubbleMountainRoom(this, metadata, trackerState);
+            SpeedBoosterHall = new SpeedBoosterHallRoom(this, metadata, trackerState);
+            SpeedBooster = new SpeedBoosterRoom(this, metadata, trackerState);
+            DoubleChamber = new DoubleChamberRoom(this, metadata, trackerState);
+            WaveBeam = new WaveBeamRoom(this, metadata, trackerState);
             MemoryRegionId = 2;
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Upper Norfair East");
         }
@@ -74,19 +25,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 
         public override string Area => "Upper Norfair";
 
-        public Location BubbleMountainMissileRoom { get; }
-
-        public Location BubbleMountain { get; }
-
-        public Location SpeedBoosterHallCeiling { get; }
-
-        public Location SpeedBoosterRoom { get; }
-
-        public Location DoubleChamber { get; }
-
-        public Location WaveBeamRoom { get; }
-
         public BubbleMountainHiddenHallRoom BubbleMountainHiddenHall { get; }
+
+        public GreenBubblesMissileRoom GreenBubblesMissile { get; }
+
+        public BubbleMountainRoom BubbleMountain { get; }
+
+        public SpeedBoosterHallRoom SpeedBoosterHall { get; }
+
+        public SpeedBoosterRoom SpeedBooster { get; }
+
+        public DoubleChamberRoom DoubleChamber { get; }
+
+        public WaveBeamRoom WaveBeam { get; }
 
         // Todo: Super is not actually needed for Frog Speedway, but changing this will affect locations
         // Todo: Ice Beam -> Croc Speedway is not considered
@@ -147,6 +98,119 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 
             public Location HiddenItem { get; }
         }
-    }
 
+        public class GreenBubblesMissileRoom : Room
+        {
+            public GreenBubblesMissileRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Green Bubbles Missile Room", metadata)
+            {
+                BubbleMountainMissileRoom = new Location(this, 63, 0x8F8C52, LocationType.Visible,
+                    name: "Missile (bubble Norfair green door)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => items.CardNorfairL2 && region.CanReachBubbleMountainLeftSide(items),
+                    memoryAddress: 0x7,
+                    memoryFlag: 0x80,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location BubbleMountainMissileRoom { get; }
+        }
+
+        public class BubbleMountainRoom : Room
+        {
+            public BubbleMountainRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Bubbles Mountain", metadata)
+            {
+                BubbleMountain = new Location(this, 64, 0x8F8C66, LocationType.Visible,
+                    name: "Missile (bubble Norfair)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => items.CardNorfairL2,
+                    memoryAddress: 0x8,
+                    memoryFlag: 0x1,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location BubbleMountain { get; }
+        }
+
+        public class SpeedBoosterHallRoom : Room
+        {
+            public SpeedBoosterHallRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Speed Booster Hall", metadata)
+            {
+                SpeedBoosterHallCeiling = new Location(this, 65, 0x8F8C74, LocationType.Hidden,
+                    name: "Missile (Speed Booster)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)
+                                     && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
+                    memoryAddress: 0x8,
+                    memoryFlag: 0x2,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location SpeedBoosterHallCeiling { get; }
+        }
+
+        public class SpeedBoosterRoom : Room
+        {
+            public SpeedBoosterRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Speed Booster Room", metadata)
+            {
+                SpeedBooster = new Location(this, 66, 0x8F8C82, LocationType.Chozo,
+                    name: "Speed Booster",
+                    vanillaItem: ItemType.SpeedBooster,
+                    access: items => items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)
+                                     && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
+                    memoryAddress: 0x8,
+                    memoryFlag: 0x4,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location SpeedBooster { get; }
+        }
+
+        public class DoubleChamberRoom : Room
+        {
+            public DoubleChamberRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Double Chamber Room", metadata)
+            {
+                DoubleChamber = new Location(this, 67, 0x8F8CBC, LocationType.Visible,
+                    name: "Missile (Wave Beam)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => (items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)) ||
+                        (items.SpeedBooster && items.Wave && items.Morph && items.Super),
+                    memoryAddress: 0x8,
+                    memoryFlag: 0x8,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location DoubleChamber { get; }
+        }
+
+        public class WaveBeamRoom : Room
+        {
+            public WaveBeamRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Wave Beam Room", metadata)
+            {
+                WaveBeam = new Location(this, 68, 0x8F8CCA, LocationType.Chozo,
+                    name: "Wave Beam",
+                    vanillaItem: ItemType.Wave,
+                    access: items => items.Morph && (
+                            (items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)) ||
+                            (items.SpeedBooster && items.Wave && items.Morph && items.Super)
+                        ),
+                    memoryAddress: 0x8,
+                    memoryFlag: 0x10,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location WaveBeam { get; }
+        }
+    }
 }

@@ -10,54 +10,11 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
     {
         public BlueBrinstar(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            MorphBall = new Location(this, 26, 0x8F86EC, LocationType.Visible,
-                name: "Morphing Ball",
-                vanillaItem: ItemType.Morph,
-                memoryAddress: 0x3,
-                memoryFlag: 0x4,
-                metadata: metadata,
-                trackerState: trackerState);
-
-            PowerBomb = new Location(this, 27, 0x8F874C, LocationType.Visible,
-                name: "Power Bomb (blue Brinstar)",
-                vanillaItem: ItemType.PowerBomb,
-                access: items => Logic.CanUsePowerBombs(items),
-                memoryAddress: 0x3,
-                memoryFlag: 0x8,
-                metadata: metadata,
-                trackerState: trackerState);
-
-            MiddleMissile = new Location(this, 28, 0x8F8798, LocationType.Visible,
-                name: "Missile (blue Brinstar middle)",
-                vanillaItem: ItemType.Missile,
-                access: items => items.CardBrinstarL1 && items.Morph,
-                memoryAddress: 0x3,
-                memoryFlag: 0x10,
-                metadata: metadata,
-                trackerState: trackerState);
-
-            Ceiling = new Location(this, 29, 0x8F879E, LocationType.Hidden,
-                name: "Energy Tank, Brinstar Ceiling",
-                vanillaItem: ItemType.ETank,
-                access: items => items.CardBrinstarL1 && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster || items.Ice),
-                memoryAddress: 0x3,
-                memoryFlag: 0x20,
-                metadata: metadata,
-                trackerState: trackerState);
-
-            BottomMissile = new Location(this, 34, 0x8F8802, LocationType.Chozo,
-                name: "Missile (blue Brinstar bottom)",
-                vanillaItem: ItemType.Missile,
-                access: items => items.Morph,
-                memoryAddress: 0x4,
-                memoryFlag: 0x4,
-                metadata: metadata,
-                trackerState: trackerState);
-
+            BlueBrinstarMorphBall = new BlueBrinstarMorphBallRoom(this, metadata, trackerState);
+            BlueBrinstarFirstMissile = new BlueBrinstarFirstMissileRoom(this, metadata, trackerState);
+            BlueBrinstarEnergyTank = new BlueBrinstarEnergyTankRoom(this, metadata, trackerState);
             BlueBrinstarTop = new BlueBrinstarTopRoom(this, metadata, trackerState);
-
             MemoryRegionId = 1;
-
             Metadata = metadata?.Region(GetType()) ?? new RegionInfo("Blue Brinstar");
         }
 
@@ -65,17 +22,88 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 
         public override string Area => "Brinstar";
 
-        public Location MorphBall { get; }
+        public BlueBrinstarMorphBallRoom BlueBrinstarMorphBall { get; }
 
-        public Location PowerBomb { get; }
+        public BlueBrinstarFirstMissileRoom BlueBrinstarFirstMissile { get; }
 
-        public Location MiddleMissile { get; }
-
-        public Location Ceiling { get; }
-
-        public Location BottomMissile { get; }
+        public BlueBrinstarEnergyTankRoom BlueBrinstarEnergyTank { get; }
 
         public BlueBrinstarTopRoom BlueBrinstarTop { get; }
+
+        public class BlueBrinstarMorphBallRoom : Room
+        {
+            public BlueBrinstarMorphBallRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Blue Brinstar Morph Ball Room", metadata, "Morph Ball Room")
+            {
+                MorphBall = new Location(this, 26, 0x8F86EC, LocationType.Visible,
+                    name: "Morphing Ball",
+                    vanillaItem: ItemType.Morph,
+                    memoryAddress: 0x3,
+                    memoryFlag: 0x4,
+                    metadata: metadata,
+                    trackerState: trackerState);
+
+                PowerBomb = new Location(this, 27, 0x8F874C, LocationType.Visible,
+                    name: "Power Bomb (blue Brinstar)",
+                    vanillaItem: ItemType.PowerBomb,
+                    access: items => Logic.CanUsePowerBombs(items),
+                    memoryAddress: 0x3,
+                    memoryFlag: 0x8,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location MorphBall { get; }
+
+            public Location PowerBomb { get; }
+        }
+
+        public class BlueBrinstarFirstMissileRoom : Room
+        {
+            public BlueBrinstarFirstMissileRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Blue Brinstar First Missile Room", metadata)
+            {
+                MiddleMissile = new Location(this, 28, 0x8F8798, LocationType.Visible,
+                    name: "Missile (blue Brinstar middle)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => items.CardBrinstarL1 && items.Morph,
+                    memoryAddress: 0x3,
+                    memoryFlag: 0x10,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location MiddleMissile { get; }
+        }
+
+        public class BlueBrinstarEnergyTankRoom : Room
+        {
+            public BlueBrinstarEnergyTankRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
+                : base(region, "Blue Brinstar Energy Tank Room", metadata)
+            {
+                Ceiling = new Location(this, 29, 0x8F879E, LocationType.Hidden,
+                    name: "Energy Tank, Brinstar Ceiling",
+                    vanillaItem: ItemType.ETank,
+                    access: items => items.CardBrinstarL1 && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster || items.Ice),
+                    memoryAddress: 0x3,
+                    memoryFlag: 0x20,
+                    metadata: metadata,
+                    trackerState: trackerState);
+
+                BottomMissile = new Location(this, 34, 0x8F8802, LocationType.Chozo,
+                    name: "Missile (blue Brinstar bottom)",
+                    vanillaItem: ItemType.Missile,
+                    access: items => items.Morph,
+                    memoryAddress: 0x4,
+                    memoryFlag: 0x4,
+                    metadata: metadata,
+                    trackerState: trackerState);
+            }
+
+            public Location Ceiling { get; }
+
+            public Location BottomMissile { get; }
+        }
 
         public class BlueBrinstarTopRoom : Room
         {
