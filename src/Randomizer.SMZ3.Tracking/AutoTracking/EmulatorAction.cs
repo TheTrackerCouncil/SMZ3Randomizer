@@ -55,7 +55,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public EmulatorMemoryData? CurrentData { get; protected set; }
 
         /// <summary>
-        /// How frequently this should be ran
+        /// The amount of time that should happen between consecutive reads
         /// </summary>
         public double FrequencySeconds = 0;
 

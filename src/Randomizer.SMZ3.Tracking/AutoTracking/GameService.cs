@@ -58,7 +58,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryGiveItems(List<Item> items, int fromPlayerId)
         {
-            if (AutoTracker is not { IsConnected: true, IsInSMZ3: true })
+            if (!IsInGame())
             {
                 return false;
             }
@@ -75,7 +75,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give the items to the player</returns>
         public bool TryGiveItemTypes(List<(ItemType type, int fromPlayerId)> items)
         {
-            if (AutoTracker is not { IsConnected: true, IsInSMZ3: true })
+            if (!IsInGame())
             {
                 return false;
             }
@@ -101,7 +101,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Address = 0xA26000 + (tempItemCounter * 4),
                     WriteValues = bytes
                 };
-                AutoTracker.WriteToMemory(action);
+                AutoTracker!.WriteToMemory(action);
 
                 tempItemCounter += batch.Length;
             }
@@ -114,7 +114,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0xA26602,
                 WriteValues = Int16ToBytes(tempItemCounter)
             };
-            AutoTracker.WriteToMemory(action);
+            AutoTracker!.WriteToMemory(action);
 
             _itemCounter = tempItemCounter;
 
@@ -127,12 +127,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryHealPlayer()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || !AutoTracker.IsInSMZ3)
+            if (!IsInGame())
             {
                 return false;
             }
 
-            if (AutoTracker.CurrentGame == Game.Zelda)
+            if (AutoTracker!.CurrentGame == Game.Zelda)
             {
                 AutoTracker.WriteToMemory(new EmulatorAction()
                 {
@@ -176,12 +176,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give magic to the player</returns>
         public bool TryFillMagic()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || AutoTracker.CurrentGame != Game.Zelda || !AutoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
 
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -198,12 +198,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give bombs to the player</returns>
         public bool TryFillZeldaBombs()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || AutoTracker.CurrentGame != Game.Zelda || !AutoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
 
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -220,12 +220,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give arrows to the player</returns>
         public bool TryFillArrows()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || AutoTracker.CurrentGame != Game.Zelda || !AutoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
 
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -242,7 +242,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give rupees to the player</returns>
         public bool TryFillRupees()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || AutoTracker.CurrentGame != Game.Zelda || !AutoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
@@ -252,7 +252,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             // Writing the target value to $7EF360 makes the rupee count start counting toward it.
             // Writing the target value to $7EF362 immediately sets the rupee count, but then it starts counting back toward where it was.
             // Writing the target value to both locations immediately sets the rupee count and keeps it there.
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -269,12 +269,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give missiles to the player</returns>
         public bool TryFillMissiles()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || AutoTracker.CurrentGame != Game.SM || !AutoTracker.IsInSMZ3)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
-            var maxMissiles = AutoTracker.MetroidState?.MaxMissiles ?? 0;
+            var maxMissiles = AutoTracker!.MetroidState?.MaxMissiles ?? 0;
             AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
@@ -292,12 +292,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give super missiles to the player</returns>
         public bool TryFillSuperMissiles()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || AutoTracker.CurrentGame != Game.SM || !AutoTracker.IsInSMZ3)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
-            var maxSuperMissiles = AutoTracker.MetroidState?.MaxSuperMissiles ?? 0;
+            var maxSuperMissiles = AutoTracker!.MetroidState?.MaxSuperMissiles ?? 0;
             AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
@@ -315,12 +315,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give power bombs to the player</returns>
         public bool TryFillPowerBombs()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || AutoTracker.CurrentGame != Game.SM || !AutoTracker.IsInSMZ3)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
-            var maxPowerBombs = AutoTracker.MetroidState?.MaxPowerBombs ?? 0;
+            var maxPowerBombs = AutoTracker!.MetroidState?.MaxPowerBombs ?? 0;
             AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
@@ -338,12 +338,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if successful</returns>
         public bool TryKillPlayer()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || !AutoTracker.IsInSMZ3)
+            if (!IsInGame())
             {
                 return false;
             }
 
-            if (AutoTracker.CurrentGame == Game.Zelda)
+            if (AutoTracker!.CurrentGame == Game.Zelda)
             {
                 // Set health to 0
                 AutoTracker.WriteToMemory(new EmulatorAction()
@@ -405,13 +405,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if successful</returns>
         public bool TrySetupCrystalFlash()
         {
-            if (AutoTracker == null || !AutoTracker.IsConnected || !AutoTracker.IsInSMZ3 || AutoTracker.CurrentGame != Game.SM)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
             // Set HP to 50 health
-            AutoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -521,6 +521,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 bytes.Reverse();
             }
             return bytes.ToArray();
+        }
+
+        private bool IsInGame(Game game = Game.Both)
+        {
+            if (AutoTracker is { IsConnected: true, IsInSMZ3: true, HasValidState: true })
+            {
+                return game == Game.Both || AutoTracker.CurrentGame == game;
+            }
+            return false;
         }
     }
 }
