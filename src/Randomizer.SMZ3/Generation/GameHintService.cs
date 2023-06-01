@@ -57,6 +57,20 @@ namespace Randomizer.SMZ3.Generation
             256 + 215, // GT Validation Chest
         };
 
+        private static readonly Dictionary<Type, int> s_dungeonBossLocations = new()
+        {
+            { typeof(EasternPalace), 256 + 108 },
+            { typeof(DesertPalace), 256 + 114 },
+            { typeof(TowerOfHera), 256 + 120 },
+            { typeof(PalaceOfDarkness), 256 + 134 },
+            { typeof(SwampPalace), 256 + 144 },
+            { typeof(SkullWoods), 256 + 152 },
+            { typeof(ThievesTown), 256 + 160 },
+            { typeof(IcePalace), 256 + 168 },
+            { typeof(MiseryMire), 256 + 176 },
+            { typeof(TurtleRock), 256 + 188 },
+        };
+
         private readonly ILogger<GameHintService> _logger;
         private readonly IMetadataService _metadataService;
         private readonly GameLinesConfig _gameLines;
@@ -283,6 +297,14 @@ namespace Randomizer.SMZ3.Generation
                     {
                         return LocationUsefulness.Mandatory;
                     }
+                }
+
+                // Make sure all crystal dungeons are beatable
+                if (allWorlds.SelectMany(x => x.Dungeons).Any(d =>
+                        d.IsCrystalDungeon && !sphereLocations.Any(l =>
+                            d.DungeonState.WorldId == l.World.Id && l.Id == s_dungeonBossLocations[d.GetType()])))
+                {
+                    return LocationUsefulness.Mandatory;
                 }
 
                 if (!canBeatGT || !canBeatKraid || !canBeatPhantoon || !canBeatDraygon || !canBeatRidley || !allCrateriaBosSKeys)
