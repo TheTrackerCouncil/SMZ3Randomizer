@@ -20,6 +20,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         }
 
         /// <summary>
+        /// The raw byte array of the data
+        /// </summary>
+        public byte[] Raw
+        {
+            get
+            {
+                return _bytes;
+            }
+        }
+
+        /// <summary>
         /// Returns the memory value at a location
         /// </summary>
         /// <param name="location">The offset location to check</param>

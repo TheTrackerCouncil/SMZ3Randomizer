@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
-using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.Data.WorldData;
@@ -19,9 +16,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
     /// </summary>
     public class GameService : TrackerModule
     {
-        private AutoTracker? _autoTracker => Tracker.AutoTracker;
+        private AutoTracker? AutoTracker => Tracker.AutoTracker;
         private readonly ILogger<GameService> _logger;
-        private readonly int trackerPlayerId;
+        private readonly int _trackerPlayerId;
+        private int _itemCounter;
+        private readonly Dictionary<int, EmulatorAction> _emulatorActions = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameService"/>
@@ -37,7 +36,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             Tracker.GameService = this;
             _logger = logger;
-            trackerPlayerId = worldAccessor.Worlds.Count > 0 ? worldAccessor.Worlds.Count : 0;
+            _trackerPlayerId = worldAccessor.Worlds.Count > 0 ? worldAccessor.Worlds.Count : 0;
         }
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryGiveItem(Item item, int? fromPlayerId)
         {
-            return TryGiveItems(new List<Item>() { item }, fromPlayerId ?? trackerPlayerId);
+            return TryGiveItems(new List<Item>() { item }, fromPlayerId ?? _trackerPlayerId);
         }
 
         /// <summary>
@@ -59,12 +58,29 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryGiveItems(List<Item> items, int fromPlayerId)
         {
-            if (_autoTracker is not { IsConnected: true, IsInSMZ3: true })
+            if (!IsInGame())
             {
                 return false;
             }
 
-            var tempItemCounter = ItemCounter;
+            Tracker.TrackItems(items, true, true);
+
+            return TryGiveItemTypes(items.Select(x => (x.Type, fromPlayerId)).ToList());
+        }
+
+        /// <summary>
+        /// Gives a series of item types from particular players
+        /// </summary>
+        /// <param name="items">The list of item types and the players that are giving the item to the player</param>
+        /// <returns>False if it is currently unable to give the items to the player</returns>
+        public bool TryGiveItemTypes(List<(ItemType type, int fromPlayerId)> items)
+        {
+            if (!IsInGame())
+            {
+                return false;
+            }
+
+            var tempItemCounter = _itemCounter;
             EmulatorAction action;
 
             // First give the player all of the requested items
@@ -74,8 +90,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 var bytes = new List<byte>();
                 foreach (var item in batch)
                 {
-                    bytes.AddRange(Int16ToBytes(fromPlayerId));
-                    bytes.AddRange(Int16ToBytes((int)item.Type));
+                    bytes.AddRange(Int16ToBytes(item.fromPlayerId));
+                    bytes.AddRange(Int16ToBytes((int)item.type));
                 }
 
                 action = new EmulatorAction()
@@ -85,12 +101,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     Address = 0xA26000 + (tempItemCounter * 4),
                     WriteValues = bytes
                 };
-                _autoTracker.WriteToMemory(action);
+                AutoTracker!.WriteToMemory(action);
 
                 tempItemCounter += batch.Length;
             }
-
-            Tracker.TrackItems(items, true, true);
 
             // Up the item counter to have them actually pick it up
             action = new EmulatorAction()
@@ -100,9 +114,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0xA26602,
                 WriteValues = Int16ToBytes(tempItemCounter)
             };
-            _autoTracker.WriteToMemory(action);
+            AutoTracker!.WriteToMemory(action);
 
-            ItemCounter = tempItemCounter;
+            _itemCounter = tempItemCounter;
+
             return true;
         }
 
@@ -112,14 +127,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give an item to the player</returns>
         public bool TryHealPlayer()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3)
+            if (!IsInGame())
             {
                 return false;
             }
 
-            if (_autoTracker.CurrentGame == Game.Zelda)
+            if (AutoTracker!.CurrentGame == Game.Zelda)
             {
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -129,11 +144,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 return true;
             }
-            else if (_autoTracker.CurrentGame == Game.SM && _autoTracker.MetroidState != null)
+            else if (AutoTracker.CurrentGame == Game.SM && AutoTracker.MetroidState != null)
             {
-                var maxHealth = _autoTracker.MetroidState.MaxEnergy;
-                var maxReserves = _autoTracker.MetroidState.MaxReserveTanks;
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                var maxHealth = AutoTracker.MetroidState.MaxEnergy;
+                var maxReserves = AutoTracker.MetroidState.MaxReserveTanks;
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -141,7 +156,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                     WriteValues = Int16ToBytes(maxHealth)
                 });
 
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -161,12 +176,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give magic to the player</returns>
         public bool TryFillMagic()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
 
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -183,12 +198,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give bombs to the player</returns>
         public bool TryFillZeldaBombs()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
 
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -205,12 +220,12 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give arrows to the player</returns>
         public bool TryFillArrows()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
 
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -227,22 +242,17 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give rupees to the player</returns>
         public bool TryFillRupees()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.Zelda || !_autoTracker.IsInSMZ3)
+            if (!IsInGame(Game.Zelda))
             {
                 return false;
             }
 
-            List<byte> bytes = BitConverter.GetBytes((short)2000).ToList();
-
-            if (!BitConverter.IsLittleEndian)
-            {
-                bytes.Reverse();
-            }
+            var bytes = Int16ToBytes(2000);
 
             // Writing the target value to $7EF360 makes the rupee count start counting toward it.
             // Writing the target value to $7EF362 immediately sets the rupee count, but then it starts counting back toward where it was.
             // Writing the target value to both locations immediately sets the rupee count and keeps it there.
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -259,13 +269,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give missiles to the player</returns>
         public bool TryFillMissiles()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
-            var maxMissiles = _autoTracker.MetroidState?.MaxMissiles ?? 0;
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            var maxMissiles = AutoTracker!.MetroidState?.MaxMissiles ?? 0;
+            AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -282,13 +292,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give super missiles to the player</returns>
         public bool TryFillSuperMissiles()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
-            var maxSuperMissiles = _autoTracker.MetroidState?.MaxSuperMissiles ?? 0;
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            var maxSuperMissiles = AutoTracker!.MetroidState?.MaxSuperMissiles ?? 0;
+            AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -305,13 +315,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>False if it is currently unable to give power bombs to the player</returns>
         public bool TryFillPowerBombs()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || _autoTracker.CurrentGame != Game.SM || !_autoTracker.IsInSMZ3)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
-            var maxPowerBombs = _autoTracker.MetroidState?.MaxPowerBombs ?? 0;
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            var maxPowerBombs = AutoTracker!.MetroidState?.MaxPowerBombs ?? 0;
+            AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -328,15 +338,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if successful</returns>
         public bool TryKillPlayer()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3)
+            if (!IsInGame())
             {
                 return false;
             }
 
-            if (_autoTracker.CurrentGame == Game.Zelda)
+            if (AutoTracker!.CurrentGame == Game.Zelda)
             {
                 // Set health to 0
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -345,7 +355,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 });
 
                 // Deal 1 heart of damage
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -355,10 +365,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 return true;
             }
-            else if (_autoTracker.CurrentGame == Game.SM)
+            else if (AutoTracker.CurrentGame == Game.SM)
             {
                 // Empty reserves
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -367,7 +377,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 });
 
                 // Set HP to 1 (to prevent saving with 0 energy)
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -376,7 +386,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 });
 
                 // Deal 255 damage to player
-                _autoTracker.WriteToMemory(new EmulatorAction()
+                AutoTracker.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
@@ -395,13 +405,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if successful</returns>
         public bool TrySetupCrystalFlash()
         {
-            if (_autoTracker == null || !_autoTracker.IsConnected || !_autoTracker.IsInSMZ3 || _autoTracker.CurrentGame != Game.SM)
+            if (!IsInGame(Game.SM))
             {
                 return false;
             }
 
             // Set HP to 50 health
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker!.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -410,7 +420,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             });
 
             // Empty reserves
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -419,8 +429,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             });
 
             // Fill missiles
-            var maxMissiles = _autoTracker.MetroidState?.MaxMissiles ?? 0;
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            var maxMissiles = AutoTracker.MetroidState?.MaxMissiles ?? 0;
+            AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -429,8 +439,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             });
 
             // Fill super missiles
-            var maxSuperMissiles = _autoTracker.MetroidState?.MaxSuperMissiles ?? 0;
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            var maxSuperMissiles = AutoTracker.MetroidState?.MaxSuperMissiles ?? 0;
+            AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -439,8 +449,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             });
 
             // Fill power bombs
-            var maxPowerBombs = _autoTracker.MetroidState?.MaxPowerBombs ?? 0;
-            _autoTracker.WriteToMemory(new EmulatorAction()
+            var maxPowerBombs = AutoTracker.MetroidState?.MaxPowerBombs ?? 0;
+            AutoTracker.WriteToMemory(new EmulatorAction()
             {
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
@@ -452,13 +462,74 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         }
 
         /// <summary>
-        /// The number of items given to the player
+        /// Gives the player any items that tracker thinks they should have but are not in memory as having been gifted
         /// </summary>
-        public int ItemCounter { get; set; }
+        /// <param name="action"></param>
+        public void SyncItems(EmulatorAction action)
+        {
+            if (AutoTracker?.HasValidState != true)
+            {
+                return;
+            }
+
+            _emulatorActions[action.Address] = action;
+
+            if (!_emulatorActions.ContainsKey(0xA26000) || !_emulatorActions.ContainsKey(0xA26300) || !_emulatorActions.Values.All(x =>
+                    x.LastRunTime != null && (DateTime.Now - x.LastRunTime.Value).TotalSeconds < 5))
+            {
+                return;
+            }
+
+            var data = _emulatorActions[0xA26000].CurrentData!.Raw.Concat(_emulatorActions[0xA26300].CurrentData!.Raw).ToArray();
+
+            var previouslyGiftedItems = new List<(ItemType type, int fromPlayerId)>();
+            for (var i = 0; i < 0x150; i++)
+            {
+                var item = (ItemType)BitConverter.ToUInt16(data.AsSpan(i * 4 + 2, 2));
+                if (item == ItemType.Nothing)
+                {
+                    continue;
+                }
+
+                var playerId = BitConverter.ToUInt16(data.AsSpan(i * 4, 2));
+                previouslyGiftedItems.Add((item, playerId));
+            }
+
+            _itemCounter = previouslyGiftedItems.Count;
+
+            var otherCollectedItems = WorldService.Worlds.SelectMany(x => x.Locations)
+                .Where(x => x.State.ItemWorldId == Tracker.World.Id && x.State.WorldId != Tracker.World.Id &&
+                            x.State.Autotracked).Select(x => (x.State.Item, x.State.WorldId)).ToList();
+
+            foreach (var item in previouslyGiftedItems)
+            {
+                otherCollectedItems.Remove(item);
+            }
+
+            if (otherCollectedItems.Any())
+            {
+                _logger.LogInformation("Giving player {ItemCount} missing items", otherCollectedItems.Count);
+                TryGiveItemTypes(otherCollectedItems);
+            }
+        }
 
         private static byte[] Int16ToBytes(int value)
         {
-            return new byte[] { (byte)(value % 256), (byte)(value / 256) };
+            var bytes = BitConverter.GetBytes((short)value).ToList();
+            if (!BitConverter.IsLittleEndian)
+            {
+                bytes.Reverse();
+            }
+            return bytes.ToArray();
+        }
+
+        private bool IsInGame(Game game = Game.Both)
+        {
+            if (AutoTracker is { IsConnected: true, IsInSMZ3: true, HasValidState: true })
+            {
+                return game == Game.Both || AutoTracker.CurrentGame == game;
+            }
+            return false;
         }
     }
 }

@@ -108,6 +108,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0x7ef000,
                 Length = 0x250,
                 Game = Game.Zelda,
+                FrequencySeconds = 1,
                 Action = CheckZeldaRooms
             });
 
@@ -119,6 +120,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0x7ef280,
                 Length = 0x200,
                 Game = Game.Zelda,
+                FrequencySeconds = 1,
                 Action = CheckZeldaMisc
             });
 
@@ -141,6 +143,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0xA17400,
                 Length = 0x120,
                 Game = Game.Both,
+                FrequencySeconds = 1,
                 Action = CheckBeatFinalBosses
             });
 
@@ -152,6 +155,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0x7ed870,
                 Length = 0x20,
                 Game = Game.SM,
+                FrequencySeconds = 1,
                 Action = CheckMetroidLocations
             });
 
@@ -163,6 +167,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Address = 0x7ed828,
                 Length = 0x08,
                 Game = Game.SM,
+                FrequencySeconds = 1,
                 Action = CheckMetroidBosses
             });
 
@@ -193,15 +198,28 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 Type = EmulatorActionType.ReadBlock,
                 Domain = MemoryDomain.CartRAM,
-                Address = 0xA26602,
-                Length = 0x2,
+                Address = 0xA26000,
+                Length = 0x300,
                 Game = Game.Both,
-                Action = test =>
+                FrequencySeconds = 30,
+                Action = action =>
                 {
-                    if (Tracker.GameService != null)
-                    {
-                        Tracker.GameService.ItemCounter = test.CurrentData?.ReadUInt16(0) ?? 0;
-                    }
+                    Tracker.GameService?.SyncItems(action);
+                }
+            });
+
+            // Get the number of items given to the player via the interactor
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.CartRAM,
+                Address = 0xA26300,
+                Length = 0x300,
+                Game = Game.Both,
+                FrequencySeconds = 30,
+                Action = action =>
+                {
+                    Tracker.GameService?.SyncItems(action);
                 }
             });
 

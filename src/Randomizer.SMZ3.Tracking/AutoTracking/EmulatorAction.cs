@@ -55,6 +55,16 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         public EmulatorMemoryData? CurrentData { get; protected set; }
 
         /// <summary>
+        /// The amount of time that should happen between consecutive reads
+        /// </summary>
+        public double FrequencySeconds = 0;
+
+        /// <summary>
+        /// When this action was last executed
+        /// </summary>
+        public DateTime? LastRunTime;
+
+        /// <summary>
         /// Update the stored data and invoke the action
         /// </summary>
         /// <param name="data">The data collected from the emulator</param>
@@ -62,6 +72,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             PreviousData = CurrentData;
             CurrentData = data;
+            LastRunTime = DateTime.Now;
             Action?.Invoke(this);
         }
 
@@ -73,7 +84,19 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <returns>True if the message should be sent.</returns>
         public bool ShouldProcess(Game currentGame, bool hasStartedGame)
         {
-            return (!hasStartedGame && Game == Game.Neither) || (hasStartedGame && Game != Game.Neither && (Game == Game.Both || Game == currentGame));
+            return HasExpired && ((!hasStartedGame && Game == Game.Neither) || (hasStartedGame && Game != Game.Neither && (Game == Game.Both || Game == currentGame)));
+        }
+
+        /// <summary>
+        /// If the previous action's result has expired
+        /// </summary>
+        public bool HasExpired
+        {
+            get
+            {
+                return FrequencySeconds <= 0 || LastRunTime == null ||
+                       (DateTime.Now - LastRunTime.Value).TotalSeconds >= FrequencySeconds;
+            }
         }
 
         /// <summary>
