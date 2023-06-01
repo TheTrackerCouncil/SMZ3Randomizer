@@ -247,6 +247,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 return false;
             }
 
+            var bytes = Int16ToBytes(2000);
+
             // Writing the target value to $7EF360 makes the rupee count start counting toward it.
             // Writing the target value to $7EF362 immediately sets the rupee count, but then it starts counting back toward where it was.
             // Writing the target value to both locations immediately sets the rupee count and keeps it there.
@@ -255,7 +257,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Type = EmulatorActionType.WriteBytes,
                 Domain = MemoryDomain.WRAM,
                 Address = 0x7EF360,
-                WriteValues = Int16ToBytes(2000)
+                WriteValues = bytes.Concat(bytes).ToList()
             });
 
             return true;
