@@ -57,6 +57,20 @@ namespace Randomizer.SMZ3.Generation
             256 + 215, // GT Validation Chest
         };
 
+        private static readonly Dictionary<Type, int> s_dungeonBossLocations = new()
+        {
+            { typeof(EasternPalace), 256 + 108 },
+            { typeof(DesertPalace), 256 + 114 },
+            { typeof(TowerOfHera), 256 + 120 },
+            { typeof(PalaceOfDarkness), 256 + 134 },
+            { typeof(SwampPalace), 256 + 144 },
+            { typeof(SkullWoods), 256 + 152 },
+            { typeof(ThievesTown), 256 + 160 },
+            { typeof(IcePalace), 256 + 168 },
+            { typeof(MiseryMire), 256 + 176 },
+            { typeof(TurtleRock), 256 + 188 },
+        };
+
         private readonly ILogger<GameHintService> _logger;
         private readonly IMetadataService _metadataService;
         private readonly GameLinesConfig _gameLines;
@@ -280,6 +294,23 @@ namespace Randomizer.SMZ3.Generation
                 {
                     if (sphereLocations.Count(x => x.Item.Type == ItemType.ProgressiveSword && x.Item.World == world) <
                         2)
+                    {
+                        return LocationUsefulness.Mandatory;
+                    }
+                }
+
+                // Make sure the required amount of crystal dungeons are beatable
+                foreach (var world in allWorlds)
+                {
+                    var numCrystalsNeeded = world.Config.GanonCrystalCount;
+                    if (!world.Config.OpenPyramid && world.Config.GanonsTowerCrystalCount > numCrystalsNeeded)
+                    {
+                        numCrystalsNeeded = world.Config.GanonsTowerCrystalCount;
+                    }
+                    var currentCrystalCount = world.Dungeons.Count(d =>
+                        d.IsCrystalDungeon && sphereLocations.Any(l =>
+                            l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()]));
+                    if (currentCrystalCount < numCrystalsNeeded)
                     {
                         return LocationUsefulness.Mandatory;
                     }
