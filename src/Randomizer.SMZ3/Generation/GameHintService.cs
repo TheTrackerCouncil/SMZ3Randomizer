@@ -300,11 +300,17 @@ namespace Randomizer.SMZ3.Generation
                 }
 
                 // Make sure all crystal dungeons are beatable
-                if (allWorlds.SelectMany(x => x.Dungeons).Any(d =>
-                        d.IsCrystalDungeon && !sphereLocations.Any(l =>
-                            d.DungeonState.WorldId == l.World.Id && l.Id == s_dungeonBossLocations[d.GetType()])))
+                foreach (var world in allWorlds)
                 {
-                    return LocationUsefulness.Mandatory;
+                    var numCrystalsNeeded =
+                        Math.Max(world.Config.GanonCrystalCount, world.Config.GanonsTowerCrystalCount);
+                    var currentCrystalCount = world.Dungeons.Count(d =>
+                        d.IsCrystalDungeon && sphereLocations.Any(l =>
+                            l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()]));
+                    if (currentCrystalCount < numCrystalsNeeded)
+                    {
+                        return LocationUsefulness.Mandatory;
+                    }
                 }
 
                 if (!canBeatGT || !canBeatKraid || !canBeatPhantoon || !canBeatDraygon || !canBeatRidley || !allCrateriaBosSKeys)
