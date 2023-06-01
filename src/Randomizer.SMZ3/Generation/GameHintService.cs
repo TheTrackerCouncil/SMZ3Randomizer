@@ -299,11 +299,14 @@ namespace Randomizer.SMZ3.Generation
                     }
                 }
 
-                // Make sure all crystal dungeons are beatable
+                // Make sure the required amount of crystal dungeons are beatable
                 foreach (var world in allWorlds)
                 {
-                    var numCrystalsNeeded =
-                        Math.Max(world.Config.GanonCrystalCount, world.Config.GanonsTowerCrystalCount);
+                    var numCrystalsNeeded = world.Config.GanonCrystalCount;
+                    if (!world.Config.OpenPyramid && world.Config.GanonsTowerCrystalCount > numCrystalsNeeded)
+                    {
+                        numCrystalsNeeded = world.Config.GanonsTowerCrystalCount;
+                    }
                     var currentCrystalCount = world.Dungeons.Count(d =>
                         d.IsCrystalDungeon && sphereLocations.Any(l =>
                             l.World.Id == world.Id && l.Id == s_dungeonBossLocations[d.GetType()]));
