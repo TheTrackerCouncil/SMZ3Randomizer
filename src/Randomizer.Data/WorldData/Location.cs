@@ -33,7 +33,7 @@ namespace Randomizer.Data.WorldData
 
         private int? _weight;
 
-        public Location(Room room, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Room room, LocationId id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
                     : this(room.Region, id, romAddress, type, name, metadata, trackerState, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
@@ -64,7 +64,7 @@ namespace Randomizer.Data.WorldData
         /// <param name="memoryType">The type of location</param>
         /// <param name="relevanceRequirement">Logic for if the location is accessible following defeating a boss or collecting a reward</param>
         /// <param name="trackerLogic">Special logic for if the location should be displayed in tracker</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Region region, LocationId id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
         {
@@ -90,7 +90,7 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Gets the internal identifier of the location.
         /// </summary>
-        public int Id { get; }
+        public LocationId Id { get; }
 
         /// <summary>
         /// Gets the name of the location.
