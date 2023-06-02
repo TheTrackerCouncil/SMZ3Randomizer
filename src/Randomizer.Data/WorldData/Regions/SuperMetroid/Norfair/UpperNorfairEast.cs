@@ -73,7 +73,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
         public class BubbleMountainHiddenHallRoom : Room
         {
             public BubbleMountainHiddenHallRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
-                : base(region, "Bubble Mountain Hidden Hall", metadata)
+                : base(region, "Bubble Mountain Hidden Hall", metadata, "Norfair Reserve Tank")
             {
                 MainItem = new Location(this, LocationId.NorfairReserveTankChozo, 0x8F8C3E, LocationType.Chozo,
                     name: "Main Item",
