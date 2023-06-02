@@ -101,7 +101,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public WateringHoleRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Watering Hole", metadata)
             {
-                Left = new Location(this, 140, 0x8FC4AF, LocationType.Visible,
+                Left = new Location(this, LocationId.WateringHoleLeft, 0x8FC4AF, LocationType.Visible,
                     name: "Left",
                     vanillaItem: ItemType.Super,
                     access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, true),
@@ -111,7 +111,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Right = new Location(this, 141, 0x8FC4B5, LocationType.Visible,
+                Right = new Location(this, LocationId.WateringHoleRight, 0x8FC4B5, LocationType.Visible,
                     name: "Right",
                     vanillaItem: ItemType.Missile,
                     access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, true),
@@ -132,7 +132,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public PseudoPlasmaSparkRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Pseudo Plasma Spark Room", metadata)
             {
-                PseudoSparkRoom = new Location(this, 142, 0x8FC533, LocationType.Visible,
+                PseudoSparkRoom = new Location(this, LocationId.PseudoPlasmaSpark, 0x8FC533, LocationType.Visible,
                     name: "Missile (yellow Maridia false wall)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.CardMaridiaL1 && Logic.CanPassBombPassages(items) && region.CanPassPipeCrossroads(items) && CanReachAqueduct(items, Logic, true),
@@ -151,7 +151,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public PlasmaRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Plasma Room", metadata, "Plasma Beam Room")
             {
-                PlasmaBeam = new Location(this, 143, 0x8FC559, LocationType.Chozo,
+                PlasmaBeam = new Location(this, LocationId.Plasma, 0x8FC559, LocationType.Chozo,
                     name: "Plasma Beam",
                     vanillaItem: ItemType.Plasma,
                     access: items => region.CanAccessPlasmaBeamRoom(items, requireRewards: true),
@@ -170,7 +170,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public LeftSandPitRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Left Sand Pit", metadata)
             {
-                Left = new Location(this, 144, 0x8FC5DD, LocationType.Visible,
+                Left = new Location(this, LocationId.WestSandHoleLeft, 0x8FC5DD, LocationType.Visible,
                     name: "Left",
                     vanillaItem: ItemType.Missile,
                     access: items => CanEnter(items, true) && Logic.CanNavigateMaridiaLeftSandPit(items),
@@ -180,7 +180,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Right = new Location(this, 145, 0x8FC5E3, LocationType.Chozo,
+                Right = new Location(this, LocationId.WestSandHoleRight, 0x8FC5E3, LocationType.Chozo,
                     name: "Right",
                     vanillaItem: ItemType.ReserveTank,
                     access: items => CanEnter(items, true) && Logic.CanNavigateMaridiaLeftSandPit(items),
@@ -204,7 +204,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public RightSandPitRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Right Sand Pit", metadata)
             {
-                Left = new Location(this, 146, 0x8FC5EB, LocationType.Visible,
+                Left = new Location(this, LocationId.EastSandHoleLeft, 0x8FC5EB, LocationType.Visible,
                     name: "Missile (right Maridia sand pit room)",
                     vanillaItem: ItemType.Missile,
                     access: items => CanReachRightSandPit(items, true),
@@ -213,7 +213,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                Right = new Location(this, 147, 0x8FC5F1, LocationType.Visible,
+                Right = new Location(this, LocationId.EastSandHoleRight, 0x8FC5F1, LocationType.Visible,
                     name: "Power Bomb (right Maridia sand pit room)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => CanReachRightSandPit(items, true),
@@ -237,7 +237,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public AqueductRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Aqueduct", metadata)
             {
-                AqueductLeft = new Location(this, 148, 0x8FC603, LocationType.Visible,
+                AqueductLeft = new Location(this, LocationId.AqueductLeft, 0x8FC603, LocationType.Visible,
                     name: "Missile (pink Maridia)",
                     vanillaItem: ItemType.Missile,
                     access: items => CanReachAqueduct(items, Logic, true) && items.SpeedBooster,
@@ -246,7 +246,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                     memoryFlag: 0x10,
                     metadata: metadata,
                     trackerState: trackerState);
-                AqueductRight = new Location(this, 149, 0x8FC609, LocationType.Visible,
+                AqueductRight = new Location(this, LocationId.AqueductRight, 0x8FC609, LocationType.Visible,
                     name: "Super Missile (pink Maridia)",
                     vanillaItem: ItemType.Super,
                     access: items => CanReachAqueduct(items, Logic, true) && items.SpeedBooster,
@@ -267,7 +267,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public SpringBallRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Spring Ball Room", metadata)
             {
-                ShaktoolItem = new Location(this, 150, 0x8FC6E5, LocationType.Chozo,
+                ShaktoolItem = new Location(this, LocationId.SpringBall, 0x8FC6E5, LocationType.Chozo,
                     name: "Spring Ball",
                     vanillaItem: ItemType.SpringBall,
                     access: items => items.Super && Logic.CanUsePowerBombs(items) && items.Grapple
@@ -287,7 +287,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public ThePreciousRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "The Precious Room", metadata)
             {
-                PreDraygonRoom = new Location(this, 151, 0x8FC74D, LocationType.Hidden,
+                PreDraygonRoom = new Location(this, LocationId.ThePreciousRoom, 0x8FC74D, LocationType.Hidden,
                     name: "Missile (Draygon)",
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanAccessPreciousRoom(items, true),
@@ -306,7 +306,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public BotwoonsRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Botwoon's Room", metadata)
             {
-                Botwoon = new Location(this, 152, 0x8FC755, LocationType.Visible,
+                Botwoon = new Location(this, LocationId.Botwoon, 0x8FC755, LocationType.Visible,
                     name: "Energy Tank, Botwoon",
                     vanillaItem: ItemType.ETank,
                     access: items => (items.CardMaridiaL1 && items.CardMaridiaL2 && region.CanDefeatBotwoon(items, true))
@@ -327,7 +327,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public SpaceJumpRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Space Jump Room", metadata)
             {
-                DraygonTreasure = new Location(this, 154, 0x8FC7A7, LocationType.Chozo,
+                DraygonTreasure = new Location(this, LocationId.SpaceJump, 0x8FC7A7, LocationType.Chozo,
                     name: "Space Jump",
                     vanillaItem: ItemType.SpaceJump,
                     access: items => items.Draygon,

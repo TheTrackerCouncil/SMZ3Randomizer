@@ -35,7 +35,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BlueBrinstarMorphBallRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blue Brinstar Morph Ball Room", metadata, "Morph Ball Room")
             {
-                MorphBall = new Location(this, 26, 0x8F86EC, LocationType.Visible,
+                MorphBall = new Location(this, LocationId.MorphBallRight, 0x8F86EC, LocationType.Visible,
                     name: "Morphing Ball",
                     vanillaItem: ItemType.Morph,
                     memoryAddress: 0x3,
@@ -43,7 +43,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                     metadata: metadata,
                     trackerState: trackerState);
 
-                PowerBomb = new Location(this, 27, 0x8F874C, LocationType.Visible,
+                PowerBomb = new Location(this, LocationId.MorphBallLeft, 0x8F874C, LocationType.Visible,
                     name: "Power Bomb (blue Brinstar)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => Logic.CanUsePowerBombs(items),
@@ -63,7 +63,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BlueBrinstarFirstMissileRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blue Brinstar First Missile Room", metadata)
             {
-                MiddleMissile = new Location(this, 28, 0x8F8798, LocationType.Visible,
+                MiddleMissile = new Location(this, LocationId.FirstMissile, 0x8F8798, LocationType.Visible,
                     name: "Missile (blue Brinstar middle)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.CardBrinstarL1 && items.Morph,
@@ -81,7 +81,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BlueBrinstarEnergyTankRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blue Brinstar Energy Tank Room", metadata)
             {
-                Ceiling = new Location(this, 29, 0x8F879E, LocationType.Hidden,
+                Ceiling = new Location(this, LocationId.BlueBrinstarEnergyTankCeiling, 0x8F879E, LocationType.Hidden,
                     name: "Energy Tank, Brinstar Ceiling",
                     vanillaItem: ItemType.ETank,
                     access: items => items.CardBrinstarL1 && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster || items.Ice),
@@ -90,7 +90,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                     metadata: metadata,
                     trackerState: trackerState);
 
-                BottomMissile = new Location(this, 34, 0x8F8802, LocationType.Chozo,
+                BottomMissile = new Location(this, LocationId.BlueBrinstarEnergyTankRight, 0x8F8802, LocationType.Chozo,
                     name: "Missile (blue Brinstar bottom)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.Morph,
@@ -110,7 +110,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BlueBrinstarTopRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blue Brinstar Top", metadata, "Billy Mays Room")
             {
-                MainItem = new Location(this, 36, 0x8F8836, LocationType.Visible,
+                MainItem = new Location(this, LocationId.BlueBrinstarDoubleMissileVisible, 0x8F8836, LocationType.Visible,
                     name: "Main Item",
                     vanillaItem: ItemType.Missile,
                     access: CanEnter,
@@ -119,7 +119,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                     metadata: metadata,
                     trackerState: trackerState);
 
-                HiddenItem = new Location(this, 37, 0x8F883C, LocationType.Hidden,
+                HiddenItem = new Location(this, LocationId.BlueBrinstarDoubleMissileHidden, 0x8F883C, LocationType.Hidden,
                     name: "Hidden Item",
                     vanillaItem: ItemType.Missile,
                     access: CanEnter,

@@ -34,7 +34,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
             public MireShedRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Mire Shed", metadata)
             {
-                Left = new Location(this, 256 + 89, 0x1EA73, LocationType.Regular,
+                Left = new Location(this, LocationId.MireShedLeft, 0x1EA73, LocationType.Regular,
                     name: "Mire Shed - Left",
                     vanillaItem: ItemType.HeartPiece,
                     access: items => items.MoonPearl,
@@ -42,7 +42,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                Right = new Location(this, 256 + 90, 0x1EA76, LocationType.Regular,
+                Right = new Location(this, LocationId.MireShedRight, 0x1EA76, LocationType.Regular,
                     name: "Mire Shed - Right",
                     vanillaItem: ItemType.TwentyRupees,
                     access: items => items.MoonPearl,

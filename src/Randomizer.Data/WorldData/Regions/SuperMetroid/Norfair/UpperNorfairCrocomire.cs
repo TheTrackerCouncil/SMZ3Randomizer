@@ -67,7 +67,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CrocomiresRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crocomire's Room", metadata)
             {
-                Crocomire = new Location(this, 52, 0x8F8BA4, LocationType.Visible,
+                Crocomire = new Location(this, LocationId.Crocomire, 0x8F8BA4, LocationType.Visible,
                     name: "Energy Tank, Crocomire",
                     vanillaItem: ItemType.ETank,
                     access: items => region.CanAccessCrocomire(items) && ((Logic.HasEnergyReserves(items, 1) && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.Grapple),
@@ -85,7 +85,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CrocomireEscapeRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crocomire Escape", metadata)
             {
-                CrocomireEscape = new Location(this, 54, 0x8F8BC0, LocationType.Visible,
+                CrocomireEscape = new Location(this, LocationId.CrocomireEscape, 0x8F8BC0, LocationType.Visible,
                     name: "Missile (above Crocomire)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster && Logic.CanWallJump(WallJumpDifficulty.Hard)),
@@ -103,7 +103,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public PostCrocomirePowerBombRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Post Crocomire Power Bomb Room", metadata)
             {
-                PostCrocPowerBombRoom = new Location(this, 57, 0x8F8C04, LocationType.Visible,
+                PostCrocPowerBombRoom = new Location(this, LocationId.PostCrocomirePowerBomb, 0x8F8C04, LocationType.Visible,
                     name: "Power Bomb (Crocomire)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => region.CanAccessCrocomire(items) && (Logic.CanFly(items) || items.HiJump || items.Grapple),
@@ -121,7 +121,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public PostCrocomireMissileRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Post Crocomire Missile Room", metadata, "Cosine Room")
             {
-                CosineRoom = new Location(this, 58, 0x8F8C14, LocationType.Visible,
+                CosineRoom = new Location(this, LocationId.PostCrocomireMissile, 0x8F8C14, LocationType.Visible,
                     name: "Missile (below Crocomire)",
                     vanillaItem: ItemType.Missile,
                     access: items =>
@@ -143,7 +143,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public PostCrocomireJumpRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Post Crocomire Jump Room", metadata, "Indiana Jones Room", "Pantry")
             {
-                IndianaJonesRoom = new Location(this, 59, 0x8F8C2A, LocationType.Visible,
+                IndianaJonesRoom = new Location(this, LocationId.PostCrocomireJump, 0x8F8C2A, LocationType.Visible,
                     name: "Missile (Grappling Beam)",
                     vanillaItem: ItemType.Missile,
                     access: items =>
@@ -165,7 +165,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public GrappleBeamRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Grapple Beam Room", metadata)
             {
-                GrappleBeam = new Location(this, 60, 0x8F8C36, LocationType.Chozo,
+                GrappleBeam = new Location(this, LocationId.GrappleBeam, 0x8F8C36, LocationType.Chozo,
                     name: "Grappling Beam",
                     vanillaItem: ItemType.Grapple,
                     access: items =>

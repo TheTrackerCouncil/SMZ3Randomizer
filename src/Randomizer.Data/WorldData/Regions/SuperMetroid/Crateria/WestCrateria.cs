@@ -46,7 +46,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public GauntletShaftRoom(WestCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Gauntlet Shaft", metadata)
             {
-                GauntletRight = new Location(this, 9, 0x8F8464, LocationType.Visible,
+                GauntletRight = new Location(this, LocationId.GauntletShaftRight, 0x8F8464, LocationType.Visible,
                     name: "Right",
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2),
@@ -55,7 +55,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                     metadata: metadata,
                     trackerState: trackerState);
 
-                GauntletLeft = new Location(this, 10, 0x8F846A, LocationType.Visible,
+                GauntletLeft = new Location(this, LocationId.GauntletShaftLeft, 0x8F846A, LocationType.Visible,
                     name: "Left",
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.CanPassBombPassages(items) && Logic.HasEnergyReserves(items, 2),
@@ -75,7 +75,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public GauntletEnergyTankRoom(WestCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Gauntlet Energy Tank Room", metadata)
             {
-                Gauntlet = new Location(this, 5, 0x8F8264, LocationType.Visible,
+                Gauntlet = new Location(this, LocationId.GauntletEnergyTank, 0x8F8264, LocationType.Visible,
                     name: "Energy Tank, Gauntlet",
                     vanillaItem: ItemType.ETank,
                     access: items => region.CanEnterAndLeaveGauntlet(items) && Logic.HasEnergyReserves(items, 1),
@@ -93,7 +93,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public TerminatorRoom(WestCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Terminator Room", metadata)
             {
-                Terminator = new Location(this, 8, 0x8F8432, LocationType.Visible,
+                Terminator = new Location(this, LocationId.CrateriaTerminator, 0x8F8432, LocationType.Visible,
                     name: "Energy Tank, Terminator",
                     vanillaItem: ItemType.ETank,
                     memoryAddress: 0x1,

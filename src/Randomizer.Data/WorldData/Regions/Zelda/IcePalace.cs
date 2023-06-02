@@ -17,7 +17,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeyIP, ItemType.BigKeyIP, ItemType.MapIP, ItemType.CompassIP };
 
-            CompassChest = new Location(this, 256 + 161, 0x1E9D4, LocationType.Regular,
+            CompassChest = new Location(this, LocationId.IcePalaceCompassChest, 0x1E9D4, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassIP,
                 memoryAddress: 0x2E,
@@ -25,7 +25,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            SpikeRoom = new Location(this, 256 + 162, 0x1E9E0, LocationType.Regular,
+            SpikeRoom = new Location(this, LocationId.IcePalaceSpikeRoom, 0x1E9E0, LocationType.Regular,
                 name: "Spike Room",
                 vanillaItem: ItemType.KeyIP,
                 access: items => BigKeyChest != null && MapChest != null && (items.Hookshot || (items.KeyIP >= 1
@@ -35,7 +35,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MapChest = new Location(this, 256 + 163, 0x1E9DD, LocationType.Regular,
+            MapChest = new Location(this, LocationId.IcePalaceMapChest, 0x1E9DD, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapIP,
                 access: items => BigKeyChest != null && items.Hammer && Logic.CanLiftLight(items) && (
@@ -47,7 +47,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigKeyChest = new Location(this, 256 + 164, 0x1E9A4, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.IcePalaceBigKeyChest, 0x1E9A4, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyIP,
                 access: items => items.Hammer && Logic.CanLiftLight(items) && (
@@ -59,7 +59,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            IcedTRoom = new Location(this, 256 + 165, 0x1E9E3, LocationType.Regular,
+            IcedTRoom = new Location(this, LocationId.IcePalaceIcedTRoom, 0x1E9E3, LocationType.Regular,
                 name: "Iced T Room",
                 vanillaItem: ItemType.KeyIP,
                 memoryAddress: 0xAE,
@@ -67,7 +67,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            FreezorChest = new Location(this, 256 + 166, 0x1E995, LocationType.Regular,
+            FreezorChest = new Location(this, LocationId.IcePalaceFreezorChest, 0x1E995, LocationType.Regular,
                 name: "Freezor Chest",
                 vanillaItem: ItemType.ThreeBombs,
                 memoryAddress: 0x7E,
@@ -75,7 +75,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigChest = new Location(this, 256 + 167, 0x1E9AA, LocationType.Regular,
+            BigChest = new Location(this, LocationId.IcePalaceBigChest, 0x1E9AA, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveTunic,
                 access: items => items.BigKeyIP,
@@ -84,7 +84,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            KholdstareReward = new Location(this, 256 + 168, 0x308157, LocationType.Regular,
+            KholdstareReward = new Location(this, LocationId.IcePalaceKholdstare, 0x308157, LocationType.Regular,
                 name: "Kholdstare",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyIP && items.Hammer && Logic.CanLiftLight(items) &&

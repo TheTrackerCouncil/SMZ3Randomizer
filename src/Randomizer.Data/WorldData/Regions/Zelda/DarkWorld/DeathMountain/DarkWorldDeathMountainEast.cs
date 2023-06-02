@@ -37,7 +37,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
             public HookshotCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hookshot Cave", metadata)
             {
-                TopRight = new Location(this, 256 + 65, 0x1EB51, LocationType.Regular,
+                TopRight = new Location(this, LocationId.HookshotCaveTopRight, 0x1EB51, LocationType.Regular,
                     name: "Hookshot Cave - Top Right",
                     vanillaItem: ItemType.FiftyRupees,
                     access: items => items.MoonPearl && items.Hookshot,
@@ -45,7 +45,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                TopLeft = new Location(this, 256 + 66, 0x1EB54, LocationType.Regular,
+                TopLeft = new Location(this, LocationId.HookshotCaveTopLeft, 0x1EB54, LocationType.Regular,
                     name: "Hookshot Cave - Top Left",
                     vanillaItem: ItemType.FiftyRupees,
                     access: items => items.MoonPearl && items.Hookshot,
@@ -53,7 +53,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
                     memoryFlag: 0x5,
                     metadata: metadata,
                     trackerState: trackerState);
-                BottomLeft =new Location(this, 256 + 67, 0x1EB57, LocationType.Regular,
+                BottomLeft =new Location(this, LocationId.HookshotCaveBottomLeft, 0x1EB57, LocationType.Regular,
                     name: "Hookshot Cave - Bottom Left",
                     vanillaItem: ItemType.FiftyRupees,
                     access: items => items.MoonPearl && items.Hookshot,
@@ -61,7 +61,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
                     memoryFlag: 0x6,
                     metadata: metadata,
                     trackerState: trackerState);
-                BottomRight = new Location(this, 256 + 68, 0x1EB5A, LocationType.Regular,
+                BottomRight = new Location(this, LocationId.HookshotCaveBottomRight, 0x1EB5A, LocationType.Regular,
                     name: "Hookshot Cave - Bottom Right",
                     vanillaItem: ItemType.FiftyRupees,
                     access: items => items.MoonPearl && (items.Hookshot || items.Boots),
@@ -85,14 +85,14 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
             public SuperbunnyCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Superbunny Cave", metadata)
             {
-                Top = new Location(this, 256 + 69, 0x1EA7C, LocationType.Regular,
+                Top = new Location(this, LocationId.SuperbunnyCaveTop, 0x1EA7C, LocationType.Regular,
                     name: "Superbunny Cave - Top",
                     access: items => items.MoonPearl,
                     memoryAddress: 0xF8,
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                Bottom = new Location(this, 256 + 70, 0x1EA7F, LocationType.Regular,
+                Bottom = new Location(this, LocationId.SuperbunnyCaveBottom, 0x1EA7F, LocationType.Regular,
                     name: "Superbunny Cave - Bottom",
                     access: items => items.MoonPearl,
                     memoryAddress: 0xF8,

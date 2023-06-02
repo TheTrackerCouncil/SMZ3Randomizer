@@ -17,7 +17,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeyMM, ItemType.BigKeyMM, ItemType.MapMM, ItemType.CompassMM };
 
-            MainLobby = new Location(this, 256 + 169, 0x1EA5E, LocationType.Regular,
+            MainLobby = new Location(this, LocationId.MiseryMireMainLobby, 0x1EA5E, LocationType.Regular,
                 name: "Main Lobby",
                 vanillaItem: ItemType.KeyMM,
                 access: items => items.BigKeyMM || items.KeyMM >= 1,
@@ -27,7 +27,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MapChest = new Location(this, 256 + 170, 0x1EA6A, LocationType.Regular,
+            MapChest = new Location(this, LocationId.MiseryMireMapChest, 0x1EA6A, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapMM,
                 access: items => items.BigKeyMM || items.KeyMM >= 1,
@@ -37,7 +37,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BridgeChest = new Location(this, 256 + 171, 0x1EA61, LocationType.Regular,
+            BridgeChest = new Location(this, LocationId.MiseryMireBridgeChest, 0x1EA61, LocationType.Regular,
                 name: "Bridge Chest",
                 vanillaItem: ItemType.KeyMM,
                 memoryAddress: 0xA2,
@@ -46,7 +46,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            SpikeChest = new Location(this, 256 + 172, 0x1E9DA, LocationType.Regular,
+            SpikeChest = new Location(this, LocationId.MiseryMireSpikeChest, 0x1E9DA, LocationType.Regular,
                 name: "Spike Chest",
                 vanillaItem: ItemType.KeyMM,
                 memoryAddress: 0xB3,
@@ -55,7 +55,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            CompassChest = new Location(this, 256 + 173, 0x1EA64, LocationType.Regular,
+            CompassChest = new Location(this, LocationId.MiseryMireCompassChest, 0x1EA64, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassMM,
                 access: items => BigKeyChest != null
@@ -67,7 +67,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigKeyChest = new Location(this, 256 + 174, 0x1EA6D, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.MiseryMireBigkeyChest, 0x1EA6D, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyMM,
                 access: items => Logic.CanLightTorches(items)
@@ -78,7 +78,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigChest = new Location(this, 256 + 175, 0x1EA67, LocationType.Regular,
+            BigChest = new Location(this, LocationId.MiseryMireBigChest, 0x1EA67, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.Somaria,
                 access: items => items.BigKeyMM,
@@ -88,7 +88,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            VitreousReward = new Location(this, 256 + 176, 0x308158, LocationType.Regular,
+            VitreousReward = new Location(this, LocationId.MiseryMireVitreous, 0x308158, LocationType.Regular,
                 name: "Vitreous",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyMM && Logic.CanPassSwordOnlyDarkRooms(items) && items.Somaria,

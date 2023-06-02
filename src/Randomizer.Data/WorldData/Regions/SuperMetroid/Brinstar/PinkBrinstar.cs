@@ -48,7 +48,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BigPinkRoom(PinkBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Big Pink", metadata)
             {
-                PinkShaftTop = new Location(this, 21, 0x8F8608, LocationType.Visible,
+                PinkShaftTop = new Location(this, LocationId.PinkShaftTop, 0x8F8608, LocationType.Visible,
                     name: "Missile (pink Brinstar top)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.Grapple || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items),
@@ -56,14 +56,14 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                     memoryFlag: 0x20,
                     metadata: metadata,
                     trackerState: trackerState);
-                PinkShaftBottom = new Location(this, 22, 0x8F860E, LocationType.Visible,
+                PinkShaftBottom = new Location(this, LocationId.PinkShaftBottom, 0x8F860E, LocationType.Visible,
                     name: "Missile (pink Brinstar bottom)",
                     vanillaItem: ItemType.Missile,
                     memoryAddress: 0x2,
                     memoryFlag: 0x40,
                     metadata: metadata,
                     trackerState: trackerState);
-                PinkShaftChozo = new Location(this, 23, 0x8F8614, LocationType.Chozo,
+                PinkShaftChozo = new Location(this, LocationId.PinkShaftChozo, 0x8F8614, LocationType.Chozo,
                     name: "Charge Beam",
                     vanillaItem: ItemType.Charge,
                     access: items => Logic.CanPassBombPassages(items),
@@ -85,7 +85,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public PinkBrinstarPowerBombRoom(PinkBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Pink Brinstar Power Bomb Room", metadata)
             {
-                MissionImpossible = new Location(this, 24, 0x8F865C, LocationType.Visible,
+                MissionImpossible = new Location(this, LocationId.PinkBrinstarPowerBomb, 0x8F865C, LocationType.Visible,
                     name: "Power Bomb (pink Brinstar)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => Logic.CanUsePowerBombs(items) && items.Super && Logic.HasEnergyReserves(items, 1)
@@ -104,7 +104,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public HoptankRoom(PinkBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hoptank Room", metadata)
             {
-                WaveBeamGlitchRoom = new Location(this, 35, 0x8F8824, LocationType.Visible,
+                WaveBeamGlitchRoom = new Location(this, LocationId.PinkBrinstarHoptank, 0x8F8824, LocationType.Visible,
                     name: "Energy Tank, Brinstar Gate",
                     vanillaItem: ItemType.ETank,
                     access: items => items.CardBrinstarL2 && Logic.CanUsePowerBombs(items)
@@ -124,7 +124,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public SporeSpawnSuperRoom(PinkBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Spore Spawn Super Room", metadata)
             {
-                SporeSpawnReward = new Location(this, 14, 0x8F84E4, LocationType.Chozo,
+                SporeSpawnReward = new Location(this, LocationId.SporeSpawnSuper, 0x8F84E4, LocationType.Chozo,
                     name: "Super Missile (pink Brinstar)",
                     vanillaItem: ItemType.Super,
                     access: items => items.CardBrinstarBoss && Logic.CanPassBombPassages(items) && items.Super,
@@ -142,7 +142,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public WaterwayEnergyTankRoom(PinkBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Waterway Energy Tank Room", metadata)
             {
-                Waterway = new Location(this, 33, 0x8F87FA, LocationType.Visible,
+                Waterway = new Location(this, LocationId.WaterwayEnergyTank, 0x8F87FA, LocationType.Visible,
                     name: "Energy Tank, Waterway",
                     vanillaItem: ItemType.ETank,
                     access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && items.SpeedBooster &&
@@ -161,7 +161,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public GreenHillZoneRoom(PinkBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Green Hill Zone", metadata)
             {
-                GreenHillZone = new Location(this, 25, 0x8F8676, LocationType.Visible,
+                GreenHillZone = new Location(this, LocationId.GreenHillZone, 0x8F8676, LocationType.Visible,
                     name: "Missile (green Brinstar pipe)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.Morph

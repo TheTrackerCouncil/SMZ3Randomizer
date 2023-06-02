@@ -28,7 +28,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain
             public SpikeCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Spike Cave", metadata)
             {
-                Chest = new Location(this, 256 + 64, 0x1EA8B, LocationType.Regular,
+                Chest = new Location(this, LocationId.SpikeCave, 0x1EA8B, LocationType.Regular,
                     name: "Spike Cave",
                     access: items => items.MoonPearl && items.Hammer && Logic.CanLiftLight(items) &&
                         ((Logic.CanExtendMagic(items, 2) && items.Cape) || items.Byrna) &&

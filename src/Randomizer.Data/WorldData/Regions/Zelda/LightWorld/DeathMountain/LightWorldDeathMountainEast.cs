@@ -11,7 +11,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
     {
         public LightWorldDeathMountainEast(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            FloatingIsland = new Location(this, 256 + 4, 0x308141, LocationType.Regular,
+            FloatingIsland = new Location(this, LocationId.FloatingIsland, 0x308141, LocationType.Regular,
                 name: "Floating Island",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && items.MoonPearl && Logic.CanLiftHeavy(items),
@@ -21,7 +21,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                 metadata: metadata,
                 trackerState: trackerState);
 
-            SpiralCave = new Location(this, 256 + 5, 0x1E9BF, LocationType.Regular,
+            SpiralCave = new Location(this, LocationId.SpiralCave, 0x1E9BF, LocationType.Regular,
                 name: "Spiral Cave",
                 vanillaItem: ItemType.FiftyRupees,
                 memoryAddress: 0xFE,
@@ -29,7 +29,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MirrorCave = new Location(this, 256 + 13, 0x1E9C5, LocationType.Regular,
+            MirrorCave = new Location(this, LocationId.MimicCave, 0x1E9C5, LocationType.Regular,
                 name: "Mimic Cave",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && items.KeyTR >= 2 && World.TurtleRock.CanEnter(items, true),
@@ -72,7 +72,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
             public ParadoxCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Paradox Cave", metadata)
             {
-                LowerLeft = new Location(this, 256 + 6, 0x1EB39, LocationType.Regular,
+                LowerLeft = new Location(this, LocationId.ParadoxCaveUpperLeft, 0x1EB39, LocationType.Regular,
                     name: "Paradox Cave Upper - Left",
                     vanillaItem: ItemType.ThreeBombs,
                     memoryAddress: 0xFF,
@@ -80,7 +80,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                     metadata: metadata,
                     trackerState: trackerState);
 
-                LowerRight = new Location(this, 256 + 7, 0x1EB3C, LocationType.Regular,
+                LowerRight = new Location(this, LocationId.ParadoxCaveUpperRight, 0x1EB3C, LocationType.Regular,
                     name: "Paradox Cave Upper - Right",
                     vanillaItem: ItemType.TenArrows,
                     memoryAddress: 0xFF,
@@ -88,7 +88,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                     metadata: metadata,
                     trackerState: trackerState);
 
-                UpperFarLeft = new Location(this, 256 + 8, 0x1EB2A, LocationType.Regular,
+                UpperFarLeft = new Location(this, LocationId.ParadoxCaveLowerFarLeft, 0x1EB2A, LocationType.Regular,
                     name: "Paradox Cave Lower - Far Left",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0xEF,
@@ -96,7 +96,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                     metadata: metadata,
                     trackerState: trackerState);
 
-                UpperLeft = new Location(this, 256 + 9, 0x1EB2D, LocationType.Regular,
+                UpperLeft = new Location(this, LocationId.ParadoxCaveLowerLeft, 0x1EB2D, LocationType.Regular,
                     name: "Paradox Cave Lower - Left",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0xEF,
@@ -104,7 +104,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                     metadata: metadata,
                     trackerState: trackerState);
 
-                UpperMiddle = new Location(this, 256 + 10, 0x1EB36, LocationType.Regular,
+                UpperMiddle = new Location(this, LocationId.ParadoxCaveLowerMiddle, 0x1EB36, LocationType.Regular,
                     name: "Paradox Cave Lower - Middle",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0xEF,
@@ -112,7 +112,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                     metadata: metadata,
                     trackerState: trackerState);
 
-                UpperRight = new Location(this, 256 + 11, 0x1EB30, LocationType.Regular,
+                UpperRight = new Location(this, LocationId.ParadoxCaveLowerRight, 0x1EB30, LocationType.Regular,
                     name: "Paradox Cave Lower - Right",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0xEF,
@@ -120,7 +120,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                     metadata: metadata,
                     trackerState: trackerState);
 
-                UpperFarRight = new Location(this, 256 + 12, 0x1EB33, LocationType.Regular,
+                UpperFarRight = new Location(this, LocationId.ParadoxCaveLowerFarRight, 0x1EB33, LocationType.Regular,
                     name: "Paradox Cave Lower - Far Right",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0xEF,

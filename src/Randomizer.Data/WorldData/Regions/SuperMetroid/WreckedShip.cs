@@ -93,7 +93,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public MainShaftRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Wrecked Ship Main Shaft", metadata)
             {
-                MainShaftSideRoom = new Location(this, 128, 0x8FC265, LocationType.Visible,
+                MainShaftSideRoom = new Location(this, LocationId.WreckedShipMainShaft, 0x8FC265, LocationType.Visible,
                     name: "Missile (Wrecked Ship middle)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanPassBombPassages(items),
@@ -111,7 +111,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public BowlingAlleyRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Bowling Alley", metadata, "Post Chozo Concert")
             {
-                PostChozoConcertSpeedBoosterItem = new Location(this, 129, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
+                PostChozoConcertSpeedBoosterItem = new Location(this, LocationId.BowlingAlleyTop, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
                     name: "Reserve Tank, Wrecked Ship",
                     vanillaItem: ItemType.ReserveTank,
                     access: items => region.CanViewConcert(items, requireRewards: true) && items.SpeedBooster && Logic.CanUsePowerBombs(items),
@@ -120,7 +120,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
                     memoryFlag: 0x2,
                     metadata: metadata,
                     trackerState: trackerState);
-                PostChozoConcertBreakableChozo = new Location(this, 130, 0x8FC2EF, LocationType.Visible,
+                PostChozoConcertBreakableChozo = new Location(this, LocationId.BowlingAlleyBottom, 0x8FC2EF, LocationType.Visible,
                     name: "Missile (Gravity Suit)",
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanViewConcert(items, requireRewards: true),
@@ -141,7 +141,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public AssemblyLineRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Assembly Line", metadata)
             {
-                AtticAssemblyLine = new Location(this, 131, 0x8FC319, LocationType.Visible,
+                AtticAssemblyLine = new Location(this, LocationId.AssemblyLine, 0x8FC319, LocationType.Visible,
                     name: "Missile (Wrecked Ship top)",
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanAccessShutDownRooms(items, requireRewards: true),
@@ -160,7 +160,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public EnergyTankRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Wrecked Ship Energy Tank Room", metadata, "Wrecked Pool")
             {
-                WreckedPool = new Location(this, 132, 0x8FC337, LocationType.Visible,
+                WreckedPool = new Location(this, LocationId.WreckedShipEnergyTank, 0x8FC337, LocationType.Visible,
                     name: "Energy Tank, Wrecked Ship",
                     vanillaItem: ItemType.ETank,
                     access: items => region.CanAccessWreckedPool(items, requireRewards: true),
@@ -179,7 +179,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public WestSuperRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Wrecked Ship West Super Room", metadata)
             {
-                LeftSuperMissileChamber = new Location(this, 133, 0x8FC357, LocationType.Visible,
+                LeftSuperMissileChamber = new Location(this, LocationId.WreckedShipWestSuper, 0x8FC357, LocationType.Visible,
                     name: "Super Missile (Wrecked Ship left)",
                     vanillaItem: ItemType.Super,
                     access: items => region.CanAccessShutDownRooms(items, requireRewards: true),
@@ -198,7 +198,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public EastSuperRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Wrecked Ship East Super Room", metadata)
             {
-                RightSuperMissileChamber = new Location(this, 134, 0x8FC365, LocationType.Visible,
+                RightSuperMissileChamber = new Location(this, LocationId.WreckedShipEastSuper, 0x8FC365, LocationType.Visible,
                     name: "Right Super, Wrecked Ship",
                     vanillaItem: ItemType.Super,
                     access: items => region.CanAccessShutDownRooms(items, requireRewards: true),
@@ -217,7 +217,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public GravitySuitRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Gravity Suit Room", metadata)
             {
-                PostChozoConcertGravitySuitChamber = new Location(this, 135, 0x8FC36D, LocationType.Chozo,
+                PostChozoConcertGravitySuitChamber = new Location(this, LocationId.GravitySuit, 0x8FC36D, LocationType.Chozo,
                     name: "Gravity Suit",
                     vanillaItem: ItemType.Gravity,
                     access: items => region.CanViewConcert(items, requireRewards: true),

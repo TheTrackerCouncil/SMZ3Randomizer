@@ -28,7 +28,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeySW, ItemType.BigKeySW, ItemType.MapSW, ItemType.CompassSW };
 
-            PotPrison = new Location(this, 256 + 145, 0x1E9A1, LocationType.Regular,
+            PotPrison = new Location(this, LocationId.SkullWoodsPotPrison, 0x1E9A1, LocationType.Regular,
                 name: "Pot Prison",
                 vanillaItem: ItemType.KeySW,
                 memoryAddress: 0x57,
@@ -36,7 +36,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            CompassChest = new Location(this, 256 + 146, 0x1E992, LocationType.Regular,
+            CompassChest = new Location(this, LocationId.SkullWoodsCompassChest, 0x1E992, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassSW,
                 memoryAddress: 0x67,
@@ -44,7 +44,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigChest = new Location(this, 256 + 147, 0x1E998, LocationType.Regular,
+            BigChest = new Location(this, LocationId.SkullWoodsBigChest, 0x1E998, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.Firerod,
                 access: items => items.BigKeySW,
@@ -54,7 +54,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .AlwaysAllow((item, items) => item.Is(ItemType.BigKeySW, World));
 
-            MapChest = new Location(this, 256 + 148, 0x1E99B, LocationType.Regular,
+            MapChest = new Location(this, LocationId.SkullWoodsMapChest, 0x1E99B, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapSW,
                 memoryAddress: 0x58,
@@ -62,7 +62,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            PinballRoom = new Location(this, 256 + 149, 0x1E9C8, LocationType.Regular,
+            PinballRoom = new Location(this, LocationId.SkullWoodsPinballRoom, 0x1E9C8, LocationType.Regular,
                 name: "Pinball Room",
                 vanillaItem: ItemType.KeySW,
                 memoryAddress: 0x68,
@@ -71,7 +71,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Allow((item, items) => item.Is(ItemType.KeySW, World));
 
-            BigKeyChest = new Location(this, 256 + 150, 0x1E99E, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.SkullWoodsBigKeyChest, 0x1E99E, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeySW,
                 memoryAddress: 0x57,
@@ -79,7 +79,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BridgeRoom = new Location(this, 256 + 151, 0x1E9FE, LocationType.Regular,
+            BridgeRoom = new Location(this, LocationId.SkullWoodsBridgeRoom, 0x1E9FE, LocationType.Regular,
                 name: "Bridge Room",
                 vanillaItem: ItemType.KeySW,
                 access: items => items.FireRod,
@@ -88,7 +88,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MothulaReward = new Location(this, 256 + 152, 0x308155, LocationType.Regular,
+            MothulaReward = new Location(this, LocationId.SkullWoodsMothula, 0x308155, LocationType.Regular,
                 name: "Mothula",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.FireRod && items.Sword && items.KeySW >= 3,
