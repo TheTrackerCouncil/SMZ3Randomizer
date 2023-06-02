@@ -168,7 +168,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
         public class LeftSandPitRoom : Room
         {
             public LeftSandPitRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
-                : base(region, "Left Sand Pit", metadata)
+                : base(region, "Left Sand Pit", metadata, "West Sand Hole")
             {
                 Left = new Location(this, LocationId.WestSandHoleLeft, 0x8FC5DD, LocationType.Visible,
                     name: "Left",
@@ -202,7 +202,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
         public class RightSandPitRoom : Room
         {
             public RightSandPitRoom(InnerMaridia region, IMetadataService? metadata, TrackerState? trackerState)
-                : base(region, "Right Sand Pit", metadata)
+                : base(region, "Right Sand Pit", metadata, "East Sand Hole")
             {
                 Left = new Location(this, LocationId.EastSandHoleLeft, 0x8FC5EB, LocationType.Visible,
                     name: "Missile (right Maridia sand pit room)",
