@@ -111,7 +111,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid
             public BowlingAlleyRoom(WreckedShip region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Bowling Alley", metadata, "Post Chozo Concert")
             {
-                PostChozoConcertSpeedBoosterItem = new Location(this, LocationId.BowlingAlleyTop, 0x8FC2E9, LocationType.Chozo, // This isn't a Chozo item?
+                PostChozoConcertSpeedBoosterItem = new Location(this, LocationId.BowlingAlleyTop, 0x8FC2E9, LocationType.Chozo,
                     name: "Reserve Tank, Wrecked Ship",
                     vanillaItem: ItemType.ReserveTank,
                     access: items => region.CanViewConcert(items, requireRewards: true) && items.SpeedBooster && Logic.CanUsePowerBombs(items),
