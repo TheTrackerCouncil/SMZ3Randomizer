@@ -631,7 +631,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
             // Store the locations for this action so that we don't need to grab them each time every half a second or so
             action.Locations ??= _worldService.AllLocations().Where(x =>
-                x.MemoryType == type && ((game == Game.SM && x.Id < 256) || (game == Game.Zelda && x.Id >= 256))).ToList();
+                x.MemoryType == type && ((game == Game.SM && (int)x.Id < 256) || (game == Game.Zelda && (int)x.Id >= 256))).ToList();
 
             foreach (var location in action.Locations)
             {
@@ -655,7 +655,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                         _logger.LogInformation("Auto tracked {ItemName} from {LocationName}", location.Item.Name, location.Name);
 
                         // Mark HC as cleared if this was Zelda's Cell
-                        if (location.Id == 256 + 98 && Tracker.World.HyruleCastle.DungeonState.Cleared == false)
+                        if (location.Id == LocationId.HyruleCastleZeldasCell && Tracker.World.HyruleCastle.DungeonState.Cleared == false)
                         {
                             Tracker.MarkDungeonAsCleared(Tracker.World.HyruleCastle, null, autoTracked: true);
                         }

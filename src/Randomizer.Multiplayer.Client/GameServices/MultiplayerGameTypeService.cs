@@ -238,7 +238,7 @@ public abstract class MultiplayerGameTypeService : IDisposable
     /// <param name="locationId">The id of </param>
     /// <param name="isLocalPlayer"></param>
     /// <returns></returns>
-    public PlayerTrackedLocationEventHandlerArgs? PlayerTrackedLocation(MultiplayerPlayerState player, int locationId, bool isLocalPlayer)
+    public PlayerTrackedLocationEventHandlerArgs? PlayerTrackedLocation(MultiplayerPlayerState player, LocationId locationId, bool isLocalPlayer)
     {
         if (TrackerState == null || isLocalPlayer) return null;
 

@@ -184,7 +184,7 @@ namespace Randomizer.App.Windows
             var row = 0;
             foreach (var location in world.Locations.OrderBy(x => x.Room == null ? "" : x.Room.Name).ThenBy(x => x.Name))
             {
-                var locationDetails = _locations.Single(x => x.LocationNumber == location.Id); //TODO: Refactor into IWorldService
+                var locationDetails = _locations.Single(x => x.LocationNumber == (int)location.Id); //TODO: Refactor into IWorldService
                 var name = locationDetails.ToString();
                 var toolTip = "";
                 if (locationDetails.Name.Count > 1)
@@ -382,7 +382,7 @@ namespace Randomizer.App.Windows
             const int numberOfSeeds = 1000;
             var progressDialog = new ProgressDialog(this, $"Generating {numberOfSeeds} seeds...");
             var stats = InitStats();
-            var itemCounts = new ConcurrentDictionary<(int itemId, int locationId), int>();
+            var itemCounts = new ConcurrentDictionary<(int itemId, LocationId locationId), int>();
             var ct = progressDialog.CancellationToken;
             var finished = false;
             ThreadPool.GetAvailableThreads(out int workerThreads, out int completionPortThreads);
@@ -432,7 +432,7 @@ namespace Randomizer.App.Windows
             }
         }
 
-        private void AddToMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, SeedData seed)
+        private void AddToMegaSpoilerLog(ConcurrentDictionary<(int itemId, LocationId locationId), int> itemCounts, SeedData seed)
         {
             foreach (var location in seed.WorldGenerationData.LocalWorld.World.Locations)
             {
@@ -478,7 +478,7 @@ namespace Randomizer.App.Windows
                 stats.Increment("The GT Moldorm chest contains a Metroid item");
         }
 
-        private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, int numberOfSeeds)
+        private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, LocationId locationId), int> itemCounts, int numberOfSeeds)
         {
             var items = Enum.GetValues<ItemType>().ToDictionary(x => (int)x);
             var locations = new World(new Config(), "", 0, "").Locations;
@@ -547,28 +547,28 @@ namespace Randomizer.App.Windows
             };
             Process.Start(startInfo);
 
-            int GetLocationSmallKeyCount(int locationId)
+            int GetLocationSmallKeyCount(LocationId locationId)
             {
                 return itemCounts.Where(x =>
                     x.Key.locationId == locationId &&
                     items[x.Key.itemId].IsInCategory(ItemCategory.SmallKey)).Sum(x => x.Value);
             }
 
-            int GetLocationBigKeyCount(int locationId)
+            int GetLocationBigKeyCount(LocationId locationId)
             {
                 return itemCounts.Where(x =>
                     x.Key.locationId == locationId &&
                     items[x.Key.itemId].IsInCategory(ItemCategory.BigKey)).Sum(x => x.Value);
             }
 
-            int GetLocationMapCompassCount(int locationId)
+            int GetLocationMapCompassCount(LocationId locationId)
             {
                 return itemCounts.Where(x =>
                     x.Key.locationId == locationId &&
                     items[x.Key.itemId].IsInAnyCategory(ItemCategory.Compass, ItemCategory.Map)).Sum(x => x.Value);
             }
 
-            int GetLocationTreasureCount(int locationId)
+            int GetLocationTreasureCount(LocationId locationId)
             {
                 return itemCounts.Where(x =>
                     x.Key.locationId == locationId &&
@@ -576,7 +576,7 @@ namespace Randomizer.App.Windows
                     .Sum(x => x.Value);
             }
 
-            int GetLocationProgressionCount(int locationId)
+            int GetLocationProgressionCount(LocationId locationId)
             {
                 return itemCounts.Where(x =>
                         x.Key.locationId == locationId &&
@@ -587,7 +587,7 @@ namespace Randomizer.App.Windows
         }
 
         private void ReportStats(IDictionary<string, int> stats,
-            ConcurrentDictionary<(int itemId, int locationId), int> itemCounts, int total)
+            ConcurrentDictionary<(int itemId, LocationId locationId), int> itemCounts, int total)
         {
             var message = new StringBuilder();
             message.AppendLine($"If you were to play {total} seeds:");

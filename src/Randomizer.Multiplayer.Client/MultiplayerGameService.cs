@@ -264,7 +264,7 @@ public class MultiplayerGameService : IDisposable
         if (args != null) PlayerTrackedDeath?.Invoke(args);
     }
 
-    private void ClientOnLocationTracked(MultiplayerPlayerState playerState, int locationId)
+    private void ClientOnLocationTracked(MultiplayerPlayerState playerState, LocationId locationId)
     {
         var args = _currentGameService.PlayerTrackedLocation(playerState, locationId,
             playerState.Guid == _client.CurrentPlayerGuid);

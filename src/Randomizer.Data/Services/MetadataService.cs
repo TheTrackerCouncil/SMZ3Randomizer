@@ -229,12 +229,12 @@ namespace Randomizer.Data.Services
         /// <summary>
         /// Returns extra information for the specified location.
         /// </summary>
-        /// <param name="id">The numeric ID of the location.</param>
+        /// <param name="id">The ID of the location.</param>
         /// <returns>
         /// A new <see cref="LocationInfo"/> for the specified room.
         /// </returns>
-        public LocationInfo Location(int id)
-            => Locations.Single(x => x.LocationNumber == id);
+        public LocationInfo Location(LocationId id)
+            => Locations.Single(x => x.LocationNumber == (int)id);
 
         /// <summary>
         /// Returns extra information for the specified location.
@@ -246,7 +246,7 @@ namespace Randomizer.Data.Services
         /// A new <see cref="LocationInfo"/> for the specified room.
         /// </returns>
         public LocationInfo Location(Location location)
-            => Locations.Single(x => x.LocationNumber == location.Id);
+            => Locations.Single(x => x.LocationNumber == (int)location.Id);
 
         /// <summary>
         /// Returns information about a specified boss

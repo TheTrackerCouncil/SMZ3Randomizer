@@ -83,7 +83,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Location Location(int id);
+        public Location Location(LocationId id);
 
         /// <summary>
         /// Checks if the location is accessible with the given progression

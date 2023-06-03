@@ -201,7 +201,7 @@ namespace Randomizer.Data.Options
         public string Seed { get; set; } = "";
         public string SettingsString { get; set; } = "";
         public bool CopySeedAndRaceSettings { get; set; }
-        public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
+        public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();
         public LogicConfig LogicConfig { get; set; } = new LogicConfig();
         public CasPatches CasPatches { get; set; } = new();
         public MetroidControlOptions MetroidControls { get; set; } = new();

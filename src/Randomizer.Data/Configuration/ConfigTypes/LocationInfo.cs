@@ -37,12 +37,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// </summary>
         /// <param name="id">
         /// The ID of the location. Must match an existing <see
-        /// cref="Location.Id"/>.
+        /// cref="LocationId"/>.
         /// </param>
         /// <param name="name">The names for the location.</param>
-        public LocationInfo(int id, string name)
+        public LocationInfo(LocationId id, string name)
         {
-            LocationNumber = id;
+            LocationNumber = (int)id;
             Name = new SchrodingersString(name);
         }
 

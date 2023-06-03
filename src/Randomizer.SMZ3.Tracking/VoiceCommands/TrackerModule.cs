@@ -202,7 +202,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </returns>
         protected static Location GetLocationFromResult(Tracker tracker, RecognitionResult result)
         {
-            var id = (int)result.Semantics[LocationKey].Value;
+            var id = (LocationId)result.Semantics[LocationKey].Value;
             var location = tracker.World.Locations.First(x => x.Id == id);
             return location ?? throw new Exception($"Could not find a location with ID {id} (\"{result.Text}\")");
         }
@@ -468,7 +468,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             foreach (var location in Tracker.World.Locations)
             {
                 foreach (var name in location.Metadata.Name)
-                    locationNames.Add(new SemanticResultValue(name.Text, location.Id));
+                    locationNames.Add(new SemanticResultValue(name.Text, (int)location.Id));
             }
 
             return locationNames;

@@ -11,7 +11,7 @@ namespace Randomizer.Shared.Models
         [Key]
         public long Id { get; set; }
         public TrackerState? TrackerState { get; set; }
-        public int LocationId { get; init; }
+        public LocationId LocationId { get; init; }
         public ItemType Item { get; init; }
         public ItemType? MarkedItem { get; set; }
         public bool Cleared { get; set; }

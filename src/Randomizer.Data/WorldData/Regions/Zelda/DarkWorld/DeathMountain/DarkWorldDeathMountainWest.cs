@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
-using Randomizer.Shared;
 using Randomizer.Shared.Models;
 
 namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld.DeathMountain

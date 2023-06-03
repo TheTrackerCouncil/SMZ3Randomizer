@@ -84,14 +84,14 @@ public class MultiplayerPlayerGenerationData
 
 public class PlayerGenerationLocationData
 {
-    public PlayerGenerationLocationData(int id, int itemWorldId, ItemType item)
+    public PlayerGenerationLocationData(LocationId id, int itemWorldId, ItemType item)
     {
         Id = id;
         ItemWorldId = itemWorldId;
         Item = item;
     }
 
-    public int Id { get; }
+    public LocationId Id { get; }
     public int ItemWorldId { get; }
     public ItemType Item { get; }
 }

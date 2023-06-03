@@ -382,7 +382,7 @@ namespace Randomizer.SMZ3.FileData
         {
             var type = location.Item.World == location.Region.World ? 0 : 1;
             var owner = location.Item.World.Id;
-            return (0x386000 + (location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
+            return (0x386000 + ((int)location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
         }
 
         private void WritePrizeShuffle()

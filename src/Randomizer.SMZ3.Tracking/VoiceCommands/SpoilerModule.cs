@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         };
 
         private readonly Dictionary<ItemType, int> _itemHintsGiven = new();
-        private readonly Dictionary<int, int> _locationHintsGiven = new();
+        private readonly Dictionary<LocationId, int> _locationHintsGiven = new();
         private readonly Playthrough? _playthrough;
         private readonly IRandomizerConfigService _randomizerConfigService;
         private readonly bool _isMultiworld;

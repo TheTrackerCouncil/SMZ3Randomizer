@@ -130,7 +130,7 @@ namespace Randomizer.SMZ3
                     // We determine this on if all players can beat all 4 golden bosses, access the
                     if (inaccessibleLocations.Select(l => l.Item).Count() >= (15 * worlds.Count()))
                     {
-                        var vitalLocations = allLocations.Where(x => x.Id is 256 + 215 or 48 or 134 or 154 or 78).ToList();
+                        var vitalLocations = allLocations.Where(x => x.Id is LocationId.GanonsTowerMoldormChest or LocationId.VariaSuit or LocationId.WreckedShipEastSuper or LocationId.SpaceJump or LocationId.RidleyTank).ToList();
                         var crateriaBossKeys = items.Count(x => x.Type == ItemType.CardCrateriaBoss);
                         if (accessibleLocations.Count(x => vitalLocations.Contains(x)) != vitalLocations.Count() || crateriaBossKeys != worlds.Count())
                         {
