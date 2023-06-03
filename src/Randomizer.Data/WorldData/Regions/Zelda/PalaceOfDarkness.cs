@@ -103,7 +103,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            HelmasaurKingReward = new Location(this, LocationId.PalaceOfDarknessHelmasaurKind, 0x308153, LocationType.Regular,
+            HelmasaurKingReward = new Location(this, LocationId.PalaceOfDarknessHelmasaurKing, 0x308153, LocationType.Regular,
                 name: "Helmasaur King",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.Hammer && items.Bow && items.BigKeyPD && items.KeyPD >= 6,

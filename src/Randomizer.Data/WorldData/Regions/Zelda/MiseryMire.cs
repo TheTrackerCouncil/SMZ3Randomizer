@@ -67,7 +67,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigKeyChest = new Location(this, LocationId.MiseryMireBigkeyChest, 0x1EA6D, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.MiseryMireBigKeyChest, 0x1EA6D, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyMM,
                 access: items => Logic.CanLightTorches(items)

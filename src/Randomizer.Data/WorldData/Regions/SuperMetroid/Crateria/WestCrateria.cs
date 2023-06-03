@@ -93,7 +93,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public TerminatorRoom(WestCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Terminator Room", metadata)
             {
-                Terminator = new Location(this, LocationId.CrateriaTerminator, 0x8F8432, LocationType.Visible,
+                Terminator = new Location(this, LocationId.Terminator, 0x8F8432, LocationType.Visible,
                     name: "Energy Tank, Terminator",
                     vanillaItem: ItemType.ETank,
                     memoryAddress: 0x1,

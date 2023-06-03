@@ -77,7 +77,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public PitRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Pit Room", metadata)
             {
-                MotherBrainTreasure = new Location(this, LocationId.CrateriaPit, 0x8F83EE, LocationType.Visible,
+                MotherBrainTreasure = new Location(this, LocationId.Pit, 0x8F83EE, LocationType.Visible,
                     name: "Missile (Crateria bottom)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanDestroyBombWalls(items),

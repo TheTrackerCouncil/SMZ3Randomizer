@@ -69,7 +69,7 @@ namespace Randomizer.Data.WorldData
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
         {
             Region = region;
-            Id = id;
+            Id = (int)id;
             Name = name;
             Type = type;
             RomAddress = romAddress;
@@ -82,15 +82,15 @@ namespace Randomizer.Data.WorldData
             MemoryType = memoryType;
             _relevanceRequirement = relevanceRequirement ?? (items => _canAccess(items));
             _trackerLogic = trackerLogic ?? (_ => true);
-            Metadata = metadata?.Location(id) ?? new LocationInfo(id, name);
-            State = trackerState?.LocationStates.First(x => x.LocationId == id && x.WorldId == World.Id) ?? new TrackerLocationState();
+            Metadata = metadata?.Location((int)id) ?? new LocationInfo((int)id, name);
+            State = trackerState?.LocationStates.First(x => x.LocationId == (int)id && x.WorldId == World.Id) ?? new TrackerLocationState();
             Item = new Item(ItemType.Nothing, region.World, "");
         }
 
         /// <summary>
         /// Gets the internal identifier of the location.
         /// </summary>
-        public LocationId Id { get; }
+        public int Id { get; }
 
         /// <summary>
         /// Gets the name of the location.

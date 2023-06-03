@@ -182,7 +182,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public MiniMoldormCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Mini Moldorm Cave", metadata)
             {
-                FarLeftChest = new Location(this, LocationId.MiniMoldormFarLeft, 0x1EB42, LocationType.Regular,
+                FarLeftChest = new Location(this, LocationId.MiniMoldormCaveFarLeft, 0x1EB42, LocationType.Regular,
                     name: "Far Left",
                     vanillaItem: ItemType.ThreeBombs,
                     memoryAddress: 0x123,
@@ -191,7 +191,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                LeftChest = new Location(this, LocationId.MiniMoldormLeft, 0x1EB45, LocationType.Regular,
+                LeftChest = new Location(this, LocationId.MiniMoldormCaveLeft, 0x1EB45, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x123,
@@ -200,7 +200,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                Npc = new Location(this, LocationId.MiniMoldormNpc, 0x308010, LocationType.Regular,
+                Npc = new Location(this, LocationId.MiniMoldormCaveNpc, 0x308010, LocationType.Regular,
                     name: "NPC",
                     vanillaItem: ItemType.ThreeHundredRupees,
                     memoryAddress: 0x123,
@@ -209,7 +209,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                RightChest = new Location(this, LocationId.MiniMoldormRight, 0x1EB48, LocationType.Regular,
+                RightChest = new Location(this, LocationId.MiniMoldormCaveRight, 0x1EB48, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x123,
@@ -218,7 +218,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                FarRightChest = new Location(this, LocationId.MiniMoldormFarRight, 0x1EB4B, LocationType.Regular,
+                FarRightChest = new Location(this, LocationId.MiniMoldormCaveFarRight, 0x1EB4B, LocationType.Regular,
                     name: "Far Right",
                     vanillaItem: ItemType.TenArrows,
                     memoryAddress: 0x123,

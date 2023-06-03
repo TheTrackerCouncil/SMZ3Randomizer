@@ -61,7 +61,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BetaPowerBombRoom(RedBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Beta Power Bomb Room", metadata)
             {
-                PowerBomb = new Location(this, LocationId.BetaPowerBombRoom, 0x8F88CA, LocationType.Visible,
+                PowerBomb = new Location(this, LocationId.BetaPowerBomb, 0x8F88CA, LocationType.Visible,
                     name: "Power Bomb (red Brinstar sidehopper room)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => Logic.CanUsePowerBombs(items) && items.Super,
@@ -79,7 +79,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public AlphaPowerBombRoom(RedBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Alpha Power Bomb Room", metadata)
             {
-                PowerBomb = new Location(this, LocationId.AlphaPowerBombRoomRight, 0x8F890E, LocationType.Chozo,
+                PowerBomb = new Location(this, LocationId.AlphaPowerBombRight, 0x8F890E, LocationType.Chozo,
                     name: "Power Bomb (red Brinstar spike room)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => (Logic.CanUsePowerBombs(items) || items.Ice) && items.Super,
@@ -87,7 +87,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                     memoryFlag: 0x1,
                     metadata: metadata,
                     trackerState: trackerState);
-                AlphaPowerBombRoomWall = new Location(this, LocationId.AlphaPowerBombRoomLeft, 0x8F8914, LocationType.Visible,
+                AlphaPowerBombRoomWall = new Location(this, LocationId.AlphaPowerBombLeft, 0x8F8914, LocationType.Visible,
                     name: "Missile (red Brinstar spike room)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanUsePowerBombs(items) && items.Super,
