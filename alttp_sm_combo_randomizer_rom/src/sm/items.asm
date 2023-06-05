@@ -1160,7 +1160,7 @@ alttp_item_pickup:
     lda #$80
     sta.l !SRAM_ALTTP_ITEM_BUF+$73           ; Refill Link's magic
     %a16()
-    jmp .end
+    jmp .normal_item
 
 .end
     ;lda #$0168
