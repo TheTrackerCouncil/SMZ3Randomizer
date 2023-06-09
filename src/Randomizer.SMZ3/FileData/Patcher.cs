@@ -593,7 +593,7 @@ namespace Randomizer.SMZ3.FileData
                 var item = GetItemName(config, _myWorld.LightWorldNorthWest.BottleMerchant.Item);
                 _stringTable.SetBottleVendorText(Dialog.GetChoiceText(_gameLines.BottleMerchant?.Format(item) ?? "{NOTEXT}", _gameLines.ChoiceYes?.ToString() ?? string.Empty, _gameLines.ChoiceNo?.ToString() ?? string.Empty));
 
-                item = GetItemName(config, _myWorld.LightWorldNorthEast.ZorasDomain.Zora.Item);
+                item = GetItemName(config, _myWorld.FindLocation(LocationId.KingZora).Item);
                 _stringTable.SetZoraText(Dialog.GetChoiceText(_gameLines.KingZora?.Format(item) ?? "{NOTEXT}", _gameLines.ChoiceYes?.ToString() ?? string.Empty, _gameLines.ChoiceNo?.ToString() ?? string.Empty));
             }
 

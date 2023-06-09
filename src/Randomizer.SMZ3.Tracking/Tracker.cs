@@ -2229,7 +2229,7 @@ namespace Randomizer.SMZ3.Tracking
         /// </returns>
         protected internal bool IsWorth(RewardType reward)
         {
-            var sahasrahlaItem = World.LightWorldNorthEast.SahasrahlasHideout.Sahasrahla.Item;
+            var sahasrahlaItem = World.FindLocation(LocationId.Sahasrahla).Item;
             if (sahasrahlaItem.Type != ItemType.Nothing && reward == RewardType.PendantGreen)
             {
                 _logger.LogDebug("{Reward} leads to {Item}...", reward, sahasrahlaItem);
@@ -2580,7 +2580,7 @@ namespace Randomizer.SMZ3.Tracking
                     .OrderByDescending(x => x.Count())
                     .ThenBy(x => x.Key.Name);
 
-                if (newlyAccessible.Contains(World.InnerMaridia.SpringBall.ShaktoolItem))
+                if (newlyAccessible.Contains(World.FindLocation(LocationId.InnerMaridiaSpringBall)))
                     Say(Responses.ShaktoolAvailable);
 
                 if (newlyAccessible.Contains(World.DarkWorldNorthWest.PegWorld))

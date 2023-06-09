@@ -34,27 +34,26 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
             public MireShedRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Mire Shed", metadata)
             {
-                Left = new Location(this, LocationId.MireShedLeft, 0x1EA73, LocationType.Regular,
-                    name: "Mire Shed - Left",
-                    vanillaItem: ItemType.HeartPiece,
-                    access: items => items.MoonPearl,
-                    memoryAddress: 0x10D,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                Right = new Location(this, LocationId.MireShedRight, 0x1EA76, LocationType.Regular,
-                    name: "Mire Shed - Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    access: items => items.MoonPearl,
-                    memoryAddress: 0x10D,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.MireShedLeft, 0x1EA73, LocationType.Regular,
+                        name: "Mire Shed - Left",
+                        vanillaItem: ItemType.HeartPiece,
+                        access: items => items.MoonPearl,
+                        memoryAddress: 0x10D,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.MireShedRight, 0x1EA76, LocationType.Regular,
+                        name: "Mire Shed - Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        access: items => items.MoonPearl,
+                        memoryAddress: 0x10D,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
         }
     }
 }

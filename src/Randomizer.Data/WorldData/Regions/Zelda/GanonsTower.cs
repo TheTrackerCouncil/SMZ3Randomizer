@@ -43,11 +43,11 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 name: "Firesnake Room",
                 vanillaItem: ItemType.KeyGT,
                 access: items => FiresnakeRoom != null && RandomizerRoom != null && items.Hammer && items.Hookshot && items.KeyGT >= (new[] {
-                        RandomizerRoom.TopRight,
-                        RandomizerRoom.TopLeft,
-                        RandomizerRoom.BottomLeft,
-                        RandomizerRoom.BottomRight
-                    }.Any(l => l.ItemIs(ItemType.BigKeyGT, World))
+                        LocationId.GanonsTowerRandomizerRoomTopRight,
+                        LocationId.GanonsTowerRandomizerRoomTopLeft,
+                        LocationId.GanonsTowerRandomizerRoomBottomLeft,
+                        LocationId.GanonsTowerRandomizerRoomBottomRight
+                    }.Any(l => world.FindLocation(l).ItemIs(ItemType.BigKeyGT, World))
                     || FiresnakeRoom.ItemIs(ItemType.KeyGT, World) ? 2 : 3),
                 memoryAddress: 0x7D,
                 memoryFlag: 0x4,
@@ -200,43 +200,38 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 : base(region, "DMs Room", metadata)
             {
                 // "bombs, arrows, and Rupees" - but what?
-                TopLeft = new Location(this, LocationId.GanonsTowerDMsRoomTopLeft, 0x1EAB8, LocationType.Regular,
-                    name: "Top Left",
-                    access: items => items.Hammer && items.Hookshot,
-                    memoryAddress: 0x7B,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                TopRight = new Location(this, LocationId.GanonsTowerDMsRoomTopRight, 0x1EABB, LocationType.Regular,
-                    name: "Top Right",
-                    access: items => items.Hammer && items.Hookshot,
-                    memoryAddress: 0x7B,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                BottomLeft = new Location(this, LocationId.GanonsTowerDMsRoomBottomLeft, 0x1EABE, LocationType.Regular,
-                    name: "Bottom Left",
-                    access: items => items.Hammer && items.Hookshot,
-                    memoryAddress: 0x7B,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                BottomRight = new Location(this, LocationId.GanonsTowerDMsRoomBottomRight, 0x1EAC1, LocationType.Regular,
-                    name: "Bottom Right",
-                    access: items => items.Hammer && items.Hookshot,
-                    memoryAddress: 0x7B,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.GanonsTowerDMsRoomTopLeft, 0x1EAB8, LocationType.Regular,
+                        name: "Top Left",
+                        access: items => items.Hammer && items.Hookshot,
+                        memoryAddress: 0x7B,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerDMsRoomTopRight, 0x1EABB, LocationType.Regular,
+                        name: "Top Right",
+                        access: items => items.Hammer && items.Hookshot,
+                        memoryAddress: 0x7B,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerDMsRoomBottomLeft, 0x1EABE, LocationType.Regular,
+                        name: "Bottom Left",
+                        access: items => items.Hammer && items.Hookshot,
+                        memoryAddress: 0x7B,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerDMsRoomBottomRight, 0x1EAC1, LocationType.Regular,
+                        name: "Bottom Right",
+                        access: items => items.Hammer && items.Hookshot,
+                        memoryAddress: 0x7B,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location TopLeft { get; }
-
-            public Location TopRight { get; }
-
-            public Location BottomLeft { get; }
-
-            public Location BottomRight { get; }
         }
 
         public class RandomizerRoomRoom : Room
@@ -244,47 +239,42 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public RandomizerRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Randomizer Room", metadata) // The room with all the floor tiles
             {
-                TopLeft = new Location(this, LocationId.GanonsTowerRandomizerRoomTopLeft, 0x1EAC4, LocationType.Regular,
-                    name: "Top Left",
-                    access: items => LeftSide(items, new[] { TopRight, BottomLeft, BottomRight }),
-                    memoryAddress: 0x7C,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                TopRight = new Location(this, LocationId.GanonsTowerRandomizerRoomTopRight, 0x1EAC7, LocationType.Regular,
-                    name: "Top Right",
-                    access: items => LeftSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
-                    memoryAddress: 0x7C,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                BottomLeft = new Location(this, LocationId.GanonsTowerRandomizerRoomBottomLeft, 0x1EACA, LocationType.Regular,
-                    name: "Bottom Left",
-                    access: items => LeftSide(items, new[] { TopRight, TopLeft, BottomRight }),
-                    memoryAddress: 0x7C,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                BottomRight = new Location(this, LocationId.GanonsTowerRandomizerRoomBottomRight, 0x1EACD, LocationType.Regular,
-                    name: "Bottom Right",
-                    access: items => LeftSide(items, new[] { TopRight, TopLeft, BottomLeft }),
-                    memoryAddress: 0x7C,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.GanonsTowerRandomizerRoomTopLeft, 0x1EAC4, LocationType.Regular,
+                        name: "Top Left",
+                        access: items => LeftSide(items, LocationId.GanonsTowerRandomizerRoomTopLeft),
+                        memoryAddress: 0x7C,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerRandomizerRoomTopRight, 0x1EAC7, LocationType.Regular,
+                        name: "Top Right",
+                        access: items => LeftSide(items, LocationId.GanonsTowerRandomizerRoomTopRight),
+                        memoryAddress: 0x7C,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerRandomizerRoomBottomLeft, 0x1EACA, LocationType.Regular,
+                        name: "Bottom Left",
+                        access: items => LeftSide(items, LocationId.GanonsTowerRandomizerRoomBottomLeft),
+                        memoryAddress: 0x7C,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerRandomizerRoomBottomRight, 0x1EACD, LocationType.Regular,
+                        name: "Bottom Right",
+                        access: items => LeftSide(items, LocationId.GanonsTowerRandomizerRoomBottomRight),
+                        memoryAddress: 0x7C,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
 
-            public Location TopLeft { get; }
-
-            public Location TopRight { get; }
-
-            public Location BottomLeft { get; }
-
-            public Location BottomRight { get; }
-
-            private bool LeftSide(Progression items, IList<Location?> locations)
+            private bool LeftSide(Progression items, LocationId except)
             {
-                return items.Hammer && items.Hookshot && items.KeyGT >= (locations.Any(l => l != null && l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
+                return items.Hammer && items.Hookshot && items.KeyGT >= (Locations.Any(l => l.Id != except && l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
             }
         }
 
@@ -293,26 +283,24 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public HopeRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hope Room", metadata, "Right Side First Room")
             {
-                Left = new Location(this, LocationId.GanonsTowerHopeRoomLeft, 0x1EAD9, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.TenArrows,
-                    memoryAddress: 0x8C,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Right = new Location(this, LocationId.GanonsTowerHopeRoomRight, 0x1EADC, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.ThreeBombs,
-                    memoryAddress: 0x8C,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.GanonsTowerHopeRoomLeft, 0x1EAD9, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.TenArrows,
+                        memoryAddress: 0x8C,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerHopeRoomRight, 0x1EADC, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.ThreeBombs,
+                        memoryAddress: 0x8C,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
         }
 
         public class CompassRoomRoom : Room
@@ -320,51 +308,43 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public CompassRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Compass Room", metadata)
             {
-                TopLeft = new Location(this, LocationId.GanonsTowerCompassRoomTopLeft, 0x1EAE5, LocationType.Regular,
-                    name: "Top Left",
-                    vanillaItem: ItemType.CompassGT,
-                    access: items => RightSide(items, new[] { TopRight, BottomLeft, BottomRight }),
-                    memoryAddress: 0x9D,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                TopRight = new Location(this, LocationId.GanonsTowerCompassRoomTopRight, 0x1EAE8, LocationType.Regular,
-                    name: "Top Right",
-                    access: items => RightSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
-                    memoryAddress: 0x9D,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                BottomLeft = new Location(this, LocationId.GanonsTowerCompassRoomBottomLeft, 0x1EAEB, LocationType.Regular,
-                    name: "Bottom Left",
-                    access: items => RightSide(items, new[] { TopRight, TopLeft, BottomRight }),
-                    memoryAddress: 0x9D,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                BottomRight = new Location(this, LocationId.GanonsTowerCompassRoomBottomRight, 0x1EAEE, LocationType.Regular,
-                    name: "Bottom Right",
-                    access: items => RightSide(items, new[] { TopRight, TopLeft, BottomLeft }),
-                    memoryAddress: 0x9D,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.GanonsTowerCompassRoomTopLeft, 0x1EAE5, LocationType.Regular,
+                        name: "Top Left",
+                        vanillaItem: ItemType.CompassGT,
+                        access: items => RightSide(items, LocationId.GanonsTowerCompassRoomTopLeft),
+                        memoryAddress: 0x9D,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerCompassRoomTopRight, 0x1EAE8, LocationType.Regular,
+                        name: "Top Right",
+                        access: items => RightSide(items, LocationId.GanonsTowerCompassRoomTopRight),
+                        memoryAddress: 0x9D,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerCompassRoomBottomLeft, 0x1EAEB, LocationType.Regular,
+                        name: "Bottom Left",
+                        access: items => RightSide(items, LocationId.GanonsTowerCompassRoomBottomLeft),
+                        memoryAddress: 0x9D,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerCompassRoomBottomRight, 0x1EAEE, LocationType.Regular,
+                        name: "Bottom Right",
+                        access: items => RightSide(items, LocationId.GanonsTowerCompassRoomBottomRight),
+                        memoryAddress: 0x9D,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
 
-            public Location TopLeft { get; }
-
-            public Location TopRight { get; }
-
-            public Location BottomLeft { get; }
-
-            public Location BottomRight { get; }
-
-            private bool RightSide(Progression items, IList<Location?> locations)
+            private bool RightSide(Progression items, LocationId except)
             {
-                return items.Somaria && items.FireRod && items.KeyGT >= (locations.Any(l => l != null && l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
+                return items.Somaria && items.FireRod && items.KeyGT >= (Locations.Any(l => l.Id != except && l.ItemIs(ItemType.BigKeyGT, World)) ? 3 : 4);
             }
         }
 
@@ -373,39 +353,34 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public BigKeyRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Big Key Room", metadata)
             {
-                Bottom = new Location(this, LocationId.GanonsTowerBigKeyChest, 0x1EAF1, LocationType.Regular,
-                    name: "Bottom Big Key Chest",
-                    vanillaItem: ItemType.BigKeyGT,
-                    access: BigKeyRoom,
-                    memoryAddress: 0x1C,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Left = new Location(this, LocationId.GanonsTowerBigKeyRoomLeft, 0x1EAF4, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.TenArrows,
-                    access: BigKeyRoom,
-                    memoryAddress: 0x1C,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Right = new Location(this, LocationId.GanonsTowerBigKeyRoomRight, 0x1EAF7, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.ThreeBombs,
-                    access: BigKeyRoom,
-                    memoryAddress: 0x1C,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.GanonsTowerBigKeyChest, 0x1EAF1, LocationType.Regular,
+                        name: "Bottom Big Key Chest",
+                        vanillaItem: ItemType.BigKeyGT,
+                        access: BigKeyRoom,
+                        memoryAddress: 0x1C,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerBigKeyRoomLeft, 0x1EAF4, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.TenArrows,
+                        access: BigKeyRoom,
+                        memoryAddress: 0x1C,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.GanonsTowerBigKeyRoomRight, 0x1EAF7, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.ThreeBombs,
+                        access: BigKeyRoom,
+                        memoryAddress: 0x1C,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Bottom { get; }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
 
             private bool BigKeyRoom(Progression items)
             {
@@ -427,30 +402,29 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 : base(region, "Mini Helmasaur Room", metadata)
             {
                 var tower = (GanonsTower)region;
-                Left = new Location(this, LocationId.GanonsTowerMiniHelmasaurRoomLeft, 0x1EAFD, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.ThreeBombs,
-                    access: tower.TowerAscend,
-                    memoryAddress: 0x3D,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
-                Right = new Location(this, LocationId.GanonsTowerMiniHelmasaurRoomRight, 0x1EB00, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.ThreeBombs,
-                    access: tower.TowerAscend,
-                    memoryAddress: 0x3D,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.GanonsTowerMiniHelmasaurRoomLeft, 0x1EAFD, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.ThreeBombs,
+                        access: tower.TowerAscend,
+                        memoryAddress: 0x3D,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World)),
+                    new Location(this, LocationId.GanonsTowerMiniHelmasaurRoomRight, 0x1EB00, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.ThreeBombs,
+                        access: tower.TowerAscend,
+                        memoryAddress: 0x3D,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World))
+                };
             }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
         }
     }
 }

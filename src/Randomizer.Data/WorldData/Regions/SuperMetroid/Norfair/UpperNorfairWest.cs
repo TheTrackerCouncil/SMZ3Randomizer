@@ -3,6 +3,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
+using System.Collections.Generic;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 {
@@ -43,20 +44,21 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CathedralRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Cathedral", metadata, "Lava Room")
             {
-                LavaRoom = new Location(this, LocationId.UpperNorfairCathedral, 0x8F8AE4, LocationType.Hidden,
-                    name: "Missile (lava room)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => items.Varia && (
-                                (Logic.CanOpenRedDoors(items) && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
-                                (World.UpperNorfairEast.CanEnter(items, true) && items.CardNorfairL2)
-                            ) && items.Morph,
-                    memoryAddress: 0x6,
-                    memoryFlag: 0x2,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairCathedral, 0x8F8AE4, LocationType.Hidden,
+                        name: "Missile (lava room)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => items.Varia && (
+                                    (Logic.CanOpenRedDoors(items) && (Logic.CanFly(items) || items.HiJump || items.SpeedBooster)) ||
+                                    (World.UpperNorfairEast.CanEnter(items, true) && items.CardNorfairL2)
+                                ) && items.Morph,
+                        memoryAddress: 0x6,
+                        memoryFlag: 0x2,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location LavaRoom { get; }
         }
 
         public class IceBeamRoom : Room
@@ -64,18 +66,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public IceBeamRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Ice Beam Room", metadata)
             {
-                IceBeam = new Location(this, LocationId.UpperNorfairIceBeam, 0x8F8B24, LocationType.Chozo,
-                    name: "Ice Beam",
-                    vanillaItem: ItemType.Ice,
-                    access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
-                                     && Logic.CanPassBombPassages(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
-                    memoryAddress: 0x6,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairIceBeam, 0x8F8B24, LocationType.Chozo,
+                        name: "Ice Beam",
+                        vanillaItem: ItemType.Ice,
+                        access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
+                                         && Logic.CanPassBombPassages(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items),
+                        memoryAddress: 0x6,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location IceBeam { get; }
         }
 
         public class CrumbleShaftRoom : Room
@@ -83,19 +86,20 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CrumbleShaftRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crumble Shaft Room", metadata)
             {
-                CrumbleShaft = new Location(this, LocationId.UpperNorfairCrumbleShaft, 0x8F8B46, LocationType.Hidden,
-                    name: "Missile (below Ice Beam)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
-                                     && Logic.CanUsePowerBombs(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items)
-                                     && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
-                    memoryAddress: 0x6,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairCrumbleShaft, 0x8F8B46, LocationType.Hidden,
+                        name: "Missile (below Ice Beam)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
+                                         && Logic.CanUsePowerBombs(items) && items.Varia && Logic.CanMoveAtHighSpeeds(items)
+                                         && (Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
+                        memoryAddress: 0x6,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location CrumbleShaft { get; }
         }
 
         public class HiJumpBootsRoom : Room
@@ -103,17 +107,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public HiJumpBootsRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hi-Jump Boots Room", metadata)
             {
-                HiJumpBoots = new Location(this, LocationId.UpperNorfairHiJumpBoots, 0x8F8BAC, LocationType.Chozo,
-                    name: "Hi-Jump Boots",
-                    vanillaItem: ItemType.HiJump,
-                    access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassBombPassages(items),
-                    memoryAddress: 0x6,
-                    memoryFlag: 0x20,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairHiJumpBoots, 0x8F8BAC, LocationType.Chozo,
+                        name: "Hi-Jump Boots",
+                        vanillaItem: ItemType.HiJump,
+                        access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassBombPassages(items),
+                        memoryAddress: 0x6,
+                        memoryFlag: 0x20,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location HiJumpBoots { get; }
         }
 
         public class HiJumpEnergyTankRoom : Room
@@ -121,27 +126,26 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public HiJumpEnergyTankRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hi-Jump Energy Tank Room", metadata, "Hi-Jump Lobby")
             {
-                HiJumpLobbyBack = new Location(this, LocationId.UpperNorfairHiJumpEnergyTankLeft, 0x8F8BE6, LocationType.Visible,
-                    name: "Missile (Hi-Jump Boots)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => Logic.CanOpenRedDoors(items) && items.Morph,
-                    memoryAddress: 0x6,
-                    memoryFlag: 0x80,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                HiJumpLobbyEntrance = new Location(this, LocationId.UpperNorfairHiJumpEnergyTankRight, 0x8F8BEC, LocationType.Visible,
-                    name: "Energy Tank (Hi-Jump Boots)",
-                    vanillaItem: ItemType.ETank,
-                    access: items => Logic.CanOpenRedDoors(items),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x1,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairHiJumpEnergyTankLeft, 0x8F8BE6, LocationType.Visible,
+                        name: "Missile (Hi-Jump Boots)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => Logic.CanOpenRedDoors(items) && items.Morph,
+                        memoryAddress: 0x6,
+                        memoryFlag: 0x80,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.UpperNorfairHiJumpEnergyTankRight, 0x8F8BEC, LocationType.Visible,
+                        name: "Energy Tank (Hi-Jump Boots)",
+                        vanillaItem: ItemType.ETank,
+                        access: items => Logic.CanOpenRedDoors(items),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x1,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location HiJumpLobbyBack { get; }
-
-            public Location HiJumpLobbyEntrance { get; }
         }
     }
 }

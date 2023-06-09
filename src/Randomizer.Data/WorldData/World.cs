@@ -167,6 +167,16 @@ namespace Randomizer.Data.WorldData
                 ?? Locations.FirstOrDefault(x => x.ToString().Equals(name, comparisonType));
         }
 
+        /// <summary>
+        /// Returns the Location object matching the given ID.
+        /// We can be confident this won't throw an exception because we have a
+        /// test that ensures every LocationId is used exactly once.
+        /// </summary>
+        public Location FindLocation(LocationId id)
+        {
+            return Locations.First(x => x.Id == id);
+        }
+
         public bool CanAquire(Progression items, RewardType reward)
         {
             var dungeonWithReward = Regions.OfType<IHasReward>().FirstOrDefault(x => reward == x.RewardType);

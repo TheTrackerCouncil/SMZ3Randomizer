@@ -3,6 +3,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
+using System.Collections.Generic;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 {
@@ -66,17 +67,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public SpringBallMazeRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Spring Ball Maze Room", metadata)
             {
-                SpringBallMaze = new Location(this, LocationId.LowerNorfairSpringBallMaze, 0x8F8FCA, LocationType.Visible,
-                    name: "Missile (lower Norfair above fire flea room)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => region.CanExit(items),
-                    memoryAddress: 0x9,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.LowerNorfairSpringBallMaze, 0x8F8FCA, LocationType.Visible,
+                        name: "Missile (lower Norfair above fire flea room)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => region.CanExit(items),
+                        memoryAddress: 0x9,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location SpringBallMaze { get; }
         }
 
         public class EscapePowerBombRoom : Room
@@ -84,17 +86,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public EscapePowerBombRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Escape Power Bomb Room", metadata)
             {
-                PowerBomb = new Location(this, LocationId.LowerNorfairEscapePowerBomb, 0x8F8FD2, LocationType.Visible,
-                    name: "Power Bomb (lower Norfair above fire flea room)",
-                    vanillaItem: ItemType.PowerBomb,
-                    access: items => region.CanExit(items),
-                    memoryAddress: 0x9,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.LowerNorfairEscapePowerBomb, 0x8F8FD2, LocationType.Visible,
+                        name: "Power Bomb (lower Norfair above fire flea room)",
+                        vanillaItem: ItemType.PowerBomb,
+                        access: items => region.CanExit(items),
+                        memoryAddress: 0x9,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location PowerBomb { get; }
         }
 
         public class WastelandRoom : Room
@@ -102,17 +105,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public WastelandRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Wasteland", metadata, "Power Bomb of Shame Room")
             {
-                PowerBombOfShame = new Location(this, LocationId.LowerNorfairWasteland, 0x8F90C0, LocationType.Visible,
-                    name: "Power Bomb (Power Bombs of shame)",
-                    vanillaItem: ItemType.PowerBomb,
-                    access: items => region.CanExit(items) && Logic.CanUsePowerBombs(items),
-                    memoryAddress: 0x9,
-                    memoryFlag: 0x10,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.LowerNorfairWasteland, 0x8F90C0, LocationType.Visible,
+                        name: "Power Bomb (Power Bombs of shame)",
+                        vanillaItem: ItemType.PowerBomb,
+                        access: items => region.CanExit(items) && Logic.CanUsePowerBombs(items),
+                        memoryAddress: 0x9,
+                        memoryFlag: 0x10,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location PowerBombOfShame { get; }
         }
 
         public class ThreeMusketeersRoom : Room
@@ -120,17 +124,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public ThreeMusketeersRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Three Musketeers' Room", metadata)
             {
-                Missile = new Location(this, LocationId.LowerNorfairThreeMusketeers, 0x8F9100, LocationType.Visible,
-                    name: "Missile (lower Norfair near Wave Beam)",
-                    vanillaItem: ItemType.Missile,
-                    access: region.CanExit,
-                    memoryAddress: 0x9,
-                    memoryFlag: 0x20,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.LowerNorfairThreeMusketeers, 0x8F9100, LocationType.Visible,
+                        name: "Missile (lower Norfair near Wave Beam)",
+                        vanillaItem: ItemType.Missile,
+                        access: region.CanExit,
+                        memoryAddress: 0x9,
+                        memoryFlag: 0x20,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Missile { get; }
         }
 
         public class RidleyTankRoom : Room
@@ -138,18 +143,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public RidleyTankRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                : base(region, "Ridley Tank Room", metadata)
            {
-                RidleyTreasure = new Location(this, LocationId.LowerNorfairRidleyTank, 0x8F9108, LocationType.Hidden,
-                    name: "Energy Tank, Ridley",
-                    vanillaItem: ItemType.ETank,
-                    access: items => items.Ridley,
-                    relevanceRequirement: region.CanBeatBoss,
-                    memoryAddress: 0x9,
-                    memoryFlag: 0x40,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.LowerNorfairRidleyTank, 0x8F9108, LocationType.Hidden,
+                        name: "Energy Tank, Ridley",
+                        vanillaItem: ItemType.ETank,
+                        access: items => items.Ridley,
+                        relevanceRequirement: region.CanBeatBoss,
+                        memoryAddress: 0x9,
+                        memoryFlag: 0x40,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
            }
-
-            public Location RidleyTreasure { get; }
         }
 
         public class FirefleaRoom : Room
@@ -157,17 +163,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public FirefleaRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                : base(region, "Lower Norfair Fireflea Room", metadata)
             {
-                EnergyTank = new Location(this, LocationId.LowerNorfairFireflea, 0x8F9184, LocationType.Visible,
-                    name: "Energy Tank, Firefleas",
-                    vanillaItem: ItemType.ETank,
-                    access: region.CanExit,
-                    memoryAddress: 0xA,
-                    memoryFlag: 0x1,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.LowerNorfairFireflea, 0x8F9184, LocationType.Visible,
+                        name: "Energy Tank, Firefleas",
+                        vanillaItem: ItemType.ETank,
+                        access: region.CanExit,
+                        memoryAddress: 0xA,
+                        memoryFlag: 0x1,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location EnergyTank { get; }
         }
     }
 }

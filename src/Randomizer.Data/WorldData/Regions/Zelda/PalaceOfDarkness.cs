@@ -177,28 +177,26 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public DarkMazeRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Dark Maze", metadata)
             {
-                Top = new Location(this, LocationId.PalaceOfDarknessDarkMazeTop, 0x1EA55, LocationType.Regular,
-                    name: "Top",
-                    vanillaItem: ItemType.ThreeBombs,
-                    access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 6 : 5),
-                    memoryAddress: 0x19,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Bottom = new Location(this, LocationId.PalaceOfDarknessDarkMazeBottom, 0x1EA58, LocationType.Regular,
-                    name: "Bottom",
-                    vanillaItem: ItemType.KeyPD,
-                    access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 6 : 5),
-                    memoryAddress: 0x19,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.PalaceOfDarknessDarkMazeTop, 0x1EA55, LocationType.Regular,
+                        name: "Top",
+                        vanillaItem: ItemType.ThreeBombs,
+                        access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 6 : 5),
+                        memoryAddress: 0x19,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.PalaceOfDarknessDarkMazeBottom, 0x1EA58, LocationType.Regular,
+                        name: "Bottom",
+                        vanillaItem: ItemType.KeyPD,
+                        access: items => Logic.CanPassSwordOnlyDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 6 : 5),
+                        memoryAddress: 0x19,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Top { get; }
-
-            public Location Bottom { get; }
         }
 
         public class DarkBasementRoom : Room
@@ -206,28 +204,26 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public DarkBasementRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Dark Basement", metadata)
             {
-                Left = new Location(this, LocationId.PalaceOfDarknessDarkBasementLeft, 0x1EA4C, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.TenArrows,
-                    access: items => Logic.CanPassFireRodDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 4 : 3),
-                    memoryAddress: 0x6A,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Right = new Location(this, LocationId.PalaceOfDarknessDarkBasementRight, 0x1EA4F, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.KeyPD,
-                    access: items => Logic.CanPassFireRodDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 4 : 3),
-                    memoryAddress: 0x6A,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.PalaceOfDarknessDarkBasementLeft, 0x1EA4C, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.TenArrows,
+                        access: items => Logic.CanPassFireRodDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 4 : 3),
+                        memoryAddress: 0x6A,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.PalaceOfDarknessDarkBasementRight, 0x1EA4F, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.KeyPD,
+                        access: items => Logic.CanPassFireRodDarkRooms(items) && items.KeyPD >= ((items.Hammer && items.Bow) || Config.ZeldaKeysanity ? 4 : 3),
+                        memoryAddress: 0x6A,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
         }
     }
 }

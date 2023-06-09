@@ -49,7 +49,7 @@ namespace Randomizer.Data.WorldData.Regions
         /// Gets a collection of every location in the region.
         /// </summary>
         public IEnumerable<Location> Locations => GetStandaloneLocations()
-            .Concat(GetRooms().SelectMany(x => x.GetLocations()));
+            .Concat(GetRooms().SelectMany(x => x.Locations));
 
         /// <summary>
         /// Gets a collection of every room in the region.

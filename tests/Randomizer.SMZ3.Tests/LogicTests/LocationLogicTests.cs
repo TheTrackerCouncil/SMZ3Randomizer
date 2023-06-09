@@ -62,7 +62,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithTwoMissingItemsReturnsTwoMissingItems()
         {
             var emptyProgression = new Progression(World.ItemPools.Keycards, new List<Reward>(), new List<Boss>());
-            var missingItems = Logic.GetMissingRequiredItems(World.GreenBrinstar.GreenBrinstarMainShaft.PowerBomb, emptyProgression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.GreenBrinstarMainShaft), emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.PowerBomb });
         }
 
@@ -70,7 +70,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithMultipleOptionsReturnsAllOptions()
         {
             var emptyProgression = new Progression(World.ItemPools.Keycards, new List<Reward>(), new List<Boss>());
-            var missingItems = Logic.GetMissingRequiredItems(World.BlueBrinstar.BlueBrinstarEnergyTank.Ceiling, emptyProgression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.BlueBrinstarEnergyTankCeiling), emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.SpaceJump })
                 .And.ContainEquivalentOf(new[] { ItemType.HiJump })
                 .And.ContainEquivalentOf(new[] { ItemType.SpeedBooster })
@@ -81,7 +81,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
         public void LocationWithThreeMissingItemsReturnsThreeMissingItems()
         {
             var emptyProgression = new Progression(World.ItemPools.Keycards, new List<Reward>(), new List<Boss>());
-            var missingItems = Logic.GetMissingRequiredItems(World.CentralCrateria.BombTorizo.BombTorizo, emptyProgression, out _);
+            var missingItems = Logic.GetMissingRequiredItems(World.FindLocation(LocationId.CrateriaBombTorizo), emptyProgression, out _);
             missingItems.Should().ContainEquivalentOf(new[] { ItemType.Morph, ItemType.Super, ItemType.PowerBomb });
         }
     }
