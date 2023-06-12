@@ -40,6 +40,10 @@ transition_to_sm:
     lda #$8f
     sta $002100                 ; Enable PPU force blank
 
+    lda.b #$00
+    sta.w $2007
+    sta.w $2006                 ; Kill MSU-1 music if it's playing
+
     jsl sm_spc_reset            ; Kill the ALTTP music engine and put the SPC in IPL upload mode
                                 ; Gotta do this before switching RAM contents
 

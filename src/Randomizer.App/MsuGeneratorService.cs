@@ -78,18 +78,37 @@ public class MsuGeneratorService
         var romBaseName = Path.GetFileNameWithoutExtension(romPath);
         var msuBaseName = Path.GetFileNameWithoutExtension(msuPath);
 
+        var swap = true;
+
         // First copy base files
         foreach (var msuFile in Directory.EnumerateFiles(msuFolder!, $"{msuBaseName}*"))
         {
             var fileName = Path.GetFileName(msuFile);
             var suffix = fileName.Replace(msuBaseName, "");
-
             var link = Path.Combine(romFolder!, romBaseName + suffix);
+
+            if (suffix.Contains(".pcm") && swap)
+            {
+                if (int.TryParse(suffix.Replace("-", "").Replace(".pcm", ""), out var trackNumber) && trackNumber > 0)
+                {
+                    if (trackNumber < 99)
+                    {
+                        trackNumber += 100;
+                    }
+                    else if (trackNumber > 99)
+                    {
+                        trackNumber -= 100;
+                    }
+
+                    var oldLink = link;
+                    link = Path.Combine(romFolder!, romBaseName + "-" + trackNumber + ".pcm");
+                }
+            }
             NativeMethods.CreateHardLink(link, msuFile, IntPtr.Zero);
         }
 
         // Loop through dungeons and fix missing pendant/crystal themes
-        var fallbackPendantFile = Path.Combine(romFolder!, $"{romBaseName}-117.pcm");
+        /*var fallbackPendantFile = Path.Combine(romFolder!, $"{romBaseName}-117.pcm");
         var fallbackCrystalFile = Path.Combine(romFolder!, $"{romBaseName}-122.pcm");
         foreach (var dungeon in worldGenerationData.World.Dungeons.Where(x => x.HasReward && x is not CastleTower))
         {
@@ -129,7 +148,7 @@ public class MsuGeneratorService
             if (stream == null) throw new FileNotFoundException("empty.pcm file not found");
             using var fileStream = new FileStream(bossVictoryPcmFile, FileMode.Create, FileAccess.Write);
             stream.CopyTo(fileStream);
-        }
+        }*/
 
         error = "";
         return true;

@@ -49,11 +49,15 @@
 
 !MULTIWORLD_DELAY = $19FE
 
+incsrc ram.asm
+incsrc sram.asm
+incsrc registers.asm
 incsrc hooks.asm
 incsrc treekid.asm
 incsrc spriteswap.asm
 incsrc sharedplayerpalettefix.asm
 incsrc fairyfountainrooms.asm
+incsrc spc.asm
 
 org $cae980             ; Free space in SM bank 8a
 base $8ae980
@@ -107,6 +111,7 @@ incsrc textskip_functions.asm
 incsrc itemtext.asm
 incsrc textrenderer.asm
 incsrc quickswap.asm
+incsrc msu.asm
 warnpc $b8ffff
 
 org $1C8000 ; text tables for translation
