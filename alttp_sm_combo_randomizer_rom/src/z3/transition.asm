@@ -24,10 +24,6 @@ transition_to_zelda:
     lda #$8f
     sta $002100                 ; Enable PPU force blank
 
-    lda.b #$00
-    sta.w $2007
-    sta.w $2006                 ; Kill MSU-1 music if it's playing
-
     jsl zelda_spc_reset         ; Kill the SM music engine and put the SPC in IPL upload mode
                                 ; Gotta do this before switching RAM contents
 
@@ -222,6 +218,10 @@ zelda_spc_reset:
     
     lda #$ff                    ; Send N-SPC into "upload mode"
     sta $2140
+
+    lda #$00
+    STA $2007
+    STA $2006
 
     rep #$30
     lda #$0000
