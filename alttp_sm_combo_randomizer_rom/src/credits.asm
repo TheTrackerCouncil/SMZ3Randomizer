@@ -80,6 +80,14 @@ init:
     ; Start SPC song
     jsl playmusic
 
+    ; If MSU music is previously playing, play the combo credits MSU track
+    sep #$30
+    lda $2002 : cmp.b #'S' : bne +
+        lda #99 : sta $2004 : stz $2005 ; Play track 99
+        lda #1 : sta $2007 ; Sets the track to not repeat
+        lda #$FF : sta $2006 ; Set to max volume
+    + 
+
     ; Load credits fonts and palettes into VRAM/CGRAM
     %ai16()
     jsr load_graphics
