@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Randomizer.Shared
+﻿namespace Randomizer.Shared
 {
     /// <summary>
     /// Specifies the IDs of item locations.

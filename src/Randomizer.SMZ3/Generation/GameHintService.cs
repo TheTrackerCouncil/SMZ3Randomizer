@@ -40,10 +40,10 @@ namespace Randomizer.SMZ3.Generation
 
         private static readonly List<LocationId> s_importantLocations = new()
         {
-            LocationId.VariaSuit, // After Kraid
+            LocationId.KraidsLairVariaSuit, // After Kraid
             LocationId.WreckedShipEastSuper, // After Phantoon
-            LocationId.SpaceJump, // After Draygon
-            LocationId.RidleyTank, // After Ridley
+            LocationId.InnerMaridiaSpaceJump, // After Draygon
+            LocationId.LowerNorfairRidleyTank, // After Ridley
             LocationId.EasternPalaceArmosKnights,
             LocationId.DesertPalaceLanmolas,
             LocationId.TowerOfHeraMoldorm,
@@ -196,11 +196,11 @@ namespace Randomizer.SMZ3.Generation
         {
             var hints = new List<string>();
 
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WaterwayEnergyTank));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PinkBrinstarWaterwayEnergyTank));
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipEnergyTank)); // Wrecked pool
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.BowlingAlleyTop)); // Wrecked ship post chozo speed booster item
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SpringBall)); // Shaktool
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Plasma));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipBowlingAlleyTop)); // Wrecked ship post chozo speed booster item
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaSpringBall)); // Shaktool
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaPlasma));
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Sahasrahla));
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.MasterSwordPedestal));
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.KingZora));
@@ -277,10 +277,10 @@ namespace Randomizer.SMZ3.Generation
                 var sphereLocations = spheres.SelectMany(x => x.Locations);
 
                 var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, LocationId.GanonsTowerMoldormChest, allWorlds.Count());
-                var canBeatKraid = CheckSphereLocationCount(sphereLocations, locations, LocationId.VariaSuit, allWorlds.Count());
+                var canBeatKraid = CheckSphereLocationCount(sphereLocations, locations, LocationId.KraidsLairVariaSuit, allWorlds.Count());
                 var canBeatPhantoon = CheckSphereLocationCount(sphereLocations, locations, LocationId.WreckedShipEastSuper, allWorlds.Count());
-                var canBeatDraygon = CheckSphereLocationCount(sphereLocations, locations, LocationId.SpaceJump, allWorlds.Count());
-                var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, LocationId.RidleyTank, allWorlds.Count());
+                var canBeatDraygon = CheckSphereLocationCount(sphereLocations, locations, LocationId.InnerMaridiaSpaceJump, allWorlds.Count());
+                var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, LocationId.LowerNorfairRidleyTank, allWorlds.Count());
                 var allCrateriaBosSKeys = CheckSphereCrateriaBossKeys(sphereLocations);
 
                 // Make sure all players have the silver arrows
