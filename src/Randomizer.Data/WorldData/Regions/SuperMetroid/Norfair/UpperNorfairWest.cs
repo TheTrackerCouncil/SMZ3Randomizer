@@ -43,7 +43,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CathedralRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Cathedral", metadata, "Lava Room")
             {
-                LavaRoom = new Location(this, LocationId.Cathedral, 0x8F8AE4, LocationType.Hidden,
+                LavaRoom = new Location(this, LocationId.UpperNorfairCathedral, 0x8F8AE4, LocationType.Hidden,
                     name: "Missile (lava room)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.Varia && (
@@ -64,7 +64,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public IceBeamRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Ice Beam Room", metadata)
             {
-                IceBeam = new Location(this, LocationId.IceBeam, 0x8F8B24, LocationType.Chozo,
+                IceBeam = new Location(this, LocationId.UpperNorfairIceBeam, 0x8F8B24, LocationType.Chozo,
                     name: "Ice Beam",
                     vanillaItem: ItemType.Ice,
                     access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
@@ -83,7 +83,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CrumbleShaftRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crumble Shaft Room", metadata)
             {
-                CrumbleShaft = new Location(this, LocationId.CrumbleShaft, 0x8F8B46, LocationType.Hidden,
+                CrumbleShaft = new Location(this, LocationId.UpperNorfairCrumbleShaft, 0x8F8B46, LocationType.Hidden,
                     name: "Missile (below Ice Beam)",
                     vanillaItem: ItemType.Missile,
                     access: items => (Config.MetroidKeysanity ? items.CardNorfairL1 : items.Super)
@@ -103,7 +103,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public HiJumpBootsRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hi-Jump Boots Room", metadata)
             {
-                HiJumpBoots = new Location(this, LocationId.HiJumpBoots, 0x8F8BAC, LocationType.Chozo,
+                HiJumpBoots = new Location(this, LocationId.UpperNorfairHiJumpBoots, 0x8F8BAC, LocationType.Chozo,
                     name: "Hi-Jump Boots",
                     vanillaItem: ItemType.HiJump,
                     access: items => Logic.CanOpenRedDoors(items) && Logic.CanPassBombPassages(items),
@@ -121,7 +121,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public HiJumpEnergyTankRoom(UpperNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hi-Jump Energy Tank Room", metadata, "Hi-Jump Lobby")
             {
-                HiJumpLobbyBack = new Location(this, LocationId.HiJumpEnergyTankLeft, 0x8F8BE6, LocationType.Visible,
+                HiJumpLobbyBack = new Location(this, LocationId.UpperNorfairHiJumpEnergyTankLeft, 0x8F8BE6, LocationType.Visible,
                     name: "Missile (Hi-Jump Boots)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanOpenRedDoors(items) && items.Morph,
@@ -129,7 +129,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                     memoryFlag: 0x80,
                     metadata: metadata,
                     trackerState: trackerState);
-                HiJumpLobbyEntrance = new Location(this, LocationId.HiJumpEnergyTankRight, 0x8F8BEC, LocationType.Visible,
+                HiJumpLobbyEntrance = new Location(this, LocationId.UpperNorfairHiJumpEnergyTankRight, 0x8F8BEC, LocationType.Visible,
                     name: "Energy Tank (Hi-Jump Boots)",
                     vanillaItem: ItemType.ETank,
                     access: items => Logic.CanOpenRedDoors(items),

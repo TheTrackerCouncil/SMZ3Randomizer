@@ -45,7 +45,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public MainStreetRoom(OuterMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Main Street Room", metadata, "Main Street")
             {
-                MainStreetCeiling = new Location(this, LocationId.MainStreetBottom, 0x8FC437, LocationType.Visible,
+                MainStreetCeiling = new Location(this, LocationId.OuterMaridiaMainStreetBottom, 0x8FC437, LocationType.Visible,
                     name: "Missile (green Maridia shinespark)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.SpeedBooster,
@@ -53,7 +53,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                     memoryFlag: 0x1,
                     metadata: metadata,
                     trackerState: trackerState);
-                MainStreetCrabSupers = new Location(this, LocationId.MainStreetTop, 0x8FC43D, LocationType.Visible,
+                MainStreetCrabSupers = new Location(this, LocationId.OuterMaridiaMainStreetTop, 0x8FC43D, LocationType.Visible,
                     name: "Super Missile (green Maridia)",
                     vanillaItem: ItemType.Super,
                     access: items => Logic.CanWallJump(WallJumpDifficulty.Medium)
@@ -75,7 +75,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
             public MamaTurtleRoom(OuterMaridia region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Mama Turtle Room", metadata)
             {
-                EnergyTank = new Location(this, LocationId.MamaTurtleVisible, 0x8FC47D, LocationType.Visible,
+                EnergyTank = new Location(this, LocationId.OuterMaridiaMamaTurtleVisible, 0x8FC47D, LocationType.Visible,
                     name: "Energy Tank, Mama turtle",
                     vanillaItem: ItemType.ETank,
                     access: items => region.CanReachTurtleRoom(items)
@@ -86,7 +86,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Maridia
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                MamaTurtleWallItem = new Location(this, LocationId.MamaTurtleHidden, 0x8FC483, LocationType.Hidden,
+                MamaTurtleWallItem = new Location(this, LocationId.OuterMaridiaMamaTurtleHidden, 0x8FC483, LocationType.Hidden,
                     name: "Missile (green Maridia tatori)",
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanReachTurtleRoom(items)

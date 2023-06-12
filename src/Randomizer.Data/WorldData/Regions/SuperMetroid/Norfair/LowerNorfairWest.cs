@@ -46,7 +46,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public GoldenTorizosRoom(LowerNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Golden Torizo's Room", metadata)
             {
-                BeforeGoldTorizo = new Location(this, LocationId.GoldenTorizoVisible, 0x8F8E6E, LocationType.Visible,
+                BeforeGoldTorizo = new Location(this, LocationId.LowerNorfairGoldenTorizoVisible, 0x8F8E6E, LocationType.Visible,
                     name: "Missile (Gold Torizo)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanUsePowerBombs(items) && items.SpaceJump && items.Super,
@@ -54,7 +54,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
                     memoryFlag: 0x40,
                     metadata: metadata,
                     trackerState: trackerState);
-                GoldTorizoCeiling = new Location(this, LocationId.GoldenTorizoHidden, 0x8F8E74, LocationType.Hidden,
+                GoldTorizoCeiling = new Location(this, LocationId.LowerNorfairGoldenTorizoHidden, 0x8F8E74, LocationType.Hidden,
                     name: "Super Missile (Gold Torizo)",
                     vanillaItem: ItemType.Super,
                     access: items => Logic.CanDestroyBombWalls(items)
@@ -77,7 +77,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public MickeyMouseRoom(LowerNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Mickey Mouse Room", metadata, "Mickey Mouse Clubhouse")
             {
-                MickeyMouseClubhouse = new Location(this, LocationId.MickeyMouse, 0x8F8F30, LocationType.Visible,
+                MickeyMouseClubhouse = new Location(this, LocationId.LowerNorfairMickeyMouse, 0x8F8F30, LocationType.Visible,
                     name: "Missile (Mickey Mouse room)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.Morph && items.Super && (
@@ -104,7 +104,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public ScrewAttackRoom(LowerNorfairWest region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Screw Attack Room", metadata)
             {
-                ScrewAttack = new Location(this, LocationId.ScrewAttack, 0x8F9110, LocationType.Chozo,
+                ScrewAttack = new Location(this, LocationId.LowerNorfairScrewAttack, 0x8F9110, LocationType.Chozo,
                     name: "Screw Attack",
                     access: items => (Logic.CanDestroyBombWalls(items) || items.ScrewAttack) && (items.SpaceJump && Logic.CanUsePowerBombs(items) || Logic.CanAccessNorfairLowerPortal(items)),
                     memoryAddress: 0x9,

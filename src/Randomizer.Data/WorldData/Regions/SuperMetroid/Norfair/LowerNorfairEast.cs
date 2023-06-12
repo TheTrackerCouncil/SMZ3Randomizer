@@ -66,7 +66,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public SpringBallMazeRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Spring Ball Maze Room", metadata)
             {
-                SpringBallMaze = new Location(this, LocationId.SpringBallMaze, 0x8F8FCA, LocationType.Visible,
+                SpringBallMaze = new Location(this, LocationId.LowerNorfairSpringBallMaze, 0x8F8FCA, LocationType.Visible,
                     name: "Missile (lower Norfair above fire flea room)",
                     vanillaItem: ItemType.Missile,
                     access: items => region.CanExit(items),
@@ -84,7 +84,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public EscapePowerBombRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Escape Power Bomb Room", metadata)
             {
-                PowerBomb = new Location(this, LocationId.EscapePowerBomb, 0x8F8FD2, LocationType.Visible,
+                PowerBomb = new Location(this, LocationId.LowerNorfairEscapePowerBomb, 0x8F8FD2, LocationType.Visible,
                     name: "Power Bomb (lower Norfair above fire flea room)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => region.CanExit(items),
@@ -102,7 +102,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public WastelandRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Wasteland", metadata, "Power Bomb of Shame Room")
             {
-                PowerBombOfShame = new Location(this, LocationId.Wasteland, 0x8F90C0, LocationType.Visible,
+                PowerBombOfShame = new Location(this, LocationId.LowerNorfairWasteland, 0x8F90C0, LocationType.Visible,
                     name: "Power Bomb (Power Bombs of shame)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => region.CanExit(items) && Logic.CanUsePowerBombs(items),
@@ -120,7 +120,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public ThreeMusketeersRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Three Musketeers' Room", metadata)
             {
-                Missile = new Location(this, LocationId.ThreeMusketeers, 0x8F9100, LocationType.Visible,
+                Missile = new Location(this, LocationId.LowerNorfairThreeMusketeers, 0x8F9100, LocationType.Visible,
                     name: "Missile (lower Norfair near Wave Beam)",
                     vanillaItem: ItemType.Missile,
                     access: region.CanExit,
@@ -138,7 +138,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public RidleyTankRoom(LowerNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                : base(region, "Ridley Tank Room", metadata)
            {
-                RidleyTreasure = new Location(this, LocationId.RidleyTank, 0x8F9108, LocationType.Hidden,
+                RidleyTreasure = new Location(this, LocationId.LowerNorfairRidleyTank, 0x8F9108, LocationType.Hidden,
                     name: "Energy Tank, Ridley",
                     vanillaItem: ItemType.ETank,
                     access: items => items.Ridley,

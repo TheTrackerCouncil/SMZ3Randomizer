@@ -59,7 +59,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public TheFinalMissileRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "The Final Missile Room", metadata)
             {
-                FinalMissileBombWay = new Location(this, LocationId.TheFinalMissile, 0x8F8486, LocationType.Visible,
+                FinalMissileBombWay = new Location(this, LocationId.CrateriaFinalMissile, 0x8F8486, LocationType.Visible,
                     name: "Missile (Crateria middle)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanPassBombPassages(items),
@@ -77,7 +77,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public PitRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Pit Room", metadata)
             {
-                MotherBrainTreasure = new Location(this, LocationId.Pit, 0x8F83EE, LocationType.Visible,
+                MotherBrainTreasure = new Location(this, LocationId.CrateriaPit, 0x8F83EE, LocationType.Visible,
                     name: "Missile (Crateria bottom)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanDestroyBombWalls(items),
@@ -113,7 +113,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public BombTorizoRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Bomb Torizo Room", metadata)
             {
-                BombTorizo = new Location(this, LocationId.BombTorizo, 0x8F8404, LocationType.Chozo,
+                BombTorizo = new Location(this, LocationId.CrateriaBombTorizo, 0x8F8404, LocationType.Chozo,
                     name: "Bombs",
                     vanillaItem: ItemType.Bombs,
                     access: items => (Config.MetroidKeysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))

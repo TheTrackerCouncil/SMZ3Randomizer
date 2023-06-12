@@ -35,7 +35,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BlueBrinstarMorphBallRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blue Brinstar Morph Ball Room", metadata, "Morph Ball Room")
             {
-                MorphBall = new Location(this, LocationId.MorphBallRight, 0x8F86EC, LocationType.Visible,
+                MorphBall = new Location(this, LocationId.BlueBrinstarMorphBallRight, 0x8F86EC, LocationType.Visible,
                     name: "Morphing Ball",
                     vanillaItem: ItemType.Morph,
                     memoryAddress: 0x3,
@@ -43,7 +43,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
                     metadata: metadata,
                     trackerState: trackerState);
 
-                PowerBomb = new Location(this, LocationId.MorphBallLeft, 0x8F874C, LocationType.Visible,
+                PowerBomb = new Location(this, LocationId.BlueBrinstarMorphBallLeft, 0x8F874C, LocationType.Visible,
                     name: "Power Bomb (blue Brinstar)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => Logic.CanUsePowerBombs(items),
@@ -63,7 +63,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BlueBrinstarFirstMissileRoom(BlueBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blue Brinstar First Missile Room", metadata)
             {
-                MiddleMissile = new Location(this, LocationId.FirstMissile, 0x8F8798, LocationType.Visible,
+                MiddleMissile = new Location(this, LocationId.BlueBrinstarFirstMissile, 0x8F8798, LocationType.Visible,
                     name: "Missile (blue Brinstar middle)",
                     vanillaItem: ItemType.Missile,
                     access: items => items.CardBrinstarL1 && items.Morph,
