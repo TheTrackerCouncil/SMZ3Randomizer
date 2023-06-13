@@ -15,7 +15,7 @@ public class MultiplayerLocationState
     [JsonIgnore] public virtual MultiplayerGameState Game { get; init; } = null!;
     public long PlayerId { get; set; }
     [JsonIgnore] public virtual MultiplayerPlayerState Player { get; init; } = null!;
-    public int LocationId { get; init; }
+    public LocationId LocationId { get; init; }
     public bool Tracked { get; set; }
     public DateTimeOffset? TrackedTime { get; set; }
 }

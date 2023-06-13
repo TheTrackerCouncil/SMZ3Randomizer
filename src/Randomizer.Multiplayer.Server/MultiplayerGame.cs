@@ -427,7 +427,7 @@ public class MultiplayerGame
     /// </summary>
     /// <param name="player"></param>
     /// <param name="locationId"></param>
-    public MultiplayerLocationState? TrackLocation(MultiplayerPlayer player, int locationId)
+    public MultiplayerLocationState? TrackLocation(MultiplayerPlayer player, LocationId locationId)
     {
         var location = player.State.TrackLocation(locationId);
         State.LastMessage = DateTimeOffset.Now;

@@ -2,12 +2,12 @@
 
 public class TrackLocationResponse
 {
-    public TrackLocationResponse(string playerGuid, int locationId)
+    public TrackLocationResponse(string playerGuid, LocationId locationId)
     {
         PlayerGuid = playerGuid;
         LocationId = locationId;
     }
 
     public string PlayerGuid { get; init; }
-    public int LocationId { get; init; }
+    public LocationId LocationId { get; init; }
 }

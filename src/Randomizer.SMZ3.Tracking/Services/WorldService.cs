@@ -139,7 +139,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Location Location(int id)
+        public Location Location(LocationId id)
         {
             return AllLocations().First(x => x.Id == id);
         }

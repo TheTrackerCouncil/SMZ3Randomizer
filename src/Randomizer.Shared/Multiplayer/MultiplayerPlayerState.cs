@@ -34,7 +34,7 @@ public class MultiplayerPlayerState
     public string? AdditionalData { get; set; }
     [JsonIgnore] public string? GenerationData { get; set; }
 
-    public MultiplayerLocationState? GetLocation(int id) => Locations?.FirstOrDefault(x => x.LocationId == id);
+    public MultiplayerLocationState? GetLocation(LocationId id) => Locations?.FirstOrDefault(x => x.LocationId == id);
     public MultiplayerItemState? GetItem(ItemType type) => Items?.FirstOrDefault(x => x.Item == type);
     public MultiplayerBossState? GetBoss(BossType type) => Bosses?.FirstOrDefault(x => x.Boss == type);
     public MultiplayerDungeonState? GetDungeon(string name) => Dungeons?.FirstOrDefault(x => x.Dungeon == name);
@@ -44,7 +44,7 @@ public class MultiplayerPlayerState
     /// Marks a location as accessed
     /// </summary>
     /// <param name="locationId"></param>
-    public MultiplayerLocationState? TrackLocation(int locationId)
+    public MultiplayerLocationState? TrackLocation(LocationId locationId)
     {
         var location = GetLocation(locationId);
         if (location != null)

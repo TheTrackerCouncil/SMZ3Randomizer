@@ -375,7 +375,7 @@ public class MultiplayerClientService
     /// </summary>
     /// <param name="locationId">The id of the location that was cleared</param>
     /// <param name="playerGuid">The player whose dungeon was cleared. Set to null to use the local player.</param>
-    public async Task TrackLocation(int locationId, string? playerGuid = null)
+    public async Task TrackLocation(LocationId locationId, string? playerGuid = null)
     {
         playerGuid ??= CurrentPlayerGuid;
         await MakeRequest("TrackLocation", new TrackLocationRequest(playerGuid ?? CurrentPlayerGuid!, locationId));

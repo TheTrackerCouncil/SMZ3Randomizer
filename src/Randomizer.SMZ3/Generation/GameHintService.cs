@@ -19,7 +19,7 @@ namespace Randomizer.SMZ3.Generation
     /// </summary>
     public class GameHintService : IGameHintService
     {
-        public static readonly List<string> HintLocations = new List<string>()
+        public static readonly List<string> HintLocations = new()
         {
             "telepathic_tile_eastern_palace",
             "telepathic_tile_tower_of_hera_floor_4",
@@ -38,37 +38,37 @@ namespace Randomizer.SMZ3.Generation
             "telepathic_tile_south_east_darkworld_cave"
         };
 
-        private static readonly List<int> s_importantLocations = new List<int>()
+        private static readonly List<LocationId> s_importantLocations = new()
         {
-            48, // Kraid
-            134, // Phantoon
-            154, // Dragon
-            78, // Ridley
-            256 + 108, // Armos Knights
-            256 + 114, // Lanmolas
-            256 + 120, // Moldorm
-            256 + 134, // Helmasaur King
-            256 + 144, // Arrghus
-            256 + 152, // Mothula
-            256 + 160, // Blind
-            256 + 168, // Kholdstare
-            256 + 176, // Vitreous
-            256 + 188, // Trinexx
-            256 + 215, // GT Validation Chest
+            LocationId.KraidsLairVariaSuit, // After Kraid
+            LocationId.WreckedShipEastSuper, // After Phantoon
+            LocationId.InnerMaridiaSpaceJump, // After Draygon
+            LocationId.LowerNorfairRidleyTank, // After Ridley
+            LocationId.EasternPalaceArmosKnights,
+            LocationId.DesertPalaceLanmolas,
+            LocationId.TowerOfHeraMoldorm,
+            LocationId.PalaceOfDarknessHelmasaurKing,
+            LocationId.SwampPalaceArrghus,
+            LocationId.SkullWoodsMothula,
+            LocationId.ThievesTownBlind,
+            LocationId.IcePalaceKholdstare,
+            LocationId.MiseryMireVitreous,
+            LocationId.TurtleRockTrinexx,
+            LocationId.GanonsTowerMoldormChest,
         };
 
-        private static readonly Dictionary<Type, int> s_dungeonBossLocations = new()
+        private static readonly Dictionary<Type, LocationId> s_dungeonBossLocations = new()
         {
-            { typeof(EasternPalace), 256 + 108 },
-            { typeof(DesertPalace), 256 + 114 },
-            { typeof(TowerOfHera), 256 + 120 },
-            { typeof(PalaceOfDarkness), 256 + 134 },
-            { typeof(SwampPalace), 256 + 144 },
-            { typeof(SkullWoods), 256 + 152 },
-            { typeof(ThievesTown), 256 + 160 },
-            { typeof(IcePalace), 256 + 168 },
-            { typeof(MiseryMire), 256 + 176 },
-            { typeof(TurtleRock), 256 + 188 },
+            { typeof(EasternPalace), LocationId.EasternPalaceArmosKnights },
+            { typeof(DesertPalace), LocationId.DesertPalaceLanmolas },
+            { typeof(TowerOfHera), LocationId.TowerOfHeraMoldorm },
+            { typeof(PalaceOfDarkness), LocationId.PalaceOfDarknessHelmasaurKing },
+            { typeof(SwampPalace), LocationId.SwampPalaceArrghus },
+            { typeof(SkullWoods), LocationId.SkullWoodsMothula },
+            { typeof(ThievesTown), LocationId.ThievesTownBlind },
+            { typeof(IcePalace), LocationId.IcePalaceKholdstare },
+            { typeof(MiseryMire), LocationId.MiseryMireVitreous },
+            { typeof(TurtleRock), LocationId.TurtleRockTrinexx },
         };
 
         private readonly ILogger<GameHintService> _logger;
@@ -196,17 +196,17 @@ namespace Randomizer.SMZ3.Generation
         {
             var hints = new List<string>();
 
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 33)); // Waterway
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 132)); // Wrecked pool
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 129)); // Wrecked ship post chozo speed booster item
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 150)); // Shaktool
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 143)); // Plasma beam
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 44)); // Sahasrahla
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 14)); // Ped
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 36)); // Zora
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 78)); // Catfish
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 117)); // Tower of Hera big key chest
-            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is 256 + 139 or 256 + 140), "The left side of swamp palace");
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PinkBrinstarWaterwayEnergyTank));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipEnergyTank)); // Wrecked pool
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipBowlingAlleyTop)); // Wrecked ship post chozo speed booster item
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaSpringBall)); // Shaktool
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaPlasma));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Sahasrahla));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.MasterSwordPedestal));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.KingZora));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Catfish));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.TowerOfHeraBigKeyChest));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SwampPalaceWestChest or LocationId.SwampPalaceBigKeyChest), "The left side of swamp palace");
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldNorthEast.PyramidFairy.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldSouth.HypeCave.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldDeathMountainEast.HookshotCave.Locations);
@@ -276,11 +276,11 @@ namespace Randomizer.SMZ3.Generation
                 var spheres = Playthrough.GenerateSpheres(worldLocations);
                 var sphereLocations = spheres.SelectMany(x => x.Locations);
 
-                var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, 256 + 215, allWorlds.Count());
-                var canBeatKraid = CheckSphereLocationCount(sphereLocations, locations, 48, allWorlds.Count());
-                var canBeatPhantoon = CheckSphereLocationCount(sphereLocations, locations, 134, allWorlds.Count());
-                var canBeatDraygon = CheckSphereLocationCount(sphereLocations, locations, 154, allWorlds.Count());
-                var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, 78, allWorlds.Count());
+                var canBeatGT = CheckSphereLocationCount(sphereLocations, locations, LocationId.GanonsTowerMoldormChest, allWorlds.Count());
+                var canBeatKraid = CheckSphereLocationCount(sphereLocations, locations, LocationId.KraidsLairVariaSuit, allWorlds.Count());
+                var canBeatPhantoon = CheckSphereLocationCount(sphereLocations, locations, LocationId.WreckedShipEastSuper, allWorlds.Count());
+                var canBeatDraygon = CheckSphereLocationCount(sphereLocations, locations, LocationId.InnerMaridiaSpaceJump, allWorlds.Count());
+                var canBeatRidley = CheckSphereLocationCount(sphereLocations, locations, LocationId.LowerNorfairRidleyTank, allWorlds.Count());
                 var allCrateriaBosSKeys = CheckSphereCrateriaBossKeys(sphereLocations);
 
                 // Make sure all players have the silver arrows
@@ -339,7 +339,7 @@ namespace Randomizer.SMZ3.Generation
         /// Checks if a given location is found for all worlds in the locations from all spheres
         /// If that location is in the checked locations list, it'll be ignored
         /// </summary>
-        private bool CheckSphereLocationCount(IEnumerable<Location> sphereLocations, IEnumerable<Location> checkedLocations, int locationId, int worldCount)
+        private bool CheckSphereLocationCount(IEnumerable<Location> sphereLocations, IEnumerable<Location> checkedLocations, LocationId locationId, int worldCount)
         {
             var ignoreOwnWorld = checkedLocations.Any(x => x.Id == locationId);
             var matchingLocationCount = sphereLocations.Count(x => x.Id == locationId);

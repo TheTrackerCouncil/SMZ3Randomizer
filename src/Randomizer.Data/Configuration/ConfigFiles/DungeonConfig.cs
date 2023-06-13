@@ -35,7 +35,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "EP",
                     Boss = new("Armos Knights"),
                     Type = typeof(Data.WorldData.Regions.Zelda.EasternPalace),
-                    LocationId = 364,
+                    LocationId = LocationId.EasternPalaceArmosKnights,
                 },
                 new DungeonInfo()
                 {
@@ -44,7 +44,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "DP",
                     Boss = new("Lanmolas"),
                     Type = typeof(Data.WorldData.Regions.Zelda.DesertPalace),
-                    LocationId = 370,
+                    LocationId = LocationId.DesertPalaceLanmolas,
                 },
                 new DungeonInfo()
                 {
@@ -53,7 +53,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "TH",
                     Boss = new("Moldorm"),
                     Type = typeof(Data.WorldData.Regions.Zelda.TowerOfHera),
-                    LocationId = 376,
+                    LocationId = LocationId.TowerOfHeraMoldorm,
                 },
                 new DungeonInfo()
                 {
@@ -62,7 +62,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "PD",
                     Boss = new("Helmasaur King", "Helmasaur"),
                     Type = typeof(Data.WorldData.Regions.Zelda.PalaceOfDarkness),
-                    LocationId = 390,
+                    LocationId = LocationId.PalaceOfDarknessHelmasaurKing,
                 },
                 new DungeonInfo()
                 {
@@ -71,7 +71,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "SP",
                     Boss = new("Arrghus"),
                     Type = typeof(Data.WorldData.Regions.Zelda.SwampPalace),
-                    LocationId = 400,
+                    LocationId = LocationId.SwampPalaceArrghus,
                 },
                 new DungeonInfo()
                 {
@@ -80,7 +80,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "SW",
                     Boss = new(new("Mothula", 0), "MOTHyula"),
                     Type = typeof(Data.WorldData.Regions.Zelda.SkullWoods),
-                    LocationId = 408,
+                    LocationId = LocationId.SkullWoodsMothula,
                 },
                 new DungeonInfo()
                 {
@@ -89,7 +89,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "TT",
                     Boss = new("Blind"),
                     Type = typeof(Data.WorldData.Regions.Zelda.ThievesTown),
-                    LocationId = 416,
+                    LocationId = LocationId.ThievesTownBlind,
                 },
                 new DungeonInfo()
                 {
@@ -98,7 +98,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "IP",
                     Boss = new("Kholdstare"),
                     Type = typeof(Data.WorldData.Regions.Zelda.IcePalace),
-                    LocationId = 424,
+                    LocationId = LocationId.IcePalaceKholdstare,
                 },
                 new DungeonInfo()
                 {
@@ -107,7 +107,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "MM",
                     Boss = new("Vitreous"),
                     Type = typeof(Data.WorldData.Regions.Zelda.MiseryMire),
-                    LocationId = 432,
+                    LocationId = LocationId.MiseryMireVitreous,
                 },
                 new DungeonInfo()
                 {
@@ -116,7 +116,7 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                     Abbreviation = "TR",
                     Boss = new("Trinexx"),
                     Type = typeof(Data.WorldData.Regions.Zelda.TurtleRock),
-                    LocationId = 444,
+                    LocationId = LocationId.TurtleRockTrinexx,
                 },
                 new DungeonInfo()
                 {

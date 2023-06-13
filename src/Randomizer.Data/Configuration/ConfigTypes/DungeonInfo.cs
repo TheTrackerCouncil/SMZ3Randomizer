@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Data.WorldData;
+using Randomizer.Shared;
 
 namespace Randomizer.Data.Configuration.ConfigTypes
 {
@@ -76,7 +77,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         /// defeating the boss, or <c>null</c> if the dungeon has item reward
         /// for beating the boss.
         /// </summary>
-        public int? LocationId { get; init; }
+        public LocationId? LocationId { get; init; }
 
         /// <summary>
         /// Returns a string representation of the dungeon.

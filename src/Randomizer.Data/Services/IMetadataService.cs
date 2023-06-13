@@ -198,7 +198,7 @@ namespace Randomizer.Data.Services
         /// <returns>
         /// A new <see cref="LocationInfo"/> for the specified room.
         /// </returns>
-        public LocationInfo Location(int id);
+        public LocationInfo Location(LocationId id);
 
         /// <summary>
         /// Returns extra information for the specified location.

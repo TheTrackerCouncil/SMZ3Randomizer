@@ -49,7 +49,7 @@ namespace Randomizer.Data.Options
         [JsonIgnore]
         public bool CopySeedAndRaceSettings { get; set; }
 
-        public IDictionary<int, int> LocationItems { get; set; } = new Dictionary<int, int>();
+        public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();
 
         public IDictionary<string, int> ItemOptions { get; set; } = new Dictionary<string, int>();
     }

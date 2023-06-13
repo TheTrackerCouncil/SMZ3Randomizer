@@ -25,7 +25,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
     {
         // If this test breaks, update Smz3Randomizer.Version
         [Theory]
-        [InlineData("test", -420637834)] // Smz3Randomizer v4.0
+        [InlineData("test", -2044032863)] // Smz3Randomizer v4.0
         public void StandardFillerWithSameSeedGeneratesSameWorld(string seed, int expectedHash)
         {
             var filler = new StandardFiller(GetLogger<StandardFiller>());

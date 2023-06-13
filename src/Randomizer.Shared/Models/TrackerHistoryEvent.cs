@@ -12,7 +12,7 @@ namespace Randomizer.Shared.Models {
         public long Id { get; set; }
         public TrackerState? TrackerState { get; set; }
         public HistoryEventType Type { get; set; }
-        public int? LocationId { get; set; }
+        public LocationId? LocationId { get; set; }
         public string? LocationName { get; set; }
         public string ObjectName { get; set; } = string.Empty;
         public bool IsImportant { get; set; }
