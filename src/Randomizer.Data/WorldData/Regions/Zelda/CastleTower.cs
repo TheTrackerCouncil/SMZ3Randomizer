@@ -59,7 +59,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public FoyerRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Foyer", metadata)
             {
-                Chest = new Location(region, 256 + 101, 0x1EAB5, LocationType.Regular,
+                Chest = new Location(region, LocationId.CastleTowerFoyer, 0x1EAB5, LocationType.Regular,
                     name: "Castle Tower - Foyer",
                     memoryAddress: 0xE0,
                     memoryFlag: 0x4,
@@ -75,7 +75,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public DarkMazeRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Dark Maze", metadata)
             {
-                Chest = new Location(region, 256 + 102, 0x1EAB2, LocationType.Regular,
+                Chest = new Location(region, LocationId.CastleTowerDarkMaze, 0x1EAB2, LocationType.Regular,
                     name: "Castle Tower - Dark Maze",
                     access: items => items.Lamp && items.KeyCT >= 1,
                     memoryAddress: 0xD0,

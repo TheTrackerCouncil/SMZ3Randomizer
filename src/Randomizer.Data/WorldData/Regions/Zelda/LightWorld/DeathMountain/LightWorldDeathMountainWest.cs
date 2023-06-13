@@ -11,7 +11,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
     {
         public LightWorldDeathMountainWest(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            EtherTablet = new Location(this, 256 + 0, 0x308016, LocationType.Ether,
+            EtherTablet = new Location(this, LocationId.EtherTablet, 0x308016, LocationType.Ether,
                 name: "Ether Tablet",
                 vanillaItem: ItemType.Ether,
                 access: items => items.Book && items.MasterSword && (items.Mirror || (items.Hammer && items.Hookshot)),
@@ -21,7 +21,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                 metadata: metadata,
                 trackerState: trackerState);
 
-            SpectacleRock = new Location(this, 256 + 1, 0x308140, LocationType.Regular,
+            SpectacleRock = new Location(this, LocationId.SpectacleRock, 0x308140, LocationType.Regular,
                 name: "Spectacle Rock",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror,
@@ -31,7 +31,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                 metadata: metadata,
                 trackerState: trackerState);
 
-            SpectacleRockCave = new Location(this, 256 + 2, 0x308002, LocationType.Regular,
+            SpectacleRockCave = new Location(this, LocationId.SpectacleRockCave, 0x308002, LocationType.Regular,
                 name: "Spectacle Rock Cave",
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0xEA,
@@ -39,7 +39,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
                 metadata: metadata,
                 trackerState: trackerState);
 
-            OldManReward = new Location(this, 256 + 3, 0x1EE9FA, LocationType.Regular,
+            OldManReward = new Location(this, LocationId.OldMan, 0x1EE9FA, LocationType.Regular,
                 name: "Old Man",
                 vanillaItem: ItemType.Mirror,
                 access: items => Logic.CanPassSwordOnlyDarkRooms(items),

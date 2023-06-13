@@ -47,7 +47,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public WestOceanRoom(EastCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "West Ocean", metadata)
             {
-                FloodedCavernUnderWater = new Location(this, 1, 0x8F81E8, LocationType.Visible,
+                FloodedCavernUnderWater = new Location(this, LocationId.CrateriaWestOceanFloodedCavern, 0x8F81E8, LocationType.Visible,
                     name: "Missile (outside Wrecked Ship bottom)",
                     vanillaItem: ItemType.Missile,
                     access: items => CanAccessFloodedCavernUnderWater(items, true),
@@ -56,7 +56,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                     memoryFlag: 0x2,
                     metadata: metadata,
                     trackerState: trackerState);
-                SkyMissile = new Location(this, 2, 0x8F81EE, LocationType.Hidden,
+                SkyMissile = new Location(this, LocationId.CrateriaWestOceanSky, 0x8F81EE, LocationType.Hidden,
                     name: "Missile (outside Wrecked Ship top)",
                     vanillaItem: ItemType.Missile,
                     access: items => CanAccessSkyItem(items, true),
@@ -65,7 +65,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                MorphBallMaze = new Location(this, 3, 0x8F81F4, LocationType.Visible,
+                MorphBallMaze = new Location(this, LocationId.CrateriaWestOceanMorphBallMaze, 0x8F81F4, LocationType.Visible,
                     name: "Missile (outside Wrecked Ship middle)",
                     vanillaItem: ItemType.Missile,
                     access: items => CanPassThroughWreckedShip(items, true),
@@ -102,7 +102,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public TheMoatRoom(EastCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "The Moat", metadata)
             {
-                Moat = new Location(this, 4, 0x8F8248, LocationType.Visible,
+                Moat = new Location(this, LocationId.CrateriaMoat, 0x8F8248, LocationType.Visible,
                     name: "Missile (Crateria moat)",
                     vanillaItem: ItemType.Missile,
                     memoryAddress: 0x0,

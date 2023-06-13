@@ -11,7 +11,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
     {
         public DarkWorldSouth(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            DiggingGame = new Location(this, 256 + 82, 0x308148, LocationType.Regular,
+            DiggingGame = new Location(this, LocationId.DiggingGame, 0x308148, LocationType.Regular,
                 name: "Digging Game",
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x68,
@@ -20,7 +20,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            Stumpy = new Location(this, 256 + 83, 0x6B0C7, LocationType.Regular,
+            Stumpy = new Location(this, LocationId.Stumpy, 0x6B0C7, LocationType.Regular,
                 name: "Stumpy",
                 vanillaItem: ItemType.Shovel,
                 memoryAddress: 0x190,
@@ -62,7 +62,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
             public HypeCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hype Cave", metadata)
             {
-                Top = new Location(this, 256 + 84, 0x1EB1E, LocationType.Regular,
+                Top = new Location(this, LocationId.HypeCaveTop, 0x1EB1E, LocationType.Regular,
                     name: "Top",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x11E,
@@ -70,7 +70,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     metadata: metadata,
                     trackerState: trackerState);
 
-                MiddleRight = new Location(this, 256 + 85, 0x1EB21, LocationType.Regular,
+                MiddleRight = new Location(this, LocationId.HypeCaveMiddleRight, 0x1EB21, LocationType.Regular,
                     name: "Middle Right",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x11E,
@@ -78,7 +78,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     metadata: metadata,
                     trackerState: trackerState);
 
-                MiddleLeft = new Location(this, 256 + 86, 0x1EB24, LocationType.Regular,
+                MiddleLeft = new Location(this, LocationId.HypeCaveMiddleLeft, 0x1EB24, LocationType.Regular,
                     name: "Middle Left",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x11E,
@@ -86,7 +86,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Bottom = new Location(this, 256 + 87, 0x1EB27, LocationType.Regular,
+                Bottom = new Location(this, LocationId.HypeCaveBottom, 0x1EB27, LocationType.Regular,
                     name: "Bottom",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x11E,
@@ -94,7 +94,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Npc = new Location(this, 256 + 88, 0x308011, LocationType.Regular,
+                Npc = new Location(this, LocationId.HypeCaveNpc, 0x308011, LocationType.Regular,
                     name: "NPC",
                     vanillaItem: ItemType.ThreeHundredRupees,
                     memoryAddress: 0x11E,

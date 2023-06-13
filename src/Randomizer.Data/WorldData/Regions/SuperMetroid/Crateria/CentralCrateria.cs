@@ -41,7 +41,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public PowerBombRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crateria Power Bomb Room", metadata)
             {
-                PowerBomb = new Location(this, 0, 0x8F81CC, LocationType.Visible,
+                PowerBomb = new Location(this, LocationId.CrateriaPowerBomb, 0x8F81CC, LocationType.Visible,
                     name: "Power Bomb (Crateria surface)",
                     vanillaItem: ItemType.PowerBomb,
                     access: items => (Config.MetroidKeysanity ? items.CardCrateriaL1 : Logic.CanUsePowerBombs(items)) && (items.SpeedBooster || Logic.CanFly(items)),
@@ -59,7 +59,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public TheFinalMissileRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "The Final Missile Room", metadata)
             {
-                FinalMissileBombWay = new Location(this, 12, 0x8F8486, LocationType.Visible,
+                FinalMissileBombWay = new Location(this, LocationId.CrateriaFinalMissile, 0x8F8486, LocationType.Visible,
                     name: "Missile (Crateria middle)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanPassBombPassages(items),
@@ -77,7 +77,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public PitRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Pit Room", metadata)
             {
-                MotherBrainTreasure = new Location(this, 6, 0x8F83EE, LocationType.Visible,
+                MotherBrainTreasure = new Location(this, LocationId.CrateriaPit, 0x8F83EE, LocationType.Visible,
                     name: "Missile (Crateria bottom)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanDestroyBombWalls(items),
@@ -95,7 +95,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public CrateriaSuperRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crateria Super Room", metadata)
             {
-                SuperMissile = new Location(this, 11, 0x8F8478, LocationType.Visible,
+                SuperMissile = new Location(this, LocationId.CrateriaSuper, 0x8F8478, LocationType.Visible,
                     name: "Super Missile (Crateria)",
                     vanillaItem: ItemType.Super,
                     access: items => Logic.CanUsePowerBombs(items) && Logic.HasEnergyReserves(items, 2) && items.SpeedBooster && (!World.Config.LogicConfig.LaunchPadRequiresIceBeam || items.Ice),
@@ -113,7 +113,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public BombTorizoRoom(CentralCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Bomb Torizo Room", metadata)
             {
-                BombTorizo = new Location(this, 7, 0x8F8404, LocationType.Chozo,
+                BombTorizo = new Location(this, LocationId.CrateriaBombTorizo, 0x8F8404, LocationType.Chozo,
                     name: "Bombs",
                     vanillaItem: ItemType.Bombs,
                     access: items => (Config.MetroidKeysanity ? items.CardCrateriaBoss : Logic.CanOpenRedDoors(items))

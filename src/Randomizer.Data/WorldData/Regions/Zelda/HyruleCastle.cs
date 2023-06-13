@@ -16,7 +16,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeyHC, ItemType.MapHC };
 
-            Sanctuary = new Location(this, 256 + 91, 0x1EA79, LocationType.Regular,
+            Sanctuary = new Location(this, LocationId.Sanctuary, 0x1EA79, LocationType.Regular,
                 name: "Sanctuary",
                 vanillaItem: ItemType.HeartContainer,
                 memoryAddress: 0x12,
@@ -25,7 +25,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            MapChest = new Location(this, 256 + 96, 0x1EB0C, LocationType.Regular,
+            MapChest = new Location(this, LocationId.HyruleCastleMapChest, 0x1EB0C, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapHC,
                 memoryAddress: 0x72,
@@ -34,7 +34,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            BoomerangChest = new Location(this, 256 + 97, 0x1E974, LocationType.Regular,
+            BoomerangChest = new Location(this, LocationId.HyruleCastleBoomerangChest, 0x1E974, LocationType.Regular,
                 name: "Boomerang Chest",
                 vanillaItem: ItemType.BlueBoomerang,
                 access: items => items.KeyHC,
@@ -44,7 +44,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            ZeldasCell = new Location(this, 256 + 98, 0x1EB09, LocationType.Regular,
+            ZeldasCell = new Location(this, LocationId.HyruleCastleZeldasCell, 0x1EB09, LocationType.Regular,
                 name: "Zelda's Cell",
                 vanillaItem: ItemType.FiveRupees,
                 access: items => items.KeyHC,
@@ -54,7 +54,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            LinksUncle = new Location(this, 256 + 99, 0x5DF45, LocationType.NotInDungeon,
+            LinksUncle = new Location(this, LocationId.LinksUncle, 0x5DF45, LocationType.NotInDungeon,
                 name: "Link's Uncle",
                 vanillaItem: ItemType.ProgressiveSword,
                 memoryAddress: 0x146,
@@ -65,7 +65,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 .Allow((item, items) => Config.ZeldaKeysanity || !item.IsDungeonItem)
                 .Weighted(SphereOne);
 
-            SecretPassage = new Location(this, 256 + 100, 0x1E971, LocationType.NotInDungeon,
+            SecretPassage = new Location(this, LocationId.SecretPassage, 0x1E971, LocationType.NotInDungeon,
                 name: "Secret Passage",
                 vanillaItem: ItemType.FiveRupees,
                 memoryAddress: 0x55,
@@ -112,7 +112,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public BackOfEscapeRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Sewers", metadata, "Back of Escape")
             {
-                SecretRoomLeft = new Location(this, 256 + 92, 0x1EB5D, LocationType.Regular,
+                SecretRoomLeft = new Location(this, LocationId.SewersSecretRoomLeft, 0x1EB5D, LocationType.Regular,
                     name: "Secret Room - Left",
                     vanillaItem: ItemType.ThreeBombs,
                     access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
@@ -121,7 +121,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                SecretRoomMiddle = new Location(this, 256 + 93, 0x1EB60, LocationType.Regular,
+                SecretRoomMiddle = new Location(this, LocationId.SewersSecretRoomMiddle, 0x1EB60, LocationType.Regular,
                     name: "Secret Room - Middle",
                     vanillaItem: ItemType.ThreeHundredRupees,
                     access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
@@ -130,7 +130,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                SecretRoomRight = new Location(this, 256 + 94, 0x1EB63, LocationType.Regular,
+                SecretRoomRight = new Location(this, LocationId.SewersSecretRoomRight, 0x1EB63, LocationType.Regular,
                     name: "Secret Room - Right",
                     vanillaItem: ItemType.TenArrows,
                     access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
@@ -139,7 +139,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                DarkCross = new Location(this, 256 + 95, 0x1E96E, LocationType.Regular,
+                DarkCross = new Location(this, LocationId.SewersDarkCross, 0x1E96E, LocationType.Regular,
                     name: "Dark Cross",
                     vanillaItem: ItemType.KeyHC,
                     access: items => Logic.CanPassFireRodDarkRooms(items),

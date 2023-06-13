@@ -18,7 +18,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeySP, ItemType.BigKeySP, ItemType.MapSP, ItemType.CompassSP };
 
-            Entrance = new Location(this, 256 + 135, 0x1EA9D, LocationType.Regular,
+            Entrance = new Location(this, LocationId.SwampPalaceEntrance, 0x1EA9D, LocationType.Regular,
                 name: "Entrance",
                 vanillaItem: ItemType.KeySP,
                 memoryAddress: 0x28,
@@ -27,7 +27,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Allow((item, items) => Config.ZeldaKeysanity || item.Is(ItemType.KeySP, World));
 
-            MapChest = new Location(this, 256 + 136, 0x1E986, LocationType.Regular,
+            MapChest = new Location(this, LocationId.SwampPalaceMapChest, 0x1E986, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapSP,
                 access: items => items.KeySP,
@@ -36,7 +36,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigChest = new Location(this, 256 + 137, 0x1E989, LocationType.Regular,
+            BigChest = new Location(this, LocationId.SwampPalaceBigChest, 0x1E989, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.Hookshot,
                 access: items => items.BigKeySP && items.KeySP && items.Hammer,
@@ -46,7 +46,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .AlwaysAllow((item, items) => item.Is(ItemType.BigKeySP, World));
 
-            CompassChest = new Location(this, 256 + 138, 0x1EAA0, LocationType.Regular,
+            CompassChest = new Location(this, LocationId.SwampPalaceCompassChest, 0x1EAA0, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassSP,
                 access: items => items.KeySP && items.Hammer,
@@ -55,7 +55,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            WestChest = new Location(this, 256 + 139, 0x1EAA3, LocationType.Regular,
+            WestChest = new Location(this, LocationId.SwampPalaceWestChest, 0x1EAA3, LocationType.Regular,
                 name: "West Chest",
                 vanillaItem: ItemType.TwentyRupees,
                 access: items => items.KeySP && items.Hammer,
@@ -64,7 +64,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigKeyChest = new Location(this, 256 + 140, 0x1EAA6, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.SwampPalaceBigKeyChest, 0x1EAA6, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeySP,
                 access: items => items.KeySP && items.Hammer,
@@ -73,7 +73,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            WaterfallRoom = new Location(this, 256 + 143, 0x1EAAF, LocationType.Regular,
+            WaterfallRoom = new Location(this, LocationId.SwampPalaceWaterfallRoom, 0x1EAAF, LocationType.Regular,
                 name: "Waterfall Room",
                 vanillaItem: ItemType.TwentyRupees,
                 access: items => items.KeySP && items.Hammer && items.Hookshot,
@@ -82,7 +82,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            ArrghusReward = new Location(this, 256 + 144, 0x308154, LocationType.Regular,
+            ArrghusReward = new Location(this, LocationId.SwampPalaceArrghus, 0x308154, LocationType.Regular,
                 name: "Arrghus",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.KeySP && items.Hammer && items.Hookshot,
@@ -147,7 +147,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public FloodedRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Flooded Room", metadata)
             {
-                Left = new Location(this, 256 + 141, 0x1EAA9, LocationType.Regular,
+                Left = new Location(this, LocationId.SwampPalaceFloodedRoomLeft, 0x1EAA9, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TwentyRupees,
                     access: items => items.KeySP && items.Hammer && items.Hookshot,
@@ -155,7 +155,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                Right = new Location(this, 256 + 142, 0x1EAAC, LocationType.Regular,
+                Right = new Location(this, LocationId.SwampPalaceFloodedRoomRight, 0x1EAAC, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.TwentyRupees,
                     access: items => items.KeySP && items.Hammer && items.Hookshot,

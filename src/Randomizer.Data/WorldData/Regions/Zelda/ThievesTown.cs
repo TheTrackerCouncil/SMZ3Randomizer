@@ -18,7 +18,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeyTT, ItemType.BigKeyTT, ItemType.MapTT, ItemType.CompassTT };
 
-            MapChest = new Location(this, 256 + 153, 0x1EA01, LocationType.Regular,
+            MapChest = new Location(this, LocationId.ThievesTownMapChest, 0x1EA01, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapTT,
                 memoryAddress: 0xDB,
@@ -26,7 +26,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            AmbushChest = new Location(this, 256 + 154, 0x1EA0A, LocationType.Regular,
+            AmbushChest = new Location(this, LocationId.ThievesTownAmbushChest, 0x1EA0A, LocationType.Regular,
                 name: "Ambush Chest",
                 vanillaItem: ItemType.TwentyRupees,
                 memoryAddress: 0xCB,
@@ -34,7 +34,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            CompassChest = new Location(this, 256 + 155, 0x1EA07, LocationType.Regular,
+            CompassChest = new Location(this, LocationId.ThievesTownCompassChest, 0x1EA07, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassTT,
                 memoryAddress: 0xDC,
@@ -42,7 +42,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigKeyChest = new Location(this, 256 + 156, 0x1EA04, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.ThievesTownBigKeyChest, 0x1EA04, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyTT,
                 memoryAddress: 0xDB,
@@ -50,7 +50,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            Attic = new Location(this, 256 + 157, 0x1EA0D, LocationType.Regular,
+            Attic = new Location(this, LocationId.ThievesTownAttic, 0x1EA0D, LocationType.Regular,
                 name: "Attic", // ??? Vanilla item ???
                 access: items => items.BigKeyTT && items.KeyTT,
                 memoryAddress: 0x65,
@@ -58,7 +58,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BlindsCell = new Location(this, 256 + 158, 0x1EA13, LocationType.Regular,
+            BlindsCell = new Location(this, LocationId.ThievesTownBlindsCell, 0x1EA13, LocationType.Regular,
                 name: "Blind's Cell",
                 vanillaItem: ItemType.KeyTT,
                 access: items => items.BigKeyTT,
@@ -67,7 +67,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigChest = new Location(this, 256 + 159, 0x1EA10, LocationType.Regular,
+            BigChest = new Location(this, LocationId.ThievesTownBigChest, 0x1EA10, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveGlove,
                 access: items => BigChest != null && items.BigKeyTT && items.Hammer &&
@@ -78,7 +78,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyTT, World) && items.Hammer);
 
-            BlindReward = new Location(this, 256 + 160, 0x308156, LocationType.Regular,
+            BlindReward = new Location(this, LocationId.ThievesTownBlind, 0x308156, LocationType.Regular,
                 name: "Blind",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyTT && items.KeyTT && CanBeatBoss(items),

@@ -20,7 +20,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeyTH, ItemType.BigKeyTH, ItemType.MapTH, ItemType.CompassTH };
 
-            BasementCage = new Location(this, 256 + 115, 0x308162, LocationType.HeraStandingKey,
+            BasementCage = new Location(this, LocationId.TowerOfHeraBasementCage, 0x308162, LocationType.HeraStandingKey,
                 name: "Basement Cage",
                 vanillaItem: ItemType.KeyTH,
                 memoryAddress: 0x87,
@@ -28,7 +28,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MapChest = new Location(this, 256 + 116, 0x1E9AD, LocationType.Regular,
+            MapChest = new Location(this, LocationId.TowerOfHeraMapChest, 0x1E9AD, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapTH,
                 memoryAddress: 0x77,
@@ -36,7 +36,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigKeyChest = new Location(this, 256 + 117, 0x1E9E6, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.TowerOfHeraBigKeyChest, 0x1E9E6, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyTH,
                 access: items => items.KeyTH && Logic.CanLightTorches(items),
@@ -46,7 +46,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyTH, World));
 
-            CompassChest = new Location(this, 256 + 118, 0x1E9FB, LocationType.Regular,
+            CompassChest = new Location(this, LocationId.TowerOfHeraCompassChest, 0x1E9FB, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassTH,
                 access: items => items.BigKeyTH,
@@ -55,7 +55,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigChest = new Location(this, 256 + 119, 0x1E9F8, LocationType.Regular,
+            BigChest = new Location(this, LocationId.TowerOfHeraBigChest, 0x1E9F8, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.MoonPearl,
                 access: items => items.BigKeyTH,
@@ -64,7 +64,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MoldormReward = new Location(this, 256 + 120, 0x308152, LocationType.Regular,
+            MoldormReward = new Location(this, LocationId.TowerOfHeraMoldorm, 0x308152, LocationType.Regular,
                 name: "Moldorm",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => items.BigKeyTH && CanBeatBoss(items),

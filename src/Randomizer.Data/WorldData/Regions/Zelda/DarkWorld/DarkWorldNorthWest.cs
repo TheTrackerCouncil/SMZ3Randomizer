@@ -11,7 +11,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
     {
         public DarkWorldNorthWest(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            BumperCaveLedge = new Location(this, 256 + 71, 0x308146, LocationType.Regular,
+            BumperCaveLedge = new Location(this, LocationId.BumperCave, 0x308146, LocationType.Regular,
                 name: "Bumper Cave",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => Logic.CanLiftLight(items) && items.Cape,
@@ -21,7 +21,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            ChestGame = new Location(this, 256 + 72, 0x1EDA8, LocationType.Regular,
+            ChestGame = new Location(this, LocationId.ChestGame, 0x1EDA8, LocationType.Regular,
                 name: "Chest Game",
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x106,
@@ -29,7 +29,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            CShapedHouse = new Location(this, 256 + 73, 0x1E9EF, LocationType.Regular,
+            CShapedHouse = new Location(this, LocationId.CShapedHouse, 0x1E9EF, LocationType.Regular,
                 name: "C-Shaped House", // ???
                 vanillaItem: ItemType.ThreeHundredRupees, // ???
                 memoryAddress: 0x11C,
@@ -37,7 +37,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            Brewery = new Location(this, 256 + 74, 0x1E9EC, LocationType.Regular,
+            Brewery = new Location(this, LocationId.Brewery, 0x1E9EC, LocationType.Regular,
                 name: "Brewery", // ???
                 vanillaItem: ItemType.ThreeHundredRupees,
                 memoryAddress: 0x106,
@@ -45,7 +45,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            PegWorld = new Location(this, 256 + 75, 0x308006, LocationType.Regular,
+            PegWorld = new Location(this, LocationId.HammerPegs, 0x308006, LocationType.Regular,
                 name: "Hammer Pegs",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => Logic.CanLiftHeavy(items) && items.Hammer,
@@ -54,7 +54,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            PurpleChestTurnin = new Location(this, 256 + 77, 0x6BD68, LocationType.Regular,
+            PurpleChestTurnin = new Location(this, LocationId.PurpleChest, 0x6BD68, LocationType.Regular,
                 name: "Purple Chest",
                 vanillaItem: ItemType.Bottle,
                 access: items => Logic.CanLiftHeavy(items),

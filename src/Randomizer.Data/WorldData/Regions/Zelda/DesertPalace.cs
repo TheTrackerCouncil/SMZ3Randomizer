@@ -21,7 +21,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeyDP, ItemType.BigKeyDP, ItemType.MapDP, ItemType.CompassDP };
 
-            BigChest = new Location(this, 256 + 109, 0x1E98F, LocationType.Regular,
+            BigChest = new Location(this, LocationId.DesertPalaceBigChest, 0x1E98F, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveGlove,
                 access: items => items.BigKeyDP,
@@ -30,7 +30,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            TorchItem = new Location(this, 256 + 110, 0x308160, LocationType.Regular,
+            TorchItem = new Location(this, LocationId.DesertPalaceTorch, 0x308160, LocationType.Regular,
                 name: "Torch",
                 vanillaItem: ItemType.KeyDP,
                 access: items => items.Boots,
@@ -39,7 +39,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MapChest = new Location(this, 256 + 111, 0x1E9B6, LocationType.Regular,
+            MapChest = new Location(this, LocationId.DesertPalaceMapChest, 0x1E9B6, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapDP,
                 memoryAddress: 0x74,
@@ -47,7 +47,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigKeyChest = new Location(this, 256 + 112, 0x1E9C2, LocationType.Regular,
+            BigKeyChest = new Location(this, LocationId.DesertPalaceBigKeyChest, 0x1E9C2, LocationType.Regular,
                 name: "Big Key Chest",
                 vanillaItem: ItemType.BigKeyDP,
                 access: items => items.KeyDP,
@@ -56,7 +56,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            CompassChest = new Location(this, 256 + 113, 0x1E9CB, LocationType.Regular,
+            CompassChest = new Location(this, LocationId.DesertPalaceCompassChest, 0x1E9CB, LocationType.Regular,
                 name: "Compass Chest",
                 vanillaItem: ItemType.CompassDP,
                 access: items => items.KeyDP,
@@ -65,7 +65,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            LanmolasReward = new Location(this, 256 + 114, 0x308151, LocationType.Regular,
+            LanmolasReward = new Location(this, LocationId.DesertPalaceLanmolas, 0x308151, LocationType.Regular,
                 name: "Lanmolas",
                 vanillaItem: ItemType.HeartContainer,
                 access: items => (

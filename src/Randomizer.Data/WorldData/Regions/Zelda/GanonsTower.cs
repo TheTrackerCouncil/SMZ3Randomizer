@@ -19,7 +19,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         {
             RegionItems = new[] { ItemType.KeyGT, ItemType.BigKeyGT, ItemType.MapGT, ItemType.CompassGT };
 
-            BobsTorch = new Location(this, 256 + 189, 0x308161, LocationType.Regular,
+            BobsTorch = new Location(this, LocationId.GanonsTowerBobsTorch, 0x308161, LocationType.Regular,
                 name: "Bob's Torch",
                 vanillaItem: ItemType.KeyGT,
                 access: items => items.Boots,
@@ -28,7 +28,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MapChest = new Location(this, 256 + 194, 0x1EAD3, LocationType.Regular,
+            MapChest = new Location(this, LocationId.GanonsTowerMapChest, 0x1EAD3, LocationType.Regular,
                 name: "Map Chest",
                 vanillaItem: ItemType.MapGT,
                 access: items => items.Hammer && (items.Hookshot || items.Boots) && items.KeyGT >=
@@ -39,7 +39,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .AlwaysAllow((item, items) => item.Is(ItemType.KeyGT, World) && items.KeyGT >= 3);
 
-            FiresnakeRoom = new Location(this, 256 + 195, 0x1EAD0, LocationType.Regular,
+            FiresnakeRoom = new Location(this, LocationId.GanonsTowerFiresnakeRoom, 0x1EAD0, LocationType.Regular,
                 name: "Firesnake Room",
                 vanillaItem: ItemType.KeyGT,
                 access: items => FiresnakeRoom != null && RandomizerRoom != null && items.Hammer && items.Hookshot && items.KeyGT >= (new[] {
@@ -54,7 +54,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            TileRoom = new Location(this, 256 + 202, 0x1EAE2, LocationType.Regular,
+            TileRoom = new Location(this, LocationId.GanonsTowerTileRoom, 0x1EAE2, LocationType.Regular,
                 name: "Tile Room",
                 vanillaItem: ItemType.KeyGT,
                 access: items => items.Somaria,
@@ -63,7 +63,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BobsChest = new Location(this, 256 + 207, 0x1EADF, LocationType.Regular,
+            BobsChest = new Location(this, LocationId.GanonsTowerBobsChest, 0x1EADF, LocationType.Regular,
                 name: "Bob's Chest",
                 vanillaItem: ItemType.TenArrows,
                 access: items => items.KeyGT >= 3 && (
@@ -74,7 +74,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BigChest = new Location(this, 256 + 208, 0x1EAD6, LocationType.Regular,
+            BigChest = new Location(this, LocationId.GanonsTowerBigChest, 0x1EAD6, LocationType.Regular,
                 name: "Big Chest",
                 vanillaItem: ItemType.ProgressiveTunic,
                 access: items => items.BigKeyGT && items.KeyGT >= 3 && (
@@ -86,7 +86,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
-            PreMoldormChest = new Location(this, 256 + 214, 0x1EB03, LocationType.Regular,
+            PreMoldormChest = new Location(this, LocationId.GanonsTowerPreMoldormChest, 0x1EB03, LocationType.Regular,
                 name: "Pre-Moldorm Chest",
                 vanillaItem: ItemType.KeyGT,
                 access: TowerAscend,
@@ -96,7 +96,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 trackerState: trackerState)
                 .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
-            MoldormChest = new Location(this, 256 + 215, 0x1EB06, LocationType.Regular,
+            MoldormChest = new Location(this, LocationId.GanonsTowerMoldormChest, 0x1EB06, LocationType.Regular,
                 name: "Moldorm Chest",
                 vanillaItem: ItemType.TwentyRupees,
                 access: items => items.BigKeyGT && items.KeyGT >= 4 &&
@@ -200,28 +200,28 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 : base(region, "DMs Room", metadata)
             {
                 // "bombs, arrows, and Rupees" - but what?
-                TopLeft = new Location(this, 256 + 190, 0x1EAB8, LocationType.Regular,
+                TopLeft = new Location(this, LocationId.GanonsTowerDMsRoomTopLeft, 0x1EAB8, LocationType.Regular,
                     name: "Top Left",
                     access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                TopRight = new Location(this, 256 + 191, 0x1EABB, LocationType.Regular,
+                TopRight = new Location(this, LocationId.GanonsTowerDMsRoomTopRight, 0x1EABB, LocationType.Regular,
                     name: "Top Right",
                     access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
                     memoryFlag: 0x5,
                     metadata: metadata,
                     trackerState: trackerState);
-                BottomLeft = new Location(this, 256 + 192, 0x1EABE, LocationType.Regular,
+                BottomLeft = new Location(this, LocationId.GanonsTowerDMsRoomBottomLeft, 0x1EABE, LocationType.Regular,
                     name: "Bottom Left",
                     access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
                     memoryFlag: 0x6,
                     metadata: metadata,
                     trackerState: trackerState);
-                BottomRight = new Location(this, 256 + 193, 0x1EAC1, LocationType.Regular,
+                BottomRight = new Location(this, LocationId.GanonsTowerDMsRoomBottomRight, 0x1EAC1, LocationType.Regular,
                     name: "Bottom Right",
                     access: items => items.Hammer && items.Hookshot,
                     memoryAddress: 0x7B,
@@ -244,28 +244,28 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public RandomizerRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Randomizer Room", metadata) // The room with all the floor tiles
             {
-                TopLeft = new Location(this, 256 + 196, 0x1EAC4, LocationType.Regular,
+                TopLeft = new Location(this, LocationId.GanonsTowerRandomizerRoomTopLeft, 0x1EAC4, LocationType.Regular,
                     name: "Top Left",
                     access: items => LeftSide(items, new[] { TopRight, BottomLeft, BottomRight }),
                     memoryAddress: 0x7C,
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState);
-                TopRight = new Location(this, 256 + 197, 0x1EAC7, LocationType.Regular,
+                TopRight = new Location(this, LocationId.GanonsTowerRandomizerRoomTopRight, 0x1EAC7, LocationType.Regular,
                     name: "Top Right",
                     access: items => LeftSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
                     memoryAddress: 0x7C,
                     memoryFlag: 0x5,
                     metadata: metadata,
                     trackerState: trackerState);
-                BottomLeft = new Location(this, 256 + 198, 0x1EACA, LocationType.Regular,
+                BottomLeft = new Location(this, LocationId.GanonsTowerRandomizerRoomBottomLeft, 0x1EACA, LocationType.Regular,
                     name: "Bottom Left",
                     access: items => LeftSide(items, new[] { TopRight, TopLeft, BottomRight }),
                     memoryAddress: 0x7C,
                     memoryFlag: 0x6,
                     metadata: metadata,
                     trackerState: trackerState);
-                BottomRight = new Location(this, 256 + 199, 0x1EACD, LocationType.Regular,
+                BottomRight = new Location(this, LocationId.GanonsTowerRandomizerRoomBottomRight, 0x1EACD, LocationType.Regular,
                     name: "Bottom Right",
                     access: items => LeftSide(items, new[] { TopRight, TopLeft, BottomLeft }),
                     memoryAddress: 0x7C,
@@ -293,7 +293,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public HopeRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hope Room", metadata, "Right Side First Room")
             {
-                Left = new Location(this, 256 + 200, 0x1EAD9, LocationType.Regular,
+                Left = new Location(this, LocationId.GanonsTowerHopeRoomLeft, 0x1EAD9, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TenArrows,
                     memoryAddress: 0x8C,
@@ -301,7 +301,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Right = new Location(this, 256 + 201, 0x1EADC, LocationType.Regular,
+                Right = new Location(this, LocationId.GanonsTowerHopeRoomRight, 0x1EADC, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.ThreeBombs,
                     memoryAddress: 0x8C,
@@ -320,7 +320,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public CompassRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Compass Room", metadata)
             {
-                TopLeft = new Location(this, 256 + 203, 0x1EAE5, LocationType.Regular,
+                TopLeft = new Location(this, LocationId.GanonsTowerCompassRoomTopLeft, 0x1EAE5, LocationType.Regular,
                     name: "Top Left",
                     vanillaItem: ItemType.CompassGT,
                     access: items => RightSide(items, new[] { TopRight, BottomLeft, BottomRight }),
@@ -329,7 +329,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                TopRight = new Location(this, 256 + 204, 0x1EAE8, LocationType.Regular,
+                TopRight = new Location(this, LocationId.GanonsTowerCompassRoomTopRight, 0x1EAE8, LocationType.Regular,
                     name: "Top Right",
                     access: items => RightSide(items, new[] { TopLeft, BottomLeft, BottomRight }),
                     memoryAddress: 0x9D,
@@ -337,7 +337,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                BottomLeft = new Location(this, 256 + 205, 0x1EAEB, LocationType.Regular,
+                BottomLeft = new Location(this, LocationId.GanonsTowerCompassRoomBottomLeft, 0x1EAEB, LocationType.Regular,
                     name: "Bottom Left",
                     access: items => RightSide(items, new[] { TopRight, TopLeft, BottomRight }),
                     memoryAddress: 0x9D,
@@ -345,7 +345,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                BottomRight = new Location(this, 256 + 206, 0x1EAEE, LocationType.Regular,
+                BottomRight = new Location(this, LocationId.GanonsTowerCompassRoomBottomRight, 0x1EAEE, LocationType.Regular,
                     name: "Bottom Right",
                     access: items => RightSide(items, new[] { TopRight, TopLeft, BottomLeft }),
                     memoryAddress: 0x9D,
@@ -373,7 +373,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public BigKeyRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Big Key Room", metadata)
             {
-                Bottom = new Location(this, 256 + 209, 0x1EAF1, LocationType.Regular,
+                Bottom = new Location(this, LocationId.GanonsTowerBigKeyChest, 0x1EAF1, LocationType.Regular,
                     name: "Bottom Big Key Chest",
                     vanillaItem: ItemType.BigKeyGT,
                     access: BigKeyRoom,
@@ -382,7 +382,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Left = new Location(this, 256 + 210, 0x1EAF4, LocationType.Regular,
+                Left = new Location(this, LocationId.GanonsTowerBigKeyRoomLeft, 0x1EAF4, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TenArrows,
                     access: BigKeyRoom,
@@ -391,7 +391,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Right = new Location(this, 256 + 211, 0x1EAF7, LocationType.Regular,
+                Right = new Location(this, LocationId.GanonsTowerBigKeyRoomRight, 0x1EAF7, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.ThreeBombs,
                     access: BigKeyRoom,
@@ -427,7 +427,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                 : base(region, "Mini Helmasaur Room", metadata)
             {
                 var tower = (GanonsTower)region;
-                Left = new Location(this, 256 + 212, 0x1EAFD, LocationType.Regular,
+                Left = new Location(this, LocationId.GanonsTowerMiniHelmasaurRoomLeft, 0x1EAFD, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.ThreeBombs,
                     access: tower.TowerAscend,
@@ -437,7 +437,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
                     trackerState: trackerState)
                     .Allow((item, items) => item.IsNot(ItemType.BigKeyGT, World));
 
-                Right = new Location(this, 256 + 213, 0x1EB00, LocationType.Regular,
+                Right = new Location(this, LocationId.GanonsTowerMiniHelmasaurRoomRight, 0x1EB00, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.ThreeBombs,
                     access: tower.TowerAscend,

@@ -13,7 +13,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
 
         public LightWorldNorthWest(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            MasterSwordPedestal = new Location(this, 256 + 14, 0x589B0, LocationType.Pedestal,
+            MasterSwordPedestal = new Location(this, LocationId.MasterSwordPedestal, 0x589B0, LocationType.Pedestal,
                 name: "Master Sword Pedestal",
                 vanillaItem: ItemType.ProgressiveSword,
                 access: items => items.AllPendants,
@@ -24,7 +24,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            Mushroom = new Location(this, 256 + 15, 0x308013, LocationType.Regular,
+            Mushroom = new Location(this, LocationId.Mushroom, 0x308013, LocationType.Regular,
                 name: "Mushroom",
                 vanillaItem: ItemType.Mushroom,
                 memoryAddress: 0x191,
@@ -34,7 +34,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            LostWoodsHideout = new Location(this, 256 + 16, 0x308000, LocationType.Regular,
+            LostWoodsHideout = new Location(this, LocationId.LostWoodsHideout, 0x308000, LocationType.Regular,
                 name: "Lost Woods Hideout",
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0xE1,
@@ -43,7 +43,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            LumberjackTree = new Location(this, 256 + 17, 0x308001, LocationType.Regular,
+            LumberjackTree = new Location(this, LocationId.LumberjackTree, 0x308001, LocationType.Regular,
                 name: "Lumberjack Tree",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => Logic.CheckAgahnim(items, World, requireRewards: true) && items.Boots,
@@ -53,7 +53,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            PegasusRocks = new Location(this, 256 + 18, 0x1EB3F, LocationType.Regular,
+            PegasusRocks = new Location(this, LocationId.PegasusRocks, 0x1EB3F, LocationType.Regular,
                 name: "Pegasus Rocks",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Boots,
@@ -62,7 +62,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            GraveyardLedge = new Location(this, 256 + 19, 0x308004, LocationType.Regular,
+            GraveyardLedge = new Location(this, LocationId.GraveyardLedge, 0x308004, LocationType.Regular,
                 name: "Graveyard Ledge",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && items.MoonPearl && World.DarkWorldNorthWest.CanEnter(items, true),
@@ -72,7 +72,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            KingsTomb = new Location(this, 256 + 20, 0x1E97A, LocationType.Regular,
+            KingsTomb = new Location(this, LocationId.KingsTomb, 0x1E97A, LocationType.Regular,
                 name: "King's Tomb",
                 vanillaItem: ItemType.Cape,
                 access: items => items.Boots && (
@@ -86,7 +86,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BottleMerchant = new Location(this, 256 + 31, 0x5EB18, LocationType.Regular,
+            BottleMerchant = new Location(this, LocationId.BottleMerchant, 0x5EB18, LocationType.Regular,
                 name: "Bottle Merchant",
                 vanillaItem: ItemType.Bottle,
                 memoryAddress: 0x149,
@@ -96,7 +96,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            ChickenHouse = new Location(this, 256 + 250, 0x1E9E9, LocationType.Regular,
+            ChickenHouse = new Location(this, LocationId.ChickenHouse, 0x1E9E9, LocationType.Regular,
                 name: "Chicken House",
                 vanillaItem: ItemType.TenArrows,
                 memoryAddress: 0x108,
@@ -105,7 +105,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            SickKid = new Location(this, 256 + 33, 0x6B9CF, LocationType.Regular,
+            SickKid = new Location(this, LocationId.SickKid, 0x6B9CF, LocationType.Regular,
                 name: "Sick Kid",
                 vanillaItem: ItemType.Bugnet,
                 access: items => items.Bottle,
@@ -115,7 +115,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            TavernBackRoom = new Location(this, 256 + 34, 0x1E9CE, LocationType.Regular,
+            TavernBackRoom = new Location(this, LocationId.KakarikoTavern, 0x1E9CE, LocationType.Regular,
                 name: "Kakariko Tavern",
                 vanillaItem: ItemType.Bottle,
                 memoryAddress: 0x103,
@@ -124,7 +124,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            Blacksmith = new Location(this, 256 + 76, 0x30802A, LocationType.Regular,
+            Blacksmith = new Location(this, LocationId.Blacksmith, 0x30802A, LocationType.Regular,
                 name: "Blacksmith",
                 vanillaItem: ItemType.ProgressiveSword,
                 access: items => World.DarkWorldNorthWest.CanEnter(items, true) && Logic.CanLiftHeavy(items),
@@ -135,7 +135,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            MagicBat = new Location(this, 256 + 35, 0x308015, LocationType.Regular,
+            MagicBat = new Location(this, LocationId.MagicBat, 0x308015, LocationType.Regular,
                 name: "Magic Bat",
                 vanillaItem: ItemType.HalfMagic,
                 access: items => items.Powder
@@ -193,7 +193,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public KakarikoWellArea(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Kakariko Well", metadata)
             {
-                BackCave = new Location(this, 256 + 21, 0x1EA8E, LocationType.Regular,
+                BackCave = new Location(this, LocationId.KakarikoWellTop, 0x1EA8E, LocationType.Regular,
                     name: "Top",
                     vanillaItem: ItemType.HeartPiece,
                     memoryAddress: 0x2F,
@@ -202,7 +202,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                Left = new Location(this, 256 + 22, 0x1EA91, LocationType.Regular,
+                Left = new Location(this, LocationId.KakarikoWellLeft, 0x1EA91, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x2F,
@@ -211,7 +211,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                Middle = new Location(this, 256 + 23, 0x1EA94, LocationType.Regular,
+                Middle = new Location(this, LocationId.KakarikoWellMiddle, 0x1EA94, LocationType.Regular,
                     name: "Middle",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x2F,
@@ -220,7 +220,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                Right = new Location(this, 256 + 24, 0x1EA97, LocationType.Regular,
+                Right = new Location(this, LocationId.KakarikoWellRight, 0x1EA97, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x2F,
@@ -229,7 +229,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                Bottom = new Location(this, 256 + 25, 0x1EA9A, LocationType.Regular,
+                Bottom = new Location(this, LocationId.KakarikoWellBottom, 0x1EA9A, LocationType.Regular,
                     name: "Bottom",
                     vanillaItem: ItemType.ThreeBombs,
                     memoryAddress: 0x2F,
@@ -255,35 +255,35 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public BlindsHideoutRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blind's Hideout", metadata)
             {
-                BackRoom = new Location(this, 256 + 26, 0x1EB0F, LocationType.Regular,
+                BackRoom = new Location(this, LocationId.BlindsHideoutTop, 0x1EB0F, LocationType.Regular,
                     name: "Top",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x4,
                     metadata: metadata,
                     trackerState: trackerState)
                     .Weighted(SphereOne);
-                FarLeft = new Location(this, 256 + 27, 0x1EB18, LocationType.Regular,
+                FarLeft = new Location(this, LocationId.BlindsHideoutFarLeft, 0x1EB18, LocationType.Regular,
                     name: "Far Left",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x7,
                     metadata: metadata,
                     trackerState: trackerState)
                     .Weighted(SphereOne);
-                Left = new Location(this, 256 + 28, 0x1EB12, LocationType.Regular,
+                Left = new Location(this, LocationId.BlindsHideoutLeft, 0x1EB12, LocationType.Regular,
                     name: "Left",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x5,
                     metadata: metadata,
                     trackerState: trackerState)
                     .Weighted(SphereOne);
-                Right = new Location(this, 256 + 29, 0x1EB15, LocationType.Regular,
+                Right = new Location(this, LocationId.BlindsHideoutRight, 0x1EB15, LocationType.Regular,
                     name: "Right",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x6,
                     metadata: metadata,
                     trackerState: trackerState)
                     .Weighted(SphereOne);
-                FarRight = new Location(this, 256 + 30, 0x1EB1B, LocationType.Regular,
+                FarRight = new Location(this, LocationId.BlindsHideoutFarRight, 0x1EB1B, LocationType.Regular,
                     name: "Far Right",
                     memoryAddress: 0x11D,
                     memoryFlag: 0x8,

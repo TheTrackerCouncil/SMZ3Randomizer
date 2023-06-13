@@ -53,7 +53,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public WarehouseEnergyTankRoom(KraidsLair region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Warehouse Energy Tank Room", metadata)
             {
-                    ETank = new Location(this, 43, 0x8F899C, LocationType.Hidden,
+                    ETank = new Location(this, LocationId.KraidsLairEnergyTank, 0x8F899C, LocationType.Hidden,
                         name: "Energy Tank, Kraid",
                         vanillaItem: ItemType.ETank,
                         access: items => items.Kraid,
@@ -72,7 +72,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public WarehouseKihunterRoom(KraidsLair region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Warehouse Kihunter Room", metadata)
             {
-                MissileBeforeKraid = new Location(this, 44, 0x8F89EC, LocationType.Hidden,
+                MissileBeforeKraid = new Location(this, LocationId.KraidsLairKihunter, 0x8F89EC, LocationType.Hidden,
                     name: "Missile (Kraid)",
                     vanillaItem: ItemType.Missile,
                     access: items => Logic.CanUsePowerBombs(items),
@@ -90,7 +90,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public VariaSuitRoom(KraidsLair region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Varia Suit Room", metadata)
             {
-                KraidsItem = new Location(this, 48, 0x8F8ACA, LocationType.Chozo,
+                KraidsItem = new Location(this, LocationId.KraidsLairVariaSuit, 0x8F8ACA, LocationType.Chozo,
                     name: "Varia Suit",
                     vanillaItem: ItemType.Varia,
                     access: items => items.Kraid,

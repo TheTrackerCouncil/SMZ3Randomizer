@@ -33,7 +33,7 @@ namespace Randomizer.Data.WorldData
 
         private int? _weight;
 
-        public Location(Room room, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Room room, LocationId id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
                     : this(room.Region, id, romAddress, type, name, metadata, trackerState, vanillaItem, access, memoryAddress, memoryFlag, memoryType, relevanceRequirement, trackerLogic)
@@ -64,12 +64,12 @@ namespace Randomizer.Data.WorldData
         /// <param name="memoryType">The type of location</param>
         /// <param name="relevanceRequirement">Logic for if the location is accessible following defeating a boss or collecting a reward</param>
         /// <param name="trackerLogic">Special logic for if the location should be displayed in tracker</param>
-        public Location(Region region, int id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
+        public Location(Region region, LocationId id, int romAddress, LocationType type, string name, IMetadataService? metadata, TrackerState? trackerState, ItemType vanillaItem = ItemType.Nothing,
             Requirement? access = null, int? memoryAddress = null, int? memoryFlag = null, LocationMemoryType memoryType = LocationMemoryType.Default,
             Requirement? relevanceRequirement = null, Requirement? trackerLogic = null)
         {
             Region = region;
-            Id = id;
+            Id = (int)id;
             Name = name;
             Type = type;
             RomAddress = romAddress;
@@ -82,8 +82,8 @@ namespace Randomizer.Data.WorldData
             MemoryType = memoryType;
             _relevanceRequirement = relevanceRequirement ?? (items => _canAccess(items));
             _trackerLogic = trackerLogic ?? (_ => true);
-            Metadata = metadata?.Location(id) ?? new LocationInfo(id, name);
-            State = trackerState?.LocationStates.First(x => x.LocationId == id && x.WorldId == World.Id) ?? new TrackerLocationState();
+            Metadata = metadata?.Location((int)id) ?? new LocationInfo((int)id, name);
+            State = trackerState?.LocationStates.First(x => x.LocationId == (int)id && x.WorldId == World.Id) ?? new TrackerLocationState();
             Item = new Item(ItemType.Nothing, region.World, "");
         }
 

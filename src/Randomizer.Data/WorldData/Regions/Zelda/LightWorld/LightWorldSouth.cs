@@ -13,7 +13,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
 
         public LightWorldSouth(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            MazeRace = new Location(this, 256 + 45, 0x308142, LocationType.Regular,
+            MazeRace = new Location(this, LocationId.MazeRace, 0x308142, LocationType.Regular,
                 name: "Maze Race",
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x28,
@@ -23,7 +23,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            Library = new Location(this, 256 + 240, 0x308012, LocationType.Regular,
+            Library = new Location(this, LocationId.Library, 0x308012, LocationType.Regular,
                 name: "Library",
                 vanillaItem: ItemType.Book,
                 access: items => items.Boots,
@@ -33,7 +33,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            ForestClearingDigSpot = new Location(this, 256 + 241, 0x30814A, LocationType.Regular,
+            ForestClearingDigSpot = new Location(this, LocationId.FluteSpot, 0x30814A, LocationType.Regular,
                 name: "Flute Spot",
                 vanillaItem: ItemType.Flute,
                 access: items => items.Shovel,
@@ -43,7 +43,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            Cave45 = new Location(this, 256 + 242, 0x308003, LocationType.Regular,
+            Cave45 = new Location(this, LocationId.SouthOfGrove, 0x308003, LocationType.Regular,
                 name: "South of Grove",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && World.DarkWorldSouth.CanEnter(items, true),
@@ -53,7 +53,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            LinksHouse = new Location(this, 256 + 243, 0x1E9BC, LocationType.Regular,
+            LinksHouse = new Location(this, LocationId.LinksHouse, 0x1E9BC, LocationType.Regular,
                 name: "Link's House",
                 vanillaItem: ItemType.Lamp,
                 memoryAddress: 0x104,
@@ -62,7 +62,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            Aginah = new Location(this, 256 + 244, 0x1E9F2, LocationType.Regular,
+            Aginah = new Location(this, LocationId.AginahsCave, 0x1E9F2, LocationType.Regular,
                 name: "Aginah's Cave",
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x10A,
@@ -71,7 +71,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 trackerState: trackerState)
                 .Weighted(SphereOne);
 
-            DesertLedge = new Location(this, 256 + 252, 0x308143, LocationType.Regular,
+            DesertLedge = new Location(this, LocationId.DesertLedge, 0x308143, LocationType.Regular,
                 name: "Desert Ledge",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => World.DesertPalace.CanEnter(items, true),
@@ -81,7 +81,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            CheckerboardCave = new Location(this, 256 + 253, 0x308005, LocationType.Regular,
+            CheckerboardCave = new Location(this, LocationId.CheckerboardCave, 0x308005, LocationType.Regular,
                 name: "Checkerboard Cave",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Mirror && (
@@ -93,7 +93,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            BombosTablet = new Location(this, 256 + 58, 0x308017, LocationType.Bombos,
+            BombosTablet = new Location(this, LocationId.BombosTablet, 0x308017, LocationType.Bombos,
                 name: "Bombos Tablet",
                 vanillaItem: ItemType.Bombos,
                 access: items => items.Book && items.MasterSword && items.Mirror && World.DarkWorldSouth.CanEnter(items, true),
@@ -104,7 +104,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            LakeHyliaIsland = new Location(this, 256 + 61, 0x308144, LocationType.Regular,
+            LakeHyliaIsland = new Location(this, LocationId.LakeHyliaIsland, 0x308144, LocationType.Regular,
                 name: "Lake Hylia Island",
                 vanillaItem: ItemType.HeartPiece,
                 access: items => items.Flippers && items.MoonPearl && items.Mirror && (
@@ -119,7 +119,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            UnderTheBridge = new Location(this, 256 + 62, 0x6BE7D, LocationType.Regular,
+            UnderTheBridge = new Location(this, LocationId.Hobo, 0x6BE7D, LocationType.Regular,
                 name: "Hobo",
                 vanillaItem: ItemType.Bottle,
                 access: items => items.Flippers || Logic.CanHyruleSouthFakeFlippers(items, false),
@@ -129,7 +129,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            IceCave = new Location(this, 256 + 63, 0x1EB4E, LocationType.Regular,
+            IceCave = new Location(this, LocationId.IceRodCave, 0x1EB4E, LocationType.Regular,
                 name: "Ice Rod Cave",
                 vanillaItem: ItemType.Icerod,
                 memoryAddress: 0x120,
@@ -182,7 +182,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public MiniMoldormCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Mini Moldorm Cave", metadata)
             {
-                FarLeftChest = new Location(this, 256 + 51, 0x1EB42, LocationType.Regular,
+                FarLeftChest = new Location(this, LocationId.MiniMoldormCaveFarLeft, 0x1EB42, LocationType.Regular,
                     name: "Far Left",
                     vanillaItem: ItemType.ThreeBombs,
                     memoryAddress: 0x123,
@@ -191,7 +191,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                LeftChest = new Location(this, 256 + 52, 0x1EB45, LocationType.Regular,
+                LeftChest = new Location(this, LocationId.MiniMoldormCaveLeft, 0x1EB45, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x123,
@@ -200,7 +200,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                Npc = new Location(this, 256 + 53, 0x308010, LocationType.Regular,
+                Npc = new Location(this, LocationId.MiniMoldormCaveNpc, 0x308010, LocationType.Regular,
                     name: "NPC",
                     vanillaItem: ItemType.ThreeHundredRupees,
                     memoryAddress: 0x123,
@@ -209,7 +209,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                RightChest = new Location(this, 256 + 54, 0x1EB48, LocationType.Regular,
+                RightChest = new Location(this, LocationId.MiniMoldormCaveRight, 0x1EB48, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.TwentyRupees,
                     memoryAddress: 0x123,
@@ -218,7 +218,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                     trackerState: trackerState)
                     .Weighted(SphereOne);
 
-                FarRightChest = new Location(this, 256 + 251, 0x1EB4B, LocationType.Regular,
+                FarRightChest = new Location(this, LocationId.MiniMoldormCaveFarRight, 0x1EB4B, LocationType.Regular,
                     name: "Far Right",
                     vanillaItem: ItemType.TenArrows,
                     memoryAddress: 0x123,
@@ -244,7 +244,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public SwampRuinsRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Swamp Ruins", metadata)
             {
-                FloodgateChest = new Location(this, 256 + 59, 0x1E98C, LocationType.Regular,
+                FloodgateChest = new Location(this, LocationId.FloodgateChest, 0x1E98C, LocationType.Regular,
                    name: "Floodgate Chest",
                    vanillaItem: ItemType.ThreeBombs,
                    memoryAddress: 0x10B,
@@ -253,7 +253,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
                    trackerState: trackerState)
                    .Weighted(SphereOne);
 
-                SunkedTreasure = new Location(this, 256 + 60, 0x308145, LocationType.Regular,
+                SunkedTreasure = new Location(this, LocationId.SunkenTreasure, 0x308145, LocationType.Regular,
                     name: "Sunken Treasure",
                     vanillaItem: ItemType.HeartPiece,
                     memoryAddress: 0x3B,

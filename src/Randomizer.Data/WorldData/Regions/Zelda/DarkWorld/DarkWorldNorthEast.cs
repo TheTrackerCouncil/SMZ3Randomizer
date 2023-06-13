@@ -11,7 +11,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
     {
         public DarkWorldNorthEast(World world, Config config, IMetadataService? metadata, TrackerState? trackerState) : base(world, config, metadata, trackerState)
         {
-            Catfish = new Location(this, 256 + 78, 0x1DE185, LocationType.Regular,
+            Catfish = new Location(this, LocationId.Catfish, 0x1DE185, LocationType.Regular,
                 name: "Catfish",
                 vanillaItem: ItemType.Quake,
                 access: items => items.MoonPearl && Logic.CanLiftLight(items),
@@ -21,7 +21,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                 metadata: metadata,
                 trackerState: trackerState);
 
-            Pyramid = new Location(this, 256 + 79, 0x308147, LocationType.Regular,
+            Pyramid = new Location(this, LocationId.Pyramid, 0x308147, LocationType.Regular,
                 name: "Pyramid",
                 vanillaItem: ItemType.HeartPiece,
                 memoryAddress: 0x5B,
@@ -65,7 +65,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
             {
                 // Vanilla has torches instead of chests, but allows trading in
                 // Lv3 sword for Lv4 sword and bow & arrow for silvers.
-                Left = new Location(this, 256 + 80, 0x1E980, LocationType.Regular,
+                Left = new Location(this, LocationId.PyramidFairyLeft, 0x1E980, LocationType.Regular,
                     name: "Left",
                     vanillaItem: ItemType.ProgressiveSword,
                     access: items => CanAccessPyramidFairy(items, requireRewards: true),
@@ -76,7 +76,7 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
                     metadata: metadata,
                     trackerState: trackerState);
 
-                Right = new Location(this, 256 + 81, 0x1E983, LocationType.Regular,
+                Right = new Location(this, LocationId.PyramidFairyRight, 0x1E983, LocationType.Regular,
                     name: "Right",
                     vanillaItem: ItemType.SilverArrows,
                     access: items => CanAccessPyramidFairy(items, requireRewards: true),
