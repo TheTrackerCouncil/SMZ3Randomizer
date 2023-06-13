@@ -16,7 +16,7 @@
 
         /// <summary>
         /// The item is hiding in a Chozo egg that must be damaged reveal it.
-        /// It may or may not be being held by a Chozo statue.
+        /// A Chozo statue may be holding it or it may be lying on the ground.
         /// </summary>
         Chozo,
 

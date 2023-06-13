@@ -3,7 +3,7 @@
 namespace Randomizer.Shared
 {
     /// <summary>
-    /// Specifies the ID's of item locations.
+    /// Specifies the IDs of item locations.
     /// Locations should be named after the room they're in when they're the
     /// only one in the room. Otherwise, they should be named after the room
     /// and the part of the room they're in. The vanilla item should not
