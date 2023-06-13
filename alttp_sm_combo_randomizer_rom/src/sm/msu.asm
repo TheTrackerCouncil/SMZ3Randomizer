@@ -124,6 +124,26 @@ SM_MSU_Main:
 	;; Loading $00 means calling the original code
 	beq .OriginalCode
 .PlayMusic
+    CMP #10 : BEQ .LoadSamusTheme
+    BRA .CheckFallbacks
+
+.LoadSamusTheme
+    TAX
+    REP #$20
+
+    ; Play no music following the baby draining Samus's health
+    LDA $079B
+    CMP #$DCB1 : BNE +
+        SEP #$20
+        TXA
+        BRA .OriginalCode
+    +
+
+    SEP #$20
+    TXA
+    bra .CheckFallbacks
+
+.CheckFallbacks
 	;; Check track fallback list if the track is available
 	pha
 	DEC : PHA
