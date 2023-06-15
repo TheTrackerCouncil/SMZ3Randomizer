@@ -643,6 +643,10 @@ MSUMain:
 
 .command_f1:
     CPX.b #!VAL_COMMAND_FADE_OUT : BNE .command_f0
+    ; Don't fade out when leaving under the bridge
+    LDA $8A : CMP #$80 : BNE +
+        JML SPCContinue
+    +
     STZ.w TargetVolume
     STZ.w CurrentMSUTrack
     JML SPCContinue
