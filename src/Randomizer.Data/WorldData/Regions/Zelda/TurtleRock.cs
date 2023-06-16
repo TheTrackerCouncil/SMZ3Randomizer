@@ -148,29 +148,28 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public RollerRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Roller Room", metadata)
             {
-                Left = new Location(this, LocationId.TurtleRockRollerRoomLeft, 0x1EA1C, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.MapTR,
-                    access: items => items.FireRod,
-                    memoryAddress: 0xB7,
-                    memoryFlag: 0x4,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
-                    metadata: metadata,
-                    trackerState: trackerState);
-                Right = new Location(this, LocationId.TurtleRockRollerRoomRight, 0x1EA1F, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.KeyTR,
-                    access: items => items.FireRod,
-                    memoryAddress: 0xB7,
-                    memoryFlag: 0x5,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.TurtleRockRollerRoomLeft, 0x1EA1C, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.MapTR,
+                        access: items => items.FireRod,
+                        memoryAddress: 0xB7,
+                        memoryFlag: 0x4,
+                        trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.TurtleRockRollerRoomRight, 0x1EA1F, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.KeyTR,
+                        access: items => items.FireRod,
+                        memoryAddress: 0xB7,
+                        memoryFlag: 0x5,
+                        trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
         }
 
         public class LaserBridgeRoom : Room
@@ -178,54 +177,46 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public LaserBridgeRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Eye Bridge", metadata, "Laser Bridge")
             {
-                TopRight = new Location(this, LocationId.TurtleRockEyeBridgeTopRight, 0x1EA28, LocationType.Regular,
-                    name: "Top Right",
-                    vanillaItem: ItemType.FiveRupees,
-                    access: CanAccess,
-                    memoryAddress: 0xD5,
-                    memoryFlag: 0x4,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                TopLeft = new Location(this, LocationId.TurtleRockEyeBridgeTopLeft, 0x1EA2B, LocationType.Regular,
-                    name: "Top Left",
-                    vanillaItem: ItemType.FiveRupees,
-                    access: CanAccess,
-                    memoryAddress: 0xD5,
-                    memoryFlag: 0x5,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                BottomRight = new Location(this, LocationId.TurtleRockEyeBridgeBottomRight, 0x1EA2E, LocationType.Regular,
-                    name: "Bottom Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    access: CanAccess,
-                    memoryAddress: 0xD5,
-                    memoryFlag: 0x6,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                BottomLeft = new Location(this, LocationId.TurtleRockEyeBridgeBottomLeft, 0x1EA31, LocationType.Regular,
-                    name: "Bottom Left",
-                    vanillaItem: ItemType.KeyTR,
-                    access: CanAccess,
-                    memoryAddress: 0xD5,
-                    memoryFlag: 0x7,
-                    trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.TurtleRockEyeBridgeTopRight, 0x1EA28, LocationType.Regular,
+                        name: "Top Right",
+                        vanillaItem: ItemType.FiveRupees,
+                        access: CanAccess,
+                        memoryAddress: 0xD5,
+                        memoryFlag: 0x4,
+                        trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.TurtleRockEyeBridgeTopLeft, 0x1EA2B, LocationType.Regular,
+                        name: "Top Left",
+                        vanillaItem: ItemType.FiveRupees,
+                        access: CanAccess,
+                        memoryAddress: 0xD5,
+                        memoryFlag: 0x5,
+                        trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.TurtleRockEyeBridgeBottomRight, 0x1EA2E, LocationType.Regular,
+                        name: "Bottom Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        access: CanAccess,
+                        memoryAddress: 0xD5,
+                        memoryFlag: 0x6,
+                        trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.TurtleRockEyeBridgeBottomLeft, 0x1EA31, LocationType.Regular,
+                        name: "Bottom Left",
+                        vanillaItem: ItemType.KeyTR,
+                        access: CanAccess,
+                        memoryAddress: 0xD5,
+                        memoryFlag: 0x7,
+                        trackerLogic: items => items.HasMarkedMedallion(World.TurtleRock.DungeonState.MarkedMedallion),
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location TopRight { get; }
-
-            public Location TopLeft { get; }
-
-            public Location BottomRight { get; }
-
-            public Location BottomLeft { get; }
 
             private bool CanAccess(Progression items)
             {

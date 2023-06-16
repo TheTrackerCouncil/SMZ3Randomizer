@@ -3,6 +3,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
+using System.Collections.Generic;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
 {
@@ -43,17 +44,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public XRayScopeRoom(RedBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "X-Ray Scope Room", metadata)
             {
-                XRayScope = new Location(this, LocationId.RedBrinstarXRayScope, 0x8F8876, LocationType.Chozo,
-                    name: "X-Ray Scope",
-                    vanillaItem: ItemType.XRay,
-                    access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && (items.Grapple || items.SpaceJump),
-                    memoryAddress: 0x4,
-                    memoryFlag: 0x40,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.RedBrinstarXRayScope, 0x8F8876, LocationType.Chozo,
+                        name: "X-Ray Scope",
+                        vanillaItem: ItemType.XRay,
+                        access: items => Logic.CanUsePowerBombs(items) && Logic.CanOpenRedDoors(items) && (items.Grapple || items.SpaceJump),
+                        memoryAddress: 0x4,
+                        memoryFlag: 0x40,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location XRayScope { get; }
         }
 
         public class BetaPowerBombRoom : Room
@@ -61,17 +63,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public BetaPowerBombRoom(RedBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Beta Power Bomb Room", metadata)
             {
-                PowerBomb = new Location(this, LocationId.RedBrinstarBetaPowerBomb, 0x8F88CA, LocationType.Visible,
-                    name: "Power Bomb (red Brinstar sidehopper room)",
-                    vanillaItem: ItemType.PowerBomb,
-                    access: items => Logic.CanUsePowerBombs(items) && items.Super,
-                    memoryAddress: 0x4,
-                    memoryFlag: 0x80,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.RedBrinstarBetaPowerBomb, 0x8F88CA, LocationType.Visible,
+                        name: "Power Bomb (red Brinstar sidehopper room)",
+                        vanillaItem: ItemType.PowerBomb,
+                        access: items => Logic.CanUsePowerBombs(items) && items.Super,
+                        memoryAddress: 0x4,
+                        memoryFlag: 0x80,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location PowerBomb { get; }
         }
 
         public class AlphaPowerBombRoom : Room
@@ -79,27 +82,26 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public AlphaPowerBombRoom(RedBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Alpha Power Bomb Room", metadata)
             {
-                PowerBomb = new Location(this, LocationId.RedBrinstarAlphaPowerBombRight, 0x8F890E, LocationType.Chozo,
-                    name: "Power Bomb (red Brinstar spike room)",
-                    vanillaItem: ItemType.PowerBomb,
-                    access: items => (Logic.CanUsePowerBombs(items) || items.Ice) && items.Super,
-                    memoryAddress: 0x5,
-                    memoryFlag: 0x1,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                AlphaPowerBombRoomWall = new Location(this, LocationId.RedBrinstarAlphaPowerBombLeft, 0x8F8914, LocationType.Visible,
-                    name: "Missile (red Brinstar spike room)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => Logic.CanUsePowerBombs(items) && items.Super,
-                    memoryAddress: 0x5,
-                    memoryFlag: 0x2,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.RedBrinstarAlphaPowerBombRight, 0x8F890E, LocationType.Chozo,
+                        name: "Power Bomb (red Brinstar spike room)",
+                        vanillaItem: ItemType.PowerBomb,
+                        access: items => (Logic.CanUsePowerBombs(items) || items.Ice) && items.Super,
+                        memoryAddress: 0x5,
+                        memoryFlag: 0x1,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.RedBrinstarAlphaPowerBombLeft, 0x8F8914, LocationType.Visible,
+                        name: "Missile (red Brinstar spike room)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => Logic.CanUsePowerBombs(items) && items.Super,
+                        memoryAddress: 0x5,
+                        memoryFlag: 0x2,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location PowerBomb { get; }
-
-            public Location AlphaPowerBombRoomWall { get; }
         }
 
         public class SpazerRoom : Room
@@ -107,18 +109,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Brinstar
             public SpazerRoom(RedBrinstar region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Spazer Room", metadata)
             {
-                Spazer = new Location(this, LocationId.RedBrinstarSpazer, 0x8F896E, LocationType.Chozo,
-                    name: "Spazer",
-                    vanillaItem: ItemType.Spazer,
-                    access: items => Logic.CanPassBombPassages(items) && items.Super
-                                  && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
-                    memoryAddress: 0x5,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.RedBrinstarSpazer, 0x8F896E, LocationType.Chozo,
+                        name: "Spazer",
+                        vanillaItem: ItemType.Spazer,
+                        access: items => Logic.CanPassBombPassages(items) && items.Super
+                                      && (items.HiJump || Logic.CanWallJump(WallJumpDifficulty.Easy) || Logic.CanFly(items)),
+                        memoryAddress: 0x5,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Spazer { get; }
         }
     }
 }

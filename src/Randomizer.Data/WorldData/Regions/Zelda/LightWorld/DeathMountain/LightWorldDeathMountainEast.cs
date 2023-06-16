@@ -72,77 +72,59 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld.DeathMountain
             public ParadoxCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Paradox Cave", metadata)
             {
-                LowerLeft = new Location(this, LocationId.ParadoxCaveUpperLeft, 0x1EB39, LocationType.Regular,
-                    name: "Paradox Cave Upper - Left",
-                    vanillaItem: ItemType.ThreeBombs,
-                    memoryAddress: 0xFF,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                LowerRight = new Location(this, LocationId.ParadoxCaveUpperRight, 0x1EB3C, LocationType.Regular,
-                    name: "Paradox Cave Upper - Right",
-                    vanillaItem: ItemType.TenArrows,
-                    memoryAddress: 0xFF,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                UpperFarLeft = new Location(this, LocationId.ParadoxCaveLowerFarLeft, 0x1EB2A, LocationType.Regular,
-                    name: "Paradox Cave Lower - Far Left",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0xEF,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                UpperLeft = new Location(this, LocationId.ParadoxCaveLowerLeft, 0x1EB2D, LocationType.Regular,
-                    name: "Paradox Cave Lower - Left",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0xEF,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                UpperMiddle = new Location(this, LocationId.ParadoxCaveLowerMiddle, 0x1EB36, LocationType.Regular,
-                    name: "Paradox Cave Lower - Middle",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0xEF,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                UpperRight = new Location(this, LocationId.ParadoxCaveLowerRight, 0x1EB30, LocationType.Regular,
-                    name: "Paradox Cave Lower - Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0xEF,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                UpperFarRight = new Location(this, LocationId.ParadoxCaveLowerFarRight, 0x1EB33, LocationType.Regular,
-                    name: "Paradox Cave Lower - Far Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0xEF,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.ParadoxCaveUpperLeft, 0x1EB39, LocationType.Regular,
+                        name: "Paradox Cave Upper - Left",
+                        vanillaItem: ItemType.ThreeBombs,
+                        memoryAddress: 0xFF,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.ParadoxCaveUpperRight, 0x1EB3C, LocationType.Regular,
+                        name: "Paradox Cave Upper - Right",
+                        vanillaItem: ItemType.TenArrows,
+                        memoryAddress: 0xFF,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.ParadoxCaveLowerFarLeft, 0x1EB2A, LocationType.Regular,
+                        name: "Paradox Cave Lower - Far Left",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0xEF,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.ParadoxCaveLowerLeft, 0x1EB2D, LocationType.Regular,
+                        name: "Paradox Cave Lower - Left",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0xEF,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.ParadoxCaveLowerMiddle, 0x1EB36, LocationType.Regular,
+                        name: "Paradox Cave Lower - Middle",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0xEF,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.ParadoxCaveLowerRight, 0x1EB30, LocationType.Regular,
+                        name: "Paradox Cave Lower - Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0xEF,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.ParadoxCaveLowerFarRight, 0x1EB33, LocationType.Regular,
+                        name: "Paradox Cave Lower - Far Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0xEF,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location LowerLeft { get; }
-
-            public Location LowerRight { get; }
-
-            public Location UpperFarLeft { get; }
-
-            public Location UpperLeft { get; }
-
-            public Location UpperMiddle { get; }
-
-            public Location UpperRight { get; }
-
-            public Location UpperFarRight { get; }
         }
     }
-
 }

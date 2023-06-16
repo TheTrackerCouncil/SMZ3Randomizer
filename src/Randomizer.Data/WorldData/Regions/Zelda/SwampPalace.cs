@@ -147,27 +147,26 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public FloodedRoomRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Flooded Room", metadata)
             {
-                Left = new Location(this, LocationId.SwampPalaceFloodedRoomLeft, 0x1EAA9, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.TwentyRupees,
-                    access: items => items.KeySP && items.Hammer && items.Hookshot,
-                    memoryAddress: 0x76,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                Right = new Location(this, LocationId.SwampPalaceFloodedRoomRight, 0x1EAAC, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    access: items => items.KeySP && items.Hammer && items.Hookshot,
-                    memoryAddress: 0x76,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.SwampPalaceFloodedRoomLeft, 0x1EAA9, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.TwentyRupees,
+                        access: items => items.KeySP && items.Hammer && items.Hookshot,
+                        memoryAddress: 0x76,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.SwampPalaceFloodedRoomRight, 0x1EAAC, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        access: items => items.KeySP && items.Hammer && items.Hookshot,
+                        memoryAddress: 0x76,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
         }
     }
 }

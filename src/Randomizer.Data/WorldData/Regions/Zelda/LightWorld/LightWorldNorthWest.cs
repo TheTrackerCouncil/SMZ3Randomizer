@@ -193,61 +193,50 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public KakarikoWellArea(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Kakariko Well", metadata)
             {
-                BackCave = new Location(this, LocationId.KakarikoWellTop, 0x1EA8E, LocationType.Regular,
-                    name: "Top",
-                    vanillaItem: ItemType.HeartPiece,
-                    memoryAddress: 0x2F,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                Left = new Location(this, LocationId.KakarikoWellLeft, 0x1EA91, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x2F,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                Middle = new Location(this, LocationId.KakarikoWellMiddle, 0x1EA94, LocationType.Regular,
-                    name: "Middle",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x2F,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                Right = new Location(this, LocationId.KakarikoWellRight, 0x1EA97, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x2F,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                Bottom = new Location(this, LocationId.KakarikoWellBottom, 0x1EA9A, LocationType.Regular,
-                    name: "Bottom",
-                    vanillaItem: ItemType.ThreeBombs,
-                    memoryAddress: 0x2F,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.KakarikoWellTop, 0x1EA8E, LocationType.Regular,
+                        name: "Top",
+                        vanillaItem: ItemType.HeartPiece,
+                        memoryAddress: 0x2F,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.KakarikoWellLeft, 0x1EA91, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x2F,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.KakarikoWellMiddle, 0x1EA94, LocationType.Regular,
+                        name: "Middle",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x2F,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.KakarikoWellRight, 0x1EA97, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x2F,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.KakarikoWellBottom, 0x1EA9A, LocationType.Regular,
+                        name: "Bottom",
+                        vanillaItem: ItemType.ThreeBombs,
+                        memoryAddress: 0x2F,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne)
+                };
             }
-
-            public Location BackCave { get; }
-
-            public Location Left { get; }
-
-            public Location Middle { get; }
-
-            public Location Right { get; }
-
-            public Location Bottom { get; }
         }
 
         public class BlindsHideoutRoom : Room
@@ -255,53 +244,45 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public BlindsHideoutRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Blind's Hideout", metadata)
             {
-                BackRoom = new Location(this, LocationId.BlindsHideoutTop, 0x1EB0F, LocationType.Regular,
-                    name: "Top",
-                    memoryAddress: 0x11D,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-                FarLeft = new Location(this, LocationId.BlindsHideoutFarLeft, 0x1EB18, LocationType.Regular,
-                    name: "Far Left",
-                    memoryAddress: 0x11D,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-                Left = new Location(this, LocationId.BlindsHideoutLeft, 0x1EB12, LocationType.Regular,
-                    name: "Left",
-                    memoryAddress: 0x11D,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-                Right = new Location(this, LocationId.BlindsHideoutRight, 0x1EB15, LocationType.Regular,
-                    name: "Right",
-                    memoryAddress: 0x11D,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-                FarRight = new Location(this, LocationId.BlindsHideoutFarRight, 0x1EB1B, LocationType.Regular,
-                    name: "Far Right",
-                    memoryAddress: 0x11D,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.BlindsHideoutTop, 0x1EB0F, LocationType.Regular,
+                        name: "Top",
+                        memoryAddress: 0x11D,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.BlindsHideoutFarLeft, 0x1EB18, LocationType.Regular,
+                        name: "Far Left",
+                        memoryAddress: 0x11D,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.BlindsHideoutLeft, 0x1EB12, LocationType.Regular,
+                        name: "Left",
+                        memoryAddress: 0x11D,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.BlindsHideoutRight, 0x1EB15, LocationType.Regular,
+                        name: "Right",
+                        memoryAddress: 0x11D,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.BlindsHideoutFarRight, 0x1EB1B, LocationType.Regular,
+                        name: "Far Right",
+                        memoryAddress: 0x11D,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne)
+                };
             }
-
-            public Location BackRoom { get; }
-
-            public Location FarLeft { get; }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
-
-            public Location FarRight { get; }
         }
-
     }
 }

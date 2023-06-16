@@ -65,32 +65,30 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
             {
                 // Vanilla has torches instead of chests, but allows trading in
                 // Lv3 sword for Lv4 sword and bow & arrow for silvers.
-                Left = new Location(this, LocationId.PyramidFairyLeft, 0x1E980, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.ProgressiveSword,
-                    access: items => CanAccessPyramidFairy(items, requireRewards: true),
-                    relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
-                    memoryAddress: 0x116,
-                    memoryFlag: 0x4,
-                    trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Right = new Location(this, LocationId.PyramidFairyRight, 0x1E983, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.SilverArrows,
-                    access: items => CanAccessPyramidFairy(items, requireRewards: true),
-                    relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
-                    memoryAddress: 0x116,
-                    memoryFlag: 0x5,
-                    trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.PyramidFairyLeft, 0x1E980, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.ProgressiveSword,
+                        access: items => CanAccessPyramidFairy(items, requireRewards: true),
+                        relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
+                        memoryAddress: 0x116,
+                        memoryFlag: 0x4,
+                        trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.PyramidFairyRight, 0x1E983, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.SilverArrows,
+                        access: items => CanAccessPyramidFairy(items, requireRewards: true),
+                        relevanceRequirement: items => CanAccessPyramidFairy(items, requireRewards: false),
+                        memoryAddress: 0x116,
+                        memoryFlag: 0x5,
+                        trackerLogic: items => region.CountReward(items, RewardType.CrystalRed) == 2,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Left { get; }
-
-            public Location Right { get; }
 
             private bool CanAccessPyramidFairy(Progression items, bool requireRewards) =>
                 (items.BothRedCrystals || (!requireRewards && World.CanAquireAll(items, RewardType.CrystalRed))) &&

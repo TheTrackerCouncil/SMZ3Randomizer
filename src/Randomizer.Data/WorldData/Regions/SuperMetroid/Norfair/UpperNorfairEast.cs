@@ -3,6 +3,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
+using System.Collections.Generic;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 {
@@ -75,28 +76,26 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public BubbleMountainHiddenHallRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Bubble Mountain Hidden Hall", metadata, "Norfair Reserve Tank")
             {
-                MainItem = new Location(this, LocationId.UpperNorfairReserveTankChozo, 0x8F8C3E, LocationType.Chozo,
-                    name: "Main Item",
-                    vanillaItem: ItemType.ReserveTank,
-                    access: items => items.CardNorfairL2 && items.Morph && region.CanReachBubbleMountainLeftSide(items),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x20,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                HiddenItem = new Location(this, LocationId.UpperNorfairReserveTankHidden, 0x8F8C44, LocationType.Hidden,
-                    name: "Hidden Item",
-                    vanillaItem: ItemType.Missile,
-                    access: items => items.CardNorfairL2 && items.Morph && region.CanReachBubbleMountainLeftSide(items),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x40,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairReserveTankChozo, 0x8F8C3E, LocationType.Chozo,
+                        name: "Main Item",
+                        vanillaItem: ItemType.ReserveTank,
+                        access: items => items.CardNorfairL2 && items.Morph && region.CanReachBubbleMountainLeftSide(items),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x20,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.UpperNorfairReserveTankHidden, 0x8F8C44, LocationType.Hidden,
+                        name: "Hidden Item",
+                        vanillaItem: ItemType.Missile,
+                        access: items => items.CardNorfairL2 && items.Morph && region.CanReachBubbleMountainLeftSide(items),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x40,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location MainItem { get; }
-
-            public Location HiddenItem { get; }
         }
 
         public class GreenBubblesMissileRoom : Room
@@ -104,17 +103,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public GreenBubblesMissileRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Green Bubbles Missile Room", metadata)
             {
-                BubbleMountainMissileRoom = new Location(this, LocationId.UpperNorfairGreenBubblesMissile, 0x8F8C52, LocationType.Visible,
-                    name: "Missile (bubble Norfair green door)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => items.CardNorfairL2 && region.CanReachBubbleMountainLeftSide(items),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x80,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairGreenBubblesMissile, 0x8F8C52, LocationType.Visible,
+                        name: "Missile (bubble Norfair green door)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => items.CardNorfairL2 && region.CanReachBubbleMountainLeftSide(items),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x80,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location BubbleMountainMissileRoom { get; }
         }
 
         public class BubbleMountainRoom : Room
@@ -122,17 +122,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public BubbleMountainRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Bubbles Mountain", metadata)
             {
-                BubbleMountain = new Location(this, LocationId.UpperNorfairBubbleMountain, 0x8F8C66, LocationType.Visible,
-                    name: "Missile (bubble Norfair)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => items.CardNorfairL2,
-                    memoryAddress: 0x8,
-                    memoryFlag: 0x1,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairBubbleMountain, 0x8F8C66, LocationType.Visible,
+                        name: "Missile (bubble Norfair)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => items.CardNorfairL2,
+                        memoryAddress: 0x8,
+                        memoryFlag: 0x1,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location BubbleMountain { get; }
         }
 
         public class SpeedBoosterHallRoom : Room
@@ -140,18 +141,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public SpeedBoosterHallRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Speed Booster Hall", metadata)
             {
-                SpeedBoosterHallCeiling = new Location(this, LocationId.UpperNorfairSpeedBoosterHall, 0x8F8C74, LocationType.Hidden,
-                    name: "Missile (Speed Booster)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)
-                                     && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
-                    memoryAddress: 0x8,
-                    memoryFlag: 0x2,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairSpeedBoosterHall, 0x8F8C74, LocationType.Hidden,
+                        name: "Missile (Speed Booster)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)
+                                         && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
+                        memoryAddress: 0x8,
+                        memoryFlag: 0x2,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location SpeedBoosterHallCeiling { get; }
         }
 
         public class SpeedBoosterRoom : Room
@@ -159,18 +161,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public SpeedBoosterRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Speed Booster Room", metadata)
             {
-                SpeedBooster = new Location(this, LocationId.UpperNorfairSpeedBooster, 0x8F8C82, LocationType.Chozo,
-                    name: "Speed Booster",
-                    vanillaItem: ItemType.SpeedBooster,
-                    access: items => items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)
-                                     && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
-                    memoryAddress: 0x8,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairSpeedBooster, 0x8F8C82, LocationType.Chozo,
+                        name: "Speed Booster",
+                        vanillaItem: ItemType.SpeedBooster,
+                        access: items => items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)
+                                         && (Logic.CanWallJump(WallJumpDifficulty.Easy) || items.HiJump),
+                        memoryAddress: 0x8,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location SpeedBooster { get; }
         }
 
         public class DoubleChamberRoom : Room
@@ -178,18 +181,19 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public DoubleChamberRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Double Chamber Room", metadata)
             {
-                DoubleChamber = new Location(this, LocationId.UpperNorfairDoubleChamber, 0x8F8CBC, LocationType.Visible,
-                    name: "Missile (Wave Beam)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => (items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)) ||
-                        (items.SpeedBooster && items.Wave && items.Morph && items.Super),
-                    memoryAddress: 0x8,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairDoubleChamber, 0x8F8CBC, LocationType.Visible,
+                        name: "Missile (Wave Beam)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => (items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)) ||
+                            (items.SpeedBooster && items.Wave && items.Morph && items.Super),
+                        memoryAddress: 0x8,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location DoubleChamber { get; }
         }
 
         public class WaveBeamRoom : Room
@@ -197,20 +201,21 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public WaveBeamRoom(UpperNorfairEast region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Wave Beam Room", metadata)
             {
-                WaveBeam = new Location(this, LocationId.UpperNorfairWaveBeam, 0x8F8CCA, LocationType.Chozo,
-                    name: "Wave Beam",
-                    vanillaItem: ItemType.Wave,
-                    access: items => items.Morph && (
-                            (items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)) ||
-                            (items.SpeedBooster && items.Wave && items.Morph && items.Super)
-                        ),
-                    memoryAddress: 0x8,
-                    memoryFlag: 0x10,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairWaveBeam, 0x8F8CCA, LocationType.Chozo,
+                        name: "Wave Beam",
+                        vanillaItem: ItemType.Wave,
+                        access: items => items.Morph && (
+                                (items.CardNorfairL2 && region.CanReachBubbleMountainRightSide(items)) ||
+                                (items.SpeedBooster && items.Wave && items.Morph && items.Super)
+                            ),
+                        memoryAddress: 0x8,
+                        memoryFlag: 0x10,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location WaveBeam { get; }
         }
     }
 }

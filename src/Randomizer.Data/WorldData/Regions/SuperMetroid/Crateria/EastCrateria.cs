@@ -3,6 +3,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
+using System.Collections.Generic;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
 {
@@ -37,7 +38,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
                         /* Oasis -> Forgotten Highway */
                         (items.CardMaridiaL2 && Logic.CanDestroyBombWalls(items)) ||
                         /* Draygon -> Cactus Alley -> Forgotten Highway */
-                        World.InnerMaridia.SpaceJump.DraygonTreasure.IsAvailable(items))) ||
+                        World.FindLocation(LocationId.InnerMaridiaSpaceJump).IsAvailable(items))) ||
                     /*Through Maridia from Pipe*/
                     (Logic.CanUsePowerBombs(items) && items.Super && items.Gravity);
         }
@@ -47,40 +48,37 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public WestOceanRoom(EastCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "West Ocean", metadata)
             {
-                FloodedCavernUnderWater = new Location(this, LocationId.CrateriaWestOceanFloodedCavern, 0x8F81E8, LocationType.Visible,
-                    name: "Missile (outside Wrecked Ship bottom)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => CanAccessFloodedCavernUnderWater(items, true),
-                    relevanceRequirement: items => CanAccessFloodedCavernUnderWater(items, false),
-                    memoryAddress: 0x0,
-                    memoryFlag: 0x2,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                SkyMissile = new Location(this, LocationId.CrateriaWestOceanSky, 0x8F81EE, LocationType.Hidden,
-                    name: "Missile (outside Wrecked Ship top)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => CanAccessSkyItem(items, true),
-                    relevanceRequirement: items => CanAccessSkyItem(items, false),
-                    memoryAddress: 0x0,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-                MorphBallMaze = new Location(this, LocationId.CrateriaWestOceanMorphBallMaze, 0x8F81F4, LocationType.Visible,
-                    name: "Missile (outside Wrecked Ship middle)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => CanPassThroughWreckedShip(items, true),
-                    relevanceRequirement: items => CanPassThroughWreckedShip(items, false),
-                    memoryAddress: 0x0,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.CrateriaWestOceanFloodedCavern, 0x8F81E8, LocationType.Visible,
+                        name: "Missile (outside Wrecked Ship bottom)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => CanAccessFloodedCavernUnderWater(items, true),
+                        relevanceRequirement: items => CanAccessFloodedCavernUnderWater(items, false),
+                        memoryAddress: 0x0,
+                        memoryFlag: 0x2,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.CrateriaWestOceanSky, 0x8F81EE, LocationType.Hidden,
+                        name: "Missile (outside Wrecked Ship top)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => CanAccessSkyItem(items, true),
+                        relevanceRequirement: items => CanAccessSkyItem(items, false),
+                        memoryAddress: 0x0,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.CrateriaWestOceanMorphBallMaze, 0x8F81F4, LocationType.Visible,
+                        name: "Missile (outside Wrecked Ship middle)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => CanPassThroughWreckedShip(items, true),
+                        relevanceRequirement: items => CanPassThroughWreckedShip(items, false),
+                        memoryAddress: 0x0,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location FloodedCavernUnderWater { get; }
-
-            public Location SkyMissile { get; }
-
-            public Location MorphBallMaze { get; }
 
             private bool CanAccessFloodedCavernUnderWater(Progression items, bool requireRewards)
                 => items.Morph && (
@@ -102,16 +100,17 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Crateria
             public TheMoatRoom(EastCrateria region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "The Moat", metadata)
             {
-                Moat = new Location(this, LocationId.CrateriaMoat, 0x8F8248, LocationType.Visible,
-                    name: "Missile (Crateria moat)",
-                    vanillaItem: ItemType.Missile,
-                    memoryAddress: 0x0,
-                    memoryFlag: 0x10,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.CrateriaMoat, 0x8F8248, LocationType.Visible,
+                        name: "Missile (Crateria moat)",
+                        vanillaItem: ItemType.Missile,
+                        memoryAddress: 0x0,
+                        memoryFlag: 0x10,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Moat { get; }
         }
     }
 }

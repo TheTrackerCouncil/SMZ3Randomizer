@@ -3,6 +3,7 @@ using Randomizer.Shared;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
+using System.Collections.Generic;
 
 namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
 {
@@ -67,17 +68,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CrocomiresRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crocomire's Room", metadata)
             {
-                Crocomire = new Location(this, LocationId.UpperNorfairCrocomire, 0x8F8BA4, LocationType.Visible,
-                    name: "Energy Tank, Crocomire",
-                    vanillaItem: ItemType.ETank,
-                    access: items => region.CanAccessCrocomire(items) && ((Logic.HasEnergyReserves(items, 1) && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.Grapple),
-                    memoryAddress: 0x6,
-                    memoryFlag: 0x10,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairCrocomire, 0x8F8BA4, LocationType.Visible,
+                        name: "Energy Tank, Crocomire",
+                        vanillaItem: ItemType.ETank,
+                        access: items => region.CanAccessCrocomire(items) && ((Logic.HasEnergyReserves(items, 1) && Logic.CanWallJump(WallJumpDifficulty.Easy)) || items.SpaceJump || items.Grapple),
+                        memoryAddress: 0x6,
+                        memoryFlag: 0x10,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Crocomire { get; }
         }
 
         public class CrocomireEscapeRoom : Room
@@ -85,17 +87,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public CrocomireEscapeRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Crocomire Escape", metadata)
             {
-                CrocomireEscape = new Location(this, LocationId.UpperNorfairCrocomireEscape, 0x8F8BC0, LocationType.Visible,
-                    name: "Missile (above Crocomire)",
-                    vanillaItem: ItemType.Missile,
-                    access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster && Logic.CanWallJump(WallJumpDifficulty.Hard)),
-                    memoryAddress: 0x6,
-                    memoryFlag: 0x40,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairCrocomireEscape, 0x8F8BC0, LocationType.Visible,
+                        name: "Missile (above Crocomire)",
+                        vanillaItem: ItemType.Missile,
+                        access: items => Logic.CanFly(items) || items.Grapple || (items.HiJump && items.SpeedBooster && Logic.CanWallJump(WallJumpDifficulty.Hard)),
+                        memoryAddress: 0x6,
+                        memoryFlag: 0x40,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location CrocomireEscape { get; }
         }
 
         public class PostCrocomirePowerBombRoom : Room
@@ -103,17 +106,18 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public PostCrocomirePowerBombRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Post Crocomire Power Bomb Room", metadata)
             {
-                PostCrocPowerBombRoom = new Location(this, LocationId.UpperNorfairPostCrocomirePowerBomb, 0x8F8C04, LocationType.Visible,
-                    name: "Power Bomb (Crocomire)",
-                    vanillaItem: ItemType.PowerBomb,
-                    access: items => region.CanAccessCrocomire(items) && (Logic.CanFly(items) || items.HiJump || items.Grapple),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x2,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairPostCrocomirePowerBomb, 0x8F8C04, LocationType.Visible,
+                        name: "Power Bomb (Crocomire)",
+                        vanillaItem: ItemType.PowerBomb,
+                        access: items => region.CanAccessCrocomire(items) && (Logic.CanFly(items) || items.HiJump || items.Grapple),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x2,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location PostCrocPowerBombRoom { get; }
         }
 
         public class PostCrocomireMissileRoom : Room
@@ -121,21 +125,22 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public PostCrocomireMissileRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Post Crocomire Missile Room", metadata, "Cosine Room")
             {
-                CosineRoom = new Location(this, LocationId.UpperNorfairPostCrocomireMissile, 0x8F8C14, LocationType.Visible,
-                    name: "Missile (below Crocomire)",
-                    vanillaItem: ItemType.Missile,
-                    access: items =>
-                        // Can access item
-                        region.CanAccessCrocomire(items) && items.Morph &&
-                        // Can return
-                        (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.SpeedBooster && Logic.CanUsePowerBombs(items) && items.HiJump && items.Grapple)),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairPostCrocomireMissile, 0x8F8C14, LocationType.Visible,
+                        name: "Missile (below Crocomire)",
+                        vanillaItem: ItemType.Missile,
+                        access: items =>
+                            // Can access item
+                            region.CanAccessCrocomire(items) && items.Morph &&
+                            // Can return
+                            (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.SpeedBooster && Logic.CanUsePowerBombs(items) && items.HiJump && items.Grapple)),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location CosineRoom { get; }
         }
 
         public class PostCrocomireJumpRoom : Room
@@ -143,21 +148,22 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public PostCrocomireJumpRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Post Crocomire Jump Room", metadata, "Indiana Jones Room", "Pantry")
             {
-                IndianaJonesRoom = new Location(this, LocationId.UpperNorfairPostCrocomireJump, 0x8F8C2A, LocationType.Visible,
-                    name: "Missile (Grappling Beam)",
-                    vanillaItem: ItemType.Missile,
-                    access: items =>
-                        // Can access item
-                        region.CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))) &&
-                        // Can return
-                        (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.HiJump && items.Grapple)),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x8,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairPostCrocomireJump, 0x8F8C2A, LocationType.Visible,
+                        name: "Missile (Grappling Beam)",
+                        vanillaItem: ItemType.Missile,
+                        access: items =>
+                            // Can access item
+                            region.CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))) &&
+                            // Can return
+                            (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.HiJump && items.Grapple)),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x8,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location IndianaJonesRoom { get; }
         }
 
         public class GrappleBeamRoom : Room
@@ -165,21 +171,22 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
             public GrappleBeamRoom(UpperNorfairCrocomire region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Grapple Beam Room", metadata)
             {
-                GrappleBeam = new Location(this, LocationId.UpperNorfairGrappleBeam, 0x8F8C36, LocationType.Chozo,
-                    name: "Grappling Beam",
-                    vanillaItem: ItemType.Grapple,
-                    access: items =>
-                        // Can access item
-                        region.CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))) &&
-                        // Can return
-                        (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.HiJump && items.Grapple)),
-                    memoryAddress: 0x7,
-                    memoryFlag: 0x10,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.UpperNorfairGrappleBeam, 0x8F8C36, LocationType.Chozo,
+                        name: "Grappling Beam",
+                        vanillaItem: ItemType.Grapple,
+                        access: items =>
+                            // Can access item
+                            region.CanAccessCrocomire(items) && items.Morph && (Logic.CanFly(items) || (items.SpeedBooster && Logic.CanUsePowerBombs(items))) &&
+                            // Can return
+                            (Logic.CanFly(items) || Logic.CanWallJump(WallJumpDifficulty.Medium) || (items.HiJump && items.Grapple)),
+                        memoryAddress: 0x7,
+                        memoryFlag: 0x10,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location GrappleBeam { get; }
         }
     }
 }

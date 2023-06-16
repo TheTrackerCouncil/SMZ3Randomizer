@@ -16,18 +16,6 @@ namespace Randomizer.Data.WorldData
     public abstract class Room : IHasLocations
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Room"/> class that has
-        /// no alternate names.
-        /// </summary>
-        /// <param name="region">The region the room is located in.</param>
-        /// <param name="name">The name of the room.</param>
-        /// <param name="metadata"></param>
-        public Room(Region region, string name, IMetadataService? metadata)
-            : this(region, name, metadata, Array.Empty<string>())
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Room"/> class with the
         /// specified alternate names.
         /// </summary>
@@ -41,6 +29,7 @@ namespace Randomizer.Data.WorldData
             Name = name;
             AlsoKnownAs = new ReadOnlyCollection<string>(alsoKnownAs);
             Metadata = metadata?.Room(this) ?? new RoomInfo(name);
+            Locations = new List<Location>();
         }
 
         /// <summary>
@@ -81,14 +70,7 @@ namespace Randomizer.Data.WorldData
         /// <summary>
         /// Gets all locations in the room.
         /// </summary>
-        public IEnumerable<Location> Locations => GetLocations();
-
-        /// <summary>
-        /// Returns all locations in this room.
-        /// </summary>
-        /// <returns>A collection of locations in the room.</returns>
-        public IEnumerable<Location> GetLocations()
-            => GetType().GetPropertyValues<Location>(this);
+        public IEnumerable<Location> Locations { get; protected set; }
 
         /// <summary>
         /// Returns a string that represents the room.

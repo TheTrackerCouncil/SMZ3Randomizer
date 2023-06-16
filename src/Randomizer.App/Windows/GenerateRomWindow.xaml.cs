@@ -459,10 +459,10 @@ namespace Randomizer.App.Windows
 
             stats.Increment("Successfully generated");
 
-            if (IsScam(world.World.InnerMaridia.SpringBall.ShaktoolItem.Item.Type))
+            if (IsScam(world.World.FindLocation(LocationId.InnerMaridiaSpringBall).Item.Type))
                 stats.Increment("Shaktool betrays you");
 
-            if (IsScam(world.World.LightWorldNorthEast.ZorasDomain.Zora.Item.Type))
+            if (IsScam(world.World.FindLocation(LocationId.KingZora).Item.Type))
                 stats.Increment("Zora is a scam");
 
             if (IsScam(world.World.DarkWorldNorthEast.Catfish.Item.Type))
@@ -471,7 +471,7 @@ namespace Randomizer.App.Windows
             if (IsScam(world.World.DarkWorldNorthWest.PegWorld.Item.Type))
                 stats.Increment("\"I want to go on something more thrilling than Peg World.\"");
 
-            if (world.World.BlueBrinstar.BlueBrinstarMorphBall.MorphBall.Item.Type == ItemType.Morph)
+            if (world.World.FindLocation(LocationId.BlueBrinstarMorphBallRight).Item.Type == ItemType.Morph)
                 stats.Increment("The Morph Ball is in its original location");
 
             if (world.World.GanonsTower.MoldormChest.Item.Type.IsInCategory(ItemCategory.Metroid))

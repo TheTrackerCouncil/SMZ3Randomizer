@@ -103,7 +103,7 @@ namespace Randomizer.App.ViewModels
 
             item = new Item(ItemType.XRay, world, "Bow");
             yield return new MarkedLocationViewModel(
-                _syncer.World.LightWorldNorthEast.ZorasDomain.Zora,
+                _syncer.World.FindLocation(LocationId.KingZora),
                 item,
                 null,
                 _syncer);

@@ -62,57 +62,45 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.DarkWorld
             public HypeCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Hype Cave", metadata)
             {
-                Top = new Location(this, LocationId.HypeCaveTop, 0x1EB1E, LocationType.Regular,
-                    name: "Top",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x11E,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                MiddleRight = new Location(this, LocationId.HypeCaveMiddleRight, 0x1EB21, LocationType.Regular,
-                    name: "Middle Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x11E,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                MiddleLeft = new Location(this, LocationId.HypeCaveMiddleLeft, 0x1EB24, LocationType.Regular,
-                    name: "Middle Left",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x11E,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Bottom = new Location(this, LocationId.HypeCaveBottom, 0x1EB27, LocationType.Regular,
-                    name: "Bottom",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x11E,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                Npc = new Location(this, LocationId.HypeCaveNpc, 0x308011, LocationType.Regular,
-                    name: "NPC",
-                    vanillaItem: ItemType.ThreeHundredRupees,
-                    memoryAddress: 0x11E,
-                    memoryFlag: 0xA,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.HypeCaveTop, 0x1EB1E, LocationType.Regular,
+                        name: "Top",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x11E,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.HypeCaveMiddleRight, 0x1EB21, LocationType.Regular,
+                        name: "Middle Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x11E,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.HypeCaveMiddleLeft, 0x1EB24, LocationType.Regular,
+                        name: "Middle Left",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x11E,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.HypeCaveBottom, 0x1EB27, LocationType.Regular,
+                        name: "Bottom",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x11E,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.HypeCaveNpc, 0x308011, LocationType.Regular,
+                        name: "NPC",
+                        vanillaItem: ItemType.ThreeHundredRupees,
+                        memoryAddress: 0x11E,
+                        memoryFlag: 0xA,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location Top { get; }
-
-            public Location MiddleRight { get; }
-
-            public Location MiddleLeft { get; }
-
-            public Location Bottom { get; }
-
-            public Location Npc { get; }
         }
     }
-
 }

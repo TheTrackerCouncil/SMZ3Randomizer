@@ -112,50 +112,42 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
             public BackOfEscapeRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Sewers", metadata, "Back of Escape")
             {
-                SecretRoomLeft = new Location(this, LocationId.SewersSecretRoomLeft, 0x1EB5D, LocationType.Regular,
-                    name: "Secret Room - Left",
-                    vanillaItem: ItemType.ThreeBombs,
-                    access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
-                    memoryAddress: 0x11,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                SecretRoomMiddle = new Location(this, LocationId.SewersSecretRoomMiddle, 0x1EB60, LocationType.Regular,
-                    name: "Secret Room - Middle",
-                    vanillaItem: ItemType.ThreeHundredRupees,
-                    access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
-                    memoryAddress: 0x11,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                SecretRoomRight = new Location(this, LocationId.SewersSecretRoomRight, 0x1EB63, LocationType.Regular,
-                    name: "Secret Room - Right",
-                    vanillaItem: ItemType.TenArrows,
-                    access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
-                    memoryAddress: 0x11,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState);
-
-                DarkCross = new Location(this, LocationId.SewersDarkCross, 0x1E96E, LocationType.Regular,
-                    name: "Dark Cross",
-                    vanillaItem: ItemType.KeyHC,
-                    access: items => Logic.CanPassFireRodDarkRooms(items),
-                    memoryAddress: 0x32,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.SewersSecretRoomLeft, 0x1EB5D, LocationType.Regular,
+                        name: "Secret Room - Left",
+                        vanillaItem: ItemType.ThreeBombs,
+                        access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
+                        memoryAddress: 0x11,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.SewersSecretRoomMiddle, 0x1EB60, LocationType.Regular,
+                        name: "Secret Room - Middle",
+                        vanillaItem: ItemType.ThreeHundredRupees,
+                        access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
+                        memoryAddress: 0x11,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.SewersSecretRoomRight, 0x1EB63, LocationType.Regular,
+                        name: "Secret Room - Right",
+                        vanillaItem: ItemType.TenArrows,
+                        access: items => Logic.CanLiftLight(items) || (Logic.CanPassFireRodDarkRooms(items) && items.KeyHC),
+                        memoryAddress: 0x11,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState),
+                    new Location(this, LocationId.SewersDarkCross, 0x1E96E, LocationType.Regular,
+                        name: "Dark Cross",
+                        vanillaItem: ItemType.KeyHC,
+                        access: items => Logic.CanPassFireRodDarkRooms(items),
+                        memoryAddress: 0x32,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                };
             }
-
-            public Location SecretRoomLeft { get; }
-
-            public Location SecretRoomMiddle { get; }
-
-            public Location SecretRoomRight { get; }
-
-            public Location DarkCross { get; }
         }
     }
 }

@@ -182,61 +182,50 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public MiniMoldormCaveRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Mini Moldorm Cave", metadata)
             {
-                FarLeftChest = new Location(this, LocationId.MiniMoldormCaveFarLeft, 0x1EB42, LocationType.Regular,
-                    name: "Far Left",
-                    vanillaItem: ItemType.ThreeBombs,
-                    memoryAddress: 0x123,
-                    memoryFlag: 0x4,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                LeftChest = new Location(this, LocationId.MiniMoldormCaveLeft, 0x1EB45, LocationType.Regular,
-                    name: "Left",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x123,
-                    memoryFlag: 0x5,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                Npc = new Location(this, LocationId.MiniMoldormCaveNpc, 0x308010, LocationType.Regular,
-                    name: "NPC",
-                    vanillaItem: ItemType.ThreeHundredRupees,
-                    memoryAddress: 0x123,
-                    memoryFlag: 0xA,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                RightChest = new Location(this, LocationId.MiniMoldormCaveRight, 0x1EB48, LocationType.Regular,
-                    name: "Right",
-                    vanillaItem: ItemType.TwentyRupees,
-                    memoryAddress: 0x123,
-                    memoryFlag: 0x6,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
-
-                FarRightChest = new Location(this, LocationId.MiniMoldormCaveFarRight, 0x1EB4B, LocationType.Regular,
-                    name: "Far Right",
-                    vanillaItem: ItemType.TenArrows,
-                    memoryAddress: 0x123,
-                    memoryFlag: 0x7,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.MiniMoldormCaveFarLeft, 0x1EB42, LocationType.Regular,
+                        name: "Far Left",
+                        vanillaItem: ItemType.ThreeBombs,
+                        memoryAddress: 0x123,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.MiniMoldormCaveLeft, 0x1EB45, LocationType.Regular,
+                        name: "Left",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x123,
+                        memoryFlag: 0x5,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.MiniMoldormCaveNpc, 0x308010, LocationType.Regular,
+                        name: "NPC",
+                        vanillaItem: ItemType.ThreeHundredRupees,
+                        memoryAddress: 0x123,
+                        memoryFlag: 0xA,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.MiniMoldormCaveRight, 0x1EB48, LocationType.Regular,
+                        name: "Right",
+                        vanillaItem: ItemType.TwentyRupees,
+                        memoryAddress: 0x123,
+                        memoryFlag: 0x6,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.MiniMoldormCaveFarRight, 0x1EB4B, LocationType.Regular,
+                        name: "Far Right",
+                        vanillaItem: ItemType.TenArrows,
+                        memoryAddress: 0x123,
+                        memoryFlag: 0x7,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne)
+                };
             }
-
-            public Location FarLeftChest { get; }
-
-            public Location LeftChest { get; }
-
-            public Location RightChest { get; }
-
-            public Location FarRightChest { get; }
-
-            public Location Npc { get; }
         }
 
         public class SwampRuinsRoom : Room
@@ -244,31 +233,27 @@ namespace Randomizer.Data.WorldData.Regions.Zelda.LightWorld
             public SwampRuinsRoom(Region region, IMetadataService? metadata, TrackerState? trackerState)
                 : base(region, "Swamp Ruins", metadata)
             {
-                FloodgateChest = new Location(this, LocationId.FloodgateChest, 0x1E98C, LocationType.Regular,
-                   name: "Floodgate Chest",
-                   vanillaItem: ItemType.ThreeBombs,
-                   memoryAddress: 0x10B,
-                   memoryFlag: 0x4,
-                   metadata: metadata,
-                   trackerState: trackerState)
-                   .Weighted(SphereOne);
-
-                SunkedTreasure = new Location(this, LocationId.SunkenTreasure, 0x308145, LocationType.Regular,
-                    name: "Sunken Treasure",
-                    vanillaItem: ItemType.HeartPiece,
-                    memoryAddress: 0x3B,
-                    memoryFlag: 0x40,
-                    memoryType: LocationMemoryType.ZeldaMisc,
-                    metadata: metadata,
-                    trackerState: trackerState)
-                    .Weighted(SphereOne);
+                Locations = new List<Location>
+                {
+                    new Location(this, LocationId.FloodgateChest, 0x1E98C, LocationType.Regular,
+                        name: "Floodgate Chest",
+                        vanillaItem: ItemType.ThreeBombs,
+                        memoryAddress: 0x10B,
+                        memoryFlag: 0x4,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne),
+                    new Location(this, LocationId.SunkenTreasure, 0x308145, LocationType.Regular,
+                        name: "Sunken Treasure",
+                        vanillaItem: ItemType.HeartPiece,
+                        memoryAddress: 0x3B,
+                        memoryFlag: 0x40,
+                        memoryType: LocationMemoryType.ZeldaMisc,
+                        metadata: metadata,
+                        trackerState: trackerState)
+                        .Weighted(SphereOne)
+                };
             }
-
-            public Location FloodgateChest { get; }
-
-            public Location SunkedTreasure { get; }
-
         }
     }
-
 }
