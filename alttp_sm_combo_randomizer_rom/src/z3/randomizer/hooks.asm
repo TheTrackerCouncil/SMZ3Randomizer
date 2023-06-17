@@ -2127,9 +2127,24 @@ JML.l PreOverworld_LoadProperties_ChooseMusic
 org $028389  ; <- Bank02.asm:763
 PreOverworld_LoadProperties_SetSong:
 ;--------------------------------------------------------------------------------
+; Remove Aga1 check for Kakariko music, always play track 7
+org $02A992 ; (BCS $A999)
+NOP #2
+org $02A9B0 ; (BCS $A9B7)
+NOP #2
+org $02C1C8 ; (BCS $C1CC)
+NOP #2
+org $02ADA0 ; (LDA.b #$F1 : STA $012C)
+JSL Overworld_MosaicDarkWorldChecks : NOP
+;--------------------------------------------------------------------------------
 org $05CC58 ; <- Bank05.asm:1307 (LDA $040A : CMP.b #$18)
-JSL PsychoSolder_MusicCheck
-NOP #1
+JSL PsychoSolder_MusicCheck : NOP #1
+;--------------------------------------------------------------------------------
+org $02B13A ; <- Bank02.asm:7647
+dl Overworld_FinishMirrorWarp
+;--------------------------------------------------------------------------------
+org $0AB949 ; <- Bank0A.asm:270 (Different from US ROM)
+JSL BirdTravel_LoadTargetAreaMusic : NOP #16
 ;================================================================================
 
 ;================================================================================
