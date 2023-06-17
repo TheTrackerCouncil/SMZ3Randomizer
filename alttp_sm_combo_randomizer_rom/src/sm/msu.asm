@@ -78,10 +78,7 @@ SM_MSU_Main:
 +
 
 	;; $04 is usually ambience, call original code
-	cmp.b #$04
-	bne +
-	jmp .OriginalCode
-+
+	cmp.b #$04 : BEQ .PlayAmbience
 
 	;; Check if the song is already playing
 	cmp.w !CurrentMusic
@@ -120,33 +117,105 @@ SM_MSU_Main:
 	;; Load music to play from pointer
 	sep #$20
 	lda ($00),y
-	
+
 	;; Loading $00 means calling the original code
-	beq .OriginalCode
+	bne .PlayMusic
+    jml .OriginalCode
+
+.PlayAmbience
+    PHA
+    LDA.w $0998
+    CMP #$1A : BEQ +
+    PLA
+    JMP .OriginalCode
++
+    PLA
+    LDA #40
+    JML .CheckFallbacks
+
 .PlayMusic
     CMP #10 : BEQ .LoadSamusTheme
-    BRA .CheckFallbacks
+    CMP #19 : BEQ .LoadBossThemeOne
+    CMP #22 : BEQ .LoadBossThemeTwo
+    CMP #23 : BEQ .LoadTensionTheme
+    JML .CheckFallbacks
 
-.LoadSamusTheme
-    TAX
+.LoadSamusTheme ; (10)
     REP #$20
-
-    ; Play no music following the baby draining Samus's health
     LDA $079B
+    LDX #00
+
+    ; Play no music following the baby draining Samus's heath
     CMP #$DCB1 : BNE +
-        SEP #$20
-        TXA
-        BRA .OriginalCode
+        LDX #$FF
+    +
+    ; Play "hyper beam" theme when fighting the last phase of Mother Brain
+    CMP #$DD58 : BNE +
+        LDX #39
     +
 
     SEP #$20
-    TXA
-    bra .CheckFallbacks
+    LDY #10
+    bra .TryExtended
+
+; Boss theme for Ridley, Draygon, and Torizo statues
+.LoadBossThemeOne ; (19)
+    REP #$20
+    LDA $079B
+    LDX #00
+
+    ; Draygon
+    CMP #$DA60 : BNE +
+        LDX #35
+    +
+    ; Ridley
+    CMP #$B32E : BNE +
+        LDX #36
+    +
+
+    SEP #$20
+    LDY #19
+    bra .TryExtended
+
+; Boss theme for Kraid, Crocomire, Phantoon, and the Baby
+.LoadBossThemeTwo ; (22)
+    LDA $079F : TAX
+    LDA BossTwoExtendedThemes,X : TAX
+    LDY #22
+    bra .TryExtended
+
+; Song before fighting some of the bosses
+.LoadTensionTheme ; (23)
+    LDA $079F : TAX
+    LDA TensionExtendedThemes,X : TAX
+    LDY #23
+    bra .TryExtended
+
+; X = Extended Song (00 => Skip to Fallback, FF -> Original Code)
+; Y = Original Song
+.TryExtended
+    CPX #00 : BNE +
+        TYA
+        bra .CheckFallbacks
+    +
+    CPX #$FF : BNE +
+        TYA
+        bra .OriginalCode
+    +
+    
+    phx
+    TXA : DEC : LSR #3 : TAX
+	LDA.l MSUFallbackTable+$10,X : BEQ .FailExtended : CMP.b #$FF : BEQ .continue
+
+.FailExtended
+    PLA
+    TYA
+    BRA .CheckFallbacks
 
 .CheckFallbacks
 	;; Check track fallback list if the track is available
 	pha
-    DEC : PHA
+	DEC : PHA
 		AND.b #$07 : TAY
 		PLA : LSR #3 : TAX
 	LDA.l MSUFallbackTable+$10,X : BEQ .fallback : CMP.b #$FF : BEQ .continue
@@ -284,6 +353,11 @@ bank_45: ;; Big Boss Battle 2
 bank_48: ;; Samus's Ship (Mother Brain)
 	db 10
 
+BossTwoExtendedThemes:
+db #00,#32,#00,#34,#00,#38 ; Boss theme two
+
+TensionExtendedThemes:
+db #00,#31,#00,#33,#00,#37 ; Boss theme two
 
 TrackNeedLooping:
 ;; Samus Aran's Appearance fanfare

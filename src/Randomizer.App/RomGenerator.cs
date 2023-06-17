@@ -170,7 +170,7 @@ namespace Randomizer.App
             var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
             var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);
-            _msuGeneratorService.EnableMsu1Support(options, bytes, romPath, seed.WorldGenerationData.LocalWorld, out var msuError);
+            _msuGeneratorService.EnableMsu1Support(options.PatchOptions.Msu1Path, romPath, out var msuError);
             Rom.UpdateChecksum(bytes);
             await File.WriteAllBytesAsync(romPath, bytes);
 

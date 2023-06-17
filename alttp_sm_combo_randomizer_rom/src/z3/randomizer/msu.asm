@@ -472,9 +472,9 @@ MSUInit:
 .check_sm_fallback
         PHP : SEP #$10
         ;LDA.l NoBGM : BNE .done
-    + : LDA.b #132
-    LDX.b #3
-    LDY.b #7
+    + : LDA.b #142
+    LDX.b #5
+    LDY.b #1
 
 .check_sm_track
     STA.w MSUTRACK
