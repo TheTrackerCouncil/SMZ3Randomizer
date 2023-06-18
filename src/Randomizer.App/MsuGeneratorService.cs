@@ -43,6 +43,8 @@ public class MsuGeneratorService
         var hasTrack133 = File.Exists(msuPath.Replace(".msu", "-133.pcm"));
         var hasTrack41 = File.Exists(msuPath.Replace(".msu", "-41.pcm"));
         var hasTrack141 = File.Exists(msuPath.Replace(".msu", "-141.pcm"));
+        var track33Loops = DoesPCMLoop(msuPath.Replace(".msu", "-33.pcm"));
+        var track130Loops = DoesPCMLoop(msuPath.Replace(".msu", "-130.pcm"));
 
         // Swap if we see the Skull Woods theme above 100
         if (hasTrack141)
@@ -50,7 +52,7 @@ public class MsuGeneratorService
             swap = true;
         }
         // Swap if we don't see the Skull Woods theme above 100 and if either the Z3 epilogue or SM credits themes are incorrectly set to loop
-        else if (!hasTrack41 && hasTrack133 && (DoesPCMLoop(msuPath.Replace(".msu", "-33.pcm")) || DoesPCMLoop(msuPath.Replace(".msu", "-130.pcm"))))
+        else if (!hasTrack41 && hasTrack133 && (track33Loops || track130Loops))
         {
             swap = true;
         }
@@ -90,6 +92,10 @@ public class MsuGeneratorService
 
     private static bool DoesPCMLoop(string fileName)
     {
+        if (!File.Exists(fileName))
+        {
+            return false;
+        }
         using var fileStream = File.OpenRead(fileName);
         fileStream.Seek(4, SeekOrigin.Begin);
         var bytes = new byte[4];
