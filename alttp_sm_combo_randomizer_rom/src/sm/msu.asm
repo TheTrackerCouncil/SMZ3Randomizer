@@ -68,7 +68,7 @@ SM_MSU_Main:
 	pha
 	plb
 	
-	%CheckMSUPresence(.OriginalCode)
+	%CheckMSUPresence(.Exit)
 	
 	;; Load current requested music
 	lda.w !RequestedMusic
