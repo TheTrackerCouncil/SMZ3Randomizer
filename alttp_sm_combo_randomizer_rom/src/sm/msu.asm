@@ -1,3 +1,49 @@
+; Track List:
+;
+; 1/101 - Apperance fanfare
+; 2/102 - Item acquired (not used in SMZ3)
+; 3/103 - Item/elevator room
+; 4/104 - Opening with intro
+; 5/105 - Opening without intro
+; 6/106 - Crateria - First landing (with thunder)
+; 7/107 - Crateria - First landing (without thunder) (not used in SMZ3)
+; 8/108 - Crateria - Space Pirates Appear
+; 9/109 - Crateria - Golden statues room
+; 10/110 - Theme of Samus Aran (Samus's Ship & East Crateria)
+; 11/111 - Green Brinstar
+; 12/112 - Red Brinstar
+; 13/113 - Upper Norfair
+; 14/114 - Lower Norfair
+; 15/115 - Inner Maridia
+; 16/116 - Outer Maridia
+; 17/117 - Tourian
+; 18/118 - Mother Brain battle
+; 19/119 - Big Boss Battle 1 (Chozo statues, Ridley, and Draygon)
+; 20/120 - Evacuation
+; 21/121 - Chozo statue awakens
+; 22/122 - Big Boss Battle 2 (Crocomire, Kraid, Phantoon, Baby Metroid) 
+; 23/123 - Tension/Hostile Incoming (before Kraid, Phantoon, and Baby Metroid. Played in between Croc segments)
+; 24/124 - Plant miniboss (Sporespawn and Botwoon)
+; 25/125 - Ceres Station (not used in SMZ3)
+; 26/126 - Wrecked Ship Powered Off
+; 27/127 - Wrecked Ship Powered On
+; 28/128 - Theme of Super Metroid (not used in SMZ3)
+; 29/129 - Death cry
+; 30/130 - Ending
+;
+; SM Extended tracks
+;
+; 31/131 - Kraid incoming (falls back to 23/123)
+; 32/132 - Kraid battle (falls back to 22/122)
+; 33/133 - Phantoon incoming (falls back to 23/123)
+; 34/134 - Phantoon battle (falls back to 22/122)
+; 35/135 - Draygon battle (falls back to 19/119)
+; 36/136 - Ridley battle (falls back to 19/119)
+; 37/137 - Baby incoming (falls back to 23/123)
+; 38/138 - The baby (falls back to 22/122)
+; 39/139 - Hyper beam (falls back 10/110)
+; 40/140 - Game over
+
 ;;; MSU memory map I/O
 !MSU_STATUS = $2000
 !MSU_ID = $2002
