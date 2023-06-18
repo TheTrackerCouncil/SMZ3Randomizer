@@ -67,6 +67,7 @@ public class MsuGeneratorService
             {
                 if (int.TryParse(suffix.Replace("-", "").Replace(".pcm", ""), out var trackNumber) && trackNumber > 0)
                 {
+                    // Skip track 99 (SMZ3 combined credits) as it doesn't change
                     if (trackNumber < 99)
                     {
                         trackNumber += 100;
