@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Threading;
+using Randomizer.App;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.FileData;
+using Randomizer.SMZ3.FileData.Patches;
 
 namespace Randomizer.Tools;
 
@@ -13,7 +16,7 @@ public class RomGenerator
     private const string SmRomPath = @"D:\Games\SMZ3\sm.sfc";
     private const string Z3RomPath = @"D:\Games\SMZ3\z3.sfc";
     private const string OutputPath = @"D:\Games\SMZ3\TestRom";
-    private const string MsuPath = @"D:\Games\SMZ3\SMZ3MSUs\RetroPC\RPC-LTTP-MSU.msu";
+    private const string MsuPath = @"D:\Games\SMZ3\SMZ3MSUs\Yoshi's Scrambled Worlds - Copy\Yoshi_SMZ3.msu";
     private const string RomName = "test-rom";
 
     private static readonly Dictionary<string, string> s_ipsPatches = new()
@@ -30,6 +33,30 @@ public class RomGenerator
         { @"..\..\..\..\Randomizer.App\Patches\disable_screen_shake.ips", "SM" },
         { @"..\..\..\..\Randomizer.App\Patches\Celeste.ips", "SM" },
         { @"..\..\..\..\Randomizer.App\Patches\EasierWJ.ips", "SM" },
+        { @"..\..\..\..\Randomizer.App\Patches\UnifiedAim.ips", "SM" },
+        { @"..\..\..\..\Randomizer.App\Patches\AutoRun.ips", "SM" },
+        { @"..\..\..\..\Randomizer.App\Patches\HoldFire.ips", "SM" },
+    };
+
+    private static readonly List<RomPatch> s_romPatches = new() { new GoalsPatch(), new InfiniteSpaceJumpPatch(), new MenuSpeedPatch(), new MetroidControlsPatch() };
+
+    private static readonly Config s_config = new()
+    {
+        OpenPyramid = true,
+        MenuSpeed = MenuSpeed.Fast,
+        MetroidControls = new MetroidControlOptions()
+        {
+            Shoot = MetroidButton.Y,
+            Jump = MetroidButton.B,
+            Dash = MetroidButton.X,
+            ItemSelect = MetroidButton.Select,
+            ItemCancel = MetroidButton.R,
+            AimUp = MetroidButton.L,
+            AimDown = MetroidButton.A,
+            RunButtonBehavior = RunButtonBehavior.AutoRun,
+            ItemCancelBehavior = ItemCancelBehavior.HoldSupersOnly,
+            AimButtonBehavior = AimButtonBehavior.UnifiedAim
+        }
     };
 
     public static string GenerateRom(string[] args)
@@ -87,7 +114,6 @@ public class RomGenerator
                     Rom.ApplyIps(rom, ips);
                     break;
             }
-
         }
 
         // Apply a sprite
@@ -102,8 +128,15 @@ public class RomGenerator
         // Apply additional patches
         if (applyPatches)
         {
-            var patches = new List<(int offset, byte[] bytes)> { (Patcher.Snes(0x1C4800+0x2), Patcher.UshortBytes(0xFF)) };
+            var patches = new List<(int offset, byte[] bytes)> { (Patcher.Snes(0x40008B), Patcher.UshortBytes(0x01)) };
             var patchDictionary = patches.ToDictionary(x => x.offset, x => x.bytes);
+            foreach (var patcher in s_romPatches)
+            {
+                foreach (var (offset, bytes) in patcher.GetChanges(s_config))
+                {
+                    patchDictionary[offset] = bytes;
+                }
+            }
             Rom.ApplySeed(rom, patchDictionary);
 
             if (File.Exists(romPath)) File.Delete(romPath);
@@ -114,23 +147,10 @@ public class RomGenerator
 
         if (copyMsu)
         {
-            foreach (var file in Directory.GetFiles(OutputPath))
+            var msuGenerator = new MsuGeneratorService();
+            if (!msuGenerator.EnableMsu1Support(MsuPath, romPath, out var error))
             {
-                if (file.EndsWith(".pcm") || file.EndsWith(".msu"))
-                {
-                    File.Delete(file);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(MsuPath))
-            {
-                File.Copy(MsuPath, Path.Combine(OutputPath, $"{RomName}.msu"));
-                for (var i = 1; i < 200; i++)
-                {
-                    var pcmPath = MsuPath.Replace(".msu", $"-{i}.pcm");
-                    if (File.Exists(pcmPath))
-                        NativeMethods.CreateHardLink(Path.Combine(OutputPath, $"{RomName}-{i}.pcm"), pcmPath, IntPtr.Zero);
-                }
+                throw new Exception(error);
             }
         }
 
