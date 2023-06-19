@@ -107,7 +107,7 @@ TrackedItemMultiple:
 - Text: Found more {0}
 - Text: More {0}?
 - Text: Yay. More {0}
-- Text: Marking off another {0}
+- Text: Marking off another {2}
 - Text: You stumbled upon more {0}
   Weight: 0.5
 - Text: Hoarding more {0}

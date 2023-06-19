@@ -77,17 +77,15 @@ init:
     lda #$0000
     tcd
 
-    ; If previously playing an MSU track, play combo credits MSU track
-    ; Otherwise, play the built in music
-    pha
-    sep #$30
-
+    ; Start SPC song
     jsl playmusic
 
-    lda $2002 : cmp.b #'S' : BNE +
-        LDA #99 : STA $2004 : STZ $2005 ; Play track 99
-        LDA #1 : STA $2007 ; Sets the track to not repeat
-        LDA #$FF : STA $2006 ; Set to max volume
+    ; If MSU music is previously playing, play the combo credits MSU track
+    sep #$30
+    lda $2002 : cmp.b #'S' : bne +
+        lda #99 : sta $2004 : stz $2005 ; Play track 99
+        lda #1 : sta $2007 ; Sets the track to not repeat
+        lda #$FF : sta $2006 ; Set to max volume
     + 
 
     ; Load credits fonts and palettes into VRAM/CGRAM

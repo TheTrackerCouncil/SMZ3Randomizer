@@ -1094,52 +1094,56 @@ org $05FBD3 ; <- 2FBD3 - sprite_mad_batter.asm:209 - (STA $7EF37B)
 JSL.l GetMagicBatItem
 ;--------------------------------------------------------------------------------
 
-; ;================================================================================
-; ; MSU Music
-; ;--------------------------------------------------------------------------------
-org $0080f3
-JML check_msu : NOP : NOP
-check_msu_continue:
-
+;================================================================================
+; MSU Music
+;--------------------------------------------------------------------------------
 org $0080D7 ; <- D7 - Bank00.asm:172 (SEP #$30)
-spc_nmi:
-    JML msu_main
-    NOP
-spc_continue:
-
+JML MSUMain : NOP
+SPCContinue:
 org $028B7A ; <- C220 A5A0 - Bank02.asm:2225 (REP #$20 : LDA $A0)
 JSL SpiralStairsPreCheck
 
 org $029069 ; <- A21C A5A0 - Bank02.asm:3081 (LDX.b #$1C : LDA $A0)
 JSL SpiralStairsPostCheck
 
+org $02D6E8 ; <- 9C0A01 - Bank02.asm:10811 (STZ $010A)
+NOP #3
+
 org $08C421 ; <- AD4021 F005 - ancilla_receive_item.asm:108 (LDA $2140 : BEQ .wait_for_music)
-JML pendant_fanfare : NOP
-pendant_continue:
+JML PendantFanfareWait : NOP
+PendantFanfareContinue:
 
 org $08C42B
-pendant_done:
+PendantFanfareDone:
 
 org $08C62A ; <- AD4021 D008 - ancilla_receive_item.asm:442 (LDA $2140 : BNE .waitForSilence)
-JML crystal_fanfare : NOP
-crystal_done:
+JML CrystalFanfareWait : NOP
+CrystalFanfareDone:
 
 org $08C637
-crystal_continue:
+CrystalFanfareContinue:
+
+org $0988A0 ; <- 8D2C01 8009 - ancilla_init.asm:1179 (STA $012C : BRA .doneWithSoundEffects)
+JML FanfarePreload : NOP
+
+org $09F2A7 ; <- 8F27C27E - module_death.asm:56 (STA $7EC227)
+JSL.l StoreMusicOnDeath
 
 org $0EE6EC ; <- E220 A922 - Bank0E.asm:2892 (SEP #$20 : LDA.b #$22 : STA $012C)
-JSL.l ending_wait
+JSL.l EndingMusicWait
 
-; ; Process music commands in NMI from new location after muting is processed
-; org $0080DD
-; dw $012C
+; Process music commands in NMI from new location after muting is processed
+org $0080DD
+dw MusicControl
 
-; org $008101
-; dw $012C
+org $008101
+dw MusicControl
 
-; org $0EE6EC ; <- E220 A922 - Bank0E.asm:2892 (SEP #$20)
-; JSL.l ending_wait
-; ;--------------------------------------------------------------------------------
+org $09F512
+dw MusicControl
+
+org $0CF05F
+dw MusicControl
 
 ;================================================================================
 ; Replacement Shopkeeper
@@ -2123,9 +2127,24 @@ JML.l PreOverworld_LoadProperties_ChooseMusic
 org $028389  ; <- Bank02.asm:763
 PreOverworld_LoadProperties_SetSong:
 ;--------------------------------------------------------------------------------
+; Remove Aga1 check for Kakariko music, always play track 7
+org $02A992 ; (BCS $A999)
+NOP #2
+org $02A9B0 ; (BCS $A9B7)
+NOP #2
+org $02C1C8 ; (BCS $C1CC)
+NOP #2
+org $02ADA0 ; (LDA.b #$F1 : STA $012C)
+JSL Overworld_MosaicDarkWorldChecks : NOP
+;--------------------------------------------------------------------------------
 org $05CC58 ; <- Bank05.asm:1307 (LDA $040A : CMP.b #$18)
-JSL PsychoSolder_MusicCheck
-NOP #1
+JSL PsychoSolder_MusicCheck : NOP #1
+;--------------------------------------------------------------------------------
+org $02B13A ; <- Bank02.asm:7647
+dl Overworld_FinishMirrorWarp
+;--------------------------------------------------------------------------------
+org $0AB949 ; <- Bank0A.asm:270 (Different from US ROM)
+JSL BirdTravel_LoadTargetAreaMusic : NOP #16
 ;================================================================================
 
 ;================================================================================

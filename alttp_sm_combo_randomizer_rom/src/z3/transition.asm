@@ -219,8 +219,9 @@ zelda_spc_reset:
     lda #$ff                    ; Send N-SPC into "upload mode"
     sta $2140
 
-    lda #$00 : STA $2004
-    lda #$00 : STA $2005
+    lda #$00
+    STA $2007
+    STA $2006
 
     rep #$30
     lda #$0000

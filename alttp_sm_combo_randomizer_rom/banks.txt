@@ -38,6 +38,7 @@ Bank            Mirror banks    Content
 5F:0000-7FFF    --              -- Event data --
 
 80:8000-CD8F    C0              SM Bank #80
+80:FA00-FBFF    C0              -- SM MSU-1 Code --  
 80:FC00-FCFF    C0              -- Common IRQ Vector --
 80:FD00-FDFF    C0              -- SM Init Patches --
 80:FE00-FFFF    C0              -- SM HiROM Patches --

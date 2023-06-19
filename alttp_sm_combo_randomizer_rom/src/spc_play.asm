@@ -92,8 +92,9 @@ loadspc:
 
     ; Copy $02-ef to SPC RAM
     ; sendmusicblock $e0 $c002 $0002 $00ee
+    ; Only begin playing if there is no MSU track playing
     sep #$30
-    lda $2002 : cmp.b #'S' : BEQ +
+    lda $2002 : cmp.b #'S' : beq +
         rep #$30
         sep #!A_8BIT
         lda #$f6    ; 1
@@ -123,8 +124,9 @@ loadspc:
     jsr copyblocktospc
 
     ; sendmusicblock $f7 $0000 $8000 $7fc0
+    ; Only begin playing if there is no MSU track playing
     sep #$30
-    lda $2002 : cmp.b #'S' : BEQ +
+    lda $2002 : cmp.b #'S' : beq +
         rep #$30
         sep #!A_8BIT
         lda #$f7 ; 1
@@ -138,7 +140,6 @@ loadspc:
         ldy #$7fc0 ; 4
         jsr copyblocktospc
     +
-    rep #!XY_8BIT
 
     ; Create SPC init code that sets up registers
     jsr makespcinitcode
