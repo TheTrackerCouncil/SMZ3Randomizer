@@ -31,7 +31,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
             var filler = new StandardFiller(GetLogger<StandardFiller>());
             var randomizer = GetRandomizer();
             var config = new Config();
-            config.CasPatches.QuarterMagic = false;
+            config.LogicConfig.QuarterMagic = false;
             config.CasPatches.RandomizedBottles = false;
 
             var seedData = randomizer.GenerateSeed(config, seed, default);

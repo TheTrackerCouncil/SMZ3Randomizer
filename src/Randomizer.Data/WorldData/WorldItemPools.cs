@@ -85,7 +85,7 @@ public class WorldItemPools
             new Item(ItemType.XRay, world),
         };
 
-        if (world.Config.CasPatches.QuarterMagic)
+        if (world.Config.LogicConfig.QuarterMagic)
         {
             itemPool.Add(new Item(ItemType.HalfMagic, world));
         }

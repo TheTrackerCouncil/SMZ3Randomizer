@@ -4,7 +4,7 @@
 
 ; Implement auto-saving on death as a temporary measure to prevent lost items
 ; Game state 15h (Samus ran out of health, black out surroundings) ;;;
-JSL $9BB3A7;[$9B:B3A7]
+;JSL $9BB3A7;[$9B:B3A7]
 org $C2DD7E ; $82DD7E
    jsl sm_mw_autosave
 

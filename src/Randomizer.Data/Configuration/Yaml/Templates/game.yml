@@ -35,6 +35,12 @@ HintLocationHasUsefulItem:
 # {0} is replaced with the room, dungeon, or region name
 HintLocationHasSword:
 
+# The list of possibilities for hint messages for dungeon and the
+# medallion needed to enter it
+# {0} is replaced with the dungeon name
+# {1} is the medallion name
+HintDungeonMedallion:
+
 # The list of possibilities for hint messages for a given room, dungeon,
 # or region that has nothing required or useful in it.
 # {0} is replaced with the room, dungeon, or region name

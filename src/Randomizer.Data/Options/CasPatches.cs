@@ -25,10 +25,6 @@ namespace Randomizer.Data.Options
         [Description("Adds randomly filled bottles instead of empty bottles and random fairy bottle trades.")]
         public bool RandomizedBottles { get; set; } = true;
 
-        [DisplayName("Quarter Magic")]
-        [Description("Adds an additional progressive half magic to the item pool.")]
-        public bool QuarterMagic { get; set; } = true;
-
         [DisplayName("Aim with Any Button")]
         [Description("Allows you to map the aiming button to any button.\nPatch developed by Kejardon.")]
         public bool AimAnyButton { get; set; } = true;
