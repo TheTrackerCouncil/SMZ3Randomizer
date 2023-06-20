@@ -161,7 +161,11 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
         public override bool CanEnter(Progression items, bool requireRewards)
         {
             var smBosses = new[] { BossType.Kraid, BossType.Phantoon, BossType.Draygon, BossType.Ridley };
-            return items.MoonPearl && World.DarkWorldDeathMountainEast.CanEnter(items, requireRewards) && items.CrystalCount >= Config.GanonsTowerCrystalCount && World.CanDefeatBossCount(items, smBosses) >= Config.TourianBossCount;
+            var canEnterDDMEast = World.DarkWorldDeathMountainEast.CanEnter(items, requireRewards);
+            var haveEnoughCrystals = items.CrystalCount >= Config.GanonsTowerCrystalCount;
+            var gtOpenBeforeGanon = Config.GanonsTowerCrystalCount < Config.GanonCrystalCount;
+            var canBeatMetroid = World.CanDefeatBossCount(items, smBosses) >= Config.TourianBossCount;
+            return items.MoonPearl && canEnterDDMEast && haveEnoughCrystals && (gtOpenBeforeGanon || canBeatMetroid);
         }
 
         public override bool CanFill(Item item, Progression items)
