@@ -50,6 +50,12 @@ namespace Randomizer.Data.Configuration.ConfigFiles
             = new SchrodingersString("{0} has something nice, but it's not vital.", "{0} may be useful, but it's not required.");
 
         /// <summary>
+        /// Hints for stating that a dungeon needs a medallion
+        /// </summary>
+        public SchrodingersString? HintDungeonMedallion { get; init; }
+            = new SchrodingersString("{0} requires {1}", "You will need to find {1} to enter {0}");
+
+        /// <summary>
         /// Hints for stating that a location has a sword
         /// </summary>
         public SchrodingersString? HintLocationHasSword { get; init; }

@@ -104,6 +104,7 @@ namespace Randomizer.SMZ3.Generation
             allHints.AddRange(GetProgressionItemHints(hintPlayerWorld, lateSpheres, 8));
             allHints.AddRange(GetDungeonHints(hintPlayerWorld, allWorlds, importantLocations));
             allHints.AddRange(GetLocationHints(hintPlayerWorld, allWorlds, importantLocations));
+            allHints.AddRange(GetMedallionHints(hintPlayerWorld));
 
             _logger.LogDebug("Possible in game hints");
             foreach (var hint in allHints.Distinct())
@@ -112,15 +113,6 @@ namespace Randomizer.SMZ3.Generation
             }
 
             return allHints.Distinct().Shuffle(_random);
-
-            /*.Take(hintCount);
-            while (hints.Count() < HintLocations.Count)
-            {
-                hints = hints.Concat(hints.Take(Math.Min(HintLocations.Count() - hints.Count(), hints.Count())));
-            }
-            hints = hints.Shuffle(_random);
-
-            return hints;*/
         }
 
         /// <summary>
@@ -206,12 +198,21 @@ namespace Randomizer.SMZ3.Generation
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.KingZora));
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Catfish));
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.TowerOfHeraBigKeyChest));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.RedBrinstarXRayScope));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.PinkBrinstarHoptank));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.EtherTablet));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.BombosTablet));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.CrateriaSuper));
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SpikeCave));
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.SwampPalaceWestChest or LocationId.SwampPalaceBigKeyChest), "The left side of swamp palace");
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.Locations.Where(x => x.Id is LocationId.WreckedShipGravitySuit or LocationId.WreckedShipBowlingAlleyTop or LocationId.WreckedShipBowlingAlleyBottom), "Wrecked Ship post Chozo concert area");
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldNorthEast.PyramidFairy.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldSouth.HypeCave.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.DarkWorldDeathMountainEast.HookshotCave.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.LightWorldDeathMountainEast.ParadoxCave.Locations);
             AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.UpperNorfairCrocomire.Locations);
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.InnerMaridia.LeftSandPit.Locations);
+            AddLocationHint(hints, hintPlayerWorld, allWorlds, importantLocations, hintPlayerWorld.InnerMaridia.RightSandPit.Locations);
 
             _logger.LogInformation("Generated {Count} location hints", hints.Count);
 
@@ -356,6 +357,21 @@ namespace Randomizer.SMZ3.Generation
             return numKeysanity == numCratieriaBossKeys;
         }
 
+        private List<string> GetMedallionHints(World hintPlayerWorld)
+        {
+            var hints = new List<String>();
+
+            var mmMedallion = hintPlayerWorld.MiseryMire.Medallion;
+            var hint = _gameLines.HintDungeonMedallion?.Format(hintPlayerWorld.MiseryMire.Metadata.Name, GetItemName(mmMedallion));
+            if (hint != null) hints.Add(hint);
+
+            var trMedallion = hintPlayerWorld.TurtleRock.Medallion;
+            hint = _gameLines.HintDungeonMedallion?.Format(hintPlayerWorld.TurtleRock.Metadata.Name, GetItemName(trMedallion));
+            if (hint != null) hints.Add(hint);
+
+            return hints;
+        }
+
         private string GetLocationsName(World hintPlayerWorld, IEnumerable<Location> locations)
         {
             if (locations.Count() == 1)
@@ -398,6 +414,14 @@ namespace Randomizer.SMZ3.Generation
             if (itemName == null || itemName.Contains('<'))
                 itemName = item.Name;
             return $"{itemName}{GetMultiworldSuffix(hintPlayerWorld, item)}";
+        }
+
+        private string GetItemName(ItemType item)
+        {
+            var itemName = _metadataService.Item(item)?.NameWithArticle;
+            if (itemName == null || itemName.Contains('<'))
+                itemName = item.GetDescription();
+            return itemName;
         }
 
         private string GetMultiworldSuffix(World hintPlayerWorld, Item item)
