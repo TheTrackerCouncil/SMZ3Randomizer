@@ -155,6 +155,21 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             = new("My guess is {0}.", "I'm joining with {0}.", "I have a feeling it'll be {0}");
 
         /// <summary>
+        /// Gets the phrases to respond with right before Tracker announces her
+        /// guess. The key represents the number guessed. If there are no lines
+        /// for a specific number, it will fall back to lower numbers.
+        /// </summary>
+        /// <remarks>
+        /// <c>{0}</c> is a placeholder for the number that Tracker guessed.
+        /// </remarks>
+        public Dictionary<int, SchrodingersString> TrackerGuessPreface { get; init; }
+            = new()
+            {
+                [1] = new("I'm feeling lucky.", "I believe.", "You know what, I'm in a good mood."),
+                [8] = new()
+            };
+
+        /// <summary>
         /// Gets the phrases to respond with when Tracker is among the list of
         /// winners that were just announced.
         /// </summary>

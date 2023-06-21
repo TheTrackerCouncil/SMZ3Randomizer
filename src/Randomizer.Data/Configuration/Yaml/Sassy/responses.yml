@@ -800,7 +800,12 @@ Chat:
   - Text: Nobody guessed number {0}.
   - Text: Nobody guessed {0}.
   - Text: And the winners are... nobody.
-  TrackerGuess:
+  TrackerGuess:  
+  TrackerGuessPreface:
+    1:
+      - Text: Don't disappoint me, {User}.
+    20:
+      - Text: I hope the seed hasn't been too bad for you, because I have the feeling GT will.
   TrackerGuessWon:
   TrackerGuessOnlyWinner:
   - Text: Really? I was the only one who guessed {0}?

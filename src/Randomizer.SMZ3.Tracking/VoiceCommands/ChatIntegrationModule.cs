@@ -20,8 +20,11 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
     /// </summary>
     public class ChatIntegrationModule : TrackerModule, IDisposable
     {
-        private static readonly Random s_random = new();
         private const string WinningGuessKey = "WinningGuess";
+        private const int OptimisticGuessThreshold = 8;
+
+        private static readonly Random s_random = new();
+
         private readonly Dictionary<string, int> _usersGreetedTimes = new();
         private readonly IItemService _itemService;
         private readonly ITrackerTimerService _timerService;
@@ -124,10 +127,16 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             AllowGanonsTowerGuesses = true;
             _guessingGameStart = DateTimeOffset.Now;
             _guessingGameClosed = null;
-            _trackerGuess = s_random.Next(1, 23);
+            _trackerGuess = TrackerGTGuess();
             Tracker.Say(x => x.Chat.StartedGuessingGame);
 
             await Task.Delay(s_random.Next(100, 900));
+
+            Tracker.Say(responses =>
+            {
+                var options = responses.Chat.TrackerGuessPreface.TakeWhile(x => x.Key <= _trackerGuess).LastOrDefault();
+                return options.Value;
+            }, _trackerGuess);
             Tracker.Say(x => x.Chat.TrackerGuess, _trackerGuess);
 
             Tracker.AddUndo(() =>
@@ -405,6 +414,20 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 Logger.LogTrace("Processed incoming chat message in {ElapsedMs} ms", stopwatch.ElapsedMilliseconds);
             }
         }
+
+        /// <summary>
+        /// Returns a random integer between 1 and 22.
+        /// </summary>
+        /// <returns>A random integer that is at least 1 and no higher than 22.</returns>
+        private static int RandomGTGuess() => s_random.Next(1, 23);
+
+        /// <summary>
+        /// Returns a random integer between 1 and 22 that is likely to be higher.
+        /// </summary>
+        /// <returns>A random integer that is at least 1 and no higher than 22.</returns>
+        private static int PessimisticGTGuess() => Math.Max(RandomGTGuess(), RandomGTGuess());
+
+        private int TrackerGTGuess() => PessimisticGTGuess(); // Maybe let this depend on mood in the future?
 
         private bool ShouldRespondToGreetings => Tracker.Options.ChatGreetingEnabled
             && (Tracker.Options.ChatGreetingTimeLimit == 0
