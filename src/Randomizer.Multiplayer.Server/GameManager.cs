@@ -54,7 +54,7 @@ public class GameManager
             expiredGuids = await _dbService.DeleteOldGameStates(_databaseExpirationDays);
             _logger.LogInformation("Removed {Amount} inactive games(s) from database", expiredGuids.Count);
 
-            _logger.LogInformation("Current active games: {GameCount} | Current connected players: {PlayerCount}", MultiplayerGame.GameCount, MultiplayerGame.PlayerCount);
+            _logger.LogInformation("[{Date}] Current active games: {GameCount} | Current connected players: {PlayerCount}", DateTime.Now, MultiplayerGame.GameCount, MultiplayerGame.PlayerCount);
 
             await Task.Delay(TimeSpan.FromMinutes(_checkFrequencyMinutes));
         }
