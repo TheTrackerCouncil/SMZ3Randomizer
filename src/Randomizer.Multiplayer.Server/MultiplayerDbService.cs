@@ -27,9 +27,16 @@ public class MultiplayerDbService
     public async Task AddGameToDatabase(MultiplayerGameState state)
     {
         if (!_isDatabaseEnabled || !state.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        dbContext.MultiplayerGameStates.Add(state);
-        await SaveChanges(dbContext, "Unable add game to the database");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            dbContext.MultiplayerGameStates.Add(state);
+            await SaveChanges(dbContext, $"Unable add game {state.Guid} to the database");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to add game {Game} to the database", state.Guid);
+        }
     }
 
     /// <summary>
@@ -78,7 +85,7 @@ public class MultiplayerDbService
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex, "Unable to load game from database");
+            _logger.LogCritical(ex, "Unable to load game {Game} from database", guid);
             return null;
         }
     }
@@ -91,9 +98,16 @@ public class MultiplayerDbService
     public async Task AddPlayerToGame(MultiplayerGameState gameState, MultiplayerPlayerState playerState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        dbContext.MultiplayerPlayerStates.Add(playerState);
-        await SaveChanges(dbContext, $"Unable add player {playerState.Guid} to the database");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            dbContext.MultiplayerPlayerStates.Add(playerState);
+            await SaveChanges(dbContext, $"Unable to add player {playerState.Guid} to the database");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to add player {Player} to database", playerState.Guid);
+        }
     }
 
     /// <summary>
@@ -103,12 +117,19 @@ public class MultiplayerDbService
     public async Task SaveGameState(MultiplayerGameState gameState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var dbState = dbContext.MultiplayerGameStates
-            .FirstOrDefault(x => x.Id == gameState.Id);
-        if (dbState == null) return;
-        dbState.Copy(gameState);
-        await SaveChanges(dbContext, $"Unable to save game state {gameState.Guid}");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var dbState = dbContext.MultiplayerGameStates
+                .FirstOrDefault(x => x.Id == gameState.Id);
+            if (dbState == null) return;
+            dbState.Copy(gameState);
+            await SaveChanges(dbContext, $"Unable to save game state {gameState.Guid}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save game state {Game}", gameState.Guid);
+        }
     }
 
     /// <summary>
@@ -118,15 +139,22 @@ public class MultiplayerDbService
     public async Task SaveGameStates(IEnumerable<MultiplayerGameState> gameStates)
     {
         if (!_isDatabaseEnabled) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var gameIds = gameStates.Where(x => x.SaveToDatabase).Select(x => x.Id).ToList();
-        var dbStates = dbContext.MultiplayerGameStates
-            .Where(x => gameIds.Contains(x.Id));
-        foreach (var dbState in dbStates)
+        try
         {
-            dbState.Copy(gameStates.First(x => x.Id == dbState.Id));
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var gameIds = gameStates.Where(x => x.SaveToDatabase).Select(x => x.Id).ToList();
+            var dbStates = dbContext.MultiplayerGameStates
+                .Where(x => gameIds.Contains(x.Id));
+            foreach (var dbState in dbStates)
+            {
+                dbState.Copy(gameStates.First(x => x.Id == dbState.Id));
+            }
+            await SaveChanges(dbContext, "Unable to save game states");
         }
-        await SaveChanges(dbContext, "Unable to save game states");
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save game states");
+        }
     }
 
     /// <summary>
@@ -137,11 +165,18 @@ public class MultiplayerDbService
     public async Task SavePlayerState(MultiplayerGameState gameState, MultiplayerPlayerState playerState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var dbState = await dbContext.MultiplayerPlayerStates.FindAsync(playerState.Id);
-        if (dbState == null) return;
-        dbState.Copy(playerState);
-        await SaveChanges(dbContext, $"Unable to save player state for player {playerState.Guid}");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var dbState = await dbContext.MultiplayerPlayerStates.FindAsync(playerState.Id);
+            if (dbState == null) return;
+            dbState.Copy(playerState);
+            await SaveChanges(dbContext, $"Unable to save player state for player {playerState.Guid}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save player state {Player}", playerState.Guid);
+        }
     }
 
     /// <summary>
@@ -152,15 +187,22 @@ public class MultiplayerDbService
     public async Task SavePlayerStates(MultiplayerGameState gameState, IEnumerable<MultiplayerPlayerState> playerStates)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var playerIds = playerStates.Select(x => x.Id).ToList();
-        var dbStates = dbContext.MultiplayerPlayerStates
-            .Where(x => playerIds.Contains(x.Id));
-        foreach (var dbState in dbStates)
+        try
         {
-            dbState.Copy(playerStates.First(x => x.Id == dbState.Id));
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var playerIds = playerStates.Select(x => x.Id).ToList();
+            var dbStates = dbContext.MultiplayerPlayerStates
+                .Where(x => playerIds.Contains(x.Id));
+            foreach (var dbState in dbStates)
+            {
+                dbState.Copy(playerStates.First(x => x.Id == dbState.Id));
+            }
+            await SaveChanges(dbContext, $"Unable to save player states for game {gameState.Guid}");
         }
-        await SaveChanges(dbContext, "Unable to save player states");
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save player states for game {Game}", gameState.Guid);
+        }
     }
 
     /// <summary>
@@ -171,12 +213,19 @@ public class MultiplayerDbService
     public async Task SaveLocationState(MultiplayerGameState gameState, MultiplayerLocationState locationState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var dbState = await dbContext.MultiplayerLocationStates.FindAsync(locationState.Id);
-        if (dbState == null) return;
-        dbState.Tracked = locationState.Tracked;
-        dbState.TrackedTime = locationState.TrackedTime;
-        await SaveChanges(dbContext, "Unable to save location state");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var dbState = await dbContext.MultiplayerLocationStates.FindAsync(locationState.Id);
+            if (dbState == null) return;
+            dbState.Tracked = locationState.Tracked;
+            dbState.TrackedTime = locationState.TrackedTime;
+            await SaveChanges(dbContext, $"Unable to save location state for player {locationState.Player.Guid}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save location state for player {Player}", locationState.Player.Guid);
+        }
     }
 
     /// <summary>
@@ -187,12 +236,20 @@ public class MultiplayerDbService
     public async Task SaveItemState(MultiplayerGameState gameState, MultiplayerItemState itemState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var dbState = await dbContext.MultiplayerItemStates.FindAsync(itemState.Id);
-        if (dbState == null) return;
-        dbState.TrackingValue = itemState.TrackingValue;
-        dbState.TrackedTime = itemState.TrackedTime;
-        await SaveChanges(dbContext, "Unable to save item state");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var dbState = await dbContext.MultiplayerItemStates.FindAsync(itemState.Id);
+            if (dbState == null) return;
+            dbState.TrackingValue = itemState.TrackingValue;
+            dbState.TrackedTime = itemState.TrackedTime;
+            await SaveChanges(dbContext, $"Unable to save item state for player {itemState.Player.Guid}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save item state for player {Player}", itemState.Player.Guid);
+        }
+
     }
 
     /// <summary>
@@ -203,12 +260,20 @@ public class MultiplayerDbService
     public async Task SaveDungeonState(MultiplayerGameState gameState, MultiplayerDungeonState dungeonState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var dbState = await dbContext.MultiplayerDungeonStates.FindAsync(dungeonState.Id);
-        if (dbState == null) return;
-        dbState.Tracked = dungeonState.Tracked;
-        dbState.TrackedTime = dungeonState.TrackedTime;
-        await SaveChanges(dbContext, "Unable to save dungeon state");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var dbState = await dbContext.MultiplayerDungeonStates.FindAsync(dungeonState.Id);
+            if (dbState == null) return;
+            dbState.Tracked = dungeonState.Tracked;
+            dbState.TrackedTime = dungeonState.TrackedTime;
+            await SaveChanges(dbContext, $"Unable to save dungeon state for player {dungeonState.Player.Guid}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save dungeon state for player {Player}", dungeonState.Player.Guid);
+        }
+
     }
 
     /// <summary>
@@ -219,12 +284,19 @@ public class MultiplayerDbService
     public async Task SaveBossState(MultiplayerGameState gameState, MultiplayerBossState bossState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var dbState = await dbContext.MultiplayerBossStates.FindAsync(bossState.Id);
-        if (dbState == null) return;
-        dbState.Tracked = bossState.Tracked;
-        dbState.TrackedTime = bossState.TrackedTime;
-        await SaveChanges(dbContext, $"Unable to save boss state");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var dbState = await dbContext.MultiplayerBossStates.FindAsync(bossState.Id);
+            if (dbState == null) return;
+            dbState.Tracked = bossState.Tracked;
+            dbState.TrackedTime = bossState.TrackedTime;
+            await SaveChanges(dbContext, $"Unable to save boss state for player {bossState.Player.Guid}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to save boss state for player {Player}", bossState.Player.Guid);
+        }
     }
 
     /// <summary>
@@ -236,85 +308,93 @@ public class MultiplayerDbService
     public async Task SavePlayerWorld(MultiplayerGameState gameState, MultiplayerPlayerState playerState, PlayerWorldUpdates updates)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase || !updates.HasUpdates) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
 
-        // Update locations
-        var updateIds = updates.Locations.Select(x => x.Id).ToList();
-        var dbLocations = dbContext.MultiplayerLocationStates
-            .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
-            .ToDictionary(x => x.Id, x => x);
-        foreach (var updateData in updates.Locations)
+        try
         {
-            if (dbLocations.ContainsKey(updateData.Id))
-            {
-                var dbData = dbLocations[updateData.Id];
-                dbData.Tracked = updateData.Tracked;
-                dbData.TrackedTime = updateData.TrackedTime;
-            }
-            else
-            {
-                dbContext.MultiplayerLocationStates.Add(updateData);
-            }
-        }
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
 
-        // Update items
-        updateIds = updates.Items.Select(x => x.Id).ToList();
-        var dbItems = dbContext.MultiplayerItemStates
-            .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
-            .ToDictionary(x => x.Id, x => x);
-        foreach (var updateData in updates.Items)
+            // Update locations
+            var updateIds = updates.Locations.Select(x => x.Id).ToList();
+            var dbLocations = dbContext.MultiplayerLocationStates
+                .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
+                .ToDictionary(x => x.Id, x => x);
+            foreach (var updateData in updates.Locations)
+            {
+                if (dbLocations.ContainsKey(updateData.Id))
+                {
+                    var dbData = dbLocations[updateData.Id];
+                    dbData.Tracked = updateData.Tracked;
+                    dbData.TrackedTime = updateData.TrackedTime;
+                }
+                else
+                {
+                    dbContext.MultiplayerLocationStates.Add(updateData);
+                }
+            }
+
+            // Update items
+            updateIds = updates.Items.Select(x => x.Id).ToList();
+            var dbItems = dbContext.MultiplayerItemStates
+                .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
+                .ToDictionary(x => x.Id, x => x);
+            foreach (var updateData in updates.Items)
+            {
+                if (dbItems.ContainsKey(updateData.Id))
+                {
+                    var dbData = dbItems[updateData.Id];
+                    dbData.TrackingValue = updateData.TrackingValue;
+                    dbData.TrackedTime = updateData.TrackedTime;
+                }
+                else
+                {
+                    dbContext.MultiplayerItemStates.Add(updateData);
+                }
+            }
+
+            // Update dungeons
+            updateIds = updates.Dungeons.Select(x => x.Id).ToList();
+            var dbDungeons = dbContext.MultiplayerDungeonStates
+                .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
+                .ToDictionary(x => x.Id, x => x);
+            foreach (var updateData in updates.Dungeons)
+            {
+                if (dbDungeons.ContainsKey(updateData.Id))
+                {
+                    var dbData = dbDungeons[updateData.Id];
+                    dbData.Tracked = updateData.Tracked;
+                    dbData.TrackedTime = updateData.TrackedTime;
+                }
+                else
+                {
+                    dbContext.MultiplayerDungeonStates.Add(updateData);
+                }
+            }
+
+            // Update bosses
+            updateIds = updates.Bosses.Select(x => x.Id).ToList();
+            var dbBosses = dbContext.MultiplayerBossStates
+                .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
+                .ToDictionary(x => x.Id, x => x);
+            foreach (var updateData in updates.Bosses)
+            {
+                if (dbBosses.ContainsKey(updateData.Id))
+                {
+                    var dbData = dbBosses[updateData.Id];
+                    dbData.Tracked = updateData.Tracked;
+                    dbData.TrackedTime = updateData.TrackedTime;
+                }
+                else
+                {
+                    dbContext.MultiplayerBossStates.Add(updateData);
+                }
+            }
+
+            await SaveChanges(dbContext, $"Unable to save player world {playerState.Guid}");
+        }
+        catch (Exception e)
         {
-            if (dbItems.ContainsKey(updateData.Id))
-            {
-                var dbData = dbItems[updateData.Id];
-                dbData.TrackingValue = updateData.TrackingValue;
-                dbData.TrackedTime = updateData.TrackedTime;
-            }
-            else
-            {
-                dbContext.MultiplayerItemStates.Add(updateData);
-            }
+            _logger.LogError(e, "Unable to save player world {Player}", playerState.Guid);
         }
-
-        // Update dungeons
-        updateIds = updates.Dungeons.Select(x => x.Id).ToList();
-        var dbDungeons = dbContext.MultiplayerDungeonStates
-            .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
-            .ToDictionary(x => x.Id, x => x);
-        foreach (var updateData in updates.Dungeons)
-        {
-            if (dbDungeons.ContainsKey(updateData.Id))
-            {
-                var dbData = dbDungeons[updateData.Id];
-                dbData.Tracked = updateData.Tracked;
-                dbData.TrackedTime = updateData.TrackedTime;
-            }
-            else
-            {
-                dbContext.MultiplayerDungeonStates.Add(updateData);
-            }
-        }
-
-        // Update bosses
-        updateIds = updates.Bosses.Select(x => x.Id).ToList();
-        var dbBosses = dbContext.MultiplayerBossStates
-            .Where(x => x.PlayerId == playerState.Id && updateIds.Contains(x.Id))
-            .ToDictionary(x => x.Id, x => x);
-        foreach (var updateData in updates.Bosses)
-        {
-            if (dbBosses.ContainsKey(updateData.Id))
-            {
-                var dbData = dbBosses[updateData.Id];
-                dbData.Tracked = updateData.Tracked;
-                dbData.TrackedTime = updateData.TrackedTime;
-            }
-            else
-            {
-                dbContext.MultiplayerBossStates.Add(updateData);
-            }
-        }
-
-        await SaveChanges(dbContext, $"Unable to save player world {playerState.Guid}");
     }
 
     /// <summary>
@@ -325,11 +405,18 @@ public class MultiplayerDbService
     public async Task DeletePlayerState(MultiplayerGameState gameState, MultiplayerPlayerState playerState)
     {
         if (!_isDatabaseEnabled || !gameState.SaveToDatabase) return;
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var dbState = await dbContext.MultiplayerPlayerStates.FindAsync(playerState.Id);
-        if (dbState == null) return;
-        dbContext.MultiplayerPlayerStates.Remove(dbState);
-        await SaveChanges(dbContext, $"Unable to delete player state {playerState.Guid}");
+        try
+        {
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var dbState = await dbContext.MultiplayerPlayerStates.FindAsync(playerState.Id);
+            if (dbState == null) return;
+            dbContext.MultiplayerPlayerStates.Remove(dbState);
+            await SaveChanges(dbContext, $"Unable to delete player state {playerState.Guid}");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to delete player state {Player}", playerState.Guid);
+        }
     }
 
     /// <summary>
@@ -340,18 +427,26 @@ public class MultiplayerDbService
     public async Task<List<string>> DeleteOldGameStates(int expirationDays)
     {
         if (!_isDatabaseEnabled) return new List<string>();
-        await using var dbContext = await _contextFactory.CreateDbContextAsync();
-        var expirationDate = DateTimeOffset.Now - TimeSpan.FromDays(expirationDays);
-        var dbStates = dbContext.MultiplayerGameStates.Where(x => x.LastMessage.CompareTo(expirationDate) < 0);
-        var deletedGuids = new List<string>();
-        foreach (var dbState in dbStates)
+        try
         {
-            dbContext.Remove(dbState);
-            deletedGuids.Add(dbState.Guid);
-        }
+            await using var dbContext = await _contextFactory.CreateDbContextAsync();
+            var expirationDate = DateTimeOffset.Now - TimeSpan.FromDays(expirationDays);
+            var dbStates = dbContext.MultiplayerGameStates.Where(x => x.LastMessage.CompareTo(expirationDate) < 0);
+            var deletedGuids = new List<string>();
+            foreach (var dbState in dbStates)
+            {
+                dbContext.Remove(dbState);
+                deletedGuids.Add(dbState.Guid);
+            }
 
-        await SaveChanges(dbContext, "Unable to delete old game saves");
-        return deletedGuids;
+            await SaveChanges(dbContext, "Unable to delete old game saves");
+            return deletedGuids;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to delete old game saves");
+            return new List<string>();
+        }
     }
 
     private async Task SaveChanges(MultiplayerDbContext dbContext, string errorMessage)
