@@ -42,18 +42,25 @@ public class MsuGeneratorService
 
         var hasTrack41 = File.Exists(msuPath.Replace(".msu", "-41.pcm"));
         var hasTrack141 = File.Exists(msuPath.Replace(".msu", "-141.pcm"));
-        var track33Loops = DoesPCMLoop(msuPath.Replace(".msu", "-33.pcm"));
-        var track130Loops = DoesPCMLoop(msuPath.Replace(".msu", "-130.pcm"));
+        var hasTrack33 = File.Exists(msuPath.Replace(".msu", "-33.pcm"));
+        var hasTrack133 = File.Exists(msuPath.Replace(".msu", "-133.pcm"));
 
-        // Swap if we see the Skull Woods theme above 100
-        if (hasTrack141)
+        // Swap if we see the Skull Woods theme above 100 or if we see that the Zelda epilogue track number
+        // only exists above 100
+        if (hasTrack141 || (hasTrack133 && !hasTrack33))
         {
             swap = true;
         }
-        // Swap if we see don't see Skull Woods theme below 100 and if either the Z3 epilogue or SM credits themes are incorrectly set to loop
-        else if (!hasTrack41 && (track33Loops || track130Loops))
+        // If we don't see Skull Woods below 100 and we don't see the Zelda epilogue track only existing below 100
+        // then try to check loop tracks as a last ditch effort to see if we need to swap
+        else if (!hasTrack41 && !(hasTrack33 && !hasTrack133))
         {
-            swap = true;
+            var track33Loops = DoesPCMLoop(msuPath.Replace(".msu", "-33.pcm"));
+            var track130Loops = DoesPCMLoop(msuPath.Replace(".msu", "-130.pcm"));
+            if (track33Loops || track130Loops)
+            {
+                swap = true;
+            }
         }
 
         // Copy pcm files
