@@ -95,7 +95,11 @@
 - LocationNumber: 335
   Name:
   - Text: "Pyramid of Sour"
-    Weight: 0.2
+    Weight: 0.1
+  - Text: "Ziggurat of Power"
+    Weight: 0.3
+  - Text: "Ziggurat of Sour"
+    Weight: 0.1
 # Eastern Palace Big Key Chest
 - LocationNumber: 363
   OutOfLogic:
