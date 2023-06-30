@@ -84,10 +84,15 @@ init:
     sep #$30
     lda.b #99 : sta.w $2004 : stz.w $2005
     - lda.w $2000 : bit.b #$40 : bne -          ; Wait for MSU-1 BUSY
-    lda.w $2000 : bit.b #$08 : bne .playspc     ; Check MSU-1 Track missing otherwise fall back to SPC
+    lda.w $2000 : bit.b #$08 : bne .fallback    ; Check MSU-1 Track missing otherwise fall back to SPC
     lda.b #1 : sta.w $2007                      ; Sets the track to not repeat
     lda.b #$FF : sta.w $2006                    ; Set to max volume
     bra .load_graphics
+
+.fallback
+    ; Mute any currently playing MSU-1 track
+    stz.w $2007 : stz.w $2006
+    stz.w $2004 : stz.w $2005
 
 .playspc
     ; Start SPC song
