@@ -163,7 +163,7 @@ CheckMusicLoadRequest:
         STA.w MusicControl : STZ.w MusicControlRequest
     REP #$30 : PLY : PLX : PLA : PLD : PLB : PLP
     RTL
-
+        
 .continue
         LDA.l TournamentSeed : BNE +++
         LDA.w MSUPackRequest
@@ -243,11 +243,11 @@ CheckMusicLoadRequest:
                 AND.b #$07 : TAY
                 PLA : LSR #3 : TAX
             LDA.l MSUFallbackTable,X : BEQ .secondary_fallback : CMP.b #$FF : BEQ .mute
-
+            
             - : CPY #$00 : BEQ +
                 LSR : DEY : BRA -
             +
-
+            
             AND.b #$01 : BEQ .secondary_fallback
 
 .mute
@@ -401,7 +401,7 @@ StoreMusicOnDeath:
 ;--------------------------------------------------------------------------------
 MSUInit:
     PHP
-
+    
     SEP #$30
     LDA.b #$00
     STA.w MSULoadedTrack
@@ -421,15 +421,8 @@ MSUInit:
 
     REP #$20
 
-    LDA.w MSUID : CMP.w #!VAL_MSU_ID_01 : BEQ + : JMP .done
-    LDA.w MSUID+2 : CMP.w #!VAL_MSU_ID_23 : BEQ + : JMP .done
-    LDA.w MSUID+4 : CMP.w #!VAL_MSU_ID_45 : BEQ + : JMP .done
 
-    .done
-    PLP
-    RTL
 
-+
     ; Count the number of available MSU-1 packs
     LDA.w #$0000
     LDX.b #$00
@@ -575,7 +568,7 @@ MSUMain:
     +
     LDA.b #!VAL_VOLUME_FULL
     STA.w TargetVolume
-
+    
     LDA.w MSUResumeControl : BIT.b #!FLAG_RESUME_FADEIN : BEQ +
         EOR.b #!FLAG_RESUME_FADEIN : STA.w MSUResumeControl
         LDA.b #$00
@@ -585,7 +578,7 @@ MSUMain:
     ++
     STA.w CurrentVolume
     STA.w MSUVOL
-
+    
     LDA.w CurrentMSUTrack : DEC : PHA
         AND.b #$07 : TAY
         PLA : LSR #3 : TAX

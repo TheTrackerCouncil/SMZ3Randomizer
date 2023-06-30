@@ -82,6 +82,12 @@ macro CheckMSUPresence(labelToJump)
     BEQ + : jmp <labelToJump> : +
 endmacro
 
+macro CheckMSUPresence16(labelToJump)
+    lda.w !MSU_ID
+    cmp.w #$2D53
+    BEQ + : jmp <labelToJump> : +
+endmacro
+
 ; Init MSU and check for missing tracks
 org $C08564
     jsl init_msu1
@@ -91,12 +97,36 @@ org $C08F27
 base $808F27
     jsr SM_MSU_Main
 
-org $C0FA00
-base $80FA00
+org $C0F900
+base $80F900
 init_msu1:
+    %CheckMSUPresence16(.exit)
+    
+    ; Check if SRAM seed data matches ROM seed data.
+    ; If it does then there's no need to check the track data
+    ldx #$0000
+.check_seed
+    lda.l rando_seed_data+$10, x        ; Seed guid
+    cmp.l !SRAM_MSU_SEED_DATA, x
+    bne .do_init
+    inx : inx
+    cpx #$0020
+    bne .check_seed
+    bra .exit
+
+.do_init    
     jsl MSUInit
 
+    ldx #$0000
+.store_seed
+    lda.l rando_seed_data+$10, x        ; Seed guid
+    sta.l !SRAM_MSU_SEED_DATA, x
+    inx : inx
+    cpx #$0020
+    bne .store_seed
+
     ; original hooked code
+.exit
     jsl $808261 ; Check for non-corrupt SRAM
     rtl
 
@@ -242,11 +272,11 @@ SM_MSU_Main:
 .TryExtended
     CPX #00 : BNE +
         TYA
-        bra .CheckFallbacks
+        jmp .CheckFallbacks
     +
     CPX #$FF : BNE +
         TYA
-        bra .OriginalCode
+        jmp .OriginalCode
     +
     
     PHX
@@ -297,6 +327,8 @@ SM_MSU_Main:
     stz.w !MSU_AUDIO_TRACK_HI
     
 .CheckAudioStatus
+    lda.w !MSU_STATUS : bit.b #!MSU_STATUS_AUDIO_BUSY : bne .CheckAudioStatus
+
     ;; Play the song and add repeat if needed
     jsr TrackNeedLooping
     sta.w !MSU_AUDIO_CONTROL
