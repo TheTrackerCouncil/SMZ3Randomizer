@@ -27,32 +27,31 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
         /// <returns>True if the check was identified, false otherwise</returns>
         public bool ExecuteCheck(Tracker tracker, AutoTrackerZeldaState currentState, AutoTrackerZeldaState prevState)
         {
-            if (tracker.AutoTracker == null) return false;
+            if (tracker.AutoTracker == null || currentState.State != 0x12 || prevState.State == 0x12 || tracker.AutoTracker.PlayerHasFairy) return false;
 
-            if (currentState.State == 0x12 && prevState.State != 0x12 && !tracker.AutoTracker.PlayerHasFairy)
+            var silent = tracker.GameService!.PlayerRecentlyKilled;
+
+            // Say specific message for dying in the particular screen/room the player is in
+            if (!silent && tracker.CurrentRegion is { WhenDiedInRoom: not null })
             {
-                // Say specific message for dying in the particular screen/room the player is in
-                if (tracker.CurrentRegion != null && tracker.CurrentRegion.WhenDiedInRoom != null)
+                var region = tracker.CurrentRegion.GetRegion(tracker.World) as Z3Region;
+                if (region is { IsOverworld: true } && tracker.CurrentRegion.WhenDiedInRoom.TryGetValue(prevState.OverworldScreen, out var locationResponse))
                 {
-                    var region = tracker.CurrentRegion.GetRegion(tracker.World) as Z3Region;
-                    if (region != null && region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.OverworldScreen))
-                    {
-                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.OverworldScreen]);
-                    }
-                    else if (region != null && !region.IsOverworld && tracker.CurrentRegion.WhenDiedInRoom.ContainsKey(prevState.CurrentRoom))
-                    {
-                        tracker.Say(tracker.CurrentRegion.WhenDiedInRoom[prevState.CurrentRoom]);
-                    }
+                    tracker.Say(locationResponse);
                 }
-
-                tracker.TrackDeath(true);
-
-                var death = Items.FirstOrDefault("Death");
-                if (death is not null)
+                else if (region is { IsOverworld: false } && tracker.CurrentRegion.WhenDiedInRoom.TryGetValue(prevState.CurrentRoom, out locationResponse))
                 {
-                    tracker.TrackItem(death, autoTracked: true);
-                    return true;
+                    tracker.Say(locationResponse);
                 }
+            }
+
+            tracker.TrackDeath(true);
+
+            var death = Items.FirstOrDefault("Death");
+            if (death is not null)
+            {
+                tracker.TrackItem(death, autoTracked: true, silent: silent);
+                return true;
             }
             return false;
         }

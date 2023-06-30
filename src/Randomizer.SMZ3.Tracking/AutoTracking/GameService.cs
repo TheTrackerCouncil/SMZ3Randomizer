@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Tracking.Services;
@@ -340,11 +341,14 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             if (!IsInGame())
             {
+                _logger.LogWarning("Could not kill player as they are not in game");
                 return false;
             }
 
             if (AutoTracker!.CurrentGame == Game.Zelda)
             {
+                MarkRecentlyKilled();
+
                 // Set health to 0
                 AutoTracker.WriteToMemory(new EmulatorAction()
                 {
@@ -367,6 +371,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
             else if (AutoTracker.CurrentGame == Game.SM)
             {
+                MarkRecentlyKilled();
+
                 // Empty reserves
                 AutoTracker.WriteToMemory(new EmulatorAction()
                 {
@@ -396,6 +402,8 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
 
                 return true;
             }
+
+            _logger.LogWarning("Could not kill player as they are not in either Zelda or Metroid currently");
             return false;
         }
 
@@ -511,6 +519,18 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 _logger.LogInformation("Giving player {ItemCount} missing items", otherCollectedItems.Count);
                 TryGiveItemTypes(otherCollectedItems);
             }
+        }
+
+        /// <summary>
+        /// If the player was recently killed by the game service
+        /// </summary>
+        public bool PlayerRecentlyKilled { get; private set; }
+
+        private async void MarkRecentlyKilled()
+        {
+            PlayerRecentlyKilled = true;
+            await Task.Delay(TimeSpan.FromSeconds(10));
+            PlayerRecentlyKilled = false;
         }
 
         private static byte[] Int16ToBytes(int value)

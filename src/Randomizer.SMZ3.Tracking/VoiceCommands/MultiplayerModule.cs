@@ -193,6 +193,7 @@ public class MultiplayerModule : TrackerModule
     {
         if (args.DeathLinkEnabled && !args.IsLocalPlayer)
         {
+            Logger.LogInformation("Other player died with death link enabled");
             Tracker.GameService!.TryKillPlayer();
             Tracker.Say(x => x.Multiplayer.OtherPlayedDiedDeathLink, args.PhoneticName);
         }
@@ -243,7 +244,7 @@ public class MultiplayerModule : TrackerModule
 
     private async void TrackerOnPlayerDied(object? sender, TrackerEventArgs e)
     {
-        if (!e.AutoTracked) return;
+        if (!e.AutoTracked || Tracker.GameService!.PlayerRecentlyKilled) return;
         await _multiplayerGameService.TrackDeath();
     }
 

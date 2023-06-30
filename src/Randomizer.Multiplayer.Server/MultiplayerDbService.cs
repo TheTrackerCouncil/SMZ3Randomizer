@@ -220,11 +220,11 @@ public class MultiplayerDbService
             if (dbState == null) return;
             dbState.Tracked = locationState.Tracked;
             dbState.TrackedTime = locationState.TrackedTime;
-            await SaveChanges(dbContext, $"Unable to save location state for player {locationState.Player.Guid}");
+            await SaveChanges(dbContext, $"Unable to save location state");
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unable to save location state for player {Player}", locationState.Player.Guid);
+            _logger.LogError(e, "Unable to save location state");
         }
     }
 
@@ -243,11 +243,11 @@ public class MultiplayerDbService
             if (dbState == null) return;
             dbState.TrackingValue = itemState.TrackingValue;
             dbState.TrackedTime = itemState.TrackedTime;
-            await SaveChanges(dbContext, $"Unable to save item state for player {itemState.Player.Guid}");
+            await SaveChanges(dbContext, $"Unable to save item state");
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unable to save item state for player {Player}", itemState.Player.Guid);
+            _logger.LogError(e, "Unable to save item state");
         }
 
     }
@@ -267,11 +267,11 @@ public class MultiplayerDbService
             if (dbState == null) return;
             dbState.Tracked = dungeonState.Tracked;
             dbState.TrackedTime = dungeonState.TrackedTime;
-            await SaveChanges(dbContext, $"Unable to save dungeon state for player {dungeonState.Player.Guid}");
+            await SaveChanges(dbContext, $"Unable to save dungeon state");
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unable to save dungeon state for player {Player}", dungeonState.Player.Guid);
+            _logger.LogError(e, "Unable to save dungeon state");
         }
 
     }
@@ -291,11 +291,11 @@ public class MultiplayerDbService
             if (dbState == null) return;
             dbState.Tracked = bossState.Tracked;
             dbState.TrackedTime = bossState.TrackedTime;
-            await SaveChanges(dbContext, $"Unable to save boss state for player {bossState.Player.Guid}");
+            await SaveChanges(dbContext, $"Unable to save boss state");
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Unable to save boss state for player {Player}", bossState.Player.Guid);
+            _logger.LogError(e, "Unable to save boss state");
         }
     }
 

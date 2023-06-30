@@ -1072,12 +1072,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="autoTracked">If this was tracked by the auto tracker</param>
         /// <param name="location">The location an item was tracked from</param>
         /// <param name="giftedItem">If the item was gifted to the player by tracker or another player</param>
+        /// <param name="silent">If tracker should not say anything</param>
         /// <returns>
         /// <see langword="true"/> if the item was actually tracked; <see
         /// langword="false"/> if the item could not be tracked, e.g. when
         /// tracking Bow twice.
         /// </returns>
-        public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false)
+        public bool TrackItem(Item item, string? trackedAs = null, float? confidence = null, bool tryClear = true, bool autoTracked = false, Location? location = null, bool giftedItem = false, bool silent = false)
         {
             var didTrack = false;
             var accessibleBefore = _worldService.AccessibleLocations(false);
@@ -1089,7 +1090,7 @@ namespace Randomizer.SMZ3.Tracking
                                 && autoTracked
                                 && location?.Region.GetType() == typeof(GanonsTower)
                                 && !ItemService.GetProgression(false).BigKeyGT;
-            var stateResponse = !isGTPreBigKey && (!autoTracked
+            var stateResponse = !isGTPreBigKey && !silent && (!autoTracked
                                                || !item.Metadata.IsDungeonItem()
                                                || World.Config.ZeldaKeysanity);
 

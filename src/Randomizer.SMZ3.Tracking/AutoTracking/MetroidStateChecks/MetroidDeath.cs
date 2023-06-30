@@ -33,25 +33,28 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
         /// <returns>True if the check was identified, false otherwise</returns>
         public bool ExecuteCheck(Tracker tracker, AutoTrackerMetroidState currentState, AutoTrackerMetroidState prevState)
         {
-            if (currentState.Energy == 0 && currentState.ReserveTanks == 0 && prevState.Energy != 0 && !(currentState.CurrentRoom == 0 && currentState.CurrentRegion == 0 && currentState.SamusY == 0))
+            if (currentState.Energy != 0 || currentState.ReserveTanks != 0 || prevState.Energy == 0 ||
+                currentState.CurrentRoom == 0 && currentState is { CurrentRegion: 0, SamusY: 0 })
+                return false;
+
+            var silent = tracker.GameService!.PlayerRecentlyKilled;
+
+            // Check if there is a special message for dying in this room
+            var region = tracker.World.Regions.OfType<SMRegion>()
+                .FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion && x.Metadata.WhenDiedInRoom != null && x.Metadata.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
+
+            if (!silent && region is { Metadata.WhenDiedInRoom: not null })
             {
-                // Check if there is a special message for dying in this room
-                var region = tracker.World.Regions.OfType<SMRegion>()
-                    .FirstOrDefault(x => x.MemoryRegionId == currentState.CurrentRegion && x.Metadata.WhenDiedInRoom != null && x.Metadata.WhenDiedInRoom.ContainsKey(currentState.CurrentRoomInRegion));
+                tracker.SayOnce(region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion]);
+            }
 
-                if (region != null && region.Metadata.WhenDiedInRoom != null)
-                {
-                    tracker.SayOnce(region.Metadata.WhenDiedInRoom[currentState.CurrentRoomInRegion]);
-                }
+            tracker.TrackDeath(true);
 
-                tracker.TrackDeath(true);
-
-                var death = Items.FirstOrDefault("Death");
-                if (death is not null)
-                {
-                    tracker.TrackItem(death, autoTracked: true);
-                    return true;
-                }
+            var death = Items.FirstOrDefault("Death");
+            if (death is not null)
+            {
+                tracker.TrackItem(death, autoTracked: true, silent: silent);
+                return true;
             }
             return false;
         }
