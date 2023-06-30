@@ -77,18 +77,24 @@ init:
     lda #$0000
     tcd
 
+    ; Check if MSU-1 is available
+    lda.w $2002 : cmp.w #$2D53 : bne .playspc
+
+    ; Play MSU-1 track 99 if available
+    sep #$30
+    lda.b #99 : sta.w $2004 : stz.w $2005
+    - lda.w $2000 : bit.b #$40 : bne -          ; Wait for MSU-1 BUSY
+    lda.w $2000 : bit.b #$08 : bne .playspc     ; Check MSU-1 Track missing otherwise fall back to SPC
+    lda.b #1 : sta.w $2007                      ; Sets the track to not repeat
+    lda.b #$FF : sta.w $2006                    ; Set to max volume
+    bra .load_graphics
+
+.playspc
     ; Start SPC song
     jsl playmusic
 
-    ; If MSU music is previously playing, play the combo credits MSU track
-    sep #$30
-    lda $2002 : cmp.b #'S' : bne +
-        lda #99 : sta $2004 : stz $2005 ; Play track 99
-        lda #1 : sta $2007 ; Sets the track to not repeat
-        lda #$FF : sta $2006 ; Set to max volume
-    + 
-
     ; Load credits fonts and palettes into VRAM/CGRAM
+.load_graphics
     %ai16()
     jsr load_graphics
     jsr load_tilemap
