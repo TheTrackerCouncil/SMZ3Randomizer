@@ -282,7 +282,7 @@ namespace Randomizer.SMZ3.Generation
                 hintPlayerWorld.Locations.Where(x => x.Id is LocationId.InnerMaridiaAqueductLeft or LocationId.InnerMaridiaAqueductRight), "Inner Maridia Aqueduct"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
-                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Blacksmith or LocationId.PurpleChest), "smith chain"));
+                hintPlayerWorld.Locations.Where(x => x.Id is LocationId.Blacksmith or LocationId.PurpleChest), "Smith chain"));
 
             hints.Add(() => GetLocationHint(hintPlayerWorld, allWorlds, importantLocations,
                 hintPlayerWorld.Locations.Where(x => x.Id is LocationId.CrateriaGauntletEnergyTank or LocationId.CrateriaGauntletShaftLeft or LocationId.CrateriaGauntletShaftRight), "Crateria gauntlet"));
