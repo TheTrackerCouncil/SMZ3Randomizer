@@ -7,18 +7,18 @@ Misheard:
 - Text: Toggled boots on. <break time='750ms'/> Just kidding, I have no idea what you were trying to say.
   Weight: 0.05
 TrackedOutOfLogicItem:
-- Text: The racing council will hear about this!
-- Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without {2}. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?
+- Text: The racing council will hear about this! Maybe!
+- Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Hello? <break time='1s'/> I need to tell somebody that {{User}} went to {1} without {2}. <break time='1200ms'/> Is anybody there? <break time='1200ms'/> Aw, never mind.</prosody> Sorry, did I miss anything?
   Weight: 0.08
-- Text: I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without {2}. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.
+- Text: I think someone else is here. <break time='3s'/> Nope, guess not.
   Weight: 0.08
 TrackedOutOfLogicItemTooManyMissing:
-- Text: The racing council will hear about this!
-- Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Yeah, I'd like to report a crime. <break time='1s'/> Yeah, {{User}} went to {1} without all of the required items. <break time='1200ms'/> Ok. <break time='750ms'/> Yeah. <break time='500ms'/> Thanks. Have a nice day.</prosody> Sorry, did I miss anything?
+- Text: The racing council will hear about this! Maybe!
+- Text: The racing council will hear about this! <break time='1s'/> <prosody volume='medium'>Hello, is this the racing council? <break time='1s'/> Hello? <break time='1s'/> I'm trying to report that {{User}} went to {1} without all of the required items. <break time='1200ms'/> Is anybody there? <break time='1200ms'/> Aw, never mind.</prosody> Sorry, did I miss anything?
   Weight: 0.08
-- Text: I think someone else is here. <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I got a report that {{User}} went to {1} without having all of the required items. {{User}}, I'd like to remind you that you should keep things legal here. Please don't make me come out here again.</prosody></voice> Thank you for coming so quickly. Have a nice day.
+- Text: I think someone else is here. <break time='3s'/> Nope, guess not.
   Weight: 0.08
-- Text: But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you.
+- Text: But {1} is so far out of logic that I don't think the racing council would even believe me if I reported you. Or if they existed.
 TrackedItemMultiple:
 - Text: Increasing collection of {1}
   Weight: 0.05
@@ -42,7 +42,7 @@ Muted:
 - Text: Fine. But watch your metrics plummet.
 BeatGame:
 - Text: Congratulations on beating off the game.
-- Text: I will be submitting a log of this playthrough to The Racing Council for their review.
+- Text: I will be submitting a log of this playthrough to The Racing Council for their review. That's my name for the place where deleted seeds go.
 StoppedTrackingPostGoMode:
 - Text: Dead to rights?
 - Text: Dead to rights? <voice gender='male'><prosody rate='slow'>Dead to rights.</prosody></voice>
@@ -89,7 +89,7 @@ Chat:
     MrGeop: Gee Op
 AutoTracker:
   WhenConnected:
-  - Text: Connection established with the Council
+  - Text: Connection timed out with the Council
   NearKraidsAwfulSon:
   - Text: Oh no. Please avert your eyes to avoid seeing an imminent disaster.
   - Text: I'm suddenly feeling rather nautious. Is that Kraid's Awful Son I'm sensing?
@@ -108,15 +108,15 @@ AutoTracker:
   DiverDown:
   - Text: Is this underwater?
   EnteredGTEarly:
-  - Text: The council is on the other line, what do you want me to tell them?
-  - Text: <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I would like to remind {{User}} that purr article 5 section 2, entering Gannon's Tower without all 7 crystals is illegal. Repeated offenses will result in reprimanding by content removal. Thank you.</prosody></voice>
+  - Text: The council is on the other line, what do you want me to tell them? <break time='1s'/> <prosody volume='medium'><voice gender='male'><prosody pitch='x-high'>Who?</prosody></voice> <break time='1s'/> Quiet, I'm trying to bluff {{User}}.</prosody>
+  - Text: <voice gender='male'><prosody pitch='x-high'>Hello. I'm from the racing council. I would like to remind {{User}} that <break time='2s'/> wait <break time='1s'/> Oh, never mind.</prosody></voice>
   FakeFlippers:
-  - Text: The racing council will hear about this.
+  - Text: The racing council will hear about this. Maybe!
   RidleyFace:
   - Text: <prosody rate='x-slow' pitch='x-high'>Ahhhh</prosody>. Sorry, I'm still working on my Ridley voice
   - Text: Bet you can't wait to face Ridley. Welcome back to SMZ3 Randomizer.
   - Text: Oh hi there
 Cheats:
   EnabledCheats:
-  - Text: The racing council won't be happy about this, but since when have you cared about them?
+  - Text: The racing council won't be happy about this, but that's not unusual lately.
     Weight: 0.1
