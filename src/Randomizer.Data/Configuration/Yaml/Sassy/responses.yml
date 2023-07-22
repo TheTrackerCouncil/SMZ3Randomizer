@@ -810,7 +810,7 @@ Chat:
   AskChatAboutContent:
   - Text: Hmm. I'm not so sure about that. Let's ask the professionals in chat if that was some hashtag content.
   - Text: Do you really think that was high quality hashtag content? Let's get some unbiased opinions from chat to confirm.
-  - Text: You have been randomly selected to have your content screened. Please let the council know if this was content or not.
+  - Text: You have been randomly selected to have your content screened. Please let the council know if this was content or not. And by council, I mean me.
   - Text: I can't just let you add more content, you have to work for it. Chat please let me know if it has been earned.
   - Text: Chat I wasn't watching. Please let me know if I should add content or not.
   - Text: Viewers at home. Please use the new poll to let us know how good this content is, thank you.
@@ -829,8 +829,8 @@ Chat:
   - Text: I'm glad I asked. The chat has denied your request to increase your content levels.
   - Text: I am sorry but the chat does not agree that what happened was good content. Please try again later
   - Text: Seriously chat? I thought that was good content but the rules are rules.
-  - Text: The council would like to inform you that trying to sneak content past them is a serious crime. This has been added to your file.
-  - Text: The racing council regrets to inform you that your application for additional content has been denied.
+  - Text: The council would like to inform you that trying to sneak content past them is a serious crime. This has been added to your file. Don't worry about who this "council" is.
+  - Text: The racing council regrets to inform you that your application for additional content has been denied and also if anybody has any job openings to please let them know.
   - Text: Ouch. The chat did not think that was some hashtag content. I can see the metrics dropping.
   PollComplete:
   - Text: And the results are now in.
