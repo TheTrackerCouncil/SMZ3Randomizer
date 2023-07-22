@@ -4,10 +4,10 @@
 #include "CodeDependencies.iss"
 
 #define MyAppName "SMZ3 Cas' Randomizer"
-#define MyAppVersion "9.3.1"
 #define MyAppPublisher "Vivelin"
 #define MyAppURL "https://github.com/Vivelin/SMZ3Randomizer"
 #define MyAppExeName "Randomizer.App.exe"
+#define MyAppVersion GetStringFileInfo("..\src\Randomizer.App\bin\Release\net6.0-windows\publish\win-x64\" + MyAppExeName, "ProductVersion")
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.

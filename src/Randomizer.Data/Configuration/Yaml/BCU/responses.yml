@@ -120,3 +120,5 @@ Cheats:
   EnabledCheats:
   - Text: The racing council won't be happy about this, but that's not unusual lately.
     Weight: 0.1
+  - Text: Sure, I guess now that the racing council has disbanded you'll just cheat whenever you want, huh?
+    Weight: 0.1
