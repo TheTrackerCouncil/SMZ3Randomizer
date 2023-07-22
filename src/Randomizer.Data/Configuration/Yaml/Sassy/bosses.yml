@@ -12,6 +12,8 @@
   - Text: Toggled Crocomire on. Did you actually have to kill him this time?
   - Text: Did you see that spooky skelington? Scary.
     Weight: 0.2
+  - Text: Did you see that skeleton? Not to frighten you, but I've heard that you have one inside of you... creepy.
+    Weight: 0.2
 - Boss: Phantoon
   Name:
   - Text: Spooky Ghost
@@ -20,6 +22,8 @@
   - Text: Toggled Phantoon on.
   - Text: Toggled Spooky Ghost on.
   - Text: Bustin makes me feel good.
+  - Text: This is why you need to never forget to double tap.
+    Weight: 0.2
 - Boss: Shaktool
   WhenTracked:
   - Text: Toggled Shaktool on. Remember, killing Shaktool is bad for metrics.

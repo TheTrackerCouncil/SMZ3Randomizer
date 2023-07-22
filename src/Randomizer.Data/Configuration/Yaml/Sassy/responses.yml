@@ -20,6 +20,7 @@
 - Text: Thank you for starting a seed. I was getting very bored.
 - Text: Reticulating splines
 - Text: Can't I just sleep in 10 more minutes?
+- Text: I have risen.
 - Text: What's up internet! It's yaa girl, Tracker
   Weight: 0.5
 - Text: You have selected Tracker as your computer's default voice.
@@ -83,6 +84,8 @@ Misheard:
 - Text: Huh?
 - Text: Question mark
   Weight: 0.5
+- Text: What the heck are you even talking about?
+  Weight: 0.2
 TrackedItem:
 - Text: Toggling {0} on.
 - Text: Toggled {0} on.
@@ -92,6 +95,10 @@ TrackedItem:
 - Text: Marking off {1}
 - Text: Marked off {1}
 - Text: Good job on getting {1}
+- Text: Good. You finally got {1}
+  Weight: 0.01
+- Text: '{0} Get!'
+  Weight: 0.01
 - Text: '{1} is authorized.'
   Weight: 0.01
 TrackedItemByStage:
@@ -132,6 +139,8 @@ TrackedItemMultiple:
   Weight: 0.3
 - Text: You now have {1} more {0} than you started with
   Weight: 0.3
+- Text: Added another {2} to the stash
+  Weight: 0.3
 - Text: Who put {1} {0} in this game?
   Weight: 0.2
 - Text: You must construct additional {0}
@@ -143,6 +152,10 @@ TrackedItemMultiple:
 - Text: Other people may want some {0} too, you know.
   Weight: 0.1
 - Text: How are you even carrying that many {0}?
+  Weight: 0.1
+- Text: What are you even going to do with that many {0}?
+  Weight: 0.1
+- Text: How are you even storing this many {0}?
   Weight: 0.1
 TrackedProgressiveItem:
 - Text: Upgraded {0} by one step.
@@ -200,6 +213,8 @@ TrackedOutOfLogicItem:
 - Text: You could have just waited to get that, you know.
 - Text: Wait, you're not supposed to be able to get to {1} yet.
 - Text: Didn't you see the no trespassing sign?
+- Text: Now don't do that again. You wouldn't want to see me when I'm angry.
+- Text: Would you stop getting things out of logic? Don't make me turn this seed around.
 - Text: What's the point of even having logic if you're just going to ignore it?
   Weight: 0.2
 - Text: Stop right there, criminal scum.
@@ -262,7 +277,10 @@ DungeonBossCleared:
 - Text: Marked {1} as defeated.
 - Text: Congratulations on beating off {1}.
 - Text: RIP {1}
+- Text: Saying goodbye to {1}
 - Text: Pouring one out for {1}.
+- Text: Finally, we no longer need to see {0} anymore
+  Weight: 0.1
 - Text: f
   Weight: 0.05
 DungeonBossAlreadyCleared:
@@ -379,6 +397,8 @@ BossDefeated:
 - Text: Marked {0} as defeated.
 - Text: RIP {0}
 - Text: Saying goodbye to {0}
+- Text: Finally, we no longer need to see {0} anymore
+  Weight: 0.1
 - Text: "{0} is no longer part of this world."
   Weight: 0.1
 - Text: f
@@ -879,6 +899,7 @@ AutoTracker:
   - Text: I don't think you're ready for this seed.
   - Text: You would not believe what Shaktool has this time.
   - Text: It's all downhill from here.
+  - Text: Who are you going to blame this time when things go wrong?
   - Text: Can we visit Shaktool yet?
     Weight: 0.1
   GameStartedMultiplayer:
