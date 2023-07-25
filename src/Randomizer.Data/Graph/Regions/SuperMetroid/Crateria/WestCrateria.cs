@@ -1,17 +1,20 @@
+using System.Collections.Generic;
+using Randomizer.Shared;
+
 namespace Randomizer.Data.Graph.Regions.SuperMetroid.Crateria
 {
-    public class WestCrateria
+    public class WestCrateria : Region
     {
         public WestCrateria()
         {
             Rooms = new List<Room>
             {
                 new Room(
-                    name: "Gauntlet Energy Tank",
+                    name: "Gauntlet Energy Tank Room",
                     exits: new Dictionary<Exit, ExitType>
                     {
-                        { Exit.CrateriaGauntletEnergyTankLeft, ExitType.BlueDoor },
-                        { Exit.CrateriaGauntletEnergyTankRight, ExitType.BlueDoor }
+                        { Exit.CrateriaGauntletEnergyTankRoomLeft, ExitType.BlueDoor },
+                        { Exit.CrateriaGauntletEnergyTankRoomRight, ExitType.BlueDoor }
                     },
                     locations: new List<Location>
                     {
@@ -31,11 +34,11 @@ namespace Randomizer.Data.Graph.Regions.SuperMetroid.Crateria
                     }
                 ),
                 new Room(
-                    name: "Green Brinstar Elevator",
+                    name: "Green Brinstar Elevator Room",
                     exits: new Dictionary<Exit, ExitType>
                     {
-                        { Exit.CrateriaGreenBrinstarElevatorDown, ExitType.Elevator },
-                        { Exit.CrateriaGreenBrinstarElevatorRight, ExitType.BlueDoor }
+                        { Exit.CrateriaGreenBrinstarElevatorRoomDown, ExitType.Elevator },
+                        { Exit.CrateriaGreenBrinstarElevatorRoomRight, ExitType.BlueDoor }
                     }
                 ),
                 new Room(
@@ -52,12 +55,12 @@ namespace Randomizer.Data.Graph.Regions.SuperMetroid.Crateria
                         new Location(
                             id: LocationId.CrateriaGauntletShaftLeft,
                             name: "Gauntlet Shaft Left",
-                            vanillaItem: ItemType.Missiles
+                            vanillaItem: ItemType.Missile
                         ),
                         new Location(
                             id: LocationId.CrateriaGauntletShaftRight,
                             name: "Gauntlet Shaft Right",
-                            vanillaItem: ItemType.Missiles
+                            vanillaItem: ItemType.Missile
                         )
                     }
                 ),
@@ -70,11 +73,11 @@ namespace Randomizer.Data.Graph.Regions.SuperMetroid.Crateria
                     }
                 ),
                 new Room(
-                    name: "Statues",
+                    name: "Statues Room",
                     exits: new Dictionary<Exit, ExitType>
                     {
-                        { Exit.CrateriaStatuesLeft, ExitType.BlueDoor }, // kind of
-                        { Exit.CrateriaStatuesDown, ExitType.Elevator }
+                        { Exit.CrateriaStatuesRoomLeft, ExitType.BlueDoor }, // kind of
+                        { Exit.CrateriaStatuesRoomDown, ExitType.Elevator }
                     }
                 ),
                 new Room(
@@ -86,11 +89,11 @@ namespace Randomizer.Data.Graph.Regions.SuperMetroid.Crateria
                     }
                 ),
                 new Room(
-                    name: "Terminator",
+                    name: "Terminator Room",
                     exits: new Dictionary<Exit, ExitType>
                     {
-                        { Exit.CrateriaTerminatorLeft, ExitType.BlueDoor },
-                        { Exit.CrateriaTerminatorRight, ExitType.BlueDoor }
+                        { Exit.CrateriaTerminatorRoomLeft, ExitType.BlueDoor },
+                        { Exit.CrateriaTerminatorRoomRight, ExitType.BlueDoor }
                     },
                     locations: new List<Location>
                     {
@@ -103,15 +106,15 @@ namespace Randomizer.Data.Graph.Regions.SuperMetroid.Crateria
                 )
             };
 
-            Layout = new List<Tuple<Exit, Exit>>
+            Layout = new List<(Exit, Exit)>
             {
-                ( Exit.CrateriaGreenBrinstarElevatorRight, Exit.CrateriaMushroomKingdomLeft ),
+                ( Exit.CrateriaGreenBrinstarElevatorRoomRight, Exit.CrateriaMushroomKingdomLeft ),
                 ( Exit.CrateriaMushroomKingdomRight, Exit.CrateriaGreenPiratesShaftLeft ),
-                ( Exit.CrateriaGreenPiratesShaftTopRight, Exit.CrateriaGauntletEnergyTankLeft ),
-                ( Exit.CrateriaGreenPiratesShaftMiddleRight, Exit.CrateriaTerminatorLeft ),
+                ( Exit.CrateriaGreenPiratesShaftTopRight, Exit.CrateriaGauntletEnergyTankRoomLeft ),
+                ( Exit.CrateriaGreenPiratesShaftMiddleRight, Exit.CrateriaTerminatorRoomLeft ),
                 ( Exit.CrateriaGreenPiratesShaftBottomRight, Exit.CrateriaStatuesHallwayLeft ),
-                ( Exit.CrateriaStatuesHallwayRight, Exit.CrateriaStatuesLeft ),
-                ( Exit.CrateriaGauntletEnergyTankRight, Exit.CrateriaGauntletEntranceLeft )
+                ( Exit.CrateriaStatuesHallwayRight, Exit.CrateriaStatuesRoomLeft ),
+                ( Exit.CrateriaGauntletEnergyTankRoomRight, Exit.CrateriaGauntletEntranceLeft )
             };
         }
     }
