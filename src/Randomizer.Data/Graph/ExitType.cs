@@ -4,6 +4,11 @@ namespace Randomizer.Data.Graph
     {
         BlueDoor,
         Elevator,
-        RedDoor
+        EnemyDoor,
+        GrayDoor,
+        GreenDoor,
+        Open,
+        RedDoor,
+        YellowDoor
     }
 }
