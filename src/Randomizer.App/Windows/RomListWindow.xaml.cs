@@ -52,7 +52,6 @@ namespace Randomizer.App.Windows
                     "can start playing randomized SMZ3 games. Please do so now.",
                     "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Information);
                 OptionsMenuItem_Click(this, new RoutedEventArgs());
-                return;
             }
 
             if (!string.IsNullOrEmpty(Options.GeneralOptions.TwitchOAuthToken))
