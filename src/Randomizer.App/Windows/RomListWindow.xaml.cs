@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -93,8 +94,29 @@ namespace Randomizer.App.Windows
             optionsDialog.Options = Options.GeneralOptions;
             optionsDialog.ShowDialog();
 
+            if (!string.IsNullOrEmpty(Options.GeneralOptions.RomOutputPath) && !Directory.Exists(Options.GeneralOptions.RomOutputPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(Options.GeneralOptions.RomOutputPath);
+                }
+                catch
+                {
+                    // Oh well, next check will warn the user
+                }
+            }
+
+            if (!Options.GeneralOptions.Validate())
+            {
+                MessageBox.Show(this, "Missing required settings. Verify that you have entered valid " +
+                                      "roms and a valid output folder.",
+                "SMZ3 Cas’ Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+
             try
             {
+
                 Options.Save(OptionsFactory.GetFilePath());
             }
             catch
