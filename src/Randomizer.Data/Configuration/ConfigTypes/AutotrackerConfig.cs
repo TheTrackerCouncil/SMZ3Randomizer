@@ -90,6 +90,12 @@ namespace Randomizer.Data.Configuration.ConfigTypes
             = new("Good job on the tech. Was it a first try?");
 
         /// <summary>
+        /// Gets the phrases to respond with when performing Specky Clip
+        /// </summary>
+        public SchrodingersString SpeckyClip { get; init; }
+            = new("Good job on the tech. Was it a first try?");
+
+        /// <summary>
         /// Gets the phrases to respond with when performing Diver Down tech
         /// </summary>
         public SchrodingersString DiverDown { get; init; }
