@@ -938,6 +938,15 @@ AutoTracker:
   - Text: Did you just phase through that wall? Spooky
   - Text: That was an okay icebreaker, but how about this one? What would your ideal vacation be with Shaktool?
     Weight: 0.2
+  SpeckyClip:
+    - Text: Good job on the tech. Was it a first try?
+    - Text: I hope you were quiet during the cutscene. Wait. Why did you not go watch the cutscene?
+    - Text: Oh good. You saved a speck of time. I hope you're happy.
+    - Text: Oh good. You saved a speck of time.<break time='2s'/>Do you get the joke?
+      Weight: 0.2
+    - Text: I sure hope you can perform the diver down technique so we can get out of here quickly.
+    - Text: Just so you know, I didn't agree to that being legal.
+      Weight: 0.2
   DiverDown:
   - Text: Good job on the tech. Was it a first try?
   - Text: Since when could you walk on water?
