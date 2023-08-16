@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TwitchLib.Client" Version="3.2.6-preview-5e869129649a88c4cb8d7fb824f17f9397d1668b" />
+    <PackageReference Include="TwitchLib.Client" Version="3.3.1" />
   </ItemGroup>
 
   <ItemGroup>

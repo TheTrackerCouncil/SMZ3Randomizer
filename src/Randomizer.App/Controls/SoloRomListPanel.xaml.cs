@@ -12,7 +12,7 @@ using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
-using SharpYaml;
+using YamlDotNet.Core;
 
 namespace Randomizer.App.Controls
 {

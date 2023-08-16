@@ -51,6 +51,12 @@ namespace Randomizer.App.Windows
 
         private async void MultiplayerClientServiceOnGameStarted(List<MultiplayerPlayerGenerationData> playerGenerationData)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => MultiplayerClientServiceOnGameStarted(playerGenerationData));
+                return;
+            }
+
             // Regenerate the seed using all of the data for the players that came from the server
             var seedData = _multiplayerGameService.RegenerateSeed(playerGenerationData, out var error);
             if (!string.IsNullOrEmpty(error))
@@ -69,11 +75,21 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceOnGameStateUpdated()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(MultiplayerClientServiceOnGameStateUpdated);
+                return;
+            }
             Model.GameStatus = _multiplayerClientService.GameStatus;
         }
 
         private async void MultiplayerClientServiceOnPlayerForfeit(MultiplayerPlayerState playerState, bool isLocalPlayer)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => MultiplayerClientServiceOnPlayerForfeit(playerState, isLocalPlayer));
+                return;
+            }
             if (!isLocalPlayer || _multiplayerClientService.GameStatus != MultiplayerGameStatus.Created) return;
             await _multiplayerClientService.Disconnect();
             Close();
@@ -81,6 +97,11 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceOnGameRejoined()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(MultiplayerClientServiceOnGameRejoined);
+                return;
+            }
             Model.IsConnected = true;
             Model.GameUrl = _multiplayerClientService.GameUrl ?? "";
             Model.GameStatus = _multiplayerClientService.GameStatus ?? MultiplayerGameStatus.Created;
@@ -90,11 +111,21 @@ namespace Randomizer.App.Windows
 
         private async void MultiplayerClientServiceOnConnected()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(MultiplayerClientServiceOnConnected);
+                return;
+            }
             await _multiplayerClientService.RejoinGame();
         }
 
         private void MultiplayerClientServiceOnConnectionClosed(string message, Exception? exception)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => MultiplayerClientServiceOnConnectionClosed(message, exception));
+                return;
+            }
             Model.IsConnected = false;
         }
 
@@ -117,16 +148,32 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceError(string error, Exception? exception)
         {
-            DisplayError(error);
+            if (!Dispatcher.CheckAccess())
+            {
+                MultiplayerClientServiceError(error, exception);
+                return;
+            }
+
+            Dispatcher.Invoke(() => DisplayError(error));
         }
 
         private void MultiplayerClientServiceOnPlayerListUpdated()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(MultiplayerClientServiceOnPlayerListUpdated);
+                return;
+            }
             UpdatePlayerList();
         }
 
         private void MultiplayerClientServiceOnPlayerSync(MultiplayerPlayerState state, MultiplayerPlayerState? previousState, bool isLocalPlayer)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => MultiplayerClientServiceOnPlayerSync(state,  previousState, isLocalPlayer));
+                return;
+            }
             Model.UpdatePlayer(state, _multiplayerClientService.LocalPlayer);
             CheckPlayerConfigs();
         }

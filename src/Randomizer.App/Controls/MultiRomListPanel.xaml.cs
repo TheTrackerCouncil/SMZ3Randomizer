@@ -98,7 +98,13 @@ namespace Randomizer.App.Controls
             }
             else
             {
-                var rom = DbContext.GeneratedRoms.FirstOrDefault(x => x.MultiplayerGameDetailsId == details.Id);
+                var rom = DbContext.GeneratedRoms
+                    .Where(x => x.MultiplayerGameDetailsId == details.Id)
+                    .Include(x => x.MultiplayerGameDetails)
+                    .Include(x => x.TrackerState)
+                    .ThenInclude(x => x!.History)
+                    .FirstOrDefault();
+
                 if (rom != null && !DeleteGeneratedRom(rom))
                 {
                     return;

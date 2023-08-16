@@ -350,9 +350,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <param name="e"></param>
         protected async void Connector_Connected(object? sender, EventArgs e)
         {
+            _logger.LogInformation("Connector Connected");
             await Task.Delay(TimeSpan.FromSeconds(0.1f));
             if (!IsSendingMessages)
             {
+                _logger.LogInformation("Start sending messages");
                 Tracker.Say(x => x.AutoTracker.WhenConnected);
                 AutoTrackerConnected?.Invoke(this, EventArgs.Empty);
                 _stopSendingMessages = new CancellationTokenSource();

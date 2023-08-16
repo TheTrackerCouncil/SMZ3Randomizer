@@ -57,6 +57,8 @@ public class MultiplayerModule : TrackerModule
 
     private void AutoTrackerOnAutoTrackerConnected(object? sender, EventArgs e)
     {
+        Logger.LogInformation("AutoTracker Connected");
+
         // Unfortunately sending items immediately after auto tracker has connected seems to cause the items to get
         // lost, so wait 5 seconds before trying to send the items
         Task.Run(async () =>
