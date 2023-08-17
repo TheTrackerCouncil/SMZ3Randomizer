@@ -63,13 +63,20 @@ public class MultiplayerModule : TrackerModule
         // lost, so wait 5 seconds before trying to send the items
         Task.Run(async () =>
         {
-            do
+            try
             {
-                await Task.Delay(TimeSpan.FromSeconds(5));
-                if (Tracker.AutoTracker?.HasValidState != true) return;
-            } while (Tracker.AutoTracker!.CurrentGame == Game.Neither);
-            Logger.LogInformation("Requesting player sync");
-            await _multiplayerGameService.OnAutoTrackingConnected();
+                do
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                } while (Tracker.AutoTracker?.HasValidState != true || Tracker.AutoTracker!.CurrentGame == Game.Neither);
+
+                Logger.LogInformation("Requesting player sync");
+                await _multiplayerGameService.OnAutoTrackingConnected();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error starting multiworld");
+            }
         });
     }
 
