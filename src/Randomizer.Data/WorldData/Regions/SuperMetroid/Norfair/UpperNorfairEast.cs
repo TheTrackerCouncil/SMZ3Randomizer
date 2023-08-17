@@ -59,7 +59,7 @@ namespace Randomizer.Data.WorldData.Regions.SuperMetroid.Norfair
         private bool CanReachBubbleMountainLeftSide(Progression items)
             => Logic.CanFly(items)
             || (items.Grapple && items.Morph && (items.SpeedBooster || Logic.CanPassBombPassages(items)))
-            || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Easy))
+            || (items.HiJump && Logic.CanWallJump(WallJumpDifficulty.Medium))
             || (items.Ice && items.HiJump)
             || Logic.CanWallJump(WallJumpDifficulty.Insane)
             || (Logic.CanWallJump(WallJumpDifficulty.Hard) && items.Grapple);
