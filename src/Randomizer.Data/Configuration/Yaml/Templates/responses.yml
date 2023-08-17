@@ -805,6 +805,9 @@ AutoTracker:
   # The list of possibilities when performing the Ice Breaker trick
   IceBreaker:
 
+  # The list of possibilities when performing the Specky Clip trick
+  SpeckyClip:
+
   # The list of possibilities when performing the Diver Down trick
   DiverDown:
 
