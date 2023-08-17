@@ -7,7 +7,7 @@
 #define MyAppPublisher "Vivelin"
 #define MyAppURL "https://github.com/Vivelin/SMZ3Randomizer"
 #define MyAppExeName "Randomizer.App.exe"
-#define MyAppVersion GetStringFileInfo("..\src\Randomizer.App\bin\Release\net6.0-windows\publish\win-x64\" + MyAppExeName, "ProductVersion")
+#define MyAppVersion GetStringFileInfo("..\src\Randomizer.App\bin\Release\net7.0-windows\publish\win-x64\" + MyAppExeName, "ProductVersion")
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -33,8 +33,8 @@ OutputBaseFilename=SMZ3CasRandomizerSetup_{#MyAppVersion}
 [Code]
 function InitializeSetup: Boolean;
 begin
-  Dependency_AddDotNet60Desktop;
-  Dependency_AddDotNet60Asp;
+  Dependency_AddDotNet70Desktop;
+  Dependency_AddDotNet70Asp;
   Result := True;
 end;
 
@@ -48,10 +48,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "netcorecheck.exe"; Flags: dontcopy noencryption
 Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
 Source: "..\src\Randomizer.App\Sprites\*"; DestDir: "{app}\Sprites"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\src\Randomizer.App\bin\Release\net6.0-windows\publish\win-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode;
-Source: "..\src\Randomizer.App\bin\Release\net6.0-windows\publish\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: Is64BitInstallMode;
-Source: "..\src\Randomizer.App\bin\Release\net6.0-windows\publish\win-x86\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not Is64BitInstallMode";
-Source: "..\src\Randomizer.App\bin\Release\net6.0-windows\publish\win-x86\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: "not Is64BitInstallMode";
+Source: "..\src\Randomizer.App\bin\Release\net7.0-windows\publish\win-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode;
+Source: "..\src\Randomizer.App\bin\Release\net7.0-windows\publish\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: Is64BitInstallMode;
+Source: "..\src\Randomizer.App\bin\Release\net7.0-windows\publish\win-x86\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: "not Is64BitInstallMode";
+Source: "..\src\Randomizer.App\bin\Release\net7.0-windows\publish\win-x86\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: "not Is64BitInstallMode";
 Source: "..\src\Randomizer.Data\maps.json"; DestDir: "{localappdata}\SMZ3CasRandomizer"; Flags: comparetimestamp
 Source: "..\src\Randomizer.SMZ3.Tracking\AutoTracking\LuaScripts\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\AutoTrackerScripts"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\src\Randomizer.Data\Configuration\Yaml\*"; DestDir: "{localappdata}\SMZ3CasRandomizer\Configs"; Flags: ignoreversion recursesubdirs createallsubdirs

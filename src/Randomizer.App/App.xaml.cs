@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -66,7 +67,7 @@ namespace Randomizer.App
                 var vScreenHeight = SystemParameters.VirtualScreenHeight;
                 var vScreenTop = SystemParameters.VirtualScreenTop;
                 var vScreenLeft = SystemParameters.VirtualScreenLeft;
-                
+
                 window.Width = (int)key.GetValue("Width", window.Width)!;
                 window.Height = (int)key.GetValue("Height", window.Height)!;
                 window.Left = (int)key.GetValue("Left", window.Left)!;
@@ -150,10 +151,17 @@ namespace Randomizer.App
             _logger = _host.Services.GetRequiredService<ILogger<App>>();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
+            TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
 
             var mainWindow = _host.Services.GetRequiredService<RomListWindow>();
             mainWindow.Show();
+        }
+
+        private void TaskSchedulerOnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+        {
+            _logger?.LogCritical(e.Exception, "[CRASH] Uncaught {ExceptionType}: ", e.Exception.GetType().Name);
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

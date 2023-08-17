@@ -340,33 +340,66 @@ end;
 procedure Dependency_AddDotNet60;
 begin
   // https://dotnet.microsoft.com/download/dotnet/6.0
-  if not Dependency_IsNetCoreInstalled('Microsoft.NETCore.App 6.0.4') then begin
+  if not Dependency_IsNetCoreInstalled('Microsoft.NETCore.App 6.0.11') then begin
     Dependency_Add('dotnet60' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
-      '.NET Runtime 6.0.4' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/08e41641-f1b4-47b4-9ed9-c8672614f093/ea66a30f9f8ac7320ea0d7f6e4d5d2d9/dotnet-runtime-6.0.4-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/2e97f1f0-f321-4baf-8d02-0be5f08afc4e/2a011c8f9b2792e17d363a21c0ed8fdc/dotnet-runtime-6.0.4-win-x64.exe'),
+      '.NET Runtime 6.0.11' + Dependency_ArchTitle,
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/719bfd7c-bce2-4e73-937c-cbd7a7ace3cb/d4f570d461711d22e277f1e3487ea9c2/dotnet-runtime-6.0.11-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/8cf88855-ed09-4002-95db-8bb0f0eff051/f9006645511830bd3b840be132423768/dotnet-runtime-6.0.11-win-x64.exe'),
       '', False, False);
   end;
 end;
 procedure Dependency_AddDotNet60Asp;
 begin
   // https://dotnet.microsoft.com/download/dotnet/6.0
-  if not Dependency_IsNetCoreInstalled('Microsoft.AspNetCore.App 6.0.4') then begin
+  if not Dependency_IsNetCoreInstalled('Microsoft.AspNetCore.App 6.0.11') then begin
     Dependency_Add('dotnet60asp' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
-      'ASP.NET Core Runtime 6.0.4' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/c2093d31-b27e-4876-891c-750247cf1faa/33b9191b128a1d33671549972403994e/aspnetcore-runtime-6.0.4-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/2162932c-987a-4de8-ae2a-f7d327bb39a8/97fe1cb950c2bccf44b7c3fe6aa45b53/aspnetcore-runtime-6.0.4-win-x64.exe'),
+      'ASP.NET Core Runtime 6.0.11' + Dependency_ArchTitle,
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/94504599-143a-4d53-b518-74aee0ebecca/dac4a7b1f7bdc7b4e8441d6befa4941a/aspnetcore-runtime-6.0.11-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/e874914f-d43d-4b61-8479-f6a5536e44b1/7043adfe896aa9f980ce23e884aae37d/aspnetcore-runtime-6.0.11-win-x64.exe'),
       '', False, False);
   end;
 end;
 procedure Dependency_AddDotNet60Desktop;
 begin
   // https://dotnet.microsoft.com/download/dotnet/6.0
-  if not Dependency_IsNetCoreInstalled('Microsoft.WindowsDesktop.App 6.0.4') then begin
+  if not Dependency_IsNetCoreInstalled('Microsoft.WindowsDesktop.App 6.0.11') then begin
     Dependency_Add('dotnet60desktop' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
-      '.NET Desktop Runtime 6.0.4' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/05b30243-5cd2-48c3-a9bb-6ac83d7d481b/03a25aecb5cf4ba53c8b9cf5194e3c86/windowsdesktop-runtime-6.0.4-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/f13d7b5c-608f-432b-b7ec-8fe84f4030a1/5e06998f9ce23c620b9d6bac2dae6c1d/windowsdesktop-runtime-6.0.4-win-x64.exe'),
+      '.NET Desktop Runtime 6.0.11' + Dependency_ArchTitle,
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/2a392287-fd51-4ee8-9c15-a672ab9bc55d/03d4784b3a543a0fb9ce5677ed13a9a3/windowsdesktop-runtime-6.0.11-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/0192a249-3ec8-4374-a827-e186dd58d55d/cec046575f3eb2247a10ba3d50f5cf6c/windowsdesktop-runtime-6.0.11-win-x64.exe'),
+      '', False, False);
+  end;
+end;
+procedure Dependency_AddDotNet70;
+begin
+  // https://dotnet.microsoft.com/download/dotnet/7.0
+  if not Dependency_IsNetCoreInstalled('Microsoft.NETCore.App 7.0.0') then begin
+    Dependency_Add('dotnet70' + Dependency_ArchSuffix + '.exe',
+      '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
+      '.NET Runtime 7.0.0' + Dependency_ArchTitle,
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/75c0d7c7-9f30-46fd-9675-a301f0e051f4/ec04d5cc40aa6537a4af21fad6bf8ba9/dotnet-runtime-7.0.0-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/87bc5966-97cc-498c-8381-bff4c43aafc6/baca88b989e7d2871e989d33a667d8e9/dotnet-runtime-7.0.0-win-x64.exe'),
+      '', False, False);
+  end;
+end;
+procedure Dependency_AddDotNet70Asp;
+begin
+  // https://dotnet.microsoft.com/download/dotnet/7.0
+  if not Dependency_IsNetCoreInstalled('Microsoft.AspNetCore.App 7.0.0') then begin
+    Dependency_Add('dotnet70asp' + Dependency_ArchSuffix + '.exe',
+      '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
+      'ASP.NET Core Runtime 7.0.0' + Dependency_ArchTitle,
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/aa4da7f2-fa27-47b1-9ad0-ac07dcecb730/00101e955bae403e5a2a424b3c29fb78/aspnetcore-runtime-7.0.0-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/388543cf-e110-4425-be62-2dfa1635586c/fab629ebe2c7b2edfa0f2ee9171de26b/aspnetcore-runtime-7.0.0-win-x64.exe'),
+      '', False, False);
+  end;
+end;
+procedure Dependency_AddDotNet70Desktop;
+begin
+  // https://dotnet.microsoft.com/download/dotnet/7.0
+  if not Dependency_IsNetCoreInstalled('Microsoft.WindowsDesktop.App 7.0.0') then begin
+    Dependency_Add('dotnet70desktop' + Dependency_ArchSuffix + '.exe',
+      '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
+      '.NET Desktop Runtime 7.0.0' + Dependency_ArchTitle,
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/d05a833c-2cf9-4d06-89ae-a0f3e10c5c91/c668ff42e23c2f67aa3d80227860585f/windowsdesktop-runtime-7.0.0-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/5b2fbe00-507e-450e-8b52-43ab052aadf2/79d54c3a19ce3fce314f2367cf4e3b21/windowsdesktop-runtime-7.0.0-win-x64.exe'),
       '', False, False);
   end;
 end;
@@ -546,45 +579,48 @@ end;
 #ifndef Dependency_NoExampleSetup
 
 ; comment out dependency defines to disable installing them
-#define UseDotNet35
-#define UseDotNet40
-#define UseDotNet45
-#define UseDotNet46
-#define UseDotNet47
-#define UseDotNet48
+;#define UseDotNet35
+;#define UseDotNet40
+;#define UseDotNet45
+;#define UseDotNet46
+;#define UseDotNet47
+;#define UseDotNet48
 
 ; requires netcorecheck.exe and netcorecheck_x64.exe (see download link below)
 #define UseNetCoreCheck
 #ifdef UseNetCoreCheck
-  #define UseNetCore31
-  #define UseNetCore31Asp
-  #define UseNetCore31Desktop
-  #define UseDotNet50
-  #define UseDotNet50Asp
-  #define UseDotNet50Desktop
-  #define UseDotNet60
-  #define UseDotNet60Asp
-  #define UseDotNet60Desktop
+;  #define UseNetCore31
+;  #define UseNetCore31Asp
+;  #define UseNetCore31Desktop
+;  #define UseDotNet50
+;  #define UseDotNet50Asp
+;  #define UseDotNet50Desktop
+;  #define UseDotNet60
+;  #define UseDotNet60Asp
+;  #define UseDotNet60Desktop
+  #define UseDotNet70
+  #define UseDotNet70Asp
+  #define UseDotNet70Desktop
 #endif
 
-#define UseVC2005
-#define UseVC2008
-#define UseVC2010
-#define UseVC2012
-#define UseVC2013
-#define UseVC2015To2022
+;#define UseVC2005
+;#define UseVC2008
+;#define UseVC2010
+;#define UseVC2012
+;#define UseVC2013
+;#define UseVC2015To2022
 
 ; requires dxwebsetup.exe (see download link below)
 ;#define UseDirectX
 
-#define UseSql2008Express
-#define UseSql2012Express
-#define UseSql2014Express
-#define UseSql2016Express
-#define UseSql2017Express
-#define UseSql2019Express
+;#define UseSql2008Express
+;#define UseSql2012Express
+;#define UseSql2014Express
+;#define UseSql2016Express
+;#define UseSql2017Express
+;#define UseSql2019Express
 
-#define UseWebView2
+;#define UseWebView2
 
 #define MyAppSetupName 'MyProgram'
 #define MyAppVersion '1.0'
@@ -692,6 +728,15 @@ begin
 #endif
 #ifdef UseDotNet60Desktop
   Dependency_AddDotNet60Desktop;
+#endif
+#ifdef UseDotNet70
+  Dependency_AddDotNet70;
+#endif
+#ifdef UseDotNet70Asp
+  Dependency_AddDotNet70Asp;
+#endif
+#ifdef UseDotNet70Desktop
+  Dependency_AddDotNet70Desktop;
 #endif
 #ifdef UseVC2005
   Dependency_AddVC2005;

@@ -77,6 +77,10 @@ namespace Randomizer.App.Windows
 
         private void MultiplayerClientServiceGameJoined()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(MultiplayerClientServiceGameJoined);
+            }
             DialogResult = true;
             Close();
         }

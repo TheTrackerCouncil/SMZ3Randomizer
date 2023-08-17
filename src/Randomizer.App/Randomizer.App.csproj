@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>chozo20.ico</ApplicationIcon>
-    <Version>9.3.3</Version>
+    <Version>9.4.0-beta.1</Version>
     <Title>SMZ3 Cas' Randomizer</Title>
     <AssemblyTitle>SMZ3 Cas' Randomizer</AssemblyTitle>
     <Authors>Vivelin</Authors>
@@ -38,6 +38,7 @@
     <None Remove="spinjumprestart.ips" />
     <None Remove="zsm.ips" />
     <None Remove="zsm.ips.gz" />
+    
   </ItemGroup>
 
   <ItemGroup>
@@ -71,10 +72,9 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="NReco.Logging.File" Version="1.1.2" />
-    <PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="NReco.Logging.File" Version="1.1.6" />
   </ItemGroup>
 
   <ItemGroup>

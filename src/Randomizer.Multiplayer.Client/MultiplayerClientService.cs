@@ -491,6 +491,7 @@ public class MultiplayerClientService
     /// <param name="response"></param>
     private async Task OnUpdateGameState(UpdateGameStateResponse response)
     {
+        _logger.LogInformation("Game State Updated | {State}", response.GameState.ToString());
         await UpdateLocalGameState(response.GameState);
         GameStateUpdated?.Invoke();
     }
@@ -506,10 +507,10 @@ public class MultiplayerClientService
         CurrentGameGuid = response.GameState.Guid;
         CurrentPlayerGuid = response.PlayerGuid;
         CurrentPlayerKey = response.PlayerKey;
-        GameCreated?.Invoke();
         UpdatePlayerList(response.AllPlayers);
         await UpdateLocalGameState(response.GameState);
         await SaveGameToDatabase(response.GameState, response.PlayerGuid, response.PlayerKey);
+        GameCreated?.Invoke();
     }
 
     /// <summary>
@@ -523,10 +524,10 @@ public class MultiplayerClientService
         CurrentGameGuid = response.GameState.Guid;
         CurrentPlayerGuid = response.PlayerGuid;
         CurrentPlayerKey = response.PlayerKey;
-        GameJoined?.Invoke();
         UpdatePlayerList(response.AllPlayers);
         await UpdateLocalGameState(response.GameState);
         await SaveGameToDatabase(response.GameState, response.PlayerGuid, response.PlayerKey);
+        GameJoined?.Invoke();
     }
 
     /// <summary>
