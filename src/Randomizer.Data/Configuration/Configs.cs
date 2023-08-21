@@ -34,6 +34,7 @@ namespace Randomizer.Data.Configuration
             Rewards = provider.GetRewardConfig(profiles);
             UILayouts = provider.GetUIConfig(profiles);
             GameLines = provider.GetGameConfig(profiles);
+            MsuConfig = provider.GetMsuConfig(profiles);
         }
 
         /// <summary>
@@ -120,5 +121,10 @@ namespace Randomizer.Data.Configuration
         /// Gets the in game lines
         /// </summary>
         public GameLinesConfig GameLines { get; }
+
+        /// <summary>
+        /// Gets the msu config
+        /// </summary>
+        public MsuConfig MsuConfig { get; }
     }
 }

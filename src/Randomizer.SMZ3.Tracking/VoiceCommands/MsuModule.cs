@@ -1,0 +1,228 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Speech.Recognition;
+using System.Timers;
+using Microsoft.Extensions.Logging;
+using MSURandomizerLibrary;
+using MSURandomizerLibrary.Configs;
+using MSURandomizerLibrary.Models;
+using MSURandomizerLibrary.Services;
+using Randomizer.Data.Configuration.ConfigFiles;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.SMZ3.Tracking.Services;
+
+namespace Randomizer.SMZ3.Tracking.VoiceCommands;
+
+/// <summary>
+/// Module for tracker stating what the current song is
+/// </summary>
+public class MsuModule : TrackerModule, IDisposable
+{
+    private readonly IMsuSelectorService _msuSelectorService;
+    private Msu? _currentMsu;
+    private readonly string? _msuPath;
+    private readonly ICollection<string>? _inputMsuPaths;
+    private readonly Timer? _timer;
+    private readonly MsuType? _msuType;
+    private readonly MsuConfig _msuConfig;
+    private readonly string MsuKey = "MsuKey";
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="tracker"></param>
+    /// <param name="itemService">Service to get item information</param>
+    /// <param name="worldService">Service to get world information</param>
+    /// <param name="logger"></param>
+    /// <param name="msuLookupService"></param>
+    /// <param name="msuSelectorService"></param>
+    /// <param name="msuTypeService"></param>
+    /// <param name="msuConfig"></param>
+    public MsuModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<MsuModule> logger, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService, MsuConfig msuConfig)
+        : base(tracker, itemService, worldService, logger)
+    {
+        _msuSelectorService = msuSelectorService;
+        _msuType = msuTypeService.GetSMZ3MsuType();
+        _msuConfig = msuConfig;
+
+        if (!File.Exists(tracker.RomPath))
+        {
+            throw new InvalidOperationException("No tracker rom file found");
+        }
+
+        var romFileInfo = new FileInfo(tracker.RomPath);
+        _msuPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
+
+        if (!File.Exists(_msuPath))
+        {
+            return;
+        }
+
+        try
+        {
+            _currentMsu = msuLookupService.LoadMsu(_msuPath, _msuType, false, true, true);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error loading MSU {Path}", _msuPath);
+            return;
+        }
+
+        if (_currentMsu == null)
+        {
+            logger.LogWarning("MSU file found but unable to load MSU");
+            return;
+        }
+
+        // Start reshuffling every minute if requested
+        if (tracker.Rom!.MsuRandomizationStyle == MsuRandomizationStyle.Continuous)
+        {
+            _inputMsuPaths = tracker.Rom!.MsuPaths?.Split("|");
+            _timer = new Timer(TimeSpan.FromSeconds(60));
+            _timer.Elapsed += TimerOnElapsed;
+            _timer.Start();
+        }
+
+        AddCommand("location song", GetLocationSongRules(), (result) =>
+        {
+            if (_currentMsu == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+
+            var trackNumber = (int)result.Semantics[MsuKey].Value;
+            var track = _currentMsu.GetTrackFor(trackNumber);
+            if (track != null)
+            {
+                var parts = new List<string>() { track.SongName };
+                if (!string.IsNullOrEmpty(track.DisplayAlbum))
+                {
+                    parts.Add($"from the album {track.DisplayAlbum}");
+                }
+                else if (!string.IsNullOrEmpty(track.DisplayArtist))
+                {
+                    parts.Add($"by {track.DisplayArtist}");
+                }
+                if (!string.IsNullOrEmpty(track.MsuName) && tracker.Rom!.MsuRandomizationStyle != null)
+                {
+                    parts.Add($"from MSU Pack {track.MsuName}");
+                    if (!string.IsNullOrEmpty(track.MsuCreator)) parts.Add($"by {track.MsuCreator}");
+                }
+
+                Tracker.Say(_msuConfig.CurrentSong, string.Join("; ", parts));
+            }
+            else
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+            }
+        });
+
+        AddCommand("location msu", GetLocationMsuRules(), (result) =>
+        {
+            if (_currentMsu == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+
+            var trackNumber = (int)result.Semantics[MsuKey].Value;
+            var track = _currentMsu.GetTrackFor(trackNumber);
+            if (track?.GetMsuName() != null)
+            {
+                Tracker.Say(_msuConfig.CurrentMsu, track.GetMsuName());
+            }
+            else
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+            }
+        });
+    }
+
+    private GrammarBuilder GetLocationSongRules()
+    {
+        var msuLocations = new Choices();
+
+        foreach (var track in _msuConfig.TrackLocations)
+        {
+            foreach (var name in track.Value)
+            {
+                msuLocations.Add(new SemanticResultValue(name, track.Key));
+            }
+        }
+
+        var option1 = new GrammarBuilder()
+            .Append("Hey tracker,")
+            .OneOf("what's the current song for", "what's the song for", "what's the current theme for", "what's the theme for")
+            .Optional("the")
+            .Append(MsuKey, msuLocations);
+
+        var option2 = new GrammarBuilder()
+            .Append("Hey tracker,")
+            .OneOf("what's the current", "what's the")
+            .Append(MsuKey, msuLocations)
+            .OneOf("song", "theme");
+
+        return GrammarBuilder.Combine(option1, option2);
+
+    }
+
+    private GrammarBuilder GetLocationMsuRules()
+    {
+        var msuLocations = new Choices();
+
+        foreach (var track in _msuConfig.TrackLocations)
+        {
+            foreach (var name in track.Value)
+            {
+                msuLocations.Add(new SemanticResultValue(name, track.Key));
+            }
+        }
+
+        var option1 = new GrammarBuilder()
+            .Append("Hey tracker,")
+            .Append("what MSU pack is")
+            .OneOf("the current song for", "the song for", "the current theme for", "the theme for")
+            .Optional("the")
+            .Append(MsuKey, msuLocations)
+            .Append("from");
+
+        var option2 = new GrammarBuilder()
+            .Append("Hey tracker,")
+            .Append("what MSU pack is")
+            .OneOf("the current", "the")
+            .Append(MsuKey, msuLocations)
+            .OneOf("song", "theme")
+            .Append("from");
+
+        return GrammarBuilder.Combine(option1, option2);
+
+    }
+
+    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
+    {
+        try
+        {
+            var response = _msuSelectorService.CreateShuffledMsu(new MsuSelectorRequest()
+            {
+                MsuPaths = _inputMsuPaths, OutputMsuType = _msuType, OutputPath = _msuPath, PrevMsu = _currentMsu
+            });
+            _currentMsu = response.Msu;
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError(exception, "Error creating MSU");
+        }
+
+    }
+
+    public void Dispose()
+    {
+        if (_timer != null)
+        {
+            _timer.Stop();
+            _timer.Dispose();
+        }
+    }
+}

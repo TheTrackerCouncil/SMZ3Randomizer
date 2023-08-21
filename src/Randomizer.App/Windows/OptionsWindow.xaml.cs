@@ -256,5 +256,25 @@ namespace Randomizer.App.Windows
             _ = TryParse(new string(UndoExpirationTimeTextBox.Text.Where(char.IsDigit).ToArray()), out var number);
             UndoExpirationTimeTextBox.Text = Math.Max(1, number).ToString();
         }
+
+        private void FileSystemInput_OnOnPathUpdated(object? sender, EventArgs e)
+        {
+            var outputPath = Options.RomOutputPath;
+            var msuPath = Options.MsuPath;
+
+            if (string.IsNullOrEmpty(outputPath) || string.IsNullOrEmpty(msuPath))
+            {
+                return;
+            }
+
+            var outputDrive = new DriveInfo(outputPath);
+            var msuDrive = new DriveInfo(msuPath);
+            if (outputDrive.Name != msuDrive.Name)
+            {
+                MessageBox.Show(this,
+                    "To preserve drive space, it is recommended that the Rom Output and MSU folders be on the same drive.",
+                    "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
     }
 }

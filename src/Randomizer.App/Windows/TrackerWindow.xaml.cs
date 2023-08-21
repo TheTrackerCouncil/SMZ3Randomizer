@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MSURandomizerLibrary.Services;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
@@ -47,6 +48,7 @@ namespace Randomizer.App.Windows
         private readonly IWorldAccessor _world;
         private readonly RandomizerOptions _options;
         private readonly Smz3GeneratedRomLoader _romLoader;
+        private readonly IMsuLookupService _msuLookupService;
         private bool _pegWorldMode;
         private TrackerLocationsWindow? _locationsWindow;
         private TrackerHelpWindow? _trackerHelpWindow;
@@ -68,8 +70,8 @@ namespace Randomizer.App.Windows
             IUIService uiService,
             OptionsFactory optionsFactory,
             IWorldAccessor world,
-            ITrackerTimerService timerService
-        )
+            ITrackerTimerService timerService,
+            IMsuLookupService msuLookupService)
         {
             InitializeComponent();
 
@@ -82,6 +84,7 @@ namespace Randomizer.App.Windows
             _layout = uiService.GetLayout(_options.GeneralOptions.SelectedLayout);
             _defaultLayout = _layout;
             _world = world;
+            _msuLookupService = msuLookupService;
 
             foreach (var layout in uiService.SelectableLayouts)
             {
@@ -693,12 +696,18 @@ namespace Randomizer.App.Windows
             if (_options == null)
                 throw new InvalidOperationException("Cannot initialize Tracker before assigning " + nameof(_options));
 
+            Task.Run(() =>
+            {
+                _msuLookupService.LookupMsus(_options.GeneralOptions.MsuPath);
+            });
+
             _tracker = _serviceProvider.GetRequiredService<Tracker>();
 
             // If a rom was passed in with a valid tracker state, reload the state from the database
             if (GeneratedRom.IsValid(Rom))
             {
-                Tracker.Load(Rom);
+                var romPath = Path.Combine(_options.RomOutputPath, Rom.RomPath);
+                Tracker.Load(Rom, romPath);
             }
 
             Tracker.SpeechRecognized += (sender, e) => Dispatcher.Invoke(() =>
@@ -971,7 +980,8 @@ namespace Randomizer.App.Windows
             // If there is a valid rom, then load the state from the db
             if (GeneratedRom.IsValid(Rom))
             {
-                await Task.Run(() => Tracker.Load(Rom));
+                var romPath = Path.Combine(_options.RomOutputPath, Rom.RomPath);
+                await Task.Run(() => Tracker.Load(Rom, romPath));
 
                 Tracker.StartTimer(true);
                 if (_dispatcherTimer.IsEnabled)

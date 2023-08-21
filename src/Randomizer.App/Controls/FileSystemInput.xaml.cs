@@ -99,6 +99,7 @@ namespace Randomizer.App.Controls
                 if (string.IsNullOrEmpty(FileValidationHash) || string.IsNullOrEmpty(FileValidationErrorMessage))
                 {
                     Path = dialog.FileName;
+                    OnPathUpdated?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
@@ -115,6 +116,7 @@ namespace Randomizer.App.Controls
                     }
 
                     Path = dialog.FileName;
+                    OnPathUpdated?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -133,8 +135,11 @@ namespace Randomizer.App.Controls
             if (dialog.ShowDialog(owner) == CommonFileDialogResult.Ok)
             {
                 Path = dialog.FileName;
+                OnPathUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
+
+        public event EventHandler? OnPathUpdated;
 
     }
 }

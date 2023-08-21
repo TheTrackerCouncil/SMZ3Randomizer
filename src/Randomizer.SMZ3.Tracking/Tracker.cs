@@ -295,6 +295,11 @@ namespace Randomizer.SMZ3.Tracking
         public GeneratedRom? Rom { get; private set; }
 
         /// <summary>
+        /// The path to the generated rom
+        /// </summary>
+        public string? RomPath { get; private set; }
+
+        /// <summary>
         /// The region the player is currently in according to the Auto Tracker
         /// </summary>
         public RegionInfo? CurrentRegion { get; private set; }
@@ -406,11 +411,13 @@ namespace Randomizer.SMZ3.Tracking
         /// Loads the state from the database for a given rom
         /// </summary>
         /// <param name="rom">The rom to load</param>
+        /// <param name="romPath">The full path to the rom to load</param>
         /// <returns>True or false if the load was successful</returns>
-        public bool Load(GeneratedRom rom)
+        public bool Load(GeneratedRom rom, string romPath)
         {
             IsDirty = false;
             Rom = rom;
+            RomPath = romPath;
             var trackerState = _stateService.LoadState(_worldAccessor.Worlds, rom);
 
             if (trackerState != null)

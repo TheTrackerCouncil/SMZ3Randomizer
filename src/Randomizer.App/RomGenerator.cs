@@ -170,7 +170,7 @@ namespace Randomizer.App
             var fileSuffix = $"{DateTimeOffset.Now:yyyyMMdd-HHmmss}_{safeSeed}";
             var romFileName = $"SMZ3_Cas_{fileSuffix}.sfc";
             var romPath = Path.Combine(folderPath, romFileName);
-            _msuGeneratorService.EnableMsu1Support(options.PatchOptions.Msu1Path, romPath, out var msuError);
+            _msuGeneratorService.ApplyMsuOptions(romPath);
             Rom.UpdateChecksum(bytes);
             await File.WriteAllBytesAsync(romPath, bytes);
 
@@ -194,7 +194,7 @@ namespace Randomizer.App
             return new GenerateRomResults()
             {
                 Rom = rom,
-                MsuError = msuError
+                MsuError = ""
             };
         }
 
@@ -426,6 +426,8 @@ namespace Randomizer.App
                 Settings = settingsString,
                 GeneratorVersion = Smz3Randomizer.Version.Major,
                 MultiplayerGameDetails = multiplayerGameDetails,
+                MsuRandomizationStyle = options.PatchOptions.MsuRandomizationStyle,
+                MsuPaths = string.Join("|", options.PatchOptions.MsuPaths)
             };
             _dbContext.GeneratedRoms.Add(rom);
 

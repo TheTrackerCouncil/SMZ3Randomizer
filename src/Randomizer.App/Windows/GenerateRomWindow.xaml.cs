@@ -16,6 +16,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
+using MSURandomizerLibrary;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
@@ -37,17 +39,20 @@ namespace Randomizer.App.Windows
         private readonly RomGenerator _romGenerator;
         private readonly LocationConfig _locations;
         private readonly IMetadataService _metadataService;
+        private readonly MsuGeneratorService _msuGeneratorService;
         private RandomizerOptions? _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
             RomGenerator romGenerator,
             LocationConfig locations,
-            IMetadataService metadataService)
+            IMetadataService metadataService,
+            MsuGeneratorService msuGeneratorService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
             _locations = locations;
             _metadataService = metadataService;
+            _msuGeneratorService = msuGeneratorService;
             InitializeComponent();
 
             SamusSprites.Add(Sprite.DefaultSamus);
@@ -725,6 +730,106 @@ namespace Randomizer.App.Windows
         {
             DialogResult = true;
             Close();
+        }
+
+        private void SelectMsuButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Single, null);
+            UpdateMsuTextBox();
+        }
+
+        private void MsuOptionsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (MsuOptionsButton.ContextMenu == null) return;
+            MsuOptionsButton.ContextMenu.IsOpen = true;
+        }
+
+        private void RandomMsuMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Single);
+            UpdateMsuTextBox();
+        }
+
+        private void ShuffledMsuMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Shuffled);
+            UpdateMsuTextBox();
+        }
+
+        private void ContinuousShuffleMsuMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Continuous);
+            UpdateMsuTextBox();
+        }
+
+        private void UpdateMsuTextBox()
+        {
+
+            if (Options.PatchOptions.MsuRandomizationStyle == null && Options.PatchOptions.MsuPaths.Any())
+            {
+                if (!string.IsNullOrEmpty(Options.GeneralOptions.MsuPath))
+                {
+                    SelectedMsuTextBox.Text = Path.GetRelativePath(Options.GeneralOptions.MsuPath, Options.PatchOptions.MsuPaths.First());
+                }
+                else
+                {
+                    SelectedMsuTextBox.Text = Options.PatchOptions.MsuPaths.First();
+                }
+            }
+            else if (Options.PatchOptions.MsuRandomizationStyle == MsuRandomizationStyle.Single)
+            {
+                SelectedMsuTextBox.Text = $"Random MSU from {Options.PatchOptions.MsuPaths.Count} MSUs";
+            }
+            else if (Options.PatchOptions.MsuRandomizationStyle == MsuRandomizationStyle.Shuffled)
+            {
+                SelectedMsuTextBox.Text = $"Shuffled MSU from {Options.PatchOptions.MsuPaths.Count} MSUs";
+            }
+            else if (Options.PatchOptions.MsuRandomizationStyle == MsuRandomizationStyle.Continuous)
+            {
+                SelectedMsuTextBox.Text = $"Continuously Shuffle {Options.PatchOptions.MsuPaths.Count} MSUs";
+            }
+            else
+            {
+                SelectedMsuTextBox.Text = "None";
+            }
+        }
+
+        private void GenerateRomWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(Options.PatchOptions.Msu1Path) && !Options.PatchOptions.MsuPaths.Any() &&
+                Options.PatchOptions.MsuRandomizationStyle == null && File.Exists(Options.PatchOptions.Msu1Path))
+            {
+                Options.PatchOptions.MsuPaths.Add(Options.PatchOptions.Msu1Path);
+                Options.PatchOptions.Msu1Path = "";
+            }
+
+            UpdateMsuTextBox();
+            _msuGeneratorService.LookupMsus();
+        }
+
+        private void SelectMsuFileMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                CheckFileExists = true,
+                Filter = "MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*",
+                Title = "Select MSU-1 file",
+                InitialDirectory = Directory.Exists(Options.GeneralOptions.MsuPath) ? Options.GeneralOptions.MsuPath : null
+            };
+
+            if (dialog.ShowDialog(this) == true && File.Exists(dialog.FileName))
+            {
+                Options.PatchOptions.MsuPaths = new List<string>() { dialog.FileName };
+                Options.PatchOptions.MsuRandomizationStyle = null;
+                UpdateMsuTextBox();
+            }
+        }
+
+        private void VanillaMusicMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            Options.PatchOptions.MsuPaths = new List<string>();
+            Options.PatchOptions.MsuRandomizationStyle = null;
+            UpdateMsuTextBox();
         }
     }
 }

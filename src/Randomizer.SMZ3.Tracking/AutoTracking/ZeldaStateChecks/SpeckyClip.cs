@@ -17,9 +17,9 @@
         {
             var inCorrectLocation = currentState is
                 { CurrentRoom: 55, IsOnBottomHalfOfRoom: true, IsOnRightHalfOfRoom: false };
-            var prevInWall = prevState.LinkY is >= 1845 and <= 1855;
+            var prevInWall = prevState.LinkY is >= 1840 and <= 1863;
             var nowBelowWall = currentState is
-                { LinkX: >= 3665, LinkX: <= 3695, LinkY: >= 1858, LinkY: <= 1875, CurrentRoom: 55 };
+                { LinkX: >= 3650, LinkX: <= 3696, LinkY: >= 1864, LinkY: <= 1872, CurrentRoom: 55 };
             if (inCorrectLocation && prevInWall && nowBelowWall)
             {
                 tracker.Say(x => x.AutoTracker.SpeckyClip);

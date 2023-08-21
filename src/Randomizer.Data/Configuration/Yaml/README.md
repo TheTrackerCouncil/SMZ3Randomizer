@@ -23,6 +23,7 @@ Next you can then either copy the yml files from the Templates folder or create 
 - **responses.yml** - Responses for specific actions performed by the user
 - **rewards.yml** - Additional reward information
 - **rooms.yml** - Additional room information
+- **msu.yml** - Responses and configurations for MSU details
 
 **NOTE:** Contained inside each of the template yaml files is additional details on what can be modified for Tracker to say or understand.
 
