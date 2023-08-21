@@ -147,11 +147,11 @@ public class RomGenerator
 
         if (copyMsu)
         {
-            var msuGenerator = new MsuGeneratorService();
+            /*var msuGenerator = new MsuGeneratorService();
             if (!msuGenerator.EnableMsu1Support(MsuPath, romPath, out var error))
             {
                 throw new Exception(error);
-            }
+            }*/
         }
 
         if (openRom)

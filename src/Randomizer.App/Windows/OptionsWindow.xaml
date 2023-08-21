@@ -55,6 +55,14 @@
                                           IsFolderPicker="True"
                                           DialogTitle="Select ROM output folder" />
               </controls:LabeledControl>
+
+              <controls:LabeledControl Text="MSU parent folder:">
+                <controls:FileSystemInput Path="{Binding MsuPath, Mode=TwoWay}"
+                                          IsFolderPicker="True"
+                                          DialogTitle="Select MSU parent folder"
+                                          OnPathUpdated="FileSystemInput_OnOnPathUpdated"
+                                          />
+              </controls:LabeledControl>
             </StackPanel>
           </Expander>
 

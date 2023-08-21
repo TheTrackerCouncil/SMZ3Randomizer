@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using MSURandomizerLibrary;
 
 namespace Randomizer.Data.Options
 {
@@ -12,6 +14,10 @@ namespace Randomizer.Data.Options
     public class PatchOptions : INotifyPropertyChanged
     {
         private string _msu1Path = "";
+        private string _msuName = "";
+        private MsuRandomizationStyle? _msuRandomizationStyle;
+        private List<string> _msuPaths = new List<string>();
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -34,6 +40,45 @@ namespace Randomizer.Data.Options
                     _msu1Path = value;
                     OnPropertyChanged(nameof(Msu1Path));
                     OnPropertyChanged(nameof(CanEnableExtendedSoundtrack));
+                }
+            }
+        }
+
+        public string MsuName
+        {
+            get => _msuName;
+            set
+            {
+                if (value != _msuName)
+                {
+                    _msuName = value;
+                    OnPropertyChanged(nameof(MsuName));
+                }
+            }
+        }
+
+        public List<string> MsuPaths
+        {
+            get => _msuPaths;
+            set
+            {
+                if (value != _msuPaths)
+                {
+                    _msuPaths = value;
+                    OnPropertyChanged(nameof(MsuPaths));
+                }
+            }
+        }
+
+        public MsuRandomizationStyle? MsuRandomizationStyle
+        {
+            get => _msuRandomizationStyle;
+            set
+            {
+                if (value != _msuRandomizationStyle)
+                {
+                    _msuRandomizationStyle = value;
+                    OnPropertyChanged(nameof(MsuRandomizationStyle));
                 }
             }
         }

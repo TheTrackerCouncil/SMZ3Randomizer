@@ -59,6 +59,7 @@ namespace Randomizer.Data.Options
         public bool EarlyItemsExpanded { get; set; } = false;
 
         public bool CustomizationExpanded { get; set; } = false;
+        public bool LocationExpanded { get; set; } = false;
         public bool LogicExpanded { get; set; } = false;
 
         public bool CommonExpanded { get; set; } = false;

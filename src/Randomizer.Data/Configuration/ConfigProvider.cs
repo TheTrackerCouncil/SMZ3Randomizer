@@ -174,6 +174,14 @@ namespace Randomizer.Data.Configuration
             LoadYamlConfigs<GameLinesConfig, GameLinesConfig>("game.yml", profiles);
 
         /// <summary>
+        /// Returns the configs with msus
+        /// </summary>
+        /// <param name="profiles">The selected tracker profile(s) to load</param>
+        /// <returns></returns>
+        public virtual MsuConfig GetMsuConfig(params string?[] profiles) =>
+            LoadYamlConfigs<MsuConfig, MsuConfig>("msu.yml", profiles);
+
+        /// <summary>
         /// Returns a collection of all possible config profiles to
         /// select from
         /// </summary>

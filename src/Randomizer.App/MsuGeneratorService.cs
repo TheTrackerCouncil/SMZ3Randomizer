@@ -1,112 +1,137 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using MSURandomizerLibrary;
+using MSURandomizerLibrary.Models;
+using MSURandomizerLibrary.Services;
+using MSURandomizerUI;
+using Randomizer.Data.Options;
 
 namespace Randomizer.App;
 
 public class MsuGeneratorService
 {
-    /// <summary>
-    /// Enables MSU support for a rom
-    /// </summary>
-    /// <param name="msuPath">The path to the msu file</param>
-    /// <param name="romPath">The path to the rom file</param>
-    /// <param name="error">Any error that was ran into when updating the rom</param>
-    /// <returns>True if successful, false otherwise</returns>
-    public bool EnableMsu1Support(string msuPath, string romPath, out string error)
+    private readonly IMsuLookupService _msuLookupService;
+    private readonly IMsuUiFactory _msuUiFactory;
+    private readonly RandomizerOptions _options;
+    private readonly IMsuSelectorService _msuSelectorService;
+    private readonly IMsuTypeService _msuTypeService;
+
+    public MsuGeneratorService(OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuUiFactory msuUiFactory, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService)
     {
-        if (!File.Exists(msuPath))
+        _options = optionsFactory.Create();
+        _msuLookupService = msuLookupService;
+        _msuUiFactory = msuUiFactory;
+        _msuSelectorService = msuSelectorService;
+        _msuTypeService = msuTypeService;
+    }
+
+    public void OpenMsuWindow(Window parentWindow, SelectionMode selectionMode, MsuRandomizationStyle? randomizationStyle)
+    {
+        if (!VerifyMsuDirectory(parentWindow)) return;
+        if (!_msuUiFactory.OpenMsuWindow(selectionMode, true, out var options)) return;
+        if (options.SelectedMsus?.Any() != true) return;
+        _options.PatchOptions.MsuPaths = options.SelectedMsus.ToList();
+        _options.PatchOptions.MsuRandomizationStyle = randomizationStyle;
+    }
+
+    public bool LookupMsus()
+    {
+        if (!string.IsNullOrEmpty(_options.GeneralOptions.MsuPath) && Directory.Exists(_options.GeneralOptions.MsuPath))
         {
-            error = "";
+            Task.Run(() =>
+            {
+                _msuLookupService.LookupMsus(_options.GeneralOptions.MsuPath);
+            });
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool VerifyMsuDirectory(Window parentWindow)
+    {
+        if (!string.IsNullOrEmpty(_options.GeneralOptions.MsuPath) && Directory.Exists(_options.GeneralOptions.MsuPath))
+        {
+            return true;
+        }
+
+        MessageBox.Show(parentWindow, "Please select the parent folder than contains all of your MSUs. To preserve drive space, it is recommended that the Rom Output and MSU folders be on the same drive.", "MSU Path Needed",
+            MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+        using var dialog = new CommonOpenFileDialog();
+        dialog.EnsurePathExists = true;
+        dialog.Title = "Select MSU Path";
+        dialog.IsFolderPicker = true;
+
+        if (dialog.ShowDialog(parentWindow) == CommonFileDialogResult.Ok)
+        {
+            _options.GeneralOptions.MsuPath = dialog.FileName;
+        }
+
+        if (string.IsNullOrEmpty(_options.GeneralOptions.MsuPath) ||
+            !Directory.Exists(_options.GeneralOptions.MsuPath))
+        {
             return false;
         }
 
-        var romDrive = Path.GetPathRoot(romPath);
-        var msuDrive = Path.GetPathRoot(msuPath);
-        if (romDrive?.Equals(msuDrive, StringComparison.OrdinalIgnoreCase) == false)
+        Task.Run(() =>
         {
-            error = $"Due to technical limitations, the MSU-1 " +
-                $"pack and the ROM need to be on the same drive. MSU-1 " +
-                $"support cannot be enabled.\n\nPlease move or copy the MSU-1 " +
-                $"files to somewhere on {romDrive}, or change the ROM output " +
-                $"folder setting to be on the {msuDrive} drive.";
-            return false;
-        }
+            _msuLookupService.LookupMsus(_options.GeneralOptions.MsuPath);
+        });
 
-        var romFolder = Path.GetDirectoryName(romPath);
-        var msuFolder = Path.GetDirectoryName(msuPath);
-        var romBaseName = Path.GetFileNameWithoutExtension(romPath);
-        var msuBaseName = Path.GetFileNameWithoutExtension(msuPath);
+        MessageBox.Show(parentWindow, "Updated MSU folder. If you want to change the MSU path in the future, you can do so in the Tools -> Options window", "MSU Path Updated",
+            MessageBoxButton.OK, MessageBoxImage.Information);
 
-        var swap = false;
+        LookupMsus();
 
-        var hasTrack41 = File.Exists(msuPath.Replace(".msu", "-41.pcm"));
-        var hasTrack141 = File.Exists(msuPath.Replace(".msu", "-141.pcm"));
-        var hasTrack33 = File.Exists(msuPath.Replace(".msu", "-33.pcm"));
-        var hasTrack133 = File.Exists(msuPath.Replace(".msu", "-133.pcm"));
-
-        // Swap if we see the Skull Woods theme above 100 or if we see that the Zelda epilogue track number
-        // only exists above 100
-        if (hasTrack141 || (hasTrack133 && !hasTrack33))
-        {
-            swap = true;
-        }
-        // If we don't see Skull Woods below 100 and we don't see the Zelda epilogue track only existing below 100
-        // then try to check loop tracks as a last ditch effort to see if we need to swap
-        else if (!hasTrack41 && !(hasTrack33 && !hasTrack133))
-        {
-            var track33Loops = DoesPCMLoop(msuPath.Replace(".msu", "-33.pcm"));
-            var track130Loops = DoesPCMLoop(msuPath.Replace(".msu", "-130.pcm"));
-            if (track33Loops || track130Loops)
-            {
-                swap = true;
-            }
-        }
-
-        // Copy pcm files
-        foreach (var msuFile in Directory.EnumerateFiles(msuFolder!, $"{msuBaseName}*"))
-        {
-            var fileName = Path.GetFileName(msuFile);
-            var suffix = fileName.Replace(msuBaseName, "");
-            var link = Path.Combine(romFolder!, romBaseName + suffix);
-
-            // Swap SM and Z3 tracks if needed
-            if (swap && suffix.Contains(".pcm"))
-            {
-                if (int.TryParse(suffix.Replace("-", "").Replace(".pcm", ""), out var trackNumber) && trackNumber > 0)
-                {
-                    // Skip track 99 (SMZ3 combined credits) as it doesn't change
-                    if (trackNumber < 99)
-                    {
-                        trackNumber += 100;
-                    }
-                    else if (trackNumber > 99)
-                    {
-                        trackNumber -= 100;
-                    }
-
-                    var oldLink = link;
-                    link = Path.Combine(romFolder!, romBaseName + "-" + trackNumber + ".pcm");
-                }
-            }
-            NativeMethods.CreateHardLink(link, msuFile, IntPtr.Zero);
-        }
-
-        error = "";
         return true;
     }
 
-    private static bool DoesPCMLoop(string fileName)
+    public bool ApplyMsuOptions(string romPath)
     {
-        if (!File.Exists(fileName))
+        if (!_options.PatchOptions.MsuPaths.Any())
         {
             return false;
         }
-        using var fileStream = File.OpenRead(fileName);
-        fileStream.Seek(4, SeekOrigin.Begin);
-        var bytes = new byte[4];
-        fileStream.Read(bytes, 0, 4);
-        return bytes.Any(x => x != 0);
+
+        var romFileInfo = new FileInfo(romPath);
+        var outputPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
+
+        if (_options.PatchOptions.MsuRandomizationStyle == null)
+        {
+            _msuSelectorService.AssignMsu(new MsuSelectorRequest()
+            {
+                MsuPath = _options.PatchOptions.MsuPaths.First(),
+                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+                OutputPath = outputPath,
+            });
+        }
+        else if (_options.PatchOptions.MsuRandomizationStyle == MsuRandomizationStyle.Single)
+        {
+            _msuSelectorService.PickRandomMsu(new MsuSelectorRequest()
+            {
+                MsuPaths = _options.PatchOptions.MsuPaths,
+                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+                OutputPath = outputPath,
+            });
+        }
+        else
+        {
+            _msuSelectorService.CreateShuffledMsu(new MsuSelectorRequest()
+            {
+                MsuPaths = _options.PatchOptions.MsuPaths,
+                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+                OutputPath = outputPath,
+            });
+        }
+
+        return true;
     }
 
 }

@@ -71,6 +71,8 @@ namespace Randomizer.Data.Options
         public string RomOutputPath { get; set; }
             = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
 
+        public string? MsuPath { get; set; }
+
         public string AutoTrackerScriptsOutputPath { get; set; }
             = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
 

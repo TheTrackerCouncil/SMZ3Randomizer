@@ -1,0 +1,10 @@
+﻿UserOptionsFilePath: "%LocalAppData%\\SMZ3CasRandomizer\\msu-user-settings.yml"
+MsuCachePath: "%LocalAppData%\\SMZ3CasRandomizer"
+ContinuousReshuffleSeconds: 60
+MsuWindowDisplayRandomButton: false
+MsuWindowDisplayShuffleButton: false
+MsuWindowDisplayContinuousButton: false
+MsuWindowDisplayOptionsButton: false
+MsuWindowDisplaySelectButton: true
+ForcedMsuType: "Super Metroid / A Link to the Past Combination Randomizer"
+MsuWindowTitle: SMZ3 Cas' Randomizer

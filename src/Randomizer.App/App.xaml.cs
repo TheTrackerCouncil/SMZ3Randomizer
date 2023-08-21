@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+using MSURandomizerLibrary;
+using MSURandomizerLibrary.Models;
+using MSURandomizerLibrary.Services;
+using MSURandomizerUI;
 using Randomizer.App.Controls;
 using Randomizer.App.Windows;
 using Randomizer.Data.Configuration;
@@ -131,6 +137,9 @@ namespace Randomizer.App
             services.AddTransient<MultiRomListPanel>();
             services.AddWindows<App>();
 
+            // MSU Randomzer
+            services.AddMsuRandomizerServices();
+            services.AddMsuRandomizerUIServices();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -154,6 +163,8 @@ namespace Randomizer.App
             TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
 
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+
+            InitializeMsuRandomizer();
 
             var mainWindow = _host.Services.GetRequiredService<RomListWindow>();
             mainWindow.Show();
@@ -192,6 +203,24 @@ namespace Randomizer.App
 
             e.Handled = true;
             Environment.FailFast("Uncaught exception in Dispatcher", e.Exception);
+        }
+
+        private void InitializeMsuRandomizer()
+        {
+            var settingsStream =  Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("Randomizer.App.msu-randomizer-settings.yml");
+            var typesStream = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("Randomizer.App.msu-randomizer-types.json");
+            var msuInitializationRequest = new MsuRandomizerInitializationRequest()
+            {
+                MsuAppSettingsStream = settingsStream,
+                MsuTypeConfigStream = typesStream,
+                LookupMsus = false
+            };
+#if DEBUG
+            msuInitializationRequest.UserOptionsPath = "%LocalAppData%\\SMZ3CasRandomizer\\msu-user-settings-debug.yml";
+#endif
+            _host!.Services.GetRequiredService<IMsuRandomizerInitializationService>().Initialize(msuInitializationRequest);
         }
     }
 }

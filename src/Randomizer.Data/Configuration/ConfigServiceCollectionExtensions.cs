@@ -88,6 +88,12 @@ namespace Randomizer.Data.Configuration
                 return configs.GameLines;
             });
 
+            services.AddScoped(serviceProvider =>
+            {
+                var configs = serviceProvider.GetRequiredService<Configs>();
+                return configs.MsuConfig;
+            });
+
             return services;
         }
     }

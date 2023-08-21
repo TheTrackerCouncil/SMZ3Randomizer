@@ -10,6 +10,7 @@
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         xmlns:windows="clr-namespace:Randomizer.App.Windows"
         mc:Ignorable="d"
+        Loaded="GenerateRomWindow_OnLoaded"
         Closing="Window_Closing"
         Title="SMZ3 Cas' Randomizer"
         Width="{Binding WindowWidth, Mode=TwoWay}"
@@ -307,16 +308,37 @@
 
 
               <controls:LabeledControl Text="Custom music pack:">
-                <controls:FileSystemInput Path="{Binding Msu1Path, Mode=TwoWay}"
-                                          Filter="MSU-1 files (*.msu)|*.msu|All files (*.*)|*.*"
-                                          DialogTitle="Select MSU-1 file" />
-              </controls:LabeledControl>
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                  </Grid.ColumnDefinitions>
+                  <TextBox Grid.Column="0" Name="SelectedMsuTextBox" IsReadOnly="True"></TextBox>
+                  <StackPanel Grid.Column="1" Orientation="Horizontal"
+                              HorizontalAlignment="Right">
+                    <Button x:Name="SelectMsuButton"
+                            Click="SelectMsuButton_OnClick">Select _MSU</Button>
+                    <Button x:Name="MsuOptionsButton"
+                            MinWidth="0"
+                            Width="23"
+                            Content="▼"
+                            FontSize="8"
+                            BorderThickness="0,1,1,1"
+                            Margin="0,0,0,0"
+                            Click="MsuOptionsButton_OnClick">
+                      <Button.ContextMenu>
+                        <ContextMenu>
+                          <MenuItem Header="Pick _Random MSU from List" Name="RandomMsuMenuItem" Click="RandomMsuMenuItem_OnClick"></MenuItem>
+                          <MenuItem Header="Create _Shuffled MSU" Name="ShuffledMsuMenuItem" Click="ShuffledMsuMenuItem_OnClick"></MenuItem>
+                          <MenuItem Header="_Continuously Reshuffle MSU" Name="ContinuousShuffleMsuMenuItem" Click="ContinuousShuffleMsuMenuItem_OnClick"></MenuItem>
+                          <MenuItem Header="Select MSU _File" Name="SelectMsuFileMenuItem" Click="SelectMsuFileMenuItem_OnClick"></MenuItem>
+                          <MenuItem Header="Play _Vanilla Music" Name="VanillaMusicMenuItem" Click="VanillaMusicMenuItem_OnClick"></MenuItem>
+                        </ContextMenu>
+                      </Button.ContextMenu>
+                    </Button>
+                  </StackPanel>
+                </Grid>
 
-              <controls:LabeledControl Text="">
-                <CheckBox IsChecked="{Binding EnableExtendedSoundtrack}"
-                          IsEnabled="{Binding CanEnableExtendedSoundtrack}"
-                          Content="Enable extended soundtrack"
-                          ToolTip="Enables support for the extended MSU-1 soundtrack. Only available if a custom music pack is selected." />
               </controls:LabeledControl>
 
             </StackPanel>
@@ -342,6 +364,7 @@
 
           <Expander Header="Locations"
                     Visibility="{Binding InvisibleInPlando, Mode=OneTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                    IsExpanded="{Binding LocationExpanded}"
                     x:Name="Locations">
             <StackPanel Orientation="Vertical"
                         Margin="24,11,11,11">

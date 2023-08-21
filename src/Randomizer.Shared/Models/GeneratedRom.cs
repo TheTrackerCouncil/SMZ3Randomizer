@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using MSURandomizerLibrary;
 using Randomizer.Shared.Multiplayer;
 
 namespace Randomizer.Shared.Models
@@ -20,6 +21,8 @@ namespace Randomizer.Shared.Models
         public string SpoilerPath { get; init; } = "";
         [ForeignKey("MultiplayerGameDetails")]
         public long? MultiplayerGameDetailsId { get; set; }
+        public string? MsuPaths { get; set; }
+        public MsuRandomizationStyle? MsuRandomizationStyle { get; set; }
         public virtual MultiplayerGameDetails? MultiplayerGameDetails { get; set; }
         public TrackerState? TrackerState { get; set; }
 
