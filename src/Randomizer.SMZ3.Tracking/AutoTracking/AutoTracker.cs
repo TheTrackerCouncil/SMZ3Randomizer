@@ -229,18 +229,6 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Action = action => Tracker.UpdateTrackNumber(action.CurrentData!.ReadUInt8(1))
             });
 
-            // Check for current title screen song
-            AddReadAction(new()
-            {
-                Type = EmulatorActionType.ReadBlock,
-                Domain = MemoryDomain.WRAM,
-                Address = 0x7E0330,
-                Length = 0x03,
-                Game = Game.Credits,
-                FrequencySeconds = 2,
-                Action = action => Tracker.UpdateTrackNumber(action.CurrentData!.ReadUInt8(2))
-            });
-
             // Get the number of items given to the player via the interactor
             AddReadAction(new()
             {
@@ -582,6 +570,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             else if (value == 0x11)
             {
                 CurrentGame = Game.Credits;
+                Tracker.UpdateTrackNumber(99);
             }
             if (_previousGame != CurrentGame)
             {
