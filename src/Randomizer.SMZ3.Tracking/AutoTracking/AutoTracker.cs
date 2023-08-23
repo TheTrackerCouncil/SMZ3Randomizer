@@ -193,6 +193,54 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
                 Action = CheckMetroidState
             });
 
+            // Check for current Zelda song
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E010B,
+                Length = 0x01,
+                Game = Game.Zelda,
+                FrequencySeconds = 2,
+                Action = action => Tracker.UpdateTrackNumber(action.CurrentData!.ReadUInt8(0))
+            });
+
+            // Check for current Metroid song
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E0332,
+                Length = 0x01,
+                Game = Game.SM,
+                FrequencySeconds = 2,
+                Action = action => Tracker.UpdateTrackNumber(action.CurrentData!.ReadUInt8(0))
+            });
+
+            // Check for current title screen song
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E0331,
+                Length = 0x02,
+                Game = Game.Neither,
+                FrequencySeconds = 2,
+                Action = action => Tracker.UpdateTrackNumber(action.CurrentData!.ReadUInt8(1))
+            });
+
+            // Check for current title screen song
+            AddReadAction(new()
+            {
+                Type = EmulatorActionType.ReadBlock,
+                Domain = MemoryDomain.WRAM,
+                Address = 0x7E0330,
+                Length = 0x03,
+                Game = Game.Credits,
+                FrequencySeconds = 2,
+                Action = action => Tracker.UpdateTrackNumber(action.CurrentData!.ReadUInt8(2))
+            });
+
             // Get the number of items given to the player via the interactor
             AddReadAction(new()
             {
@@ -307,6 +355,11 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// Occurs when the tracker's auto tracker is disconnected
         /// </summary>
         public event EventHandler? AutoTrackerDisconnected;
+
+        /// <summary>
+        /// Occurs when the MSU track number has changed
+        /// </summary>
+        public event EventHandler<TrackNumberEventArgs>? TrackNumberUpdated;
 
         /// <summary>
         /// The action to run when the player asks Tracker to look at the game
@@ -525,6 +578,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             else if (value == 0xFF)
             {
                 CurrentGame = Game.SM;
+            }
+            else if (value == 0x11)
+            {
+                CurrentGame = Game.Credits;
             }
             if (_previousGame != CurrentGame)
             {

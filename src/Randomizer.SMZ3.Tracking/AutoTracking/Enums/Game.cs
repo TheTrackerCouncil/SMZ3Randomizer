@@ -23,6 +23,11 @@
         /// <summary>
         /// Send if the player is in either game
         /// </summary>
-        Both
+        Both,
+
+        /// <summary>
+        /// Send if the player is viewing the credits
+        /// </summary>
+        Credits
     }
 }

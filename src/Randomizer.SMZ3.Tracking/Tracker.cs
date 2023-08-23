@@ -222,6 +222,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? PlayerDied;
 
         /// <summary>
+        /// Occurs when the current played track number is updated
+        /// </summary>
+        public event EventHandler<TrackNumberEventArgs>? TrackNumberUpdated;
+
+        /// <summary>
         /// Set when the progression needs to be updated for the current tracker
         /// instance
         /// </summary>
@@ -308,6 +313,11 @@ namespace Randomizer.SMZ3.Tracking
         /// The map to display for the player
         /// </summary>
         public string CurrentMap { get; private set; } = "";
+
+        /// <summary>
+        /// The current track number being played
+        /// </summary>
+        public int CurrentTrackNumber { get; private set; }
 
         /// <summary>
         /// Gets a string describing tracker's mood.
@@ -2214,6 +2224,13 @@ namespace Randomizer.SMZ3.Tracking
         public void TrackDeath(bool autoTracked)
         {
             PlayerDied?.Invoke(this, new TrackerEventArgs(autoTracked));
+        }
+
+        public void UpdateTrackNumber(int number)
+        {
+            if (number <= 0 || number > 200 || number == CurrentTrackNumber) return;
+            CurrentTrackNumber = number;
+            TrackNumberUpdated?.Invoke(this, new TrackNumberEventArgs(number));
         }
 
         internal void RestartIdleTimers()
