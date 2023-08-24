@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 using BunLabs;
 using Microsoft.Extensions.Logging;
-
+using MSURandomizerLibrary.Configs;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.Shared.Models;
@@ -225,6 +225,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Occurs when the current played track number is updated
         /// </summary>
         public event EventHandler<TrackNumberEventArgs>? TrackNumberUpdated;
+
+        /// <summary>
+        /// Occurs when the current track has changed
+        /// </summary>
+        public event EventHandler<TrackChangedEventArgs>? TrackChanged;
 
         /// <summary>
         /// Set when the progression needs to be updated for the current tracker
@@ -2226,11 +2231,26 @@ namespace Randomizer.SMZ3.Tracking
             PlayerDied?.Invoke(this, new TrackerEventArgs(autoTracked));
         }
 
+        /// <summary>
+        /// Updates the current track number being played
+        /// </summary>
+        /// <param name="number">The number of the track</param>
         public void UpdateTrackNumber(int number)
         {
             if (number <= 0 || number > 200 || number == CurrentTrackNumber) return;
             CurrentTrackNumber = number;
             TrackNumberUpdated?.Invoke(this, new TrackNumberEventArgs(number));
+        }
+
+        /// <summary>
+        /// Updates the current track being played
+        /// </summary>
+        /// <param name="msu">The current MSU pack</param>
+        /// <param name="track">The current track</param>
+        /// <param name="outputText">Formatted output text matching the requested style</param>
+        public void UpdateTrack(Msu msu, Track track, string outputText)
+        {
+            TrackChanged?.Invoke(this, new TrackChangedEventArgs(msu, track, outputText));
         }
 
         internal void RestartIdleTimers()

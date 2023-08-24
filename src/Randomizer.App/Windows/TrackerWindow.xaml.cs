@@ -55,6 +55,7 @@ namespace Randomizer.App.Windows
         private TrackerMapWindow? _trackerMapWindow;
         private AutoTrackerWindow? _autoTrackerHelpWindow;
         private TrackerLocationSyncer? _locationSyncer;
+        private MsuTrackWindow? _msuTrackWindow;
         private MenuItem? _autoTrackerDisableMenuItem;
         private MenuItem? _autoTrackerLuaMenuItem;
         private MenuItem? _autoTrackerUSB2SNESMenuItem;
@@ -688,6 +689,13 @@ namespace Randomizer.App.Windows
             _trackerMapWindow.Syncer = _locationSyncer;
             _trackerMapWindow.Show();
 
+            if (_options.GeneralOptions.DisplayMsuTrackWindow)
+            {
+                _msuTrackWindow = new MsuTrackWindow();
+                _msuTrackWindow.Init(Tracker, _options);
+                _msuTrackWindow.Show();
+            }
+
             InitializeAutoTracker();
         }
 
@@ -937,6 +945,9 @@ namespace Randomizer.App.Windows
             _locationsWindow = null;
             _trackerMapWindow?.Close();
             _trackerMapWindow = null;
+            _msuTrackWindow?.Close(true);
+            _msuTrackWindow = null;
+            _msuTrackWindow?.Dispose();
             _tracker?.Dispose();
         }
 
@@ -1138,6 +1149,20 @@ namespace Randomizer.App.Windows
                 {
                     layoutMenuItem.IsChecked = layoutMenuItem.Tag == _layout;
                 }
+            }
+        }
+
+        private void CurrentSongMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_msuTrackWindow != null && Application.Current.Windows.OfType<MsuTrackWindow>().Any())
+            {
+                _msuTrackWindow.Activate();
+            }
+            else
+            {
+                _msuTrackWindow = new MsuTrackWindow();
+                _msuTrackWindow.Init(Tracker, _options);
+                _msuTrackWindow.Show();
             }
         }
     }
