@@ -1,5 +1,5 @@
 $parentFolder = Split-Path -parent $PSScriptRoot
-$folder = "$parentFolder\src\Randomizer.Multiplayer.Server\bin\Release\net6.0\publish"
+$folder = "$parentFolder\src\Randomizer.Multiplayer.Server\bin\Release\net7.0\publish"
 $version = (Get-Item "$folder\Randomizer.Multiplayer.Server.exe").VersionInfo.ProductVersion
 $fullVersion = "Randomizer.Multiplayer.Server-$version"
 $outputZip = "$PSScriptRoot\output\$fullVersion.zip"

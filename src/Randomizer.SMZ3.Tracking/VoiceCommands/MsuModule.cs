@@ -27,6 +27,9 @@ public class MsuModule : TrackerModule, IDisposable
     private readonly MsuType? _msuType;
     private readonly MsuConfig _msuConfig;
     private readonly string MsuKey = "MsuKey";
+    private int _currentTrackNumber = 0;
+    private readonly HashSet<int> _validTrackNumbers;
+    private Track? _currentTrack;
 
     /// <summary>
     /// Constructor
@@ -45,6 +48,7 @@ public class MsuModule : TrackerModule, IDisposable
         _msuSelectorService = msuSelectorService;
         _msuType = msuTypeService.GetSMZ3MsuType();
         _msuConfig = msuConfig;
+        _validTrackNumbers = _msuType!.ValidTrackNumbers;
 
         if (!File.Exists(tracker.RomPath))
         {
@@ -84,6 +88,8 @@ public class MsuModule : TrackerModule, IDisposable
             _timer.Start();
         }
 
+        tracker.TrackNumberUpdated += TrackerOnTrackNumberUpdated;
+
         AddCommand("location song", GetLocationSongRules(), (result) =>
         {
             if (_currentMsu == null)
@@ -96,22 +102,7 @@ public class MsuModule : TrackerModule, IDisposable
             var track = _currentMsu.GetTrackFor(trackNumber);
             if (track != null)
             {
-                var parts = new List<string>() { track.SongName };
-                if (!string.IsNullOrEmpty(track.DisplayAlbum))
-                {
-                    parts.Add($"from the album {track.DisplayAlbum}");
-                }
-                else if (!string.IsNullOrEmpty(track.DisplayArtist))
-                {
-                    parts.Add($"by {track.DisplayArtist}");
-                }
-                if (!string.IsNullOrEmpty(track.MsuName) && tracker.Rom!.MsuRandomizationStyle != null)
-                {
-                    parts.Add($"from MSU Pack {track.MsuName}");
-                    if (!string.IsNullOrEmpty(track.MsuCreator)) parts.Add($"by {track.MsuCreator}");
-                }
-
-                Tracker.Say(_msuConfig.CurrentSong, string.Join("; ", parts));
+                Tracker.Say(_msuConfig.CurrentSong, GetTrackText(track));
             }
             else
             {
@@ -138,6 +129,35 @@ public class MsuModule : TrackerModule, IDisposable
                 Tracker.Say(_msuConfig.UnknownSong);
             }
         });
+
+        AddCommand("current song", GetCurrentSongRules(), (result) =>
+        {
+            if (_currentTrack == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+            Tracker.Say(_msuConfig.CurrentSong, GetTrackText(_currentTrack));
+        });
+
+        AddCommand("current msu", GetCurrentMsuRules(), (result) =>
+        {
+            if (_currentTrack == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+            Tracker.Say(_msuConfig.CurrentMsu, _currentTrack.GetMsuName());
+        });
+    }
+
+    private void TrackerOnTrackNumberUpdated(object? sender, TrackNumberEventArgs e)
+    {
+        if (!_validTrackNumbers.Contains(e.TrackNumber)) return;
+        _currentTrackNumber = e.TrackNumber;
+        if (_currentMsu == null) return;
+        _currentTrack =_currentMsu.GetTrackFor(_currentTrackNumber);
+        Logger.LogInformation("Current Track: {Track}", _currentTrack?.GetDisplayText(true) ?? "Unknown");
     }
 
     private GrammarBuilder GetLocationSongRules()
@@ -198,6 +218,52 @@ public class MsuModule : TrackerModule, IDisposable
 
         return GrammarBuilder.Combine(option1, option2);
 
+    }
+
+    private string GetTrackText(Track track)
+    {
+        var parts = new List<string>() { track.SongName };
+        if (!string.IsNullOrEmpty(track.DisplayAlbum))
+        {
+            parts.Add($"from the album {track.DisplayAlbum}");
+        }
+        else if (!string.IsNullOrEmpty(track.DisplayArtist))
+        {
+            parts.Add($"by {track.DisplayArtist}");
+        }
+        if (!string.IsNullOrEmpty(track.MsuName) && Tracker.Rom!.MsuRandomizationStyle != null)
+        {
+            parts.Add($"from MSU Pack {track.MsuName}");
+            if (!string.IsNullOrEmpty(track.MsuCreator)) parts.Add($"by {track.MsuCreator}");
+        }
+
+        return string.Join("; ", parts);
+    }
+
+    private GrammarBuilder GetCurrentSongRules()
+    {
+        var msuLocations = new Choices();
+
+        foreach (var track in _msuConfig.TrackLocations)
+        {
+            foreach (var name in track.Value)
+            {
+                msuLocations.Add(new SemanticResultValue(name, track.Key));
+            }
+        }
+
+        return new GrammarBuilder()
+            .Append("Hey tracker,")
+            .OneOf("what's the current song", "what's currently playing", "what's the current track");
+
+    }
+
+    private GrammarBuilder GetCurrentMsuRules()
+    {
+        return new GrammarBuilder()
+            .Append("Hey tracker,")
+            .Append("what MSU pack is")
+            .OneOf("the current song from", "the current track from", "the current theme from");
     }
 
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)

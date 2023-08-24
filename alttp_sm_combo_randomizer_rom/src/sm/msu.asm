@@ -65,6 +65,7 @@
 !RequestedMusic = $063D
 !CurrentMusic = $064C
 !MusicBank = $07F3
+!CURRENT_MSU_TRACK = $0332
 
 !FULL_VOLUME = $FF
 
@@ -323,6 +324,7 @@ SM_MSU_Main:
     tay
     clc : adc.b #!TRACK_OFFSET
 
+    sta.w !CURRENT_MSU_TRACK
     sta.w !MSU_AUDIO_TRACK_LO
     stz.w !MSU_AUDIO_TRACK_HI
     
@@ -401,7 +403,7 @@ bank_00: ;; Opening
 bank_03: ;; Opening
     db 04,05
 bank_06: ;; Crateria (First Landing)
-    db 06,00,07
+    db 06,06,07
 bank_09: ;; Crateria
     db 08,09
 bank_0C: ;; Samus's Ship
