@@ -76,7 +76,7 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="1.0.1" />
+    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="1.1.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="NReco.Logging.File" Version="1.1.6" />
