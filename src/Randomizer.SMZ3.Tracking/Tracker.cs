@@ -1908,6 +1908,13 @@ namespace Randomizer.SMZ3.Tracking
                 }
             }
 
+            // Auto track the dungeon reward if not already marked
+            if (autoTracked && dungeon.DungeonState.MarkedReward != dungeon.DungeonState.Reward)
+            {
+                dungeon.DungeonState.MarkedReward = dungeon.DungeonState.Reward;
+                SetDungeonReward(dungeon, dungeon.DungeonState.Reward);
+            }
+
             dungeon.DungeonState.Cleared = true;
             Say(Responses.DungeonBossCleared.Format(dungeon.DungeonMetadata.Name, dungeon.DungeonMetadata.Boss));
             IsDirty = true;

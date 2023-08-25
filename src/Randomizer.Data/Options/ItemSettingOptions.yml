@@ -202,7 +202,7 @@
     - Flute
   - Display: Start with Flute
     MemoryValues:
-      12: 3
+      12: 2
     MatchingItemTypes:
     - Flute
 - Item: Bug Net
