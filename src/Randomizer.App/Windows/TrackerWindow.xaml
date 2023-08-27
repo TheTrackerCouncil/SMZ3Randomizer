@@ -38,6 +38,9 @@
         <MenuItem Header="_Map"
                   x:Name="MapMenuItem"
                   Click="MapMenuItem_Click" />
+        <MenuItem Header="_Current Song"
+                  x:Name="CurrentSongMenuItem"
+                  Click="CurrentSongMenuItem_OnClick" />
         <MenuItem Header="_Help"
                   x:Name="HelpMenuItem"
                   Click="HelpMenuItem_Click" />

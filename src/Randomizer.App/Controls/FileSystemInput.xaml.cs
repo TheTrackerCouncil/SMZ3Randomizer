@@ -26,6 +26,9 @@ namespace Randomizer.App.Controls
         public static readonly DependencyProperty IsFolderPickerProperty =
             DependencyProperty.Register("IsFolderPicker", typeof(bool), typeof(FileSystemInput), new PropertyMetadata(false));
 
+        public static readonly DependencyProperty IsSavePickerProperty =
+            DependencyProperty.Register("IsSavePicker", typeof(bool), typeof(FileSystemInput), new PropertyMetadata(false));
+
         public static readonly DependencyProperty FileValidationHashProperty =
             DependencyProperty.Register(nameof(FileValidationHash), typeof(string), typeof(FileSystemInput), new PropertyMetadata(string.Empty));
 
@@ -61,6 +64,12 @@ namespace Randomizer.App.Controls
             set => SetValue(IsFolderPickerProperty, value);
         }
 
+        public bool IsSavePicker
+        {
+            get => (bool)GetValue(IsSavePickerProperty);
+            set => SetValue(IsSavePickerProperty, value);
+        }
+
         public string FileValidationHash
         {
             get => (string)GetValue(FileValidationHashProperty);
@@ -77,6 +86,8 @@ namespace Randomizer.App.Controls
         {
             if (IsFolderPicker)
                 BrowseFolder();
+            else if (IsSavePicker)
+                BrowseSaveFile();
             else
                 BrowseFile();
         }
@@ -118,6 +129,25 @@ namespace Randomizer.App.Controls
                     Path = dialog.FileName;
                     OnPathUpdated?.Invoke(this, EventArgs.Empty);
                 }
+            }
+        }
+
+        private void BrowseSaveFile()
+        {
+            var folderPath = System.IO.Path.GetDirectoryName(Path);
+            var dialog = new SaveFileDialog()
+            {
+                Filter = Filter,
+                Title = DialogTitle,
+                InitialDirectory = Directory.Exists(folderPath) ? folderPath : null,
+                FileName = Path
+            };
+
+            var owner = Window.GetWindow(this);
+            if (dialog.ShowDialog(owner) == true)
+            {
+                Path = dialog.FileName;
+                OnPathUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
 

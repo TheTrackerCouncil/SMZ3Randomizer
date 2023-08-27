@@ -10,6 +10,7 @@ using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 using Randomizer.SMZ3.Tracking.Services;
 
 namespace Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -157,7 +158,78 @@ public class MsuModule : TrackerModule, IDisposable
         _currentTrackNumber = e.TrackNumber;
         if (_currentMsu == null) return;
         _currentTrack =_currentMsu.GetTrackFor(_currentTrackNumber);
+
+        if (_currentTrack != null)
+        {
+            var output = GetOutputText();
+            Tracker.UpdateTrack(_currentMsu, _currentTrack, output);
+
+            if (!string.IsNullOrEmpty(Tracker.Options.MsuTrackOutputPath))
+            {
+                try
+                {
+                    _ = File.WriteAllTextAsync(Tracker.Options.MsuTrackOutputPath, output);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Unable to write current track details to {Path}", Tracker.Options.MsuTrackOutputPath);
+                }
+            }
+        }
+
         Logger.LogInformation("Current Track: {Track}", _currentTrack?.GetDisplayText(true) ?? "Unknown");
+    }
+
+    private string GetOutputText()
+    {
+        if (_currentMsu == null || _currentTrack == null)
+            return "";
+
+        var options = Tracker.Options;
+        if (options.MsuTrackDisplayStyle == MsuTrackDisplayStyle.Horizontal)
+        {
+            if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum) || !string.IsNullOrEmpty(_currentTrack.DisplayArtist))
+            {
+                var album = string.IsNullOrEmpty(_currentTrack.DisplayAlbum)
+                    ? ""
+                    : $"{_currentTrack.DisplayAlbum} - ";
+                var artist = string.IsNullOrEmpty(_currentTrack.DisplayArtist)
+                    ? ""
+                    : $" ({_currentTrack.DisplayArtist})";
+                return $"{album}{_currentTrack.SongName}{artist}";
+            }
+            else
+            {
+                var msu = string.IsNullOrEmpty(_currentTrack.MsuName)
+                    ? _currentMsu.DisplayName
+                    : _currentTrack.MsuName;
+                return $"{_currentTrack.SongName} from {msu}";
+            }
+        }
+        else
+        {
+            var lines = new List<string>();
+
+            var creator = string.IsNullOrEmpty(_currentTrack.MsuCreator)
+                ? _currentMsu.DisplayCreator
+                : _currentTrack.MsuCreator;
+            var msu = string.IsNullOrEmpty(_currentTrack.MsuName)
+                ? _currentMsu.DisplayName
+                : _currentTrack.MsuName;
+            lines.Add(string.IsNullOrEmpty(creator)
+                ? $"MSU: {msu}"
+                : $"MSU: {msu} by {creator}");
+
+            if (!string.IsNullOrEmpty(_currentTrack.DisplayAlbum))
+                lines.Add($"Album: {_currentTrack.DisplayAlbum}");
+
+            lines.Add($"Song: {_currentTrack.SongName}");
+
+            if (!string.IsNullOrEmpty(_currentTrack.DisplayArtist))
+                lines.Add($"Artist: {_currentTrack.DisplayArtist}");
+
+            return string.Join("\r\n", lines);
+        }
     }
 
     private GrammarBuilder GetLocationSongRules()
