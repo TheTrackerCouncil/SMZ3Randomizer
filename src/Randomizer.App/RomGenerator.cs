@@ -32,14 +32,15 @@ namespace Randomizer.App
         private readonly ILogger<RomGenerator> _logger;
         private readonly ITrackerStateService _stateService;
         private readonly MsuGeneratorService _msuGeneratorService;
+        private readonly SpriteService _spriteService;
 
         public RomGenerator(Smz3Randomizer randomizer,
             Smz3Plandomizer plandomizer,
             RandomizerContext dbContext,
             ILogger<RomGenerator> logger,
             ITrackerStateService stateService,
-            MsuGeneratorService msuGeneratorService
-        )
+            MsuGeneratorService msuGeneratorService,
+            SpriteService spriteService)
         {
             _randomizer = randomizer;
             _plandomizer = plandomizer;
@@ -47,6 +48,7 @@ namespace Randomizer.App
             _logger = logger;
             _stateService = stateService;
             _msuGeneratorService = msuGeneratorService;
+            _spriteService = spriteService;
         }
 
         /// <summary>
@@ -298,8 +300,9 @@ namespace Randomizer.App
             }
             Rom.ApplySeed(rom, seed.WorldGenerationData.LocalWorld.Patches);
 
-            options.PatchOptions.SamusSprite.ApplyTo(rom);
-            options.PatchOptions.LinkSprite.ApplyTo(rom);
+            _spriteService.ApplySpriteTo(options.PatchOptions.SamusSprite, rom);
+            _spriteService.ApplySpriteTo(options.PatchOptions.LinkSprite, rom);
+            _spriteService.ApplySpriteTo(options.PatchOptions.ShipSprite, rom);
 
             if (options.PatchOptions.CasPatches.Respin)
             {
@@ -383,20 +386,6 @@ namespace Randomizer.App
             {
                 using var patch = IpsPatch.UnifiedAim();
                 Rom.ApplySuperMetroidIps(rom, patch);
-            }
-
-            if (options.PatchOptions.ShipPatch.FileName != null)
-            {
-
-                var shipPatchFileName = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships", options.PatchOptions.ShipPatch.FileName);
-                if (File.Exists(shipPatchFileName))
-                {
-                    using var customShipBasePatch = IpsPatch.CustomShip();
-                    Rom.ApplySuperMetroidIps(rom, customShipBasePatch);
-
-                    using var shipPatch = File.OpenRead(shipPatchFileName);
-                    Rom.ApplySuperMetroidIps(rom, shipPatch);
-                }
             }
 
             return rom;

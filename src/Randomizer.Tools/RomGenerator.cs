@@ -119,8 +119,8 @@ public class RomGenerator
         // Apply a sprite
         if (applyPatches)
         {
-            var sprite = new Sprite("", "", @"..\..\..\..\Randomizer.App\Sprites\Samus\rash.rdc", SpriteType.Samus);
-            sprite.ApplyTo(rom);
+            //var sprite = new Sprite("", "", @"..\..\..\..\Randomizer.App\Sprites\Samus\rash.rdc", SpriteType.Samus);
+            //sprite.ApplyTo(rom);
         }
 
         Directory.CreateDirectory(OutputPath);

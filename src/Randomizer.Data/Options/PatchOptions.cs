@@ -27,8 +27,8 @@ namespace Randomizer.Data.Options
         public Sprite SamusSprite { get; set; }
             = Sprite.DefaultSamus;
 
-        public ShipSprite ShipPatch { get; set; }
-            = ShipSprite.DefaultShip;
+        public Sprite ShipSprite { get; set; }
+            = Sprite.DefaultShip;
 
         public string Msu1Path
         {

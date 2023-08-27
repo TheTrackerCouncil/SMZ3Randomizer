@@ -38,7 +38,7 @@
     <None Remove="spinjumprestart.ips" />
     <None Remove="zsm.ips" />
     <None Remove="zsm.ips.gz" />
-    
+
   </ItemGroup>
 
   <ItemGroup>
@@ -76,6 +76,7 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="1.0.1" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
