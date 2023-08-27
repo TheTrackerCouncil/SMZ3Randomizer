@@ -170,6 +170,21 @@ namespace Randomizer.Data.Options
 
         public string? SelectedLayout { get; set; }
 
+        /// <summary>
+        /// How the current playing song should be displayed
+        /// </summary>
+        public MsuTrackDisplayStyle MsuTrackDisplayStyle { get; set; } = MsuTrackDisplayStyle.Vertical;
+
+        /// <summary>
+        /// The file path to write the current track/song information to
+        /// </summary>
+        public string? MsuTrackOutputPath { get; set; }
+
+        /// <summary>
+        /// If the MSU track window should open by default
+        /// </summary>
+        public bool DisplayMsuTrackWindow { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()
@@ -194,6 +209,8 @@ namespace Randomizer.Data.Options
             VoiceFrequency = (TrackerVoiceFrequency)VoiceFrequency,
             TrackerProfiles = SelectedProfiles,
             UndoExpirationTime = UndoExpirationTime,
+            MsuTrackDisplayStyle = MsuTrackDisplayStyle,
+            MsuTrackOutputPath = MsuTrackOutputPath
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

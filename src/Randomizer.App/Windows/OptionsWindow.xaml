@@ -6,6 +6,7 @@
         xmlns:controls="clr-namespace:Randomizer.App.Controls"
         xmlns:vm="clr-namespace:Randomizer.App.ViewModels"
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
+        xmlns:app="clr-namespace:Randomizer.App"
         x:Name="Self"
         ResizeMode="NoResize"
         mc:Ignorable="d"
@@ -27,7 +28,7 @@
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled">
         <StackPanel Orientation="Vertical">
-          <Expander>
+          <Expander IsExpanded="True">
             <Expander.Header>
               <TextBlock FontWeight="SemiBold">Randomizer options</TextBlock>
             </Expander.Header>
@@ -201,13 +202,13 @@
                 <TextBox Name="UndoExpirationTimeTextBox" Text="{Binding UndoExpirationTime, Mode=TwoWay}" LostFocus="UndoExpirationTimeTextBox_OnLostFocus" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Auto Tracker Scripts folder:">
+              <controls:LabeledControl Text="Auto Tracker scripts folder:">
                 <controls:FileSystemInput Path="{Binding AutoTrackerScriptsOutputPath, Mode=TwoWay}"
                                           IsFolderPicker="True"
                                           DialogTitle="Select Auto Tracker scripts folder" />
               </controls:LabeledControl>
 
-              <controls:LabeledControl Text="Auto Tracker Default Connection:"
+              <controls:LabeledControl Text="Auto Tracker default connection:"
                                        ToolTip="Determines the starting connection type when starting the tracker">
                 <Grid>
                   <Grid.ColumnDefinitions>
@@ -220,6 +221,22 @@
                             VerticalAlignment="Top">
                   </ComboBox>
                 </Grid>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Current song display style:"
+                                       ToolTip="Changes the orientation of the information displayed in the current song window and the written text file with the current song.">
+                <ComboBox SelectedItem="{Binding MsuTrackDisplayStyle}"
+                          ItemsSource="{Binding Source={app:EnumBindingSource {x:Type options:MsuTrackDisplayStyle}}}"
+                          MinWidth="75">
+                </ComboBox>
+              </controls:LabeledControl>
+
+              <controls:LabeledControl Text="Current song output path:"
+                                       ToolTip="The text file that is written whenever the current song changes">
+                <controls:FileSystemInput Path="{Binding MsuTrackOutputPath, Mode=TwoWay}"
+                                          Filter="Text Files (*.txt)|*.txt|All files (*.*)|*.*"
+                                          IsSavePicker="True"
+                                          DialogTitle="Current song output path" />
               </controls:LabeledControl>
 
               <StackPanel Orientation="Horizontal">
@@ -307,7 +324,7 @@
             </StackPanel>
           </Expander>
 
-          <Expander IsExpanded="True">
+          <Expander>
             <Expander.Header>
               <TextBlock FontWeight="SemiBold">Tracker Profiles</TextBlock>
             </Expander.Header>
