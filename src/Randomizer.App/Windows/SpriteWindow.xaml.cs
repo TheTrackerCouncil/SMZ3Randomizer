@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -82,11 +83,6 @@ public partial class SpriteWindow : Window
         }
     }
 
-    private void UIElement_OnTextInput(object sender, TextCompositionEventArgs e)
-    {
-        var text = SearchTextBox.Text;
-    }
-
     private void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)
     {
         if (SearchTextBox.Text == _searchText) return;
@@ -147,6 +143,12 @@ public partial class SpriteWindow : Window
             .ToDictionary(x => x.Sprite?.FilePath ?? "", x => x.SpriteOption);
         DialogResult = true;
         Close();
+    }
+
+    private void SpriteWindow_OnClosing(object? sender, CancelEventArgs e)
+    {
+        SelectedSpriteOptions = Model.Sprites.Where(x => x.SpriteOption != SpriteOptions.Default)
+            .ToDictionary(x => x.Sprite?.FilePath ?? "", x => x.SpriteOption);
     }
 }
 

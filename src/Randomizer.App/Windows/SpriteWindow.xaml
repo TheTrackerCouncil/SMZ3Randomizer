@@ -9,6 +9,7 @@
         xmlns:options="clr-namespace:Randomizer.Data.Options;assembly=Randomizer.Data"
         mc:Ignorable="d"
         Loaded="SpriteWindow_OnLoaded"
+        Closing="SpriteWindow_OnClosing"
         Title="Sprites — SMZ3 Cas' Randomizer" Height="725" Width="1050">
   <Window.DataContext>
     <viewModels:SpriteWindowViewModel></viewModels:SpriteWindowViewModel>

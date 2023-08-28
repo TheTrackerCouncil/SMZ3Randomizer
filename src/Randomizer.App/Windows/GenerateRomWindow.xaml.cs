@@ -796,11 +796,10 @@ namespace Randomizer.App.Windows
             spriteWindow.Options = Options;
             spriteWindow.SpriteType = SpriteType.Samus;
             var result = spriteWindow.ShowDialog();
+            Options.GeneralOptions.SamusSpriteOptions = spriteWindow.SelectedSpriteOptions;
             if (result == true)
             {
                 Options.PatchOptions.SelectedSamusSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultSamus;
-                Options.GeneralOptions.SamusSpriteOptions = spriteWindow.SelectedSpriteOptions;
-                SamusSpriteTextBox.Text = Options.PatchOptions.SelectedSamusSprite.Name;
                 SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
             }
         }
@@ -811,10 +810,10 @@ namespace Randomizer.App.Windows
             spriteWindow.Options = Options;
             spriteWindow.SpriteType = SpriteType.Link;
             var result = spriteWindow.ShowDialog();
+            Options.GeneralOptions.LinkSpriteOptions = spriteWindow.SelectedSpriteOptions;
             if (result == true)
             {
                 Options.PatchOptions.SelectedLinkSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultLink;
-                Options.GeneralOptions.LinkSpriteOptions = spriteWindow.SelectedSpriteOptions;
                 LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
             }
         }
@@ -825,10 +824,10 @@ namespace Randomizer.App.Windows
             spriteWindow.Options = Options;
             spriteWindow.SpriteType = SpriteType.Ship;
             var result = spriteWindow.ShowDialog();
+            Options.GeneralOptions.ShipSpriteOptions = spriteWindow.SelectedSpriteOptions;
             if (result == true)
             {
                 Options.PatchOptions.SelectedShipSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultShip;
-                Options.GeneralOptions.ShipSpriteOptions = spriteWindow.SelectedSpriteOptions;
                 ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
             }
         }
