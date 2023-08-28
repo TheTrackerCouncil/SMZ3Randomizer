@@ -83,8 +83,7 @@ namespace Randomizer.SMZ3.Generation
             {
                 var patchRnd = new Random().Sanitize();
                 var patch = new Patcher(world, worlds, seedData.Guid, 0, patchRnd, _metadataService, _gameLines, _logger);
-                var hints = _hintService.GetInGameHints(world, worlds, playthrough, 0);
-                var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(config, hints), hints);
+                var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(config, new List<string>()));
                 seedData.WorldGenerationData.Add(worldGenerationData);
             }
 
