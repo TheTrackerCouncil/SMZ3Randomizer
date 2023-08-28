@@ -760,9 +760,9 @@ namespace Randomizer.App.Windows
 
             UpdateMsuTextBox();
             _msuGeneratorService.LookupMsus();
-            SamusSpriteTextBox.Text = $"{Options.PatchOptions.SamusSprite.Name} by {Options.PatchOptions.SamusSprite.Author}";
-            LinkSpriteTextBox.Text = $"{Options.PatchOptions.LinkSprite.Name} by {Options.PatchOptions.LinkSprite.Author}";
-            ShipSpriteTextBox.Text = $"{Options.PatchOptions.ShipSprite.Name} by {Options.PatchOptions.ShipSprite.Author}";
+            SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
+            LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
+            ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
         }
 
         private void SelectMsuFileMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -798,10 +798,10 @@ namespace Randomizer.App.Windows
             var result = spriteWindow.ShowDialog();
             if (result == true)
             {
-                Options.PatchOptions.SamusSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultSamus;
+                Options.PatchOptions.SelectedSamusSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultSamus;
                 Options.GeneralOptions.SamusSpriteOptions = spriteWindow.SelectedSpriteOptions;
-                SamusSpriteTextBox.Text = Options.PatchOptions.SamusSprite.Name;
-                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SamusSprite.Name} by {Options.PatchOptions.SamusSprite.Author}";
+                SamusSpriteTextBox.Text = Options.PatchOptions.SelectedSamusSprite.Name;
+                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
             }
         }
 
@@ -813,9 +813,9 @@ namespace Randomizer.App.Windows
             var result = spriteWindow.ShowDialog();
             if (result == true)
             {
-                Options.PatchOptions.LinkSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultLink;
+                Options.PatchOptions.SelectedLinkSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultLink;
                 Options.GeneralOptions.LinkSpriteOptions = spriteWindow.SelectedSpriteOptions;
-                LinkSpriteTextBox.Text = $"{Options.PatchOptions.LinkSprite.Name} by {Options.PatchOptions.LinkSprite.Author}";
+                LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
             }
         }
 
@@ -827,9 +827,9 @@ namespace Randomizer.App.Windows
             var result = spriteWindow.ShowDialog();
             if (result == true)
             {
-                Options.PatchOptions.ShipSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultShip;
+                Options.PatchOptions.SelectedShipSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultShip;
                 Options.GeneralOptions.ShipSpriteOptions = spriteWindow.SelectedSpriteOptions;
-                ShipSpriteTextBox.Text = $"{Options.PatchOptions.ShipSprite.Name} by {Options.PatchOptions.ShipSprite.Author}";
+                ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
             }
         }
     }

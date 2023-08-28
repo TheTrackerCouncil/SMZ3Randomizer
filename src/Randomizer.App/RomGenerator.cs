@@ -300,9 +300,9 @@ namespace Randomizer.App
             }
             Rom.ApplySeed(rom, seed.WorldGenerationData.LocalWorld.Patches);
 
-            _spriteService.ApplySpriteTo(options.PatchOptions.SamusSprite, rom);
-            _spriteService.ApplySpriteTo(options.PatchOptions.LinkSprite, rom);
-            _spriteService.ApplySpriteTo(options.PatchOptions.ShipSprite, rom);
+            _spriteService.ApplySpriteTo(options.PatchOptions.SelectedSamusSprite, rom);
+            _spriteService.ApplySpriteTo(options.PatchOptions.SelectedLinkSprite, rom);
+            _spriteService.ApplySpriteTo(options.PatchOptions.SelectedShipSprite, rom);
 
             if (options.PatchOptions.CasPatches.Respin)
             {

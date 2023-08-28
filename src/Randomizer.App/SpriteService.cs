@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using Randomizer.App.Patches;
 using Randomizer.Data;
@@ -39,13 +41,25 @@ public class SpriteService
         {
             var defaults = new List<Sprite>() { Sprite.DefaultSamus, Sprite.DefaultLink, Sprite.DefaultShip };
 
-            var sprites = Directory.EnumerateFiles(SpritePath, "*.rdc", SearchOption.AllDirectories)
+            var playerSprites = Directory.EnumerateFiles(SpritePath, "*.rdc", SearchOption.AllDirectories)
                 .Select(LoadRdcSprite);
 
             var shipSprites = Directory.EnumerateFiles(Path.Combine(SpritePath, "Ships"), "*.ips", SearchOption.AllDirectories)
                 .Select(LoadIpsSprite);
 
-            Sprites = sprites.Concat(shipSprites).Concat(defaults).OrderBy(x => x.Name).ToList();
+            var sprites = playerSprites.Concat(shipSprites).Concat(defaults).OrderBy(x => x.Name).ToList();
+
+            var extraSpriteDirectory = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\Sprites");
+
+            if (Directory.Exists(extraSpriteDirectory))
+            {
+                sprites.AddRange(Directory.EnumerateFiles(extraSpriteDirectory, "*.rdc", SearchOption.AllDirectories)
+                    .Select(LoadRdcSprite));
+                sprites.AddRange(Directory.EnumerateFiles(extraSpriteDirectory, "*.ips", SearchOption.AllDirectories)
+                    .Select(LoadIpsSprite));
+            }
+
+            Sprites = sprites;
 
             _logger.LogInformation("{LinkSprites} Link Sprites | {SamusSprites} Samus Sprites | {ShipCount} Ship Sprites", LinkSprites.Count(), SamusSprites.Count(), ShipSprites.Count());
         });
@@ -93,6 +107,10 @@ public class SpriteService
 
         var file = new FileInfo(path);
         var previewPath = file.FullName.Replace(file.Extension, ".png");
+        if (!File.Exists(previewPath))
+        {
+            previewPath = GetRandomPreviewImage(spriteType);
+        }
 
         return new Sprite(name, author, path, spriteType, previewPath);
     }
@@ -109,6 +127,10 @@ public class SpriteService
         var name = parts[0];
         var author = parts[1];
         var previewPath = file.FullName.Replace(file.Extension, ".png");
+        if (!File.Exists(previewPath))
+        {
+            previewPath = GetRandomPreviewImage(SpriteType.Ship);
+        }
         return new Sprite(name, author, path, SpriteType.Ship, previewPath);
     }
 

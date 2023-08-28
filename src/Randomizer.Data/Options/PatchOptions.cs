@@ -21,13 +21,13 @@ namespace Randomizer.Data.Options
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Sprite LinkSprite { get; set; }
+        public Sprite SelectedLinkSprite { get; set; }
             = Sprite.DefaultLink;
 
-        public Sprite SamusSprite { get; set; }
+        public Sprite SelectedSamusSprite { get; set; }
             = Sprite.DefaultSamus;
 
-        public Sprite ShipSprite { get; set; }
+        public Sprite SelectedShipSprite { get; set; }
             = Sprite.DefaultShip;
 
         public string Msu1Path
