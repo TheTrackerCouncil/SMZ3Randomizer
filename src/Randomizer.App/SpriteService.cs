@@ -123,9 +123,17 @@ public class SpriteService
     private Sprite LoadIpsSprite(string path)
     {
         var file = new FileInfo(path);
-        var parts = Path.GetFileNameWithoutExtension(path).Split(" by ");
-        var name = parts[0];
-        var author = parts[1];
+        var filename = Path.GetFileNameWithoutExtension(path);
+        var name = filename;
+        var author = "";
+
+        if (name.Contains(" by "))
+        {
+            var parts = name.Split(" by ");
+            name = parts.First();
+            author = parts.Last();
+        }
+
         var previewPath = file.FullName.Replace(file.Extension, ".png");
         if (!File.Exists(previewPath))
         {
