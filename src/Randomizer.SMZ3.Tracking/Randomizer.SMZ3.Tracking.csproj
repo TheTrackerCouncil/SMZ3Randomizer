@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BunLabs.Common" Version="1.0.4" />
-    <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="1.1.4" />
+    <PackageReference Include="MattEqualsCoder.MSURandomizer.Library" Version="1.2.0" />
     <PackageReference Include="System.Speech" Version="7.0.0" />
     <PackageReference Include="Websocket.Client" Version="4.6.1" />
     <PackageReference Include="YamlDotNet" Version="13.1.1" />
