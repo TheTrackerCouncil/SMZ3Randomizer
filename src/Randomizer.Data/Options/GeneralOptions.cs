@@ -102,6 +102,10 @@ namespace Randomizer.Data.Options
         public bool AutoTrackerChangeMap { get; set; }
         public int UndoExpirationTime { get; set; } = 3;
 
+        public Dictionary<string, SpriteOptions> LinkSpriteOptions { get; set; } = new();
+        public Dictionary<string, SpriteOptions> SamusSpriteOptions { get; set; } = new();
+        public Dictionary<string, SpriteOptions> ShipSpriteOptions { get; set; } = new();
+
         public string? TwitchUserName
         {
             get => _twitchUserName;

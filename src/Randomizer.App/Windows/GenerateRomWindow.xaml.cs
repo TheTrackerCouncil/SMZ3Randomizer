@@ -46,7 +46,8 @@ namespace Randomizer.App.Windows
             RomGenerator romGenerator,
             LocationConfig locations,
             IMetadataService metadataService,
-            MsuGeneratorService msuGeneratorService)
+            MsuGeneratorService msuGeneratorService,
+            SpriteService spriteService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
@@ -55,11 +56,7 @@ namespace Randomizer.App.Windows
             _msuGeneratorService = msuGeneratorService;
             InitializeComponent();
 
-            SamusSprites.Add(Sprite.DefaultSamus);
-            LinkSprites.Add(Sprite.DefaultLink);
-            ShipSprites.Add(ShipSprite.DefaultShip);
-            _loadSpritesTask = Task.Run(LoadSprites)
-                .ContinueWith(_ => Trace.WriteLine("Finished loading sprites."));
+            spriteService.LoadSprites();
         }
 
         public PlandoConfig? PlandoConfig { get; set; }
@@ -109,12 +106,6 @@ namespace Randomizer.App.Windows
         /// plando mode is active.
         /// </summary>
         public bool DisabledInPlandoAndMulti => DisabledInMultiplayer && DisabledInPlando;
-
-        public ObservableCollection<Sprite> SamusSprites { get; } = new();
-
-        public ObservableCollection<Sprite> LinkSprites { get; } = new();
-
-        public ObservableCollection<ShipSprite> ShipSprites { get; } = new();
 
         public RandomizerOptions Options
         {
@@ -250,42 +241,6 @@ namespace Randomizer.App.Windows
                     CasPatchGrid.Children.Add(checkBox);
                 }
             }
-        }
-
-        public void LoadSprites()
-        {
-            var spritesPath = Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
-                "Sprites");
-            var sprites = Directory.EnumerateFiles(spritesPath, "*.rdc", SearchOption.AllDirectories)
-                .Select(Sprite.LoadSprite)
-                .OrderBy(x => x.Name);
-
-            var shipSpritesPath = Path.Combine(AppContext.BaseDirectory, "Sprites", "Ships");
-            var shipSprites = Directory.EnumerateFiles(shipSpritesPath, "*.ips", SearchOption.AllDirectories)
-                .Select(x => new ShipSprite(Path.GetFileNameWithoutExtension(x), Path.GetRelativePath(shipSpritesPath, x)));
-
-            Dispatcher.Invoke(() =>
-            {
-                foreach (var sprite in sprites)
-                {
-                    switch (sprite.SpriteType)
-                    {
-                        case SpriteType.Samus:
-                            SamusSprites.Add(sprite);
-                            break;
-
-                        case SpriteType.Link:
-                            LinkSprites.Add(sprite);
-                            break;
-                    }
-                }
-
-                foreach (var ship in shipSprites)
-                {
-                    ShipSprites.Add(ship);
-                }
-            }, DispatcherPriority.Loaded);
         }
 
         private static bool IsScam(ItemType itemType) => itemType.IsInCategory(ItemCategory.Scam);
@@ -805,6 +760,9 @@ namespace Randomizer.App.Windows
 
             UpdateMsuTextBox();
             _msuGeneratorService.LookupMsus();
+            SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
+            LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
+            ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
         }
 
         private void SelectMsuFileMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -830,6 +788,48 @@ namespace Randomizer.App.Windows
             Options.PatchOptions.MsuPaths = new List<string>();
             Options.PatchOptions.MsuRandomizationStyle = null;
             UpdateMsuTextBox();
+        }
+
+        private void SamusSpriteButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
+            spriteWindow.Options = Options;
+            spriteWindow.SpriteType = SpriteType.Samus;
+            var result = spriteWindow.ShowDialog();
+            Options.GeneralOptions.SamusSpriteOptions = spriteWindow.SelectedSpriteOptions;
+            if (result == true)
+            {
+                Options.PatchOptions.SelectedSamusSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultSamus;
+                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
+            }
+        }
+
+        private void LinkSpriteButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
+            spriteWindow.Options = Options;
+            spriteWindow.SpriteType = SpriteType.Link;
+            var result = spriteWindow.ShowDialog();
+            Options.GeneralOptions.LinkSpriteOptions = spriteWindow.SelectedSpriteOptions;
+            if (result == true)
+            {
+                Options.PatchOptions.SelectedLinkSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultLink;
+                LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
+            }
+        }
+
+        private void ShipSpriteButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
+            spriteWindow.Options = Options;
+            spriteWindow.SpriteType = SpriteType.Ship;
+            var result = spriteWindow.ShowDialog();
+            Options.GeneralOptions.ShipSpriteOptions = spriteWindow.SelectedSpriteOptions;
+            if (result == true)
+            {
+                Options.PatchOptions.SelectedShipSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultShip;
+                ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
+            }
         }
     }
 }

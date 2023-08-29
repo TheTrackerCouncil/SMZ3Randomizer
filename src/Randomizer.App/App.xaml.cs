@@ -124,6 +124,7 @@ namespace Randomizer.App
             services.AddScoped<AutoTracker>();
             services.AddSingleton<ITrackerStateService, TrackerStateService>();
             services.AddMultiplayerServices();
+            services.AddSingleton<SpriteService>();
 
             // Chat
             services.AddSingleton<IChatApi, TwitchChatAPI>();
@@ -136,6 +137,7 @@ namespace Randomizer.App
             services.AddTransient<SoloRomListPanel>();
             services.AddTransient<MultiRomListPanel>();
             services.AddWindows<App>();
+            services.AddTransient<SpriteWindow>();
 
             // MSU Randomzer
             services.AddMsuRandomizerServices();

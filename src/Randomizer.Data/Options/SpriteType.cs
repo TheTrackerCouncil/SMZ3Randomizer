@@ -10,6 +10,7 @@ namespace Randomizer.Data.Options
     {
         Unknown = 0,
         Samus,
-        Link
+        Link,
+        Ship
     }
 }

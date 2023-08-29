@@ -257,24 +257,37 @@
                         Margin="24,11,11,11"
                         DataContext="{Binding PatchOptions}">
               <controls:LabeledControl Text="Samus sprite:">
-                <ComboBox x:Name="SamusSpriteDropdown"
-                          ItemsSource="{Binding SamusSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedItem="{Binding SamusSprite}" />
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                  </Grid.ColumnDefinitions>
+                  <TextBox Grid.Column="0" IsReadOnly="True" Name="SamusSpriteTextBox"></TextBox>
+                  <Button Grid.Column="1" Name="SamusSpriteButton" Click="SamusSpriteButton_OnClick">Select</Button>
+                </Grid>
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Link sprite:">
-                <ComboBox x:Name="LinkSpriteDropdown"
-                          ItemsSource="{Binding LinkSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedItem="{Binding LinkSprite}" />
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                  </Grid.ColumnDefinitions>
+                  <TextBox Grid.Column="0" IsReadOnly="True" Name="LinkSpriteTextBox"></TextBox>
+                  <Button Grid.Column="1" Name="LinkSpriteButton" Click="LinkSpriteButton_OnClick">Select</Button>
+                </Grid>
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Ship sprite:">
-                <ComboBox x:Name="ShipSpriteDropdown"
-                          ItemsSource="{Binding ShipSprites, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GenerateRomWindow}}}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedItem="{Binding ShipPatch}" />
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                  </Grid.ColumnDefinitions>
+                  <TextBox Grid.Column="0" IsReadOnly="True" Name="ShipSpriteTextBox"></TextBox>
+                  <Button Grid.Column="1" Name="ShipSpriteButton" Click="ShipSpriteButton_OnClick">Select</Button>
+                </Grid>
+
               </controls:LabeledControl>
 
               <controls:LabeledControl Text="Heart color:">
