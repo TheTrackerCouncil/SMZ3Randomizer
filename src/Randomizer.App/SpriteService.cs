@@ -36,11 +36,11 @@ public class SpriteService
     /// <summary>
     /// Loads all player and ship sprites
     /// </summary>
-    public void LoadSprites()
+    public Task LoadSprites()
     {
-        if (Sprites.Any()) return;
+        if (Sprites.Any()) return Task.CompletedTask;
 
-        Task.Run(() =>
+        return Task.Run(() =>
         {
             var defaults = new List<Sprite>() { Sprite.DefaultSamus, Sprite.DefaultLink, Sprite.DefaultShip, Sprite.RandomSamus, Sprite.RandomLink, Sprite.RandomShip };
 
@@ -169,7 +169,7 @@ public class SpriteService
         {
             if (!Sprites.Any())
             {
-                LoadSprites();
+                LoadSprites().Wait();
             }
 
             var spriteType = sprite.SpriteType;
