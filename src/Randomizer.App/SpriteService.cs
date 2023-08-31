@@ -188,11 +188,25 @@ public class SpriteService
                 _ => _options.GeneralOptions.ShipSpriteFilter
             };
 
+            var previousSprite = spriteType switch
+            {
+                SpriteType.Link => _options.PatchOptions.PreviousLinkSprite,
+                SpriteType.Samus => _options.PatchOptions.PreviousSamusSprite,
+                _ => _options.PatchOptions.PreviousShipSprite
+            };
+
             var random = new Random().Sanitize();
 
-            sprite = Sprites.Where(x =>
-                             x.SpriteType == spriteType && x.MatchesFilter(searchText, filter) && !x.IsRandomSprite)
-                         .Random(random)
+            var randomSpriteOptions = Sprites.Where(x =>
+                x.SpriteType == spriteType && x.MatchesFilter(searchText, filter) && !x.IsRandomSprite);
+
+            // Try not to pick the same sprite twice in a row
+            if (previousSprite != null && randomSpriteOptions.Count() > 1)
+            {
+                randomSpriteOptions = randomSpriteOptions.Where(x => x != previousSprite);
+            }
+
+            sprite = randomSpriteOptions.Random(random)
                      ?? Sprites.First(x => x.SpriteType == spriteType && x.IsDefault);
 
             if (sprite.IsDefault)

@@ -30,6 +30,12 @@ namespace Randomizer.Data.Options
         public Sprite SelectedShipSprite { get; set; }
             = Sprite.DefaultShip;
 
+        public Sprite? PreviousLinkSprite { get; set; }
+
+        public Sprite? PreviousSamusSprite { get; set; }
+
+        public Sprite? PreviousShipSprite { get; set; }
+
         public string Msu1Path
         {
             get => _msu1Path;
