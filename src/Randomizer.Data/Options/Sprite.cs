@@ -14,30 +14,35 @@ namespace Randomizer.Data.Options
             { SpriteType.Ship, "Ships" }
         };
 
-        public static readonly Sprite DefaultSamus = new("Default Samus", SpriteType.Samus);
-        public static readonly Sprite DefaultLink = new("Default Link", SpriteType.Link);
-        public static readonly Sprite DefaultShip = new("Default Ship", SpriteType.Ship);
+        public static readonly Sprite DefaultSamus = new("Default Samus", SpriteType.Samus, true, false, "default.png");
+        public static readonly Sprite DefaultLink = new("Default Link", SpriteType.Link, true, false, "default.png");
+        public static readonly Sprite DefaultShip = new("Default Ship", SpriteType.Ship, true, false, "default.png");
+        public static readonly Sprite RandomSamus = new("Random Sprite", SpriteType.Samus, false, true, "random.png");
+        public static readonly Sprite RandomLink = new("Random Sprite", SpriteType.Link, false, true, "random.png");
+        public static readonly Sprite RandomShip = new("Random Sprite", SpriteType.Ship, false, true, "random.png");
 
-        public Sprite(string name, string author, string? filePath, SpriteType spriteType, string previewPath)
+        public Sprite(string name, string author, string filePath, SpriteType spriteType, string previewPath, SpriteOptions spriteOption)
         {
             Name = name;
             Author = author;
-            FilePath = filePath ?? "";
+            FilePath = filePath;
             SpriteType = spriteType;
             PreviewPath = previewPath;
+            SpriteOption = spriteOption;
             if (string.IsNullOrEmpty(filePath))
                 IsDefault = true;
         }
 
-        private Sprite(string name, SpriteType spriteType)
+        private Sprite(string name, SpriteType spriteType, bool isDefault, bool isRandomSprite, string sprite)
         {
             Name = name;
-            Author = "Nintendo";
+            Author = isDefault ? "Nintendo" : "";
             SpriteType = spriteType;
-            IsDefault = true;
+            IsDefault = isDefault;
+            IsRandomSprite = isRandomSprite;
             PreviewPath = Path.Combine(
                 Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
-                "Sprites", s_folderNames[spriteType], "default.png");
+                "Sprites", s_folderNames[spriteType], sprite);
         }
 
         public string Name { get; }
@@ -50,7 +55,19 @@ namespace Randomizer.Data.Options
 
         public string PreviewPath { get; }
 
-        public bool IsDefault { get; }
+        public bool IsDefault { get; set; }
+
+        public bool IsRandomSprite { get; set; }
+
+        public SpriteOptions SpriteOption { get; set; }
+
+        public bool MatchesFilter(string searchTerm, SpriteFilter spriteFilter) => (string.IsNullOrEmpty(searchTerm) ||
+                Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                Author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
+            ((spriteFilter == SpriteFilter.Default && SpriteOption != SpriteOptions.Hide) ||
+             (spriteFilter == SpriteFilter.Favorited && SpriteOption == SpriteOptions.Favorite) ||
+             (spriteFilter == SpriteFilter.Hidden && SpriteOption == SpriteOptions.Hide) ||
+             spriteFilter == SpriteFilter.All);
 
         public static bool operator ==(Sprite? a, Sprite? b)
             => a is null && b is null || a?.Equals(b) == true;
@@ -69,7 +86,9 @@ namespace Randomizer.Data.Options
         public bool Equals(Sprite? other)
         {
             return FilePath == other?.FilePath
-                && SpriteType == other.SpriteType;
+                && SpriteType == other.SpriteType
+                && IsDefault == other.IsDefault
+                && IsRandomSprite == other.IsRandomSprite;
         }
 
         public override int GetHashCode()

@@ -24,13 +24,15 @@ namespace Randomizer.App.Windows
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly MultiplayerGameService _multiplayerGameService;
         private readonly RomGenerator _romGenerator;
+        private readonly SpriteService _spriteService;
 
         public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService,
-            MultiplayerGameService multiplayerGameService, RomGenerator romGenerator)
+            MultiplayerGameService multiplayerGameService, RomGenerator romGenerator, SpriteService spriteService)
         {
             _multiplayerClientService = multiplayerClientService;
             _multiplayerGameService = multiplayerGameService;
             _romGenerator = romGenerator;
+            _spriteService = spriteService;
             DataContext = Model;
             InitializeComponent();
 

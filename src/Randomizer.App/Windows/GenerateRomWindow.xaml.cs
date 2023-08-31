@@ -760,9 +760,7 @@ namespace Randomizer.App.Windows
 
             UpdateMsuTextBox();
             _msuGeneratorService.LookupMsus();
-            SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
-            LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
-            ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
+            UpdateSpriteTextBoxes();
         }
 
         private void SelectMsuFileMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -795,12 +793,16 @@ namespace Randomizer.App.Windows
             var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
             spriteWindow.Options = Options;
             spriteWindow.SpriteType = SpriteType.Samus;
+            spriteWindow.Model.SearchText = Options.GeneralOptions.SamusSpriteSearchText;
+            spriteWindow.Model.SpriteFilter = Options.GeneralOptions.SamusSpriteFilter;
             var result = spriteWindow.ShowDialog();
             Options.GeneralOptions.SamusSpriteOptions = spriteWindow.SelectedSpriteOptions;
             if (result == true)
             {
                 Options.PatchOptions.SelectedSamusSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultSamus;
-                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
+                Options.GeneralOptions.SamusSpriteSearchText = spriteWindow.Model.SearchText;
+                Options.GeneralOptions.SamusSpriteFilter = spriteWindow.Model.SpriteFilter;
+                UpdateSpriteTextBoxes();
             }
         }
 
@@ -809,12 +811,16 @@ namespace Randomizer.App.Windows
             var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
             spriteWindow.Options = Options;
             spriteWindow.SpriteType = SpriteType.Link;
+            spriteWindow.Model.SearchText = Options.GeneralOptions.LinkSpriteSearchText;
+            spriteWindow.Model.SpriteFilter = Options.GeneralOptions.LinkSpriteFilter;
             var result = spriteWindow.ShowDialog();
             Options.GeneralOptions.LinkSpriteOptions = spriteWindow.SelectedSpriteOptions;
             if (result == true)
             {
                 Options.PatchOptions.SelectedLinkSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultLink;
-                LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
+                Options.GeneralOptions.LinkSpriteSearchText = spriteWindow.Model.SearchText;
+                Options.GeneralOptions.LinkSpriteFilter = spriteWindow.Model.SpriteFilter;
+                UpdateSpriteTextBoxes();
             }
         }
 
@@ -823,11 +829,45 @@ namespace Randomizer.App.Windows
             var spriteWindow = _serviceProvider.GetRequiredService<SpriteWindow>();
             spriteWindow.Options = Options;
             spriteWindow.SpriteType = SpriteType.Ship;
+            spriteWindow.Model.SearchText = Options.GeneralOptions.ShipSpriteSearchText;
+            spriteWindow.Model.SpriteFilter = Options.GeneralOptions.ShipSpriteFilter;
             var result = spriteWindow.ShowDialog();
             Options.GeneralOptions.ShipSpriteOptions = spriteWindow.SelectedSpriteOptions;
             if (result == true)
             {
                 Options.PatchOptions.SelectedShipSprite = spriteWindow.SelectedSprite ?? Sprite.DefaultShip;
+                Options.GeneralOptions.ShipSpriteSearchText = spriteWindow.Model.SearchText;
+                Options.GeneralOptions.ShipSpriteFilter = spriteWindow.Model.SpriteFilter;
+                UpdateSpriteTextBoxes();
+            }
+        }
+
+        private void UpdateSpriteTextBoxes()
+        {
+            if (string.IsNullOrEmpty(Options.PatchOptions.SelectedSamusSprite.Author))
+            {
+                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name}";
+            }
+            else
+            {
+                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
+            }
+
+            if (string.IsNullOrEmpty(Options.PatchOptions.SelectedLinkSprite.Author))
+            {
+                LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name}";
+            }
+            else
+            {
+                LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
+            }
+
+            if (string.IsNullOrEmpty(Options.PatchOptions.SelectedShipSprite.Author))
+            {
+                ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name}";
+            }
+            else
+            {
                 ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
             }
         }

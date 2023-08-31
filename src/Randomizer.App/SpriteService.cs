@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.Patches;
 using Randomizer.Data;
 using Randomizer.Data.Options;
+using Randomizer.Shared;
 using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.App;
@@ -19,10 +20,12 @@ namespace Randomizer.App;
 public class SpriteService
 {
     private readonly ILogger<SpriteService> _logger;
+    private readonly RandomizerOptions _options;
 
-    public SpriteService(ILogger<SpriteService> logger)
+    public SpriteService(ILogger<SpriteService> logger, OptionsFactory optionsFactory)
     {
         _logger = logger;
+        _options = optionsFactory.Create();
     }
 
     public IEnumerable<Sprite> Sprites { get; set; } = new List<Sprite>();
@@ -39,7 +42,7 @@ public class SpriteService
 
         Task.Run(() =>
         {
-            var defaults = new List<Sprite>() { Sprite.DefaultSamus, Sprite.DefaultLink, Sprite.DefaultShip };
+            var defaults = new List<Sprite>() { Sprite.DefaultSamus, Sprite.DefaultLink, Sprite.DefaultShip, Sprite.RandomSamus, Sprite.RandomLink, Sprite.RandomShip };
 
             var playerSprites = Directory.EnumerateFiles(SpritePath, "*.rdc", SearchOption.AllDirectories)
                 .Select(LoadRdcSprite);
@@ -87,10 +90,17 @@ public class SpriteService
         var rdc = Rdc.Parse(stream);
 
         var spriteType = SpriteType.Unknown;
+        var spriteOption = SpriteOptions.Default;
         if (rdc.Contains<LinkSprite>())
+        {
             spriteType = SpriteType.Link;
+            _options.GeneralOptions.LinkSpriteOptions.TryGetValue(path, out spriteOption);
+        }
         else if (rdc.Contains<SamusSprite>())
+        {
             spriteType = SpriteType.Samus;
+            _options.GeneralOptions.SamusSpriteOptions.TryGetValue(path, out spriteOption);
+        }
 
         var name = Path.GetFileName(path);
         var author = rdc.Author;
@@ -112,7 +122,7 @@ public class SpriteService
             previewPath = GetRandomPreviewImage(spriteType);
         }
 
-        return new Sprite(name, author, path, spriteType, previewPath);
+        return new Sprite(name, author, path, spriteType, previewPath, spriteOption);
     }
 
     /// <summary>
@@ -139,17 +149,57 @@ public class SpriteService
         {
             previewPath = GetRandomPreviewImage(SpriteType.Ship);
         }
-        return new Sprite(name, author, path, SpriteType.Ship, previewPath);
+
+        _options.GeneralOptions.LinkSpriteOptions.TryGetValue(path, out var spriteOption);
+
+        return new Sprite(name, author, path, SpriteType.Ship, previewPath, spriteOption);
     }
 
     /// <summary>
-    /// Applys a sprite to the given rom bytes
+    /// Applys the user selected sprite options to the given rom bytes
     /// </summary>
     /// <param name="sprite">The sprite to apply</param>
     /// <param name="bytes">The rom bytes to apply the sprite to</param>
-    public void ApplySpriteTo(Sprite sprite, byte[] bytes)
+    /// <returns>The actual selected sprite object</returns>
+    public Sprite ApplySpriteOptionsTo(Sprite sprite, byte[] bytes)
     {
-        if (sprite.IsDefault) return;
+        if (sprite.IsDefault) return sprite;
+
+        if (sprite.IsRandomSprite)
+        {
+            if (!Sprites.Any())
+            {
+                LoadSprites();
+            }
+
+            var spriteType = sprite.SpriteType;
+
+            var searchText = spriteType switch
+            {
+                SpriteType.Link => _options.GeneralOptions.LinkSpriteSearchText,
+                SpriteType.Samus => _options.GeneralOptions.SamusSpriteSearchText,
+                _ => _options.GeneralOptions.ShipSpriteSearchText
+            };
+
+            var filter = spriteType switch
+            {
+                SpriteType.Link => _options.GeneralOptions.LinkSpriteFilter,
+                SpriteType.Samus => _options.GeneralOptions.SamusSpriteFilter,
+                _ => _options.GeneralOptions.ShipSpriteFilter
+            };
+
+            var random = new Random().Sanitize();
+
+            sprite = Sprites.Where(x =>
+                             x.SpriteType == spriteType && x.MatchesFilter(searchText, filter) && !x.IsRandomSprite)
+                         .Random(random)
+                     ?? Sprites.First(x => x.SpriteType == spriteType && x.IsDefault);
+
+            if (sprite.IsDefault)
+            {
+                return sprite;
+            }
+        }
 
         if (sprite.SpriteType == SpriteType.Ship)
         {
@@ -159,6 +209,8 @@ public class SpriteService
         {
             ApplyRdcSpriteTo(sprite, bytes);
         }
+
+        return sprite;
     }
 
     private void ApplyShipSpriteTo(Sprite sprite, byte[] bytes)

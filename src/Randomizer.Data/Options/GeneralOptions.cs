@@ -106,6 +106,14 @@ namespace Randomizer.Data.Options
         public Dictionary<string, SpriteOptions> SamusSpriteOptions { get; set; } = new();
         public Dictionary<string, SpriteOptions> ShipSpriteOptions { get; set; } = new();
 
+        public string LinkSpriteSearchText { get; set; } = "";
+        public string SamusSpriteSearchText { get; set; } = "";
+        public string ShipSpriteSearchText { get; set; } = "";
+
+        public SpriteFilter LinkSpriteFilter { get; set; }
+        public SpriteFilter SamusSpriteFilter { get; set; }
+        public SpriteFilter ShipSpriteFilter { get; set; }
+
         public string? TwitchUserName
         {
             get => _twitchUserName;

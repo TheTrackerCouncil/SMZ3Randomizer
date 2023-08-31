@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Randomizer.Data.Options;
@@ -9,7 +8,6 @@ namespace Randomizer.App.ViewModels;
 public class SpriteViewModel : INotifyPropertyChanged
 {
     private bool _display;
-    private SpriteOptions _spriteOption;
 
     private static Dictionary<SpriteType, (int, int)> s_ImageDimensions = new()
     {
@@ -21,33 +19,21 @@ public class SpriteViewModel : INotifyPropertyChanged
         { SpriteType.Link, 250 }, { SpriteType.Samus, 250 }, { SpriteType.Ship, 450 },
     };
 
-    public SpriteViewModel(Sprite sprite, SpriteOptions spriteOption)
+    public SpriteViewModel(Sprite sprite)
     {
         Sprite = sprite;
         Name = sprite.Name;
         Author = sprite.Author;
         PreviewPath = sprite.PreviewPath;
-        SpriteOption = spriteOption;
-        Display = spriteOption != SpriteOptions.Hide;
+        SpriteOption = sprite.SpriteOption;
+        Display = sprite.SpriteOption != SpriteOptions.Hide;
         PanelWidth = s_Widths[sprite.SpriteType];
         ImageWidth = s_ImageDimensions[sprite.SpriteType].Item1;
         ImageHeight = s_ImageDimensions[sprite.SpriteType].Item2;
         CanFavoriteAndHide = true;
     }
 
-    public SpriteViewModel(string path, string name, SpriteType spriteType)
-    {
-        Sprite = null;
-        Name = name;
-        Author = "";
-        PreviewPath = path;
-        Display = true;
-        PanelWidth = s_Widths[spriteType];
-        ImageWidth = s_ImageDimensions[spriteType].Item1;
-        ImageHeight = s_ImageDimensions[spriteType].Item2;
-    }
-
-    public Sprite? Sprite { get; }
+    public Sprite Sprite { get; }
     public string Name { get; set; }
     public string Author { get; set; }
     public string PreviewPath { get; set; }
@@ -58,10 +44,11 @@ public class SpriteViewModel : INotifyPropertyChanged
 
     public SpriteOptions SpriteOption
     {
-        get => _spriteOption;
+        get => Sprite.SpriteOption;
         set
         {
-            SetField(ref _spriteOption, value);
+            Sprite.SpriteOption = value;
+            OnPropertyChanged();
             OnPropertyChanged(nameof(IsFavorite));
             OnPropertyChanged(nameof(IsNotFavorite));
         }
@@ -96,13 +83,12 @@ public class SpriteViewModel : INotifyPropertyChanged
 
     public void CheckFilterOption(string searchTerm, SpriteFilter spriteFilter)
     {
-        if (Sprite == null)
+        if (Sprite.IsRandomSprite)
         {
             Display = true;
             return;
         }
 
-        Display = (string.IsNullOrEmpty(searchTerm) || Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || Author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
-                  ((spriteFilter == SpriteFilter.Default && SpriteOption != SpriteOptions.Hide) || (spriteFilter == SpriteFilter.Favorited && SpriteOption == SpriteOptions.Favorite) || (spriteFilter == SpriteFilter.Hidden && SpriteOption == SpriteOptions.Hide) || spriteFilter == SpriteFilter.All);
+        Display = Sprite.MatchesFilter(searchTerm, spriteFilter);
     }
 }

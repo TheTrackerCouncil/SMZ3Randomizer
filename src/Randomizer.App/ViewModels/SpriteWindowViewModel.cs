@@ -9,6 +9,8 @@ namespace Randomizer.App.ViewModels;
 public class SpriteWindowViewModel : INotifyPropertyChanged
 {
     private ObservableCollection<SpriteViewModel> _sprites = new();
+    private SpriteFilter _spriteFilter;
+    private string _searchText = "";
 
     public ObservableCollection<SpriteViewModel> Sprites
     {
@@ -16,7 +18,17 @@ public class SpriteWindowViewModel : INotifyPropertyChanged
         set => SetField(ref _sprites, value);
     }
 
-    public SpriteFilter SpriteFilter { get; set; }
+    public SpriteFilter SpriteFilter
+    {
+        get => _spriteFilter;
+        set => SetField(ref _spriteFilter, value);
+    }
+
+    public string SearchText
+    {
+        get => _searchText;
+        set => SetField(ref _searchText, value);
+    }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
