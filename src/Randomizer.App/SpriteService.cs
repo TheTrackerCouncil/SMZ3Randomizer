@@ -36,7 +36,7 @@ public class SpriteService
     /// <summary>
     /// Loads all player and ship sprites
     /// </summary>
-    public Task LoadSprites()
+    public Task LoadSpritesAsync()
     {
         if (Sprites.Any()) return Task.CompletedTask;
 
@@ -156,7 +156,7 @@ public class SpriteService
     }
 
     /// <summary>
-    /// Applys the user selected sprite options to the given rom bytes
+    /// Applies the user selected sprite options to the given rom bytes
     /// </summary>
     /// <param name="sprite">The sprite to apply</param>
     /// <param name="bytes">The rom bytes to apply the sprite to</param>
@@ -169,7 +169,7 @@ public class SpriteService
         {
             if (!Sprites.Any())
             {
-                LoadSprites().Wait();
+                LoadSpritesAsync().Wait();
             }
 
             var spriteType = sprite.SpriteType;

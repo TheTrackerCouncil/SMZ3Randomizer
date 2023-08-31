@@ -56,7 +56,7 @@ namespace Randomizer.App.Windows
             _msuGeneratorService = msuGeneratorService;
             InitializeComponent();
 
-            _ = spriteService.LoadSprites();
+            _ = spriteService.LoadSpritesAsync();
         }
 
         public PlandoConfig? PlandoConfig { get; set; }
