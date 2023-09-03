@@ -31,7 +31,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Orientation="Vertical">
           <TextBlock>Search</TextBlock>
-          <TextBox Name="SearchTextBox" KeyUp="SearchTextBox_OnKeyUp"></TextBox>
+          <TextBox Name="SearchTextBox" KeyUp="SearchTextBox_OnKeyUp" Text="{Binding SearchText}"></TextBox>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10 0 0 0">

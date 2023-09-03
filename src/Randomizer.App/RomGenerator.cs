@@ -193,6 +193,15 @@ namespace Randomizer.App
 
             var rom = await SaveSeedToDatabaseAsync(options, seed, romPath, spoilerPath, multiplayerGameDetails);
 
+            try
+            {
+                options.Save();
+            }
+            catch (Exception e)
+            {
+                // Do nothing
+            }
+
             return new GenerateRomResults()
             {
                 Rom = rom,
@@ -300,9 +309,17 @@ namespace Randomizer.App
             }
             Rom.ApplySeed(rom, seed.WorldGenerationData.LocalWorld.Patches);
 
-            _spriteService.ApplySpriteTo(options.PatchOptions.SelectedSamusSprite, rom);
-            _spriteService.ApplySpriteTo(options.PatchOptions.SelectedLinkSprite, rom);
-            _spriteService.ApplySpriteTo(options.PatchOptions.SelectedShipSprite, rom);
+            var samusSprite = _spriteService.ApplySpriteOptionsTo(options.PatchOptions.SelectedSamusSprite, rom);
+            var linkSprite = _spriteService.ApplySpriteOptionsTo(options.PatchOptions.SelectedLinkSprite, rom);
+            var shipSprite = _spriteService.ApplySpriteOptionsTo(options.PatchOptions.SelectedShipSprite, rom);
+
+            options.PatchOptions.PreviousSamusSprite = samusSprite;
+            options.PatchOptions.PreviousLinkSprite = linkSprite;
+            options.PatchOptions.PreviousShipSprite = shipSprite;
+
+            var localConfig = seed.Configs.First(x => x.IsLocalConfig);
+            localConfig.SamusName = samusSprite.Name;
+            localConfig.LinkName = linkSprite.Name;
 
             if (options.PatchOptions.CasPatches.Respin)
             {

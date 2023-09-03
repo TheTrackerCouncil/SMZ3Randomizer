@@ -100,6 +100,11 @@ public class MsuGeneratorService
             return false;
         }
 
+        if (!_msuLookupService.Msus.Any())
+        {
+            _msuLookupService.LookupMsus(_options.GeneralOptions.MsuPath);
+        }
+
         var romFileInfo = new FileInfo(romPath);
         var outputPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
 

@@ -40,9 +40,6 @@ public partial class SpriteWindow : Window
     public Sprite? SelectedSprite { get; private set; }
     public Dictionary<string, SpriteOptions> SelectedSpriteOptions { get; private set; } = new();
 
-    private string _searchText = "";
-    private SpriteFilter _spriteFilter;
-
     private void SpriteWindow_OnLoaded(object sender, RoutedEventArgs e)
     {
         _spriteOptions = SpriteType switch
@@ -53,9 +50,7 @@ public partial class SpriteWindow : Window
             _ => new Dictionary<string, SpriteOptions>()
         };
 
-        _allSprites = _spriteService.Sprites.Where(x => x.SpriteType == SpriteType).OrderBy(x => !_spriteOptions.ContainsKey(x.FilePath));
-
-        Model.Sprites.Add(new SpriteViewModel(_spriteService.GetRandomPreviewImage(SpriteType), "Random Sprite", SpriteType));
+        _allSprites = _spriteService.Sprites.Where(x => x.SpriteType == SpriteType).OrderByDescending(x => x.IsRandomSprite).ThenByDescending(x => _spriteOptions.ContainsKey(x.FilePath));
 
         Task.Factory.StartNew(() =>
         {
@@ -63,30 +58,18 @@ public partial class SpriteWindow : Window
             {
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    var model = new SpriteViewModel(sprite, GetSpriteOptionFor(sprite));
-                    model.CheckFilterOption(_searchText, _spriteFilter);
+                    var model = new SpriteViewModel(sprite);
+                    model.CheckFilterOption(Model.SearchText, Model.SpriteFilter);
                     Model.Sprites.Add(model);
                 }), DispatcherPriority.Background);
             }
         });
     }
 
-    private SpriteOptions GetSpriteOptionFor(Sprite sprite)
-    {
-        if (_spriteOptions.TryGetValue(sprite.FilePath, out var option))
-        {
-            return option;
-        }
-        else
-        {
-            return SpriteOptions.Default;
-        }
-    }
-
     private void SearchTextBox_OnKeyUp(object sender, KeyEventArgs e)
     {
-        if (SearchTextBox.Text == _searchText) return;
-        _searchText = SearchTextBox.Text;
+        if (SearchTextBox.Text == Model.SearchText) return;
+        Model.SearchText = SearchTextBox.Text;
         Search();
     }
 
@@ -94,7 +77,7 @@ public partial class SpriteWindow : Window
     {
         foreach (var sprite in Model.Sprites)
         {
-            sprite.CheckFilterOption(_searchText, _spriteFilter);
+            sprite.CheckFilterOption(Model.SearchText, Model.SpriteFilter);
         }
     }
 
@@ -102,12 +85,12 @@ public partial class SpriteWindow : Window
     {
         if (sender is not Button { Tag: SpriteViewModel sprite }) return;
         sprite.SpriteOption = SpriteOptions.Hide;
-        sprite.CheckFilterOption(_searchText, _spriteFilter);
+        sprite.CheckFilterOption(Model.SearchText, Model.SpriteFilter);
     }
 
     private void SpriteFilterComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _spriteFilter = (SpriteFilter)SpriteFilterComboBox.SelectedItem;
+        Model.SpriteFilter = (SpriteFilter)SpriteFilterComboBox.SelectedItem;
         Search();
     }
 
@@ -117,25 +100,19 @@ public partial class SpriteWindow : Window
         sprite.SpriteOption = sprite.SpriteOption == SpriteOptions.Favorite
             ? SpriteOptions.Default
             : SpriteOptions.Favorite;
-        sprite.CheckFilterOption(_searchText, _spriteFilter);
+        sprite.CheckFilterOption(Model.SearchText, Model.SpriteFilter);
     }
 
     private void SelectButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (sender is not Button { Tag: SpriteViewModel sprite }) return;
 
-        if (sprite.Sprite == null)
+        if (sprite.Sprite.IsRandomSprite && !Model.Sprites.Any(x => x.Display && !x.Sprite.IsRandomSprite))
         {
-            if (!Model.Sprites.Any(x => x.Display && x.Sprite != null))
-            {
-                MessageBox.Show(
-                    "No available sprites to pick from. Change your search and filter options before selecting the random sprite option.",
-                    "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var random = new Random().Sanitize();
-            sprite = Model.Sprites.Where(x => x.Display && x.Sprite != null).Random(random)!;
+            MessageBox.Show(
+                "No available sprites to pick from. Change your search and filter options before selecting the random sprite option.",
+                "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
         }
 
         SelectedSprite = sprite.Sprite;
@@ -147,8 +124,8 @@ public partial class SpriteWindow : Window
 
     private void SpriteWindow_OnClosing(object? sender, CancelEventArgs e)
     {
-        SelectedSpriteOptions = Model.Sprites.Where(x => x.SpriteOption != SpriteOptions.Default)
-            .ToDictionary(x => x.Sprite?.FilePath ?? "", x => x.SpriteOption);
+        SelectedSpriteOptions = _allSprites!.Where(x => x.SpriteOption != SpriteOptions.Default)
+            .ToDictionary(x => x.FilePath ?? "", x => x.SpriteOption);
     }
 }
 
