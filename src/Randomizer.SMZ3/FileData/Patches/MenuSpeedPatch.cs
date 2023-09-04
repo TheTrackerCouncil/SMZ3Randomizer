@@ -37,15 +37,15 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
         {
             // #$00 = Off (default) - #$01 = On
-            yield return (Snes(QuickSwapAddress), new[] { QuickSwapEnabled });
+            yield return new GeneratedPatch(Snes(QuickSwapAddress), new[] { QuickSwapEnabled });
 
-            yield return (Snes(MenuSpeedAddress), s_menuSpeedValues[data.Config.MenuSpeed]);
-            yield return (Snes(MenuDownChimeAddress), new[] { data.Config.MenuSpeed == MenuSpeed.Instant ? MenuChime : VwoopDown });
-            yield return (Snes(MenuUpChimeAddress), new[] { data.Config.MenuSpeed == MenuSpeed.Instant ? MenuChime : VwoopUp });
-            yield return (Snes(MenuUpChimeAddress2), new[] { data.Config.MenuSpeed == MenuSpeed.Instant ? MenuChime : VwoopUp });
+            yield return new GeneratedPatch(Snes(MenuSpeedAddress), s_menuSpeedValues[data.Config.MenuSpeed]);
+            yield return new GeneratedPatch(Snes(MenuDownChimeAddress), new[] { data.Config.MenuSpeed == MenuSpeed.Instant ? MenuChime : VwoopDown });
+            yield return new GeneratedPatch(Snes(MenuUpChimeAddress), new[] { data.Config.MenuSpeed == MenuSpeed.Instant ? MenuChime : VwoopUp });
+            yield return new GeneratedPatch(Snes(MenuUpChimeAddress2), new[] { data.Config.MenuSpeed == MenuSpeed.Instant ? MenuChime : VwoopUp });
         }
     }
 }

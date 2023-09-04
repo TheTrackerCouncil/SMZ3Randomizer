@@ -54,7 +54,7 @@ public class PatcherService : IPatcherService
 
     private Dictionary<int, byte[]> GetPatches(PatcherServiceData data)
     {
-        var patches = new List<(int offset, byte[] bytes)>();
+        var patches = new List<GeneratedPatch>();
 
         foreach (var patch in _romPatchFactory.GetPatches())
         {
@@ -63,7 +63,7 @@ public class PatcherService : IPatcherService
             patches.AddRange(updates);
         }
 
-        return patches.ToDictionary(x => x.offset, x => x.bytes);
+        return patches.ToDictionary(x => x.Offset, x => x.Data);
     }
 
 }

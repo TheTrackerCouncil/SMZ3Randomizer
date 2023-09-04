@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class ZeldaRewardsPatch : RomPatch
 {
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         var crystalsBlue = new[] { 1, 2, 3, 4, 7 }.Shuffle(data.Random);
         var crystalsRed = new[] { 5, 6 }.Shuffle(data.Random);
@@ -32,12 +32,12 @@ public class ZeldaRewardsPatch : RomPatch
         }
     }
 
-    private IEnumerable<(int, byte[])> RewardPatches(IEnumerable<IHasReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues)
+    private IEnumerable<GeneratedPatch> RewardPatches(IEnumerable<IHasReward> regions, IEnumerable<int> rewards, Func<int, byte[]> rewardValues)
     {
         var addresses = regions.Select(RewardAddresses);
         var values = rewards.Select(rewardValues);
         var associations = addresses.Zip(values, (a, v) => (a, v));
-        return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => (Snes(i), new[] { b })));
+        return associations.SelectMany(x => x.a.Zip(x.v, (i, b) => new GeneratedPatch(Snes(i), new[] { b })));
     }
 
     private static int[] RewardAddresses(IHasReward region)

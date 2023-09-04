@@ -9,29 +9,29 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class LocationsPatch : RomPatch
 {
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
-        var patches = new List<(int offset, byte[] bytes)>();
+        var patches = new List<GeneratedPatch>();
         patches.AddRange(WriteMetroidLocations(data));
         patches.AddRange(WriteZ3Locations(data));
         return patches;
     }
 
-    private IEnumerable<(int offset, byte[] data)> WriteMetroidLocations(PatcherServiceData data)
+    private IEnumerable<GeneratedPatch> WriteMetroidLocations(PatcherServiceData data)
     {
         foreach (var location in data.LocalWorld.Regions.OfType<SMRegion>().SelectMany(x => x.Locations))
         {
             if (PatcherServiceData.EnableMultiworld)
             {
-                yield return (Snes(location.RomAddress), UshortBytes(GetMetroidItemValue(data, location)));
+                yield return new GeneratedPatch(Snes(location.RomAddress), UshortBytes(GetMetroidItemValue(data, location)));
                 yield return ItemTablePatch(location, GetZ3ItemId(data, location));
             }
             else
             {
                 var plmId = GetMetroidItemValue(data, location);
-                yield return (Snes(location.RomAddress), UshortBytes(plmId));
+                yield return new GeneratedPatch(Snes(location.RomAddress), UshortBytes(plmId));
                 if (plmId >= 0xEFE0)
-                    yield return (Snes(location.RomAddress + 5), new[] { GetZ3ItemId(data, location) });
+                    yield return new GeneratedPatch(Snes(location.RomAddress + 5), new[] { GetZ3ItemId(data, location) });
             }
         }
     }
@@ -85,23 +85,23 @@ public class LocationsPatch : RomPatch
         return (ushort)plmId;
     }
 
-    private IEnumerable<(int offset, byte[] data)> WriteZ3Locations(PatcherServiceData data)
+    private IEnumerable<GeneratedPatch> WriteZ3Locations(PatcherServiceData data)
     {
         foreach (var location in data.LocalWorld.Regions.OfType<Z3Region>().SelectMany(x => x.Locations))
         {
             if (location.Type == LocationType.HeraStandingKey)
             {
-                yield return (Snes(0x9E3BB), location.Item.Type == ItemType.KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB });
+                yield return new GeneratedPatch(Snes(0x9E3BB), location.Item.Type == ItemType.KeyTH ? new byte[] { 0xE4 } : new byte[] { 0xEB });
             }
 
             if (PatcherServiceData.EnableMultiworld)
             {
-                yield return (Snes(location.RomAddress), new[] { (byte)(location.Id - 256) });
+                yield return new GeneratedPatch(Snes(location.RomAddress), new[] { (byte)(location.Id - 256) });
                 yield return ItemTablePatch(location, GetZ3ItemId(data, location));
             }
             else
             {
-                yield return (Snes(location.RomAddress), new[] { GetZ3ItemId(data, location) });
+                yield return new GeneratedPatch(Snes(location.RomAddress), new[] { GetZ3ItemId(data, location) });
             }
         }
     }
@@ -122,10 +122,10 @@ public class LocationsPatch : RomPatch
         return (byte)value;
     }
 
-    private (int, byte[]) ItemTablePatch(Location location, byte itemId)
+    private GeneratedPatch ItemTablePatch(Location location, byte itemId)
     {
         var type = location.Item.World == location.Region.World ? 0 : 1;
         var owner = location.Item.World.Id;
-        return (0x386000 + ((int)location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
+        return new GeneratedPatch(0x386000 + ((int)location.Id * 8), new[] { type, itemId, owner, 0 }.SelectMany(UshortBytes).ToArray());
     }
 }

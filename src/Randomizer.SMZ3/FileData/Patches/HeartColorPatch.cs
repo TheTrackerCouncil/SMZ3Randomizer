@@ -24,16 +24,16 @@ namespace Randomizer.SMZ3.FileData.Patches
             [HeartColor.Blue] = new byte[] { 0xC9, 0x69 }
         };
 
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
         {
             var hudValue = GetHudValue(data.Config.HeartColor);
             for (var i = 0; i < 20; i += 2)
             {
-                yield return (Snes(HudBase + i), new[] { hudValue });
+                yield return new GeneratedPatch(Snes(HudBase + i), new[] { hudValue });
             }
 
             var fileSelectValue = GetFileSelectValue(HeartColor.Red);
-            yield return (Snes(FileSelect), fileSelectValue);
+            yield return new GeneratedPatch(Snes(FileSelect), fileSelectValue);
         }
 
         protected virtual byte GetHudValue(HeartColor color)

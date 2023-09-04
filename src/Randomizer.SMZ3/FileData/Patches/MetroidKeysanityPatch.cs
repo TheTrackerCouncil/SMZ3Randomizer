@@ -62,7 +62,7 @@ public class MetroidKeysanityPatch : RomPatch
         new ushort[] { 0xCC6F, KeycardDoors.Left,       0x064E, KeycardEvents.WreckedShipBoss,       KeycardPlaque.Boss,     0x044F, 0xC29D },  // Wrecked Ship - Pre-Phantoon - Door to Phantoon
     };
 
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         if (!data.LocalWorld.Config.MetroidKeysanity)
             yield break;
@@ -77,33 +77,33 @@ public class MetroidKeysanityPatch : RomPatch
             {
                 // Write dynamic door
                 var doorData = door[0..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                yield return (Snes(0x8f0000 + plmTablePos), doorData);
+                yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), doorData);
                 plmTablePos += 0x08;
             }
             else
             {
                 // Overwrite existing door
                 var doorData = door[1..3].SelectMany(x => UshortBytes(x)).Concat(UshortBytes(doorArgs)).ToArray();
-                yield return (Snes(0x8f0000 + door[6]), doorData);
+                yield return new GeneratedPatch(Snes(0x8f0000 + door[6]), doorData);
                 if ((door[3] == KeycardEvents.BrinstarBoss && door[0] != 0x9D9C)
                     || door[3] == KeycardEvents.LowerNorfairBoss
                     || door[3] == KeycardEvents.MaridiaBoss
                     || door[3] == KeycardEvents.WreckedShipBoss)
                     // Overwrite the extra parts of the Gadora with a PLM
                     // that just deletes itself
-                    yield return (Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 });
+                    yield return new GeneratedPatch(Snes(0x8f0000 + door[6] + 0x06), new byte[] { 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00, 0x2F, 0xB6, 0x00, 0x00, 0x00, 0x00 });
             }
 
             // Plaque data
             if (door[4] != KeycardPlaque.None)
             {
                 var plaqueData = UshortBytes(door[0]).Concat(UshortBytes(plaquePLm)).Concat(UshortBytes(door[5])).Concat(UshortBytes(door[4])).ToArray();
-                yield return (Snes(0x8f0000 + plmTablePos), plaqueData);
+                yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), plaqueData);
                 plmTablePos += 0x08;
             }
             doorId += 1;
         }
 
-        yield return (Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+        yield return new GeneratedPatch(Snes(0x8f0000 + plmTablePos), new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
     }
 }

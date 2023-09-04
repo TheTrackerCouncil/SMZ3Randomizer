@@ -20,19 +20,19 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
         {
             if (!data.Config.CasPatches.DisableFlashing)
                 yield break;
 
             // Update various effects to remove flashing
             // https://github.com/ArchipelagoMW/Archipelago/blob/main/worlds/alttp/Rom.py#L1800
-            yield return (Snes(Rom.TranslateZeldaOffset(0x17E07)), new byte[] { 0x06 });
-            yield return (Snes(Rom.TranslateZeldaOffset(0x17EAB)), new byte[] { 0xD0, 0x03, 0xA9, 0x40, 0x29, 0x60 });
-            yield return (Snes(Rom.TranslateZeldaOffset(0x123FE)), new byte[] { 0x72 });
-            yield return (Snes(Rom.TranslateZeldaOffset(0x3FA7B)), new byte[] { 0x80, 0xac - 0x7b });
-            yield return (Snes(Rom.TranslateZeldaOffset(0x3FAB6)), new byte[] { 0x80 });
-            yield return (Snes(Rom.TranslateZeldaOffset(0x3FAC2)), new byte[] { 0x80 });
+            yield return new GeneratedPatch(Snes(Rom.TranslateZeldaOffset(0x17E07)), new byte[] { 0x06 });
+            yield return new GeneratedPatch(Snes(Rom.TranslateZeldaOffset(0x17EAB)), new byte[] { 0xD0, 0x03, 0xA9, 0x40, 0x29, 0x60 });
+            yield return new GeneratedPatch(Snes(Rom.TranslateZeldaOffset(0x123FE)), new byte[] { 0x72 });
+            yield return new GeneratedPatch(Snes(Rom.TranslateZeldaOffset(0x3FA7B)), new byte[] { 0x80, 0xac - 0x7b });
+            yield return new GeneratedPatch(Snes(Rom.TranslateZeldaOffset(0x3FAB6)), new byte[] { 0x80 });
+            yield return new GeneratedPatch(Snes(Rom.TranslateZeldaOffset(0x3FAC2)), new byte[] { 0x80 });
         }
     }
 }

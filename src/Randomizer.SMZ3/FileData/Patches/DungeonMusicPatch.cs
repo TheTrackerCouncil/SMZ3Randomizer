@@ -9,11 +9,11 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class DungeonMusicPatch : RomPatch
 {
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         if (data.LocalWorld.Config.ZeldaKeysanity)
         {
-            return new List<(int offset, byte[] data)>();
+            return new List<GeneratedPatch>();
         };
 
         var regions = data.LocalWorld.Regions.OfType<IHasReward>().Where(x => x.RewardType != RewardType.Agahnim);
@@ -27,11 +27,11 @@ public class DungeonMusicPatch : RomPatch
         return MusicPatches(regions, music);
     }
 
-    private IEnumerable<(int offset, byte[] data)> MusicPatches(IEnumerable<IHasReward> regions, IEnumerable<byte> music)
+    private IEnumerable<GeneratedPatch> MusicPatches(IEnumerable<IHasReward> regions, IEnumerable<byte> music)
     {
         var addresses = regions.Select(MusicAddresses);
         var associations = addresses.Zip(music, (a, b) => (a, b));
-        return associations.SelectMany(x => x.a.Select(i => (Snes(i), new byte[] { x.b })));
+        return associations.SelectMany(x => x.a.Select(i => new GeneratedPatch(Snes(i), new byte[] { x.b })));
     }
 
     private int[] MusicAddresses(IHasReward region)

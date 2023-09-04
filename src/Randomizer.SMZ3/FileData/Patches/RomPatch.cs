@@ -69,6 +69,6 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public abstract IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data);
+        public abstract IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data);
     }
 }

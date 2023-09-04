@@ -14,17 +14,17 @@ namespace Randomizer.SMZ3.FileData.Patches
             [LowHealthBeepSpeed.Quarter] = 0x80,
         };
 
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
         {
             // A Link to the Past
-            yield return (0x400033, new[] { s_speedValues[data.Config.LowHealthBeepSpeed] });
+            yield return new GeneratedPatch(0x400033, new[] { s_speedValues[data.Config.LowHealthBeepSpeed] });
 
             // Super Metroid
             if (data.Config.DisableLowEnergyBeep)
             {
-                yield return (Snes(0x90EA9B), new byte[] { 0x80 });
-                yield return (Snes(0x90F337), new byte[] { 0x80 });
-                yield return (Snes(0x91E6D5), new byte[] { 0x80 });
+                yield return new GeneratedPatch(Snes(0x90EA9B), new byte[] { 0x80 });
+                yield return new GeneratedPatch(Snes(0x90F337), new byte[] { 0x80 });
+                yield return new GeneratedPatch(Snes(0x91E6D5), new byte[] { 0x80 });
             }
         }
     }

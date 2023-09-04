@@ -15,13 +15,13 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
         {
             // Updates the value set in config.asm
             if (data.Config.CasPatches.MetroidAutoSave)
-                yield return (Snes(0xF4700C), UshortBytes(0x0001));
+                yield return new GeneratedPatch(Snes(0xF4700C), UshortBytes(0x0001));
             else
-                yield return (Snes(0xF4700C), UshortBytes(0x0000));
+                yield return new GeneratedPatch(Snes(0xF4700C), UshortBytes(0x0000));
         }
     }
 }

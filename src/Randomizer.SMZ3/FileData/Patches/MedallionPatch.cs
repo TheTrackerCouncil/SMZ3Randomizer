@@ -7,7 +7,7 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class MedallionPatch : RomPatch
 {
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         var turtleRockAddresses = new[] { 0x308023, 0xD020, 0xD0FF, 0xD1DE };
         var miseryMireAddresses = new[] { 0x308022, 0xCFF2, 0xD0D1, 0xD1B0 };
@@ -28,9 +28,9 @@ public class MedallionPatch : RomPatch
             var x => throw new InvalidOperationException($"Tried using {x} in place of Misery Mire medallion")
         };
 
-        var patches = new List<(int offset, byte[] bytes)>();
-        patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => (Snes(i), new[] { b })));
-        patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => (Snes(i), new[] { b })));
+        var patches = new List<GeneratedPatch>();
+        patches.AddRange(turtleRockAddresses.Zip(turtleRockValues, (i, b) => new GeneratedPatch(Snes(i), new[] { b })));
+        patches.AddRange(miseryMireAddresses.Zip(miseryMireValues, (i, b) => new GeneratedPatch(Snes(i), new[] { b })));
         return patches;
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Randomizer.Data.Options;
-using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.SMZ3.FileData.Patches;
 
@@ -18,7 +17,7 @@ public class StartingEquipmentPatch : RomPatch
     /// A collection of changes, represented by the data to overwrite at the
     /// specified ROM offset.
     /// </returns>
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         var itemSettingOptions = ItemSettingOptions.GetOptions();
 
@@ -63,10 +62,10 @@ public class StartingEquipmentPatch : RomPatch
         foreach (var patchData in metroidData)
         {
             var valueTotal = patchData.Value.Aggregate(0, (current, value) => current | value);
-            yield return (Snes(0x81EF90 + patchData.Key), UshortBytes(valueTotal));
+            yield return new GeneratedPatch(Snes(0x81EF90 + patchData.Key), UshortBytes(valueTotal));
         }
 
-        yield return (Snes(0x30B000), zeldaData.ToArray());
+        yield return new GeneratedPatch(Snes(0x30B000), zeldaData.ToArray());
     }
 
 }

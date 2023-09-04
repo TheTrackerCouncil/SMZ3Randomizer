@@ -8,7 +8,7 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class ZeldaPrizesPatch : RomPatch
 {
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         const int prizePackItems = 56;
         const int treePullItems = 3;
@@ -31,24 +31,24 @@ public class ZeldaPrizesPatch : RomPatch
 
         /* prize pack drop order */
         (var bytes, prizes) = prizes.SplitOff(prizePackItems);
-        yield return (Snes(0x6FA78), bytes.ToArray());
+        yield return new GeneratedPatch(Snes(0x6FA78), bytes.ToArray());
 
         /* tree pull prizes */
         (bytes, prizes) = prizes.SplitOff(treePullItems);
-        yield return (Snes(0x1DFBD4), bytes.ToArray());
+        yield return new GeneratedPatch(Snes(0x1DFBD4), bytes.ToArray());
 
         /* crab prizes */
         (var drop, var final, prizes) = prizes;
-        yield return (Snes(0x6A9C8), new[] { drop });
-        yield return (Snes(0x6A9C4), new[] { final });
+        yield return new GeneratedPatch(Snes(0x6A9C8), new[] { drop });
+        yield return new GeneratedPatch(Snes(0x6A9C4), new[] { final });
 
         /* stun prize */
         (drop, prizes) = prizes;
-        yield return (Snes(0x6F993), new[] { drop });
+        yield return new GeneratedPatch(Snes(0x6F993), new[] { drop });
 
         /* fish prize */
         (drop, _) = prizes;
-        yield return (Snes(0x1D82CC), new[] { drop });
+        yield return new GeneratedPatch(Snes(0x1D82CC), new[] { drop });
 
         foreach (var patch in EnemyPrizePackDistribution(data))
         {
@@ -59,10 +59,10 @@ public class ZeldaPrizesPatch : RomPatch
         /* Normal difficulty is 50%. 0 => 100%, 1 => 50%, 3 => 25% */
         const int nrPacks = 7;
         const byte probability = 1;
-        yield return (Snes(0x6FA62), Enumerable.Repeat(probability, nrPacks).ToArray());
+        yield return new GeneratedPatch(Snes(0x6FA62), Enumerable.Repeat(probability, nrPacks).ToArray());
     }
 
-    private IEnumerable<(int, byte[])> EnemyPrizePackDistribution(PatcherServiceData data)
+    private IEnumerable<GeneratedPatch> EnemyPrizePackDistribution(PatcherServiceData data)
     {
         var (prizePacks, duplicatePacks) = EnemyPrizePacks();
 
@@ -72,17 +72,17 @@ public class ZeldaPrizesPatch : RomPatch
         var patches = prizePacks.Select(x =>
         {
             (var packs, randomization) = randomization.SplitOff(x.bytes.Length);
-            return (x.offset, bytes: x.bytes.Zip(packs, (b, p) => (byte)(b | p)).ToArray());
+            return new GeneratedPatch(x.offset, x.bytes.Zip(packs, (b, p) => (byte)(b | p)).ToArray());
         }).ToList();
 
         var duplicates =
             from d in duplicatePacks
             from p in patches
-            where p.offset == d.src
-            select (d.dest, p.bytes);
+            where p.Offset == d.src
+            select new GeneratedPatch(d.dest, p.Data);
         patches.AddRange(duplicates.ToList());
 
-        return patches.Select(x => (Snes(x.offset), x.bytes));
+        return patches;
     }
 
     /* Guarantees at least s of each prize pack, over a total of n packs.

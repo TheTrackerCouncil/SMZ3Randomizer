@@ -15,13 +15,13 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
         {
             // Updates the value set by bomb_torizo.asm
             if (data.Config.CasPatches.NoBozoSoftlock)
-                yield return (Snes(0x84BA54), new byte[] { 0x28 });
+                yield return new GeneratedPatch(Snes(0x84BA54), new byte[] { 0x28 });
             else
-                yield return (Snes(0x84BA54), new byte[] { 0x28 * 2 });
+                yield return new GeneratedPatch(Snes(0x84BA54), new byte[] { 0x28 * 2 });
         }
     }
 }

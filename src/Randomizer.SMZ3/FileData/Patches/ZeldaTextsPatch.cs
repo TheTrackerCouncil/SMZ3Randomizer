@@ -14,7 +14,7 @@ public class ZeldaTextsPatch : RomPatch
     private PatcherServiceData _data = null!;
     private StringTable _stringTable = null!;
 
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         _data = data;
         _stringTable = new StringTable();
@@ -32,26 +32,26 @@ public class ZeldaTextsPatch : RomPatch
 
         var sahasrahla =
             Dialog.GetGameSafeString(data.GameLines.SahasrahlaReveal?.Format(greenPendantDungeon) ?? "{NOTEXT}");
-        yield return (Snes(0x308A00), Dialog.Simple(sahasrahla));
+        yield return new GeneratedPatch(Snes(0x308A00), Dialog.Simple(sahasrahla));
         _stringTable.SetSahasrahlaRevealText(sahasrahla);
 
         var bombShop =
             Dialog.GetGameSafeString(
                 data.GameLines.BombShopReveal?.Format(redCrystalDungeons.First(), redCrystalDungeons.Last()) ??
                 "{NOTEXT}");
-        yield return (Snes(0x308E00), Dialog.Simple(bombShop));
+        yield return new GeneratedPatch(Snes(0x308E00), Dialog.Simple(bombShop));
         _stringTable.SetBombShopRevealText(bombShop);
 
         var blind = Dialog.GetGameSafeString(data.GameLines.BlindIntro?.ToString() ?? "{NOTEXT}");
-        yield return (Snes(0x308800), Dialog.Simple(blind));
+        yield return new GeneratedPatch(Snes(0x308800), Dialog.Simple(blind));
         _stringTable.SetBlindText(blind);
 
         var tavernMan = Dialog.GetGameSafeString(data.GameLines.TavernMan?.ToString() ?? "{NOTEXT}");
-        yield return (Snes(0x308C00), Dialog.Simple(tavernMan));
+        yield return new GeneratedPatch(Snes(0x308C00), Dialog.Simple(tavernMan));
         _stringTable.SetTavernManText(tavernMan);
 
         var ganon = Dialog.GetGameSafeString(data.GameLines.GanonIntro?.ToString() ?? "{NOTEXT}");
-        yield return (Snes(0x308600), Dialog.Simple(ganon));
+        yield return new GeneratedPatch(Snes(0x308600), Dialog.Simple(ganon));
         _stringTable.SetGanonFirstPhaseText(ganon);
 
         // Have bottle merchant and zora say what they have if requested
@@ -67,11 +67,11 @@ public class ZeldaTextsPatch : RomPatch
         // Todo: Verify these two are correct if ganon invincible patch is
         // ever added ganon_fall_in_alt in v30
         var ganonFirstPhaseInvincible = "You think you\nare ready to\nface me?\n\nI will not die\n\nunless you\ncomplete your\ngoals. Dingus!";
-        yield return (Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible));
+        yield return new GeneratedPatch(Snes(0x309100), Dialog.Simple(ganonFirstPhaseInvincible));
 
         // ganon_phase_3_alt in v30
         var ganonThirdPhaseInvincible = "Got wax in\nyour ears?\nI cannot die!";
-        yield return (Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible));
+        yield return new GeneratedPatch(Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible));
         // ---
 
         var silversLocation = data.Worlds.SelectMany(world => world.Locations).FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.LocalWorld));
@@ -80,13 +80,13 @@ public class ZeldaTextsPatch : RomPatch
             var silvers = Dialog.GetGameSafeString(data.GameLines.GanonSilversHint?.Format(
                 !data.Config.MultiWorld || silversLocation.World == data.LocalWorld ? "you" : silversLocation.World.Player,
                 silversLocation.Region.Area) ?? "{NOTEXT}");
-            yield return (Snes(0x308700), Dialog.Simple(silvers));
+            yield return new GeneratedPatch(Snes(0x308700), Dialog.Simple(silvers));
             _stringTable.SetGanonThirdPhaseText(silvers);
         }
         else
         {
             var silvers = Dialog.GetGameSafeString(data.GameLines.GanonNoSilvers?.ToString() ?? "{NOTEXT}");
-            yield return (Snes(0x308700), Dialog.Simple(silvers));
+            yield return new GeneratedPatch(Snes(0x308700), Dialog.Simple(silvers));
             _stringTable.SetGanonThirdPhaseText(silvers);
         }
 
@@ -95,7 +95,7 @@ public class ZeldaTextsPatch : RomPatch
         yield return PedestalTabletText(data, data.LocalWorld.FindLocation(LocationId.BombosTablet));
 
         var triforceRoom = Dialog.GetGameSafeString(data.GameLines.TriforceRoom?.ToString() ?? "{NOTEXT}");
-        yield return (Snes(0x308400), Dialog.Simple(triforceRoom));
+        yield return new GeneratedPatch(Snes(0x308400), Dialog.Simple(triforceRoom));
         _stringTable.SetTriforceRoomText(triforceRoom);
 
         if (data.Hints.Any() && data.Config.UniqueHintCount > 0)
@@ -108,30 +108,30 @@ public class ZeldaTextsPatch : RomPatch
             _stringTable.SetHints(hints.Shuffle(data.Random).Select(Dialog.GetGameSafeString));
         }
 
-        yield return (Snes(0x1C8000), _stringTable.GetPaddedBytes());
+        yield return new GeneratedPatch(Snes(0x1C8000), _stringTable.GetPaddedBytes());
     }
 
-    private (int offset, byte[] data) PedestalTabletText(PatcherServiceData data, Location location)
+    private GeneratedPatch PedestalTabletText(PatcherServiceData data, Location location)
     {
         var text = GetPedestalHint(data, location.Item);
         var dialog = Dialog.Simple(text);
         if (location.Type == LocationType.Pedestal)
         {
             _stringTable.SetPedestalText(text);
-            return (Snes(0x308300), dialog);
+            return new GeneratedPatch(Snes(0x308300), dialog);
         }
         else if (location.Type == LocationType.Ether)
         {
             _stringTable.SetEtherText(text);
-            return (Snes(0x308F00), dialog);
+            return new GeneratedPatch(Snes(0x308F00), dialog);
         }
         else if (location.Type == LocationType.Bombos)
         {
             _stringTable.SetBombosText(text);
-            return (Snes(0x309000), dialog);
+            return new GeneratedPatch(Snes(0x309000), dialog);
         }
 
-        return (-1, Array.Empty<byte>());
+        return new GeneratedPatch(-1, Array.Empty<byte>());
     }
 
     private string GetRegionName(Region region)
