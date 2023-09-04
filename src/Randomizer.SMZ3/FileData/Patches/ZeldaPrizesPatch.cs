@@ -6,9 +6,10 @@ using static Randomizer.SMZ3.FileData.DropPrize;
 
 namespace Randomizer.SMZ3.FileData.Patches;
 
+[Order(-7)]
 public class ZeldaPrizesPatch : RomPatch
 {
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         const int prizePackItems = 56;
         const int treePullItems = 3;
@@ -62,7 +63,7 @@ public class ZeldaPrizesPatch : RomPatch
         yield return new GeneratedPatch(Snes(0x6FA62), Enumerable.Repeat(probability, nrPacks).ToArray());
     }
 
-    private IEnumerable<GeneratedPatch> EnemyPrizePackDistribution(PatcherServiceData data)
+    private IEnumerable<GeneratedPatch> EnemyPrizePackDistribution(GetPatchesRequest data)
     {
         var (prizePacks, duplicatePacks) = EnemyPrizePacks();
 
@@ -92,7 +93,7 @@ public class ZeldaPrizesPatch : RomPatch
      * as the random element.
      */
 
-    private IEnumerable<byte> PrizePackRandomization(PatcherServiceData data, int n, int s)
+    private IEnumerable<byte> PrizePackRandomization(GetPatchesRequest data, int n, int s)
     {
         const int m = 7;
         var g = Enumerable.Repeat(Enumerable.Range(0, m), s)

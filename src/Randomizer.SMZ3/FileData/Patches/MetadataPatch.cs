@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Shared;
 using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.SMZ3.FileData.Patches;
 
+[Order(-9)]
 public class MetadataPatch : RomPatch
 {
-    private PatcherServiceData _data = null!;
+    private GetPatchesRequest _data = null!;
 
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         _data = data;
         var patches = new List<GeneratedPatch>();
@@ -53,19 +55,19 @@ public class MetadataPatch : RomPatch
     private IEnumerable<GeneratedPatch> WriteSeedData()
     {
         var configField =
-            ((_data.LocalWorld.Config.Race ? 1 : 0) << 15) |
-            ((_data.LocalWorld.Config.Keysanity ? 1 : 0) << 13) |
-            ((PatcherServiceData.EnableMultiworld ? 1 : 0) << 12) |
+            ((_data.World.Config.Race ? 1 : 0) << 15) |
+            ((_data.World.Config.Keysanity ? 1 : 0) << 13) |
+            ((GetPatchesRequest.EnableMultiworld ? 1 : 0) << 12) |
             (Smz3Randomizer.Version.Major << 4) |
             (Smz3Randomizer.Version.Minor << 0);
 
-        yield return new GeneratedPatch(Snes(0x80FF50), UshortBytes(_data.LocalWorld.Id));
+        yield return new GeneratedPatch(Snes(0x80FF50), UshortBytes(_data.World.Id));
         yield return new GeneratedPatch(Snes(0x80FF52), UshortBytes(configField));
         yield return new GeneratedPatch(Snes(0x80FF54), UintBytes(_data.Seed));
         /* Reserve the rest of the space for future use */
         yield return new GeneratedPatch(Snes(0x80FF58), Enumerable.Repeat<byte>(0x00, 8).ToArray());
         yield return new GeneratedPatch(Snes(0x80FF60), AsAscii(_data.SeedGuid));
-        yield return new GeneratedPatch(Snes(0x80FF80), AsAscii(_data.LocalWorld.Guid));
+        yield return new GeneratedPatch(Snes(0x80FF80), AsAscii(_data.World.Guid));
     }
 
     private IEnumerable<GeneratedPatch> WriteGameTitle()
@@ -81,7 +83,7 @@ public class MetadataPatch : RomPatch
         // Enable multiworld (for cheats)
         yield return new GeneratedPatch(Snes(0xF47000), UshortBytes(0x0001));
         // Enable keysanity if applicable
-        if (_data.LocalWorld.Config.Keysanity)
+        if (_data.World.Config.Keysanity)
             yield return new GeneratedPatch(Snes(0xF47006), UshortBytes(0x0001));
     }
 }

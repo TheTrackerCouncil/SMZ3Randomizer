@@ -7,9 +7,10 @@ using Randomizer.Shared;
 
 namespace Randomizer.SMZ3.FileData.Patches;
 
+[Order(-10)]
 public class ZeldaRewardsPatch : RomPatch
 {
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         var crystalsBlue = new[] { 1, 2, 3, 4, 7 }.Shuffle(data.Random);
         var crystalsRed = new[] { 5, 6 }.Shuffle(data.Random);
@@ -17,7 +18,7 @@ public class ZeldaRewardsPatch : RomPatch
 
         var pendantRewards = new[] { 1, 2, 3 };
 
-        var regions = data.LocalWorld.Regions.OfType<IHasReward>();
+        var regions = data.World.Regions.OfType<IHasReward>();
         var crystalRegions = regions.Where(x => x.RewardType == RewardType.CrystalBlue).Concat(regions.Where(x => x.RewardType == RewardType.CrystalRed));
         var pendantRegions = regions.Where(x => x.RewardType is RewardType.PendantGreen or RewardType.PendantRed or RewardType.PendantBlue).OrderBy(r => (int)r.RewardType);
 

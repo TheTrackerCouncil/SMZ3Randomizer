@@ -5,9 +5,9 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class UncleEquipmentPatch : RomPatch
 {
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        var item = data.LocalWorld.HyruleCastle.LinksUncle.Item;
+        var item = data.World.HyruleCastle.LinksUncle.Item;
         if (item.Type != ItemType.ProgressiveSword)
         {
             yield return new GeneratedPatch(Snes(0xDD263), new byte[] { 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x0E });

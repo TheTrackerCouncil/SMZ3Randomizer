@@ -22,6 +22,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Multiplayer.Client;
 using Randomizer.SMZ3.ChatIntegration;
+using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
@@ -107,10 +108,7 @@ namespace Randomizer.App
         {
             // Randomizer + Tracker
             services.AddConfigs();
-            services.AddSmz3Randomizer();
-            services.AddPlandomizer();
-            services.AddGeneratedRomLoader();
-            services.AddSmz3MultiplayerRomGenerator();
+            services.AddRandomizerServices();
             services.AddTracker()
                 .AddOptionalModule<PegWorldModeModule>()
                 .AddOptionalModule<SpoilerModule>()

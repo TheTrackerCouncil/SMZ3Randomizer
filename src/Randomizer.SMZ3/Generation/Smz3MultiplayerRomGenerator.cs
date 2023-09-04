@@ -8,6 +8,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation;
 
@@ -67,9 +68,17 @@ public class Smz3MultiplayerRomGenerator : ISeededRandomizer
 
         foreach (var world in worlds.OrderBy(x => x.Id))
         {
-            var patchRnd = new Random(seedNumber % 1000 + world.Id).Sanitize();
             var hints = world.Config.MultiplayerPlayerGenerationData!.Hints;
-            var patches = _patcherService.GetPatches(world, worlds, seedData.Guid, seedNumber, patchRnd, hints);
+            var patches = _patcherService.GetPatches(new GetPatchesRequest()
+            {
+                World = world,
+                Worlds = worlds,
+                SeedGuid = seedData.Guid,
+                Seed = seedNumber,
+                Random = new Random(seedNumber % 1000 + world.Id).Sanitize(),
+                Hints = hints
+            });
+
             var worldGenerationData = new WorldGenerationData(world, patches, hints);
             seedData.WorldGenerationData.Add(worldGenerationData);
         }

@@ -62,9 +62,9 @@ public class MetroidKeysanityPatch : RomPatch
         new ushort[] { 0xCC6F, KeycardDoors.Left,       0x064E, KeycardEvents.WreckedShipBoss,       KeycardPlaque.Boss,     0x044F, 0xC29D },  // Wrecked Ship - Pre-Phantoon - Door to Phantoon
     };
 
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        if (!data.LocalWorld.Config.MetroidKeysanity)
+        if (!data.World.Config.MetroidKeysanity)
             yield break;
 
         ushort plaquePLm = 0xd410;

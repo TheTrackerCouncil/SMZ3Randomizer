@@ -18,11 +18,10 @@ public class PatcherService : IPatcherService
     private readonly RomPatchFactory _romPatchFactory;
     private readonly Configs _configs;
 
-    public PatcherService(Configs configs, ILogger<PatcherService> logger)
+    public PatcherService(RomPatchFactory romPatchFactory, ILogger<PatcherService> logger)
     {
-        _configs = configs;
         _logger = logger;
-        _romPatchFactory = new RomPatchFactory();
+        _romPatchFactory = romPatchFactory;
     }
 
     /// <summary>
@@ -40,19 +39,18 @@ public class PatcherService : IPatcherService
     {
         hints ??= new List<string>();
 
-        return GetPatches(new PatcherServiceData()
+        return GetPatches(new GetPatchesRequest()
         {
-            LocalWorld = localWorld,
+            World = localWorld,
             Worlds = worlds,
             SeedGuid = seedGuid,
             Seed = seed,
             Random = random,
-            Hints = hints,
-            Configs = _configs
+            Hints = hints
         });
     }
 
-    private Dictionary<int, byte[]> GetPatches(PatcherServiceData data)
+    public Dictionary<int, byte[]> GetPatches(GetPatchesRequest data)
     {
         var patches = new List<GeneratedPatch>();
 

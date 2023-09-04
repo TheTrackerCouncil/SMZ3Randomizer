@@ -9,14 +9,14 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class DungeonMusicPatch : RomPatch
 {
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
-        if (data.LocalWorld.Config.ZeldaKeysanity)
+        if (data.World.Config.ZeldaKeysanity)
         {
             return new List<GeneratedPatch>();
         };
 
-        var regions = data.LocalWorld.Regions.OfType<IHasReward>().Where(x => x.RewardType != RewardType.Agahnim);
+        var regions = data.World.Regions.OfType<IHasReward>().Where(x => x.RewardType != RewardType.Agahnim);
         var music = regions.Select(x => (byte)(x.RewardType switch {
             RewardType.PendantBlue => 0x11,
             RewardType.PendantGreen => 0x11,
