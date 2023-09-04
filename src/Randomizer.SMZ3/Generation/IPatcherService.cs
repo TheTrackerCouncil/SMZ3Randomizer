@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 
 namespace Randomizer.SMZ3.Generation;
@@ -19,7 +20,8 @@ public interface IPatcherService
     /// <param name="seed">The seed number</param>
     /// <param name="random">The random generator to be used for determining various patches</param>
     /// <param name="hints">The list of hints to use for hint tiles</param>
+    /// <param name="plandoConfig">Plando configuartion</param>
     /// <returns>The memory locations and overwrite data for all of the patches to apply to the rom</returns>
     Dictionary<int, byte[]> GetPatches(World localWorld, List<World> worlds, string seedGuid, int seed,
-        Random random, IEnumerable<string>? hints = null);
+        Random random, IEnumerable<string>? hints = null, PlandoConfig? plandoConfig = null);
 }

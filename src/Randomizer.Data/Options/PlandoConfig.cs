@@ -98,5 +98,10 @@ namespace Randomizer.Data.Options
         /// medallions they require.
         /// </summary>
         public Dictionary<string, ItemType> Medallions { get; set; } = new();
+
+        /// <summary>
+        /// Text overrides
+        /// </summary>
+        public PlandoTextConfig Text { get; set; } = new();
     }
 }

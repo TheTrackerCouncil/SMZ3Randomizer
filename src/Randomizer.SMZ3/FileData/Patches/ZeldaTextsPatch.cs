@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
@@ -13,13 +15,15 @@ public class ZeldaTextsPatch : RomPatch
 {
     private PatcherServiceData _data = null!;
     private StringTable _stringTable = null!;
+    private PlandoTextConfig _plandoText = null!;
 
     public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
     {
         _data = data;
         _stringTable = new StringTable();
+        _plandoText = data.PlandoConfig?.Text ?? new PlandoTextConfig();
 
-        var regions = data.LocalWorld.Regions.OfType<IHasReward>();
+        var regions = data.LocalWorld.Regions.OfType<IHasReward>().ToList();
 
         var greenPendantDungeon = regions
             .Where(x => x.RewardType == RewardType.PendantGreen)
@@ -30,39 +34,88 @@ public class ZeldaTextsPatch : RomPatch
             .Where(x => x.RewardType == RewardType.CrystalRed)
             .Select(x => GetRegionName((Region)x));
 
-        var sahasrahla =
-            Dialog.GetGameSafeString(data.GameLines.SahasrahlaReveal?.Format(greenPendantDungeon) ?? "{NOTEXT}");
-        yield return new GeneratedPatch(Snes(0x308A00), Dialog.Simple(sahasrahla));
-        _stringTable.SetSahasrahlaRevealText(sahasrahla);
+        yield return SetText(0x308A00, StringTable.SahasrahlaReveal,
+            data.GameLines.SahasrahlaReveal, _plandoText.SahasrahlaReveal,
+            greenPendantDungeon);
 
-        var bombShop =
-            Dialog.GetGameSafeString(
-                data.GameLines.BombShopReveal?.Format(redCrystalDungeons.First(), redCrystalDungeons.Last()) ??
-                "{NOTEXT}");
-        yield return new GeneratedPatch(Snes(0x308E00), Dialog.Simple(bombShop));
-        _stringTable.SetBombShopRevealText(bombShop);
+        yield return SetText(0x308E00, StringTable.BombShopReveal,
+            data.GameLines.BombShopReveal, _plandoText.BombShopReveal,
+            redCrystalDungeons.First(), redCrystalDungeons.Last());
 
-        var blind = Dialog.GetGameSafeString(data.GameLines.BlindIntro?.ToString() ?? "{NOTEXT}");
-        yield return new GeneratedPatch(Snes(0x308800), Dialog.Simple(blind));
-        _stringTable.SetBlindText(blind);
+        yield return SetText(0x308800, StringTable.BlindIntro,
+            data.GameLines.BlindIntro, _plandoText.BlindIntro);
 
-        var tavernMan = Dialog.GetGameSafeString(data.GameLines.TavernMan?.ToString() ?? "{NOTEXT}");
-        yield return new GeneratedPatch(Snes(0x308C00), Dialog.Simple(tavernMan));
-        _stringTable.SetTavernManText(tavernMan);
+        yield return SetText(0x308C00, StringTable.TavernMan,
+            data.GameLines.TavernMan, _plandoText.TavernMan);
 
-        var ganon = Dialog.GetGameSafeString(data.GameLines.GanonIntro?.ToString() ?? "{NOTEXT}");
-        yield return new GeneratedPatch(Snes(0x308600), Dialog.Simple(ganon));
-        _stringTable.SetGanonFirstPhaseText(ganon);
-
-        // Have bottle merchant and zora say what they have if requested
-        if (data.Config.CasPatches.PreventScams)
+        foreach (var text in GanonText(data))
         {
-            var item = GetItemName(data, data.LocalWorld.LightWorldNorthWest.BottleMerchant.Item);
-            _stringTable.SetBottleVendorText(Dialog.GetChoiceText(data.GameLines.BottleMerchant?.Format(item) ?? "{NOTEXT}", data.GameLines.ChoiceYes?.ToString() ?? string.Empty, data.GameLines.ChoiceNo?.ToString() ?? string.Empty));
-
-            item = GetItemName(data, data.LocalWorld.FindLocation(LocationId.KingZora).Item);
-            _stringTable.SetZoraText(Dialog.GetChoiceText(data.GameLines.KingZora?.Format(item) ?? "{NOTEXT}", data.GameLines.ChoiceYes?.ToString() ?? string.Empty, data.GameLines.ChoiceNo?.ToString() ?? string.Empty));
+            yield return text;
         }
+
+        SetMerchantText();
+
+        var hintText = GetPedestalHint(data, LocationId.MasterSwordPedestal);
+        yield return SetText(0x308300, StringTable.MasterSwordPedestal, hintText, _plandoText.MasterSwordPedestal);
+
+        hintText = GetPedestalHint(data, LocationId.EtherTablet);
+        yield return SetText(0x308F00, StringTable.EtherTablet, hintText, _plandoText.EtherTablet);
+
+        hintText = GetPedestalHint(data, LocationId.BombosTablet);
+        yield return SetText(0x309000, StringTable.BombosTablet, hintText, _plandoText.BombosTablet);
+
+        yield return SetText(0x308400, StringTable.TriforceRoom,
+            data.GameLines.TriforceRoom, _plandoText.TriforceRoom);
+
+        SetHintText();
+
+        yield return new GeneratedPatch(Snes(0x1C8000), _stringTable.GetPaddedBytes());
+    }
+
+    private GeneratedPatch SetText(int address, string? textKey, SchrodingersString? defaultText, string? overrideText, params object[] formatData)
+    {
+        return SetText(address, textKey, defaultText?.ToString(), overrideText, formatData);
+    }
+
+    private GeneratedPatch SetText(int address, string? textKey, string? defaultText, string? overrideText, params object[] formatData)
+    {
+        var text = string.IsNullOrEmpty(overrideText) ? defaultText : overrideText;
+        if (string.IsNullOrEmpty(text))
+            text = "{NOTEXT}";
+
+        var formattedText =
+            Dialog.GetGameSafeString(string.Format(text, formatData));
+
+        if (!string.IsNullOrEmpty(textKey))
+        {
+            _stringTable.SetText(textKey, formattedText);
+        }
+
+        if (address < 0)
+        {
+            return new GeneratedPatch(0, Array.Empty<byte>());
+        }
+
+        return new GeneratedPatch(Snes(address), Dialog.Simple(formattedText));
+    }
+
+    private void SetChoiceText(string textKey, SchrodingersString? defaultText, string? overrideText, string item)
+    {
+        var text = string.IsNullOrEmpty(overrideText) ? defaultText?.ToString() : overrideText;
+        if (string.IsNullOrEmpty(text))
+            text = "{NOTEXT}";
+
+        _stringTable.SetText(textKey,
+            Dialog.GetChoiceText(string.Format(text, item),
+                _data.GameLines.ChoiceYes?.ToString() ?? "Yes",
+                _data.GameLines.ChoiceNo?.ToString() ?? "No"));
+
+    }
+
+    private IEnumerable<GeneratedPatch> GanonText(PatcherServiceData data)
+    {
+        yield return SetText(0x308600, StringTable.GanonIntro,
+            data.GameLines.GanonIntro, _plandoText.GanonIntro);
 
         // Todo: Verify these two are correct if ganon invincible patch is
         // ever added ganon_fall_in_alt in v30
@@ -74,64 +127,103 @@ public class ZeldaTextsPatch : RomPatch
         yield return new GeneratedPatch(Snes(0x309200), Dialog.Simple(ganonThirdPhaseInvincible));
         // ---
 
-        var silversLocation = data.Worlds.SelectMany(world => world.Locations).FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.LocalWorld));
-        if (silversLocation != null)
+        var silversLocation = data.Worlds.SelectMany(world => world.Locations)
+            .FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.LocalWorld));
+        var silversText = silversLocation == null
+            ? data.GameLines.GanonSilversHint
+            : data.GameLines.GanonNoSilvers;
+        var silverLocationPlayer = data.Config.MultiWorld && silversLocation?.World != data.LocalWorld
+            ? silversLocation?.World.Player
+            : "you";
+        yield return SetText(0x308700, StringTable.GanonPhaseThreeText,
+            silversText, _plandoText.GanonSilversHint,
+            silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
+    }
+
+    private void SetMerchantText()
+    {
+        // Have bottle merchant and zora say what they have if requested
+        if (_data.Config.CasPatches.PreventScams)
         {
-            var silvers = Dialog.GetGameSafeString(data.GameLines.GanonSilversHint?.Format(
-                !data.Config.MultiWorld || silversLocation.World == data.LocalWorld ? "you" : silversLocation.World.Player,
-                silversLocation.Region.Area) ?? "{NOTEXT}");
-            yield return new GeneratedPatch(Snes(0x308700), Dialog.Simple(silvers));
-            _stringTable.SetGanonThirdPhaseText(silvers);
+            var item = GetItemName(_data, _data.LocalWorld.LightWorldNorthWest.BottleMerchant.Item);
+            SetChoiceText(StringTable.BottleMerchant, _data.GameLines.BottleMerchant,
+                _plandoText.BottleMerchant, item);
+
+            item = GetItemName(_data, _data.LocalWorld.FindLocation(LocationId.KingZora).Item);
+            SetChoiceText(StringTable.KingZora, _data.GameLines.KingZora,
+                _plandoText.KingZora, item);
         }
         else
         {
-            var silvers = Dialog.GetGameSafeString(data.GameLines.GanonNoSilvers?.ToString() ?? "{NOTEXT}");
-            yield return new GeneratedPatch(Snes(0x308700), Dialog.Simple(silvers));
-            _stringTable.SetGanonThirdPhaseText(silvers);
-        }
-
-        yield return PedestalTabletText(data, data.LocalWorld.FindLocation(LocationId.MasterSwordPedestal));
-        yield return PedestalTabletText(data, data.LocalWorld.FindLocation(LocationId.EtherTablet));
-        yield return PedestalTabletText(data, data.LocalWorld.FindLocation(LocationId.BombosTablet));
-
-        var triforceRoom = Dialog.GetGameSafeString(data.GameLines.TriforceRoom?.ToString() ?? "{NOTEXT}");
-        yield return new GeneratedPatch(Snes(0x308400), Dialog.Simple(triforceRoom));
-        _stringTable.SetTriforceRoomText(triforceRoom);
-
-        if (data.Hints.Any() && data.Config.UniqueHintCount > 0)
-        {
-            var hints = data.Hints.Take(data.Config.UniqueHintCount);
-            while (hints.Count() < GameHintService.HintLocations.Count)
+            if (!string.IsNullOrEmpty(_plandoText.BottleMerchant))
             {
-                hints = hints.Concat(hints.Take(Math.Min(GameHintService.HintLocations.Count() - hints.Count(), hints.Count())));
+                SetChoiceText(StringTable.BottleMerchant, null, _plandoText.BottleMerchant, "");
             }
-            _stringTable.SetHints(hints.Shuffle(data.Random).Select(Dialog.GetGameSafeString));
-        }
 
-        yield return new GeneratedPatch(Snes(0x1C8000), _stringTable.GetPaddedBytes());
+            if (!string.IsNullOrEmpty(_plandoText.KingZora))
+            {
+                SetChoiceText(StringTable.KingZora, null, _plandoText.KingZora, "");
+            }
+        }
     }
 
-    private GeneratedPatch PedestalTabletText(PatcherServiceData data, Location location)
+    private void SetHintText()
     {
-        var text = GetPedestalHint(data, location.Item);
-        var dialog = Dialog.Simple(text);
-        if (location.Type == LocationType.Pedestal)
+        // Get the correct number of hints
+        var hints = _data.Hints.ToList();
+        if (hints.Any() && _data.Config.UniqueHintCount > 0)
         {
-            _stringTable.SetPedestalText(text);
-            return new GeneratedPatch(Snes(0x308300), dialog);
+            hints = hints.Take(_data.Config.UniqueHintCount).ToList();
+            while (hints.Count < GameHintService.HintLocations.Count)
+            {
+                hints.AddRange(hints.Take(Math.Min(GameHintService.HintLocations.Count - hints.Count,
+                    hints.Count)));
+            }
+
+            hints.Shuffle(_data.Random);
         }
-        else if (location.Type == LocationType.Ether)
+        else
         {
-            _stringTable.SetEtherText(text);
-            return new GeneratedPatch(Snes(0x308F00), dialog);
-        }
-        else if (location.Type == LocationType.Bombos)
-        {
-            _stringTable.SetBombosText(text);
-            return new GeneratedPatch(Snes(0x309000), dialog);
+            hints = Enumerable.Repeat("",GameHintService.HintLocations.Count).ToList();
         }
 
-        return new GeneratedPatch(-1, Array.Empty<byte>());
+        SetHintTileText(StringTable.TelepathicTileEasternPalace, hints[0],
+            _plandoText.TelepathicTileEasternPalace);
+        SetHintTileText(StringTable.TelepathicTileTowerOfHeraFloor4, hints[1],
+            _plandoText.TelepathicTileTowerOfHeraFloor4);
+        SetHintTileText(StringTable.TelepathicTileSpectacleRock, hints[2],
+            _plandoText.TelepathicTileSpectacleRock);
+        SetHintTileText(StringTable.TelepathicTileSwampEntrance, hints[3],
+            _plandoText.TelepathicTileSwampEntrance);
+        SetHintTileText(StringTable.TelepathicTileThievesTownUpstairs, hints[4],
+            _plandoText.TelepathicTileThievesTownUpstairs);
+        SetHintTileText(StringTable.TelepathicTileMiseryMire, hints[5],
+            _plandoText.TelepathicTileMiseryMire);
+        SetHintTileText(StringTable.TelepathicTilePalaceOfDarkness, hints[6],
+            _plandoText.TelepathicTilePalaceOfDarkness);
+        SetHintTileText(StringTable.TelepathicTileDesertBonkTorchRoom, hints[7],
+            _plandoText.TelepathicTileDesertBonkTorchRoom);
+        SetHintTileText(StringTable.TelepathicTileCastleTower, hints[8],
+            _plandoText.TelepathicTileCastleTower);
+        SetHintTileText(StringTable.TelepathicTileIceLargeRoom, hints[9],
+            _plandoText.TelepathicTileIceLargeRoom);
+        SetHintTileText(StringTable.TelepathicTileTurtleRock, hints[10],
+            _plandoText.TelepathicTileTurtleRock);
+        SetHintTileText(StringTable.TelepathicTileIceEntrance, hints[11],
+            _plandoText.TelepathicTileIceEntrance);
+        SetHintTileText(StringTable.TelepathicTileIceStalfosKnightsRoom, hints[12],
+            _plandoText.TelepathicTileIceStalfosKnightsRoom);
+        SetHintTileText(StringTable.TelepathicTileTowerOfHeraEntrance, hints[13],
+            _plandoText.TelepathicTileTowerOfHeraEntrance);
+        SetHintTileText(StringTable.TelepathicTileSouthEastDarkworldCave, hints[14],
+            _plandoText.TelepathicTileSouthEastDarkworldCave);
+    }
+
+    private void SetHintTileText(string key, string? defaultText, string? overrideText)
+    {
+        var text = string.IsNullOrEmpty(overrideText) ? defaultText : overrideText;
+        if (string.IsNullOrEmpty(text)) return;
+        _stringTable.SetHintText(key, Dialog.GetGameSafeString(text));
     }
 
     private string GetRegionName(Region region)
@@ -154,8 +246,9 @@ public class ZeldaTextsPatch : RomPatch
         }
     }
 
-    private string GetPedestalHint(PatcherServiceData data, Item item)
+    private string GetPedestalHint(PatcherServiceData data, LocationId locationId)
     {
+        var item = data.LocalWorld.FindLocation(locationId).Item;
         var hintText = data.GetItemData(item)?.PedestalHints?.ToString() ?? item.Name;
         if (!data.Config.MultiWorld)
         {

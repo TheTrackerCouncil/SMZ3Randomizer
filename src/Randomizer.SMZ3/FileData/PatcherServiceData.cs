@@ -22,6 +22,7 @@ public class PatcherServiceData
     public required Random Random { get; init; }
     public required IEnumerable<string> Hints { get; init; }
     public required Configs Configs { get; init; }
+    public required PlandoConfig? PlandoConfig { get; init; }
 
     public const bool EnableMultiworld = true;
     public Config Config => LocalWorld.Config;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.FileData.Patches;
@@ -35,8 +36,9 @@ public class PatcherService : IPatcherService
     /// <param name="seed">The seed number</param>
     /// <param name="random">The random generator to be used for determining various patches</param>
     /// <param name="hints">The list of hints to use for hint tiles</param>
+    /// <param name="plandoConfig">Plando configuration</param>
     /// <returns>The memory locations and overwrite data for all of the patches to apply to the rom</returns>
-    public Dictionary<int, byte[]> GetPatches(World localWorld, List<World> worlds, string seedGuid, int seed, Random random, IEnumerable<string>? hints = null)
+    public Dictionary<int, byte[]> GetPatches(World localWorld, List<World> worlds, string seedGuid, int seed, Random random, IEnumerable<string>? hints = null, PlandoConfig? plandoConfig = null)
     {
         hints ??= new List<string>();
 
@@ -48,7 +50,8 @@ public class PatcherService : IPatcherService
             Seed = seed,
             Random = random,
             Hints = hints,
-            Configs = _configs
+            Configs = _configs,
+            PlandoConfig = plandoConfig
         });
     }
 
