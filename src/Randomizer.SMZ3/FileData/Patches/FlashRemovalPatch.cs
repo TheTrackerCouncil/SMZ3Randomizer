@@ -20,7 +20,7 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
             if (!data.Config.CasPatches.DisableFlashing)
                 yield break;

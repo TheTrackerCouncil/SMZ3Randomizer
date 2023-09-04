@@ -9,7 +9,7 @@ namespace Randomizer.SMZ3.FileData.Patches;
 /// </summary>
 public class MetroidControlsPatch : RomPatch
 {
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         yield return new GeneratedPatch(Snes(0x81B331), UshortBytes((int)data.Config.MetroidControls.Shoot));
         yield return new GeneratedPatch(Snes(0x81B325), UshortBytes((int)data.Config.MetroidControls.Jump));

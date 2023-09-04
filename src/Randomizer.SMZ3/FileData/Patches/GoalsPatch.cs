@@ -6,7 +6,7 @@ namespace Randomizer.SMZ3.FileData.Patches;
 
 public class GoalsPatch : RomPatch
 {
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         // Mark Ganon invincible flag (if needed)
         yield return new GeneratedPatch(Snes(0x30803E), new byte[] { 0x03 });

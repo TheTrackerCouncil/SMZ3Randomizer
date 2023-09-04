@@ -24,7 +24,7 @@ namespace Randomizer.SMZ3.FileData.Patches
             [HeartColor.Blue] = new byte[] { 0xC9, 0x69 }
         };
 
-        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
             var hudValue = GetHudValue(data.Config.HeartColor);
             for (var i = 0; i < 20; i += 2)

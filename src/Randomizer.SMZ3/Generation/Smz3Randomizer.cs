@@ -10,6 +10,7 @@ using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -121,10 +122,16 @@ namespace Randomizer.SMZ3.Generation
             var patchSeed = rng.Next();
             foreach (var world in worlds)
             {
-                var patchRnd = new Random(patchSeed).Sanitize();
                 var hints = _hintService.GetInGameHints(world, worlds, playthrough, rng.Next());
-                var patches = _patcherService.GetPatches(world, worlds, seedData.Guid,
-                    primaryConfig.Race ? 0 : seedNumber, patchRnd, hints);
+                var patches = _patcherService.GetPatches(new GetPatchesRequest()
+                {
+                    World = world,
+                    Worlds = worlds,
+                    SeedGuid = seedData.Guid,
+                    Seed = primaryConfig.Race ? 0 : seedNumber,
+                    Random = new Random(patchSeed).Sanitize(),
+                    Hints = hints
+                });
                 var worldGenerationData = new WorldGenerationData(world, patches, hints);
                 _logger.LogInformation("Patch created for world {WorldId}", world.Id);
                 seedData.WorldGenerationData.Add(worldGenerationData);

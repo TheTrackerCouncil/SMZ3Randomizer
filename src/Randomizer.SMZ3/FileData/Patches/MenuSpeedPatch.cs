@@ -37,7 +37,7 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
             // #$00 = Off (default) - #$01 = On
             yield return new GeneratedPatch(Snes(QuickSwapAddress), new[] { QuickSwapEnabled });

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Data.Configuration;
+using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
@@ -11,19 +13,30 @@ using Randomizer.SMZ3.Text;
 
 namespace Randomizer.SMZ3.FileData.Patches;
 
+[Order(-5)]
 public class ZeldaTextsPatch : RomPatch
 {
-    private PatcherServiceData _data = null!;
     private StringTable _stringTable = null!;
     private PlandoTextConfig _plandoText = null!;
+    private GameLinesConfig _gameLines;
+    private ItemConfig _items;
+    private RegionConfig _regions;
+    private GetPatchesRequest _data;
 
-    public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+    public ZeldaTextsPatch(Configs configs)
+    {
+        _gameLines = configs.GameLines;
+        _items = configs.Items;
+        _regions = configs.Regions;
+    }
+
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         _data = data;
         _stringTable = new StringTable();
         _plandoText = data.PlandoConfig?.Text ?? new PlandoTextConfig();
 
-        var regions = data.LocalWorld.Regions.OfType<IHasReward>().ToList();
+        var regions = data.World.Regions.OfType<IHasReward>().ToList();
 
         var greenPendantDungeon = regions
             .Where(x => x.RewardType == RewardType.PendantGreen)
@@ -35,18 +48,18 @@ public class ZeldaTextsPatch : RomPatch
             .Select(x => GetRegionName((Region)x));
 
         yield return SetText(0x308A00, StringTable.SahasrahlaReveal,
-            data.GameLines.SahasrahlaReveal, _plandoText.SahasrahlaReveal,
+            _gameLines.SahasrahlaReveal, _plandoText.SahasrahlaReveal,
             greenPendantDungeon);
 
         yield return SetText(0x308E00, StringTable.BombShopReveal,
-            data.GameLines.BombShopReveal, _plandoText.BombShopReveal,
+            _gameLines.BombShopReveal, _plandoText.BombShopReveal,
             redCrystalDungeons.First(), redCrystalDungeons.Last());
 
         yield return SetText(0x308800, StringTable.BlindIntro,
-            data.GameLines.BlindIntro, _plandoText.BlindIntro);
+            _gameLines.BlindIntro, _plandoText.BlindIntro);
 
         yield return SetText(0x308C00, StringTable.TavernMan,
-            data.GameLines.TavernMan, _plandoText.TavernMan);
+            _gameLines.TavernMan, _plandoText.TavernMan);
 
         foreach (var text in GanonText(data))
         {
@@ -65,7 +78,7 @@ public class ZeldaTextsPatch : RomPatch
         yield return SetText(0x309000, StringTable.BombosTablet, hintText, _plandoText.BombosTablet);
 
         yield return SetText(0x308400, StringTable.TriforceRoom,
-            data.GameLines.TriforceRoom, _plandoText.TriforceRoom);
+            _gameLines.TriforceRoom, _plandoText.TriforceRoom);
 
         SetHintText();
 
@@ -107,15 +120,15 @@ public class ZeldaTextsPatch : RomPatch
 
         _stringTable.SetText(textKey,
             Dialog.GetChoiceText(string.Format(text, item),
-                _data.GameLines.ChoiceYes?.ToString() ?? "Yes",
-                _data.GameLines.ChoiceNo?.ToString() ?? "No"));
+                _gameLines.ChoiceYes?.ToString() ?? "Yes",
+                _gameLines.ChoiceNo?.ToString() ?? "No"));
 
     }
 
-    private IEnumerable<GeneratedPatch> GanonText(PatcherServiceData data)
+    private IEnumerable<GeneratedPatch> GanonText(GetPatchesRequest data)
     {
         yield return SetText(0x308600, StringTable.GanonIntro,
-            data.GameLines.GanonIntro, _plandoText.GanonIntro);
+            _gameLines.GanonIntro, _plandoText.GanonIntro);
 
         // Todo: Verify these two are correct if ganon invincible patch is
         // ever added ganon_fall_in_alt in v30
@@ -128,11 +141,11 @@ public class ZeldaTextsPatch : RomPatch
         // ---
 
         var silversLocation = data.Worlds.SelectMany(world => world.Locations)
-            .FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.LocalWorld));
+            .FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.World));
         var silversText = silversLocation == null
-            ? data.GameLines.GanonSilversHint
-            : data.GameLines.GanonNoSilvers;
-        var silverLocationPlayer = data.Config.MultiWorld && silversLocation?.World != data.LocalWorld
+            ? _gameLines.GanonSilversHint
+            : _gameLines.GanonNoSilvers;
+        var silverLocationPlayer = data.Config.MultiWorld && silversLocation?.World != data.World
             ? silversLocation?.World.Player
             : "you";
         yield return SetText(0x308700, StringTable.GanonPhaseThreeText,
@@ -145,12 +158,12 @@ public class ZeldaTextsPatch : RomPatch
         // Have bottle merchant and zora say what they have if requested
         if (_data.Config.CasPatches.PreventScams)
         {
-            var item = GetItemName(_data, _data.LocalWorld.LightWorldNorthWest.BottleMerchant.Item);
-            SetChoiceText(StringTable.BottleMerchant, _data.GameLines.BottleMerchant,
+            var item = GetItemName(_data, _data.World.LightWorldNorthWest.BottleMerchant.Item);
+            SetChoiceText(StringTable.BottleMerchant, _gameLines.BottleMerchant,
                 _plandoText.BottleMerchant, item);
 
-            item = GetItemName(_data, _data.LocalWorld.FindLocation(LocationId.KingZora).Item);
-            SetChoiceText(StringTable.KingZora, _data.GameLines.KingZora,
+            item = GetItemName(_data, _data.World.FindLocation(LocationId.KingZora).Item);
+            SetChoiceText(StringTable.KingZora, _gameLines.KingZora,
                 _plandoText.KingZora, item);
         }
         else
@@ -228,37 +241,40 @@ public class ZeldaTextsPatch : RomPatch
 
     private string GetRegionName(Region region)
     {
-        return Dialog.GetGameSafeString(_data.GetRegionInfo(region)?.Name.ToString() ?? region.Name);
+        return Dialog.GetGameSafeString(GetRegionInfo(region)?.Name.ToString() ?? region.Name);
     }
 
-    private string GetItemName(PatcherServiceData data, Item item)
+    private string GetItemName(GetPatchesRequest data, Item item)
     {
-        var itemName = _data.GetItemData(item)?.NameWithArticle ?? item.Name;
+        var itemName = GetItemData(item)?.NameWithArticle ?? item.Name;
         if (!data.Config.MultiWorld)
         {
             return itemName;
         }
         else
         {
-            return data.LocalWorld == item.World
+            return data.World == item.World
                 ? $"{itemName} belonging to you"
                 : $"{itemName} belonging to {item.World.Player}";
         }
     }
 
-    private string GetPedestalHint(PatcherServiceData data, LocationId locationId)
+    private string GetPedestalHint(GetPatchesRequest data, LocationId locationId)
     {
-        var item = data.LocalWorld.FindLocation(locationId).Item;
-        var hintText = data.GetItemData(item)?.PedestalHints?.ToString() ?? item.Name;
+        var item = data.World.FindLocation(locationId).Item;
+        var hintText = GetItemData(item)?.PedestalHints?.ToString() ?? item.Name;
         if (!data.Config.MultiWorld)
         {
             return hintText;
         }
         else
         {
-            return data.LocalWorld == item.World
+            return data.World == item.World
                 ? $"{hintText} belonging to you"
                 : $"{hintText} belonging to {item.World.Player}";
         }
     }
+
+    private RegionInfo? GetRegionInfo(Region region) => _regions.FirstOrDefault(x => x.Type == region.GetType());
+    private ItemData? GetItemData(Item item) => _items.FirstOrDefault(x => x.InternalItemType == item.Type);
 }

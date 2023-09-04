@@ -15,7 +15,7 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
             // Updates the value set in config.asm
             if (data.Config.CasPatches.MetroidAutoSave)

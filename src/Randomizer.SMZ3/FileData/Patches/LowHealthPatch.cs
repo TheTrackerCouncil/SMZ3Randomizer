@@ -14,7 +14,7 @@ namespace Randomizer.SMZ3.FileData.Patches
             [LowHealthBeepSpeed.Quarter] = 0x80,
         };
 
-        public override IEnumerable<GeneratedPatch> GetChanges(PatcherServiceData data)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
             // A Link to the Past
             yield return new GeneratedPatch(0x400033, new[] { s_speedValues[data.Config.LowHealthBeepSpeed] });

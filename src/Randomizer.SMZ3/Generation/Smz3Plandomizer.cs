@@ -9,6 +9,7 @@ using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation
 {
@@ -74,8 +75,15 @@ namespace Randomizer.SMZ3.Generation
 
             foreach (var world in worlds)
             {
-                var patchRnd = new Random().Sanitize();
-                var patches = _patcherService.GetPatches(world, worlds, seedData.Guid, 0, patchRnd);
+                var patches = _patcherService.GetPatches(new GetPatchesRequest()
+                {
+                    World = world,
+                    Worlds = worlds,
+                    SeedGuid = seedData.Guid,
+                    Seed = 0,
+                    Random = new Random().Sanitize()
+                });
+
                 var worldGenerationData = new WorldGenerationData(world, patches);
                 seedData.WorldGenerationData.Add(worldGenerationData);
             }
