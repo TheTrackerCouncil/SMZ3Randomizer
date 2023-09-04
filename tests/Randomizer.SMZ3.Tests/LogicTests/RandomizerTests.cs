@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 using FluentAssertions;
@@ -7,7 +6,6 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
-using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
@@ -168,14 +166,15 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 .AddSingleton<Configs>()
                 .AddSingleton<IMetadataService, MetadataService>()
                 .AddSingleton<IGameHintService, GameHintService>()
+                .AddSingleton<IPatcherService, PatcherService>()
                 .AddConfigs()
                 .BuildServiceProvider();
 
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            return new Smz3Randomizer(filler, new WorldAccessor(), serviceProvider.GetRequiredService<Configs>(),
-                serviceProvider.GetRequiredService<IMetadataService>(),
+            return new Smz3Randomizer(filler, new WorldAccessor(),
                 serviceProvider.GetRequiredService<IGameHintService>(),
-                GetLogger<Smz3Randomizer>());
+                GetLogger<Smz3Randomizer>(),
+                serviceProvider.GetRequiredService<IPatcherService>());
         }
     }
 }

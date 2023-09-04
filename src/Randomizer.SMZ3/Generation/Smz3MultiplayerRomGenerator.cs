@@ -4,14 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Logging;
-using Randomizer.Data.Configuration;
-using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
-using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
-using Randomizer.SMZ3.FileData;
 
 namespace Randomizer.SMZ3.Generation;
 
@@ -20,18 +16,16 @@ public class Smz3MultiplayerRomGenerator : ISeededRandomizer
 
     private readonly MultiplayerFillerFactory _fillerFactory;
     private readonly IWorldAccessor _worldAccessor;
-    private readonly IMetadataService _metadataService;
-    private readonly GameLinesConfig _gameLines;
     private readonly ILogger<Smz3MultiplayerRomGenerator> _logger;
+    private readonly IPatcherService _patcherService;
 
     public Smz3MultiplayerRomGenerator(MultiplayerFillerFactory fillerFactory, IWorldAccessor worldAccessor,
-        IMetadataService metadataService, Configs configs, ILogger<Smz3MultiplayerRomGenerator> logger)
+        ILogger<Smz3MultiplayerRomGenerator> logger, IPatcherService patcherService)
     {
         _fillerFactory = fillerFactory;
         _worldAccessor = worldAccessor;
-        _metadataService = metadataService;
-        _gameLines = configs.GameLines;
         _logger = logger;
+        _patcherService = patcherService;
     }
 
     public SeedData GenerateSeed(Config config, CancellationToken cancellationToken = default) =>
@@ -74,9 +68,9 @@ public class Smz3MultiplayerRomGenerator : ISeededRandomizer
         foreach (var world in worlds.OrderBy(x => x.Id))
         {
             var patchRnd = new Random(seedNumber % 1000 + world.Id).Sanitize();
-            var patch = new Patcher(world, worlds, seedData.Guid, seedNumber, patchRnd, _metadataService, _gameLines, _logger);
             var hints = world.Config.MultiplayerPlayerGenerationData!.Hints;
-            var worldGenerationData = new WorldGenerationData(world, patch.CreatePatch(world.Config, hints), hints);
+            var patches = _patcherService.GetPatches(world, worlds, seedData.Guid, seedNumber, patchRnd, hints);
+            var worldGenerationData = new WorldGenerationData(world, patches, hints);
             seedData.WorldGenerationData.Add(worldGenerationData);
         }
 
