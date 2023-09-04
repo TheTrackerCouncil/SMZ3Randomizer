@@ -12,6 +12,7 @@ using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
 
@@ -164,6 +165,7 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 .AddLogging(options => { })
                 .AddSingleton<OptionsFactory>()
                 .AddSingleton<Configs>()
+                .AddSingleton<RomPatchFactory>()
                 .AddSingleton<IMetadataService, MetadataService>()
                 .AddSingleton<IGameHintService, GameHintService>()
                 .AddSingleton<IPatcherService, PatcherService>()
