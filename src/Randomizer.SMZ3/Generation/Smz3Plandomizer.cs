@@ -81,7 +81,8 @@ namespace Randomizer.SMZ3.Generation
                     Worlds = worlds,
                     SeedGuid = seedData.Guid,
                     Seed = 0,
-                    Random = new Random().Sanitize()
+                    Random = new Random().Sanitize(),
+                    PlandoConfig = config.PlandoConfig ?? new PlandoConfig()
                 });
 
                 var worldGenerationData = new WorldGenerationData(world, patches);

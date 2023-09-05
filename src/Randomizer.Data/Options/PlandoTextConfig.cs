@@ -53,34 +53,34 @@ public class PlandoTextConfig
 
     public string? BombosTablet { get; init; }
 
-    public string? TelepathicTileEasternPalace { get; init; }
+    public string? HintTileEasternPalace { get; init; }
 
-    public string? TelepathicTileTowerOfHeraFloor4 { get; init; }
+    public string? HintTileTowerOfHeraFloor4 { get; init; }
 
-    public string? TelepathicTileSpectacleRock { get; init; }
+    public string? HintTileSpectacleRock { get; init; }
 
-    public string? TelepathicTileSwampEntrance { get; init; }
+    public string? HintTileSwampEntrance { get; init; }
 
-    public string? TelepathicTileThievesTownUpstairs { get; init; }
+    public string? HintTileThievesTownUpstairs { get; init; }
 
-    public string? TelepathicTileMiseryMire { get; init; }
+    public string? HintTileMiseryMire { get; init; }
 
-    public string? TelepathicTilePalaceOfDarkness { get; init; }
+    public string? HintTilePalaceOfDarkness { get; init; }
 
-    public string? TelepathicTileDesertBonkTorchRoom { get; init; }
+    public string? HintTileDesertBonkTorchRoom { get; init; }
 
-    public string? TelepathicTileCastleTower { get; init; }
+    public string? HintTileCastleTower { get; init; }
 
-    public string? TelepathicTileIceLargeRoom { get; init; }
+    public string? HintTileIceLargeRoom { get; init; }
 
-    public string? TelepathicTileTurtleRock { get; init; }
+    public string? HintTileTurtleRock { get; init; }
 
-    public string? TelepathicTileIceEntrance { get; init; }
+    public string? HintTileIceEntrance { get; init; }
 
-    public string? TelepathicTileIceStalfosKnightsRoom { get; init; }
+    public string? HintTileIceStalfosKnightsRoom { get; init; }
 
-    public string? TelepathicTileTowerOfHeraEntrance { get; init; }
+    public string? HintTileTowerOfHeraEntrance { get; init; }
 
-    public string? TelepathicTileSouthEastDarkworldCave { get; init; }
+    public string? HintTileSouthEastDarkworldCave { get; init; }
 
 }

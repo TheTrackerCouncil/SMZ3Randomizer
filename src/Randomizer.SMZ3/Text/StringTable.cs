@@ -10,34 +10,33 @@ namespace Randomizer.SMZ3.Text;
 
 public class StringTable
 {
-
-    public static string SahasrahlaReveal = "sahasrahla_quest_information";
-    public static string BombShopReveal = "bomb_shop";
-    public static string BlindIntro = "blind_by_the_light";
-    public static string TavernMan = "kakariko_tavern_fisherman";
-    public static string GanonIntro = "ganon_fall_in";
-    public static string GanonPhaseThreeText = "ganon_phase_3";
-    public static string TriforceRoom = "end_triforce";
-    public static string BottleMerchant = "bottle_vendor_choice";
-    public static string KingZora = "zora_tells_cost";
-    public static string MasterSwordPedestal = "mastersword_pedestal_translated";
-    public static string EtherTablet = "tablet_ether_book";
-    public static string BombosTablet = "tablet_bombos_book";
-    public static string TelepathicTileEasternPalace = "telepathic_tile_eastern_palace";
-    public static string TelepathicTileTowerOfHeraFloor4 = "telepathic_tile_tower_of_hera_floor_4";
-    public static string TelepathicTileSpectacleRock = "telepathic_tile_spectacle_rock";
-    public static string TelepathicTileSwampEntrance = "telepathic_tile_swamp_entrance";
-    public static string TelepathicTileThievesTownUpstairs = "telepathic_tile_thieves_town_upstairs";
-    public static string TelepathicTileMiseryMire = "telepathic_tile_misery_mire";
-    public static string TelepathicTilePalaceOfDarkness = "telepathic_tile_palace_of_darkness";
-    public static string TelepathicTileDesertBonkTorchRoom = "telepathic_tile_desert_bonk_torch_room";
-    public static string TelepathicTileCastleTower = "telepathic_tile_castle_tower";
-    public static string TelepathicTileIceLargeRoom = "telepathic_tile_ice_large_room";
-    public static string TelepathicTileTurtleRock = "telepathic_tile_turtle_rock";
-    public static string TelepathicTileIceEntrance = "telepathic_tile_ice_entrance";
-    public static string TelepathicTileIceStalfosKnightsRoom = "telepathic_tile_ice_stalfos_knights_room";
-    public static string TelepathicTileTowerOfHeraEntrance = "telepathic_tile_tower_of_hera_entrance";
-    public static string TelepathicTileSouthEastDarkworldCave = "telepathic_tile_south_east_darkworld_cave";
+    public const string SahasrahlaReveal = "sahasrahla_quest_information";
+    public const string BombShopReveal = "bomb_shop";
+    public const string BlindIntro = "blind_by_the_light";
+    public const string TavernMan = "kakariko_tavern_fisherman";
+    public const string GanonIntro = "ganon_fall_in";
+    public const string GanonPhaseThreeText = "ganon_phase_3";
+    public const string TriforceRoom = "end_triforce";
+    public const string BottleMerchant = "bottle_vendor_choice";
+    public const string KingZora = "zora_tells_cost";
+    public const string MasterSwordPedestal = "mastersword_pedestal_translated";
+    public const string EtherTablet = "tablet_ether_book";
+    public const string BombosTablet = "tablet_bombos_book";
+    public const string HintTileEasternPalace = "telepathic_tile_eastern_palace";
+    public const string HintTileTowerOfHeraFloor4 = "telepathic_tile_tower_of_hera_floor_4";
+    public const string HintTileSpectacleRock = "telepathic_tile_spectacle_rock";
+    public const string HintTileSwampEntrance = "telepathic_tile_swamp_entrance";
+    public const string HintTileThievesTownUpstairs = "telepathic_tile_thieves_town_upstairs";
+    public const string HintTileMiseryMire = "telepathic_tile_misery_mire";
+    public const string HintTilePalaceOfDarkness = "telepathic_tile_palace_of_darkness";
+    public const string HintTileDesertBonkTorchRoom = "telepathic_tile_desert_bonk_torch_room";
+    public const string HintTileCastleTower = "telepathic_tile_castle_tower";
+    public const string HintTileIceLargeRoom = "telepathic_tile_ice_large_room";
+    public const string HintTileTurtleRock = "telepathic_tile_turtle_rock";
+    public const string HintTileIceEntrance = "telepathic_tile_ice_entrance";
+    public const string HintTileIceStalfosKnightsRoom = "telepathic_tile_ice_stalfos_knights_room";
+    public const string HintTileTowerOfHeraEntrance = "telepathic_tile_tower_of_hera_entrance";
+    public const string HintTileSouthEastDarkworldCave = "telepathic_tile_south_east_darkworld_cave";
 
     private static readonly List<string> s_unwantedText = new()
     {
@@ -71,74 +70,14 @@ public class StringTable
         template = ParseEntries("Text.Scripts.StringTable.yaml");
     }
 
-
-    public void SetSahasrahlaRevealText(string text) {
-        SetText("sahasrahla_quest_information", text);
-    }
-
-    public void SetBombShopRevealText(string text) {
-        SetText("bomb_shop", text);
-    }
-
-    public void SetBlindText(string text) {
-        SetText("blind_by_the_light", text);
-    }
-
-    public void SetTavernManText(string text) {
-        SetText("kakariko_tavern_fisherman", text);
-    }
-
-    public void SetGanonFirstPhaseText(string text) {
-        SetText("ganon_fall_in", text);
-    }
-
-    public void SetGanonThirdPhaseText(string text) {
-        SetText("ganon_phase_3", text);
-    }
-
-    public void SetTriforceRoomText(string text) {
-        SetText("end_triforce", $"{{NOBORDER}}\n{text}");
-    }
-
-    public void SetPedestalText(string text) {
-        SetText("mastersword_pedestal_translated", text);
-    }
-
-    public void SetEtherText(string text) {
-        SetText("tablet_ether_book", text);
-    }
-
-    public void SetBombosText(string text) {
-        SetText("tablet_bombos_book", text);
-    }
-
-    public void SetHints(IEnumerable<string> hints)
-    {
-        var index = 0;
-        foreach (var hint in hints)
-        {
-            SetText(GameHintService.HintLocations[index], "{NOBORDER}\n" + hint);
-            index++;
-        }
-    }
-
     public void SetHintText(string location, string hint)
     {
         SetText(location, "{NOBORDER}\n" + hint);
     }
 
-    public void SetBottleVendorText(string text)
-    {
-        SetText("bottle_vendor_choice", text);
-    }
-
-    public void SetZoraText(string text)
-    {
-        SetText("zora_tells_cost", text);
-    }
-
     public void SetText(string name, string text) {
         var index = entries.IndexOf(entries.First(x => x.name == name));
+        if (index < 0) throw new InvalidOperationException("Invalid text key");
         entries[index] = (name, Dialog.Compiled(text));
     }
 

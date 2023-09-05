@@ -200,36 +200,36 @@ public class ZeldaTextsPatch : RomPatch
             hints = Enumerable.Repeat("",GameHintService.HintLocations.Count).ToList();
         }
 
-        SetHintTileText(StringTable.TelepathicTileEasternPalace, hints[0],
-            _plandoText.TelepathicTileEasternPalace);
-        SetHintTileText(StringTable.TelepathicTileTowerOfHeraFloor4, hints[1],
-            _plandoText.TelepathicTileTowerOfHeraFloor4);
-        SetHintTileText(StringTable.TelepathicTileSpectacleRock, hints[2],
-            _plandoText.TelepathicTileSpectacleRock);
-        SetHintTileText(StringTable.TelepathicTileSwampEntrance, hints[3],
-            _plandoText.TelepathicTileSwampEntrance);
-        SetHintTileText(StringTable.TelepathicTileThievesTownUpstairs, hints[4],
-            _plandoText.TelepathicTileThievesTownUpstairs);
-        SetHintTileText(StringTable.TelepathicTileMiseryMire, hints[5],
-            _plandoText.TelepathicTileMiseryMire);
-        SetHintTileText(StringTable.TelepathicTilePalaceOfDarkness, hints[6],
-            _plandoText.TelepathicTilePalaceOfDarkness);
-        SetHintTileText(StringTable.TelepathicTileDesertBonkTorchRoom, hints[7],
-            _plandoText.TelepathicTileDesertBonkTorchRoom);
-        SetHintTileText(StringTable.TelepathicTileCastleTower, hints[8],
-            _plandoText.TelepathicTileCastleTower);
-        SetHintTileText(StringTable.TelepathicTileIceLargeRoom, hints[9],
-            _plandoText.TelepathicTileIceLargeRoom);
-        SetHintTileText(StringTable.TelepathicTileTurtleRock, hints[10],
-            _plandoText.TelepathicTileTurtleRock);
-        SetHintTileText(StringTable.TelepathicTileIceEntrance, hints[11],
-            _plandoText.TelepathicTileIceEntrance);
-        SetHintTileText(StringTable.TelepathicTileIceStalfosKnightsRoom, hints[12],
-            _plandoText.TelepathicTileIceStalfosKnightsRoom);
-        SetHintTileText(StringTable.TelepathicTileTowerOfHeraEntrance, hints[13],
-            _plandoText.TelepathicTileTowerOfHeraEntrance);
-        SetHintTileText(StringTable.TelepathicTileSouthEastDarkworldCave, hints[14],
-            _plandoText.TelepathicTileSouthEastDarkworldCave);
+        SetHintTileText(StringTable.HintTileEasternPalace, hints[0],
+            _plandoText.HintTileEasternPalace);
+        SetHintTileText(StringTable.HintTileTowerOfHeraFloor4, hints[1],
+            _plandoText.HintTileTowerOfHeraFloor4);
+        SetHintTileText(StringTable.HintTileSpectacleRock, hints[2],
+            _plandoText.HintTileSpectacleRock);
+        SetHintTileText(StringTable.HintTileSwampEntrance, hints[3],
+            _plandoText.HintTileSwampEntrance);
+        SetHintTileText(StringTable.HintTileThievesTownUpstairs, hints[4],
+            _plandoText.HintTileThievesTownUpstairs);
+        SetHintTileText(StringTable.HintTileMiseryMire, hints[5],
+            _plandoText.HintTileMiseryMire);
+        SetHintTileText(StringTable.HintTilePalaceOfDarkness, hints[6],
+            _plandoText.HintTilePalaceOfDarkness);
+        SetHintTileText(StringTable.HintTileDesertBonkTorchRoom, hints[7],
+            _plandoText.HintTileDesertBonkTorchRoom);
+        SetHintTileText(StringTable.HintTileCastleTower, hints[8],
+            _plandoText.HintTileCastleTower);
+        SetHintTileText(StringTable.HintTileIceLargeRoom, hints[9],
+            _plandoText.HintTileIceLargeRoom);
+        SetHintTileText(StringTable.HintTileTurtleRock, hints[10],
+            _plandoText.HintTileTurtleRock);
+        SetHintTileText(StringTable.HintTileIceEntrance, hints[11],
+            _plandoText.HintTileIceEntrance);
+        SetHintTileText(StringTable.HintTileIceStalfosKnightsRoom, hints[12],
+            _plandoText.HintTileIceStalfosKnightsRoom);
+        SetHintTileText(StringTable.HintTileTowerOfHeraEntrance, hints[13],
+            _plandoText.HintTileTowerOfHeraEntrance);
+        SetHintTileText(StringTable.HintTileSouthEastDarkworldCave, hints[14],
+            _plandoText.HintTileSouthEastDarkworldCave);
     }
 
     private void SetHintTileText(string key, string? defaultText, string? overrideText)
