@@ -42,6 +42,7 @@ namespace Randomizer.Data.Options
             Medallions = world.Regions.Where(x => x is INeedsMedallion)
                 .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
             Logic = world.Config.LogicConfig.Clone();
+            StartingInventory = world.Config.ItemOptions;
         }
 
         /// <summary>
@@ -133,5 +134,10 @@ namespace Randomizer.Data.Options
         /// Fish Prize?
         /// </summary>
         public DropPrize? FishPrize { get; set; }
+
+        /// <summary>
+        /// Item Options for the starting inventory
+        /// </summary>
+        public IDictionary<string, int> StartingInventory { get; set; } = new Dictionary<string, int>();
     }
 }
