@@ -1,59 +1,63 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Randomizer.Data.Options;
 using Randomizer.Shared;
 
-using static Randomizer.SMZ3.FileData.DropPrize;
+using static Randomizer.Data.Options.DropPrize;
 
 namespace Randomizer.SMZ3.FileData.Patches;
 
 [Order(-7)]
 public class ZeldaPrizesPatch : RomPatch
 {
+    private IEnumerable<DropPrize> _defaultPool = new[] {
+        Heart, Heart, Heart, Heart, GreenRupee, Heart, Heart, GreenRupee,         // pack 1
+        BlueRupee, GreenRupee, BlueRupee, RedRupee, BlueRupee, GreenRupee, BlueRupee, BlueRupee,                // pack 2
+        FullMagic, Magic, Magic, BlueRupee, FullMagic, Magic, Heart, Magic,  // pack 3
+        Bomb1, Bomb1, Bomb1, Bomb4, Bomb1, Bomb1, Bomb8, Bomb1,         // pack 4
+        Arrow5, Heart, Arrow5, Arrow10, Arrow5, Heart, Arrow5, Arrow10, // pack 5
+        Magic, GreenRupee, Heart, Arrow5, Magic, Bomb1, GreenRupee, Heart,        // pack 6
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,       // pack 7
+        GreenRupee, BlueRupee, RedRupee, // from pull trees
+        GreenRupee, RedRupee, // from prize crab
+        GreenRupee, // stunned prize
+        RedRupee, // saved fish prize
+    }.ToList();
+
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         const int prizePackItems = 56;
         const int treePullItems = 3;
 
-        var pool = new[] {
-            Heart, Heart, Heart, Heart, Green, Heart, Heart, Green,         // pack 1
-            Blue, Green, Blue, Red, Blue, Green, Blue, Blue,                // pack 2
-            FullMagic, Magic, Magic, Blue, FullMagic, Magic, Heart, Magic,  // pack 3
-            Bomb1, Bomb1, Bomb1, Bomb4, Bomb1, Bomb1, Bomb8, Bomb1,         // pack 4
-            Arrow5, Heart, Arrow5, Arrow10, Arrow5, Heart, Arrow5, Arrow10, // pack 5
-            Magic, Green, Heart, Arrow5, Magic, Bomb1, Green, Heart,        // pack 6
-            Heart, Fairy, FullMagic, Red, Bomb8, Heart, Red, Arrow10,       // pack 7
-            Green, Blue, Red, // from pull trees
-            Green, Red, // from prize crab
-            Green, // stunned prize
-            Red, // saved fish prize
-        }.AsEnumerable();
+        //_defaultPool = Enumerable.Repeat(GreenRupee, 63);
 
-        var prizes = pool.Shuffle(data.Random).Cast<byte>();
+        var prizes = _defaultPool.Shuffle(data.Random).Cast<byte>();
 
         /* prize pack drop order */
-        (var bytes, prizes) = prizes.SplitOff(prizePackItems);
-        yield return new GeneratedPatch(Snes(0x6FA78), bytes.ToArray());
+        (var patch, prizes) = GetDropPatch(0x6FA78, prizes, data.PlandoConfig.EnemyDrops, prizePackItems);
+        yield return patch;
 
         /* tree pull prizes */
-        (bytes, prizes) = prizes.SplitOff(treePullItems);
-        yield return new GeneratedPatch(Snes(0x1DFBD4), bytes.ToArray());
+        (patch, prizes) = GetDropPatch(0x1DFBD4, prizes, data.PlandoConfig.TreePulls, treePullItems);
+        yield return patch;
 
         /* crab prizes */
-        (var drop, var final, prizes) = prizes;
-        yield return new GeneratedPatch(Snes(0x6A9C8), new[] { drop });
-        yield return new GeneratedPatch(Snes(0x6A9C4), new[] { final });
+        (patch, prizes) = GetDropPatch(0x6A9C8, prizes, data.PlandoConfig.CrabBaseDrop);
+        yield return patch;
+        (patch, prizes) = GetDropPatch(0x6A9C4, prizes, data.PlandoConfig.CrabEightDrop);
+        yield return patch;
 
         /* stun prize */
-        (drop, prizes) = prizes;
-        yield return new GeneratedPatch(Snes(0x6F993), new[] { drop });
+        (patch, prizes) = GetDropPatch(0x6F993, prizes, data.PlandoConfig.StunPrize);
+        yield return patch;
 
         /* fish prize */
-        (drop, _) = prizes;
-        yield return new GeneratedPatch(Snes(0x1D82CC), new[] { drop });
+        (patch, _) = GetDropPatch(0x1D82CC, prizes, data.PlandoConfig.FishPrize);
+        yield return patch;
 
-        foreach (var patch in EnemyPrizePackDistribution(data))
+        foreach (var enemyDistributionPatch in EnemyPrizePackDistribution(data))
         {
-            yield return patch;
+            yield return enemyDistributionPatch;
         }
 
         /* Pack drop chance */
@@ -61,6 +65,40 @@ public class ZeldaPrizesPatch : RomPatch
         const int nrPacks = 7;
         const byte probability = 1;
         yield return new GeneratedPatch(Snes(0x6FA62), Enumerable.Repeat(probability, nrPacks).ToArray());
+    }
+
+    private (GeneratedPatch patch, IEnumerable<byte> prizes) GetDropPatch(int location, IEnumerable<byte> prizes,
+        IEnumerable<DropPrize>? dropOverride, int count)
+    {
+        if (dropOverride?.Any() == true)
+        {
+            var bytes = dropOverride.Cast<byte>().ToList();
+            if (bytes.Count < count)
+            {
+                (var additionalBytes, prizes) = prizes.SplitOff(count - bytes.Count);
+                bytes.AddRange(additionalBytes);
+            }
+            return (new GeneratedPatch(Snes(location), bytes.ToArray()), prizes);
+        }
+        else
+        {
+            (var bytes, prizes) = prizes.SplitOff(count);
+            return (new GeneratedPatch(Snes(location), bytes.ToArray()), prizes);
+        }
+    }
+
+    private (GeneratedPatch patch, IEnumerable<byte> prizes) GetDropPatch(int location, IEnumerable<byte> prizes,
+        DropPrize? dropOverride)
+    {
+        if (dropOverride == null)
+        {
+            (var bytes, prizes) = prizes.SplitOff(1);
+            return (new GeneratedPatch(Snes(location), bytes.ToArray()), prizes);
+        }
+        else
+        {
+            return (new GeneratedPatch(Snes(location), new[] { (byte)dropOverride }), prizes);
+        }
     }
 
     private IEnumerable<GeneratedPatch> EnemyPrizePackDistribution(GetPatchesRequest data)
