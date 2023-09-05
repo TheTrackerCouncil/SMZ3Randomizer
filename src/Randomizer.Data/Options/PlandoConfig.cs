@@ -139,5 +139,10 @@ namespace Randomizer.Data.Options
         /// Item Options for the starting inventory
         /// </summary>
         public IDictionary<string, int> StartingInventory { get; set; } = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Lines for tracker to say when tracking a location
+        /// </summary>
+        public IDictionary<string, string> TrackerLocationLines { get; set; } = new Dictionary<string, string>();
     }
 }
