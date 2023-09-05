@@ -12,19 +12,19 @@ public class StartingEquipmentPatch : RomPatch
     /// <summary>
     /// Returns the changes to be applied to an SMZ3 ROM file.
     /// </summary>
-    /// <param name="config">The configuration for the seed.</param>
+    /// <param name="data">Patcher Data with the world and config information</param>
     /// <returns>
     /// A collection of changes, represented by the data to overwrite at the
     /// specified ROM offset.
     /// </returns>
-    public override IEnumerable<(int offset, byte[] data)> GetChanges(Config config)
+    public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         var itemSettingOptions = ItemSettingOptions.GetOptions();
 
         var zeldaData = Enumerable.Repeat((byte)0, 78).ToList();
         var metroidData = new Dictionary<int, List<int>>();
 
-        foreach (var item in config.ItemOptions)
+        foreach (var item in data.Config.ItemOptions)
         {
             var itemOptions = itemSettingOptions.FirstOrDefault(x => x.Item == item.Key);
             if (itemOptions == null || item.Value <= 0 || item.Value >= itemOptions.Options.Count) continue;
@@ -62,10 +62,10 @@ public class StartingEquipmentPatch : RomPatch
         foreach (var patchData in metroidData)
         {
             var valueTotal = patchData.Value.Aggregate(0, (current, value) => current | value);
-            yield return (Patcher.Snes(0x81EF90 + patchData.Key), Patcher.UshortBytes(valueTotal));
+            yield return new GeneratedPatch(Snes(0x81EF90 + patchData.Key), UshortBytes(valueTotal));
         }
 
-        yield return (Patcher.Snes(0x30B000), zeldaData.ToArray());
+        yield return new GeneratedPatch(Snes(0x30B000), zeldaData.ToArray());
     }
 
 }

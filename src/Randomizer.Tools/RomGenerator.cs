@@ -8,6 +8,7 @@ using Randomizer.App;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.FileData;
 using Randomizer.SMZ3.FileData.Patches;
+using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.Tools;
 
@@ -38,7 +39,7 @@ public class RomGenerator
         { @"..\..\..\..\Randomizer.App\Patches\HoldFire.ips", "SM" },
     };
 
-    private static readonly List<RomPatch> s_romPatches = new() { new GoalsPatch(), new InfiniteSpaceJumpPatch(), new MenuSpeedPatch(), new MetroidControlsPatch() };
+    //private static readonly List<RomPatch> s_romPatches = new() { new GoalsPatch(), new InfiniteSpaceJumpPatch(), new MenuSpeedPatch(), new MetroidControlsPatch() };
 
     private static readonly Config s_config = new()
     {
@@ -126,9 +127,9 @@ public class RomGenerator
         Directory.CreateDirectory(OutputPath);
 
         // Apply additional patches
-        if (applyPatches)
+        /*if (applyPatches)
         {
-            var patches = new List<(int offset, byte[] bytes)> { (Patcher.Snes(0x40008B), Patcher.UshortBytes(0x01)) };
+            var patches = new List<(int offset, byte[] bytes)> { (PatcherService.Snes(0x40008B), PatcherService.UshortBytes(0x01)) };
             var patchDictionary = patches.ToDictionary(x => x.offset, x => x.bytes);
             foreach (var patcher in s_romPatches)
             {
@@ -141,7 +142,7 @@ public class RomGenerator
 
             if (File.Exists(romPath)) File.Delete(romPath);
             Rom.UpdateChecksum(rom);
-        }
+        }*/
 
         File.WriteAllBytes(romPath, rom);
 

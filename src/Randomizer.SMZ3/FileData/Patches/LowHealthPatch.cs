@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.FileData.Patches
@@ -18,17 +14,17 @@ namespace Randomizer.SMZ3.FileData.Patches
             [LowHealthBeepSpeed.Quarter] = 0x80,
         };
 
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(Config config)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
             // A Link to the Past
-            yield return (0x400033, new byte[] { s_speedValues[config.LowHealthBeepSpeed] });
+            yield return new GeneratedPatch(0x400033, new[] { s_speedValues[data.Config.LowHealthBeepSpeed] });
 
             // Super Metroid
-            if (config.DisableLowEnergyBeep)
+            if (data.Config.DisableLowEnergyBeep)
             {
-                yield return (Snes(0x90EA9B), new byte[] { 0x80 });
-                yield return (Snes(0x90F337), new byte[] { 0x80 });
-                yield return (Snes(0x91E6D5), new byte[] { 0x80 });
+                yield return new GeneratedPatch(Snes(0x90EA9B), new byte[] { 0x80 });
+                yield return new GeneratedPatch(Snes(0x90F337), new byte[] { 0x80 });
+                yield return new GeneratedPatch(Snes(0x91E6D5), new byte[] { 0x80 });
             }
         }
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.FileData.Patches
 {
@@ -18,7 +17,7 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// <returns>
         /// The PC offset equivalent to the SNES <paramref name="addr"/>.
         /// </returns>
-        public static int Snes(int addr)
+        protected static int Snes(int addr)
         {
             addr = addr switch
             {
@@ -40,7 +39,7 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// <returns>
         /// A new byte array containing the 32-bit unsigned integer.
         /// </returns>
-        public static byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
+        protected static byte[] UintBytes(int value) => BitConverter.GetBytes((uint)value);
 
         /// <summary>
         /// Returns a byte array representing the specified 16-bit unsigned
@@ -50,7 +49,7 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// <returns>
         /// A new byte array containing the 16-bit unsigned integer.
         /// </returns>
-        public static byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
+        protected static byte[] UshortBytes(int value) => BitConverter.GetBytes((ushort)value);
 
         /// <summary>
         /// Returns a byte array representing the specified ASCII-encoded text.
@@ -60,16 +59,16 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// A new byte array containing the ASCII representation of the
         /// <paramref name="text"/>.
         /// </returns>
-        public static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
+        protected static byte[] AsAscii(string text) => Encoding.ASCII.GetBytes(text);
 
         /// <summary>
         /// Returns the changes to be applied to an SMZ3 ROM file.
         /// </summary>
-        /// <param name="config">The configuration for the seed.</param>
+        /// <param name="data">Patcher Data with the world and config information</param>
         /// <returns>
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public abstract IEnumerable<(int offset, byte[] data)> GetChanges(Config config);
+        public abstract IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data);
     }
 }

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Randomizer.Data.Options;
 
 namespace Randomizer.SMZ3.FileData.Patches
 {
     public class HeartColorPatch : RomPatch
     {
-        protected const int HudBase = 0xDFA1E;
-        protected const int FileSelect = 0x1BD6AA;
+        private const int HudBase = 0xDFA1E;
+        private const int FileSelect = 0x1BD6AA;
 
         private static readonly Dictionary<HeartColor, byte> s_hudValues = new()
         {
@@ -25,16 +24,16 @@ namespace Randomizer.SMZ3.FileData.Patches
             [HeartColor.Blue] = new byte[] { 0xC9, 0x69 }
         };
 
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(Config config)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
-            var hudValue = GetHudValue(config.HeartColor);
+            var hudValue = GetHudValue(data.Config.HeartColor);
             for (var i = 0; i < 20; i += 2)
             {
-                yield return (Snes(HudBase + i), new byte[] { hudValue });
+                yield return new GeneratedPatch(Snes(HudBase + i), new[] { hudValue });
             }
 
             var fileSelectValue = GetFileSelectValue(HeartColor.Red);
-            yield return (Snes(FileSelect), fileSelectValue);
+            yield return new GeneratedPatch(Snes(FileSelect), fileSelectValue);
         }
 
         protected virtual byte GetHudValue(HeartColor color)

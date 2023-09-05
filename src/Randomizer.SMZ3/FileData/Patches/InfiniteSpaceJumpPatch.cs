@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Randomizer.Data.Options;
+﻿using System.Collections.Generic;
 
 namespace Randomizer.SMZ3.FileData.Patches
 {
@@ -12,19 +10,19 @@ namespace Randomizer.SMZ3.FileData.Patches
         /// <summary>
         /// Returns the changes to be applied to an SMZ3 ROM file.
         /// </summary>
-        /// <param name="config">The configuration for the seed.</param>
+        /// <param name="data">Patcher Data with the world and config information</param>
         /// <returns>
         /// A collection of changes, represented by the data to overwrite at the
         /// specified ROM offset.
         /// </returns>
-        public override IEnumerable<(int offset, byte[] data)> GetChanges(Config config)
+        public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
         {
-            if (!config.CasPatches.InfiniteSpaceJump)
+            if (!data.Config.CasPatches.InfiniteSpaceJump)
                 yield break;
 
             // Infinite Space Jump
             // See: https://github.com/theonlydude/RandomMetroidSolver/blob/master/patches/common/patches.py#L97
-            yield return (Rom.TranslateSuperMetroidOffset(0x82493), new byte[] { 0x80, 0x0D });
+            yield return new GeneratedPatch(Rom.TranslateSuperMetroidOffset(0x82493), new byte[] { 0x80, 0x0D });
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 
 using FluentAssertions;
@@ -7,13 +6,13 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
-using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Logic;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.SMZ3.Contracts;
+using Randomizer.SMZ3.FileData.Patches;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Infrastructure;
 
@@ -166,16 +165,18 @@ namespace Randomizer.SMZ3.Tests.LogicTests
                 .AddLogging(options => { })
                 .AddSingleton<OptionsFactory>()
                 .AddSingleton<Configs>()
+                .AddSingleton<RomPatchFactory>()
                 .AddSingleton<IMetadataService, MetadataService>()
                 .AddSingleton<IGameHintService, GameHintService>()
+                .AddSingleton<IPatcherService, PatcherService>()
                 .AddConfigs()
                 .BuildServiceProvider();
 
             var filler = new StandardFiller(GetLogger<StandardFiller>());
-            return new Smz3Randomizer(filler, new WorldAccessor(), serviceProvider.GetRequiredService<Configs>(),
-                serviceProvider.GetRequiredService<IMetadataService>(),
+            return new Smz3Randomizer(filler, new WorldAccessor(),
                 serviceProvider.GetRequiredService<IGameHintService>(),
-                GetLogger<Smz3Randomizer>());
+                GetLogger<Smz3Randomizer>(),
+                serviceProvider.GetRequiredService<IPatcherService>());
         }
     }
 }
