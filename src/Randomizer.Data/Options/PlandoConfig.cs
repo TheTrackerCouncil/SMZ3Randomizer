@@ -43,6 +43,13 @@ namespace Randomizer.Data.Options
                 .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
             Logic = world.Config.LogicConfig.Clone();
             StartingInventory = world.Config.ItemOptions;
+            var prizes = DropPrizes.GetPool(world.Config.ZeldaDrops);
+            ZeldaPrizes.EnemyDrops = prizes.Take(56).ToList();
+            ZeldaPrizes.TreePulls = prizes.Skip(56).Take(3).ToList();
+            ZeldaPrizes.CrabBaseDrop = prizes.Skip(59).First();
+            ZeldaPrizes.CrabEightDrop = prizes.Skip(60).First();
+            ZeldaPrizes.StunPrize = prizes.Skip(61).First();
+            ZeldaPrizes.FishPrize = prizes.Skip(62).First();
         }
 
         /// <summary>
@@ -106,34 +113,9 @@ namespace Randomizer.Data.Options
         public PlandoTextConfig Text { get; set; } = new();
 
         /// <summary>
-        /// Pool of 56 enemy drops
+        /// Various Zelda enemy drops and other prizes
         /// </summary>
-        public ICollection<DropPrize>? EnemyDrops { get; set; }
-
-        /// <summary>
-        /// Pool of tree pull prizes
-        /// </summary>
-        public ICollection<DropPrize>? TreePulls { get; set; }
-
-        /// <summary>
-        /// Normal crab drops
-        /// </summary>
-        public DropPrize? CrabBaseDrop { get; set; }
-
-        /// <summary>
-        /// Unique crab eigth drop
-        /// </summary>
-        public DropPrize? CrabEightDrop { get; set; }
-
-        /// <summary>
-        /// Stun Prize
-        /// </summary>
-        public DropPrize? StunPrize { get; set; }
-
-        /// <summary>
-        /// Fish Prize?
-        /// </summary>
-        public DropPrize? FishPrize { get; set; }
+        public PlandoZeldaPrizeConfig ZeldaPrizes { get; set; } = new();
 
         /// <summary>
         /// Item Options for the starting inventory
