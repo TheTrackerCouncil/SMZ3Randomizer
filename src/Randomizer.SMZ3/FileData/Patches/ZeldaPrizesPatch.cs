@@ -10,7 +10,7 @@ namespace Randomizer.SMZ3.FileData.Patches;
 [Order(-7)]
 public class ZeldaPrizesPatch : RomPatch
 {
-    private IEnumerable<DropPrize> _defaultPool = new[] {
+    private readonly IEnumerable<DropPrize> _defaultPool = new[] {
         Heart, Heart, Heart, Heart, GreenRupee, Heart, Heart, GreenRupee,         // pack 1
         BlueRupee, GreenRupee, BlueRupee, RedRupee, BlueRupee, GreenRupee, BlueRupee, BlueRupee,                // pack 2
         FullMagic, Magic, Magic, BlueRupee, FullMagic, Magic, Heart, Magic,  // pack 3
@@ -24,14 +24,57 @@ public class ZeldaPrizesPatch : RomPatch
         RedRupee, // saved fish prize
     }.ToList();
 
+    private readonly IEnumerable<DropPrize> _easyPool = new[] {
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,
+        Heart, Fairy, FullMagic, RedRupee, Bomb8, Heart, RedRupee, Arrow10,
+        Bomb4, Arrow10, FullMagic, // from pull trees
+        RedRupee, RedRupee, // from prize crab
+        Fairy, // stunned prize
+        RedRupee, // saved fish prize
+    }.ToList();
+
+    private readonly IEnumerable<DropPrize> _difficultPool = new[] {
+        Heart, Heart, BlueRupee, BlueRupee, GreenRupee, BlueRupee, BlueRupee, GreenRupee,         // pack 1
+        BlueRupee, GreenRupee, BlueRupee, RedRupee, BlueRupee, GreenRupee, BlueRupee, BlueRupee,                // pack 2
+        Magic, Magic, Magic, BlueRupee, Magic, Magic, Heart, Magic,  // pack 3
+        Bomb1, Bomb1, Bomb1, Bomb1, Bomb1, Bomb1, Bomb4, Bomb1,         // pack 4
+        Arrow5, Heart, Arrow5, Arrow5, Arrow5, BlueRupee, Arrow5, Arrow5, // pack 5
+        Magic, GreenRupee, Heart, Arrow5, Magic, Bomb1, GreenRupee, BlueRupee,        // pack 6
+        Heart, RedRupee, Magic, RedRupee, Bomb4, BlueRupee, RedRupee, Arrow5,       // pack 7
+        GreenRupee, BlueRupee, RedRupee, // from pull trees
+        GreenRupee, RedRupee, // from prize crab
+        GreenRupee, // stunned prize
+        RedRupee, // saved fish prize
+    }.ToList();
+
     public override IEnumerable<GeneratedPatch> GetChanges(GetPatchesRequest data)
     {
         const int prizePackItems = 56;
         const int treePullItems = 3;
 
-        //_defaultPool = Enumerable.Repeat(GreenRupee, 63);
+        IEnumerable<byte> prizes;
 
-        var prizes = _defaultPool.Shuffle(data.Random).Cast<byte>();
+        if (data.Config.ZeldaDrops == ZeldaDrops.Vanilla)
+        {
+            prizes = _defaultPool.Cast<byte>();
+        }
+        else if (data.Config.ZeldaDrops == ZeldaDrops.Easy)
+        {
+            prizes = _easyPool.Cast<byte>();
+        }
+        else if (data.Config.ZeldaDrops == ZeldaDrops.Difficult)
+        {
+            prizes = _difficultPool.Cast<byte>();
+        }
+        else
+        {
+            prizes = _defaultPool.Shuffle(data.Random).Cast<byte>();
+        }
 
         /* prize pack drop order */
         (var patch, prizes) = GetDropPatch(0x6FA78, prizes, data.PlandoConfig.EnemyDrops, prizePackItems);

@@ -184,7 +184,7 @@ namespace Randomizer.Data.Options
         public bool DisableLowEnergyBeep { get; set; } = false;
         public MenuSpeed MenuSpeed { get; set; } = MenuSpeed.Default;
         public bool CasualSMPatches { get; set; } = false;
-
+        public ZeldaDrops ZeldaDrops { get; set; } = ZeldaDrops.Randomized;
         public bool GenerateSeedOnly { get; private set; } = false;
 
         public string LinkName { get; set; } = "Link";
