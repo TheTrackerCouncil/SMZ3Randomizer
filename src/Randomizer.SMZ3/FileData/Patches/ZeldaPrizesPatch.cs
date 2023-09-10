@@ -94,17 +94,17 @@ public class ZeldaPrizesPatch : RomPatch
         var patches = prizePacks.Select(x =>
         {
             (var packs, randomization) = randomization.SplitOff(x.bytes.Length);
-            return new GeneratedPatch(x.offset, x.bytes.Zip(packs, (b, p) => (byte)(b | p)).ToArray());
+            return (x.offset, bytes: x.bytes.Zip(packs, (b, p) => (byte)(b | p)).ToArray());
         }).ToList();
 
         var duplicates =
             from d in duplicatePacks
             from p in patches
-            where p.Offset == d.src
-            select new GeneratedPatch(d.dest, p.Data);
+            where p.offset == d.src
+            select (d.dest, p.bytes);
         patches.AddRange(duplicates.ToList());
 
-        return patches;
+        return patches.Select(x => new GeneratedPatch(Snes(x.offset), x.bytes));
     }
 
     /* Guarantees at least s of each prize pack, over a total of n packs.
