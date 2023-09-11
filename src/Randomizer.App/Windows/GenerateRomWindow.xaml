@@ -311,6 +311,13 @@
                           MinWidth="75" />
               </controls:LabeledControl>
 
+              <controls:LabeledControl Text="Zelda Item Drops:">
+                <ComboBox SelectedItem="{Binding ZeldaDrops}"
+                          ItemsSource="{Binding Source={local:EnumBindingSource {x:Type options:ZeldaDrops}}}"
+                          HorizontalAlignment="Left"
+                          MinWidth="75" />
+              </controls:LabeledControl>
+
               <CheckBox IsChecked="{Binding DisableLowEnergyBeep}"
                         Content="Disable low energy beep in Super Metroid" />
 

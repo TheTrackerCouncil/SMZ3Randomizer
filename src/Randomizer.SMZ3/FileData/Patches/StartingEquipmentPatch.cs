@@ -24,7 +24,11 @@ public class StartingEquipmentPatch : RomPatch
         var zeldaData = Enumerable.Repeat((byte)0, 78).ToList();
         var metroidData = new Dictionary<int, List<int>>();
 
-        foreach (var item in data.Config.ItemOptions)
+        var options = data.PlandoConfig.Items.Any()
+            ? data.PlandoConfig.StartingInventory
+            : data.Config.ItemOptions;
+
+        foreach (var item in options)
         {
             var itemOptions = itemSettingOptions.FirstOrDefault(x => x.Item == item.Key);
             if (itemOptions == null || item.Value <= 0 || item.Value >= itemOptions.Options.Count) continue;

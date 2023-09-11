@@ -45,6 +45,8 @@ public class GetPatchesRequest
     /// </summary>
     public IEnumerable<string> Hints { get; init; } = new List<string>();
 
+    public PlandoConfig PlandoConfig { get; init; } = new();
+
     public const bool EnableMultiworld = true;
     public Config Config => World.Config;
 

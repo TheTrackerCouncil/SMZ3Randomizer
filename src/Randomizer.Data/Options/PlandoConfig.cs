@@ -42,6 +42,14 @@ namespace Randomizer.Data.Options
             Medallions = world.Regions.Where(x => x is INeedsMedallion)
                 .ToDictionary(x => x.ToString(), x => ((INeedsMedallion)x).Medallion);
             Logic = world.Config.LogicConfig.Clone();
+            StartingInventory = world.Config.ItemOptions;
+            var prizes = DropPrizes.GetPool(world.Config.ZeldaDrops);
+            ZeldaPrizes.EnemyDrops = prizes.Take(56).ToList();
+            ZeldaPrizes.TreePulls = prizes.Skip(56).Take(3).ToList();
+            ZeldaPrizes.CrabBaseDrop = prizes.Skip(59).First();
+            ZeldaPrizes.CrabEightDrop = prizes.Skip(60).First();
+            ZeldaPrizes.StunPrize = prizes.Skip(61).First();
+            ZeldaPrizes.FishPrize = prizes.Skip(62).First();
         }
 
         /// <summary>
@@ -98,5 +106,25 @@ namespace Randomizer.Data.Options
         /// medallions they require.
         /// </summary>
         public Dictionary<string, ItemType> Medallions { get; set; } = new();
+
+        /// <summary>
+        /// Text overrides
+        /// </summary>
+        public PlandoTextConfig Text { get; set; } = new();
+
+        /// <summary>
+        /// Various Zelda enemy drops and other prizes
+        /// </summary>
+        public PlandoZeldaPrizeConfig ZeldaPrizes { get; set; } = new();
+
+        /// <summary>
+        /// Item Options for the starting inventory
+        /// </summary>
+        public IDictionary<string, int> StartingInventory { get; set; } = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Lines for tracker to say when tracking a location
+        /// </summary>
+        public IDictionary<string, string> TrackerLocationLines { get; set; } = new Dictionary<string, string>();
     }
 }

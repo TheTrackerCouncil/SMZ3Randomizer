@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
 using Randomizer.SMZ3.FileData;
 

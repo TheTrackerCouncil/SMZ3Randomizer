@@ -146,6 +146,7 @@ namespace Randomizer.Data.Options
                     TourianBossCount = SeedOptions.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
                     ItemOptions = SeedOptions.ItemOptions,
+                    ZeldaDrops = PatchOptions.ZeldaDrops
                 };
                 return config;
             }
@@ -160,6 +161,7 @@ namespace Randomizer.Data.Options
                 var disableCheats = SeedOptions.DisableCheats;
                 var casPatches = PatchOptions.CasPatches.Clone();
                 var seed = SeedOptions.Seed;
+                var zeldaDrops = PatchOptions.ZeldaDrops;
 
                 if (SeedOptions.CopySeedAndRaceSettings)
                 {
@@ -170,6 +172,7 @@ namespace Randomizer.Data.Options
                     disableCheats = oldConfig.DisableCheats;
                     casPatches = oldConfig.CasPatches;
                     seed = oldConfig.Seed;
+                    zeldaDrops = oldConfig.ZeldaDrops;
                 }
 
                 return new Config()
@@ -202,6 +205,7 @@ namespace Randomizer.Data.Options
                     TourianBossCount = oldConfig.TourianBossCount,
                     MetroidControls = PatchOptions.MetroidControls.Clone(),
                     ItemOptions = oldConfig.ItemOptions,
+                    ZeldaDrops = zeldaDrops
                 };
             }
         }

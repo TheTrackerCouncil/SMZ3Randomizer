@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using static System.Linq.Enumerable;
-using Randomizer.SMZ3.Text;
-using static Randomizer.SMZ3.FileData.DropPrize;
-
-namespace Randomizer.SMZ3.FileData
+﻿namespace Randomizer.SMZ3.FileData
 {
 
     static class KeycardPlaque

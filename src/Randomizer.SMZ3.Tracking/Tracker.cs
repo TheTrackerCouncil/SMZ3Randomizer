@@ -2530,9 +2530,14 @@ namespace Randomizer.SMZ3.Tracking
 
         private void GiveLocationComment(Item item, Location location, bool isTracking, float? confidence)
         {
+            // If the plando config specifies a specific line for this location, say it
+            if (World.Config.PlandoConfig?.TrackerLocationLines.ContainsKey(location.ToString()) == true)
+            {
+                Say(World.Config.PlandoConfig?.TrackerLocationLines[location.ToString()]);
+            }
             // Give some sass if the user tracks or marks the wrong item at a
             // location unless the user is clearing a useless item like missiles
-            if (location.Item.Type != ItemType.Nothing && item.Type != location.Item.Type && (item.Type != ItemType.Nothing || location.Item.Metadata.IsProgression(World.Config)))
+            else if (location.Item.Type != ItemType.Nothing && item.Type != location.Item.Type && (item.Type != ItemType.Nothing || location.Item.Metadata.IsProgression(World.Config)))
             {
                 if (confidence == null || confidence < Options.MinimumSassConfidence)
                     return;
