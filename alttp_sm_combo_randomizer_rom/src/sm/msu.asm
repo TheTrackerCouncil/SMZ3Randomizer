@@ -66,10 +66,16 @@
 !CurrentMusic = $064C
 !MusicBank = $07F3
 !CURRENT_MSU_TRACK = $0332
+!CURRENT_MSU_VOLUME = $0336
+!RESUME_MSU_TRACK = $0338
 
+;; MIN_VOLUME must equal a multiple of FADE_PER_FRAME, minus 1, or we'll never hit FULL_VOLUME
 !FULL_VOLUME = $FF
+!MIN_VOLUME = $0F
+!FADE_PER_FRAME = $10   ; 15 frames of fade-in
 
 !TRACK_OFFSET = 100
+!TRACK_ITEM_ROOM = 103  ; 3 + TRACK_OFFSET
 
 !VAL_COMMAND_MUTE_SPC = $FA
 !VAL_COMMAND_UNMUTE_SPC = $FB
@@ -88,6 +94,10 @@ macro CheckMSUPresence16(labelToJump)
     cmp.w #$2D53
     BEQ + : jmp <labelToJump> : +
 endmacro
+
+; Hijack the jump to the second-to-last routine in the main gameplay loop
+org $C28BAF
+    jsl msu_fade_in
 
 ; Init MSU and check for missing tracks
 org $C08564
@@ -324,6 +334,30 @@ SM_MSU_Main:
     tay
     clc : adc.b #!TRACK_OFFSET
 
+    pha
+    ;; If the incoming track is Item/Elevator Room, tell MSU chip to store the resume point
+    CMP #!TRACK_ITEM_ROOM : BNE +
+    lda.w !CURRENT_MSU_TRACK
+    sta.w !RESUME_MSU_TRACK
+    lda.b #$04
+    sta.w !MSU_AUDIO_CONTROL
+    bra ++
++
+    ;; If the outgoing track is Item/Elevator Room, set the MSU volume low so we can fade in
+    ;; But only if the incoming track is the one we set to resume above
+    lda.w !CURRENT_MSU_TRACK
+    CMP #!TRACK_ITEM_ROOM : BNE ++
+    pla     ; Load the incoming track back into the accumulator...
+    pha     ; ...but keep it on the stack because we need it again at the end of the block.
+    CMP !RESUME_MSU_TRACK : BNE ++
+    lda.b #!MIN_VOLUME
+    bra +++
+++
+    lda.b #!FULL_VOLUME
++++
+    sta.w !CURRENT_MSU_VOLUME
+    pla
+
     sta.w !CURRENT_MSU_TRACK
     sta.w !MSU_AUDIO_TRACK_LO
     stz.w !MSU_AUDIO_TRACK_HI
@@ -336,7 +370,7 @@ SM_MSU_Main:
     sta.w !MSU_AUDIO_CONTROL
     
     ;; Set volume
-    lda.b #!FULL_VOLUME
+    lda.w !CURRENT_MSU_VOLUME
     sta.w !MSU_AUDIO_VOLUME
     
     ;; Mute SPC music
@@ -474,3 +508,16 @@ TrackNeedLooping:
 NoLooping:
     lda.b #$01
     rts
+
+msu_fade_in:
+    jsl $A08687                 ; Do the jump we hijacked
+    lda.w !CURRENT_MSU_VOLUME
+    beq +                       ; Volume is zero, so MSU chip is muted
+    cmp.w #!FULL_VOLUME : beq + ; Already full volume
+    adc.w #!FADE_PER_FRAME
+    sta.w !CURRENT_MSU_VOLUME
+    sep #$20                    ; Switch to 8-bit mode so we don't also write the CONTROL byte
+    sta.w !MSU_AUDIO_VOLUME
+    rep #$20                    ; Return to 16-bit mode
++
+    rtl
