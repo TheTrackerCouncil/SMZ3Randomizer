@@ -150,7 +150,7 @@ public class SpriteService
             previewPath = GetRandomPreviewImage(SpriteType.Ship);
         }
 
-        _options.GeneralOptions.LinkSpriteOptions.TryGetValue(path, out var spriteOption);
+        _options.GeneralOptions.ShipSpriteOptions.TryGetValue(path, out var spriteOption);
 
         return new Sprite(name, author, path, SpriteType.Ship, previewPath, spriteOption);
     }
