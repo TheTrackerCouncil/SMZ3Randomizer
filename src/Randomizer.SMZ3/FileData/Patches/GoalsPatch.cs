@@ -28,6 +28,6 @@ public class GoalsPatch : RomPatch
         // Bosses to enter Tourian
         var numBosses = data.Config.TourianBossCount;
         yield return new GeneratedPatch(Snes(0xF47008), new byte[] { (byte)numBosses, 0x00 });
-        yield return new GeneratedPatch(Snes(0xF4700B), numBosses == 0 ? new byte[] { 0x00, 0x04  } : new byte[] { 0x01, 0x00 } );
+        yield return new GeneratedPatch(Snes(0xF4700B), numBosses == 0 ? new byte[] { 0x00, 0x04  } : new byte[] { 0x00, 0x01 } );
     }
 }
