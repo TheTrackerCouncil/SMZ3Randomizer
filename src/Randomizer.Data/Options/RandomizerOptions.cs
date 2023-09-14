@@ -90,6 +90,11 @@ namespace Randomizer.Data.Options
             get => (EmulatorConnectorType)GeneralOptions.AutoTrackerDefaultConnector;
         }
 
+        public string? AutoTrackerQUsb2SnesIp
+        {
+            get => GeneralOptions.AutoTrackerQUsb2SnesIp;
+        }
+
         public static RandomizerOptions Load(string path)
         {
             var json = File.ReadAllText(path);

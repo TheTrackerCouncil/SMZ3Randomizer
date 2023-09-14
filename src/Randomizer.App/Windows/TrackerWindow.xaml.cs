@@ -805,7 +805,7 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerDisableMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.None);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.None, "");
             };
             menu.Items.Add(_autoTrackerDisableMenuItem);
 
@@ -816,7 +816,7 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerLuaMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.Lua);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.Lua, "");
             };
             menu.Items.Add(_autoTrackerLuaMenuItem);
 
@@ -827,7 +827,7 @@ namespace Randomizer.App.Windows
             };
             _autoTrackerUSB2SNESMenuItem.Click += (sender, e) =>
             {
-                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.USB2SNES);
+                Tracker.AutoTracker?.SetConnector(EmulatorConnectorType.USB2SNES, _options.AutoTrackerQUsb2SnesIp);
             };
             menu.Items.Add(_autoTrackerUSB2SNESMenuItem);
 
@@ -877,7 +877,7 @@ namespace Randomizer.App.Windows
             Tracker.AutoTracker.AutoTrackerConnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
             Tracker.AutoTracker.AutoTrackerDisconnected += (sender, e) => Dispatcher.Invoke(UpdateAutoTrackerMenu);
 
-            Tracker.AutoTracker.SetConnector(_options.AutoTrackerDefaultConnector);
+            Tracker.AutoTracker.SetConnector(_options.AutoTrackerDefaultConnector, _options.AutoTrackerQUsb2SnesIp);
         }
 
         private void UpdateAutoTrackerMenu()

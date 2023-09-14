@@ -56,7 +56,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         /// </summary>
         public void Dispose()
         {
-            _autoTracker.SetConnector(EmulatorConnectorType.None);
+            _autoTracker.SetConnector(EmulatorConnectorType.None, "");
         }
     }
 

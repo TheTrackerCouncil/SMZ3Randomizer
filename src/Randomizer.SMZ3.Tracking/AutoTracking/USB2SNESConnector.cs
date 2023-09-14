@@ -26,13 +26,15 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
-        public USB2SNESConnector(ILogger<USB2SNESConnector> logger)
+        /// <param name="qusb2SnesIp"></param>
+        public USB2SNESConnector(ILogger<USB2SNESConnector> logger, string? qusb2SnesIp)
         {
             _logger = logger;
 
             _lastMessage = null;
 
-            var url = new Uri("ws://localhost:8080");
+            var ip = string.IsNullOrEmpty(qusb2SnesIp) ? "localhost" : qusb2SnesIp;
+            var url = new Uri($"ws://{ip}:8080");
 
             _client = new WebsocketClient(url);
             _client.ReconnectTimeout = TimeSpan.FromSeconds(5);
