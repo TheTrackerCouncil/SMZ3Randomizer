@@ -99,6 +99,8 @@ namespace Randomizer.Data.Options
 
         public int AutoTrackerDefaultConnector { get; set; } = (int)EmulatorConnectorType.None;
 
+        public string? AutoTrackerQUsb2SnesIp { get; set; }
+
         public bool AutoTrackerChangeMap { get; set; }
         public int UndoExpirationTime { get; set; } = 3;
 

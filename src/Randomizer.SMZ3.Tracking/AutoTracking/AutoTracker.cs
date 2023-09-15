@@ -293,7 +293,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         /// <summary>
         /// Disables the current connector and creates the requested type
         /// </summary>
-        public void SetConnector(EmulatorConnectorType type)
+        public void SetConnector(EmulatorConnectorType type, string? qusb2SnesIp)
         {
             if (_connector != null)
             {
@@ -305,7 +305,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             {
                 if (type == EmulatorConnectorType.USB2SNES)
                 {
-                    _connector = new USB2SNESConnector(_loggerFactory.CreateLogger<USB2SNESConnector>());
+                    _connector = new USB2SNESConnector(_loggerFactory.CreateLogger<USB2SNESConnector>(), qusb2SnesIp);
                 }
                 else
                 {
