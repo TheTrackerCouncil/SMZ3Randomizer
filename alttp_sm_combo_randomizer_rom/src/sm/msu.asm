@@ -68,11 +68,17 @@
 !CURRENT_MSU_TRACK = $0332
 !CURRENT_MSU_VOLUME = $0336
 !RESUME_MSU_TRACK = $0338
+!NO_RESUME_AFTER = $033A
 
 ;; MIN_VOLUME must equal a multiple of FADE_PER_FRAME, minus 1, or we'll never hit FULL_VOLUME
 !FULL_VOLUME = $FF
 !MIN_VOLUME = $0F
 !FADE_PER_FRAME = $10   ; 15 frames of fade-in
+
+!SM_FRAME_COUNT = $7E05B8   ; This is a long, but we'll only look at the low 16 bits
+;; The maximum number of frames a different track can play before resuming the original track
+;; Here we're using 30 seconds, to match the Z3 side
+!MAX_RESUME_FRAMES = $708
 
 !TRACK_OFFSET = 100
 !TRACK_ITEM_ROOM = 103  ; 3 + TRACK_OFFSET
@@ -334,29 +340,7 @@ SM_MSU_Main:
     tay
     clc : adc.b #!TRACK_OFFSET
 
-    pha
-    ;; If the incoming track is Item/Elevator Room, tell MSU chip to store the resume point
-    CMP #!TRACK_ITEM_ROOM : BNE +
-    lda.w !CURRENT_MSU_TRACK
-    sta.w !RESUME_MSU_TRACK
-    lda.b #$04
-    sta.w !MSU_AUDIO_CONTROL
-    bra ++
-+
-    ;; If the outgoing track is Item/Elevator Room, set the MSU volume low so we can fade in
-    ;; But only if the incoming track is the one we set to resume above
-    lda.w !CURRENT_MSU_TRACK
-    CMP #!TRACK_ITEM_ROOM : BNE ++
-    pla     ; Load the incoming track back into the accumulator...
-    pha     ; ...but keep it on the stack because we need it again at the end of the block.
-    CMP !RESUME_MSU_TRACK : BNE ++
-    lda.b #!MIN_VOLUME
-    bra +++
-++
-    lda.b #!FULL_VOLUME
-+++
-    sta.w !CURRENT_MSU_VOLUME
-    pla
+    jsr ComputeResumeAndVolume
 
     sta.w !CURRENT_MSU_TRACK
     sta.w !MSU_AUDIO_TRACK_LO
@@ -507,6 +491,54 @@ TrackNeedLooping:
     rts
 NoLooping:
     lda.b #$01
+    rts
+
+;; Accumulator has the number of the requested track, CPU is in 8-bit mode
+ComputeResumeAndVolume:
+    pha
+    ;; If the incoming track is Item/Elevator Room, tell MSU chip to store the resume point
+    CMP #!TRACK_ITEM_ROOM : BNE .CheckResume
+.SetResume
+    lda.w !CURRENT_MSU_TRACK
+    sta.w !RESUME_MSU_TRACK
+    lda.b #$04
+    sta.w !MSU_AUDIO_CONTROL
+    rep #$20                    ; Switch to 16-bit mode
+    lda.w !SM_FRAME_COUNT
+    adc.w #!MAX_RESUME_FRAMES
+    sta.w !NO_RESUME_AFTER
+    sep #$20                    ; Return to 8-bit mode
+    bra .NoFade
+.CheckResume
+    ;; If the outgoing track is Item/Elevator Room, set the MSU volume low so we can fade in
+    ;; But only if the incoming track is the one we set to resume above and we haven't timed out
+    lda.w !CURRENT_MSU_TRACK
+    CMP #!TRACK_ITEM_ROOM : BNE .NoFade
+    pla     ; Load the incoming track back into the accumulator...
+    pha     ; ...but keep it on the stack because we need it again at the end of the block.
+    CMP !RESUME_MSU_TRACK : BNE .NoFade
+    rep #$20                    ; Switch to 16-bit mode
+    lda.w !SM_FRAME_COUNT
+    cmp.w !NO_RESUME_AFTER
+    sep #$20                    ; Return to 8-bit mode
+    bpl .ResetResume
+.SetFade
+    lda.b #!MIN_VOLUME
+    bra .FadeDone
+.ResetResume
+    pla     ; Load the incoming track back into the accumulator...
+    pha     ; ...but keep it on the stack because we need it again at the end of the block.
+    sta.w !MSU_AUDIO_TRACK_LO   ; Select the requested track...
+    stz.w !MSU_AUDIO_TRACK_HI
+    lda.b #$01
+    sta.w !MSU_AUDIO_CONTROL    ; ...play it, so the resume point is cleared...
+    lda.b #$00
+    sta.w !MSU_AUDIO_CONTROL    ; ...then immediately stop it so we don't actually hear it.
+.NoFade
+    lda.b #!FULL_VOLUME
+.FadeDone
+    sta.w !CURRENT_MSU_VOLUME
+    pla
     rts
 
 msu_fade_in:
