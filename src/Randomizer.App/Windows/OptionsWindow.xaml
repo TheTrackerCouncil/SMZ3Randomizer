@@ -64,6 +64,9 @@
                                           OnPathUpdated="FileSystemInput_OnOnPathUpdated"
                                           />
               </controls:LabeledControl>
+              <CheckBox IsChecked="{Binding CheckForUpdatesOnStartup}"
+                        VerticalAlignment="Center"
+                        Margin="0">Check for updates on startup</CheckBox>
             </StackPanel>
           </Expander>
 

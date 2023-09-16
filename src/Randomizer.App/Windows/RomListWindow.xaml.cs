@@ -1,7 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Navigation;
+using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.App.Controls;
@@ -22,13 +26,16 @@ namespace Randomizer.App.Windows
         private readonly RandomizerContext _dbContext;
         private readonly RomGenerator _romGenerator;
         private readonly IChatAuthenticationService _chatAuthenticationService;
+        private readonly IGitHubReleaseCheckerService _gitHubReleaseCheckerService;
+        private string _gitHubReleaseUrl = "";
 
         public RomListWindow(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListWindow> logger,
             RandomizerContext dbContext,
             RomGenerator romGenerator,
-            IChatAuthenticationService chatAuthenticationService)
+            IChatAuthenticationService chatAuthenticationService,
+            IGitHubReleaseCheckerService gitHubReleaseCheckerService)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -37,6 +44,7 @@ namespace Randomizer.App.Windows
             InitializeComponent();
             Options = optionsFactory.Create();
             _chatAuthenticationService = chatAuthenticationService;
+            _gitHubReleaseCheckerService = gitHubReleaseCheckerService;
 
             App.RestoreWindowPositionAndSize(this);
         }
@@ -65,6 +73,27 @@ namespace Randomizer.App.Windows
                         " go to Options and log in with Twitch again to re-enable" +
                         " chat integration features.", "SMZ3 Cas’ Randomizer",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+
+            if (Options.GeneralOptions.CheckForUpdatesOnStartup)
+            {
+                var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+
+                try
+                {
+                    var newerGitHubRelease = _gitHubReleaseCheckerService
+                        .GetGitHubReleaseToUpdateTo("Vivelin", "SMZ3Randomizer", version ?? "", false);
+
+                    if (newerGitHubRelease != null && newerGitHubRelease.Url != Options.GeneralOptions.IgnoredUpdateUrl)
+                    {
+                        UpdateNotificationBorder.Visibility = Visibility.Visible;
+                        _gitHubReleaseUrl = newerGitHubRelease.Url;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error getting GitHub release");
                 }
             }
 
@@ -139,5 +168,32 @@ namespace Randomizer.App.Windows
             aboutWindow.ShowDialog();
         }
 
+        private void UpdateNotificationHyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = _gitHubReleaseUrl,
+                UseShellExecute = true
+            });
+        }
+
+        private void CloseUpdateNotificationButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            UpdateNotificationBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void IgnoreVersionHyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Options.GeneralOptions.IgnoredUpdateUrl = _gitHubReleaseUrl;
+            Options.Save();
+            UpdateNotificationBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void StopUpdateCheckHyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Options.GeneralOptions.CheckForUpdatesOnStartup = false;
+            Options.Save();
+            UpdateNotificationBorder.Visibility = Visibility.Collapsed;
+        }
     }
 }
