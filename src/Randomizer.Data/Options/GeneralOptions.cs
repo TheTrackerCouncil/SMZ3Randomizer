@@ -195,6 +195,16 @@ namespace Randomizer.Data.Options
         /// </summary>
         public bool DisplayMsuTrackWindow { get; set; }
 
+        /// <summary>
+        /// Check for new releases on GitHub on startup
+        /// </summary>
+        public bool CheckForUpdatesOnStartup { get; set; } = true;
+
+        /// <summary>
+        /// Update version to ignore
+        /// </summary>
+        public string? IgnoredUpdateUrl { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()

@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using BunLabs.IO;
-
+using GitHubReleaseChecker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -140,6 +140,9 @@ namespace Randomizer.App
             // MSU Randomzer
             services.AddMsuRandomizerServices();
             services.AddMsuRandomizerUIServices();
+
+            // Misc
+            services.AddGitHubReleaseCheckerServices();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
