@@ -14,6 +14,7 @@ namespace Randomizer.Data.Configuration.ConfigTypes
         Items,
         SMBoss,
         Dungeon,
-        Peg
+        Peg,
+        Shak
     }
 }

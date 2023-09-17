@@ -172,6 +172,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
 
         /// <summary>
+        /// Occurs when going to Shaktool
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? ToggledShaktoolMode;
+
+        /// <summary>
         /// Occurs when a Peg World peg has been pegged.
         /// </summary>
         public event EventHandler<TrackerEventArgs>? PegPegged;
@@ -266,6 +271,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Indicates whether Tracker is in Peg World mode.
         /// </summary>
         public bool PegWorldMode { get; set; }
+
+        /// <summary>
+        /// Indicates whether Tracker is in Shaktool mode.
+        /// </summary>
+        public bool ShaktoolMode { get; set; }
 
         /// <summary>
         /// If the speech recognition engine was fully initialized
@@ -487,6 +497,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void ToggleGoMode(float? confidence = null)
         {
+            ShutUp();
             Say("Toggled Go Mode <break time='1s'/>", wait: true);
             GoMode = true;
             OnGoModeToggledOn(new TrackerEventArgs(confidence));
@@ -832,6 +843,8 @@ namespace Randomizer.SMZ3.Tracking
             if (MicrophoneInitialized && !VoiceRecognitionEnabled)
             {
                 _logger.LogInformation("Starting speech recognition");
+                _recognizer.SetInputToDefaultAudioDevice();
+                _recognizer.RecognizeAsyncStop();
                 _recognizer.RecognizeAsync(RecognizeMode.Multiple);
                 VoiceRecognitionEnabled = true;
             }
@@ -2135,6 +2148,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void StartPegWorldMode(float? confidence = null)
         {
+            ShutUp();
             PegWorldMode = true;
             Say(Responses.PegWorldModeOn, wait: true);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
@@ -2151,6 +2165,28 @@ namespace Randomizer.SMZ3.Tracking
             Say(Responses.PegWorldModeDone);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
             AddUndo(() => PegWorldMode = true);
+        }
+
+        /// <summary>
+        /// Starts Peg World mode.
+        /// </summary>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void StartShaktoolMode(float? confidence = null)
+        {
+            ShaktoolMode = true;
+            OnShaktoolModeToggled(new TrackerEventArgs(confidence));
+            AddUndo(() => ShaktoolMode = false);
+        }
+
+        /// <summary>
+        /// Turns Peg World mode off.
+        /// </summary>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void StopShaktoolMode(float? confidence = null)
+        {
+            ShaktoolMode = false;
+            OnShaktoolModeToggled(new TrackerEventArgs(confidence));
+            AddUndo(() => ShaktoolMode = true);
         }
 
         /// <summary>
@@ -2409,6 +2445,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="e">Event data.</param>
         protected virtual void OnPegPegged(TrackerEventArgs e)
             => PegPegged?.Invoke(this, e);
+
+        /// <summary>
+        /// Raises the <see cref="ToggledPegWorldModeOn"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        protected virtual void OnShaktoolModeToggled(TrackerEventArgs e)
+            => ToggledShaktoolMode?.Invoke(this, e);
 
         /// <summary>
         /// Raises the <see cref="DungeonUpdated"/> event.

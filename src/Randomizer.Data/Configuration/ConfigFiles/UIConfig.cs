@@ -1331,6 +1331,180 @@ namespace Randomizer.Data.Configuration.ConfigFiles
                         Column = 3,
                         Identifiers = new List<string>() { "22" }
                     }
+                }),
+                #endregion
+
+                #region Shak
+                new UILayout("Shak", new List<UIGridLocation>()
+                {
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 1,
+                        Column = 1,
+                        Identifiers = new List<string>() { "1" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 1,
+                        Column = 2,
+                        Identifiers = new List<string>() { "2" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 1,
+                        Column = 3,
+                        Identifiers = new List<string>() { "3" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 1,
+                        Column = 4,
+                        Identifiers = new List<string>() { "4" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 1,
+                        Column = 5,
+                        Identifiers = new List<string>() { "5" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 1,
+                        Column = 6,
+                        Identifiers = new List<string>() { "6" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 2,
+                        Column = 1,
+                        Identifiers = new List<string>() { "7" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 2,
+                        Column = 2,
+                        Identifiers = new List<string>() { "8" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 2,
+                        Column = 3,
+                        Identifiers = new List<string>() { "9" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 2,
+                        Column = 4,
+                        Identifiers = new List<string>() { "10" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 2,
+                        Column = 5,
+                        Identifiers = new List<string>() { "11" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 2,
+                        Column = 6,
+                        Identifiers = new List<string>() { "12" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 3,
+                        Column = 1,
+                        Identifiers = new List<string>() { "13" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 3,
+                        Column = 2,
+                        Identifiers = new List<string>() { "14" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 3,
+                        Column = 3,
+                        Identifiers = new List<string>() { "15" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 3,
+                        Column = 4,
+                        Identifiers = new List<string>() { "16" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 3,
+                        Column = 5,
+                        Identifiers = new List<string>() { "17" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 3,
+                        Column = 6,
+                        Identifiers = new List<string>() { "18" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 4,
+                        Column = 1,
+                        Identifiers = new List<string>() { "19" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 4,
+                        Column = 2,
+                        Identifiers = new List<string>() { "20" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 4,
+                        Column = 3,
+                        Identifiers = new List<string>() { "21" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 4,
+                        Column = 4,
+                        Identifiers = new List<string>() { "22" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 4,
+                        Column = 5,
+                        Identifiers = new List<string>() { "23" }
+                    },
+                    new UIGridLocation()
+                    {
+                        Type = UIGridLocationType.Shak,
+                        Row = 4,
+                        Column = 6,
+                        Identifiers = new List<string>() { "24" }
+                    }
                 })
                 #endregion
             };

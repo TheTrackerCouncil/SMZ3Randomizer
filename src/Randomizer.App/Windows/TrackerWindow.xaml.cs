@@ -29,6 +29,7 @@ using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.Services;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
+using WpfAnimatedGif;
 
 namespace Randomizer.App.Windows
 {
@@ -50,6 +51,7 @@ namespace Randomizer.App.Windows
         private readonly Smz3GeneratedRomLoader _romLoader;
         private readonly IMsuLookupService _msuLookupService;
         private bool _pegWorldMode;
+        private bool _shaktoolMode;
         private TrackerLocationsWindow? _locationsWindow;
         private TrackerHelpWindow? _trackerHelpWindow;
         private TrackerMapWindow? _trackerMapWindow;
@@ -125,10 +127,10 @@ namespace Randomizer.App.Windows
         /// </summary>
         public event EventHandler? SavedState;
 
-        protected Image GetGridItemControl(string? imageFileName, int column, int row, string overlayFileName)
-            => GetGridItemControl(imageFileName, column, row, new Overlay(overlayFileName, 0, 0));
+        protected Image GetGridItemControl(string? imageFileName, int column, int row, out ImageSource imageSource, string overlayFileName)
+            => GetGridItemControl(imageFileName, column, row, out imageSource, new Overlay(overlayFileName, 0, 0));
 
-        protected Image GetGridItemControl(string? imageFileName, int column, int row, int counter, string? overlayFileName, int minCounter = 2)
+        protected Image GetGridItemControl(string? imageFileName, int column, int row, out ImageSource imageSource, int counter, string? overlayFileName, int minCounter = 2)
         {
             var overlays = new List<Overlay>();
             if (overlayFileName != null)
@@ -151,7 +153,7 @@ namespace Randomizer.App.Windows
                 }
             }
 
-            return GetGridItemControl(imageFileName, column, row, overlays.ToArray());
+            return GetGridItemControl(imageFileName, column, row, out imageSource, overlays.ToArray());
         }
 
         internal static IEnumerable<int> GetDigits(int value)
@@ -163,12 +165,12 @@ namespace Randomizer.App.Windows
             }
         }
 
-        protected Image GetGridItemControl(string? imageFileName, int column, int row,
+        protected Image GetGridItemControl(string? imageFileName, int column, int row, out ImageSource bitmapImage,
             params Overlay[] overlays)
         {
             imageFileName ??= _uiService.GetSpritePath("Items", "blank.png", out _);
 
-            var bitmapImage = new BitmapImage(new Uri(imageFileName ?? ""));
+            bitmapImage = new BitmapImage(new Uri(imageFileName ?? ""));
             if (overlays.Length == 0)
             {
                 return GetGridItemControl(bitmapImage, column, row);
@@ -242,7 +244,7 @@ namespace Randomizer.App.Windows
                 var labelImage = (Image?)null;
                 if (gridLocation.Image != null)
                 {
-                    labelImage = GetGridItemControl(_uiService.GetSpritePath("Items", gridLocation.Image, out _), gridLocation.Column, gridLocation.Row);
+                    labelImage = GetGridItemControl(_uiService.GetSpritePath("Items", gridLocation.Image, out _), gridLocation.Column, gridLocation.Row, out _);
                     TrackerGrid.Children.Add(labelImage);
                 }
 
@@ -285,7 +287,7 @@ namespace Randomizer.App.Windows
 
                         latestImage = GetGridItemControl(fileName,
                             gridLocation.Column, gridLocation.Row,
-                            counter, overlay, minCounter: 2);
+                            out _, counter, overlay, minCounter: 2);
                         latestImage.Opacity = item.State.TrackingState > 0 || counter > 0 ? 1.0d : 0.2d;
                         TrackerGrid.Children.Add(latestImage);
                     }
@@ -321,7 +323,7 @@ namespace Randomizer.App.Windows
                     var rewardPath = dungeon.MarkedReward != RewardType.None ? _uiService.GetSpritePath(dungeon.MarkedReward) : null;
                     var image = GetGridItemControl(rewardPath,
                         gridLocation.Column, gridLocation.Row,
-                        dungeon.DungeonState.RemainingTreasure, overlayPath, minCounter: 1);
+                        out _, dungeon.DungeonState.RemainingTreasure, overlayPath, minCounter: 1);
                     image.Tag = gridLocation;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
@@ -351,7 +353,7 @@ namespace Randomizer.App.Windows
                     }
 
                     var image = GetGridItemControl(fileName,
-                        gridLocation.Column, gridLocation.Row);
+                        gridLocation.Column, gridLocation.Row, out _);
                     image.Tag = gridLocation;
                     image.ContextMenu = CreateContextMenu(boss);
                     image.MouseLeftButtonDown += Image_MouseDown;
@@ -371,10 +373,24 @@ namespace Randomizer.App.Windows
                     var fileName = _uiService.GetSpritePath("Items",
                         Tracker?.PegsPegged >= pegNumber ? "pegged.png" : "peg.png", out _);
 
-                    var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row);
+                    var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row, out _);
                     image.Tag = gridLocation;
                     image.MouseLeftButtonDown += Image_MouseDown;
                     image.MouseLeftButtonUp += Image_LeftClick;
+                    TrackerGrid.Children.Add(image);
+                }
+                // If it's a shaktool
+                else if (gridLocation.Type == UIGridLocationType.Shak)
+                {
+                    var fileName = _uiService.GetSpritePath("Items",
+                        "shakspin.gif", out _);
+
+                    var image = GetGridItemControl(fileName, gridLocation.Column, gridLocation.Row, out var imageSource);
+                    image.Tag = gridLocation;
+                    image.MouseLeftButtonDown += Image_MouseDown;
+                    image.MouseLeftButtonUp += Image_LeftClick;
+                    ImageBehavior.SetAnimatedSource(image, imageSource);
+
                     TrackerGrid.Children.Add(image);
                 }
             }
@@ -725,11 +741,17 @@ namespace Randomizer.App.Windows
             Tracker.ItemTracked += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TogglePegWorld(false);
+                ToggleShaktoolMode(false);
                 RefreshGridItems();
             });
             Tracker.ToggledPegWorldModeOn += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TogglePegWorld(Tracker.PegWorldMode);
+                RefreshGridItems();
+            });
+            Tracker.ToggledShaktoolMode += (sender, e) => Dispatcher.Invoke(() =>
+            {
+                ToggleShaktoolMode(Tracker.ShaktoolMode);
                 RefreshGridItems();
             });
             Tracker.PegPegged += (sender, e) => Dispatcher.Invoke(() =>
@@ -745,6 +767,7 @@ namespace Randomizer.App.Windows
             Tracker.BossUpdated += (sender, e) => Dispatcher.Invoke(() =>
             {
                 TogglePegWorld(false);
+                ToggleShaktoolMode(false);
                 RefreshGridItems();
             });
             Tracker.GoModeToggledOn += (sender, e) => Dispatcher.Invoke(() =>
@@ -783,6 +806,22 @@ namespace Randomizer.App.Windows
             {
                 _previousLayout = _layout;
                 _layout = _uiService.GetLayout("Peg World");
+            }
+            else
+            {
+                _layout = _previousLayout ?? _defaultLayout;
+                _previousLayout = null;
+            }
+        }
+
+        private void ToggleShaktoolMode(bool enable)
+        {
+            if (_shaktoolMode == enable) return;
+            _shaktoolMode = enable;
+            if (_shaktoolMode)
+            {
+                _previousLayout = _layout;
+                _layout = _uiService.GetLayout("Shak");
             }
             else
             {

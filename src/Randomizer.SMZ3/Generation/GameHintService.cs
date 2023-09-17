@@ -175,7 +175,7 @@ namespace Randomizer.SMZ3.Generation
             string? GetDungeonHint(IDungeon dungeon)
             {
                 var dungeonRegion = (Region)dungeon;
-                var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations);
+                var usefulness = CheckIfLocationsAreImportant(allWorlds, importantLocations, dungeonRegion.Locations.Where(x => x.Type != LocationType.NotInDungeon));
                 var dungeonName = GetDungeonName(hintPlayerWorld, dungeon, dungeonRegion);
 
                 if (usefulness == LocationUsefulness.Mandatory)
