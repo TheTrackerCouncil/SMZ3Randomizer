@@ -99,6 +99,9 @@ AutoTracker:
   - Text: Finally, we're nearly to Shaktool. I've been waiting for this since you started playing.
   - Text: Shaktool content imminent. I can feel the metrics rising.
   - Text: Its almost time for everyone's favorite diggy boy
+  - Text: Everyone shut up, it's Shaktool time.
+  - Text: Get your popcorn out, cause it's time for Shaktool!
+  - Text: Stop using your words hole, it's time for the Shak Attack!
   NearCrocomire:
   - Text: You currently have {0} out of {1} super missiles. Do you think you have enough?
     Weight: 0.1

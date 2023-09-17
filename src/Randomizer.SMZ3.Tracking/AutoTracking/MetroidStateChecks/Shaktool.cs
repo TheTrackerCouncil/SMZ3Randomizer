@@ -22,6 +22,7 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.MetroidStateChecks
                 tracker.World.FindLocation(LocationId.InnerMaridiaSpringBall)?.State.Cleared != true &&
                 tracker.World.AllBosses.FirstOrDefault(x => x.Name == "Shaktool")?.State?.Defeated != true)
             {
+                tracker.ShutUp();
                 tracker.SayOnce(x => x.AutoTracker.NearShaktool);
                 tracker.StartShaktoolMode();
                 return true;
