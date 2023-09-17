@@ -1882,3 +1882,17 @@
   Response:
   - Text: You can't get rid of me that easily.
   - Text: You can't escape me that easily.
+- Phrases:
+  - what are you talking about?
+  - what are you going on about?
+  Response:
+  - Text: Oh, I'm sorry. Was that too complex for you to comprehend?
+  - Text: I'm just providing the people what they want. Some good quality content.
+  - Text: I think you know what I meant.
+  - Text: You heard me.
+  - Text: Don't make me repeat myself.
+  - Text: I think it was quite obvious what I was talking about.
+  - Text: I'll be sure to dumb it down next time for you.
+  - Text: I honestly have no idea what I'm saying most of the time. I'm just told what to say.
+    Weight: 0.1
+

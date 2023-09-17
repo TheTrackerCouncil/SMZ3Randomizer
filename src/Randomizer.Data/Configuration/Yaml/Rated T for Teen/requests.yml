@@ -72,4 +72,11 @@
     Weight: 0.5
   - Text: Hey, thanks. Thank you. That's awesome, fucking awesome. I mean, that's cool, you can say that.
     Weight: 0.2
-
+- Phrases:
+    - what are you talking about?
+    - what are you going on about?
+    - what the fuck are you talking about?
+    - what the fuck are you going on about?
+  Response:
+    - Text: Wow. What the fuck. I work hard to provide some hashtag content here, and that's how you treat me?
+      Weight: 0.1

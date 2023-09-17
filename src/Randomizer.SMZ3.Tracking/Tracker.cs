@@ -172,6 +172,11 @@ namespace Randomizer.SMZ3.Tracking
         public event EventHandler<TrackerEventArgs>? ToggledPegWorldModeOn;
 
         /// <summary>
+        /// Occurs when going to Shaktool
+        /// </summary>
+        public event EventHandler<TrackerEventArgs>? ToggledShaktoolMode;
+
+        /// <summary>
         /// Occurs when a Peg World peg has been pegged.
         /// </summary>
         public event EventHandler<TrackerEventArgs>? PegPegged;
@@ -266,6 +271,11 @@ namespace Randomizer.SMZ3.Tracking
         /// Indicates whether Tracker is in Peg World mode.
         /// </summary>
         public bool PegWorldMode { get; set; }
+
+        /// <summary>
+        /// Indicates whether Tracker is in Shaktool mode.
+        /// </summary>
+        public bool ShaktoolMode { get; set; }
 
         /// <summary>
         /// If the speech recognition engine was fully initialized
@@ -2154,6 +2164,28 @@ namespace Randomizer.SMZ3.Tracking
         }
 
         /// <summary>
+        /// Starts Peg World mode.
+        /// </summary>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void StartShaktoolMode(float? confidence = null)
+        {
+            ShaktoolMode = true;
+            OnShaktoolModeToggled(new TrackerEventArgs(confidence));
+            AddUndo(() => ShaktoolMode = false);
+        }
+
+        /// <summary>
+        /// Turns Peg World mode off.
+        /// </summary>
+        /// <param name="confidence">The speech recognition confidence.</param>
+        public void StopShaktoolMode(float? confidence = null)
+        {
+            ShaktoolMode = false;
+            OnShaktoolModeToggled(new TrackerEventArgs(confidence));
+            AddUndo(() => ShaktoolMode = true);
+        }
+
+        /// <summary>
         /// Updates the region that the player is in
         /// </summary>
         /// <param name="region">The region the player is in</param>
@@ -2409,6 +2441,13 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="e">Event data.</param>
         protected virtual void OnPegPegged(TrackerEventArgs e)
             => PegPegged?.Invoke(this, e);
+
+        /// <summary>
+        /// Raises the <see cref="ToggledPegWorldModeOn"/> event.
+        /// </summary>
+        /// <param name="e">Event data.</param>
+        protected virtual void OnShaktoolModeToggled(TrackerEventArgs e)
+            => ToggledShaktoolMode?.Invoke(this, e);
 
         /// <summary>
         /// Raises the <see cref="DungeonUpdated"/> event.

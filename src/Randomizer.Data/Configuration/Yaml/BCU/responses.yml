@@ -90,6 +90,8 @@ Chat:
 AutoTracker:
   WhenConnected:
   - Text: Connection timed out with the Council
+  GameStarted:
+  - Text: Just to let you know, there are multiple items left in Thieves Town
   NearKraidsAwfulSon:
   - Text: Oh no. Please avert your eyes to avoid seeing an imminent disaster.
   - Text: I'm suddenly feeling rather nautious. Is that Kraid's Awful Son I'm sensing?

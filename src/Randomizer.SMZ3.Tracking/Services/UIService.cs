@@ -48,7 +48,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         /// <summary>
         /// Retrieves a list of layouts that can be selected by the user
         /// </summary>
-        public List<UILayout> SelectableLayouts => _layouts.Where(x => x.Name != "Peg World").ToList();
+        public List<UILayout> SelectableLayouts => _layouts.Where(x => x.Name != "Peg World" && x.Name != "Shak").ToList();
 
         /// <summary>
         /// Retrieves a layout by name
