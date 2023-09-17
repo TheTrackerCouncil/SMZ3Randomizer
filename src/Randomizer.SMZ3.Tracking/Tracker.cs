@@ -497,6 +497,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void ToggleGoMode(float? confidence = null)
         {
+            ShutUp();
             Say("Toggled Go Mode <break time='1s'/>", wait: true);
             GoMode = true;
             OnGoModeToggledOn(new TrackerEventArgs(confidence));
@@ -842,6 +843,8 @@ namespace Randomizer.SMZ3.Tracking
             if (MicrophoneInitialized && !VoiceRecognitionEnabled)
             {
                 _logger.LogInformation("Starting speech recognition");
+                _recognizer.SetInputToDefaultAudioDevice();
+                _recognizer.RecognizeAsyncStop();
                 _recognizer.RecognizeAsync(RecognizeMode.Multiple);
                 VoiceRecognitionEnabled = true;
             }
@@ -2145,6 +2148,7 @@ namespace Randomizer.SMZ3.Tracking
         /// <param name="confidence">The speech recognition confidence.</param>
         public void StartPegWorldMode(float? confidence = null)
         {
+            ShutUp();
             PegWorldMode = true;
             Say(Responses.PegWorldModeOn, wait: true);
             OnPegWorldModeToggled(new TrackerEventArgs(confidence));
