@@ -41,6 +41,38 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         }
 
         /// <summary>
+        /// Updates memory values so both SM and Z3 will cancel any pending MSU resumes and play
+        /// all tracks from the start until new resume points have been stored.
+        /// </summary>
+        /// <returns>True, even if it didn't do anything</returns>
+        public void TryCancelMsuResume()
+        {
+            if (IsInGame(Game.SM))
+            {
+                // Zero out SM's NO_RESUME_AFTER variable
+                AutoTracker?.WriteToMemory(new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.WRAM,
+                    Address = 0x7E033A, // As declared in sm/msu.asm
+                    WriteValues = new List<byte>() { 0, 0 }
+                });
+            }
+
+            if (IsInGame(Game.Zelda))
+            {
+                // Zero out Z3's MSUResumeTime variable
+                AutoTracker?.WriteToMemory(new EmulatorAction()
+                {
+                    Type = EmulatorActionType.WriteBytes,
+                    Domain = MemoryDomain.WRAM,
+                    Address = 0x7E1E6B, // As declared in z3/randomizer/ram.asm
+                    WriteValues = new List<byte>() { 0, 0, 0, 0 }
+                });
+            }
+        }
+
+        /// <summary>
         /// Gives an item to the player
         /// </summary>
         /// <param name="item">The item to give</param>

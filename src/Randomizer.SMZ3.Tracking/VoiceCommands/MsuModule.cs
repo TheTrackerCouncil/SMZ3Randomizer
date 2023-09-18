@@ -353,6 +353,7 @@ public class MsuModule : TrackerModule, IDisposable
             Logger.LogError(exception, "Error creating MSU");
         }
 
+        Tracker.GameService?.TryCancelMsuResume();
     }
 
     public void Dispose()
