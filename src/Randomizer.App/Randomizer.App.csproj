@@ -43,31 +43,13 @@
 
   <ItemGroup>
     <Resource Include="chozo20.ico" />
-    <EmbeddedResource Include="Patches\AimAnyButton.ips" />
-    <EmbeddedResource Include="Patches\custom_ship.ips" />
-    <EmbeddedResource Include="Patches\elevators_speed.ips" />
-    <EmbeddedResource Include="Patches\fast_doors.ips" />
-    <EmbeddedResource Include="Patches\msu1-v6.ips" />
-    <EmbeddedResource Include="Patches\nerfed_charge.ips" />
-    <EmbeddedResource Include="Patches\rando_speed.ips" />
-    <EmbeddedResource Include="Patches\refill_before_save.ips" />
-    <EmbeddedResource Include="Patches\spinjumprestart.ips" />
-    <EmbeddedResource Include="Patches\zsm.ips" />
     <None Remove="Patches\noflashing.ips" />
-    <EmbeddedResource Include="Patches\noflashing.ips" />
     <None Remove="Patches\disable_screen_shake.ips" />
-    <EmbeddedResource Include="Patches\disable_screen_shake.ips" />
     <EmbeddedResource Include="Resources\empty.pcm" />
-    <EmbeddedResource Include="Patches\EasierWJ.ips" />
-    <EmbeddedResource Include="Patches\Celeste.ips" />
     <None Remove="Patches\AutoRun.ips" />
-    <EmbeddedResource Include="Patches\AutoRun.ips" />
     <None Remove="Patches\QuickToggle.ips" />
-    <EmbeddedResource Include="Patches\QuickToggle.ips" />
     <None Remove="Patches\HoldFire.ips" />
-    <EmbeddedResource Include="Patches\HoldFire.ips" />
     <None Remove="Patches\UnifiedAim.ips" />
-    <EmbeddedResource Include="Patches\UnifiedAim.ips" />
     <None Remove="msu-randomizer-settings.yml" />
     <EmbeddedResource Include="msu-randomizer-settings.yml" />
     <None Remove="msu-randomizer-types.json" />
@@ -92,10 +74,7 @@
     <ProjectReference Include="..\Randomizer.SMZ3.Tracking\Randomizer.SMZ3.Tracking.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3.Twitch\Randomizer.SMZ3.Twitch.csproj" />
     <ProjectReference Include="..\Randomizer.SMZ3\Randomizer.SMZ3.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Sprites\Maps\" />
+    <ProjectReference Include="..\Randomizer.Sprites\Randomizer.Sprites.csproj" />
   </ItemGroup>
 
   <ItemGroup>

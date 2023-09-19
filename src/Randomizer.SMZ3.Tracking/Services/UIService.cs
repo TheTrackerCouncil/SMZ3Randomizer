@@ -36,12 +36,8 @@ namespace Randomizer.SMZ3.Tracking.Services
             var iconPaths = options.Options?.TrackerProfiles
                 .Where(x => !string.IsNullOrEmpty(x))
                 .NonNull()
-                .Select(x => Path.Combine(configProvider.ConfigDirectory, x)).Reverse().ToList() ?? new();
-            var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (basePath != null)
-            {
-                iconPaths.Add(basePath);
-            }
+                .Select(x => Path.Combine(configProvider.ConfigDirectory, x, "Sprites")).Reverse().ToList() ?? new();
+            iconPaths.Add(Sprite.SpritePath);
             _iconPaths = iconPaths;
         }
 
@@ -147,7 +143,7 @@ namespace Randomizer.SMZ3.Tracking.Services
         {
             if (!string.IsNullOrEmpty(basePath))
             {
-                var path = Path.Combine(basePath, "Sprites", category, imageFileName);
+                var path = Path.Combine(basePath, category, imageFileName);
                 if (File.Exists(path))
                 {
                     profilePath = basePath;
@@ -158,7 +154,7 @@ namespace Randomizer.SMZ3.Tracking.Services
             {
                 foreach (var profile in _iconPaths)
                 {
-                    var path = Path.Combine(profile, "Sprites", category, imageFileName);
+                    var path = Path.Combine(profile, category, imageFileName);
                     if (File.Exists(path))
                     {
                         profilePath = profile;

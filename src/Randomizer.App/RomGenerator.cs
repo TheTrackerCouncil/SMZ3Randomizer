@@ -9,7 +9,6 @@ using System.Windows.Forms;
 
 using Microsoft.Extensions.Logging;
 
-using Randomizer.App.Patches;
 using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Data.WorldData.Regions;
@@ -17,7 +16,9 @@ using Randomizer.Shared;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3;
 using Randomizer.SMZ3.FileData;
+using Randomizer.SMZ3.FileData.IpsPatches;
 using Randomizer.SMZ3.Generation;
+using Randomizer.Sprites;
 
 namespace Randomizer.App
 {
@@ -309,17 +310,11 @@ namespace Randomizer.App
             }
             Rom.ApplySeed(rom, seed.WorldGenerationData.LocalWorld.Patches);
 
-            var samusSprite = _spriteService.ApplySpriteOptionsTo(options.PatchOptions.SelectedSamusSprite, rom);
-            var linkSprite = _spriteService.ApplySpriteOptionsTo(options.PatchOptions.SelectedLinkSprite, rom);
-            var shipSprite = _spriteService.ApplySpriteOptionsTo(options.PatchOptions.SelectedShipSprite, rom);
-
-            options.PatchOptions.PreviousSamusSprite = samusSprite;
-            options.PatchOptions.PreviousLinkSprite = linkSprite;
-            options.PatchOptions.PreviousShipSprite = shipSprite;
+            _spriteService.ApplySpritesTo(options, rom, out var linkSpriteName, out var samusSpriteName);
 
             var localConfig = seed.Configs.First(x => x.IsLocalConfig);
-            localConfig.SamusName = samusSprite.Name;
-            localConfig.LinkName = linkSprite.Name;
+            localConfig.SamusName = samusSpriteName;
+            localConfig.LinkName = linkSpriteName;
 
             if (options.PatchOptions.CasPatches.Respin)
             {

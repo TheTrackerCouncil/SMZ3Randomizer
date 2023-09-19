@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 
 namespace Randomizer.App.ViewModels
 {
@@ -119,13 +120,11 @@ namespace Randomizer.App.ViewModels
                 if (_isDesign || CurrentMap == null)
                 {
                     return new BitmapImage(new Uri(System.IO.Path.Combine(
-                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-                    "Sprites", "Maps", "lttp_lightworld.png")));
+                    Sprite.SpritePath, "Maps", "lttp_lightworld.png")));
                 }
 
                 return new BitmapImage(new Uri(System.IO.Path.Combine(
-                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-                    "Sprites", "Maps", CurrentMap.Image)));
+                    Sprite.SpritePath, "Maps", CurrentMap.Image)));
             }
         }
 

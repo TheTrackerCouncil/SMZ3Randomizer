@@ -26,6 +26,7 @@ using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
 using Randomizer.SMZ3.Generation;
+using Randomizer.Sprites;
 
 namespace Randomizer.App.Windows
 {

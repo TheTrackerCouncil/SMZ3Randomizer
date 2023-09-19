@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
-using Randomizer.App.Patches;
+﻿using Microsoft.Extensions.Logging;
 using Randomizer.Data;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
 using Randomizer.SMZ3.FileData;
+using Randomizer.SMZ3.FileData.IpsPatches;
 
-namespace Randomizer.App;
+namespace Randomizer.Sprites;
 
 /// <summary>
 /// Service for collecting and applying player and ship sprites
@@ -44,10 +37,10 @@ public class SpriteService
         {
             var defaults = new List<Sprite>() { Sprite.DefaultSamus, Sprite.DefaultLink, Sprite.DefaultShip, Sprite.RandomSamus, Sprite.RandomLink, Sprite.RandomShip };
 
-            var playerSprites = Directory.EnumerateFiles(SpritePath, "*.rdc", SearchOption.AllDirectories)
+            var playerSprites = Directory.EnumerateFiles(Sprite.SpritePath, "*.rdc", SearchOption.AllDirectories)
                 .Select(LoadRdcSprite);
 
-            var shipSprites = Directory.EnumerateFiles(Path.Combine(SpritePath, "Ships"), "*.ips", SearchOption.AllDirectories)
+            var shipSprites = Directory.EnumerateFiles(Path.Combine(Sprite.SpritePath, "Ships"), "*.ips", SearchOption.AllDirectories)
                 .Select(LoadIpsSprite);
 
             var sprites = playerSprites.Concat(shipSprites).Concat(defaults).OrderBy(x => x.Name).ToList();
@@ -76,7 +69,7 @@ public class SpriteService
     public string GetRandomPreviewImage(SpriteType type)
     {
         var spriteFolder = type == SpriteType.Ship ? "Ships" : type.ToString();
-        return Path.Combine(SpritePath, spriteFolder, "random.png");
+        return Path.Combine(Sprite.SpritePath, spriteFolder, "random.png");
     }
 
     /// <summary>
@@ -198,12 +191,12 @@ public class SpriteService
             var random = new Random().Sanitize();
 
             var randomSpriteOptions = Sprites.Where(x =>
-                x.SpriteType == spriteType && x.MatchesFilter(searchText, filter) && !x.IsRandomSprite);
+                x.SpriteType == spriteType && x.MatchesFilter(searchText, filter) && !x.IsRandomSprite).ToList();
 
             // Try not to pick the same sprite twice in a row
             if (previousSprite != null && randomSpriteOptions.Count() > 1)
             {
-                randomSpriteOptions = randomSpriteOptions.Where(x => x != previousSprite);
+                randomSpriteOptions = randomSpriteOptions.Where(x => x != previousSprite).ToList();
             }
 
             sprite = randomSpriteOptions.Random(random)
@@ -225,6 +218,20 @@ public class SpriteService
         }
 
         return sprite;
+    }
+
+    public void ApplySpritesTo(RandomizerOptions options, byte[] rom, out string linkSpriteName, out string samusSpriteName)
+    {
+        var samusSprite = ApplySpriteOptionsTo(options.PatchOptions.SelectedSamusSprite, rom);
+        var linkSprite = ApplySpriteOptionsTo(options.PatchOptions.SelectedLinkSprite, rom);
+        var shipSprite = ApplySpriteOptionsTo(options.PatchOptions.SelectedShipSprite, rom);
+
+        options.PatchOptions.PreviousSamusSprite = samusSprite;
+        options.PatchOptions.PreviousLinkSprite = linkSprite;
+        options.PatchOptions.PreviousShipSprite = shipSprite;
+
+        samusSpriteName = samusSprite.Name;
+        linkSpriteName = linkSprite.Name;
     }
 
     private void ApplyShipSpriteTo(Sprite sprite, byte[] bytes)
@@ -251,8 +258,4 @@ public class SpriteService
         if (rdc.TryParse<SamusSprite>(stream, out var samusSprite))
             samusSprite?.Apply(bytes);
     }
-
-    private string SpritePath => Path.Combine(
-        Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
-        "Sprites");
 }

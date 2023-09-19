@@ -27,6 +27,7 @@ using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.SMZ3.Twitch;
+using Randomizer.Sprites;
 
 namespace Randomizer.App
 {

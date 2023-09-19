@@ -12,6 +12,7 @@ using Randomizer.Shared.Multiplayer;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
+using Randomizer.Sprites;
 
 namespace Randomizer.App.Windows
 {
