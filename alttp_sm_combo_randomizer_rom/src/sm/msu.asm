@@ -68,14 +68,16 @@
 !CURRENT_MSU_TRACK = $0332
 !CURRENT_MSU_VOLUME = $0336
 !RESUME_MSU_TRACK = $0338
-!NO_RESUME_AFTER = $033A
+!NO_RESUME_AFTER_LO = $033A
+!NO_RESUME_AFTER_HI = $033C
 
 ;; MIN_VOLUME must equal a multiple of FADE_PER_FRAME, minus 1, or we'll never hit FULL_VOLUME
 !FULL_VOLUME = $FF
 !MIN_VOLUME = $0F
 !FADE_PER_FRAME = $10   ; 15 frames of fade-in
 
-!SM_FRAME_COUNT = $7E05B8   ; This is a long, but we'll only look at the low 16 bits
+!SM_FRAME_COUNT_LO = $7E05B8
+!SM_FRAME_COUNT_HI = $7E05BA
 ;; The maximum number of frames a different track can play before resuming the original track
 ;; Here we're using 30 seconds, to match the Z3 side
 !MAX_RESUME_FRAMES = $708
@@ -504,9 +506,12 @@ ComputeResumeAndVolume:
     lda.b #$04
     sta.w !MSU_AUDIO_CONTROL
     rep #$20                    ; Switch to 16-bit mode
-    lda.w !SM_FRAME_COUNT
+    lda.w !SM_FRAME_COUNT_LO
     adc.w #!MAX_RESUME_FRAMES
-    sta.w !NO_RESUME_AFTER
+    sta.w !NO_RESUME_AFTER_LO
+    lda.w #$00
+    adc.w !SM_FRAME_COUNT_HI
+    sta.w !NO_RESUME_AFTER_HI
     sep #$20                    ; Return to 8-bit mode
     bra .NoFade
 .CheckResume
@@ -518,10 +523,13 @@ ComputeResumeAndVolume:
     pha     ; ...but keep it on the stack because we need it again at the end of the block.
     CMP !RESUME_MSU_TRACK : BNE .NoFade
     rep #$20                    ; Switch to 16-bit mode
-    lda.w !SM_FRAME_COUNT
-    cmp.w !NO_RESUME_AFTER
+    lda.w !SM_FRAME_COUNT_HI
+    cmp.w !NO_RESUME_AFTER_HI : BNE + ; Low word rolled over and changed high word
+    lda.w !SM_FRAME_COUNT_LO
+    cmp.w !NO_RESUME_AFTER_LO
++
     sep #$20                    ; Return to 8-bit mode
-    bpl .ResetResume
+    bcs .ResetResume            ; Greater than or equal to
 .SetFade
     lda.b #!MIN_VOLUME
     bra .FadeDone
