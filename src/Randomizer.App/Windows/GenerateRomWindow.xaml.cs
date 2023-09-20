@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,13 +13,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using MSURandomizerLibrary;
 using Randomizer.Data.Configuration.ConfigFiles;
 using Randomizer.Data.Options;
-using Randomizer.Data.Services;
 using Randomizer.Data.WorldData;
 using Randomizer.Data.WorldData.Regions;
 using Randomizer.Shared;
@@ -33,28 +30,24 @@ namespace Randomizer.App.Windows
     /// <summary>
     /// Interaction logic for GenerateRomWindow.xaml
     /// </summary>
-    public partial class GenerateRomWindow : Window
+    public partial class GenerateRomWindow
     {
-        private readonly Task _loadSpritesTask;
         private readonly IServiceProvider _serviceProvider;
-        private readonly RomGenerator _romGenerator;
+        private readonly RomGenerationService _romGenerator;
         private readonly LocationConfig _locations;
-        private readonly IMetadataService _metadataService;
-        private readonly MsuGeneratorService _msuGeneratorService;
+        private readonly MsuUiService _msuUiService;
         private RandomizerOptions? _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
-            RomGenerator romGenerator,
+            RomGenerationService romGenerator,
             LocationConfig locations,
-            IMetadataService metadataService,
-            MsuGeneratorService msuGeneratorService,
+            MsuUiService msuUiService,
             SpriteService spriteService)
         {
             _serviceProvider = serviceProvider;
             _romGenerator = romGenerator;
             _locations = locations;
-            _metadataService = metadataService;
-            _msuGeneratorService = msuGeneratorService;
+            _msuUiService = msuUiService;
             InitializeComponent();
 
             _ = spriteService.LoadSpritesAsync();
@@ -310,7 +303,14 @@ namespace Randomizer.App.Windows
             var rom = PlandoMode
                 ? await _romGenerator.GeneratePlandoRomAsync(Options, PlandoConfig!)
                 : await _romGenerator.GenerateRandomRomAsync(Options);
-            if (rom != null)
+
+            if (!string.IsNullOrEmpty(rom.GenerationError))
+            {
+                MessageBox.Show(this, rom.GenerationError, "SMZ3 Cas' Randomizer", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+
+            if (rom.Rom != null)
             {
                 DialogResult = true;
                 Close();
@@ -346,11 +346,11 @@ namespace Randomizer.App.Windows
             var itemCounts = new ConcurrentDictionary<(int itemId, LocationId locationId), int>();
             var ct = progressDialog.CancellationToken;
             var finished = false;
-            ThreadPool.GetAvailableThreads(out int workerThreads, out int completionPortThreads);
+            ThreadPool.GetAvailableThreads(out _, out _);
             var genTask = Task.Run(() =>
             {
                 var i = 0;
-                Parallel.For(0, numberOfSeeds, (iteration, state) =>
+                Parallel.For(0, numberOfSeeds, (_, _) =>
                 {
                     try
                     {
@@ -363,6 +363,7 @@ namespace Randomizer.App.Windows
                     }
                     catch (Exception)
                     {
+                        // ignored
                     }
 
                     var seedsGenerated = Interlocked.Increment(ref i);
@@ -374,7 +375,7 @@ namespace Randomizer.App.Windows
             }, ct);
 
             progressDialog.StartTimer();
-            var result = progressDialog.ShowDialog();
+            progressDialog.ShowDialog();
             try
             {
                 genTask.GetAwaiter().GetResult();
@@ -442,7 +443,7 @@ namespace Randomizer.App.Windows
         private void WriteMegaSpoilerLog(ConcurrentDictionary<(int itemId, LocationId locationId), int> itemCounts, int numberOfSeeds)
         {
             var items = Enum.GetValues<ItemType>().ToDictionary(x => (int)x);
-            var locations = new World(new Config(), "", 0, "").Locations;
+            var locations = new World(new Config(), "", 0, "").Locations.ToList();
 
             var itemLocations = items.Values
                 .Where(item => itemCounts.Keys.Any(x => x.itemId == (int)item))
@@ -459,7 +460,7 @@ namespace Randomizer.App.Windows
             // Area > region > location
             var locationItems = locations.Select(location => new
             {
-                Area = location.Region.Area,
+                location.Region.Area,
                 Name = location.ToString(),
                 Items = itemCounts.Where(x => x.Key.locationId == location.Id)
                         .OrderByDescending(x => x.Value)
@@ -690,7 +691,7 @@ namespace Randomizer.App.Windows
 
         private void SelectMsuButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Single, null);
+            _msuUiService.OpenMsuWindow(this, SelectionMode.Single, null);
             UpdateMsuTextBox();
         }
 
@@ -702,19 +703,19 @@ namespace Randomizer.App.Windows
 
         private void RandomMsuMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Single);
+            _msuUiService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Single);
             UpdateMsuTextBox();
         }
 
         private void ShuffledMsuMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Shuffled);
+            _msuUiService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Shuffled);
             UpdateMsuTextBox();
         }
 
         private void ContinuousShuffleMsuMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            _msuGeneratorService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Continuous);
+            _msuUiService.OpenMsuWindow(this, SelectionMode.Multiple, MsuRandomizationStyle.Continuous);
             UpdateMsuTextBox();
         }
 
@@ -760,7 +761,7 @@ namespace Randomizer.App.Windows
             }
 
             UpdateMsuTextBox();
-            _msuGeneratorService.LookupMsus();
+            _msuUiService.LookupMsus();
             UpdateSpriteTextBoxes();
         }
 

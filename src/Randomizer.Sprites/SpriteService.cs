@@ -2,8 +2,6 @@
 using Randomizer.Data;
 using Randomizer.Data.Options;
 using Randomizer.Shared;
-using Randomizer.SMZ3.FileData;
-using Randomizer.SMZ3.FileData.IpsPatches;
 
 namespace Randomizer.Sprites;
 
@@ -148,15 +146,14 @@ public class SpriteService
         return new Sprite(name, author, path, SpriteType.Ship, previewPath, spriteOption);
     }
 
-    /// <summary>
-    /// Applies the user selected sprite options to the given rom bytes
-    /// </summary>
-    /// <param name="sprite">The sprite to apply</param>
-    /// <param name="bytes">The rom bytes to apply the sprite to</param>
-    /// <returns>The actual selected sprite object</returns>
-    public Sprite ApplySpriteOptionsTo(Sprite sprite, byte[] bytes)
+    public Sprite GetSprite(SpriteType type)
     {
-        if (sprite.IsDefault) return sprite;
+        var sprite = type switch
+        {
+            SpriteType.Link => _options.PatchOptions.SelectedLinkSprite,
+            SpriteType.Samus => _options.PatchOptions.SelectedSamusSprite,
+            _ => _options.PatchOptions.SelectedShipSprite
+        };
 
         if (sprite.IsRandomSprite)
         {
@@ -208,54 +205,20 @@ public class SpriteService
             }
         }
 
-        if (sprite.SpriteType == SpriteType.Ship)
+        if (type == SpriteType.Link)
         {
-            ApplyShipSpriteTo(sprite, bytes);
+            _options.PatchOptions.PreviousLinkSprite = sprite;
         }
-        else if (sprite.SpriteType is SpriteType.Link or SpriteType.Samus)
+        else if (type == SpriteType.Samus)
         {
-            ApplyRdcSpriteTo(sprite, bytes);
+            _options.PatchOptions.PreviousSamusSprite = sprite;
+        }
+        else if (type == SpriteType.Ship)
+        {
+            _options.PatchOptions.PreviousShipSprite = sprite;
         }
 
         return sprite;
     }
 
-    public void ApplySpritesTo(RandomizerOptions options, byte[] rom, out string linkSpriteName, out string samusSpriteName)
-    {
-        var samusSprite = ApplySpriteOptionsTo(options.PatchOptions.SelectedSamusSprite, rom);
-        var linkSprite = ApplySpriteOptionsTo(options.PatchOptions.SelectedLinkSprite, rom);
-        var shipSprite = ApplySpriteOptionsTo(options.PatchOptions.SelectedShipSprite, rom);
-
-        options.PatchOptions.PreviousSamusSprite = samusSprite;
-        options.PatchOptions.PreviousLinkSprite = linkSprite;
-        options.PatchOptions.PreviousShipSprite = shipSprite;
-
-        samusSpriteName = samusSprite.Name;
-        linkSpriteName = linkSprite.Name;
-    }
-
-    private void ApplyShipSpriteTo(Sprite sprite, byte[] bytes)
-    {
-        var shipPatchFileName = sprite.FilePath;
-        if (File.Exists(shipPatchFileName))
-        {
-            using var customShipBasePatch = IpsPatch.CustomShip();
-            Rom.ApplySuperMetroidIps(bytes, customShipBasePatch);
-
-            using var shipPatch = File.OpenRead(shipPatchFileName);
-            Rom.ApplySuperMetroidIps(bytes, shipPatch);
-        }
-    }
-
-    private void ApplyRdcSpriteTo(Sprite sprite, byte[] bytes)
-    {
-        using var stream = File.OpenRead(sprite.FilePath);
-        var rdc = Rdc.Parse(stream);
-
-        if (rdc.TryParse<LinkSprite>(stream, out var linkSprite))
-            linkSprite?.Apply(bytes);
-
-        if (rdc.TryParse<SamusSprite>(stream, out var samusSprite))
-            samusSprite?.Apply(bytes);
-    }
 }
