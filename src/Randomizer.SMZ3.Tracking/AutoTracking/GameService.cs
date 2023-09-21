@@ -49,13 +49,13 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
         {
             if (IsInGame(Game.SM))
             {
-                // Zero out SM's NO_RESUME_AFTER variable
+                // Zero out SM's NO_RESUME_AFTER_LO and NO_RESUME_AFTER_HI variables
                 AutoTracker?.WriteToMemory(new EmulatorAction()
                 {
                     Type = EmulatorActionType.WriteBytes,
                     Domain = MemoryDomain.WRAM,
                     Address = 0x7E033A, // As declared in sm/msu.asm
-                    WriteValues = new List<byte>() { 0, 0 }
+                    WriteValues = new List<byte>() { 0, 0, 0, 0 }
                 });
             }
 
