@@ -27,6 +27,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Castle Tower";
 
+        public RewardType DefaultRewardType => RewardType.Agahnim;
+
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Agahnim's Tower", "Hyrule Castle Tower" };
 

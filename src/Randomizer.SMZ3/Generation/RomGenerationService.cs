@@ -24,9 +24,9 @@ public class RomGenerationService
     private readonly ILogger<RomGenerationService> _logger;
     private readonly ITrackerStateService _stateService;
     private readonly SpritePatcherService _spritePatcherService;
-    private readonly IMsuLookupService _msuLookupService;
-    private readonly IMsuSelectorService _msuSelectorService;
-    private readonly IMsuTypeService _msuTypeService;
+    private readonly IMsuLookupService? _msuLookupService;
+    private readonly IMsuSelectorService? _msuSelectorService;
+    private readonly IMsuTypeService? _msuTypeService;
     private readonly RomTextService _romTextService;
 
     public RomGenerationService(Smz3Randomizer randomizer,
@@ -35,9 +35,10 @@ public class RomGenerationService
         ILogger<RomGenerationService> logger,
         ITrackerStateService stateService,
         SpritePatcherService spritePatcherService,
-        IMsuLookupService msuLookupService,
-        IMsuSelectorService msuSelectorService,
-        IMsuTypeService msuTypeService, RomTextService romTextService)
+        IMsuLookupService? msuLookupService,
+        IMsuSelectorService? msuSelectorService,
+        IMsuTypeService? msuTypeService,
+        RomTextService romTextService)
     {
         _randomizer = randomizer;
         _plandomizer = plandomizer;
@@ -63,7 +64,7 @@ public class RomGenerationService
         return _randomizer.GenerateSeed(config, seed ?? config.Seed, CancellationToken.None);
     }
 
-    private SeedData GeneratePlandoSeed(RandomizerOptions options, PlandoConfig plandoConfig)
+    public SeedData GeneratePlandoSeed(RandomizerOptions options, PlandoConfig plandoConfig)
     {
         var config = options.ToConfig();
         config.PlandoConfig = plandoConfig;
@@ -367,6 +368,11 @@ public class RomGenerationService
     public bool ApplyMsuOptions(RandomizerOptions options, string romPath)
     {
         if (!options.PatchOptions.MsuPaths.Any())
+        {
+            return false;
+        }
+
+        if (_msuLookupService == null || _msuSelectorService == null || _msuTypeService == null)
         {
             return false;
         }

@@ -98,6 +98,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Thieves' Town";
 
+        public RewardType DefaultRewardType => RewardType.CrystalBlue;
+
         public int SongIndex { get; init; } = 9;
 
         public Reward Reward { get; set; }

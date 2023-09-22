@@ -126,6 +126,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Palace of Darkness";
 
+        public RewardType DefaultRewardType => RewardType.CrystalBlue;
+
         public override string Area => "Dark Palace";
 
         public int SongIndex { get; init; } = 4;

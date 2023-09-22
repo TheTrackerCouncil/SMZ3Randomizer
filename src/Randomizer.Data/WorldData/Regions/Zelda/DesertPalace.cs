@@ -89,6 +89,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Desert Palace";
 
+        public RewardType DefaultRewardType => RewardType.PendantBlue;
+
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Dessert Palace" };
 
