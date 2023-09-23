@@ -51,22 +51,21 @@ namespace Randomizer.Data.Options
             PreviewPath = Path.Combine(SpritePath, s_folderNames[spriteType], sprite);
         }
 
+        [YamlIgnore]
         public string Name { get; set; }
 
+        [YamlIgnore]
         public string Author { get; set; }
 
         public string FilePath { get; set; } = "";
 
-        [YamlIgnore]
         public SpriteType SpriteType { get; set; }
 
         [YamlIgnore]
         public string PreviewPath { get; set; }
 
-        [YamlIgnore]
         public bool IsDefault { get; set; }
 
-        [YamlIgnore]
         public bool IsRandomSprite { get; set; }
 
         [YamlIgnore]

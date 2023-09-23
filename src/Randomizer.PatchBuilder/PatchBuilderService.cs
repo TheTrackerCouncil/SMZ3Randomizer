@@ -9,11 +9,17 @@ public class PatchBuilderService
 {
     private readonly ILogger<PatchBuilderService> _logger;
     private readonly RomGenerationService _romGenerationService;
+    private readonly OptionsFactory _optionsFactory;
+    private readonly string _solutionPath;
+    private readonly string _randomizerRomPath;
 
-    public PatchBuilderService(ILogger<PatchBuilderService> logger, RomGenerationService romGenerationService)
+    public PatchBuilderService(ILogger<PatchBuilderService> logger, RomGenerationService romGenerationService, OptionsFactory optionsFactory)
     {
         _logger = logger;
         _romGenerationService = romGenerationService;
+        _solutionPath = SolutionPath;
+        _randomizerRomPath = Path.Combine(_solutionPath, "alttp_sm_combo_randomizer_rom");
+        _optionsFactory = optionsFactory;
     }
 
     public void CreatePatches(PatchBuilderConfig config)
@@ -21,6 +27,9 @@ public class PatchBuilderService
         _logger.LogInformation("CreatePatches Start");
         try
         {
+            var options = _optionsFactory.Create();
+            options.PatchOptions = config.PatchOptions;
+
             BuildPatches(config);
             CopyPatches(config);
             var romPath = GenerateTestRom(config);
@@ -38,9 +47,12 @@ public class PatchBuilderService
         if (!config.PatchFlags.CreatePatches) return;
 
         _logger.LogInformation("Building patches");
-        var scriptFile = string.IsNullOrEmpty(config.EnvironmentSettings.PatchBuildScriptPath)
-            ? @"..\..\..\..\..\alttp_sm_combo_randomizer_rom\build.bat"
-            : config.EnvironmentSettings.PatchBuildScriptPath;
+        var scriptFile = config.EnvironmentSettings.PatchBuildScriptPath;
+        if (string.IsNullOrEmpty(scriptFile))
+        {
+            scriptFile = Path.Combine(_randomizerRomPath, OperatingSystem.IsWindows() ? "build.bat" : "build.sh");
+        }
+
         var info = new FileInfo(scriptFile);
 
         // Run the patch build.bat file
@@ -58,11 +70,12 @@ public class PatchBuilderService
         process.Close();
 
         // Verify that the main IPS file was created
-        info = new FileInfo(@"..\..\..\..\..\alttp_sm_combo_randomizer_rom\build\zsm.ips");
+        info = new FileInfo(Path.Combine(_randomizerRomPath, "build", "zsm.ips"));
 
         var length = info.Exists ? info.Length : 0L;
         if (length < 1000)
         {
+            _logger.LogError("Invalid zsm.ips file found out {Path}", info.FullName);
             throw new InvalidOperationException("Invalid zsm.ips file created");
         }
     }
@@ -70,10 +83,10 @@ public class PatchBuilderService
     private void CopyPatches(PatchBuilderConfig config)
     {
         if (!config.PatchFlags.CopyPatchesToProject) return;
-        var patchBuildFolder = new DirectoryInfo(@"..\..\..\..\..\alttp_sm_combo_randomizer_rom\build");
+        var patchBuildFolder = new DirectoryInfo(Path.Combine(_randomizerRomPath, "build"));
         foreach (var file in patchBuildFolder.EnumerateFiles().Where(x => x.Extension.Contains("ips")))
         {
-            var destinationFile = new FileInfo(@"..\..\..\..\Randomizer.SMZ3\FileData\IpsPatches\" + file.Name);
+            var destinationFile = new FileInfo(Path.Combine(_solutionPath, "src", "Randomizer.SMZ3", "FileData", "IpsPatches", file.Name));
             file.CopyTo(destinationFile.FullName, true);
             _logger.LogInformation("Copying {Source} to {Destination}", file, destinationFile.FullName);
         }
@@ -83,10 +96,10 @@ public class PatchBuilderService
     {
         if (!config.PatchFlags.GenerateTestRom) return null;
         var smRom = new FileInfo(string.IsNullOrEmpty(config.EnvironmentSettings.MetroidRomPath)
-            ? @"..\..\..\..\..\alttp_sm_combo_randomizer_rom\resources\sm.sfc"
+            ? Path.Combine(_randomizerRomPath, "resources", "sm.sfc")
             : config.EnvironmentSettings.MetroidRomPath);
         var z3Rom = new FileInfo(string.IsNullOrEmpty(config.EnvironmentSettings.Z3RomPath)
-            ? @"..\..\..\..\..\alttp_sm_combo_randomizer_rom\resources\z3.sfc"
+            ? Path.Combine(_randomizerRomPath, "resources", "z3.sfc")
             : config.EnvironmentSettings.Z3RomPath);
 
         if (!smRom.Exists || !z3Rom.Exists)
@@ -97,7 +110,7 @@ public class PatchBuilderService
         var outputFolder = config.EnvironmentSettings.OutputPath;
         if (string.IsNullOrEmpty(outputFolder))
         {
-            outputFolder = new DirectoryInfo(@"..\..\..\..\..\alttp_sm_combo_randomizer_rom\build").FullName;
+            outputFolder = Path.Combine(_randomizerRomPath, "build");
         }
 
         var outputFileName = config.EnvironmentSettings.TestRomFileName;
@@ -135,7 +148,11 @@ public class PatchBuilderService
     private void Launch(PatchBuilderConfig config, string? romPath)
     {
         if (!config.PatchFlags.LaunchTestRom) return;
-        if (string.IsNullOrEmpty(romPath)) return;
+        if (string.IsNullOrEmpty(romPath))
+        {
+            _logger.LogError("No rom path specified. GenerateTestRom: true is required");
+            return;
+        }
         var launchApplication = config.EnvironmentSettings.LaunchApplication;
         var launchArguments = "";
         if (string.IsNullOrEmpty(launchApplication))
@@ -148,9 +165,9 @@ public class PatchBuilderService
             {
                 launchArguments = $"\"{romPath}\"";
             }
-            else if (launchArguments.Contains("%rom%"))
+            else if (config.EnvironmentSettings.LaunchArguments.Contains("%rom%"))
             {
-                launchArguments = config.EnvironmentSettings.LaunchArguments.Replace("%rom%", $"\"{romPath}\"");
+                launchArguments = config.EnvironmentSettings.LaunchArguments.Replace("%rom%", $"{romPath}");
             }
             else
             {
@@ -160,6 +177,7 @@ public class PatchBuilderService
 
         try
         {
+            _logger.LogInformation("Executing {FileName} {Arguments}", launchApplication, launchArguments);
             Process.Start(new ProcessStartInfo
             {
                 FileName = launchApplication,
@@ -173,5 +191,19 @@ public class PatchBuilderService
         }
     }
 
+    private static string SolutionPath
+    {
+        get
+        {
+            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+            while (directory != null && !directory.GetFiles("*.sln").Any())
+            {
+                directory = directory.Parent;
+            }
+
+            return Path.Combine(directory!.FullName);
+        }
+    }
 
 }

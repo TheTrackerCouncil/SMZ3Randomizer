@@ -155,13 +155,13 @@ public class SpriteService
             _ => _options.PatchOptions.SelectedShipSprite
         };
 
+        if (!Sprites.Any())
+        {
+            LoadSpritesAsync().Wait();
+        }
+
         if (sprite.IsRandomSprite)
         {
-            if (!Sprites.Any())
-            {
-                LoadSpritesAsync().Wait();
-            }
-
             var spriteType = sprite.SpriteType;
 
             var searchText = spriteType switch
@@ -203,6 +203,11 @@ public class SpriteService
             {
                 return sprite;
             }
+        }
+        else if (!sprite.IsDefault)
+        {
+            var matchingSprite = Sprites.FirstOrDefault(x => x == sprite);
+            sprite = matchingSprite ?? Sprites.First(x => x.IsDefault && x.SpriteType == type);
         }
 
         if (type == SpriteType.Link)

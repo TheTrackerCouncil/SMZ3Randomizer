@@ -346,4 +346,4 @@ healthchecksdb
 /WebRandomizer/randomizer.db
 /asar/
 setup/Output/
-patch-config.yml
+patch-config*

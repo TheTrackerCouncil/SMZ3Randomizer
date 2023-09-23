@@ -48,7 +48,7 @@ namespace Randomizer.Data.Options
         public SeedOptions SeedOptions { get; }
 
         [JsonPropertyName("Patch")]
-        public PatchOptions PatchOptions { get; init;  }
+        public PatchOptions PatchOptions { get; set;  }
 
         [JsonPropertyName("Logic")]
         public LogicConfig LogicConfig { get; set; }

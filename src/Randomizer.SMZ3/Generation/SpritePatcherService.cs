@@ -34,6 +34,8 @@ public class SpritePatcherService
 
     private void ApplyShipSpriteTo(Sprite sprite, byte[] bytes)
     {
+        if (sprite.IsDefault) return;
+
         var shipPatchFileName = sprite.FilePath;
         if (File.Exists(shipPatchFileName))
         {
@@ -47,6 +49,8 @@ public class SpritePatcherService
 
     private void ApplyRdcSpriteTo(Sprite sprite, byte[] bytes)
     {
+        if (sprite.IsDefault) return;
+
         using var stream = File.OpenRead(sprite.FilePath);
         var rdc = Rdc.Parse(stream);
 
