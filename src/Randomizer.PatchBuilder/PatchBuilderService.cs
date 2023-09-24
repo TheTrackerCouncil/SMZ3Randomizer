@@ -171,7 +171,7 @@ public class PatchBuilderService
         var response = _msuSelectorService.AssignMsu(new MsuSelectorRequest()
         {
             Msu = msu,
-            OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+            OutputMsuType = _msuTypeService.GetMsuType("Super Metroid / A Link to the Past Combination Randomizer"),
             OutputPath = romPath,
             EmptyFolder = true,
         });

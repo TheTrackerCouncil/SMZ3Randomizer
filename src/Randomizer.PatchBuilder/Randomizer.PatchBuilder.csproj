@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="msu-randomizer-settings.yml" />
       <EmbeddedResource Include="msu-randomizer-types.json" />
     </ItemGroup>
 

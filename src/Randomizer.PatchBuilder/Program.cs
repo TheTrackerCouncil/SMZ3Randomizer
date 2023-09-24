@@ -31,12 +31,9 @@ var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
 var typesStream = Assembly.GetExecutingAssembly()
     .GetManifestResourceStream("Randomizer.PatchBuilder.msu-randomizer-types.json");
-var msuInitializationRequest = new MsuRandomizerInitializationRequest()
-{
-    MsuTypeConfigStream = typesStream,
-    LookupMsus = false
-};
-serviceProvider.GetRequiredService<IMsuRandomizerInitializationService>().Initialize(msuInitializationRequest);
+serviceProvider.GetRequiredService<IMsuTypeService>().LoadMsuTypes(typesStream!);
+
+InitializeMsuRandomizer(serviceProvider.GetRequiredService<IMsuRandomizerInitializationService>());
 
 var yamlPath = "";
 var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
@@ -89,4 +86,19 @@ else
         logger.LogError(e, "Error deserializing YAML file");
     }
 
+}
+
+static void InitializeMsuRandomizer(IMsuRandomizerInitializationService msuRandomizerInitializationService)
+{
+    var settingsStream =  Assembly.GetExecutingAssembly()
+        .GetManifestResourceStream("Randomizer.PatchBuilder.msu-randomizer-settings.yml");
+    var typesStream = Assembly.GetExecutingAssembly()
+        .GetManifestResourceStream("Randomizer.PatchBuilder.msu-randomizer-types.json");
+    var msuInitializationRequest = new MsuRandomizerInitializationRequest()
+    {
+        MsuAppSettingsStream = settingsStream,
+        MsuTypeConfigStream = typesStream,
+        LookupMsus = false
+    };
+    msuRandomizerInitializationService.Initialize(msuInitializationRequest);
 }
