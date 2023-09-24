@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using MSURandomizerLibrary.Models;
+using MSURandomizerLibrary.Services;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.Generation;
 
@@ -10,16 +12,22 @@ public class PatchBuilderService
     private readonly ILogger<PatchBuilderService> _logger;
     private readonly RomGenerationService _romGenerationService;
     private readonly OptionsFactory _optionsFactory;
+    private readonly IMsuTypeService _msuTypeService;
+    private readonly IMsuLookupService _msuLookupService;
+    private readonly IMsuSelectorService _msuSelectorService;
     private readonly string _solutionPath;
     private readonly string _randomizerRomPath;
 
-    public PatchBuilderService(ILogger<PatchBuilderService> logger, RomGenerationService romGenerationService, OptionsFactory optionsFactory)
+    public PatchBuilderService(ILogger<PatchBuilderService> logger, RomGenerationService romGenerationService, OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService)
     {
         _logger = logger;
         _romGenerationService = romGenerationService;
         _solutionPath = SolutionPath;
         _randomizerRomPath = Path.Combine(_solutionPath, "alttp_sm_combo_randomizer_rom");
         _optionsFactory = optionsFactory;
+        _msuLookupService = msuLookupService;
+        _msuSelectorService = msuSelectorService;
+        _msuTypeService = msuTypeService;
     }
 
     public void CreatePatches(PatchBuilderConfig config)
@@ -30,10 +38,12 @@ public class PatchBuilderService
             var options = _optionsFactory.Create();
             options.PatchOptions = config.PatchOptions;
 
+            Initialize(config);
             BuildPatches(config);
             CopyPatches(config);
-            var romPath = GenerateTestRom(config);
-            Launch(config, romPath);
+            GenerateTestRom(config);
+            AssignMsu(config);
+            Launch(config);
         }
         catch (Exception e)
         {
@@ -42,18 +52,36 @@ public class PatchBuilderService
 
     }
 
+    private void Initialize(PatchBuilderConfig config)
+    {
+        if (string.IsNullOrEmpty(config.EnvironmentSettings.PatchBuildScriptPath))
+        {
+            config.EnvironmentSettings.PatchBuildScriptPath = Path.Combine(_randomizerRomPath, OperatingSystem.IsWindows() ? "build.bat" : "build.sh");
+        }
+
+        if (string.IsNullOrEmpty(config.EnvironmentSettings.OutputPath))
+        {
+            config.EnvironmentSettings.OutputPath = Path.Combine(_randomizerRomPath, "build", "rom");
+        }
+
+        if (!Directory.Exists(config.EnvironmentSettings.OutputPath))
+        {
+            Directory.CreateDirectory(config.EnvironmentSettings.OutputPath);
+        }
+
+        if (string.IsNullOrEmpty(config.EnvironmentSettings.TestRomFileName))
+        {
+            config.EnvironmentSettings.TestRomFileName = "test-rom";
+        }
+    }
+
     private void BuildPatches(PatchBuilderConfig config)
     {
         if (!config.PatchFlags.CreatePatches) return;
 
         _logger.LogInformation("Building patches");
-        var scriptFile = config.EnvironmentSettings.PatchBuildScriptPath;
-        if (string.IsNullOrEmpty(scriptFile))
-        {
-            scriptFile = Path.Combine(_randomizerRomPath, OperatingSystem.IsWindows() ? "build.bat" : "build.sh");
-        }
 
-        var info = new FileInfo(scriptFile);
+        var info = new FileInfo(config.EnvironmentSettings.PatchBuildScriptPath);
 
         // Run the patch build.bat file
         var process = Process.Start(new ProcessStartInfo()
@@ -92,9 +120,9 @@ public class PatchBuilderService
         }
     }
 
-    private string? GenerateTestRom(PatchBuilderConfig config)
+    private void GenerateTestRom(PatchBuilderConfig config)
     {
-        if (!config.PatchFlags.GenerateTestRom) return null;
+        if (!config.PatchFlags.GenerateTestRom) return;
         var smRom = new FileInfo(string.IsNullOrEmpty(config.EnvironmentSettings.MetroidRomPath)
             ? Path.Combine(_randomizerRomPath, "resources", "sm.sfc")
             : config.EnvironmentSettings.MetroidRomPath);
@@ -105,18 +133,6 @@ public class PatchBuilderService
         if (!smRom.Exists || !z3Rom.Exists)
         {
             throw new FileNotFoundException("Super Metroid or Zelda rom not found");
-        }
-
-        var outputFolder = config.EnvironmentSettings.OutputPath;
-        if (string.IsNullOrEmpty(outputFolder))
-        {
-            outputFolder = Path.Combine(_randomizerRomPath, "build");
-        }
-
-        var outputFileName = config.EnvironmentSettings.TestRomFileName;
-        if (string.IsNullOrEmpty(outputFileName))
-        {
-            outputFileName = "test-rom";
         }
 
         var randomizerOptions = new RandomizerOptions()
@@ -132,27 +148,52 @@ public class PatchBuilderService
         var seedData = _romGenerationService.GeneratePlandoSeed(randomizerOptions, config.PlandoConfig);
         var bytes = _romGenerationService.GenerateRomBytes(randomizerOptions, seedData);
 
-        if (!Directory.Exists(outputFolder))
-        {
-            Directory.CreateDirectory(outputFolder);
-        }
+        var romPath = Path.Combine(config.EnvironmentSettings.OutputPath, $"{config.EnvironmentSettings.TestRomFileName}.sfc");
 
-        var romPath = Path.Combine(outputFolder, $"{outputFileName}.sfc");
         File.WriteAllBytes(romPath, bytes);
 
         _logger.LogInformation("Wrote test rom to {Path}", romPath);
-
-        return romPath;
     }
 
-    private void Launch(PatchBuilderConfig config, string? romPath)
+    private void AssignMsu(PatchBuilderConfig config)
+    {
+        if (!config.PatchFlags.AssignMsu) return;
+
+        if (!config.PatchOptions.MsuPaths.Any() || !File.Exists(config.PatchOptions.MsuPaths.First()))
+        {
+            _logger.LogError("No valid MSU entered");
+            throw new InvalidOperationException("No valid MSU entered");
+        }
+
+        var romPath = Path.Combine(config.EnvironmentSettings.OutputPath, $"{config.EnvironmentSettings.TestRomFileName}.sfc");
+        var msuPath = config.PatchOptions.MsuPaths.First();
+        var msu = _msuLookupService.LoadMsu(msuPath, null, false, true, true);
+        var response = _msuSelectorService.AssignMsu(new MsuSelectorRequest()
+        {
+            Msu = msu,
+            OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
+            OutputPath = romPath,
+            EmptyFolder = true,
+        });
+
+        if (!response.Successful)
+        {
+            _logger.LogWarning("Error assigning msu: {Error}", response.Message);
+        }
+    }
+
+    private void Launch(PatchBuilderConfig config)
     {
         if (!config.PatchFlags.LaunchTestRom) return;
-        if (string.IsNullOrEmpty(romPath))
+
+        var romPath = Path.Combine(config.EnvironmentSettings.OutputPath, $"{config.EnvironmentSettings.TestRomFileName}.sfc");
+
+        if (!File.Exists(romPath))
         {
-            _logger.LogError("No rom path specified. GenerateTestRom: true is required");
+            _logger.LogError("No test rom found at {Path}", romPath);
             return;
         }
+
         var launchApplication = config.EnvironmentSettings.LaunchApplication;
         var launchArguments = "";
         if (string.IsNullOrEmpty(launchApplication))

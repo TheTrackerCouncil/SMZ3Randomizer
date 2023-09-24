@@ -26,5 +26,6 @@ public class PatchFlags
     public bool CreatePatches { get; set; }
     public bool CopyPatchesToProject { get; set; }
     public bool GenerateTestRom { get; set; }
+    public bool AssignMsu { get; set; }
     public bool LaunchTestRom { get; set; }
 }

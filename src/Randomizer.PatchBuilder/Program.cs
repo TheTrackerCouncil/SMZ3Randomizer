@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MSURandomizerLibrary;
+using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
@@ -17,9 +20,7 @@ var serviceProvider = new ServiceCollection()
     })
     .AddConfigs()
     .AddSingleton<ITrackerStateService, TrackerStateService>()
-    .AddSingleton<IMsuLookupService>(_ => null!)
-    .AddSingleton<IMsuTypeService>(_ => null!)
-    .AddSingleton<IMsuSelectorService>(_ => null!)
+    .AddMsuRandomizerServices()
     .AddSingleton<SpriteService>()
     .AddSingleton<OptionsFactory>()
     .AddRandomizerServices()
@@ -27,6 +28,15 @@ var serviceProvider = new ServiceCollection()
     .BuildServiceProvider();
 
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+
+var typesStream = Assembly.GetExecutingAssembly()
+    .GetManifestResourceStream("Randomizer.PatchBuilder.msu-randomizer-types.json");
+var msuInitializationRequest = new MsuRandomizerInitializationRequest()
+{
+    MsuTypeConfigStream = typesStream,
+    LookupMsus = false
+};
+serviceProvider.GetRequiredService<IMsuRandomizerInitializationService>().Initialize(msuInitializationRequest);
 
 var yamlPath = "";
 var directory = new DirectoryInfo(Directory.GetCurrentDirectory());

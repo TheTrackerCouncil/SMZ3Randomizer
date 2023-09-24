@@ -19,7 +19,6 @@ namespace Randomizer.Data.Options
         private MsuRandomizationStyle? _msuRandomizationStyle;
         private List<string> _msuPaths = new List<string>();
 
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public Sprite SelectedLinkSprite { get; set; }
