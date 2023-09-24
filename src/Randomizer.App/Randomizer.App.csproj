@@ -60,7 +60,7 @@
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="MattEqualsCoder.GitHubReleaseChecker" Version="1.0.0" />
-    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="1.2.0" />
+    <PackageReference Include="MattEqualsCoder.MSURandomizer.UI" Version="1.2.1" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="NReco.Logging.File" Version="1.1.6" />
