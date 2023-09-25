@@ -28,7 +28,7 @@ When you run the Patch Builder project for the first time, it will generate a pa
     - **LaunchTestRom** - If the test rom should be launched
 - **EnvironmentSettings** - Updates paths that will be used. All of these fields are optional.
     - **MetroidRomPath** - Path to the Metroid rom file. Will look for sm.sfc in the alttp_sm_combo_randomizer_rom\resources if not provided.
-    - **MetroidRomPath** - Path to the Metroid rom file. Will look for z3.sfc in the alttp_sm_combo_randomizer_rom\resources if not provided.
+    - **Z3RomPath** - Path to the Zelda rom file. Will look for z3.sfc in the alttp_sm_combo_randomizer_rom\resources if not provided.
     - **TestRomFileName** - Name of the test rom file (without the sfc file extension). Will use test-rom if not provided.
     - **PatchBuildScriptPath** - Path to the script file to execute to compile the assembly. Will use alttp_sm_combo_randomizer_rom/build.bat or alttp_sm_combo_randomizer_rom/build.sh depending on operating system if not provided.
     - **LaunchApplication** - Application to launch for playing the test rom. If not provided, it will use the default application associated with the sfc file extension.
