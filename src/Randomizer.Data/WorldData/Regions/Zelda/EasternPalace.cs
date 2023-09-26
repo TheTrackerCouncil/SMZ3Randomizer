@@ -80,6 +80,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Eastern Palace";
 
+        public RewardType DefaultRewardType => RewardType.PendantGreen;
+
         public Reward Reward { get; set; }
 
         public DungeonInfo DungeonMetadata { get; set; }

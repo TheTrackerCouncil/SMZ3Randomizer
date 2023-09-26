@@ -108,6 +108,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Skull Woods";
 
+        public RewardType DefaultRewardType => RewardType.CrystalBlue;
+
         public override List<string> AlsoKnownAs { get; }
             = new List<string>() { "Skill Woods" };
 

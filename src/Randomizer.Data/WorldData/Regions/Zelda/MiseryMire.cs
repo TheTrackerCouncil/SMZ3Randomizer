@@ -111,6 +111,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Misery Mire";
 
+        public RewardType DefaultRewardType => RewardType.CrystalRed;
+
+        public ItemType DefaultMedallion => ItemType.Ether;
+
         public int SongIndex { get; init; } = 5;
 
         public Reward Reward { get; set; }

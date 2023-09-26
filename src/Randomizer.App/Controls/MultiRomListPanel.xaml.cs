@@ -9,6 +9,7 @@ using Randomizer.App.ViewModels;
 using Randomizer.App.Windows;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Generation;
 
 namespace Randomizer.App.Controls
 {
@@ -21,7 +22,7 @@ namespace Randomizer.App.Controls
             OptionsFactory optionsFactory,
             ILogger<MultiRomListPanel> logger,
             RandomizerContext dbContext,
-            RomGenerator romGenerator) : base(serviceProvider, optionsFactory, logger, dbContext, romGenerator)
+            RomGenerationService romGenerationService) : base(serviceProvider, optionsFactory, logger, dbContext, romGenerationService)
         {
             Model = new MultiplayerGamesViewModel();
             DataContext = Model;

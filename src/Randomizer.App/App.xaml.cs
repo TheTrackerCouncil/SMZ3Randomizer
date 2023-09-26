@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,11 +21,11 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.Multiplayer.Client;
 using Randomizer.SMZ3.ChatIntegration;
-using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 using Randomizer.SMZ3.Tracking.AutoTracking;
 using Randomizer.SMZ3.Tracking.VoiceCommands;
 using Randomizer.SMZ3.Twitch;
+using Randomizer.Sprites;
 
 namespace Randomizer.App
 {
@@ -75,10 +74,10 @@ namespace Randomizer.App
                 var vScreenTop = SystemParameters.VirtualScreenTop;
                 var vScreenLeft = SystemParameters.VirtualScreenLeft;
 
-                window.Width = (int)key.GetValue("Width", window.Width)!;
-                window.Height = (int)key.GetValue("Height", window.Height)!;
-                window.Left = (int)key.GetValue("Left", window.Left)!;
-                window.Top = (int)key.GetValue("Top", window.Top)!;
+                window.Width = (int)key.GetValue("Width", window.Width);
+                window.Height = (int)key.GetValue("Height", window.Height);
+                window.Left = (int)key.GetValue("Left", window.Left);
+                window.Top = (int)key.GetValue("Top", window.Top);
 
                 if (window.Left < vScreenLeft)
                 {
@@ -116,8 +115,7 @@ namespace Randomizer.App
                 .AddOptionalModule<MapModule>()
                 .AddOptionalModule<GameService>();
 
-            services.AddSingleton<MsuGeneratorService>();
-            services.AddSingleton<RomGenerator>();
+            services.AddSingleton<MsuUiService>();
             services.AddScoped<TrackerLocationSyncer>();
             services.AddScoped<AutoTracker>();
             services.AddSingleton<ITrackerStateService, TrackerStateService>();
@@ -157,7 +155,7 @@ namespace Randomizer.App
                         options.MaxRollingFiles = 5;
                     });
                 })
-                .ConfigureServices((context, services) => ConfigureServices(services))
+                .ConfigureServices((_, services) => ConfigureServices(services))
                 .Start();
 
             _logger = _host.Services.GetRequiredService<ILogger<App>>();

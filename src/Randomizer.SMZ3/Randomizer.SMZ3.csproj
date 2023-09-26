@@ -14,6 +14,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="FileData\IpsPatches\AimAnyButton.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\AutoRun.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\Celeste.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\custom_ship.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\disable_screen_shake.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\EasierWJ.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\elevators_speed.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\fast_doors.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\HoldFire.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\msu1-v6.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\nerfed_charge.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\noflashing.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\QuickToggle.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\rando_speed.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\refill_before_save.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\spinjumprestart.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\UnifiedAim.ips" />
+    <EmbeddedResource Include="FileData\IpsPatches\zsm.ips" />
     <EmbeddedResource Include="Text\Scripts\StringTable.yaml" />
   </ItemGroup>
 
@@ -26,6 +44,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Randomizer.Data\Randomizer.Data.csproj" />
     <ProjectReference Include="..\Randomizer.Shared\Randomizer.Shared.csproj" />
+    <ProjectReference Include="..\Randomizer.Sprites\Randomizer.Sprites.csproj" />
   </ItemGroup>
 
 </Project>

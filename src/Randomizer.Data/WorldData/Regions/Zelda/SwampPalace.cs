@@ -104,6 +104,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Swamp Palace";
 
+        public RewardType DefaultRewardType => RewardType.CrystalBlue;
+
         public int SongIndex { get; init; } = 3;
 
         public Reward Reward { get; set; }

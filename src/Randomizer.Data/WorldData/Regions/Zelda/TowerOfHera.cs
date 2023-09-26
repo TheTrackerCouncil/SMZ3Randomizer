@@ -84,6 +84,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Tower of Hera";
 
+        public RewardType DefaultRewardType => RewardType.PendantRed;
+
         public int SongIndex { get; init; } = 8;
 
         public Reward Reward { get; set; }

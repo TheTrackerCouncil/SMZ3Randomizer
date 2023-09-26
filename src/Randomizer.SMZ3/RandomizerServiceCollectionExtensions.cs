@@ -22,6 +22,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSmz3Randomizer();
             services.AddPlandomizer();
             services.AddSmz3MultiplayerRomGenerator();
+            services.AddSingleton<RomGenerationService>();
+            services.AddSingleton<SpritePatcherService>();
+            services.AddSingleton<RomTextService>();
             return services;
         }
 

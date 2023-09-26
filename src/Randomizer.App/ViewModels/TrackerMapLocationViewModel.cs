@@ -10,6 +10,7 @@ using Randomizer.Data.WorldData.Regions.Zelda;
 using Randomizer.Data.WorldData;
 using Randomizer.Shared;
 using Randomizer.Data.Configuration.ConfigTypes;
+using Randomizer.Data.Options;
 using static Randomizer.Data.Configuration.ConfigTypes.TrackerMapLocation;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -236,9 +237,7 @@ namespace Randomizer.App.ViewModels
 
                 IconVisibility = image == "blank.png" ? Visibility.Collapsed : Visibility.Visible;
 
-                return new BitmapImage(new Uri(System.IO.Path.Combine(
-                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-                    "Sprites", "Maps", image)));
+                return new BitmapImage(new Uri(System.IO.Path.Combine(Sprite.SpritePath, "Maps", image)));
             }
         }
 
@@ -253,15 +252,13 @@ namespace Randomizer.App.ViewModels
                 if (ClearableLocationsCount > 1)
                 {
                     return new BitmapImage(new Uri(System.IO.Path.Combine(
-                        System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-                        "Sprites", "Marks", $"{Math.Min(9, ClearableLocationsCount)}.png")));
+                        Sprite.SpritePath, "Marks", $"{Math.Min(9, ClearableLocationsCount)}.png")));
 
                 }
                 else
                 {
                     return new BitmapImage(new Uri(System.IO.Path.Combine(
-                        System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
-                        "Sprites", "Maps", "blank.png")));
+                        Sprite.SpritePath, "Maps", "blank.png")));
                 }
             }
         }

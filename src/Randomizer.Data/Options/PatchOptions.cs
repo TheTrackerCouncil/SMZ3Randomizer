@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using MSURandomizerLibrary;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
 {
@@ -17,7 +18,6 @@ namespace Randomizer.Data.Options
         private string _msuName = "";
         private MsuRandomizationStyle? _msuRandomizationStyle;
         private List<string> _msuPaths = new List<string>();
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -94,6 +94,7 @@ namespace Randomizer.Data.Options
         public MusicShuffleMode ShuffleDungeonMusic { get; set; }
             = MusicShuffleMode.Default;
 
+        [YamlIgnore]
         public bool CanEnableExtendedSoundtrack => File.Exists(Msu1Path);
 
         public HeartColor HeartColor { get; set; }

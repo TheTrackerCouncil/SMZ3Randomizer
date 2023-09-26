@@ -26,7 +26,7 @@ namespace Randomizer.App.Controls
             OptionsFactory optionsFactory,
             ILogger<SoloRomListPanel> logger,
             RandomizerContext dbContext,
-            RomGenerator romGenerator) : base (serviceProvider, optionsFactory, logger, dbContext, romGenerator)
+            RomGenerationService romGenerationService) : base (serviceProvider, optionsFactory, logger, dbContext, romGenerationService)
         {
             Model = new GeneratedRomsViewModel();
             DataContext = Model;
@@ -303,10 +303,14 @@ namespace Randomizer.App.Controls
         /// <param name="e"></param>
         private async void QuickPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var rom = await RomGenerator.GenerateRandomRomAsync(Options);
-            if (!GeneratedRom.IsValid(rom)) return;
+            var rom = await RomGenerationService.GenerateRandomRomAsync(Options);
+            if (!string.IsNullOrEmpty(rom.GenerationError))
+            {
+                MessageBox.Show(rom.GenerationError, "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            if (rom.Rom == null || !GeneratedRom.IsValid(rom.Rom)) return;
             UpdateList();
-            QuickLaunchRom(rom);
+            QuickLaunchRom(rom.Rom);
         }
     }
 }

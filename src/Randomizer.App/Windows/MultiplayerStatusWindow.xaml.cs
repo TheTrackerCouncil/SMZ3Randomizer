@@ -12,6 +12,8 @@ using Randomizer.Shared.Multiplayer;
 using Randomizer.Multiplayer.Client;
 using Randomizer.Shared;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Generation;
+using Randomizer.Sprites;
 
 namespace Randomizer.App.Windows
 {
@@ -23,15 +25,15 @@ namespace Randomizer.App.Windows
     {
         private readonly MultiplayerClientService _multiplayerClientService;
         private readonly MultiplayerGameService _multiplayerGameService;
-        private readonly RomGenerator _romGenerator;
+        private readonly RomGenerationService _romGenerationService;
         private readonly SpriteService _spriteService;
 
         public MultiplayerStatusWindow(MultiplayerClientService multiplayerClientService,
-            MultiplayerGameService multiplayerGameService, RomGenerator romGenerator, SpriteService spriteService)
+            MultiplayerGameService multiplayerGameService, RomGenerationService romGenerationService, SpriteService spriteService)
         {
             _multiplayerClientService = multiplayerClientService;
             _multiplayerGameService = multiplayerGameService;
-            _romGenerator = romGenerator;
+            _romGenerationService = romGenerationService;
             _spriteService = spriteService;
             DataContext = Model;
             InitializeComponent();
@@ -67,10 +69,10 @@ namespace Randomizer.App.Windows
                 return;
             }
 
-            var rom = await _romGenerator.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!, _multiplayerClientService.DatabaseGameDetails!);
-            if (rom != null)
+            var rom = await _romGenerationService.GeneratePreSeededRomAsync(ParentPanel.Options, seedData!, _multiplayerClientService.DatabaseGameDetails!);
+            if (rom.Rom != null)
             {
-                Model.GeneratedRom = rom;
+                Model.GeneratedRom = rom.Rom;
                 DisplayMessage("Rom successfully generated.\nTo begin, launch tracker and the rom, then start auto tracking.");
             }
         }

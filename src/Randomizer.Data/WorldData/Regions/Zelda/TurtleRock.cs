@@ -98,6 +98,10 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Turtle Rock";
 
+        public RewardType DefaultRewardType => RewardType.CrystalBlue;
+
+        public ItemType DefaultMedallion => ItemType.Quake;
+
         public int SongIndex { get; init; } = 10;
 
         public Reward Reward { get; set; }

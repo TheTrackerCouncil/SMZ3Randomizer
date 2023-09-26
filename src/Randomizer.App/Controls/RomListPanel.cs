@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.Windows;
 using Randomizer.Data.Options;
 using Randomizer.Shared.Models;
+using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
 
 namespace Randomizer.App.Controls
@@ -22,12 +23,12 @@ namespace Randomizer.App.Controls
             OptionsFactory optionsFactory,
             ILogger<RomListPanel> logger,
             RandomizerContext dbContext,
-            RomGenerator romGenerator)
+            RomGenerationService romGenerationService)
         {
             ServiceProvider = serviceProvider;
             Logger = logger;
             DbContext = dbContext;
-            RomGenerator = romGenerator;
+            RomGenerationService = romGenerationService;
             Options = optionsFactory.Create();
             CheckSpeechRecognition();
         }
@@ -53,7 +54,7 @@ namespace Randomizer.App.Controls
 
         protected virtual bool CanStartTracker { get; private set; }
 
-        protected virtual RomGenerator RomGenerator { get; private set; }
+        protected virtual RomGenerationService RomGenerationService { get; private set; }
 
         protected virtual RandomizerContext DbContext { get; private set; }
 

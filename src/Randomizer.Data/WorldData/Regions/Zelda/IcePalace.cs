@@ -105,6 +105,8 @@ namespace Randomizer.Data.WorldData.Regions.Zelda
 
         public override string Name => "Ice Palace";
 
+        public RewardType DefaultRewardType => RewardType.CrystalRed;
+
         public int SongIndex { get; init; } = 7;
 
         public Reward Reward { get; set; }

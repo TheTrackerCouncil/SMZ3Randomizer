@@ -17,6 +17,8 @@ namespace Randomizer.Data.WorldData.Regions
 
         Reward Reward { get; set; }
 
+        RewardType DefaultRewardType { get;  }
+
         /// <summary>
         /// Determines whether the reward for the region can be obtained.
         /// </summary>

@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.Controls;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
-using Randomizer.Shared.Models;
 using Randomizer.SMZ3.ChatIntegration;
 
 namespace Randomizer.App.Windows
@@ -23,8 +22,6 @@ namespace Randomizer.App.Windows
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<RomListWindow> _logger;
-        private readonly RandomizerContext _dbContext;
-        private readonly RomGenerator _romGenerator;
         private readonly IChatAuthenticationService _chatAuthenticationService;
         private readonly IGitHubReleaseCheckerService _gitHubReleaseCheckerService;
         private string _gitHubReleaseUrl = "";
@@ -32,15 +29,11 @@ namespace Randomizer.App.Windows
         public RomListWindow(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListWindow> logger,
-            RandomizerContext dbContext,
-            RomGenerator romGenerator,
             IChatAuthenticationService chatAuthenticationService,
             IGitHubReleaseCheckerService gitHubReleaseCheckerService)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
-            _dbContext = dbContext;
-            _romGenerator = romGenerator;
             InitializeComponent();
             Options = optionsFactory.Create();
             _chatAuthenticationService = chatAuthenticationService;

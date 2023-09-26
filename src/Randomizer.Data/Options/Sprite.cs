@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
 {
@@ -20,6 +22,13 @@ namespace Randomizer.Data.Options
         public static readonly Sprite RandomSamus = new("Random Sprite", SpriteType.Samus, false, true, "random.png");
         public static readonly Sprite RandomLink = new("Random Sprite", SpriteType.Link, false, true, "random.png");
         public static readonly Sprite RandomShip = new("Random Sprite", SpriteType.Ship, false, true, "random.png");
+
+        public Sprite()
+        {
+            Name = "";
+            Author = "";
+            PreviewPath = "";
+        }
 
         public Sprite(string name, string author, string filePath, SpriteType spriteType, string previewPath, SpriteOptions spriteOption)
         {
@@ -40,25 +49,27 @@ namespace Randomizer.Data.Options
             SpriteType = spriteType;
             IsDefault = isDefault;
             IsRandomSprite = isRandomSprite;
-            PreviewPath = Path.Combine(
-                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
-                "Sprites", s_folderNames[spriteType], sprite);
+            PreviewPath = Path.Combine(SpritePath, s_folderNames[spriteType], sprite);
         }
 
-        public string Name { get; }
+        [YamlIgnore]
+        public string Name { get; set; }
 
-        public string Author { get; }
+        [YamlIgnore]
+        public string Author { get; set; }
 
-        public string FilePath { get; } = "";
+        public string FilePath { get; set; } = "";
 
-        public SpriteType SpriteType { get; }
+        public SpriteType SpriteType { get; set; }
 
-        public string PreviewPath { get; }
+        [YamlIgnore]
+        public string PreviewPath { get; set; }
 
         public bool IsDefault { get; set; }
 
         public bool IsRandomSprite { get; set; }
 
+        [YamlIgnore]
         public SpriteOptions SpriteOption { get; set; }
 
         public bool MatchesFilter(string searchTerm, SpriteFilter spriteFilter) => (string.IsNullOrEmpty(searchTerm) ||
@@ -93,5 +104,28 @@ namespace Randomizer.Data.Options
 
         public override int GetHashCode()
             => HashCode.Combine(FilePath, SpriteType);
+
+        public static string SpritePath
+        {
+            get
+            {
+#if DEBUG
+                var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+                while (directory != null && !directory.GetFiles("*.sln").Any())
+                {
+                    directory = directory.Parent;
+                }
+
+                return Path.Combine(directory!.FullName, "src", "Randomizer.Sprites");
+#else
+
+            return Path.Combine(
+                Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName ?? "")!,
+                "Sprites");
+#endif
+            }
+
+        }
     }
 }

@@ -13,21 +13,17 @@ using Randomizer.Data.Options;
 
 namespace Randomizer.App;
 
-public class MsuGeneratorService
+public class MsuUiService
 {
     private readonly IMsuLookupService _msuLookupService;
     private readonly IMsuUiFactory _msuUiFactory;
     private readonly RandomizerOptions _options;
-    private readonly IMsuSelectorService _msuSelectorService;
-    private readonly IMsuTypeService _msuTypeService;
 
-    public MsuGeneratorService(OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuUiFactory msuUiFactory, IMsuSelectorService msuSelectorService, IMsuTypeService msuTypeService)
+    public MsuUiService(OptionsFactory optionsFactory, IMsuLookupService msuLookupService, IMsuUiFactory msuUiFactory)
     {
         _options = optionsFactory.Create();
         _msuLookupService = msuLookupService;
         _msuUiFactory = msuUiFactory;
-        _msuSelectorService = msuSelectorService;
-        _msuTypeService = msuTypeService;
     }
 
     public void OpenMsuWindow(Window parentWindow, SelectionMode selectionMode, MsuRandomizationStyle? randomizationStyle)
@@ -54,7 +50,7 @@ public class MsuGeneratorService
         return false;
     }
 
-    private bool VerifyMsuDirectory(Window parentWindow)
+    public bool VerifyMsuDirectory(Window parentWindow)
     {
         if (!string.IsNullOrEmpty(_options.GeneralOptions.MsuPath) && Directory.Exists(_options.GeneralOptions.MsuPath))
         {
@@ -89,52 +85,6 @@ public class MsuGeneratorService
             MessageBoxButton.OK, MessageBoxImage.Information);
 
         LookupMsus();
-
-        return true;
-    }
-
-    public bool ApplyMsuOptions(string romPath)
-    {
-        if (!_options.PatchOptions.MsuPaths.Any())
-        {
-            return false;
-        }
-
-        if (!_msuLookupService.Msus.Any())
-        {
-            _msuLookupService.LookupMsus(_options.GeneralOptions.MsuPath);
-        }
-
-        var romFileInfo = new FileInfo(romPath);
-        var outputPath = romFileInfo.FullName.Replace(romFileInfo.Extension, ".msu");
-
-        if (_options.PatchOptions.MsuRandomizationStyle == null)
-        {
-            _msuSelectorService.AssignMsu(new MsuSelectorRequest()
-            {
-                MsuPath = _options.PatchOptions.MsuPaths.First(),
-                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
-                OutputPath = outputPath,
-            });
-        }
-        else if (_options.PatchOptions.MsuRandomizationStyle == MsuRandomizationStyle.Single)
-        {
-            _msuSelectorService.PickRandomMsu(new MsuSelectorRequest()
-            {
-                MsuPaths = _options.PatchOptions.MsuPaths,
-                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
-                OutputPath = outputPath,
-            });
-        }
-        else
-        {
-            _msuSelectorService.CreateShuffledMsu(new MsuSelectorRequest()
-            {
-                MsuPaths = _options.PatchOptions.MsuPaths,
-                OutputMsuType = _msuTypeService.GetSMZ3MsuType(),
-                OutputPath = outputPath,
-            });
-        }
 
         return true;
     }

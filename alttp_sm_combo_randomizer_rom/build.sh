@@ -15,4 +15,7 @@ rm 00.sfc ff.sfc
 cp zsm.ips ../build/zsm.ips > /dev/null
 
 cd ..
+
+python3 create_ips_patches.py
+
 echo Done

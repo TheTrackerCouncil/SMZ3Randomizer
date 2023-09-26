@@ -5,7 +5,8 @@
 
 :: To build optional IPS patches, you will also need the following in the resources folder
     :: Lunar IPS (https://www.romhacking.net/utilities/240/)
-    :: smz3.sfc (A relatively clean copy of SMZ3 with as few patches as possible)
+    :: sm.sfc
+    :: z3.sfc
 
 echo Building Super Metroid + Zelda 3 Randomizer
 
