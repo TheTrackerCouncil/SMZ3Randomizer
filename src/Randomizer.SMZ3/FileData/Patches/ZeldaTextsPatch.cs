@@ -143,8 +143,8 @@ public class ZeldaTextsPatch : RomPatch
         var silversLocation = data.Worlds.SelectMany(world => world.Locations)
             .FirstOrDefault(l => l.ItemIs(ItemType.SilverArrows, data.World));
         var silversText = silversLocation == null
-            ? _gameLines.GanonSilversHint
-            : _gameLines.GanonNoSilvers;
+            ? _gameLines.GanonNoSilvers
+            : _gameLines.GanonSilversHint;
         var silverLocationPlayer = data.Config.MultiWorld && silversLocation?.World != data.World
             ? silversLocation?.World.Player
             : "you";
