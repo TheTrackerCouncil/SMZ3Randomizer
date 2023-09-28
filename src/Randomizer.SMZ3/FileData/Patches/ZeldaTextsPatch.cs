@@ -18,10 +18,10 @@ public class ZeldaTextsPatch : RomPatch
 {
     private StringTable _stringTable = null!;
     private PlandoTextConfig _plandoText = null!;
-    private GameLinesConfig _gameLines;
-    private ItemConfig _items;
-    private RegionConfig _regions;
-    private GetPatchesRequest _data;
+    private readonly GameLinesConfig _gameLines;
+    private readonly ItemConfig _items;
+    private readonly RegionConfig _regions;
+    private GetPatchesRequest _data = null!;
 
     public ZeldaTextsPatch(Configs configs)
     {
@@ -34,7 +34,7 @@ public class ZeldaTextsPatch : RomPatch
     {
         _data = data;
         _stringTable = new StringTable();
-        _plandoText = data.PlandoConfig?.Text ?? new PlandoTextConfig();
+        _plandoText = data.PlandoConfig.Text;
 
         var regions = data.World.Regions.OfType<IHasReward>().ToList();
 
@@ -45,14 +45,15 @@ public class ZeldaTextsPatch : RomPatch
 
         var redCrystalDungeons = regions
             .Where(x => x.RewardType == RewardType.CrystalRed)
-            .Select(x => GetRegionName((Region)x));
+            .Select(x => GetRegionName((Region)x))
+            .ToList();
 
         yield return SetText(0x308A00, StringTable.SahasrahlaReveal,
-            _gameLines.SahasrahlaReveal, _plandoText.SahasrahlaReveal,
+            _gameLines.SahasrahlaReveal, _plandoText.SahasrahlaReveal, false,
             greenPendantDungeon);
 
         yield return SetText(0x308E00, StringTable.BombShopReveal,
-            _gameLines.BombShopReveal, _plandoText.BombShopReveal,
+            _gameLines.BombShopReveal, _plandoText.BombShopReveal, false,
             redCrystalDungeons.First(), redCrystalDungeons.Last());
 
         yield return SetText(0x308800, StringTable.BlindIntro,
@@ -78,19 +79,19 @@ public class ZeldaTextsPatch : RomPatch
         yield return SetText(0x309000, StringTable.BombosTablet, hintText, _plandoText.BombosTablet);
 
         yield return SetText(0x308400, StringTable.TriforceRoom,
-            _gameLines.TriforceRoom, _plandoText.TriforceRoom);
+            _gameLines.TriforceRoom, _plandoText.TriforceRoom, true);
 
         SetHintText();
 
         yield return new GeneratedPatch(Snes(0x1C8000), _stringTable.GetPaddedBytes());
     }
 
-    private GeneratedPatch SetText(int address, string? textKey, SchrodingersString? defaultText, string? overrideText, params object[] formatData)
+    private GeneratedPatch SetText(int address, string? textKey, SchrodingersString? defaultText, string? overrideText, bool hideBorder = false, params object[] formatData)
     {
-        return SetText(address, textKey, defaultText?.ToString(), overrideText, formatData);
+        return SetText(address, textKey, defaultText?.ToString(), overrideText, hideBorder, formatData);
     }
 
-    private GeneratedPatch SetText(int address, string? textKey, string? defaultText, string? overrideText, params object[] formatData)
+    private GeneratedPatch SetText(int address, string? textKey, string? defaultText, string? overrideText, bool hideBorder = false, params object[] formatData)
     {
         var text = string.IsNullOrEmpty(overrideText) ? defaultText : overrideText;
         if (string.IsNullOrEmpty(text))
@@ -101,7 +102,8 @@ public class ZeldaTextsPatch : RomPatch
 
         if (!string.IsNullOrEmpty(textKey))
         {
-            _stringTable.SetText(textKey, formattedText);
+            var stringFlag = hideBorder ? "{NOBORDER}\n" : "";
+            _stringTable.SetText(textKey, $"{stringFlag}{formattedText}");
         }
 
         if (address < 0)
@@ -149,7 +151,7 @@ public class ZeldaTextsPatch : RomPatch
             ? silversLocation?.World.Player
             : "you";
         yield return SetText(0x308700, StringTable.GanonPhaseThreeText,
-            silversText, _plandoText.GanonSilversHint,
+            silversText, _plandoText.GanonSilversHint, false,
             silverLocationPlayer ?? "", silversLocation?.Region.Area ?? "");
     }
 
