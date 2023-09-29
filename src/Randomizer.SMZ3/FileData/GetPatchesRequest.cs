@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Randomizer.Data.Configuration;
-using Randomizer.Data.Configuration.ConfigFiles;
-using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.Data.WorldData;
-using Randomizer.Data.WorldData.Regions;
 
 namespace Randomizer.SMZ3.FileData;
 
@@ -45,9 +40,20 @@ public class GetPatchesRequest
     /// </summary>
     public IEnumerable<string> Hints { get; init; } = new List<string>();
 
+    /// <summary>
+    /// The PlandoConfig being used to specify data about the world
+    /// </summary>
     public PlandoConfig PlandoConfig { get; init; } = new();
 
+    /// <summary>
+    /// If Multiworld patches should be enabled
+    /// This is defaulted to true (at least for now) so tracker can give hints
+    /// </summary>
     public const bool EnableMultiworld = true;
+
+    /// <summary>
+    /// The local world's config
+    /// </summary>
     public Config Config => World.Config;
 
 
