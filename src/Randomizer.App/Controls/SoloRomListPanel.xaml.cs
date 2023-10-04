@@ -4,11 +4,11 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Input;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Contracts;
 using Randomizer.SMZ3.Generation;
@@ -25,8 +25,8 @@ namespace Randomizer.App.Controls
         public SoloRomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<SoloRomListPanel> logger,
-            RandomizerContext dbContext,
-            RomGenerationService romGenerationService) : base (serviceProvider, optionsFactory, logger, dbContext, romGenerationService)
+            RomGenerationService romGenerationService,
+            IGameDbService gameDbService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService)
         {
             Model = new GeneratedRomsViewModel();
             DataContext = Model;
@@ -38,11 +38,7 @@ namespace Randomizer.App.Controls
 
         public sealed override void UpdateList()
         {
-            var models = DbContext.GeneratedRoms
-                    .Include(x => x.MultiplayerGameDetails)
-                    .Include(x => x.TrackerState)
-                    .ThenInclude(x => x!.History)
-                    .Where(x => x.MultiplayerGameDetails == null)
+            var models = GameDbService.GetGeneratedRomsList()
                     .OrderByDescending(x => x.Id)
                     .ToList();
             Model.UpdateList(models);
@@ -208,11 +204,8 @@ namespace Randomizer.App.Controls
             labelTextBlock.Visibility = Visibility.Visible;
             editLabelTextBox.Visibility = Visibility.Collapsed;
 
-            var newName = editLabelTextBox.Text;
-            if (rom.Label != newName)
+            if (GameDbService.UpdateGeneratedRom(rom, label: editLabelTextBox.Text))
             {
-                rom.Label = newName;
-                DbContext.SaveChanges();
                 UpdateList();
             }
 

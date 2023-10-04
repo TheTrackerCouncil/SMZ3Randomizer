@@ -15,38 +15,70 @@ namespace Randomizer.Data.Options
             _logger = logger;
         }
 
-        public static string GetFilePath()
+        public static string GetFileFolder()
         {
             var basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "SMZ3CasRandomizer");
             Directory.CreateDirectory(basePath);
-            return Path.Combine(basePath, "options.json");
+            return basePath;
+        }
+
+        public static string GetFilePath()
+        {
+#if DEBUG
+            return Path.Combine(GetFileFolder(), "randomizer-options-debug.yml");
+#else
+            return Path.Combine(GetFileFolder(), "randomizer-options.yml");
+#endif
         }
 
         public RandomizerOptions Create()
         {
             if (_options != null) return _options;
 
-            var optionsPath = GetFilePath();
+            var yamlFilePath = GetFilePath();
+            var jsonFilePath = Path.Combine(GetFileFolder(), "options.json");
+
+            if (File.Exists(yamlFilePath))
+            {
+                _logger.LogInformation("YAML options file {Path} found", yamlFilePath);
+                return LoadFromFile(yamlFilePath, yamlFilePath, true);
+            }
+            else if (File.Exists(jsonFilePath))
+            {
+                _logger.LogInformation("JSON options file {Path} found", jsonFilePath);
+                return LoadFromFile(jsonFilePath, yamlFilePath, false);
+            }
+            else
+            {
+                _logger.LogInformation("Options file '{Path}' does not exist, using default options", yamlFilePath);
+                _options = new RandomizerOptions();
+                _options.FilePath = yamlFilePath;
+                return _options;
+            }
+        }
+
+        public RandomizerOptions LoadFromFile(string loadPath, string savePath, bool isYaml)
+        {
+            if (!File.Exists(loadPath))
+            {
+                _logger.LogInformation("Options file '{Path}' does not exist, using default options", loadPath);
+                _options = new RandomizerOptions();
+                _options.FilePath = savePath;
+                return _options;
+            }
 
             try
             {
-                if (!File.Exists(optionsPath))
-                {
-                    _logger.LogInformation("Options file '{path}' does not exist, using default options", optionsPath);
-                    _options = new RandomizerOptions();
-                    _options.FilePath = optionsPath;
-                    return _options;
-                }
-
-                _options = RandomizerOptions.Load(optionsPath);
+                _options = RandomizerOptions.Load(loadPath, savePath, isYaml);
+                _logger.LogInformation("Loaded options from file '{Path}'", loadPath);
                 return _options;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to load '{path}', using default options", optionsPath);
+                _logger.LogError(ex, "Unable to load '{Path}', using default options", loadPath);
                 _options = new RandomizerOptions();
-                _options.FilePath = optionsPath;
+                _options.FilePath = savePath;
                 return _options;
             }
         }

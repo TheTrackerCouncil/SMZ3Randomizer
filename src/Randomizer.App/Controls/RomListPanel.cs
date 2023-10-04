@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Randomizer.App.Windows;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
 using Randomizer.SMZ3.Tracking;
@@ -19,19 +20,22 @@ namespace Randomizer.App.Controls
     {
         private TrackerWindow? _trackerWindow;
 
+
         public RomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<RomListPanel> logger,
-            RandomizerContext dbContext,
-            RomGenerationService romGenerationService)
+            RomGenerationService romGenerationService,
+            IGameDbService gameDbService)
         {
             ServiceProvider = serviceProvider;
             Logger = logger;
-            DbContext = dbContext;
             RomGenerationService = romGenerationService;
+            GameDbService = gameDbService;
             Options = optionsFactory.Create();
             CheckSpeechRecognition();
         }
+
+        protected IGameDbService GameDbService;
 
         /// <summary>
         /// Verifies that speech recognition is working
@@ -55,8 +59,6 @@ namespace Randomizer.App.Controls
         protected virtual bool CanStartTracker { get; private set; }
 
         protected virtual RomGenerationService RomGenerationService { get; private set; }
-
-        protected virtual RandomizerContext DbContext { get; private set; }
 
         public RandomizerOptions Options { get; private set; }
 
@@ -206,7 +208,7 @@ namespace Randomizer.App.Controls
                 return;
             }
 
-            DbContext.Entry(rom.TrackerState).Collection(x => x.History).Load();
+            var history = GameDbService.GetGameHistory(rom);
 
             if (rom.TrackerState?.History == null || rom.TrackerState.History.Count == 0)
             {
@@ -215,7 +217,7 @@ namespace Randomizer.App.Controls
             }
 
             var path = Path.Combine(Options.RomOutputPath, rom.SpoilerPath).Replace("Spoiler_Log", "Progression_Log");
-            var historyText = HistoryService.GenerateHistoryText(rom, rom.TrackerState.History.ToList());
+            var historyText = HistoryService.GenerateHistoryText(rom, history.ToList());
             File.WriteAllText(path, historyText);
             Process.Start(new ProcessStartInfo
             {
@@ -231,44 +233,10 @@ namespace Randomizer.App.Controls
                 return false;
             }
 
-            // Try to delete the folder first
-            try
+            if (!GameDbService.DeleteGeneratedRom(rom, out var error))
             {
-                var path = Path.GetDirectoryName(Path.Combine(Options.RomOutputPath, rom.RomPath));
-
-                if (!string.IsNullOrEmpty(path))
-                {
-                    var directory = new DirectoryInfo(path);
-                    directory.Delete(true);
-                }
+                ShowErrorMessageBox(error);
             }
-            catch (Exception ex)
-            {
-                if (ex is not DirectoryNotFoundException)
-                {
-                    ShowErrorMessageBox("There was an error in trying to delete the rom directory. Verify the rom is not open in your emulator.");
-                    return false;
-                }
-            }
-
-            // Delete the tracker info if it is available
-            if (rom.TrackerState != null)
-            {
-                DbContext.Entry(rom.TrackerState).Collection(x => x.ItemStates).Load();
-                DbContext.Entry(rom.TrackerState).Collection(x => x.LocationStates).Load();
-                DbContext.Entry(rom.TrackerState).Collection(x => x.RegionStates).Load();
-                DbContext.Entry(rom.TrackerState).Collection(x => x.DungeonStates).Load();
-                DbContext.Entry(rom.TrackerState).Collection(x => x.MarkedLocations).Load();
-                DbContext.Entry(rom.TrackerState).Collection(x => x.BossStates).Load();
-                DbContext.Entry(rom.TrackerState).Collection(x => x.History).Load();
-
-                DbContext.TrackerStates.Remove(rom.TrackerState);
-            }
-
-            // Remove the rom itself from the db and save the db
-            DbContext.GeneratedRoms.Remove(rom);
-            DbContext.SaveChanges();
-
             return true;
         }
 

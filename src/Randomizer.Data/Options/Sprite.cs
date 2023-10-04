@@ -105,6 +105,19 @@ namespace Randomizer.Data.Options
         public override int GetHashCode()
             => HashCode.Combine(FilePath, SpriteType);
 
+        public override string ToString()
+        {
+            if (IsDefault)
+            {
+                return $"Default";
+            }
+            else if (IsRandomSprite)
+            {
+                return $"Random {SpriteType} Sprite";
+            }
+            return string.IsNullOrEmpty(Author) ? Name : $"{Name} by {Author}";
+        }
+
         public static string SpritePath
         {
             get

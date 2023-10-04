@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Randomizer.Data.Logic;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
 {
@@ -42,10 +43,10 @@ namespace Randomizer.Data.Options
         public event PropertyChangedEventHandler? PropertyChanged;
 
         [JsonPropertyName("General")]
-        public GeneralOptions GeneralOptions { get; }
+        public GeneralOptions GeneralOptions { get; set; }
 
         [JsonPropertyName("Seed")]
-        public SeedOptions SeedOptions { get; }
+        public SeedOptions SeedOptions { get; set; }
 
         [JsonPropertyName("Patch")]
         public PatchOptions PatchOptions { get; set;  }
@@ -53,7 +54,7 @@ namespace Randomizer.Data.Options
         [JsonPropertyName("Logic")]
         public LogicConfig LogicConfig { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public string? FilePath { get; set; }
 
         public bool EarlyItemsExpanded { get; set; } = false;
@@ -71,6 +72,7 @@ namespace Randomizer.Data.Options
 
         public string MultiplayerUrl { get; set; } = "";
 
+        [YamlIgnore]
         public string RomOutputPath
         {
             get => Directory.Exists(GeneralOptions.RomOutputPath)
@@ -78,6 +80,7 @@ namespace Randomizer.Data.Options
                     : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "Seeds");
         }
 
+        [YamlIgnore]
         public string AutoTrackerScriptsOutputPath
         {
             get => Directory.Exists(GeneralOptions.AutoTrackerScriptsOutputPath)
@@ -85,22 +88,35 @@ namespace Randomizer.Data.Options
                     : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
         }
 
+        [YamlIgnore]
         public EmulatorConnectorType AutoTrackerDefaultConnector
         {
             get => (EmulatorConnectorType)GeneralOptions.AutoTrackerDefaultConnector;
         }
 
+        [YamlIgnore]
         public string? AutoTrackerQUsb2SnesIp
         {
             get => GeneralOptions.AutoTrackerQUsb2SnesIp;
         }
 
-        public static RandomizerOptions Load(string path)
+        public static RandomizerOptions Load(string loadPath, string savePath, bool isYaml)
         {
-            var json = File.ReadAllText(path);
-            var options = JsonSerializer.Deserialize<RandomizerOptions>(json, s_jsonOptions) ?? new();
-            options.FilePath = path;
-            return options;
+            var fileText = File.ReadAllText(loadPath);
+
+            if (isYaml)
+            {
+                var serializer = new YamlDotNet.Serialization.Deserializer();
+                var options = serializer.Deserialize<RandomizerOptions>(fileText);
+                options.FilePath = savePath;
+                return options;
+            }
+            else
+            {
+                var options = JsonSerializer.Deserialize<RandomizerOptions>(fileText, s_jsonOptions) ?? new();
+                options.FilePath = savePath;
+                return options;
+            }
         }
 
         public void Save(string? path = null)
@@ -115,8 +131,9 @@ namespace Randomizer.Data.Options
                 return;
             }
 
-            var json = JsonSerializer.Serialize(this, s_jsonOptions);
-            File.WriteAllText(path, json);
+            var serializer = new YamlDotNet.Serialization.Serializer();
+            var yamlText = serializer.Serialize(this);
+            File.WriteAllText(path, yamlText);
         }
 
         public Config ToConfig()

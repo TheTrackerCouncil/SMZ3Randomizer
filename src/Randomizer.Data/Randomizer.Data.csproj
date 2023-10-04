@@ -66,7 +66,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Randomizer.Shared\Randomizer.Shared.csproj" />
   </ItemGroup>
-  
+
   <!--<ItemGroup>
     <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>-->

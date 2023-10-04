@@ -45,9 +45,9 @@ public class RomTextService
         try
         {
 #if DEBUG
-            var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking\\AutoTracking\\LuaScripts");
+            var autoTrackerSourcePath = Path.Combine(GetSourceDirectory(), "Randomizer.SMZ3.Tracking", "AutoTracking", "LuaScripts");
 #else
-            var autoTrackerSourcePath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\AutotrackerScripts");
+            var autoTrackerSourcePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "AutoTrackerScripts");
 #endif
             var autoTrackerDestPath = options.AutoTrackerScriptsOutputPath;
 

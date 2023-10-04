@@ -81,6 +81,30 @@ public class PatchBuilderService
 
         _logger.LogInformation("Building patches");
 
+        var asarPath = Path.Combine(_randomizerRomPath, "resources",
+            OperatingSystem.IsWindows() ? "asar.exe" : "asar");
+        if (!File.Exists(asarPath))
+        {
+            throw new FileNotFoundException(
+                $"{asarPath} not found. Please download from https://github.com/RPGHacker/asar");
+        }
+
+        var ipsPatcher = Path.Combine(_randomizerRomPath, "resources",
+            OperatingSystem.IsWindows() ? "Lunar IPS.exe" : "flips-linux");
+        if (!File.Exists(ipsPatcher))
+        {
+            var downloadUrl = OperatingSystem.IsWindows() ? "https://www.romhacking.net/utilities/240/" : "https://www.romhacking.net/utilities/1040/";
+            throw new FileNotFoundException(
+                $"{ipsPatcher} not found. Please download from {downloadUrl}");
+        }
+
+        var smRom = Path.Combine(_randomizerRomPath, "resources", "sm.sfc");
+        if (!File.Exists(smRom))
+        {
+            throw new FileNotFoundException(
+                $"{smRom} not found.");
+        }
+
         var info = new FileInfo(config.EnvironmentSettings.PatchBuildScriptPath);
 
         // Run the patch build.bat file

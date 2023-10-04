@@ -43,7 +43,9 @@ public class SpriteService
 
             var sprites = playerSprites.Concat(shipSprites).Concat(defaults).OrderBy(x => x.Name).ToList();
 
-            var extraSpriteDirectory = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\Sprites");
+            var extraSpriteDirectory =
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "SMZ3CasRandomizer", "Sprites");
 
             if (Directory.Exists(extraSpriteDirectory))
             {

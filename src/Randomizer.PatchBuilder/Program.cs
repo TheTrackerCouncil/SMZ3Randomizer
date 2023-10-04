@@ -29,10 +29,6 @@ var serviceProvider = new ServiceCollection()
 
 var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
 
-var typesStream = Assembly.GetExecutingAssembly()
-    .GetManifestResourceStream("Randomizer.PatchBuilder.msu-randomizer-types.json");
-serviceProvider.GetRequiredService<IMsuTypeService>().LoadMsuTypes(typesStream!);
-
 InitializeMsuRandomizer(serviceProvider.GetRequiredService<IMsuRandomizerInitializationService>());
 
 var yamlPath = "";
