@@ -33,7 +33,7 @@ jobs:
       #if: ${{ github.event_name != 'pull_request' }}
       run: dotnet publish --os linux --arch x64 -c Release src/Randomizer.CrossPlatform/Randomizer.CrossPlatform.csproj
     - name: Publish Multiplayer Server
-      if: ${{ github.event_name != 'pull_request' }}
+      #if: ${{ github.event_name != 'pull_request' }}
       run: dotnet publish -c Release src/Randomizer.Multiplayer.Server/Randomizer.Multiplayer.Server.csproj
     - name: Get version number
       #if: ${{ github.event_name != 'pull_request' }}
