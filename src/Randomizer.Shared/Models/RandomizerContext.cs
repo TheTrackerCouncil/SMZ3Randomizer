@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 #pragma warning disable CS8618
@@ -15,13 +16,7 @@ namespace Randomizer.Shared.Models {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var dbPath = Environment.ExpandEnvironmentVariables("%LocalAppData%\\SMZ3CasRandomizer\\smz3.db");
-            if (Debugger.IsAttached)
-            {
-                dbPath = "smz3.db";
-            }
-
-            optionsBuilder.UseSqlite($"FileName={dbPath}", option =>
+            optionsBuilder.UseSqlite($"FileName={DbPath}", option =>
             {
                 option.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });
@@ -55,6 +50,12 @@ namespace Randomizer.Shared.Models {
         public DbSet<TrackerBossState> TrackerBossStates { get; set; }
         public DbSet<TrackerHistoryEvent> TrackerHistoryEvents { get; set; }
         public DbSet<MultiplayerGameDetails> MultiplayerGames { get; set; }
+
+#if DEBUG
+        private static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "smz3-debug.db");
+#else
+        private static string DbPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SMZ3CasRandomizer", "smz3.db");
+#endif
 
     }
 

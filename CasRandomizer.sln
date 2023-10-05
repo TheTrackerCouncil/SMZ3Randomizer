@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.Sprites", "src\R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.PatchBuilder", "src\Randomizer.PatchBuilder\Randomizer.PatchBuilder.csproj", "{F4C0D33B-CAE0-4F70-95B8-0D1B44F4B927}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Randomizer.CrossPlatform", "src\Randomizer.CrossPlatform\Randomizer.CrossPlatform.csproj", "{B18DD122-3612-4948-B512-464D410A271B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{F4C0D33B-CAE0-4F70-95B8-0D1B44F4B927}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4C0D33B-CAE0-4F70-95B8-0D1B44F4B927}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4C0D33B-CAE0-4F70-95B8-0D1B44F4B927}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B18DD122-3612-4948-B512-464D410A271B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B18DD122-3612-4948-B512-464D410A271B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B18DD122-3612-4948-B512-464D410A271B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B18DD122-3612-4948-B512-464D410A271B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

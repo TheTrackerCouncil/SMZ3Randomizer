@@ -36,6 +36,7 @@ namespace Randomizer.App.Windows
         private readonly RomGenerationService _romGenerator;
         private readonly LocationConfig _locations;
         private readonly MsuUiService _msuUiService;
+        private readonly SpriteService _spriteService;
         private RandomizerOptions? _options;
 
         public GenerateRomWindow(IServiceProvider serviceProvider,
@@ -48,9 +49,8 @@ namespace Randomizer.App.Windows
             _romGenerator = romGenerator;
             _locations = locations;
             _msuUiService = msuUiService;
+            _spriteService = spriteService;
             InitializeComponent();
-
-            _ = spriteService.LoadSpritesAsync();
         }
 
         public PlandoConfig? PlandoConfig { get; set; }
@@ -762,7 +762,13 @@ namespace Randomizer.App.Windows
 
             UpdateMsuTextBox();
             _msuUiService.LookupMsus();
-            UpdateSpriteTextBoxes();
+
+            Task.Run(async () =>
+            {
+                await _spriteService.LoadSpritesAsync();
+                Dispatcher.Invoke(UpdateSpriteTextBoxes);
+            });
+
         }
 
         private void SelectMsuFileMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -846,31 +852,37 @@ namespace Randomizer.App.Windows
 
         private void UpdateSpriteTextBoxes()
         {
-            if (string.IsNullOrEmpty(Options.PatchOptions.SelectedSamusSprite.Author))
+            if (Options.PatchOptions.SelectedSamusSprite.IsDefault ||
+                Options.PatchOptions.SelectedSamusSprite.IsRandomSprite)
             {
-                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name}";
+                SamusSpriteTextBox.Text = Options.PatchOptions.SelectedSamusSprite.ToString();
             }
             else
             {
-                SamusSpriteTextBox.Text = $"{Options.PatchOptions.SelectedSamusSprite.Name} by {Options.PatchOptions.SelectedSamusSprite.Author}";
+                var sprite = _spriteService.GetSprite(SpriteType.Samus);
+                SamusSpriteTextBox.Text = sprite.ToString();
             }
 
-            if (string.IsNullOrEmpty(Options.PatchOptions.SelectedLinkSprite.Author))
+            if (Options.PatchOptions.SelectedLinkSprite.IsDefault ||
+                Options.PatchOptions.SelectedLinkSprite.IsRandomSprite)
             {
-                LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name}";
+                LinkSpriteTextBox.Text = Options.PatchOptions.SelectedLinkSprite.ToString();
             }
             else
             {
-                LinkSpriteTextBox.Text = $"{Options.PatchOptions.SelectedLinkSprite.Name} by {Options.PatchOptions.SelectedLinkSprite.Author}";
+                var sprite = _spriteService.GetSprite(SpriteType.Link);
+                LinkSpriteTextBox.Text = sprite.ToString();
             }
 
-            if (string.IsNullOrEmpty(Options.PatchOptions.SelectedShipSprite.Author))
+            if (Options.PatchOptions.SelectedShipSprite.IsDefault ||
+                Options.PatchOptions.SelectedShipSprite.IsRandomSprite)
             {
-                ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name}";
+                ShipSpriteTextBox.Text = Options.PatchOptions.SelectedShipSprite.ToString();
             }
             else
             {
-                ShipSpriteTextBox.Text = $"{Options.PatchOptions.SelectedShipSprite.Name} by {Options.PatchOptions.SelectedShipSprite.Author}";
+                var sprite = _spriteService.GetSprite(SpriteType.Ship);
+                ShipSpriteTextBox.Text = sprite.ToString();
             }
         }
     }

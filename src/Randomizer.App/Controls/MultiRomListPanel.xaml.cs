@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Randomizer.App.ViewModels;
 using Randomizer.App.Windows;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared.Models;
 using Randomizer.SMZ3.Generation;
 
@@ -21,8 +22,8 @@ namespace Randomizer.App.Controls
         public MultiRomListPanel(IServiceProvider serviceProvider,
             OptionsFactory optionsFactory,
             ILogger<MultiRomListPanel> logger,
-            RandomizerContext dbContext,
-            RomGenerationService romGenerationService) : base(serviceProvider, optionsFactory, logger, dbContext, romGenerationService)
+            RomGenerationService romGenerationService,
+            IGameDbService gameDbService) : base(serviceProvider, optionsFactory, logger, romGenerationService, gameDbService)
         {
             Model = new MultiplayerGamesViewModel();
             DataContext = Model;
@@ -34,9 +35,7 @@ namespace Randomizer.App.Controls
 
         public sealed override void UpdateList()
         {
-            var models = DbContext.MultiplayerGames
-                .Include(x => x.GeneratedRom)
-                .ThenInclude(x => x!.TrackerState)
+            var models = GameDbService.GetMultiplayerGamesList()
                 .OrderByDescending(x => x.Id)
                 .ToList();
             Model.UpdateList(models);
@@ -88,32 +87,11 @@ namespace Randomizer.App.Controls
             if (sender is not MenuItem { Tag: MultiplayerGameDetails details })
                 return;
 
-            // If there's a rom, try to delete it first and don't continue
-            // if it wasn't deleted
-            if (details.GeneratedRom != null)
+            if (!GameDbService.DeleteMultiplayerGame(details, out var error))
             {
-                if (!DeleteGeneratedRom(details.GeneratedRom))
-                {
-                    return;
-                }
-            }
-            else
-            {
-                var rom = DbContext.GeneratedRoms
-                    .Where(x => x.MultiplayerGameDetailsId == details.Id)
-                    .Include(x => x.MultiplayerGameDetails)
-                    .Include(x => x.TrackerState)
-                    .ThenInclude(x => x!.History)
-                    .FirstOrDefault();
-
-                if (rom != null && !DeleteGeneratedRom(rom))
-                {
-                    return;
-                }
+                ShowErrorMessageBox(error);
             }
 
-            DbContext.MultiplayerGames.Remove(details);
-            DbContext.SaveChanges();
             UpdateList();
         }
 

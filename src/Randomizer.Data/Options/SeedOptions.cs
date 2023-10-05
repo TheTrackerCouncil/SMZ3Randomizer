@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Windows;
 using Randomizer.Shared;
 using Randomizer.Shared.Enums;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
 {
@@ -43,10 +44,10 @@ namespace Randomizer.Data.Options
         public bool OpenPyramid { get; set; } = false;
         public int TourianBossCount { get; set; } = 4;
 
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public int MaxHints => 15;
 
-        [JsonIgnore]
+        [JsonIgnore, YamlIgnore]
         public bool CopySeedAndRaceSettings { get; set; }
 
         public IDictionary<LocationId, int> LocationItems { get; set; } = new Dictionary<LocationId, int>();

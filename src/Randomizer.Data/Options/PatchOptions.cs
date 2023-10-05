@@ -36,6 +36,7 @@ namespace Randomizer.Data.Options
 
         public Sprite? PreviousShipSprite { get; set; }
 
+        [YamlIgnore]
         public string Msu1Path
         {
             get => _msu1Path;
@@ -50,6 +51,7 @@ namespace Randomizer.Data.Options
             }
         }
 
+        [YamlIgnore]
         public string MsuName
         {
             get => _msuName;
