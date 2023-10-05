@@ -10,6 +10,7 @@ using System.Windows.Input;
 using Microsoft.Extensions.Logging;
 using Randomizer.Data.Configuration;
 using Randomizer.Data.Options;
+using Randomizer.Data.Services;
 using Randomizer.Shared;
 using Randomizer.SMZ3.ChatIntegration;
 using static System.Int32;
@@ -27,16 +28,18 @@ namespace Randomizer.App.Windows
         private GeneralOptions _options = new();
         private bool _canLogIn = true;
         private ICollection<string> _availableProfiles;
-
+        private SourceRomValidationService _sourceRomValidationService;
 
         public OptionsWindow(IChatAuthenticationService chatAuthenticationService,
             ConfigProvider configProvider,
-            ILogger<OptionsWindow> logger)
+            ILogger<OptionsWindow> logger,
+            SourceRomValidationService sourceRomValidationService)
         {
             InitializeComponent();
             _trackerConfigProvider = configProvider;
             _chatAuthenticationService = chatAuthenticationService;
             _logger = logger;
+            _sourceRomValidationService = sourceRomValidationService;
             _availableProfiles = configProvider.GetAvailableProfiles();
             PropertyChanged?.Invoke(this, new(nameof(DisabledProfiles)));
         }
@@ -273,6 +276,26 @@ namespace Randomizer.App.Windows
             {
                 MessageBox.Show(this,
                     "To preserve drive space, it is recommended that the Rom Output and MSU folders be on the same drive.",
+                    "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void MetroidRomFileSystemInput_OnOnPathUpdated(object? sender, EventArgs e)
+        {
+            if (!_sourceRomValidationService.ValidateMetroidRom(MetroidRomFileSystemInput.Path))
+            {
+                MessageBox.Show(this,
+                    "The rom selected does not appear to be a valid Super Metroid Japanese/US ROM. Generated SMZ3 ROMs may not work as expected.",
+                    "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void ZeldaRomFileSystemInput_OnOnPathUpdated(object? sender, EventArgs e)
+        {
+            if (!_sourceRomValidationService.ValidateZeldaRom(ZeldaRomFileSystemInput.Path))
+            {
+                MessageBox.Show(this,
+                    "The rom selected does not appear to be a valid ALttP Japanese v1.0 ROM. Generated SMZ3 ROMs may not work as expected.",
                     "SMZ3 Cas' Randomizer", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }

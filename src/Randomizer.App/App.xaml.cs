@@ -142,6 +142,7 @@ namespace Randomizer.App
             // Misc
             services.AddGitHubReleaseCheckerServices();
             services.AddSingleton<IGameDbService, GameDbService>();
+            services.AddTransient<SourceRomValidationService>();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
