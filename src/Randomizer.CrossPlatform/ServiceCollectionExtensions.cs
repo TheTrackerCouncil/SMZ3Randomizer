@@ -31,6 +31,7 @@ public static class ServiceCollectionExtensions
         // Misc
         services.AddSingleton<OptionsFactory>();
         services.AddSingleton<IGameDbService, GameDbService>();
+        services.AddTransient<SourceRomValidationService>();
 
         return services;
     }

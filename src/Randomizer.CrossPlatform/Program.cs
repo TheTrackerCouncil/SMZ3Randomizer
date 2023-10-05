@@ -13,6 +13,8 @@ namespace Randomizer.CrossPlatform;
 
 public static class Program
 {
+    private static ServiceProvider s_services = null!;
+
     public static void Main(string[] args)
     {
         var logLevel = LogEventLevel.Warning;
@@ -25,7 +27,7 @@ public static class Program
             .WriteTo.File(LogPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 30)
             .CreateLogger();
 
-        var services = new ServiceCollection()
+        s_services = new ServiceCollection()
             .AddLogging(logging =>
             {
                 logging.AddSerilog(dispose: true);
@@ -33,20 +35,14 @@ public static class Program
             .ConfigureServices()
             .BuildServiceProvider();
 
-        InitializeMsuRandomizer(services.GetRequiredService<IMsuRandomizerInitializationService>());
+        InitializeMsuRandomizer(s_services.GetRequiredService<IMsuRandomizerInitializationService>());
 
         var optionsFile = new FileInfo("randomizer-options.yml");
-        var randomizerOptions = services.GetRequiredService<OptionsFactory>().LoadFromFile(optionsFile.FullName, optionsFile.FullName, true);
+        var randomizerOptions = s_services.GetRequiredService<OptionsFactory>().LoadFromFile(optionsFile.FullName, optionsFile.FullName, true);
         randomizerOptions.Save();
 
-        if (string.IsNullOrEmpty(randomizerOptions.GeneralOptions.Z3RomPath) || string.IsNullOrEmpty(randomizerOptions
-                                                                                 .GeneralOptions.SMRomPath)
-                                                                             || !File.Exists(randomizerOptions
-                                                                                 .GeneralOptions.Z3RomPath) ||
-                                                                             !File.Exists(randomizerOptions
-                                                                                 .GeneralOptions.SMRomPath))
+        if (!ValidateRandomizerOptions(randomizerOptions))
         {
-            Console.WriteLine($"Please update {optionsFile.FullName} to include the paths to the Super Metroid and A Link to the Past roms and any other desired options for generation.");
             return;
         }
 
@@ -68,7 +64,7 @@ public static class Program
             // Allow the user to select an MSU
             if (!string.IsNullOrEmpty(randomizerOptions.GeneralOptions.MsuPath))
             {
-                var msus = services.GetRequiredService<IMsuLookupService>().LookupMsus(randomizerOptions.GeneralOptions.MsuPath)
+                var msus = s_services.GetRequiredService<IMsuLookupService>().LookupMsus(randomizerOptions.GeneralOptions.MsuPath)
                     .Where(x => x.ValidTracks.Count > 10).ToList();
 
                 result = DisplayMenu("Which msu do you want to use?",
@@ -80,7 +76,7 @@ public static class Program
             }
 
             // Generate the rom
-            var results = services.GetRequiredService<RomGenerationService>().GenerateRandomRomAsync(randomizerOptions).Result;
+            var results = s_services.GetRequiredService<RomGenerationService>().GenerateRandomRomAsync(randomizerOptions).Result;
             if (string.IsNullOrEmpty(results.GenerationError))
             {
                 var romPath = Path.Combine(randomizerOptions.RomOutputPath, results.Rom!.RomPath);
@@ -95,7 +91,7 @@ public static class Program
         // Plays a previously generated rom
         else if (result.Value.Item1 == 1)
         {
-            var roms = services.GetRequiredService<IGameDbService>().GetGeneratedRomsList()
+            var roms = s_services.GetRequiredService<IGameDbService>().GetGeneratedRomsList()
                 .OrderByDescending(x => x.Id)
                 .ToList();
 
@@ -112,7 +108,7 @@ public static class Program
         // Deletes rom(s)
         else if (result.Value.Item1 == 2)
         {
-            var dbService = services.GetRequiredService<IGameDbService>();
+            var dbService = s_services.GetRequiredService<IGameDbService>();
             var roms = dbService.GetGeneratedRomsList()
                 .OrderByDescending(x => x.Id)
                 .ToList();
@@ -142,7 +138,26 @@ public static class Program
         }
     }
 
-    static (int, string)? DisplayMenu(string prompt, List<string> options)
+    private static bool ValidateRandomizerOptions(RandomizerOptions options)
+    {
+        var sourceRomValidationService = s_services.GetRequiredService<SourceRomValidationService>();
+
+        if (!sourceRomValidationService.ValidateZeldaRom(options.GeneralOptions.Z3RomPath))
+        {
+            Console.WriteLine("Missing Z3RomPath. Please enter a valid A Link to the Past Japanese v1.0 ROM");
+            return false;
+        }
+
+        if (!sourceRomValidationService.ValidateMetroidRom(options.GeneralOptions.SMRomPath))
+        {
+            Console.WriteLine("Missing SMRomPath. Please enter a valid Super Metroid Japanese/US ROM");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static (int, string)? DisplayMenu(string prompt, List<string> options)
     {
         Console.WriteLine(prompt);
 
@@ -168,7 +183,7 @@ public static class Program
 
     }
 
-    static void Launch(string romPath, RandomizerOptions options)
+    private static void Launch(string romPath, RandomizerOptions options)
     {
         if (!File.Exists(romPath))
         {
@@ -215,7 +230,7 @@ public static class Program
         }
     }
 
-    static void InitializeMsuRandomizer(IMsuRandomizerInitializationService msuRandomizerInitializationService)
+    private static void InitializeMsuRandomizer(IMsuRandomizerInitializationService msuRandomizerInitializationService)
     {
         var settingsStream =  Assembly.GetExecutingAssembly()
             .GetManifestResourceStream("Randomizer.CrossPlatform.msu-randomizer-settings.yml");
