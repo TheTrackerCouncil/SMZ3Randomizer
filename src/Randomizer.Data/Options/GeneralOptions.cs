@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Randomizer.Shared.Enums;
+using YamlDotNet.Serialization;
 
 namespace Randomizer.Data.Options
 {
@@ -21,48 +19,6 @@ namespace Randomizer.Data.Options
         private string? _twitchOAuthToken;
         private string? _twitchChannel;
         private string? _twitchId;
-
-        /// <summary>
-        /// Converts the enum descriptions into a string array for displaying in a dropdown
-        /// </summary>
-        public static IEnumerable<string> QuickLaunchOptions
-        {
-            get
-            {
-                var attributes = typeof(LaunchButtonOptions).GetMembers()
-                    .SelectMany(member => member.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
-                    .ToList();
-                return attributes.Select(x => x.Description);
-            }
-        }
-
-        /// <summary>
-        /// Converts the enum descriptions into a string array for displaying in a dropdown
-        /// </summary>
-        public static IEnumerable<string> AutoTrackerConnectorOptions
-        {
-            get
-            {
-                var attributes = typeof(EmulatorConnectorType).GetMembers()
-                    .SelectMany(member => member.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
-                    .ToList();
-                return attributes.Select(x => x.Description);
-            }
-        }
-
-        /// <summary>
-        /// Converts the enum descriptions into a string array for displaying in a dropdown
-        /// </summary>
-        public static IEnumerable<string> TrackerVoiceFrequencyOptions
-        {
-            get
-            {
-                var attributes = typeof(TrackerVoiceFrequency).GetMembers()
-                    .SelectMany(member => member.GetCustomAttributes(typeof(DescriptionAttribute), true).Cast<DescriptionAttribute>())
-                    .ToList();
-                return attributes.Select(x => x.Description);
-            }
-        }
 
         public string? Z3RomPath { get; set; }
 
@@ -93,15 +49,24 @@ namespace Randomizer.Data.Options
 
         public bool TrackerShadows { get; set; } = true;
 
+        [YamlIgnore]
         public int LaunchButton { get; set; } = (int)LaunchButtonOptions.PlayAndTrack;
 
+        public LaunchButtonOptions LaunchButtonOption { get; set; }
+
+        [YamlIgnore]
         public int VoiceFrequency { get; set; } = (int)TrackerVoiceFrequency.All;
+
+        public TrackerVoiceFrequency TrackerVoiceFrequency { get; set; }
 
         public bool TrackerHintsEnabled { get; set; }
 
         public bool TrackerSpoilersEnabled { get; set; }
 
+        [YamlIgnore]
         public int AutoTrackerDefaultConnector { get; set; } = (int)EmulatorConnectorType.None;
+
+        public EmulatorConnectorType AutoTrackerDefaultConnectionType { get; set; }
 
         public string? AutoTrackerQUsb2SnesIp { get; set; }
 
@@ -178,7 +143,7 @@ namespace Randomizer.Data.Options
 
         public bool EnablePollCreation { get; set; } = true;
 
-        public int ChatGreetingTimeLimit { get; set; } = 0;
+        public int ChatGreetingTimeLimit { get; set; }
 
         public ICollection<string?> SelectedProfiles { get; set; } = new List<string?> { "Sassy" };
 
@@ -209,6 +174,11 @@ namespace Randomizer.Data.Options
         /// </summary>
         public string? IgnoredUpdateUrl { get; set; }
 
+        /// <summary>
+        /// Automatically tracks the map and other "hey tracker, look at this" events when viewing
+        /// </summary>
+        public bool AutoSaveLookAtEvents { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool Validate()
@@ -230,11 +200,12 @@ namespace Randomizer.Data.Options
             ChatGreetingTimeLimit = ChatGreetingTimeLimit,
             PollCreationEnabled = EnablePollCreation,
             AutoTrackerChangeMap = AutoTrackerChangeMap,
-            VoiceFrequency = (TrackerVoiceFrequency)VoiceFrequency,
+            VoiceFrequency = TrackerVoiceFrequency,
             TrackerProfiles = SelectedProfiles,
             UndoExpirationTime = UndoExpirationTime,
             MsuTrackDisplayStyle = MsuTrackDisplayStyle,
-            MsuTrackOutputPath = MsuTrackOutputPath
+            MsuTrackOutputPath = MsuTrackOutputPath,
+            AutoSaveLookAtEvents = AutoSaveLookAtEvents
         };
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -254,7 +225,10 @@ namespace Randomizer.Data.Options
                     return twitchUri.AbsolutePath.TrimStart('/');
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             return value;
         }

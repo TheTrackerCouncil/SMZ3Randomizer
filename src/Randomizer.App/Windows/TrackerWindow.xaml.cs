@@ -1048,9 +1048,9 @@ namespace Randomizer.App.Windows
         private async Task SaveStateAsync()
         {
             // If there is a rom, save it to the database
-            if (GeneratedRom.IsValid(Rom))
+            if (GeneratedRom.IsValid(Tracker.Rom))
             {
-                await Tracker.SaveAsync(Rom);
+                await Tracker.SaveAsync();
             }
 
             SavedState?.Invoke(this, EventArgs.Empty);

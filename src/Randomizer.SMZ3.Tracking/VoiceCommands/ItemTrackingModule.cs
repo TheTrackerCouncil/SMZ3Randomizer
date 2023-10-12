@@ -1,4 +1,5 @@
-﻿using System.Speech.Recognition;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Speech.Recognition;
 
 using Microsoft.Extensions.Logging;
 
@@ -24,112 +25,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public ItemTrackingModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<ItemTrackingModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            var isMultiworld = worldService.World.Config.MultiWorld;
 
-            AddCommand("Track item", GetTrackItemRule(isMultiworld), (result) =>
-            {
-                var item = GetItemFromResult(tracker, result, out var itemName);
-
-                if (result.Semantics.ContainsKey(DungeonKey))
-                {
-                    var dungeon = GetDungeonFromResult(tracker, result);
-                    tracker.TrackItem(item, dungeon,
-                        trackedAs: itemName,
-                        confidence: result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(RoomKey))
-                {
-                    var room = GetRoomFromResult(tracker, result);
-                    tracker.TrackItem(item, room,
-                        trackedAs: itemName,
-                        confidence: result.Confidence);
-                }
-                else if (result.Semantics.ContainsKey(LocationKey))
-                {
-                    var location = GetLocationFromResult(tracker, result);
-                    tracker.TrackItem(item: item,
-                        trackedAs: itemName,
-                        confidence: result.Confidence,
-                        tryClear: true,
-                        autoTracked: false,
-                        location: location);
-                }
-                else
-                {
-                    tracker.TrackItem(item,
-                        trackedAs: itemName,
-                        confidence: result.Confidence);
-                }
-            });
-
-            AddCommand("Track death", GetTrackDeathRule(), (result) =>
-            {
-                var death = itemService.FirstOrDefault("Death");
-                if (death == null)
-                {
-                    Logger.LogError("Tried to track death, but could not find an item named 'Death'.");
-                    tracker.Say(x => x.Error);
-                    return;
-                }
-
-                tracker.TrackItem(death, confidence: result.Confidence, tryClear: false);
-            });
-
-            if (!isMultiworld)
-            {
-                AddCommand("Track available items in an area", GetTrackEverythingRule(), (result) =>
-                {
-                    if (result.Semantics.ContainsKey(RoomKey))
-                    {
-                        var room = GetRoomFromResult(tracker, result);
-                        tracker.ClearArea(room,
-                            trackItems: true,
-                            includeUnavailable: false,
-                            confidence: result.Confidence);
-                    }
-                    else if (result.Semantics.ContainsKey(RegionKey))
-                    {
-                        var region = GetRegionFromResult(tracker, result);
-                        tracker.ClearArea(region,
-                            trackItems: true,
-                            includeUnavailable: false,
-                            confidence: result.Confidence);
-                    }
-                });
-
-                AddCommand("Track all items in an area (including out-of-logic)", GetTrackEverythingIncludingOutOfLogicRule(), (result) =>
-                {
-                    if (result.Semantics.ContainsKey(RoomKey))
-                    {
-                        var room = GetRoomFromResult(tracker, result);
-                        tracker.ClearArea(room,
-                            trackItems: true,
-                            includeUnavailable: true,
-                            confidence: result.Confidence);
-                    }
-                    else if (result.Semantics.ContainsKey(RegionKey))
-                    {
-                        var region = GetRegionFromResult(tracker, result);
-                        tracker.ClearArea(region,
-                            trackItems: true,
-                            includeUnavailable: true,
-                            confidence: result.Confidence);
-                    }
-                });
-            }
-
-            AddCommand("Untrack an item", GetUntrackItemRule(), (result) =>
-            {
-                var item = GetItemFromResult(tracker, result, out _);
-                tracker.UntrackItem(item, result.Confidence);
-            });
-
-            AddCommand("Set item count", GetSetItemCountRule(), (result) =>
-            {
-                var item = GetItemFromResult(tracker, result, out _);
-                var count = (int)result.Semantics[ItemCountKey].Value;
-                tracker.TrackItemAmount(item, count, result.Confidence);
-            });
         }
 
         private GrammarBuilder GetTrackDeathRule()
@@ -269,6 +165,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return GrammarBuilder.Combine(untrackItem, toggleItemOff);
         }
 
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
         private GrammarBuilder GetSetItemCountRule()
         {
             var itemNames = GetPluralItemNames();
@@ -281,6 +178,117 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("I have", "I've got", "I possess", "I am in the possession of")
                 .Append(ItemCountKey, numbers)
                 .Append(ItemNameKey, itemNames);
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
+            var isMultiworld = WorldService.World.Config.MultiWorld;
+
+            AddCommand("Track item", GetTrackItemRule(isMultiworld), (result) =>
+            {
+                var item = GetItemFromResult(Tracker, result, out var itemName);
+
+                if (result.Semantics.ContainsKey(DungeonKey))
+                {
+                    var dungeon = GetDungeonFromResult(Tracker, result);
+                    Tracker.TrackItem(item, dungeon,
+                        trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(RoomKey))
+                {
+                    var room = GetRoomFromResult(Tracker, result);
+                    Tracker.TrackItem(item, room,
+                        trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
+                else if (result.Semantics.ContainsKey(LocationKey))
+                {
+                    var location = GetLocationFromResult(Tracker, result);
+                    Tracker.TrackItem(item: item,
+                        trackedAs: itemName,
+                        confidence: result.Confidence,
+                        tryClear: true,
+                        autoTracked: false,
+                        location: location);
+                }
+                else
+                {
+                    Tracker.TrackItem(item,
+                        trackedAs: itemName,
+                        confidence: result.Confidence);
+                }
+            });
+
+            AddCommand("Track death", GetTrackDeathRule(), (result) =>
+            {
+                var death = ItemService.FirstOrDefault("Death");
+                if (death == null)
+                {
+                    Logger.LogError("Tried to track death, but could not find an item named 'Death'.");
+                    Tracker.Say(x => x.Error);
+                    return;
+                }
+
+                Tracker.TrackItem(death, confidence: result.Confidence, tryClear: false);
+            });
+
+            if (!isMultiworld)
+            {
+                AddCommand("Track available items in an area", GetTrackEverythingRule(), (result) =>
+                {
+                    if (result.Semantics.ContainsKey(RoomKey))
+                    {
+                        var room = GetRoomFromResult(Tracker, result);
+                        Tracker.ClearArea(room,
+                            trackItems: true,
+                            includeUnavailable: false,
+                            confidence: result.Confidence);
+                    }
+                    else if (result.Semantics.ContainsKey(RegionKey))
+                    {
+                        var region = GetRegionFromResult(Tracker, result);
+                        Tracker.ClearArea(region,
+                            trackItems: true,
+                            includeUnavailable: false,
+                            confidence: result.Confidence);
+                    }
+                });
+
+                AddCommand("Track all items in an area (including out-of-logic)", GetTrackEverythingIncludingOutOfLogicRule(), (result) =>
+                {
+                    if (result.Semantics.ContainsKey(RoomKey))
+                    {
+                        var room = GetRoomFromResult(Tracker, result);
+                        Tracker.ClearArea(room,
+                            trackItems: true,
+                            includeUnavailable: true,
+                            confidence: result.Confidence);
+                    }
+                    else if (result.Semantics.ContainsKey(RegionKey))
+                    {
+                        var region = GetRegionFromResult(Tracker, result);
+                        Tracker.ClearArea(region,
+                            trackItems: true,
+                            includeUnavailable: true,
+                            confidence: result.Confidence);
+                    }
+                });
+            }
+
+            AddCommand("Untrack an item", GetUntrackItemRule(), (result) =>
+            {
+                var item = GetItemFromResult(Tracker, result, out _);
+                Tracker.UntrackItem(item, result.Confidence);
+            });
+
+            AddCommand("Set item count", GetSetItemCountRule(), (result) =>
+            {
+                var item = GetItemFromResult(Tracker, result, out _);
+                var count = (int)result.Semantics[ItemCountKey].Value;
+                Tracker.TrackItemAmount(item, count, result.Confidence);
+            });
         }
     }
 }

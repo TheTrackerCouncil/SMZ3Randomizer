@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -22,13 +23,19 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public PegWorldModeModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<PegWorldModeModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
+
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
             AddCommand("Toggle Peg World mode on", new[] {
                 "Hey tracker, toggle Peg World Mode on",
                 "Hey tracker, we're going to Peg World!",
                 "Hey tracker, let's go to Peg World!"
             }, (result) =>
             {
-                tracker.StartPegWorldMode(result.Confidence);
+                Tracker.StartPegWorldMode(result.Confidence);
             });
 
             AddCommand("Toggle Peg World mode off", new[] {
@@ -39,7 +46,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, release me from Peg World"
             }, (result) =>
             {
-                tracker.StopPegWorldMode(result.Confidence);
+                Tracker.StopPegWorldMode(result.Confidence);
             });
 
             AddCommand("Track Peg World peg", new[] {
@@ -47,9 +54,9 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 "Hey tracker, peg."
             }, (result) =>
             {
-                if (tracker.PegsPegged < TotalPegs)
+                if (Tracker.PegsPegged < TotalPegs)
                 {
-                    tracker.Peg(result.Confidence);
+                    Tracker.Peg(result.Confidence);
                 }
             });
         }

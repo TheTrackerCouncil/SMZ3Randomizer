@@ -52,10 +52,18 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking.ZeldaStateChecks
                 if (currentRegion is LightWorldNorthWest or LightWorldNorthEast or LightWorldSouth or LightWorldDeathMountainEast or LightWorldDeathMountainWest)
                 {
                     tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateLightWorldRewards);
+                    if (tracker.Options.AutoSaveLookAtEvents)
+                    {
+                        tracker.AutoTracker.LatestViewAction.Invoke();
+                    }
                 }
                 else if (currentRegion is DarkWorldNorthWest or DarkWorldNorthEast or DarkWorldSouth or DarkWorldMire or DarkWorldDeathMountainEast or DarkWorldDeathMountainWest)
                 {
                     tracker.AutoTracker.LatestViewAction = new AutoTrackerViewedAction(UpdateDarkWorldRewards);
+                    if (tracker.Options.AutoSaveLookAtEvents)
+                    {
+                        tracker.AutoTracker.LatestViewAction.Invoke();
+                    }
                 }
 
                 return true;

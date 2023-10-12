@@ -7,7 +7,6 @@ using Randomizer.Data.Options;
 using Randomizer.Data.Services;
 using Randomizer.SMZ3.Generation;
 using Serilog;
-using Serilog.Events;
 
 namespace Randomizer.CrossPlatform;
 
@@ -17,13 +16,8 @@ public static class Program
 
     public static void Main(string[] args)
     {
-        var logLevel = LogEventLevel.Warning;
-        if (args.Any(x => x == "-v"))
-            logLevel = LogEventLevel.Information;
-
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
-            .WriteTo.Console(logLevel)
             .WriteTo.File(LogPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 30)
             .CreateLogger();
 
@@ -45,6 +39,8 @@ public static class Program
         {
             return;
         }
+
+        Console.WriteLine($"Using Randomizer Options file at {optionsFile.FullName}");
 
         var result = DisplayMenu("What do you want to do?", new List<string>()
         {
@@ -82,6 +78,7 @@ public static class Program
                 var romPath = Path.Combine(randomizerOptions.RomOutputPath, results.Rom!.RomPath);
                 Console.WriteLine($"Rom generated successfully: {romPath}");
                 Launch(romPath, randomizerOptions);
+                _ = s_services.GetRequiredService<ConsoleTrackerDisplayService>().StartTracking(results.Rom, romPath);
             }
             else
             {
@@ -103,7 +100,9 @@ public static class Program
                 var selectedRom = roms[result.Value.Item1];
                 var romPath = Path.Combine(randomizerOptions.RomOutputPath, selectedRom.RomPath);
                 Launch(romPath, randomizerOptions);
+                _ = s_services.GetRequiredService<ConsoleTrackerDisplayService>().StartTracking(selectedRom, romPath);
             }
+
         }
         // Deletes rom(s)
         else if (result.Value.Item1 == 2)

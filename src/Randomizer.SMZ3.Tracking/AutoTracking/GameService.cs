@@ -583,5 +583,10 @@ namespace Randomizer.SMZ3.Tracking.AutoTracking
             }
             return false;
         }
+
+        public override void AddCommands()
+        {
+
+        }
     }
 }

@@ -28,64 +28,6 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         {
             _logger = logger;
             _config = config;
-
-            var darkRoomMaps = config.Maps.Where(x => x.IsDarkRoomMap == true && x.MemoryRoomNumbers?.Count > 0).ToList();
-
-            AddCommand("Update map", GetChangeMapRule(), (result) =>
-            {
-                var mapName = (string)result.Semantics[MapKey].Value;
-                Tracker.UpdateMap(mapName);
-                Tracker.Say(x => x.Map.UpdateMap, mapName);
-            });
-
-            AddCommand("Show dark room map", DarkRoomRule(), (result) =>
-            {
-                // If the player is not in a Zelda cave/dungeon
-                if (Tracker.AutoTracker?.CurrentGame != AutoTracking.Game.Zelda || Tracker.AutoTracker?.ZeldaState?.OverworldScreen != 0)
-                {
-                    Tracker.Say(x => x.Map.NotInDarkRoom);
-                    return;
-                }
-
-                // Get the room and map for the player
-                var roomNumber = Tracker.AutoTracker?.ZeldaState?.CurrentRoom ?? -1;
-                var map = darkRoomMaps.FirstOrDefault(x => x.MemoryRoomNumbers?.Contains(roomNumber) == true);
-
-                if (map != null)
-                {
-                    if (itemService.IsTracked(Shared.ItemType.Lamp))
-                    {
-                        Tracker.Say(x => x.Map.HasLamp);
-                        return;
-                    }
-
-                    _prevMap = Tracker.CurrentMap;
-                    if (string.IsNullOrEmpty(_prevMap))
-                    {
-                        _prevMap = _config.Maps.Last().ToString();
-                    }
-                    Tracker.UpdateMap(map.ToString());
-                    Tracker.Say(x => x.Map.ShowDarkRoomMap, map.Name);
-                }
-                else
-                {
-                    Tracker.Say(x => x.Map.NotInDarkRoom);
-                }
-            });
-
-            AddCommand("Hide dark room map", CanSeeRule(), (result) =>
-            {
-                if (string.IsNullOrEmpty(_prevMap))
-                {
-                    Tracker.Say(x => x.Map.NoPrevDarkRoomMap);
-                }
-                else
-                {
-                    Tracker.UpdateMap(_prevMap);
-                    Tracker.Say(x => x.Map.HideDarkRoomMap, _prevMap);
-                    _prevMap = "";
-                }
-            });
         }
 
         private GrammarBuilder GetChangeMapRule()
@@ -133,6 +75,67 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return new GrammarBuilder()
                 .Append("Hey tracker,")
                 .OneOf("I can see now", "I can see clearly now", "it's no longer dark", "I'm out of the dark room", "stop showing me the dark room map");
+        }
+
+        public override void AddCommands()
+        {
+            var darkRoomMaps = _config.Maps.Where(x => x.IsDarkRoomMap == true && x.MemoryRoomNumbers?.Count > 0).ToList();
+
+            AddCommand("Update map", GetChangeMapRule(), (result) =>
+            {
+                var mapName = (string)result.Semantics[MapKey].Value;
+                Tracker.UpdateMap(mapName);
+                Tracker.Say(x => x.Map.UpdateMap, mapName);
+            });
+
+            AddCommand("Show dark room map", DarkRoomRule(), (result) =>
+            {
+                // If the player is not in a Zelda cave/dungeon
+                if (Tracker.AutoTracker?.CurrentGame != AutoTracking.Game.Zelda || Tracker.AutoTracker?.ZeldaState?.OverworldScreen != 0)
+                {
+                    Tracker.Say(x => x.Map.NotInDarkRoom);
+                    return;
+                }
+
+                // Get the room and map for the player
+                var roomNumber = Tracker.AutoTracker?.ZeldaState?.CurrentRoom ?? -1;
+                var map = darkRoomMaps.FirstOrDefault(x => x.MemoryRoomNumbers?.Contains(roomNumber) == true);
+
+                if (map != null)
+                {
+                    if (ItemService.IsTracked(Shared.ItemType.Lamp))
+                    {
+                        Tracker.Say(x => x.Map.HasLamp);
+                        return;
+                    }
+
+                    _prevMap = Tracker.CurrentMap;
+                    if (string.IsNullOrEmpty(_prevMap))
+                    {
+                        _prevMap = _config.Maps.Last().ToString();
+                    }
+                    Tracker.UpdateMap(map.ToString());
+                    Tracker.Say(x => x.Map.ShowDarkRoomMap, map.Name);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Map.NotInDarkRoom);
+                }
+            });
+
+            AddCommand("Hide dark room map", CanSeeRule(), (result) =>
+            {
+                if (string.IsNullOrEmpty(_prevMap))
+                {
+                    Tracker.Say(x => x.Map.NoPrevDarkRoomMap);
+                }
+                else
+                {
+                    Tracker.UpdateMap(_prevMap);
+                    Tracker.Say(x => x.Map.HideDarkRoomMap, _prevMap);
+                    _prevMap = "";
+                }
+            });
         }
     }
 }

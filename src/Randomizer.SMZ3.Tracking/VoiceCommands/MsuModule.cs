@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Speech.Recognition;
 using System.Timers;
@@ -9,7 +10,6 @@ using MSURandomizerLibrary.Configs;
 using MSURandomizerLibrary.Models;
 using MSURandomizerLibrary.Services;
 using Randomizer.Data.Configuration.ConfigFiles;
-using Randomizer.Data.Configuration.ConfigTypes;
 using Randomizer.Data.Options;
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -27,8 +27,8 @@ public class MsuModule : TrackerModule, IDisposable
     private readonly Timer? _timer;
     private readonly MsuType? _msuType;
     private readonly MsuConfig _msuConfig;
-    private readonly string MsuKey = "MsuKey";
-    private int _currentTrackNumber = 0;
+    private readonly string _msuKey = "MsuKey";
+    private int _currentTrackNumber;
     private readonly HashSet<int> _validTrackNumbers;
     private Track? _currentTrack;
 
@@ -91,65 +91,6 @@ public class MsuModule : TrackerModule, IDisposable
 
         tracker.TrackNumberUpdated += TrackerOnTrackNumberUpdated;
 
-        AddCommand("location song", GetLocationSongRules(), (result) =>
-        {
-            if (_currentMsu == null)
-            {
-                Tracker.Say(_msuConfig.UnknownSong);
-                return;
-            }
-
-            var trackNumber = (int)result.Semantics[MsuKey].Value;
-            var track = _currentMsu.GetTrackFor(trackNumber);
-            if (track != null)
-            {
-                Tracker.Say(_msuConfig.CurrentSong, GetTrackText(track));
-            }
-            else
-            {
-                Tracker.Say(_msuConfig.UnknownSong);
-            }
-        });
-
-        AddCommand("location msu", GetLocationMsuRules(), (result) =>
-        {
-            if (_currentMsu == null)
-            {
-                Tracker.Say(_msuConfig.UnknownSong);
-                return;
-            }
-
-            var trackNumber = (int)result.Semantics[MsuKey].Value;
-            var track = _currentMsu.GetTrackFor(trackNumber);
-            if (track?.GetMsuName() != null)
-            {
-                Tracker.Say(_msuConfig.CurrentMsu, track.GetMsuName());
-            }
-            else
-            {
-                Tracker.Say(_msuConfig.UnknownSong);
-            }
-        });
-
-        AddCommand("current song", GetCurrentSongRules(), (result) =>
-        {
-            if (_currentTrack == null)
-            {
-                Tracker.Say(_msuConfig.UnknownSong);
-                return;
-            }
-            Tracker.Say(_msuConfig.CurrentSong, GetTrackText(_currentTrack));
-        });
-
-        AddCommand("current msu", GetCurrentMsuRules(), (result) =>
-        {
-            if (_currentTrack == null)
-            {
-                Tracker.Say(_msuConfig.UnknownSong);
-                return;
-            }
-            Tracker.Say(_msuConfig.CurrentMsu, _currentTrack.GetMsuName());
-        });
     }
 
     private void TrackerOnTrackNumberUpdated(object? sender, TrackNumberEventArgs e)
@@ -177,7 +118,7 @@ public class MsuModule : TrackerModule, IDisposable
             }
         }
 
-        Logger.LogInformation("Current Track: {Track}", _currentTrack?.GetDisplayText(true) ?? "Unknown");
+        Logger.LogInformation("Current Track: {Track}", _currentTrack?.GetDisplayText() ?? "Unknown");
     }
 
     private string GetOutputText()
@@ -232,6 +173,7 @@ public class MsuModule : TrackerModule, IDisposable
         }
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     private GrammarBuilder GetLocationSongRules()
     {
         var msuLocations = new Choices();
@@ -248,18 +190,19 @@ public class MsuModule : TrackerModule, IDisposable
             .Append("Hey tracker,")
             .OneOf("what's the current song for", "what's the song for", "what's the current theme for", "what's the theme for")
             .Optional("the")
-            .Append(MsuKey, msuLocations);
+            .Append(_msuKey, msuLocations);
 
         var option2 = new GrammarBuilder()
             .Append("Hey tracker,")
             .OneOf("what's the current", "what's the")
-            .Append(MsuKey, msuLocations)
+            .Append(_msuKey, msuLocations)
             .OneOf("song", "theme");
 
         return GrammarBuilder.Combine(option1, option2);
 
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     private GrammarBuilder GetLocationMsuRules()
     {
         var msuLocations = new Choices();
@@ -277,14 +220,14 @@ public class MsuModule : TrackerModule, IDisposable
             .Append("what MSU pack is")
             .OneOf("the current song for", "the song for", "the current theme for", "the theme for")
             .Optional("the")
-            .Append(MsuKey, msuLocations)
+            .Append(_msuKey, msuLocations)
             .Append("from");
 
         var option2 = new GrammarBuilder()
             .Append("Hey tracker,")
             .Append("what MSU pack is")
             .OneOf("the current", "the")
-            .Append(MsuKey, msuLocations)
+            .Append(_msuKey, msuLocations)
             .OneOf("song", "theme")
             .Append("from");
 
@@ -312,6 +255,7 @@ public class MsuModule : TrackerModule, IDisposable
         return string.Join("; ", parts);
     }
 
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
     private GrammarBuilder GetCurrentSongRules()
     {
         var msuLocations = new Choices();
@@ -363,5 +307,69 @@ public class MsuModule : TrackerModule, IDisposable
             _timer.Stop();
             _timer.Dispose();
         }
+    }
+
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+    public override void AddCommands()
+    {
+        AddCommand("location song", GetLocationSongRules(), (result) =>
+        {
+            if (_currentMsu == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+
+            var trackNumber = (int)result.Semantics[_msuKey].Value;
+            var track = _currentMsu.GetTrackFor(trackNumber);
+            if (track != null)
+            {
+                Tracker.Say(_msuConfig.CurrentSong, GetTrackText(track));
+            }
+            else
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+            }
+        });
+
+        AddCommand("location msu", GetLocationMsuRules(), (result) =>
+        {
+            if (_currentMsu == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+
+            var trackNumber = (int)result.Semantics[_msuKey].Value;
+            var track = _currentMsu.GetTrackFor(trackNumber);
+            if (track?.GetMsuName() != null)
+            {
+                Tracker.Say(_msuConfig.CurrentMsu, track.GetMsuName());
+            }
+            else
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+            }
+        });
+
+        AddCommand("current song", GetCurrentSongRules(), (_) =>
+        {
+            if (_currentTrack == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+            Tracker.Say(_msuConfig.CurrentSong, GetTrackText(_currentTrack));
+        });
+
+        AddCommand("current msu", GetCurrentMsuRules(), (_) =>
+        {
+            if (_currentTrack == null)
+            {
+                Tracker.Say(_msuConfig.UnknownSong);
+                return;
+            }
+            Tracker.Say(_msuConfig.CurrentMsu, _currentTrack.GetMsuName());
+        });
     }
 }

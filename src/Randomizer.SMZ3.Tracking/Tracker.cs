@@ -42,7 +42,7 @@ namespace Randomizer.SMZ3.Tracking
         private const int RepeatRateModifier = 2;
         private static readonly Random s_random = new();
 
-        private readonly SpeechRecognitionEngine _recognizer;
+
         private readonly IWorldAccessor _worldAccessor;
         private readonly TrackerModuleFactory _moduleFactory;
         private readonly IChatClient _chatClient;
@@ -55,6 +55,7 @@ namespace Randomizer.SMZ3.Tracking
         private readonly ITrackerStateService _stateService;
         private readonly IWorldService _worldService;
         private readonly ITrackerTimerService _timerService;
+        private readonly ISpeechRecognitionService _recognizer;
         private bool _disposed;
         private string? _mood;
         private string? _lastSpokenText;
@@ -63,13 +64,6 @@ namespace Randomizer.SMZ3.Tracking
         private readonly HashSet<SchrodingersString> _saidLines = new();
         private bool _beatenGame;
         private IEnumerable<ItemType>? _previousMissingItems;
-
-        /// <summary>
-        /// Dll to get the number of microphones
-        /// </summary>
-        /// <returns></returns>
-        [DllImport("winmm.dll")]
-        private static extern int waveInGetNumDevs();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tracker"/> class.
@@ -107,7 +101,8 @@ namespace Randomizer.SMZ3.Tracking
             IMetadataService metadataService,
             ITrackerStateService stateService,
             IWorldService worldService,
-            ITrackerTimerService timerService)
+            ITrackerTimerService timerService,
+            ISpeechRecognitionService speechRecognitionService)
         {
             if (trackerOptions.Options == null)
                 throw new InvalidOperationException("Tracker options have not yet been activated.");
@@ -145,7 +140,7 @@ namespace Randomizer.SMZ3.Tracking
             }
 
             // Initialize the speech recognition engine
-            _recognizer = new SpeechRecognitionEngine();
+            _recognizer = speechRecognitionService;
             _recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
             InitializeMicrophone();
         }
@@ -413,23 +408,8 @@ namespace Randomizer.SMZ3.Tracking
         public bool InitializeMicrophone()
         {
             if (MicrophoneInitialized) return true;
-
-            try
-            {
-                if (waveInGetNumDevs() == 0)
-                {
-                    _logger.LogWarning("No microphone device found.");
-                    return false;
-                }
-                _recognizer.SetInputToDefaultAudioDevice();
-                MicrophoneInitialized = true;
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error initializing microphone");
-                return false;
-            }
+            MicrophoneInitialized = _recognizer.InitializeMicrophone();
+            return MicrophoneInitialized;
         }
 
         /// <summary>
@@ -457,12 +437,15 @@ namespace Randomizer.SMZ3.Tracking
         /// <summary>
         /// Saves the state of the tracker to the database
         /// </summary>
-        /// <param name="rom">The rom to save</param>
         /// <returns></returns>
-        public async Task SaveAsync(GeneratedRom rom)
+        public async Task SaveAsync()
         {
+            if (Rom == null)
+            {
+                throw new NullReferenceException("No rom loaded into tracker");
+            }
             IsDirty = false;
-            await _stateService.SaveStateAsync(_worldAccessor.Worlds, rom, _timerService.SecondsElapsed);
+            await _stateService.SaveStateAsync(_worldAccessor.Worlds, Rom, _timerService.SecondsElapsed);
         }
 
         /// <summary>
@@ -711,7 +694,17 @@ namespace Randomizer.SMZ3.Tracking
         {
             // Load the modules for voice recognition
             StartTimer(true);
-            Syntax = _moduleFactory.LoadAll(this, _recognizer, out var loadError);
+
+            var loadError = false;
+            try
+            {
+                Syntax = _moduleFactory.LoadAll(this, _recognizer.RecognitionEngine, out loadError);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unable to load modules");
+                loadError = true;
+            }
 
             try
             {

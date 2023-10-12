@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Speech.Recognition;
 using Microsoft.Extensions.Logging;
@@ -36,59 +37,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public CheatsModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<CheatsModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            if (tracker.World.Config.Race || tracker.World.Config.DisableCheats) return;
 
-            AddCommand("Enable cheats", GetEnableCheatsRule(), (result) =>
-            {
-                _cheatsEnabled = true;
-                Tracker.Say(x => x.Cheats.EnabledCheats);
-            });
-
-            AddCommand("Disable cheats", GetDisableHintsRule(), (result) =>
-            {
-                _cheatsEnabled = false;
-                Tracker.Say(x => x.Cheats.DisabledCheats);
-            });
-
-            AddCommand("Fill rule", FillRule(), (result) =>
-            {
-                var fillType = result.Semantics.ContainsKey(s_fillCheatKey) ? (string)result.Semantics[s_fillCheatKey].Value : s_fillHealthChoices.First();
-                Fill(fillType);
-            });
-
-            AddCommand("Give item", GiveItemRule(), (result) =>
-            {
-                var item = GetItemFromResult(tracker, result, out var itemName);
-                GiveItem(item);
-            });
-
-            AddCommand("Kill player", KillPlayerRule(), (result) =>
-            {
-                if (!PlayerCanCheat()) return;
-
-                if (Tracker.GameService?.TryKillPlayer() == true)
-                {
-                    Tracker.Say(x => x.Cheats.CheatPerformed);
-                }
-                else
-                {
-                    Tracker.Say(x => x.Cheats.CheatFailed);
-                }
-            });
-
-            AddCommand("Setup Crystal Flash", SetupCrystalFlashRule(), (result) =>
-            {
-                if (!PlayerCanCheat()) return;
-
-                if (Tracker.GameService?.TrySetupCrystalFlash() == true)
-                {
-                    Tracker.Say(x => x.Cheats.CheatPerformed);
-                }
-                else
-                {
-                    Tracker.Say(x => x.Cheats.CheatFailed);
-                }
-            });
         }
 
         private bool PlayerCanCheat()
@@ -192,6 +141,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .OneOf("cheats", "cheat codes", "sv_cheats");
         }
 
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
         private static GrammarBuilder FillRule()
         {
             var fillChoices = new Choices();
@@ -243,6 +193,64 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
                 .Append("Hey tracker,")
                 .Optional("please", "would you kindly")
                 .OneOf("setup crystal flash requirements", "ready a crystal flash");
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
+            if (Tracker.World.Config.Race || Tracker.World.Config.DisableCheats) return;
+
+            AddCommand("Enable cheats", GetEnableCheatsRule(), (result) =>
+            {
+                _cheatsEnabled = true;
+                Tracker.Say(x => x.Cheats.EnabledCheats);
+            });
+
+            AddCommand("Disable cheats", GetDisableHintsRule(), (result) =>
+            {
+                _cheatsEnabled = false;
+                Tracker.Say(x => x.Cheats.DisabledCheats);
+            });
+
+            AddCommand("Fill rule", FillRule(), (result) =>
+            {
+                var fillType = result.Semantics.ContainsKey(s_fillCheatKey) ? (string)result.Semantics[s_fillCheatKey].Value : s_fillHealthChoices.First();
+                Fill(fillType);
+            });
+
+            AddCommand("Give item", GiveItemRule(), (result) =>
+            {
+                var item = GetItemFromResult(Tracker, result, out var itemName);
+                GiveItem(item);
+            });
+
+            AddCommand("Kill player", KillPlayerRule(), (result) =>
+            {
+                if (!PlayerCanCheat()) return;
+
+                if (Tracker.GameService?.TryKillPlayer() == true)
+                {
+                    Tracker.Say(x => x.Cheats.CheatPerformed);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Cheats.CheatFailed);
+                }
+            });
+
+            AddCommand("Setup Crystal Flash", SetupCrystalFlashRule(), (result) =>
+            {
+                if (!PlayerCanCheat()) return;
+
+                if (Tracker.GameService?.TrySetupCrystalFlash() == true)
+                {
+                    Tracker.Say(x => x.Cheats.CheatPerformed);
+                }
+                else
+                {
+                    Tracker.Say(x => x.Cheats.CheatFailed);
+                }
+            });
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 
 using Randomizer.SMZ3.Tracking.Services;
 
@@ -19,10 +20,7 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
         public UndoModule(Tracker tracker, IItemService itemService, IWorldService worldService, ILogger<UndoModule> logger)
             : base(tracker, itemService, worldService, logger)
         {
-            AddCommand("Undo last operation", GetUndoRule(), (result) =>
-            {
-                tracker.Undo(result.Confidence);
-            });
+
         }
 
         private GrammarBuilder GetUndoRule()
@@ -30,6 +28,15 @@ namespace Randomizer.SMZ3.Tracking.VoiceCommands
             return new GrammarBuilder()
                 .Append("Hey tracker,")
                 .OneOf("undo that", "control Z", "that's not what I said", "take backsies");
+        }
+
+        [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+        public override void AddCommands()
+        {
+            AddCommand("Undo last operation", GetUndoRule(), (result) =>
+            {
+                Tracker.Undo(result.Confidence);
+            });
         }
     }
 }

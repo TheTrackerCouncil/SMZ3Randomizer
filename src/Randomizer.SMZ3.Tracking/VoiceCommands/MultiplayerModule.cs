@@ -257,4 +257,8 @@ public class MultiplayerModule : TrackerModule
         await _multiplayerGameService.TrackDeath();
     }
 
+    public override void AddCommands()
+    {
+
+    }
 }
